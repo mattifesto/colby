@@ -1,0 +1,91 @@
+/**
+ * This file is used to give all platforms and browsers an equal base for css.
+ * If there is anything very basic that's different among platforms or browsers
+ * then rules should be added to this file to equalize and make the experience
+ * the same for all browsers and platforms.
+ *
+ * Things that commonly change from theme to theme should not be placed in this
+ * file.
+ *
+ */
+
+*
+{
+    margin: 0px;
+    padding: 0px;
+}
+
+html
+{
+    font-size: 16px;
+    overflow-y: scroll;
+}
+
+a:link,
+a:active,
+a:focus,
+a:hover
+{
+    outline: none;
+}
+
+a img
+{
+    border: none;
+}
+
+h1
+{
+    font-size: 32px;
+}
+
+h2
+{
+    font-size: 26px;
+}
+
+h3
+{
+    font-size: 22px;
+}
+
+h4
+{
+    font-size: 20px;
+}
+
+h5
+{
+    font-size: 18px;
+}
+
+h6
+{
+    font-size: 16px;
+}
+
+ul,
+ol
+{
+    padding-left: 40px;
+}
+
+pre
+{
+    overflow: auto;
+}
+
+input[type=text],
+textarea
+{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+td,
+th
+{
+    text-align: left;
+    vertical-align: baseline;
+}

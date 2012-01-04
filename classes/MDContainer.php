@@ -8,32 +8,32 @@ class MDContainer
     public function start($id = '', $class = '')
     {
         // MDContainer element
-        
+
         echo '<div';
-        
+
         // id attribute
-        
+
         if (!empty($id))
         {
             echo ' id="', $id, '"';
         }
-        
+
         // class attribue
-        
+
         echo ' class="MDContainer';
-        
+
         if (!empty($class))
         {
             echo ' ', $class;
         }
-        
+
         echo '">';
-        
+
         // MDHeader element
-        
+
         echo '<div class="MDHeader">';
     }
-    
+
     /// <summary>
     ///
     /// </summary>
@@ -41,7 +41,7 @@ class MDContainer
     {
         echo '</div><div class="MDBody">';
     }
-    
+
     /// <summary>
     ///
     /// </summary>
@@ -49,7 +49,7 @@ class MDContainer
     {
         echo '</div><div class="MDFooter">';
     }
-    
+
     /// <summary>
     ///
     /// </summary>
