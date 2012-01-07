@@ -3,14 +3,17 @@
 //
 // colby
 //
-// version 0.0.2
+// version 0.0.3
 //
 
 require_once(__DIR__ . '/classes/MDContainer.php');
 
 class Colby
 {
+    private static $sitePath;
     private static $siteUrl;
+
+    private static $urlParser;
 
     /// <summary>
     ///
@@ -25,8 +28,31 @@ class Colby
     /// <summary>
     ///
     /// </summary>
+    public static function setSitePath($sitePath)
+    {
+        Colby::$sitePath = $sitePath;
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
     public static function setSiteUrl($siteUrl)
     {
         Colby::$siteUrl = $siteUrl;
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    public static function urlParser()
+    {
+        require_once(self::$sitePath . '/colby/classes/MDURLParser.php');
+
+        if (!isset($urlParser))
+        {
+            self::$urlParser = new MDURLParser();
+        }
+
+        return self::$urlParser;
     }
 }
