@@ -2,6 +2,9 @@
 
 class MDURLParser
 {
+    private $requestedURL;
+    private $requestedQueryString;
+
     private $stubs;
 
     /// <summary>
@@ -18,26 +21,31 @@ class MDURLParser
             $_SERVER['REQUEST_URI'],
             $matches);
 
-        $url = urldecode($matches[1]);
+        $this->requestedURL = urldecode($matches[1]);
 
         if (isset($matches[2]))
         {
-            $queryString = $matches[2];
+            $this->requestedQueryString = $matches[2];
         }
         else
         {
-            $queryString = '';
+            $this->requestedQueryString = '';
         }
 
         // step 2: get stubs
+        // preg_split will return an empty array if there aren't any stubs
 
         $this->stubs = preg_split('/[\/\s]+/',
-            $url,
+            $this->requestedURL,
             null,
             PREG_SPLIT_NO_EMPTY);
+    }
 
-        // step 3: redirect to canonicalized URL if necessary
-
+    /// <summary>
+    ///
+    /// </summary>
+    public function canonicalizeURL()
+    {
         $canonicalURL = '/';
 
         if (count($this->stubs) === 1 && 'index.php' === $this->stubs[0])
@@ -49,9 +57,9 @@ class MDURLParser
             $canonicalURL = '/' . implode('/', $this->stubs) . '/';
         }
 
-        if ($url !== $canonicalURL)
+        if ($this->requestedURL !== $canonicalURL)
         {
-            $redirectURI = $canonicalURL . $queryString;
+            $redirectURI = $canonicalURL . $this->requestedQueryString;
 
             header('Location: ' . $redirectURI, true, 301);
             exit;

@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 0.0.3
+// version 0.0.4
 //
 
 require_once(__DIR__ . '/classes/MDContainer.php');
@@ -23,6 +23,14 @@ class Colby
         echo '<link rel="stylesheet" type="text/css" href="',
             Colby::$siteUrl,
             'colby/css/equalize.css">';
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    public static function sitePath()
+    {
+        return Colby::$sitePath;
     }
 
     /// <summary>
