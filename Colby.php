@@ -3,15 +3,17 @@
 //
 // colby
 //
-// version 0.0.4
+// version 0.0.5
 //
+
+error_reporting(E_ALL | E_STRICT);
 
 require_once(__DIR__ . '/classes/MDContainer.php');
 
 class Colby
 {
     private static $sitePath;
-    private static $siteUrl;
+    private static $siteURL;
 
     private static $urlParser;
 
@@ -21,7 +23,7 @@ class Colby
     public static function includeEqualizeStylesheet()
     {
         echo '<link rel="stylesheet" type="text/css" href="',
-            Colby::$siteUrl,
+            Colby::$siteURL,
             'colby/css/equalize.css">';
     }
 
@@ -44,9 +46,17 @@ class Colby
     /// <summary>
     ///
     /// </summary>
-    public static function setSiteUrl($siteUrl)
+    public static function siteURL()
     {
-        Colby::$siteUrl = $siteUrl;
+        return Colby::$siteURL;
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    public static function setSiteURL($siteURL)
+    {
+        Colby::$siteURL = $siteURL;
     }
 
     /// <summary>
