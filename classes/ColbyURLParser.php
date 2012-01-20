@@ -1,6 +1,6 @@
 <?php
 
-class MDURLParser
+class ColbyURLParser
 {
     private $requestedURL;
     private $requestedQueryString;
@@ -39,6 +39,34 @@ class MDURLParser
             $this->requestedURL,
             null,
             PREG_SPLIT_NO_EMPTY);
+
+        // step 3: handle reserved stubs
+
+        if (1 === count($this->stubs))
+        {
+            switch ($this->stubs[0])
+            {
+                case 'facebook-oauth-handler':
+
+                    // this page redirects
+                    // so we can exit after
+
+                    require(COLBY_SITE_PATH . '/colby/pages/facebook-oauth-handler.php');
+                    exit;
+
+                case 'logout':
+
+                    // this page redirects
+                    // so we can exit after
+
+                    require(COLBY_SITE_PATH . '/colby/pages/logout.php');
+                    exit;
+
+                default:
+
+                    break;
+            }
+        }
     }
 
     /// <summary>

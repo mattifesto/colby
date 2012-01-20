@@ -3,18 +3,16 @@
 //
 // colby
 //
-// version 0.0.5
+// version 0.0.6
 //
 
 error_reporting(E_ALL | E_STRICT);
 
+require_once(__DIR__ . '/../colby-configuration.php');
 require_once(__DIR__ . '/classes/MDContainer.php');
 
 class Colby
 {
-    private static $sitePath;
-    private static $siteURL;
-
     private static $urlParser;
 
     /// <summary>
@@ -23,40 +21,8 @@ class Colby
     public static function includeEqualizeStylesheet()
     {
         echo '<link rel="stylesheet" type="text/css" href="',
-            Colby::$siteURL,
+            COLBY_SITE_URL,
             'colby/css/equalize.css">';
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    public static function sitePath()
-    {
-        return Colby::$sitePath;
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    public static function setSitePath($sitePath)
-    {
-        Colby::$sitePath = $sitePath;
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    public static function siteURL()
-    {
-        return Colby::$siteURL;
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    public static function setSiteURL($siteURL)
-    {
-        Colby::$siteURL = $siteURL;
     }
 
     /// <summary>
@@ -64,13 +30,24 @@ class Colby
     /// </summary>
     public static function urlParser()
     {
-        require_once(self::$sitePath . '/colby/classes/MDURLParser.php');
+        require_once(COLBY_SITE_PATH . '/colby/classes/ColbyURLParser.php');
+
+        // TODO: document why is this in the singleton pattern
+        // or don't use singleton pattern
 
         if (!isset($urlParser))
         {
-            self::$urlParser = new MDURLParser();
+            self::$urlParser = new ColbyURLParser();
         }
 
         return self::$urlParser;
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    public static function useUser()
+    {
+        require_once(__DIR__ . '/classes/ColbyUser.php');
     }
 }
