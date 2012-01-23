@@ -1,10 +1,8 @@
 <?php
 
-$state = json_decode(urldecode($_GET['state']));
-$time = time() - (60 * 60 * 24);
+Colby::useUser();
+ColbyUser::logoutCurrentUser();
 
-setcookie('user_id', '', $time, '/');
-setcookie('user_access_token', '', $time, '/');
-setcookie('user_name', '', $time, '/');
+$state = json_decode(urldecode($_GET['state']));
 
 header('Location: ' . $state->colby_redirect_uri);

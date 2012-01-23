@@ -17,6 +17,22 @@
 
 html
 {
+    /**
+     ** these two styles are very important
+     ** they set the default behavior for absolutely positioned elements
+     ** these elements will be positioned relative to the whole html page
+     ** if not for these styles
+     ** these elements would be positioned relative to the viewport
+     **   (the viewport is the html element's parent)
+     ** this will not affect elements inside a relatively positioned child
+     **/
+
+    position: relative;
+    min-height: 100%;
+}
+
+html
+{
     font-size: 16px;
     overflow-y: scroll;
 }
@@ -81,6 +97,7 @@ textarea
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    outline: none;
 }
 
 td,

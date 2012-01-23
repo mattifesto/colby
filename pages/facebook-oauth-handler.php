@@ -17,13 +17,21 @@ $response = file_get_contents($accessTokenURL);
 $params = null;
 parse_str($response, $params);
 
+$userAccessToken = $params['access_token'];
+$userAccessExpirationTime = time() + $params['expires'] - 60;
+
 $userPropertiesURL = 'https://graph.facebook.com/me' .
-    '?access_token=' . $params['access_token'];
+    '?access_token=' . $userAccessToken;
 
 $userProperties = json_decode(file_get_contents($userPropertiesURL));
 
-setcookie('user_id', $userProperties->id, 0, '/');
-setcookie('user_access_token', $params['access_token'], 0, '/');
-setcookie('user_name', $userProperties->name, 0, '/');
+Colby::useUser();
+
+ColbyUser::loginCurrentUser(
+    $userProperties->id,
+    $userAccessToken,
+    $userAccessExpirationTime,
+    $userProperties->name,
+    $userProperties->first_name);
 
 header('Location: ' . $state->colby_redirect_uri);
