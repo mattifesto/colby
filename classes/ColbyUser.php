@@ -12,6 +12,14 @@ class ColbyUser
 
     private static $currentUserId = null;
 
+    // currentUserRow
+    // this is cached, see the following document for discussion
+    // "Colby User Data and Permissions Caching"
+    // this information will not change during a request
+    // even if the database row is altered
+
+    private static $currentUserRow = null;
+
     ///
     ///
     ///
@@ -21,8 +29,8 @@ class ColbyUser
     }
 
     ///
-    /// internal function
-    /// this function should never be called by site code
+    /// this function should be run only once
+    /// it is run automatically when ColbyUser is first included
     ///
     public static function initialize()
     {
@@ -39,7 +47,7 @@ class ColbyUser
 
             // get the user row for the user indicated by the cookie
 
-            $userRow = self::userRowForUserId($cookieUserId);
+            $userRow = self::userRow($cookieUserId);
 
             if (null === $userRow)
             {
@@ -145,7 +153,7 @@ class ColbyUser
             '?client_id=' . COLBY_FACEBOOK_APP_ID .
             '&redirect_uri=' .
                 urlencode(COLBY_SITE_URL
-                    . 'facebook-oauth-handler/') .
+                    . '/facebook-oauth-handler/') .
             '&state=' . urlencode(json_encode($state));
 
         return $url;
@@ -173,7 +181,7 @@ class ColbyUser
         $state = new stdClass();
         $state->colby_redirect_uri = $redirectURL;
 
-        $url = COLBY_SITE_URL . 'logout/' .
+        $url = COLBY_SITE_URL . '/logout/' .
             '?state=' . urlencode(json_encode($state));
 
         return $url;
@@ -190,7 +198,7 @@ class ColbyUser
     /// userId
     ///     type: unsigned 64-bit integer
     ///
-    public static function userRowForUserId($userId = null)
+    public static function userRow($userId = null)
     {
         $mysqli = Colby::mysqli();
 
@@ -202,6 +210,11 @@ class ColbyUser
             }
 
             $userId = self::$currentUserId;
+        }
+
+        if ($userId === self::$currentUserId && self::$currentUserRow)
+        {
+            return self::$currentUserRow;
         }
 
         $sql = 'SELECT * FROM `ColbyUsers` WHERE `facebookId` = ' .
@@ -225,6 +238,13 @@ class ColbyUser
 
         $result->free();
 
+        if ($userId === self::$currentUserId)
+        {
+            self::$currentUserRow = $userRow;
+        }
+
         return $userRow;
     }
 }
+
+ColbyUser::initialize();

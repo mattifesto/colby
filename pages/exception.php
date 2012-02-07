@@ -5,7 +5,7 @@
         <title>Exception</title>
     </head>
     <body>
-        <pre><?php echo var_export($e, true); ?></pre>
+        <pre><?php Colby::writeExceptionStackTrace($e); ?></pre>
     </body>
 </html>
 

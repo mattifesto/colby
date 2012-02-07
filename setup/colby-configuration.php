@@ -1,7 +1,7 @@
 <?php
 
-define('COLBY_SITE_PATH', __DIR__);
-define('COLBY_SITE_URL', 'http://example.com/');
+define('COLBY_SITE_DIRECTORY', __DIR__);
+define('COLBY_SITE_URL', 'http://example.com');
 
 define('COLBY_FACEBOOK_APP_ID', '012345678901234');
 define('COLBY_FACEBOOK_APP_SECRET', '0123456789abcdef01234567890abcde');

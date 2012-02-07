@@ -2,15 +2,41 @@
 
 class ColbyURLParser
 {
-    private $requestedURL;
-    private $requestedQueryString;
+    private static $requestedURL;
+    private static $requestedQueryString;
 
-    private $stubs;
+    private static $stubs;
 
     /// <summary>
     ///
     /// </summary>
-    public function __construct()
+    public static function canonicalizeURL()
+    {
+        $canonicalURL = '/';
+
+        if (count(self::$stubs) === 1 && 'index.php' === self::$stubs[0])
+        {
+            // canonical URL is still '/'
+        }
+        else if (count(self::$stubs) > 0)
+        {
+            $canonicalURL = '/' . implode('/', self::$stubs) . '/';
+        }
+
+        if (self::$requestedURL !== $canonicalURL)
+        {
+            $redirectURI = $canonicalURL . self::$requestedQueryString;
+
+            header('Location: ' . $redirectURI, true, 301);
+            exit;
+        }
+    }
+
+    ///
+    /// this function should be run only once
+    /// it is run automatically when ColbyURLParser is first included
+    ///
+    public static function initialize()
     {
         // step 1: separate url from query string
 
@@ -21,37 +47,38 @@ class ColbyURLParser
             $_SERVER['REQUEST_URI'],
             $matches);
 
-        $this->requestedURL = urldecode($matches[1]);
+        self::$requestedURL = urldecode($matches[1]);
 
         if (isset($matches[2]))
         {
-            $this->requestedQueryString = $matches[2];
+            self::$requestedQueryString = $matches[2];
         }
         else
         {
-            $this->requestedQueryString = '';
+            self::$requestedQueryString = '';
         }
 
         // step 2: get stubs
         // preg_split will return an empty array if there aren't any stubs
 
-        $this->stubs = preg_split('/[\/\s]+/',
-            $this->requestedURL,
+        self::$stubs = preg_split('/[\/\s]+/',
+            self::$requestedURL,
             null,
             PREG_SPLIT_NO_EMPTY);
 
         // step 3: handle reserved stubs
 
-        if (1 === count($this->stubs))
+        if (1 === count(self::$stubs))
         {
-            switch ($this->stubs[0])
+            switch (self::$stubs[0])
             {
                 case 'facebook-oauth-handler':
 
                     // this page redirects
                     // so we can exit after
 
-                    require(COLBY_SITE_PATH . '/colby/pages/facebook-oauth-handler.php');
+                    require(COLBY_SITE_DIRECTORY .
+                        '/colby/pages/facebook-oauth-handler.php');
                     exit;
 
                 case 'logout':
@@ -59,7 +86,8 @@ class ColbyURLParser
                     // this page redirects
                     // so we can exit after
 
-                    require(COLBY_SITE_PATH . '/colby/pages/logout.php');
+                    require(COLBY_SITE_DIRECTORY .
+                        '/colby/pages/logout.php');
                     exit;
 
                 default:
@@ -72,33 +100,10 @@ class ColbyURLParser
     /// <summary>
     ///
     /// </summary>
-    public function canonicalizeURL()
+    public static function stubs()
     {
-        $canonicalURL = '/';
-
-        if (count($this->stubs) === 1 && 'index.php' === $this->stubs[0])
-        {
-            // canonical URL is still '/'
-        }
-        else if (count($this->stubs) > 0)
-        {
-            $canonicalURL = '/' . implode('/', $this->stubs) . '/';
-        }
-
-        if ($this->requestedURL !== $canonicalURL)
-        {
-            $redirectURI = $canonicalURL . $this->requestedQueryString;
-
-            header('Location: ' . $redirectURI, true, 301);
-            exit;
-        }
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    public function stubs()
-    {
-        return $this->stubs;
+        return self::$stubs;
     }
 }
+
+ColbyURLParser::initialize();
