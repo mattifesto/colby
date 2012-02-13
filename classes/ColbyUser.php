@@ -96,32 +96,52 @@ class ColbyUser
     ///     basically: current unix time + facebook relative expiration time
     ///
     public static function loginCurrentUser(
-        $facebookId,
         $facebookAccessToken,
         $facebookAccessExpirationTime,
-        $facebookName,
-        $facebookFirstName)
+        $facebookProperties)
     {
         $mysqli = Colby::mysqli();
 
-        $sql = 'REPLACE INTO `ColbyUsers`' .
-            ' (' .
-                '`facebookId`,' .
-                '`facebookAccessToken`,' .
-                '`facebookAccessExpirationTime`,' .
-                '`facebookName`,' .
-                '`facebookFirstName`' .
-            ') VALUES (' .
-                $facebookId .
-                ',"' .
-                $mysqli->escape_string($facebookAccessToken) .
-                '",' .
-                $facebookAccessExpirationTime .
-                ',"' .
-                $mysqli->escape_string($facebookName) .
-                '","' .
-                $mysqli->escape_string($facebookFirstName) .
-            '")';
+        $accessToken = $mysqli->escape_string($facebookAccessToken);
+
+        $name = Colby::textToHTML($facebookProperties->name);
+        $name = $mysqli->escape_string($name);
+
+        $firstName = Colby::textToHTML($facebookProperties->first_name);
+        $firstName = $mysqli->escape_string($firstName);
+
+        $lastName = Colby::textToHTML($facebookProperties->last_name);
+        $lastName = $mysqli->escape_string($lastName);
+
+        $sql = <<< END
+INSERT INTO `ColbyUsers`
+(
+    `facebookId`,
+    `facebookAccessToken`,
+    `facebookAccessExpirationTime`,
+    `facebookName`,
+    `facebookFirstName`,
+    `facebookLastName`,
+    `facebookTimeZone`
+)
+VALUES
+(
+    '$facebookProperties->id',
+    '$accessToken',
+    '$facebookAccessExpirationTime',
+    '$name',
+    '$firstName',
+    '$lastName',
+    '$facebookProperties->timezone'
+)
+ON DUPLICATE KEY UPDATE
+    `facebookAccessToken` = VALUES(`facebookAccessToken`),
+    `facebookAccessExpirationTime` = VALUES(`facebookAccessExpirationTime`),
+    `facebookName` = VALUES(`facebookName`),
+    `facebookFirstName` = VALUES(`facebookFirstName`),
+    `facebookLastName` = VALUES(`facebookLastName`),
+    `facebookTimeZone` = VALUES(`facebookTimeZone`)
+END;
 
         $mysqli->query($sql);
 
@@ -130,13 +150,13 @@ class ColbyUser
             throw new RuntimeException($mysqli->error);
         }
 
-        $hashedValue = $facebookId .
+        $hashedValue = $facebookProperties->id .
             $facebookAccessToken .
             $facebookAccessExpirationTime;
 
         $hash = hash('sha512', $hashedValue);
 
-        $cookieValue = $facebookId . '-' . $hash;
+        $cookieValue = $facebookProperties->id . '-' . $hash;
 
         setcookie(COLBY_USER_COOKIE, $cookieValue, 0, '/');
     }

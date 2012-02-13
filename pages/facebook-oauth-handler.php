@@ -28,10 +28,8 @@ $userProperties = json_decode(file_get_contents($userPropertiesURL));
 Colby::useUser();
 
 ColbyUser::loginCurrentUser(
-    $userProperties->id,
     $userAccessToken,
     $userAccessExpirationTime,
-    $userProperties->name,
-    $userProperties->first_name);
+    $userProperties);
 
 header('Location: ' . $state->colby_redirect_uri);

@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 0.1.0
+// version 0.1.1
 //
 
 class Colby
@@ -94,9 +94,43 @@ class Colby
         return self::$mysqli;
     }
 
-    /// <summary>
     ///
-    /// </summary>
+    /// converts plain text into formatted content HTML
+    ///
+    ///  - trims whitespace
+    ///  - converts html special characters to entities
+    ///  - interprets textual formatting to create formatted content HTML
+    ///
+    public static function textToFormattedContent($text)
+    {
+        $html = self::textToHTML($text);
+
+        $html = preg_replace('/[\r\n]+/', "\n<p>", $html);
+        $html = '<p>' . $html;
+
+        return $html;
+    }
+
+    ///
+    /// converts plain text to HTML
+    ///
+    ///  - trims whitespace
+    ///  - converts html special characters to entities
+    ///
+    /// this fuction exists because it's so easy to forget
+    /// the details on how this should be done
+    /// such as the inclusion of ENT_QUOTES
+    /// also because if I figure out something else is required
+    /// I can now change it in just one place
+    ///
+    public static function textToHTML($text)
+    {
+        return htmlspecialchars(trim($text), ENT_QUOTES);
+    }
+
+    ///
+    ///
+    ///
     public static function useURLParser()
     {
         require_once(COLBY_SITE_DIRECTORY .

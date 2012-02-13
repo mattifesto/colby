@@ -5,8 +5,11 @@ CREATE TABLE IF NOT EXISTS `ColbyUsers`
     `facebookAccessExpirationTime` INT UNSIGNED,
     `facebookName` VARCHAR(100) NOT NULL,
     `facebookFirstName` VARCHAR(50) NOT NULL,
+    `facebookLastName` VARCHAR(50) NOT NULL,
+    `facebookTimeZone` TINYINT NOT NULL DEFAULT '0',
     `capabilities` VARCHAR(255),
-    PRIMARY KEY (`facebookId`)
+    PRIMARY KEY (`facebookId`),
+    KEY `facebookLastName` (`facebookLastName`)
 )
 DEFAULT CHARSET=utf8
 ENGINE=InnoDB;
