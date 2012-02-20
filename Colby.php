@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 0.1.1
+// version 0.1.2
 //
 
 class Colby
@@ -106,7 +106,11 @@ class Colby
         $html = self::textToHTML($text);
 
         $html = preg_replace('/[\r\n]+/', "\n<p>", $html);
-        $html = '<p>' . $html;
+
+        if ($html)
+        {
+            $html = "<p>{$html}";
+        }
 
         return $html;
     }
