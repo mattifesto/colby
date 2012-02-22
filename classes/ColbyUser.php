@@ -237,8 +237,17 @@ END;
             return self::$currentUserRow;
         }
 
-        $sql = 'SELECT * FROM `ColbyUsers` WHERE `facebookId` = ' .
-            $userId;
+        $userId = $mysqli->escape_string($userId);
+        $userId = "'{$userId}'";
+
+        $sql = <<< END
+SELECT
+    *
+FROM
+    `ColbyUsers`
+WHERE
+    `facebookId` = {$userId}
+END;
 
         $result = $mysqli->query($sql);
 
