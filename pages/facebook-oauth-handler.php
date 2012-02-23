@@ -10,7 +10,22 @@ $accessTokenURL = 'https://graph.facebook.com/oauth/access_token' .
     '&client_secret=' . COLBY_FACEBOOK_APP_SECRET .
     '&code=' . $_GET['code'];
 
-$response = file_get_contents($accessTokenURL);
+$curlHandle = curl_init();
+curl_setopt($curlHandle, CURLOPT_URL, $accessTokenURL);
+curl_setopt($curlHandle, CURLOPT_HEADER, 0);
+curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+
+$response = curl_exec($curlHandle);
+
+if (curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) === 400)
+{
+    $object = json_decode($response);
+
+    throw new RuntimeException('Facebook Authentication Error: ' .
+        $object->error->type .
+        ', ' .
+        $object->error->message);
+}
 
 // response is in the form of a query string
 
