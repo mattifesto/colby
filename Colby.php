@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 0.1.3
+// version 1.0.0
 //
 
 class Colby

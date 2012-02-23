@@ -1,3 +1,5 @@
+-- ColbyUsers --------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `ColbyUsers`
 (
     `facebookId` BIGINT UNSIGNED NOT NULL,
@@ -13,6 +15,9 @@ CREATE TABLE IF NOT EXISTS `ColbyUsers`
 )
 DEFAULT CHARSET=utf8
 ENGINE=InnoDB;
+
+
+-- ColbySequences --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `ColbySequences`
 (
