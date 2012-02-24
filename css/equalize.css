@@ -80,12 +80,6 @@ h6
     font-size: 1.0em;
 }
 
-ul,
-ol
-{
-    padding-left: 40px;
-}
-
 pre
 {
     overflow: auto;

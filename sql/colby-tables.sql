@@ -9,9 +9,10 @@ CREATE TABLE IF NOT EXISTS `ColbyUsers`
     `facebookFirstName` VARCHAR(50) NOT NULL,
     `facebookLastName` VARCHAR(50) NOT NULL,
     `facebookTimeZone` TINYINT NOT NULL DEFAULT '0',
-    `capabilities` VARCHAR(255),
+    `hasBeenVerified` BIT(1) NOT NULL DEFAULT b'0',
     PRIMARY KEY (`facebookId`),
-    KEY `facebookLastName` (`facebookLastName`)
+    KEY `hasBeenVerified_facebookLastName`
+        (`hasBeenVerified`, `facebookLastName`)
 )
 DEFAULT CHARSET=utf8
 ENGINE=InnoDB;

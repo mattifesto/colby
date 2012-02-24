@@ -21,7 +21,7 @@ class ColbyUser
     private static $currentUserRow = null;
 
     ///
-    ///
+    /// will return the user id or null if a user is not logged in
     ///
     public static function currentUserId()
     {
