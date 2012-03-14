@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 1.1.1
+// version 1.1.2
 //
 
 class Colby
@@ -63,13 +63,31 @@ class Colby
         if (!defined('COLBY_SITE_DIRECTORY'))
         {
             throw new RuntimeException(
-                'required constant COLBY_SITE_DIRECTORY has not been set');
+                'constant COLBY_SITE_DIRECTORY has not been set');
         }
 
         if (!defined('COLBY_SITE_URL'))
         {
             throw new RuntimeException(
-                'required constant COLBY_SITE_URL has not been set');
+                'constant COLBY_SITE_URL has not been set');
+        }
+
+        if (!defined('COLBY_SITE_NAME'))
+        {
+            throw new RuntimeException(
+                'constant COLBY_SITE_NAME has not been set');
+        }
+
+        if (!defined('COLBY_SITE_ADMINISTRATOR'))
+        {
+            throw new RuntimeException(
+                'constant COLBY_SITE_ADMINISTRATOR has not been set');
+        }
+
+        if (!defined('COLBY_SITE_IS_BEING_DEBUGGED'))
+        {
+            throw new RuntimeException(
+                'constant COLBY_SITE_IS_BEING_DEBUGGED has not been set');
         }
     }
 
@@ -97,6 +115,29 @@ class Colby
         return self::$mysqli;
     }
 
+    ///
+    ///
+    ///
+    public static function reportException($e)
+    {
+        $headers = 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+        $subject = 'Exception thrown from "' . 
+            COLBY_SITE_NAME . 
+            '"';
+        
+        ob_start();
+        
+        self::writeExceptionStackTrace($e);
+        
+        $message = ob_get_clean();
+        
+        $result = mail(COLBY_SITE_ADMINISTRATOR,
+            $subject,
+            $message,
+            $headers);
+    }
+    
     ///
     /// converts plain text into formatted content HTML
     ///
@@ -140,7 +181,7 @@ class Colby
     ///
     public static function useURLParser()
     {
-        require_once(COLBY_SITE_DIRECTORY .
+        include_once(COLBY_SITE_DIRECTORY .
             '/colby/classes/ColbyURLParser.php');
     }
 
@@ -150,7 +191,7 @@ class Colby
     ///
     public static function useUser()
     {
-        require_once(__DIR__ . '/classes/ColbyUser.php');
+        include_once(__DIR__ . '/classes/ColbyUser.php');
     }
 
     ///
@@ -158,7 +199,7 @@ class Colby
     ///
     public static function writeExceptionStackTrace($e)
     {
-        require(__DIR__ . '/snippets/exception-stack-trace.php');
+        include(__DIR__ . '/snippets/exception-stack-trace.php');
     }
 }
 
