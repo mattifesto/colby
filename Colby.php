@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 1.1.2
+// version 1.1.3
 //
 
 class Colby
@@ -37,7 +37,7 @@ class Colby
     {
         error_log('includeEqualizeStylesheet() has been deprecated ' .
             'just directly include /colby/css/equalize.css');
-            
+
         echo '<link rel="stylesheet" type="text/css" href="',
             COLBY_SITE_URL,
             '/colby/css/equalize.css">';
@@ -122,22 +122,22 @@ class Colby
     {
         $headers = 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
-        $subject = 'Exception thrown from "' . 
-            COLBY_SITE_NAME . 
+        $subject = 'Exception thrown from "' .
+            COLBY_SITE_NAME .
             '"';
-        
+
         ob_start();
-        
+
         self::writeExceptionStackTrace($e);
-        
+
         $message = ob_get_clean();
-        
+
         $result = mail(COLBY_SITE_ADMINISTRATOR,
             $subject,
             $message,
             $headers);
     }
-    
+
     ///
     /// converts plain text into formatted content HTML
     ///
