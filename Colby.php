@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 1.1.0
+// version 1.1.1
 //
 
 class Colby
@@ -35,6 +35,9 @@ class Colby
     ///
     public static function includeEqualizeStylesheet()
     {
+        error_log('includeEqualizeStylesheet() has been deprecated ' .
+            'just directly include /colby/css/equalize.css');
+            
         echo '<link rel="stylesheet" type="text/css" href="',
             COLBY_SITE_URL,
             '/colby/css/equalize.css">';

@@ -29,6 +29,13 @@ html
 
     position: relative;
     min-height: 100%;
+    
+    /**
+     ** optimizeLegibility might eventually be on by default
+     ** keep an eye on it
+     **/
+     
+    text-rendering: optimizeLegibility;
 }
 
 html
@@ -119,5 +126,5 @@ ul.Horizontal > li
 
 ul.Horizontal > li + li
 {
-    margin-left: 1.0em;
+    margin-left: 1.5em;
 }
