@@ -1,12 +1,60 @@
 <?php
 
-// If a php block is at the end of a line it appears that a newline is not added to the HTML which is why there are manual newlines added below in that case. With the pre element, we care about newlines.
+// PHP removes one newline after a PHP closing tag from the output
+// which is especially noticable inside of a <pre> element
+// this is why there appear to be more newlines than necessary
+//
+// the following:
+//
+//    echo 'the'; endphp>-newline-
+//   -newline-
+//   content
+//
+// will produce the output
+//
+//   the
+//   content
+//
+// http://brian.moonspot.net/php-history-newline-closing-tag
+//
+// updated: 2012.04.11
 
 ?>
 
-<pre style="overflow-y: auto; margin: 20px;">
-Exception: <?php echo get_class($e), "\n"; ?>
-Message: <?php echo $e->getMessage(), "\n"; ?>
+<style scoped="scoped">
+    pre
+    {
+        overflow-y: auto;
+        padding: 20px;
+        margin: 20px;
+        background-color: white;
+        color: #333;
+    }
+</style>
+<pre>
+Exception: <?php
 
-## <?php echo $e->getFile(), '(', $e->getLine(), ')', "\n"; ?>
-<?php echo $e->getTraceAsString(); ?></pre>
+    echo htmlspecialchars(get_class($e), ENT_QUOTES);
+
+?>
+
+Message: <?php
+
+    echo htmlspecialchars($e->getMessage(), ENT_QUOTES);
+
+?>
+
+
+## <?php
+
+    echo htmlspecialchars($e->getFile(), ENT_QUOTES),
+    '(',
+    htmlspecialchars($e->getLine(), ENT_QUOTES),
+    ')';
+?>
+
+<?php
+
+    echo htmlspecialchars($e->getTraceAsString(), ENT_QUOTES);
+
+?></pre>

@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 1.1.3
+// version 1.2.0
 //
 
 class Colby
@@ -26,7 +26,8 @@ class Colby
     ///
     public static function handleException($e)
     {
-        require_once(__DIR__ . '/pages/exception.php');
+        require_once(COLBY_SITE_DIRECTORY .
+            '/colby/pages/exception.php');
     }
 
     ///
@@ -118,6 +119,15 @@ class Colby
     ///
     ///
     ///
+    public static function queryNextSequenceId($sequenceName)
+    {
+        return include(COLBY_SITE_DIRECTORY .
+            '/colby/snippets/query-next-sequence-id-for-sequence-name.php');
+    }
+
+    ///
+    ///
+    ///
     public static function reportException($e)
     {
         $headers = 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
@@ -191,7 +201,8 @@ class Colby
     ///
     public static function useUser()
     {
-        include_once(__DIR__ . '/classes/ColbyUser.php');
+        include_once(COLBY_SITE_DIRECTORY .
+            '/colby/classes/ColbyUser.php');
     }
 
     ///
@@ -199,7 +210,8 @@ class Colby
     ///
     public static function writeExceptionStackTrace($e)
     {
-        include(__DIR__ . '/snippets/exception-stack-trace.php');
+        include(COLBY_SITE_DIRECTORY .
+            '/colby/snippets/exception-stack-trace.php');
     }
 }
 

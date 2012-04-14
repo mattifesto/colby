@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
+        <meta charset="utf-8">
         <title>Exception</title>
     </head>
     <body>
-        <pre><?php Colby::writeExceptionStackTrace($e); ?></pre>
+        <?php Colby::writeExceptionStackTrace($e); ?>
     </body>
 </html>
 

@@ -65,7 +65,7 @@ class ColbyUser
             // if they match the cookie is authentic
             // if they don't the cookie is not authentic (or it's stale)
 
-            $hashedValue = $userRow->facebookId .
+            $hashedValue = $userRow->id .
                 $userRow->facebookAccessToken .
                 $userRow->facebookAccessExpirationTime;
 
@@ -102,6 +102,13 @@ class ColbyUser
     {
         $mysqli = Colby::mysqli();
 
+        $userId = self::queryUserIdWithFacebookId($facebookProperties->id);
+
+        if (null === $userId)
+        {
+            $userId = Colby::queryNextSequenceId('ColbyUsersId');
+        }
+
         $accessToken = $mysqli->escape_string($facebookAccessToken);
 
         $name = Colby::textToHTML($facebookProperties->name);
@@ -116,6 +123,7 @@ class ColbyUser
         $sql = <<< END
 INSERT INTO `ColbyUsers`
 (
+    `id`,
     `facebookId`,
     `facebookAccessToken`,
     `facebookAccessExpirationTime`,
@@ -126,6 +134,7 @@ INSERT INTO `ColbyUsers`
 )
 VALUES
 (
+    '$userId',
     '$facebookProperties->id',
     '$accessToken',
     '$facebookAccessExpirationTime',
@@ -150,13 +159,13 @@ END;
             throw new RuntimeException($mysqli->error);
         }
 
-        $hashedValue = $facebookProperties->id .
+        $hashedValue = $userId .
             $facebookAccessToken .
             $facebookAccessExpirationTime;
 
         $hash = hash('sha512', $hashedValue);
 
-        $cookieValue = $facebookProperties->id . '-' . $hash;
+        $cookieValue = $userId . '-' . $hash;
 
         setcookie(COLBY_USER_COOKIE, $cookieValue, 0, '/');
     }
@@ -208,6 +217,15 @@ END;
     }
 
     ///
+    ///
+    ///
+    public static function queryUserIdWithFacebookId($facebookId)
+    {
+        return include(COLBY_SITE_DIRECTORY .
+            '/colby/snippets/query-user-id-with-facebook-id.php');
+    }
+
+    ///
     /// returns the ColbyUser table row for a given user id
     /// if userId is null
     ///     returns the row for the current logged in user
@@ -220,8 +238,6 @@ END;
     ///
     public static function userRow($userId = null)
     {
-        $mysqli = Colby::mysqli();
-
         if (null === $userId)
         {
             if (null === self::$currentUserId)
@@ -237,35 +253,8 @@ END;
             return self::$currentUserRow;
         }
 
-        $userId = $mysqli->escape_string($userId);
-        $userId = "'{$userId}'";
-
-        $sql = <<< END
-SELECT
-    *
-FROM
-    `ColbyUsers`
-WHERE
-    `facebookId` = {$userId}
-END;
-
-        $result = $mysqli->query($sql);
-
-        if ($mysqli->error)
-        {
-            throw new RuntimeException($mysqli->error);
-        }
-
-        if (0 === $result->num_rows)
-        {
-            $userRow = null;
-        }
-        else
-        {
-            $userRow = $result->fetch_object();
-        }
-
-        $result->free();
+        $userRow = include(COLBY_SITE_DIRECTORY .
+            '/colby/snippets/query-user-row-for-user-id.php');
 
         if ($userId === self::$currentUserId)
         {
