@@ -16,8 +16,9 @@ CREATE TABLE IF NOT EXISTS `ColbyUsers`
     KEY `hasBeenVerified_facebookLastName`
         (`hasBeenVerified`, `facebookLastName`)
 )
+ENGINE=InnoDB
 DEFAULT CHARSET=utf8
-ENGINE=InnoDB;
+COLLATE=utf8_unicode_ci;
 
 
 -- ColbySequences ----------------------------------------------------
@@ -30,8 +31,9 @@ CREATE TABLE IF NOT EXISTS `ColbySequences`
   `id` BIGINT UNSIGNED NOT NULL,
   PRIMARY KEY (`name`)
 )
+ENGINE=InnoDB
 DEFAULT CHARSET=utf8
-ENGINE=InnoDB;
+COLLATE=utf8_unicode_ci;
 
 -- sequence name should be TableNameFieldName
 
@@ -78,8 +80,9 @@ CREATE TABLE IF NOT EXISTS `Articles`
     CONSTRAINT `article_author` FOREIGN KEY (`author`)
         REFERENCES `ColbyUsers` (`id`)
 )
+ENGINE=InnoDB
 DEFAULT CHARSET=utf8
-ENGINE=InnoDB;
+COLLATE=utf8_unicode_ci;
 
 
 -- Articles id sequence ----------------------------------------------
