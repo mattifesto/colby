@@ -7,9 +7,9 @@ class ColbyURLParser
 
     private static $stubs;
 
-    /// <summary>
     ///
-    /// </summary>
+    ///
+    ///
     public static function canonicalizeURL()
     {
         $canonicalURL = '/';
@@ -97,9 +97,17 @@ class ColbyURLParser
         }
     }
 
-    /// <summary>
     ///
-    /// </summary>
+    ///
+    ///
+    public static function requestedURL()
+    {
+        return self::$requestedURL;
+    }
+
+    ///
+    ///
+    ///
     public static function stubs()
     {
         return self::$stubs;
