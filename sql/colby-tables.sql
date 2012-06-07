@@ -1,3 +1,9 @@
+--
+-- right now this file contains only experimental SQL
+-- it's not used currently
+-- TODO: figure out the fate of this stuff
+--
+
 -- Articles ----------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `Articles`
@@ -29,6 +35,4 @@ COLLATE=utf8_unicode_ci;
 
 -- Articles id sequence ----------------------------------------------
 
-INSERT INTO `ColbySequences`
-(`name`, `id`)
-VALUES ('ArticlesId', '0');
+CALL CreateSequence('ArticlesId');
