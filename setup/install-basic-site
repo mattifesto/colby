@@ -1,0 +1,30 @@
+#!/bin/bash
+
+RED=$(tput setaf 1)
+OFF=$(tput sgr0)
+
+if [ ! -d colby ]
+then
+ echo "${RED}This doesn't appear to be a colby web root directory.${OFF}"
+ exit
+fi
+
+if [ ! -f .htaccess ]
+then
+    echo "creating '.htaccess'"
+    cat > .htaccess << 'EOF'
+<IfModule mod_rewrite.c>
+
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . /index.php [L]
+
+</IfModule>
+EOF
+else
+    echo "${RED}.htaccess already exists, no changes made${OFF}"
+fi
+
+
