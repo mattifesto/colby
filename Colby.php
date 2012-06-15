@@ -6,6 +6,11 @@
 // version 1.3.1
 //
 
+if (defined('V2_TRANSITION'))
+{
+    require_once(__DIR__ . '/../colby-configuration.php');
+}
+
 class Colby
 {
     // mysqli
@@ -26,8 +31,26 @@ class Colby
     ///
     public static function handleException($e)
     {
-        require_once(COLBY_SITE_DIRECTORY .
-            '/colby/pages/exception.php');
+        // exception handlers should never throw exceptions
+        // if they do, it's very difficult to debug
+        // in some cases while making more major system changes
+        // throwing exceptions in exception handlers is unavoidable
+        //     errors are converted to exceptions in Colby
+        //     so even if we don't throw, exceptions can occur
+        // so to be sure we always get some good feedback
+        // we wrap all code in an exception handler in a try-catch block
+        // and use error_log as a last resort to find out what went wrong
+        // if an exception is thrown inside this exception handler
+
+        try
+        {
+            require_once(COLBY_SITE_DIRECTORY .
+                '/colby/pages/exception.php');
+        }
+        catch (Exception $e)
+        {
+            error_log(var_export($e->getMessage(), true));
+        }
     }
 
     ///
@@ -89,6 +112,17 @@ class Colby
         {
             throw new RuntimeException(
                 'constant COLBY_SITE_IS_BEING_DEBUGGED has not been set');
+        }
+
+        if (defined('V2_TRANSITION'))
+        {
+            include_once(COLBY_SITE_DIRECTORY .
+                '/colby/classes/ColbyUser.php');
+
+            include_once(COLBY_SITE_DIRECTORY .
+                '/colby/classes/ColbyRequest.php');
+
+            ColbyRequest::handleRequest();
         }
     }
 

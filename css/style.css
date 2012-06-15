@@ -1,0 +1,30 @@
+/*
+ * this css file is to be used just for the default handlers
+ *
+ */
+
+body
+{
+    margin: 100px auto 50px;
+    line-height: 1.5;
+}
+
+h1, h2, blockquote
+{
+    text-align: center;
+}
+
+h1, h2, p
+{
+    margin: 1.0em auto;
+}
+
+p
+{
+    width: 500px;
+}
+
+blockquote
+{
+    margin: 2.0em 5.0em;
+}
