@@ -116,11 +116,19 @@ class Colby
 
         if (defined('V2_TRANSITION'))
         {
+            // the order of these files might matter some day
+            // files that depend on other files should be included after
+            // at this time, none of these files depends on another
+            // so they are in alphabetical order
+
             include_once(COLBY_SITE_DIRECTORY .
-                '/colby/classes/ColbyUser.php');
+                '/colby/classes/ColbyPage.php');
 
             include_once(COLBY_SITE_DIRECTORY .
                 '/colby/classes/ColbyRequest.php');
+
+            include_once(COLBY_SITE_DIRECTORY .
+                '/colby/classes/ColbyUser.php');
 
             ColbyRequest::handleRequest();
         }

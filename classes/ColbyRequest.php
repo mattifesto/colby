@@ -101,7 +101,7 @@ class ColbyRequest
                 '/handlers/' .
                 $fileName;
 
-            if (!is_file($fileName))
+            if (!is_file($handlerPath))
             {
                 $handlerPath = COLBY_SITE_DIRECTORY .
                     '/colby/handlers/' .
@@ -185,7 +185,7 @@ class ColbyRequest
                 '/handlers/' .
                 $fileName;
 
-            if (!is_file($fileName))
+            if (!is_file($handlerPath))
             {
                 $handlerPath = COLBY_SITE_DIRECTORY .
                     '/colby/handlers/' .
