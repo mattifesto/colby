@@ -1,6 +1,6 @@
 <?php
 
-class ColbyURLParser
+class ColbyRequest
 {
     private static $requestedURL;
     private static $requestedQueryString;
@@ -34,7 +34,7 @@ class ColbyURLParser
 
     ///
     /// this function should be run only once
-    /// it is run automatically when ColbyURLParser is first included
+    /// it is run automatically when ColbyRequest is first included
     ///
     public static function initialize()
     {
@@ -114,4 +114,4 @@ class ColbyURLParser
     }
 }
 
-ColbyURLParser::initialize();
+ColbyRequest::initialize();
