@@ -2,34 +2,205 @@
 
 class ColbyRequest
 {
-    private static $requestedURL;
+    private static $decodedRequestURI;
+    // example:
+    // /foo bar/piñata/post/
+
     private static $requestedQueryString;
+    // example:
+    // ?user=bob+jones
 
-    private static $stubs;
+    private static $encodedStubs;
+    // example:
+    // foo+bar, pi%C3%B1ata, post
+
+    private static $decodedStubs;
+    // example:
+    // foo bar, piñata, post
 
     ///
+    /// construct a canonical URI using decoded stubs
+    /// compare this agains a decoded request URI
+    /// if the don't  match then
+    /// 1) construct a canonical URI using encoded data
+    /// 2) append the original query string
+    /// 3) and finally redirect the browser to the canonical URL
     ///
-    ///
-    public static function canonicalizeURL()
+    public static function canonicalizeRequestURI()
     {
-        $canonicalURL = '/';
+        $countOfDecodedStubs = count(self::$decodedStubs);
+        $canonicalDecodedURI = '/';
 
-        if (count(self::$stubs) === 1 && 'index.php' === self::$stubs[0])
+        // construct cononical URI using decoded stubs
+        
+        if (   1 === $countOfDecodedStubs
+            && 'index.php' === self::$decodedStubs[0])
         {
-            // canonical URL is still '/'
+            // canonical URI is still '/'
         }
-        else if (count(self::$stubs) > 0)
+        else if ($countOfDecodedStubs > 0)
         {
-            $canonicalURL = '/' . implode('/', self::$stubs) . '/';
+            $canonicalDecodedURI = '/' .
+                implode('/', self::$decodedStubs) .
+                '/';
         }
 
-        if (self::$requestedURL !== $canonicalURL)
+        if (self::$decodedRequestURI !== $canonicalDecodedURI)
         {
-            $redirectURI = $canonicalURL . self::$requestedQueryString;
+            // 1) construct a canonical URI using encoded data
+            
+            if ('/' === $canonicalDecodedURI)
+            {
+                $canonicalEncodedURI = '/';
+            }
+            else
+            {
+                $canonicalEncodedURI = '/' .
+                    implode('/', self::$encodedStubs) .
+                    '/';
+            }
 
+            // 2) append the original query string
+            
+            $redirectURI = $canonicalEncodedURI .
+                self::$requestedQueryString;
+
+            // 3) and finally redirect the browser to the canonical URL
+            
             header('Location: ' . $redirectURI, true, 301);
             exit;
         }
+    }
+
+    ///
+    ///
+    ///
+    public static function decodedStubs()
+    {
+        return self::$decodedStubs;
+    }
+
+    ///
+    /// it's not required that this function be called
+    /// however most sites will call this function from index.php
+    /// to handle requests in the standard way
+    /// which is to search for the appropriate hanlder file and load it
+    ///
+    public static function handleRequest()
+    {
+        $countOfStubs = count(self::$decodedStubs);
+        $handlerPath = null;
+
+        // handle front page request
+
+        if (0 === $countOfStubs)
+        {
+            $fileName = 'handle-special-front-page.php';
+
+            $handlerPath = COLBY_SITE_DIRECTORY .
+                '/handlers/' .
+                $fileName;
+
+            if (!is_file($fileName))
+            {
+                $handlerPath = COLBY_SITE_DIRECTORY .
+                    '/colby/handlers/' .
+                    $fileName;
+            }
+        }
+
+        // redirect requests for
+        //   http://example.com/index.php
+        // to
+        //   http://example.com/
+
+        else if (   1 === $countOfStubs
+                 && 'index.php' === self::$decodedStubs[0])
+        {
+            self::canonicalizeRequestURI();
+
+            // canonicalizeRequestURI() will exit for us
+            // because the URL definitely needs to change in this case
+            // the exit here should never be reached
+            // but it's place here to make intentions clear
+
+            exit;
+        }
+
+        // search for handlers
+
+        else
+        {
+            // check for full URL handler
+            // filenames use encoded stubs (no spaces or special characters)
+
+            $fullFilename = 'handle-' .
+                implode(',', self::$encodedStubs);
+
+            $path = COLBY_SITE_DIRECTORY .
+                '/handlers/' .
+                $fullFilename .
+                '.php';
+
+            if (file_exists($path))
+            {
+                $handlerPath = $path;
+            }
+
+            // check for partial URL handlers
+
+            if (null === $handlerPath)
+            {
+            }
+
+            // check for full URL handler in colby system
+
+            if (null === $handlerPath)
+            {
+                $path = COLBY_SITE_DIRECTORY .
+                    '/colby/handlers/' .
+                    $fullFilename .
+                    '.php';
+
+                if (file_exists($path))
+                {
+                    $handlerPath = $path;
+                }
+            }
+        }
+
+        if ($handlerPath !== null)
+        {
+            // this is a valid set of stubs but the URL may not be canonical
+            // calling canonicalizeRequestURI will return if the URI
+            // is canonical or it will redirect if the URI isn't canonical
+
+            self::canonicalizeRequestURI();
+        }
+        else
+        {
+            $fileName = 'handle-special-default.php';
+
+            $handlerPath = COLBY_SITE_DIRECTORY .
+                '/handlers/' .
+                $fileName;
+
+            if (!is_file($fileName))
+            {
+                $handlerPath = COLBY_SITE_DIRECTORY .
+                    '/colby/handlers/' .
+                    $fileName;
+            }
+        }
+
+        if (!is_readable($handlerPath))
+        {
+            throw new RuntimeException('the URL handler: "' .
+                $handlerPath .
+                '" is not readable.');
+        }
+
+        include($handlerPath);
     }
 
     ///
@@ -39,15 +210,15 @@ class ColbyRequest
     public static function initialize()
     {
         // step 1: separate url from query string
-
-        // 1: url
-        // 2: query string (optional)
+        //
+        // $matches[1]: encoded requested URI
+        // $matches[2]: query string (may or may not be present)
 
         preg_match('/^(.*?)(\?.*)?$/',
             $_SERVER['REQUEST_URI'],
             $matches);
 
-        self::$requestedURL = urldecode($matches[1]);
+        self::$decodedRequestURI = urldecode($matches[1]);
 
         if (isset($matches[2]))
         {
@@ -59,58 +230,36 @@ class ColbyRequest
         }
 
         // step 2: get stubs
+        //
+        // note: PREG_SPLIT_NO_EMPTY
+        //       this will prevent preg_split from returning empty stubs
+        //       from before the first and after the last slash
+        //
+        // note: repeated slashes are treated as one: '[\/]+'
+        //       if there are repeated slashes the URL is not canonical
+        //       and will be rewritten
+        //
         // preg_split will return an empty array if there aren't any stubs
 
-        self::$stubs = preg_split('/[\/\s]+/',
-            self::$requestedURL,
+        self::$decodedStubs = preg_split('/[\/]+/',
+            self::$decodedRequestURI,
             null,
             PREG_SPLIT_NO_EMPTY);
 
-        // step 3: handle reserved stubs
+        self::$encodedStubs = array();
 
-        if (1 === count(self::$stubs))
+        foreach (self::$decodedStubs as $decodedStub)
         {
-            switch (self::$stubs[0])
-            {
-                case 'facebook-oauth-handler':
-
-                    // this page redirects
-                    // so we can exit after
-
-                    require(COLBY_SITE_DIRECTORY .
-                        '/colby/pages/facebook-oauth-handler.php');
-                    exit;
-
-                case 'logout':
-
-                    // this page redirects
-                    // so we can exit after
-
-                    require(COLBY_SITE_DIRECTORY .
-                        '/colby/pages/logout.php');
-                    exit;
-
-                default:
-
-                    break;
-            }
+            self::$encodedStubs[] = urlencode($decodedStub);
         }
     }
 
     ///
     ///
     ///
-    public static function requestedURL()
+    public static function decodedRequestedURI()
     {
-        return self::$requestedURL;
-    }
-
-    ///
-    ///
-    ///
-    public static function stubs()
-    {
-        return self::$stubs;
+        return self::$decodedRequestedURI;
     }
 }
 
