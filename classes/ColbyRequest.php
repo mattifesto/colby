@@ -6,7 +6,7 @@ class ColbyRequest
     // example:
     // /foo bar/piñata/post/
 
-    private static $requestedQueryString;
+    private static $requestQueryString;
     // example:
     // ?user=bob+jones
 
@@ -32,7 +32,7 @@ class ColbyRequest
         $canonicalDecodedURI = '/';
 
         // construct cononical URI using decoded stubs
-        
+
         if (   1 === $countOfDecodedStubs
             && 'index.php' === self::$decodedStubs[0])
         {
@@ -48,7 +48,7 @@ class ColbyRequest
         if (self::$decodedRequestURI !== $canonicalDecodedURI)
         {
             // 1) construct a canonical URI using encoded data
-            
+
             if ('/' === $canonicalDecodedURI)
             {
                 $canonicalEncodedURI = '/';
@@ -61,12 +61,12 @@ class ColbyRequest
             }
 
             // 2) append the original query string
-            
+
             $redirectURI = $canonicalEncodedURI .
-                self::$requestedQueryString;
+                self::$requestQueryString;
 
             // 3) and finally redirect the browser to the canonical URL
-            
+
             header('Location: ' . $redirectURI, true, 301);
             exit;
         }
@@ -211,7 +211,7 @@ class ColbyRequest
     {
         // step 1: separate url from query string
         //
-        // $matches[1]: encoded requested URI
+        // $matches[1]: encoded request URI
         // $matches[2]: query string (may or may not be present)
 
         preg_match('/^(.*?)(\?.*)?$/',
@@ -222,11 +222,11 @@ class ColbyRequest
 
         if (isset($matches[2]))
         {
-            self::$requestedQueryString = $matches[2];
+            self::$requestQueryString = $matches[2];
         }
         else
         {
-            self::$requestedQueryString = '';
+            self::$requestQueryString = '';
         }
 
         // step 2: get stubs
@@ -252,14 +252,6 @@ class ColbyRequest
         {
             self::$encodedStubs[] = urlencode($decodedStub);
         }
-    }
-
-    ///
-    ///
-    ///
-    public static function decodedRequestedURI()
-    {
-        return self::$decodedRequestedURI;
     }
 }
 
