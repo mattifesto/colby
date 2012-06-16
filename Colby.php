@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 2.0.1
+// version 2.0.2
 //
 
 if (defined('V2_TRANSITION'))
@@ -150,6 +150,15 @@ class Colby
             if ($mysqli->connect_error)
             {
                 throw new RuntimeException($mysqli->connect_error);
+            }
+
+            // latin1 is the default character set
+            // utf8 is the characater set the tables use
+
+            if (!$mysqli->set_charset('utf8'))
+            {
+                throw new RuntimeException(
+                    'unable to set mysqli character set to utf8');
             }
 
             self::$mysqli = $mysqli;
