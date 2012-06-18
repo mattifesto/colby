@@ -83,28 +83,4 @@ class ColbyPage
 
         Colby::handleException($e);
     }
-
-    ///
-    ///
-    ///
-    public static function writeHeader()
-    {
-        ob_start();
-
-        set_exception_handler('ColbyPage::handleException');
-
-        require(COLBY_SITE_DIRECTORY . '/snippets/header.php');
-    }
-
-    ///
-    ///
-    ///
-    public static function writeFooter()
-    {
-        require(COLBY_SITE_DIRECTORY . '/snippets/footer.php');
-
-        restore_exception_handler();
-
-        ob_end_flush();
-    }
 }
