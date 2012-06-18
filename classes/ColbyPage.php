@@ -2,10 +2,67 @@
 
 class ColbyPage
 {
-    public static $title = COLBY_SITE_NAME;
-    public static $description = COLBY_SITE_DESCRIPTION;
-    public static $cssURLs = array();
-    public static $jsURLs = array();
+    private static $args = null;
+
+    ///
+    ///
+    ///
+    public static function begin($args)
+    {
+        if (!isset($args->header))
+        {
+            $args->header = COLBY_SITE_DIRECTORY .
+                '/snippets/header.php';
+        }
+
+        // TODO: I think these checks should be in the individual header files
+        //       I can imagine cases where the header is default (an exception)
+        //       think about it
+
+        if (!isset($args->title))
+        {
+            throw new RuntimeException('$args->title is not set ' .
+                '- a title is required');
+        }
+
+        if (!isset($args->description))
+        {
+            throw new RuntimeException('$args->description is not set ' .
+                '- a description is required');
+        }
+
+        self::$args = $args;
+
+        ob_start();
+
+        set_exception_handler('ColbyPage::handleException');
+
+        // we include (instead of require) the header file
+        // because we will show an exception page if the header doesn't exist
+        //
+        // as of this writing, the goal of exception pages is not to be pretty
+        // but to send an email, or otherwise notify,
+        // the developer about the exception
+        // it doesn't matter if the page is pretty
+        // because an unhandled exception is equivalent to a crash
+        // it should never ever happen
+
+        include($args->header);
+    }
+
+    ///
+    ///
+    ///
+    public static function end()
+    {
+        if (!isset(self::$args->footer))
+        {
+            self::$args->footer = COLBY_SITE_DIRECTORY .
+                '/snippets/footer.php';
+        }
+
+        include(self::$args->footer);
+    }
 
     ///
     ///

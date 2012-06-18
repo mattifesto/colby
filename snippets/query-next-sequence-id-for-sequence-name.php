@@ -8,23 +8,10 @@ $safeSequenceName = $mysqli->escape_string($sequenceName);
 $safeSequenceName = "'{$safeSequenceName}'";
 
 $sql = <<< END
-UPDATE
-    `ColbySequences`
-SET
-    `id` = LAST_INSERT_ID(`id` + 1)
-WHERE
-    `name` = {$safeSequenceName}
-END;
-
-$mysqli->query($sql);
-
-if ($mysqli->error)
-{
-    throw new RuntimeException($mysqli->error);
-}
-
-$sql = <<< END
-SELECT LAST_INSERT_ID() as `id`;
+SELECT
+    GetNextInsertIdForSequence({$safeSequenceName})
+AS
+    `id`;
 END;
 
 $result = $mysqli->query($sql);

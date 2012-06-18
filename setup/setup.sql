@@ -51,14 +51,16 @@ COLLATE=utf8_unicode_ci;
 DELIMITER //
 
 --
---
+-- the IGNORE keyword prevents the function from reporting an error if a
+-- sequence with the provided name already exists - in this case the
+-- procedure will do nothing
 --
 
 DROP PROCEDURE IF EXISTS CreateSequence//
 
 CREATE PROCEDURE CreateSequence(IN sequenceName VARCHAR(50))
 BEGIN
-    INSERT INTO `ColbySequences`
+    INSERT IGNORE INTO `ColbySequences`
         (
             `name`,
             `id`
@@ -71,16 +73,18 @@ BEGIN
 END//
 
 --
---
+-- DROP PROCEDURE in addtion to DROP FUNCTION
+-- because this used to be a procedure
 --
 
 DROP PROCEDURE IF EXISTS GetNextInsertIdForSequence//
+DROP FUNCTION IF EXISTS GetNextInsertIdForSequence//
 
-CREATE PROCEDURE GetNextInsertIdForSequence
+CREATE FUNCTION GetNextInsertIdForSequence
 (
-    IN sequenceName VARCHAR(50),
-    OUT insertId BIGINT UNSIGNED
+    sequenceName VARCHAR(50)
 )
+RETURNS BIGINT UNSIGNED
 BEGIN
     UPDATE `ColbySequences`
     SET
@@ -88,7 +92,7 @@ BEGIN
     WHERE
         `name` = sequenceName;
 
-    SELECT LAST_INSERT_ID() INTO insertId;
+    RETURN LAST_INSERT_ID();
 END//
 
 --
