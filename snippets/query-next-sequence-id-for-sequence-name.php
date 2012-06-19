@@ -4,15 +4,9 @@
 
 $mysqli = Colby::mysqli();
 
-$safeSequenceName = $mysqli->escape_string($sequenceName);
-$safeSequenceName = "'{$safeSequenceName}'";
+$sequenceName = $mysqli->escape_string($sequenceName);
 
-$sql = <<< END
-SELECT
-    GetNextInsertIdForSequence({$safeSequenceName})
-AS
-    `id`;
-END;
+$sql = "SELECT GetNextInsertIdForSequence('{$sequenceName}') AS `id`";
 
 $result = $mysqli->query($sql);
 

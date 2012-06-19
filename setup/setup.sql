@@ -82,7 +82,7 @@ DROP FUNCTION IF EXISTS GetNextInsertIdForSequence//
 
 CREATE FUNCTION GetNextInsertIdForSequence
 (
-    sequenceName VARCHAR(50)
+    theSequenceName VARCHAR(50)
 )
 RETURNS BIGINT UNSIGNED
 BEGIN
@@ -90,9 +90,34 @@ BEGIN
     SET
         `id` = LAST_INSERT_ID(`id` + 1)
     WHERE
-        `name` = sequenceName;
+        `name` = theSequenceName;
 
     RETURN LAST_INSERT_ID();
+END//
+
+--
+--
+--
+
+DROP FUNCTION IF EXISTS GetUserIdWithFacebookId//
+
+CREATE FUNCTION GetUserIdWithFacebookId
+(
+    theFacebookId BIGINT UNSIGNED
+)
+RETURNS BIGINT UNSIGNED
+BEGIN
+    DECLARE theUserId BIGINT UNSIGNED DEFAULT NULL;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND BEGIN END;
+
+    SELECT
+        `id` INTO theUserId
+    FROM
+        `ColbyUsers`
+    WHERE
+        `facebookId` = theFacebookId;
+
+    RETURN theUserId;
 END//
 
 --

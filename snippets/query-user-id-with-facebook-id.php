@@ -4,17 +4,9 @@
 
 $mysqli = Colby::mysqli();
 
-$safeFacebookId = $mysqli->escape_string($facebookId);
-$safeFacebookId = "'{$safeFacebookId}'";
+$facebookId = $mysqli->escape_string($facebookId);
 
-$sql = <<< END
-SELECT
-    `id`
-FROM
-    `ColbyUsers`
-WHERE
-    `facebookId` = {$safeFacebookId}
-END;
+$sql = "SELECT GetUserIdWithFacebookId('{$facebookId}') as `id`";
 
 $result = $mysqli->query($sql);
 
@@ -23,14 +15,7 @@ if ($mysqli->error)
     throw new RuntimeException($mysqli->error);
 }
 
-if (0 === $result->num_rows)
-{
-    $userId = null;
-}
-else
-{
-    $userId = $result->fetch_object()->id;
-}
+$userId = $result->fetch_object()->id;
 
 $result->free();
 
