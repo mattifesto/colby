@@ -102,13 +102,6 @@ class ColbyUser
     {
         $mysqli = Colby::mysqli();
 
-        $userId = self::queryUserIdWithFacebookId($facebookProperties->id);
-
-        if (null === $userId)
-        {
-            $userId = Colby::queryNextSequenceId('ColbyUsersId');
-        }
-
         $accessToken = $mysqli->escape_string($facebookAccessToken);
 
         $name = Colby::textToHTML($facebookProperties->name);
@@ -120,44 +113,26 @@ class ColbyUser
         $lastName = Colby::textToHTML($facebookProperties->last_name);
         $lastName = $mysqli->escape_string($lastName);
 
-        $sql = <<< END
-INSERT INTO `ColbyUsers`
-(
-    `id`,
-    `facebookId`,
-    `facebookAccessToken`,
-    `facebookAccessExpirationTime`,
-    `facebookName`,
-    `facebookFirstName`,
-    `facebookLastName`,
-    `facebookTimeZone`
-)
-VALUES
-(
-    '$userId',
-    '$facebookProperties->id',
-    '$accessToken',
-    '$facebookAccessExpirationTime',
-    '$name',
-    '$firstName',
-    '$lastName',
-    '$facebookProperties->timezone'
-)
-ON DUPLICATE KEY UPDATE
-    `facebookAccessToken` = VALUES(`facebookAccessToken`),
-    `facebookAccessExpirationTime` = VALUES(`facebookAccessExpirationTime`),
-    `facebookName` = VALUES(`facebookName`),
-    `facebookFirstName` = VALUES(`facebookFirstName`),
-    `facebookLastName` = VALUES(`facebookLastName`),
-    `facebookTimeZone` = VALUES(`facebookTimeZone`)
-END;
+        $sql = 'SELECT LoginFacebookUser(' .
+            "'{$facebookProperties->id}'," .
+            "'{$accessToken}'," .
+            "'{$facebookAccessExpirationTime}'," .
+            "'{$name}'," .
+            "'{$firstName}'," .
+            "'{$lastName}'," .
+            "'{$facebookProperties->timezone}'" .
+            ') AS `id`';
 
-        $mysqli->query($sql);
+        $result = $mysqli->query($sql);
 
         if ($mysqli->error)
         {
             throw new RuntimeException($mysqli->error);
         }
+
+        $userId = $result->fetch_object()->id;
+
+        $result->free();
 
         $hashedValue = $userId .
             $facebookAccessToken .
@@ -214,31 +189,6 @@ END;
             '?state=' . urlencode(json_encode($state));
 
         return $url;
-    }
-
-    ///
-    ///
-    ///
-    public static function queryUserIdWithFacebookId($facebookId)
-    {
-        $mysqli = Colby::mysqli();
-        
-        $facebookId = $mysqli->escape_string($facebookId);
-        
-        $sql = "SELECT GetUserIdWithFacebookId('{$facebookId}') as `id`";
-        
-        $result = $mysqli->query($sql);
-        
-        if ($mysqli->error)
-        {
-            throw new RuntimeException($mysqli->error);
-        }
-        
-        $userId = $result->fetch_object()->id;
-        
-        $result->free();
-        
-        return $userId;
     }
 
     ///

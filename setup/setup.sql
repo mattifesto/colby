@@ -124,6 +124,68 @@ END//
 --
 --
 
+DROP FUNCTION IF EXISTS LoginFacebookUser;
+
+CREATE FUNCTION LoginFacebookUser
+(
+    theFacebookId BIGINT UNSIGNED,
+    theFacebookAccessToken VARCHAR(255),
+    theFacebookAccessExpirationTime INT UNSIGNED,
+    theFacebookName VARCHAR(100),
+    theFacebookFirstName VARCHAR(50),
+    theFacebookLastName VARCHAR(50),
+    theFacebookTimeZone TINYINT
+)
+RETURNS BIGINT UNSIGNED
+BEGIN
+    DECLARE theUserId BIGINT UNSIGNED DEFAULT NULL;
+
+    SELECT
+        IFNULL
+        (
+            GetUserIdWithFacebookId(theFacebookId),
+            GetNextInsertIdForSequence('ColbyUsersId')
+        )
+    INTO
+        theUserId;
+
+    INSERT INTO `ColbyUsers`
+    (
+        `id`,
+        `facebookId`,
+        `facebookAccessToken`,
+        `facebookAccessExpirationTime`,
+        `facebookName`,
+        `facebookFirstName`,
+        `facebookLastName`,
+        `facebookTimeZone`
+    )
+    VALUES
+    (
+        theUserId,
+        theFacebookId,
+        theFacebookAccessToken,
+        theFacebookAccessExpirationTime,
+        theFacebookName,
+        theFacebookFirstName,
+        theFacebookLastName,
+        theFacebookTimeZone
+    )
+    ON DUPLICATE KEY UPDATE
+        `facebookAccessToken` = theFacebookAccessToken,
+        `facebookAccessExpirationTime` = theFacebookAccessExpirationTime,
+        `facebookName` = theFacebookName,
+        `facebookFirstName` = theFacebookFirstName,
+        `facebookLastName` = theFacebookLastName,
+        `facebookTimeZone` = theFacebookTimeZone;
+
+    RETURN theUserId;
+END//
+
+--
+--
+--
+
 DROP PROCEDURE IF EXISTS ShowUnverifiedUsers//
 
 CREATE PROCEDURE ShowUnverifiedUsers()
