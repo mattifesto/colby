@@ -221,8 +221,24 @@ END;
     ///
     public static function queryUserIdWithFacebookId($facebookId)
     {
-        return include(COLBY_SITE_DIRECTORY .
-            '/colby/snippets/query-user-id-with-facebook-id.php');
+        $mysqli = Colby::mysqli();
+        
+        $facebookId = $mysqli->escape_string($facebookId);
+        
+        $sql = "SELECT GetUserIdWithFacebookId('{$facebookId}') as `id`";
+        
+        $result = $mysqli->query($sql);
+        
+        if ($mysqli->error)
+        {
+            throw new RuntimeException($mysqli->error);
+        }
+        
+        $userId = $result->fetch_object()->id;
+        
+        $result->free();
+        
+        return $userId;
     }
 
     ///

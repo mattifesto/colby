@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 2.1.2
+// version 2.1.3
 //
 
 if (defined('V2_TRANSITION'))
@@ -172,8 +172,24 @@ class Colby
     ///
     public static function queryNextSequenceId($sequenceName)
     {
-        return include(COLBY_SITE_DIRECTORY .
-            '/colby/snippets/query-next-sequence-id-for-sequence-name.php');
+        $mysqli = Colby::mysqli();
+        
+        $sequenceName = $mysqli->escape_string($sequenceName);
+        
+        $sql = "SELECT GetNextInsertIdForSequence('{$sequenceName}') AS `id`";
+        
+        $result = $mysqli->query($sql);
+        
+        if ($mysqli->error)
+        {
+            throw new RuntimeException($mysqli->error);
+        }
+        
+        $nextSequenceId = $result->fetch_object()->id;
+        
+        $result->free();
+        
+        return $nextSequenceId;
     }
 
     ///
