@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 2.3.1
+// version 2.3.2
 //
 
 require_once(__DIR__ . '/../colby-configuration.php');

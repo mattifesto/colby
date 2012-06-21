@@ -1,6 +1,5 @@
 <?php
 
-Colby::useUser();
 ColbyUser::logoutCurrentUser();
 
 $state = json_decode(urldecode($_GET['state']));

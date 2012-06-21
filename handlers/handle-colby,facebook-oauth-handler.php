@@ -6,7 +6,7 @@ $accessTokenURL = 'https://graph.facebook.com/oauth/access_token' .
     '?client_id=' . COLBY_FACEBOOK_APP_ID .
     '&redirect_uri=' .
         urlencode(COLBY_SITE_URL
-            . '/facebook-oauth-handler/') .
+            . '/colby/facebook-oauth-handler/') .
     '&client_secret=' . COLBY_FACEBOOK_APP_SECRET .
     '&code=' . $_GET['code'];
 
@@ -39,8 +39,6 @@ $userPropertiesURL = 'https://graph.facebook.com/me' .
     '?access_token=' . $userAccessToken;
 
 $userProperties = json_decode(file_get_contents($userPropertiesURL));
-
-Colby::useUser();
 
 ColbyUser::loginCurrentUser(
     $userAccessToken,
