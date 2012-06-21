@@ -157,7 +157,7 @@ class ColbyUser
             '?client_id=' . COLBY_FACEBOOK_APP_ID .
             '&redirect_uri=' .
                 urlencode(COLBY_SITE_URL
-                    . '/facebook-oauth-handler/') .
+                    . '/colby/facebook-oauth-handler/') .
             '&state=' . urlencode(json_encode($state));
 
         return $url;
@@ -185,7 +185,7 @@ class ColbyUser
         $state = new stdClass();
         $state->colby_redirect_uri = $redirectURL;
 
-        $url = COLBY_SITE_URL . '/logout/' .
+        $url = COLBY_SITE_URL . '/colby/logout/' .
             '?state=' . urlencode(json_encode($state));
 
         return $url;
