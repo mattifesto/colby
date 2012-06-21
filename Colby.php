@@ -3,13 +3,10 @@
 //
 // colby
 //
-// version 2.1.4
+// version 2.2.0
 //
 
-if (defined('V2_TRANSITION'))
-{
-    require_once(__DIR__ . '/../colby-configuration.php');
-}
+require_once(__DIR__ . '/../colby-configuration.php');
 
 class Colby
 {
@@ -114,24 +111,21 @@ class Colby
                 'constant COLBY_SITE_IS_BEING_DEBUGGED has not been set');
         }
 
-        if (defined('V2_TRANSITION'))
-        {
-            // the order of these files might matter some day
-            // files that depend on other files should be included after
-            // at this time, none of these files depends on another
-            // so they are in alphabetical order
+        // the order of these files might matter some day
+        // files that depend on other files should be included after
+        // at this time, none of these files depends on another
+        // so they are in alphabetical order
 
-            include_once(COLBY_SITE_DIRECTORY .
-                '/colby/classes/ColbyPage.php');
+        include_once(COLBY_SITE_DIRECTORY .
+            '/colby/classes/ColbyPage.php');
 
-            include_once(COLBY_SITE_DIRECTORY .
-                '/colby/classes/ColbyRequest.php');
+        include_once(COLBY_SITE_DIRECTORY .
+            '/colby/classes/ColbyRequest.php');
 
-            include_once(COLBY_SITE_DIRECTORY .
-                '/colby/classes/ColbyUser.php');
+        include_once(COLBY_SITE_DIRECTORY .
+            '/colby/classes/ColbyUser.php');
 
-            ColbyRequest::handleRequest();
-        }
+        ColbyRequest::handleRequest();
     }
 
     /// <summary>
@@ -173,22 +167,22 @@ class Colby
     public static function queryNextSequenceId($sequenceName)
     {
         $mysqli = Colby::mysqli();
-        
+
         $sequenceName = $mysqli->escape_string($sequenceName);
-        
+
         $sql = "SELECT GetNextInsertIdForSequence('{$sequenceName}') AS `id`";
-        
+
         $result = $mysqli->query($sql);
-        
+
         if ($mysqli->error)
         {
             throw new RuntimeException($mysqli->error);
         }
-        
+
         $nextSequenceId = $result->fetch_object()->id;
-        
+
         $result->free();
-        
+
         return $nextSequenceId;
     }
 
@@ -251,25 +245,6 @@ class Colby
     public static function textToHTML($text)
     {
         return htmlspecialchars(trim($text), ENT_QUOTES);
-    }
-
-    ///
-    ///
-    ///
-    public static function useURLParser()
-    {
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyURLParser.php');
-    }
-
-    ///
-    /// this works best if called before any html output
-    /// it sets a cookie
-    ///
-    public static function useUser()
-    {
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyUser.php');
     }
 
     ///
