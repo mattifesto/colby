@@ -3,7 +3,7 @@
 //
 // colby
 //
-// version 2.2.0
+// version 2.3.0
 //
 
 require_once(__DIR__ . '/../colby-configuration.php');
@@ -117,6 +117,9 @@ class Colby
         // so they are in alphabetical order
 
         include_once(COLBY_SITE_DIRECTORY .
+            '/colby/classes/ColbyConvert.php');
+
+        include_once(COLBY_SITE_DIRECTORY .
             '/colby/classes/ColbyPage.php');
 
         include_once(COLBY_SITE_DIRECTORY .
@@ -207,44 +210,6 @@ class Colby
             $subject,
             $message,
             $headers);
-    }
-
-    ///
-    /// converts plain text into formatted content HTML
-    ///
-    ///  - trims whitespace
-    ///  - converts html special characters to entities
-    ///  - interprets textual formatting to create formatted content HTML
-    ///
-    public static function textToFormattedContent($text)
-    {
-        $html = self::textToHTML($text);
-
-        $html = preg_replace('/[\r\n]+/', "\n<p>", $html);
-
-        if ($html)
-        {
-            $html = "<p>{$html}";
-        }
-
-        return $html;
-    }
-
-    ///
-    /// converts plain text to HTML
-    ///
-    ///  - trims whitespace
-    ///  - converts html special characters to entities
-    ///
-    /// this fuction exists because it's so easy to forget
-    /// the details on how this should be done
-    /// such as the inclusion of ENT_QUOTES
-    /// also because if I figure out something else is required
-    /// I can now change it in just one place
-    ///
-    public static function textToHTML($text)
-    {
-        return htmlspecialchars(trim($text), ENT_QUOTES);
     }
 
     ///

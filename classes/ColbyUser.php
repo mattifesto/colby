@@ -104,13 +104,13 @@ class ColbyUser
 
         $accessToken = $mysqli->escape_string($facebookAccessToken);
 
-        $name = Colby::textToHTML($facebookProperties->name);
+        $name = ColbyConvert::textToHTML($facebookProperties->name);
         $name = $mysqli->escape_string($name);
 
-        $firstName = Colby::textToHTML($facebookProperties->first_name);
+        $firstName = ColbyConvert::textToHTML($facebookProperties->first_name);
         $firstName = $mysqli->escape_string($firstName);
 
-        $lastName = Colby::textToHTML($facebookProperties->last_name);
+        $lastName = ColbyConvert::textToHTML($facebookProperties->last_name);
         $lastName = $mysqli->escape_string($lastName);
 
         $sql = 'SELECT LoginFacebookUser(' .
