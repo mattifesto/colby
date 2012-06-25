@@ -21,6 +21,13 @@ RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . /index.php [L]
 
+#
+# if the request is for an existing file whose path contains the string '.git'
+# rewrite to index.php (do not show the file)
+#
+
+RewriteRule \.git /index.php [L]
+
 </IfModule>
 EOF
 else
