@@ -29,12 +29,12 @@ html
 
     position: relative;
     min-height: 100%;
-    
+
     /**
      ** optimizeLegibility might eventually be on by default
      ** keep an eye on it
      **/
-     
+
     text-rendering: optimizeLegibility;
 }
 
@@ -92,6 +92,14 @@ pre
     overflow: auto;
 }
 
+/* 2012.06.25
+ * added 'input[type=file]' to the list however I'm thinking that
+ * all input elements should be included
+ * I'm going to be conservative today and not change it
+ * but consider it in the future, there should be a definitive answer
+ */
+
+input[type=file],
 input[type=text],
 textarea
 {
