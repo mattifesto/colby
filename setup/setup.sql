@@ -8,6 +8,21 @@
 -- and always be necessary for a minimum Colby installation
 --
 
+
+-- Database Character Set and Collation ------------------------------
+--
+-- I started getting some errors about mismatched collations
+-- it turns out that when functions and procedures are created
+-- they use the database character set and collation
+-- I often don't have the ability to set these at database creation time
+-- especially with a web hosting service
+-- but these database variables do need to be set correctly
+-- before the functions and procedures are created
+
+ALTER DATABASE
+DEFAULT CHARSET=utf8
+COLLATE=utf8_unicode_ci;
+
 -- ColbyUsers --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `ColbyUsers`

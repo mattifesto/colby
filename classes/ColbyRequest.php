@@ -131,36 +131,51 @@ class ColbyRequest
 
         else
         {
-            // check for full URL handler
+            // check for full URL handler in app
             // filenames use encoded stubs (no spaces or special characters)
 
-            $fullFilename = 'handle-' .
-                implode(',', self::$encodedStubs);
+            $fullFilename = 'handle,' .
+                implode(',', self::$encodedStubs) .
+                '.php';
 
             $path = COLBY_SITE_DIRECTORY .
                 '/handlers/' .
-                $fullFilename .
-                '.php';
+                $fullFilename;
 
             if (file_exists($path))
             {
                 $handlerPath = $path;
             }
 
-            // check for partial URL handlers
-
-            if (null === $handlerPath)
-            {
-            }
-
-            // check for full URL handler in colby system
+            // check for full URL handler in Colby system
 
             if (null === $handlerPath)
             {
                 $path = COLBY_SITE_DIRECTORY .
                     '/colby/handlers/' .
-                    $fullFilename .
-                    '.php';
+                    $fullFilename;
+
+                if (file_exists($path))
+                {
+                    $handlerPath = $path;
+                }
+            }
+
+            // check for partial URL handlers in app
+
+            if (   null === $handlerPath
+                && $countOfStubs > 1)
+            {
+                $stubs = self::$encodedStubs;
+                array_pop($stubs);
+
+                $fullFilename = 'handle,' .
+                    implode(',', $stubs) .
+                    ',.php';
+
+                $path = COLBY_SITE_DIRECTORY .
+                    '/handlers/' .
+                    $fullFilename;
 
                 if (file_exists($path))
                 {
