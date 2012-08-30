@@ -1,20 +1,27 @@
 <?php
 
+// TODO: Document official handler file naming a search policy in comments
+//       in this file
+
 class ColbyRequest
 {
     private static $decodedRequestURI;
+    // type: string
     // example:
     // /foo bar/piñata/post/
 
     private static $requestQueryString;
+    // type: string
     // example:
     // ?user=bob+jones
 
     private static $encodedStubs;
+    // type: array
     // example:
     // foo+bar, pi%C3%B1ata, post
 
     private static $decodedStubs;
+    // type: array
     // example:
     // foo bar, piñata, post
 
@@ -81,6 +88,17 @@ class ColbyRequest
     }
 
     ///
+    ///
+    ///
+    public static function fileIsValidHandler($filePath)
+    {
+        // is_readable: file or directory exists and is readable
+        // is_file: file is a regular file (not a directory)
+
+        return (is_readable($filePath) && is_file($filePath));
+    }
+
+    ///
     /// it's not required that this function be called
     /// however most sites will call this function from index.php
     /// to handle requests in the standard way
@@ -95,17 +113,19 @@ class ColbyRequest
 
         if (0 === $countOfStubs)
         {
-            $fileName = 'handle-special-front-page.php';
+            $frontPageHandlerFileName = 'handle-special-front-page.php';
 
             $handlerPath = COLBY_SITE_DIRECTORY .
                 '/handlers/' .
-                $fileName;
+                $frontPageHandlerFileName;
 
-            if (!is_file($handlerPath))
+            if (!self::fileIsValidHandler($handlerPath))
             {
+                // colby handlers are assumed to exist and be readable
+
                 $handlerPath = COLBY_SITE_DIRECTORY .
                     '/colby/handlers/' .
-                    $fileName;
+                    $frontPageHandlerFileName;
             }
         }
 
@@ -127,59 +147,63 @@ class ColbyRequest
             exit;
         }
 
-        // search for handlers
+        // search for handler files
+        // handler filenames use encoded stubs
+        // (no spaces or special characters)
+        //
+        // 1. check for "every stub" URL handler in app
+        // 2. check for "every stub" URL handler in Colby system
+        // 3. check for "first stub" multi-URL handler in app
 
         else
         {
-            // check for full URL handler in app
-            // filenames use encoded stubs (no spaces or special characters)
+            // 1. check for "every stub" URL handler in app
+            //    (/handlers/)
 
-            $fullFilename = 'handle,' .
+            $everyStubFileName = 'handle,' .
                 implode(',', self::$encodedStubs) .
                 '.php';
 
-            $path = COLBY_SITE_DIRECTORY .
+            $potentialPath = COLBY_SITE_DIRECTORY .
                 '/handlers/' .
-                $fullFilename;
+                $everyStubFileName;
 
-            if (file_exists($path))
+            if (self::fileIsValidHandler($potentialPath))
             {
-                $handlerPath = $path;
+                $handlerPath = $potentialPath;
             }
 
-            // check for full URL handler in Colby system
+            // 2. check for "every stub" URL handler in Colby system
+            //    (/colby/handlers/)
 
             if (null === $handlerPath)
             {
-                $path = COLBY_SITE_DIRECTORY .
+                $potentialPath = COLBY_SITE_DIRECTORY .
                     '/colby/handlers/' .
-                    $fullFilename;
+                    $everyStubFileName;
 
-                if (file_exists($path))
+                if (self::fileIsValidHandler($potentialPath))
                 {
-                    $handlerPath = $path;
+                    $handlerPath = $potentialPath;
                 }
             }
 
-            // check for partial URL handlers in app
+            // 3. check for "first stub" multi-URL handler in app
+            //    (/handlers/)
 
-            if (   null === $handlerPath
-                && $countOfStubs > 1)
+            if (null === $handlerPath)
             {
-                $stubs = self::$encodedStubs;
-                array_pop($stubs);
-
-                $fullFilename = 'handle,' .
-                    implode(',', $stubs) .
+                $firstStubFileName = 'handle,' .
+                    self::$encodedStubs[0] .
                     ',.php';
 
-                $path = COLBY_SITE_DIRECTORY .
+                $potentialPath = COLBY_SITE_DIRECTORY .
                     '/handlers/' .
-                    $fullFilename;
+                    $firstStubFileName;
 
-                if (file_exists($path))
+                if (self::fileIsValidHandler($potentialPath))
                 {
-                    $handlerPath = $path;
+                    $handlerPath = $potentialPath;
                 }
             }
         }
@@ -188,34 +212,45 @@ class ColbyRequest
         {
             // this is a valid set of stubs but the URL may not be canonical
             // calling canonicalizeRequestURI will return if the URI
-            // is canonical or it will redirect if the URI isn't canonical
+            // is canonical or it will redirect and end the process
+            // if the URI isn't canonical
 
             self::canonicalizeRequestURI();
-        }
-        else
-        {
-            $fileName = 'handle-special-default.php';
 
-            $handlerPath = COLBY_SITE_DIRECTORY .
-                '/handlers/' .
-                $fileName;
+            $result = include($handlerPath);
 
-            if (!is_file($handlerPath))
+            if (1 === $result)
             {
-                $handlerPath = COLBY_SITE_DIRECTORY .
-                    '/colby/handlers/' .
-                    $fileName;
+                // file was included and did not return a special value
+                // we take this to mean everything went fine and we're done
+
+                return;
             }
         }
 
-        if (!is_readable($handlerPath))
+        // if we reach this code it means either no valid handler was found
+        // or including the found handler returned a non-standard value
+
+        // a valid handler will return a non-standard value
+        // to communicate that a sub-stub does not exist
+        // since it's only the handler that is able to determine that fact
+
+        $defaultHandlerFileName = 'handle-special-default.php';
+
+        $defaultHandlerPath = COLBY_SITE_DIRECTORY .
+            '/handlers/' .
+            $defaultHandlerFileName;
+
+        if (!self::fileIsValidHandler($defaultHandlerPath))
         {
-            throw new RuntimeException('the URL handler: "' .
-                $handlerPath .
-                '" is not readable.');
+            // colby handlers are assumed to exist and be readable
+
+            $defaultHandlerPath = COLBY_SITE_DIRECTORY .
+                '/colby/handlers/' .
+                $defaultHandlerFileName;
         }
 
-        include($handlerPath);
+        include($defaultHandlerPath);
     }
 
     ///
