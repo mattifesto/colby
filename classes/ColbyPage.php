@@ -101,10 +101,23 @@ class ColbyPage
         }
         else if (!$userRow->hasBeenVerified)
         {
-            include(COLBY_SITE_DIRECTORY .
-                '/colby/snippets/user-verification-required-page.php');
+            // If the first verified user id in the configuration file
+            // matches the current user, then verify the current user.
+            // This will usually happen only once in the lifetime of a website.
+            // It's the simplest way to verify the first verified user.
+            // That user can then use the admin pages to verify other users.
 
-            exit;
+            if (COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID === $userRow->facebookId)
+            {
+                Colby::query('CALL VerifyUser(' . $userRow->id . ')');
+            }
+            else
+            {
+                include(COLBY_SITE_DIRECTORY .
+                    '/colby/snippets/user-verification-required-page.php');
+
+                exit;
+            }
         }
     }
 }

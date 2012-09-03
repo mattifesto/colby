@@ -163,11 +163,24 @@ class Colby
     ///
     public static function queryNextSequenceId($sequenceName)
     {
-        $mysqli = Colby::mysqli();
-
         $sequenceName = $mysqli->escape_string($sequenceName);
 
-        $sql = "SELECT GetNextInsertIdForSequence('{$sequenceName}') AS `id`";
+        $result = self::query(
+            "SELECT GetNextInsertIdForSequence('{$sequenceName}') AS `id`");
+
+        $nextSequenceId = $result->fetch_object()->id;
+
+        $result->free();
+
+        return $nextSequenceId;
+    }
+
+    ///
+    /// simple way to run a query
+    ///
+    public static function query($sql)
+    {
+        $mysqli = Colby::mysqli();
 
         $result = $mysqli->query($sql);
 
@@ -176,11 +189,7 @@ class Colby
             throw new RuntimeException($mysqli->error);
         }
 
-        $nextSequenceId = $result->fetch_object()->id;
-
-        $result->free();
-
-        return $nextSequenceId;
+        return $result;
     }
 
     ///
