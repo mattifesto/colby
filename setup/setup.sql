@@ -204,6 +204,7 @@ END//
 DROP PROCEDURE IF EXISTS ShowUnverifiedUsers//
 
 CREATE PROCEDURE ShowUnverifiedUsers()
+READS SQL DATA
 BEGIN
     SELECT
         `id`,

@@ -15,8 +15,5 @@
         <link rel="stylesheet"
               href="<?php echo COLBY_SITE_URL;
                     ?>/colby/css/equalize.css">
-        <link rel="stylesheet"
-              href="<?php echo COLBY_SITE_URL;
-                    ?>/colby/css/style.css">
     </head>
     <body>
