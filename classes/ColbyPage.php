@@ -83,4 +83,28 @@ class ColbyPage
 
         Colby::handleException($e);
     }
+
+    ///
+    /// call this before any content has been output
+    /// on a page that should only be viewed by verified users
+    ///
+    public static function requireVerifiedUser()
+    {
+        $userRow = ColbyUser::userRow();
+
+        if ($userRow === null)
+        {
+            include(COLBY_SITE_DIRECTORY .
+                '/colby/snippets/user-login-required-page.php');
+
+            exit;
+        }
+        else if (!$userRow->hasBeenVerified)
+        {
+            include(COLBY_SITE_DIRECTORY .
+                '/colby/snippets/user-verification-required-page.php');
+
+            exit;
+        }
+    }
 }
