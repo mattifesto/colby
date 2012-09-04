@@ -53,6 +53,17 @@ class ColbyPage
     ///
     ///
     ///
+    public static function beginAdmin($args)
+    {
+        $args->header = COLBY_SITE_DIRECTORY . '/colby/snippets/header.php';
+        $args->footer = COLBY_SITE_DIRECTORY . '/colby/snippets/footer.php';
+
+        self::begin($args);
+    }
+
+    ///
+    ///
+    ///
     public static function end()
     {
         if (!isset(self::$args->footer))
