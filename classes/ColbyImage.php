@@ -50,6 +50,12 @@ Size parameters are specified in the following manner:
         w100h150    the image is exactly 100x150 pixels
                     the image is centered, filled, and clipped if necessary
 
+# 2012.09.06 Note on Filenames
+
+Discussions on filenames are a black hole. There are a million compelling reasons one can come up with for naming image files with certain patterns in certain contexts. They're all red herrings. The goal of this class is to process many unrelated images; with unknown present and future goals; using as little external technology as possible (for instance, databases). This forces the conclusion that it's best not to have "meaningful" image filenames because any meaning would be an external dependency, even if only conceptually. The sha1 hash is perfect because it's easily calculated and doesn't have any meaning whatsoever related to the content of the image.
+
+If you find yourself in a discussion about how to name image files, end it as fast as you can. All your worries will be gone. Image metadata is important, it just shouldn't be part of the image filename.
+
 */
 
 class ColbyImage
