@@ -218,6 +218,15 @@ class Colby
     ///
     ///
     ///
+    public static function useImage()
+    {
+        include(COLBY_SITE_DIRECTORY .
+            '/colby/classses/ColbyImage.php');
+    }
+
+    ///
+    ///
+    ///
     public static function writeExceptionStackTrace($e)
     {
         include(COLBY_SITE_DIRECTORY .
