@@ -221,7 +221,7 @@ class Colby
     public static function useImage()
     {
         include(COLBY_SITE_DIRECTORY .
-            '/colby/classses/ColbyImage.php');
+            '/colby/classes/ColbyImage.php');
     }
 
     ///

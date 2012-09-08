@@ -60,22 +60,25 @@ If you find yourself in a discussion about how to name image files, end it as fa
 
 class ColbyImage
 {
-    public static function importFromUpload(
+    public static function /* string */ importFromUpload(
         $name,
         $destinationSize,
         $imageDirectory)
     {
     }
 
-    public static function importFromFile(
-        $path,
+    public static function /* string */ importFromFile(
+        $sourcePath,
         $destinationSize,
         $imageDirectory,
         $shouldDeleteFile)
     {
+        $imageHash = hash_file('sha1', $sourcePath);
+
+        return $imageHash;
     }
 
-    public static function versionFromMaster(
+    public static function /* null */ versionFromMaster(
         $imageHash,
         $destinationSize,
         $imageDirectory)
