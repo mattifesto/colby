@@ -66,20 +66,6 @@ class Colby
     }
 
     ///
-    /// TODO: remove this function
-    /// just document the location of equalize.css
-    ///
-    public static function includeEqualizeStylesheet()
-    {
-        error_log('includeEqualizeStylesheet() has been deprecated ' .
-            'just directly include /colby/css/equalize.css');
-
-        echo '<link rel="stylesheet" type="text/css" href="',
-            COLBY_SITE_URL,
-            '/colby/css/equalize.css">';
-    }
-
-    ///
     /// this function should be run only once
     /// it is run automatically when Colby is first included
     ///
@@ -252,16 +238,6 @@ class Colby
     {
         include(COLBY_SITE_DIRECTORY .
             '/colby/classes/ColbyImage.php');
-    }
-
-    ///
-    /// deprecated
-    /// replaced by Colby::exceptionStackTrace(...)
-    ///
-    public static function writeExceptionStackTrace($exception)
-    {
-        include(COLBY_SITE_DIRECTORY .
-            '/colby/snippets/exception-stack-trace.php');
     }
 }
 
