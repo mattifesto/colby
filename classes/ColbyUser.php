@@ -148,8 +148,13 @@ class ColbyUser
     ///
     ///
     ///
-    public static function loginURL($redirectURL = '/')
+    public static function loginURL($redirectURL = null)
     {
+        if (!$redirectURL)
+        {
+            $redirectURL = $_SERVER['REQUEST_URI'];
+        }
+
         $state = new stdClass();
         $state->colby_redirect_uri = $redirectURL;
 
@@ -180,8 +185,13 @@ class ColbyUser
     ///
     ///
     ///
-    public static function logoutURL($redirectURL = '/')
+    public static function logoutURL($redirectURL = null)
     {
+        if (!$redirectURL)
+        {
+            $redirectURL = $_SERVER['REQUEST_URI'];
+        }
+
         $state = new stdClass();
         $state->colby_redirect_uri = $redirectURL;
 

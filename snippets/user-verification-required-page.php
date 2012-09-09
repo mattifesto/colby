@@ -14,11 +14,12 @@ ColbyPage::begin($args);
 
 ?>
 
+<p style="text-align: right;">
+    <a href="<?php echo ColbyUser::logoutURL(); ?>">log out</a>
+
 <h1><?php echo $args->title; ?></h1>
 
 <p><?php echo $args->description; ?>
-
-<p><a href="<?php echo ColbyUser::logoutURL($_SERVER['REQUEST_URI']); ?>">log out</a>
 
 <?php
 

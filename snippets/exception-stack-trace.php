@@ -20,41 +20,27 @@
 // updated: 2012.04.11
 
 ?>
+Exception Type: <?php
 
-<style scoped="scoped">
-    pre
-    {
-        overflow-y: auto;
-        padding: 20px;
-        margin: 20px;
-        background-color: white;
-        color: #333;
-    }
-</style>
-<pre>
-Exception: <?php
-
-    echo htmlspecialchars(get_class($e), ENT_QUOTES);
+    echo get_class($exception);
 
 ?>
 
 Message: <?php
 
-    echo htmlspecialchars($e->getMessage(), ENT_QUOTES);
+    echo $exception->getMessage();
 
 ?>
 
 
 ## <?php
 
-    echo htmlspecialchars($e->getFile(), ENT_QUOTES),
+    echo $exception->getFile(),
     '(',
-    htmlspecialchars($e->getLine(), ENT_QUOTES),
+    $exception->getLine(),
     ')';
 ?>
 
 <?php
 
-    echo htmlspecialchars($e->getTraceAsString(), ENT_QUOTES);
-
-?></pre>
+    echo $exception->getTraceAsString();

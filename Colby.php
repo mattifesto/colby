@@ -12,6 +12,19 @@ class Colby
     ///
     ///
     ///
+    public static function /* string */ exceptionStackTrace($exception)
+    {
+        ob_start();
+
+        include(COLBY_SITE_DIRECTORY .
+            '/colby/snippets/exception-stack-trace.php');
+
+        return ob_get_clean();
+    }
+
+    ///
+    ///
+    ///
     public static function handleError($errno, $errstr, $errfile, $errline)
     {
         throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
@@ -20,7 +33,7 @@ class Colby
     ///
     ///
     ///
-    public static function handleException($e)
+    public static function handleException($exception, $responseType = 'html')
     {
         // exception handlers should never throw exceptions
         // if they do, it's very difficult to debug
@@ -35,12 +48,20 @@ class Colby
 
         try
         {
-            require_once(COLBY_SITE_DIRECTORY .
-                '/colby/pages/exception.php');
+            if ($responseType === 'ajax')
+            {
+                include(COLBY_SITE_DIRECTORY .
+                    '/colby/snippets/exception-ajax-response.php');
+            }
+            else
+            {
+                include(COLBY_SITE_DIRECTORY .
+                    '/colby/snippets/exception-page.php');
+            }
         }
-        catch (Exception $e)
+        catch (Exception $rareException)
         {
-            error_log(var_export($e->getMessage(), true));
+            error_log(var_export($rareException->getMessage(), true));
         }
     }
 
@@ -195,7 +216,7 @@ class Colby
     ///
     ///
     ///
-    public static function reportException($e)
+    public static function reportException($exception)
     {
         $headers = 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
@@ -203,16 +224,25 @@ class Colby
             COLBY_SITE_NAME .
             '"';
 
-        ob_start();
+        $stackTrace = htmlspecialchars(
+            self::exceptionStackTrace($exception),
+            ENT_QUOTES);
 
-        self::writeExceptionStackTrace($e);
-
-        $message = ob_get_clean();
+        $message = "<pre>{$stackTrace}</pre>\n";
 
         $result = mail(COLBY_SITE_ADMINISTRATOR,
             $subject,
             $message,
             $headers);
+    }
+
+    ///
+    ///
+    ///
+    public static function useAjax()
+    {
+        include(COLBY_SITE_DIRECTORY .
+            '/colby/classes/ColbyAjax.php');
     }
 
     ///
@@ -225,9 +255,10 @@ class Colby
     }
 
     ///
+    /// deprecated
+    /// replaced by Colby::exceptionStackTrace(...)
     ///
-    ///
-    public static function writeExceptionStackTrace($e)
+    public static function writeExceptionStackTrace($exception)
     {
         include(COLBY_SITE_DIRECTORY .
             '/colby/snippets/exception-stack-trace.php');

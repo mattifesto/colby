@@ -7,7 +7,7 @@ class ColbyPage
     ///
     ///
     ///
-    public static function begin($args)
+    public static function /* void */ begin($args)
     {
         if (!isset($args->header))
         {
@@ -53,7 +53,7 @@ class ColbyPage
     ///
     ///
     ///
-    public static function beginAdmin($args)
+    public static function /* void */ beginAdmin($args)
     {
         $args->header = COLBY_SITE_DIRECTORY . '/colby/snippets/header.php';
         $args->footer = COLBY_SITE_DIRECTORY . '/colby/snippets/footer.php';
@@ -64,7 +64,7 @@ class ColbyPage
     ///
     ///
     ///
-    public static function end()
+    public static function /* void */ end()
     {
         if (!isset(self::$args->footer))
         {
@@ -73,12 +73,14 @@ class ColbyPage
         }
 
         include(self::$args->footer);
+
+        ob_end_flush();
     }
 
     ///
     ///
     ///
-    public static function handleException($e)
+    public static function /* void */ handleException($e)
     {
         // remove the current page exception handler
         // we got here by handling an exception so we're done with it
@@ -99,7 +101,7 @@ class ColbyPage
     /// call this before any content has been output
     /// on a page that should only be viewed by verified users
     ///
-    public static function requireVerifiedUser()
+    public static function /* void */ requireVerifiedUser()
     {
         $userRow = ColbyUser::userRow();
 
