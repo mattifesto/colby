@@ -103,12 +103,11 @@ class ColbyImage
         $destinationDirectory,
         $shouldDeleteSourceFile = false)
     {
-        $temporaryFilename = self::resizeImageToTemporaryFile($sourceFilename, $destinationSize);
-
-        if (empty($temporaryFilename))
-        {
-            $temporaryFilename = $sourceFilename;
-        }
+        $temporaryFilename = self::createIndependentImage(
+            $sourceFilename,
+            $destinationSize,
+            $destinationDirectory,
+            $shouldDeleteSourceFile);
 
         $imageHash = hash_file('sha1', $temporaryFilename);
 
@@ -116,28 +115,9 @@ class ColbyImage
 
         $destinationFilename = "{$destinationDirectory}/{$imageHash}.{$destinationExtension}";
 
-        if ($temporaryFilename != $sourceFilename)
+        if (!rename($temporaryFilename, $destinationFilename))
         {
-            if (!move($temporaryFilename, $destinationFilename))
-            {
-                throw new RuntimeException("Unable to move {$sourceFilename} to {$destinationFilename}");
-            }
-
-            if ($shouldDeleteSourceFile)
-            {
-                unlink($sourceFilename);
-            }
-        }
-        else if ($shouldDeleteSourceFile)
-        {
-            if (!rename($sourceFilename, $destinationFilename))
-            {
-                throw new RuntimeException("Unable to move {$sourceFilename} to {$destinationFilename}");
-            }
-        }
-        else if (!copy($sourceFilename, $destinationFilename))
-        {
-            throw new RuntimeException("Unable to copy {$sourceFilename} to {$destinationFilename}");
+            throw new RuntimeException("Unable to move {$temporaryFilename} to {$destinationFilename}");
         }
 
         return basename($destinationFilename);
@@ -162,10 +142,36 @@ class ColbyImage
     }
 
     //
+    // This function creates an independent image of the specified size.
+    // This file is guaranteed not to be needed by anyone other than the caller.
     //
+    // Note: Deleting the source file only actually happens in this function.
     //
-    public static function /* string | false */ resizeImageToTemporaryFile($sourceFilename, $destinationSize)
+    // returns: the filename of the independent file
+    //          this file will need to be either used or deleted by the caller
+    //
+    public static function /* string */ createIndependentImage(
+        $sourceFilename,
+        $destinationSize,
+        $destinationDirectory,
+        $shouldDeleteSourceFile)
     {
-        return false;
+        $temporaryFilename = $destinationDirectory .
+            '/tmp-' .
+            hash('sha1', $sourceFilename . rand());
+
+        if (false /* needs resize */)
+        {
+        }
+        else if ($shouldDeleteSourceFile)
+        {
+            rename($sourceFilename, $temporaryFilename);
+        }
+        else
+        {
+            copy($sourceFilename, $temporaryFilename);
+        }
+
+        return $temporaryFilename;
     }
 }
