@@ -84,6 +84,59 @@ class ColbyImage
         }
     }
 
+
+    //
+    // This function creates an independent image of the specified size.
+    // This file is guaranteed not to be needed by anyone other than the caller.
+    //
+    // Note: Deleting the source file only actually happens in this function.
+    //
+    // returns: the filename of the independent file
+    //          this file will need to be either used or deleted by the caller
+    //
+    public static function /* string */ createIndependentImage(
+        $sourceFilename,
+        $destinationSize,
+        $destinationDirectory,
+        $shouldDeleteSourceFile)
+    {
+        $temporaryFilename = $destinationDirectory .
+            '/tmp-' .
+            hash('sha1', $sourceFilename . rand());
+
+        if (false /* needs resize */)
+        {
+        }
+        else if ($shouldDeleteSourceFile)
+        {
+            rename($sourceFilename, $temporaryFilename);
+        }
+        else
+        {
+            copy($sourceFilename, $temporaryFilename);
+        }
+
+        return $temporaryFilename;
+    }
+
+    //
+    // the caller should pass in the master image as the $sourceFilename
+    // this is not strictly checked, but it would be odd to do otherwise
+    //
+    // the new image will be created in the same directory as the $sourceFilename
+    // and will have the same basename with the size specification appended
+    //
+    //     abcdef.jpg
+    //     abcdef-x200.jpg
+    //
+    // returns: the basename of the new image
+    //
+    public static function /* string */ createResizedImage(
+        $sourceFilename,
+        $destinationSize)
+    {
+    }
+
     //
     // returns: the basename of the imported image
     //
@@ -121,57 +174,5 @@ class ColbyImage
         }
 
         return basename($destinationFilename);
-    }
-
-    //
-    // the caller should pass in the master image as the $sourceFilename
-    // this is not strictly checked, but it would be odd to do otherwise
-    //
-    // the new image will be created in the same directory as the $sourceFilename
-    // and will have the same basename with the size specification appended
-    //
-    //     abcdef.jpg
-    //     abcdef-x200.jpg
-    //
-    // returns: the basename of the new image
-    //
-    public static function /* string */ createResizedImage(
-        $sourceFilename,
-        $destinationSize)
-    {
-    }
-
-    //
-    // This function creates an independent image of the specified size.
-    // This file is guaranteed not to be needed by anyone other than the caller.
-    //
-    // Note: Deleting the source file only actually happens in this function.
-    //
-    // returns: the filename of the independent file
-    //          this file will need to be either used or deleted by the caller
-    //
-    public static function /* string */ createIndependentImage(
-        $sourceFilename,
-        $destinationSize,
-        $destinationDirectory,
-        $shouldDeleteSourceFile)
-    {
-        $temporaryFilename = $destinationDirectory .
-            '/tmp-' .
-            hash('sha1', $sourceFilename . rand());
-
-        if (false /* needs resize */)
-        {
-        }
-        else if ($shouldDeleteSourceFile)
-        {
-            rename($sourceFilename, $temporaryFilename);
-        }
-        else
-        {
-            copy($sourceFilename, $temporaryFilename);
-        }
-
-        return $temporaryFilename;
     }
 }
