@@ -12,8 +12,8 @@ The image file known as the master image is either imported from an original fil
 
 Master images are created by the functions:
 
-        importFromUpload
-        importFromFile
+        importUploadedImage
+        importImage
 
     --------
 
@@ -60,28 +60,112 @@ If you find yourself in a discussion about how to name image files, end it as fa
 
 class ColbyImage
 {
-    public static function /* string */ importFromUpload(
+    //
+    // This function canonicalizes image file extensions
+    // and also determines supported image types.
+    //
+    // returns: the canonicalized extension.
+    //
+    public static function /* string */ canonicalizedExtensionFromFilename($filename)
+    {
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        if ($extension === 'jpg' || $extension = 'jpeg')
+        {
+            return 'jpg';
+        }
+        else if ($extension === 'png')
+        {
+            return 'png';
+        }
+        else
+        {
+            throw new RuntimeException("Unsupported image format: {$filename}");
+        }
+    }
+
+    //
+    // returns: the basename of the imported image
+    //
+    public static function /* string */ importUploadedImage(
         $name,
         $destinationSize,
-        $imageDirectory)
+        $destinationDirectory)
     {
     }
 
-    public static function /* string */ importFromFile(
-        $sourcePath,
+    //
+    // returns: the basename of the imported image
+    //
+    public static function /* string */ importImage(
+        $sourceFilename,
         $destinationSize,
-        $imageDirectory,
-        $shouldDeleteFile)
+        $destinationDirectory,
+        $shouldDeleteSourceFile = false)
     {
-        $imageHash = hash_file('sha1', $sourcePath);
+        $temporaryFilename = self::resizeImageToTemporaryFile($sourceFilename, $destinationSize);
 
-        return $imageHash;
+        if (empty($temporaryFilename))
+        {
+            $temporaryFilename = $sourceFilename;
+        }
+
+        $imageHash = hash_file('sha1', $temporaryFilename);
+
+        $destinationExtension = self::canonicalizedExtensionFromFilename($sourceFilename);
+
+        $destinationFilename = "{$destinationDirectory}/{$imageHash}.{$destinationExtension}";
+
+        if ($temporaryFilename != $sourceFilename)
+        {
+            if (!move($temporaryFilename, $destinationFilename))
+            {
+                throw new RuntimeException("Unable to move {$sourceFilename} to {$destinationFilename}");
+            }
+
+            if ($shouldDeleteSourceFile)
+            {
+                unlink($sourceFilename);
+            }
+        }
+        else if ($shouldDeleteSourceFile)
+        {
+            if (!rename($sourceFilename, $destinationFilename))
+            {
+                throw new RuntimeException("Unable to move {$sourceFilename} to {$destinationFilename}");
+            }
+        }
+        else if (!copy($sourceFilename, $destinationFilename))
+        {
+            throw new RuntimeException("Unable to copy {$sourceFilename} to {$destinationFilename}");
+        }
+
+        return basename($destinationFilename);
     }
 
-    public static function /* null */ versionFromMaster(
-        $imageHash,
-        $destinationSize,
-        $imageDirectory)
+    //
+    // the caller should pass in the master image as the $sourceFilename
+    // this is not strictly checked, but it would be odd to do otherwise
+    //
+    // the new image will be created in the same directory as the $sourceFilename
+    // and will have the same basename with the size specification appended
+    //
+    //     abcdef.jpg
+    //     abcdef-x200.jpg
+    //
+    // returns: the basename of the new image
+    //
+    public static function /* string */ createResizedImage(
+        $sourceFilename,
+        $destinationSize)
     {
+    }
+
+    //
+    //
+    //
+    public static function /* string | false */ resizeImageToTemporaryFile($sourceFilename, $destinationSize)
+    {
+        return false;
     }
 }
