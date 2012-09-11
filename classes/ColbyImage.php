@@ -84,7 +84,6 @@ class ColbyImage
         }
     }
 
-
     //
     // This function creates an independent image of the specified size.
     // This file is guaranteed not to be needed by anyone other than the caller.
