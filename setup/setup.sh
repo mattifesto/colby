@@ -17,6 +17,12 @@ then
 
 RewriteEngine On
 RewriteBase /
+
+#
+# pass URLS matching the following patterns through
+# without any further modification
+#
+
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . /index.php [L]
@@ -27,6 +33,13 @@ RewriteRule . /index.php [L]
 #
 
 RewriteRule \.git /index.php [L]
+
+#
+# if the request is for an existing php file (other than index.php)
+# rewrite to index.php (do not show the file)
+#
+
+RewriteRule \.php$ /index.php [L]
 
 </IfModule>
 EOF
