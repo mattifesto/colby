@@ -24,6 +24,12 @@ RewriteBase /
 #
 
 RewriteRule ^index\.php$ - [L]
+
+#
+# if the URL doesn't reference an existing file
+# then rewrite it to /index.php
+#
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . /index.php [L]
 
