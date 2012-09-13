@@ -1,5 +1,9 @@
 <?php
 
+Colby::useRect();
+
+define('COLBY_IMAGE_QUALITY', 90);
+
 /*
 
 This class provides support for importing images as simply as possible. The class adds maximum image support while adding very little dogma. The class only needs to be loaded if an image needs to be imported or a version needs to be created. The images created by the class don't need the class to exist in the future. The class is meant to be as small as possible while providing maximum simplicity for user uploaded and maintained images.
@@ -126,7 +130,7 @@ class ColbyImage
     // and will have the same basename with the size specification appended
     //
     //     abcdef.jpg
-    //     abcdef-x200.jpg
+    //     abcdef-x200x200.jpg
     //
     // returns: the basename of the new image
     //
@@ -134,10 +138,32 @@ class ColbyImage
         $sourceFilename,
         $destinationSize)
     {
+        $sourceSize = getimagesize($sourceFilename);
+
+        $sourceRect = ColbyRect::sourceRect($sourceSize, $destinationSize);
+
+        $destinationRect = ColbyRect::destinationRect($sourceSize, $destinationSize);
+
+        $sourceImage = self::openImageResource($sourceFilename);
+
+        $destinationImage = imagecreatetruecolor($destinationRect->width, $destinationRect->height);
+
+        if (!imagecopyresampled(
+            $destinationImage,
+            $sourceImage,
+            $destinationRect->x, $destinationRect->y,
+            $sourceRect->x, $sourceRect->y,
+            $destinationRect->width, $destinationRect->height,
+            $sourceRect->width, $sourceRect->height))
+        {
+            throw new RuntimeException("imagecopyresampled() of '{$sourceFilename}' failed");
+        }
+
+        self::saveImageResource($destinationImage, $sourceFilename, $destinationSize);
     }
 
     //
-    // returns: the basename of the imported image
+    // returns: the filename of the imported image
     //
     public static function /* string */ importUploadedImage(
         $name,
@@ -147,7 +173,7 @@ class ColbyImage
     }
 
     //
-    // returns: the basename of the imported image
+    // returns: the filename of the imported image
     //
     public static function /* string */ importImage(
         $sourceFilename,
@@ -172,6 +198,79 @@ class ColbyImage
             throw new RuntimeException("Unable to move {$temporaryFilename} to {$destinationFilename}");
         }
 
-        return basename($destinationFilename);
+        return $destinationFilename;
+    }
+
+    //
+    //
+    //
+    public static function /* resource */ openImageResource($filename)
+    {
+        $extension = self::canonicalizedExtensionFromFilename($filename);
+
+        switch ($extension)
+        {
+            case 'jpg':
+
+                $resource = imagecreatefromjpeg($filename);
+
+                break;
+
+            case 'png':
+
+                $resource = imagecreatefrompng($filename);
+
+                break;
+
+            default:
+
+                throw new RuntimeException("unrecognized image extension");
+
+                break;
+        }
+
+        return $resource;
+    }
+
+    //
+    //
+    //
+    public static function /* void */ saveImageResource($imageResource, $sourceFilename, $destinationSize)
+    {
+        $pathinfo = pathinfo($sourceFilename);
+
+        if ($destinationSize[2] === 'fill')
+        {
+            $meta = "w{$destinationSize[0]}h{$destinationSize[1]}";
+        }
+        else
+        {
+            $meta = "x{$destinationSize[0]}x{$destinationSize[1]}";
+        }
+
+        $extension = self::canonicalizedExtensionFromFilename($sourceFilename);
+
+        $destinationFilename = "{$pathinfo['dirname']}/{$pathinfo['filename']}-{$meta}.{$extension}";
+
+        switch ($extension)
+        {
+            case 'jpg':
+
+                imagejpeg($imageResource, $destinationFilename, COLBY_IMAGE_QUALITY);
+
+                break;
+
+            case 'png':
+
+                imagepng($imageResource, $destinationFilename);
+
+                break;
+
+            default:
+
+                throw new RuntimeException("unrecognized image extension");
+
+                break;
+        }
     }
 }

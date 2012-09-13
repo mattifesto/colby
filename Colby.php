@@ -222,22 +222,31 @@ class Colby
             $headers);
     }
 
-    ///
-    ///
-    ///
+    //
+    //
+    //
     public static function useAjax()
     {
-        include(COLBY_SITE_DIRECTORY .
+        include_once(COLBY_SITE_DIRECTORY .
             '/colby/classes/ColbyAjax.php');
     }
 
-    ///
-    ///
-    ///
+    //
+    //
+    //
     public static function useImage()
     {
-        include(COLBY_SITE_DIRECTORY .
+        include_once(COLBY_SITE_DIRECTORY .
             '/colby/classes/ColbyImage.php');
+    }
+
+    //
+    //
+    //
+    public static function useRect()
+    {
+        include_once(COLBY_SITE_DIRECTORY .
+            '/colby/classes/ColbyRect.php');
     }
 }
 
