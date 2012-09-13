@@ -64,13 +64,15 @@ If you find yourself in a discussion about how to name image files, end it as fa
 
 class ColbyImage
 {
-    //
-    // This function canonicalizes image file extensions
-    // and also determines supported image types.
-    //
-    // returns: the canonicalized extension.
-    //
-    public static function /* string */ canonicalizedExtensionFromFilename($filename)
+    /**
+     * Canonicalizes image filename extensions.
+     *
+     * Also determines supported image types.
+     *
+     * @return string
+     *   The canonicalized extension.
+     */
+    public static function canonicalizedExtensionFromFilename($filename)
     {
         $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
@@ -88,16 +90,19 @@ class ColbyImage
         }
     }
 
-    //
-    // This function creates an independent image of the specified size.
-    // This file is guaranteed not to be needed by anyone other than the caller.
-    //
-    // Note: Deleting the source file only actually happens in this function.
-    //
-    // returns: the filename of the independent file
-    //          this file will need to be either used or deleted by the caller
-    //
-    public static function /* string */ createIndependentImage(
+    /**
+     * Creates a new independent image that is free to be moved or deleted.
+     *
+     * This function creates an independent image of the specified size.
+     * This file is guaranteed not to be needed by anyone other than the caller.
+     *
+     * Note: Deleting the source file only actually happens in this function.
+     *
+     * @return string
+     *   The filename of the independent file.
+     *   This file needs to be either used or deleted by the caller.
+     */
+    public static function createIndependentImage(
         $sourceFilename,
         $destinationSize,
         $destinationDirectory,
@@ -122,19 +127,27 @@ class ColbyImage
         return $temporaryFilename;
     }
 
-    //
-    // the caller should pass in the master image as the $sourceFilename
-    // this is not strictly checked, but it would be odd to do otherwise
-    //
-    // the new image will be created in the same directory as the $sourceFilename
-    // and will have the same basename with the size specification appended
-    //
-    //     abcdef.jpg
-    //     abcdef-x200x200.jpg
-    //
-    // returns: the basename of the new image
-    //
-    public static function /* string */ createResizedImage(
+    /**
+     * Creates a new resized image from an existing image and saves it to disk.
+     *
+     * The caller should pass in the master image as the $sourceFilename.
+     * This is not strictly checked, but it would be odd to do otherwise.
+     *
+     * The new image will be created in the same directory as the $sourceFilename
+     * and will have the same basename with the size specification appended.
+     *
+     *     abcdef.jpg
+     *     abcdef-x200x200.jpg
+     *
+     * @param string $sourceFilename
+     *   The filename of the source image.
+     * @param array $destinationSize
+     *   An array holding three elements describing how the image is to be resized.
+     *   The elements: width (int), height (int), and 'fill' or 'fit'
+     * @return string
+     *   The destination filename.
+     */
+    public static function createResizedImage(
         $sourceFilename,
         $destinationSize)
     {
@@ -162,20 +175,22 @@ class ColbyImage
         self::saveImageResource($destinationImage, $sourceFilename, $destinationSize);
     }
 
-    //
-    // returns: the filename of the imported image
-    //
-    public static function /* string */ importUploadedImage(
+    /**
+     * @return string
+     *   The filename of the imported image.
+     */
+    public static function importUploadedImage(
         $name,
         $destinationSize,
         $destinationDirectory)
     {
     }
 
-    //
-    // returns: the filename of the imported image
-    //
-    public static function /* string */ importImage(
+    /**
+     * @return string
+     *   The filename of the imported image.
+     */
+    public static function importImage(
         $sourceFilename,
         $destinationSize,
         $destinationDirectory,
@@ -201,10 +216,11 @@ class ColbyImage
         return $destinationFilename;
     }
 
-    //
-    //
-    //
-    public static function /* resource */ openImageResource($filename)
+    /**
+     *
+     * @return resource
+     */
+    public static function openImageResource($filename)
     {
         $extension = self::canonicalizedExtensionFromFilename($filename);
 
@@ -232,10 +248,17 @@ class ColbyImage
         return $resource;
     }
 
-    //
-    //
-    //
-    public static function /* void */ saveImageResource($imageResource, $sourceFilename, $destinationSize)
+    /**
+     * Saves an image resource to disk with a filename matching the master image
+     * but with an image size suffix.
+     *
+     * @param resource $imageResource
+     * @param string $sourceFilename
+     * @param array $destinationSize
+     * @return string
+     *   The destination filename.
+     */
+    public static function saveImageResource($imageResource, $sourceFilename, $destinationSize)
     {
         $pathinfo = pathinfo($sourceFilename);
 
@@ -272,5 +295,7 @@ class ColbyImage
 
                 break;
         }
+
+        return $destinationFilename;
     }
 }
