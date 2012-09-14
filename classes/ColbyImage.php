@@ -91,6 +91,76 @@ class ColbyImage
     }
 
     /**
+     *
+     */
+    public static function createImageByFilling(
+        $sourceFilename,
+        $destinationFilename,
+        $requestedSize)
+    {
+        $sourceSize = getimagesize($sourceFilename);
+
+        if (   $sourceSize[0] < $requestedSize[0]
+            || $sourceSize[1] < $requestedSize[1])
+        {
+            // The whole point of filling is to fill the requested size
+            // completely. If the source isn't big enough to do that, throw
+            // an exception. The caller should never do that on purpose.
+
+            throw new RuntimeException('The source size is too small to fill the requested size.');
+        }
+
+        $sourceRect = ColbyRect::sourceRectToFillRequestedSize($sourceSize, $requestedSize);
+
+        $sourceImage = self::openImageResource($sourceFilename);
+
+        $destinationImage = imagecreatetruecolor($requestedSize[0], $requestedSize[1]);
+
+        imagecopyresampled(
+            $destinationImage,
+            $sourceImage,
+            0 /* destination x */, 0 /* destination y */,
+            $sourceRect->x, $sourceRect->y,
+            $requestedSize[0] /* destination width */, $requestedSize[1] /* destination height */,
+            $sourceRect->width, $sourceRect->height);
+
+        self::saveImageResource($destinationImage, $destinationFilename);
+    }
+
+    /**
+     *
+     */
+    public static function createImageByFitting(
+        $sourceFilename,
+        $destinationFilename,
+        $requestedSize)
+    {
+        $sourceSize = getimagesize($sourceFilename);
+
+        if (   $sourceSize[0] < $requestedSize[0]
+            && $sourceSize[1] < $requestedSize[1])
+        {
+            // copy
+        }
+
+        $destinationRect = ColbyRect::destinationRectToFitRequestedSize($sourceSize, $requestedSize);
+
+        $sourceImage = self::openImageResource($sourceFilename);
+
+        $destinationImage = imagecreatetruecolor($destinationRect->width, $destinationRect->height);
+
+        imagecopyresampled(
+            $destinationImage,
+            $sourceImage,
+            $destinationRect->x, $destinationRect->y,
+            0 /* source x */, 0 /* source y */,
+            $destinationRect->width, $destinationRect->height,
+            $sourceSize[0] /* source width */, $sourceSize[1] /* source height */);
+
+        self::saveImageResource($destinationImage, $destinationFilename);
+    }
+
+    /**
      * Creates a new independent image that is free to be moved or deleted.
      *
      * This function creates an independent image of the specified size.
@@ -125,54 +195,6 @@ class ColbyImage
         }
 
         return $temporaryFilename;
-    }
-
-    /**
-     * Creates a new resized image from an existing image and saves it to disk.
-     *
-     * The caller should pass in the master image as the $sourceFilename.
-     * This is not strictly checked, but it would be odd to do otherwise.
-     *
-     * The new image will be created in the same directory as the $sourceFilename
-     * and will have the same basename with the size specification appended.
-     *
-     *     abcdef.jpg
-     *     abcdef-x200x200.jpg
-     *
-     * @param string $sourceFilename
-     *   The filename of the source image.
-     * @param array $destinationSize
-     *   An array holding three elements describing how the image is to be resized.
-     *   The elements: width (int), height (int), and 'fill' or 'fit'
-     * @return string
-     *   The destination filename.
-     */
-    public static function createResizedImage(
-        $sourceFilename,
-        $destinationSize)
-    {
-        $sourceSize = getimagesize($sourceFilename);
-
-        $sourceRect = ColbyRect::sourceRect($sourceSize, $destinationSize);
-
-        $destinationRect = ColbyRect::destinationRect($sourceSize, $destinationSize);
-
-        $sourceImage = self::openImageResource($sourceFilename);
-
-        $destinationImage = imagecreatetruecolor($destinationRect->width, $destinationRect->height);
-
-        if (!imagecopyresampled(
-            $destinationImage,
-            $sourceImage,
-            $destinationRect->x, $destinationRect->y,
-            $sourceRect->x, $sourceRect->y,
-            $destinationRect->width, $destinationRect->height,
-            $sourceRect->width, $sourceRect->height))
-        {
-            throw new RuntimeException("imagecopyresampled() of '{$sourceFilename}' failed");
-        }
-
-        self::saveImageResource($destinationImage, $sourceFilename, $destinationSize);
     }
 
     /**
@@ -249,43 +271,23 @@ class ColbyImage
     }
 
     /**
-     * Saves an image resource to disk with a filename matching the master image
-     * but with an image size suffix.
      *
-     * @param resource $imageResource
-     * @param string $sourceFilename
-     * @param array $destinationSize
-     * @return string
-     *   The destination filename.
      */
-    public static function saveImageResource($imageResource, $sourceFilename, $destinationSize)
+    public static function saveImageResource($imageResource, $filename)
     {
-        $pathinfo = pathinfo($sourceFilename);
-
-        if ($destinationSize[2] === 'fill')
-        {
-            $meta = "w{$destinationSize[0]}h{$destinationSize[1]}";
-        }
-        else
-        {
-            $meta = "x{$destinationSize[0]}x{$destinationSize[1]}";
-        }
-
-        $extension = self::canonicalizedExtensionFromFilename($sourceFilename);
-
-        $destinationFilename = "{$pathinfo['dirname']}/{$pathinfo['filename']}-{$meta}.{$extension}";
+        $extension = self::canonicalizedExtensionFromFilename($filename);
 
         switch ($extension)
         {
             case 'jpg':
 
-                imagejpeg($imageResource, $destinationFilename, COLBY_IMAGE_QUALITY);
+                imagejpeg($imageResource, $filename, COLBY_IMAGE_QUALITY);
 
                 break;
 
             case 'png':
 
-                imagepng($imageResource, $destinationFilename);
+                imagepng($imageResource, $filename);
 
                 break;
 
@@ -295,7 +297,5 @@ class ColbyImage
 
                 break;
         }
-
-        return $destinationFilename;
     }
 }
