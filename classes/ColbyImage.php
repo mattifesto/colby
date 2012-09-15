@@ -2,7 +2,7 @@
 
 Colby::useRect();
 
-define('COLBY_IMAGE_QUALITY', 90);
+define('COLBY_IMAGE_QUALITY', 80);
 
 /*
 
@@ -107,7 +107,7 @@ class ColbyImage
             // completely. If the source isn't big enough to do that, throw
             // an exception. The caller should never do that on purpose.
 
-            throw new RuntimeException('The source size is too small to fill the requested size.');
+            throw new RuntimeException("The size '{$sourceSize[0]}x{$sourceSize[1]}' of '{$sourceFilename}' is too small to fill the requested size.");
         }
 
         $sourceRect = ColbyRect::sourceRectToFillRequestedSize($sourceSize, $requestedSize);
