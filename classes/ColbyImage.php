@@ -6,57 +6,55 @@ define('COLBY_IMAGE_QUALITY', 80);
 
 /*
 
-This class provides support for importing images as simply as possible. The class adds maximum image support while adding very little dogma. The class only needs to be loaded if an image needs to be imported or a version needs to be created. The images created by the class don't need the class to exist in the future. The class is meant to be as small as possible while providing maximum simplicity for user uploaded and maintained images.
+This class provides support for commonly required image manipulations. It's loaded by calling Colby::useImage() and only needs to be loaded if new images need to be canonicalized or resized.
 
-    --------
 
-The image file known as the master image is either imported from an original file that's been uploaded or already exists on disk.
+# Import Functions
 
-    --------
-
-Master images are created by the functions:
+The 'import' functions are used to canonicalize image filenames and move files in commonly needed ways. The result of an import is always a "master image".  Import functions take an image that's "out of the system" and bring it "into the system", though it's only through file renaming and copying, so it's very lightweight.
 
         importUploadedImage
         importImage
 
-    --------
+-   import functions never resize an image
+-   import functions always either remove or have the option of removing the source image
+-   import functions always create a master image
+-   the hash of a master image filename always matches the sha1 hash of the actual image file
+-   master image basenames are always <hash>.{jpg|png}
+-   since import functions always assign a filename to the image
+    they only take a destination directory, not a destination filename
 
-At the time of import a size can be specified for the master image that is different from the original. The application may often choose to use this size because true original images are often larger than will ever be necessary on a website. The master image will be a copy of the original imported image file if a size is not specified.
 
-    --------
+# Create Functions
 
-Master image filenames are the sha1 hash of the master image file:
+The 'create' functions are used to create new images by resizing other images.
 
-        d8610f80bc8210bd5259bb7af1dc756ee364596c.jpg
+        createImageByFilling
+        createImageByFitting
 
-This hash is virtually guaranteed to be distinct. The meta data used to describe user uploaded files is often frequently changed or not relevant, so meta data will be placed in an alt attribute on the image element instead of the filename.
+-   master images are usually passed in as the source image to a create function
+-   create doesn't check and doesn't care if the source image is a master image
+-   create functions always create the new image in the same directory as the source image
+    no destination filename or path is accepted
+-   create functions always have a string modifier for the images they create
+-   the string modifier 'w200h300' means the image is exactly 200x300 pixels
+-   the string modifier 'x200x300' means the max extent of the image fits 200x300 pixels
+    usually the image will match this size in at least one dimension
+    but it may be smaller in both dimensions where the source image is small
+-   create functions never enlarge images
+-   create image filenames are always <source-filename>-<modifier>.<source-extension>
 
-    --------
 
-Versions of the master image are created by the function:
+# Common Patterns and Scenarios
 
-        versionFromMaster
+-   Use 'importUploadedImage' to import an uploaded image, then use a 'create' function to create a new intermediate size, and then use 'importImage' to turn that new image into a master image. This handles a scenario where a large master image is not required so giant uploaded images are discarded.
 
-Versions are created with a required size parameter which is appended to the filename:
+-   Use the image functions to manipulate images and then use PHP's 'copy' and 'rename' to make custom adjustements to filenames. The ColbyImage functions are not meant to replace or prevent the use of PHP file manipulations.
 
-        d8610f80bc8210bd5259bb7af1dc756ee364596c-x200.jpg
-
-Size parameters are specified in the following manner:
-
-        current supported size specifications:
-
-        x200        the maximum extent of the image is 200 pixels
-
-        future supported size specifications:
-
-        w200        the width of the image is 200 pixels
-        h200        the height of the image is 200 pixels
-        w100h150    the image is exactly 100x150 pixels
-                    the image is centered, filled, and clipped if necessary
 
 # 2012.09.06 Note on Filenames
 
-Discussions on filenames are a black hole. There are a million compelling reasons one can come up with for naming image files with certain patterns in certain contexts. They're all red herrings. The goal of this class is to process many unrelated images; with unknown present and future goals; using as little external technology as possible (for instance, databases). This forces the conclusion that it's best not to have "meaningful" image filenames because any meaning would be an external dependency, even if only conceptually. The sha1 hash is perfect because it's easily calculated and doesn't have any meaning whatsoever related to the content of the image.
+Discussions on filenames are a black hole. There are a million compelling reasons one can come up with for naming image files with certain patterns in certain contexts. They're all red herrings. The goal of this class is to process many unrelated images; with unknown present and future goals; using as little external technology as possible (for instance, databases). This forces the conclusion that it's best not to have "meaningful" image filenames because any meaning would be an external dependency, even if only conceptually. The sha1 hash is perfect because it's easily calculated, is theoretically distinct, and doesn't have any meaning whatsoever related to the content of the image.
 
 If you find yourself in a discussion about how to name image files, end it as fast as you can. All your worries will be gone. Image metadata is important, it just shouldn't be part of the image filename.
 
