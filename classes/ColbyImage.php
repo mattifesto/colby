@@ -82,13 +82,9 @@ class ColbyImage
         {
             return 'png';
         }
-        else if ($extension === 'gif')
-        {
-            return 'gif';
-        }
         else
         {
-            throw new RuntimeException("Unknown image filename extension: {$filename}");
+            throw new RuntimeException("Unsupported image filename extension: {$filename}");
         }
     }
 
@@ -292,7 +288,7 @@ class ColbyImage
 
             default:
 
-                throw new RuntimeException("unrecognized image extension");
+                throw new RuntimeException("Unsupported image filename extension: {$filename}");
 
                 break;
         }
@@ -323,7 +319,7 @@ class ColbyImage
 
             default:
 
-                throw new RuntimeException("unrecognized image extension");
+                throw new RuntimeException("Unsupported image filename extension: {$filename}");
 
                 break;
         }
