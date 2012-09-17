@@ -67,8 +67,6 @@ class ColbyImage
     /**
      * Canonicalizes image filename extensions.
      *
-     * Also determines supported image types.
-     *
      * @return string
      *   The canonicalized extension.
      */
@@ -84,9 +82,13 @@ class ColbyImage
         {
             return 'png';
         }
+        else if ($extension === 'gif')
+        {
+            return 'gif';
+        }
         else
         {
-            throw new RuntimeException("Unsupported image format: {$filename}");
+            throw new RuntimeException("Unknown image filename extension: {$filename}");
         }
     }
 
@@ -198,14 +200,38 @@ class ColbyImage
     }
 
     /**
+     * Imports an uploaded image.
+     *
+     * This method does not do any resizing. If the image needs to be further
+     * processed to create a new master image at a smaller size, use
+     * ColbyImage::importImage after calling this function.
+     *
+     * If the caller determines the image is unacceptable, the caller will
+     * need to delete it.
+     *
      * @return string
      *   The filename of the imported image.
+     *   This will be: <sha1 hash of file>.<canonicalized extension>
      */
     public static function importUploadedImage(
         $name,
-        $destinationSize,
         $destinationDirectory)
     {
+        // NOTE: This code does not handle multiple file uploads for one name
+        //       and will most likely fail explicitly or functionally if that
+        //       is attempted. It's neither a security nor a functionality
+        //       concern. It's not something the user can choose to do on their
+        //       own so it shouldn't be a problem in a production environment.
+
+        $extension = self::canonicalizedExtensionFromFilename($_FILES[$name]['name']);
+
+        $imageHash = hash_file('sha1', $_FILES[$name]['tmp_name']);
+
+        $filename = "{$destinationDirectory}/{$imageHash}.{$extension}";
+
+        move_uploaded_file($_FILES[$name]['tmp_name'], $filename);
+
+        return $filename;
     }
 
     /**
@@ -230,9 +256,13 @@ class ColbyImage
 
         $destinationFilename = "{$destinationDirectory}/{$imageHash}.{$destinationExtension}";
 
-        if (!rename($temporaryFilename, $destinationFilename))
+        if ($shouldDeleteSourceFile)
         {
-            throw new RuntimeException("Unable to move {$temporaryFilename} to {$destinationFilename}");
+            rename($temporaryFilename, $destinationFilename);
+        }
+        else
+        {
+            copy($temporaryFilename, $destinationFilename);
         }
 
         return $destinationFilename;
