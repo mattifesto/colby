@@ -89,11 +89,11 @@ class ColbyImage
     }
 
     /**
-     *
+     * @return string
+     *  The filename of the new image.
      */
     public static function createImageByFilling(
         $sourceFilename,
-        $destinationFilename,
         $requestedSize)
     {
         $sourceSize = getimagesize($sourceFilename);
@@ -122,23 +122,37 @@ class ColbyImage
             $requestedSize[0] /* destination width */, $requestedSize[1] /* destination height */,
             $sourceRect->width, $sourceRect->height);
 
+        $pathinfo = pathinfo($sourceFilename);
+
+        $sizeId = "w{$requestedSize[0]}h{$requestedSize[1]}";
+
+        $destinationFilename = "{$pathinfo['dirname']}/{$pathinfo['filename']}-{$sizeId}.{$pathinfo['extension']}";
+
         self::saveImageResource($destinationImage, $destinationFilename);
+
+        return $destinationFilename;
     }
 
     /**
-     *
+     * @return string
+     *  The filename of the new image.
      */
     public static function createImageByFitting(
         $sourceFilename,
-        $destinationFilename,
         $requestedSize)
     {
+        $pathinfo = pathinfo($sourceFilename);
+
+        $sizeId = "x{$requestedSize[0]}x{$requestedSize[1]}";
+
+        $destinationFilename = "{$pathinfo['dirname']}/{$pathinfo['filename']}-{$sizeId}.{$pathinfo['extension']}";
+
         $sourceSize = getimagesize($sourceFilename);
 
         if (   $sourceSize[0] < $requestedSize[0]
             && $sourceSize[1] < $requestedSize[1])
         {
-            // copy
+            copy($sourceFilename, $destinationFilename);
         }
 
         $destinationRect = ColbyRect::destinationRectToFitRequestedSize($sourceSize, $requestedSize);
@@ -156,43 +170,8 @@ class ColbyImage
             $sourceSize[0] /* source width */, $sourceSize[1] /* source height */);
 
         self::saveImageResource($destinationImage, $destinationFilename);
-    }
 
-    /**
-     * Creates a new independent image that is free to be moved or deleted.
-     *
-     * This function creates an independent image of the specified size.
-     * This file is guaranteed not to be needed by anyone other than the caller.
-     *
-     * Note: Deleting the source file only actually happens in this function.
-     *
-     * @return string
-     *   The filename of the independent file.
-     *   This file needs to be either used or deleted by the caller.
-     */
-    public static function createIndependentImage(
-        $sourceFilename,
-        $destinationSize,
-        $destinationDirectory,
-        $shouldDeleteSourceFile)
-    {
-        $temporaryFilename = $destinationDirectory .
-            '/tmp-' .
-            hash('sha1', $sourceFilename . rand());
-
-        if (false /* needs resize */)
-        {
-        }
-        else if ($shouldDeleteSourceFile)
-        {
-            rename($sourceFilename, $temporaryFilename);
-        }
-        else
-        {
-            copy($sourceFilename, $temporaryFilename);
-        }
-
-        return $temporaryFilename;
+        return $destinationFilename;
     }
 
     /**
@@ -236,17 +215,10 @@ class ColbyImage
      */
     public static function importImage(
         $sourceFilename,
-        $destinationSize,
         $destinationDirectory,
         $shouldDeleteSourceFile = false)
     {
-        $temporaryFilename = self::createIndependentImage(
-            $sourceFilename,
-            $destinationSize,
-            $destinationDirectory,
-            $shouldDeleteSourceFile);
-
-        $imageHash = hash_file('sha1', $temporaryFilename);
+        $imageHash = hash_file('sha1', $sourceFilename);
 
         $destinationExtension = self::canonicalizedExtensionFromFilename($sourceFilename);
 
@@ -254,11 +226,11 @@ class ColbyImage
 
         if ($shouldDeleteSourceFile)
         {
-            rename($temporaryFilename, $destinationFilename);
+            rename($sourceFilename, $destinationFilename);
         }
         else
         {
-            copy($temporaryFilename, $destinationFilename);
+            copy($sourceFilename, $destinationFilename);
         }
 
         return $destinationFilename;
@@ -297,7 +269,7 @@ class ColbyImage
     }
 
     /**
-     *
+     * @return void
      */
     public static function saveImageResource($imageResource, $filename)
     {
