@@ -122,17 +122,20 @@ th
  * so it makes sense to have them here
  */
 
-ul.Horizonal
+ul.Horizontal, /* deprecated */
+ul.horizontal
 {
     padding-left: 0px;
 }
 
-ul.Horizontal > li
+ul.Horizontal > li, /* deprecated */
+ul.horizontal > li
 {
     display: inline;
 }
 
-ul.Horizontal > li + li
+ul.Horizontal > li + li, /* deprecated */
+ul.horizontal > li + li
 {
     margin-left: 1.5em;
 }
