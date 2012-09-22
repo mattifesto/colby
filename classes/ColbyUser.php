@@ -145,6 +145,30 @@ class ColbyUser
         setcookie(COLBY_USER_COOKIE, $cookieValue, 0, '/');
     }
 
+    /**
+     * Creates a hyperlink for either logging in or out depending on whether
+     * the user is currently logged in or out.
+     *
+     * @return string
+     *  a string containg an HTML anchor element
+     *  <a href="...">log in</a>
+     */
+    public static function loginHyperlink($redirectURL = null)
+    {
+        if (ColbyUser::currentUserId())
+        {
+            $url = ColbyUser::logoutURL($redirectURL);
+
+            return "<a href=\"{$url}\">log out</a>";
+        }
+        else
+        {
+            $url = ColbyUser::loginURL($redirectURL);
+
+            return "<a href=\"{$url}\">log out</a>";
+        }
+    }
+
     ///
     ///
     ///
