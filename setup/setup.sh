@@ -12,45 +12,23 @@ fi
 if [ ! -f .htaccess ]
 then
     echo "creating '.htaccess'"
-    cat > .htaccess << 'EOF'
-<IfModule mod_rewrite.c>
-
-RewriteEngine On
-RewriteBase /
-
-#
-# pass URLS matching the following patterns through
-# without any further modification
-#
-
-RewriteRule ^index\.php$ - [L]
-
-#
-# if the URL doesn't reference an existing file
-# then rewrite it to /index.php
-#
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule . /index.php [L]
-
-#
-# if the request is for an existing file whose path contains the string '.git'
-# rewrite to index.php (do not show the file)
-#
-
-RewriteRule \.git /index.php [L]
-
-#
-# if the request is for an existing php file (other than index.php)
-# rewrite to index.php (do not show the file)
-#
-
-RewriteRule \.php$ /index.php [L]
-
-</IfModule>
-EOF
+    cp colby/setup/htaccess.template .htaccess
 else
     echo "${RED}.htaccess already exists, no changes made${OFF}"
 fi
 
+if [ ! -f colby-configuration.php ]
+then
+    echo "creating 'colby-configuration.php'"
+    cp colby/setup/colby-configuration.template colby-configuration.php
+else
+    echo "${RED}colby-configuration.php already exists, no changes made${OFF}"
+fi
 
+if [ ! -f index.php ]
+then
+    echo "creating 'index.php'"
+    cp colby/setup/index.template index.php
+else
+    echo "${RED}index.php already exists, no changes made${OFF}"
+fi
