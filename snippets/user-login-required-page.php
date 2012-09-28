@@ -18,7 +18,7 @@ ColbyPage::begin($args);
 
 <p><?php echo $args->description; ?>
 
-<p><a href="<?php echo ColbyUser::loginURL(); ?>">log in</a>
+<p><?php echo ColbyUser::loginHyperlink(); ?>
 
 <?php
 

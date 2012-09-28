@@ -47,7 +47,21 @@ class ColbyUser
 
             // get the user row for the user indicated by the cookie
 
-            $userRow = self::userRow($cookieUserId);
+            // NOTE: 2012.09.28
+            // Sometimes when the configuration file has been modified
+            // the user can be logged in and later the database is unavailable.
+            // This is a rare occurrence but we handle it
+            // with a check to make sure COLBY_MYSQL_HOST is set
+            // before attempting to get the user row for the user.
+
+            if (COLBY_MYSQL_HOST)
+            {
+                $userRow = self::userRow($cookieUserId);
+            }
+            else
+            {
+                $userRow = null;
+            }
 
             if (null === $userRow)
             {
@@ -155,7 +169,11 @@ class ColbyUser
      */
     public static function loginHyperlink($redirectURL = null)
     {
-        if (ColbyUser::currentUserId())
+        if (!COLBY_FACEBOOK_APP_ID)
+        {
+            return '<span style="color: red;">this site is not configured to support users</span>';
+        }
+        else if (ColbyUser::currentUserId())
         {
             $url = ColbyUser::logoutURL($redirectURL);
 
