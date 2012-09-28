@@ -183,7 +183,7 @@ class ColbyUser
         {
             $url = ColbyUser::loginURL($redirectURL);
 
-            return "<a href=\"{$url}\">log out</a>";
+            return "<a href=\"{$url}\">log in</a>";
         }
     }
 
