@@ -28,6 +28,7 @@ dd
 
 <h1>Colby Configuration</h1>
 
+<!--
 <dl>
     <dt>Site URL</dt>
     <dd><input type="text" id="colby-site-url" value="http://<?php echo $_SERVER['SERVER_NAME']; ?>"></dd>
@@ -52,8 +53,95 @@ dd
     <dt>Developer Information</dt>
     <dd><input type="checkbox" id="colby-site-is-being-debugged"> site is being debugged</dd>
 </dl>
+-->
 
-<button onclick="">Install Colby</button>
+<?php
+
+if (!COLBY_MYSQL_HOST)
+{
+    ?>
+
+    <p>Please finish setting up the colby-configuration.php file and return to this page.
+
+    <?php
+}
+else
+{
+    ?>
+
+    <button onclick="doInstallColby();">Install Colby</button>
+    <progress id="ajax-communication" value="0"></progress>
+
+    <?php
+}
+
+?>
+
+<div id="error-log"></div>
+<script>
+
+"use strict";
+
+var xhr;
+
+function doInstallColby()
+{
+    beginAjax();
+
+    xhr = new XMLHttpRequest();
+    xhr.open('POST', '/colby/ajax/setup-database/', true);
+    xhr.onload = handleAjaxResponse;
+    xhr.send();
+}
+
+function handleAjaxResponse()
+{
+    var response = JSON.parse(xhr.responseText);
+
+    var errorLog = document.getElementById('error-log');
+
+    // remove error-log element content
+
+    while (errorLog.firstChild)
+    {
+        errorLog.removeChild(errorLog.firstChild);
+    }
+
+    var p = document.createElement('p');
+    var t = document.createTextNode(response.message);
+
+    p.appendChild(t);
+    errorLog.appendChild(p);
+
+    if ('stackTrace' in response)
+    {
+        var pre = document.createElement('pre');
+        t = document.createTextNode(response.stackTrace);
+
+        pre.appendChild(t);
+        errorLog.appendChild(pre);
+    }
+
+    xhr = null;
+
+    endAjax();
+}
+
+function beginAjax()
+{
+    var progress = document.getElementById('ajax-communication');
+
+    progress.removeAttribute('value');
+}
+
+function endAjax()
+{
+    var progress = document.getElementById('ajax-communication');
+
+    progress.setAttribute('value', '0');
+}
+
+</script>
 
 <?php
 
