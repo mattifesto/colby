@@ -193,7 +193,7 @@ class Colby
 
         if ($mysqli->error)
         {
-            throw new RuntimeException($mysqli->error);
+            throw new RuntimeException("MySQL error: {$mysqli->error}");
         }
 
         return $result;

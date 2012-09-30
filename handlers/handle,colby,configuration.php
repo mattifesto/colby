@@ -96,7 +96,17 @@ function doInstallColby()
 
 function handleAjaxResponse()
 {
-    var response = JSON.parse(xhr.responseText);
+    if (xhr.status == 200)
+    {
+        var response = JSON.parse(xhr.responseText);
+    }
+    else
+    {
+        var response =
+        {
+            'message' : xhr.status + ': ' + xhr.statusText
+        };
+    }
 
     var errorLog = document.getElementById('error-log');
 
