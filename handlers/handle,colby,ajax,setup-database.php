@@ -92,7 +92,7 @@ COLLATE=utf8_unicode_ci
 EOT;
 
 $sqls[] = <<<EOT
-CREATE PROCEDURE CreateSequence(IN sequenceName VARCHAR(50))
+CREATE PROCEDURE ColbyCreateSequence(IN sequenceName VARCHAR(50))
 BEGIN
     INSERT IGNORE INTO `ColbySequences`
         (
@@ -215,7 +215,7 @@ END
 EOT;
 
 $sqls[] = <<<EOT
-CALL CreateSequence('ColbyUsersId')
+CALL ColbyCreateSequence('ColbyUsersId')
 EOT;
 
 foreach ($sqls as $sql)
