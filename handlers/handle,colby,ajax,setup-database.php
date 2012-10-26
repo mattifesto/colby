@@ -214,6 +214,17 @@ BEGIN
 END
 EOT;
 
+// heredocs don't parse for constants so place the version in a variable
+$version = COLBY_VERSION;
+
+$sqls[] = <<<EOT
+CREATE FUNCTION ColbyVersion()
+RETURNS VARCHAR(15)
+BEGIN
+    RETURN '{$version}';
+END
+EOT;
+
 $sqls[] = <<<EOT
 CALL ColbyCreateSequence('ColbyUsersId')
 EOT;

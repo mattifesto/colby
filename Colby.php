@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . '/../colby-configuration.php');
+require_once(__DIR__ . '/version.php');
 
 class Colby
 {
