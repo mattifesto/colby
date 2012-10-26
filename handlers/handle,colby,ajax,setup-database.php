@@ -125,7 +125,7 @@ END
 EOT;
 
 $sqls[] = <<<EOT
-CREATE FUNCTION GetUserIdWithFacebookId
+CREATE FUNCTION ColbyGetUserIdWithFacebookId
 (
     theFacebookId BIGINT UNSIGNED
 )
@@ -163,7 +163,7 @@ BEGIN
     SELECT
         IFNULL
         (
-            GetUserIdWithFacebookId(theFacebookId),
+            ColbyGetUserIdWithFacebookId(theFacebookId),
             ColbyGetNextInsertIdForSequence('ColbyUsersId')
         )
     INTO
