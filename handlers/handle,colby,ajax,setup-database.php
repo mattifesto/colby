@@ -80,6 +80,21 @@ COLLATE=utf8_unicode_ci
 EOT;
 
 $sqls[] = <<<EOT
+CREATE TABLE IF NOT EXISTS `ColbyBlogPosts`
+(
+    `id` BINARY(20) NOT NULL,
+    `stub` VARCHAR(100) NOT NULL,
+    `published` DATETIME,
+    `searchContent` LONGTEXT NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `published` (`published`)
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8
+COLLATE=utf8_unicode_ci
+EOT;
+
+$sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbySequences`
 (
   `name` VARCHAR(50) NOT NULL,
