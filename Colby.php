@@ -172,8 +172,7 @@ class Colby
     {
         $sequenceName = $mysqli->escape_string($sequenceName);
 
-        $result = self::query(
-            "SELECT GetNextInsertIdForSequence('{$sequenceName}') AS `id`");
+        $result = self::query("SELECT ColbyGetNextInsertIdForSequence('{$sequenceName}') AS `id`");
 
         $nextSequenceId = $result->fetch_object()->id;
 

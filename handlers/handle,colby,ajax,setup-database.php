@@ -108,7 +108,7 @@ END
 EOT;
 
 $sqls[] = <<<EOT
-CREATE FUNCTION GetNextInsertIdForSequence
+CREATE FUNCTION ColbyGetNextInsertIdForSequence
 (
     theSequenceName VARCHAR(50)
 )
@@ -164,7 +164,7 @@ BEGIN
         IFNULL
         (
             GetUserIdWithFacebookId(theFacebookId),
-            GetNextInsertIdForSequence('ColbyUsersId')
+            ColbyGetNextInsertIdForSequence('ColbyUsersId')
         )
     INTO
         theUserId;
