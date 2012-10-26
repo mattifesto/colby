@@ -127,15 +127,17 @@ class ColbyUser
         $lastName = ColbyConvert::textToHTML($facebookProperties->last_name);
         $lastName = $mysqli->escape_string($lastName);
 
-        $sql = 'SELECT LoginFacebookUser(' .
-            "'{$facebookProperties->id}'," .
-            "'{$accessToken}'," .
-            "'{$facebookAccessExpirationTime}'," .
-            "'{$name}'," .
-            "'{$firstName}'," .
-            "'{$lastName}'," .
-            "'{$facebookProperties->timezone}'" .
-            ') AS `id`';
+        $sql = <<<EOT
+SELECT ColbyLoginFacebookUser(
+    '{$facebookProperties->id}',
+    '{$accessToken}',
+    '{$facebookAccessExpirationTime}',
+    '{$name}',
+    '{$firstName}',
+    '{$lastName}',
+    '{$facebookProperties->timezone}')
+AS `id`
+EOT;
 
         $result = $mysqli->query($sql);
 

@@ -146,7 +146,7 @@ END
 EOT;
 
 $sqls[] = <<<EOT
-CREATE FUNCTION LoginFacebookUser
+CREATE FUNCTION ColbyLoginFacebookUser
 (
     theFacebookId BIGINT UNSIGNED,
     theFacebookAccessToken VARCHAR(255),
