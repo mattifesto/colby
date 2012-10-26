@@ -2,9 +2,12 @@
 
 define('COLBY_SITE_DIR', $_SERVER['DOCUMENT_ROOT']);
 
-$indexFilename = COLBY_SITE_DIR . '/index.php';
+$dataDirectory = COLBY_SITE_DIR . '/data';
+
 $configurationFilename = COLBY_SITE_DIR . '/colby-configuration.php';
+$gitignoreFilename = COLBY_SITE_DIR . '/.gitignore';
 $htaccessFilename = COLBY_SITE_DIR . '/.htaccess';
+$indexFilename = COLBY_SITE_DIR . '/index.php';
 
 ?>
 
@@ -13,9 +16,11 @@ $htaccessFilename = COLBY_SITE_DIR . '/.htaccess';
 
 <?php
 
-if (   is_file($configurationFilename)
-    || is_file($htaccessFilename)
-    || is_file($indexFilename))
+if (   file_exists($dataDirectory)
+    || file_exists($configurationFilename)
+    || file_exists($gitignoreFilename)
+    || file_exists($htaccessFilename)
+    || file_exists($indexFilename))
 {
     // if .htaccess exists correctly in the web root directory
     // the user will not even be able to load this file
@@ -43,7 +48,9 @@ if (   is_file($configurationFilename)
     exit;
 }
 
+mkdir($dataDirectory);
 copy(__DIR__ . '/colby-configuration-bootstrap.php', $configurationFilename);
+copy(__DIR__ . '/gitignore.template', $gitignoreFilename);
 copy(__DIR__ . '/htaccess.template', $htaccessFilename);
 copy(__DIR__ . '/index.template', $indexFilename);
 
