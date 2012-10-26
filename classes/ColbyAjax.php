@@ -67,7 +67,7 @@ class ColbyAjax
 
             if (COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID === $userRow->facebookId)
             {
-                Colby::query('CALL VerifyUser(' . $userRow->id . ')');
+                Colby::query('CALL ColbyVerifyUser(' . $userRow->id . ')');
             }
             else
             {

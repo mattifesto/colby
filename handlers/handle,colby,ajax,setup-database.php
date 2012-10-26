@@ -204,7 +204,7 @@ END
 EOT;
 
 $sqls[] = <<<EOT
-CREATE PROCEDURE VerifyUser(IN userId BIGINT UNSIGNED)
+CREATE PROCEDURE ColbyVerifyUser(IN userId BIGINT UNSIGNED)
 BEGIN
     UPDATE `ColbyUsers`
     SET
