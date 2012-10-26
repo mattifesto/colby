@@ -204,20 +204,6 @@ END
 EOT;
 
 $sqls[] = <<<EOT
-CREATE PROCEDURE ShowUnverifiedUsers()
-READS SQL DATA
-BEGIN
-    SELECT
-        `id`,
-        `facebookname`
-    FROM
-        `ColbyUsers`
-    WHERE
-        `hasBeenVerified` = b'0';
-END
-EOT;
-
-$sqls[] = <<<EOT
 CREATE PROCEDURE VerifyUser(IN userId BIGINT UNSIGNED)
 BEGIN
     UPDATE `ColbyUsers`
