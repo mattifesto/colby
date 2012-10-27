@@ -13,7 +13,7 @@ ColbyPage::beginAdmin($args);
 <?php
 
 $sql = <<<EOT
-SELECT 
+SELECT
     `id`
 FROM
     `ColbyBlogPosts`
@@ -30,16 +30,16 @@ $result = Colby::query($sql);
 <table><tbody>
 
     <?php
-    
+
     while ($row = $result->fetch_object())
     {
         echo "<tr><td>{$row->id}</td></tr>\n";
     }
 
     $result->free();
-    
+
     ?>
-    
+
 </tbody></table>
 
 <h2>Create a New Blog Post</h2>
@@ -52,7 +52,7 @@ $editorDataFiles = $editorDataFiles + glob(COLBY_SITE_DIRECTORY . '/editor-templ
 foreach ($editorDataFiles as $editorDataFile)
 {
     $editorData = unserialize(file_get_contents($editorDataFile));
-    
+
     echo "<p>{$editorData->internalType}\n";
 }
 
