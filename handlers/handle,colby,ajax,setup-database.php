@@ -85,7 +85,6 @@ CREATE TABLE IF NOT EXISTS `ColbyBlogPosts`
     `id` BINARY(20) NOT NULL,
     `stub` VARCHAR(100) NOT NULL,
     `published` DATETIME,
-    `searchContent` LONGTEXT NOT NULL,
     PRIMARY KEY (`id`),
     KEY `published` (`published`)
 )
