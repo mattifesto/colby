@@ -13,6 +13,11 @@ class ColbyArchiver
 
     public static function createFileWithFileId($fileId)
     {
+        if (!preg_match('/^[0-9a-f]{40}$/', $fileId))
+        {
+            throw new InvalidArgumentException('fileId');
+        }
+
         $absoluteFileDirectory = COLBY_DATA_DIRECTORY . "/{$fileId}";
 
         if (file_exists($absoluteFileDirectory))
