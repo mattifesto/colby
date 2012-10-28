@@ -97,15 +97,20 @@ pre
  * all input elements should be included
  * I'm going to be conservative today and not change it
  * but consider it in the future, there should be a definitive answer
+ *
+ * 2012.10.27
+ * changed input[type=text] and input[type=file] to just input
+ * I'm leaving this comment in just in case something goes wrong
+ * also added the button and select elements
  */
 
-input[type=file],
-input[type=text],
+button,
+input,
+select,
 textarea
 {
     box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+    font-size: inherit;
     outline: none;
 }
 
