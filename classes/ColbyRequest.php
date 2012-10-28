@@ -154,6 +154,7 @@ class ColbyRequest
         // 1. check for "every stub" URL handler in app
         // 2. check for "every stub" URL handler in Colby system
         // 3. check for "first stub" multi-URL handler in app
+        // 4. check for "first stub" multi-URL handler in Colby system
 
         else
         {
@@ -199,6 +200,25 @@ class ColbyRequest
 
                 $potentialPath = COLBY_SITE_DIRECTORY .
                     '/handlers/' .
+                    $firstStubFileName;
+
+                if (self::fileIsValidHandler($potentialPath))
+                {
+                    $handlerPath = $potentialPath;
+                }
+            }
+
+            // 4. check for "first stub" multi-URL handler in Colby system
+            //    (/colby/handlers/)
+
+            if (null === $handlerPath)
+            {
+                $firstStubFileName = 'handle,' .
+                    self::$encodedStubs[0] .
+                    ',.php';
+
+                $potentialPath = COLBY_SITE_DIRECTORY .
+                    '/colby/handlers/' .
                     $firstStubFileName;
 
                 if (self::fileIsValidHandler($potentialPath))
