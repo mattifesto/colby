@@ -1,1 +1,0 @@
-O:8:"stdClass":3:{s:2:"id";s:40:"380d6933ab4b406708c32c59b2f8b900b4267123";s:12:"externalType";s:9:"Blog Post";s:12:"internalType";s:17:"Generic Blog Post";}

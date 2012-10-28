@@ -1,8 +1,8 @@
 <?php
 
 $args = new stdClass();
-$args->title = 'Colby Configuration';
-$args->description = 'Use this page to configure Colby.';
+$args->title = 'Generic Blog Post Editor';
+$args->description = 'Create and edit generic blog posts.';
 
 ColbyPage::beginAdmin($args);
 
