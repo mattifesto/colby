@@ -32,16 +32,19 @@ function ColbyArchiverBasicTest()
 {
     $fileId = sha1(microtime() . rand());
 
-    ColbyArchiver::createFileWithFileId($fileId);
+    $object0 = new stdClass();
+
+    $hash = ColbyArchiver::createFileWithRootObjectAndFileId($object0, $fileId);
 
     $object1 = new stdClass();
     $object1->message = 'test';
 
-    ColbyArchiver::archiveRootObjectWithFileId($object1, $fileId);
+    $hash = ColbyArchiver::archiveRootObjectWithFileId($object1, $fileId, $hash);
 
-    $object2 = ColbyArchiver::unarchiveRootObjectWithFileId($fileId);
+    $result = ColbyArchiver::unarchiveRootObjectWithFileId($fileId);
 
-    if ($object2->message != 'test')
+    if (   $result->fileHash != $hash
+        || $result->rootObject->message != 'test')
     {
         throw new RuntimeException(__FUNCTION__ . ' failed.');
     }
@@ -53,7 +56,9 @@ function ColbyArchiverInvalidFileIdTest()
 
     try
     {
-        ColbyArchiver::createFilewithFileId($fileId);
+        $object = new stdClass();
+
+        ColbyArchiver::createFileWithRootObjectAndFileId($object, $fileId);
     }
     catch (InvalidArgumentException $e)
     {

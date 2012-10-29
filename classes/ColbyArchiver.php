@@ -4,14 +4,55 @@ define('COLBY_DATA_DIRECTORY', COLBY_SITE_DIRECTORY . '/data');
 
 class ColbyArchiver
 {
-    public static function archiveRootObjectWithFileId($object, $fileId)
+    /**
+     * @return bool | string
+     *  false: if the file has been change since it was read
+     *         the file will not be written in this case
+     *  the updated file hash: if the file is archived successfully
+     */
+    public static function archiveRootObjectWithFileId($rootObject, $fileId, $previousFileHash)
     {
-        $absoluteRootObjectFilename = COLBY_DATA_DIRECTORY . "/{$fileId}/rootObject.php";
+        // If createFileWithFileId hasn't been called most of the functions
+        // below will fail. This enforces that it be called before this function.
 
-        file_put_contents($absoluteRootObjectFilename, serialize($object));
+        $absoluteRootObjectFilename = COLBY_DATA_DIRECTORY . "/{$fileId}/rootObject.data";
+
+        $lockResource = self::lockFile($fileId);
+
+        try
+        {
+            $hash = sha1_file($absoluteRootObjectFilename);
+
+            if ($hash != $previousFileHash)
+            {
+                $result = false;
+
+                goto done;
+            }
+
+            file_put_contents($absoluteRootObjectFilename, serialize($rootObject));
+
+            $result = sha1_file($absoluteRootObjectFilename);
+        }
+        catch (Exception $exception)
+        {
+            self::unlock($lockResource);
+
+            throw $exception;
+        }
+
+        done:
+
+        self::unlock($lockResource);
+
+        return $result;
     }
 
-    public static function createFileWithFileId($fileId)
+    /**
+     * @return string
+     *  the new file hash
+     */
+    public static function createFileWithRootObjectAndFileId($rootObject, $fileId)
     {
         if (!preg_match('/^[0-9a-f]{40}$/', $fileId))
         {
@@ -26,14 +67,86 @@ class ColbyArchiver
         }
 
         mkdir($absoluteFileDirectory);
+
+        $absoluteRootObjectFilename = COLBY_DATA_DIRECTORY . "/{$fileId}/rootObject.data";
+
+        $lockResource = self::lockFile($fileId);
+
+        try
+        {
+            file_put_contents($absoluteRootObjectFilename, serialize($rootObject));
+
+            $result = sha1_file($absoluteRootObjectFilename);
+        }
+        catch (Exception $exception)
+        {
+            self::unlock($lockResource);
+
+            throw $exception;
+        }
+
+        self::unlock($lockResource);
+
+        return $result;
     }
 
+    /**
+     * @return file handle
+     *  the file handle resource that was used to take the lock
+     *  this is not useful except that it needs to be passed to unlock
+     */
+    private static function lockFile($fileId)
+    {
+        // NOTE: flock is a cooperative (advisory) locking mechanism
+        //       it only locks out others if they also use flock
+        //       which, in this case, is enough
+        //       things like file_get_contents or a shell on the webserver
+        //       do not participate in flock locks
+
+        $absoluteLockFilename = COLBY_DATA_DIRECTORY . "/{$fileId}/lock.data";
+
+        $lockResource = fopen($absoluteLockFilename, 'w');
+        flock($lockResource, LOCK_EX);
+
+        return $lockResource;
+    }
+
+    /**
+     * @return object
+     *  object->fileHash: the file hash
+     *  object->rootObject: the root object
+     */
     public static function unarchiveRootObjectWithFileId($fileId)
     {
-        $absoluteRootObjectFilename = COLBY_DATA_DIRECTORY . "/{$fileId}/rootObject.php";
+        $absoluteRootObjectFilename = COLBY_DATA_DIRECTORY . "/{$fileId}/rootObject.data";
 
-        $object = unserialize(file_get_contents($absoluteRootObjectFilename));
+        $lockResource = self::lockFile($fileId);
 
-        return $object;
+        try
+        {
+            $result = new stdClass();
+
+            $result->fileHash = sha1_file($absoluteRootObjectFilename);
+            $result->rootObject = unserialize(file_get_contents($absoluteRootObjectFilename));
+        }
+        catch (Exception $exception)
+        {
+            self::unlock($lockResource);
+
+            throw $exception;
+        }
+
+        self::unlock($lockResource);
+
+        return $result;
+    }
+
+    /**
+     * @return void
+     */
+    private static function unlock($lockResource)
+    {
+        flock($lockResource, LOCK_UN);
+        fclose($lockResource);
     }
 }
