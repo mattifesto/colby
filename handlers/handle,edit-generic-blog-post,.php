@@ -49,17 +49,63 @@ fieldset > div + div
 <p>fileId: <?php echo $fileId; ?>
 
 <fieldset>
-    <div>Title <input type="text" onkeypress="handleKeyPressed(this);"></div>
-    <div>Content <textarea style="height: 400px;" onkeypress="handleKeyPressed(this);"></textarea></div>
+    <div>Title <input type="text" class="form-field" onkeypress="handleKeyPressed(this);"></div>
+    <div>Content <textarea class="form-field" style="height: 400px;" onkeypress="handleKeyPressed(this);"></textarea></div>
     <div><input type="date"></div>
 </fieldset>
 
 <script>
 "use strict";
 
+var needsUpdate = false;
+var isUpdating = false;
+var timer = null;
+
 function handleKeyPressed(sender)
 {
-    sender.style.backgroundColor = 'LightYellow';
+    if (sender)
+    {
+        sender.style.backgroundColor = 'LightYellow';
+    }
+
+    needsUpdate = true;
+
+    if (!isUpdating)
+    {
+        if (timer)
+        {
+            clearTimeout(timer);
+        }
+
+        timer = setTimeout(updateBlogPost, 2000);
+    }
+}
+
+function updateBlogPost()
+{
+    isUpdating = true;
+    needsUpdate = false;
+
+    setTimeout(handleBlogPostUpdated, 3000); // mimic ajax call
+}
+
+function handleBlogPostUpdated()
+{
+    isUpdating = false;
+
+    if (needsUpdate)
+    {
+        handleKeyPressed(null);
+    }
+    else
+    {
+        var elements = document.getElementsByClassName('form-field');
+
+        for (var i = 0; i < elements.length; i++)
+        {
+            elements[i].style.backgroundColor = 'Transparent';
+        }
+    }
 }
 </script>
 
