@@ -46,16 +46,16 @@ $result = Colby::query($sql);
 
 <?php
 
-$editorDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,edit-*-blog-post,.data');
-$editorDataFiles = $editorDataFiles + glob(COLBY_SITE_DIRECTORY . '/handlers/handle,edit-*-blog-post,.data');
+$editorDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,blog,*.data');
+$editorDataFiles = $editorDataFiles + glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,blog,*.data');
 
 foreach ($editorDataFiles as $editorDataFile)
 {
     $editorData = unserialize(file_get_contents($editorDataFile));
 
-    preg_match('/edit-(.*)-blog-post,.data$/', $editorDataFile, $matches);
+    preg_match('/blog,([^,]*).data$/', $editorDataFile, $matches);
 
-    echo "<p>{$editorData->name} <a href=\"/edit-{$matches[1]}-blog-post/\">new</a>\n";
+    echo "<p>{$editorData->name} <a href=\"/admin/blog/{$matches[1]}/edit/\">new</a>\n";
 }
 
 ColbyPage::end();

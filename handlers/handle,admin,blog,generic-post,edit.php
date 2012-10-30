@@ -1,16 +1,16 @@
 <?php
 
-$stubs = ColbyRequest::decodedStubs();
+ColbyPage::requireVerifiedUser();
 
-if (count($stubs) === 1)
+if (isset($_GET['file-id']))
 {
-    $fileId = sha1(microtime() . rand() . ColbyUser::currentUserId());
-
-    header('Location: /edit-generic-blog-post/' . $fileId . '/');
+    $fileId = $_GET['file-id'];
 }
 else
 {
-    $fileId = $stubs[1];
+    $fileId = sha1(microtime() . rand() . ColbyUser::currentUserId());
+
+    header("Location: /admin/blog/generic-post/edit/?file-id={$fileId}");
 }
 
 $args = new stdClass();
@@ -46,7 +46,7 @@ fieldset > div + div
 
 <h1>Generic Blog Post Editor</h1>
 
-<p>fileId: <?php echo $fileId; ?>
+<p>File Id: <?php echo $fileId; ?>
 
 <fieldset>
     <div>Title <input type="text" class="form-field" onkeypress="handleKeyPressed(this);"></div>
