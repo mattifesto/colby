@@ -288,6 +288,8 @@ class ColbyRequest
             $_SERVER['REQUEST_URI'],
             $matches);
 
+        // step 2: decode request URI
+
         self::$decodedRequestURI = urldecode($matches[1]);
 
         if (isset($matches[2]))
@@ -299,7 +301,7 @@ class ColbyRequest
             self::$requestQueryString = '';
         }
 
-        // step 2: get stubs
+        // step 3: get decoded stubs
         //
         // note: PREG_SPLIT_NO_EMPTY
         //       this will prevent preg_split from returning empty stubs
@@ -315,6 +317,14 @@ class ColbyRequest
             self::$decodedRequestURI,
             null,
             PREG_SPLIT_NO_EMPTY);
+
+        // step 4: re-encode stubs
+        //
+        // This is necessary because while the URI comes to us encoded
+        // it is not always fully encoded. For instance, often commas will not
+        // be encoded. Re-encoding the stubs canonicalizes the encoding so
+        // that our stubs are fully encoded the same way every time
+        // regardless of how we receive them.
 
         self::$encodedStubs = array();
 
