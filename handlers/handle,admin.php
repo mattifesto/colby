@@ -12,6 +12,8 @@ ColbyPage::beginAdmin($args);
 
 <h1>Site Administration</h1>
 
+<h2>Sections</h2>
+
 <?php
 
 $adminSections = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin~*.php');
