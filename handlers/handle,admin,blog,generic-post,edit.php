@@ -46,13 +46,15 @@ fieldset > div + div
 
 <h1>Generic Blog Post Editor</h1>
 
-<p>File Id: <?php echo $fileId; ?>
+<p><progress id="ajax-communication" value="0"></progress>
 
 <fieldset>
-    <div>Title <input type="text" class="form-field" onkeypress="handleKeyPressed(this);"></div>
+    <div>Title <input type="text" id="title" class="form-field" onkeypress="handleKeyPressed(this);"></div>
     <div>Content <textarea class="form-field" style="height: 400px;" onkeypress="handleKeyPressed(this);"></textarea></div>
     <div><input type="date"></div>
 </fieldset>
+
+<div id="error-log"></div>
 
 <script>
 "use strict";
@@ -60,6 +62,64 @@ fieldset > div + div
 var needsUpdate = false;
 var isUpdating = false;
 var timer = null;
+var xhr;
+
+function handleAjaxResponse()
+{
+    if (xhr.status == 200)
+    {
+        var response = JSON.parse(xhr.responseText);
+    }
+    else
+    {
+        var response =
+        {
+            'message' : xhr.status + ': ' + xhr.statusText
+        };
+    }
+
+    var errorLog = document.getElementById('error-log');
+
+    // remove error-log element content
+
+    while (errorLog.firstChild)
+    {
+        errorLog.removeChild(errorLog.firstChild);
+    }
+
+    var p = document.createElement('p');
+    var t = document.createTextNode(response.message);
+
+    p.appendChild(t);
+    errorLog.appendChild(p);
+
+    if ('stackTrace' in response)
+    {
+        var pre = document.createElement('pre');
+        t = document.createTextNode(response.stackTrace);
+
+        pre.appendChild(t);
+        errorLog.appendChild(pre);
+    }
+
+    xhr = null;
+
+    endAjax();
+}
+
+function beginAjax()
+{
+    var progress = document.getElementById('ajax-communication');
+
+    progress.removeAttribute('value');
+}
+
+function endAjax()
+{
+    var progress = document.getElementById('ajax-communication');
+
+    progress.setAttribute('value', '0');
+}
 
 function handleKeyPressed(sender)
 {
@@ -86,12 +146,24 @@ function updateBlogPost()
     isUpdating = true;
     needsUpdate = false;
 
-    setTimeout(handleBlogPostUpdated, 3000); // mimic ajax call
+    beginAjax();
+
+    var title = document.getElementById('title');
+
+    var formData = new FormData();
+    formData.append('title', title.value);
+
+    xhr = new XMLHttpRequest();
+    xhr.open('POST', '/admin/blog/generic-post/ajax/update/', true);
+    xhr.onload = handleBlogPostUpdated;
+    xhr.send(formData);
 }
 
 function handleBlogPostUpdated()
 {
     isUpdating = false;
+
+    handleAjaxResponse();
 
     if (needsUpdate)
     {
