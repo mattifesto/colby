@@ -30,9 +30,15 @@ class ColbyArchiver
                 goto done;
             }
 
-            file_put_contents($absoluteRootObjectFilename, serialize($rootObject));
+            // TODO: update file metadata on the root object before saving
 
-            $result = sha1_file($absoluteRootObjectFilename);
+            // $rootObject->fileAttributes = ...;
+
+            $serializedRootObject = serialize($rootObject);
+
+            file_put_contents($absoluteRootObjectFilename, $serializedRootObject);
+
+            $result = sha1($serializedRootObject);
         }
         catch (Exception $exception)
         {
@@ -74,9 +80,11 @@ class ColbyArchiver
 
         try
         {
-            file_put_contents($absoluteRootObjectFilename, serialize($rootObject));
+            $serializedRootObject = serialize($rootObject);
 
-            $result = sha1_file($absoluteRootObjectFilename);
+            file_put_contents($absoluteRootObjectFilename, $serializedRootObject);
+
+            $result = sha1($serializedRootObject);
         }
         catch (Exception $exception)
         {
@@ -126,8 +134,10 @@ class ColbyArchiver
         {
             $result = new stdClass();
 
-            $result->fileHash = sha1_file($absoluteRootObjectFilename);
-            $result->rootObject = unserialize(file_get_contents($absoluteRootObjectFilename));
+            $serializedRootObject = file_get_contents($absoluteRootObjectFilename);
+
+            $result->fileHash = sha1($serializedRootObject);
+            $result->rootObject = unserialize($serializedRootObject);
         }
         catch (Exception $exception)
         {
