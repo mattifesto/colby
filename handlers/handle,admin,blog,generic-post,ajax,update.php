@@ -1,6 +1,7 @@
 <?php
 
 Colby::useAjax();
+Colby::useBlog();
 
 ColbyAjax::requireVerifiedUser();
 
@@ -27,6 +28,8 @@ $rootObject->content = $_POST['content'];
 $rootObject->contentHTML = ColbyConvert::textToFormattedContent($rootObject->content);
 
 $archive->save();
+
+ColbyBlog::update($_POST['archive-id'], 'foo' . rand(), $archive->attributes()->created);
 
 $response->wasSuccessful = true;
 // just send a response back that indications the communication worked

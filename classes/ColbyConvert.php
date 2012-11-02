@@ -94,4 +94,24 @@ class ColbyConvert
 
         return strtolower($stub);
     }
+
+    /**
+     * @return string
+     */
+    public static function timestampToSQLDateTime($timestamp)
+    {
+        if (empty($timestamp))
+        {
+            return 'NULL';
+        }
+        else
+        {
+            $value = gmdate('Y-m-d H:i:s', $timestamp);
+
+            // return value in single quotes because it should be ready
+            // to insert into a SQL statement
+
+            return "'{$value}'";
+        }
+    }
 }

@@ -234,6 +234,15 @@ class Colby
             '/colby/classes/ColbyAjax.php');
     }
 
+    /**
+     * @return void
+     */
+    public static function useBlog()
+    {
+        include_once(COLBY_SITE_DIRECTORY .
+            '/colby/classes/ColbyBlog.php');
+    }
+
     //
     //
     //

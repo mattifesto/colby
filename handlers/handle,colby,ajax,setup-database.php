@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `ColbyBlogPosts`
     `stub` VARCHAR(100) NOT NULL,
     `published` DATETIME,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `stub` (`stub`),
     KEY `published` (`published`)
 )
 ENGINE=InnoDB
