@@ -20,6 +20,28 @@ class ColbyArchive
     protected $rootObject;
 
     /**
+     * @return void
+     */
+    public static function delete($archiveId)
+    {
+        // NOTE: currently doesn't handle nonexistent archive
+        //       assumes no subdirectories
+
+        $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$archiveId}";
+
+        $files = glob("{$absoluteArchiveDirectory}/*");
+
+        foreach ($files as $file)
+        {
+            unlink($file);
+        }
+
+        rmdir($absoluteArchiveDirectory);
+    }
+
+    /**
+     * @param string $archiveId
+     *
      * @param string $hash The hash of the archive that the caller is currently
      *                     working with. This can be passed as null if you don't
      *                     have a hash or don't care.

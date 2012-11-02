@@ -55,6 +55,8 @@ function ColbyArchiverBasicTest()
     {
         throw new RuntimeException(__FUNCTION__ . ' failed: data mismatch');
     }
+
+    ColbyArchive::delete($archiveId);
 }
 
 function ColbyArchiverInvalidFileIdTest()
