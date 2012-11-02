@@ -184,7 +184,7 @@ class ColbyArchive
 
         $this->attributes->hash = sha1(serialize($this->rootObject));
 
-        $time = gmdate('U');
+        $time = time(); // time() same as intval(gmdate('U'));
 
         if (null === $this->attributes->created)
         {
