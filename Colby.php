@@ -119,7 +119,7 @@ class Colby
         // so they are in alphabetical order
 
         include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyArchiver.php');
+            '/colby/classes/ColbyArchive.php');
 
         include_once(COLBY_SITE_DIRECTORY .
             '/colby/classes/ColbyConvert.php');

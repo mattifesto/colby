@@ -30,40 +30,45 @@ ColbyAjax::end();
 
 function ColbyArchiverBasicTest()
 {
-    $fileId = sha1(microtime() . rand());
+    $archiveId = sha1(microtime() . rand());
 
     $object0 = new stdClass();
 
-    $hash = ColbyArchiver::createFileWithRootObjectAndFileId($object0, $fileId);
+    $archive = ColbyArchive::open($archiveId);
 
-    $object1 = new stdClass();
-    $object1->message = 'test';
+    $archive->rootObject()->message = 'test';
 
-    $hash = ColbyArchiver::archiveRootObjectWithFileId($object1, $fileId, $hash);
+    $archive->save();
 
-    $result = ColbyArchiver::unarchiveRootObjectWithFileId($fileId);
+    $hash = $archive->attributes()->hash;
 
-    if (   $result->fileHash != $hash
-        || $result->rootObject->message != 'test')
+    $archive = null;
+
+    $archive = ColbyArchive::open($archiveId, $hash);
+
+    if (false === $archive)
     {
-        throw new RuntimeException(__FUNCTION__ . ' failed.');
+        throw new RuntimeException(__FUNCTION__ . ' failed: unable to re-open archive');
+    }
+
+    if ($archive->rootObject()->message != 'test')
+    {
+        throw new RuntimeException(__FUNCTION__ . ' failed: data mismatch');
     }
 }
 
 function ColbyArchiverInvalidFileIdTest()
 {
-    $fileId = 'abadf00d';
+    $archiveId = 'abadf00d';
 
     try
     {
-        $object = new stdClass();
-
-        ColbyArchiver::createFileWithRootObjectAndFileId($object, $fileId);
+        $archvie = ColbyArchive::open($archiveId);
     }
     catch (InvalidArgumentException $e)
     {
         return;
     }
 
-    throw new RuntimeException(__FUNCTION__ . ' failed.');
+    throw new RuntimeException(__FUNCTION__ . ' failed');
 }

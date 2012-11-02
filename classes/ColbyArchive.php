@@ -2,161 +2,196 @@
 
 define('COLBY_DATA_DIRECTORY', COLBY_SITE_DIRECTORY . '/data');
 
-class ColbyArchiver
+class ColbyArchiveAttributes
 {
+    public $created;
+    public $createdBy;
+    public $hash;
+    public $modified;
+    public $modifiedBy;
+}
+
+class ColbyArchive
+{
+    private $archiveId;
+    private $lockResource;
+
+    protected $attributes;
+    protected $rootObject;
+
     /**
-     * @return bool | string
-     *  false: if the file has been change since it was read
-     *         the file will not be written in this case
-     *  the updated file hash: if the file is archived successfully
+     * @param string $hash The hash of the archive that the caller is currently
+     *                     working with. This can be passed as null if you don't
+     *                     have a hash or don't care.
+     *
+     * @return
+     *  ColbyArchive instance - if it's a new archive, the hash is null,
+     *                          or if the hash matches the hash on disk
+     *  false - if hash doesn't match the hash on disk
      */
-    public static function archiveRootObjectWithFileId($rootObject, $fileId, $previousFileHash)
+    public static function open($archiveId, $hash = null)
     {
-        // If createFileWithFileId hasn't been called most of the functions
-        // below will fail. This enforces that it be called before this function.
-
-        $absoluteRootObjectFilename = COLBY_DATA_DIRECTORY . "/{$fileId}/rootObject.data";
-
-        $lockResource = self::lockFile($fileId);
-
-        try
+        if (!preg_match('/^[0-9a-f]{40}$/', $archiveId))
         {
-            $hash = sha1_file($absoluteRootObjectFilename);
+            throw new InvalidArgumentException('archiveId');
+        }
 
-            if ($hash != $previousFileHash)
+        $archive = new ColbyArchive();
+
+        $archive->archiveId = $archiveId;
+
+        $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$archiveId}";
+        $absoluteArchiveFilename = "{$absoluteArchiveDirectory}/archive.data";
+
+        if (is_dir($absoluteArchiveDirectory))
+        {
+            $archive->lock(LOCK_SH);
+
+            $data = unserialize(file_get_contents($absoluteArchiveFilename));
+
+            $archive->unlock();
+
+            if ($hash && $data->attributes->hash != $hash)
             {
-                $result = false;
-
-                goto done;
+                return false;
             }
 
-            // TODO: update file metadata on the root object before saving
+            $archive->attributes = $data->attributes;
+            $archive->rootObject = $data->rootObject;
 
-            // $rootObject->fileAttributes = ...;
-
-            $serializedRootObject = serialize($rootObject);
-
-            file_put_contents($absoluteRootObjectFilename, $serializedRootObject);
-
-            $result = sha1($serializedRootObject);
+            return $archive;
         }
-        catch (Exception $exception)
+        else
         {
-            self::unlock($lockResource);
+            // if the caller passed in a hash but the file doesn's exist
+            // this is the same as the hash not matching the hash on disk
 
-            throw $exception;
+            if ($hash)
+            {
+                return false;
+            }
+
+            $archive->attributes = new ColbyArchiveAttributes();
+            $archive->rootObject = new stdClass();
+
+            return $archive;
         }
+    }
 
-        done:
+    /*
+     * @return ColbyArchiveAttributes instance
+     */
+    public function attributes()
+    {
+        // TODO: copy?
 
-        self::unlock($lockResource);
-
-        return $result;
+        return $this->attributes;
     }
 
     /**
-     * @return string
-     *  the new file hash
+     * @param int $operation Either LOCK_SH or LOCK_EX. Use unlock() function instead of passing LOCK_UN.
+     *
+     * @return void
      */
-    public static function createFileWithRootObjectAndFileId($rootObject, $fileId)
+    private function lock($operation)
     {
-        if (!preg_match('/^[0-9a-f]{40}$/', $fileId))
-        {
-            throw new InvalidArgumentException('fileId');
-        }
+        // TODO: push an error and exception handler here
+        //       to unlock and release file resource in case of an error
 
-        $absoluteFileDirectory = COLBY_DATA_DIRECTORY . "/{$fileId}";
-
-        if (file_exists($absoluteFileDirectory))
-        {
-            throw new RuntimeException('A file with the specified fileId already exists.');
-        }
-
-        mkdir($absoluteFileDirectory);
-
-        $absoluteRootObjectFilename = COLBY_DATA_DIRECTORY . "/{$fileId}/rootObject.data";
-
-        $lockResource = self::lockFile($fileId);
-
-        try
-        {
-            $serializedRootObject = serialize($rootObject);
-
-            file_put_contents($absoluteRootObjectFilename, $serializedRootObject);
-
-            $result = sha1($serializedRootObject);
-        }
-        catch (Exception $exception)
-        {
-            self::unlock($lockResource);
-
-            throw $exception;
-        }
-
-        self::unlock($lockResource);
-
-        return $result;
-    }
-
-    /**
-     * @return file handle
-     *  the file handle resource that was used to take the lock
-     *  this is not useful except that it needs to be passed to unlock
-     */
-    private static function lockFile($fileId)
-    {
         // NOTE: flock is a cooperative (advisory) locking mechanism
         //       it only locks out others if they also use flock
         //       which, in this case, is enough
         //       things like file_get_contents or a shell on the webserver
         //       do not participate in flock locks
 
-        $absoluteLockFilename = COLBY_DATA_DIRECTORY . "/{$fileId}/lock.data";
+        // NOTE: this function doesn't protect against multiple locks
 
-        $lockResource = fopen($absoluteLockFilename, 'w');
-        flock($lockResource, LOCK_EX);
+        $absoluteLockFilename = COLBY_DATA_DIRECTORY . "/{$this->archiveId}/lock.data";
 
-        return $lockResource;
+        $this->lockResource = fopen($absoluteLockFilename, 'w');
+        flock($this->lockResource, $operation);
     }
 
     /**
-     * @return object
-     *  object->fileHash: the file hash
-     *  object->rootObject: the root object
+     * @return the root object
      */
-    public static function unarchiveRootObjectWithFileId($fileId)
+    public function rootObject()
     {
-        $absoluteRootObjectFilename = COLBY_DATA_DIRECTORY . "/{$fileId}/rootObject.data";
-
-        $lockResource = self::lockFile($fileId);
-
-        try
-        {
-            $result = new stdClass();
-
-            $serializedRootObject = file_get_contents($absoluteRootObjectFilename);
-
-            $result->fileHash = sha1($serializedRootObject);
-            $result->rootObject = unserialize($serializedRootObject);
-        }
-        catch (Exception $exception)
-        {
-            self::unlock($lockResource);
-
-            throw $exception;
-        }
-
-        self::unlock($lockResource);
-
-        return $result;
+        return $this->rootObject;
     }
 
     /**
      * @return void
      */
-    private static function unlock($lockResource)
+    public function setRootObject($rootObject)
     {
-        flock($lockResource, LOCK_UN);
-        fclose($lockResource);
+        $this->rootObject = $rootObject;
+    }
+
+    /**
+     * @return bool
+     *  true - if the file was saved successfully
+     *  false - if the file has change since we last read it from disk
+     */
+    public function save()
+    {
+        $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$this->archiveId}";
+        $absoluteArchiveFilename = "{$absoluteArchiveDirectory}/archive.data";
+
+        if (!file_exists($absoluteArchiveDirectory))
+        {
+            mkdir($absoluteArchiveDirectory);
+        }
+
+        $this->lock(LOCK_EX);
+
+        // if archive already exists on the disk, make sure it hasn't changed
+        // since we read it
+
+        if ($this->attributes->hash)
+        {
+            $data = unserialize(file_get_contents($absoluteArchiveFilename));
+
+            if ($this->attributes->hash != $data->attributes->hash)
+            {
+                return false;
+            }
+        }
+
+        // update file attributes
+
+        $this->attributes->hash = sha1(serialize($this->rootObject));
+
+        $time = gmdate('U');
+
+        if (null === $this->attributes->created)
+        {
+            $this->attributes->created = $time;
+            $this->attributes->createdBy = ColbyUser::currentUserId();
+        }
+
+        $this->attributes->modified = $time;
+        $this->attributes->modifiedBy = ColbyUser::currentUserId();
+
+        $data = new stdClass();
+        $data->attributes = $this->attributes;
+        $data->rootObject = $this->rootObject;
+
+        file_put_contents($absoluteArchiveFilename, serialize($data));
+
+        $this->unlock();
+
+        return true;
+    }
+
+    /**
+     * @return void
+     */
+    private function unlock()
+    {
+        flock($this->lockResource, LOCK_UN);
+        fclose($this->lockResource);
+
+        $this->lockResource = null;
     }
 }
