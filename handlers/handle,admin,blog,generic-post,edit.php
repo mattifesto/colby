@@ -2,15 +2,28 @@
 
 ColbyPage::requireVerifiedUser();
 
-if (isset($_GET['file-id']))
+include_once(__DIR__ . '/handle,admin,blog,generic-post,shared.php');
+
+if (isset($_GET['archive-id']))
 {
-    $fileId = $_GET['file-id'];
+    $archiveId = $_GET['archive-id'];
+
+    $archive = ColbyArchive::open($archiveId);
+
+    if ($archive->attributes()->created)
+    {
+        $data = $archive->rootObject();
+    }
+    else
+    {
+        $data = new ColbyGenericBlogPost();
+    }
 }
 else
 {
-    $fileId = sha1(microtime() . rand() . ColbyUser::currentUserId());
+    $archiveId = sha1(microtime() . rand() . ColbyUser::currentUserId());
 
-    header("Location: /admin/blog/generic-post/edit/?file-id={$fileId}");
+    header("Location: /admin/blog/generic-post/edit/?archive-id={$archiveId}");
 }
 
 $args = new stdClass();
@@ -49,9 +62,19 @@ fieldset > div + div
 <p><progress id="ajax-communication" value="0"></progress>
 
 <fieldset>
-    <div>Title <input type="text" id="title" class="form-field" onkeypress="handleKeyPressed(this);"></div>
-    <div>Content <textarea class="form-field" style="height: 400px;" onkeypress="handleKeyPressed(this);"></textarea></div>
-    <div><input type="date"></div>
+    <div>Title <input type="text"
+                      id="title"
+                      class="form-field"
+                      value="<?php echo ColbyConvert::textToHTML($data->title); ?>"
+                      onkeypress="handleKeyPressed(this);"></div>
+    <div>Content <textarea id="content"
+                           class="form-field"
+                           style="height: 400px;"
+                           onkeypress="handleKeyPressed(this);"><?php
+
+        echo ColbyConvert::textToHTML($data->content);
+
+    ?></textarea></div>
 </fieldset>
 
 <div id="error-log"></div>
@@ -59,6 +82,7 @@ fieldset > div + div
 <script>
 "use strict";
 
+var archiveId = '<?php echo $archiveId; ?>';
 var needsUpdate = false;
 var isUpdating = false;
 var timer = null;
@@ -148,9 +172,12 @@ function updateBlogPost()
 
     beginAjax();
 
+    var content = document.getElementById('content');
     var title = document.getElementById('title');
 
     var formData = new FormData();
+    formData.append('archive-id', archiveId);
+    formData.append('content', content.value);
     formData.append('title', title.value);
 
     xhr = new XMLHttpRequest();
