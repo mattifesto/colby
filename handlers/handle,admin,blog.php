@@ -14,7 +14,7 @@ ColbyPage::beginAdmin($args);
 
 $sql = <<<EOT
 SELECT
-    `id`
+    HEX(`id`) AS `id`
 FROM
     `ColbyBlogPosts`
 ORDER BY
