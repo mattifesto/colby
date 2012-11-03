@@ -1,6 +1,8 @@
 <?php
 
-class ColbyGenericBlogPost
+Colby::useBlogPost();
+
+class ColbyGenericBlogPost extends ColbyBlogPost
 {
     public $title = '';
     public $titleHTML = '';

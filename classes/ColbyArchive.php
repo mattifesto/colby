@@ -100,7 +100,7 @@ class ColbyArchive
         }
     }
 
-    /*
+    /**
      * @return ColbyArchiveAttributes instance
      */
     public function attributes()
@@ -108,6 +108,14 @@ class ColbyArchive
         // TODO: copy?
 
         return $this->attributes;
+    }
+
+    /*
+     * @return string archiveId
+     */
+    public function archiveId()
+    {
+        return $this->archiveId;
     }
 
     /**

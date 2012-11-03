@@ -5,18 +5,15 @@ class ColbyBlog
     /**
      * @return void
      */
-    public static function update($id, $stub, $published)
+    public static function update(ColbyArchive $archive)
     {
-        // NOTE: caller is responsible for passing a valid id
-        //       a 40 character hexadecimal number
-
-        $sqlId = Colby::mysqli()->escape_string($id);
+        $sqlId = Colby::mysqli()->escape_string($archive->archiveId());
         $sqlId = "UNHEX('{$sqlId}')";
 
-        $sqlStub = Colby::mysqli()->escape_string($stub);
+        $sqlStub = Colby::mysqli()->escape_string($archive->rootObject()->stub);
         $sqlStub = "'{$sqlStub}'";
 
-        $sqlPublished = ColbyConvert::timestampToSQLDateTime($published);
+        $sqlPublished = ColbyConvert::timestampToSQLDateTime($archive->rootObject()->published);
 
         $sql = <<<EOT
 INSERT INTO `ColbyBlogPosts`

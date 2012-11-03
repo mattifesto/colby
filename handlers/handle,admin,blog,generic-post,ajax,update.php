@@ -22,6 +22,7 @@ if (!$archive->attributes()->created)
 
 $rootObject = $archive->rootObject();
 
+$rootObject->stub = ColbyConvert::textToStub($_POST['title']);
 $rootObject->title = $_POST['title'];
 $rootObject->titleHTML = ColbyConvert::textToHTML($rootObject->title);
 $rootObject->content = $_POST['content'];
@@ -29,7 +30,7 @@ $rootObject->contentHTML = ColbyConvert::textToFormattedContent($rootObject->con
 
 $archive->save();
 
-ColbyBlog::update($_POST['archive-id'], 'foo' . rand(), $archive->attributes()->created);
+ColbyBlog::update($archive);
 
 $response->wasSuccessful = true;
 // just send a response back that indications the communication worked

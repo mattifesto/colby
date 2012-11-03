@@ -67,6 +67,12 @@ fieldset > div + div
                       class="form-field"
                       value="<?php echo ColbyConvert::textToHTML($data->title); ?>"
                       onkeypress="handleKeyPressed(this);"></div>
+    <div>Stub <input type="text"
+                     id="stub"
+                     class="form-field"
+                     value="<?php echo ColbyConvert::textToHTML($data->stub); ?>"
+                     readonly="readonly"
+                     onkeypress="handleKeyPressed(this);"></div>
     <div>Content <textarea id="content"
                            class="form-field"
                            style="height: 400px;"
@@ -173,11 +179,13 @@ function updateBlogPost()
     beginAjax();
 
     var content = document.getElementById('content');
+    var stub = document.getElementById('stub');
     var title = document.getElementById('title');
 
     var formData = new FormData();
     formData.append('archive-id', archiveId);
     formData.append('content', content.value);
+    formData.append('stub', content.value);
     formData.append('title', title.value);
 
     xhr = new XMLHttpRequest();
