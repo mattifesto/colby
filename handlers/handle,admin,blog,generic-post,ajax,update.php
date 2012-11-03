@@ -5,7 +5,7 @@ Colby::useBlog();
 
 ColbyAjax::requireVerifiedUser();
 
-include_once(__DIR__ . '/handle,admin,blog,generic-post,shared.php');
+include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyGenericBlogPost.php');
 
 ColbyAjax::begin();
 
