@@ -83,6 +83,7 @@ $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbyBlogPosts`
 (
     `id` BINARY(20) NOT NULL,
+    `type` BINARY(20) NOT NULL,
     `stub` VARCHAR(100) NOT NULL,
     `published` DATETIME,
     PRIMARY KEY (`id`),

@@ -16,6 +16,7 @@ ColbyPage::beginAdmin($args);
 
 $sql = <<<EOT
 SELECT
+    LOWER(HEX(`type`)) AS `type`,
     LOWER(HEX(`id`)) AS `id`
 FROM
     `ColbyBlogPosts`
@@ -35,7 +36,7 @@ $result = Colby::query($sql);
 
     while ($row = $result->fetch_object())
     {
-        echo "<tr><td><a href="">{$row->id}</a></td></tr>\n";
+        echo "<tr><td><a href=\"/admin/blog/{$row->type}/edit/?archive-id={$row->id}\">{$row->id}</a></td></tr>\n";
     }
 
     $result->free();

@@ -10,6 +10,9 @@ class ColbyBlog
         $sqlId = Colby::mysqli()->escape_string($archive->archiveId());
         $sqlId = "UNHEX('{$sqlId}')";
 
+        $sqlType = Colby::mysqli()->escape_string($archive->rootObject()->type);
+        $sqlType = "UNHEX('{$sqlType}')";
+
         $sqlStub = Colby::mysqli()->escape_string($archive->rootObject()->stub);
         $sqlStub = "'{$sqlStub}'";
 
@@ -19,12 +22,14 @@ class ColbyBlog
 INSERT INTO `ColbyBlogPosts`
 (
     `id`,
+    `type`,
     `stub`,
     `published`
 )
 VALUES
 (
     {$sqlId},
+    {$sqlType},
     {$sqlStub},
     {$sqlPublished}
 )

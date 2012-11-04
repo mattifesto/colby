@@ -15,6 +15,11 @@ $archive = ColbyArchive::open($_POST['archive-id']);
 
 $rootObject = $archive->rootObject();
 
+if (!$archive->attributes()->created)
+{
+    $rootObject->type = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
+}
+
 $rootObject->content = $_POST['content'];
 $rootObject->contentHTML = ColbyConvert::textToFormattedContent($rootObject->content);
 $rootObject->published = NULL;
