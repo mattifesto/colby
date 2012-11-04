@@ -1,5 +1,13 @@
 <?php
 
+// TODO: better title and description?
+
+$args = new stdClass();
+$args->title = 'Blog';
+$args->description = 'Blog';
+
+ColbyPage::begin($args);
+
 $sql = <<<EOT
 SELECT
     LOWER(HEX(`id`)) AS `id`,
@@ -20,3 +28,5 @@ while ($row = $result->fetch_object())
 
     <?php
 }
+
+ColbyPage::end();

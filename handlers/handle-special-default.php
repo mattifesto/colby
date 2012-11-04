@@ -6,12 +6,6 @@ $args = new stdClass();
 $args->title = 'Page Not Found';
 $args->description = 'The page you requested was not found.';
 
-// setting the header and footer is only required to override the default
-// which is COLBY_SITE_DIRECTORY . '/snippets/(header|footer).php'
-
-$args->header = COLBY_SITE_DIRECTORY . '/colby/snippets/header.php';
-$args->footer = COLBY_SITE_DIRECTORY . '/colby/snippets/footer.php';
-
 ColbyPage::begin($args);
 
 ?>

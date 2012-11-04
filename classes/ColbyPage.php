@@ -4,15 +4,37 @@ class ColbyPage
 {
     private static $args = null;
 
-    ///
-    ///
-    ///
-    public static function /* void */ begin($args)
+    /**
+     * @return void
+     */
+    public static function begin($args)
     {
         if (!isset($args->header))
         {
-            $args->header = COLBY_SITE_DIRECTORY .
-                '/snippets/header.php';
+            $header = COLBY_SITE_DIRECTORY . '/snippets/header.php';
+
+            if (file_exists($header))
+            {
+                $args->header = $header;
+            }
+            else
+            {
+                $args->header = COLBY_SITE_DIRECTORY . '/colby/snippets/header.php';
+            }
+        }
+
+        if (!isset($args->footer))
+        {
+            $footer = COLBY_SITE_DIRECTORY . '/snippets/footer.php';
+
+            if (file_exists($footer))
+            {
+                $args->header = $footer;
+            }
+            else
+            {
+                $args->footer = COLBY_SITE_DIRECTORY . '/colby/snippets/footer.php';
+            }
         }
 
         // TODO: I think these checks should be in the individual header files
@@ -50,37 +72,33 @@ class ColbyPage
         include($args->header);
     }
 
-    ///
-    ///
-    ///
-    public static function /* void */ beginAdmin($args)
+    /**
+     * @return void
+     */
+    public static function beginAdmin($args)
     {
+        // admin pages always use system header and footer
+
         $args->header = COLBY_SITE_DIRECTORY . '/colby/snippets/header.php';
         $args->footer = COLBY_SITE_DIRECTORY . '/colby/snippets/footer.php';
 
         self::begin($args);
     }
 
-    ///
-    ///
-    ///
-    public static function /* void */ end()
+    /**
+     * @return void
+     */
+    public static function end()
     {
-        if (!isset(self::$args->footer))
-        {
-            self::$args->footer = COLBY_SITE_DIRECTORY .
-                '/snippets/footer.php';
-        }
-
         include(self::$args->footer);
 
         ob_end_flush();
     }
 
-    ///
-    ///
-    ///
-    public static function /* void */ handleException($e)
+    /**
+     * @return void
+     */
+    public static function handleException($e)
     {
         // remove the current page exception handler
         // we got here by handling an exception so we're done with it
