@@ -3,6 +3,39 @@
 class ColbyBlog
 {
     /**
+     * @return ColbyArchive | bool (false)
+     */
+    public static function archiveForStub($stub)
+    {
+        $sqlStub = Colby::mysqli()->escape_string($stub);
+        $sqlStub = "'{$sqlStub}'";
+
+        $sql = <<<EOT
+SELECT
+    LOWER(HEX(`id`)) AS `id`
+FROM
+    `ColbyBlogPosts`
+WHERE
+    `stub` = {$sqlStub}
+EOT;
+
+        $result = Colby::query($sql);
+
+        if ($result->num_rows != 1)
+        {
+            return false;
+        }
+
+        $archiveId = $result->fetch_object()->id;
+
+        $result->free();
+
+        $archive = ColbyArchive::open($archiveId);
+
+        return $archive;
+    }
+
+    /**
      * @return void
      */
     public static function update(ColbyArchive $archive)
