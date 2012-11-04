@@ -2,8 +2,6 @@
 
 ColbyPage::requireVerifiedUser();
 
-include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyGenericBlogPost.php');
-
 if (isset($_GET['archive-id']))
 {
     $archiveId = $_GET['archive-id'];
@@ -12,18 +10,19 @@ if (isset($_GET['archive-id']))
 
     if ($archive->attributes()->created)
     {
+        $hasData = true;
         $data = $archive->rootObject();
     }
     else
     {
-        $data = new ColbyGenericBlogPost();
+        $hasData = false;
     }
 }
 else
 {
     $archiveId = sha1(microtime() . rand() . ColbyUser::currentUserId());
 
-    header("Location: /admin/blog/generic-post/edit/?archive-id={$archiveId}");
+    header("Location: /admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/edit/?archive-id={$archiveId}");
 }
 
 $args = new stdClass();
@@ -65,12 +64,12 @@ fieldset > div + div
     <div>Title <input type="text"
                       id="title"
                       class="form-field"
-                      value="<?php echo ColbyConvert::textToHTML($data->title); ?>"
+                      value="<?php if ($hasData) echo ColbyConvert::textToHTML($data->title); ?>"
                       onkeypress="handleKeyPressed(this);"></div>
     <div>Stub <input type="text"
                      id="stub"
                      class="form-field"
-                     value="<?php echo ColbyConvert::textToHTML($data->stub); ?>"
+                     value="<?php if ($hasData) echo ColbyConvert::textToHTML($data->stub); ?>"
                      readonly="readonly"
                      onkeypress="handleKeyPressed(this);"></div>
     <div>Content <textarea id="content"
@@ -78,7 +77,7 @@ fieldset > div + div
                            style="height: 400px;"
                            onkeypress="handleKeyPressed(this);"><?php
 
-        echo ColbyConvert::textToHTML($data->content);
+        if ($hasData) echo ColbyConvert::textToHTML($data->content);
 
     ?></textarea></div>
 </fieldset>
@@ -189,7 +188,7 @@ function updateBlogPost()
     formData.append('title', title.value);
 
     xhr = new XMLHttpRequest();
-    xhr.open('POST', '/admin/blog/generic-post/ajax/update/', true);
+    xhr.open('POST', '/admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/', true);
     xhr.onload = handleBlogPostUpdated;
     xhr.send(formData);
 }

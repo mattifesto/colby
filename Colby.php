@@ -243,15 +243,6 @@ class Colby
             '/colby/classes/ColbyBlog.php');
     }
 
-    /**
-     * @return void
-     */
-    public static function useBlogPost()
-    {
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyBlogPost.php');
-    }
-
     //
     //
     //

@@ -5,8 +5,6 @@ Colby::useBlog();
 
 ColbyAjax::requireVerifiedUser();
 
-include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyGenericBlogPost.php');
-
 ColbyAjax::begin();
 
 $response = new stdClass();
@@ -15,18 +13,14 @@ $response->message = 'incomplete';
 
 $archive = ColbyArchive::open($_POST['archive-id']);
 
-if (!$archive->attributes()->created)
-{
-    $archive->setRootObject(new ColbyGenericBlogPost());
-}
-
 $rootObject = $archive->rootObject();
 
+$rootObject->content = $_POST['content'];
+$rootObject->contentHTML = ColbyConvert::textToFormattedContent($rootObject->content);
+$rootObject->published = NULL;
 $rootObject->stub = ColbyConvert::textToStub($_POST['title']);
 $rootObject->title = $_POST['title'];
 $rootObject->titleHTML = ColbyConvert::textToHTML($rootObject->title);
-$rootObject->content = $_POST['content'];
-$rootObject->contentHTML = ColbyConvert::textToFormattedContent($rootObject->content);
 
 $archive->save();
 

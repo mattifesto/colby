@@ -1,5 +1,7 @@
 <?php
 
+ColbyPage::requireVerifiedUser();
+
 $args = new stdClass();
 $args->title = 'Blog Administration';
 $args->description = 'Create, edit, and delete blog posts.';
@@ -14,7 +16,7 @@ ColbyPage::beginAdmin($args);
 
 $sql = <<<EOT
 SELECT
-    HEX(`id`) AS `id`
+    LOWER(HEX(`id`)) AS `id`
 FROM
     `ColbyBlogPosts`
 ORDER BY
@@ -33,7 +35,7 @@ $result = Colby::query($sql);
 
     while ($row = $result->fetch_object())
     {
-        echo "<tr><td>{$row->id}</td></tr>\n";
+        echo "<tr><td><a href="">{$row->id}</a></td></tr>\n";
     }
 
     $result->free();
