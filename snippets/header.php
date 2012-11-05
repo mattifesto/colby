@@ -46,6 +46,33 @@
                 margin-top: 1.0em;
                 margin-bottom: 1.0em;
             }
+
+            table
+            {
+                margin: 1.0em 0.0em 3.0em;
+                border: 1px solid #ddddff;
+                border-spacing: 0px;
+                table-layout: fixed;
+            }
+
+            td,
+            th
+            {
+                padding: 5px 10px;
+                overflow: hidden; /* wrapping behavior */
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            th
+            {
+                background-color: #eeeeff;
+            }
+
+            table tr:nth-child(even)
+            {
+                background-color: #f8f8ff;
+            }
         </style>
     </head>
     <body>

@@ -30,13 +30,35 @@ $result = Colby::query($sql);
 
 <h2>Blog Posts</h2>
 
-<table><tbody>
+<table style="width: 600px;"><thead>
+    <tr>
+        <th style="width: 30px;"></th>
+        <th style="width: 400px;">Title</th>
+        <th style="width: 100px;">Created</th>
+        <th style="width: 100px;">Modified</th>
+    </tr>
+</thead><tbody>
 
     <?php
 
     while ($row = $result->fetch_object())
     {
-        echo "<tr><td><a href=\"/admin/blog/{$row->type}/edit/?archive-id={$row->id}\">{$row->id}</a></td></tr>\n";
+        $archive = ColbyArchive::open($row->id);
+        $attributes = $archive->attributes();
+        $data = $archive->rootObject();
+
+        $editURL = COLBY_SITE_URL . "/admin/blog/{$row->type}/edit/?archive-id={$row->id}";
+
+        ?>
+
+        <tr>
+            <td><a href="<?php echo $editURL; ?>">edit</a></td>
+            <td><?php echo $data->titleHTML; ?></td>
+            <td><?php echo gmdate('Y/m/d', $attributes->created); ?></td>
+            <td><?php echo gmdate('Y/m/d', $attributes->modified); ?></td>
+        </tr>
+
+        <?php
     }
 
     $result->free();
