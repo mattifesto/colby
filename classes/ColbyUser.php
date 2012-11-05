@@ -66,8 +66,7 @@ class ColbyUser
             if (null === $userRow)
             {
                 // if no user row was found for the user in the cookie
-                // that's very odd
-                // nevertheless, cookie is not authentic, remove it
+                // the cookie is not authentic, remove it
 
                 self::logoutCurrentUser();
 
@@ -85,7 +84,7 @@ class ColbyUser
 
             $generatedHash = hash('sha512', $hashedValue);
 
-            if ($cookieHash === $generatedHash)
+            if ($cookieHash == $generatedHash)
             {
                 self::$currentUserId = $cookieUserId;
             }
@@ -204,9 +203,7 @@ EOT;
 
         $url = 'https://www.facebook.com/dialog/oauth' .
             '?client_id=' . COLBY_FACEBOOK_APP_ID .
-            '&redirect_uri=' .
-                urlencode(COLBY_SITE_URL
-                    . '/colby/facebook-oauth-handler/') .
+            '&redirect_uri=' . urlencode(COLBY_SITE_URL . '/colby/facebook-oauth-handler/') .
             '&state=' . urlencode(json_encode($state));
 
         return $url;
@@ -239,8 +236,7 @@ EOT;
         $state = new stdClass();
         $state->colby_redirect_uri = $redirectURL;
 
-        $url = COLBY_SITE_URL . '/colby/logout/' .
-            '?state=' . urlencode(json_encode($state));
+        $url = COLBY_SITE_URL . '/colby/logout/?state=' . urlencode(json_encode($state));
 
         return $url;
     }
@@ -267,17 +263,48 @@ EOT;
 
             $userId = self::$currentUserId;
         }
+        else
+        {
+            $userId = intval($userId); // intval confirmed 64-bit capable (signed though)
+        }
 
-        if ($userId === self::$currentUserId && self::$currentUserRow)
+        if (   $userId == self::$currentUserId
+            && self::$currentUserRow)
         {
             return self::$currentUserRow;
         }
 
-        $userRow = include(COLBY_SITE_DIRECTORY .
-            '/colby/snippets/query-user-row-for-user-id.php');
+        $sqlUserId = "'{$userId}'";
 
-        if ($userId === self::$currentUserId)
+        $sql = <<<EOT
+SELECT
+    *
+FROM
+    `ColbyUsers`
+WHERE
+    `id` = {$sqlUserId}
+EOT;
+
+        $result = Colby::query($sql);
+
+        if (1 === $result->num_rows)
         {
+            $userRow = $result->fetch_object();
+        }
+        else
+        {
+            $userRow = null;
+        }
+
+        $result->free();
+
+        if ($userId == self::$currentUserId)
+        {
+            // cache current user row
+            // user data shouldn't change significantly during a request
+            // if it does, that will be the main task of the request
+            // so the request will be aware of the changes
+
             self::$currentUserRow = $userRow;
         }
 
