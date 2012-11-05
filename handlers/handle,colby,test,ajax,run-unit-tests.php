@@ -1,9 +1,9 @@
 <?php
 
-// This ajax does not require a verified user, so it must either run only when appropriate or be non-destructive.
-
 Colby::useAjax();
+Colby::useBlog();
 
+ColbyAjax::requireVerifiedUser();
 ColbyAjax::begin();
 
 $response = new stdClass();
@@ -16,6 +16,12 @@ $response->message = 'incomplete';
 
 ColbyArchiverBasicTest();
 ColbyArchiverInvalidFileIdTest();
+
+//
+// Test Blog
+//
+
+ColbyBlogPostCreateAndDeleteTest();
 
 //
 // Unit Tests Complete
@@ -73,4 +79,37 @@ function ColbyArchiverInvalidFileIdTest()
     }
 
     throw new RuntimeException(__FUNCTION__ . ' failed');
+}
+
+function ColbyBlogPostCreateAndDeleteTest()
+{
+    $archiveId = sha1('ColbyCreateAndDeleteBlogPostTests' . rand());
+
+    $archive = ColbyArchive::open($archiveId);
+
+    $rootObject = $archive->rootObject();
+
+    if ($archive->attributes()->created)
+    {
+        throw new RuntimeException(__FUNCTION__ . 'failed: The archive already exists.');
+    }
+
+    $title = 'Test Post Title';
+    $content = 'This is the content for a test post.';
+
+    $rootObject->type = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
+    $rootObject->content = $content;
+    $rootObject->contentHTML = ColbyConvert::textToFormattedContent($rootObject->content);
+    $rootObject->published = NULL;
+    $rootObject->stub = ColbyConvert::textToStub($title);
+    $rootObject->title = $title;
+    $rootObject->titleHTML = ColbyConvert::textToHTML($rootObject->title);
+
+    $archive->save();
+
+    ColbyBlog::updateDatabaseWithPostArchive($archive);
+
+    $archive = null;
+
+    ColbyBlog::deletePost($archiveId);
 }

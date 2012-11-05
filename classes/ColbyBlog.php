@@ -21,7 +21,7 @@ EOT;
 
         $result = Colby::query($sql);
 
-        if ($result->num_rows != 1)
+        if ($result->num_rows != 1) // will either be 1 or 0
         {
             return false;
         }
@@ -38,7 +38,7 @@ EOT;
     /**
      * @return void
      */
-    public static function update(ColbyArchive $archive)
+    public static function updateDatabaseWithPostArchive(ColbyArchive $archive)
     {
         $sqlId = Colby::mysqli()->escape_string($archive->archiveId());
         $sqlId = "UNHEX('{$sqlId}')";
@@ -75,9 +75,18 @@ EOT;
     }
 
     /**
+     * Deletes a post from the database and deletes the post archive.
+     *
      * @return void
      */
-    public static function delete($id)
+    public static function deletePost($id)
     {
+        $sqlId = Colby::mysqli()->escape_string($id);
+
+        $sql = "DELETE FROM `ColbyBlogPosts` WHERE `id` = UNHEX('{$sqlId}')";
+
+        Colby::query($sql);
+
+        ColbyArchive::delete($id);
     }
 }

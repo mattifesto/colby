@@ -29,7 +29,7 @@ $rootObject->titleHTML = ColbyConvert::textToHTML($rootObject->title);
 
 $archive->save();
 
-ColbyBlog::update($archive);
+ColbyBlog::updateDatabaseWithPostArchive($archive);
 
 $response->wasSuccessful = true;
 // just send a response back that indications the communication worked
