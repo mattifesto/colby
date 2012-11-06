@@ -32,8 +32,7 @@ $archive->save();
 ColbyBlog::updateDatabaseWithPostArchive($archive);
 
 $response->wasSuccessful = true;
-// just send a response back that indications the communication worked
-$response->message = "Title: {$_POST['title']}";
+$response->message = 'Post Last Updated: ' . ColbyConvert::timestampToLocalUserTime(time());
 
 echo json_encode($response);
 

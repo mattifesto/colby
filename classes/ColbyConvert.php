@@ -98,6 +98,103 @@ class ColbyConvert
     /**
      * @return string
      */
+    public static function timestampToFriendlyTime($timestamp)
+    {
+        $delta = time() - $timestamp;
+
+        // Less than a minute ago
+
+        if ($delta < 60)
+        {
+            return 'less than a minute ago';
+        }
+
+        // One minute ago
+
+        if ($delta < 120)
+        {
+            return 'one minute ago';
+        }
+
+        // Less than an hour ago
+
+        if ($delta < 3600)
+        {
+            return intval(($delta / 60)) . ' minutes ago';
+        }
+
+        // One hour ago (between 1 and 2 hours ago)
+
+        if ($delta < 7200)
+        {
+            return 'one hour ago';
+        }
+
+        // Less than 24 hours ago
+
+        if ($delta < 86400)
+        {
+            return intval(($delta / 3600)) . ' hours ago';
+        }
+
+        // return values will need the local time zone modified timestamp
+        // this function will give more accurate results than wordpress
+        // in cases where the timezone changes after posts have been created
+        // they use a cached time for the old timezone, it's dumb
+        // (this is why one should only store utc times in a database)
+
+        if ($userRow = ColbyUser::userRow())
+        {
+            $gmtOffset = intval($userRow->facebookTimeZone) * 3600;
+        }
+        else
+        {
+            $gmtOffset = 0;
+        }
+
+        //$gmtOffset = intval(get_option('gmt_offset')) * 3600;
+        $localTimeStamp = $timestamp + $gmtOffset;
+
+        // Less than 6 days ago
+
+        // BUGBUG: using date does timezone conversions
+        //         instead use DateTime conversions as show below
+
+        if ($delta < 518400)
+        {
+            return date('l', $localTimeStamp) .
+                ' at ' .
+                date(get_option('time_format'), $localTimeStamp);
+
+        }
+
+        return date(get_option('date_format'), $localTimeStamp) .
+            ' at ' .
+            date(get_option('time_format'), $localTimeStamp);
+    }
+
+    /**
+     * @return string
+     */
+    public static function timestampToLocalUserTime($timestamp)
+    {
+        $date = new DateTime("@{$timestamp}", new DateTimeZone('UTC'));
+
+        if ($userRow = ColbyUser::userRow())
+        {
+            $timeZoneName = timezone_name_from_abbr('', $userRow->facebookTimeZone * 3600, false);
+
+            $timeZone = new DateTimeZone($timeZoneName);
+
+            $date->setTimeZone($timeZone);
+        }
+
+        return $date->format(DateTime::RFC3339);
+    }
+
+    /**
+     * @return string
+     */
     public static function timestampToSQLDateTime($timestamp)
     {
         if (empty($timestamp))
