@@ -29,7 +29,7 @@ ColbyPage::beginAdmin($args);
 ?>
 
 <style>
-input,
+input[type=text],
 textarea
 {
     display: block;
@@ -56,32 +56,62 @@ fieldset > div + div
 <p><progress id="ajax-communication" value="0"></progress>
 
 <fieldset>
-    <div>Title <input type="text"
-                      id="title"
-                      class="form-field"
-                      value="<?php if (isset($data->titleHTML)) echo $data->titleHTML; ?>"
-                      onkeydown="handleKeyDown(this);"></div>
-    <div>Stub <input type="text"
-                     id="stub"
-                     class="form-field"
-                     value="<?php if (isset($data->stub)) echo $data->stub; ?>"
-                     readonly="readonly"
-                     onkeydown="handleKeyDown(this);"></div>
-    <div>Subhead <input type="text"
-                        id="subhead"
-                        class="form-field"
-                        value="<?php if (isset($data->subheadHTML)) echo $data->subheadHTML; ?>"
-                        onkeydown="handleKeyDown(this);"></div>
-    <div>Content <textarea id="content"
-                           class="form-field"
-                           style="height: 400px;"
-                           onkeydown="handleKeyDown(this);"><?php
+
+    <div><label>Title
+        <input type="text"
+               id="title"
+               class="form-field"
+               value="<?php if (isset($data->titleHTML)) echo $data->titleHTML; ?>"
+               onkeydown="handleValueChanged(this);">
+    </label></div>
+
+    <div><label>Stub
+        <input type="text"
+               id="stub"
+               class="form-field"
+               value="<?php if (isset($data->stub)) echo $data->stub; ?>"
+               readonly="readonly"
+               onkeydown="handleValueChanged(this);">
+    </label></div>
+
+    <div><label>Subhead
+        <input type="text"
+               id="subhead"
+               class="form-field"
+               value="<?php if (isset($data->subheadHTML)) echo $data->subheadHTML; ?>"
+               onkeydown="handleValueChanged(this);">
+    </label></div>
+
+    <div><label>Content
+        <textarea id="content"
+                  class="form-field"
+                   style="height: 400px;"
+                 onkeydown="handleValueChanged(this);"><?php
 
         if (isset($data->content)) echo ColbyConvert::textToHTML($data->content);
 
-    ?></textarea></div>
-</fieldset>
+        ?></textarea>
+    </label></div>
 
+    <div><label>
+        <input type="checkbox"
+               id="published"
+               <?php if (isset($data->published)) echo 'checked="checked"'; ?>
+               onclick="handleValueChanged(this);">
+    Published</label><span style="float:right;"><?php
+
+        if (isset($data->publishedAt))
+        {
+            // TODO: echo publication date
+        }
+        else
+        {
+            echo 'publication date will be set when first published';
+        }
+
+    ?></span></div>
+
+</fieldset>
 <div id="error-log"></div>
 
 <script>
@@ -157,7 +187,7 @@ function endAjax()
     progress.setAttribute('value', '0');
 }
 
-function handleKeyDown(sender)
+function handleValueChanged(sender)
 {
     if (sender)
     {
@@ -215,7 +245,7 @@ function handleBlogPostUpdated()
 
     if (needsUpdate)
     {
-        handleKeyDown(null);
+        handleValueChanged(null);
     }
     else
     {
