@@ -10,12 +10,7 @@ if (isset($_GET['archive-id']))
 
     if ($archive->attributes()->created)
     {
-        $hasData = true;
         $data = $archive->rootObject();
-    }
-    else
-    {
-        $hasData = false;
     }
 }
 else
@@ -64,20 +59,25 @@ fieldset > div + div
     <div>Title <input type="text"
                       id="title"
                       class="form-field"
-                      value="<?php if ($hasData) echo ColbyConvert::textToHTML($data->title); ?>"
+                      value="<?php if (isset($data->titleHTML)) echo $data->titleHTML; ?>"
                       onkeydown="handleKeyDown(this);"></div>
     <div>Stub <input type="text"
                      id="stub"
                      class="form-field"
-                     value="<?php if ($hasData) echo ColbyConvert::textToHTML($data->stub); ?>"
+                     value="<?php if (isset($data->stub)) echo $data->stub; ?>"
                      readonly="readonly"
                      onkeydown="handleKeyDown(this);"></div>
+    <div>Subhead <input type="text"
+                        id="subhead"
+                        class="form-field"
+                        value="<?php if (isset($data->subheadHTML)) echo $data->subheadHTML; ?>"
+                        onkeydown="handleKeyDown(this);"></div>
     <div>Content <textarea id="content"
                            class="form-field"
                            style="height: 400px;"
                            onkeydown="handleKeyDown(this);"><?php
 
-        if ($hasData) echo ColbyConvert::textToHTML($data->content);
+        if (isset($data->content)) echo ColbyConvert::textToHTML($data->content);
 
     ?></textarea></div>
 </fieldset>
@@ -184,15 +184,17 @@ function updateBlogPost()
 
     beginAjax();
 
-    var content = document.getElementById('content');
-    var stub = document.getElementById('stub');
     var title = document.getElementById('title');
+    var stub = document.getElementById('stub');
+    var subhead = document.getElementById('subhead');
+    var content = document.getElementById('content');
 
     var formData = new FormData();
     formData.append('archive-id', archiveId);
-    formData.append('content', content.value);
-    formData.append('stub', content.value);
     formData.append('title', title.value);
+    formData.append('stub', stub.value);
+    formData.append('subhead', subhead.value);
+    formData.append('content', content.value);
 
     xhr = new XMLHttpRequest();
     xhr.open('POST', '/admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/', true);

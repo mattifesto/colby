@@ -20,12 +20,14 @@ if (!$archive->attributes()->created)
     $rootObject->type = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
 }
 
+$rootObject->title = $_POST['title'];
+$rootObject->titleHTML = ColbyConvert::textToHTML($rootObject->title);
+$rootObject->stub = ColbyConvert::textToStub($_POST['title']);
+$rootObject->subhead = $_POST['subhead'];
+$rootObject->subheadHTML = ColbyConvert::textToHTML($rootObject->subhead);
 $rootObject->content = $_POST['content'];
 $rootObject->contentHTML = ColbyConvert::textToFormattedContent($rootObject->content);
 $rootObject->published = NULL;
-$rootObject->stub = ColbyConvert::textToStub($_POST['title']);
-$rootObject->title = $_POST['title'];
-$rootObject->titleHTML = ColbyConvert::textToHTML($rootObject->title);
 
 $archive->save();
 
