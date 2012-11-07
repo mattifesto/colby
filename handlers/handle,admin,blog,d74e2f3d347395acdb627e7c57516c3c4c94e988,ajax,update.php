@@ -31,6 +31,7 @@ $archive->save();
 
 ColbyBlog::updateDatabaseWithPostArchive($archive);
 
+$response->stub = $rootObject->stub;
 $response->wasSuccessful = true;
 $response->message = 'Post Last Updated: ' . ColbyConvert::timestampToLocalUserTime(time());
 

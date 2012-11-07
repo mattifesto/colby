@@ -65,17 +65,17 @@ fieldset > div + div
                       id="title"
                       class="form-field"
                       value="<?php if ($hasData) echo ColbyConvert::textToHTML($data->title); ?>"
-                      onkeypress="handleKeyPressed(this);"></div>
+                      onkeydown="handleKeyDown(this);"></div>
     <div>Stub <input type="text"
                      id="stub"
                      class="form-field"
                      value="<?php if ($hasData) echo ColbyConvert::textToHTML($data->stub); ?>"
                      readonly="readonly"
-                     onkeypress="handleKeyPressed(this);"></div>
+                     onkeydown="handleKeyDown(this);"></div>
     <div>Content <textarea id="content"
                            class="form-field"
                            style="height: 400px;"
-                           onkeypress="handleKeyPressed(this);"><?php
+                           onkeydown="handleKeyDown(this);"><?php
 
         if ($hasData) echo ColbyConvert::textToHTML($data->content);
 
@@ -91,8 +91,12 @@ var archiveId = '<?php echo $archiveId; ?>';
 var needsUpdate = false;
 var isUpdating = false;
 var timer = null;
-var xhr;
+var xhr = null;
 
+/**
+ * @return object
+ *  ajax response data
+ */
 function handleAjaxResponse()
 {
     if (xhr.status == 200)
@@ -103,6 +107,7 @@ function handleAjaxResponse()
     {
         var response =
         {
+            'wasSuccessful' : false,
             'message' : xhr.status + ': ' + xhr.statusText
         };
     }
@@ -134,6 +139,8 @@ function handleAjaxResponse()
     xhr = null;
 
     endAjax();
+
+    return response;
 }
 
 function beginAjax()
@@ -150,7 +157,7 @@ function endAjax()
     progress.setAttribute('value', '0');
 }
 
-function handleKeyPressed(sender)
+function handleKeyDown(sender)
 {
     if (sender)
     {
@@ -197,11 +204,16 @@ function handleBlogPostUpdated()
 {
     isUpdating = false;
 
-    handleAjaxResponse();
+    var response = handleAjaxResponse();
+
+    if (response.wasSuccessful)
+    {
+        document.getElementById('stub').value = response.stub;
+    }
 
     if (needsUpdate)
     {
-        handleKeyPressed(null);
+        handleKeyDown(null);
     }
     else
     {
