@@ -23,11 +23,15 @@ if (!$archive->attributes()->created)
 $data->title = $_POST['title'];
 $data->titleHTML = ColbyConvert::textToHTML($data->title);
 $data->stub = ColbyConvert::textToStub($_POST['title']);
-$data->subhead = $_POST['subhead'];
-$data->subheadHTML = ColbyConvert::textToHTML($data->subhead);
+$data->subtitle = $_POST['subtitle'];
+$data->subtitleHTML = ColbyConvert::textToHTML($data->subtitle);
 $data->content = $_POST['content'];
 $data->contentHTML = ColbyConvert::textToFormattedContent($data->content);
-$data->published = null;
+
+// TODO: do we want to do some data validation on these dates?
+
+$data->published = empty($_POST['published']) ? null : intval($_POST['published']);
+$data->publicationDate = intval($_POST['publication-date']);
 
 $archive->save();
 

@@ -20,6 +20,20 @@ else
     header("Location: /admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/edit/?archive-id={$archiveId}");
 }
 
+// mise en place
+
+$title = isset($data->titleHTML) ? $data->titleHTML : '';
+$subtitle = isset($data->subtitleHTML) ? $data->subtitleHTML : '';
+$stub = isset($data->stub) ? $data->stub : '';
+$stubIsLocked = (isset($data->stubIsLocked) && $data->stubIsLocked) ? ' checked="checked"' : '';
+$content = isset($data->content) ? ColbyConvert::textToHTML($data->content) : '';
+$isPublished = isset($data->published) ? ' checked="checked"' : '';
+$publicationDateString = isset($data->publicationDate) ?
+    ColbyConvert::timestampToLocalUserTime($data->publicationDate) :
+    '';
+
+// begin page
+
 $args = new stdClass();
 $args->title = 'Generic Blog Post Editor';
 $args->description = 'Create and edit generic blog posts.';
@@ -61,24 +75,27 @@ fieldset > div + div
         <input type="text"
                id="title"
                class="form-field"
-               value="<?php if (isset($data->titleHTML)) echo $data->titleHTML; ?>"
+               value="<?php echo $title; ?>"
                onkeydown="handleValueChanged(this);">
     </label></div>
 
-    <div><label>Stub
-        <input type="text"
-               id="stub"
-               class="form-field"
-               value="<?php if (isset($data->stub)) echo $data->stub; ?>"
-               readonly="readonly"
-               onkeydown="handleValueChanged(this);">
-    </label></div>
+    <div>
+        <label style="float:right;"><input type="checkbox"<?php echo $stubIsLocked; ?>> Locked</label>
+        <label>Stub
+            <input type="text"
+                   id="stub"
+                   class="form-field"
+                   value="<?php echo $stub; ?>"
+                   readonly="readonly"
+                   onkeydown="handleValueChanged(this);">
+        </label>
+    </div>
 
-    <div><label>Subhead
+    <div><label>Subtitle
         <input type="text"
-               id="subhead"
+               id="subtitle"
                class="form-field"
-               value="<?php if (isset($data->subheadHTML)) echo $data->subheadHTML; ?>"
+               value="<?php echo $subtitle; ?>"
                onkeydown="handleValueChanged(this);">
     </label></div>
 
@@ -86,30 +103,24 @@ fieldset > div + div
         <textarea id="content"
                   class="form-field"
                    style="height: 400px;"
-                 onkeydown="handleValueChanged(this);"><?php
-
-        if (isset($data->content)) echo ColbyConvert::textToHTML($data->content);
-
-        ?></textarea>
+                 onkeydown="handleValueChanged(this);"><?php echo $content; ?></textarea>
     </label></div>
 
-    <div><label>
-        <input type="checkbox"
-               id="published"
-               <?php if (isset($data->published)) echo 'checked="checked"'; ?>
-               onclick="handleValueChanged(this);">
-    Published</label><span style="float:right;"><?php
-
-        if (isset($data->publishedAt))
-        {
-            // TODO: echo publication date
-        }
-        else
-        {
-            echo 'publication date will be set when first published';
-        }
-
-    ?></span></div>
+    <div>
+        <label style="float: right;">
+            <input type="checkbox"
+                   id="is-published"
+                   <?php echo $isPublished; ?>
+                   onclick="handlePublishedChanged(this);">
+        Published</label>
+        <label>Publication Date:
+            <input type="text"
+                   id="publication-date"
+                   class="form-field"
+                   value="<?php echo $publicationDateString; ?>"
+                   onkeydown="handleValueChanged(this);">
+        </label>
+    </div>
 
 </fieldset>
 <div id="error-log"></div>
@@ -118,6 +129,9 @@ fieldset > div + div
 "use strict";
 
 var archiveId = '<?php echo $archiveId; ?>';
+var published = <?php echo isset($data->published) ? $data->published : 'null'; ?>;
+var publicationDate = <?php echo isset($data->publicationDate) ? $data->publicationDate : 'null'; ?>;
+
 var needsUpdate = false;
 var isUpdating = false;
 var timer = null;
@@ -187,6 +201,29 @@ function endAjax()
     progress.setAttribute('value', '0');
 }
 
+function handlePublishedChanged(sender)
+{
+    if (sender.checked)
+    {
+        if (publicationDate === null)
+        {
+            var date = new Date();
+
+            publicationDate = Math.floor(date.getTime() / 1000);
+        }
+
+        published = publicationDate;
+
+        document.getElementById('publication-date').value = publicationDate;
+    }
+    else
+    {
+        published = null;
+    }
+
+    handleValueChanged(null);
+}
+
 function handleValueChanged(sender)
 {
     if (sender)
@@ -215,16 +252,18 @@ function updateBlogPost()
     beginAjax();
 
     var title = document.getElementById('title');
+    var subtitle = document.getElementById('subtitle');
     var stub = document.getElementById('stub');
-    var subhead = document.getElementById('subhead');
     var content = document.getElementById('content');
 
     var formData = new FormData();
     formData.append('archive-id', archiveId);
     formData.append('title', title.value);
+    formData.append('subtitle', subtitle.value);
     formData.append('stub', stub.value);
-    formData.append('subhead', subhead.value);
     formData.append('content', content.value);
+    formData.append('published', published ? published : '');
+    formData.append('publication-date', publicationDate);
 
     xhr = new XMLHttpRequest();
     xhr.open('POST', '/admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/', true);
