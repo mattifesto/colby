@@ -32,8 +32,8 @@ $data->contentHTML = ColbyConvert::textToFormattedContent($data->content);
 
 $wasPublished = isset($data->published);
 
-$data->published = empty($_POST['published']) ? null : intval($_POST['published']);
-$data->publicationDate = empty($_POST['publication-date']) ? null : intval($_POST['publication-date']);
+$data->published = empty($_POST['published']) ? null : $_POST['published'];
+$data->publicationDate = empty($_POST['publication-date']) ? null : $_POST['publication-date'];
 
 if (!isset($data->publishedBy))
 {

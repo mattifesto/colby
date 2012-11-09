@@ -28,9 +28,9 @@ $stub = isset($data->stub) ? $data->stub : '';
 $stubIsLocked = (isset($data->stubIsLocked) && $data->stubIsLocked) ? ' checked="checked"' : '';
 $content = isset($data->content) ? ColbyConvert::textToHTML($data->content) : '';
 $isPublished = isset($data->published) ? ' checked="checked"' : '';
-$publicationDateString = isset($data->publicationDate) ?
-    ColbyConvert::timestampToLocalUserTime($data->publicationDate) :
-    '';
+
+$javascriptPublished = isset($data->published) ? $data->published * 1000 : 'null';
+$javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationDate * 1000 : 'null';
 
 // begin page
 
@@ -79,6 +79,14 @@ fieldset > div + div
                onkeydown="handleValueChanged(this);">
     </label></div>
 
+    <div><label>Subtitle
+        <input type="text"
+               id="subtitle"
+               class="form-field"
+               value="<?php echo $subtitle; ?>"
+               onkeydown="handleValueChanged(this);">
+    </label></div>
+
     <div>
         <label style="float:right;"><input type="checkbox"<?php echo $stubIsLocked; ?>> Locked</label>
         <label>Stub
@@ -90,14 +98,6 @@ fieldset > div + div
                    onkeydown="handleValueChanged(this);">
         </label>
     </div>
-
-    <div><label>Subtitle
-        <input type="text"
-               id="subtitle"
-               class="form-field"
-               value="<?php echo $subtitle; ?>"
-               onkeydown="handleValueChanged(this);">
-    </label></div>
 
     <div><label>Content
         <textarea id="content"
@@ -117,8 +117,7 @@ fieldset > div + div
             <input type="text"
                    id="publication-date"
                    class="form-field"
-                   value="<?php echo $publicationDateString; ?>"
-                   onkeydown="handleValueChanged(this);">
+                   onblur="handlePublicationDateBlurred(this);">
         </label>
     </div>
 
@@ -129,8 +128,8 @@ fieldset > div + div
 "use strict";
 
 var archiveId = '<?php echo $archiveId; ?>';
-var published = <?php echo isset($data->published) ? $data->published : 'null'; ?>;
-var publicationDate = <?php echo isset($data->publicationDate) ? $data->publicationDate : 'null'; ?>;
+var published = <?php echo $javascriptPublished; ?>;
+var publicationDate = <?php echo $javascriptPublicationDate; ?>;
 
 var needsUpdate = false;
 var isUpdating = false;
@@ -201,6 +200,44 @@ function endAjax()
     progress.setAttribute('value', '0');
 }
 
+function handleContentLoaded()
+{
+    if (publicationDate)
+    {
+        var date = new Date(publicationDate);
+
+        document.getElementById('publication-date').value = date.toLocaleString();
+    }
+}
+
+function handlePublicationDateBlurred(sender)
+{
+    var date = new Date(Date.parse(sender.value));
+
+    if (isNaN(date))
+    {
+        alert('Can\'t parse date value "' + sender.value + '".');
+
+        return;
+    }
+
+    var timestamp = date.getTime();
+
+    if (publicationDate != timestamp)
+    {
+        publicationDate = timestamp;
+
+        if (published)
+        {
+            published = timestamp;
+        }
+
+        sender.value = date.toLocaleString();
+
+        handleValueChanged(sender);
+    }
+}
+
 function handlePublishedChanged(sender)
 {
     if (sender.checked)
@@ -209,12 +246,12 @@ function handlePublishedChanged(sender)
         {
             var date = new Date();
 
-            publicationDate = Math.floor(date.getTime() / 1000);
+            publicationDate = date.getTime();
+
+            document.getElementById('publication-date').value = date.toLocaleString();
         }
 
         published = publicationDate;
-
-        document.getElementById('publication-date').value = publicationDate;
     }
     else
     {
@@ -256,14 +293,17 @@ function updateBlogPost()
     var stub = document.getElementById('stub');
     var content = document.getElementById('content');
 
+    var phpPublished = published ? Math.floor(published / 1000) : '';
+    var phpPublicationDate = publicationDate ? Math.floor(publicationDate / 1000) : '';
+
     var formData = new FormData();
     formData.append('archive-id', archiveId);
     formData.append('title', title.value);
     formData.append('subtitle', subtitle.value);
     formData.append('stub', stub.value);
     formData.append('content', content.value);
-    formData.append('published', published ? published : '');
-    formData.append('publication-date', publicationDate);
+    formData.append('published', phpPublished);
+    formData.append('publication-date', phpPublicationDate);
 
     xhr = new XMLHttpRequest();
     xhr.open('POST', '/admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/', true);
@@ -296,6 +336,9 @@ function handleBlogPostUpdated()
         }
     }
 }
+
+document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
+
 </script>
 
 <?php
