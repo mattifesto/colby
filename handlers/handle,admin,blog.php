@@ -3,16 +3,10 @@
 ColbyPage::requireVerifiedUser();
 
 $args = new stdClass();
-$args->title = 'Blog Administration';
+$args->title = 'Blog';
 $args->description = 'Create, edit, and delete blog posts.';
 
 ColbyPage::beginAdmin($args);
-
-?>
-
-<h1>Blog Administration</h1>
-
-<?php
 
 $sql = <<<EOT
 SELECT
@@ -27,8 +21,6 @@ EOT;
 $result = Colby::query($sql);
 
 ?>
-
-<h2>Blog Posts</h2>
 
 <table style="width: 600px;"><thead>
     <tr>
@@ -67,8 +59,6 @@ $result = Colby::query($sql);
 
 </tbody></table>
 
-<h2>Create a New Blog Post</h2>
-
 <?php
 
 $editorDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,blog,*.data');
@@ -80,7 +70,16 @@ foreach ($editorDataFiles as $editorDataFile)
 
     preg_match('/blog,([^,]*).data$/', $editorDataFile, $matches);
 
-    echo "<p>{$editorData->name} <a href=\"/admin/blog/{$matches[1]}/edit/\">new</a>\n";
+    $editorURL = "/admin/blog/{$matches[1]}/edit/";
+
+    // TODO: escape this data for HTML
+
+    ?>
+
+    <p style="font-size: 1.5em;"><a href="<?php echo $editorURL ?>">Create a <?php echo $editorData->name; ?></a>
+    <p><?php echo $editorData->description; ?>
+
+    <?php
 }
 
 ColbyPage::end();
