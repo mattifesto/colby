@@ -18,16 +18,24 @@ ColbyPage::begin($args);
         {
             font-size: 1.5em;
         }
+
+        article > h2
+        {
+            font-size: 1.0em;
+        }
     </style>
 
     <?php
 
     $sql = <<<EOT
 SELECT
-    LOWER(HEX(`id`)) AS `id`,
-    `stub`
+    `stub`,
+    `titleHTML`,
+    `subtitleHTML`
 FROM
     `ColbyBlogPosts`
+WHERE
+    `published` IS NOT NULL
 ORDER BY
     `published`
 EOT;
@@ -38,20 +46,20 @@ EOT;
     {
         while ($row = $result->fetch_object())
         {
-            $archive = ColbyArchive::open($row->id);
-            $data = $archive->rootObject();
-
             $url = COLBY_SITE_URL . "/blog/{$row->stub}/";
 
             ?>
 
             <article>
-                <h1><a href="<?php echo $url; ?>"><?php echo $data->titleHTML; ?></a></h1>
+                <h1><a href="<?php echo $url; ?>"><?php echo $row->titleHTML; ?></a></h1>
+                <h2><?php echo $row->subtitleHTML; ?></h2>
             </article>
 
             <?php
         }
     }
+
+    $result->free();
 
     ?>
 

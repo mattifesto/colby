@@ -86,6 +86,8 @@ class ColbyUser
 
             if ($cookieHash == $generatedHash)
             {
+                // NOTE: This is the only place the current user id is set. This is because when the user logs in that request sets the cookie and that's all it does. So the only way a user can be logged in is if the cookie is already set. The user is never logged in any other way or in the middle of a request.
+
                 self::$currentUserId = $cookieUserId;
             }
             else

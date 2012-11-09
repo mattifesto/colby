@@ -49,7 +49,16 @@ EOT;
         $sqlStub = Colby::mysqli()->escape_string($archive->rootObject()->stub);
         $sqlStub = "'{$sqlStub}'";
 
+        $sqlTitleHTML = Colby::mysqli()->escape_string($archive->rootObject()->titleHTML);
+        $sqlTitleHTML = "'{$sqlTitleHTML}'";
+
+        $sqlSubtitleHTML = Colby::mysqli()->escape_string($archive->rootObject()->subtitleHTML);
+        $sqlSubtitleHTML = "'{$sqlSubtitleHTML}'";
+
         $sqlPublished = ColbyConvert::timestampToSQLDateTime($archive->rootObject()->published);
+
+        $sqlPublishedBy = $archive->rootObject()->publishedBy;
+        $sqlPublishedBy = empty($sqlPublishedBy) ? 'NULL' : "'{$sqlPublishedBy}'";
 
         $sql = <<<EOT
 INSERT INTO `ColbyBlogPosts`
@@ -57,18 +66,27 @@ INSERT INTO `ColbyBlogPosts`
     `id`,
     `type`,
     `stub`,
-    `published`
+    `titleHTML`,
+    `subtitleHTML`,
+    `published`,
+    `publishedBy`
 )
 VALUES
 (
     {$sqlId},
     {$sqlType},
     {$sqlStub},
-    {$sqlPublished}
+    {$sqlTitleHTML},
+    {$sqlSubtitleHTML},
+    {$sqlPublished},
+    {$sqlPublishedBy}
 )
 ON DUPLICATE KEY UPDATE
     `stub` = {$sqlStub},
-    `published` = {$sqlPublished}
+    `titleHTML` = {$sqlTitleHTML},
+    `subtitleHTML` = {$sqlSubtitleHTML},
+    `published` = {$sqlPublished},
+    `publishedBy` = {$sqlPublishedBy}
 EOT;
 
         Colby::query($sql);

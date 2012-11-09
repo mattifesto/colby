@@ -84,11 +84,16 @@ CREATE TABLE IF NOT EXISTS `ColbyBlogPosts`
 (
     `id` BINARY(20) NOT NULL,
     `type` BINARY(20) NOT NULL,
-    `stub` VARCHAR(100) NOT NULL,
+    `stub` VARCHAR(119) NOT NULL,
+    `titleHTML` VARCHAR(119) NOT NULL,
+    `subtitleHTML` VARCHAR(119),
     `published` DATETIME,
+    `publishedBy` BIGINT UNSIGNED,
     PRIMARY KEY (`id`),
     UNIQUE KEY `stub` (`stub`),
-    KEY `published` (`published`)
+    KEY `published` (`published`),
+    CONSTRAINT `ColbyBlogPosts_publishedBy` FOREIGN KEY (`publishedBy`)
+        REFERENCES `ColbyUsers` (`id`)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8
