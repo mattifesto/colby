@@ -1,15 +1,19 @@
+<?php
+
+// mise en place
+
+$titleHTML = ColbyConvert::textToHTML(self::$args->title);
+$descriptionHTML = ColbyConvert::textToHTML(self::$args->description);
+
+?>
 <!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title><?php echo htmlspecialchars(self::$args->title,
-                                           ENT_QUOTES,
-                                           'UTF-8'); ?></title>
+        <title><?php echo $titleHTML; ?></title>
 
         <meta name="description"
-              content="<?php echo htmlspecialchars(self::$args->description,
-                                                   ENT_QUOTES,
-                                                   'UTF-8'); ?>">
+              content="<?php echo $descriptionHTML; ?>">
 
         <link rel="stylesheet"
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/equalize.css">
@@ -30,7 +34,18 @@
 
             body
             {
-                margin: 20px;
+                margin: 50px 20px 20px;
+            }
+
+            body > nav
+            {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 100%;
+                padding: 5px;
+                background-color: LightGray;
+                border-bottom: 2px solid DarkGray;
             }
 
             button,
@@ -76,3 +91,9 @@
         </style>
     </head>
     <body>
+        <nav>
+            <ul class="horizontal">
+                <li><a href="/admin/">admin</a></li>
+                <li><?php echo $titleHTML; ?></li>
+            </ul>
+        </nav>
