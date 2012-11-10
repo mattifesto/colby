@@ -43,7 +43,6 @@ $descriptionHTML = ColbyConvert::textToHTML(self::$args->description);
                 top: 0px;
                 left: 0px;
                 width: 100%;
-                padding: 5px;
                 background-color: LightGray;
                 border-bottom: 2px solid DarkGray;
             }
@@ -92,8 +91,9 @@ $descriptionHTML = ColbyConvert::textToHTML(self::$args->description);
     </head>
     <body>
         <nav>
-            <ul class="horizontal">
+            <ul class="horizontal" style="padding: 5px;">
                 <li><a href="/admin/">admin</a></li>
                 <li><?php echo $titleHTML; ?></li>
+                <li style="float: right;"><?php echo ColbyUser::loginHyperlink(); ?></li>
             </ul>
         </nav>
