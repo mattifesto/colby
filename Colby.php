@@ -10,10 +10,10 @@ class Colby
 
     private static $mysqli = null;
 
-    ///
-    ///
-    ///
-    public static function /* string */ exceptionStackTrace($exception)
+    /**
+     * @return string
+     */
+    public static function exceptionStackTrace($exception)
     {
         ob_start();
 
@@ -23,17 +23,76 @@ class Colby
         return ob_get_clean();
     }
 
-    ///
-    ///
-    ///
+    /**
+     * @return bool
+     */
+    public static function isReadableFile($absoluteFilename)
+    {
+        // is_readable: file or directory exists and is readable
+        // is_file: file is a regular file (not a directory)
+
+        return (is_readable($absoluteFilename) && is_file($absoluteFilename));
+    }
+
+    /**
+     * @return string | false
+     */
+    public static function findHandler($filename)
+    {
+        $absoluteHandlerFilename = COLBY_SITE_DIRECTORY . "/handlers/{$filename}";
+
+        if (self::isReadableFile($absoluteHandlerFilename))
+        {
+            return $absoluteHandlerFilename;
+        }
+
+        $absoluteHandlerFilename = COLBY_SITE_DIRECTORY . "/colby/handlers/{$filename}";
+
+        if (self::isReadableFile($absoluteHandlerFilename))
+        {
+            return $absoluteHandlerFilename;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * @return string | false
+     */
+    public static function findSnippet($filename)
+    {
+        $absoluteSnippetFilename = COLBY_SITE_DIRECTORY . "/handlers/{$filename}";
+
+        if (self::isReadableFile($absoluteSnippetFilename))
+        {
+            return $absoluteSnippetFilename;
+        }
+
+        $absoluteSnippetFilename = COLBY_SITE_DIRECTORY . "/colby/handlers/{$filename}";
+
+        if (self::isReadableFile($absoluteSnippetFilename))
+        {
+            return $absoluteSnippetFilename;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * @return void
+     */
     public static function handleError($errno, $errstr, $errfile, $errline)
     {
         throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 
-    ///
-    ///
-    ///
+    /**
+     * @return void
+     */
     public static function handleException($exception, $responseType = 'html')
     {
         // exception handlers should never throw exceptions
