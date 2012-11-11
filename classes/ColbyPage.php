@@ -98,28 +98,29 @@ class ColbyPage
     /**
      * @return void
      */
-    public static function handleException($e)
+    public static function handleException($exception)
     {
-        // remove the current page exception handler
+        // remove the current exception handler
         // we got here by handling an exception so we're done with it
 
         restore_exception_handler();
 
-        // since we're mid-page we know we have output buffering turned on
+        // since we're mid-output we know we have output buffering turned on
         // clear the buffer and turn off output buffering
 
         ob_end_clean();
 
         // for now just pass the exception to Colby
 
-        Colby::handleException($e);
+        Colby::handleException($exception);
     }
 
-    ///
-    /// call this before any content has been output
-    /// on a page that should only be viewed by verified users
-    ///
-    public static function /* void */ requireVerifiedUser()
+    /**
+     * Call this before any content has been output on a page that should only be viewed by verified users.
+     *
+     * @return void
+     */
+    public static function requireVerifiedUser()
     {
         $userRow = ColbyUser::userRow();
 

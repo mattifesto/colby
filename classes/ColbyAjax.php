@@ -2,32 +2,32 @@
 
 class ColbyAjax
 {
-    ///
-    ///
-    ///
-    public static function /* void */ begin()
+    /**
+     * @return void
+     */
+    public static function begin()
     {
         ob_start();
 
         set_exception_handler('ColbyAjax::handleException');
     }
 
-    ///
-    ///
-    ///
-    public static function /* void */ end()
+    /**
+     * @return void
+     */
+    public static function end()
     {
         header('Content-type: application/json');
 
         ob_end_flush();
     }
 
-    ///
-    ///
-    ///
-    public static function /* void */ handleException($exception)
+    /**
+     * @return void
+     */
+    public static function handleException($exception)
     {
-        // remove the current ajax exception handler
+        // remove the current exception handler
         // we got here by handling an exception so we're done with it
 
         restore_exception_handler();
@@ -42,11 +42,12 @@ class ColbyAjax
         Colby::handleException($exception, 'ajax');
     }
 
-    ///
-    /// call this before any content has been output
-    /// on a page that should only be viewed by verified users
-    ///
-    public static function /* void */ requireVerifiedUser()
+    /**
+     * Call this before any content has been output on a page that should only be viewed by verified users.
+     *
+     * @return void
+     */
+    public static function requireVerifiedUser()
     {
         $userRow = ColbyUser::userRow();
 
