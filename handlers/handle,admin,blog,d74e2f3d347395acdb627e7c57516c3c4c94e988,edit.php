@@ -1,23 +1,21 @@
 <?php
 
-ColbyPage::requireVerifiedUser();
-
-if (isset($_GET['archive-id']))
+if (!isset($_GET['archive-id']))
 {
-    $archiveId = $_GET['archive-id'];
-
-    $archive = ColbyArchive::open($archiveId);
-
-    if ($archive->attributes()->created)
-    {
-        $data = $archive->rootObject();
-    }
-}
-else
-{
-    $archiveId = sha1(microtime() . rand() . ColbyUser::currentUserId());
+    $archiveId = sha1(microtime() . rand());
 
     header("Location: /admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/edit/?archive-id={$archiveId}");
+}
+
+$page = ColbyOutputManager::beginPage('Generic Blog Post Editor', 'Create and edit generic blog posts.');
+
+$archiveId = $_GET['archive-id'];
+
+$archive = ColbyArchive::open($archiveId);
+
+if ($archive->attributes()->created)
+{
+    $data = $archive->rootObject();
 }
 
 // mise en place
@@ -31,14 +29,6 @@ $isPublished = isset($data->published) ? ' checked="checked"' : '';
 
 $javascriptPublished = isset($data->published) ? $data->published * 1000 : 'null';
 $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationDate * 1000 : 'null';
-
-// begin page
-
-$args = new stdClass();
-$args->title = 'Generic Blog Post Editor';
-$args->description = 'Create and edit generic blog posts.';
-
-ColbyPage::beginAdmin($args);
 
 ?>
 
@@ -343,4 +333,4 @@ document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
 
 <?php
 
-ColbyPage::end();
+$page->end();

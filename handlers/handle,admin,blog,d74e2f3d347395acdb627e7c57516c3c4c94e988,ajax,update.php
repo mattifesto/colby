@@ -1,15 +1,8 @@
 <?php
 
-Colby::useAjax();
+$response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
+
 Colby::useBlog();
-
-ColbyAjax::requireVerifiedUser();
-
-ColbyAjax::begin();
-
-$response = new stdClass();
-$response->wasSuccessful = false;
-$response->message = 'incomplete';
 
 $archive = ColbyArchive::open($_POST['archive-id']);
 
@@ -58,6 +51,4 @@ $response->stub = $data->stub;
 $response->wasSuccessful = true;
 $response->message = 'Post last updated: ' . ColbyConvert::timestampToLocalUserTime(time());
 
-echo json_encode($response);
-
-ColbyAjax::end();
+$response->end();

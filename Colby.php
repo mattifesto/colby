@@ -63,14 +63,14 @@ class Colby
      */
     public static function findSnippet($filename)
     {
-        $absoluteSnippetFilename = COLBY_SITE_DIRECTORY . "/handlers/{$filename}";
+        $absoluteSnippetFilename = COLBY_SITE_DIRECTORY . "/snippets/{$filename}";
 
         if (self::isReadableFile($absoluteSnippetFilename))
         {
             return $absoluteSnippetFilename;
         }
 
-        $absoluteSnippetFilename = COLBY_SITE_DIRECTORY . "/colby/handlers/{$filename}";
+        $absoluteSnippetFilename = COLBY_SITE_DIRECTORY . "/colby/snippets/{$filename}";
 
         if (self::isReadableFile($absoluteSnippetFilename))
         {
@@ -93,7 +93,7 @@ class Colby
     /**
      * @return void
      */
-    public static function handleException($exception, $responseType = 'html')
+    public static function handleException($exception, $handlerName = null)
     {
         // exception handlers should never throw exceptions
         // if they do, it's very difficult to debug
@@ -108,16 +108,19 @@ class Colby
 
         try
         {
-            if ($responseType === 'ajax')
+            $absoluteHandlerFilename = null;
+
+            if ($handlerName)
             {
-                include(COLBY_SITE_DIRECTORY .
-                    '/colby/snippets/exception-ajax-response.php');
+                $absoluteHandlerFilename = Colby::findHandler("handle-exception-{$handlerName}.php");
             }
-            else
+
+            if (!$absoluteHandlerFilename)
             {
-                include(COLBY_SITE_DIRECTORY .
-                    '/colby/snippets/exception-page.php');
+                $absoluteHandlerFilename = self::findHandler('handle-exception.php');
             }
+
+            include($absoluteHandlerFilename);
         }
         catch (Exception $rareException)
         {
@@ -177,20 +180,17 @@ class Colby
         // at this time, none of these files depends on another
         // so they are in alphabetical order
 
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyArchive.php');
+        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyArchive.php');
 
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyConvert.php');
+        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyConvert.php');
 
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyPage.php');
+        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyOutputManager.php');
 
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyRequest.php');
+        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyPage.php');
 
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyUser.php');
+        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyRequest.php');
+
+        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyUser.php');
 
         ColbyRequest::handleRequest();
     }

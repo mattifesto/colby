@@ -126,8 +126,9 @@ class ColbyPage
 
         if ($userRow === null)
         {
-            include(COLBY_SITE_DIRECTORY .
-                '/colby/snippets/user-login-required-page.php');
+            $handler = Colby::findHandler('handle-user-log-in-required.php');
+
+            include($handler);
 
             exit;
         }
@@ -145,8 +146,9 @@ class ColbyPage
             }
             else
             {
-                include(COLBY_SITE_DIRECTORY .
-                    '/colby/snippets/user-verification-required-page.php');
+                $handler = Colby::findHandler('handle-user-verification-required.php');
+
+                include($handler);
 
                 exit;
             }

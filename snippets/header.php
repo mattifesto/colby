@@ -2,8 +2,18 @@
 
 // mise en place
 
-$titleHTML = ColbyConvert::textToHTML(self::$args->title);
-$descriptionHTML = ColbyConvert::textToHTML(self::$args->description);
+if (isset($this))
+{
+    $titleHTML = ColbyConvert::textToHTML($this->title);
+    $descriptionHTML = ColbyConvert::textToHTML($this->description);
+}
+else
+{
+    error_log(__FILE__ . ': A deprecated code path has been taken.');
+
+    $titleHTML = ColbyConvert::textToHTML(self::$args->title);
+    $descriptionHTML = ColbyConvert::textToHTML(self::$args->description);
+}
 
 ?>
 <!doctype html>

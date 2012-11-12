@@ -53,8 +53,9 @@ class ColbyAjax
 
         if ($userRow === null)
         {
-            include(COLBY_SITE_DIRECTORY .
-                '/colby/snippets/user-login-required-ajax-response.php');
+            $handler = Colby::findHandler('handle-user-log-in-required-ajax.php');
+
+            include($handler);
 
             exit;
         }
@@ -72,8 +73,9 @@ class ColbyAjax
             }
             else
             {
-                include(COLBY_SITE_DIRECTORY .
-                    '/colby/snippets/user-verification-required-ajax-response.php');
+                $handler = Colby::findHandler('handle-user-verification-required-ajax.php');
+
+                include($handler);
 
                 exit;
             }
