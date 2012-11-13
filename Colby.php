@@ -213,13 +213,12 @@ class Colby
                 throw new RuntimeException($mysqli->connect_error);
             }
 
-            // latin1 is the default character set
-            // utf8 is the characater set the tables use
+            // The default MySQL character set is "latin1" but the tables use "utf8"
 
             if (!$mysqli->set_charset('utf8'))
             {
                 throw new RuntimeException(
-                    'unable to set mysqli character set to utf8');
+                    'Unable to set mysqli character set to "utf8".');
             }
 
             self::$mysqli = $mysqli;

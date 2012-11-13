@@ -25,22 +25,6 @@ class ColbyRequest
     // example:
     // foo bar, piñata, post
 
-    /**
-     * @return string
-     */
-    public static function absoluteDefaultHandlerFilename()
-    {
-        return Colby::findHandler('handle-special-default.php');
-    }
-
-    /**
-     * @return string
-     */
-    public static function absoluteFrontPageHandlerFilename()
-    {
-        return Colby::findHandler('handle-special-front-page.php');
-    }
-
     ///
     /// construct a canonical URI using decoded stubs
     /// compare this agains a decoded request URI
@@ -118,7 +102,7 @@ class ColbyRequest
 
         if (0 === $countOfStubs)
         {
-            $handlerFilename = self::absoluteFrontPageHandlerFilename();
+            $handlerFilename = Colby::findHandler('handle-front-page.php');
         }
 
         // redirect requests for
@@ -191,7 +175,7 @@ class ColbyRequest
         // to communicate that a sub-stub does not exist
         // it's only the handler that is able to determine that fact
 
-        include(self::absoluteDefaultHandlerFilename());
+        include(Colby::findHandler('handle-default.php'));
     }
 
     ///
