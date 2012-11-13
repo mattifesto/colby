@@ -1,17 +1,11 @@
 <?php
 
-$args = new stdClass();
-$args->title = 'Front Page';
-$args->description = 'This is the front page.';
-
-ColbyPage::begin($args);
+$page = ColbyOutputManager::beginPage('Front Page', 'This is the front page.');
 
 ?>
 
-<h1><?php echo $args->title; ?></h1>
-
-<p><?php echo $args->description; ?>
+<p>This is the front page.
 
 <?php
 
-ColbyPage::end();
+$page->end();
