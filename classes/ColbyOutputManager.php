@@ -3,7 +3,6 @@
 class ColbyOutputManager
 {
     private $name;
-    private $hasBegun = false;
 
     /**
      * @return ColbyOutput
@@ -21,8 +20,6 @@ class ColbyOutputManager
         ob_start();
 
         set_exception_handler(array($this, 'handleException'));
-
-        $this->hasBegun = true;
 
         $absoluteHeaderSnippetFilename = null;
 
@@ -42,12 +39,22 @@ class ColbyOutputManager
     /**
      * @return ColbyOutputManager
      */
-    public static function beginAjaxResponse()
+    public static function createAjaxResponse()
     {
         $outputManager = new ColbyOutputManager('ajax');
 
         $outputManager->wasSuccessful = false;
         $outputManager->message = 'An official response message was never set.';
+
+        return $outputManager;
+    }
+
+    /**
+     * @return ColbyOutputManager
+     */
+    public static function beginAjaxResponse()
+    {
+        $outputManager = self::createAjaxResponse();
 
         $outputManager->begin();
 
@@ -59,9 +66,23 @@ class ColbyOutputManager
      */
     public static function beginVerifiedUserAjaxResponse()
     {
-        $outputManager = self::beginAjaxResponse();
+        $outputManager = self::createAjaxResponse();
 
         $outputManager->requireVerifiedUser();
+        $outputManager->begin();
+
+        return $outputManager;
+    }
+
+    /**
+     * @return ColbyOutputManager
+     */
+    public static function createPage($title, $description, $name = null)
+    {
+        $outputManager = new ColbyOutputManager($name);
+
+        $outputManager->title = $title;
+        $outputManager->description = $description;
 
         return $outputManager;
     }
@@ -71,10 +92,7 @@ class ColbyOutputManager
      */
     public static function beginPage($title, $description, $name = null)
     {
-        $outputManager = new ColbyOutputManager($name);
-
-        $outputManager->title = $title;
-        $outputManager->description = $description;
+        $outputManager = self::createPage($title, $description, $name);
 
         $outputManager->begin();
 
@@ -86,9 +104,10 @@ class ColbyOutputManager
      */
     public static function beginVerifiedUserPage($title, $description, $name = null)
     {
-        $outputManager = self::beginPage($title, $description, $name);
+        $outputManager = self::createPage($title, $description, $name);
 
         $outputManager->requireVerifiedUser();
+        $outputManager->begin();
 
         return $outputManager;
     }
@@ -135,6 +154,7 @@ class ColbyOutputManager
 
     /**
      * Call this before any content has been output on a page that should only be viewed by logged in users.
+     * These methods must remain private because that's how their timing is enforced.
      *
      * @return object (user row) | exit
      */
@@ -161,11 +181,6 @@ class ColbyOutputManager
             $absoluteHandlerFilename = Colby::findHandler('handle-user-log-in-required.php');
         }
 
-        if ($hasBegun)
-        {
-            ob_end_clean();
-        }
-
         include($absoluteHandlerFilename);
 
         exit;
@@ -173,6 +188,7 @@ class ColbyOutputManager
 
     /**
      * Call this before any content has been output on a page that should only be viewed by verified users.
+     * These methods must remain private because that's how their timing is enforced.
      *
      * @return void | exit
      */
@@ -212,11 +228,6 @@ class ColbyOutputManager
         if (!$absoluteHandlerFilename)
         {
             $absoluteHandlerFilename = Colby::findHandler('handle-user-verification-required.php');
-        }
-
-        if ($hasBegun)
-        {
-            ob_end_clean;
         }
 
         include($absoluteHandlerFilename);

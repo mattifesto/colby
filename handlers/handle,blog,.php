@@ -11,9 +11,10 @@ if (count($stubs) > 2)
 
 $archive = ColbyBlog::archiveForStub($stubs[1]);
 
-if (!$archive /* || !$archive->rootObject()->published */)
+if (!$archive || !$archive->rootObject()->published)
 {
     return false;
 }
 
-include(COLBY_SITE_DIRECTORY . "/colby/handlers/handle,admin,blog,{$archive->rootObject()->type},display.php");
+include(COLBY_SITE_DIRECTORY .
+        "/colby/handlers/handle,admin,blog,{$archive->rootObject()->type},display.php");
