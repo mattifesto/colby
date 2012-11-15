@@ -1,14 +1,8 @@
 <?php
 
-Colby::useAjax();
 Colby::useBlog();
 
-ColbyAjax::requireVerifiedUser();
-ColbyAjax::begin();
-
-$response = new stdClass();
-$response->wasSuccessful = false;
-$response->message = 'incomplete';
+$response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
 //
 // Test ColbyArchiver.php
@@ -28,11 +22,9 @@ ColbyBlogPostCreateAndDeleteTest();
 //
 
 $response->wasSuccessful = true;
-$response->message = 'Unit tests ran successfully.';
+$response->message = 'The unit tests ran successfully.';
 
-echo json_encode($response);
-
-ColbyAjax::end();
+$response->end();
 
 function ColbyArchiverBasicTest()
 {
@@ -94,16 +86,20 @@ function ColbyBlogPostCreateAndDeleteTest()
         throw new RuntimeException(__FUNCTION__ . 'failed: The archive already exists.');
     }
 
-    $title = 'Test Post Title';
+    $title = 'Test post title';
+    $subtitle = 'Test post subtitle.';
     $content = 'This is the content for a test post.';
 
     $rootObject->type = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
     $rootObject->content = $content;
     $rootObject->contentHTML = ColbyConvert::textToFormattedContent($rootObject->content);
-    $rootObject->published = NULL;
+    $rootObject->published = null;
+    $rootObject->publishedBy = null;
     $rootObject->stub = ColbyConvert::textToStub($title);
     $rootObject->title = $title;
     $rootObject->titleHTML = ColbyConvert::textToHTML($rootObject->title);
+    $rootObject->subtitle = $subtitle;
+    $rootObject->subtitleHTML = ColbyConvert::textToHTML($rootObject->subtitle);
 
     $archive->save();
 

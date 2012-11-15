@@ -283,15 +283,6 @@ class Colby
             $headers);
     }
 
-    //
-    //
-    //
-    public static function useAjax()
-    {
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyAjax.php');
-    }
-
     /**
      * @return void
      */

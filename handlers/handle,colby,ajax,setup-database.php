@@ -2,13 +2,7 @@
 
 // This ajax does not require a verified user, so it must either run only when appropriate or be non-destructive.
 
-Colby::useAjax();
-
-ColbyAjax::begin();
-
-$response = new stdClass();
-$response->wasSuccessful = false;
-$response->message = 'incomplete';
+$response = ColbyOutputManager::beginAjaxResponse();
 
 // drop all procedures and functions
 
@@ -256,8 +250,6 @@ foreach ($sqls as $sql)
 }
 
 $response->wasSuccessful = true;
-$response->message = 'Database schema updated successfully.';
+$response->message = 'The database schema was updated successfully.';
 
-echo json_encode($response);
-
-ColbyAjax::end();
+$response->end();
