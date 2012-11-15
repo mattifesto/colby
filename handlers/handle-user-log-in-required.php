@@ -1,17 +1,13 @@
 <?php
 
-$args = new stdClass();
-$args->title = 'Log In Required';
-$args->description = 'You must log in to view this page.';
-
-ColbyPage::beginAdmin($args);
+$page = ColbyOutputManager::beginPage('Log In Required', 'You must log in to view this page.');
 
 ?>
 
-<p><?php echo $args->description; ?>
+<p>You must log in to view this page.
 
 <p><?php echo ColbyUser::loginHyperlink(); ?>
 
 <?php
 
-ColbyPage::end();
+$page->end();

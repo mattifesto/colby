@@ -1,10 +1,6 @@
 <?php
 
-ColbyPage::requireVerifiedUser();
-
-$args = new stdClass();
-$args->title = 'Manage Users';
-$args->description = 'Use this page to manage users.';
+$page = ColbyOutputManager::beginVerifiedUserPage('Users', 'Manage users.', 'admin');
 
 $sql = <<< END
 SELECT
@@ -15,32 +11,7 @@ ORDER BY
     `facebookLastName`
 END;
 
-ColbyPage::beginAdmin($args);
-
 ?>
-
-<style>
-body
-{
-    margin: 10px;
-}
-
-table
-{
-    border-collapse: collapse;
-}
-
-td
-{
-    border: 1px solid #dddddd;
-    padding: 5px 15px;
-}
-
-tr:nth-child(even) td
-{
-    background-color: #eeeeee;
-}
-</style>
 
 <script>
 
@@ -93,10 +64,6 @@ function update_user_verification(id, hasBeenVerified)
 
 </script>
 
-<h1 style="text-align: center;">Manage users</h1>
-
-<h2>Users</h2>
-
 <table><tbody>
 
     <?php
@@ -124,7 +91,7 @@ function update_user_verification(id, hasBeenVerified)
 
 <?php
 
-ColbyPage::end();
+$page->end();
 
 //
 // functions

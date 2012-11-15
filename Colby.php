@@ -186,8 +186,6 @@ class Colby
 
         include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyOutputManager.php');
 
-        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyPage.php');
-
         include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyRequest.php');
 
         include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyUser.php');

@@ -1,12 +1,6 @@
 <?php
 
-ColbyPage::requireVerifiedUser();
-
-$args = new stdClass();
-$args->title = 'Blog';
-$args->description = 'Create, edit, and delete blog posts.';
-
-ColbyPage::beginAdmin($args);
+$page = ColbyOutputManager::beginVerifiedUserPage('Blog', 'Create, edit, and delete blog posts.', 'admin');
 
 $sql = <<<EOT
 SELECT
@@ -82,4 +76,4 @@ foreach ($editorDataFiles as $editorDataFile)
     <?php
 }
 
-ColbyPage::end();
+$page->end();

@@ -1,19 +1,11 @@
 <?php
 
-$args = new stdClass();
-$args->title = 'Colby Test';
-$args->description = 'Colby Unit Tests';
-
-ColbyPage::beginAdmin($args);
+$page = ColbyOutputManager::beginVerifiedUserPage(
+    'Unit Tests', 'Develeloper tests to make sure there are no regressions in functionality.', 'admin');
 
 ?>
 
 <style>
-h1
-{
-    margin-bottom: 1.0em;
-}
-
 input[type=text]
 {
     width: 400px;
@@ -25,8 +17,6 @@ dd
     margin: 5px 0px 15px;
 }
 </style>
-
-<h1>Colby Unit Tests</h1>
 
 <?php
 
@@ -128,5 +118,5 @@ function endAjax()
 
 <?php
 
-ColbyPage::end();
+$page->end();
 

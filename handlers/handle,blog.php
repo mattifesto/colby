@@ -2,11 +2,7 @@
 
 // TODO: better title and description?
 
-$args = new stdClass();
-$args->title = 'Blog';
-$args->description = 'Blog';
-
-ColbyPage::begin($args);
+$page = ColbyOutputManager::beginPage('Blog', 'Blog');
 
 ?>
 
@@ -67,4 +63,4 @@ EOT;
 
 <?php
 
-ColbyPage::end();
+$page->end();

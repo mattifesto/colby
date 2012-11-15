@@ -1,12 +1,8 @@
 <?php
 
-ColbyPage::requireVerifiedUser();
-
-$args = new stdClass();
-$args->title = 'Site Administration';
-$args->description = 'Edit the settings and content of this website.';
-
-ColbyPage::beginAdmin($args);
+$page = ColbyOutputManager::beginVerifiedUserPage('Site Administration',
+                                                  'Edit the settings and content of this website.',
+                                                  'admin');
 
 ?>
 
@@ -28,4 +24,4 @@ foreach ($adminSections as $adminSection)
     echo "<p><a href=\"/admin/{$matches[1]}/\">{$matches[1]}</a>\n";
 }
 
-ColbyPage::end();
+$page->end();

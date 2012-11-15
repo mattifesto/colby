@@ -1,10 +1,8 @@
 <?php
 
-$args = new stdClass();
-$args->title = 'Colby Configuration';
-$args->description = 'Use this page to configure Colby.';
+// TODO: There should be some security on this page.
 
-ColbyPage::beginAdmin($args);
+$page = ColbyOutputManager::beginPage('Configuration', 'Use this page to first set up your site.', 'admin');
 
 ?>
 
@@ -155,5 +153,5 @@ function endAjax()
 
 <?php
 
-ColbyPage::end();
+$page->end();
 
