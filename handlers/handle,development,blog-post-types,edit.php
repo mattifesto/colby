@@ -1,6 +1,6 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Post Type Editor', 
+$page = ColbyOutputManager::beginVerifiedUserPage('Post Type Editor',
                                                   'Edit the attributes of a blog post type.',
                                                   'admin');
 
@@ -29,12 +29,12 @@ $description = isset($data->descriptionHTML) ? $data->descriptionHTML : '';
 
 <fieldset>
     <div><label>Blog Post Type Id
-        <input type="text" 
+        <input type="text"
                value="<?php echo $blogPostTypeId; ?>"
-               readonly="readonly" 
+               readonly="readonly"
                style="font-family: monospace;">
     </label></div>
-    
+
     <div><label>Title
         <input type="text"
                id="title"
@@ -50,7 +50,7 @@ $description = isset($data->descriptionHTML) ? $data->descriptionHTML : '';
                   onkeydown="handleValueChanged(this);"><?php echo $description; ?></textarea>
     </label></div>
 </fieldset>
-    
+
 <?php
 
 $page->end();
