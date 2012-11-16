@@ -21,11 +21,17 @@ $descriptionHTML = ColbyConvert::textToHTML($this->description);
         <link rel="stylesheet"
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/shared.css">
 
+        <link rel="stylesheet"
+              href="<?php echo COLBY_SITE_URL; ?>/colby/css/admin.css">
+
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/Colby.js"></script>
+
+        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyFormManager.js"></script>
     </head>
     <body>
         <nav>
             <ul class="horizontal" style="padding: 5px;">
+                <li><a href="/admin/">admin</a></li>
                 <li><?php echo $titleHTML; ?></li>
                 <li style="float: right;"><?php echo ColbyUser::loginHyperlink(); ?></li>
             </ul>

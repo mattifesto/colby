@@ -1,13 +1,15 @@
 <?php
 
+$page = ColbyOutputManager::beginVerifiedUserPage('Generic Blog Post Editor',
+                                                  'Create and edit generic blog posts.',
+                                                  'admin');
+
 if (!isset($_GET['archive-id']))
 {
     $archiveId = sha1(microtime() . rand());
 
-    header("Location: /admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/edit/?archive-id={$archiveId}");
+    header("Location: {$_SERVER['REQUEST_URI']}?archive-id={$archiveId}");
 }
-
-$page = ColbyOutputManager::beginPage('Generic Blog Post Editor', 'Create and edit generic blog posts.');
 
 $archiveId = $_GET['archive-id'];
 
@@ -32,34 +34,10 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
 
 ?>
 
-<style>
-input[type=text],
-textarea
-{
-    display: block;
-    width: 100%;
-    padding: 4px;
-    margin-top: 5px;
-    border: 1px solid LightGray;
-}
-
-fieldset
-{
-    width: 600px;
-    border: none;
-}
-
-fieldset > div + div
-{
-    margin-top: 10px;
-}
-</style>
-
-<h1>Generic Blog Post Editor</h1>
-
-<p><progress id="ajax-communication" value="0"></progress>
-
 <fieldset>
+    <progress id="ajax-communication"
+              value="0"
+              style="width: 100px; float: right;"></progress>
 
     <div><label>Title
         <input type="text"
@@ -92,8 +70,8 @@ fieldset > div + div
     <div><label>Content
         <textarea id="content"
                   class="form-field"
-                   style="height: 400px;"
-                 onkeydown="handleValueChanged(this);"><?php echo $content; ?></textarea>
+                  style="height: 400px;"
+                  onkeydown="handleValueChanged(this);"><?php echo $content; ?></textarea>
     </label></div>
 
     <div>
@@ -112,6 +90,7 @@ fieldset > div + div
     </div>
 
 </fieldset>
+
 <div id="error-log"></div>
 
 <script>
@@ -125,6 +104,8 @@ var needsUpdate = false;
 var isUpdating = false;
 var timer = null;
 var xhr = null;
+
+var formManager = null;
 
 /**
  * @return object
@@ -171,27 +152,15 @@ function handleAjaxResponse()
 
     xhr = null;
 
-    endAjax();
+    formManager.setIsAjaxIndicatorOn(false);
 
     return response;
 }
 
-function beginAjax()
-{
-    var progress = document.getElementById('ajax-communication');
-
-    progress.removeAttribute('value');
-}
-
-function endAjax()
-{
-    var progress = document.getElementById('ajax-communication');
-
-    progress.setAttribute('value', '0');
-}
-
 function handleContentLoaded()
 {
+    formManager = new ColbyFormManager();
+
     if (publicationDate)
     {
         var date = new Date(publicationDate);
@@ -276,7 +245,7 @@ function updateBlogPost()
     isUpdating = true;
     needsUpdate = false;
 
-    beginAjax();
+    formManager.setIsAjaxIndicatorOn(true);
 
     var title = document.getElementById('title');
     var subtitle = document.getElementById('subtitle');
