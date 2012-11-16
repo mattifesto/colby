@@ -22,24 +22,25 @@ if (file_exists($dataFilename))
     $data = unserialize(file_get_contents($dataFilename));
 }
 
-$title = isset($data->titleHTML) ? $data->titleHTML : '';
-$description = isset($data->descriptionHTML) ? $data->descriptionHTML : '';
+$nameHTML = isset($data->nameHTML) ? $data->nameHTML : '';
+$descriptionHTML = isset($data->descriptionHTML) ? $data->descriptionHTML : '';
 
 ?>
 
 <fieldset>
     <div><label>Blog Post Type Id
         <input type="text"
+               id="blog-post-type-id"
                value="<?php echo $blogPostTypeId; ?>"
                readonly="readonly"
                style="font-family: monospace;">
     </label></div>
 
-    <div><label>Title
+    <div><label>Name
         <input type="text"
-               id="title"
+               id="name"
                class="form-field"
-               value="<?php echo $title; ?>"
+               value="<?php echo $nameHTML; ?>"
                onkeydown="handleValueChanged(this);">
     </label></div>
 
@@ -47,7 +48,7 @@ $description = isset($data->descriptionHTML) ? $data->descriptionHTML : '';
         <textarea id="description"
                   class="form-field"
                   style="height: 400px;"
-                  onkeydown="handleValueChanged(this);"><?php echo $description; ?></textarea>
+                  onkeydown="handleValueChanged(this);"><?php echo $descriptionHTML; ?></textarea>
     </label></div>
 </fieldset>
 
