@@ -22,6 +22,10 @@ if ($archive->attributes()->created)
 
 // mise en place
 
+$ajaxURL = COLBY_SITE_URL . '/admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/';
+
+$published = isset($data->published) ? $data->published : '';
+$publicationDate = isset($data->publicationDate) ? $data->publicationDate : '';
 $title = isset($data->titleHTML) ? $data->titleHTML : '';
 $subtitle = isset($data->subtitleHTML) ? $data->subtitleHTML : '';
 $stub = isset($data->stub) ? $data->stub : '';
@@ -35,24 +39,23 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
 ?>
 
 <fieldset>
-    <progress id="ajax-communication"
-              value="0"
+    <input type="hidden" id="archive-id" value="<?php echo $archiveId; ?>">
+    <input type="hidden" id="published" value="<?php echo $published; ?>">
+    <input type="hidden" id="publication-date" value="<?php echo $publicationDate; ?>">
+
+    <progress value="0"
               style="width: 100px; float: right;"></progress>
 
     <div><label>Title
         <input type="text"
                id="title"
-               class="form-field"
-               value="<?php echo $title; ?>"
-               onkeydown="handleValueChanged(this);">
+               value="<?php echo $title; ?>">
     </label></div>
 
     <div><label>Subtitle
         <input type="text"
                id="subtitle"
-               class="form-field"
-               value="<?php echo $subtitle; ?>"
-               onkeydown="handleValueChanged(this);">
+               value="<?php echo $subtitle; ?>">
     </label></div>
 
     <div>
@@ -60,31 +63,27 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
         <label>Stub
             <input type="text"
                    id="stub"
-                   class="form-field"
                    value="<?php echo $stub; ?>"
-                   readonly="readonly"
-                   onkeydown="handleValueChanged(this);">
+                   readonly="readonly">
         </label>
     </div>
 
     <div><label>Content
         <textarea id="content"
-                  class="form-field"
-                  style="height: 400px;"
-                  onkeydown="handleValueChanged(this);"><?php echo $content; ?></textarea>
+                  style="height: 400px;"><?php echo $content; ?></textarea>
     </label></div>
 
     <div>
         <label style="float: right;">
             <input type="checkbox"
-                   id="is-published"
+                   class="ignore"
                    <?php echo $isPublished; ?>
                    onclick="handlePublishedChanged(this);">
         Published</label>
         <label>Publication Date:
             <input type="text"
-                   id="publication-date"
-                   class="form-field"
+                   id="publication-date-text"
+                   class="ignore"
                    onblur="handlePublicationDateBlurred(this);">
         </label>
     </div>
@@ -96,76 +95,22 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
 <script>
 "use strict";
 
-var archiveId = '<?php echo $archiveId; ?>';
+var formManager = null;
+
 var published = <?php echo $javascriptPublished; ?>;
 var publicationDate = <?php echo $javascriptPublicationDate; ?>;
 
-var needsUpdate = false;
-var isUpdating = false;
-var timer = null;
-var xhr = null;
-
-var formManager = null;
-
-/**
- * @return object
- *  ajax response data
- */
-function handleAjaxResponse()
-{
-    if (xhr.status == 200)
-    {
-        var response = JSON.parse(xhr.responseText);
-    }
-    else
-    {
-        var response =
-        {
-            'wasSuccessful' : false,
-            'message' : xhr.status + ': ' + xhr.statusText
-        };
-    }
-
-    var errorLog = document.getElementById('error-log');
-
-    // remove error-log element content
-
-    while (errorLog.firstChild)
-    {
-        errorLog.removeChild(errorLog.firstChild);
-    }
-
-    var p = document.createElement('p');
-    var t = document.createTextNode(response.message);
-
-    p.appendChild(t);
-    errorLog.appendChild(p);
-
-    if ('stackTrace' in response)
-    {
-        var pre = document.createElement('pre');
-        t = document.createTextNode(response.stackTrace);
-
-        pre.appendChild(t);
-        errorLog.appendChild(pre);
-    }
-
-    xhr = null;
-
-    formManager.setIsAjaxIndicatorOn(false);
-
-    return response;
-}
-
 function handleContentLoaded()
 {
-    formManager = new ColbyFormManager();
+    // TODO: Make absolute URL
+
+    formManager = new ColbyFormManager('<?php echo $ajaxURL; ?>');
 
     if (publicationDate)
     {
         var date = new Date(publicationDate);
 
-        document.getElementById('publication-date').value = date.toLocaleString();
+        document.getElementById('publication-date-text').value = date.toLocaleString();
     }
 }
 
@@ -193,7 +138,9 @@ function handlePublicationDateBlurred(sender)
 
         sender.value = date.toLocaleString();
 
-        handleValueChanged(sender);
+        var phpPublicationDate = Math.floor(publicationDate / 1000);
+
+        document.getElementById('publication-date').value = phpPublicationDate;
     }
 }
 
@@ -207,7 +154,7 @@ function handlePublishedChanged(sender)
 
             publicationDate = date.getTime();
 
-            document.getElementById('publication-date').value = date.toLocaleString();
+            document.getElementById('publication-date-text').value = date.toLocaleString();
         }
 
         published = publicationDate;
@@ -217,57 +164,9 @@ function handlePublishedChanged(sender)
         published = null;
     }
 
-    handleValueChanged(null);
-}
-
-function handleValueChanged(sender)
-{
-    if (sender)
-    {
-        sender.style.backgroundColor = 'LightYellow';
-    }
-
-    needsUpdate = true;
-
-    if (!isUpdating)
-    {
-        if (timer)
-        {
-            clearTimeout(timer);
-        }
-
-        timer = setTimeout(updateBlogPost, 2000);
-    }
-}
-
-function updateBlogPost()
-{
-    isUpdating = true;
-    needsUpdate = false;
-
-    formManager.setIsAjaxIndicatorOn(true);
-
-    var title = document.getElementById('title');
-    var subtitle = document.getElementById('subtitle');
-    var stub = document.getElementById('stub');
-    var content = document.getElementById('content');
-
     var phpPublished = published ? Math.floor(published / 1000) : '';
-    var phpPublicationDate = publicationDate ? Math.floor(publicationDate / 1000) : '';
 
-    var formData = new FormData();
-    formData.append('archive-id', archiveId);
-    formData.append('title', title.value);
-    formData.append('subtitle', subtitle.value);
-    formData.append('stub', stub.value);
-    formData.append('content', content.value);
-    formData.append('published', phpPublished);
-    formData.append('publication-date', phpPublicationDate);
-
-    xhr = new XMLHttpRequest();
-    xhr.open('POST', '/admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/', true);
-    xhr.onload = handleBlogPostUpdated;
-    xhr.send(formData);
+    document.getElementById('published').value = phpPublished;
 }
 
 function handleBlogPostUpdated()

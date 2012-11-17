@@ -15,19 +15,25 @@ else
     header("Location: {$_SERVER['REQUEST_URI']}?blog-post-type-id={$blogPostTypeId}");
 }
 
-$dataFilename = COLBY_SITE_DIRECTORY . "/colby/handlers/handle,admin,blog,{$blogPostTypeId}.data";
+$dataFilename = "handle,admin,blog,{$blogPostTypeId}.data";
 
-if (file_exists($dataFilename))
+$absoluteDataFilename = Colby::findHandler($dataFilename);
+
+if ($absoluteDataFilename)
 {
-    $data = unserialize(file_get_contents($dataFilename));
+    $data = unserialize(file_get_contents($absoluteDataFilename));
 }
 
+$ajaxURL = COLBY_SITE_URL . '/development/blog-post-types/ajax/update/';
 $nameHTML = isset($data->nameHTML) ? $data->nameHTML : '';
-$descriptionHTML = isset($data->descriptionHTML) ? $data->descriptionHTML : '';
+$descriptionHTML = isset($data->description) ? ColbyConvert::textToHTML($data->description) : '';
 
 ?>
 
 <fieldset>
+    <progress value="0"
+              style="width: 100px; float: right;"></progress>
+
     <div><label>Blog Post Type Id
         <input type="text"
                id="blog-post-type-id"
@@ -39,18 +45,30 @@ $descriptionHTML = isset($data->descriptionHTML) ? $data->descriptionHTML : '';
     <div><label>Name
         <input type="text"
                id="name"
-               class="form-field"
-               value="<?php echo $nameHTML; ?>"
-               onkeydown="handleValueChanged(this);">
+               value="<?php echo $nameHTML; ?>">
     </label></div>
 
     <div><label>Description
         <textarea id="description"
-                  class="form-field"
-                  style="height: 400px;"
-                  onkeydown="handleValueChanged(this);"><?php echo $descriptionHTML; ?></textarea>
+                  style="height: 300px;"><?php echo $descriptionHTML; ?></textarea>
     </label></div>
+
+    <div id="error-log"></div>
 </fieldset>
+
+<script>
+"use strict";
+
+var formManager;
+
+function handleContentLoaded()
+{
+    formManager = new ColbyFormManager('<?php echo $ajaxURL; ?>');
+}
+
+document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
+
+</script>
 
 <?php
 

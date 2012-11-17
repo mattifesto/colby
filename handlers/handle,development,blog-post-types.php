@@ -1,33 +1,56 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Blog Post Types', 'Developer tools for blog post types.');
+$page = ColbyOutputManager::beginVerifiedUserPage('Blog Post Types',
+                                                  'Developer tools for blog post types.',
+                                                  'admin');
 
-$builtInPostTypeDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,blog,*.data');
+?>
 
-foreach ($builtInPostTypeDataFiles as $postTypeDataFile)
-{
-    $postTypeData = unserialize(file_get_contents($postTypeDataFile));
+<h1>Built in post types</h1>
 
-    ?>
+<?php
 
-    <h1 style="font-size: 1.5em;"><?php echo $postTypeData->name; ?></h1>
-    <p><?php echo $postTypeData->description; ?>
+$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,blog,*.data');
 
-    <?php
-}
+displayPostTypes($absoluteDataFilenames);
 
-$siteSpecificPostTypeDataFiles = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,blog,*.data');
+?>
 
-foreach ($siteSpecificPostTypeDataFiles as $postTypeDataFile)
-{
-    $postTypeData = unserialize(file_get_contents($postTypeDataFile));
+<h1>Site specific post types</h1>
 
-    ?>
+<?php
 
-    <h1 style="font-size: 1.5em;"><?php echo $postTypeData->name; ?><h1>
-    <p><?php echo $postTypeData->description; ?>
+$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,blog,*.data');
 
-    <?php
-}
+displayPostTypes($absoluteDataFilenames);
+
+?>
+
+<div><a href="<?php echo "{$_SERVER['REQUEST_URI']}/edit/"; ?>">Create a new blog post type</a></div>
+
+<?php
 
 $page->end();
+
+/**
+ * @return void
+ */
+function displayPostTypes($absoluteDataFilenames)
+{
+    foreach ($absoluteDataFilenames as $absoluteDataFilename)
+    {
+        preg_match('/blog,([^,]*).data$/', $absoluteDataFilename, $matches);
+
+        $editURL = COLBY_SITE_URL . "/development/blog-post-types/edit/?blog-post-type-id={$matches[1]}";
+
+        $data = unserialize(file_get_contents($absoluteDataFilename));
+
+        ?>
+
+        <h1 style="font-size: 1.5em;"><?php echo $data->nameHTML; ?></h1>
+        <p><?php echo $data->descriptionHTML; ?>
+        <p><a href="<?php echo $editURL; ?>">edit</a>
+
+        <?php
+    }
+}

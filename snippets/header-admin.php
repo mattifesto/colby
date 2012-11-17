@@ -31,8 +31,8 @@ $descriptionHTML = ColbyConvert::textToHTML($this->description);
     <body>
         <nav>
             <ul class="horizontal" style="padding: 5px;">
-                <li><a href="/admin/">admin</a></li>
                 <li><?php echo $titleHTML; ?></li>
                 <li style="float: right;"><?php echo ColbyUser::loginHyperlink(); ?></li>
+                <li><a style="float: right;" href="/admin/">admin</a></li>
             </ul>
         </nav>
