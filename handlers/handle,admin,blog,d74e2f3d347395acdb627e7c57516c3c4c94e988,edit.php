@@ -100,6 +100,9 @@ var formManager = null;
 var published = <?php echo $javascriptPublished; ?>;
 var publicationDate = <?php echo $javascriptPublicationDate; ?>;
 
+/**
+ * @return void
+ */
 function handleContentLoaded()
 {
     // TODO: Make absolute URL
@@ -114,47 +117,36 @@ function handleContentLoaded()
     }
 }
 
+/**
+ * @return void
+ */
 function handlePublicationDateBlurred(sender)
 {
-    var date = new Date(Date.parse(sender.value));
+    var date = new Date(sender.value);
 
     if (isNaN(date))
     {
+        // TODO: turn field red by adding a class
+        // remove it when field is successfully set
+
         alert('Can\'t parse date value "' + sender.value + '".');
 
         return;
     }
 
-    var timestamp = date.getTime();
-
-    if (publicationDate != timestamp)
-    {
-        publicationDate = timestamp;
-
-        if (published)
-        {
-            published = timestamp;
-        }
-
-        sender.value = date.toLocaleString();
-
-        var phpPublicationDate = Math.floor(publicationDate / 1000);
-
-        document.getElementById('publication-date').value = phpPublicationDate;
-    }
+    setPublicationDate(date.getTime());
 }
 
+/**
+ * @return void
+ */
 function handlePublishedChanged(sender)
 {
     if (sender.checked)
     {
         if (publicationDate === null)
         {
-            var date = new Date();
-
-            publicationDate = date.getTime();
-
-            document.getElementById('publication-date-text').value = date.toLocaleString();
+            setPublicationDate(new Date().getTime());
         }
 
         published = publicationDate;
@@ -167,8 +159,15 @@ function handlePublishedChanged(sender)
     var phpPublished = published ? Math.floor(published / 1000) : '';
 
     document.getElementById('published').value = phpPublished;
+
+    sender.parentNode.classList.add('needs-update');
+
+    formManager.setNeedsUpdate(true);
 }
 
+/**
+ * @return void
+ */
 function handleBlogPostUpdated()
 {
     isUpdating = false;
@@ -193,6 +192,37 @@ function handleBlogPostUpdated()
             elements[i].style.backgroundColor = 'Transparent';
         }
     }
+}
+
+/**
+ * @return void
+ */
+function setPublicationDate(timestamp)
+{
+    if (publicationDate == timestamp)
+    {
+        return;
+    }
+
+    publicationDate = timestamp;
+    var date = new Date(timestamp);
+
+    var publicationDateTextElement = document.getElementById('publication-date-text');
+
+    publicationDateTextElement.value = date.toLocaleString();
+    publicationDateTextElement.classList.add('needs-update');
+
+    var phpPublicationDate = Math.floor(publicationDate / 1000);
+
+    if (published)
+    {
+        published = timestamp;
+        document.getElementById('published').value = phpPublicationDate;
+    }
+
+    document.getElementById('publication-date').value = phpPublicationDate;
+
+    formManager.setNeedsUpdate(true);
 }
 
 document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
