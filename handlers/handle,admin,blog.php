@@ -56,7 +56,8 @@ $result = Colby::query($sql);
 <?php
 
 $editorDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,blog,*.data');
-$editorDataFiles = $editorDataFiles + glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,blog,*.data');
+$editorDataFiles = array_merge($editorDataFiles,
+                               glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,blog,*.data'));
 
 foreach ($editorDataFiles as $editorDataFile)
 {
@@ -70,8 +71,8 @@ foreach ($editorDataFiles as $editorDataFile)
 
     ?>
 
-    <p style="font-size: 1.5em;"><a href="<?php echo $editorURL ?>">Create a <?php echo $editorData->name; ?></a>
-    <p><?php echo $editorData->description; ?>
+    <p style="font-size: 1.5em;"><a href="<?php echo $editorURL ?>">Create a <?php echo $editorData->nameHTML; ?></a>
+    <p><?php echo $editorData->descriptionHTML; ?>
 
     <?php
 }

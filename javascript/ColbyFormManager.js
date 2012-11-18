@@ -80,7 +80,7 @@ ColbyFormManager.prototype.getFormElements = function()
     var i;
     var arrayOfElements = new Array();
 
-    elements = this.fieldsetElement.getElementsByTagName('input');
+    var elements = this.fieldsetElement.getElementsByTagName('input');
 
     i = 0;
 
@@ -117,16 +117,16 @@ ColbyFormManager.prototype.getFormElements = function()
  */
 ColbyFormManager.prototype.handleAjaxResponse = function()
 {
-    if (xhr.status == 200)
+    if (this.xhr.status == 200)
     {
-        var response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(this.xhr.responseText);
     }
     else
     {
         var response =
         {
             'wasSuccessful' : false,
-            'message' : xhr.status + ': ' + xhr.statusText
+            'message' : this.xhr.status + ': ' + this.xhr.statusText
         };
     }
 
@@ -154,7 +154,7 @@ ColbyFormManager.prototype.handleAjaxResponse = function()
         errorLog.appendChild(pre);
     }
 
-    xhr = null;
+    this.xhr = null;
 
     formManager.setIsAjaxIndicatorOn(false);
 
@@ -277,7 +277,7 @@ ColbyFormManager.prototype.update = function()
 
     elements = this.getFormElements();
 
-    formData = new FormData();
+    var formData = new FormData();
 
     for (var i = 0; i < elements.length; i++)
     {
@@ -286,8 +286,8 @@ ColbyFormManager.prototype.update = function()
         formData.append(element.id, element.value);
     }
 
-    xhr = new XMLHttpRequest();
-    xhr.open('POST', this.ajaxURL, true);
-    xhr.onload = handler;
-    xhr.send(formData);
+    this.xhr = new XMLHttpRequest();
+    this.xhr.open('POST', this.ajaxURL, true);
+    this.xhr.onload = handler;
+    this.xhr.send(formData);
 }
