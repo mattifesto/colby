@@ -1,3 +1,3 @@
 <?php
 
-define('COLBY_VERSION', '2.7.1');
+define('COLBY_VERSION', '2.8.0');
