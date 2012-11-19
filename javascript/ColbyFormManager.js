@@ -44,7 +44,6 @@ function ColbyFormManager(ajaxURL)
 /**
  * @return void
  */
-
 ColbyFormManager.prototype.addChangeListenerToCheckboxes = function(collection)
 {
     var self = this;

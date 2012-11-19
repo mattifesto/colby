@@ -256,7 +256,18 @@ function updateCompleteCallback(response)
 
     var stub = document.getElementById('stub');
 
-    stub.value = response.suggestedStub;
+    if (stub.value != response.suggestedStub)
+    {
+        stub.value = response.suggestedStub;
+
+        // Changing the value of the stub input will not notify the system that the stub has changed. We could just call setNeedsUpdate(true) on the formManager but instead we send the 'input' event to the stub input element which will highlight it, giving the user visual feedback of the change, and also notify the formManager that an update is needed.
+
+        var event = document.createEvent('Event');
+
+        event.initEvent('input', false, false);
+
+        stub.dispatchEvent(event);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
