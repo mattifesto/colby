@@ -240,7 +240,23 @@ function setPublicationDate(timestamp)
  */
 function updateCompleteCallback(response)
 {
-    //alert(response.stub);
+    var locked = document.getElementById('stub-is-locked');
+
+    if (locked.checked)
+    {
+        return;
+    }
+
+    var custom = document.getElementById('stub-is-custom');
+
+    if (custom.checked)
+    {
+        return;
+    }
+
+    var stub = document.getElementById('stub');
+
+    stub.value = response.suggestedStub;
 }
 
 document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
