@@ -86,9 +86,8 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
     <div>
         <label style="float: right;">
             <input type="checkbox"
-                   class="ignore"
                    <?php echo $isPublished; ?>
-                   onclick="handlePublishedChanged(this);">
+                   onchange="handlePublishedChanged(this);">
         Published</label>
         <label>Publication Date:
             <input type="text"
@@ -125,6 +124,12 @@ function handleContentLoaded()
 
         document.getElementById('publication-date-text').value = date.toLocaleString();
     }
+
+    if (published)
+    {
+        document.getElementById('stub-is-custom').disabled = true;
+        document.getElementById('stub-is-locked').disabled = true;
+    }
 }
 
 /**
@@ -160,10 +165,33 @@ function handlePublishedChanged(sender)
         }
 
         published = publicationDate;
+
+        // When a post is published the stub is always automatically locked to maintain the permalink. If the user unpublishes the post they have the choice to unlock the stub if desired.
+
+        var locked = document.getElementById('stub-is-locked');
+
+        if (!locked.checked)
+        {
+            locked.checked = true;
+
+            // Simulate the user checking the checkbox indicate the state has changed.
+
+            var event = document.createEvent('Event');
+
+            event.initEvent('change', false, false);
+
+            locked.dispatchEvent(event);
+        }
+
+        document.getElementById('stub-is-custom').disabled = true;
+        document.getElementById('stub-is-locked').disabled = true;
     }
     else
     {
         published = null;
+
+        document.getElementById('stub-is-custom').disabled = false;
+        document.getElementById('stub-is-locked').disabled = false;
     }
 
     var phpPublished = published ? Math.floor(published / 1000) : '';
@@ -171,8 +199,6 @@ function handlePublishedChanged(sender)
     document.getElementById('published').value = phpPublished;
 
     sender.parentNode.classList.add('needs-update');
-
-    formManager.setNeedsUpdate(true);
 }
 
 /**
