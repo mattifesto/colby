@@ -7,6 +7,7 @@ function ColbyFormManager(ajaxURL)
 {
     this.ajaxURL = ajaxURL;
     this.isAjaxIndicatorOn = false;
+    this.updateCompleteCallback = null;
 
     var elements = document.getElementsByTagName('fieldset');
 
@@ -32,28 +33,64 @@ function ColbyFormManager(ajaxURL)
 
     elements = this.fieldsetElement.getElementsByTagName('input');
 
-    this.addKeyDownListenerToElements(elements);
+    this.addInputListenerToTextAndTextareas(elements);
+    this.addChangeListenerToCheckboxes(elements);
 
     elements = this.fieldsetElement.getElementsByTagName('textarea');
 
-    this.addKeyDownListenerToElements(elements);
+    this.addInputListenerToTextAndTextareas(elements);
 }
 
 /**
- *
+ * @return void
  */
-ColbyFormManager.prototype.addKeyDownListenerToElements = function(collection)
+
+ColbyFormManager.prototype.addChangeListenerToCheckboxes = function(collection)
 {
     var self = this;
 
     var handler = function()
     {
-        self.handleKeyDown(this);
+        self.handleChange(this);
     }
 
-    for (var i = 0; i < collection.length; i++)
+    var countOfElements = collection.length;
+
+    for (var i = 0; i < countOfElements; i++)
     {
-        var element = collection[i];
+        var element = collection.item(i);
+
+        if (element.classList.contains('ignore'))
+        {
+            continue;
+        }
+
+        if (element.tagName != 'INPUT' || element.type != 'checkbox')
+        {
+            continue;
+        }
+
+        element.addEventListener('change', handler, false);
+    }
+}
+
+/**
+ * @return void
+ */
+ColbyFormManager.prototype.addInputListenerToTextAndTextareas = function(collection)
+{
+    var self = this;
+
+    var handler = function()
+    {
+        self.handleInput(this);
+    }
+
+    var countOfElements = collection.length;
+
+    for (var i = 0; i < countOfElements; i++)
+    {
+        var element = collection.item(i);
 
         if (element.classList.contains('ignore'))
         {
@@ -67,7 +104,7 @@ ColbyFormManager.prototype.addKeyDownListenerToElements = function(collection)
             continue;
         }
 
-        element.addEventListener('keydown', handler, false);
+        element.addEventListener('input', handler, false);
     }
 }
 
@@ -162,12 +199,20 @@ ColbyFormManager.prototype.handleAjaxResponse = function()
 }
 
 /**
- *
+ * @return void
  */
-ColbyFormManager.prototype.handleKeyDown = function(sender)
+ColbyFormManager.prototype.handleChange = function(sender)
 {
-    // add class "needs-update"
+    sender.parentElement.classList.add('needs-update');
 
+    this.setNeedsUpdate(true);
+}
+
+/**
+ * @return void
+ */
+ColbyFormManager.prototype.handleInput = function(sender)
+{
     sender.classList.add('needs-update');
 
     this.setNeedsUpdate(true);
@@ -191,6 +236,11 @@ ColbyFormManager.prototype.handleUpdateComplete = function()
     while (element = elements.item(0))
     {
         element.classList.remove('now-updating');
+    }
+
+    if (this.updateCompleteCallback)
+    {
+        this.updateCompleteCallback(response);
     }
 }
 
@@ -283,7 +333,14 @@ ColbyFormManager.prototype.update = function()
     {
         element = elements[i];
 
-        formData.append(element.id, element.value);
+        if (element.tagName == 'INPUT' && element.type == 'checkbox')
+        {
+            formData.append(element.id, element.checked ? '1' : '0');
+        }
+        else
+        {
+            formData.append(element.id, element.value);
+        }
     }
 
     this.xhr = new XMLHttpRequest();

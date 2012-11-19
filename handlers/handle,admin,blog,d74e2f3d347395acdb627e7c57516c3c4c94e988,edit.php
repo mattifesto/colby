@@ -30,6 +30,7 @@ $title = isset($data->titleHTML) ? $data->titleHTML : '';
 $subtitle = isset($data->subtitleHTML) ? $data->subtitleHTML : '';
 $stub = isset($data->stub) ? $data->stub : '';
 $stubIsLocked = (isset($data->stubIsLocked) && $data->stubIsLocked) ? ' checked="checked"' : '';
+$stubIsCustom = (isset($data->stubIsCustom) && $data->stubIsCustom) ? ' checked="checked"' : '';
 $content = isset($data->content) ? ColbyConvert::textToHTML($data->content) : '';
 $isPublished = isset($data->published) ? ' checked="checked"' : '';
 
@@ -59,7 +60,16 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
     </label></div>
 
     <div>
-        <label style="float:right;"><input type="checkbox"<?php echo $stubIsLocked; ?>> Locked</label>
+        <label style="float:right; margin-left: 20px;">
+            <input type="checkbox"
+                   id="stub-is-locked"
+                   <?php echo $stubIsLocked; ?>> Locked
+        </label>
+        <label style="float:right;">
+            <input type="checkbox"
+                   id="stub-is-custom"
+                   <?php echo $stubIsCustom; ?>> Custom
+        </label>
         <label>Stub
             <input type="text"
                    id="stub"
@@ -105,9 +115,9 @@ var publicationDate = <?php echo $javascriptPublicationDate; ?>;
  */
 function handleContentLoaded()
 {
-    // TODO: Make absolute URL
-
     formManager = new ColbyFormManager('<?php echo $ajaxURL; ?>');
+
+    formManager.updateCompleteCallback = updateCompleteCallback;
 
     if (publicationDate)
     {
@@ -223,6 +233,14 @@ function setPublicationDate(timestamp)
     document.getElementById('publication-date').value = phpPublicationDate;
 
     formManager.setNeedsUpdate(true);
+}
+
+/**
+ * @return void
+ */
+function updateCompleteCallback(response)
+{
+    //alert(response.stub);
 }
 
 document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
