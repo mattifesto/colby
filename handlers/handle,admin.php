@@ -13,7 +13,7 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Site Administration',
 <?php
 
 $adminSections = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,*.php');
-$adminSections = $adminSections + glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,*.php');
+$adminSections = array_merge($adminSections, glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,*.php'));
 
 $adminSections = preg_grep('/handle,admin,[^,]*.php$/', $adminSections);
 

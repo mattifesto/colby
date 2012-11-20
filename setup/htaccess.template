@@ -1,3 +1,9 @@
+#
+# Explicitly disallow directory listings.
+#
+
+Options -Indexes
+
 <IfModule mod_rewrite.c>
 
 RewriteEngine On
