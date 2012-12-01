@@ -16,5 +16,6 @@ if (!$archive || !$archive->rootObject()->published)
     return false;
 }
 
-include(COLBY_SITE_DIRECTORY .
-        "/colby/handlers/handle,admin,blog,{$archive->rootObject()->type},display.php");
+$blogViewFilename = "handle,admin,blog,{$archive->rootObject()->type},view.php";
+
+include(Colby::findHandler($blogViewFilename));

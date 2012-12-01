@@ -1,7 +1,7 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Generic Blog Post Editor',
-                                                  'Create and edit generic blog posts.',
+$page = ColbyOutputManager::beginVerifiedUserPage('Generic Document Editor',
+                                                  'Create and edit generic documents.',
                                                   'admin');
 
 if (!isset($_GET['archive-id']))
@@ -22,7 +22,7 @@ if ($archive->attributes()->created)
 
 // mise en place
 
-$ajaxURL = COLBY_SITE_URL . '/admin/blog/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/';
+$ajaxURL = COLBY_SITE_URL . '/admin/model/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/';
 
 $published = isset($data->published) ? $data->published : '';
 $publicationDate = isset($data->publicationDate) ? $data->publicationDate : '';

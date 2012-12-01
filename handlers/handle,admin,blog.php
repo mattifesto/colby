@@ -33,7 +33,7 @@ $result = Colby::query($sql);
         $attributes = $archive->attributes();
         $data = $archive->rootObject();
 
-        $editURL = COLBY_SITE_URL . "/admin/blog/{$row->type}/edit/?archive-id={$row->id}";
+        $editURL = COLBY_SITE_URL . "/admin/model/{$row->type}/edit/?archive-id={$row->id}";
 
         ?>
 
@@ -55,26 +55,33 @@ $result = Colby::query($sql);
 
 <?php
 
-$editorDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,blog,*.data');
-$editorDataFiles = array_merge($editorDataFiles,
-                               glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,blog,*.data'));
+$modelDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,model,*.data');
+$modelDataFiles = array_merge($modelDataFiles,
+                              glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,model,*.data'));
 
-foreach ($editorDataFiles as $editorDataFile)
+foreach ($modelDataFiles as $modelDataFile)
 {
-    $editorData = unserialize(file_get_contents($editorDataFile));
+    // Get the model id
 
-    preg_match('/blog,([^,]*).data$/', $editorDataFile, $matches);
+    preg_match('/model,([^,]*).data$/', $modelDataFile, $matches);
 
-    $editorURL = "/admin/blog/{$matches[1]}/edit/";
+    // If there is a blog view for this model, offer the model as an option
 
-    // TODO: escape this data for HTML
+    $viewHandlerFilename = "handle,admin,blog,{$matches[1]},view.php";
 
-    ?>
+    if (Colby::findHandler($viewHandlerFilename))
+    {
+        $modelData = unserialize(file_get_contents($modelDataFile));
 
-    <p style="font-size: 1.5em;"><a href="<?php echo $editorURL ?>">Create a <?php echo $editorData->nameHTML; ?></a>
-    <p><?php echo $editorData->descriptionHTML; ?>
+        $editURL = "/admin/model/{$matches[1]}/edit/";
 
-    <?php
+        ?>
+
+        <p style="font-size: 1.5em;"><a href="<?php echo $editURL; ?>">Create a <?php echo $modelData->nameHTML; ?></a>
+        <p><?php echo $modelData->descriptionHTML; ?>
+
+        <?php
+    }
 }
 
 $page->end();
