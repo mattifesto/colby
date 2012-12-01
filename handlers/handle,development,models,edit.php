@@ -1,21 +1,21 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Post Type Editor',
-                                                  'Edit the attributes of a blog post type.',
+$page = ColbyOutputManager::beginVerifiedUserPage('Model Editor',
+                                                  'Edit the attributes of a model.',
                                                   'admin');
 
-if (isset($_GET['blog-post-type-id']))
+if (isset($_GET['model-id']))
 {
-    $blogPostTypeId = $_GET['blog-post-type-id'];
+    $modelId = $_GET['model-id'];
 }
 else
 {
-    $blogPostTypeId = sha1(microtime() . rand());
+    $modelId = sha1(microtime() . rand());
 
-    header("Location: {$_SERVER['REQUEST_URI']}?blog-post-type-id={$blogPostTypeId}");
+    header("Location: {$_SERVER['REQUEST_URI']}?model-id={$modelId}");
 }
 
-$dataFilename = "handle,admin,blog,{$blogPostTypeId}.data";
+$dataFilename = "handle,admin,model,{$modelId}.data";
 
 $absoluteDataFilename = Colby::findHandler($dataFilename);
 
@@ -24,7 +24,7 @@ if ($absoluteDataFilename)
     $data = unserialize(file_get_contents($absoluteDataFilename));
 }
 
-$ajaxURL = COLBY_SITE_URL . '/development/blog-post-types/ajax/update/';
+$ajaxURL = COLBY_SITE_URL . '/development/models/ajax/update/';
 $nameHTML = isset($data->nameHTML) ? $data->nameHTML : '';
 $descriptionHTML = isset($data->description) ? ColbyConvert::textToHTML($data->description) : '';
 
@@ -34,10 +34,10 @@ $descriptionHTML = isset($data->description) ? ColbyConvert::textToHTML($data->d
     <progress value="0"
               style="width: 100px; float: right;"></progress>
 
-    <div><label>Blog Post Type Id
+    <div><label>Model Id
         <input type="text"
-               id="blog-post-type-id"
-               value="<?php echo $blogPostTypeId; ?>"
+               id="model-id"
+               value="<?php echo $modelId; ?>"
                readonly="readonly"
                style="font-family: monospace;">
     </label></div>

@@ -1,32 +1,32 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Blog Post Types',
-                                                  'Developer tools for blog post types.',
+$page = ColbyOutputManager::beginVerifiedUserPage('Models',
+                                                  'Developer tools for creating and editing models.',
                                                   'admin');
 
 ?>
 
-<h1>Built in post types</h1>
+<h1>Built in models</h1>
 
 <?php
 
-$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,blog,*.data');
+$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,model,*.data');
 
 displayPostTypes($absoluteDataFilenames);
 
 ?>
 
-<h1>Site specific post types</h1>
+<h1>Site specific models</h1>
 
 <?php
 
-$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,blog,*.data');
+$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,model,*.data');
 
 displayPostTypes($absoluteDataFilenames);
 
 ?>
 
-<div><a href="<?php echo "{$_SERVER['REQUEST_URI']}/edit/"; ?>">Create a new blog post type</a></div>
+<div><a href="<?php echo "{$_SERVER['REQUEST_URI']}/edit/"; ?>">Create a new model</a></div>
 
 <?php
 
@@ -39,9 +39,9 @@ function displayPostTypes($absoluteDataFilenames)
 {
     foreach ($absoluteDataFilenames as $absoluteDataFilename)
     {
-        preg_match('/blog,([^,]*).data$/', $absoluteDataFilename, $matches);
+        preg_match('/model,([^,]*).data$/', $absoluteDataFilename, $matches);
 
-        $editURL = COLBY_SITE_URL . "/development/blog-post-types/edit/?blog-post-type-id={$matches[1]}";
+        $editURL = COLBY_SITE_URL . "/development/models/edit/?model-id={$matches[1]}";
 
         $data = unserialize(file_get_contents($absoluteDataFilename));
 

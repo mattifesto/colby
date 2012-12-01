@@ -2,7 +2,7 @@
 
 $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
-$blogPostTypeId = $_POST['blog-post-type-id'];
+$modelId = $_POST['model-id'];
 
 $data = new stdClass();
 $data->name = $_POST['name'];
@@ -10,7 +10,7 @@ $data->nameHTML = ColbyConvert::textToHTML($data->name);
 $data->description = $_POST['description'];
 $data->descriptionHTML = ColbyConvert::textToFormattedContent($data->description);
 
-$handlerFilenameBase = "handle,admin,blog,{$blogPostTypeId}";
+$handlerFilenameBase = "handle,admin,model,{$modelId}";
 
 $absoluteDataFilename = Colby::findHandler("{$handlerFilenameBase}.data");
 
@@ -19,14 +19,14 @@ if (!$absoluteDataFilename)
     // If a data file doesn't yet exists will go through a more detailed process:
     //
     // 1. Make sure the site specific handlers directory exists.
-    // 2. Create all the necessary template files for the blog post type, if they don't exist.
+    // 2. Create all the necessary template files for the model, if they don't exist.
     // 3. Finally write the data file (happens outside this block, in all cases).
 
     $absoluteHandlersDirectory = COLBY_SITE_DIRECTORY . '/handlers';
     $absoluteHandlerFilenameBase = "{$absoluteHandlersDirectory}/{$handlerFilenameBase}";
 
     $absoluteDataFilename       = "{$absoluteHandlerFilenameBase}.data";
-    $absoluteDisplayFilename    = "{$absoluteHandlerFilenameBase},display.php";
+    $absoluteDisplayFilename    = "{$absoluteHandlerFilenameBase},view.php";
     $absoluteEditFilename       = "{$absoluteHandlerFilenameBase},edit.php";
     $absoluteUpdateFilename     = "{$absoluteHandlerFilenameBase},ajax,update.php";
 
@@ -37,7 +37,7 @@ if (!$absoluteDataFilename)
         mkdir($absoluteHandlersDirectory);
     }
 
-    // 2. Create all the necessary template files for the blog post type, if they don't exist.
+    // 2. Create all the necessary template files for the model, if they don't exist.
 
     if (!file_exists($absoluteDisplayFilename))
     {
@@ -60,6 +60,6 @@ if (!$absoluteDataFilename)
 file_put_contents($absoluteDataFilename, serialize($data));
 
 $response->wasSuccessful = true;
-$response->message = 'The blog post type was successfully updated.';
+$response->message = 'The model was successfully updated.';
 
 $response->end();
