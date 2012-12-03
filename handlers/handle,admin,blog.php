@@ -2,6 +2,8 @@
 
 $page = ColbyOutputManager::beginVerifiedUserPage('Blog', 'Create, edit, and delete blog posts.', 'admin');
 
+$blogPostGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
+
 $sql = <<<EOT
 SELECT
     LOWER(HEX(`type`)) AS `type`,
@@ -33,7 +35,7 @@ $result = Colby::query($sql);
         $attributes = $archive->attributes();
         $data = $archive->rootObject();
 
-        $editURL = COLBY_SITE_URL . "/admin/model/{$row->type}/edit/?archive-id={$row->id}";
+        $editURL = COLBY_SITE_URL . "/admin/model/{$row->type}/edit/?archive-id={$row->id}&group-id={$blogPostGroupId}&group-stub=blog";
 
         ?>
 

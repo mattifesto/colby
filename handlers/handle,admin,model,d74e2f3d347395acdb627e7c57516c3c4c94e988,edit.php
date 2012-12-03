@@ -12,6 +12,8 @@ if (!isset($_GET['archive-id']))
 }
 
 $archiveId = $_GET['archive-id'];
+$groupId  = isset($_GET['group-id']) ? $_GET['group-id'] : '';
+$groupStub  = isset($_GET['group-stub']) ? $_GET['group-stub'] : '';
 
 $archive = ColbyArchive::open($archiveId);
 
@@ -41,6 +43,8 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
 
 <fieldset>
     <input type="hidden" id="archive-id" value="<?php echo $archiveId; ?>">
+    <input type="hidden" id="group-id" value="<?php echo $groupId; ?>">
+    <input type="hidden" id="group-stub" value="<?php echo $groupStub; ?>">
     <input type="hidden" id="published" value="<?php echo $published; ?>">
     <input type="hidden" id="publication-date" value="<?php echo $publicationDate; ?>">
 

@@ -11,12 +11,8 @@ $data = $archive->rootObject();
 // TODO: better place for model id?
 
 $modelId = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
-
-// TODO: group id and group stub should come from the client
-//       because they will change depending on the purpose of the page
-
-$groupId = '';
-$groupStub = 'blog';
+$groupId = $_POST['group-id'];
+$groupStub = $_POST['group-stub'];
 
 // TODO: in the future set page to the root object
 
