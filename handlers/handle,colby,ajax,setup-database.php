@@ -51,6 +51,9 @@ DEFAULT CHARSET=utf8
 COLLATE=utf8_unicode_ci
 EOT;
 
+/**
+ * ColbyUsers
+ */
 $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbyUsers`
 (
@@ -94,6 +97,34 @@ DEFAULT CHARSET=utf8
 COLLATE=utf8_unicode_ci
 EOT;
 
+/**
+ * ColbyPages
+ */
+$sqls[] = <<<EOT
+CREATE TABLE IF NOT EXISTS `ColbyPages`
+(
+    `archiveId` BINARY(20) NOT NULL,
+    `groupId` BINARY(20),
+    `stub` VARCHAR(119) NOT NULL,
+    `titleHTML` VARCHAR(119) NOT NULL,
+    `subtitleHTML` VARCHAR(119),
+    `searchText` LONGTEXT,
+    `published` DATETIME,
+    `publishedBy` BIGINT UNSIGNED,
+    PRIMARY KEY (`archiveId`),
+    UNIQUE KEY `stub` (`stub`),
+    KEY `groupId_published` (`groupId`, `published`),
+    CONSTRAINT `ColbyPages_publishedBy` FOREIGN KEY (`publishedBy`)
+        REFERENCES `ColbyUsers` (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8
+COLLATE=utf8_unicode_ci
+EOT;
+
+/**
+ * ColbySequences
+ */
 $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbySequences`
 (

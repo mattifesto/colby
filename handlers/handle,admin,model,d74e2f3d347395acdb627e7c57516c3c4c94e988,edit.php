@@ -204,35 +204,6 @@ function handlePublishedChanged(sender)
 /**
  * @return void
  */
-function handleBlogPostUpdated()
-{
-    isUpdating = false;
-
-    var response = handleAjaxResponse();
-
-    if (response.wasSuccessful)
-    {
-        document.getElementById('stub').value = response.stub;
-    }
-
-    if (needsUpdate)
-    {
-        handleValueChanged(null);
-    }
-    else
-    {
-        var elements = document.getElementsByClassName('form-field');
-
-        for (var i = 0; i < elements.length; i++)
-        {
-            elements[i].style.backgroundColor = 'Transparent';
-        }
-    }
-}
-
-/**
- * @return void
- */
 function setPublicationDate(timestamp)
 {
     if (publicationDate == timestamp)
@@ -266,6 +237,11 @@ function setPublicationDate(timestamp)
  */
 function updateCompleteCallback(response)
 {
+    if (!response.wasSuccessful)
+    {
+        return;
+    }
+
     var locked = document.getElementById('stub-is-locked');
 
     if (locked.checked)

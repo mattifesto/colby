@@ -2,23 +2,39 @@
 
 class ColbyPage
 {
-    public $stubBasePart;
-    public $stubPagePart; 
-    public $stubIsLocked;
-    public $stubIsCustom;   
+    // All of the declared member variables in this class are public to avoid any unforseen serialization issues. However, these member variables should usually be set with an accessor method rather than directly because some of them are calculated. Obviously, adding any undeclared member variables will require setting them directly, which won't be a problem.
+
+    public $pageStub;
+    public $pageStubIsLocked;
+    public $customPageStub;
+    public $fallbackPageStub;
 
     public $modelId;
+    public $defaultViewId; // TODO: multiple available views per model?
     public $groupId;
-    
+    public $groupStub;
+
     public $title;
     public $titleHTML;
     public $subtitle;
     public $subtitleHTML;
-    
-    public $published;
+
+    public $isPublished;
     public $publishedBy;
     public $publicationDate;
-    
+
+    /**
+     * @return ColbyPage
+     */
+    public function __construct($modelId, $groupId, $groupStub)
+    {
+        // Set member variables that are constant for the lifetime of the object.
+
+        $this->modelId = $modelId;
+        $this->groupId = $groupId;
+        $this->groupStub = $groupStub;
+    }
+
     /**
      * @return ColbyArchive | bool (false)
      */
@@ -67,62 +83,88 @@ EOT;
 
         ColbyArchive::delete($archiveId);
     }
-    
+
     /**
      * @return string
      */
-    public function suggestedStubWithPrefix($prefix)
+    private function stub()
     {
+        return $this->groupStub . '/' . $this->pageStub;
     }
-    
-    /**
-     * @return string
-     */
-    public function stub()
-    {
-        // TODO: there must be a page part (based on a title)
-        //       figure out if temporarily things are allowed to not have a title
-        
-        if (!empty($this->stubBasePart))
-        {
-            return "{$this->stubBasePart}/{$this->stubPagePart}";
-        }
-        else
-        {
-            return $this->stubPagePart;
-        }
-    }
-    
+
     /**
      * @return void
      */
-    public static function updateDatabaseWithPostArchive(ColbyArchive $archive)
+    public function setStubData($customPageStub, $pageStubIsLocked)
     {
-        $sqlId = Colby::mysqli()->escape_string($archive->archiveId());
-        $sqlId = "UNHEX('{$sqlId}')";
 
-        $sqlType = Colby::mysqli()->escape_string($archive->rootObject()->type);
-        $sqlType = "UNHEX('{$sqlType}')";
+    }
 
-        $sqlStub = Colby::mysqli()->escape_string($archive->rootObject()->stub);
+    /**
+     * @return void
+     */
+    public function setSubtitle($subtitle)
+    {
+        $this->subtitle = $subtitle;
+        $this->subtitleHTML = ColbyConvert::textToHTML($subtitle);
+    }
+
+    /**
+     * @return void
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        $this->titleHTML = ColbyConvert::textToHTML($title);
+    }
+
+    /**
+     * @return void
+     */
+    public function updateDatabaseWithArchiveId($archiveId)
+    {
+        // TODO: Although it's redundant to duplicate the archive id inside the file itself
+        // there have been other places where I've wanted it. One such place is for use as a
+        // fallback stub. Way the pros and cons of including the archive id in this class.
+
+        $sqlArchiveId = Colby::mysqli()->escape_string($archiveId);
+        $sqlArchiveId = "UNHEX('{$sqlArchiveId}')";
+
+        if ($this->groupId)
+        {
+            $sqlGroupId = Colby::mysqli()->escape_string($this->groupId);
+            $sqlGroupId = "UNHEX('{$sqlGroupId}')";
+        }
+        else
+        {
+            $sqlGroupId = 'NULL';
+        }
+
+        $sqlStub = Colby::mysqli()->escape_string($this->stub());
         $sqlStub = "'{$sqlStub}'";
 
-        $sqlTitleHTML = Colby::mysqli()->escape_string($archive->rootObject()->titleHTML);
+        $sqlTitleHTML = Colby::mysqli()->escape_string($this->titleHTML);
         $sqlTitleHTML = "'{$sqlTitleHTML}'";
 
-        $sqlSubtitleHTML = Colby::mysqli()->escape_string($archive->rootObject()->subtitleHTML);
+        $sqlSubtitleHTML = Colby::mysqli()->escape_string($this->subtitleHTML);
         $sqlSubtitleHTML = "'{$sqlSubtitleHTML}'";
 
-        $sqlPublished = ColbyConvert::timestampToSQLDateTime($archive->rootObject()->published);
+        if ($this->isPublished)
+        {
+             $sqlPublished = ColbyConvert::timestampToSQLDateTime($this->publicationDate);
+        }
+        else
+        {
+            $sqlPublished = 'NULL';
+        }
 
-        $sqlPublishedBy = $archive->rootObject()->publishedBy;
-        $sqlPublishedBy = empty($sqlPublishedBy) ? 'NULL' : "'{$sqlPublishedBy}'";
+        $sqlPublishedBy = empty($sqlPublishedBy) ? 'NULL' : "'{$this->publishedBy}'";
 
         $sql = <<<EOT
-INSERT INTO `ColbyBlogPosts`
+INSERT INTO `ColbyPages`
 (
-    `id`,
-    `type`,
+    `archiveId`,
+    `groupId`,
     `stub`,
     `titleHTML`,
     `subtitleHTML`,
@@ -131,8 +173,8 @@ INSERT INTO `ColbyBlogPosts`
 )
 VALUES
 (
-    {$sqlId},
-    {$sqlType},
+    {$sqlArchiveId},
+    {$sqlGroupId},
     {$sqlStub},
     {$sqlTitleHTML},
     {$sqlSubtitleHTML},

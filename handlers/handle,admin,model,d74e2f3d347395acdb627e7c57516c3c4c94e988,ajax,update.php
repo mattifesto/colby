@@ -8,10 +8,27 @@ $archive = ColbyArchive::open($_POST['archive-id']);
 
 $data = $archive->rootObject();
 
+// TODO: better place for model id?
+
+$modelId = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
+
+// TODO: group id and group stub should come from the client
+//       because they will change depending on the purpose of the page
+
+$groupId = '';
+$groupStub = 'blog';
+
+// TODO: in the future set page to the root object
+
+$page = new ColbyPage($modelId, $groupId, $groupStub);
+
 if (!$archive->attributes()->created)
 {
-    $data->type = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
+    $page = new ColbyPage($modelId, $groupId, $groupStub);
+    $data->type = $modelId;
 }
+
+$page->setTitle($_POST['title']);
 
 $data->stub = $_POST['stub'];
 $data->stubIsLocked = $_POST['stub-is-locked'];
@@ -48,6 +65,7 @@ if (   !$wasPublished
 $archive->save();
 
 ColbyBlog::updateDatabaseWithPostArchive($archive);
+$page->updateDatabaseWithArchiveId($_POST['archive-id']);
 
 $response->suggestedStub = ColbyConvert::textToStub($_POST['title']);
 $response->wasSuccessful = true;
