@@ -68,9 +68,32 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
                value="<?php echo $title; ?>">
     </label></div>
 
-    <div id="preferred-stub-view"><?php echo $preferredPageStub; ?></div>
-    <div id="stub-view"><?php echo $stub; ?></div>
-    <div>
+    <div style="padding: 0px 50px; font-size: 0.75em;">
+        <style scoped="scoped">
+            .stub
+            {
+                font-family: "Courier New", monospace;
+            }
+
+            table.stubs
+            {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            table.stubs tr td:first-child
+            {
+                width: 100px;
+                text-align: right;
+            }
+        </style>
+        <table class="stubs"><tr>
+            <td>Preferred URL:</td>
+            <td id="preferred-stub-view" class="stub"><?php echo $preferredPageStub; ?></td>
+        </tr><tr>
+            <td>Actual URL:</td>
+            <td id="stub-view" class="stub"><?php echo $stub; ?></td>
+        </td></table>
         <label style="float:right; margin-left: 20px;">
             <input type="checkbox"
                    id="stub-is-locked"
