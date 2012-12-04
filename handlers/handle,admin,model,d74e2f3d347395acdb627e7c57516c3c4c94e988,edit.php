@@ -4,6 +4,8 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Generic Document Editor',
                                                   'Create and edit generic documents.',
                                                   'admin');
 
+$modelId = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
+
 $archiveId = isset($_GET['archive-id']) ? $_GET['archive-id'] : '';
 $groupId  = isset($_GET['group-id']) ? $_GET['group-id'] : '';
 $groupStub  = isset($_GET['group-stub']) ? $_GET['group-stub'] : '';
@@ -28,28 +30,31 @@ if ($archive->attributes()->created)
 {
     $data = $archive->rootObject();
 }
+else
+{
+    $data = new ColbyPage($modelId, $groupId, $groupStub);
+}
 
 // mise en place
 
 $ajaxURL = COLBY_SITE_URL . '/admin/model/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/';
 
-$published = isset($data->published) ? $data->published : '';
 $publicationDate = isset($data->publicationDate) ? $data->publicationDate : '';
 $title = isset($data->titleHTML) ? $data->titleHTML : '';
 $subtitle = isset($data->subtitleHTML) ? $data->subtitleHTML : '';
 
-$stub = isset($data->stub) ? $data->stub : '';
+$stub = $data->stub();
+$preferredStub = $data->preferredStub();
 $preferredPageStub = isset($data->preferredPageStub) ? $data->preferredPageStub : '';
-$stubIsLocked = (isset($data->stubIsLocked) && $data->stubIsLocked) ? ' checked="checked"' : '';
+$stubIsLocked = $data->stubIsLocked ? ' checked="checked"' : '';
 $customPageStubText = isset($data->customPageStubText) ? $data->customPageStubText : '';
 
 $content = isset($data->content) ? ColbyConvert::textToHTML($data->content) : '';
 
-$isPublished = isset($data->published) ? ' checked="checked"' : '';
+$isPublished = $data->isPublished ? ' checked="checked"' : '';
 $publishedBy = isset($data->publishedBy) ? $data->publishedBy : '';
 $currentUserId = ColbyUser::currentUserId();
 
-$javascriptPublished = isset($data->published) ? $data->published * 1000 : 'null';
 $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationDate * 1000 : 'null';
 
 ?>
@@ -59,7 +64,6 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
     <input type="hidden" id="group-id" value="<?php echo $groupId; ?>">
     <input type="hidden" id="group-stub" value="<?php echo $groupStub; ?>">
     <input type="hidden" id="preferred-page-stub" value="<?php echo $preferredPageStub; ?>">
-    <input type="hidden" id="published" value="<?php echo $published; ?>">
     <input type="hidden" id="published-by" value="<?php echo $publishedBy; ?>">
     <input type="hidden" id="publication-date" value="<?php echo $publicationDate; ?>">
 
@@ -93,7 +97,7 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
         </style>
         <table class="stubs"><tr>
             <td>Preferred URL:</td>
-            <td id="preferred-stub-view" class="stub"><?php echo $preferredPageStub; ?></td>
+            <td id="preferred-stub-view" class="stub"><?php echo $preferredStub; ?></td>
         </tr><tr>
             <td>Actual URL:</td>
             <td id="stub-view" class="stub"><?php echo $stub; ?></td>
@@ -126,7 +130,7 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
             <input type="checkbox"
                    id="is-published"
                    <?php echo $isPublished; ?>
-                   onchange="handlePublishedChanged(this);">
+                   onchange="handleIsPublishedChanged(this);">
         Published</label>
         <label>Publication Date:
             <input type="text"
@@ -147,7 +151,6 @@ var formManager = null;
 
 var currentUserId = <?php echo $currentUserId; ?>;
 var groupStub = '<?php echo $groupStub; ?>';
-var published = <?php echo $javascriptPublished; ?>;
 var publicationDate = <?php echo $javascriptPublicationDate; ?>;
 
 /**
@@ -166,7 +169,7 @@ function handleContentLoaded()
         document.getElementById('publication-date-text').value = date.toLocaleString();
     }
 
-    if (published)
+    if (document.getElementById('is-published').checked)
     {
         document.getElementById('custom-page-stub-text').disabled = true;
         document.getElementById('stub-is-locked').disabled = true;
@@ -199,7 +202,7 @@ function handlePublicationDateBlurred(sender)
 /**
  * @return void
  */
-function handlePublishedChanged(sender)
+function handleIsPublishedChanged(sender)
 {
     if (sender.checked)
     {
@@ -207,8 +210,6 @@ function handlePublishedChanged(sender)
         {
             setPublicationDate(new Date().getTime());
         }
-
-        published = publicationDate;
 
         var publishedBy = document.getElementById('published-by');
 
@@ -239,17 +240,9 @@ function handlePublishedChanged(sender)
     }
     else
     {
-        published = null;
-
         document.getElementById('custom-page-stub-text').disabled = false;
         document.getElementById('stub-is-locked').disabled = false;
     }
-
-    var phpPublished = published ? Math.floor(published / 1000) : '';
-
-    document.getElementById('published').value = phpPublished;
-
-    sender.parentNode.classList.add('needs-update');
 }
 
 /**
@@ -313,12 +306,6 @@ function setPublicationDate(timestamp)
     publicationDateTextElement.classList.add('needs-update');
 
     var phpPublicationDate = Math.floor(publicationDate / 1000);
-
-    if (published)
-    {
-        published = timestamp;
-        document.getElementById('published').value = phpPublicationDate;
-    }
 
     document.getElementById('publication-date').value = phpPublicationDate;
 

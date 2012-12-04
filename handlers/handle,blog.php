@@ -29,7 +29,7 @@ SELECT
     `titleHTML`,
     `subtitleHTML`
 FROM
-    `ColbyBlogPosts`
+    `ColbyPages`
 WHERE
     `published` IS NOT NULL
 ORDER BY
@@ -42,7 +42,7 @@ EOT;
     {
         while ($row = $result->fetch_object())
         {
-            $url = COLBY_SITE_URL . "/blog/{$row->stub}/";
+            $url = COLBY_SITE_URL . "/{$row->stub}/";
 
             ?>
 

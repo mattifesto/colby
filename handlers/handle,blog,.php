@@ -2,20 +2,15 @@
 
 Colby::useBlog();
 
-$stubs = ColbyRequest::decodedStubs();
+$stub = implode('/', ColbyRequest::decodedStubs());
 
-if (count($stubs) > 2)
+$archive = ColbyPage::archiveForStub($stub);
+
+if (!$archive || !$archive->rootObject()->isPublished)
 {
     return false;
 }
 
-$archive = ColbyBlog::archiveForStub($stubs[1]);
-
-if (!$archive || !$archive->rootObject()->published)
-{
-    return false;
-}
-
-$blogViewFilename = "handle,admin,blog,{$archive->rootObject()->type},view.php";
+$blogViewFilename = "handle,admin,blog,{$archive->rootObject()->modelId},view.php";
 
 include(Colby::findHandler($blogViewFilename));

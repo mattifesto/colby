@@ -31,8 +31,8 @@ class ColbyPage
         // Set member variables that are constant for the lifetime of the object.
 
         $this->modelId = $modelId;
-        $this->groupId = $groupId;
-        $this->groupStub = $groupStub;
+        $this->groupId = $groupId ? $groupId : null;
+        $this->groupStub = $groupStub ? $groupStub : null;
     }
 
     /**
@@ -87,11 +87,11 @@ EOT;
     /**
      * @return void
      */
-    public function setPageStubData($preferredPageStub, $pageStubIsLocked)
+    public function setPageStubData($preferredPageStub, $stubIsLocked)
     {
-        // Convert pageStubIsLocked to a Boolean variable and save.
+        // Convert stubIsLocked to a Boolean variable and save.
 
-        $this->pageStubIsLocked = !!$pageStubIsLocked;
+        $this->stubIsLocked = !!$stubIsLocked;
 
         // The variable pageStubIsLocked is saved only for use on the client side. The server side (this process) ignores its value. If the client sends an updated preferredPageStub it will be taken as a sign that the page stub is to be re-evaluated. If the preferredPageStub is unchanged it will not be re-evaluated even if it happens that the preferredPageStub had not been available before but has now become available.
 
@@ -102,6 +102,14 @@ EOT;
             $this->preferredPageStub = $preferredPageStub;
             $this->pageStub = null;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function preferredStub()
+    {
+        return "{$this->groupStub}/{$this->preferredPageStub}";
     }
 
     /**
@@ -161,6 +169,9 @@ EOT;
         $sqlArchiveId = Colby::mysqli()->escape_string($archiveId);
         $sqlArchiveId = "UNHEX('{$sqlArchiveId}')";
 
+        $sqlModelId = Colby::mysqli()->escape_string($this->modelId);
+        $sqlModelId = "UNHEX('{$sqlModelId}')";
+
         if ($this->groupId)
         {
             $sqlGroupId = Colby::mysqli()->escape_string($this->groupId);
@@ -195,6 +206,7 @@ EOT;
 INSERT INTO `ColbyPages`
 (
     `archiveId`,
+    `modelId`,
     `groupId`,
     `stub`,
     `titleHTML`,
@@ -205,6 +217,7 @@ INSERT INTO `ColbyPages`
 VALUES
 (
     {$sqlArchiveId},
+    {$sqlModelId},
     {$sqlGroupId},
     {$sqlStub},
     {$sqlTitleHTML},

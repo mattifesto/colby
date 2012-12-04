@@ -6,7 +6,7 @@ Colby::useBlog();
 
 $archive = ColbyArchive::open($_POST['archive-id']);
 
-$data = $archive->rootObject();
+$page = $archive->rootObject();
 
 // TODO: better place for model id?
 
@@ -14,14 +14,10 @@ $modelId = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
 $groupId = $_POST['group-id'];
 $groupStub = $_POST['group-stub'];
 
-// TODO: in the future set page to the root object
-
-$page = new ColbyPage($modelId, $groupId, $groupStub);
-
 if (!$archive->attributes()->created)
 {
     $page = new ColbyPage($modelId, $groupId, $groupStub);
-    $data->type = $modelId;
+    $archive->setRootObject($page);
 }
 
 $page->setTitle($_POST['title']);
@@ -36,41 +32,12 @@ $page->setPublicationData($_POST['is-published'],
                           $_POST['published-by'],
                           $_POST['publication-date']);
 
-$data->stub = $_POST['preferred-page-stub'];
-$data->stubIsLocked = $_POST['stub-is-locked'];
-$data->title = $_POST['title'];
-$data->titleHTML = ColbyConvert::textToHTML($data->title);
-$data->subtitle = $_POST['subtitle'];
-$data->subtitleHTML = ColbyConvert::textToHTML($data->subtitle);
-$data->content = $_POST['content'];
-$data->contentHTML = ColbyConvert::textToFormattedContent($data->content);
+$page->content = $_POST['content'];
+$page->contentHTML = ColbyConvert::textToFormattedContent($page->content);
 
-// TODO: do we want to do some data validation on these dates?
-
-$wasPublished = isset($data->published);
-
-$data->published = empty($_POST['published']) ? null : $_POST['published'];
-$data->publicationDate = empty($_POST['publication-date']) ? null : $_POST['publication-date'];
-
-if (!isset($data->publishedBy))
-{
-    $data->publishedBy = null;
-}
-
-// If this is the first time the post has been published, assign published by
-// TODO: maybe this should be controlled more by the UI side?
-
-if (   !$wasPublished
-    && $data->published
-    && !$data->publishedBy)
-{
-    $data->publishedBy = ColbyUser::currentUserId();
-}
+$page->updateDatabaseWithArchiveId($_POST['archive-id']);
 
 $archive->save();
-
-ColbyBlog::updateDatabaseWithPostArchive($archive);
-$page->updateDatabaseWithArchiveId($_POST['archive-id']);
 
 $response->pageStub = $page->pageStub;
 $response->wasSuccessful = true;

@@ -7,10 +7,14 @@ $blogPostGroupStub = 'blog';
 
 $sql = <<<EOT
 SELECT
-    LOWER(HEX(`type`)) AS `type`,
-    LOWER(HEX(`id`)) AS `id`
+    LOWER(HEX(`archiveId`)) AS `archiveId`,
+    LOWER(HEX(`modelId`)) AS `modelId`,
+    `titleHTML`,
+    `published`
 FROM
-    `ColbyBlogPosts`
+    `ColbyPages`
+WHERE
+    `groupId` = UNHEX('{$blogPostGroupId}')
 ORDER BY
     `published`
 EOT;
@@ -23,8 +27,7 @@ $result = Colby::query($sql);
     <tr>
         <th style="width: 30px;"></th>
         <th style="width: 400px;">Title</th>
-        <th style="width: 100px;">Created</th>
-        <th style="width: 100px;">Modified</th>
+        <th style="width: 100px;">Published</th>
     </tr>
 </thead><tbody>
 
@@ -32,19 +35,14 @@ $result = Colby::query($sql);
 
     while ($row = $result->fetch_object())
     {
-        $archive = ColbyArchive::open($row->id);
-        $attributes = $archive->attributes();
-        $data = $archive->rootObject();
-
-        $editURL = COLBY_SITE_URL . "/admin/model/{$row->type}/edit/?archive-id={$row->id}&group-id={$blogPostGroupId}&group-stub={$blogPostGroupStub}";
+        $editURL = COLBY_SITE_URL . "/admin/model/{$row->modelId}/edit/?archive-id={$row->archiveId}&group-id={$blogPostGroupId}&group-stub={$blogPostGroupStub}";
 
         ?>
 
         <tr>
             <td><a href="<?php echo $editURL; ?>">edit</a></td>
-            <td><?php echo $data->titleHTML; ?></td>
-            <td><?php echo gmdate('Y/m/d', $attributes->created); ?></td>
-            <td><?php echo gmdate('Y/m/d', $attributes->modified); ?></td>
+            <td><?php echo $row->titleHTML; ?></td>
+            <td><?php echo $row->published; ?></td>
         </tr>
 
         <?php
