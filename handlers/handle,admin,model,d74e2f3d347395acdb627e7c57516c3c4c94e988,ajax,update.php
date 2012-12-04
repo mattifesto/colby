@@ -25,10 +25,13 @@ if (!$archive->attributes()->created)
 }
 
 $page->setTitle($_POST['title']);
+$page->setSubtitle($_POST['subtitle']);
+$page->setPageStubData($_POST['preferred-page-stub'],
+                       $_POST['stub-is-locked'],
+                       $_POST['custom-page-stub-text']);
 
-$data->stub = $_POST['stub'];
+$data->stub = $_POST['preferred-page-stub'];
 $data->stubIsLocked = $_POST['stub-is-locked'];
-$data->stubIsCustom = $_POST['stub-is-custom'];
 $data->title = $_POST['title'];
 $data->titleHTML = ColbyConvert::textToHTML($data->title);
 $data->subtitle = $_POST['subtitle'];
@@ -63,7 +66,7 @@ $archive->save();
 ColbyBlog::updateDatabaseWithPostArchive($archive);
 $page->updateDatabaseWithArchiveId($_POST['archive-id']);
 
-$response->suggestedStub = ColbyConvert::textToStub($_POST['title']);
+$response->pageStub = $page->pageStub;
 $response->wasSuccessful = true;
 //$response->message = var_export($_POST, true);
 $response->message = 'Post last updated: ' . ColbyConvert::timestampToLocalUserTime(time());

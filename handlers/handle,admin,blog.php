@@ -3,6 +3,7 @@
 $page = ColbyOutputManager::beginVerifiedUserPage('Blog', 'Create, edit, and delete blog posts.', 'admin');
 
 $blogPostGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
+$blogPostGroupStub = 'blog';
 
 $sql = <<<EOT
 SELECT
@@ -35,7 +36,7 @@ $result = Colby::query($sql);
         $attributes = $archive->attributes();
         $data = $archive->rootObject();
 
-        $editURL = COLBY_SITE_URL . "/admin/model/{$row->type}/edit/?archive-id={$row->id}&group-id={$blogPostGroupId}&group-stub=blog";
+        $editURL = COLBY_SITE_URL . "/admin/model/{$row->type}/edit/?archive-id={$row->id}&group-id={$blogPostGroupId}&group-stub={$blogPostGroupStub}";
 
         ?>
 
@@ -75,7 +76,7 @@ foreach ($modelDataFiles as $modelDataFile)
     {
         $modelData = unserialize(file_get_contents($modelDataFile));
 
-        $editURL = "/admin/model/{$matches[1]}/edit/";
+        $editURL = "/admin/model/{$matches[1]}/edit/?group-id={$blogPostGroupId}&group-stub={$blogPostGroupStub}";
 
         ?>
 

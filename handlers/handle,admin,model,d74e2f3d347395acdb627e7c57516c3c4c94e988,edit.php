@@ -4,16 +4,23 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Generic Document Editor',
                                                   'Create and edit generic documents.',
                                                   'admin');
 
-if (!isset($_GET['archive-id']))
+$archiveId = isset($_GET['archive-id']) ? $_GET['archive-id'] : '';
+$groupId  = isset($_GET['group-id']) ? $_GET['group-id'] : '';
+$groupStub  = isset($_GET['group-stub']) ? $_GET['group-stub'] : '';
+
+if (empty($archiveId))
 {
     $archiveId = sha1(microtime() . rand());
 
-    header("Location: {$_SERVER['REQUEST_URI']}?archive-id={$archiveId}");
-}
+    $parts = explode('?', $_SERVER['REQUEST_URI']);
 
-$archiveId = $_GET['archive-id'];
-$groupId  = isset($_GET['group-id']) ? $_GET['group-id'] : '';
-$groupStub  = isset($_GET['group-stub']) ? $_GET['group-stub'] : '';
+    $path = $parts[0];
+
+    $queryString = isset($parts[1]) ? $parts[1] : '';
+    $queryString = "archive-id={$archiveId}&{$queryString}";
+
+    header("Location: {$path}?{$queryString}");
+}
 
 $archive = ColbyArchive::open($archiveId);
 
@@ -30,9 +37,12 @@ $published = isset($data->published) ? $data->published : '';
 $publicationDate = isset($data->publicationDate) ? $data->publicationDate : '';
 $title = isset($data->titleHTML) ? $data->titleHTML : '';
 $subtitle = isset($data->subtitleHTML) ? $data->subtitleHTML : '';
+
 $stub = isset($data->stub) ? $data->stub : '';
+$preferredPageStub = isset($data->preferredPageStub) ? $data->preferredPageStub : '';
 $stubIsLocked = (isset($data->stubIsLocked) && $data->stubIsLocked) ? ' checked="checked"' : '';
-$stubIsCustom = (isset($data->stubIsCustom) && $data->stubIsCustom) ? ' checked="checked"' : '';
+$customPageStubText = isset($data->customPageStubText) ? $data->customPageStubText : '';
+
 $content = isset($data->content) ? ColbyConvert::textToHTML($data->content) : '';
 $isPublished = isset($data->published) ? ' checked="checked"' : '';
 
@@ -45,6 +55,7 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
     <input type="hidden" id="archive-id" value="<?php echo $archiveId; ?>">
     <input type="hidden" id="group-id" value="<?php echo $groupId; ?>">
     <input type="hidden" id="group-stub" value="<?php echo $groupStub; ?>">
+    <input type="hidden" id="preferred-page-stub" value="<?php echo $preferredPageStub; ?>">
     <input type="hidden" id="published" value="<?php echo $published; ?>">
     <input type="hidden" id="publication-date" value="<?php echo $publicationDate; ?>">
 
@@ -57,30 +68,26 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
                value="<?php echo $title; ?>">
     </label></div>
 
+    <div id="preferred-stub-view"><?php echo $preferredPageStub; ?></div>
+    <div id="stub-view"><?php echo $stub; ?></div>
+    <div>
+        <label style="float:right; margin-left: 20px;">
+            <input type="checkbox"
+                   id="stub-is-locked"
+                   <?php echo $stubIsLocked; ?>> Lock Stub
+        </label>
+        <label>Custom Stub Text
+            <input type="text"
+                   id="custom-page-stub-text"
+                   value="<?php echo $customPageStubText; ?>">
+        </label>
+    </div>
+
     <div><label>Subtitle
         <input type="text"
                id="subtitle"
                value="<?php echo $subtitle; ?>">
     </label></div>
-
-    <div>
-        <label style="float:right; margin-left: 20px;">
-            <input type="checkbox"
-                   id="stub-is-locked"
-                   <?php echo $stubIsLocked; ?>> Locked
-        </label>
-        <label style="float:right;">
-            <input type="checkbox"
-                   id="stub-is-custom"
-                   <?php echo $stubIsCustom; ?>> Custom
-        </label>
-        <label>Stub
-            <input type="text"
-                   id="stub"
-                   value="<?php echo $stub; ?>"
-                   readonly="readonly">
-        </label>
-    </div>
 
     <div><label>Content
         <textarea id="content"
@@ -110,6 +117,7 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
 
 var formManager = null;
 
+var groupStub = '<?php echo $groupStub; ?>';
 var published = <?php echo $javascriptPublished; ?>;
 var publicationDate = <?php echo $javascriptPublicationDate; ?>;
 
@@ -131,9 +139,12 @@ function handleContentLoaded()
 
     if (published)
     {
-        document.getElementById('stub-is-custom').disabled = true;
+        document.getElementById('custom-page-stub-text').disabled = true;
         document.getElementById('stub-is-locked').disabled = true;
     }
+
+    document.getElementById('title').addEventListener('input', updatePreferredPageStub, false);
+    document.getElementById('custom-page-stub-text').addEventListener('input', updatePreferredPageStub, false);
 }
 
 /**
@@ -187,14 +198,14 @@ function handlePublishedChanged(sender)
             locked.dispatchEvent(event);
         }
 
-        document.getElementById('stub-is-custom').disabled = true;
+        document.getElementById('custom-page-stub-text').disabled = true;
         document.getElementById('stub-is-locked').disabled = true;
     }
     else
     {
         published = null;
 
-        document.getElementById('stub-is-custom').disabled = false;
+        document.getElementById('custom-page-stub-text').disabled = false;
         document.getElementById('stub-is-locked').disabled = false;
     }
 
@@ -203,6 +214,48 @@ function handlePublishedChanged(sender)
     document.getElementById('published').value = phpPublished;
 
     sender.parentNode.classList.add('needs-update');
+}
+
+/**
+ * @return void
+ */
+function updatePreferredPageStub()
+{
+    if (document.getElementById('stub-is-locked').checked)
+    {
+        return;
+    }
+
+    var stubText = document.getElementById('custom-page-stub-text').value.trim();
+
+    if (!stubText)
+    {
+        stubText = document.getElementById('title').value.trim();
+    }
+
+    var pageStub = stubText.toLowerCase();
+
+    pageStub = pageStub.replace(/[^a-z0-9- ]/g, '');
+    pageStub = pageStub.replace(/^[\s-]+|[\s-]+$/, '');
+    pageStub = pageStub.replace(/[\s-]+/g, '-');
+
+    var stub = pageStub;
+
+    if (groupStub)
+    {
+        stub = groupStub + '/' + stub;
+    }
+
+    document.getElementById('preferred-page-stub').value = pageStub;
+
+    var preferredStubView = document.getElementById('preferred-stub-view');
+
+    while (preferredStubView.firstChild)
+    {
+        preferredStubView.removeChild(preferredStubView.firstChild);
+    }
+
+    preferredStubView.appendChild(document.createTextNode(stub));
 }
 
 /**
@@ -246,34 +299,21 @@ function updateCompleteCallback(response)
         return;
     }
 
-    var locked = document.getElementById('stub-is-locked');
+    var stubView = document.getElementById('stub-view');
 
-    if (locked.checked)
+    while (stubView.firstChild)
     {
-        return;
+        stubView.removeChild(stubView.firstChild);
     }
 
-    var custom = document.getElementById('stub-is-custom');
+    var stub = response.pageStub;
 
-    if (custom.checked)
+    if (groupStub)
     {
-        return;
+        stub = groupStub + '/' + stub;
     }
 
-    var stub = document.getElementById('stub');
-
-    if (stub.value != response.suggestedStub)
-    {
-        stub.value = response.suggestedStub;
-
-        // Changing the value of the stub input will not notify the system that the stub has changed. We could just call setNeedsUpdate(true) on the formManager but instead we send the 'input' event to the stub input element which will highlight it, giving the user visual feedback of the change, and also notify the formManager that an update is needed.
-
-        var event = document.createEvent('Event');
-
-        event.initEvent('input', false, false);
-
-        stub.dispatchEvent(event);
-    }
+    stubView.appendChild(document.createTextNode(stub));
 }
 
 document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
