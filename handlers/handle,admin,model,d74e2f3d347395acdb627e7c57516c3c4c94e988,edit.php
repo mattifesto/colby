@@ -44,7 +44,10 @@ $stubIsLocked = (isset($data->stubIsLocked) && $data->stubIsLocked) ? ' checked=
 $customPageStubText = isset($data->customPageStubText) ? $data->customPageStubText : '';
 
 $content = isset($data->content) ? ColbyConvert::textToHTML($data->content) : '';
+
 $isPublished = isset($data->published) ? ' checked="checked"' : '';
+$publishedBy = isset($data->publishedBy) ? $data->publishedBy : '';
+$currentUserId = ColbyUser::currentUserId();
 
 $javascriptPublished = isset($data->published) ? $data->published * 1000 : 'null';
 $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationDate * 1000 : 'null';
@@ -57,6 +60,7 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
     <input type="hidden" id="group-stub" value="<?php echo $groupStub; ?>">
     <input type="hidden" id="preferred-page-stub" value="<?php echo $preferredPageStub; ?>">
     <input type="hidden" id="published" value="<?php echo $published; ?>">
+    <input type="hidden" id="published-by" value="<?php echo $publishedBy; ?>">
     <input type="hidden" id="publication-date" value="<?php echo $publicationDate; ?>">
 
     <progress value="0"
@@ -120,6 +124,7 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
     <div>
         <label style="float: right;">
             <input type="checkbox"
+                   id="is-published"
                    <?php echo $isPublished; ?>
                    onchange="handlePublishedChanged(this);">
         Published</label>
@@ -140,6 +145,7 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
 
 var formManager = null;
 
+var currentUserId = <?php echo $currentUserId; ?>;
 var groupStub = '<?php echo $groupStub; ?>';
 var published = <?php echo $javascriptPublished; ?>;
 var publicationDate = <?php echo $javascriptPublicationDate; ?>;
@@ -203,6 +209,13 @@ function handlePublishedChanged(sender)
         }
 
         published = publicationDate;
+
+        var publishedBy = document.getElementById('published-by');
+
+        if (!publishedBy.value)
+        {
+            publishedBy.value = currentUserId;
+        }
 
         // When a post is published the stub is always automatically locked to maintain the permalink. If the user unpublishes the post they have the choice to unlock the stub if desired.
 

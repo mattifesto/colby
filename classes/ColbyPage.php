@@ -105,6 +105,16 @@ EOT;
     }
 
     /**
+     * @return void
+     */
+    public function setPublicationData($isPublished, $publishedBy, $publicationDate)
+    {
+        $this->isPublished = !!$isPublished;
+        $this->publishedBy = $publishedBy ? intval($publishedBy) : null;
+        $this->publicationDate = $publicationDate ? intval($publicationDate) : null;
+    }
+
+    /**
      * @return string
      */
     public function stub()
@@ -179,7 +189,7 @@ EOT;
             $sqlPublished = 'NULL';
         }
 
-        $sqlPublishedBy = empty($sqlPublishedBy) ? 'NULL' : "'{$this->publishedBy}'";
+        $sqlPublishedBy = empty($this->publishedBy) ? 'NULL' : "'{$this->publishedBy}'";
 
         $sql = <<<EOT
 INSERT INTO `ColbyPages`

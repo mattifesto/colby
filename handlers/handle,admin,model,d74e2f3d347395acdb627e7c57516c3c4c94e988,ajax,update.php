@@ -25,10 +25,16 @@ if (!$archive->attributes()->created)
 }
 
 $page->setTitle($_POST['title']);
+
 $page->setSubtitle($_POST['subtitle']);
+
 $page->setPageStubData($_POST['preferred-page-stub'],
                        $_POST['stub-is-locked'],
                        $_POST['custom-page-stub-text']);
+
+$page->setPublicationData($_POST['is-published'],
+                          $_POST['published-by'],
+                          $_POST['publication-date']);
 
 $data->stub = $_POST['preferred-page-stub'];
 $data->stubIsLocked = $_POST['stub-is-locked'];
