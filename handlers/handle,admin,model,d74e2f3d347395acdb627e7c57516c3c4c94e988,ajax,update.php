@@ -2,8 +2,6 @@
 
 $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
-Colby::useBlog();
-
 $archive = ColbyArchive::open($_POST['archive-id']);
 
 $page = $archive->rootObject();

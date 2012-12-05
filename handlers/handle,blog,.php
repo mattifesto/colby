@@ -1,7 +1,5 @@
 <?php
 
-Colby::useBlog();
-
 $stub = implode('/', ColbyRequest::decodedStubs());
 
 $archive = ColbyPage::archiveForStub($stub);

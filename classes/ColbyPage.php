@@ -73,11 +73,11 @@ EOT;
      *
      * @return void
      */
-    public static function deletePage($archiveId)
+    public static function delete($archiveId)
     {
         $sqlArchiveId = Colby::mysqli()->escape_string($archiveId);
 
-        $sql = "DELETE FROM `ColbyBlogPosts` WHERE `id` = UNHEX('{$sqlArchiveId}')";
+        $sql = "DELETE FROM `ColbyPages` WHERE `archiveId` = UNHEX('{$sqlArchiveId}')";
 
         Colby::query($sql);
 
@@ -93,13 +93,21 @@ EOT;
 
         $this->stubIsLocked = !!$stubIsLocked;
 
-        // The variable pageStubIsLocked is saved only for use on the client side. The server side (this process) ignores its value. If the client sends an updated preferredPageStub it will be taken as a sign that the page stub is to be re-evaluated. If the preferredPageStub is unchanged it will not be re-evaluated even if it happens that the preferredPageStub had not been available before but has now become available.
+        // The variable stubIsLocked is saved only for use on the client side. The server side (this process) ignores its value. If the client sends an updated preferredPageStub it will be taken as a sign that the page stub is to be re-evaluated. If the preferredPageStub is unchanged it will not be re-evaluated even if it happens that the preferredPageStub had not been available before but has now become available.
 
         if ($this->preferredPageStub != $preferredPageStub)
         {
-            // Setting the pageStub to null indicates that it should be re-evaluated.
+            // Validate the stub. It would be exceptional behavior to pass in an invalid stub which is why we will throw an exeption.
+
+            if (!preg_match('/^[0-9a-zA-Z-]+$/', $preferredPageStub))
+            {
+                throw new InvalidArgumentException('preferredPageStub');
+            }
 
             $this->preferredPageStub = $preferredPageStub;
+
+            // Setting the pageStub to null indicates that it should be re-evaluated.
+
             $this->pageStub = null;
         }
     }
