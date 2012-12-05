@@ -69,6 +69,34 @@ EOT;
     }
 
     /**
+     * @return void
+     */
+    public function calculatePageStub()
+    {
+        $sqlPreferredStub = Colby::mysqli()->escape_string($this->preferredStub());
+        $sqlPreferredStub = "'{$sqlPreferredStub}'";
+
+        $sql = "SELECT COUNT(*) as `count` FROM `ColbyPages` WHERE `stub` = {$sqlPreferredStub}";
+
+        $result = Colby::query($sql);
+
+        $count = $result->fetch_object()->count;
+
+        $result->free();
+
+        if ($count > 0)
+        {
+            // The preferred stub is already in use.
+
+            $this->pageStub = sha1(microtime() . rand());
+        }
+        else
+        {
+            $this->pageStub = $this->preferredPageStub;
+        }
+    }
+
+    /**
      * Deletes a page from the database and deletes the page archive.
      *
      * @return void
@@ -163,15 +191,11 @@ EOT;
     {
         // TODO: Although it's redundant to duplicate the archive id inside the file itself
         // there have been other places where I've wanted it. One such place is for use as a
-        // fallback stub. Way the pros and cons of including the archive id in this class.
+        // fallback stub. Weigh the pros and cons of including the archive id in this class.
 
         if (!$this->pageStub)
         {
-            $preferredStub = "{$this->groupStub}/{$this->preferredPageStub}";
-
-            // TODO: check database to see if its available, for now we just lazily assume
-
-            $this->pageStub = $this->preferredPageStub;
+            $this->calculatePageStub();
         }
 
         $sqlArchiveId = Colby::mysqli()->escape_string($archiveId);
