@@ -10,7 +10,7 @@ class ColbyPage
     public $stubIsLocked;
 
     public $modelId;
-    public $defaultViewId; // TODO: multiple available views per model?
+    public $viewId;
     public $groupId;
     public $groupStub;
 
@@ -162,7 +162,14 @@ EOT;
      */
     public function preferredStub()
     {
-        return "{$this->groupStub}/{$this->preferredPageStub}";
+        if ($this->groupStub)
+        {
+            return "{$this->groupStub}/{$this->preferredPageStub}";
+        }
+        else
+        {
+            return $this->preferredPageStub;
+        }
     }
 
     /**
@@ -180,7 +187,14 @@ EOT;
      */
     public function stub()
     {
-        return "{$this->groupStub}/{$this->pageStub}";
+        if ($this->groupStub)
+        {
+            return "{$this->groupStub}/{$this->pageStub}";
+        }
+        else
+        {
+            return $this->pageStub;
+        }
     }
 
     /**
@@ -218,8 +232,25 @@ EOT;
         $sqlArchiveId = Colby::mysqli()->escape_string($archiveId);
         $sqlArchiveId = "UNHEX('{$sqlArchiveId}')";
 
-        $sqlModelId = Colby::mysqli()->escape_string($this->modelId);
-        $sqlModelId = "UNHEX('{$sqlModelId}')";
+        if ($this->modelId)
+        {
+            $sqlModelId = Colby::mysqli()->escape_string($this->modelId);
+            $sqlModelId = "UNHEX('{$sqlModelId}')";
+        }
+        else
+        {
+            $sqlModelId = 'NULL';
+        }
+
+        if ($this->viewId)
+        {
+            $sqlViewId = Colby::mysqli()->escape_string($this->viewId);
+            $sqlViewId = "UNHEX('{$sqlViewId}')";
+        }
+        else
+        {
+            $sqlViewId = 'NULL';
+        }
 
         if ($this->groupId)
         {
@@ -256,6 +287,7 @@ INSERT INTO `ColbyPages`
 (
     `archiveId`,
     `modelId`,
+    `viewId`,
     `groupId`,
     `stub`,
     `titleHTML`,
@@ -267,6 +299,7 @@ VALUES
 (
     {$sqlArchiveId},
     {$sqlModelId},
+    {$sqlViewId},
     {$sqlGroupId},
     {$sqlStub},
     {$sqlTitleHTML},

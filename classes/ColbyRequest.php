@@ -6,7 +6,7 @@
 class ColbyRequest
 {
     private static $decodedRequestURI;
-    // type: string
+    // type: stríng
     // example:
     // /foo bar/piñata/post/
 
@@ -87,12 +87,16 @@ class ColbyRequest
         return self::$decodedStubs;
     }
 
-    ///
-    /// it's not required that this function be called
-    /// however most sites will call this function from index.php
-    /// to handle requests in the standard way
-    /// which is to search for the appropriate hanlder file and load it
-    ///
+    /**
+     * It's not required that this method be called
+     * however most sites will call this method from index.php
+     * to handle requests in the standard way
+     * which is to search for the appropriate handler file and load it.
+     * If no handler file is found, the method will search for the URL
+     * in the database to see if it can load it that way.
+     *
+     * @return void
+     */
     public static function handleRequest()
     {
         $countOfStubs = count(self::$decodedStubs);
@@ -129,6 +133,7 @@ class ColbyRequest
         //
         // 1. check for "every stub" URL handler
         // 2. check for "first stub" multi-URL handler
+        // 3. check for full stub in the database and use the view handler
 
         else
         {
