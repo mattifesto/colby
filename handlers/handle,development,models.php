@@ -12,7 +12,7 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Models',
 
 $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,model,*.data');
 
-displayPostTypes($absoluteDataFilenames);
+displayModels($absoluteDataFilenames);
 
 ?>
 
@@ -22,7 +22,7 @@ displayPostTypes($absoluteDataFilenames);
 
 $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,model,*.data');
 
-displayPostTypes($absoluteDataFilenames);
+displayModels($absoluteDataFilenames);
 
 ?>
 
@@ -35,7 +35,7 @@ $page->end();
 /**
  * @return void
  */
-function displayPostTypes($absoluteDataFilenames)
+function displayModels($absoluteDataFilenames)
 {
     foreach ($absoluteDataFilenames as $absoluteDataFilename)
     {

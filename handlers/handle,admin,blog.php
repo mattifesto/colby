@@ -35,7 +35,7 @@ $result = Colby::query($sql);
 
     while ($row = $result->fetch_object())
     {
-        $editURL = COLBY_SITE_URL . "/admin/model/{$row->modelId}/edit/?archive-id={$row->archiveId}&group-id={$blogPostGroupId}&group-stub={$blogPostGroupStub}";
+        $editURL = COLBY_SITE_URL . "/admin/model/{$row->modelId}/edit/?archive-id={$row->archiveId}";
 
         ?>
 
@@ -56,33 +56,33 @@ $result = Colby::query($sql);
 
 <?php
 
-$modelDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,model,*.data');
-$modelDataFiles = array_merge($modelDataFiles,
-                              glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,model,*.data'));
+$viewDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,view,*.data');
+$viewDataFiles = array_merge($viewDataFiles,
+                              glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,view,*.data'));
 
-foreach ($modelDataFiles as $modelDataFile)
+foreach ($viewDataFiles as $viewDataFile)
 {
-    // Get the model id
+    $viewData = unserialize(file_get_contents($viewDataFile));
 
-    preg_match('/model,([^,]*).data$/', $modelDataFile, $matches);
-
-    // If there is a blog view for this model, offer the model as an option
-
-    $viewHandlerFilename = "handle,admin,blog,{$matches[1]},view.php";
-
-    if (Colby::findHandler($viewHandlerFilename))
+    if ($viewData->groupId != $blogPostGroupId)
     {
-        $modelData = unserialize(file_get_contents($modelDataFile));
-
-        $editURL = "/admin/model/{$matches[1]}/edit/?group-id={$blogPostGroupId}&group-stub={$blogPostGroupStub}";
-
-        ?>
-
-        <p style="font-size: 1.5em;"><a href="<?php echo $editURL; ?>">Create a <?php echo $modelData->nameHTML; ?></a>
-        <p><?php echo $modelData->descriptionHTML; ?>
-
-        <?php
+        continue;
     }
+
+    // Get the view id
+
+    preg_match('/([0-9a-f]{40})/', $viewDataFile, $matches);
+
+    $viewId = $matches[1];
+
+    $editURL = "/admin/model/{$viewData->modelId}/edit/?&view-id={$viewId}";
+
+    ?>
+
+    <p style="font-size: 1.5em;"><a href="<?php echo $editURL; ?>">Create a <?php echo $viewData->nameHTML; ?></a>
+    <p><?php echo $viewData->descriptionHTML; ?>
+
+    <?php
 }
 
 $page->end();

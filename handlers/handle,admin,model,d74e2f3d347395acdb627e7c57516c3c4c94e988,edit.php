@@ -4,11 +4,7 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Generic Document Editor',
                                                   'Create and edit generic documents.',
                                                   'admin');
 
-$modelId = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
-
 $archiveId = isset($_GET['archive-id']) ? $_GET['archive-id'] : '';
-$groupId  = isset($_GET['group-id']) ? $_GET['group-id'] : '';
-$groupStub  = isset($_GET['group-stub']) ? $_GET['group-stub'] : '';
 
 if (empty($archiveId))
 {
@@ -29,30 +25,35 @@ $archive = ColbyArchive::open($archiveId);
 if ($archive->attributes()->created)
 {
     $data = $archive->rootObject();
+
+    $viewId = $data->viewId;
 }
 else
 {
-    $data = new ColbyPage($modelId, $groupId, $groupStub);
+    $viewId = $_GET['view-id'];
+
+    $data = ColbyPage::pageWithViewId($viewId);
 }
 
 // mise en place
 
 $ajaxURL = COLBY_SITE_URL . '/admin/model/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/';
 
-$publicationDate = isset($data->publicationDate) ? $data->publicationDate : '';
-$title = isset($data->titleHTML) ? $data->titleHTML : '';
-$subtitle = isset($data->subtitleHTML) ? $data->subtitleHTML : '';
+$publicationDate = $data->publicationDate;
+$title = $data->titleHTML;
+$subtitle = $data->subtitleHTML;
 
-$stub = $data->stub();
+$customPageStubText = $data->customPageStubText;
+$groupStub = $data->groupStub;
 $preferredStub = $data->preferredStub();
-$preferredPageStub = isset($data->preferredPageStub) ? $data->preferredPageStub : '';
+$preferredPageStub = $data->preferredPageStub;
+$stub = $data->stub();
 $stubIsLocked = $data->stubIsLocked ? ' checked="checked"' : '';
-$customPageStubText = isset($data->customPageStubText) ? $data->customPageStubText : '';
 
 $content = isset($data->content) ? ColbyConvert::textToHTML($data->content) : '';
 
 $isPublished = $data->isPublished ? ' checked="checked"' : '';
-$publishedBy = isset($data->publishedBy) ? $data->publishedBy : '';
+$publishedBy = $data->publishedBy;
 $currentUserId = ColbyUser::currentUserId();
 
 $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationDate * 1000 : 'null';
@@ -61,8 +62,7 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
 
 <fieldset>
     <input type="hidden" id="archive-id" value="<?php echo $archiveId; ?>">
-    <input type="hidden" id="group-id" value="<?php echo $groupId; ?>">
-    <input type="hidden" id="group-stub" value="<?php echo $groupStub; ?>">
+    <input type="hidden" id="view-id" value="<?php echo $viewId; ?>">
     <input type="hidden" id="preferred-page-stub" value="<?php echo $preferredPageStub; ?>">
     <input type="hidden" id="published-by" value="<?php echo $publishedBy; ?>">
     <input type="hidden" id="publication-date" value="<?php echo $publicationDate; ?>">

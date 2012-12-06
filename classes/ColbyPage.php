@@ -26,13 +26,30 @@ class ColbyPage
     /**
      * @return ColbyPage
      */
-    public function __construct($modelId, $groupId, $groupStub)
+    public static function pageWithViewId($viewId)
     {
+        $page = new ColbyPage();
+
+        $viewDataFilename = "handle,admin,view,{$viewId}.data";
+
+        $absoluteViewDataFilename = Colby::findHandler($viewDataFilename);
+
+        $viewData = unserialize(file_get_contents($absoluteViewDataFilename));
+
+        $groupDataFilename = "handle,admin,group,{$viewData->groupId}.data";
+
+        $absoluteGroupDataFilename = Colby::findHandler($groupDataFilename);
+
+        $groupData = unserialize(file_get_contents($absoluteGroupDataFilename));
+
         // Set member variables that are constant for the lifetime of the object.
 
-        $this->modelId = $modelId;
-        $this->groupId = $groupId ? $groupId : null;
-        $this->groupStub = $groupStub ? $groupStub : null;
+        $page->viewId = $viewId;
+        $page->modelId = $viewData->modelId;
+        $page->groupId = $viewData->groupId;
+        $page->groupStub = $groupData->stub;
+
+        return $page;
     }
 
     /**

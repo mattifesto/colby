@@ -4,17 +4,16 @@ $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
 $archive = ColbyArchive::open($_POST['archive-id']);
 
-$page = $archive->rootObject();
-
-// TODO: better place for model id?
-
-$modelId = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
-$groupId = $_POST['group-id'];
-$groupStub = $_POST['group-stub'];
-
-if (!$archive->attributes()->created)
+if ($archive->attributes()->created)
 {
-    $page = new ColbyPage($modelId, $groupId, $groupStub);
+    $page = $archive->rootObject();
+}
+else
+{
+    $viewId = $_POST['view-id'];
+
+    $page = ColbyPage::pageWithViewId($viewId);
+
     $archive->setRootObject($page);
 }
 

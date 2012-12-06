@@ -9,6 +9,6 @@ if (!$archive || !$archive->rootObject()->isPublished)
     return false;
 }
 
-$blogViewFilename = "handle,admin,blog,{$archive->rootObject()->modelId},view.php";
+$viewFilename = "handle,admin,view,{$archive->rootObject()->viewId}.php";
 
-include(Colby::findHandler($blogViewFilename));
+include(Colby::findHandler($viewFilename));

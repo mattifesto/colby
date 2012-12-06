@@ -36,6 +36,10 @@ function ColbyFormManager(ajaxURL)
     this.addInputListenerToTextAndTextareas(elements);
     this.addChangeListenerToCheckboxes(elements);
 
+    elements = this.fieldsetElement.getElementsByTagName('select');
+
+    this.addChangeListenerToSelects(elements);
+
     elements = this.fieldsetElement.getElementsByTagName('textarea');
 
     this.addInputListenerToTextAndTextareas(elements);
@@ -65,6 +69,38 @@ ColbyFormManager.prototype.addChangeListenerToCheckboxes = function(collection)
         }
 
         if (element.tagName != 'INPUT' || element.type != 'checkbox')
+        {
+            continue;
+        }
+
+        element.addEventListener('change', handler, false);
+    }
+}
+
+/**
+ * @return void
+ */
+ColbyFormManager.prototype.addChangeListenerToSelects = function(collection)
+{
+    var self = this;
+
+    var handler = function()
+    {
+        self.handleChange(this);
+    }
+
+    var countOfElements = collection.length;
+
+    for (var i = 0; i < countOfElements; i++)
+    {
+        var element = collection.item(i);
+
+        if (element.classList.contains('ignore'))
+        {
+            continue;
+        }
+
+        if (element.tagName != 'SELECT')
         {
             continue;
         }
@@ -117,6 +153,20 @@ ColbyFormManager.prototype.getFormElements = function()
     var arrayOfElements = new Array();
 
     var elements = this.fieldsetElement.getElementsByTagName('input');
+
+    i = 0;
+
+    while (element = elements.item(i))
+    {
+        if (!element.classList.contains('ignore'))
+        {
+            arrayOfElements.push(element);
+        }
+
+        i++;
+    }
+
+    var elements = this.fieldsetElement.getElementsByTagName('select');
 
     i = 0;
 

@@ -83,7 +83,8 @@ $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbyPages`
 (
     `archiveId` BINARY(20) NOT NULL,
-    `modelId` BINARY(20) NOT NULL,
+    `modelId` BINARY(20),
+    `viewId` BINARY(20),
     `groupId` BINARY(20),
     `stub` VARCHAR(119) NOT NULL,
     `titleHTML` VARCHAR(119) NOT NULL,
