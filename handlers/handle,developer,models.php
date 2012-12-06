@@ -41,7 +41,7 @@ function displayModels($absoluteDataFilenames)
     {
         preg_match('/model,([^,]*).data$/', $absoluteDataFilename, $matches);
 
-        $editURL = COLBY_SITE_URL . "/development/models/edit/?model-id={$matches[1]}";
+        $editURL = COLBY_SITE_URL . "/developer/models/edit/?model-id={$matches[1]}";
 
         $data = unserialize(file_get_contents($absoluteDataFilename));
 

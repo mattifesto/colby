@@ -24,7 +24,7 @@ if ($absoluteDataFilename)
     $data = unserialize(file_get_contents($absoluteDataFilename));
 }
 
-$ajaxURL = COLBY_SITE_URL . '/development/models/ajax/update/';
+$ajaxURL = COLBY_SITE_URL . '/developer/models/ajax/update/';
 $nameHTML = isset($data->nameHTML) ? $data->nameHTML : '';
 $descriptionHTML = isset($data->description) ? ColbyConvert::textToHTML($data->description) : '';
 
