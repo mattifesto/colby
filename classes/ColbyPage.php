@@ -57,6 +57,8 @@ class ColbyPage
      */
     public static function archiveForStub($stub)
     {
+        $archive = false;
+
         $sqlStub = Colby::mysqli()->escape_string($stub);
         $sqlStub = "'{$sqlStub}'";
 
@@ -73,14 +75,16 @@ EOT;
 
         if ($result->num_rows != 1) // will either be 1 or 0
         {
-            return false;
+            goto done;
         }
 
         $archiveId = $result->fetch_object()->archiveId;
 
-        $result->free();
-
         $archive = ColbyArchive::open($archiveId);
+
+        done:
+
+        $result->free();
 
         return $archive;
     }
@@ -127,6 +131,27 @@ EOT;
         Colby::query($sql);
 
         ColbyArchive::delete($archiveId);
+    }
+
+    /**
+     * A page can't be displayed directly
+     * because the full archive information should be made available to the view.
+     *
+     * @return void
+     */
+    public static function displayPageForArchiveId($archiveId)
+    {
+        // TODO: Add something like 'openIfExists' to ColbyArchive
+        //       This function is usually only called when we're pretty certain the archive exists
+        //       but if it doesn't, we don't want to create it.
+
+        $archive = ColbyArchive::open($archiveId);
+
+        $page = $archive->rootObject();
+
+        $viewFilename = "handle,admin,view,{$page->viewId}.php";
+
+        return include(Colby::findHandler($viewFilename));
     }
 
     /**

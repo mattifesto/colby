@@ -88,6 +88,43 @@ class ColbyRequest
     }
 
     /**
+     * @return string | bool (false)
+     */
+    public static function displayableArchiveIdForStub($stub)
+    {
+        $archiveId = false;
+
+        $sqlStub = Colby::mysqli()->escape_string($stub);
+        $sqlStub = "'{$sqlStub}'";
+
+        $sql = <<<EOT
+SELECT
+    LOWER(HEX(`archiveId`)) AS `archiveId`
+FROM
+    `ColbyPages`
+WHERE
+    `stub` = {$sqlStub} AND
+    `viewId` IS NOT NULL AND
+    `published` IS NOT NULL
+EOT;
+
+        $result = Colby::query($sql);
+
+        if ($result->num_rows != 1) // This will either be 1 or 0.
+        {
+            goto done;
+        }
+
+        $archiveId = $result->fetch_object()->archiveId;
+
+        done:
+
+        $result->free();
+
+        return $archiveId;
+    }
+
+    /**
      * It's not required that this method be called
      * however most sites will call this method from index.php
      * to handle requests in the standard way
@@ -99,6 +136,7 @@ class ColbyRequest
      */
     public static function handleRequest()
     {
+        $archiveId = null;
         $countOfStubs = count(self::$decodedStubs);
         $handlerFilename = null;
 
@@ -133,7 +171,7 @@ class ColbyRequest
         //
         // 1. check for "every stub" URL handler
         // 2. check for "first stub" multi-URL handler
-        // 3. check for full stub in the database and use the view handler
+        // 3. Check whether page is displayable without a stub related handler.
 
         else
         {
@@ -151,9 +189,18 @@ class ColbyRequest
 
                 $handlerFilename = Colby::findHandler("handle,{$firstStub},.php");
             }
+
+            // 3. Check whether page is displayable without a stub related handler.
+
+            if (!$handlerFilename)
+            {
+                $fullStub = implode('/', self::$decodedStubs);
+
+                $archiveId = self::displayableArchiveIdForStub($fullStub);
+            }
         }
 
-        if ($handlerFilename)
+        if ($handlerFilename || $archiveId)
         {
             // this is a valid set of stubs but the URL may not be canonical
             // calling canonicalizeRequestURI will return if the URI
@@ -162,7 +209,14 @@ class ColbyRequest
 
             self::canonicalizeRequestURI();
 
-            $result = include($handlerFilename);
+            if ($handlerFilename)
+            {
+                $result = include($handlerFilename);
+            }
+            else
+            {
+                $result = ColbyPage::displayPageForArchiveId($archiveId);
+            }
 
             if (1 === $result)
             {
