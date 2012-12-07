@@ -1,6 +1,8 @@
 <?php
 
-// TODO: better title and description?
+$blogPostsGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
+
+// TODO: when we have a page metadata file, use the title and subtitle in that.
 
 $page = ColbyOutputManager::beginPage('Blog', 'Blog');
 
@@ -31,6 +33,7 @@ SELECT
 FROM
     `ColbyPages`
 WHERE
+    `groupId` = UNHEX('{$blogPostsGroupId}') AND
     `published` IS NOT NULL
 ORDER BY
     `published`
