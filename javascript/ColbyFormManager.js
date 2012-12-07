@@ -35,6 +35,7 @@ function ColbyFormManager(ajaxURL)
 
     this.addInputListenerToTextAndTextareas(elements);
     this.addChangeListenerToCheckboxes(elements);
+    this.addChangeListenerToFiles(elements);
 
     elements = this.fieldsetElement.getElementsByTagName('select');
 
@@ -69,6 +70,38 @@ ColbyFormManager.prototype.addChangeListenerToCheckboxes = function(collection)
         }
 
         if (element.tagName != 'INPUT' || element.type != 'checkbox')
+        {
+            continue;
+        }
+
+        element.addEventListener('change', handler, false);
+    }
+}
+
+/**
+ * @return void
+ */
+ColbyFormManager.prototype.addChangeListenerToFiles = function(collection)
+{
+    var self = this;
+
+    var handler = function()
+    {
+        self.handleChange(this);
+    }
+
+    var countOfElements = collection.length;
+
+    for (var i = 0; i < countOfElements; i++)
+    {
+        var element = collection.item(i);
+
+        if (element.classList.contains('ignore'))
+        {
+            continue;
+        }
+
+        if (element.tagName != 'INPUT' || element.type != 'file')
         {
             continue;
         }
@@ -158,10 +191,21 @@ ColbyFormManager.prototype.getFormElements = function()
 
     while (element = elements.item(i))
     {
-        if (!element.classList.contains('ignore'))
+        if (element.classList.contains('ignore'))
         {
-            arrayOfElements.push(element);
+            i++;
+            continue;
         }
+
+        if (element.type == 'file' && !element.parentElement.classList.contains('now-updating'))
+        {
+            // Only include file elements that have been changed so that we don't upload large files over and over again.
+
+            i++;
+            continue;
+        }
+
+        arrayOfElements.push(element);
 
         i++;
     }
@@ -385,6 +429,10 @@ ColbyFormManager.prototype.update = function()
         if (element.tagName == 'INPUT' && element.type == 'checkbox')
         {
             formData.append(element.id, element.checked ? '1' : '0');
+        }
+        else if (element.tagName == 'INPUT' && element.type == 'file')
+        {
+            formData.append(element.id, element.files[0]);
         }
         else
         {

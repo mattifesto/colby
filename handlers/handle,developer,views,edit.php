@@ -66,7 +66,7 @@ foreach ($groupDataFiles as $groupDataFile)
     <progress value="0"
               style="width: 100px; float: right;"></progress>
 
-    <div><label>Model Id
+    <div><label>View Id
         <input type="text"
                id="view-id"
                value="<?php echo $viewId; ?>"

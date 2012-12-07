@@ -94,6 +94,13 @@ EOT;
      */
     public function calculatePageStub()
     {
+        if (!$this->preferredPageStub)
+        {
+            $this->pageStub = sha1(microtime() . rand());
+
+            return;
+        }
+
         $sqlPreferredStub = Colby::mysqli()->escape_string($this->preferredStub());
         $sqlPreferredStub = "'{$sqlPreferredStub}'";
 

@@ -26,7 +26,6 @@ if (!$absoluteDataFilename)
     $absoluteHandlerFilenameBase = "{$absoluteHandlersDirectory}/{$handlerFilenameBase}";
 
     $absoluteDataFilename       = "{$absoluteHandlerFilenameBase}.data";
-    $absoluteDisplayFilename    = "{$absoluteHandlerFilenameBase},view.php";
     $absoluteEditFilename       = "{$absoluteHandlerFilenameBase},edit.php";
     $absoluteUpdateFilename     = "{$absoluteHandlerFilenameBase},ajax,update.php";
 
@@ -38,11 +37,6 @@ if (!$absoluteDataFilename)
     }
 
     // 2. Create all the necessary template files for the model, if they don't exist.
-
-    if (!file_exists($absoluteDisplayFilename))
-    {
-        touch($absoluteDisplayFilename);
-    }
 
     if (!file_exists($absoluteEditFilename))
     {
