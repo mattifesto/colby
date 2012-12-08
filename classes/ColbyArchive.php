@@ -1,6 +1,7 @@
 <?php
 
 define('COLBY_DATA_DIRECTORY', COLBY_SITE_DIRECTORY . '/data');
+define('COLBY_DATA_URL', COLBY_SITE_URL . '/data');
 
 class ColbyArchiveAttributes
 {

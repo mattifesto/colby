@@ -1,8 +1,11 @@
 <?php
 
+Colby::useImage();
+
 $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
-$archive = ColbyArchive::open($_POST['archive-id']);
+$archiveId = $_POST['archive-id'];
+$archive = ColbyArchive::open($archiveId);
 
 if ($archive->attributes()->created)
 {
@@ -32,14 +35,40 @@ $page->setPublicationData($_POST['is-published'],
 $page->content = $_POST['content'];
 $page->contentHTML = ColbyConvert::textToFormattedContent($page->content);
 
-$page->updateDatabaseWithArchiveId($_POST['archive-id']);
+if (isset($_FILES['image']))
+{
+    $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$archiveId}";
+
+    $absoluteMasterImageFilename = ColbyImage::importUploadedImage('image', $absoluteArchiveDirectory);
+
+    // Create an images sized for viewing in the post.
+
+    $absoluteResizedImageFilename = ColbyImage::createImageByFitting($absoluteMasterImageFilename,
+                                                                     array(400, PHP_INT_MAX));
+
+    $page->imageFilename = basename($absoluteResizedImageFilename);
+
+    // Create a thumbnail image.
+
+    $absoluteThumbnailImageFilename = ColbyImage::createImageByFitting($absoluteMasterImageFilename,
+                                                                       array(400, 400));
+
+    // TODO: Either support png or force jpg.
+
+    rename($absoluteThumbnailImageFilename, "{$absoluteArchiveDirectory}/thumbnail.jpg");
+
+    // Delete master image because we have no need for it.
+
+    unlink($absoluteMasterImageFilename);
+}
+
+$page->updateDatabaseWithArchiveId($archiveId);
 
 $archive->save();
 
 $response->pageStub = $page->pageStub;
 $response->wasSuccessful = true;
 //$response->message = var_export($_POST, true);
-$fileMessage = isset($_FILES['image']) ? ' (file uploaded)' : '';
-$response->message = 'Post last updated: ' . ColbyConvert::timestampToLocalUserTime(time()) . $fileMessage;
+$response->message = 'Post last updated: ' . ColbyConvert::timestampToLocalUserTime(time());
 
 $response->end();

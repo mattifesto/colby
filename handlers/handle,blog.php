@@ -12,6 +12,11 @@ $page = ColbyOutputManager::beginPage('Blog', 'Blog');
 
 <section id="blog-posts">
     <style>
+        article
+        {
+            margin-bottom: 20px;
+            clear: both;
+        }
         article > h1
         {
             font-size: 1.5em;
@@ -21,12 +26,21 @@ $page = ColbyOutputManager::beginPage('Blog', 'Blog');
         {
             font-size: 1.0em;
         }
+
+        img.thumbnail
+        {
+            max-width: 100px;
+            max-height: 100px;
+            margin-right: 10px;
+            float: left;
+        }
     </style>
 
     <?php
 
     $sql = <<<EOT
 SELECT
+    LOWER(HEX(`archiveId`)) AS `archiveId`,
     `stub`,
     `titleHTML`,
     `subtitleHTML`
@@ -46,10 +60,26 @@ EOT;
         while ($row = $result->fetch_object())
         {
             $url = COLBY_SITE_URL . "/{$row->stub}/";
+            $absoluteThumbnailFilename = COLBY_DATA_DIRECTORY . "/{$row->archiveId}/thumbnail.jpg";
+            $absoluteThumbnailURL = COLBY_DATA_URL . "/{$row->archiveId}/thumbnail.jpg";
 
             ?>
 
             <article>
+
+                <?php
+
+                if (file_exists($absoluteThumbnailFilename))
+                {
+                    ?>
+
+                    <img src="<?php echo $absoluteThumbnailURL; ?>" alt="" class="thumbnail">
+
+                    <?php
+                }
+
+                ?>
+
                 <h1><a href="<?php echo $url; ?>"><?php echo $row->titleHTML; ?></a></h1>
                 <h2><?php echo $row->subtitleHTML; ?></h2>
             </article>
