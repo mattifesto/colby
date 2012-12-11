@@ -1,13 +1,26 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Archive Details', 'Viewmv  the contents of an archive.', 'admin');
+$page = ColbyOutputManager::beginVerifiedUserPage('Archive Details', 'View the contents of an archive.', 'admin');
 
 $archiveId = $_GET['archive-id'];
 
-$archive = ColbyArchive::open($archiveId);
+$absoluteArchiveFilename = COLBY_DATA_DIRECTORY . "/{$archiveId}/archive.data";
 
-$attributesHTML = ColbyConvert::textToHTML(var_export($archive->attributes(), true));
-$rootObjectHTML = ColbyConvert::textToHTML(var_export($archive->rootObject(), true));
+if (!is_file($absoluteArchiveFilename))
+{
+    ?>
+
+    <p>The archive data file doesn't exist.
+    <p><code><?php echo $absoluteArchiveFilename; ?></code>
+
+    <?php
+
+    goto done;
+}
+
+$data = unserialize(file_get_contents($absoluteArchiveFilename));
+
+$dataHTML = ColbyConvert::textToHTML(var_export($data, true));
 
 ?>
 
@@ -23,12 +36,11 @@ $rootObjectHTML = ColbyConvert::textToHTML(var_export($archive->rootObject(), tr
     }
 </style>
 
-<h6>Attributes</h6>
-<pre><?php echo $attributesHTML; ?></pre>
-
-<h6>Root Object</h6>
-<pre><?php echo $rootObjectHTML; ?></pre>
+<h6>Data</h6>
+<pre><?php echo $dataHTML; ?></pre>
 
 <?php
+
+done:
 
 $page->end();

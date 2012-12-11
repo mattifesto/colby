@@ -25,23 +25,19 @@ if (empty($archiveId))
 }
 
 $archive = ColbyArchive::open($archiveId);
+$data = $archive->data();
+$pageModel = ColbyPageModel::modelWithData($data);
 
-if ($archive->attributes()->created)
+if (!$pageModel->viewId())
 {
-    $data = $archive->rootObject();
-
-    $viewId = $data->viewId;
-}
-else
-{
-    $viewId = $_GET['view-id'];
-
-    $data = ColbyPage::pageWithViewId($viewId);
+    $pageModel->setViewId($_GET['view-id']);
 }
 
 // mise en place
 
 $ajaxURL = COLBY_SITE_URL . "/admin/model/{$modelId}/ajax/update/";
+
+$viewId = $pageModel->viewId();
 
 $publicationDate = $data->publicationDate;
 $title = $data->titleHTML;

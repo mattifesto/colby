@@ -215,7 +215,7 @@ EOT;
             }
             else
             {
-                $result = ColbyPage::displayPageForArchiveId($archiveId);
+                $result = ColbyPageModel::displayPageForArchiveId($archiveId);
             }
 
             if (1 === $result)

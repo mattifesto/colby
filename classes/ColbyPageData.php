@@ -1,55 +1,29 @@
 <?php
 
-class ColbyPage
+class ColbyPageModel
 {
-    // All of the declared member variables in this class are public to avoid any unforseen serialization issues. However, these member variables should usually be set with an accessor method rather than directly because some of them are calculated. Obviously, adding any undeclared member variables will require setting them directly, which won't be a problem.
-
-    public $customPageStubText;
-    public $pageStub;
-    public $preferredPageStub;
-    public $stubIsLocked;
-
-    public $modelId;
-    public $viewId;
-    public $groupId;
-    public $groupStub;
-
-    public $title;
-    public $titleHTML;
-    public $subtitle;
-    public $subtitleHTML;
-
-    public $isPublished;
-    public $publishedBy;
-    public $publicationDate;
+    private $data;
 
     /**
-     * @return ColbyPage
+     * The constructor is private because to create a new ColbyPageModel
+     * correctly the static method 'modelWithData' should be called.
+     *
+     * @return ColbyPageModel
      */
-    public static function pageWithViewId($viewId)
+    private function __construct()
     {
-        $page = new ColbyPage();
+    }
 
-        $viewDataFilename = "handle,admin,view,{$viewId}.data";
+    /**
+     * @return ColbyPageModel
+     */
+    public static function modelWithData(stdClass $data)
+    {
+        $model = new ColbyPageModel();
 
-        $absoluteViewDataFilename = Colby::findHandler($viewDataFilename);
+        $model->data = $data;
 
-        $viewData = unserialize(file_get_contents($absoluteViewDataFilename));
-
-        $groupDataFilename = "handle,admin,group,{$viewData->groupId}.data";
-
-        $absoluteGroupDataFilename = Colby::findHandler($groupDataFilename);
-
-        $groupData = unserialize(file_get_contents($absoluteGroupDataFilename));
-
-        // Set member variables that are constant for the lifetime of the object.
-
-        $page->viewId = $viewId;
-        $page->modelId = $viewData->modelId;
-        $page->groupId = $viewData->groupId;
-        $page->groupStub = $groupData->stub;
-
-        return $page;
+        return $model;
     }
 
     /**
@@ -94,9 +68,9 @@ EOT;
      */
     public function calculatePageStub()
     {
-        if (!$this->preferredPageStub)
+        if (!$this->preferredPageStub())
         {
-            $this->pageStub = sha1(microtime() . rand());
+            $this->data->pageStub = sha1(microtime() . rand());
 
             return;
         }
@@ -116,12 +90,28 @@ EOT;
         {
             // The preferred stub is already in use.
 
-            $this->pageStub = sha1(microtime() . rand());
+            $this->data->pageStub = sha1(microtime() . rand());
         }
         else
         {
-            $this->pageStub = $this->preferredPageStub;
+            $this->data->pageStub = $this->preferredPageStub();
         }
+    }
+
+    /**
+     * @return string | null
+     */
+    public function customPageStubText()
+    {
+        return isset($this->data->customPageStubText) ? $this->data->customPageStubText : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setCustomPageStubText($customPageStubText)
+    {
+        $this->data->customPageStubText = $customPageStubText ? strval($customPageStubText) : null;
     }
 
     /**
@@ -144,6 +134,8 @@ EOT;
      * A page can't be displayed directly
      * because the full archive information should be made available to the view.
      *
+     * TODO: should this function be moved to the ColbyOutputManager class?
+     *
      * @return void
      */
     public static function displayPageForArchiveId($archiveId)
@@ -154,11 +146,67 @@ EOT;
 
         $archive = ColbyArchive::open($archiveId);
 
-        $page = $archive->rootObject();
+        $page = $archive->data();
 
         $viewFilename = "handle,admin,view,{$page->viewId}.php";
 
         return include(Colby::findHandler($viewFilename));
+    }
+
+    /**
+     * @return string | null
+     */
+    public function groupId()
+    {
+        return isset($this->data->groupId) ? $this->data->groupId : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setGroupId($groupId)
+    {
+        $this->data->groupId = $groupId;
+    }
+
+    /**
+     * @return string | null
+     */
+    public function groupStub()
+    {
+        return isset($this->data->groupStub) ? $this->data->groupStub : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setGroupStub($groupStub)
+    {
+        $this->data->groupStub = $groupStub ? strval($groupStub) : null;
+    }
+
+    /**
+     * @return string | null
+     */
+    public function modelId()
+    {
+        return isset($this->data->modelId) ? $this->data->modelId : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setModelId($modelId)
+    {
+        $this->data->modelId = $modelId;
+    }
+
+    /**
+     * @return string | null
+     */
+    public function pageStub()
+    {
+        return isset($this->data->pageStub) ? $this->data->pageStub : null;
     }
 
     /**
@@ -168,11 +216,11 @@ EOT;
     {
         // Convert stubIsLocked to a Boolean variable and save.
 
-        $this->stubIsLocked = !!$stubIsLocked;
+        $this->data->stubIsLocked = !!$stubIsLocked;
 
         // The variable stubIsLocked is saved only for use on the client side. The server side (this process) ignores its value. If the client sends an updated preferredPageStub it will be taken as a sign that the page stub is to be re-evaluated. If the preferredPageStub is unchanged it will not be re-evaluated even if it happens that the preferredPageStub had not been available before but has now become available.
 
-        if ($this->preferredPageStub != $preferredPageStub)
+        if ($this->preferredPageStub() != $preferredPageStub)
         {
             // Validate the stub. It would be exceptional behavior to pass in an invalid stub which is why we will throw an exeption.
 
@@ -181,12 +229,28 @@ EOT;
                 throw new InvalidArgumentException('preferredPageStub');
             }
 
-            $this->preferredPageStub = $preferredPageStub;
+            $this->data->preferredPageStub = $preferredPageStub;
 
             // Setting the pageStub to null indicates that it should be re-evaluated.
 
-            $this->pageStub = null;
+            $this->data->pageStub = null;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function preferredPageStub()
+    {
+        return isset($this->data->preferredPageStub) ? $this->data->preferredPageStub : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setPreferredPageStub($preferredPageStub)
+    {
+        $this->data->preferredPageStub = $preferredPageStub ? strval($preferredPageStub) : null;
     }
 
     /**
@@ -194,13 +258,16 @@ EOT;
      */
     public function preferredStub()
     {
-        if ($this->groupStub)
+        $groupStub = $this->groupStub();
+        $preferredPageStub = $this->preferredPageStub();
+
+        if ($groupStub)
         {
-            return "{$this->groupStub}/{$this->preferredPageStub}";
+            return "{$groupStub}/{$preferredPageStub}";
         }
         else
         {
-            return $this->preferredPageStub;
+            return $preferredPageStub;
         }
     }
 
@@ -209,9 +276,57 @@ EOT;
      */
     public function setPublicationData($isPublished, $publishedBy, $publicationDate)
     {
-        $this->isPublished = !!$isPublished;
-        $this->publishedBy = $publishedBy ? intval($publishedBy) : null;
-        $this->publicationDate = $publicationDate ? intval($publicationDate) : null;
+        $this->data->isPublished = !!$isPublished;
+        $this->data->publishedBy = $publishedBy ? intval($publishedBy) : null;
+        $this->data->publicationDate = $publicationDate ? intval($publicationDate) : null;
+    }
+
+    /**
+     * @return int | null
+     */
+    public function publicationDate()
+    {
+        return isset($this->data->publicationDate) ? $this->data->publicationDate : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setPublicationDate($publicationDate)
+    {
+        $this->data->publicationDate = $publicationDate ? intval($publicationDate) : null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublished()
+    {
+        return isset($this->data->isPublished) ? $this->data->isPublished : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setIsPublished($isPublished)
+    {
+        $this->data->isPublished = !!$isPublished;
+    }
+
+    /**
+     * @return int | null
+     */
+    public function publishedBy()
+    {
+        return isset($this->data->publishedBy) ? $this->data->publishedBy : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setPublishedBy($publishedBy)
+    {
+        $this->data->publishedBy = $publishedBy ? intval($publishedBy) : null;
     }
 
     /**
@@ -219,14 +334,49 @@ EOT;
      */
     public function stub()
     {
-        if ($this->groupStub)
+        $groupStub = $this->groupStub();
+        $pageStub = $this->pageStub();
+
+        if ($groupStub)
         {
-            return "{$this->groupStub}/{$this->pageStub}";
+            return "{$groupStub}/{$pageStub}";
         }
         else
         {
-            return $this->pageStub;
+            return $pageStub;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function stubIsLocked()
+    {
+        return isset($this->data->stubIsLocked) ? $this->data->stubIsLocked : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setStubIsLocked($stubIsLocked)
+    {
+        $this->data->stubIsLocked = !!$stubIsLocked;
+    }
+
+    /**
+     * @return string | null
+     */
+    public function subtitle()
+    {
+        return isset($this->data->subtitle) ? $this->data->subtitle : null;
+    }
+
+    /**
+     * @return string | null
+     */
+    public function subtitleHTML()
+    {
+        return isset($this->data->subtitleHTML) ? $this->data->subtitleHTML : null;
     }
 
     /**
@@ -234,8 +384,24 @@ EOT;
      */
     public function setSubtitle($subtitle)
     {
-        $this->subtitle = $subtitle;
-        $this->subtitleHTML = ColbyConvert::textToHTML($subtitle);
+        $this->data->subtitle = $subtitle ? strval($subtitle) : '';
+        $this->data->subtitleHTML = ColbyConvert::textToHTML($this->data->subtitle);
+    }
+
+    /**
+     * @return string | null
+     */
+    public function title()
+    {
+        return isset($this->data->title) ? $this->data->title : null;
+    }
+
+    /**
+     * @return string | null
+     */
+    public function titleHTML()
+    {
+        return isset($this->data->titleHTML) ? $this->data->titleHTML : null;
     }
 
     /**
@@ -243,30 +409,30 @@ EOT;
      */
     public function setTitle($title)
     {
-        $this->title = $title;
-        $this->titleHTML = ColbyConvert::textToHTML($title);
+        $this->data->title = $title ? strval($title) : '';
+        $this->data->titleHTML = ColbyConvert::textToHTML($this->data->title);
     }
 
     /**
      * @return void
      */
-    public function updateDatabaseWithArchiveId($archiveId)
+    public function updateDatabase()
     {
         // TODO: Although it's redundant to duplicate the archive id inside the file itself
         // there have been other places where I've wanted it. One such place is for use as a
         // fallback stub. Weigh the pros and cons of including the archive id in this class.
 
-        if (!$this->pageStub)
+        if (!$this->data->pageStub)
         {
             $this->calculatePageStub();
         }
 
-        $sqlArchiveId = Colby::mysqli()->escape_string($archiveId);
+        $sqlArchiveId = Colby::mysqli()->escape_string($this->data->archiveId);
         $sqlArchiveId = "UNHEX('{$sqlArchiveId}')";
 
-        if ($this->modelId)
+        if ($this->modelId())
         {
-            $sqlModelId = Colby::mysqli()->escape_string($this->modelId);
+            $sqlModelId = Colby::mysqli()->escape_string($this->modelId());
             $sqlModelId = "UNHEX('{$sqlModelId}')";
         }
         else
@@ -274,9 +440,9 @@ EOT;
             $sqlModelId = 'NULL';
         }
 
-        if ($this->viewId)
+        if ($this->viewId())
         {
-            $sqlViewId = Colby::mysqli()->escape_string($this->viewId);
+            $sqlViewId = Colby::mysqli()->escape_string($this->viewId());
             $sqlViewId = "UNHEX('{$sqlViewId}')";
         }
         else
@@ -284,9 +450,9 @@ EOT;
             $sqlViewId = 'NULL';
         }
 
-        if ($this->groupId)
+        if ($this->groupId())
         {
-            $sqlGroupId = Colby::mysqli()->escape_string($this->groupId);
+            $sqlGroupId = Colby::mysqli()->escape_string($this->groupId());
             $sqlGroupId = "UNHEX('{$sqlGroupId}')";
         }
         else
@@ -297,22 +463,30 @@ EOT;
         $sqlStub = Colby::mysqli()->escape_string($this->stub());
         $sqlStub = "'{$sqlStub}'";
 
-        $sqlTitleHTML = Colby::mysqli()->escape_string($this->titleHTML);
+        $sqlTitleHTML = Colby::mysqli()->escape_string($this->titleHTML());
         $sqlTitleHTML = "'{$sqlTitleHTML}'";
 
-        $sqlSubtitleHTML = Colby::mysqli()->escape_string($this->subtitleHTML);
+        $sqlSubtitleHTML = Colby::mysqli()->escape_string($this->subtitleHTML());
         $sqlSubtitleHTML = "'{$sqlSubtitleHTML}'";
 
-        if ($this->isPublished)
+        if ($this->isPublished())
         {
-             $sqlPublished = ColbyConvert::timestampToSQLDateTime($this->publicationDate);
+             $sqlPublished = ColbyConvert::timestampToSQLDateTime($this->publicationDate());
         }
         else
         {
             $sqlPublished = 'NULL';
         }
 
-        $sqlPublishedBy = empty($this->publishedBy) ? 'NULL' : "'{$this->publishedBy}'";
+        if ($this->publishedBy())
+        {
+            $sqlPublishedBy = Colby::mysqli()->escape_string($this->publishedBy());
+            $sqlPublishedBy = "'{$sqlPublishedBy}'";
+        }
+        else
+        {
+            $sqlPublishedBy = 'NULL';
+        }
 
         $sql = <<<EOT
 INSERT INTO `ColbyPages`
@@ -348,5 +522,38 @@ ON DUPLICATE KEY UPDATE
 EOT;
 
         Colby::query($sql);
+    }
+
+    /**
+     * @return string | null
+     */
+    public function viewId()
+    {
+        return isset($this->data->viewId) ? $this->data->viewId : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setViewId($viewId)
+    {
+        $viewDataFilename = "handle,admin,view,{$viewId}.data";
+
+        $absoluteViewDataFilename = Colby::findHandler($viewDataFilename);
+
+        $viewData = unserialize(file_get_contents($absoluteViewDataFilename));
+
+        $groupDataFilename = "handle,admin,group,{$viewData->groupId}.data";
+
+        $absoluteGroupDataFilename = Colby::findHandler($groupDataFilename);
+
+        $groupData = unserialize(file_get_contents($absoluteGroupDataFilename));
+
+        // Set member variables that are constant for the lifetime of the object.
+
+        $this->data->viewId = $viewId;
+        $this->data->modelId = $viewData->modelId;
+        $this->data->groupId = $viewData->groupId;
+        $this->data->groupStub = $groupData->stub;
     }
 }

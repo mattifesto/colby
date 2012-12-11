@@ -3,22 +3,32 @@
 define('COLBY_DATA_DIRECTORY', COLBY_SITE_DIRECTORY . '/data');
 define('COLBY_DATA_URL', COLBY_SITE_URL . '/data');
 
-class ColbyArchiveAttributes
-{
-    public $created;
-    public $createdBy;
-    public $hash;
-    public $modified;
-    public $modifiedBy;
-}
-
 class ColbyArchive
 {
-    private $archiveId;
     private $lockResource;
 
     protected $attributes;
-    protected $rootObject;
+    protected $data;
+
+    /**
+     * The Unix timestamp when the archive was first saved.
+     *
+     *  @return int | null
+     */
+    public function created()
+    {
+        return isset($this->attributes->created) ? $this->attributes->created : null;
+    }
+
+    /**
+     * The user id of the user that first save the archive.
+     *
+     *  @return int | null
+     */
+    public function createdBy()
+    {
+        return isset($this->attributes->createdBy) ? $this->attributes->createdBy : null;
+    }
 
     /**
      * @return void
@@ -41,16 +51,38 @@ class ColbyArchive
     }
 
     /**
+     * The Unix timestamp when the archive was last modified.
+     *
+     *  @return int | null
+     */
+    public function modified()
+    {
+        return isset($this->attributes->modified) ? $this->attributes->modified : null;
+    }
+
+    /**
+     * The user id of the user that last saved the archive.
+     *
+     *  @return int | null
+     */
+    public function modifiedBy()
+    {
+        return isset($this->attributes->modifiedBy) ? $this->attributes->modifiedBy : null;
+    }
+
+    /**
      * @param string $archiveId
      *
-     * @param string $hash The hash of the archive that the caller is currently
-     *                     working with. This can be passed as null if you don't
-     *                     have a hash or don't care.
+     * @param string $hash
      *
-     * @return
-     *  ColbyArchive instance - if it's a new archive, the hash is null,
-     *                          or if the hash matches the hash on disk
-     *  false - if hash doesn't match the hash on disk
+     *  The hash of the archive that the caller is currently working with.
+     *  This can be null if you don't have a hash or don't care.
+     *
+     * @return ColbyArchive | bool
+     *
+     *  The method returns a ColbyArchive instance if it's a new archive
+     *  or if the archive exists on disk. The function returns false
+     *  if the hash doesn't match last saved hash.
      */
     public static function open($archiveId, $hash = null)
     {
@@ -61,12 +93,18 @@ class ColbyArchive
 
         $archive = new ColbyArchive();
 
-        $archive->archiveId = $archiveId;
+        // If an archive file exists, these values will be overwritten.
+
+        $archive->attributes = new stdClass();
+        $archive->data = new stdClass();
+        $archive->data->archiveId = $archiveId;
+
+        // If an archive exists on the disk, load the data.
 
         $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$archiveId}";
         $absoluteArchiveFilename = "{$absoluteArchiveDirectory}/archive.data";
 
-        if (is_dir($absoluteArchiveDirectory))
+        if (is_file($absoluteArchiveFilename))
         {
             $archive->lock(LOCK_SH);
 
@@ -74,49 +112,53 @@ class ColbyArchive
 
             $archive->unlock();
 
-            if ($hash && $data->attributes->hash != $hash)
+            $archive->attributes = $data->attributes;
+            $archive->data = $data->data;
+
+            // Since we store the archive id in the file, just do a basic check to make sure it's the same as the archive id requested.
+
+            if ($archive->archiveId() != $archiveId)
+            {
+                throw new RuntimeException('Data Consistency Error: The archive id stored inside the archive doesn\'t match the external archive id.');
+            }
+
+            if ($hash && $archive->hash() != $hash)
             {
                 return false;
             }
-
-            $archive->attributes = $data->attributes;
-            $archive->rootObject = $data->rootObject;
 
             return $archive;
         }
         else
         {
-            // if the caller passed in a hash but the file doesn's exist
-            // this is the same as the hash not matching the hash on disk
-
             if ($hash)
             {
+                // If the caller passed in a hash but the archive file doesn't exist the caller is clearly making some sort of a mistake. The hash they passed in doesn't match 'no hash'.
+
                 return false;
             }
-
-            $archive->attributes = new ColbyArchiveAttributes();
-            $archive->rootObject = new stdClass();
 
             return $archive;
         }
     }
 
     /**
-     * @return ColbyArchiveAttributes instance
-     */
-    public function attributes()
-    {
-        // TODO: copy?
-
-        return $this->attributes;
-    }
-
-    /*
-     * @return string archiveId
+     * @return string
      */
     public function archiveId()
     {
-        return $this->archiveId;
+        return $this->data->archiveId;
+    }
+
+    /**
+     * Returns the hash value for the data the last time it was saved. This
+     * method does not recompute the hash if the data has changed.
+     *
+     * @return string
+     */
+    public function hash()
+    {
+        return isset($this->attributes->hash) ? $this->attributes->hash : null;
     }
 
     /**
@@ -137,26 +179,18 @@ class ColbyArchive
 
         // NOTE: this function doesn't protect against multiple locks
 
-        $absoluteLockFilename = COLBY_DATA_DIRECTORY . "/{$this->archiveId}/lock.data";
+        $absoluteLockFilename = COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}/lock.data";
 
         $this->lockResource = fopen($absoluteLockFilename, 'w');
         flock($this->lockResource, $operation);
     }
 
     /**
-     * @return the root object
+     * @return stdClass
      */
-    public function rootObject()
+    public function data()
     {
-        return $this->rootObject;
-    }
-
-    /**
-     * @return void
-     */
-    public function setRootObject($rootObject)
-    {
-        $this->rootObject = $rootObject;
+        return $this->data;
     }
 
     /**
@@ -166,7 +200,7 @@ class ColbyArchive
      */
     public function save()
     {
-        $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$this->archiveId}";
+        $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}";
         $absoluteArchiveFilename = "{$absoluteArchiveDirectory}/archive.data";
 
         if (!file_exists($absoluteArchiveDirectory))
@@ -179,7 +213,7 @@ class ColbyArchive
         // if archive already exists on the disk, make sure it hasn't changed
         // since we read it
 
-        if ($this->attributes->hash)
+        if (isset($this->attributes->hash))
         {
             $data = unserialize(file_get_contents($absoluteArchiveFilename));
 
@@ -191,11 +225,11 @@ class ColbyArchive
 
         // update file attributes
 
-        $this->attributes->hash = sha1(serialize($this->rootObject));
+        $this->attributes->hash = sha1(serialize($this->data));
 
         $time = time(); // time() same as intval(gmdate('U'));
 
-        if (null === $this->attributes->created)
+        if (!isset($this->attributes->created))
         {
             $this->attributes->created = $time;
             $this->attributes->createdBy = ColbyUser::currentUserId();
@@ -204,11 +238,11 @@ class ColbyArchive
         $this->attributes->modified = $time;
         $this->attributes->modifiedBy = ColbyUser::currentUserId();
 
-        $data = new stdClass();
-        $data->attributes = $this->attributes;
-        $data->rootObject = $this->rootObject;
+        $serializableObject = new stdClass();
+        $serializableObject->attributes = $this->attributes;
+        $serializableObject->data = $this->data;
 
-        file_put_contents($absoluteArchiveFilename, serialize($data));
+        file_put_contents($absoluteArchiveFilename, serialize($serializableObject));
 
         $this->unlock();
 

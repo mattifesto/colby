@@ -13,10 +13,10 @@ ColbyArchiverBasicTest();
 ColbyArchiverInvalidFileIdTest();
 
 //
-// Test ColbyPage class
+// Test ColbyPageModel class
 //
 
-ColbyPageCreateAndDeleteTest();
+ColbyPageModelCreateAndDeleteTest();
 
 //
 // Unit Tests Complete
@@ -35,11 +35,11 @@ function ColbyArchiverBasicTest()
 
     $archive = ColbyArchive::open($archiveId);
 
-    $archive->rootObject()->message = 'test';
+    $archive->data()->message = 'test';
 
     $archive->save();
 
-    $hash = $archive->attributes()->hash;
+    $hash = $archive->hash();
 
     $archive = null;
 
@@ -50,7 +50,7 @@ function ColbyArchiverBasicTest()
         throw new RuntimeException(__FUNCTION__ . ' failed: unable to re-open archive');
     }
 
-    if ($archive->rootObject()->message != 'test')
+    if ($archive->data()->message != 'test')
     {
         throw new RuntimeException(__FUNCTION__ . ' failed: data mismatch');
     }
@@ -74,17 +74,17 @@ function ColbyArchiverInvalidFileIdTest()
     throw new RuntimeException(__FUNCTION__ . ' failed');
 }
 
-function ColbyPageCreateAndDeleteTest()
+function ColbyPageModelCreateAndDeleteTest()
 {
     // make sure there isn't a document already left over from a previous failed attempt
 
-    $archive = ColbyPage::archiveForStub('test/the-test-post');
+    $archive = ColbyPageModel::archiveForStub('test/the-test-post');
 
     if ($archive)
     {
-        ColbyPage::delete($archive->archiveId());
+        ColbyPageModel::delete($archive->archiveId());
 
-        if (ColbyPage::archiveForStub('test/the-test-post'))
+        if (ColbyPageModel::archiveForStub('test/the-test-post'))
         {
             throw new RuntimeException(__FUNCTION__ . ' failed: Unable to clean up test evironment.');
         }
@@ -98,35 +98,37 @@ function ColbyPageCreateAndDeleteTest()
 
     $archive = ColbyArchive::open($archiveId);
 
-    $rootObject = $archive->rootObject();
-
-    if ($archive->attributes()->created)
+    if ($archive->created())
     {
         throw new RuntimeException(__FUNCTION__ . 'failed: The archive already exists.');
     }
+
+    $data = $archive->data();
 
     $title = 'Test post title';
     $subtitle = 'Test post subtitle.';
     $content = 'This is the content for a test post.';
 
-    $page = new ColbyPage(SIMPLE_CONTENT_DOCUMENT_MODEL_ID, TEST_GROUP_ID, 'test');
+    $model = ColbyPageModel::modelWithData($data);
+    $model->setModelId(SIMPLE_CONTENT_DOCUMENT_MODEL_ID);
+    $model->setGroupId(TEST_GROUP_ID);
+    $model->setGroupStub('test');
 
-    $page->setTitle($title);
-    $page->setSubtitle($subtitle);
-    $page->setPageStubData('the-test-post', false);
+    $model->setTitle($title);
+    $model->setSubtitle($subtitle);
+    $model->setPageStubData('the-test-post', false);
 
-    $page->content = $content;
-    $page->contentHTML = ColbyConvert::textToFormattedContent($content);
+    $data->content = $content;
+    $data->contentHTML = ColbyConvert::textToFormattedContent($content);
 
-    $page->updateDatabaseWithArchiveId($archiveId);
-
-    $archive->setRootObject($page);
+    $model->updateDatabase();
     $archive->save();
 
     $archive = null;
-    $page = null;
+    $data = null;
+    $model = null;
 
-    $archive = ColbyPage::archiveForStub('test/the-test-post');
+    $archive = ColbyPageModel::archiveForStub('test/the-test-post');
 
     if (!$archive)
     {
@@ -140,9 +142,9 @@ function ColbyPageCreateAndDeleteTest()
 
     $archive = null;
 
-    ColbyPage::delete($archiveId);
+    ColbyPageModel::delete($archiveId);
 
-    $archive = ColbyPage::archiveForStub('test/the-test-post');
+    $archive = ColbyPageModel::archiveForStub('test/the-test-post');
 
     if ($archive)
     {

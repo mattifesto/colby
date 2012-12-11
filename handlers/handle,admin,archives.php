@@ -28,16 +28,16 @@ $archiveDirectories = glob(COLBY_DATA_DIRECTORY . '/*');
 
         $archiveId = $matches[1];
 
-        $archive = ColbyArchive::open($archiveId);
+        //$archive = ColbyArchive::open($archiveId);
         $viewArchiveURL = COLBY_SITE_URL . "/admin/archives/view/?archive-id={$archiveId}";
-        $titleHTML = isset($archive->rootObject()->titleHTML) ? $archive->rootObject()->titleHTML : '';
+        //$titleHTML = isset($archive->data()->titleHTML) ? $archive->data()->titleHTML : '';
 
         ?>
 
         <tr>
             <td><a href="<?php echo $viewArchiveURL; ?>">view</a></td>
             <td><code><?php echo $archiveId; ?></code></td>
-            <td><?php echo $titleHTML; ?></td>
+            <td><?php //echo $titleHTML; ?></td>
         </tr>
 
         <?php

@@ -2,8 +2,8 @@
 
 if (isset($archive))
 {
-    $page = ColbyOutputManager::beginPage($archive->rootObject()->titleHTML,
-                                          $archive->rootObject()->subtitleHTML);
+    $page = ColbyOutputManager::beginPage($archive->data()->titleHTML,
+                                          $archive->data()->subtitleHTML);
 }
 else
 {
@@ -19,11 +19,11 @@ else
 
     $archive = ColbyArchive::open($_GET['archive-id']);
 
-    $page = ColbyOutputManager::beginVerifiedUserPage($archive->rootObject()->titleHTML,
-                                                      $archive->rootObject()->subtitleHTML);
+    $page = ColbyOutputManager::beginVerifiedUserPage($archive->data()->titleHTML,
+                                                      $archive->data()->subtitleHTML);
 }
 
-$data = $archive->rootObject();
+$data = $archive->data();
 $archiveId = $archive->archiveId();
 
 ?>
@@ -47,7 +47,7 @@ $archiveId = $archive->archiveId();
 
     ?>
 
-    <div class="formatted-content"><?php echo $archive->rootObject()->contentHTML; ?></div>
+    <div class="formatted-content"><?php echo $archive->data()->contentHTML; ?></div>
 </article>
 
 <?php

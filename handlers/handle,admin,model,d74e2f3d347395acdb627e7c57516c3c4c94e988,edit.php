@@ -18,54 +18,40 @@ if (empty($archiveId))
     $queryString = "archive-id={$archiveId}&{$queryString}";
 
     header("Location: {$path}?{$queryString}");
+
+    return; // exit? do we need to cancel HTML output?
 }
 
 $archive = ColbyArchive::open($archiveId);
+$data = $archive->data();
+$pageModel = ColbyPageModel::modelWithData($data);
 
-if ($archive->attributes()->created)
+if (!$pageModel->viewId())
 {
-    $data = $archive->rootObject();
-
-    $viewId = $data->viewId;
-}
-else
-{
-    $viewId = $_GET['view-id'];
-
-    $data = ColbyPage::pageWithViewId($viewId);
+    $pageModel->setViewId($_GET['view-id']);
 }
 
 // mise en place
 
 $ajaxURL = COLBY_SITE_URL . '/admin/model/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/';
 
-$publicationDate = $data->publicationDate;
-$title = $data->titleHTML;
-$subtitle = $data->subtitleHTML;
-
-$customPageStubText = $data->customPageStubText;
-$groupStub = $data->groupStub;
-$preferredStub = $data->preferredStub();
-$preferredPageStub = $data->preferredPageStub;
-$stub = $data->stub();
-$stubIsLocked = $data->stubIsLocked ? ' checked="checked"' : '';
+$customPageStubTextHTML = ColbyConvert::textToHTML($pageModel->customPageStubText());
+$stubIsLocked = $pageModel->stubIsLocked() ? ' checked="checked"' : '';
 
 $content = isset($data->content) ? ColbyConvert::textToHTML($data->content) : '';
 
-$isPublished = $data->isPublished ? ' checked="checked"' : '';
-$publishedBy = $data->publishedBy;
+$isPublished = $pageModel->isPublished() ? ' checked="checked"' : '';
 $currentUserId = ColbyUser::currentUserId();
-
-$javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationDate * 1000 : 'null';
+$javascriptPublicationDate = $pageModel->publicationDate() * 1000;
 
 ?>
 
 <fieldset>
     <input type="hidden" id="archive-id" value="<?php echo $archiveId; ?>">
-    <input type="hidden" id="view-id" value="<?php echo $viewId; ?>">
-    <input type="hidden" id="preferred-page-stub" value="<?php echo $preferredPageStub; ?>">
-    <input type="hidden" id="published-by" value="<?php echo $publishedBy; ?>">
-    <input type="hidden" id="publication-date" value="<?php echo $publicationDate; ?>">
+    <input type="hidden" id="view-id" value="<?php echo $pageModel->viewId(); ?>">
+    <input type="hidden" id="preferred-page-stub" value="<?php echo $pageModel->preferredPageStub(); ?>">
+    <input type="hidden" id="published-by" value="<?php echo $pageModel->publishedBy(); ?>">
+    <input type="hidden" id="publication-date" value="<?php echo $pageModel->publicationDate(); ?>">
 
     <progress value="0"
               style="width: 100px; float: right;"></progress>
@@ -73,7 +59,7 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
     <div><label>Title
         <input type="text"
                id="title"
-               value="<?php echo $title; ?>">
+               value="<?php echo $pageModel->titleHTML(); ?>">
     </label></div>
 
     <div style="padding: 0px 50px; font-size: 0.75em;">
@@ -97,27 +83,27 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
         </style>
         <table class="stubs"><tr>
             <td>Preferred URL:</td>
-            <td id="preferred-stub-view" class="stub"><?php echo $preferredStub; ?></td>
+            <td id="preferred-stub-view" class="stub"><?php echo $pageModel->preferredStub(); ?></td>
         </tr><tr>
             <td>Actual URL:</td>
-            <td id="stub-view" class="stub"><?php echo $stub; ?></td>
+            <td id="stub-view" class="stub"><?php echo $pageModel->stub(); ?></td>
         </td></table>
         <label style="float:right; margin-left: 20px;">
             <input type="checkbox"
                    id="stub-is-locked"
-                   <?php echo $stubIsLocked; ?>> Lock Stub
+                   <?php echo $pageModel->stubIsLocked(); ?>> Lock Stub
         </label>
         <label>Custom Stub Text
             <input type="text"
                    id="custom-page-stub-text"
-                   value="<?php echo $customPageStubText; ?>">
+                   value="<?php echo $customPageStubTextHTML; ?>">
         </label>
     </div>
 
     <div><label>Subtitle
         <input type="text"
                id="subtitle"
-               value="<?php echo $subtitle; ?>">
+               value="<?php echo $pageModel->subtitleHTML(); ?>">
     </label></div>
 
     <div><label>Content
@@ -150,7 +136,7 @@ $javascriptPublicationDate = isset($data->publicationDate) ? $data->publicationD
 var formManager = null;
 
 var currentUserId = <?php echo $currentUserId; ?>;
-var groupStub = '<?php echo $groupStub; ?>';
+var groupStub = '<?php echo $pageModel->groupStub(); ?>';
 var publicationDate = <?php echo $javascriptPublicationDate; ?>;
 
 /**
@@ -206,7 +192,7 @@ function handleIsPublishedChanged(sender)
 {
     if (sender.checked)
     {
-        if (publicationDate === null)
+        if (!publicationDate)
         {
             setPublicationDate(new Date().getTime());
         }

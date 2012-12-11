@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `ColbyPages`
     `groupId` BINARY(20),
     `stub` VARCHAR(100) NOT NULL,
     `titleHTML` VARCHAR(150) NOT NULL,
-    `subtitleHTML` VARCHAR(150),
+    `subtitleHTML` VARCHAR(150) NOT NULL,
     `searchText` LONGTEXT,
     `published` DATETIME,
     `publishedBy` BIGINT UNSIGNED,
