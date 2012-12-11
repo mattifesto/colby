@@ -52,7 +52,7 @@ function doRunUnitTests()
     beginAjax();
 
     xhr = new XMLHttpRequest();
-    xhr.open('POST', '/colby/test/ajax/run-unit-tests/', true);
+    xhr.open('POST', '/developer/test/ajax/run-unit-tests/', true);
     xhr.onload = handleAjaxResponse;
     xhr.send();
 }
