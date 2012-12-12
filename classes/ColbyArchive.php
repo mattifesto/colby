@@ -51,6 +51,27 @@ class ColbyArchive
     }
 
     /**
+     * This function is named "path" because it can return either a directory
+     * or a filename depending on the value of the $filename parameter.
+     *
+     * @return string
+     *
+     *  The absolute archive directory for this archive or an absolute
+     *  filename for a file in the archive directory.
+     */
+    public function path($filename = null)
+    {
+        if ($filename)
+        {
+            return COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}/{$filename}";
+        }
+        else
+        {
+            return COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}";
+        }
+    }
+
+    /**
      * The Unix timestamp when the archive was last modified.
      *
      *  @return int | null
@@ -101,8 +122,7 @@ class ColbyArchive
 
         // If an archive exists on the disk, load the data.
 
-        $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$archiveId}";
-        $absoluteArchiveFilename = "{$absoluteArchiveDirectory}/archive.data";
+        $absoluteArchiveFilename = $archive->path('archive.data');
 
         if (is_file($absoluteArchiveFilename))
         {
@@ -179,7 +199,7 @@ class ColbyArchive
 
         // NOTE: this function doesn't protect against multiple locks
 
-        $absoluteLockFilename = COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}/lock.data";
+        $absoluteLockFilename = $this->path('lock.data');
 
         $this->lockResource = fopen($absoluteLockFilename, 'w');
         flock($this->lockResource, $operation);
@@ -200,12 +220,11 @@ class ColbyArchive
      */
     public function save()
     {
-        $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}";
-        $absoluteArchiveFilename = "{$absoluteArchiveDirectory}/archive.data";
+        $absoluteArchiveFilename = $this->path('archive.data');
 
-        if (!file_exists($absoluteArchiveDirectory))
+        if (!file_exists($this->path()))
         {
-            mkdir($absoluteArchiveDirectory);
+            mkdir($this->path());
         }
 
         $this->lock(LOCK_EX);

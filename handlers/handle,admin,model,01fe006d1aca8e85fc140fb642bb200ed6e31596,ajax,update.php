@@ -26,13 +26,11 @@ $pageModel->setPublicationData($_POST['is-published'],
                                $_POST['publication-date']);
 
 $data->content = $_POST['content'];
-$data->contentHTML = ColbyConvert::textToFormattedContent($page->content);
+$data->contentHTML = ColbyConvert::textToFormattedContent($data->content);
 
 if (isset($_FILES['image']))
 {
-    $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$archiveId}";
-
-    $absoluteMasterImageFilename = ColbyImage::importUploadedImage('image', $absoluteArchiveDirectory);
+    $absoluteMasterImageFilename = ColbyImage::importUploadedImage('image', $archive->path());
 
     // Create an images sized for viewing in the post.
 
@@ -43,12 +41,12 @@ if (isset($_FILES['image']))
 
     // Create a thumbnail image.
 
-    $absoluteThumbnailImageFilename = ColbyImage::createImageByFitting($absoluteMasterImageFilename,
+    $absoluteThumbnailImageFilename = ColbyImage::createImageByFilling($absoluteMasterImageFilename,
                                                                        array(400, 400));
 
     // TODO: Either support png or force jpg.
 
-    rename($absoluteThumbnailImageFilename, "{$absoluteArchiveDirectory}/thumbnail.jpg");
+    rename($absoluteThumbnailImageFilename, $archive->path('thumbnail.jpg'));
 
     // Delete master image because we have no need for it.
 

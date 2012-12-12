@@ -1,7 +1,11 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Generic Document Editor',
-                                                  'Create and edit generic documents.',
+$modelId = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
+$modelDataFilename = "handle,admin,model,{$modelId}.data";
+$modelData = unserialize(file_get_contents(Colby::findHandler($modelDataFilename)));
+
+$page = ColbyOutputManager::beginVerifiedUserPage($modelData->nameHTML,
+                                                  $modelData->descriptionHTML,
                                                   'admin');
 
 $archiveId = isset($_GET['archive-id']) ? $_GET['archive-id'] : '';
@@ -19,7 +23,7 @@ if (empty($archiveId))
 
     header("Location: {$path}?{$queryString}");
 
-    return; // exit? do we need to cancel HTML output?
+    return;
 }
 
 $archive = ColbyArchive::open($archiveId);
@@ -33,7 +37,7 @@ if (!$pageModel->viewId())
 
 // mise en place
 
-$ajaxURL = COLBY_SITE_URL . '/admin/model/d74e2f3d347395acdb627e7c57516c3c4c94e988/ajax/update/';
+$ajaxURL = COLBY_SITE_URL . "/admin/model/{$modelId}/ajax/update/";
 
 $customPageStubTextHTML = ColbyConvert::textToHTML($pageModel->customPageStubText());
 $stubIsLocked = $pageModel->stubIsLocked() ? ' checked="checked"' : '';
