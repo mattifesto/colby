@@ -40,7 +40,7 @@ $archiveId = $archive->archiveId();
 
         ?>
 
-        <img src="<?php echo $absoluteImageURL; ?>" alt="" style="max-width: 200px; float: right;">
+        <img src="<?php echo $absoluteImageURL; ?>" alt="" style="max-width: 250px; float: right;">
 
         <?php
     }

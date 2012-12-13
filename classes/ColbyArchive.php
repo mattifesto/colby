@@ -94,10 +94,17 @@ class ColbyArchive
     /**
      * @param string $archiveId
      *
-     * @param string $hash
+     * @param bool $shouldCreateStorageNow
      *
-     *  The hash of the archive that the caller is currently working with.
-     *  This can be null if you don't have a hash or don't care.
+     *  If this parameter is true the storage area for the archive will be
+     *  created before this method returns. This would be desireable if the
+     *  caller was preparing to save files into the archive before saving
+     *  the archive data and needs to be sure the storage area exists.
+     *
+     *  If this parameter is false, the default value, then the storage area for
+     *  the archive won't be created until the archive is first saved. If the
+     *  archive is never saved, the storage area won't be created at all and
+     *  opening the archive will have no permanent side effect.
      *
      * @return ColbyArchive | bool
      *
@@ -105,7 +112,7 @@ class ColbyArchive
      *  or if the archive exists on disk. The function returns false
      *  if the hash doesn't match last saved hash.
      */
-    public static function open($archiveId, $hash = null)
+    public static function open($archiveId, $shouldCreateStorageNow = false)
     {
         if (!preg_match('/^[0-9a-f]{40}$/', $archiveId))
         {
@@ -141,25 +148,18 @@ class ColbyArchive
             {
                 throw new RuntimeException('Data Consistency Error: The archive id stored inside the archive doesn\'t match the external archive id.');
             }
-
-            if ($hash && $archive->hash() != $hash)
-            {
-                return false;
-            }
-
-            return $archive;
         }
-        else
+        else if ($shouldCreateStorageNow)
         {
-            if ($hash)
+            $absoluteArchiveDirectory = $archive->path();
+
+            if (!is_dir($absoluteArchiveDirectory))
             {
-                // If the caller passed in a hash but the archive file doesn't exist the caller is clearly making some sort of a mistake. The hash they passed in doesn't match 'no hash'.
-
-                return false;
+                mkdir($absoluteArchiveDirectory);
             }
-
-            return $archive;
         }
+
+        return $archive;
     }
 
     /**

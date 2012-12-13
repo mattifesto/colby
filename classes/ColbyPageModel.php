@@ -422,7 +422,7 @@ EOT;
         // there have been other places where I've wanted it. One such place is for use as a
         // fallback stub. Weigh the pros and cons of including the archive id in this class.
 
-        if (!$this->data->pageStub)
+        if (!isset($this->data->pageStub))
         {
             $this->calculatePageStub();
         }

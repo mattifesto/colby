@@ -4,7 +4,7 @@ Colby::useImage();
 
 $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
-$archive = ColbyArchive::open($_POST['archive-id']);
+$archive = ColbyArchive::open($_POST['archive-id'], true);
 $data = $archive->data();
 $pageModel = ColbyPageModel::modelWithData($data);
 
@@ -35,7 +35,7 @@ if (isset($_FILES['image']))
     // Create an images sized for viewing in the post.
 
     $absoluteResizedImageFilename = ColbyImage::createImageByFitting($absoluteMasterImageFilename,
-                                                                     array(400, PHP_INT_MAX));
+                                                                     array(500, PHP_INT_MAX));
 
     $data->imageFilename = basename($absoluteResizedImageFilename);
 
