@@ -15,6 +15,7 @@ $page = ColbyOutputManager::beginPage('Blog', 'Blog');
         article
         {
             margin-bottom: 20px;
+            overflow: hidden; /* contains floated thumbnail */
             clear: both;
         }
         article > h1

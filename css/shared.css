@@ -5,21 +5,6 @@ html
     font-family: "Lucida Grande", Tahoma, Verdana, Arial, sans-serif;
 }
 
-body
-{
-    margin: 50px 20px 20px;
-}
-
-body > nav /* TODO: nav is admin only, I think */
-{
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    background-color: LightGray;
-    border-bottom: 2px solid DarkGray;
-}
-
 button,
 input[type="button"],
 input[type="submit"],
