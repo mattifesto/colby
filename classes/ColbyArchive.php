@@ -102,27 +102,6 @@ class ColbyArchive
     }
 
     /**
-     * This function is named "path" because it can return either a directory
-     * or a filename depending on the value of the $filename parameter.
-     *
-     * @return string
-     *
-     *  The absolute archive directory for this archive or an absolute
-     *  filename for a file in the archive directory.
-     */
-    public function path($filename = null)
-    {
-        if ($filename)
-        {
-            return COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}/{$filename}";
-        }
-        else
-        {
-            return COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}";
-        }
-    }
-
-    /**
      * The Unix timestamp when the archive was last modified.
      *
      *  @return int | null
@@ -211,6 +190,27 @@ class ColbyArchive
         }
 
         return $archive;
+    }
+
+    /**
+     * This function is named "path" because it can return either a directory
+     * or a filename depending on the value of the $filename parameter.
+     *
+     * @return string
+     *
+     *  The absolute archive directory for this archive or an absolute
+     *  filename for a file in the archive directory.
+     */
+    public function path($filename = null)
+    {
+        if ($filename)
+        {
+            return COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}/{$filename}";
+        }
+        else
+        {
+            return COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}";
+        }
     }
 
     /**
