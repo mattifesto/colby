@@ -17,6 +17,8 @@ input[type="reset"]
 {
     margin-top: 1.0em;
     margin-bottom: 1.0em;
+    text-align: justify;
+    line-height: 1.6;
 }
 
 .formatted-content :first-child

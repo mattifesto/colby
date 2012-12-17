@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Blog post
+ * Title, subtitle, formatted content, medium image floated right
+ * More appropriate for vertical images
+ */
+
 if (isset($archive))
 {
     $page = ColbyOutputManager::beginPage($archive->data()->titleHTML,
@@ -24,30 +30,38 @@ else
 }
 
 $data = $archive->data();
-$archiveId = $archive->archiveId();
+$model = ColbyPageModel::modelWithData($data);
+$publicationTimestamp = $model->isPublished() ? $model->publicationDate() * 1000 : '';
+$publicationText = $model->isPublished() ? '' : 'not published';
 
 ?>
 
 <article style="width: 600px; margin: 0px auto;">
-    <h1><?php echo $data->titleHTML; ?></h1>
-    <h2><?php echo $data->subtitleHTML; ?></h2>
+    <h1><?php echo $model->titleHTML(); ?></h1>
+    <h2><?php echo $model->subtitleHTML(); ?></h2>
+    <div style="margin-bottom: 20px;">Posted:
+        <span class="time"
+              data-timestamp="<?php echo $publicationTimestamp; ?>">
+            <?php echo $publicationText; ?>
+        </span>
+    </div>
 
     <?php
 
-    if ($data->imageFilename)
+    if (isset($data->imageFilename))
     {
-        $absoluteImageURL = COLBY_DATA_URL . "/{$archiveId}/{$data->imageFilename}";
+        $absoluteImageURL = $archive->url($data->imageFilename);
 
         ?>
 
-        <img src="<?php echo $absoluteImageURL; ?>" alt="" style="max-width: 250px; float: right;">
+        <img src="<?php echo $absoluteImageURL; ?>" alt="" style="max-width: 250px; margin: 0px 0px 10px 20px; float: right;">
 
         <?php
     }
 
     ?>
 
-    <div class="formatted-content"><?php echo $archive->data()->contentHTML; ?></div>
+    <div class="formatted-content"><?php echo $data->contentHTML; ?></div>
 </article>
 
 <?php

@@ -278,4 +278,22 @@ class ColbyArchive
 
         $this->lockResource = null;
     }
+
+    /**
+     * @return string
+     *
+     *  The absolute archive URL for this archive or an absolute URL for a file
+     *  in the archive directory.
+     */
+    public function url($filename = null)
+    {
+        if ($filename)
+        {
+            return COLBY_DATA_URL . "/{$this->data->archiveId}/{$filename}";
+        }
+        else
+        {
+            return COLBY_DATA_URL . "/{$this->data->archiveId}";
+        }
+    }
 }
