@@ -67,6 +67,41 @@ class ColbyArchive
     }
 
     /**
+     * Returns the hash value for the data the last time it was saved. This
+     * method does not recompute the hash if the data has changed.
+     *
+     * @return string
+     */
+    public function hash()
+    {
+        return isset($this->attributes->hash) ? $this->attributes->hash : null;
+    }
+
+    /**
+     * @param int $operation Either LOCK_SH or LOCK_EX. Use unlock() function instead of passing LOCK_UN.
+     *
+     * @return void
+     */
+    private function lock($operation)
+    {
+        // TODO: push an error and exception handler here
+        //       to unlock and release file resource in case of an error
+
+        // NOTE: flock is a cooperative (advisory) locking mechanism
+        //       it only locks out others if they also use flock
+        //       which, in this case, is enough
+        //       things like file_get_contents or a shell on the webserver
+        //       do not participate in flock locks
+
+        // NOTE: this function doesn't protect against multiple locks
+
+        $absoluteLockFilename = $this->path('lock.data');
+
+        $this->lockResource = fopen($absoluteLockFilename, 'w');
+        flock($this->lockResource, $operation);
+    }
+
+    /**
      * This function is named "path" because it can return either a directory
      * or a filename depending on the value of the $filename parameter.
      *
@@ -176,41 +211,6 @@ class ColbyArchive
         }
 
         return $archive;
-    }
-
-    /**
-     * Returns the hash value for the data the last time it was saved. This
-     * method does not recompute the hash if the data has changed.
-     *
-     * @return string
-     */
-    public function hash()
-    {
-        return isset($this->attributes->hash) ? $this->attributes->hash : null;
-    }
-
-    /**
-     * @param int $operation Either LOCK_SH or LOCK_EX. Use unlock() function instead of passing LOCK_UN.
-     *
-     * @return void
-     */
-    private function lock($operation)
-    {
-        // TODO: push an error and exception handler here
-        //       to unlock and release file resource in case of an error
-
-        // NOTE: flock is a cooperative (advisory) locking mechanism
-        //       it only locks out others if they also use flock
-        //       which, in this case, is enough
-        //       things like file_get_contents or a shell on the webserver
-        //       do not participate in flock locks
-
-        // NOTE: this function doesn't protect against multiple locks
-
-        $absoluteLockFilename = $this->path('lock.data');
-
-        $this->lockResource = fopen($absoluteLockFilename, 'w');
-        flock($this->lockResource, $operation);
     }
 
     /**
