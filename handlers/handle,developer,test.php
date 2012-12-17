@@ -32,8 +32,11 @@ else
 {
     ?>
 
-    <button onclick="doRunUnitTests();">Run Unit Tests</button>
+    <p>This file was loaded: <span class="time" data-timestamp="<?php echo time() * 1000; ?>"></span>
+    <p><button onclick="doRunUnitTests();">Run unit tests</button>
     <progress id="ajax-communication" value="0"></progress>
+
+    <p><button onclick="doRunJavascriptUnitTests();">Run Javascript unit tests</button>
 
     <?php
 }
@@ -46,6 +49,100 @@ else
 "use strict";
 
 var xhr;
+
+function doRunJavascriptUnitTests()
+{
+    var wasSuccessful = true;
+    var now = new Date('2012/12/16 10:51 pm');
+    var date = now;
+    var tests = new Array();
+
+    // Setup tests
+
+    tests.push({
+        'date' : now,
+        'string' : '0 seconds ago'
+    });
+
+    tests.push({
+        'date' : new Date(now.getTime() - 1000),
+        'string' : '1 seconds ago'
+    });
+
+    tests.push({
+        'date' : new Date(now.getTime() - (1000 * 59)),
+        'string' : '59 seconds ago'
+    });
+
+    tests.push({
+        'date' : new Date(now.getTime() - (1000 * 60)),
+        'string' : '1 minute ago'
+    });
+
+    tests.push({
+        'date' : new Date(now.getTime() - (1000 * 60 * 2)),
+        'string' : '2 minutes ago'
+    });
+
+    tests.push({
+        'date' : new Date(now.getTime() - (1000 * 60 * 59)),
+        'string' : '59 minutes ago'
+    });
+
+    tests.push({
+        'date' : new Date('2012/12/16 9:51 pm'),
+        'string' : 'Today at 9:51 PM'
+    });
+
+    tests.push({
+        'date' : new Date('2012/12/16 12:00 am'),
+        'string' : 'Today at 12:00 AM'
+    });
+
+    tests.push({
+        'date' : new Date('2012/12/15 11:59 pm'),
+        'string' : 'Yesterday at 11:59 PM'
+    });
+
+    tests.push({
+        'date' : new Date('2012/12/15 12:00 am'),
+        'string' : 'Yesterday at 12:00 AM'
+    });
+
+    tests.push({
+        'date' : new Date('2012/12/14 1:53 pm'),
+        'string' : '2012/12/14 1:53 PM'
+    });
+
+    // Run tests
+
+    var countOfTests = tests.length;
+
+    for (var i = 0; i < countOfTests; i++)
+    {
+        var string = Colby.dateToRelativeLocaleString(tests[i].date, now);
+
+        if (string != tests[i].string)
+        {
+            alert('test failed\nexpected: "' + tests[i].string + '"\nreceived: "' + string + '"');
+
+            wasSuccessful = false;
+
+            break;
+        }
+    }
+
+    // Report results
+
+    if (wasSuccessful)
+    {
+        alert('Javascript unit tests passed.');
+    }
+    else
+    {
+        alert('Javascript unit tests failed.');
+    }
+}
 
 function doRunUnitTests()
 {
