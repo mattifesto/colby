@@ -39,6 +39,14 @@ class ColbyArchive
     }
 
     /**
+     * @return stdClass
+     */
+    public function data()
+    {
+        return $this->data;
+    }
+
+    /**
      * @return void
      */
     public static function delete($archiveId)
@@ -203,14 +211,6 @@ class ColbyArchive
 
         $this->lockResource = fopen($absoluteLockFilename, 'w');
         flock($this->lockResource, $operation);
-    }
-
-    /**
-     * @return stdClass
-     */
-    public function data()
-    {
-        return $this->data;
     }
 
     /**
