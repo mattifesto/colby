@@ -28,5 +28,19 @@ $descriptionHTML = ColbyConvert::textToHTML($this->description);
             <ul class="horizontal" style="padding: 5px;">
                 <li><a href="<?php echo COLBY_SITE_URL; ?>">home</a></li>
                 <li style="float: right;"><?php echo ColbyUser::loginHyperlink(); ?></li>
+
+                <?php
+
+                if ($userRow = ColbyUser::userRow())
+                {
+                    ?>
+
+                    <li style="float: right;"><?php echo $userRow->facebookName; ?></li>
+
+                    <?php
+                }
+
+                ?>
+
             </ul>
         </nav>

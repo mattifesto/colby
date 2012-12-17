@@ -13,8 +13,18 @@ input[type="reset"]
     padding: 2px 6px 3px;
 }
 
-p /* TODO: should this be outside of formatted-content? */
+.formatted-content p
 {
     margin-top: 1.0em;
     margin-bottom: 1.0em;
+}
+
+.formatted-content :first-child
+{
+    margin-top: 0px;
+}
+
+.formatted-content :last-child
+{
+    margin-bottom: 0px;
 }

@@ -2,15 +2,6 @@
 
 $page = ColbyOutputManager::beginVerifiedUserPage('Users', 'Manage users.', 'admin');
 
-$sql = <<< END
-SELECT
-    *
-FROM
-    `ColbyUsers`
-ORDER BY
-    `facebookLastName`
-END;
-
 ?>
 
 <script>
@@ -64,9 +55,39 @@ function update_user_verification(id, hasBeenVerified)
 
 </script>
 
+<?php
+$sql = <<<END
+SELECT
+    USER() as `user`,
+    CURRENT_USER() as `currentUser`
+END;
+
+$result = Colby::query($sql);
+
+$row = $result->fetch_object();
+
+$result->free();
+
+?>
+
+<table><thead>
+<tr><th>user()</th><th>current_user()</th></tr>
+</thead><tbody>
+<tr><td><?php echo $row->user; ?></td><td><?php echo $row->currentUser; ?></td></tr>
+</tbody></table>
+
 <table><tbody>
 
     <?php
+
+    $sql = <<<END
+SELECT
+    *
+FROM
+    `ColbyUsers`
+ORDER BY
+    `facebookLastName`
+END;
 
     $result = Colby::query($sql);
 
