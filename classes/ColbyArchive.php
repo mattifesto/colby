@@ -11,6 +11,14 @@ class ColbyArchive
     protected $data;
 
     /**
+     * @return string
+     */
+    public function archiveId()
+    {
+        return $this->data->archiveId;
+    }
+
+    /**
      * The Unix timestamp when the archive was first saved.
      *
      *  @return int | null
@@ -160,14 +168,6 @@ class ColbyArchive
         }
 
         return $archive;
-    }
-
-    /**
-     * @return string
-     */
-    public function archiveId()
-    {
-        return $this->data->archiveId;
     }
 
     /**
