@@ -42,5 +42,10 @@ $descriptionHTML = ColbyConvert::textToHTML($this->description);
 
                 ?>
 
+                <li style="float: right;">
+                    <form action="<?php echo COLBY_SITE_URL . '/search/'; ?>">
+                        <input type="text" name="query" placeholder="Search">
+                    </form>
+                </li>
             </ul>
         </nav>
