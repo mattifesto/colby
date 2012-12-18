@@ -28,6 +28,8 @@ $model->setPublicationData($_POST['is-published'],
 $data->content = $_POST['content'];
 $data->contentHTML = ColbyConvert::textToFormattedContent($data->content);
 
+$model->setContentSearchText($data->content);
+
 if (isset($_FILES['image']))
 {
     $absoluteMasterImageFilename = ColbyImage::importUploadedImage('image', $archive->path());

@@ -101,6 +101,24 @@ EOT;
     /**
      * @return string | null
      */
+    public function contentSearchText()
+    {
+        return isset($this->contentSearchText) ? $this->contentSearchText : null;
+    }
+
+    /**
+     * @return void
+     */
+    public function setContentSearchText($text)
+    {
+        // Content search text is not saved to the archive so it is not set on the data object.
+
+        $this->contentSearchText = $text ? strval($text) : null;
+    }
+
+    /**
+     * @return string | null
+     */
     public function customPageStubText()
     {
         return isset($this->data->customPageStubText) ? $this->data->customPageStubText : null;
@@ -332,6 +350,42 @@ EOT;
     /**
      * @return string
      */
+    private function searchText()
+    {
+        // Discussion
+        //
+        // Dates: I'm not including dates right now in search terms. It might
+        // be a nice feature to include the work 'August' in items with that
+        // were published in August but what if the date is irrelevant for
+        // searches, as it is with pages that don't display a published date.
+        // There may be certain specific models that need to include dates
+        // but generically it doesn't seem like a good idea.
+        //
+        // Published By: This seems more likely to be desireable except
+        // again in the case of pages where the person who published it is
+        // not display to the user. I'm leaving this out for now but blog
+        // posts may wish to include it. It may be the type of thing that should
+        // always be included only if the specific model deems it necessary.
+
+        $searchableData = array();
+
+        // In order of statistically most likely to match any given search query
+
+        $searchableData[] = $this->title();
+        $searchableData[] = $this->subtitle();
+        $searchableData[] = $this->contentSearchText();
+        $searchableData[] = $this->stub();
+        $searchableData[] = $this->data->archiveId;
+        $searchableData[] = $this->groupId();
+        $searchableData[] = $this->modelId();
+        $searchableData[] = $this->viewId();
+
+        return implode(' ', $searchableData);
+    }
+
+    /**
+     * @return string
+     */
     public function stub()
     {
         $groupStub = $this->groupStub();
@@ -469,6 +523,9 @@ EOT;
         $sqlSubtitleHTML = Colby::mysqli()->escape_string($this->subtitleHTML());
         $sqlSubtitleHTML = "'{$sqlSubtitleHTML}'";
 
+        $sqlSearchText = Colby::mysqli()->escape_string($this->searchText());
+        $sqlSearchText = "'{$sqlSearchText}'";
+
         if ($this->isPublished())
         {
              $sqlPublished = ColbyConvert::timestampToSQLDateTime($this->publicationDate());
@@ -498,6 +555,7 @@ INSERT INTO `ColbyPages`
     `stub`,
     `titleHTML`,
     `subtitleHTML`,
+    `searchText`,
     `published`,
     `publishedBy`
 )
@@ -510,6 +568,7 @@ VALUES
     {$sqlStub},
     {$sqlTitleHTML},
     {$sqlSubtitleHTML},
+    {$sqlSearchText},
     {$sqlPublished},
     {$sqlPublishedBy}
 )
@@ -517,6 +576,7 @@ ON DUPLICATE KEY UPDATE
     `stub` = {$sqlStub},
     `titleHTML` = {$sqlTitleHTML},
     `subtitleHTML` = {$sqlSubtitleHTML},
+    `searchText` = {$sqlSearchText},
     `published` = {$sqlPublished},
     `publishedBy` = {$sqlPublishedBy}
 EOT;

@@ -22,8 +22,8 @@ if (empty($archiveId))
     $queryString = "archive-id={$archiveId}&{$queryString}";
 
     header("Location: {$path}?{$queryString}");
-
-    return;
+    ob_end_clean();
+    exit;
 }
 
 $archive = ColbyArchive::open($archiveId);
