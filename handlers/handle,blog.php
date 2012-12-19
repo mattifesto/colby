@@ -8,9 +8,9 @@ $page = ColbyOutputManager::beginPage('Blog', 'Blog');
 
 ?>
 
-<h1>Blog</h1>
+<h1 style="text-align: center;">Blog</h1>
 
-<section>
+<section style="width: 800px; margin: 50px auto 0px;">
     <style>
         article
         {
@@ -28,12 +28,19 @@ $page = ColbyOutputManager::beginPage('Blog', 'Blog');
             font-size: 1.0em;
         }
 
+        div.img
+        {
+            width: 100px;
+            height: 100px;
+            margin-right: 10px;
+            float: left;
+            background-color: #fffff8;
+        }
+
         img.thumbnail
         {
             max-width: 100px;
             max-height: 100px;
-            margin-right: 10px;
-            float: left;
         }
     </style>
 
@@ -67,20 +74,22 @@ EOT;
             ?>
 
             <article>
-
-                <?php
-
-                if (file_exists($absoluteThumbnailFilename))
-                {
-                    ?>
-
-                    <img src="<?php echo $absoluteThumbnailURL; ?>" alt="" class="thumbnail">
+                <div class="img">
 
                     <?php
-                }
 
-                ?>
+                    if (file_exists($absoluteThumbnailFilename))
+                    {
+                        ?>
 
+                        <img src="<?php echo $absoluteThumbnailURL; ?>" alt="" class="thumbnail">
+
+                        <?php
+                    }
+
+                    ?>
+
+                </div>
                 <h1><a href="<?php echo $url; ?>"><?php echo $row->titleHTML; ?></a></h1>
                 <h2><?php echo $row->subtitleHTML; ?></h2>
             </article>
