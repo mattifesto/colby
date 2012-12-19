@@ -10,7 +10,7 @@ $page = ColbyOutputManager::beginPage('Blog', 'Blog');
 
 <h1>Blog</h1>
 
-<section id="blog-posts">
+<section>
     <style>
         article
         {
