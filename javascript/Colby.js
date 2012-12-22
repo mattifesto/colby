@@ -164,4 +164,7 @@ Colby.updateTimes = function()
     }
 };
 
-document.addEventListener('DOMContentLoaded', Colby.handleContentLoaded, false);
+if (document.addEventListener) // disable for IE8 and earlier
+{
+    document.addEventListener('DOMContentLoaded', Colby.handleContentLoaded, false);
+}

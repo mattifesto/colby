@@ -166,6 +166,8 @@ EOT;
      * Creates a hyperlink for either logging in or out depending on whether
      * the user is currently logged in or out.
      *
+     * @param string $redirectURL
+     *
      * @return string
      *  a string containg an HTML anchor element
      *  <a href="...">log in</a>
@@ -179,20 +181,38 @@ EOT;
         else if (ColbyUser::currentUserId())
         {
             $url = ColbyUser::logoutURL($redirectURL);
+            $url = ColbyConvert::textToHTML($url);
 
             return "<a href=\"{$url}\">log out</a>";
         }
         else
         {
             $url = ColbyUser::loginURL($redirectURL);
+            $url = ColbyConvert::textToHTML($url);
 
             return "<a href=\"{$url}\">log in</a>";
         }
     }
 
-    ///
-    ///
-    ///
+    /**
+     * @param string $redirect
+     *  The URL to go to after logging out.
+     *
+     *  This URL should not be escaped for use in HTML.
+     *
+     *  The URL can be URL encoded or not.
+     *      (If a case is found where it needs to be one or the other,
+     *       update this documentation.)
+     *
+     *  If no URL is provided, $_SERVER['REQUEST_URI'] will be used.
+     *
+     * @return string
+     *  The URL to visit to log out.
+     *
+     *  This URL will be properly URL encoded.
+     *
+     *  This URL will not be escaped for use in HTML.
+     */
     public static function loginURL($redirectURL = null)
     {
         if (!$redirectURL)
@@ -225,9 +245,25 @@ EOT;
         setcookie(COLBY_USER_COOKIE, '', $time, '/');
     }
 
-    ///
-    ///
-    ///
+    /**
+     * @param string $redirect
+     *  The URL to go to after logging out.
+     *
+     *  This URL should not be escaped for use in HTML.
+     *
+     *  The URL can be URL encoded or not.
+     *      (If a case is found where it needs to be one or the other,
+     *       update this documentation.)
+     *
+     *  If no URL is provided, $_SERVER['REQUEST_URI'] will be used.
+     *
+     * @return string
+     *  The URL to visit to log out.
+     *
+     *  This URL will be properly URL encoded.
+     *
+     *  This URL will not be escaped for use in HTML.
+     */
     public static function logoutURL($redirectURL = null)
     {
         if (!$redirectURL)
