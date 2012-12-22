@@ -25,9 +25,20 @@ else
 
 $data = $archive->data();
 $model = ColbyPageModel::modelWithData($data);
-$publicationJavascriptTimestamp = $model->isPublished() ? $model->publicationDate() * 1000 : '';
+$javascriptPublicationTimestamp = $model->isPublished() ? $model->publicationDate() * 1000 : '';
 $publicationDateTime = $model->isPublished() ? date(DateTime::RFC3339, $model->publicationDate()) : '';
 $publicationDateText = $model->isPublished() ? date('Y/m/d g:i A T', $model->publicationDate()) : 'not published';
+
+$publishedBy = 'not published';
+
+if ($model->isPublished())
+{
+    $row = ColbyUser::userRow($model->publishedBy());
+
+    $publishedBy = $row->facebookName;
+}
+
+$borderColor = 'rgba(128, 0, 128, 0.3)';
 
 ?>
 
@@ -51,7 +62,6 @@ $publicationDateText = $model->isPublished() ? date('Y/m/d g:i A T', $model->pub
 
         #document h1
         {
-            margin-bottom: 1.2em;
             color: #222222;
             font-family: 'Open Sans Condensed';
             font-size: 2.0em;
@@ -60,8 +70,11 @@ $publicationDateText = $model->isPublished() ? date('Y/m/d g:i A T', $model->pub
 
         #document h2
         {
-            padding: 0px 100px;
-            margin-bottom: 50px;
+            padding: 10px 100px;
+            border-color: <?php echo $borderColor; ?>;
+            border-style: solid;
+            border-width: 1px 0px 1px;
+            margin: 2.0em 0.0em 4.0em;
             color: purple;
             font-family: 'Gentium Basic', serif;
             font-size: 1.0em;
@@ -70,10 +83,24 @@ $publicationDateText = $model->isPublished() ? date('Y/m/d g:i A T', $model->pub
             text-align: center;
         }
 
-        #document time
+        #published
         {
-            margin-bottom: 20px;
-            float: right;
+            width: 150px;
+            padding-right: 10px;
+            padding-bottom: 30px;
+            border-right: 1px solid <?php echo $borderColor; ?>;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            float: left;
+            color: purple;
+            font-family: 'Gentium Basic', serif;
+            font-size: 0.9em;
+            line-height: 1.3;
+        }
+
+        #published p
+        {
+            margin: 1.0em 0.0em;
         }
 
         div.formatted-content
@@ -83,16 +110,20 @@ $publicationDateText = $model->isPublished() ? date('Y/m/d g:i A T', $model->pub
         }
     </style>
 
-    <time datetime="<?php echo $publicationDateTime; ?>">Posted:
-        <span class="time"
-              data-timestamp="<?php echo $publicationJavascriptTimestamp; ?>">
-            <?php echo $publicationDateText; ?>
-        </span>
-    </time>
-
     <h1><?php echo $archive->data()->titleHTML; ?></h1>
 
     <h2><?php echo $archive->data()->subtitleHTML; ?></h2>
+
+    <div id="published">
+        <p>Published:<br>
+            <time data-timestamp="<?php echo $javascriptPublicationTimestamp; ?>"
+                  datetime="<?php echo $publicationDateTime; ?>"
+                  class="time">
+                    <?php echo $publicationDateText; ?>
+            </time>
+        <p>By:<br>
+            <?php echo $publishedBy; ?>
+    </div>
 
     <div class="formatted-content"><?php echo $archive->data()->contentHTML; ?></div>
 
