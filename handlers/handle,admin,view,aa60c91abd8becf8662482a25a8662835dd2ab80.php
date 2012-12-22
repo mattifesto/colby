@@ -70,11 +70,11 @@ $borderColor = 'rgba(128, 0, 128, 0.3)';
 
         #document h2
         {
-            padding: 10px 100px;
+            padding: 0.6em 2.0em;
             border-color: <?php echo $borderColor; ?>;
             border-style: solid;
             border-width: 1px 0px 1px;
-            margin: 2.0em 0.0em 4.0em;
+            margin: 2.0em 4.0em 4.0em;
             color: purple;
             font-family: 'Gentium Basic', serif;
             font-size: 1.0em;
