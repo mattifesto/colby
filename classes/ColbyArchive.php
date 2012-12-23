@@ -269,6 +269,58 @@ class ColbyArchive
     }
 
     /**
+     * @return string
+     *
+     *  This method returns the string that was set for the name.
+     */
+    public function stringForName($name)
+    {
+        return isset($this->data->$name) ? $this->data->$name : null;
+    }
+
+    /**
+     * @return string
+     *
+     *  This method returns an HTML escaped version of the string that was set
+     *  for the name.
+     */
+    public function stringHTMLForName($name)
+    {
+        $nameHTML = "{$name}HTML";
+
+        return isset($this->data->$nameHTML) ? $this->data->$nameHTML : null;
+    }
+
+    /**
+     * This method sets a string value for the given name.
+     *
+     * @param bool $shouldCacheHTML
+     *
+     *  This parameter specifies whether an HTML escaped version of the string
+     *  should be cached and saved with the archive.
+     *
+     *  If $shouldCacheHTML is true, this method will set values for two names:
+     *  "{$name}" and "{$name}HTML".
+     *
+     * @return void
+     */
+    public function setStringForName($string, $name, $shouldCacheHTML = true)
+    {
+        $this->data->$name = strval($string);
+
+        $htmlName = "{$name}HTML";
+
+        if ($shouldCacheHTML)
+        {
+            $this->data->$htmlName = ColbyConvert::textToHTML($this->data->$name);
+        }
+        else if (isset($this->data->$htmlName))
+        {
+            unset($this->data->$htmlName);
+        }
+    }
+
+    /**
      * @return void
      */
     private function unlock()

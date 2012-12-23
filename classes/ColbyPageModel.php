@@ -461,15 +461,6 @@ EOT;
     /**
      * @return void
      */
-    public function setTitle($title)
-    {
-        $this->data->title = $title ? strval($title) : '';
-        $this->data->titleHTML = ColbyConvert::textToHTML($this->data->title);
-    }
-
-    /**
-     * @return void
-     */
     public function updateDatabase()
     {
         // TODO: Although it's redundant to duplicate the archive id inside the file itself
