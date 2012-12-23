@@ -2,8 +2,8 @@
 
 if (isset($archive))
 {
-    $page = ColbyOutputManager::beginPage($archive->data()->titleHTML,
-                                          $archive->data()->subtitleHTML);
+    $page = ColbyOutputManager::beginPage($archive->valueForKey('titleHTML'),
+                                          $archive->valueForKey('subtitleHTML'));
 }
 else
 {
@@ -19,21 +19,22 @@ else
 
     $archive = ColbyArchive::open($_GET['archive-id']);
 
-    $page = ColbyOutputManager::beginVerifiedUserPage($archive->data()->titleHTML,
-                                                      $archive->data()->subtitleHTML);
+    $page = ColbyOutputManager::beginVerifiedUserPage($archive->valueForKey('titleHTML'),
+                                                      $archive->valueForKey('subtitleHTML'));
 }
 
-$data = $archive->data();
-$model = ColbyPageModel::modelWithData($data);
-$javascriptPublicationTimestamp = $model->isPublished() ? $model->publicationDate() * 1000 : '';
-$publicationDateTime = $model->isPublished() ? date(DateTime::RFC3339, $model->publicationDate()) : '';
-$publicationDateText = $model->isPublished() ? date('Y/m/d g:i A T', $model->publicationDate()) : 'not published';
+$isPublished = $archive->valueForKey('isPublished');
+$publicationDate = $archive->valueForKey('publicationDate');
+
+$javascriptPublicationTimestamp = $isPublished ? $publicationDate * 1000 : '';
+$publicationDateTime = $isPublished ? date(DateTime::RFC3339, $publicationDate) : '';
+$publicationDateText = $isPublished ? date('Y/m/d g:i A T', $publicationDate) : 'not published';
 
 $publishedBy = 'not published';
 
-if ($model->isPublished())
+if ($isPublished)
 {
-    $row = ColbyUser::userRow($model->publishedBy());
+    $row = ColbyUser::userRow($archive->valueForKey('publishedBy'));
 
     $publishedBy = $row->facebookName;
 }
@@ -110,9 +111,9 @@ $borderColor = 'rgba(128, 0, 128, 0.3)';
         }
     </style>
 
-    <h1><?php echo $archive->data()->titleHTML; ?></h1>
+    <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
 
-    <h2><?php echo $archive->data()->subtitleHTML; ?></h2>
+    <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
 
     <div id="published">
         <p>Published:<br>
@@ -125,7 +126,7 @@ $borderColor = 'rgba(128, 0, 128, 0.3)';
             <?php echo $publishedBy; ?>
     </div>
 
-    <div class="formatted-content"><?php echo $archive->data()->contentHTML; ?></div>
+    <div class="formatted-content"><?php echo $archive->valueForKey('contentHTML'); ?></div>
 
 </section>
 <?php

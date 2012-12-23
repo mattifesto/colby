@@ -11,7 +11,7 @@ if (!$model->viewId())
     $model->setViewId($_POST['view-id']);
 }
 
-$archive->setStringForName($_POST['title'], 'title');
+$archive->setStringValueForKey($_POST['title'], 'title');
 
 $model->setSubtitle($_POST['subtitle']);
 

@@ -8,8 +8,8 @@
 
 if (isset($archive))
 {
-    $page = ColbyOutputManager::beginPage($archive->data()->titleHTML,
-                                          $archive->data()->subtitleHTML);
+    $page = ColbyOutputManager::beginPage($archive->valueForKey('titleHTML'),
+                                          $archive->valueForKey('subtitleHTML'));
 }
 else
 {
@@ -25,20 +25,18 @@ else
 
     $archive = ColbyArchive::open($_GET['archive-id']);
 
-    $page = ColbyOutputManager::beginVerifiedUserPage($archive->data()->titleHTML,
-                                                      $archive->data()->subtitleHTML);
+    $page = ColbyOutputManager::beginVerifiedUserPage($archive->valueForKey('titleHTML'),
+                                                      $archive->valueForKey('subtitleHTML'));
 }
 
-$data = $archive->data();
-$model = ColbyPageModel::modelWithData($data);
-$publicationTimestamp = $model->isPublished() ? $model->publicationDate() * 1000 : '';
-$publicationText = $model->isPublished() ? '' : 'not published';
+$publicationTimestamp = $archive->valueForKey('isPublished') ? $archive->valueForKey('publicationDate') * 1000 : '';
+$publicationText = $archive->valueForKey('isPublished') ? '' : 'not published';
 
 ?>
 
 <article style="width: 600px; margin: 0px auto;">
-    <h1><?php echo $model->titleHTML(); ?></h1>
-    <h2><?php echo $model->subtitleHTML(); ?></h2>
+    <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
+    <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
     <div style="margin-bottom: 20px;">Posted:
         <span class="time"
               data-timestamp="<?php echo $publicationTimestamp; ?>">
@@ -48,9 +46,9 @@ $publicationText = $model->isPublished() ? '' : 'not published';
 
     <?php
 
-    if (isset($data->imageFilename))
+    if ($archive->valueForKey('imageFilename'))
     {
-        $absoluteImageURL = $archive->url($data->imageFilename);
+        $absoluteImageURL = $archive->url($archive->valueForKey('imageFilename'));
 
         ?>
 
@@ -61,7 +59,7 @@ $publicationText = $model->isPublished() ? '' : 'not published';
 
     ?>
 
-    <div class="formatted-content"><?php echo $data->contentHTML; ?></div>
+    <div class="formatted-content"><?php echo $archive->valueForKey('contentHTML'); ?></div>
 </article>
 
 <?php

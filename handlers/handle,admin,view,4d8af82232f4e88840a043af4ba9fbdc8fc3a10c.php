@@ -25,10 +25,10 @@ else
 
 ?>
 
-<h1><?php echo $archive->data()->titleHTML; ?></h1>
-<h2><?php echo $archive->data()->subtitleHTML; ?></h2>
+<h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
+<h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
 
-<div class="formatted-content"><?php echo $archive->data()->contentHTML; ?></div>
+<div class="formatted-content"><?php echo $archive->valueForKey('contentHTML'); ?></div>
 
 <?php
 

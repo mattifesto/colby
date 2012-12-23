@@ -269,54 +269,31 @@ class ColbyArchive
     }
 
     /**
-     * @return string
-     *
-     *  This method returns the string that was set for the name.
-     */
-    public function stringForName($name)
-    {
-        return isset($this->data->$name) ? $this->data->$name : null;
-    }
-
-    /**
-     * @return string
-     *
-     *  This method returns an HTML escaped version of the string that was set
-     *  for the name.
-     */
-    public function stringHTMLForName($name)
-    {
-        $nameHTML = "{$name}HTML";
-
-        return isset($this->data->$nameHTML) ? $this->data->$nameHTML : null;
-    }
-
-    /**
      * This method sets a string value for the given name.
      *
-     * @param bool $shouldCacheHTML
+     * @param string $stringValue
      *
-     *  This parameter specifies whether an HTML escaped version of the string
-     *  should be cached and saved with the archive.
+     * @param string $key
      *
-     *  If $shouldCacheHTML is true, this method will set values for two names:
-     *  "{$name}" and "{$name}HTML".
+     * @param bool $shouldAlsoSetHTMLStringValue
+     *
+     *  This parameter specifies whether in addition to setting the value for
+     *  $key to $stringValue, an HTML escaped version of the string should be
+     *  generated and set as the value for the key "{$key}HTML".
      *
      * @return void
      */
-    public function setStringForName($string, $name, $shouldCacheHTML = true)
+    public function setStringValueForKey($stringValue, $key, $shouldAlsoSetHTMLStringValue = true)
     {
-        $this->data->$name = strval($string);
+        $key = strval($key);
 
-        $htmlName = "{$name}HTML";
+        $this->data->$key = strval($stringValue);
 
-        if ($shouldCacheHTML)
+        if ($shouldAlsoSetHTMLStringValue)
         {
-            $this->data->$htmlName = ColbyConvert::textToHTML($this->data->$name);
-        }
-        else if (isset($this->data->$htmlName))
-        {
-            unset($this->data->$htmlName);
+            $htmlKey = "{$key}HTML";
+
+            $this->data->$htmlKey = ColbyConvert::textToHTML($this->data->$key);
         }
     }
 
@@ -347,5 +324,15 @@ class ColbyArchive
         {
             return COLBY_DATA_URL . "/{$this->data->archiveId}";
         }
+    }
+
+    /**
+     * @return mixed
+     *
+     *  This method returns the value that was set for the key.
+     */
+    public function valueForKey($key)
+    {
+        return isset($this->data->$key) ? $this->data->$key : null;
     }
 }
