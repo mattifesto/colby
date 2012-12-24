@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This is the model updater for a model with a title, subtitle, and content.
+ */
+
 $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
 $archive = ColbyArchive::open($_POST['archive-id']);
@@ -12,8 +16,7 @@ if (!$model->viewId())
 }
 
 $archive->setStringValueForKey($_POST['title'], 'title');
-
-$model->setSubtitle($_POST['subtitle']);
+$archive->setStringValueForKey($_POST['subtitle'], 'subtitle');
 
 $model->setPageStubData($_POST['preferred-page-stub'],
                             $_POST['stub-is-locked'],

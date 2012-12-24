@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * This is the model updater or a model with a title, subtitle, content, and
+ * one medium sized image.
+ */
+
 Colby::useImage();
 
 $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
@@ -14,8 +19,7 @@ if (!$model->viewId())
 }
 
 $archive->setStringValueForKey($_POST['title'], 'title');
-
-$model->setSubtitle($_POST['subtitle']);
+$archive->setStringValueForKey($_POST['subtitle'], 'subtitle');
 
 $model->setPageStubData($_POST['preferred-page-stub'],
                             $_POST['stub-is-locked'],

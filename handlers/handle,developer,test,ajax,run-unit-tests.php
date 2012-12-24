@@ -115,7 +115,7 @@ function ColbyPageModelCreateAndDeleteTest()
     $model->setGroupStub('test');
 
     $archive->setStringValueForKey($title, 'title');
-    $model->setSubtitle($subtitle);
+    $archive->setStringValueForKey($subtitle, 'subtitle');
     $model->setPageStubData('the-test-post', false);
 
     $data->content = $content;

@@ -434,15 +434,6 @@ EOT;
     }
 
     /**
-     * @return void
-     */
-    public function setSubtitle($subtitle)
-    {
-        $this->data->subtitle = $subtitle ? strval($subtitle) : '';
-        $this->data->subtitleHTML = ColbyConvert::textToHTML($this->data->subtitle);
-    }
-
-    /**
      * @return string | null
      */
     public function title()
