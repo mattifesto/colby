@@ -169,14 +169,24 @@ class ColbyArchive
 
             $archive->unlock();
 
-            $archive->attributes = $data->attributes;
-            $archive->data = $data->data;
+            // In most cases the "attributes" and "data" properties will be set. In the case of a malformed archive they will not be set. We aren't exactly interested in making these cases work, but we are interested in not crashing when they occur. For instance, the built-in archive viewer should still be able to open the archive without error to see if there is a title available. Saving a malformed archive after opening it will lose any of the malformed data, which is probably the best behavior we could hope for. It's a better option than making the archive inaccessible.
 
-            // Since we store the archive id in the file, just do a basic check to make sure it's the same as the archive id requested.
-
-            if ($archive->archiveId() != $archiveId)
+            if (isset($data->attributes))
             {
-                throw new RuntimeException('Data Consistency Error: The archive id stored inside the archive doesn\'t match the external archive id.');
+                $archive->attributes = $data->attributes;
+            }
+
+            if (isset($data->data))
+            {
+                $archive->data = $data->data;
+
+                // If the 'inner' archive id doesn't match the 'outer' archive id, set the 'inner' archive id to the archive id used to open the archive. This should rarely happen, however if it does, it could lead to some pretty crazy bugs. The most likely scenario would be when opening an older archive that was created before archive id was set inside the archive data.
+
+                if (   !isset($archive->data->archiveId)
+                    || $archive->data->archiveId != $archiveId)
+                {
+                    $archive->data->archiveId = $archiveId;
+                }
             }
         }
         else if ($shouldCreateStorageNow)

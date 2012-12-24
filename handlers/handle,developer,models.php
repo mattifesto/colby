@@ -41,15 +41,20 @@ function displayModels($absoluteDataFilenames)
     {
         preg_match('/model,([^,]*).data$/', $absoluteDataFilename, $matches);
 
-        $editURL = COLBY_SITE_URL . "/developer/models/edit/?model-id={$matches[1]}";
+        $modelId = $matches[1];
+
+        $editURL = COLBY_SITE_URL . "/developer/models/edit/?model-id={$modelId}";
 
         $data = unserialize(file_get_contents($absoluteDataFilename));
 
         ?>
 
-        <h1 style="font-size: 1.5em;"><?php echo $data->nameHTML; ?></h1>
-        <p><?php echo $data->descriptionHTML; ?>
-        <p><a href="<?php echo $editURL; ?>">edit</a>
+        <section style="margin-bottom: 2.0em;">
+            <h1 style="font-size: 1.5em;"><?php echo $data->nameHTML; ?></h1>
+            <p class="hash"><?php echo $modelId; ?>
+            <p><?php echo $data->descriptionHTML; ?>
+            <p><a href="<?php echo $editURL; ?>">edit</a>
+        </section>
 
         <?php
     }

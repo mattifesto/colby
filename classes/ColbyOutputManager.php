@@ -77,12 +77,12 @@ class ColbyOutputManager
     /**
      * @return ColbyOutputManager
      */
-    public static function createPage($title, $description, $name = null)
+    public static function createPage($titleHTML, $descriptionHTML, $name = null)
     {
         $outputManager = new ColbyOutputManager($name);
 
-        $outputManager->title = $title;
-        $outputManager->description = $description;
+        $outputManager->titleHTML = $titleHTML;
+        $outputManager->descriptionHTML = $descriptionHTML;
 
         return $outputManager;
     }
@@ -90,9 +90,9 @@ class ColbyOutputManager
     /**
      * @return ColbyOutputManager
      */
-    public static function beginPage($title, $description, $name = null)
+    public static function beginPage($titleHTML, $descriptionHTML, $name = null)
     {
-        $outputManager = self::createPage($title, $description, $name);
+        $outputManager = self::createPage($titleHTML, $descriptionHTML, $name);
 
         $outputManager->begin();
 
@@ -102,9 +102,9 @@ class ColbyOutputManager
     /**
      * @return ColbyOutputManager
      */
-    public static function beginVerifiedUserPage($title, $description, $name = null)
+    public static function beginVerifiedUserPage($titleHTML, $descriptionHTML, $name = null)
     {
-        $outputManager = self::createPage($title, $description, $name);
+        $outputManager = self::createPage($titleHTML, $descriptionHTML, $name);
 
         $outputManager->requireVerifiedUser();
         $outputManager->begin();

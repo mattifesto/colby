@@ -2,8 +2,8 @@
 
 // mise en place
 
-$titleHTML = ColbyConvert::textToHTML($this->title);
-$descriptionHTML = ColbyConvert::textToHTML($this->description);
+$titleHTML = $this->titleHTML;
+$descriptionHTML = $this->descriptionHTML;
 
 ?>
 <!doctype html>

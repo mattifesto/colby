@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * This is the model editor for a model with a title, subtitle, content, and one
+ * medium sized image.
+ */
+
 $modelId = '01fe006d1aca8e85fc140fb642bb200ed6e31596';
 $modelDataFilename = "handle,admin,model,{$modelId}.data";
 $modelData = unserialize(file_get_contents(Colby::findHandler($modelDataFilename)));
@@ -63,7 +68,7 @@ $javascriptPublicationDate = $pageModel->publicationDate() * 1000;
     <div><label>Title
         <input type="text"
                id="title"
-               value="<?php echo $pageModel->titleHTML(); ?>">
+               value="<?php echo $archive->valueForKey('titleHTML'); ?>">
     </label></div>
 
     <div style="padding: 0px 50px; font-size: 0.75em;">
@@ -107,7 +112,7 @@ $javascriptPublicationDate = $pageModel->publicationDate() * 1000;
     <div><label>Subtitle
         <input type="text"
                id="subtitle"
-               value="<?php echo $pageModel->subtitleHTML(); ?>">
+               value="<?php echo $archive->valueForKey('subtitleHTML'); ?>">
     </label></div>
 
     <div><label>Content

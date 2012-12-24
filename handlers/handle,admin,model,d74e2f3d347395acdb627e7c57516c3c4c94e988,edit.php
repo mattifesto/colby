@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This is the model editor for a model with a title, subtitle and content.
+ */
+
 $modelId = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
 $modelDataFilename = "handle,admin,model,{$modelId}.data";
 $modelData = unserialize(file_get_contents(Colby::findHandler($modelDataFilename)));
@@ -40,7 +44,7 @@ if (!$pageModel->viewId())
 $ajaxURL = COLBY_SITE_URL . "/admin/model/{$modelId}/ajax/update/";
 
 $customPageStubTextHTML = ColbyConvert::textToHTML($pageModel->customPageStubText());
-$stubIsLocked = $pageModel->stubIsLocked() ? ' checked="checked"' : '';
+$stubIsLockedChecked = $pageModel->stubIsLocked() ? ' checked="checked"' : '';
 
 $content = isset($data->content) ? ColbyConvert::textToHTML($data->content) : '';
 
@@ -63,7 +67,7 @@ $javascriptPublicationDate = $pageModel->publicationDate() * 1000;
     <div><label>Title
         <input type="text"
                id="title"
-               value="<?php echo $pageModel->titleHTML(); ?>">
+               value="<?php echo $archive->valueForKey('titleHTML'); ?>">
     </label></div>
 
     <div style="padding: 0px 50px; font-size: 0.75em;">
@@ -95,7 +99,7 @@ $javascriptPublicationDate = $pageModel->publicationDate() * 1000;
         <label style="float:right; margin-left: 20px;">
             <input type="checkbox"
                    id="stub-is-locked"
-                   <?php echo $pageModel->stubIsLocked(); ?>> Lock Stub
+                   <?php echo $stubIsLockedChecked; ?>> Lock Stub
         </label>
         <label>Custom Stub Text
             <input type="text"
@@ -107,7 +111,7 @@ $javascriptPublicationDate = $pageModel->publicationDate() * 1000;
     <div><label>Subtitle
         <input type="text"
                id="subtitle"
-               value="<?php echo $pageModel->subtitleHTML(); ?>">
+               value="<?php echo $archive->valueForKey('subtitleHTML'); ?>">
     </label></div>
 
     <div><label>Content
