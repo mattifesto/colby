@@ -68,6 +68,12 @@ table tr:nth-child(even)
     background-color: #f8f8ff;
 }
 
+.hash
+{
+    font-size: 0.75em;
+    font-family: Menlo, monospace;
+}
+
 .now-updating
 {
     background-color: Snow;

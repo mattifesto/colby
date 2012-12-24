@@ -1,9 +1,13 @@
 <?php
 
+/**
+ * This is the built-in view for a page with a title, subtitle, and content.
+ */
+ 
 if (isset($archive))
 {
-    $page = ColbyOutputManager::beginPage($archive->data()->titleHTML,
-                                          $archive->data()->subtitleHTML);
+    $page = ColbyOutputManager::beginPage($archive->valueForKey('titleHTML'),
+                                          $archive->valueForKey('subtitleHTML'));
 }
 else
 {
@@ -19,8 +23,8 @@ else
 
     $archive = ColbyArchive::open($_GET['archive-id']);
 
-    $page = ColbyOutputManager::beginVerifiedUserPage($archive->data()->titleHTML,
-                                                      $archive->data()->subtitleHTML);
+    $page = ColbyOutputManager::beginVerifiedUserPage($archive->valueForKey('titleHTML'),
+                                                      $archive->valueForKey('subtitleHTML'));
 }
 
 ?>
