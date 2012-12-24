@@ -3,7 +3,7 @@
 /**
  * This is the built-in view for a page with a title, subtitle, and content.
  */
- 
+
 if (isset($archive))
 {
     $page = ColbyOutputManager::beginPage($archive->valueForKey('titleHTML'),
