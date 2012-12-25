@@ -264,23 +264,18 @@ ColbyFormManager.prototype.handleAjaxResponse = function()
 
     // remove error-log element content
 
-    while (errorLog.firstChild)
-    {
-        errorLog.removeChild(errorLog.firstChild);
-    }
+    errorLog.innerHTML = '';
 
     var p = document.createElement('p');
-    var t = document.createTextNode(response.message);
+    p.textContent = response.message;
 
-    p.appendChild(t);
     errorLog.appendChild(p);
 
     if ('stackTrace' in response)
     {
         var pre = document.createElement('pre');
-        t = document.createTextNode(response.stackTrace);
+        pre.textContent = response.stackTrace;
 
-        pre.appendChild(t);
         errorLog.appendChild(pre);
     }
 
