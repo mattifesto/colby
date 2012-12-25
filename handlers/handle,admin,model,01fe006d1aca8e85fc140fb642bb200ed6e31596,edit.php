@@ -43,8 +43,8 @@ if (!$pageModel->viewId())
 
 $ajaxURL = COLBY_SITE_URL . "/admin/model/{$modelId}/ajax/update/";
 
-$customPageStubTextHTML = ColbyConvert::textToHTML($pageModel->customPageStubText());
-$stubIsLockedChecked = $pageModel->stubIsLocked() ? ' checked="checked"' : '';
+$customPageStubTextHTML = $archive->valueForKey('customPageStubTextHTML');
+$stubIsLockedChecked = $archive->valueForKey('stubIsLocked') ? ' checked="checked"' : '';
 
 $editableContentHTML = ColbyConvert::textToHTML($archive->valueForKey('content'));
 
@@ -57,7 +57,7 @@ $javascriptPublicationDate = $pageModel->publicationDate() * 1000;
 <fieldset>
     <input type="hidden" id="archive-id" value="<?php echo $archiveId; ?>">
     <input type="hidden" id="view-id" value="<?php echo $pageModel->viewId(); ?>">
-    <input type="hidden" id="preferred-page-stub" value="<?php echo $pageModel->preferredPageStub(); ?>">
+    <input type="hidden" id="preferred-page-stub" value="<?php echo $archive->valueForKey('preferredPageStub'); ?>">
     <input type="hidden" id="published-by" value="<?php echo $pageModel->publishedBy(); ?>">
     <input type="hidden" id="publication-date" value="<?php echo $pageModel->publicationDate(); ?>">
 

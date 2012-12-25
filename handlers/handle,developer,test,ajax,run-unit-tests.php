@@ -114,7 +114,9 @@ function ColbyPageModelCreateAndDeleteTest()
 
     $archive->setStringValueForKey($title, 'title');
     $archive->setStringValueForKey($subtitle, 'subtitle');
-    $model->setPageStubData('the-test-post', false);
+    $archive->setBoolValueForKey(false, 'stubIsLocked');
+
+    $model->setPreferredPageStub('the-test-post');
 
     $archive->setMarkdownValueForKey($content, 'content');
 

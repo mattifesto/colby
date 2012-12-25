@@ -275,6 +275,20 @@ class ColbyArchive
     }
 
     /**
+     * @param bool $boolValue
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function setBoolValueForKey($boolValue, $key)
+    {
+        $key = strval($key);
+
+        $this->data->$key = !!$boolValue;
+    }
+
+    /**
      * This method sets a markdown value for the given name. It also converts
      * the markdown to HTML and sets the HTML value for the key "{$key}HTML".
      *

@@ -19,10 +19,10 @@ if (!$model->viewId())
 
 $archive->setStringValueForKey($_POST['title'], 'title');
 $archive->setStringValueForKey($_POST['subtitle'], 'subtitle');
+$archive->setBoolValueForKey($_POST['stub-is-locked'], 'stubIsLocked');
+$archive->setStringValueForKey($_POST['custom-page-stub-text'], 'customPageStubText');
 
-$model->setPageStubData($_POST['preferred-page-stub'],
-                            $_POST['stub-is-locked'],
-                            $_POST['custom-page-stub-text']);
+$model->setPreferredPageStub($_POST['preferred-page-stub']);
 
 $model->setPublicationData($_POST['is-published'],
                                $_POST['published-by'],

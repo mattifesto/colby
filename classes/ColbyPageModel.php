@@ -70,7 +70,7 @@ EOT;
      */
     public function calculatePageStub()
     {
-        if (!$this->preferredPageStub())
+        if (!$this->archive->valueForKey('preferredPageStub'))
         {
             $this->data->pageStub = sha1(microtime() . rand());
 
@@ -96,7 +96,7 @@ EOT;
         }
         else
         {
-            $this->data->pageStub = $this->preferredPageStub();
+            $this->data->pageStub = $this->archive->valueForKey('preferredPageStub');
         }
     }
 
@@ -232,15 +232,13 @@ EOT;
     /**
      * @return void
      */
-    public function setPageStubData($preferredPageStub, $stubIsLocked)
+    public function setPreferredPageStub($preferredPageStub)
     {
-        // Convert stubIsLocked to a Boolean variable and save.
+        $preferredPageStub = strval($preferredPageStub);
 
-        $this->data->stubIsLocked = !!$stubIsLocked;
+        // If the client sends an updated preferredPageStub it will be taken as a sign that the page stub is to be re-evaluated. If the preferredPageStub is unchanged it will not be re-evaluated even if it happens that the preferredPageStub had not been available before but has now become available.
 
-        // The variable stubIsLocked is saved only for use on the client side. The server side (this process) ignores its value. If the client sends an updated preferredPageStub it will be taken as a sign that the page stub is to be re-evaluated. If the preferredPageStub is unchanged it will not be re-evaluated even if it happens that the preferredPageStub had not been available before but has now become available.
-
-        if ($this->preferredPageStub() != $preferredPageStub)
+        if ($this->archive->valueForKey('preferredPageStub') != $preferredPageStub)
         {
             // Validate the stub. It would be exceptional behavior to pass in an invalid stub which is why we will throw an exeption.
 
@@ -260,26 +258,10 @@ EOT;
     /**
      * @return string
      */
-    public function preferredPageStub()
-    {
-        return isset($this->data->preferredPageStub) ? $this->data->preferredPageStub : null;
-    }
-
-    /**
-     * @return void
-     */
-    public function setPreferredPageStub($preferredPageStub)
-    {
-        $this->data->preferredPageStub = $preferredPageStub ? strval($preferredPageStub) : null;
-    }
-
-    /**
-     * @return string
-     */
     public function preferredStub()
     {
         $groupStub = $this->groupStub();
-        $preferredPageStub = $this->preferredPageStub();
+        $preferredPageStub = $this->archive->valueForKey('preferredPageStub');
 
         if ($groupStub)
         {
