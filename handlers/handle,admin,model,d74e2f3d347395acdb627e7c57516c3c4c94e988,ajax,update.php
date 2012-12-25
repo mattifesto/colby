@@ -7,8 +7,7 @@
 $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
 $archive = ColbyArchive::open($_POST['archive-id']);
-$data = $archive->data();
-$model = ColbyPageModel::modelWithData($data);
+$model = ColbyPageModel::modelWithArchive($archive);
 
 if (!$model->viewId())
 {

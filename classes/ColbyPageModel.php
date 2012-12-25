@@ -2,11 +2,12 @@
 
 class ColbyPageModel
 {
+    private $archive;
     private $data;
 
     /**
      * The constructor is private because to create a new ColbyPageModel
-     * correctly the static method 'modelWithData' should be called.
+     * correctly the static method 'modelWithArchive' should be called.
      *
      * @return ColbyPageModel
      */
@@ -17,11 +18,12 @@ class ColbyPageModel
     /**
      * @return ColbyPageModel
      */
-    public static function modelWithData(stdClass $data)
+    public static function modelWithArchive(ColbyArchive $archive)
     {
         $model = new ColbyPageModel();
 
-        $model->data = $data;
+        $model->archive = $archive;
+        $model->data = $archive->data();
 
         return $model;
     }

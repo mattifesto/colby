@@ -103,13 +103,11 @@ function ColbyPageModelCreateAndDeleteTest()
         throw new RuntimeException(__FUNCTION__ . 'failed: The archive already exists.');
     }
 
-    $data = $archive->data();
-
     $title = 'Test post title';
     $subtitle = 'Test post subtitle.';
     $content = 'This is the content for a test post.';
 
-    $model = ColbyPageModel::modelWithData($data);
+    $model = ColbyPageModel::modelWithArchive($archive);
     $model->setModelId(SIMPLE_CONTENT_DOCUMENT_MODEL_ID);
     $model->setGroupId(TEST_GROUP_ID);
     $model->setGroupStub('test');
@@ -124,7 +122,6 @@ function ColbyPageModelCreateAndDeleteTest()
     $archive->save();
 
     $archive = null;
-    $data = null;
     $model = null;
 
     $archive = ColbyPageModel::archiveForStub('test/the-test-post');

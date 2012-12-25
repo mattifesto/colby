@@ -10,8 +10,7 @@ Colby::useImage();
 $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
 $archive = ColbyArchive::open($_POST['archive-id'], true);
-$data = $archive->data();
-$model = ColbyPageModel::modelWithData($data);
+$model = ColbyPageModel::modelWithArchive($archive);
 
 if (!$model->viewId())
 {
@@ -42,7 +41,7 @@ if (isset($_FILES['image']))
     $absoluteResizedImageFilename = ColbyImage::createImageByFitting($absoluteMasterImageFilename,
                                                                      array(500, PHP_INT_MAX));
 
-    $data->imageFilename = basename($absoluteResizedImageFilename);
+    $archive->setStringValueForKey('imageFilename', basename($absoluteResizedImageFilename), false);
 
     // Create a thumbnail image.
 

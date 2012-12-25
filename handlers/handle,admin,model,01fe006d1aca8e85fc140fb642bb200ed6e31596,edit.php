@@ -32,8 +32,7 @@ if (empty($archiveId))
 }
 
 $archive = ColbyArchive::open($archiveId);
-$data = $archive->data();
-$pageModel = ColbyPageModel::modelWithData($data);
+$pageModel = ColbyPageModel::modelWithArchive($archive);
 
 if (!$pageModel->viewId())
 {
