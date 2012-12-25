@@ -180,13 +180,9 @@ class ColbyArchive
             {
                 $archive->data = $data->data;
 
-                // If the 'inner' archive id doesn't match the 'outer' archive id, set the 'inner' archive id to the archive id used to open the archive. This should rarely happen, however if it does, it could lead to some pretty crazy bugs. The most likely scenario would be when opening an older archive that was created before archive id was set inside the archive data.
+                // This code once checked to see if the archiveId inside the archive matched the archiveId used to open the archive. At first, if the two didn't match it would throw an exception. However, the only realistic scenario where this would happen would be a mistake, so then the code was changed to set the inner achiveId in this case. But there's no need to check if the archiveIds matched, instead the inner archiveId could just always be set. If it was the same, it would stay the same. If it was unset or different it would be corrected. Less code, same result. This explanation is needed to understand why the code does something often redundant and kind of weird here.
 
-                if (   !isset($archive->data->archiveId)
-                    || $archive->data->archiveId != $archiveId)
-                {
-                    $archive->data->archiveId = $archiveId;
-                }
+                $archive->data->archiveId = $archiveId;
             }
         }
         else if ($shouldCreateStorageNow)
