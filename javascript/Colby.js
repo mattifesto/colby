@@ -160,7 +160,7 @@ Colby.updateTimes = function()
 
         var date = new Date(timestamp);
 
-        element.innerHTML = Colby.dateToRelativeLocaleString(date, now);
+        element.textContent = Colby.dateToRelativeLocaleString(date, now);
     }
 };
 
