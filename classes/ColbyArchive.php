@@ -275,6 +275,30 @@ class ColbyArchive
     }
 
     /**
+     * This method sets a markdown value for the given name. It also converts
+     * the markdown to HTML and sets the HTML value for the key "{$key}HTML".
+     *
+     * @param string $markdownValue
+     *
+     * The value of this parameter is saved as the value for $key. It is then
+     * converted to HTML and saved as the value for the key "{$key}HTML".
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function setMarkdownValueForKey($markdownValue, $key)
+    {
+        $key = strval($key);
+
+        $this->data->$key = strval($markdownValue);
+
+        $htmlKey = "{$key}HTML";
+
+        $this->data->$htmlKey = ColbyConvert::textToFormattedContent($this->data->$key);
+    }
+
+    /**
      * This method sets a string value for the given name.
      *
      * @param string $stringValue

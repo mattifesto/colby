@@ -46,7 +46,7 @@ $ajaxURL = COLBY_SITE_URL . "/admin/model/{$modelId}/ajax/update/";
 $customPageStubTextHTML = ColbyConvert::textToHTML($pageModel->customPageStubText());
 $stubIsLockedChecked = $pageModel->stubIsLocked() ? ' checked="checked"' : '';
 
-$content = isset($data->content) ? ColbyConvert::textToHTML($data->content) : '';
+$editableContentHTML = ColbyConvert::textToHTML($archive->valueForKey('content'));
 
 $isPublished = $pageModel->isPublished() ? ' checked="checked"' : '';
 $currentUserId = ColbyUser::currentUserId();
@@ -116,7 +116,7 @@ $javascriptPublicationDate = $pageModel->publicationDate() * 1000;
 
     <div><label>Content
         <textarea id="content"
-                  style="height: 400px;"><?php echo $content; ?></textarea>
+                  style="height: 400px;"><?php echo $editableContentHTML; ?></textarea>
     </label></div>
 
     <div>

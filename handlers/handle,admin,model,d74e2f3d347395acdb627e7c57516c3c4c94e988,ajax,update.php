@@ -26,10 +26,9 @@ $model->setPublicationData($_POST['is-published'],
                                $_POST['published-by'],
                                $_POST['publication-date']);
 
-$data->content = $_POST['content'];
-$data->contentHTML = ColbyConvert::textToFormattedContent($data->content);
+$archive->setMarkdownValueForKey($_POST['content'], 'content');
 
-$model->setContentSearchText($data->content);
+$model->setContentSearchText($archive->valueForKey('content'));
 
 $model->updateDatabase();
 $archive->save();

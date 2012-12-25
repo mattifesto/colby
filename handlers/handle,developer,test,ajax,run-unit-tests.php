@@ -118,8 +118,7 @@ function ColbyPageModelCreateAndDeleteTest()
     $archive->setStringValueForKey($subtitle, 'subtitle');
     $model->setPageStubData('the-test-post', false);
 
-    $data->content = $content;
-    $data->contentHTML = ColbyConvert::textToFormattedContent($content);
+    $archive->setMarkdownValueForKey($content, 'content');
 
     $model->updateDatabase();
     $archive->save();
