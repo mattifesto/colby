@@ -373,8 +373,8 @@ EOT;
 
         // In order of statistically most likely to match any given search query
 
-        $searchableData[] = $this->title();
-        $searchableData[] = $this->subtitle();
+        $searchableData[] = $this->archive->valueForKey('title');
+        $searchableData[] = $this->archive->valueForKey('subtitle');
         $searchableData[] = $this->contentSearchText();
         $searchableData[] = $this->stub();
         $searchableData[] = $this->data->archiveId;
@@ -417,38 +417,6 @@ EOT;
     public function setStubIsLocked($stubIsLocked)
     {
         $this->data->stubIsLocked = !!$stubIsLocked;
-    }
-
-    /**
-     * @return string | null
-     */
-    public function subtitle()
-    {
-        return isset($this->data->subtitle) ? $this->data->subtitle : null;
-    }
-
-    /**
-     * @return string | null
-     */
-    public function subtitleHTML()
-    {
-        return isset($this->data->subtitleHTML) ? $this->data->subtitleHTML : null;
-    }
-
-    /**
-     * @return string | null
-     */
-    public function title()
-    {
-        return isset($this->data->title) ? $this->data->title : null;
-    }
-
-    /**
-     * @return string | null
-     */
-    public function titleHTML()
-    {
-        return isset($this->data->titleHTML) ? $this->data->titleHTML : null;
     }
 
     /**
@@ -501,10 +469,10 @@ EOT;
         $sqlStub = Colby::mysqli()->escape_string($this->stub());
         $sqlStub = "'{$sqlStub}'";
 
-        $sqlTitleHTML = Colby::mysqli()->escape_string($this->titleHTML());
+        $sqlTitleHTML = Colby::mysqli()->escape_string($this->archive->valueForKey('titleHTML'));
         $sqlTitleHTML = "'{$sqlTitleHTML}'";
 
-        $sqlSubtitleHTML = Colby::mysqli()->escape_string($this->subtitleHTML());
+        $sqlSubtitleHTML = Colby::mysqli()->escape_string($this->archive->valueForKey('subtitleHTML'));
         $sqlSubtitleHTML = "'{$sqlSubtitleHTML}'";
 
         $sqlSearchText = Colby::mysqli()->escape_string($this->searchText());
