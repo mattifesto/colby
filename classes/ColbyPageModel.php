@@ -135,22 +135,6 @@ EOT;
     }
 
     /**
-     * Deletes a page from the database and deletes the page archive.
-     *
-     * @return void
-     */
-    public static function delete($archiveId)
-    {
-        $sqlArchiveId = Colby::mysqli()->escape_string($archiveId);
-
-        $sql = "DELETE FROM `ColbyPages` WHERE `archiveId` = UNHEX('{$sqlArchiveId}')";
-
-        Colby::query($sql);
-
-        ColbyArchive::delete($archiveId);
-    }
-
-    /**
      * A page can't be displayed directly
      * because the full archive information should be made available to the view.
      *

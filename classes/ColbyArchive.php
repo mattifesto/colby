@@ -112,6 +112,12 @@ class ColbyArchive
      */
     public static function delete($archiveId)
     {
+        $sqlArchiveId = Colby::mysqli()->escape_string($archiveId);
+
+        $sql = "DELETE FROM `ColbyPages` WHERE `archiveId` = UNHEX('{$sqlArchiveId}')";
+
+        Colby::query($sql);
+
         // NOTE: currently doesn't handle nonexistent archive
         //       assumes no subdirectories
 
@@ -255,6 +261,8 @@ class ColbyArchive
                 mkdir($absoluteArchiveDirectory);
             }
         }
+
+        $archive->model = ColbyPageModel::modelWithArchive($archive);
 
         return $archive;
     }

@@ -82,7 +82,7 @@ function ColbyPageModelCreateAndDeleteTest()
 
     if ($archive)
     {
-        ColbyPageModel::delete($archive->archiveId());
+        ColbyArchive::delete($archive->archiveId());
 
         if (ColbyPageModel::archiveForStub('test/the-test-post'))
         {
@@ -140,7 +140,7 @@ function ColbyPageModelCreateAndDeleteTest()
 
     $archive = null;
 
-    ColbyPageModel::delete($archiveId);
+    ColbyArchive::delete($archiveId);
 
     $archive = ColbyPageModel::archiveForStub('test/the-test-post');
 
