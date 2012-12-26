@@ -13,31 +13,7 @@ $page = ColbyOutputManager::beginVerifiedUserPage($modelData->nameHTML,
                                                   $modelData->descriptionHTML,
                                                   'admin');
 
-$archiveId = isset($_GET['archive-id']) ? $_GET['archive-id'] : '';
-
-if (empty($archiveId))
-{
-    $archiveId = sha1(microtime() . rand());
-
-    $parts = explode('?', $_SERVER['REQUEST_URI']);
-
-    $path = $parts[0];
-
-    $queryString = isset($parts[1]) ? $parts[1] : '';
-    $queryString = "archive-id={$archiveId}&{$queryString}";
-
-    header("Location: {$path}?{$queryString}");
-    ob_end_clean();
-    exit;
-}
-
-$archive = ColbyArchive::open($archiveId);
-$pageModel = ColbyPageModel::modelWithArchive($archive);
-
-if (!$pageModel->viewId())
-{
-    $pageModel->setViewId($_GET['view-id']);
-}
+$archive = ColbyArchive::archiveFromGetData();
 
 // mise en place
 
@@ -48,18 +24,18 @@ $stubIsLockedChecked = $archive->valueForKey('stubIsLocked') ? ' checked="checke
 
 $editableContentHTML = ColbyConvert::textToHTML($archive->valueForKey('content'));
 
-$isPublishedChecked = $pageModel->isPublished() ? ' checked="checked"' : '';
+$isPublishedChecked = $archive->valueForKey('isPublished') ? ' checked="checked"' : '';
 $currentUserId = ColbyUser::currentUserId();
-$javascriptPublicationDate = $pageModel->publicationDate() * 1000;
+$javascriptPublicationDate = $archive->valueForKey('publicationDate') * 1000;
 
 ?>
 
 <fieldset>
-    <input type="hidden" id="archive-id" value="<?php echo $archiveId; ?>">
-    <input type="hidden" id="view-id" value="<?php echo $pageModel->viewId(); ?>">
+    <input type="hidden" id="archive-id" value="<?php echo $archive->archiveId(); ?>">
+    <input type="hidden" id="view-id" value="<?php echo $archive->valueForKey('viewId'); ?>">
     <input type="hidden" id="preferred-page-stub" value="<?php echo $archive->valueForKey('preferredPageStub'); ?>">
-    <input type="hidden" id="published-by" value="<?php echo $pageModel->publishedBy(); ?>">
-    <input type="hidden" id="publication-date" value="<?php echo $pageModel->publicationDate(); ?>">
+    <input type="hidden" id="published-by" value="<?php echo $archive->valueForKey('publishedBy'); ?>">
+    <input type="hidden" id="publication-date" value="<?php echo $archive->valueForKey('publicationDate'); ?>">
 
     <progress value="0"
               style="width: 100px; float: right;"></progress>
@@ -91,10 +67,10 @@ $javascriptPublicationDate = $pageModel->publicationDate() * 1000;
         </style>
         <table class="stubs"><tr>
             <td>Preferred URL:</td>
-            <td id="preferred-stub-view" class="stub"><?php echo $pageModel->preferredStub(); ?></td>
+            <td id="preferred-stub-view" class="stub"><?php echo $archive->model->preferredStub(); ?></td>
         </tr><tr>
             <td>Actual URL:</td>
-            <td id="stub-view" class="stub"><?php echo $pageModel->stub(); ?></td>
+            <td id="stub-view" class="stub"><?php echo $archive->model->stub(); ?></td>
         </td></table>
         <label style="float:right; margin-left: 20px;">
             <input type="checkbox"
@@ -148,7 +124,7 @@ $javascriptPublicationDate = $pageModel->publicationDate() * 1000;
 
 var ajaxURL = '<?php echo $ajaxURL; ?>'
 var currentUserId = <?php echo $currentUserId; ?>;
-var groupStub = '<?php echo $pageModel->groupStub(); ?>';
+var groupStub = '<?php echo $archive->valueForKey('groupStub'); ?>';
 var publicationDate = <?php echo $javascriptPublicationDate; ?>;
 
 </script>

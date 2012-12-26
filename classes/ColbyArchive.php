@@ -13,15 +13,48 @@ class ColbyArchive
     /**
      * @return ColbyArchive
      */
+    public static function archiveFromGetData()
+    {
+        $archiveId = isset($_GET['archive-id']) ? $_GET['archive-id'] : '';
+
+        if (empty($archiveId))
+        {
+            $archiveId = sha1(microtime() . rand());
+
+            $parts = explode('?', $_SERVER['REQUEST_URI']);
+
+            $path = $parts[0];
+
+            $queryString = isset($parts[1]) ? $parts[1] : '';
+            $queryString = "archive-id={$archiveId}&{$queryString}";
+
+            header("Location: {$path}?{$queryString}");
+            ob_end_clean();
+            exit;
+        }
+
+        $archive = ColbyArchive::open($archiveId);
+        $archive->model = ColbyPageModel::modelWithArchive($archive);
+
+        if (!$archive->model->viewId())
+        {
+            $archive->model->setViewId($_GET['view-id']);
+        }
+
+        return $archive;
+    }
+
+    /**
+     * @return ColbyArchive
+     */
     public static function archiveFromPostData()
     {
         $archive = ColbyArchive::open($_POST['archive-id']);
-        $model = ColbyPageModel::modelWithArchive($archive);
-        $archive->model = $model;
+        $archive->model = ColbyPageModel::modelWithArchive($archive);
 
-        if (!$model->viewId())
+        if (!$archive->model->viewId())
         {
-            $model->setViewId($_POST['view-id']);
+            $archive->model->setViewId($_POST['view-id']);
         }
 
         $archive->setStringValueForKey($_POST['title'], 'title');
@@ -29,11 +62,11 @@ class ColbyArchive
         $archive->setBoolValueForKey($_POST['stub-is-locked'], 'stubIsLocked');
         $archive->setStringValueForKey($_POST['custom-page-stub-text'], 'customPageStubText');
 
-        $model->setPreferredPageStub($_POST['preferred-page-stub']);
+        $archive->model->setPreferredPageStub($_POST['preferred-page-stub']);
 
-        $model->setPublicationData($_POST['is-published'],
-                                       $_POST['published-by'],
-                                       $_POST['publication-date']);
+        $archive->model->setPublicationData($_POST['is-published'],
+                                            $_POST['published-by'],
+                                            $_POST['publication-date']);
 
         return $archive;
     }
