@@ -11,6 +11,34 @@ class ColbyArchive
     protected $data;
 
     /**
+     * @return ColbyArchive
+     */
+    public static function archiveFromPostData()
+    {
+        $archive = ColbyArchive::open($_POST['archive-id']);
+        $model = ColbyPageModel::modelWithArchive($archive);
+        $archive->model = $model;
+
+        if (!$model->viewId())
+        {
+            $model->setViewId($_POST['view-id']);
+        }
+
+        $archive->setStringValueForKey($_POST['title'], 'title');
+        $archive->setStringValueForKey($_POST['subtitle'], 'subtitle');
+        $archive->setBoolValueForKey($_POST['stub-is-locked'], 'stubIsLocked');
+        $archive->setStringValueForKey($_POST['custom-page-stub-text'], 'customPageStubText');
+
+        $model->setPreferredPageStub($_POST['preferred-page-stub']);
+
+        $model->setPublicationData($_POST['is-published'],
+                                       $_POST['published-by'],
+                                       $_POST['publication-date']);
+
+        return $archive;
+    }
+
+    /**
      * @return string
      */
     public function archiveId()
@@ -226,6 +254,8 @@ class ColbyArchive
      */
     public function save()
     {
+        $this->model->updateDatabase();
+
         $absoluteArchiveFilename = $this->path('archive.data');
 
         if (!file_exists($this->path()))

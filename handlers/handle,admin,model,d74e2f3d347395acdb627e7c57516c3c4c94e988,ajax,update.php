@@ -6,33 +6,15 @@
 
 $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
-$archive = ColbyArchive::open($_POST['archive-id']);
-$model = ColbyPageModel::modelWithArchive($archive);
-
-if (!$model->viewId())
-{
-    $model->setViewId($_POST['view-id']);
-}
-
-$archive->setStringValueForKey($_POST['title'], 'title');
-$archive->setStringValueForKey($_POST['subtitle'], 'subtitle');
-$archive->setBoolValueForKey($_POST['stub-is-locked'], 'stubIsLocked');
-$archive->setStringValueForKey($_POST['custom-page-stub-text'], 'customPageStubText');
-
-$model->setPreferredPageStub($_POST['preferred-page-stub']);
-
-$model->setPublicationData($_POST['is-published'],
-                               $_POST['published-by'],
-                               $_POST['publication-date']);
+$archive = ColbyArchive::archiveFromPostData();
 
 $archive->setMarkdownValueForKey($_POST['content'], 'content');
 
-$model->setContentSearchText($archive->valueForKey('content'));
+$archive->model->setContentSearchText($archive->valueForKey('content'));
 
-$model->updateDatabase();
 $archive->save();
 
-$response->pageStub = $model->pageStub();
+$response->pageStub = $archive->model->pageStub();
 $response->wasSuccessful = true;
 //$response->message = var_export($_POST, true);
 $response->message = 'Post last updated: ' . ColbyConvert::timestampToLocalUserTime(time());
