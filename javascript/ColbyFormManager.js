@@ -281,7 +281,7 @@ ColbyFormManager.prototype.handleAjaxResponse = function()
 
     this.xhr = null;
 
-    formManager.setIsAjaxIndicatorOn(false);
+    this.setIsAjaxIndicatorOn(false);
 
     return response;
 }

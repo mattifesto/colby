@@ -1,15 +1,18 @@
 "use strict";
 
-var formManager = null;
+var ColbyPageEditor =
+{
+    'formManager' : null
+};
 
 /**
  * @return void
  */
 function handleContentLoaded()
 {
-    formManager = new ColbyFormManager(ajaxURL);
+    ColbyPageEditor.formManager = new ColbyFormManager(ajaxURL);
 
-    formManager.updateCompleteCallback = updateCompleteCallback;
+    ColbyPageEditor.formManager.updateCompleteCallback = updateCompleteCallback;
 
     if (publicationDate)
     {
@@ -153,7 +156,7 @@ function setPublicationDate(timestamp)
 
     document.getElementById('publication-date').value = phpPublicationDate;
 
-    formManager.setNeedsUpdate(true);
+    ColbyPageEditor.formManager.setNeedsUpdate(true);
 }
 
 /**
