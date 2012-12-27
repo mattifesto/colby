@@ -8,11 +8,11 @@ var ColbyPageEditor =
 /**
  * @return void
  */
-function handleContentLoaded()
+ColbyPageEditor.handleContentLoaded = function()
 {
     ColbyPageEditor.formManager = new ColbyFormManager(ajaxURL);
 
-    ColbyPageEditor.formManager.updateCompleteCallback = updateCompleteCallback;
+    ColbyPageEditor.formManager.updateCompleteCallback = ColbyPageEditor.updateCompleteCallback;
 
     if (publicationDate)
     {
@@ -162,7 +162,7 @@ function setPublicationDate(timestamp)
 /**
  * @return void
  */
-function updateCompleteCallback(response)
+ColbyPageEditor.updateCompleteCallback = function(response)
 {
     if (!response.wasSuccessful)
     {
@@ -181,4 +181,4 @@ function updateCompleteCallback(response)
     stubView.textContent = stub;
 }
 
-document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
+document.addEventListener('DOMContentLoaded', ColbyPageEditor.handleContentLoaded, false);
