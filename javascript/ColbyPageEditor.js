@@ -27,8 +27,8 @@ ColbyPageEditor.handleContentLoaded = function()
         document.getElementById('stub-is-locked').disabled = true;
     }
 
-    document.getElementById('title').addEventListener('input', updatePreferredPageStub, false);
-    document.getElementById('custom-page-stub-text').addEventListener('input', updatePreferredPageStub, false);
+    document.getElementById('title').addEventListener('input', ColbyPageEditor.updatePreferredPageStub, false);
+    document.getElementById('custom-page-stub-text').addEventListener('input', ColbyPageEditor.updatePreferredPageStub, false);
 }
 
 /**
@@ -48,7 +48,7 @@ ColbyPageEditor.handlePublicationDateBlurred = function(sender)
         return;
     }
 
-    setPublicationDate(date.getTime());
+    ColbyPageEditor.setPublicationDate(date.getTime());
 }
 
 /**
@@ -60,7 +60,7 @@ ColbyPageEditor.handleIsPublishedChanged = function(sender)
     {
         if (!publicationDate)
         {
-            setPublicationDate(new Date().getTime());
+            ColbyPageEditor.setPublicationDate(new Date().getTime());
         }
 
         var publishedBy = document.getElementById('published-by');
@@ -100,7 +100,7 @@ ColbyPageEditor.handleIsPublishedChanged = function(sender)
 /**
  * @return void
  */
-function updatePreferredPageStub()
+ColbyPageEditor.updatePreferredPageStub = function()
 {
     if (document.getElementById('stub-is-locked').checked)
     {
@@ -137,7 +137,7 @@ function updatePreferredPageStub()
 /**
  * @return void
  */
-function setPublicationDate(timestamp)
+ColbyPageEditor.setPublicationDate = function(timestamp)
 {
     if (publicationDate == timestamp)
     {
