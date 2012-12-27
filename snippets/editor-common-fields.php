@@ -86,13 +86,13 @@ $javascriptPublicationDate = $archive->valueForKey('publicationDate') * 1000;
         <input type="checkbox"
                id="is-published"
                <?php echo $isPublishedChecked; ?>
-               onchange="handleIsPublishedChanged(this);">
+               onchange="ColbyPageEditor.handleIsPublishedChanged(this);">
     Published</label>
     <label>Publication Date:
         <input type="text"
                id="publication-date-text"
                class="ignore"
-               onblur="handlePublicationDateBlurred(this);">
+               onblur="ColbyPageEditor.handlePublicationDateBlurred(this);">
     </label>
 </div>
 

@@ -34,7 +34,7 @@ ColbyPageEditor.handleContentLoaded = function()
 /**
  * @return void
  */
-function handlePublicationDateBlurred(sender)
+ColbyPageEditor.handlePublicationDateBlurred = function(sender)
 {
     var date = new Date(sender.value);
 
@@ -54,7 +54,7 @@ function handlePublicationDateBlurred(sender)
 /**
  * @return void
  */
-function handleIsPublishedChanged(sender)
+ColbyPageEditor.handleIsPublishedChanged = function(sender)
 {
     if (sender.checked)
     {
