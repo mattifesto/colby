@@ -1,19 +1,11 @@
 <?php
 
 /**
- * This is the model editor for a model with a title, subtitle, content, and one
- * medium sized image.
+ * Variables that need to be set:
+ *
+ * $archive ColbyArchive
+ * $modelId string
  */
-
-$modelId = '01fe006d1aca8e85fc140fb642bb200ed6e31596';
-$modelDataFilename = "handle,admin,model,{$modelId}.data";
-$modelData = unserialize(file_get_contents(Colby::findHandler($modelDataFilename)));
-
-$page = ColbyOutputManager::beginVerifiedUserPage($modelData->nameHTML,
-                                                  $modelData->descriptionHTML,
-                                                  'admin');
-
-$archive = ColbyArchive::archiveFromGetData();
 
 // mise en place
 
@@ -22,15 +14,14 @@ $ajaxURL = COLBY_SITE_URL . "/admin/model/{$modelId}/ajax/update/";
 $customPageStubTextHTML = $archive->valueForKey('customPageStubTextHTML');
 $stubIsLockedChecked = $archive->valueForKey('stubIsLocked') ? ' checked="checked"' : '';
 
-$editableContentHTML = ColbyConvert::textToHTML($archive->valueForKey('content'));
-
 $isPublishedChecked = $archive->valueForKey('isPublished') ? ' checked="checked"' : '';
 $currentUserId = ColbyUser::currentUserId();
 $javascriptPublicationDate = $archive->valueForKey('publicationDate') * 1000;
 
 ?>
 
-<fieldset>
+    <!-- common fields -->
+
     <input type="hidden" id="archive-id" value="<?php echo $archive->archiveId(); ?>">
     <input type="hidden" id="view-id" value="<?php echo $archive->valueForKey('viewId'); ?>">
     <input type="hidden" id="preferred-page-stub" value="<?php echo $archive->valueForKey('preferredPageStub'); ?>">
@@ -90,16 +81,6 @@ $javascriptPublicationDate = $archive->valueForKey('publicationDate') * 1000;
                value="<?php echo $archive->valueForKey('subtitleHTML'); ?>">
     </label></div>
 
-    <div><label>Content
-        <textarea id="content"
-                  style="height: 400px;"><?php echo $editableContentHTML; ?></textarea>
-    </label></div>
-
-    <div><label>Image
-        <input type="file"
-               id="image">
-    </label></div>
-
     <div>
         <label style="float: right;">
             <input type="checkbox"
@@ -115,7 +96,7 @@ $javascriptPublicationDate = $archive->valueForKey('publicationDate') * 1000;
         </label>
     </div>
 
-</fieldset>
+    <!-- end common fields -->
 
 <div id="error-log"></div>
 
@@ -130,7 +111,3 @@ var publicationDate = <?php echo $javascriptPublicationDate; ?>;
 </script>
 
 <script src="<?php echo COLBY_SITE_URL . '/colby/javascript/ColbyPageEditor.js'; ?>"></script>
-
-<?php
-
-$page->end();
