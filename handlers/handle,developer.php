@@ -6,9 +6,7 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Developer Tools',
 
 ?>
 
-<h1>Site Administration</h1>
-
-<h2>Sections</h2>
+<h1>Developer Tools</h1>
 
 <?php
 
