@@ -1,21 +1,23 @@
 <?php
 
-$query = isset($_GET['query']) ? $_GET['query'] : null;
+// This is where the search query is processed and made available for any
+// other included file (such as the header) to use.
 
-$title = 'Search';
+global $searchQueryHTML;
 
-if ($query)
+$searchQuery = isset($_GET['query']) ? $_GET['query'] : '';
+$searchQueryHTML = ColbyConvert::textToHTML($searchQuery);
+
+$titleHTML = 'Search';
+
+if ($searchQueryHTML)
 {
-    $title = "{$title}: {$query}";
+    $titleHTML = "{$titleHTML}: {$searchQueryHTML}";
 }
 
-$page = ColbyOutputManager::beginPage($title, 'Search for site content.');
+$page = ColbyOutputManager::beginPage($titleHTML, 'Search for site content.');
 
 ?>
-
-<form style="text-align: center;">
-    <input type="text" name="query" value="<?php echo ColbyConvert::textToHTML($query); ?>">
-</form>
 
 <section style="width: 800px; margin: 50px auto 0px;">
     <style>
@@ -53,7 +55,7 @@ $page = ColbyOutputManager::beginPage($title, 'Search for site content.');
 
     <?php
 
-    $sqlQuery = Colby::mysqli()->escape_string($query);
+    $sqlQuery = Colby::mysqli()->escape_string($searchQuery);
     $sqlQuery = "'%$sqlQuery%'";
 
     $sql =<<<END

@@ -2,8 +2,11 @@
 
 // mise en place
 
+global $searchQueryHTML;
+
 $titleHTML = $this->titleHTML;
 $descriptionHTML = $this->descriptionHTML;
+$searchQueryHTML = isset($searchQueryHTML) ? $searchQueryHTML : '';
 
 ?>
 <!doctype html>
@@ -27,6 +30,7 @@ $descriptionHTML = $this->descriptionHTML;
         <nav>
             <ul class="horizontal" style="padding: 5px;">
                 <li><a href="<?php echo COLBY_SITE_URL; ?>">home</a></li>
+                <li><a href="<?php echo COLBY_SITE_URL . '/blog/'; ?>">blog</a></li>
                 <li style="float: right;"><?php echo ColbyUser::loginHyperlink(); ?></li>
 
                 <?php
@@ -38,13 +42,22 @@ $descriptionHTML = $this->descriptionHTML;
                     <li style="float: right;"><?php echo $userRow->facebookName; ?></li>
 
                     <?php
+
+                    if ($userRow->hasBeenVerified)
+                    {
+                        ?>
+
+                        <li style="float: right;"><a href="<?php echo COLBY_SITE_URL . '/admin/'; ?>">admin</a></li>
+
+                        <?php
+                    }
                 }
 
                 ?>
 
                 <li style="float: right;">
                     <form action="<?php echo COLBY_SITE_URL . '/search/'; ?>">
-                        <input type="text" name="query" placeholder="Search">
+                        <input type="text" name="query" value="<?php echo $searchQueryHTML; ?>" placeholder="Search">
                     </form>
                 </li>
             </ul>

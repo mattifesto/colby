@@ -279,17 +279,17 @@ EOT;
         return $url;
     }
 
-    ///
-    /// returns the ColbyUser table row for a given user id
-    /// if userId is null
-    ///     returns the row for the current logged in user
-    ///     or null if nobody's logged in
-    /// if userId doesn't exist
-    ///     returns null
-    ///
-    /// userId
-    ///     type: unsigned 64-bit integer
-    ///
+    /**
+     * @param int $userId
+     *
+     *  If $userId is null the method returns the user row for the currently
+     *  logged in user or null of nobody is logged in.
+     *
+     * @return stdClass | null
+     *
+     *  Returns the user row for a given user id. If the userId doesn't exist
+     *  null is returned.
+     */
     public static function userRow($userId = null)
     {
         if (null === $userId)
