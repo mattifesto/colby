@@ -87,7 +87,7 @@ function doInstallColby()
     beginAjax();
 
     xhr = new XMLHttpRequest();
-    xhr.open('POST', '/colby/ajax/setup-database/', true);
+    xhr.open('POST', '/developer/configuration/ajax/setup-database/', true);
     xhr.onload = handleAjaxResponse;
     xhr.send();
 }
