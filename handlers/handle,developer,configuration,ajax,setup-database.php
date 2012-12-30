@@ -242,13 +242,13 @@ END
 EOT;
 
 // heredocs don't parse for constants so place the version in a variable
-$version = COLBY_VERSION;
+$versionNumber = COLBY_VERSION_NUMBER;
 
 $sqls[] = <<<EOT
-CREATE FUNCTION ColbyVersion()
-RETURNS VARCHAR(15)
+CREATE FUNCTION ColbySchemaVersionNumber()
+RETURNS BIGINT UNSIGNED
 BEGIN
-    RETURN '{$version}';
+    RETURN {$versionNumber};
 END
 EOT;
 
