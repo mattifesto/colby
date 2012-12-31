@@ -16,12 +16,19 @@ $descriptionHTML = $this->descriptionHTML;
               content="<?php echo $descriptionHTML; ?>">
 
         <link rel="stylesheet"
+              type="text/css"
+              href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700">
+
+        <link rel="stylesheet"
+              type="text/css"
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/equalize.css">
 
         <link rel="stylesheet"
+              type="text/css"
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/shared.css">
 
         <link rel="stylesheet"
+              type="text/css"
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/admin.css">
 
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/Colby.js"></script>

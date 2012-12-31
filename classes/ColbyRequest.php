@@ -192,7 +192,7 @@ EOT;
 
             // 3. Check whether page is displayable without a stub related handler.
 
-            if (!$handlerFilename)
+            if (!$handlerFilename && COLBY_MYSQL_DATABASE)
             {
                 $fullStub = implode('/', self::$decodedStubs);
 
