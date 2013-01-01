@@ -4,6 +4,12 @@
 
 $titleHTML = $this->titleHTML;
 $descriptionHTML = $this->descriptionHTML;
+$userRow = ColbyUser::userRow();
+
+$stubs = ColbyRequest::decodedStubs();
+
+$adminSelectedClass = (isset($stubs[0]) && $stubs[0] == 'admin') ? 'class="selected"' : '';
+$developerSelectedClass = (isset($stubs[0]) && $stubs[0] == 'developer') ? 'class="selected"' : '';
 
 ?>
 <!doctype html>
@@ -17,7 +23,7 @@ $descriptionHTML = $this->descriptionHTML;
 
         <link rel="stylesheet"
               type="text/css"
-              href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700">
+              href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700">
 
         <link rel="stylesheet"
               type="text/css"
@@ -36,12 +42,14 @@ $descriptionHTML = $this->descriptionHTML;
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyFormManager.js"></script>
     </head>
     <body>
-        <nav>
-            <ul class="horizontal" style="padding: 5px;">
-                <li><a href="<?php echo COLBY_SITE_URL; ?>">home</a></li>
-                <li><?php echo $titleHTML; ?></li>
-                <li style="float: right;"><?php echo ColbyUser::loginHyperlink(); ?></li>
-                <li style="float: right;"><a href="/admin/">admin</a></li>
-                <li style="float: right;"><a href="/developer/">developer</a></li>
+        <nav class="menubar">
+            <ul class="horizontal">
+                <li><a href="<?php echo COLBY_SITE_URL; ?>">Home</a></li>
+                <li><a href="<?php echo COLBY_SITE_URL; ?>/admin/"
+                       <?php echo $adminSelectedClass; ?>>Admin</a></li>
+                <li><a href="<?php echo COLBY_SITE_URL; ?>/developer/"
+                       <?php echo $developerSelectedClass; ?>>Developer</a></li>
+                <li><?php echo $userRow->facebookName; ?></li>
+                <li><?php echo ColbyUser::loginHyperlink(); ?></li>
             </ul>
         </nav>

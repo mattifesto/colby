@@ -8,6 +8,12 @@ $titleHTML = $this->titleHTML;
 $descriptionHTML = $this->descriptionHTML;
 $searchQueryHTML = isset($searchQueryHTML) ? $searchQueryHTML : '';
 
+$stubs = ColbyRequest::decodedStubs();
+
+$homeSelectedClass = isset($stubs[0]) ? '' : 'class="selected"';
+$searchSelectedClass = (isset($stubs[0]) && $stubs[0] == 'search') ? 'class="selected"' : '';
+$blogSelectedClass = (isset($stubs[0]) && $stubs[0] == 'blog') ? 'class="selected"' : '';
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -20,7 +26,7 @@ $searchQueryHTML = isset($searchQueryHTML) ? $searchQueryHTML : '';
 
         <link rel="stylesheet"
               type="text/css"
-              href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700">
+              href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700">
 
         <link rel="stylesheet"
               type="text/css"
@@ -33,38 +39,37 @@ $searchQueryHTML = isset($searchQueryHTML) ? $searchQueryHTML : '';
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/Colby.js"></script>
     </head>
     <body>
-        <nav>
-            <ul class="horizontal" style="padding: 5px;">
-                <li><a href="<?php echo COLBY_SITE_URL; ?>">home</a></li>
-                <li><a href="<?php echo COLBY_SITE_URL . '/blog/'; ?>">blog</a></li>
-                <li style="float: right;"><?php echo ColbyUser::loginHyperlink(); ?></li>
+        <nav class="menubar">
+            <ul class="horizontal">
+                <li><a href="<?php echo COLBY_SITE_URL; ?>"
+                       <?php echo $homeSelectedClass; ?>>Home</a></li>
+                <li><a href="<?php echo COLBY_SITE_URL; ?>/search/"
+                       <?php echo $searchSelectedClass; ?>>Search</a></li>
+                <li><a href="<?php echo COLBY_SITE_URL; ?>/blog/"
+                       <?php echo $blogSelectedClass; ?>>Blog</a></li>
 
                 <?php
 
                 if ($userRow = ColbyUser::userRow())
                 {
-                    ?>
-
-                    <li style="float: right;"><?php echo $userRow->facebookName; ?></li>
-
-                    <?php
-
                     if ($userRow->hasBeenVerified)
                     {
                         ?>
 
-                        <li style="float: right;"><a href="<?php echo COLBY_SITE_URL . '/admin/'; ?>">admin</a></li>
+                        <li><a href="<?php echo COLBY_SITE_URL; ?>/admin/">Admin</a></li>
 
                         <?php
                     }
+
+                    ?>
+
+                    <li><?php echo $userRow->facebookName; ?></li>
+
+                    <?php
                 }
 
                 ?>
 
-                <li style="float: right;">
-                    <form action="<?php echo COLBY_SITE_URL . '/search/'; ?>">
-                        <input type="text" name="query" value="<?php echo $searchQueryHTML; ?>" placeholder="Search">
-                    </form>
-                </li>
+                <li><?php echo ColbyUser::loginHyperlink(); ?></li>
             </ul>
         </nav>

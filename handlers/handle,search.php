@@ -5,8 +5,9 @@
 
 global $searchQueryHTML;
 
-$searchQuery = isset($_GET['query']) ? $_GET['query'] : '';
+$searchQuery = isset($_GET['search-for']) ? $_GET['search-for'] : '';
 $searchQueryHTML = ColbyConvert::textToHTML($searchQuery);
+$formClass = empty($searchQuery) ? 'class="no-query"' : 'class="has-query"';
 
 $titleHTML = 'Search';
 
@@ -16,6 +17,66 @@ if ($searchQueryHTML)
 }
 
 $page = ColbyOutputManager::beginPage($titleHTML, 'Search for site content.');
+
+?>
+
+<form action="<?php echo COLBY_SITE_URL; ?>/search/" <?php echo $formClass; ?>>
+    <style>
+        form input
+        {
+            padding: 5px;
+        }
+
+        form.has-query
+        {
+            width: 100%;
+            padding: 20px 50px;
+            background-color: #f7f7f7;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        form.has-query input[type=text]
+        {
+            width: 500px;
+            margin-right: 30px;
+        }
+
+        form.has-query input[type=submit]
+        {
+            position: relative;
+            top: -3px;
+            background-color: #5555ff;
+            color: white;
+        }
+
+        form.has-query input[type=submit]:hover
+        {
+            border: 1px solid #5555aa;
+        }
+
+        form.no-query
+        {
+            width: 500px;
+            margin: 100px auto;
+            text-align: center;
+        }
+
+        form.no-query input[type=text]
+        {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+    </style>
+    <input type="text" name="search-for" value="<?php echo $searchQueryHTML; ?>">
+    <input type="submit" value="Search Now">
+</form>
+
+<?php
+
+if (empty($searchQuery))
+{
+    goto done;
+}
 
 ?>
 
@@ -119,5 +180,7 @@ END;
 </section>
 
 <?php
+
+done:
 
 $page->end();

@@ -1,20 +1,5 @@
 /* admin.css */
 
-body
-{
-    margin: 50px 20px 20px;
-}
-
-body > nav
-{
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    background-color: LightGray;
-    border-bottom: 2px solid DarkGray;
-}
-
 input[type="text"],
 textarea
 {

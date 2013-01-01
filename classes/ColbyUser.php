@@ -183,14 +183,14 @@ EOT;
             $url = ColbyUser::logoutURL($redirectURL);
             $url = ColbyConvert::textToHTML($url);
 
-            return "<a href=\"{$url}\">log out</a>";
+            return "<a href=\"{$url}\">Log Out</a>";
         }
         else
         {
             $url = ColbyUser::loginURL($redirectURL);
             $url = ColbyConvert::textToHTML($url);
 
-            return "<a href=\"{$url}\">log in</a>";
+            return "<a href=\"{$url}\">Log In</a>";
         }
     }
 
