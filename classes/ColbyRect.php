@@ -32,7 +32,7 @@ class ColbyRect
 
         if ($sourceAspectRatio < $requestedAspectRatio)
         {
-            $rect->width  = $requestedSize[1] * $sourceAspectRatio;
+            $rect->width  = intval($requestedSize[1] * $sourceAspectRatio);
             $rect->height = $requestedSize[1];
 
             return $rect;
@@ -41,7 +41,7 @@ class ColbyRect
         // source rect is wider than the requested rect
 
         $rect->width  = $requestedSize[0];
-        $rect->height = $requestedSize[0] / $sourceAspectRatio;
+        $rect->height = intval($requestedSize[0] / $sourceAspectRatio);
 
         return $rect;
     }

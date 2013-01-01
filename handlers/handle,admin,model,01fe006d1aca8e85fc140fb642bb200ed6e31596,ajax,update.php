@@ -24,7 +24,7 @@ if (isset($_FILES['image']))
     $absoluteResizedImageFilename = ColbyImage::createImageByFitting($absoluteMasterImageFilename,
                                                                      array(500, PHP_INT_MAX));
 
-    $archive->setStringValueForKey('imageFilename', basename($absoluteResizedImageFilename), false);
+    $archive->setStringValueForKey(basename($absoluteResizedImageFilename), 'imageFilename', false);
 
     // Create a thumbnail image.
 

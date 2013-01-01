@@ -38,9 +38,6 @@ The 'create' functions are used to create new images by resizing other images.
     no destination filename or path is accepted
 -   create functions always have a string modifier for the images they create
 -   the string modifier 'w200h300' means the image is exactly 200x300 pixels
--   the string modifier 'x200x300' means the max extent of the image fits 200x300 pixels
-    usually the image will match this size in at least one dimension
-    but it may be smaller in both dimensions where the source image is small
 -   create functions never enlarge images
 -   create image filenames are always <source-filename>-<modifier>.<source-extension>
 
@@ -56,7 +53,7 @@ The 'create' functions are used to create new images by resizing other images.
 
 Discussions on filenames are a black hole. There are a million compelling reasons one can come up with for naming image files with certain patterns in certain contexts. They're all red herrings. The goal of this class is to process many unrelated images; with unknown present and future goals; using as little external technology as possible (for instance, databases). This forces the conclusion that it's best not to have "meaningful" image filenames because any meaning would be an external dependency, even if only conceptually. The sha1 hash is perfect because it's easily calculated, is theoretically distinct, and doesn't have any meaning whatsoever related to the content of the image.
 
-If you find yourself in a discussion about how to name image files, end it as fast as you can. All your worries will be gone. Image metadata is important, it just shouldn't be part of the image filename.
+If you find yourself in a discussion about how to name image files, end it as fast as you can. All your worries will be gone. Image metadata is important, it just shouldn't be part of the image filename. There is one necessary exception to this rule: when resizing images the new resized image must have a different filename than the original image. This class uses some form of the width and height in the filename to differentiate the files.
 
 */
 
@@ -87,8 +84,27 @@ class ColbyImage
     }
 
     /**
+     * This method creates a new image by filling the requested size with the
+     * source image. To do this, the source image must be larger than the
+     * requested size. If it is not, this method will throw an exception
+     * because the request does not make sense.
+     *
+     * It may be a valid idea to copy the source image or some other option if
+     * the source image is smaller or equal to the requested size, but it is not
+     * this method's function to make that determination.
+     *
+     * These rules are in place to simplify this function down to one task
+     * which it always expects to do. Other tasks should be performed before
+     * this method is called if they are necessary.
+     *
      * @return string
      *  The filename of the new image.
+     *  The filename will always be in the following format:
+     *
+     *      sourcefilename-fill-w400h400.jpg
+     *
+     *  The width and height will be the actual width and height of the new
+     *  image and will be the same as the requested size.
      */
     public static function createImageByFilling(
         $sourceFilename,
@@ -99,10 +115,6 @@ class ColbyImage
         if (   $sourceSize[0] < $requestedSize[0]
             || $sourceSize[1] < $requestedSize[1])
         {
-            // The whole point of filling is to fill the requested size
-            // completely. If the source isn't big enough to do that, throw
-            // an exception. The caller should never do that on purpose.
-
             throw new RuntimeException("The size '{$sourceSize[0]}x{$sourceSize[1]}' of '{$sourceFilename}' is too small to fill the requested size.");
         }
 
@@ -122,7 +134,7 @@ class ColbyImage
 
         $pathinfo = pathinfo($sourceFilename);
 
-        $sizeId = "w{$requestedSize[0]}h{$requestedSize[1]}";
+        $sizeId = "fill-w{$requestedSize[0]}h{$requestedSize[1]}";
 
         $destinationFilename = "{$pathinfo['dirname']}/{$pathinfo['filename']}-{$sizeId}.{$pathinfo['extension']}";
 
@@ -132,25 +144,38 @@ class ColbyImage
     }
 
     /**
+     * This method creates a new image by fitting the source image into the
+     * requested size while maintaining its aspect ratio. If the source image
+     * already fits into the requested size, this method will throw an exception
+     * because the request does not make sense.
+     *
+     * It may be a valid idea to copy the source image or some other option if
+     * the source image already fits into the size, but it is not this method's
+     * function to make that determination.
+     *
+     * These rules are in place to simplify this function down to one task
+     * which it always expects to do. Other tasks should be performed before
+     * this method is called if they are necessary.
+     *
      * @return string
      *  The filename of the new image.
+     *  The filename will always be in the following format:
+     *
+     *      sourcefilename-w400h300.jpg
+     *
+     *   The width and height will be the actual width and height of the new
+     *   image, not the requested size.
      */
     public static function createImageByFitting(
         $sourceFilename,
         $requestedSize)
     {
-        $pathinfo = pathinfo($sourceFilename);
-
-        $sizeId = "x{$requestedSize[0]}x{$requestedSize[1]}";
-
-        $destinationFilename = "{$pathinfo['dirname']}/{$pathinfo['filename']}-{$sizeId}.{$pathinfo['extension']}";
-
         $sourceSize = getimagesize($sourceFilename);
 
         if (   $sourceSize[0] < $requestedSize[0]
             && $sourceSize[1] < $requestedSize[1])
         {
-            copy($sourceFilename, $destinationFilename);
+            throw new RuntimeException("The size '{$sourceSize[0]}x{$sourceSize[1]}' of '{$sourceFilename}' is too small to fit to the requested size.");
         }
 
         $destinationRect = ColbyRect::destinationRectToFitRequestedSize($sourceSize, $requestedSize);
@@ -166,6 +191,12 @@ class ColbyImage
             0 /* source x */, 0 /* source y */,
             $destinationRect->width, $destinationRect->height,
             $sourceSize[0] /* source width */, $sourceSize[1] /* source height */);
+
+        $pathinfo = pathinfo($sourceFilename);
+
+        $sizeId = "w{$destinationRect->width}h{$destinationRect->height}";
+
+        $destinationFilename = "{$pathinfo['dirname']}/{$pathinfo['filename']}-{$sizeId}.{$pathinfo['extension']}";
 
         self::saveImageResource($destinationImage, $destinationFilename);
 
