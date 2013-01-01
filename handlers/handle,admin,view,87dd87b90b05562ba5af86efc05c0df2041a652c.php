@@ -34,10 +34,43 @@ $publicationText = $archive->valueForKey('isPublished') ? '' : 'not published';
 
 ?>
 
-<article style="width: 600px; margin: 0px auto;">
+<article style="width: 700px; margin: 0px auto;">
+    <style scoped="scoped">
+        article
+        {
+            padding: 50px 0px;
+        }
+
+        h1
+        {
+            margin-bottom: 1.0em;
+            font-size: 1.5em;
+        }
+
+        h2
+        {
+            margin-bottom: 2.0em;
+            color: #999999;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .posted
+        {
+            margin-bottom: 15px;
+            color: #999999;
+            font-size: 0.8em;
+            xtext-align: center;
+        }
+
+        .formatted-content
+        {
+            overflow: hidden;
+        }
+    </style>
     <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
     <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
-    <div style="margin-bottom: 20px;">Posted:
+    <div class="posted">Posted:
         <span class="time"
               data-timestamp="<?php echo $publicationTimestamp; ?>">
             <?php echo $publicationText; ?>
@@ -52,7 +85,7 @@ $publicationText = $archive->valueForKey('isPublished') ? '' : 'not published';
 
         ?>
 
-        <img src="<?php echo $absoluteImageURL; ?>" alt="" style="max-width: 250px; margin: 0px 0px 10px 20px; float: right;">
+        <img src="<?php echo $absoluteImageURL; ?>" alt="" style="max-width: 250px; margin: 0px 25px 10px 0px; float: left;">
 
         <?php
     }
