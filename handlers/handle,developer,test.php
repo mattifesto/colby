@@ -172,10 +172,12 @@ function doRunUnitTests()
 {
     beginAjax();
 
-    xhr = new XMLHttpRequest();
+    xhr = new ColbyXMLHttpRequest();
     xhr.open('POST', '/developer/test/ajax/run-unit-tests/', true);
     xhr.onload = handleAjaxResponse;
     xhr.send();
+
+    xhr = xhr.request; // Remove this line when moving to direct use of XMLHttpRequest.
 }
 
 function handleAjaxResponse()

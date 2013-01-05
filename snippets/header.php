@@ -41,6 +41,10 @@ $blogSelectedClass = (isset($stubs[0]) && $stubs[0] == 'blog') ? 'class="selecte
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/Colby.js"></script>
 
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbySheet.js"></script>
+
+        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyXMLHttpRequest.js"></script>
+
+        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyFormData.js"></script>
     </head>
     <body>
         <nav class="menubar">
