@@ -37,6 +37,8 @@ $developerSelectedClass = (isset($stubs[0]) && $stubs[0] == 'developer') ? 'clas
               type="text/css"
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/admin.css">
 
+        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/html5shiv.js"></script>
+
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/Colby.js"></script>
 
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyFormManager.js"></script>
