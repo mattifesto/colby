@@ -16,6 +16,15 @@ dd
 {
     margin: 5px 0px 15px;
 }
+
+.my-panel
+{
+    width: 500px;
+    padding: 15px;
+    margin: 0px auto;
+    background-color: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
 </style>
 
 <?php
@@ -47,6 +56,21 @@ else
 <script>
 
 "use strict";
+
+var ColbyUnitTests =
+{
+};
+
+ColbyUnitTests.alert = function(html)
+{
+    var sheetHTML = ' \
+<div class="my-panel"> \
+    <div>' + html + '</div> \
+    <div style="text-align: right;"><button onclick="endSheet();">Dismiss</button></div> \
+</div>';
+
+    beginSheet(sheetHTML);
+}
 
 var xhr;
 
@@ -124,7 +148,7 @@ function doRunJavascriptUnitTests()
 
         if (string != tests[i].string)
         {
-            alert('test failed\nexpected: "' + tests[i].string + '"\nreceived: "' + string + '"');
+            ColbyUnitTests.alert('test failed\nexpected: "' + tests[i].string + '"\nreceived: "' + string + '"');
 
             wasSuccessful = false;
 
@@ -136,11 +160,11 @@ function doRunJavascriptUnitTests()
 
     if (wasSuccessful)
     {
-        alert('Javascript unit tests passed.');
+        ColbyUnitTests.alert('Javascript unit tests passed.');
     }
     else
     {
-        alert('Javascript unit tests failed.');
+        ColbyUnitTests.alert('Javascript unit tests failed.');
     }
 }
 

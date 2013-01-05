@@ -40,6 +40,8 @@ $developerSelectedClass = (isset($stubs[0]) && $stubs[0] == 'developer') ? 'clas
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/Colby.js"></script>
 
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyFormManager.js"></script>
+
+        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbySheet.js"></script>
     </head>
     <body>
         <nav class="menubar">

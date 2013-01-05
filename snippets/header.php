@@ -37,6 +37,8 @@ $blogSelectedClass = (isset($stubs[0]) && $stubs[0] == 'blog') ? 'class="selecte
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/shared.css">
 
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/Colby.js"></script>
+
+        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbySheet.js"></script>
     </head>
     <body>
         <nav class="menubar">
