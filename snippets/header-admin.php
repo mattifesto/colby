@@ -4,7 +4,6 @@
 
 $titleHTML = $this->titleHTML;
 $descriptionHTML = $this->descriptionHTML;
-$userRow = ColbyUser::userRow();
 
 $stubs = ColbyRequest::decodedStubs();
 
@@ -57,7 +56,20 @@ $developerSelectedClass = (isset($stubs[0]) && $stubs[0] == 'developer') ? 'clas
                        <?php echo $adminSelectedClass; ?>>Admin</a></li>
                 <li><a href="<?php echo COLBY_SITE_URL; ?>/developer/"
                        <?php echo $developerSelectedClass; ?>>Developer</a></li>
-                <li><?php echo $userRow->facebookName; ?></li>
+
+                <?php
+
+                    if ($userRow = ColbyUser::userRow())
+                    {
+                        ?>
+
+                        <li><?php echo $userRow->facebookName; ?></li>
+
+                        <?php
+                    }
+
+                ?>
+
                 <li><?php echo ColbyUser::loginHyperlink(); ?></li>
             </ul>
         </nav>
