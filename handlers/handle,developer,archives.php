@@ -29,7 +29,7 @@ $archiveDirectories = glob(COLBY_DATA_DIRECTORY . '/*');
         $archiveId = $matches[1];
 
         $archive = ColbyArchive::open($archiveId);
-        $viewArchiveURL = COLBY_SITE_URL . "/admin/archives/view/?archive-id={$archiveId}";
+        $viewArchiveURL = COLBY_SITE_URL . "/developer/archives/view/?archive-id={$archiveId}";
         $titleHTML = $archive->valueForKey('titleHTML');
 
         ?>
