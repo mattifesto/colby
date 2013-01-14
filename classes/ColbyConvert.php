@@ -2,6 +2,18 @@
 
 class ColbyConvert
 {
+    /**
+     * @return string
+     */
+    public static function markaroundTextToHTML($markaroundText)
+    {
+        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyMarkaroundParser.php');
+
+        $parser = ColbyMarkaroundParser::parserWithMarkaroundText($markaroundText);
+
+        return $parser->html();
+    }
+
     ///
     /// converts plain text into formatted content HTML
     ///
@@ -23,21 +35,28 @@ class ColbyConvert
         return $html;
     }
 
-    ///
-    /// converts plain text to HTML
-    ///
-    ///  - trims whitespace
-    ///  - converts html special characters to entities
-    ///
-    /// this fuction exists because it's so easy to forget
-    /// the details on how this should be done
-    /// such as the inclusion of ENT_QUOTES
-    /// also because if I figure out something else is required
-    /// I can now change it in just one place
-    ///
+    /**
+     * This function converts plain text to HTML by escaping it.
+     *
+     * This function is important despite how small it is. It represents the
+     * current best practices for exactly how to escape text for use in HTML.
+     *
+     * History:
+     *
+     * 2013.01.13
+     *  Changed this function to not trim the text for two reasons. One: it was
+     *  an unadvertised side effect that was non-obvious. Two: When calling this
+     *  function for text to be used in a pre-formatted elements the leading and
+     *  trailing whitespace should be preserved.
+     *
+     * @param string $text
+     *
+     * @return string
+     *  The $text parameter escaped for use in HTML.
+     */
     public static function textToHTML($text)
     {
-        return htmlspecialchars(trim($text), ENT_QUOTES);
+        return htmlspecialchars($text, ENT_QUOTES);
     }
 
     ///
