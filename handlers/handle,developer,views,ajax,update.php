@@ -8,7 +8,7 @@ $data = new stdClass();
 $data->name = $_POST['name'];
 $data->nameHTML = ColbyConvert::textToHTML($data->name);
 $data->description = $_POST['description'];
-$data->descriptionHTML = ColbyConvert::textToFormattedContent($data->description);
+$data->descriptionHTML = ColbyConvert::markaroundToHTML($data->description);
 $data->modelId = $_POST['model-id'];
 $data->groupId = $_POST['group-id'];
 
@@ -27,8 +27,8 @@ if (!$absoluteDataFilename)
     $absoluteHandlersDirectory = COLBY_SITE_DIRECTORY . '/handlers';
     $absoluteHandlerFilenameBase = "{$absoluteHandlersDirectory}/{$handlerFilenameBase}";
 
-    $absoluteDataFilename       = "{$absoluteHandlerFilenameBase}.data";
-    $absoluteViewFilename    = "{$absoluteHandlerFilenameBase}.php";
+    $absoluteDataFilename = "{$absoluteHandlerFilenameBase}.data";
+    $absoluteViewFilename = "{$absoluteHandlerFilenameBase}.php";
 
     // 1. Make sure the site specific handlers directory exists.
 

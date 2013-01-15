@@ -93,25 +93,30 @@ th
 }
 
 /*
- * horizontal lists are used on almost every website
- * the elements and styles are always the same
- * so it makes sense to have them here
+ * Horizontal lists are used on almost every website and the elements and
+ * styles used are always the same so it makes sense to have them here.
+ *
+ * 2013.01.14
+ *  Switched from a left margin of 1.5em on `ul.horizontal > li + li` to
+ *  0.75em left _and_ right margins on `ul.horizontal > li`. This will make
+ *  horizontal list items will look pleasantly spaced inside an element that
+ *  doesn't have padding of its own. Previously it had been assumed the
+ *  containing element would have the padding required to make the horizontal
+ *  list look good, but that was a bad assumption.
+ *
+ *  This also means that the list will not be aligned to the left edge of the
+ *  containing element which has never been a requirement of any previous
+ *  scenario.
  */
 
-ul.Horizontal, /* deprecated */
 ul.horizontal
 {
     padding-left: 0px;
 }
 
-ul.Horizontal > li, /* deprecated */
 ul.horizontal > li
 {
     display: inline;
-}
-
-ul.Horizontal > li + li, /* deprecated */
-ul.horizontal > li + li
-{
-    margin-left: 1.5em;
+    margin-left: 0.75em;
+    margin-right: 0.75em;
 }

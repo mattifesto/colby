@@ -8,29 +8,29 @@ define('MARKAROUND_STATE_PRE_FORMATTED',             4);
 define('MARKAROUND_STATE_SIMPLE_PARAGRAPH',          5);
 define('MARKAROUND_STATE_UNORDERED_LIST',            6);
 
-define('MARKAROUND_LINETYPE_BLOCK_QUOTE',            0);
-define('MARKAROUND_LINETYPE_DESCRIPTION_NAME',       1);
-define('MARKAROUND_LINETYPE_DESCRIPTION_VALUE',      2);
-define('MARKAROUND_LINETYPE_EMPTY',                  3);
-define('MARKAROUND_LINETYPE_HEADING1',               4);
-define('MARKAROUND_LINETYPE_HEADING2',               5);
-define('MARKAROUND_LINETYPE_HEADING3',               6);
-define('MARKAROUND_LINETYPE_ORDERED_LIST_ITEM',      7);
-define('MARKAROUND_LINETYPE_PRE_FORMATTED',          8);
-define('MARKAROUND_LINETYPE_TEXT_LEFT',              9);
-define('MARKAROUND_LINETYPE_TEXT_INDENTED',         10);
-define('MARKAROUND_LINETYPE_UNORDERED_LIST_ITEM',   11);
+define('MARKAROUND_LINE_TYPE_BLOCK_QUOTE',           0);
+define('MARKAROUND_LINE_TYPE_DESCRIPTION_NAME',      1);
+define('MARKAROUND_LINE_TYPE_DESCRIPTION_VALUE',     2);
+define('MARKAROUND_LINE_TYPE_EMPTY',                 3);
+define('MARKAROUND_LINE_TYPE_HEADING1',              4);
+define('MARKAROUND_LINE_TYPE_HEADING2',              5);
+define('MARKAROUND_LINE_TYPE_HEADING3',              6);
+define('MARKAROUND_LINE_TYPE_ORDERED_LIST_ITEM',     7);
+define('MARKAROUND_LINE_TYPE_PRE_FORMATTED',         8);
+define('MARKAROUND_LINE_TYPE_TEXT_LEFT',             9);
+define('MARKAROUND_LINE_TYPE_TEXT_INDENTED',        10);
+define('MARKAROUND_LINE_TYPE_UNORDERED_LIST_ITEM',  11);
 
 class ColbyMarkaroundParser
 {
-    private $currentLineText;
-    private $currentLineType;
+    private $currentMarkaroundLine;
+    private $currentMarkaroundLineType;
     private $currentParagraphText;
     private $currentState;
 
     private $htmlArray;
     private $html;
-    private $markaroundText;
+    private $markaround;
 
     /**
      * The constructor is private because instances of this class should be
@@ -45,14 +45,14 @@ class ColbyMarkaroundParser
     /**
      * Creates a ColbyMarkaroundParser to parse the provided markaround text.
      *
-     * @param string $markaroundText
+     * @param string $markaround
      *
      * @return ColbyMarkaroundParser
      */
-    public static function parserWithMarkaroundText($markaroundText)
+    public static function parserWithMarkaround($markaround)
     {
         $parser = new ColbyMarkaroundParser();
-        $parser->markaroundText = $markaroundText;
+        $parser->markaround = $markaround;
 
         return $parser;
     }
@@ -76,40 +76,40 @@ class ColbyMarkaroundParser
      */
     private function currentLineContentText()
     {
-        switch ($this->currentLineType)
+        switch ($this->currentMarkaroundLineType)
         {
-            case MARKAROUND_LINETYPE_BLOCK_QUOTE:
+            case MARKAROUND_LINE_TYPE_BLOCK_QUOTE:
 
-                return preg_replace('/^>\s*(.*)\s*$/', '$1', $this->currentLineText);
+                return preg_replace('/^>\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
 
-            case MARKAROUND_LINETYPE_DESCRIPTION_NAME:
+            case MARKAROUND_LINE_TYPE_DESCRIPTION_NAME:
 
-                return preg_replace('/^}\s*(.*)\s*$/', '$1', $this->currentLineText);
+                return preg_replace('/^}\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
 
-            case MARKAROUND_LINETYPE_DESCRIPTION_VALUE:
+            case MARKAROUND_LINE_TYPE_DESCRIPTION_VALUE:
 
-                return preg_replace('/^]\s*(.*)\s*$/', '$1', $this->currentLineText);
+                return preg_replace('/^]\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
 
-            case MARKAROUND_LINETYPE_ORDERED_LIST_ITEM:
+            case MARKAROUND_LINE_TYPE_ORDERED_LIST_ITEM:
 
-                return preg_replace('/^[0-9]+\.\s*(.*)\s*$/', '$1', $this->currentLineText);
+                return preg_replace('/^[0-9]+\.\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
 
-            case MARKAROUND_LINETYPE_PRE_FORMATTED:
+            case MARKAROUND_LINE_TYPE_PRE_FORMATTED:
 
                 // The sequence of four backslashes below represents a single backslash.
                 //
                 // http://php.net/manual/en/regexp.reference.escape.php
 
-                return preg_replace('/^\)\s*(\\\\)?(.*)\s*$/', '$2', $this->currentLineText);
+                return preg_replace('/^\)\s*(\\\\)?(.*)\s*$/', '$2', $this->currentMarkaroundLine);
 
-            case MARKAROUND_LINETYPE_TEXT_INDENTED:
-            case MARKAROUND_LINETYPE_TEXT_LEFT:
+            case MARKAROUND_LINE_TYPE_TEXT_INDENTED:
+            case MARKAROUND_LINE_TYPE_TEXT_LEFT:
 
-                return preg_replace('/^(\\\\)?\s*(.*)\s*$/', '$2', $this->currentLineText);
+                return preg_replace('/^(\\\\)?\s*(.*)\s*$/', '$2', $this->currentMarkaroundLine);
 
-            case MARKAROUND_LINETYPE_UNORDERED_LIST_ITEM:
+            case MARKAROUND_LINE_TYPE_UNORDERED_LIST_ITEM:
 
-                return preg_replace('/^-\s*(.*)\s*$/', '$1', $this->currentLineText);
+                return preg_replace('/^-\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
 
             default:
 
@@ -118,62 +118,62 @@ class ColbyMarkaroundParser
     }
 
     /**
-     * @return MARKAROUND_LINETYPE
+     * @return MARKAROUND_LINE_TYPE
      */
-    private function currentLineType()
+    private function currentMarkaroundLineType()
     {
         // Test in order of likelyhood where possible.
 
-        if (preg_match('/^\s*$/', $this->currentLineText))
+        if (preg_match('/^\s*$/', $this->currentMarkaroundLine))
         {
-            return MARKAROUND_LINETYPE_EMPTY;
+            return MARKAROUND_LINE_TYPE_EMPTY;
         }
-        else if (preg_match('/^>/', $this->currentLineText))
+        else if (preg_match('/^>/', $this->currentMarkaroundLine))
         {
             // Block quote lines don't have to have content.
 
-            return MARKAROUND_LINETYPE_BLOCK_QUOTE;
+            return MARKAROUND_LINE_TYPE_BLOCK_QUOTE;
         }
-        else if (preg_match('/^}\s*./', $this->currentLineText))
+        else if (preg_match('/^}\s*./', $this->currentMarkaroundLine))
         {
-            return MARKAROUND_LINETYPE_DESCRIPTION_NAME;
+            return MARKAROUND_LINE_TYPE_DESCRIPTION_NAME;
         }
-        else if (preg_match('/^]\s*./', $this->currentLineText))
+        else if (preg_match('/^]\s*./', $this->currentMarkaroundLine))
         {
-            return MARKAROUND_LINETYPE_DESCRIPTION_VALUE;
+            return MARKAROUND_LINE_TYPE_DESCRIPTION_VALUE;
         }
-        else if (preg_match('/^#[^#]\s*./', $this->currentLineText))
+        else if (preg_match('/^#[^#]\s*./', $this->currentMarkaroundLine))
         {
-            return MARKAROUND_LINETYPE_HEADING1;
+            return MARKAROUND_LINE_TYPE_HEADING1;
         }
-        else if (preg_match('/^##[^#]\s*./', $this->currentLineText))
+        else if (preg_match('/^##[^#]\s*./', $this->currentMarkaroundLine))
         {
-            return MARKAROUND_LINETYPE_HEADING2;
+            return MARKAROUND_LINE_TYPE_HEADING2;
         }
-        else if (preg_match('/^###[^#]\s*./', $this->currentLineText))
+        else if (preg_match('/^###[^#]\s*./', $this->currentMarkaroundLine))
         {
-            return MARKAROUND_LINETYPE_HEADING3;
+            return MARKAROUND_LINE_TYPE_HEADING3;
         }
-        else if (preg_match('/^[0-9]+\.\s*./', $this->currentLineText))
+        else if (preg_match('/^[0-9]+\.\s*./', $this->currentMarkaroundLine))
         {
-            return MARKAROUND_LINETYPE_ORDERED_LIST_ITEM;
+            return MARKAROUND_LINE_TYPE_ORDERED_LIST_ITEM;
         }
-        else if (preg_match('/^\)/', $this->currentLineText))
+        else if (preg_match('/^\)/', $this->currentMarkaroundLine))
         {
             // Pre-formatted lines don't have to have content.
-            return MARKAROUND_LINETYPE_PRE_FORMATTED;
+            return MARKAROUND_LINE_TYPE_PRE_FORMATTED;
         }
-        else if (preg_match('/^-\s*./', $this->currentLineText))
+        else if (preg_match('/^-\s*./', $this->currentMarkaroundLine))
         {
-            return MARKAROUND_LINETYPE_UNORDERED_LIST_ITEM;
+            return MARKAROUND_LINE_TYPE_UNORDERED_LIST_ITEM;
         }
-        else if (preg_match('/^\s+./', $this->currentLineText))
+        else if (preg_match('/^\s+./', $this->currentMarkaroundLine))
         {
-            return MARKAROUND_LINETYPE_TEXT_INDENTED;
+            return MARKAROUND_LINE_TYPE_TEXT_INDENTED;
         }
         else
         {
-            return MARKAROUND_LINETYPE_TEXT_LEFT;
+            return MARKAROUND_LINE_TYPE_TEXT_LEFT;
         }
     }
 
@@ -203,14 +203,14 @@ class ColbyMarkaroundParser
 
         // Remove all carriage return characters so that only newlines separate lines. If there are random carriage returns in odd places (not adjacent to newlines) they will be ignored.
 
-        $text = preg_replace('/\r/', '', $this->markaroundText);
+        $markaround = preg_replace('/\r/', '', $this->markaround);
 
-        $lines = preg_split('/\n/', $text);
+        $markaroundLines = preg_split('/\n/', $markaround);
 
-        foreach ($lines as $lineText)
+        foreach ($markaroundLines as $markaroundLine)
         {
-            $this->currentLineText = $lineText;
-            $this->currentLineType = $this->currentLineType();
+            $this->currentMarkaroundLine = $markaroundLine;
+            $this->currentMarkaroundLineType = $this->currentMarkaroundLineType();
 
             $isLineProcessed = false;
 
@@ -280,9 +280,9 @@ class ColbyMarkaroundParser
     {
         $newState = MARKAROUND_STATE_BLOCK_QUOTE;
 
-        switch ($this->currentLineType)
+        switch ($this->currentMarkaroundLineType)
         {
-            case MARKAROUND_LINETYPE_BLOCK_QUOTE:
+            case MARKAROUND_LINE_TYPE_BLOCK_QUOTE:
 
                 $lineContentText = $this->currentLineContentText();
 
@@ -329,9 +329,9 @@ class ColbyMarkaroundParser
     {
         $newState = MARKAROUND_STATE_DESCRIPTION_LIST;
 
-        switch ($this->currentLineType)
+        switch ($this->currentMarkaroundLineType)
         {
-            case MARKAROUND_LINETYPE_DESCRIPTION_NAME:
+            case MARKAROUND_LINE_TYPE_DESCRIPTION_NAME:
 
                 $this->flushCurrentParagraph();
 
@@ -340,7 +340,7 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_DESCRIPTION_VALUE:
+            case MARKAROUND_LINE_TYPE_DESCRIPTION_VALUE:
 
                 $this->flushCurrentParagraph();
 
@@ -349,13 +349,13 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_EMPTY:
+            case MARKAROUND_LINE_TYPE_EMPTY:
 
                 $this->flushCurrentParagraph();
 
                 break;
 
-            case MARKAROUND_LINETYPE_TEXT_INDENTED:
+            case MARKAROUND_LINE_TYPE_TEXT_INDENTED:
 
                 if ($this->currentParagraphText)
                 {
@@ -366,7 +366,7 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_TEXT_LEFT:
+            case MARKAROUND_LINE_TYPE_TEXT_LEFT:
 
                 if ($this->currentParagraphText)
                 {
@@ -401,9 +401,9 @@ class ColbyMarkaroundParser
     {
         $newState = MARKAROUND_STATE_NONE;
 
-        switch ($this->currentLineType)
+        switch ($this->currentMarkaroundLineType)
         {
-            case MARKAROUND_LINETYPE_BLOCK_QUOTE:
+            case MARKAROUND_LINE_TYPE_BLOCK_QUOTE:
 
                 $this->transitionFromNoStateToBlockQuoteState();
 
@@ -411,8 +411,8 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_DESCRIPTION_NAME:
-            case MARKAROUND_LINETYPE_DESCRIPTION_VALUE:
+            case MARKAROUND_LINE_TYPE_DESCRIPTION_NAME:
+            case MARKAROUND_LINE_TYPE_DESCRIPTION_VALUE:
 
                 $this->transitionFromNoStateToDescriptionListState();
 
@@ -420,35 +420,35 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_EMPTY:
+            case MARKAROUND_LINE_TYPE_EMPTY:
 
                 break;
 
-            case MARKAROUND_LINETYPE_HEADING1:
+            case MARKAROUND_LINE_TYPE_HEADING1:
 
-                $lineContentText = preg_replace('/^#\s*(.*)\s*$/', '$1', $this->currentLineText);
+                $lineContentText = preg_replace('/^#\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
                 $lineHTML = ColbyConvert::textToHTML($lineContentText);
                 $this->htmlArray[] = "<h1>{$lineHTML}</h1>\n";
 
                 break;
 
-            case MARKAROUND_LINETYPE_HEADING2:
+            case MARKAROUND_LINE_TYPE_HEADING2:
 
-                $lineContentText = preg_replace('/^##\s*(.*)\s*$/', '$1', $this->currentLineText);
+                $lineContentText = preg_replace('/^##\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
                 $lineHTML = ColbyConvert::textToHTML($lineContentText);
                 $this->htmlArray[] = "<h2>{$lineHTML}</h2>\n";
 
                 break;
 
-            case MARKAROUND_LINETYPE_HEADING3:
+            case MARKAROUND_LINE_TYPE_HEADING3:
 
-                $lineContentText = preg_replace('/^###\s*(.*)\s*$/', '$1', $this->currentLineText);
+                $lineContentText = preg_replace('/^###\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
                 $lineHTML = ColbyConvert::textToHTML($lineContentText);
                 $this->htmlArray[] = "<h3>{$lineHTML}</h3>\n";
 
                 break;
 
-            case MARKAROUND_LINETYPE_ORDERED_LIST_ITEM:
+            case MARKAROUND_LINE_TYPE_ORDERED_LIST_ITEM:
 
                 $this->transitionFromNoStateToOrderedListState();
 
@@ -456,7 +456,7 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_PRE_FORMATTED:
+            case MARKAROUND_LINE_TYPE_PRE_FORMATTED:
 
                 $this->transitionFromNoStateToPreFormattedState();
 
@@ -464,14 +464,14 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_TEXT_LEFT:
-            case MARKAROUND_LINETYPE_TEXT_INDENTED:
+            case MARKAROUND_LINE_TYPE_TEXT_LEFT:
+            case MARKAROUND_LINE_TYPE_TEXT_INDENTED:
 
                 $newState = MARKAROUND_STATE_SIMPLE_PARAGRAPH;
 
                 break;
 
-            case MARKAROUND_LINETYPE_UNORDERED_LIST_ITEM:
+            case MARKAROUND_LINE_TYPE_UNORDERED_LIST_ITEM:
 
                 $this->transitionFromNoStateToUnorderedListState();
 
@@ -481,8 +481,8 @@ class ColbyMarkaroundParser
 
             default:
 
-                $lineHTML = ColbyConvert::textToHTML($this->currentLineText);
-                $this->htmlArray[] = "<p>{$this->currentLineType}: {$lineHTML}\n";
+                $lineHTML = ColbyConvert::textToHTML($this->currentMarkaroundLine);
+                $this->htmlArray[] = "<p>{$this->currentMarkaroundLineType}: {$lineHTML}\n";
 
                 break;
 
@@ -498,9 +498,9 @@ class ColbyMarkaroundParser
     {
         $newState = MARKAROUND_STATE_ORDERED_LIST;
 
-        switch ($this->currentLineType)
+        switch ($this->currentMarkaroundLineType)
         {
-            case MARKAROUND_LINETYPE_ORDERED_LIST_ITEM:
+            case MARKAROUND_LINE_TYPE_ORDERED_LIST_ITEM:
 
                 $this->flushCurrentParagraph();
 
@@ -509,13 +509,13 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_EMPTY:
+            case MARKAROUND_LINE_TYPE_EMPTY:
 
                 $this->flushCurrentParagraph();
 
                 break;
 
-            case MARKAROUND_LINETYPE_TEXT_INDENTED:
+            case MARKAROUND_LINE_TYPE_TEXT_INDENTED:
 
                 if ($this->currentParagraphText)
                 {
@@ -526,7 +526,7 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_TEXT_LEFT:
+            case MARKAROUND_LINE_TYPE_TEXT_LEFT:
 
                 if ($this->currentParagraphText)
                 {
@@ -561,9 +561,9 @@ class ColbyMarkaroundParser
     {
         $newState = MARKAROUND_STATE_PRE_FORMATTED;
 
-        switch ($this->currentLineType)
+        switch ($this->currentMarkaroundLineType)
         {
-            case MARKAROUND_LINETYPE_PRE_FORMATTED:
+            case MARKAROUND_LINE_TYPE_PRE_FORMATTED:
 
                 $lineHTML = ColbyConvert::textToHTML($this->currentLineContentText());
                 $this->htmlArray[] = "{$lineHTML}\n";
@@ -588,10 +588,10 @@ class ColbyMarkaroundParser
     {
         $newState = MARKAROUND_STATE_SIMPLE_PARAGRAPH;
 
-        switch ($this->currentLineType)
+        switch ($this->currentMarkaroundLineType)
         {
-            case MARKAROUND_LINETYPE_TEXT_LEFT:
-            case MARKAROUND_LINETYPE_TEXT_INDENTED:
+            case MARKAROUND_LINE_TYPE_TEXT_LEFT:
+            case MARKAROUND_LINE_TYPE_TEXT_INDENTED:
 
                 if ($this->currentParagraphText)
                 {
@@ -621,9 +621,9 @@ class ColbyMarkaroundParser
     {
         $newState = MARKAROUND_STATE_UNORDERED_LIST;
 
-        switch ($this->currentLineType)
+        switch ($this->currentMarkaroundLineType)
         {
-            case MARKAROUND_LINETYPE_UNORDERED_LIST_ITEM:
+            case MARKAROUND_LINE_TYPE_UNORDERED_LIST_ITEM:
 
                 $this->flushCurrentParagraph();
 
@@ -632,13 +632,13 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_EMPTY:
+            case MARKAROUND_LINE_TYPE_EMPTY:
 
                 $this->flushCurrentParagraph();
 
                 break;
 
-            case MARKAROUND_LINETYPE_TEXT_INDENTED:
+            case MARKAROUND_LINE_TYPE_TEXT_INDENTED:
 
                 if ($this->currentParagraphText)
                 {
@@ -649,7 +649,7 @@ class ColbyMarkaroundParser
 
                 break;
 
-            case MARKAROUND_LINETYPE_TEXT_LEFT:
+            case MARKAROUND_LINE_TYPE_TEXT_LEFT:
 
                 if ($this->currentParagraphText)
                 {

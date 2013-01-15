@@ -4,7 +4,7 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Markaround Help',
                                                   'Help for markaround syntax.',
                                                   'admin');
 
-$markaroundText = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/markaround-help.txt');
+$markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/markaround-help.txt');
 
 ?>
 
@@ -12,7 +12,7 @@ $markaroundText = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/mark
 
 <div style="width: 700px; margin: 0px auto; font-size: 14px;">
     <div class="formatted-content">
-        <?php echo ColbyConvert::markaroundTextToHTML($markaroundText); ?>
+        <?php echo ColbyConvert::markaroundToHTML($markaround); ?>
     </div>
 </div>
 

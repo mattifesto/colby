@@ -11,6 +11,28 @@ class Colby
     private static $mysqli = null;
 
     /**
+     * If the site is marked as being debugged this function will send a message
+     * to the PHP error log. If the site isn't being debugged it will do
+     * nothing.
+     *
+     * This function works well for deprecated function messages and other
+     * messages that a developer would want to know about but may not be able
+     * take action on immediately.
+     *
+     * This function should not be used for messages that require immediate
+     * action. Those issues should be resolved right away.
+     *
+     * @return void
+     */
+    public static function debugLog($message)
+    {
+        if (COLBY_SITE_IS_BEING_DEBUGGED)
+        {
+            error_log("Debug Log: {$message}");
+        }
+    }
+
+    /**
      * @return string
      */
     public static function exceptionStackTrace($exception)

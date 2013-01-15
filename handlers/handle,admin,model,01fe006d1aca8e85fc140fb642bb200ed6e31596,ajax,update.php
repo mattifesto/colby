@@ -11,7 +11,7 @@ $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
 $archive = ColbyArchive::archiveFromPostData();
 
-$archive->setMarkdownValueForKey($_POST['content'], 'content');
+$archive->setMarkaroundValueForKey($_POST['content'], 'content');
 
 $archive->model->setContentSearchText($archive->valueForKey('content'));
 

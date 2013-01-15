@@ -5,34 +5,26 @@ class ColbyConvert
     /**
      * @return string
      */
-    public static function markaroundTextToHTML($markaroundText)
+    public static function markaroundToHTML($markaround)
     {
         include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyMarkaroundParser.php');
 
-        $parser = ColbyMarkaroundParser::parserWithMarkaroundText($markaroundText);
+        $parser = ColbyMarkaroundParser::parserWithMarkaround($markaround);
 
         return $parser->html();
     }
 
-    ///
-    /// converts plain text into formatted content HTML
-    ///
-    ///  - trims whitespace
-    ///  - converts html special characters to entities
-    ///  - interprets textual formatting to create formatted content HTML
-    ///
+    /**
+     * Deprecated
+     *  2013.01.14
+     *
+     * @return string
+     */
     public static function textToFormattedContent($text)
     {
-        $html = self::textToHTML($text);
+        Colby::debugLog('`ColbyConvert::textToFormattedContent` has been deprecated in favor of `ColbyConvert::markaroundToHTML`');
 
-        $html = preg_replace('/[\r\n]+/', "\n<p>", $html);
-
-        if ($html)
-        {
-            $html = "<p>{$html}";
-        }
-
-        return $html;
+        return self::markaroundToHTML($text);
     }
 
     /**

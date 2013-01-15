@@ -360,10 +360,10 @@ class ColbyArchive
     }
 
     /**
-     * This method sets a markdown value for the given name. It also converts
-     * the markdown to HTML and sets the HTML value for the key "{$key}HTML".
+     * This method sets a markaround value for the given name. It also converts
+     * the markaround to HTML and sets the HTML value for the key "{$key}HTML".
      *
-     * @param string $markdownValue
+     * @param string $markaroundValue
      *
      * The value of this parameter is saved as the value for $key. It is then
      * converted to HTML and saved as the value for the key "{$key}HTML".
@@ -372,15 +372,28 @@ class ColbyArchive
      *
      * @return void
      */
-    public function setMarkdownValueForKey($markdownValue, $key)
+    public function setMarkaroundValueForKey($markaroundValue, $key)
     {
         $key = strval($key);
 
-        $this->data->$key = strval($markdownValue);
+        $this->data->$key = strval($markaroundValue);
 
         $htmlKey = "{$key}HTML";
 
-        $this->data->$htmlKey = ColbyConvert::textToFormattedContent($this->data->$key);
+        $this->data->$htmlKey = ColbyConvert::markaroundToHTML($this->data->$key);
+    }
+
+    /**
+     * Deprecated
+     *  2013.01.14
+     *
+     * @return void
+     */
+    public function setMarkdownValueForKey($markdownValue, $key)
+    {
+        Colby::debugLog('`ColbyArchive::setMarkdownValueForKey` has been deprecated in favor of `ColbyArchive::setMarkaroundValueForKey`');
+
+        self::setMarkaroundValueForKey($markdownValue, $key);
     }
 
     /**

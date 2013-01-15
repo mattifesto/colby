@@ -118,7 +118,7 @@ function ColbyPageModelCreateAndDeleteTest()
 
     $model->setPreferredPageStub('the-test-post');
 
-    $archive->setMarkdownValueForKey($content, 'content');
+    $archive->setMarkaroundValueForKey($content, 'content');
 
     $model->updateDatabase();
     $archive->save();

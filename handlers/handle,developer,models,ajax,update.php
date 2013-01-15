@@ -8,7 +8,7 @@ $data = new stdClass();
 $data->name = $_POST['name'];
 $data->nameHTML = ColbyConvert::textToHTML($data->name);
 $data->description = $_POST['description'];
-$data->descriptionHTML = ColbyConvert::textToFormattedContent($data->description);
+$data->descriptionHTML = ColbyConvert::markaroundToHTML($data->description);
 
 $handlerFilenameBase = "handle,admin,model,{$modelId}";
 

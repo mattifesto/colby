@@ -28,7 +28,8 @@ input[type="reset"]:hover
 
 .menubar
 {
-    padding: 5px 15px 7px;
+    padding-top: 5px;
+    padding-bottom: 7px;
     background-color: #333333;
     color: #bbbbbb;
     font-size: 14px;
