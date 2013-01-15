@@ -4,43 +4,44 @@ This document provides help on how to use markaround to create documents. Markar
 
 # The Elements
 
-## Simple paragraph
+## Paragraphs
 
-Simple paragraphs are the most common elements. They are what they say they are, simple paragraphs of text.
+Paragraphs are the most common content. A single paragraph is created for blocks of text with no blank lines.
 
-### Single line markaround to produce a single simple paragraph
+You can write all of the paragraph text on one line as you would normally or if it feels more confortable in the situation you can split the text onto multiple consecutive lines. Whitespace included before or after any line will be removed.
 
-) You can write all the content on one line.
+### Markaround text
 
-### Results
-
-You can write all the content on one line.
-
-
-### Multiple line markaround to produce a single paragraph
-
-)\As long
-)\  as there
-)\is not an empty line
-)\    all the text will be
-)\ placed in one
-)\paragraph. The whitespace between
-)\ words will be collapsed.
+) An investment in knowledge pays the best interest.
 
 ### Results
 
-As long
-  as there
-is not an empty line
-    all the text will be
- placed in one
-paragraph. The whitespace between
- words will be collapsed.
+An investment in knowledge pays the best interest.
+
+
+### Markaround text
+
+) An investment
+) in knowledge
+)\    pays the best
+) interest.
+
+
+### Results
+
+An investment
+in knowledge
+    pays the best
+interest.
 
 
 ## Headings
 
-### Headings markaround examples
+Most of the time headings aren't necessary because the document type will have headings built in, such as a blog post title and subtitle. But for longer or more structured documents, such as this document, using headings can help bring the appropriate structure.
+
+Like all elements, headings will be formatted to match the overall document type style and will change in appearance between document types. The first level heading will always be more prominent than the second level heading which will be more prominent than the third level heading.
+
+### Markaround text
 
 )# This is a first level heading
 )## This is a second level heading
@@ -58,7 +59,7 @@ paragraph. The whitespace between
 
 Use a block quote when quoting content from another source that is longer than would comfortably be expressed using quotation marks.
 
-### Block quotation markaround example
+### Markaround text
 
 )> Four score and seven years ago our fathers brought forth on this continent
 )> a new nation, conceived in liberty, and dedicated to the proposition that
@@ -86,9 +87,9 @@ Use a block quote when quoting content from another source that is longer than w
 
 ## Description lists
 
-Use description lists to display name-value style information.
+Use description lists to display name-value style information. Both the "name" and the "value" portions can have multiple paragraphs if needed as show in the second example.
 
-### Markaround for a simple description list
+### Markaround text
 
 )} Height
 )] 18"
@@ -98,9 +99,6 @@ Use description lists to display name-value style information.
 )
 )} Eye Color
 )] Brown
-)
-)} Disposition
-)] Happy
 
 
 ### Results
@@ -114,16 +112,15 @@ Use description lists to display name-value style information.
 } Eye Color
 ] Brown
 
-} Disposition
-] Happy
 
-### Markaround for a description list including a value with multiple paragraphs
+### Markaround text
 
 )\} Disposition
 )\] Happy and friendly.
 )\
 )\  Likes playing fetch, eating cheese,
 )\  and sleeping under the covers.
+
 
 ### Results
 
@@ -136,11 +133,17 @@ Use description lists to display name-value style information.
 
 ## Unordered lists
 
+Unordered lists or bulleted lists are very easy to create with lines starting with a hyphen. An unordered list will be ended when there is another type of element and empty lines do not break up an unordered list.
+
+Unordered list items can contain multiple paragraphs by adding an empty line and indenting the first line of the new paragraph by at least one space.
+
 ### Markaround for a simple unordered list
 
 )- Dogs
 )- Cats
 )- Turtles
+)
+)
 )- Doves
 
 ### Results
@@ -148,6 +151,8 @@ Use description lists to display name-value style information.
 - Dogs
 - Cats
 - Turtles
+
+
 - Doves
 
 
@@ -161,14 +166,6 @@ Use description lists to display name-value style information.
 )\
 )\    Cats are cute furry pets that prefer their independence and
 )\    are easy to house train.
-)\
-)\-   Turtles
-)\
-)\    Some turtles live to be over 100 years old.
-)\
-)\-   Doves
-)\
-)\    Doves are a symbol of peace.
 
 ### Results
 
@@ -181,42 +178,38 @@ Use description lists to display name-value style information.
     Cats are cute furry pets that prefer their independence and
     are easy to house train.
 
--   Turtles
-
-    Some turtles live to be over 100 years old.
-
--   Doves
-
-    Doves are a symbol of peace.
 
 
 ## Ordered lists
 
-When creating ordered lists the actual numbers don't matter as long as each list item is prececed by some number and a period. The displayed list will fix the ordering to start at 1 and increment by 1 for each item. In many cases its easiest to just use "1." for every line.
+When creating ordered lists the actual numbers used in the markaround text don't matter as long as each list item is prececed by some number and a period. The displayed list will fix the ordering to start at 1 and increment by 1 for each item. In many cases its easiest to just use "1." for every line so you don't have to renumber the lines if you add items or change the order.
+
+Ordered list items can contain multiple paragraphs by using the same method shown in the unordered list section.
 
 
 ### Markaround for a simple ordered list
 
-)1. Open the web browser.
-)2. Navigate to the blog admin page.
-)2. Create a new post.
-)439. Write a very interesting post using markaround syntax.
+) 1. Open the web browser.
+) 2. Navigate to the blog admin page.
+) 2. Create a new post.
+) 439. Write a very interesting blog post
+)\     using markaround syntax.
 
 ### Results
 
 1. Open the web browser.
 2. Navigate to the blog admin page.
 2. Create a new post.
-439. Write a very interesting post using markaround syntax.
+439. Write a very interesting post
+     using markaround syntax.
 
 Ordered list items can also have multiple paragraphs
 
 
 ## Pre-formatted text
 
-Pre-formatted text blocks are indicated by lines beginning with an ending parenthesis. Any white space after the opening parenthesis is collapsed to zero characters so the first non white space character starts the line. Use a backslash to start to force beginning of line whitespace.
+Pre-formatted text blocks have lines that begin with an ending parenthesis. Any white space after the beginning parenthesis is collapsed so the first non white space character starts the line content. Use a backslash to start the line content with whitespace.
 
-See the extreme examples of pre-formatted text blocks for more complex details on the syntax.
 
 ### Pre-formatted text markaround
 
@@ -261,29 +254,6 @@ This _word_ is italic.
 
 The following examples are used to exaggerate how some of the concepts of markdown are implemented. They are in this section to keep the above examples simple. These examples almost all very bad examples of how to do something and are meant to illustrate a point. Rather that examples of how things should be done, they are more likely to be examples of bad form.
 
-
-
-## Extreme simple paragraph
-
-### Markaround text
-
-)This text has a character in the first column after a blank line starting a simple paragraph.
-)This is a continuation line because there's no blank line above.
-)\   This is also a continuation line
-)and so is this
-)\               and so is this.
-)
-)\    This is a new paragraph because there's no such thing as a continuation paragraph of a simple paragraph.
-
-### Result
-
-This text has a character in the first column after a blank line starting a simple paragraph.
-This is a continuation line because there's no blank line above.
-   This is also a continuation line
-and so is this
-               and so is this.
-
-    This is a new paragraph because there's no such thing as a continuation paragraph of a simple paragraph.
 
 
 ## Extreme block quote
@@ -343,25 +313,18 @@ with one continuation line.
 
     What this means is that it is not possible to have an unordered list directly followed by another separate unordered list. I can't think of a common need for successive unordered lists, but if you have a scenario with such a need the solution is to go to the higher level and create an editor and template. The editor may expose multiple markaround fields or may not use markaround at all. It is not a goal of markaround to be a solution to every problem.
 
-## Extreme ordered list
-
-### Markaround text
-
-)5. Dogs
-)2343. Cats
-)1. Turtles
-)17. Doves
-
-### Result
-
-5. Dogs
-2343. Cats
-1. Turtles
-17. Doves
-
 ## Extreme pre-formatted text
 
-The following examples shows that initial whitespace is collapsed to zero.
+The following example shows that initial whitespace is collapsed to zero.
+
+### Markdown text
+
+))The capital T at the beginning of this line will be in the first column.
+)) The capital T at the beginning of this line will be in the first column.
+))  The capital T at the beginning of this line will be in the first column.
+))   The capital T at the beginning of this line will be in the first column.
+
+### Result
 
 )The capital T at the beginning of this line will be in the first column.
 ) The capital T at the beginning of this line will be in the first column.
@@ -369,26 +332,3 @@ The following examples shows that initial whitespace is collapsed to zero.
 )   The capital T at the beginning of this line will be in the first column.
 
 
-The following example uses a backslash to start making whitespace count.
-
-) Name     Score
-) Bob         10
-)\            20
-
-
-The following example shows that pre-formatted text blocks do no support continuations of any type.
-
-) Name     Score
-) Bob         10
-This is a new simple paragraph.
-
-
-The following example shows that you can have successive pre-formatted text blocks. A pre-formatted text block ends as soon as there is a line that doesn't begin with an open parenthesis.
-
-) This is one pre-formatted
-) text block.
-
-) This is another pre-formatted
-) text block.
-
-Successive pre-formatted text blocks are not a requirement or a feature. They are the logical result of the belief that pre-formatted text should be clearly pre-formatted. Continuations exist help other elements clarify their intent, but continuations would only blur the intent of pre-formatted text.
