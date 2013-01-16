@@ -23,9 +23,9 @@
 <progress value="0" style="width: 100px; float: right;"></progress>
 
 <div>
-    <label>Title
-        <input type="text"
-               id="title"
+    <label>
+        Title
+        <input type="text" id="title"
                value="<?php echo $archive->valueForKey('titleHTML'); ?>">
     </label>
 </div>
