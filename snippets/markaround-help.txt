@@ -228,26 +228,68 @@ Pre-formatted text blocks have lines that begin with an ending parenthesis. Any 
 )  \      Total:  51
 
 
-# Inline elemnents
+# Inline elements
 
 ## Bold
 
-This *word* is bold.
+Bold text is generally used in reference materials to highlight keywords so that a reader skimming the text can easily find the most important information. The example below is copied directly from Wikipedia.
+
+### Markaround text
+
+) *Frogs* are a diverse and largely carnivorous group of
+) short-bodied, tailless amphibians composing the order *Anura*
+) (Ancient Greek an-, without + oura, tail).
+
+### Result
+
+*Frogs* are a diverse and largely carnivorous group of short-bodied, tailless amphibians composing the order *Anura* (Ancient Greek an-, without + oura, tail).
+
+
+## Italics
+
+Italics can be used to subtly emphasize words without distracting the reader's attention or to change the meaning of a sentence.
+
+Even though italicized text is used for book and movie titles, use the citation syntax (below) instead when citing the title of a work becuase it will tell search engines that you are doing so. Italics text is just italics and doesn't bring any other special meaning with it.
+
+### Markaround text
+
+) The questions "What are you doing?" and "What _are_ you doing?" read very
+) differently. The first might be friendly but the second is somewhat
+) accusatory.
+
+### Result
+
+The questions "What are you doing?" and "What _are_ you doing?" read very
+differently. The first might be friendly but the second is somewhat
+accusatory.
+
 
 ## Citation
 
+The citation syntax should be used when citing the title of a work.
+
+### Markaround text
+
+) The book {Harry Potter and the Sorcerer's Stone} is enjoyable.
+
+### Result
+
 The book {Harry Potter and the Sorcerer's Stone} is enjoyable.
+
 
 ## Code
 
-Use back ticks "`" to insert a code block. For example:
+Use backticks to insert short snippets of code or reference function names or other software development names.
 
-This checkin adds the `parseJSON()` method.
+### Markaround text
 
-## Italic
+) I called the Javascript function `JSON.parse` to generate the content
+) to place in the `blockquote` element.
 
-This _word_ is italic.
+### Result
 
+I called the Javascript function `JSON.parse` to generate the content
+to place in the `blockquote` element.
 
 
 # Extreme examples
@@ -262,16 +304,18 @@ The following examples are used to exaggerate how some of the concepts of markdo
 
 )> This is a block quote
 )>    with
-)>a
-)> lot of
+)>way
+)>             too
+)>      many
 )>     continuation lines.
 
 ### Result
 
 > This is a block quote
 >    with
->a
-> lot of
+>way
+>             too
+>      many
 >     continuation lines.
 
 

@@ -18,6 +18,11 @@ ColbyArchiverInvalidFileIdTest();
 
 ColbyPageModelCreateAndDeleteTest();
 
+/*
+ * ColbyMarkaroundParser
+ */
+include(COLBY_SITE_DIRECTORY . '/colby/tests/TestColbyMarkaroundParser.php');
+
 //
 // Unit Tests Complete
 //
@@ -147,5 +152,19 @@ function ColbyPageModelCreateAndDeleteTest()
     if ($archive)
     {
         throw new RuntimeException(__FUNCTION__ . ' failed: The archive is still retreivable after deleting.');
+    }
+}
+
+class ColbyUnitTests
+{
+    public static function VerifyActualStringIsExpected($actual, $expected)
+    {
+        if ($actual != $expected)
+        {
+            $expected2 = ColbyConvert::textToTextWithVisibleWhitespace($expected);
+            $actual2 = ColbyConvert::textToTextWithVisibleWhitespace($actual);
+
+            throw new RuntimeException("expected: \"{$expected2}\", actual: \"{$actual2}\"");
+        }
     }
 }

@@ -184,13 +184,64 @@ class ColbyMarkaroundParser
     {
         if ($this->currentParagraphText)
         {
-            $html = ColbyConvert::textToHTML($this->currentParagraphText);
+            $html = $this->paragraphTextToHTML($this->currentParagraphText);
             $html = "<p>{$html}\n";
 
             $this->htmlArray[] = $html;
 
             $this->currentParagraphText = null;
         }
+    }
+
+    /**
+     * This function converts markaround paragraph text to HTML by converting
+     * special characters to inline formatting.
+     *
+     * *bold*       --> <b>bold</b>
+     * _italic_     --> <i>italic</i>
+     * `code`       --> <code>code</code>
+     * {citation}   --> <cite>citation</cite>
+     *
+     * @param string $markaroundParagraphText
+     *  The markaround text for the paragraph to be formatted.
+     *
+     * @return string
+     */
+    private function paragraphTextToHTML($paragraphText)
+    {
+        $patterns = array();
+        $replacements = array();
+
+        /* this pattern represents non-empty strings of text surrounded by asterisks
+         * that haven't been escaped with a backslash
+         *
+         * '(?<!\\\\)\*' --> an asterisk _not_ preceded by a backslash
+         * uses regular expression lookbehind syntax: '(?<!' … ')'
+         */
+        $patterns[] = '/(?<!\\\\)\*(.+?)(?<!\\\\)\*/';
+        $replacements[] = '<b>$1</b>';
+
+        $patterns[] = '/(?<!\\\\)_(.+?)(?<!\\\\)_/';
+        $replacements[] = '<i>$1</i>';
+
+        $patterns[] = '/(?<!\\\\)`(.+?)(?<!\\\\)`/';
+        $replacements[] = '<code>$1</code>';
+
+        $patterns[] = '/(?<!\\\\){(.+?)(?<!\\\\)}/';
+        $replacements[] = '<cite>$1</cite>';
+
+        /* this pattern represents any character preceded by a backslash
+         */
+        $patterns[] = '/[\\\\](.)/';
+        $replacements[] = '$1';
+
+        // First escape any special characters
+
+        $html = ColbyConvert::textToHTML($paragraphText);
+
+        // Then create the inline elements
+
+        return preg_replace($patterns, $replacements, $html);
     }
 
     /**
@@ -264,10 +315,30 @@ class ColbyMarkaroundParser
                 }
                 else
                 {
-                    $this->currentState = $newState;
+                    // All state transitions are either going to or from MARKAROUND_STATE_NONE. Anything else is an error.
+
+                    if ($this->currentState == MARKAROUND_STATE_NONE)
+                    {
+                        $this->transitionFromNoStateTo($newState);
+                    }
+                    else if ($newState == MARKAROUND_STATE_NONE)
+                    {
+                        $this->transitionToNoStateFrom($this->currentState);
+                    }
+                    else
+                    {
+                        $message = "Unsupported state transition from {$this->currentState} to {$newState}";
+
+                        throw new RuntimeException($message);
+                    }
                 }
             }
         }
+
+        // The last line has been processed so transition back to 'no state' to
+        // flush the current paragraph and end the current element if necessary.
+
+        $this->transitionToNoStateFrom($this->currentState);
 
         $this->html = implode('', $this->htmlArray);
         $this->htmlArray = null;
@@ -309,11 +380,6 @@ class ColbyMarkaroundParser
 
             default:
 
-                // The blockquote ends on any line that doesn't start with ">"
-
-                $this->flushCurrentParagraph();
-
-                $this->htmlArray[] = "</blockquote>\n";
                 $newState = MARKAROUND_STATE_NONE;
 
                 break;
@@ -375,7 +441,6 @@ class ColbyMarkaroundParser
                 }
                 else
                 {
-                    $this->htmlArray[] = "</dl>\n";
                     $newState = MARKAROUND_STATE_NONE;
                 }
 
@@ -383,9 +448,6 @@ class ColbyMarkaroundParser
 
             default:
 
-                $this->flushCurrentParagraph();
-
-                $this->htmlArray[] = "</dl>\n";
                 $newState = MARKAROUND_STATE_NONE;
 
                 break;
@@ -405,16 +467,12 @@ class ColbyMarkaroundParser
         {
             case MARKAROUND_LINE_TYPE_BLOCK_QUOTE:
 
-                $this->transitionFromNoStateToBlockQuoteState();
-
                 $newState = MARKAROUND_STATE_BLOCK_QUOTE;
 
                 break;
 
             case MARKAROUND_LINE_TYPE_DESCRIPTION_NAME:
             case MARKAROUND_LINE_TYPE_DESCRIPTION_VALUE:
-
-                $this->transitionFromNoStateToDescriptionListState();
 
                 $newState = MARKAROUND_STATE_DESCRIPTION_LIST;
 
@@ -450,15 +508,11 @@ class ColbyMarkaroundParser
 
             case MARKAROUND_LINE_TYPE_ORDERED_LIST_ITEM:
 
-                $this->transitionFromNoStateToOrderedListState();
-
                 $newState = MARKAROUND_STATE_ORDERED_LIST;
 
                 break;
 
             case MARKAROUND_LINE_TYPE_PRE_FORMATTED:
-
-                $this->transitionFromNoStateToPreFormattedState();
 
                 $newState = MARKAROUND_STATE_PRE_FORMATTED;
 
@@ -472,8 +526,6 @@ class ColbyMarkaroundParser
                 break;
 
             case MARKAROUND_LINE_TYPE_UNORDERED_LIST_ITEM:
-
-                $this->transitionFromNoStateToUnorderedListState();
 
                 $newState = MARKAROUND_STATE_UNORDERED_LIST;
 
@@ -535,7 +587,6 @@ class ColbyMarkaroundParser
                 }
                 else
                 {
-                    $this->htmlArray[] = '</ol>';
                     $newState = MARKAROUND_STATE_NONE;
                 }
 
@@ -543,9 +594,6 @@ class ColbyMarkaroundParser
 
             default:
 
-                $this->flushCurrentParagraph();
-
-                $this->htmlArray[] = '</ol>';
                 $newState = MARKAROUND_STATE_NONE;
 
                 break;
@@ -572,7 +620,6 @@ class ColbyMarkaroundParser
 
             default:
 
-                $this->htmlArray[] = "</pre>\n";
                 $newState = MARKAROUND_STATE_NONE;
 
                 break;
@@ -603,8 +650,6 @@ class ColbyMarkaroundParser
                 break;
 
             default:
-
-                $this->flushCurrentParagraph();
 
                 $newState = MARKAROUND_STATE_NONE;
 
@@ -658,7 +703,6 @@ class ColbyMarkaroundParser
                 }
                 else
                 {
-                    $this->htmlArray[] = "</ul>\n";
                     $newState = MARKAROUND_STATE_NONE;
                 }
 
@@ -666,9 +710,6 @@ class ColbyMarkaroundParser
 
             default:
 
-                $this->flushCurrentParagraph();
-
-                $this->htmlArray[] = "</ul>\n";
                 $newState = MARKAROUND_STATE_NONE;
 
                 break;
@@ -680,40 +721,74 @@ class ColbyMarkaroundParser
     /**
      * @return void
      */
-    private function transitionFromNoStateToBlockQuoteState()
+    private function transitionFromNoStateTo($newState)
     {
-        $this->htmlArray[] = "<blockquote>\n";
+        switch($newState)
+        {
+            case MARKAROUND_STATE_BLOCK_QUOTE:
+
+                $this->htmlArray[] = "<blockquote>\n";
+                break;
+
+            case MARKAROUND_STATE_DESCRIPTION_LIST:
+
+                $this->htmlArray[] = "<dl>\n";
+                break;
+
+            case MARKAROUND_STATE_ORDERED_LIST:
+
+                $this->htmlArray[] = "<ol>\n";
+                break;
+
+            case MARKAROUND_STATE_PRE_FORMATTED:
+
+                $this->htmlArray[] = "<pre>\n";
+                break;
+
+            case MARKAROUND_STATE_UNORDERED_LIST:
+
+                $this->htmlArray[] = "<ul>\n";
+                break;
+        }
+
+        $this->currentState = $newState;
     }
 
     /**
      * @return void
      */
-    private function transitionFromNoStateToDescriptionListState()
+    private function transitionToNoStateFrom($previousState)
     {
-        $this->htmlArray[] = "<dl>\n";
-    }
+        $this->flushCurrentParagraph();
 
-    /**
-     * @return void
-     */
-    private function transitionFromNoStateToOrderedListState()
-    {
-        $this->htmlArray[] = "<ol>\n";
-    }
+        switch($previousState)
+        {
+            case MARKAROUND_STATE_BLOCK_QUOTE:
 
-    /**
-     * @return void
-     */
-    private function transitionFromNoStateToPreFormattedState()
-    {
-        $this->htmlArray[] = "<pre>\n";
-    }
+                $this->htmlArray[] = "</blockquote>\n";
+                break;
 
-    /**
-     * @return void
-     */
-    private function transitionFromNoStateToUnorderedListState()
-    {
-        $this->htmlArray[] = "<ul>\n";
+            case MARKAROUND_STATE_DESCRIPTION_LIST:
+
+                $this->htmlArray[] = "</dl>\n";
+                break;
+
+            case MARKAROUND_STATE_ORDERED_LIST:
+
+                $this->htmlArray[] = "</ol>\n";
+                break;
+
+            case MARKAROUND_STATE_PRE_FORMATTED:
+
+                $this->htmlArray[] = "</pre>\n";
+                break;
+
+            case MARKAROUND_STATE_UNORDERED_LIST:
+
+                $this->htmlArray[] = "</ul>\n";
+                break;
+        }
+
+        $this->currentState = MARKAROUND_STATE_NONE;
     }
 }

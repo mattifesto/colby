@@ -107,6 +107,29 @@ class ColbyConvert
     }
 
     /**
+     * This function will make the whitespace inside text visible, usually for
+     * debugging purposes. I've added it here because I've needed and lost it
+     * a few times and had a hard time finding it again and that usually means
+     * it should be here. It also seems like the type of function that will
+     * be perfected over time as I encounter different types of whitespace.
+     *
+     * This function also adds backslashes to backslashes so that the returned
+     * string looks like what you'd type in PHP code to get the $text parameter
+     * value.
+     *
+     * Having said that, the return value of this function should be treated
+     * as informational only and not necessarily round-trippable.
+     *
+     * @param string $text
+     *
+     * @return string
+     */
+    public static function textToTextWithVisibleWhitespace($text)
+    {
+        return addcslashes($text, "\\\n\r\t");
+    }
+
+    /**
      * @return string
      */
     public static function timestampToFriendlyTime($timestamp)
