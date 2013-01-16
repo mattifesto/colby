@@ -23,6 +23,7 @@ input[type="text"][readonly="readonly"]
 fieldset
 {
     width: 600px;
+    margin: 50px auto;
     border: none;
 }
 
