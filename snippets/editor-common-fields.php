@@ -20,15 +20,21 @@
 <input type="hidden" id="publication-date"
         value="<?php echo $archive->valueForKey('publicationDate'); ?>">
 
-<progress value="0" style="width: 100px; float: right;"></progress>
-
-<div>
-    <label>
-        Title
-        <input type="text" id="title"
-               value="<?php echo $archive->valueForKey('titleHTML'); ?>">
-    </label>
+<div style="overflow: hidden;">
+    <progress value="0" style="width: 100px; float: right; margin: 3px;"></progress>
 </div>
+
+<section>
+    <header><label for="title">Title</label></header>
+    <input type="text" id="title"
+           value="<?php echo $archive->valueForKey('titleHTML'); ?>">
+</section>
+
+<section>
+    <header><label for="subtitle">Subtitle</label></header>
+    <input type="text" id="subtitle"
+           value="<?php echo $archive->valueForKey('subtitleHTML'); ?>">
+</section>
 
 <div style="padding: 0px 50px; font-size: 0.75em;">
     <style scoped="scoped">
@@ -71,28 +77,19 @@
     </label>
 </div>
 
-<div>
-    <label>
-        Subtitle
-        <input type="text" id="subtitle"
-               value="<?php echo $archive->valueForKey('subtitleHTML'); ?>">
-    </label>
-</div>
-
-<div>
-    <label style="float: right;">
-        <input type="checkbox" id="is-published"
-               <?php if ($archive->valueForKey('isPublished')) echo 'checked'; ?>
-               onchange="ColbyPageEditor.handleIsPublishedChanged(this);">
-        Published
-    </label>
-
-    <label>
-        Publication Date:
-        <input type="text" id="publication-date-text" class="ignore"
-               onblur="ColbyPageEditor.handlePublicationDateBlurred(this);">
-    </label>
-</div>
+<section>
+    <header>
+        <label for="publication-date-text">Publication Date</label>
+        <label style="float: right;">
+            <input type="checkbox" id="is-published"
+                   <?php if ($archive->valueForKey('isPublished')) echo 'checked'; ?>
+                   onchange="ColbyPageEditor.handleIsPublishedChanged(this);">
+            Published
+        </label>
+    </header>
+    <input type="text" id="publication-date-text" class="ignore"
+           onblur="ColbyPageEditor.handlePublicationDateBlurred(this);">
+</section>
 
 <div id="error-log"></div>
 

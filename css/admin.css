@@ -11,7 +11,6 @@ textarea
     display: block;
     width: 100%;
     padding: 4px;
-    margin-top: 5px;
     border: 1px solid LightGray;
 }
 
@@ -27,9 +26,39 @@ fieldset
     border: none;
 }
 
-fieldset > div + div
+fieldset > div + div /* deprecated */
 {
     margin-top: 10px;
+}
+
+fieldset > section
+{
+    overflow: hidden; /* force rounded corners to clip content */
+    margin-top: 10px;
+    border: 1px solid #eeeae6; /* ever so slightly brown */
+    border-radius: 5px;
+}
+
+fieldset > section > header
+{
+    padding: 2px 10px 4px;
+    background-color: #f8f7f6; /* ever so slightly brown */
+    font-size: 0.9em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+fieldset > section > div
+{
+    margin: 10px; /* div is responsible for separating from section border */
+}
+
+fieldset > section > input[type="text"],
+fieldset > section > textarea
+{
+    border: none;
+    padding: 4px 10px;
 }
 
 table

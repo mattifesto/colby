@@ -43,7 +43,7 @@ $publicationText = $archive->valueForKey('isPublished') ? '' : 'not published';
 
         h1
         {
-            margin-bottom: 1.0em;
+            margin-bottom: 0.25em;
             font-size: 1.5em;
         }
 
@@ -51,7 +51,7 @@ $publicationText = $archive->valueForKey('isPublished') ? '' : 'not published';
         {
             margin-bottom: 2.0em;
             color: #999999;
-            font-size: 1.5em;
+            font-size: 1.2em;
             font-weight: 600;
         }
 

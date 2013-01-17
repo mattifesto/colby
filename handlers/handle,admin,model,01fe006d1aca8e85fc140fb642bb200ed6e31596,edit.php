@@ -15,25 +15,31 @@ $page = ColbyOutputManager::beginVerifiedUserPage($modelData->nameHTML,
 
 $archive = ColbyArchive::archiveFromGetData();
 
-// mise en place
-
-$editableContentHTML = ColbyConvert::textToHTML($archive->valueForKey('content'));
-
 ?>
 
 <fieldset>
 
     <?php include(COLBY_SITE_DIRECTORY . '/colby/snippets/editor-common-fields.php'); ?>
 
-    <div><label>Content
-        <textarea id="content"
-                  style="height: 400px;"><?php echo $editableContentHTML; ?></textarea>
-    </label></div>
+    <section>
+        <header><label for="content">Content</label></header>
+        <textarea id="content" style="height: 400px;"><?php
+            echo ColbyConvert::textToHTML($archive->valueForKey('content'));
+        ?></textarea>
+    </section>
 
-    <div><label>Image
-        <input type="file"
-               id="image">
-    </label></div>
+    <section>
+        <header>Image</header>
+        <div style="overflow: hidden;">
+            <img class="file-thumbnail" data-file-id="image"
+                 style="float: left; width: 150px; margin-right: 10px;"
+                 src="<?php if ($filename = $archive->valueForKey('imageFilename')) echo $archive->url($filename); ?>">
+            <label>Image File
+                <input type="file"
+                       id="image">
+            </label>
+        </div>
+    </section>
 
 </fieldset>
 
