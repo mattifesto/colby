@@ -2,45 +2,44 @@
 
 var ColbySheet =
 {
-    'canAnimate' : false
+    'canAnimate' : false,
+    'frame' : 0
 };
 
-var frame = 0;
-
-function animateIn()
+ColbySheet.animateIn = function()
 {
     var durationInFrames = 30;
-    var progress = frame / durationInFrames;
+    var progress = ColbySheet.frame / durationInFrames;
 
     var background = document.getElementById('sheet-background');
     var panel = document.getElementById('sheet-panel');
 
-    if (frame <= durationInFrames)
+    if (ColbySheet.frame <= durationInFrames)
     {
         background.style.opacity = progress;
 
         var top = - panel.offsetHeight + (panel.offsetHeight * progress);
         panel.style.webkitTransform = 'translateY(' + top + 'px)';
 
-        ColbySheet.requestAnimationFrame(animateIn);
+        ColbySheet.requestAnimationFrame(ColbySheet.animateIn);
     }
     else
     {
         panel.style.webkitTransform = 'none';
     }
 
-    frame++;
+    ColbySheet.frame++;
 }
 
-function animateOut()
+ColbySheet.animateOut = function()
 {
     var durationInFrames = 30;
-    var progress = frame / durationInFrames;
+    var progress = ColbySheet.frame / durationInFrames;
 
     var background = document.getElementById('sheet-background');
     var panel = document.getElementById('sheet-panel');
 
-    if (frame <= durationInFrames)
+    if (ColbySheet.frame <= durationInFrames)
     {
         var opacity = Math.max(1 - progress, 0);
         background.style.opacity = opacity;
@@ -48,7 +47,7 @@ function animateOut()
         var top = - panel.offsetHeight + (panel.offsetHeight * (1.0 - progress));
         panel.style.webkitTransform = 'translateY(' + top + 'px)';
 
-        ColbySheet.requestAnimationFrame(animateOut);
+        ColbySheet.requestAnimationFrame(ColbySheet.animateOut);
     }
     else
     {
@@ -57,23 +56,12 @@ function animateOut()
         panel.style.webkitTransform = 'none';
     }
 
-    frame++;
+    ColbySheet.frame++;
 }
 
-function go()
+ColbySheet.beginSheet = function(contentHTML)
 {
-    var html = ' \
-<div class="my-panel"> \
-<div style="height: 200px;">There once was a man from Nantucket</div> \
-<div style="text-align: right;"><button onclick="endSheet();">Dismiss</button></div> \
-</div>';
-
-    beginSheet(html);
-}
-
-function beginSheet(contentHTML)
-{
-    createElements();
+    ColbySheet.createElements();
 
     var background = document.getElementById('sheet-background');
     background.style.visibility = 'visible';
@@ -82,21 +70,21 @@ function beginSheet(contentHTML)
     panel.style.visibility = 'visible';
     panel.innerHTML = contentHTML;
 
-    frame = 0;
+    ColbySheet.frame = 0;
 
     if (ColbySheet.canAnimate)
     {
-        animateIn();
+        ColbySheet.animateIn();
     }
 }
 
-function endSheet()
+ColbySheet.endSheet = function()
 {
-    frame = 0;
+    ColbySheet.frame = 0;
 
     if (ColbySheet.canAnimate)
     {
-        animateOut();
+        ColbySheet.animateOut();
     }
     else
     {
@@ -109,7 +97,7 @@ function endSheet()
     }
 }
 
-function createElements()
+ColbySheet.createElements = function()
 {
     if (window.webkitRequestAnimationFrame)
     {

@@ -260,23 +260,29 @@ ColbyFormManager.prototype.handleAjaxResponse = function()
         };
     }
 
-    var errorLog = document.getElementById('error-log');
 
-    // remove error-log element content
-
-    errorLog.innerHTML = '';
-
-    var p = document.createElement('p');
-    p.textContent = response.message;
-
-    errorLog.appendChild(p);
-
-    if ('stackTrace' in response)
+    if (!response.wasSuccessful)
     {
-        var pre = document.createElement('pre');
-        pre.textContent = response.stackTrace;
+        if ('stackTrace' in response)
+        {
+            var html = ' \
+<div class="large-panel"> \
+    <pre style="font-size: 0.8em;">' + response.stackTraceHTML + '</pre> \
+    <div style="text-align: right;"><button onclick="ColbySheet.endSheet();">Dismiss</button></div> \
+</div>';
 
-        errorLog.appendChild(pre);
+            ColbySheet.beginSheet(html);
+        }
+        else
+        {
+            var html = ' \
+<div class="small-panel"> \
+    <div>' + response.message + '</div> \
+    <div style="text-align: right;"><button onclick="ColbySheet.endSheet();">Dismiss</button></div> \
+</div>';
+
+            ColbySheet.beginSheet(html);
+        }
     }
 
     this.xhr = null;

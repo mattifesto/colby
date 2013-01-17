@@ -96,8 +96,6 @@
            onblur="ColbyPageEditor.handlePublicationDateBlurred(this);">
 </section>
 
-<div id="error-log"></div>
-
 <script>
 "use strict";
 

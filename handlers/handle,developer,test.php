@@ -16,15 +16,6 @@ dd
 {
     margin: 5px 0px 15px;
 }
-
-.my-panel
-{
-    width: 500px;
-    padding: 15px;
-    margin: 0px auto;
-    background-color: white;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-}
 </style>
 
 <?php
@@ -64,12 +55,12 @@ var ColbyUnitTests =
 ColbyUnitTests.alert = function(html)
 {
     var sheetHTML = ' \
-<div class="my-panel"> \
+<div class="small-panel"> \
     <div>' + html + '</div> \
-    <div style="text-align: right;"><button onclick="endSheet();">Dismiss</button></div> \
+    <div style="text-align: right;"><button onclick="ColbySheet.endSheet();">Dismiss</button></div> \
 </div>';
 
-    beginSheet(sheetHTML);
+    ColbySheet.beginSheet(sheetHTML);
 }
 
 var xhr;

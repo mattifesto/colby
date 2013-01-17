@@ -15,13 +15,6 @@
         </style>
     </head>
     <body>
-        <pre><?php
-
-            echo htmlspecialchars(
-                Colby::exceptionStackTrace($exception),
-                ENT_QUOTES);
-
-        ?></pre>
+        <pre><?php echo ColbyConvert::textToHTML(Colby::exceptionStackTrace($exception)); ?></pre>
     </body>
 </html>
-
