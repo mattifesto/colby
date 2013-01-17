@@ -20,8 +20,13 @@
 <input type="hidden" id="publication-date"
         value="<?php echo $archive->valueForKey('publicationDate'); ?>">
 
-<div style="overflow: hidden;">
-    <progress value="0" style="width: 100px; float: right; margin: 3px;"></progress>
+<div style="position: absolute; top: 40px; right: 10px; text-align: right;">
+    <div><progress value="0" style="width: 100px; margin-bottom: 5px;"></progress></div>
+    <div style="font-size: 0.7em;">Last modified<br/>
+        <span id="modified" class="time"
+              data-timestamp="<?php echo $archive->modified() * 1000; ?>">
+        </span>
+    </div>
 </div>
 
 <section>

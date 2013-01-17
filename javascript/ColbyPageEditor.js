@@ -179,6 +179,8 @@ ColbyPageEditor.updateCompleteCallback = function(response)
     var stubView = document.getElementById('stub-view');
 
     stubView.textContent = stub;
+
+    Colby.updateTimestampForElementWithId(Date.now(), 'modified');
 }
 
 document.addEventListener('DOMContentLoaded', ColbyPageEditor.handleContentLoaded, false);

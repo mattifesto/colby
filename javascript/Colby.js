@@ -31,6 +31,21 @@ Colby.handleError = function(message, url, lineNumber)
 window.onerror = Colby.handleError;
 
 /**
+ * @return void
+ */
+Colby.beginUpdatingTimes = function()
+{
+    Colby.intervalCount = 0;
+
+    if (!Colby.intervalId)
+    {
+        Colby.intervalId = setInterval(Colby.updateTimes, 1000);
+
+        Colby.updateTimes();
+    }
+}
+
+/**
  * @return string
  */
 Colby.dateToLocaleDateString = function(date)
@@ -120,9 +135,7 @@ Colby.dateToRelativeLocaleString = function(date, now)
  */
 Colby.handleContentLoaded = function()
 {
-    Colby.intervalId = setInterval(Colby.updateTimes, 1000);
-
-    Colby.updateTimes();
+    Colby.beginUpdatingTimes();
 };
 
 /**
@@ -163,6 +176,15 @@ Colby.updateTimes = function()
         element.textContent = Colby.dateToRelativeLocaleString(date, now);
     }
 };
+
+Colby.updateTimestampForElementWithId = function(timestamp, id)
+{
+    var element = document.getElementById(id);
+
+    element.setAttribute('data-timestamp', timestamp);
+
+    Colby.beginUpdatingTimes();
+}
 
 if (document.addEventListener) // disable for IE8 and earlier
 {
