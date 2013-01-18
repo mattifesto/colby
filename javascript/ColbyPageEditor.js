@@ -181,6 +181,12 @@ ColbyPageEditor.updateCompleteCallback = function(response)
     stubView.textContent = stub;
 
     Colby.updateTimestampForElementWithId(Date.now(), 'modified');
+
+    // Inform any other interested parties that the update completed by using a custom event.
+
+    var event = new CustomEvent('ColbyPageUpdateComplete', { 'detail' : response });
+
+    document.dispatchEvent(event);
 }
 
 document.addEventListener('DOMContentLoaded', ColbyPageEditor.handleContentLoaded, false);

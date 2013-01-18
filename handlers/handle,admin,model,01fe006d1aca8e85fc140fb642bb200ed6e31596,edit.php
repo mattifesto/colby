@@ -31,7 +31,7 @@ $archive = ColbyArchive::archiveFromGetData();
     <section>
         <header>Image</header>
         <div style="overflow: hidden;">
-            <img class="file-thumbnail" data-file-id="image"
+            <img id="imageThumbnail"
                  style="float: left; width: 150px; margin-right: 10px;"
                  src="<?php if ($filename = $archive->valueForKey('imageFilename')) echo $archive->url($filename); ?>">
             <label>Image File
@@ -43,6 +43,22 @@ $archive = ColbyArchive::archiveFromGetData();
 
 </fieldset>
 
+<script>
+"use strict";
+
+function updateComplete(event)
+{
+    if ('imageURL' in event.detail)
+    {
+        var img = document.getElementById('imageThumbnail');
+
+        img.src = event.detail.imageURL;
+    }
+}
+
+document.addEventListener('ColbyPageUpdateComplete', updateComplete, false);
+
+</script>
 <?php
 
 $page->end();

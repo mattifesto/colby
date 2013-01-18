@@ -38,6 +38,8 @@ if (isset($_FILES['image']))
     // Delete master image because we have no need for it.
 
     unlink($absoluteMasterImageFilename);
+
+    $response->imageURL = $archive->url($archive->valueForKey('imageFilename'));
 }
 
 $archive->save();
