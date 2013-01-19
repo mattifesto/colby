@@ -58,7 +58,7 @@ WHERE
     `groupId` = UNHEX('{$blogPostsGroupId}') AND
     `published` IS NOT NULL
 ORDER BY
-    `published`
+    `published` DESC
 EOT;
 
     $result = Colby::query($sql);
