@@ -155,7 +155,9 @@ class ColbyArchive
         // NOTE: currently doesn't handle nonexistent archive
         //       assumes no subdirectories
 
-        $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$archiveId}";
+        $dataPath = self::dataPathForArchiveId($archiveId);
+
+        $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$dataPath}";
 
         $files = glob("{$absoluteArchiveDirectory}/*");
 
