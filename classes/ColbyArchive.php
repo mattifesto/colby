@@ -136,7 +136,7 @@ class ColbyArchive
      * @return string
      *  Returns a relative path to the archive's data inside the data directory.
      */
-    private static function dataPathForArchiveId($archiveId)
+    public static function dataPathForArchiveId($archiveId)
     {
         return preg_replace('/^(..)(..)/', '$1/$2/', $archiveId);
     }

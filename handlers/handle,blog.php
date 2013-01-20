@@ -67,9 +67,11 @@ EOT;
     {
         while ($row = $result->fetch_object())
         {
+            $dataPath = ColbyArchive::dataPathForArchiveId($row->archiveId);
+
             $url = COLBY_SITE_URL . "/{$row->stub}/";
-            $absoluteThumbnailFilename = COLBY_DATA_DIRECTORY . "/{$row->archiveId}/thumbnail.jpg";
-            $absoluteThumbnailURL = COLBY_DATA_URL . "/{$row->archiveId}/thumbnail.jpg";
+            $absoluteThumbnailFilename = COLBY_DATA_DIRECTORY . "/{$dataPath}/thumbnail.jpg";
+            $absoluteThumbnailURL = COLBY_DATA_URL . "/{$dataPath}/thumbnail.jpg";
 
             ?>
 
