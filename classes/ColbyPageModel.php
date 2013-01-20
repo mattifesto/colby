@@ -144,9 +144,10 @@ EOT;
      */
     public static function displayPageForArchiveId($archiveId)
     {
-        // TODO: Add something like 'openIfExists' to ColbyArchive
-        //       This function is usually only called when we're pretty certain the archive exists
-        //       but if it doesn't, we don't want to create it.
+        if (!ColbyArchive::exists($archiveId))
+        {
+            throw new RuntimeException("An archive does not exist for the archive id `{$archiveId}`.");
+        }
 
         $archive = ColbyArchive::open($archiveId);
 

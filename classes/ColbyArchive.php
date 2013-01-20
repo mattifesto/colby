@@ -100,11 +100,45 @@ class ColbyArchive
     }
 
     /**
+     * Creates the directory where the archive data will be saved if it the
+     * directory doesn't exist yet.
+     *
+     * @return void
+     */
+    private function createStorage()
+    {
+        $dataPath = self::dataPathForArchiveId($this->data->archiveId);
+
+        $directories = explode('/', $dataPath);
+
+        $absoluteDirectory = COLBY_DATA_DIRECTORY;
+
+        foreach($directories as $directory)
+        {
+            $absoluteDirectory = "{$absoluteDirectory}/$directory";
+
+            if (!is_dir($absoluteDirectory))
+            {
+                mkdir($absoluteDirectory);
+            }
+        }
+    }
+
+    /**
      * @return stdClass
      */
     public function data()
     {
         return $this->data;
+    }
+
+    /**
+     * @return string
+     *  Returns a relative path to the archive's data inside the data directory.
+     */
+    private static function dataPathForArchiveId($archiveId)
+    {
+        return preg_replace('/^(..)(..)/', '$1/$2/', $archiveId);
     }
 
     /**
@@ -142,6 +176,19 @@ class ColbyArchive
     public function hash()
     {
         return isset($this->attributes->hash) ? $this->attributes->hash : null;
+    }
+
+    /**
+     * @return bool
+     *  Returns true if the archive exists on disk, otherwise false.
+     */
+    public static function exists($archiveId)
+    {
+        $dataPath = self::dataPathForArchiveId($archiveId);
+
+        $absoluteArchiveFilename = COLBY_DATA_DIRECTORY . "/{$dataPath}/archive.data";
+
+        return is_file($absoluteArchiveFilename);
     }
 
     /**
@@ -252,14 +299,10 @@ class ColbyArchive
                 $archive->data->archiveId = $archiveId;
             }
         }
-        else if ($shouldCreateStorageNow)
+        else if (   $shouldCreateStorageNow
+                 && !is_dir($archive->path()))
         {
-            $absoluteArchiveDirectory = $archive->path();
-
-            if (!is_dir($absoluteArchiveDirectory))
-            {
-                mkdir($absoluteArchiveDirectory);
-            }
+            $this->createStorage();
         }
 
         $archive->model = ColbyPageModel::modelWithArchive($archive);
@@ -278,13 +321,15 @@ class ColbyArchive
      */
     public function path($filename = null)
     {
+        $dataPath = self::dataPathForArchiveId($this->data->archiveId);
+
         if ($filename)
         {
-            return COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}/{$filename}";
+            return COLBY_DATA_DIRECTORY . "/{$dataPath}/{$filename}";
         }
         else
         {
-            return COLBY_DATA_DIRECTORY . "/{$this->data->archiveId}";
+            return COLBY_DATA_DIRECTORY . "/{$dataPath}";
         }
     }
 
@@ -299,9 +344,9 @@ class ColbyArchive
 
         $absoluteArchiveFilename = $this->path('archive.data');
 
-        if (!file_exists($this->path()))
+        if (!is_dir($this->path()))
         {
-            mkdir($this->path());
+            $this->createStorage();
         }
 
         $this->lock(LOCK_EX);
@@ -444,13 +489,15 @@ class ColbyArchive
      */
     public function url($filename = null)
     {
+        $dataPath = self::dataPathForArchiveId($this->data->archiveId);
+
         if ($filename)
         {
-            return COLBY_DATA_URL . "/{$this->data->archiveId}/{$filename}";
+            return COLBY_DATA_URL . "/{$dataPath}/{$filename}";
         }
         else
         {
-            return COLBY_DATA_URL . "/{$this->data->archiveId}";
+            return COLBY_DATA_URL . "/{$dataPath}";
         }
     }
 
