@@ -38,6 +38,8 @@ WHERE
     `published` IS NOT NULL
 ORDER BY
     `published` DESC
+LIMIT
+    20
 EOT;
 
 $result = Colby::query($sql);
@@ -48,11 +50,16 @@ if ($result->num_rows > 0)
     {
         $item = $channel->appendChild(new DOMElement('item'));
 
-        appendChildWithText($item, 'title', $row->titleHTML);
-        appendChildWithText($item, 'guid', COLBY_SITE_URL . "/{$row->stub}/");
-        appendChildWithText($item, 'link', COLBY_SITE_URL . "/{$row->stub}/");
-        appendChildWithText($item, 'description', $row->subtitleHTML);
-        appendChildWithText($item, 'pubDate', gmdate(DateTime::RSS, $row->published));
+        $title = htmlspecialchars_decode($row->titleHTML, ENT_QUOTES);
+        $subtitle = htmlspecialchars_decode($row->subtitleHTML, ENT_QUOTES);
+        $url = COLBY_SITE_URL . "/{$row->stub}/";
+        $published = gmdate(DateTime::RSS, $row->published);
+
+        appendChildWithText($item, 'title', $title);
+        appendChildWithText($item, 'description', $subtitle);
+        appendChildWithText($item, 'pubDate', $published);
+        appendChildWithText($item, 'guid', $url);
+        appendChildWithText($item, 'link', $url);
     }
 }
 
