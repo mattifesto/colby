@@ -82,6 +82,7 @@ EOT;
 $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbyPages`
 (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `archiveId` BINARY(20) NOT NULL,
     `modelId` BINARY(20),
     `viewId` BINARY(20),
@@ -92,7 +93,8 @@ CREATE TABLE IF NOT EXISTS `ColbyPages`
     `searchText` LONGTEXT,
     `published` DATETIME,
     `publishedBy` BIGINT UNSIGNED,
-    PRIMARY KEY (`archiveId`),
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `archiveId` (`archiveId`),
     UNIQUE KEY `stub` (`stub`),
     KEY `groupId_published` (`groupId`, `published`),
     CONSTRAINT `ColbyPages_publishedBy` FOREIGN KEY (`publishedBy`)
@@ -260,6 +262,10 @@ foreach ($sqls as $sql)
 {
     Colby::query($sql);
 }
+
+// Upgrades
+
+include(COLBY_SITE_DIRECTORY . '/colby/snippets/upgrade-database-0001.php');
 
 $response->wasSuccessful = true;
 $response->message = 'The database schema was updated successfully.';
