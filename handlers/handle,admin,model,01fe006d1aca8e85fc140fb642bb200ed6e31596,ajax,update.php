@@ -21,23 +21,38 @@ if (isset($_FILES['image']))
 
     // Create an images sized for viewing in the post.
 
-    $absoluteResizedImageFilename = ColbyImage::createImageByFitting($absoluteMasterImageFilename,
-                                                                     array(500, PHP_INT_MAX));
+    $size = getimagesize($absoluteMasterImageFilename);
+
+    if ($size[0] > 500)
+    {
+        $absoluteResizedImageFilename = ColbyImage::createImageByFitting($absoluteMasterImageFilename,
+                                                                         array(500, PHP_INT_MAX));
+    }
+    else
+    {
+        $absoluteResizedImageFilename = $absoluteMasterImageFilename;
+    }
 
     $archive->setStringValueForKey(basename($absoluteResizedImageFilename), 'imageFilename', false);
 
-    // Create a thumbnail image.
+    // Create a thumbnail image if the master image is large enough.
 
-    $absoluteThumbnailImageFilename = ColbyImage::createImageByFilling($absoluteMasterImageFilename,
-                                                                       array(400, 400));
+    if ($size[0] >= 400 && $size[1] >= 400)
+    {
+        $absoluteThumbnailImageFilename = ColbyImage::createImageByFilling($absoluteMasterImageFilename,
+                                                                           array(400, 400));
 
-    // TODO: Either support png or force jpg.
+        // TODO: Either support png or force jpg.
 
-    rename($absoluteThumbnailImageFilename, $archive->path('thumbnail.jpg'));
+        rename($absoluteThumbnailImageFilename, $archive->path('thumbnail.jpg'));
+    }
 
-    // Delete master image because we have no need for it.
+    // Delete the master image if we have no need for it.
 
-    unlink($absoluteMasterImageFilename);
+    if ($absoluteResizedImageFilename != $absoluteMasterImageFilename)
+    {
+        unlink($absoluteMasterImageFilename);
+    }
 
     $response->imageURL = $archive->url($archive->valueForKey('imageFilename'));
 }

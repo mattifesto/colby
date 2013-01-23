@@ -72,7 +72,7 @@ EOT;
     {
         if (!$this->archive->valueForKey('preferredPageStub'))
         {
-            $this->data->pageStub = sha1(microtime() . rand());
+            $this->data->pageStub = $this->data->archiveId;
 
             return;
         }
@@ -92,7 +92,7 @@ EOT;
         {
             // The preferred stub is already in use.
 
-            $this->data->pageStub = sha1(microtime() . rand());
+            $this->data->pageStub = $this->data->archiveId;
         }
         else
         {
@@ -221,7 +221,7 @@ EOT;
     {
         $preferredPageStub = strval($preferredPageStub);
 
-        // If the client sends an updated preferredPageStub it will be taken as a sign that the page stub is to be re-evaluated. If the preferredPageStub is unchanged it will not be re-evaluated even if it happens that the preferredPageStub had not been available before but has now become available.
+        // If the client sends an updated `preferredPageStub` it will be taken as a sign that the page stub is to be re-evaluated. If the `preferredPageStub` is unchanged it will not be re-evaluated even if it happens that the `preferredPageStub` had not been available before but has since become available. This is because we try to let the client be in complete control of the process so that all the logic exists in one place. For that to work out, the server has to stay out of it as much as possible. For the server to change the page stub without creating bugs it would have to check other variables, like `isStubLocked`, but those variables also have meaning on the client side and if that meaning changes the server side might break. The only reason the server ever overrides the `preferredPageStub` is when it absolutely has to and after that it stays hands off. This is the way it's supposed to work.
 
         if ($this->archive->valueForKey('preferredPageStub') != $preferredPageStub)
         {
