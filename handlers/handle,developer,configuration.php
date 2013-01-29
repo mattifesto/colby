@@ -1,8 +1,51 @@
 <?php
 
-// TODO: There should be some security on this page.
+$colbyUsersTableDoesExist = false;
 
-$page = ColbyOutputManager::beginPage('Configuration', 'Use this page to first set up your site.', 'admin');
+if (COLBY_MYSQL_HOST)
+{
+    $sql = <<<EOT
+SELECT
+    COUNT(*) AS `count`
+FROM
+    information_schema.TABLES
+WHERE
+    TABLE_NAME = 'ColbyUsers' AND
+    TABLE_SCHEMA = DATABASE()
+EOT;
+
+    $result = Colby::query($sql);
+
+    $count = $result->fetch_object()->count;
+
+    $result->free();
+
+    if (1 == $count)
+    {
+        $colbyUsersTableDoesExist = true;
+    }
+}
+
+/**
+ * If the database is not configured in colby-configuration or if the tables
+ * have never been created then show this page without requiring an
+ * administrator. Otherwise, require a log in.
+ *
+ * This way the initial table setup can be done by anyone, but upgrades must
+ * be done by an administrator. The "worst case" scenario is that some random
+ * internet user ends up installing the tables the first time but they won't
+ * be able to see the page after that. It doesn't really matter who installs
+ * the tables, so this is fine.
+ */
+if (!COLBY_MYSQL_HOST ||
+    !$colbyUsersTableDoesExist)
+{
+    $page = ColbyOutputManager::beginPage('Configuration', 'Use this page to first set up your site.', 'admin');
+}
+else
+{
+    $page = ColbyOutputManager::beginVerifiedUserPage('Configuration', 'Use this page to first set up your site.', 'admin');
+}
 
 ?>
 
