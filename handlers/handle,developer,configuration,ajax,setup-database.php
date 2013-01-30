@@ -45,6 +45,10 @@ foreach ($sqls2 as $sql)
 
 $sqls = array();
 
+/**
+ * The database should be created with these settings. In the case of hosted
+ * MySQL, however, it may not be an option when creating the database.
+ */
 $sqls[] = <<<EOT
 ALTER DATABASE
 DEFAULT CHARSET=utf8
@@ -57,7 +61,7 @@ EOT;
 $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbyUsers`
 (
-    `id` BIGINT UNSIGNED NOT NULL,
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `facebookId` BIGINT UNSIGNED NOT NULL,
     `facebookAccessToken` VARCHAR(255),
     `facebookAccessExpirationTime` INT UNSIGNED,
@@ -106,132 +110,8 @@ COLLATE=utf8_unicode_ci
 EOT;
 
 /**
- * ColbySequences
+ * ColbyVerifyUser
  */
-$sqls[] = <<<EOT
-CREATE TABLE IF NOT EXISTS `ColbySequences`
-(
-  `name` VARCHAR(50) NOT NULL,
-  `id` BIGINT UNSIGNED NOT NULL,
-  PRIMARY KEY (`name`)
-)
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8
-COLLATE=utf8_unicode_ci
-EOT;
-
-$sqls[] = <<<EOT
-CREATE PROCEDURE ColbyCreateSequence(IN sequenceName VARCHAR(50))
-BEGIN
-    INSERT IGNORE INTO `ColbySequences`
-        (
-            `name`,
-            `id`
-        )
-        VALUES
-        (
-            sequenceName,
-            '0'
-        );
-END
-EOT;
-
-$sqls[] = <<<EOT
-CREATE FUNCTION ColbyGetNextInsertIdForSequence
-(
-    theSequenceName VARCHAR(50)
-)
-RETURNS BIGINT UNSIGNED
-BEGIN
-    UPDATE `ColbySequences`
-    SET
-        `id` = LAST_INSERT_ID(`id` + 1)
-    WHERE
-        `name` = theSequenceName;
-
-    RETURN LAST_INSERT_ID();
-END
-EOT;
-
-$sqls[] = <<<EOT
-CREATE FUNCTION ColbyGetUserIdWithFacebookId
-(
-    theFacebookId BIGINT UNSIGNED
-)
-RETURNS BIGINT UNSIGNED
-BEGIN
-    DECLARE theUserId BIGINT UNSIGNED DEFAULT NULL;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND BEGIN END;
-
-    SELECT
-        `id` INTO theUserId
-    FROM
-        `ColbyUsers`
-    WHERE
-        `facebookId` = theFacebookId;
-
-    RETURN theUserId;
-END
-EOT;
-
-$sqls[] = <<<EOT
-CREATE FUNCTION ColbyLoginFacebookUser
-(
-    theFacebookId BIGINT UNSIGNED,
-    theFacebookAccessToken VARCHAR(255),
-    theFacebookAccessExpirationTime INT UNSIGNED,
-    theFacebookName VARCHAR(100),
-    theFacebookFirstName VARCHAR(50),
-    theFacebookLastName VARCHAR(50),
-    theFacebookTimeZone TINYINT
-)
-RETURNS BIGINT UNSIGNED
-BEGIN
-    DECLARE theUserId BIGINT UNSIGNED DEFAULT NULL;
-
-    SELECT
-        IFNULL
-        (
-            ColbyGetUserIdWithFacebookId(theFacebookId),
-            ColbyGetNextInsertIdForSequence('ColbyUsersId')
-        )
-    INTO
-        theUserId;
-
-    INSERT INTO `ColbyUsers`
-    (
-        `id`,
-        `facebookId`,
-        `facebookAccessToken`,
-        `facebookAccessExpirationTime`,
-        `facebookName`,
-        `facebookFirstName`,
-        `facebookLastName`,
-        `facebookTimeZone`
-    )
-    VALUES
-    (
-        theUserId,
-        theFacebookId,
-        theFacebookAccessToken,
-        theFacebookAccessExpirationTime,
-        theFacebookName,
-        theFacebookFirstName,
-        theFacebookLastName,
-        theFacebookTimeZone
-    )
-    ON DUPLICATE KEY UPDATE
-        `facebookAccessToken` = theFacebookAccessToken,
-        `facebookAccessExpirationTime` = theFacebookAccessExpirationTime,
-        `facebookName` = theFacebookName,
-        `facebookFirstName` = theFacebookFirstName,
-        `facebookLastName` = theFacebookLastName,
-        `facebookTimeZone` = theFacebookTimeZone;
-
-    RETURN theUserId;
-END
-EOT;
-
 $sqls[] = <<<EOT
 CREATE PROCEDURE ColbyVerifyUser(IN userId BIGINT UNSIGNED)
 BEGIN
@@ -243,9 +123,15 @@ BEGIN
 END
 EOT;
 
-// heredocs don't parse for constants so place the version in a variable
+/**
+ * Heredocs won't parse constants so the version number must be placed
+ * in a variable.
+ */
 $versionNumber = COLBY_VERSION_NUMBER;
 
+/**
+ * ColbySchemaVersionNumber
+ */
 $sqls[] = <<<EOT
 CREATE FUNCTION ColbySchemaVersionNumber()
 RETURNS BIGINT UNSIGNED
@@ -254,19 +140,24 @@ BEGIN
 END
 EOT;
 
-$sqls[] = <<<EOT
-CALL ColbyCreateSequence('ColbyUsersId')
-EOT;
 
+/**
+ * Run setup queries
+ */
 foreach ($sqls as $sql)
 {
     Colby::query($sql);
 }
 
-// Upgrades
-
+/**
+ * Run upgrades
+ */
 include(COLBY_SITE_DIRECTORY . '/colby/snippets/upgrade-database-0001.php');
+include(COLBY_SITE_DIRECTORY . '/colby/snippets/upgrade-database-0002.php');
 
+/**
+ * Send response
+ */
 $response->wasSuccessful = true;
 $response->message = 'The database schema was updated successfully.';
 

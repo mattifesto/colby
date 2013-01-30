@@ -102,14 +102,34 @@ class ColbyUser
         }
     }
 
-    ///
-    /// this function must be called before any html output to be effective
-    /// it sets a cookie
-    ///
-    /// facebookAccessExpirationTime
-    ///     this is an absolute unix time representing a point in the future
-    ///     basically: current unix time + facebook relative expiration time
-    ///
+    /**
+     * This function is called at after Facebook authenticates a user that wants
+     * to log in. It updates the database and sets a cookie in the user's
+     * browser confirms their identity and that they are logged in for future
+     * page requests.
+     *
+     * Since it sets a cookie it must be called before any HTML is ouput.
+     *
+     * @param int $facebookAccessExpirationTime
+     *
+     *  This is a unix timestamp representing the time in the future that
+     *  the user's access expires. It's the current unix timestamp plus the
+     *  duration of the user's access.
+     *
+     * Note:
+     *
+     *  This function uses MySQL 'INSERT ... ON DUPLICATE KEY UPDATE ...'
+     *  which will increment the AUTO_INCREMENT id every time a user logs in,
+     *  not every time a new user is added. This is due to some optimizations
+     *  in the way InnoDB deals with AUTO_INCREMENT. It's a good thing.
+     *
+     *  This means that big gaps between user id's should be expected. The
+     *  idea that the max AUTO_INCREMENT id will be reached is not a concern.
+     *  If a trillion users logged in every day it would take over 50,000 years
+     *  for the maximum AUTO_INCREMENT id to be reached. So it's not a problem.
+     *
+     * @return void
+     */
     public static function loginCurrentUser(
         $facebookAccessToken,
         $facebookAccessExpirationTime,
@@ -129,27 +149,45 @@ class ColbyUser
         $lastName = $mysqli->escape_string($lastName);
 
         $sql = <<<EOT
-SELECT ColbyLoginFacebookUser(
+INSERT INTO
+    `ColbyUsers`
+(
+    `facebookId`,
+    `facebookAccessToken`,
+    `facebookAccessExpirationTime`,
+    `facebookName`,
+    `facebookFirstName`,
+    `facebookLastName`,
+    `facebookTimeZone`
+)
+VALUES
+(
     '{$facebookProperties->id}',
     '{$accessToken}',
     '{$facebookAccessExpirationTime}',
     '{$name}',
     '{$firstName}',
     '{$lastName}',
-    '{$facebookProperties->timezone}')
-AS `id`
+    '{$facebookProperties->timezone}'
+)
+ON DUPLICATE KEY UPDATE
+    `id` = LAST_INSERT_ID(`id`),
+    `facebookAccessToken` = '{$accessToken}',
+    `facebookAccessExpirationTime` = '{$facebookAccessExpirationTime}',
+    `facebookName` = '{$name}',
+    `facebookFirstName` = '{$firstName}',
+    `facebookLastName` = '{$lastName}',
+    `facebookTimeZone` = '{$facebookProperties->timezone}'
 EOT;
 
-        $result = $mysqli->query($sql);
+        $mysqli->query($sql);
 
         if ($mysqli->error)
         {
             throw new RuntimeException($mysqli->error);
         }
 
-        $userId = $result->fetch_object()->id;
-
-        $result->free();
+        $userId = $mysqli->insert_id;
 
         $hashedValue = $userId .
             $facebookAccessToken .
