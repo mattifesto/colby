@@ -153,7 +153,7 @@ foreach ($sqls as $sql)
  * Run upgrades
  */
 include(COLBY_SITE_DIRECTORY . '/colby/snippets/upgrade-database-0001.php');
-include(COLBY_SITE_DIRECTORY . '/colby/snippets/upgrade-database-0002.php');
+include(Colby::findSnippet('upgrade-database-0002.php'));
 
 /**
  * Send response

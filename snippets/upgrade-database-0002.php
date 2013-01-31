@@ -93,7 +93,17 @@ REFERENCES
     `ColbyUsers` (`id`)
 EOT;
 
+if (is_callable('doPreUpgradeDatabase0002'))
+{
+    doPreUpgradeDatabase0002();
+}
+
 foreach ($upgradeQueries as $sql)
 {
     Colby::query($sql);
+}
+
+if (is_callable('doPostUpgradeDatabase0002'))
+{
+    doPostUpgradeDatabase0002();
 }
