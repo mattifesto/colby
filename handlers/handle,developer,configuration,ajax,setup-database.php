@@ -1,166 +1,82 @@
 <?php
 
-// This ajax does not require a verified user, so it must either run only when appropriate or be non-destructive.
+/**
+ * 2013.01.31
+ *
+ * We check to see if the table `ColbyUsers` exists. If it does not exist we
+ * do a full database install. If it does exists, we run the upgrades.
+ *
+ * We won't try to repair the odd situation that `ColbyUsers` does not exist
+ * but the other tables do.
+ *
+ * Each of the upgrades performs its own heuristics to determine whether it
+ * should attempt to make changes to the database.
+ */
 
-$response = ColbyOutputManager::beginAjaxResponse();
+/**
+ * TODO:
+ *
+ * -   Websites can override individual upgrades to include their own udgrades
+ *     but they can't add an upgrade. They should be able to do that.
+ *
+ * -   We should have a way of determining that no upgrades are needed. Right
+ *     now all of the upgrades are non destructive so it's not a problem but
+ *     in the future it will be nice to have a way to say whether an upgrade
+ *     is needed or not.
+ */
 
-// drop all procedures and functions
-
-$sqls = array();
-
-$sqls[] = <<<EOT
-SELECT CONCAT('DROP PROCEDURE ', routine_name) AS `sql`
-FROM information_schema.routines
-WHERE routine_schema = DATABASE()
-  AND routine_type = 'PROCEDURE'
+$sql = <<<EOT
+SELECT
+    COUNT(*) AS `count`
+FROM
+    information_schema.TABLES
+WHERE
+    TABLE_SCHEMA = DATABASE() AND
+    TABLE_NAME = 'ColbyUsers'
 EOT;
 
-$sqls[] = <<<EOT
-SELECT CONCAT('DROP FUNCTION ', routine_name) AS `sql`
-FROM information_schema.routines
-WHERE routine_schema = DATABASE()
-  AND routine_type = 'FUNCTION'
-EOT;
+$result = Colby::query($sql);
 
-$sqls2 = array();
+$colbyUsersTableDoesExist = $result->fetch_object()->count;
 
-foreach ($sqls as $sql)
+$result->free();
+
+if (!$colbyUsersTableDoesExist)
 {
-    $result = Colby::query($sql);
+    // No permissions are requiered for the initial installation.
 
-    while ($row = $result->fetch_object())
-    {
-        $sqls2[] = $row->sql;
-    }
+    $response = ColbyOutputManager::beginAjaxResponse();
 
-    $result->free();
+    /**
+     * Run install.
+     */
+
+    include(Colby::findSnippet('install-database.php'));
+
+    $response->message = 'The database schema was installed successfully.';
 }
-
-foreach ($sqls2 as $sql)
+else
 {
-    Colby::query($sql);
+    // Verified user permissions required to upgrade.
+
+    $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
+
+    /**
+     * Run upgrades.
+     */
+
+    include(Colby::findSnippet('upgrade-database-0001.php'));
+    include(Colby::findSnippet('upgrade-database-0002.php'));
+    include(Colby::findSnippet('upgrade-database-0003.php'));
+
+    include(Colby::findSnippet('upgrade-database-version.php'));
+
+    $response->message = 'The database schema was upgraded successfully.';
 }
-
-// create tables, procedures, and functions
-
-$sqls = array();
-
-/**
- * The database should be created with these settings. In the case of hosted
- * MySQL, however, it may not be an option when creating the database.
- */
-$sqls[] = <<<EOT
-ALTER DATABASE
-DEFAULT CHARSET=utf8
-COLLATE=utf8_unicode_ci
-EOT;
-
-/**
- * ColbyUsers
- */
-$sqls[] = <<<EOT
-CREATE TABLE IF NOT EXISTS `ColbyUsers`
-(
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `hash` BINARY(20) NOT NULL,
-    `facebookId` BIGINT UNSIGNED NOT NULL,
-    `facebookAccessToken` VARCHAR(255),
-    `facebookAccessExpirationTime` INT UNSIGNED,
-    `facebookName` VARCHAR(100) NOT NULL,
-    `facebookFirstName` VARCHAR(50) NOT NULL,
-    `facebookLastName` VARCHAR(50) NOT NULL,
-    `facebookTimeZone` TINYINT NOT NULL DEFAULT '0',
-    `hasBeenVerified` BIT(1) NOT NULL DEFAULT b'0',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `facebookId` (`facebookId`),
-    UNIQUE KEY `hash` (`hash`),
-    KEY `hasBeenVerified_facebookLastName` (`hasBeenVerified`, `facebookLastName`)
-)
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8
-COLLATE=utf8_unicode_ci
-EOT;
-
-/**
- * ColbyPages
- */
-$sqls[] = <<<EOT
-CREATE TABLE IF NOT EXISTS `ColbyPages`
-(
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `archiveId` BINARY(20) NOT NULL,
-    `modelId` BINARY(20),
-    `viewId` BINARY(20),
-    `groupId` BINARY(20),
-    `stub` VARCHAR(100) NOT NULL,
-    `titleHTML` VARCHAR(150) NOT NULL,
-    `subtitleHTML` VARCHAR(150) NOT NULL,
-    `searchText` LONGTEXT,
-    `published` DATETIME,
-    `publishedBy` BIGINT UNSIGNED,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `archiveId` (`archiveId`),
-    UNIQUE KEY `stub` (`stub`),
-    KEY `groupId_published` (`groupId`, `published`),
-    CONSTRAINT `ColbyPages_publishedBy` FOREIGN KEY (`publishedBy`)
-        REFERENCES `ColbyUsers` (`id`)
-)
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8
-COLLATE=utf8_unicode_ci
-EOT;
-
-/**
- * ColbyVerifyUser
- */
-$sqls[] = <<<EOT
-CREATE PROCEDURE ColbyVerifyUser(IN userId BIGINT UNSIGNED)
-BEGIN
-    UPDATE `ColbyUsers`
-    SET
-        `hasBeenVerified` = b'1'
-    WHERE
-        `id` = userId;
-END
-EOT;
-
-/**
- * Heredocs won't parse constants so the version number must be placed
- * in a variable.
- */
-$versionNumber = COLBY_VERSION_NUMBER;
-
-/**
- * ColbySchemaVersionNumber
- */
-$sqls[] = <<<EOT
-CREATE FUNCTION ColbySchemaVersionNumber()
-RETURNS BIGINT UNSIGNED
-BEGIN
-    RETURN {$versionNumber};
-END
-EOT;
-
-
-/**
- * Run setup queries
- */
-foreach ($sqls as $sql)
-{
-    Colby::query($sql);
-}
-
-/**
- * Run upgrades
- */
-include(COLBY_SITE_DIRECTORY . '/colby/snippets/upgrade-database-0001.php');
-include(Colby::findSnippet('upgrade-database-0002.php'));
-include(Colby::findSnippet('upgrade-database-0003.php'));
 
 /**
  * Send response
  */
-$response->wasSuccessful = true;
-$response->message = 'The database schema was updated successfully.';
 
+$response->wasSuccessful = true;
 $response->end();
