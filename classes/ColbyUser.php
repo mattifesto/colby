@@ -137,6 +137,11 @@ class ColbyUser
     {
         $mysqli = Colby::mysqli();
 
+        // This hash is only used when inserting a new user.
+
+        $hash = sha1(microtime() . rand());
+        $hash = "'{$hash}'";
+
         $accessToken = $mysqli->escape_string($facebookAccessToken);
 
         $name = ColbyConvert::textToHTML($facebookProperties->name);
@@ -148,10 +153,22 @@ class ColbyUser
         $lastName = ColbyConvert::textToHTML($facebookProperties->last_name);
         $lastName = $mysqli->escape_string($lastName);
 
+        /**
+         * The `ON DUPLICATE KEY UPDATE` clause of this query is
+         * activated when the unique `facebookId` column is duplicated, not the
+         * primary key `id` column and not the unique `hash` column. Neither
+         * `id` nor `hash` are updated if this clause is activated.
+         *
+         * The `id` column is set to its current value just to store the value
+         * as the insert id so that it can be accessed after the query. This
+         * way only one query is necessary for either insert or update.
+         */
+
         $sql = <<<EOT
 INSERT INTO
     `ColbyUsers`
 (
+    `hash`,
     `facebookId`,
     `facebookAccessToken`,
     `facebookAccessExpirationTime`,
@@ -162,6 +179,7 @@ INSERT INTO
 )
 VALUES
 (
+    UNHEX({$hash}),
     '{$facebookProperties->id}',
     '{$accessToken}',
     '{$facebookAccessExpirationTime}',

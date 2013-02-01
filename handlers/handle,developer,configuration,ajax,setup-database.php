@@ -62,6 +62,7 @@ $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbyUsers`
 (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `hash` BINARY(20) NOT NULL,
     `facebookId` BIGINT UNSIGNED NOT NULL,
     `facebookAccessToken` VARCHAR(255),
     `facebookAccessExpirationTime` INT UNSIGNED,
@@ -72,8 +73,8 @@ CREATE TABLE IF NOT EXISTS `ColbyUsers`
     `hasBeenVerified` BIT(1) NOT NULL DEFAULT b'0',
     PRIMARY KEY (`id`),
     UNIQUE KEY `facebookId` (`facebookId`),
-    KEY `hasBeenVerified_facebookLastName`
-        (`hasBeenVerified`, `facebookLastName`)
+    UNIQUE KEY `hash` (`hash`),
+    KEY `hasBeenVerified_facebookLastName` (`hasBeenVerified`, `facebookLastName`)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8
@@ -154,6 +155,7 @@ foreach ($sqls as $sql)
  */
 include(COLBY_SITE_DIRECTORY . '/colby/snippets/upgrade-database-0001.php');
 include(Colby::findSnippet('upgrade-database-0002.php'));
+include(Colby::findSnippet('upgrade-database-0003.php'));
 
 /**
  * Send response
