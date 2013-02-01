@@ -137,32 +137,73 @@ class ColbyUser
     {
         $mysqli = Colby::mysqli();
 
-        // This hash is only used when inserting a new user.
+        $sqlFacebookId = "'{$facebookProperties->id}'";
 
-        $hash = sha1(microtime() . rand());
-        $hash = "'{$hash}'";
+        $sql = <<<EOT
+SELECT
+    `id`
+FROM
+    `ColbyUsers`
+WHERE
+    `facebookId` = {$sqlFacebookId}
+EOT;
 
-        $accessToken = $mysqli->escape_string($facebookAccessToken);
+        $result = Colby::query($sql);
 
-        $name = ColbyConvert::textToHTML($facebookProperties->name);
-        $name = $mysqli->escape_string($name);
+        if ($row = $result->fetch_object())
+        {
+            $id = $row->id;
+            $sqlId = "'{$id}'";
+        }
+        else
+        {
+            $id = null;
+            $sqlId = null;
+        }
 
-        $firstName = ColbyConvert::textToHTML($facebookProperties->first_name);
-        $firstName = $mysqli->escape_string($firstName);
+        $result->free();
 
-        $lastName = ColbyConvert::textToHTML($facebookProperties->last_name);
-        $lastName = $mysqli->escape_string($lastName);
+        $sqlFacebookAccessToken = $mysqli->escape_string($facebookAccessToken);
+        $sqlFacebookAccessToken = "'{$sqlFacebookAccessToken}'";
 
-        /**
-         * The `ON DUPLICATE KEY UPDATE` clause of this query is
-         * activated when the unique `facebookId` column is duplicated, not the
-         * primary key `id` column and not the unique `hash` column. Neither
-         * `id` nor `hash` are updated if this clause is activated.
-         *
-         * The `id` column is set to its current value just to store the value
-         * as the insert id so that it can be accessed after the query. This
-         * way only one query is necessary for either insert or update.
-         */
+        $sqlFacebookAccessExpirationTime = "'{$facebookAccessExpirationTime}'";
+
+        $sqlFacebookName = ColbyConvert::textToHTML($facebookProperties->name);
+        $sqlFacebookName = $mysqli->escape_string($sqlFacebookName);
+        $sqlFacebookName = "'{$sqlFacebookName}'";
+
+        $sqlFacebookFirstName = ColbyConvert::textToHTML($facebookProperties->first_name);
+        $sqlFacebookFirstName = $mysqli->escape_string($sqlFacebookFirstName);
+        $sqlFacebookFirstName = "'{$sqlFacebookFirstName}'";
+
+        $sqlFacebookLastName = ColbyConvert::textToHTML($facebookProperties->last_name);
+        $sqlFacebookLastName = $mysqli->escape_string($sqlFacebookLastName);
+        $sqlFacebookLastName = "'{$sqlFacebookLastName}'";
+
+        $sqlFacebookTimeZone = "'{$facebookProperties->timezone}'";
+
+        if ($sqlId)
+        {
+            $sql = <<<EOT
+UPDATE
+    `ColbyUsers`
+SET
+    `facebookAccessToken` = {$sqlFacebookAccessToken},
+    `facebookAccessExpirationTime` = {$sqlFacebookAccessExpirationTime},
+    `facebookName` = {$sqlFacebookName},
+    `facebookFirstName` = {$sqlFacebookFirstName},
+    `facebookLastName` = {$sqlFacebookLastName},
+    `facebookTimeZone` = {$sqlFacebookTimeZone}
+WHERE
+    `id` = {$sqlId}
+EOT;
+
+            Colby::query($sql);
+        }
+        else
+        {
+            $sqlHash = sha1(microtime() . rand());
+            $sqlHash = "'{$sqlHash}'";
 
         $sql = <<<EOT
 INSERT INTO
@@ -179,41 +220,27 @@ INSERT INTO
 )
 VALUES
 (
-    UNHEX({$hash}),
-    '{$facebookProperties->id}',
-    '{$accessToken}',
-    '{$facebookAccessExpirationTime}',
-    '{$name}',
-    '{$firstName}',
-    '{$lastName}',
-    '{$facebookProperties->timezone}'
+    UNHEX({$sqlHash}),
+    {$sqlFacebookId},
+    {$sqlFacebookAccessToken},
+    {$sqlFacebookAccessExpirationTime},
+    {$sqlFacebookName},
+    {$sqlFacebookFirstName},
+    {$sqlFacebookLastName},
+    {$sqlFacebookTimeZone}
 )
-ON DUPLICATE KEY UPDATE
-    `id` = LAST_INSERT_ID(`id`),
-    `facebookAccessToken` = '{$accessToken}',
-    `facebookAccessExpirationTime` = '{$facebookAccessExpirationTime}',
-    `facebookName` = '{$name}',
-    `facebookFirstName` = '{$firstName}',
-    `facebookLastName` = '{$lastName}',
-    `facebookTimeZone` = '{$facebookProperties->timezone}'
 EOT;
 
-        $mysqli->query($sql);
+            Colby::query($sql);
 
-        if ($mysqli->error)
-        {
-            throw new RuntimeException($mysqli->error);
+            $id = $mysqli->insert_id;
         }
 
-        $userId = $mysqli->insert_id;
-
-        $hashedValue = $userId .
-            $facebookAccessToken .
-            $facebookAccessExpirationTime;
+        $hashedValue = $id . $facebookAccessToken . $facebookAccessExpirationTime;
 
         $hash = hash('sha512', $hashedValue);
 
-        $cookieValue = $userId . '-' . $hash;
+        $cookieValue = $id . '-' . $hash;
 
         setcookie(COLBY_USER_COOKIE, $cookieValue, 0, '/');
     }
