@@ -10,6 +10,18 @@ body
     padding-bottom: 100px;
 }
 
+body > section
+{
+    overflow: hidden; /* expand to contain floated child (vertical nav menu) */
+    width: 900px;
+    margin: 0px auto;
+}
+
+body > section > nav
+{
+    float: left;
+}
+
 input[type="text"],
 textarea
 {
@@ -64,6 +76,35 @@ fieldset > section > textarea
 {
     border: none;
     padding: 4px 10px;
+}
+
+nav.menu-column
+{
+    max-width: 200px;
+    margin-top: 2em;
+    margin-right: 1em;
+    text-align: center;
+}
+
+nav.menu-column a
+{
+    color: #222222;
+    text-decoration: none;
+}
+
+nav.menu-column a:hover
+{
+    color: #0085cf;
+}
+
+nav.menu-column > ul
+{
+    list-style-type: none;
+}
+
+nav.menu-column > ul > li
+{
+    margin-bottom: 0.5em;
 }
 
 table

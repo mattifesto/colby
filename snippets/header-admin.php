@@ -8,7 +8,6 @@ $descriptionHTML = $this->descriptionHTML;
 $stubs = ColbyRequest::decodedStubs();
 
 $adminSelectedClass = (isset($stubs[0]) && $stubs[0] == 'admin') ? 'class="selected"' : '';
-$developerSelectedClass = (isset($stubs[0]) && $stubs[0] == 'developer') ? 'class="selected"' : '';
 
 ?>
 <!doctype html>
@@ -54,8 +53,6 @@ $developerSelectedClass = (isset($stubs[0]) && $stubs[0] == 'developer') ? 'clas
                 <li><a href="<?php echo COLBY_SITE_URL; ?>">Home</a></li>
                 <li><a href="<?php echo COLBY_SITE_URL; ?>/admin/"
                        <?php echo $adminSelectedClass; ?>>Admin</a></li>
-                <li><a href="<?php echo COLBY_SITE_URL; ?>/developer/"
-                       <?php echo $developerSelectedClass; ?>>Developer</a></li>
 
                 <?php
 
@@ -73,3 +70,65 @@ $developerSelectedClass = (isset($stubs[0]) && $stubs[0] == 'developer') ? 'clas
                 <li><?php echo ColbyUser::loginHyperlink(); ?></li>
             </ul>
         </nav>
+        <section>
+            <nav class="menu-column">
+                <ul>
+
+                    <?php
+
+                    $adminSections = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,*.php');
+                    $adminSections = array_merge($adminSections, glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,*.php'));
+
+                    $adminSections = preg_grep('/handle,admin,[^,]*.php$/', $adminSections);
+
+                    foreach ($adminSections as $adminSection)
+                    {
+                        preg_match('/handle,admin,(.*).php$/', $adminSection, $matches);
+
+                        echo "<li><a href=\"/admin/{$matches[1]}/\">{$matches[1]}</a></li>\n";
+                    }
+
+                    ?>
+
+                    <li><h1>Help</h1></li>
+
+                    <?php
+
+                    $helpPages = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,help,*.php');
+                    $helpPages = array_merge($helpPages, glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,help,*.php'));
+
+                    $helpPages = preg_grep('/handle,admin,help,[^,]*.php$/', $helpPages);
+
+                    foreach ($helpPages as $helpPage)
+                    {
+                        preg_match('/handle,admin,help,(.*).php$/', $helpPage, $matches);
+
+                        $helpPageStub = $matches[1];
+
+                        echo "<li><a href=\"/admin/help/{$helpPageStub}/\">{$helpPageStub}</a></li>\n";
+                    }
+
+                    ?>
+
+                    <li><h1>Developer</h1></li>
+
+                    <?php
+
+                    $developerSections = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,developer,*.php');
+                    $developerSections = array_merge($developerSections, glob(COLBY_SITE_DIRECTORY . '/handlers/handle,developer,*.php'));
+
+                    // Reduce list to only files matching the exact pattern of developer admin section pages.
+
+                    $developerSections = preg_grep('/handle,developer,[^,]*.php$/', $developerSections);
+
+                    foreach ($developerSections as $developerSection)
+                    {
+                        preg_match('/handle,developer,(.*).php$/', $developerSection, $matches);
+
+                        echo "<li><p><a href=\"/developer/{$matches[1]}/\">{$matches[1]}</a></li>\n";
+                    }
+
+                    ?>
+
+                </ul>
+            </nav>
