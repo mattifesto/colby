@@ -6,27 +6,29 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Views',
 
 ?>
 
-<h1>Built in views</h1>
+<section>
+    <h1>Built in views</h1>
 
-<?php
+    <?php
 
-$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,view,*.data');
+    $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,view,*.data');
 
-displayViews($absoluteDataFilenames);
+    displayViews($absoluteDataFilenames);
 
-?>
+    ?>
 
-<h1>Site specific views</h1>
+    <h1>Site specific views</h1>
 
-<?php
+    <?php
 
-$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,view,*.data');
+    $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,view,*.data');
 
-displayViews($absoluteDataFilenames);
+    displayViews($absoluteDataFilenames);
 
-?>
+    ?>
 
-<div><a href="<?php echo COLBY_SITE_URL . "/developer/views/edit/"; ?>">Create a new view</a></div>
+    <div><a href="<?php echo COLBY_SITE_URL . "/developer/views/edit/"; ?>">Create a new view</a></div>
+</section>
 
 <?php
 

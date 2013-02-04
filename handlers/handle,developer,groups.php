@@ -6,28 +6,29 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Groups',
 
 ?>
 
-<h1>Built in groups</h1>
+<section>
+    <h1>Built in groups</h1>
 
-<?php
+    <?php
 
-$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,group,*.data');
+    $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,group,*.data');
 
-displayGroups($absoluteDataFilenames);
+    displayGroups($absoluteDataFilenames);
 
-?>
+    ?>
 
-<h1>Site specific groups</h1>
+    <h1>Site specific groups</h1>
 
-<?php
+    <?php
 
-$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,group,*.data');
+    $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,group,*.data');
 
-displayGroups($absoluteDataFilenames);
+    displayGroups($absoluteDataFilenames);
 
-?>
+    ?>
 
-<div><a href="<?php echo COLBY_SITE_URL . "/developer/groups/edit/"; ?>">Create a new group</a></div>
-
+    <div><a href="<?php echo COLBY_SITE_URL . "/developer/groups/edit/"; ?>">Create a new group</a></div>
+</section>
 <?php
 
 $page->end();

@@ -14,12 +14,18 @@ body > section
 {
     overflow: hidden; /* expand to contain floated child (vertical nav menu) */
     width: 900px;
-    margin: 0px auto;
+    margin: 20px auto;
 }
 
 body > section > nav
 {
     float: left;
+    margin-right: 2.0em;
+}
+
+body > section > nav + *
+{
+    overflow: hidden; /* don't wrap underneath the floated nav menu */
 }
 
 input[type="text"],
@@ -81,8 +87,6 @@ fieldset > section > textarea
 nav.menu-column
 {
     max-width: 200px;
-    margin-top: 2em;
-    margin-right: 1em;
     text-align: center;
 }
 

@@ -6,27 +6,29 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Models',
 
 ?>
 
-<h1>Built in models</h1>
+<section>
+    <h1>Built in models</h1>
 
-<?php
+    <?php
 
-$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,model,*.data');
+    $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,model,*.data');
 
-displayModels($absoluteDataFilenames);
+    displayModels($absoluteDataFilenames);
 
-?>
+    ?>
 
-<h1>Site specific models</h1>
+    <h1>Site specific models</h1>
 
-<?php
+    <?php
 
-$absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,model,*.data');
+    $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,model,*.data');
 
-displayModels($absoluteDataFilenames);
+    displayModels($absoluteDataFilenames);
 
-?>
+    ?>
 
-<div><a href="<?php echo "{$_SERVER['REQUEST_URI']}/edit/"; ?>">Create a new model</a></div>
+    <div><a href="<?php echo "{$_SERVER['REQUEST_URI']}/edit/"; ?>">Create a new model</a></div>
+</section>
 
 <?php
 

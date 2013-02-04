@@ -8,13 +8,15 @@ $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/markarou
 
 ?>
 
-<h1>Markaround Help</h1>
+<article>
+    <header><h1>Markaround Help</h1></header>
 
-<div style="width: 700px; margin: 0px auto; font-size: 14px;">
-    <div class="formatted-content">
-        <?php echo ColbyConvert::markaroundToHTML($markaround); ?>
+    <div style="font-size: 14px;">
+        <div class="formatted-content">
+            <?php echo ColbyConvert::markaroundToHTML($markaround); ?>
+        </div>
     </div>
-</div>
+</article>
 
 <?php
 
