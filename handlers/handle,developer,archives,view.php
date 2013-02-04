@@ -4,7 +4,9 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Archive Details', 'View the c
 
 $archiveId = $_GET['archive-id'];
 
-$absoluteArchiveFilename = COLBY_DATA_DIRECTORY . "/{$archiveId}/archive.data";
+$dataPath = ColbyArchive::dataPathForArchiveId($archiveId);
+
+$absoluteArchiveFilename = COLBY_DATA_DIRECTORY . "/{$dataPath}/archive.data";
 
 if (!is_file($absoluteArchiveFilename))
 {

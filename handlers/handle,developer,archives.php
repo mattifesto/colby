@@ -2,7 +2,7 @@
 
 $page = ColbyOutputManager::beginVerifiedUserPage('Archives', 'List, view, delete, and manage archives.', 'admin');
 
-$archiveDirectories = glob(COLBY_DATA_DIRECTORY . '/*');
+$archiveDirectories = glob(COLBY_DATA_DIRECTORY . '/*/*/*');
 
 ?>
 
@@ -24,9 +24,9 @@ $archiveDirectories = glob(COLBY_DATA_DIRECTORY . '/*');
 
     foreach ($archiveDirectories as $archiveDirectory)
     {
-        preg_match('/([0-9a-f]{40})/', $archiveDirectory, $matches);
+        preg_match('/([0-9a-f]{2})\/([0-9a-f]{2})\/([0-9a-f]{36})/', $archiveDirectory, $matches);
 
-        $archiveId = $matches[1];
+        $archiveId = $matches[1] . $matches[2] . $matches[3];
 
         $archive = ColbyArchive::open($archiveId);
         $viewArchiveURL = COLBY_SITE_URL . "/developer/archives/view/?archive-id={$archiveId}";

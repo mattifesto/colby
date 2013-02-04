@@ -133,6 +133,17 @@ class ColbyArchive
     }
 
     /**
+     * How this function works:
+     *
+     * $archiveId parameter value:
+     *  '4cbd040533a2f43fc6691d773d510cda70f4126a'
+     *
+     * return value:
+     *  '4c/bd/040533a2f43fc6691d773d510cda70f4126a'
+     *
+     * The function replaces the first four characters: '4cbd' with '4c/bd/'
+     * but returns the whole string.
+     *
      * @return string
      *  Returns a relative path to the archive's data inside the data directory.
      */
