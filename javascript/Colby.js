@@ -133,9 +133,58 @@ Colby.dateToRelativeLocaleString = function(date, now)
 /**
  * @return void
  */
+Colby.displayResponse = function(response)
+{
+    var content;
+
+    if ('stackTrace' in response)
+    {
+        content = '<pre style="font-size: 12px;">' + response.stackTrace + '</pre>';
+    }
+    else
+    {
+        content = '<div>' + response.message + '</div>';
+    }
+
+    var html = ' \
+<div class="large-panel">' + content + ' \
+    <div style="text-align: right;"> \
+        <button onclick="ColbySheet.endSheet();">Dismiss</button> \
+    </div> \
+</div>';
+
+    ColbySheet.beginSheet(html);
+};
+
+/**
+ * @return void
+ */
 Colby.handleContentLoaded = function()
 {
     Colby.beginUpdatingTimes();
+};
+
+/**
+ * @return Object
+ */
+Colby.responseFromXMLHttpRequest = function(xhr)
+{
+    var response;
+
+    if (xhr.status == 200)
+    {
+        response = JSON.parse(xhr.responseText);
+    }
+    else
+    {
+        response =
+        {
+            message         : xhr.status + ': ' + xhr.statusText,
+            wasSuccessful   : false
+        };
+    }
+
+    return response;
 };
 
 /**

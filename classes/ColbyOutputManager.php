@@ -113,6 +113,23 @@ class ColbyOutputManager
     }
 
     /**
+     * This function discards the page and any output that has been written
+     * since the page was begun. In most cases, another page will be begun after
+     * this function is called.
+     *
+     * @return void
+     */
+    public function discard()
+    {
+        restore_exception_handler();
+
+        ob_end_clean();
+    }
+
+    /**
+     * This function includes the appropriate footer, ends output buffering,
+     * and flushes all content, which sends it to the browser.
+     *
      * @return void
      */
     public function end()
@@ -130,6 +147,10 @@ class ColbyOutputManager
         }
 
         include($absoluteFooterSnippetFilename);
+
+        restore_exception_handler();
+
+        ob_end_flush();
     }
 
     /**

@@ -25,6 +25,14 @@
  *     is needed or not.
  */
 
+/**
+ * No permissions are requiered for the initial installation. If it turns out
+ * this is an upgrade request we will discard this response and begin a new
+ * response that requires authentication.
+ */
+
+$response = ColbyOutputManager::beginAjaxResponse();
+
 $sql = <<<EOT
 SELECT
     COUNT(*) AS `count`
@@ -43,10 +51,6 @@ $result->free();
 
 if (!$colbyUsersTableDoesExist)
 {
-    // No permissions are requiered for the initial installation.
-
-    $response = ColbyOutputManager::beginAjaxResponse();
-
     /**
      * Run install.
      */
@@ -57,7 +61,12 @@ if (!$colbyUsersTableDoesExist)
 }
 else
 {
-    // Verified user permissions required to upgrade.
+    /**
+     * At this point, verified user permissions are required to upgrade so
+     * discard the previous response and start a new one.
+     */
+
+    $response->discard();
 
     $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 
@@ -77,6 +86,14 @@ else
 /**
  * Send response
  */
+
+$sql = 'SELECT ColbySchemaVersionNumber() AS `schemaVersionNumber`';
+
+$result = Colby::query($sql);
+
+$response->schemaVersionNumber = $result->fetch_object()->schemaVersionNumber;
+
+$result->free();
 
 $response->wasSuccessful = true;
 $response->end();
