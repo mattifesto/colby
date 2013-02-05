@@ -8,6 +8,7 @@ $configurationFilename = COLBY_SITE_DIR . '/colby-configuration.php';
 $gitignoreFilename = COLBY_SITE_DIR . '/.gitignore';
 $htaccessFilename = COLBY_SITE_DIR . '/.htaccess';
 $indexFilename = COLBY_SITE_DIR . '/index.php';
+$versionFilename = COLBY_SITE_DIR . '/version.php';
 
 $shouldPerformInstallation = (isset($_GET['install']) && $_GET['install'] == 'true');
 
@@ -66,6 +67,8 @@ if (!$shouldPerformInstallation)
                 <dd>A directory named 'data' will be created in the website root. This directory will be used to hold the archives. There will be usually one archive per unit of data. A unit of data may be a page, blog post, product, user, but is almost always associated with something that has its own URL and web page.
                 <dt>index.php
                 <dd>All pages on the site will be directed to this file which will send the URLs through the Colby system to generate content. The reason the file is created in your website root is that you may want to customize this file to handle some or all of the URLs in a different way.
+                <dt>version.php
+                <dd>This file contains the version number for the website. It should be incremented by one and checked in for each release. The version number should always be a whole number in the same way the Firefox and Chrome now use only whole number versions that will potentially go quite high.
             </dl>
 
             <p>After you complete the initial installation there are a few more required steps such as editing the colby-configuration.php file mentioned above and installing the database. You will be guided to complete these steps. After clicking on the following link you will be redirected and to another page and this page will no longer be needed or available.
@@ -79,11 +82,12 @@ if (!$shouldPerformInstallation)
     exit;
 }
 
-if (   file_exists($dataDirectory)
-    || file_exists($configurationFilename)
-    || file_exists($gitignoreFilename)
-    || file_exists($htaccessFilename)
-    || file_exists($indexFilename))
+if (file_exists($dataDirectory) ||
+    file_exists($configurationFilename) ||
+    file_exists($gitignoreFilename) ||
+    file_exists($htaccessFilename) ||
+    file_exists($indexFilename) ||
+    file_exists($versionFilename))
 {
     // if .htaccess exists correctly in the web root directory
     // the user will not even be able to load this file
@@ -112,12 +116,13 @@ if (   file_exists($dataDirectory)
 }
 
 mkdir($dataDirectory);
-copy(__DIR__ . '/colby-configuration-bootstrap.php', $configurationFilename);
-copy(__DIR__ . '/gitignore.template', $gitignoreFilename);
-copy(__DIR__ . '/htaccess.template', $htaccessFilename);
-copy(__DIR__ . '/index.template', $indexFilename);
+copy(__DIR__ . '/colby-configuration.template.data', $configurationFilename);
+copy(__DIR__ . '/gitignore.template.data', $gitignoreFilename);
+copy(__DIR__ . '/htaccess.template.data', $htaccessFilename);
+copy(__DIR__ . '/index.template.data', $indexFilename);
+copy(__DIR__ . '/version.template.data', $versionFilename);
 
-header('Location: /developer/configuration/');
+header('Location: /admin/');
 
 ?>
 

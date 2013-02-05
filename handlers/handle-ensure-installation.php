@@ -12,7 +12,11 @@ $page = ColbyOutputManager::beginPage('Installation',
                                       'This website needs to be installed.',
                                       'simple');
 
-$sql = <<<EOT
+$databaseIsConfigured = COLBY_MYSQL_HOST && COLBY_MYSQL_DATABASE && COLBY_MYSQL_USER;
+
+if ($databaseIsConfigured)
+{
+    $sql = <<<EOT
 SELECT
     COUNT(*) AS `count`
 FROM
@@ -23,32 +27,64 @@ WHERE
     `ROUTINE_NAME` = 'ColbySchemaVersionNumber'
 EOT;
 
-$result = Colby::query($sql);
+    $result = Colby::query($sql);
 
-$databaseIsInstalled = $result->fetch_object()->count;
+    $databaseIsInstalled = $result->fetch_object()->count;
 
-$result->free();
+    $result->free();
 
-if ($databaseIsInstalled)
-{
-    $page->discard();
+    if ($databaseIsInstalled)
+    {
+        $page->discard();
 
-    return;
+        return;
+    }
 }
 
 ?>
 
 <section class="widget"
          style="text-align: center;">
-    <header><h1>Database Installation Required</h1></header>
-    <div>
-        <progress id="database-intallation-progress"
-                  value="0"
-                  style="width: 50px; margin: 50px;"></progress>
+
+    <?php
+
+    if ($databaseIsConfigured)
+    {
+        ?>
+
+        <header><h1>Database Installation Required</h1></header>
         <div>
-            <button onclick="DatabaseInstaller.installDatabase(this);">Install Database</button>
+            <progress id="database-intallation-progress"
+                      value="0"
+                      style="width: 50px; margin: 50px;"></progress>
+            <div>
+                <button onclick="DatabaseInstaller.installDatabase(this);">Install Database</button>
+            </div>
         </div>
-    </div>
+
+        <?php
+    }
+    else
+    {
+        ?>
+
+        <header><h1>Database Configuration Required</h1></header>
+        <div>
+            <div style="width: 400px; margin: 100px auto;" class="formatted-content">
+                <p style="text-align: center;">The database configuration section in
+                <p style="text-align: center;"><code>colby-configuration.php</code>
+                <p style="text-align: center;">has not been completed. Please complete this section of the configuration file before proceeding.
+            </div>
+            <div>
+                <button onclick="location.reload();">Check Configuration</button>
+            </div>
+        </div>
+
+        <?php
+    }
+
+    ?>
+
 </section>
 
 <script>
