@@ -44,25 +44,17 @@ input[type="text"][readonly="readonly"]
 
 fieldset
 {
-    width: 600px;
-    margin: 50px auto;
     border: none;
 }
 
-fieldset > div + div /* deprecated */
-{
-    margin-top: 10px;
-}
-
-fieldset > section
+fieldset section.control
 {
     overflow: hidden; /* force rounded corners to clip content */
-    margin-top: 10px;
     border: 1px solid #eeeae6; /* ever so slightly brown */
     border-radius: 5px;
 }
 
-fieldset > section > header
+fieldset section.control > header
 {
     padding: 2px 10px 4px;
     background-color: #f8f7f6; /* ever so slightly brown */
@@ -72,13 +64,9 @@ fieldset > section > header
     letter-spacing: 1px;
 }
 
-fieldset > section > div
-{
-    margin: 10px; /* div is responsible for separating from section border */
-}
-
-fieldset > section > input[type="text"],
-fieldset > section > textarea
+fieldset section.control > input[type="file"],
+fieldset section.control > input[type="text"],
+fieldset section.control > textarea
 {
     border: none;
     padding: 4px 10px;

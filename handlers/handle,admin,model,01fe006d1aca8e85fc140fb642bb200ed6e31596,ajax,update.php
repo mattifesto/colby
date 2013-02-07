@@ -12,12 +12,14 @@ $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
 $archive = ColbyArchive::archiveFromPostData();
 
 $archive->setMarkaroundValueForKey($_POST['content'], 'content');
+$archive->setStringValueForKey($_POST['image-caption'], 'imageCaption');
+$archive->setStringValueForKey($_POST['image-alternative-text'], 'imageAlternativeText');
 
 $archive->model->setContentSearchText($archive->valueForKey('content'));
 
-if (isset($_FILES['image']))
+if (isset($_FILES['image-file']))
 {
-    $absoluteMasterImageFilename = ColbyImage::importUploadedImage('image', $archive->path());
+    $absoluteMasterImageFilename = ColbyImage::importUploadedImage('image-file', $archive->path());
 
     // Create an images sized for viewing in the post.
 

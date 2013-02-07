@@ -14,22 +14,19 @@ $page = ColbyOutputManager::beginVerifiedUserPage($modelData->nameHTML,
 
 $archive = ColbyArchive::archiveFromGetData();
 
-// mise en place
-
-$editableContentHTML = ColbyConvert::textToHTML($archive->valueForKey('content'));
-
 ?>
 
 <fieldset>
 
     <?php include(COLBY_SITE_DIRECTORY . '/colby/snippets/editor-common-fields.php'); ?>
 
-    <div><label>Content
-        <textarea id="content"
-                  style="height: 400px;"><?php echo $editableContentHTML; ?></textarea>
-    </label></div>
-
-    <div>
+    <section class="control"
+             style="margin-top: 10px;">
+        <header><label for="content">Content</label></header>
+        <textarea id="content" style="height: 400px;"><?php
+            echo ColbyConvert::textToHTML($archive->valueForKey('content'));
+        ?></textarea>
+    </section>
 
 </fieldset>
 

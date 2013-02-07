@@ -29,13 +29,14 @@
     </div>
 </div>
 
-<section>
+<section class="control">
     <header><label for="title">Title</label></header>
     <input type="text" id="title"
            value="<?php echo $archive->valueForKey('titleHTML'); ?>">
 </section>
 
-<section>
+<section class="control"
+         style="margin-top: 10px;">
     <header><label for="subtitle">Subtitle</label></header>
     <input type="text" id="subtitle"
            value="<?php echo $archive->valueForKey('subtitleHTML'); ?>">
@@ -82,7 +83,8 @@
     </label>
 </div>
 
-<section>
+<section class="control"
+         style="margin-top: 10px;">
     <header>
         <label for="publication-date-text">Publication Date</label>
         <label style="float: right;">
