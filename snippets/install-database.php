@@ -12,6 +12,7 @@
  *
 
 DROP TABLE `ColbyPages`;
+DROP TABLE `ColbyUsersWhoAreAdministrators`;
 DROP TABLE `ColbyUsers`;
 DROP PROCEDURE `ColbyVerifyUser`;
 DROP FUNCTION `ColbySchemaVersionNumber`;
@@ -60,6 +61,25 @@ COLLATE=utf8_unicode_ci
 EOT;
 
 /**
+ * Create the `ColbyUsersWhoAreAdministrators` table.
+ */
+$sqls[] = <<<EOT
+CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreAdministrators`
+(
+    `userId` BIGINT UNSIGNED NOT NULL,
+    `added` DATETIME NOT NULL,
+    PRIMARY KEY (`userId`),
+    CONSTRAINT `ColbyUsersWhoAreAdministrators_userId`
+        FOREIGN KEY (`userId`)
+        REFERENCES `ColbyUsers` (`id`)
+        ON DELETE CASCADE
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8
+COLLATE=utf8_unicode_ci
+EOT;
+
+/**
  * Create the `ColbyPages` table.
  */
 $sqls[] = <<<EOT
@@ -80,7 +100,8 @@ CREATE TABLE IF NOT EXISTS `ColbyPages`
     UNIQUE KEY `archiveId` (`archiveId`),
     UNIQUE KEY `stub` (`stub`),
     KEY `groupId_published` (`groupId`, `published`),
-    CONSTRAINT `ColbyPages_publishedBy` FOREIGN KEY (`publishedBy`)
+    CONSTRAINT `ColbyPages_publishedBy`
+        FOREIGN KEY (`publishedBy`)
         REFERENCES `ColbyUsers` (`id`)
 )
 ENGINE=InnoDB
