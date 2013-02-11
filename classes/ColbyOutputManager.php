@@ -2,14 +2,14 @@
 
 class ColbyOutputManager
 {
-    private $name;
+    private $template;
 
     /**
      * @return ColbyOutput
      */
-    public function __construct($name = null)
+    public function __construct($template = null)
     {
-        $this->name = $name;
+        $this->template = $template;
     }
 
     /**
@@ -23,9 +23,9 @@ class ColbyOutputManager
 
         $absoluteHeaderSnippetFilename = null;
 
-        if ($this->name)
+        if ($this->template)
         {
-            $absoluteHeaderSnippetFilename = Colby::findSnippet("header-{$this->name}.php");
+            $absoluteHeaderSnippetFilename = Colby::findSnippet("header-{$this->template}.php");
         }
 
         if (!$absoluteHeaderSnippetFilename)
@@ -77,9 +77,9 @@ class ColbyOutputManager
     /**
      * @return ColbyOutputManager
      */
-    public static function createPage($titleHTML, $descriptionHTML, $name = null)
+    public static function createPage($titleHTML, $descriptionHTML, $template = null)
     {
-        $outputManager = new ColbyOutputManager($name);
+        $outputManager = new ColbyOutputManager($template);
 
         $outputManager->titleHTML = $titleHTML;
         $outputManager->descriptionHTML = $descriptionHTML;
@@ -90,9 +90,9 @@ class ColbyOutputManager
     /**
      * @return ColbyOutputManager
      */
-    public static function beginPage($titleHTML, $descriptionHTML, $name = null)
+    public static function beginPage($titleHTML, $descriptionHTML, $template = null)
     {
-        $outputManager = self::createPage($titleHTML, $descriptionHTML, $name);
+        $outputManager = self::createPage($titleHTML, $descriptionHTML, $template);
 
         $outputManager->begin();
 
@@ -102,9 +102,9 @@ class ColbyOutputManager
     /**
      * @return ColbyOutputManager
      */
-    public static function beginVerifiedUserPage($titleHTML, $descriptionHTML, $name = null)
+    public static function beginVerifiedUserPage($titleHTML, $descriptionHTML, $template = null)
     {
-        $outputManager = self::createPage($titleHTML, $descriptionHTML, $name);
+        $outputManager = self::createPage($titleHTML, $descriptionHTML, $template);
 
         $outputManager->requireVerifiedUser();
         $outputManager->begin();
@@ -136,9 +136,9 @@ class ColbyOutputManager
     {
         $absoluteFooterSnippetFilename = null;
 
-        if ($this->name)
+        if ($this->template)
         {
-            $absoluteFooterSnippetFilename = Colby::findSnippet("footer-{$this->name}.php");
+            $absoluteFooterSnippetFilename = Colby::findSnippet("footer-{$this->template}.php");
         }
 
         if (!$absoluteFooterSnippetFilename)
@@ -170,7 +170,7 @@ class ColbyOutputManager
 
         // Use the main Colby exception handler to create exception related output.
 
-        Colby::handleException($exception, $this->name);
+        Colby::handleException($exception, $this->template);
     }
 
     /**
@@ -190,9 +190,9 @@ class ColbyOutputManager
 
         $absoluteHandlerFilename = null;
 
-        if ($this->name)
+        if ($this->template)
         {
-            $handlerFilename = "handle-user-log-in-required-{$this->name}.php";
+            $handlerFilename = "handle-user-log-in-required-{$this->template}.php";
 
             $absoluteHandlerFilename = Colby::findHandler($handlerFilename);
         }
@@ -239,9 +239,9 @@ class ColbyOutputManager
 
         $absoluteHandlerFilename = null;
 
-        if ($this->name)
+        if ($this->template)
         {
-            $handlerFilename = "handle-user-verification-required-{$this->name}.php";
+            $handlerFilename = "handle-user-verification-required-{$this->template}.php";
 
             $absoluteHandlerFilename = Colby::findHandler($handlerFilename);
         }
