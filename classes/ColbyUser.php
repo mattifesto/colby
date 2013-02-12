@@ -4,6 +4,12 @@ define('COLBY_USER_COOKIE', 'colby-user');
 
 class ColbyUser
 {
+    private $id = null;
+    private $groups = array();
+    private $row = null;
+
+    private static $currentUser = null;
+
     // currentUserId
     // if we can authenticate the current logged in user
     // we just store their id, not the table row or anything else
@@ -19,6 +25,27 @@ class ColbyUser
     // even if the database row is altered
 
     private static $currentUserRow = null;
+
+    /**
+     * @return ColbyUser
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * @return ColbyUser
+     */
+    public static function current()
+    {
+        if (!self::$currentUser)
+        {
+            self::$currentUser = new ColbyUser();
+            self::$currentUser->id = self::$currentUserId;
+
+            return self::$currentUser;
+        }
+    }
 
     ///
     /// will return the user id or null if a user is not logged in
@@ -100,6 +127,55 @@ class ColbyUser
                 self::logoutCurrentUser();
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOneOfThe($group)
+    {
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $group))
+        {
+            throw new InvalidArgumentException('group');
+        }
+
+        if (!$this->id)
+        {
+            return false;
+        }
+
+        /**
+         * TODO: COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID should be renamed to COLBY_FACEBOOK_SUPERUSER_USERNAME
+         */
+
+        if (COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID == $this->row()->facebookId)
+        {
+            return true;
+        }
+
+        if (isset($this->groups[$group]))
+        {
+            return $this->groups[$group];
+        }
+
+        $sql = <<<EOT
+SELECT
+    COUNT(*) AS `isOneOfTheGroup`
+FROM
+    `ColbyUsersWhoAre{$group}`
+WHERE
+    `userId` = '{$this->id}'
+EOT;
+
+        $result = Colby::query($sql);
+
+        $isOneOfTheGroup = $result->fetch_object()->isOneOfTheGroup;
+
+        $result->free();
+
+        $this->groups[$group] = !!$isOneOfTheGroup;
+
+        return $this->groups[$group];
     }
 
     /**
@@ -360,6 +436,39 @@ EOT;
         $url = COLBY_SITE_URL . '/colby/logout/?state=' . urlencode(json_encode($state));
 
         return $url;
+    }
+
+    /**
+     * @return stdClass | null
+     */
+    public function row()
+    {
+        if (!$this->id)
+        {
+            return null;
+        }
+
+        if ($this->row)
+        {
+            return $this->row;
+        }
+
+        $sql = <<<EOT
+SELECT
+    *
+FROM
+    `ColbyUsers`
+WHERE
+    `id` = '{$this->id}'
+EOT;
+
+        $result = Colby::query($sql);
+
+        $this->row = $result->fetch_object();
+
+        $result->free();
+
+        return $this->row;
     }
 
     /**

@@ -74,6 +74,8 @@ $adminSelectedClass = (isset($stubs[0]) && $stubs[0] == 'admin') ? 'class="selec
             <nav class="menu-column">
                 <ul>
 
+                    <li><h1>Administrators</h1></li>
+
                     <?php
 
                     $adminSections = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,*.php');
@@ -110,7 +112,7 @@ $adminSelectedClass = (isset($stubs[0]) && $stubs[0] == 'admin') ? 'class="selec
 
                     ?>
 
-                    <li><h1>Developer</h1></li>
+                    <li><h1>Developers</h1></li>
 
                     <?php
 

@@ -2,9 +2,22 @@
 
 include(Colby::findHandler('handle-ensure-installation.php'));
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Site Administration',
-                                                  'Edit the settings and content of this website.',
-                                                  'admin');
+$page = new ColbyOutputManager();
+
+$page->template = 'admin';
+$page->titleHTML = 'Site Administration';
+$page->descriptionHTML = 'Edit the settings and content of this website.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
+{
+    $messageHTML = 'You must be logged in as an Administrator to view this page.';
+
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 ?>
 
@@ -47,5 +60,7 @@ foreach ($adminWidgetFilenames as $adminWidgetFilename)
 {
     include($adminWidgetFilename);
 }
+
+done:
 
 $page->end();

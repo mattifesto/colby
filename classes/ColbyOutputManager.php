@@ -2,7 +2,7 @@
 
 class ColbyOutputManager
 {
-    private $template;
+    public $template;
 
     /**
      * @return ColbyOutput
