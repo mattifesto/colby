@@ -13,6 +13,7 @@
 
 DROP TABLE `ColbyPages`;
 DROP TABLE `ColbyUsersWhoAreAdministrators`;
+DROP TABLE `ColbyUsersWhoAreDevelopers`;
 DROP TABLE `ColbyUsers`;
 DROP PROCEDURE `ColbyVerifyUser`;
 DROP FUNCTION `ColbySchemaVersionNumber`;
@@ -70,6 +71,25 @@ CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreAdministrators`
     `added` DATETIME NOT NULL,
     PRIMARY KEY (`userId`),
     CONSTRAINT `ColbyUsersWhoAreAdministrators_userId`
+        FOREIGN KEY (`userId`)
+        REFERENCES `ColbyUsers` (`id`)
+        ON DELETE CASCADE
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8
+COLLATE=utf8_unicode_ci
+EOT;
+
+/**
+ * Create the `ColbyUsersWhoAreDevelopers` table.
+ */
+$sqls[] = <<<EOT
+CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreDevelopers`
+(
+    `userId` BIGINT UNSIGNED NOT NULL,
+    `added` DATETIME NOT NULL,
+    PRIMARY KEY (`userId`),
+    CONSTRAINT `ColbyUsersWhoAreDevelopers_userId`
         FOREIGN KEY (`userId`)
         REFERENCES `ColbyUsers` (`id`)
         ON DELETE CASCADE
