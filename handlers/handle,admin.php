@@ -12,8 +12,6 @@ $page->begin();
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    $messageHTML = 'You must be logged in as an Administrator to view this page.';
-
     include Colby::findSnippet('authenticate.php');
 
     goto done;

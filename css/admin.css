@@ -72,6 +72,11 @@ fieldset section.control > textarea
     padding: 4px 10px;
 }
 
+main
+{
+    display: block; /* remove when main is a supported element in modern browsers or html5shiv is updated */
+}
+
 nav.menu-column
 {
     max-width: 200px;
