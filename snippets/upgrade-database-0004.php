@@ -7,6 +7,31 @@
  */
 
 /**
+ * Determine whether the `ColbyUsersWhoAreAdministrators` already exists.
+ */
+
+$sql = <<<EOT
+SELECT
+    COUNT(*) as `count`
+FROM
+    information_schema.TABLES
+WHERE
+    TABLE_SCHEMA = DATABASE() AND
+    TABLE_NAME = 'ColbyUsersWhoAreAdministrators'
+EOT;
+
+$result = Colby::query($sql);
+
+$count = $result->fetch_object()->count;
+
+$result->free();
+
+if (1 == $count)
+{
+    return;
+}
+
+/**
  * The website has the opportunity to add its own snippet for this upgrade
  * in which it can define callbacks for work it needs to do before and after
  * the upgrade if an upgrade needs to happen. After defining these callbacks
@@ -28,7 +53,7 @@ if (is_callable('doPreUpgradeDatabase0004'))
  */
 
 $sql = <<<EOT
-CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreAdministrators`
+CREATE TABLE `ColbyUsersWhoAreAdministrators`
 (
     `userId` BIGINT UNSIGNED NOT NULL,
     `added` DATETIME NOT NULL,

@@ -42,9 +42,9 @@ class ColbyUser
         {
             self::$currentUser = new ColbyUser();
             self::$currentUser->id = self::$currentUserId;
-
-            return self::$currentUser;
         }
+
+        return self::$currentUser;
     }
 
     ///
@@ -127,6 +127,14 @@ class ColbyUser
                 self::logoutCurrentUser();
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLoggedIn()
+    {
+        return !!$this->id;
     }
 
     /**
