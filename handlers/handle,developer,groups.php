@@ -6,29 +6,23 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Groups',
 
 ?>
 
-<section>
-    <h1>Built in groups</h1>
+<main>
+
+    <div><a href="<?php echo COLBY_SITE_URL . "/developer/groups/edit/"; ?>">Create a new group</a></div>
 
     <?php
 
     $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,group,*.data');
 
-    displayGroups($absoluteDataFilenames);
-
-    ?>
-
-    <h1>Site specific groups</h1>
-
-    <?php
+    displayGroups($absoluteDataFilenames, 'colby');
 
     $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,group,*.data');
 
-    displayGroups($absoluteDataFilenames);
+    displayGroups($absoluteDataFilenames, 'site');
 
     ?>
 
-    <div><a href="<?php echo COLBY_SITE_URL . "/developer/groups/edit/"; ?>">Create a new group</a></div>
-</section>
+</main>
 <?php
 
 $page->end();
@@ -36,21 +30,29 @@ $page->end();
 /**
  * @return void
  */
-function displayGroups($absoluteDataFilenames)
+function displayGroups($absoluteDataFilenames, $type)
 {
     foreach ($absoluteDataFilenames as $absoluteDataFilename)
     {
         preg_match('/group,([^,]*).data$/', $absoluteDataFilename, $matches);
 
-        $editURL = COLBY_SITE_URL . "/developer/groups/edit/?group-id={$matches[1]}";
+        $groupId = $matches[1];
+
+        $editURL = COLBY_SITE_URL . "/developer/groups/edit/?group-id={$groupId}";
 
         $data = unserialize(file_get_contents($absoluteDataFilename));
 
         ?>
 
-        <h1 style="font-size: 1.5em;"><?php echo $data->nameHTML; ?></h1>
-        <p><?php echo $data->descriptionHTML; ?>
-        <p><a href="<?php echo $editURL; ?>">edit</a>
+        <section class="header-metadata-description">
+            <h1><?php echo $data->nameHTML; ?></h1>
+            <div class="metadata">
+                <a href="<?php echo $editURL; ?>">edit</a>
+                <span class="hash"><?php echo $groupId; ?></span>
+                <span><?php echo $type; ?></span>
+            </div>
+            <div class="description formatted-content"><?php echo $data->descriptionHTML; ?></div>
+        </section>
 
         <?php
     }

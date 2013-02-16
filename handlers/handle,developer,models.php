@@ -6,29 +6,23 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Models',
 
 ?>
 
-<section>
-    <h1>Built in models</h1>
+<main>
+
+    <div><a href="<?php echo "{$_SERVER['REQUEST_URI']}/edit/"; ?>">Create a new model</a></div>
 
     <?php
 
     $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,model,*.data');
 
-    displayModels($absoluteDataFilenames);
-
-    ?>
-
-    <h1>Site specific models</h1>
-
-    <?php
+    displayModels($absoluteDataFilenames, 'colby');
 
     $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,model,*.data');
 
-    displayModels($absoluteDataFilenames);
+    displayModels($absoluteDataFilenames, 'site');
 
     ?>
 
-    <div><a href="<?php echo "{$_SERVER['REQUEST_URI']}/edit/"; ?>">Create a new model</a></div>
-</section>
+</main>
 
 <?php
 
@@ -37,7 +31,7 @@ $page->end();
 /**
  * @return void
  */
-function displayModels($absoluteDataFilenames)
+function displayModels($absoluteDataFilenames, $type)
 {
     foreach ($absoluteDataFilenames as $absoluteDataFilename)
     {
@@ -51,11 +45,14 @@ function displayModels($absoluteDataFilenames)
 
         ?>
 
-        <section style="margin-bottom: 2.0em;">
-            <h1 style="font-size: 1.5em;"><?php echo $data->nameHTML; ?></h1>
-            <p class="hash"><?php echo $modelId; ?>
-            <p><?php echo $data->descriptionHTML; ?>
-            <p><a href="<?php echo $editURL; ?>">edit</a>
+        <section class="header-metadata-description">
+            <h1><?php echo $data->nameHTML; ?></h1>
+            <div class="metadata">
+                <a href="<?php echo $editURL; ?>">edit</a>
+                <span class="hash"><?php echo $modelId; ?></span>
+                <span><?php echo $type; ?></span>
+            </div>
+            <div class="description formatted-content"><?php echo $data->descriptionHTML; ?></div>
         </section>
 
         <?php

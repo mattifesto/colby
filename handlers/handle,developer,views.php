@@ -6,29 +6,23 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Views',
 
 ?>
 
-<section>
-    <h1>Built in views</h1>
+<main>
+
+    <div><a href="<?php echo COLBY_SITE_URL . "/developer/views/edit/"; ?>">Create a new view</a></div>
 
     <?php
 
     $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,view,*.data');
 
-    displayViews($absoluteDataFilenames);
-
-    ?>
-
-    <h1>Site specific views</h1>
-
-    <?php
+    displayViews($absoluteDataFilenames, 'colby');
 
     $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,view,*.data');
 
-    displayViews($absoluteDataFilenames);
+    displayViews($absoluteDataFilenames, 'site');
 
     ?>
 
-    <div><a href="<?php echo COLBY_SITE_URL . "/developer/views/edit/"; ?>">Create a new view</a></div>
-</section>
+</main>
 
 <?php
 
@@ -37,7 +31,7 @@ $page->end();
 /**
  * @return void
  */
-function displayViews($absoluteDataFilenames)
+function displayViews($absoluteDataFilenames, $type)
 {
     foreach ($absoluteDataFilenames as $absoluteDataFilename)
     {
@@ -51,11 +45,14 @@ function displayViews($absoluteDataFilenames)
 
         ?>
 
-        <section style="margin-bottom: 2.0em;">
-            <h1 style="font-size: 1.5em;"><?php echo $data->nameHTML; ?></h1>
-            <p class="hash"><?php echo $viewId; ?>
-            <p><?php echo $data->descriptionHTML; ?>
-            <p><a href="<?php echo $editURL; ?>">edit</a>
+        <section class="header-metadata-description">
+            <h1><?php echo $data->nameHTML; ?></h1>
+            <div class="metadata">
+                <a href="<?php echo $editURL; ?>">edit</a>
+                <span class="hash"><?php echo $viewId; ?></span>
+                <span><?php echo $type; ?></span>
+            </div>
+            <div class="description formatted-content"><?php echo $data->descriptionHTML; ?></div>
         </section>
 
         <?php
