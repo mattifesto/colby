@@ -26,7 +26,7 @@
  */
 
 /**
- * No permissions are requiered for the initial installation. If it turns out
+ * No permissions are required for the initial installation. If it turns out
  * this is an upgrade request we will discard this response and begin a new
  * response that requires authentication.
  */

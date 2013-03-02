@@ -51,12 +51,11 @@ section.widget > header
 
 <?php
 
-$adminWidgetFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/snippets/admin-widget-*.php');
-$adminWidgetFilenames = array_merge($adminWidgetFilenames, glob(COLBY_SITE_DIRECTORY . '/snippets/admin-widget-*.php'));
+$adminWidgetFilenames = Colby::globSnippets('admin-widget-*.php');
 
 foreach ($adminWidgetFilenames as $adminWidgetFilename)
 {
-    include($adminWidgetFilename);
+    include $adminWidgetFilename;
 }
 
 done:

@@ -263,11 +263,9 @@ class ColbyArchive
      *  archive is never saved, the storage area won't be created at all and
      *  opening the archive will have no permanent side effect.
      *
-     * @return ColbyArchive | bool
+     * @return ColbyArchive
      *
-     *  The method returns a ColbyArchive instance if it's a new archive
-     *  or if the archive exists on disk. The function returns false
-     *  if the hash doesn't match last saved hash.
+     *  The method returns a ColbyArchive instance.
      */
     public static function open($archiveId, $shouldCreateStorageNow = false)
     {
@@ -418,6 +416,20 @@ class ColbyArchive
     }
 
     /**
+     * @param bool $intValue
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function setIntValueForKey($intValue, $key)
+    {
+        $key = strval($key);
+
+        $this->data->$key = intval($intValue);
+    }
+
+    /**
      * This method sets a markaround value for the given name. It also converts
      * the markaround to HTML and sets the HTML value for the key "{$key}HTML".
      *
@@ -492,6 +504,16 @@ class ColbyArchive
         fclose($this->lockResource);
 
         $this->lockResource = null;
+    }
+
+    /**
+     * @return void
+     */
+    public function unsetValueForKey($key)
+    {
+        $key = strval($key);
+
+        unset($this->data->$key);
     }
 
     /**

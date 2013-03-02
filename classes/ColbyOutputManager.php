@@ -44,7 +44,7 @@ class ColbyOutputManager
         $outputManager = new ColbyOutputManager('ajax');
 
         $outputManager->wasSuccessful = false;
-        $outputManager->message = 'An official response message was never set.';
+        $outputManager->message = 'No response message was provided.';
 
         return $outputManager;
     }

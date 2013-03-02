@@ -1,7 +1,6 @@
 <?php
 
 require_once(__DIR__ . '/../colby-configuration.php');
-require_once(__DIR__ . '/version.php');
 
 class Colby
 {
@@ -9,6 +8,15 @@ class Colby
     // holds the mysqli object if the request needs database access
 
     private static $mysqli = null;
+    private static $libraryDirectories = array();
+
+    /**
+     * @return void
+     */
+    public static function addLibraryDirectory($absoluteLibraryDirectory)
+    {
+        self::$libraryDirectories[] = $absoluteLibraryDirectory;
+    }
 
     /**
      * If the site is marked as being debugged this function will send a message
@@ -61,23 +69,17 @@ class Colby
      */
     public static function findHandler($filename)
     {
-        $absoluteHandlerFilename = COLBY_SITE_DIRECTORY . "/handlers/{$filename}";
-
-        if (self::isReadableFile($absoluteHandlerFilename))
+        foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            return $absoluteHandlerFilename;
+            $handlerFilename = "{$libraryDirectory}/handlers/{$filename}";
+
+            if (self::isReadableFile($handlerFilename))
+            {
+                return $handlerFilename;
+            }
         }
 
-        $absoluteHandlerFilename = COLBY_SITE_DIRECTORY . "/colby/handlers/{$filename}";
-
-        if (self::isReadableFile($absoluteHandlerFilename))
-        {
-            return $absoluteHandlerFilename;
-        }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     /**
@@ -85,23 +87,35 @@ class Colby
      */
     public static function findSnippet($filename)
     {
-        $absoluteSnippetFilename = COLBY_SITE_DIRECTORY . "/snippets/{$filename}";
-
-        if (self::isReadableFile($absoluteSnippetFilename))
+        foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            return $absoluteSnippetFilename;
+            $snippetFilename = "{$libraryDirectory}/snippets/{$filename}";
+
+            if (self::isReadableFile($snippetFilename))
+            {
+                return $snippetFilename;
+            }
         }
 
-        $absoluteSnippetFilename = COLBY_SITE_DIRECTORY . "/colby/snippets/{$filename}";
+        return false;
+    }
 
-        if (self::isReadableFile($absoluteSnippetFilename))
+    /**
+     * @return array
+     */
+    public static function globSnippets($pattern)
+    {
+        $snippetFilenames = array();
+
+        foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            return $absoluteSnippetFilename;
+
+            $filenames = glob("{$libraryDirectory}/snippets/{$pattern}");
+
+            $snippetFilenames = array_merge($snippetFilenames, $filenames);
         }
-        else
-        {
-            return false;
-        }
+
+        return $snippetFilenames;
     }
 
     /**
@@ -196,6 +210,21 @@ class Colby
             throw new RuntimeException(
                 'constant COLBY_SITE_IS_BEING_DEBUGGED has not been set');
         }
+
+        // Add the website and Colby library directories. They are unshifted
+        // onto the beginning of the array because they should be consulted
+        // before other libraries.
+        //
+        // The order is:
+        //
+        //    COLBY_SITE_DIRECTORY
+        //    COLBY_DIRECTORY
+        //    added directory 1
+        //    added directory 2
+        //    ...
+
+        array_unshift(self::$libraryDirectories, COLBY_DIRECTORY);
+        array_unshift(self::$libraryDirectories, COLBY_SITE_DIRECTORY);
 
         // the order of these files might matter some day
         // files that depend on other files should be included after
