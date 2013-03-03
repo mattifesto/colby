@@ -313,7 +313,7 @@ class ColbyArchive
         else if (   $shouldCreateStorageNow
                  && !is_dir($archive->path()))
         {
-            $this->createStorage();
+            $archive->createStorage();
         }
 
         $archive->model = ColbyPageModel::modelWithArchive($archive);

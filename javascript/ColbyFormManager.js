@@ -247,42 +247,11 @@ ColbyFormManager.prototype.getFormElements = function()
  */
 ColbyFormManager.prototype.handleAjaxResponse = function()
 {
-    if (this.xhr.status == 200)
-    {
-        var response = JSON.parse(this.xhr.responseText);
-    }
-    else
-    {
-        var response =
-        {
-            'wasSuccessful' : false,
-            'message' : this.xhr.status + ': ' + this.xhr.statusText
-        };
-    }
-
+    var response = Colby.responseFromXMLHttpRequest(this.xhr);
 
     if (!response.wasSuccessful)
     {
-        if ('stackTrace' in response)
-        {
-            var html = ' \
-<div class="large-panel"> \
-    <pre style="font-size: 0.8em;">' + response.stackTraceHTML + '</pre> \
-    <div style="text-align: right;"><button onclick="ColbySheet.endSheet();">Dismiss</button></div> \
-</div>';
-
-            ColbySheet.beginSheet(html);
-        }
-        else
-        {
-            var html = ' \
-<div class="small-panel"> \
-    <div>' + response.message + '</div> \
-    <div style="text-align: right;"><button onclick="ColbySheet.endSheet();">Dismiss</button></div> \
-</div>';
-
-            ColbySheet.beginSheet(html);
-        }
+        Colby.displayResponse(response);
     }
 
     this.xhr = null;

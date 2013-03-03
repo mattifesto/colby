@@ -136,18 +136,21 @@ Colby.dateToRelativeLocaleString = function(date, now)
 Colby.displayResponse = function(response)
 {
     var content;
+    var classAttribute;
 
     if ('stackTrace' in response)
     {
         content = '<pre style="font-size: 12px;">' + response.stackTrace + '</pre>';
+        classAttribute = 'large-panel';
     }
     else
     {
         content = '<div>' + response.message + '</div>';
+        classAttribute = 'small-panel';
     }
 
     var html = ' \
-<div class="large-panel">' + content + ' \
+<div class="' + classAttribute + '">' + content + ' \
     <div style="text-align: right;"> \
         <button onclick="ColbySheet.endSheet();">Dismiss</button> \
     </div> \
