@@ -84,13 +84,18 @@ class ColbyConvert
     ///    since ASCII is a subset of UTF-8 the string is still also UTF-8
     ///    iconv will do some handy coversions, like '£' becomes 'lb'
     ///
-    /// 2. replace sequences of spaces and hyphens with one hyphen
+    /// 2. replace sequences of white space and hyphens with one hyphen
     ///
-    /// 3. remove leading and trailing hyphens
+    /// 3. remove all characters except: a-z, A-Z, 0-9, and hyphen
     ///
-    /// 4. remove all characters except: a-z, A-Z, 0-9, and hyphen
+    /// 4. remove leading hyphens
     ///
-    /// 5. make all characters lowercase
+    /// 5. remove trailing hyphens
+    ///
+    /// 6. replace two or more adjacent hyphens with one hypen
+    ///    step 3 can result in characters being removed which causes this
+    ///
+    /// 7. make all characters lowercase
     ///
     /// common example: 'Piñata Örtega' --> 'pinata-ortega'
     ///
@@ -98,8 +103,8 @@ class ColbyConvert
     {
         $stub = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
 
-        $patterns =     array('/[\s-]+/', '/^-+/', '/-+$/', '/[^a-zA-Z0-9-]/');
-        $replacements = array('-'       , ''     , ''     , '');
+        $patterns =     array('/[\s-]+/', '/[^a-zA-Z0-9-]/', '/^-+/', '/-+$/', '/--+/');
+        $replacements = array('-'       , ''               , ''     , ''     , '-'    );
 
         $stub = preg_replace($patterns, $replacements, $stub);
 

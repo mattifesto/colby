@@ -416,7 +416,21 @@ class ColbyArchive
     }
 
     /**
-     * @param bool $intValue
+     * @param float $floatValue
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function setFloatValueForKey($floatValue, $key)
+    {
+        $key = strval($key);
+
+        $this->data->$key = floatval($floatValue);
+    }
+
+    /**
+     * @param int $intValue
      *
      * @param string $key
      *
