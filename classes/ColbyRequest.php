@@ -89,8 +89,11 @@ class ColbyRequest
 
     /**
      * @return ColbyArchive | null
+     *
+     * If the $urlPath argument represents a page that can be rendered using
+     * a view and an archive, the archive will be returned.
      */
-    public static function archiveForURLPath($urlPath)
+    public static function archiveForViewRenderedURLPath($urlPath)
     {
         $archive = null;
 
@@ -197,7 +200,7 @@ EOT;
             {
                 $urlPath = implode('/', self::$decodedStubs);
 
-                $archive = self::archiveForURLPath($urlPath);
+                $archive = self::archiveForViewRenderedURLPath($urlPath);
 
                 if ($archive)
                 {
