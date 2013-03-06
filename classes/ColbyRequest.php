@@ -90,7 +90,7 @@ class ColbyRequest
     /**
      * @return string | bool (false)
      */
-    public static function displayableArchiveIdForStub($stub)
+    public static function displayableArchiveIdForURLPath($urlPath)
     {
         $archiveId = false;
 
@@ -194,9 +194,9 @@ EOT;
 
             if (!$handlerFilename && COLBY_MYSQL_DATABASE)
             {
-                $fullStub = implode('/', self::$decodedStubs);
+                $urlPath = implode('/', self::$decodedStubs);
 
-                $archiveId = self::displayableArchiveIdForStub($fullStub);
+                $archiveId = self::displayableArchiveIdForURLPath($urlPath);
             }
         }
 
