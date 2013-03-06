@@ -135,30 +135,6 @@ EOT;
     }
 
     /**
-     * A page can't be displayed directly
-     * because the full archive information should be made available to the view.
-     *
-     * TODO: should this function be moved to the ColbyOutputManager class?
-     *
-     * @return void
-     */
-    public static function displayPageForArchiveId($archiveId)
-    {
-        if (!ColbyArchive::exists($archiveId))
-        {
-            throw new RuntimeException("An archive does not exist for the archive id `{$archiveId}`.");
-        }
-
-        $archive = ColbyArchive::open($archiveId);
-
-        $page = $archive->data();
-
-        $viewFilename = "handle,admin,view,{$page->viewId}.php";
-
-        return include(Colby::findHandler($viewFilename));
-    }
-
-    /**
      * @return string | null
      */
     public function groupId()

@@ -88,14 +88,13 @@ class ColbyRequest
     }
 
     /**
-     * @return string | bool (false)
+     * @return ColbyArchive | null
      */
-    public static function displayableArchiveIdForURLPath($urlPath)
+    public static function archiveForURLPath($urlPath)
     {
-        $archiveId = false;
+        $archive = null;
 
-        $sqlStub = Colby::mysqli()->escape_string($stub);
-        $sqlStub = "'{$sqlStub}'";
+        $sqlURLPath = Colby::mysqli()->escape_string($urlPath);
 
         $sql = <<<EOT
 SELECT
@@ -103,7 +102,7 @@ SELECT
 FROM
     `ColbyPages`
 WHERE
-    `stub` = {$sqlStub} AND
+    `stub` = '{$sqlURLPath}' AND
     `viewId` IS NOT NULL AND
     `published` IS NOT NULL
 EOT;
@@ -117,11 +116,13 @@ EOT;
 
         $archiveId = $result->fetch_object()->archiveId;
 
+        $archive = ColbyArchive::open($archiveId);
+
         done:
 
         $result->free();
 
-        return $archiveId;
+        return $archive;
     }
 
     /**
@@ -196,11 +197,18 @@ EOT;
             {
                 $urlPath = implode('/', self::$decodedStubs);
 
-                $archiveId = self::displayableArchiveIdForURLPath($urlPath);
+                $archive = self::archiveForURLPath($urlPath);
+
+                if ($archive)
+                {
+                    $viewId = $archive->valueForKey('viewId');
+
+                    $handlerFilename = Colby::findHandler("handle,admin,view,{$viewId}.php");
+                }
             }
         }
 
-        if ($handlerFilename || $archiveId)
+        if ($handlerFilename)
         {
             // this is a valid set of stubs but the URL may not be canonical
             // calling canonicalizeRequestURI will return if the URI
@@ -209,14 +217,7 @@ EOT;
 
             self::canonicalizeRequestURI();
 
-            if ($handlerFilename)
-            {
-                $result = include($handlerFilename);
-            }
-            else
-            {
-                $result = ColbyPageModel::displayPageForArchiveId($archiveId);
-            }
+            $result = include($handlerFilename);
 
             if (1 === $result)
             {
@@ -227,12 +228,8 @@ EOT;
             }
         }
 
-        // if we reach this code it means either no valid handler was found
-        // or including the found handler returned a non-standard value
-
-        // a valid handler will return a non-standard value (anything other than 1)
-        // to communicate that a sub-stub does not exist
-        // it's only the handler that is able to determine that fact
+        // Either no valid handler was found or the handler returned a value
+        // indicating that the page wasn't found.
 
         include(Colby::findHandler('handle-default.php'));
     }
