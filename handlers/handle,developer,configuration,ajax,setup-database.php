@@ -64,8 +64,8 @@ if (!$colbyUsersTableDoesExist)
 else
 {
     /**
-     * At this point, verified user permissions are required to upgrade so
-     * discard the previous response and start a new one.
+     * The initial insallation can be done by anyone, but one must be an
+     * administrator to upgrade the database.
      */
 
     if (!ColbyUser::current()->isOneOfThe('Administrators'))
@@ -74,7 +74,6 @@ else
 
         goto done;
     }
-
 
     /**
      * Run upgrades.
