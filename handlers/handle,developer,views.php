@@ -1,9 +1,5 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Views',
-                                                  'Developer tools for creating and editing views.',
-                                                  'admin');
-
 $page = new ColbyOutputManager('admin-html-page');
 
 $page->titleHTML = 'Views';
