@@ -3,7 +3,16 @@
 define('SIMPLE_CONTENT_DOCUMENT_MODEL_ID', 'd74e2f3d347395acdb627e7c57516c3c4c94e988');
 define('TEST_GROUP_ID', '427998e34c31e5410b730cd9993d5cc06bff6132');
 
-$response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
+$response = new ColbyOutputManager('ajax-response');
+
+$response->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    $response->message = 'You are not authorized to use this feature.';
+
+    goto done;
+}
 
 //
 // Test ColbyArchiver.php
@@ -29,6 +38,8 @@ include(COLBY_SITE_DIRECTORY . '/colby/tests/TestColbyMarkaroundParser.php');
 
 $response->wasSuccessful = true;
 $response->message = 'The unit tests ran successfully.';
+
+done:
 
 $response->end();
 

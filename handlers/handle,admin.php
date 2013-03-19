@@ -2,9 +2,8 @@
 
 include(Colby::findHandler('handle-ensure-installation.php'));
 
-$page = new ColbyOutputManager();
+$page = new ColbyOutputManager('admin-html-page');
 
-$page->template = 'admin';
 $page->titleHTML = 'Site Administration';
 $page->descriptionHTML = 'Edit the settings and content of this website.';
 

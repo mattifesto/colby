@@ -9,9 +9,19 @@ $modelId = '01fe006d1aca8e85fc140fb642bb200ed6e31596';
 $modelDataFilename = "handle,admin,model,{$modelId}.data";
 $modelData = unserialize(file_get_contents(Colby::findHandler($modelDataFilename)));
 
-$page = ColbyOutputManager::beginVerifiedUserPage($modelData->nameHTML,
-                                                  $modelData->descriptionHTML,
-                                                  'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = $modelData->nameHTML;
+$page->descriptionHTML = $modelData->descriptionHTML;
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 $archive = ColbyArchive::archiveFromGetData();
 
@@ -79,6 +89,9 @@ function updateComplete(event)
 document.addEventListener('ColbyPageUpdateComplete', updateComplete, false);
 
 </script>
+
 <?php
+
+done:
 
 $page->end();

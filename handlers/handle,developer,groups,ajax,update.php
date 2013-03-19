@@ -1,6 +1,15 @@
 <?php
 
-$response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
+$response = new ColbyOutputManager('ajax-response');
+
+$response->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    $response->message = 'You are not authorized to use this feature.';
+
+    goto done;
+}
 
 $groupId = $_POST['group-id'];
 
@@ -41,5 +50,7 @@ file_put_contents($absoluteDataFilename, serialize($data));
 
 $response->wasSuccessful = true;
 $response->message = 'The group was successfully updated.';
+
+done:
 
 $response->end();

@@ -31,7 +31,9 @@
  * response that requires authentication.
  */
 
-$response = ColbyOutputManager::beginAjaxResponse();
+$response = new ColbyOutputManager('ajax-response');
+
+$response->begin();
 
 $sql = <<<EOT
 SELECT
@@ -66,9 +68,13 @@ else
      * discard the previous response and start a new one.
      */
 
-    $response->discard();
+    if (!ColbyUser::current()->isOneOfThe('Administrators'))
+    {
+        $response->message = 'You are not authorized to use this feature.';
 
-    $response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
+        goto done;
+    }
+
 
     /**
      * Run upgrades.
@@ -98,4 +104,7 @@ $response->schemaVersionNumber = $result->fetch_object()->schemaVersionNumber;
 $result->free();
 
 $response->wasSuccessful = true;
+
+done:
+
 $response->end();

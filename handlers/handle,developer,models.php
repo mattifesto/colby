@@ -1,8 +1,18 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Models',
-                                                  'Developer tools for creating and editing models.',
-                                                  'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Models';
+$page->descriptionHTML = 'Developer tools for creating and editing models.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 ?>
 
@@ -25,6 +35,8 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Models',
 </main>
 
 <?php
+
+done:
 
 $page->end();
 

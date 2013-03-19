@@ -1,6 +1,18 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Archives', 'List, view, delete, and manage archives.', 'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Archives';
+$page->descriptionHTML = 'List, view, delete, and manage archives.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 $archiveDirectories = glob(COLBY_DATA_DIRECTORY . '/*/*/*');
 
@@ -49,5 +61,7 @@ $archiveDirectories = glob(COLBY_DATA_DIRECTORY . '/*/*/*');
 </table>
 
 <?php
+
+done:
 
 $page->end();

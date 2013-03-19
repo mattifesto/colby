@@ -1,8 +1,18 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Group Editor',
-                                                  'Edit the attributes of a group.',
-                                                  'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Group Editor';
+$page->descriptionHTML = 'Edit the attributes of a group.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 if (isset($_GET['group-id']))
 {
@@ -78,5 +88,7 @@ document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
 </script>
 
 <?php
+
+done:
 
 $page->end();

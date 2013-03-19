@@ -4,6 +4,20 @@ $page = ColbyOutputManager::beginVerifiedUserPage('View Editor',
                                                   'Edit the attributes of a view.',
                                                   'admin');
 
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'View Editor';
+$page->descriptionHTML = 'Edit the attributes of a view.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
+
 if (isset($_GET['view-id']))
 {
     $viewId = $_GET['view-id'];
@@ -133,5 +147,7 @@ document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
 </script>
 
 <?php
+
+done:
 
 $page->end();

@@ -1,8 +1,7 @@
 <?php
 
-$page = new ColbyOutputManager();
+$page = new ColbyOutputManager('admin-html-page');
 
-$page->template = 'admin';
 $page->titleHTML = 'Blog Administration';
 $page->descriptionHTML = 'Create, edit, and delete blog posts.';
 

@@ -1,6 +1,18 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Pages', 'Create, edit, and delete pages.', 'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Pages';
+$page->descriptionHTML = 'Create, edit, and delete pages.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 $pagesGroupId = 'a3f5d7ead80d4e6cb644ec158a13f3a89a9a0622';
 $pagesGroupDataFilename = Colby::findHandler("handle,admin,group,{$pagesGroupId}.data");
@@ -85,5 +97,7 @@ foreach ($viewDataFiles as $viewDataFile)
 
     <?php
 }
+
+done:
 
 $page->end();

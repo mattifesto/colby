@@ -1,8 +1,18 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Groups',
-                                                  'Developer tools for creating and editing groups.',
-                                                  'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Groups';
+$page->descriptionHTML = 'Developer tools for creating and editing groups.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 ?>
 
@@ -23,7 +33,10 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Groups',
     ?>
 
 </main>
+
 <?php
+
+done:
 
 $page->end();
 

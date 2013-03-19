@@ -1,8 +1,18 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Model Editor',
-                                                  'Edit the attributes of a model.',
-                                                  'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Model Editor';
+$page->descriptionHTML = 'Edit the attributes of a model.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 if (isset($_GET['model-id']))
 {
@@ -71,5 +81,7 @@ document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
 </script>
 
 <?php
+
+done:
 
 $page->end();

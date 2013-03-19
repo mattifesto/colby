@@ -8,9 +8,12 @@
  * This handler will always output an entire page or nothing at all.
  */
 
-$page = ColbyOutputManager::beginPage('Installation',
-                                      'This website needs to be installed.',
-                                      'simple');
+$page = new ColbyOutputManager('simple-html-page');
+
+$page->titleHTML = 'Installation';
+$page->descriptionHTML = 'This page performs the initial installation of a Colby website.';
+
+$page->begin();
 
 $databaseIsConfigured = COLBY_MYSQL_HOST && COLBY_MYSQL_DATABASE && COLBY_MYSQL_USER;
 

@@ -1,6 +1,18 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Users', 'Manage users.', 'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Users';
+$page->descriptionHTML = 'Manage users.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 ?>
 
@@ -111,6 +123,8 @@ END;
 </tbody></table>
 
 <?php
+
+done:
 
 $page->end();
 

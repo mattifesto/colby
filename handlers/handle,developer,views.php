@@ -4,6 +4,20 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Views',
                                                   'Developer tools for creating and editing views.',
                                                   'admin');
 
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Views';
+$page->descriptionHTML = 'Developer tools for creating and editing views.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
+
 ?>
 
 <main>
@@ -25,6 +39,8 @@ $page = ColbyOutputManager::beginVerifiedUserPage('Views',
 </main>
 
 <?php
+
+done:
 
 $page->end();
 

@@ -1,7 +1,18 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage(
-    'Unit Tests', 'Develeloper tests to make sure there are no regressions in functionality.', 'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Unit Tests';
+$page->descriptionHTML = 'Develeloper tests to make sure there are no regressions in functionality.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 ?>
 
@@ -231,6 +242,8 @@ function endAjax()
 </script>
 
 <?php
+
+done:
 
 $page->end();
 

@@ -1,8 +1,18 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Markaround Help',
-                                                  'Help for markaround syntax.',
-                                                  'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Markaround Help';
+$page->descriptionHTML = 'Help for markaround syntax.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/markaround-help.txt');
 
@@ -19,5 +29,7 @@ $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/markarou
 </article>
 
 <?php
+
+done:
 
 $page->end();

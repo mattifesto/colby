@@ -8,9 +8,19 @@ $modelId = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
 $modelDataFilename = "handle,admin,model,{$modelId}.data";
 $modelData = unserialize(file_get_contents(Colby::findHandler($modelDataFilename)));
 
-$page = ColbyOutputManager::beginVerifiedUserPage($modelData->nameHTML,
-                                                  $modelData->descriptionHTML,
-                                                  'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = $modelData->nameHTML;
+$page->descriptionHTML = $modelData->descriptionHTML;
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 $archive = ColbyArchive::archiveFromGetData();
 
@@ -31,5 +41,7 @@ $archive = ColbyArchive::archiveFromGetData();
 </fieldset>
 
 <?php
+
+done:
 
 $page->end();

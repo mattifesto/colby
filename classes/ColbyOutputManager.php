@@ -2,14 +2,21 @@
 
 class ColbyOutputManager
 {
-    public $template;
+    private $template;
 
     /**
      * @return ColbyOutput
      */
-    public function __construct($template = null)
+    public function __construct($template = 'html-page')
     {
         $this->template = $template;
+
+        $snippetFilename = Colby::findSnippet("{$this->template}-construct.php");
+
+        if ($snippetFilename)
+        {
+            include $snippetFilename;
+        }
     }
 
     /**
@@ -21,19 +28,12 @@ class ColbyOutputManager
 
         set_exception_handler(array($this, 'handleException'));
 
-        $absoluteHeaderSnippetFilename = null;
+        $snippetFilename = Colby::findSnippet("{$this->template}-begin.php");
 
-        if ($this->template)
+        if ($snippetFilename)
         {
-            $absoluteHeaderSnippetFilename = Colby::findSnippet("header-{$this->template}.php");
+            include $snippetFilename;
         }
-
-        if (!$absoluteHeaderSnippetFilename)
-        {
-            $absoluteHeaderSnippetFilename = Colby::findSnippet('header.php');
-        }
-
-        include($absoluteHeaderSnippetFilename);
     }
 
     /**
@@ -41,10 +41,7 @@ class ColbyOutputManager
      */
     public static function createAjaxResponse()
     {
-        $outputManager = new ColbyOutputManager('ajax');
-
-        $outputManager->wasSuccessful = false;
-        $outputManager->message = 'No response message was provided.';
+        $outputManager = new ColbyOutputManager('ajax-response');
 
         return $outputManager;
     }
@@ -134,19 +131,12 @@ class ColbyOutputManager
      */
     public function end()
     {
-        $absoluteFooterSnippetFilename = null;
+        $snippetFilename = Colby::findSnippet("{$this->template}-end.php");
 
-        if ($this->template)
+        if ($snippetFilename)
         {
-            $absoluteFooterSnippetFilename = Colby::findSnippet("footer-{$this->template}.php");
+            include $snippetFilename;
         }
-
-        if (!$absoluteFooterSnippetFilename)
-        {
-            $absoluteFooterSnippetFilename = Colby::findSnippet('footer.php');
-        }
-
-        include($absoluteFooterSnippetFilename);
 
         restore_exception_handler();
 

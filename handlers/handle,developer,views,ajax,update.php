@@ -1,6 +1,15 @@
 <?php
 
-$response = ColbyOutputManager::beginVerifiedUserAjaxResponse();
+$response = new ColbyOutputManager('ajax-response');
+
+$response->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    $response->message = 'You are not authorized to use this feature.';
+
+    goto done;
+}
 
 $viewId = $_POST['view-id'];
 
@@ -51,5 +60,7 @@ file_put_contents($absoluteDataFilename, serialize($data));
 
 $response->wasSuccessful = true;
 $response->message = 'The view was successfully updated.';
+
+done:
 
 $response->end();

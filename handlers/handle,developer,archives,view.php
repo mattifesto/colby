@@ -1,6 +1,18 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('Archive Details', 'View the contents of an archive.', 'admin');
+$page = new ColbyOutputManager('admin-html-page');
+
+$page->titleHTML = 'Archive Details';
+$page->descriptionHTML = 'View the contents of an archive.';
+
+$page->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
+{
+    include Colby::findSnippet('authenticate.php');
+
+    goto done;
+}
 
 $archiveId = $_GET['archive-id'];
 
