@@ -2,7 +2,12 @@
 
 header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
 
-$page = ColbyOutputManager::beginPage('Page Not Found', 'The page you requested was not found.');
+$page = new ColbyOutputManager();
+
+$page->titleHTML = 'Page Not Found';
+$page->descriptionHTML = 'The page you requested was not found.';
+
+$page->begin();
 
 ?>
 

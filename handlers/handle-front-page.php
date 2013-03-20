@@ -1,6 +1,11 @@
 <?php
 
-$page = ColbyOutputManager::beginPage('Front Page', 'This is the front page.');
+$page = new ColbyOutputManager();
+
+$page->titleHTML = 'Front Page';
+$page->descriptionHTML = 'This is the front page.';
+
+$page->begin();
 
 ?>
 
