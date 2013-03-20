@@ -156,11 +156,29 @@ class Colby
                 $absoluteHandlerFilename = self::findHandler('handle-exception.php');
             }
 
-            include($absoluteHandlerFilename);
+            if (!$absoluteHandlerFilename)
+            {
+                /**
+                 * 2013.03.19
+                 *
+                 * A situation occurred where COLBY_DIRECTORY wasn't set by the
+                 * configuration file which meant that an exception handler file
+                 * was not found. If this happens again, the exception message
+                 * should be sent to the error log. It's possible that other
+                 * configuration issues might also trigger this situation and
+                 * they are very difficult to debug without this code.
+                 */
+
+                error_log($exception->getMessage());
+            }
+            else
+            {
+                include $absoluteHandlerFilename;
+            }
         }
         catch (Exception $rareException)
         {
-            error_log(var_export($rareException->getMessage(), true));
+            error_log($rareException->getMessage());
         }
     }
 
@@ -184,31 +202,38 @@ class Colby
         if (!defined('COLBY_SITE_DIRECTORY'))
         {
             throw new RuntimeException(
-                'constant COLBY_SITE_DIRECTORY has not been set');
+                'The constant `COLBY_SITE_DIRECTORY` has not been set.');
         }
 
         if (!defined('COLBY_SITE_URL'))
         {
             throw new RuntimeException(
-                'constant COLBY_SITE_URL has not been set');
+                'The constant `COLBY_SITE_URL` has not been set.');
         }
 
         if (!defined('COLBY_SITE_NAME'))
         {
             throw new RuntimeException(
-                'constant COLBY_SITE_NAME has not been set');
+                'The constant `COLBY_SITE_NAME` has not been set.');
         }
 
         if (!defined('COLBY_SITE_ADMINISTRATOR'))
         {
             throw new RuntimeException(
-                'constant COLBY_SITE_ADMINISTRATOR has not been set');
+                'The constant `COLBY_SITE_ADMINISTRATOR` has not been set.');
         }
 
         if (!defined('COLBY_SITE_IS_BEING_DEBUGGED'))
         {
             throw new RuntimeException(
-                'constant COLBY_SITE_IS_BEING_DEBUGGED has not been set');
+                'The constant `COLBY_SITE_IS_BEING_DEBUGGED` has not been set.');
+        }
+
+        if (!defined('COLBY_DIRECTORY'))
+        {
+            throw new RuntimeException(
+                'The constant `COLBY_DIRECTORY` has not been set.' .
+                'Colby\'s `version.php` should be included in the site\'s `colby-configuration.php` file.');
         }
 
         // Add the website and Colby library directories. They are unshifted
