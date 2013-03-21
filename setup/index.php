@@ -9,6 +9,8 @@ $gitignoreFilename = COLBY_SITE_DIR . '/.gitignore';
 $htaccessFilename = COLBY_SITE_DIR . '/.htaccess';
 $indexFilename = COLBY_SITE_DIR . '/index.php';
 $versionFilename = COLBY_SITE_DIR . '/version.php';
+$faviconGifFilename = COLBY_SITE_DIR . '/favicon.gif';
+$faviconIcoFilename = COLBY_SITE_DIR . '/favicon.ico';
 
 $shouldPerformInstallation = (isset($_GET['install']) && $_GET['install'] == 'true');
 
@@ -65,6 +67,9 @@ if (!$shouldPerformInstallation)
                 <dd>The setup process will create this file which you will need to edit to provide site metadata and database connection information. You will be reminded of this after this initial setup process is complete.
                 <dt>data directory
                 <dd>A directory named 'data' will be created in the website root. This directory will be used to hold the archives. There will be usually one archive per unit of data. A unit of data may be a page, blog post, product, user, but is almost always associated with something that has its own URL and web page.
+                <dt>favicon.gif
+                <dt>favicon.ico
+                <dd>Zero length files will be created with these names because the files are often requested by browsers and it is faster to have zero length files available than to run a full Colby request just to generate a 404 error. When these files are zero length browsers treat them as if they didn't exist at all, so it's still effectively a 404, only faster.
                 <dt>index.php
                 <dd>All pages on the site will be directed to this file which will send the URLs through the Colby system to generate content. The reason the file is created in your website root is that you may want to customize this file to handle some or all of the URLs in a different way.
                 <dt>version.php
@@ -121,6 +126,8 @@ copy(__DIR__ . '/gitignore.template.data', $gitignoreFilename);
 copy(__DIR__ . '/htaccess.template.data', $htaccessFilename);
 copy(__DIR__ . '/index.template.data', $indexFilename);
 copy(__DIR__ . '/version.template.data', $versionFilename);
+touch($faviconGifFilename);
+touch($faviconIcoFilename);
 
 header('Location: /admin/');
 
