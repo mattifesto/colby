@@ -320,29 +320,6 @@ class Colby
         return $result;
     }
 
-    ///
-    ///
-    ///
-    public static function reportException($exception)
-    {
-        $headers = 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-        $subject = 'Exception thrown from "' .
-            COLBY_SITE_NAME .
-            '"';
-
-        $stackTrace = htmlspecialchars(
-            self::exceptionStackTrace($exception),
-            ENT_QUOTES);
-
-        $message = "<pre>{$stackTrace}</pre>\n";
-
-        $result = mail(COLBY_SITE_ADMINISTRATOR,
-            $subject,
-            $message,
-            $headers);
-    }
-
     //
     //
     //

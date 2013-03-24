@@ -200,6 +200,12 @@ EOT;
             {
                 $urlPath = implode('/', self::$decodedStubs);
 
+                // 2013.03.24 TODO:
+                // Change this to set a class variable archive which can
+                // be retrived by the handler with `ColbyRequest::$archive`
+                // so that we don't have to rely on local variables across
+                // included files.
+
                 $archive = self::archiveForViewRenderedURLPath($urlPath);
 
                 if ($archive)
