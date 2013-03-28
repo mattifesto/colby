@@ -1,8 +1,4 @@
-<?php
-
-/**
- * This is the model updater for a model with a title, subtitle, and content.
- */
+<?php // Document updater for a document with no images
 
 $response = new ColbyOutputManager('ajax-response');
 

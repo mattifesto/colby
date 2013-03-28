@@ -1,4 +1,4 @@
-<?php // Document for a blog post with content and no images
+<?php // View for a blog post with no images
 
 $page = new ColbyOutputManager();
 
@@ -6,6 +6,11 @@ if (isset($_GET['action']) && 'preview' == $_GET['action'])
 {
     if (!ColbyUser::current()->isOneOfThe('Administrators'))
     {
+        $page->titleHTML = 'Authorization Required';
+        $page->descriptionHTML = 'You are not authorized to view this page.';
+
+        $page->begin();
+
         include Colby::findSnippet('authenticate.php');
 
         goto done;

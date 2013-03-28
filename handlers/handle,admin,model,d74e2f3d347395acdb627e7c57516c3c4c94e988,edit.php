@@ -1,8 +1,4 @@
-<?php
-
-/**
- * This is the model editor for a model with a title, subtitle and content.
- */
+<?php // Document editor for a document with no images
 
 $modelId = 'd74e2f3d347395acdb627e7c57516c3c4c94e988';
 $modelDataFilename = "handle,admin,model,{$modelId}.data";

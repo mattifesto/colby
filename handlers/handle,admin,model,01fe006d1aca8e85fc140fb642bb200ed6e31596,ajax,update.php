@@ -1,9 +1,4 @@
-<?php
-
-/**
- * This is the model updater or a model with a title, subtitle, content, and
- * one medium sized image.
- */
+<?php // Document updater for a document with one image
 
 Colby::useImage();
 

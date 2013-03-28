@@ -7,12 +7,17 @@
  * $modelId string
  */
 
+$viewId = $archive->valueForKey('viewId');
+$archiveId = $archive->archiveId();
+
+$previewURL = COLBY_SITE_URL . "/admin/view/{$viewId}/?action=preview&archive-id={$archiveId}";
+
 ?>
 
 <input type="hidden" id="archive-id"
        value="<?php echo $archive->archiveId(); ?>">
 <input type="hidden" id="view-id"
-       value="<?php echo $archive->valueForKey('viewId'); ?>">
+       value="<?php echo $viewId; ?>">
 <input type="hidden" id="preferred-page-stub"
        value="<?php echo $archive->valueForKey('preferredPageStub'); ?>">
 <input type="hidden" id="published-by"
@@ -22,10 +27,14 @@
 
 <div style="position: absolute; top: 40px; right: 10px; text-align: right;">
     <div><progress value="0" style="width: 100px; margin-bottom: 5px;"></progress></div>
-    <div style="font-size: 0.7em;">Last modified<br/>
-        <span id="modified" class="time"
-              data-timestamp="<?php echo $archive->modified() * 1000; ?>">
-        </span>
+    <div style="font-size: 0.7em;">
+        <div>
+            Last modified<br/>
+            <span id="modified" class="time"
+                  data-timestamp="<?php echo $archive->modified() * 1000; ?>">
+            </span>
+        </div>
+        <div><a href="<?php echo $previewURL; ?>">preview</a></div>
     </div>
 </div>
 

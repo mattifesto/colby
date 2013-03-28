@@ -1,4 +1,4 @@
-<?php // Document for a blog post with content and one 250px wide image, works best for portrait images
+<?php // View for a blog post with one image
 
 $page = ColbyOutputManager();
 
@@ -6,6 +6,11 @@ if (isset($_GET['action']) && 'preview' == $_GET['action'])
 {
     if (!ColbyUser::current()->isOneOfThe('Administrators'))
     {
+        $page->titleHTML = 'Authorization Required';
+        $page->descriptionHTML = 'You are not authorized to view this page.';
+
+        $page->begin();
+
         include Colby::findSnippet('authenticate.php');
 
         goto done;
