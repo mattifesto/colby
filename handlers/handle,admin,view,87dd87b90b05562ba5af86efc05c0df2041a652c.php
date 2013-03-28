@@ -1,33 +1,21 @@
-<?php
+<?php // Document for a blog post with content and one 250px wide image, works best for portrait images
 
-/**
- * Blog post
- * Title, subtitle, formatted content, medium image floated right
- * More appropriate for vertical images
- */
+$page = ColbyOutputManager();
 
-if (isset($archive))
+if (isset($_GET['action']) && 'preview' == $_GET['action'])
 {
-    $page = ColbyOutputManager::beginPage($archive->valueForKey('titleHTML'),
-                                          $archive->valueForKey('subtitleHTML'));
-}
-else
-{
-    // If this URL handler is called directly, it's because a verified user wants to preview a post.
-    // So we get the post and display the page, but only for verified users.
-    // This method will display both published and unpublished posts.
-    // TODO: Can this work be generalized for all types of blog posts?
-
-    if (!isset($_GET['archive-id']))
+    if (!ColbyUser::current()->isOneOfThe('Administrators'))
     {
-        return false;
+        include Colby::findSnippet('authenticate.php');
+
+        goto done;
     }
 
     $archive = ColbyArchive::open($_GET['archive-id']);
-
-    $page = ColbyOutputManager::beginVerifiedUserPage($archive->valueForKey('titleHTML'),
-                                                      $archive->valueForKey('subtitleHTML'));
 }
+
+$page->titleHTML = $archive->valueForKey('titleHTML');
+$page->descriptionHTML = $archive->valueForKey('subtitleHTML');
 
 $publicationTimestamp = $archive->valueForKey('isPublished') ? $archive->valueForKey('publicationDate') * 1000 : '';
 $publicationText = $archive->valueForKey('isPublished') ? '' : 'not published';
@@ -35,7 +23,8 @@ $publicationText = $archive->valueForKey('isPublished') ? '' : 'not published';
 ?>
 
 <article style="width: 700px; margin: 0px auto;">
-    <style scoped="scoped">
+
+    <style scoped>
         article
         {
             padding: 50px 0px;
@@ -68,8 +57,10 @@ $publicationText = $archive->valueForKey('isPublished') ? '' : 'not published';
             overflow: hidden;
         }
     </style>
+
     <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
     <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
+
     <div class="posted">Posted:
         <span class="time"
               data-timestamp="<?php echo $publicationTimestamp; ?>">
@@ -93,8 +84,11 @@ $publicationText = $archive->valueForKey('isPublished') ? '' : 'not published';
     ?>
 
     <div class="formatted-content"><?php echo $archive->valueForKey('contentHTML'); ?></div>
+
 </article>
 
 <?php
+
+done:
 
 $page->end();

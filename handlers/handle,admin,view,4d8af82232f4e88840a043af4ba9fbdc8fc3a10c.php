@@ -1,39 +1,35 @@
-<?php
+<?php // Document for a page with content and no images
 
-/**
- * This is the built-in view for a page with a title, subtitle, and content.
- */
+$page = ColbyOutputManager();
 
-if (isset($archive))
+if (isset($_GET['action']) && 'preview' == $_GET['action'])
 {
-    $page = ColbyOutputManager::beginPage($archive->valueForKey('titleHTML'),
-                                          $archive->valueForKey('subtitleHTML'));
-}
-else
-{
-    // If this URL handler is called directly, it's because a verified user wants to preview a post.
-    // So we get the post and display the page, but only for verified users.
-    // This method will display both published and unpublished posts.
-    // TODO: Can this work be generalized for all types of blog posts?
-
-    if (!isset($_GET['archive-id']))
+    if (!ColbyUser::current()->isOneOfThe('Administrators'))
     {
-        return false;
+        include Colby::findSnippet('authenticate.php');
+
+        goto done;
     }
 
     $archive = ColbyArchive::open($_GET['archive-id']);
-
-    $page = ColbyOutputManager::beginVerifiedUserPage($archive->valueForKey('titleHTML'),
-                                                      $archive->valueForKey('subtitleHTML'));
 }
+
+$page->titleHTML = $archive->valueForKey('titleHTML');
+$page->descriptionHTML = $archive->valueForKey('subtitleHTML');
 
 ?>
 
-<h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
-<h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
+<article>
 
-<div class="formatted-content"><?php echo $archive->valueForKey('contentHTML'); ?></div>
+    <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
+    <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
+
+    <div class="formatted-content"><?php echo $archive->valueForKey('contentHTML'); ?></div>
+
+</article>
 
 <?php
+
+done:
 
 $page->end();

@@ -1,27 +1,21 @@
-<?php
+<?php // Document for a blog post with content and no images
 
-if (isset($archive))
-{
-    $page = ColbyOutputManager::beginPage($archive->valueForKey('titleHTML'),
-                                          $archive->valueForKey('subtitleHTML'));
-}
-else
-{
-    // If this URL handler is called directly, it's because a verified user wants to preview a post.
-    // So we get the post and display the page, but only for verified users.
-    // This method will display both published and unpublished posts.
-    // TODO: Can this work be generalized for all types of blog posts?
+$page = new ColbyOutputManager();
 
-    if (!isset($_GET['archive-id']))
+if (isset($_GET['action']) && 'preview' == $_GET['action'])
+{
+    if (!ColbyUser::current()->isOneOfThe('Administrators'))
     {
-        return false;
+        include Colby::findSnippet('authenticate.php');
+
+        goto done;
     }
 
     $archive = ColbyArchive::open($_GET['archive-id']);
-
-    $page = ColbyOutputManager::beginVerifiedUserPage($archive->valueForKey('titleHTML'),
-                                                      $archive->valueForKey('subtitleHTML'));
 }
+
+$page->titleHTML = $archive->valueForKey('titleHTML');
+$page->descriptionHTML = $archive->valueForKey('subtitleHTML');
 
 $isPublished = $archive->valueForKey('isPublished');
 $publicationDate = $archive->valueForKey('publicationDate');
@@ -46,9 +40,9 @@ $borderColor = 'rgba(128, 0, 128, 0.3)';
 <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Gentium+Basic:400,400italic' rel='stylesheet' type='text/css'>
 
-<section id="document">
+<article id="document">
 
-    <style scoped="scoped">
+    <style scoped>
         body
         {
             background-color: #FCFAF2;
@@ -128,7 +122,10 @@ $borderColor = 'rgba(128, 0, 128, 0.3)';
 
     <div class="formatted-content"><?php echo $archive->valueForKey('contentHTML'); ?></div>
 
-</section>
+</article>
+
 <?php
+
+done:
 
 $page->end();
