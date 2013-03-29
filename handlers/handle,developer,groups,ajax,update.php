@@ -11,7 +11,24 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
+/**
+ * Make sure the destination directory is available
+ */
+
+$location = $_POST['location'];
 $groupId = $_POST['group-id'];
+
+$groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/groups/{$groupId}";
+$groupDataFilename = "{$groupDirectory}/group.data";
+
+if (!is_dir($groupDirectory))
+{
+    mkdir($groupDirectory, 0777, true);
+}
+
+/**
+ * Create the data object
+ */
 
 $data = new stdClass();
 $data->name = $_POST['name'];
@@ -20,33 +37,15 @@ $data->description = $_POST['description'];
 $data->descriptionHTML = ColbyConvert::markaroundToHTML($data->description);
 $data->stub = $_POST['stub'];
 
-$handlerFilenameBase = "handle,admin,group,{$groupId}";
+/**
+ * Write the data file
+ */
 
-$absoluteDataFilename = Colby::findHandler("{$handlerFilenameBase}.data");
+file_put_contents($groupDataFilename, serialize($data));
 
-if (!$absoluteDataFilename)
-{
-    // If a data file doesn't yet exists will go through a more detailed process:
-    //
-    // 1. Make sure the site specific handlers directory exists.
-    // 2. Write the data file (happens outside this block, in all cases).
-
-    $absoluteHandlersDirectory = COLBY_SITE_DIRECTORY . '/handlers';
-    $absoluteHandlerFilenameBase = "{$absoluteHandlersDirectory}/{$handlerFilenameBase}";
-
-    $absoluteDataFilename       = "{$absoluteHandlerFilenameBase}.data";
-
-    // 1. Make sure the site specific handlers directory exists.
-
-    if (!file_exists($absoluteHandlersDirectory))
-    {
-        mkdir($absoluteHandlersDirectory);
-    }
-}
-
-// 2. Write the data file.
-
-file_put_contents($absoluteDataFilename, serialize($data));
+/**
+ * Send response
+ */
 
 $response->wasSuccessful = true;
 $response->message = 'The group was successfully updated.';

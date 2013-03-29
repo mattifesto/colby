@@ -14,6 +14,8 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
+$groups = Colby::findGroups();
+
 ?>
 
 <main>
@@ -22,13 +24,25 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
     <?php
 
-    $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,group,*.data');
+    foreach ($groups as $group)
+    {
+        $editURL = COLBY_SITE_URL . "/developer/groups/edit/?location={$group->location}&group-id={$group->id}";
 
-    displayGroups($absoluteDataFilenames, 'colby');
+        ?>
 
-    $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,group,*.data');
+        <section class="header-metadata-description">
+            <h1><?php echo $group->metadata->nameHTML; ?></h1>
+            <div class="metadata">
+                <a href="<?php echo $editURL; ?>">edit</a>
+                <span class="hash"><?php echo $group->id; ?></span>
+                <span>location: /<?php echo $group->location; ?></span>
+                <span>stub: <?php echo $group->metadata->stub; ?></span>
+            </div>
+            <div class="description formatted-content"><?php echo $group->metadata->descriptionHTML; ?></div>
+        </section>
 
-    displayGroups($absoluteDataFilenames, 'site');
+        <?php
+    }
 
     ?>
 
@@ -39,34 +53,3 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 done:
 
 $page->end();
-
-/**
- * @return void
- */
-function displayGroups($absoluteDataFilenames, $type)
-{
-    foreach ($absoluteDataFilenames as $absoluteDataFilename)
-    {
-        preg_match('/group,([^,]*).data$/', $absoluteDataFilename, $matches);
-
-        $groupId = $matches[1];
-
-        $editURL = COLBY_SITE_URL . "/developer/groups/edit/?group-id={$groupId}";
-
-        $data = unserialize(file_get_contents($absoluteDataFilename));
-
-        ?>
-
-        <section class="header-metadata-description">
-            <h1><?php echo $data->nameHTML; ?></h1>
-            <div class="metadata">
-                <a href="<?php echo $editURL; ?>">edit</a>
-                <span class="hash"><?php echo $groupId; ?></span>
-                <span><?php echo $type; ?></span>
-            </div>
-            <div class="description formatted-content"><?php echo $data->descriptionHTML; ?></div>
-        </section>
-
-        <?php
-    }
-}

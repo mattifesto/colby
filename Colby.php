@@ -65,6 +65,40 @@ class Colby
     }
 
     /**
+     * @return array
+     *  An array of objects containing metadata for each available group.
+     */
+    public static function findGroups()
+    {
+        $groups = array();
+
+        foreach (self::$libraryDirectories as $libraryDirectory)
+        {
+            $metadataFilenames = glob("{$libraryDirectory}/groups/*/group.data");
+            $matchExpression = '/^' . addcslashes(COLBY_SITE_DIRECTORY, '/') . '\/((.*?)\/)?groups\/(.*?)\//';
+
+            foreach ($metadataFilenames as $metadataFilename)
+            {
+                preg_match($matchExpression, $metadataFilename, $matches);
+
+                $location = $matches[2];
+                $groupId = $matches[3];
+
+                $o = new stdClass();
+
+                $o->id = $groupId;
+                $o->location = $location;
+                $o->metadataFilename = $metadataFilename;
+                $o->metadata = unserialize(file_get_contents($metadataFilename));
+
+                $groups[] = $o;
+            }
+        }
+
+        return $groups;
+    }
+
+    /**
      * @return string | false
      */
     public static function findHandler($filename)

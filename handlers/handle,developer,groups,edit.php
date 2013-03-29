@@ -14,6 +14,8 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
+$location = $_GET['location'];
+
 if (isset($_GET['group-id']))
 {
     $groupId = $_GET['group-id'];
@@ -21,17 +23,17 @@ if (isset($_GET['group-id']))
 else
 {
     $groupId = sha1(microtime() . rand());
+    $uriParts = explode('?', $_SERVER['REQUEST_URI']);
 
-    header("Location: {$_SERVER['REQUEST_URI']}?group-id={$groupId}");
+    header("Location: {$uriParts[0]}?location={$location}&group-id={$groupId}");
 }
 
-$dataFilename = "handle,admin,group,{$groupId}.data";
+$groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/groups/{$groupId}";
+$groupDataFilename = "{$groupDirectory}/group.data";
 
-$absoluteDataFilename = Colby::findHandler($dataFilename);
-
-if ($absoluteDataFilename)
+if (is_file($groupDataFilename))
 {
-    $data = unserialize(file_get_contents($absoluteDataFilename));
+    $data = unserialize(file_get_contents($groupDataFilename));
 }
 
 $ajaxURL = COLBY_SITE_URL . '/developer/groups/ajax/update/';
@@ -45,30 +47,44 @@ $descriptionHTML = isset($data->description) ? ColbyConvert::textToHTML($data->d
     <progress value="0"
               style="width: 100px; float: right;"></progress>
 
-    <div><label>Group Id
-        <input type="text"
-               id="group-id"
-               value="<?php echo $groupId; ?>"
-               readonly="readonly"
-               style="font-family: monospace;">
-    </label></div>
+    <input type="hidden" id="location" value="<?php echo $location; ?>">
+    <input type="hidden" id="group-id" value="<?php echo $groupId; ?>">
 
-    <div><label>Name
+    <section class="control">
+        <header>
+            <label for="name">Name</label>
+        </header>
         <input type="text"
                id="name"
                value="<?php echo $nameHTML; ?>">
-    </label></div>
+    </section>
 
-    <div><label>Description
+    <section class="control" style="margin-top: 10px;">
+        <header>
+            <label for="description">Metadata</label>
+        </header>
+        <div style="padding: 4px 10px; font-size: 0.7em;">
+            <span class="hash"><?php echo $groupId; ?></span>
+            <span style="margin-left: 20px;">location: /<?php echo $location; ?></span>
+        </div>
+    </section>
+
+    <section class="control" style="margin-top: 10px;">
+        <header>
+            <label for="description">Description</label>
+        </header>
         <textarea id="description"
                   style="height: 300px;"><?php echo $descriptionHTML; ?></textarea>
-    </label></div>
+    </section>
 
-    <div><label>Stub
+    <section class="control" style="margin-top: 10px;">
+        <header>
+            <label>Stub</label>
+        </header>
         <input type="text"
                id="stub"
                value="<?php echo $stub; ?>">
-    </label></div>
+    </section>
 
     <div id="error-log"></div>
 </fieldset>
