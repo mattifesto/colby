@@ -2,8 +2,8 @@
 
 $page = new ColbyOutputManager('admin-html-page');
 
-$page->titleHTML = 'Groups';
-$page->descriptionHTML = 'Developer tools for creating and editing groups.';
+$page->titleHTML = 'Document Groups';
+$page->descriptionHTML = 'Developer tools for creating and editing document groups.';
 
 $page->begin();
 
@@ -14,13 +14,15 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
-$groups = Colby::findGroups();
+$groups = Colby::findDocumentGroups();
 
 ?>
 
 <main>
 
-    <div><a href="<?php echo COLBY_SITE_URL . "/developer/groups/edit/"; ?>">Create a new group</a></div>
+    <h1>Document Groups</h1>
+
+    <div><a href="<?php echo COLBY_SITE_URL . "/developer/groups/edit/?location="; ?>">Create a new group</a></div>
 
     <?php
 

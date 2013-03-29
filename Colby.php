@@ -68,14 +68,14 @@ class Colby
      * @return array
      *  An array of objects containing metadata for each available group.
      */
-    public static function findGroups()
+    public static function findDocumentGroups()
     {
         $groups = array();
 
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $metadataFilenames = glob("{$libraryDirectory}/groups/*/group.data");
-            $matchExpression = '/^' . addcslashes(COLBY_SITE_DIRECTORY, '/') . '\/((.*?)\/)?groups\/(.*?)\//';
+            $metadataFilenames = glob("{$libraryDirectory}/document-groups/*/group.data");
+            $matchExpression = '/^' . addcslashes(COLBY_SITE_DIRECTORY, '/') . '\/((.*?)\/)?document-groups\/(.*?)\//';
 
             foreach ($metadataFilenames as $metadataFilename)
             {

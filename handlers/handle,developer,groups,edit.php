@@ -28,7 +28,7 @@ else
     header("Location: {$uriParts[0]}?location={$location}&group-id={$groupId}");
 }
 
-$groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/groups/{$groupId}";
+$groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/document-groups/{$groupId}";
 $groupDataFilename = "{$groupDirectory}/group.data";
 
 if (is_file($groupDataFilename))

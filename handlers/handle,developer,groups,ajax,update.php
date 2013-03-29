@@ -18,7 +18,7 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 $location = $_POST['location'];
 $groupId = $_POST['group-id'];
 
-$groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/groups/{$groupId}";
+$groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/document-groups/{$groupId}";
 $groupDataFilename = "{$groupDirectory}/group.data";
 
 if (!is_dir($groupDirectory))
