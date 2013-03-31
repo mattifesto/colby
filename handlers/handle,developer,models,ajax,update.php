@@ -11,7 +11,29 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
-$modelId = $_POST['model-id'];
+/**
+ * Make sure the destination directory is available
+ */
+
+$location = $_POST['location'];
+$documentGroupId = $_POST['document-group-id'];
+$documentTypeId = $_POST['document-type-id'];
+
+$documentTypeDirectory = COLBY_SITE_DIRECTORY .
+                         "/{$location}/" .
+                         "/document-groups/{$documentGroupId}" .
+                         "/document-types/{$documentTypeId}";
+
+$documentTypeDataFilename = "{$documentTypeDirectory}/document-type.data";
+
+if (!is_dir($documentTypeDirectory))
+{
+    mkdir($documentTypeDirectory, 0777, true);
+}
+
+/**
+ * Create the data object
+ */
 
 $data = new stdClass();
 $data->name = $_POST['name'];
@@ -19,51 +41,18 @@ $data->nameHTML = ColbyConvert::textToHTML($data->name);
 $data->description = $_POST['description'];
 $data->descriptionHTML = ColbyConvert::markaroundToHTML($data->description);
 
-$handlerFilenameBase = "handle,admin,model,{$modelId}";
+/**
+ * Write the data file
+ */
 
-$absoluteDataFilename = Colby::findHandler("{$handlerFilenameBase}.data");
+file_put_contents($documentTypeDataFilename, serialize($data));
 
-if (!$absoluteDataFilename)
-{
-    // If a data file doesn't yet exists will go through a more detailed process:
-    //
-    // 1. Make sure the site specific handlers directory exists.
-    // 2. Create all the necessary template files for the model, if they don't exist.
-    // 3. Finally write the data file (happens outside this block, in all cases).
-
-    $absoluteHandlersDirectory = COLBY_SITE_DIRECTORY . '/handlers';
-    $absoluteHandlerFilenameBase = "{$absoluteHandlersDirectory}/{$handlerFilenameBase}";
-
-    $absoluteDataFilename       = "{$absoluteHandlerFilenameBase}.data";
-    $absoluteEditFilename       = "{$absoluteHandlerFilenameBase},edit.php";
-    $absoluteUpdateFilename     = "{$absoluteHandlerFilenameBase},ajax,update.php";
-
-    // 1. Make sure the site specific handlers directory exists.
-
-    if (!file_exists($absoluteHandlersDirectory))
-    {
-        mkdir($absoluteHandlersDirectory);
-    }
-
-    // 2. Create all the necessary template files for the model, if they don't exist.
-
-    if (!file_exists($absoluteEditFilename))
-    {
-        touch($absoluteEditFilename);
-    }
-
-    if (!file_exists($absoluteUpdateFilename))
-    {
-        touch($absoluteUpdateFilename);
-    }
-}
-
-// 3. Write the data file.
-
-file_put_contents($absoluteDataFilename, serialize($data));
+/**
+ * Send the response
+ */
 
 $response->wasSuccessful = true;
-$response->message = 'The model was successfully updated.';
+$response->message = 'The document type was successfully updated.';
 
 done:
 

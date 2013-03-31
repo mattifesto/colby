@@ -16,14 +16,17 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
  */
 
 $location = $_POST['location'];
-$groupId = $_POST['group-id'];
+$documentGroupId = $_POST['document-group-id'];
 
-$groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/document-groups/{$groupId}";
-$groupDataFilename = "{$groupDirectory}/group.data";
+$documentGroupDirectory = COLBY_SITE_DIRECTORY .
+                  "/{$location}" .
+                  "/document-groups/{$documentGroupId}";
 
-if (!is_dir($groupDirectory))
+$documentGroupDataFilename = "{$documentGroupDirectory}/group.data";
+
+if (!is_dir($documentGroupDirectory))
 {
-    mkdir($groupDirectory, 0777, true);
+    mkdir($documentGroupDirectory, 0777, true);
 }
 
 /**
@@ -41,10 +44,10 @@ $data->stub = $_POST['stub'];
  * Write the data file
  */
 
-file_put_contents($groupDataFilename, serialize($data));
+file_put_contents($documentGroupDataFilename, serialize($data));
 
 /**
- * Send response
+ * Send the response
  */
 
 $response->wasSuccessful = true;

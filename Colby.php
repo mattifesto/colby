@@ -66,7 +66,8 @@ class Colby
 
     /**
      * @return array
-     *  An array of objects containing metadata for each available group.
+     *  An array of objects containing properties for each available document
+     *  group.
      */
     public static function findDocumentGroups()
     {
@@ -96,6 +97,92 @@ class Colby
         }
 
         return $groups;
+    }
+
+    /**
+     * @return string | false
+     */
+    public static function findFileForDocumentGroup($filename, $documentGroupId)
+    {
+        $relativeFilename = "/document-groups/{$documentGroupId}" .
+                            "/{$filename}";
+
+        foreach (self::$libraryDirectories as $libraryDirectory)
+        {
+            $absoluteFilename = "{$libraryDirectory}/{$relativeFilename}";
+
+            if (self::isReadableFile($absoluteFilename))
+            {
+                return $absoluteFilename;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     *  An array of objects containing properties for each available document
+     *  type.
+     */
+    public static function findDocumentTypes($documentGroupId)
+    {
+        $documentTypes = array();
+
+        foreach (self::$libraryDirectories as $libraryDirectory)
+        {
+            $metadataFilenames = glob("{$libraryDirectory}/document-groups/{$documentGroupId}/document-types/*/document-type.data");
+
+            $matchExpression =
+                '/^' .
+                addcslashes(COLBY_SITE_DIRECTORY, '/') .
+                '\/((.*?)\/)?' .
+                'document-groups\/' .
+                $documentGroupId .
+                '\/document-types\/' .
+                '(.*?)\//';
+
+            foreach ($metadataFilenames as $metadataFilename)
+            {
+                preg_match($matchExpression, $metadataFilename, $matches);
+
+                $location = $matches[2];
+                $documentTypeId = $matches[3];
+
+                $o = new stdClass();
+
+                $o->id = $documentTypeId;
+                $o->location = $location;
+                $o->metadataFilename = $metadataFilename;
+                $o->metadata = unserialize(file_get_contents($metadataFilename));
+
+                $documentTypes[] = $o;
+            }
+        }
+
+        return $documentTypes;
+    }
+
+    /**
+     * @return string | false
+     */
+    public static function findFileForDocumentType($filename, $documentGroupId, $documentTypeId)
+    {
+        $relativeFilename = "/document-groups/{$documentGroupId}" .
+                            "/document-types/{$documentTypeId}" .
+                            "/{$filename}";
+
+        foreach (self::$libraryDirectories as $libraryDirectory)
+        {
+            $absoluteFilename = "{$libraryDirectory}/{$relativeFilename}";
+
+            if (self::isReadableFile($absoluteFilename))
+            {
+                return $absoluteFilename;
+            }
+        }
+
+        return false;
     }
 
     /**

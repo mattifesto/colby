@@ -18,17 +18,17 @@ $location = $_GET['location'];
 
 if (isset($_GET['group-id']))
 {
-    $groupId = $_GET['group-id'];
+    $documentGroupId = $_GET['group-id'];
 }
 else
 {
-    $groupId = sha1(microtime() . rand());
+    $documentGroupId = sha1(microtime() . rand());
     $uriParts = explode('?', $_SERVER['REQUEST_URI']);
 
-    header("Location: {$uriParts[0]}?location={$location}&group-id={$groupId}");
+    header("Location: {$uriParts[0]}?location={$location}&group-id={$documentGroupId}");
 }
 
-$groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/document-groups/{$groupId}";
+$groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/document-groups/{$documentGroupId}";
 $groupDataFilename = "{$groupDirectory}/group.data";
 
 if (is_file($groupDataFilename))
@@ -47,8 +47,10 @@ $descriptionHTML = isset($data->description) ? ColbyConvert::textToHTML($data->d
     <progress value="0"
               style="width: 100px; float: right;"></progress>
 
+    <h1 style="margin-bottom: 10px;">Document Group Properties Editor</h1>
+
     <input type="hidden" id="location" value="<?php echo $location; ?>">
-    <input type="hidden" id="group-id" value="<?php echo $groupId; ?>">
+    <input type="hidden" id="document-group-id" value="<?php echo $documentGroupId; ?>">
 
     <section class="control">
         <header>
@@ -63,10 +65,10 @@ $descriptionHTML = isset($data->description) ? ColbyConvert::textToHTML($data->d
         <header>
             <label for="description">Metadata</label>
         </header>
-        <div style="padding: 4px 10px; font-size: 0.7em;">
-            <span class="hash"><?php echo $groupId; ?></span>
-            <span style="margin-left: 20px;">location: /<?php echo $location; ?></span>
-        </div>
+        <table id="table1" class="simple-keys-and-values" style="margin: 0px auto; font-size: 0.8em;">
+            <tr><th>location</th><td>/<?php echo $location; ?></td></tr>
+            <tr><th>document group id</th><td class="hash"><?php echo $documentGroupId; ?></td></tr>
+        </table>
     </section>
 
     <section class="control" style="margin-top: 10px;">
@@ -85,8 +87,6 @@ $descriptionHTML = isset($data->description) ? ColbyConvert::textToHTML($data->d
                id="stub"
                value="<?php echo $stub; ?>">
     </section>
-
-    <div id="error-log"></div>
 </fieldset>
 
 <script>

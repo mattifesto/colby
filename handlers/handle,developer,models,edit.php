@@ -2,8 +2,8 @@
 
 $page = new ColbyOutputManager('admin-html-page');
 
-$page->titleHTML = 'Model Editor';
-$page->descriptionHTML = 'Edit the attributes of a model.';
+$page->titleHTML = 'Document Type Properties Editor';
+$page->descriptionHTML = 'Edit the properties of a document type.';
 
 $page->begin();
 
@@ -14,24 +14,35 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
-if (isset($_GET['model-id']))
+$location = $_GET['location'];
+$documentGroupId = $_GET['document-group-id'];
+$documentGroupData = unserialize(file_get_contents(Colby::findFileForDocumentGroup(
+                        'group.data', $documentGroupId)));
+
+if (isset($_GET['document-type-id']))
 {
-    $modelId = $_GET['model-id'];
+    $documentTypeId = $_GET['document-type-id'];
 }
 else
 {
-    $modelId = sha1(microtime() . rand());
+    $documentTypeId = sha1(microtime() . rand());
+    $uriParts = explode('?', $_SERVER['REQUEST_URI']);
 
-    header("Location: {$_SERVER['REQUEST_URI']}?model-id={$modelId}");
+    header("Location: {$uriParts[0]}" .
+           "?location={$location}" .
+           "&document-group-id={$documentGroupId}" .
+           "&document-type-id={$documentTypeId}");
 }
 
-$dataFilename = "handle,admin,model,{$modelId}.data";
+$documentTypeDataFilename = COLBY_SITE_DIRECTORY .
+                            "/{$location}/" .
+                            "/document-groups/{$documentGroupId}" .
+                            "/document-types/{$documentTypeId}" .
+                            "/document-type.data";
 
-$absoluteDataFilename = Colby::findHandler($dataFilename);
-
-if ($absoluteDataFilename)
+if (is_file($documentTypeDataFilename))
 {
-    $data = unserialize(file_get_contents($absoluteDataFilename));
+    $data = unserialize(file_get_contents($documentTypeDataFilename));
 }
 
 $ajaxURL = COLBY_SITE_URL . '/developer/models/ajax/update/';
@@ -44,26 +55,40 @@ $descriptionHTML = isset($data->description) ? ColbyConvert::textToHTML($data->d
     <progress value="0"
               style="width: 100px; float: right;"></progress>
 
-    <div><label>Model Id
-        <input type="text"
-               id="model-id"
-               value="<?php echo $modelId; ?>"
-               readonly="readonly"
-               style="font-family: monospace;">
-    </label></div>
+    <h1 style="margin-bottom: 10px;">Document Type Properties Editor</h1>
 
-    <div><label>Name
+    <input type="hidden" id="location" value="<?php echo $location; ?>">
+    <input type="hidden" id="document-group-id" value="<?php echo $documentGroupId; ?>">
+    <input type="hidden" id="document-type-id" value="<?php echo $documentTypeId; ?>">
+
+    <section class="control">
+        <header>
+            <label for="name">Name</label>
+        </header>
         <input type="text"
                id="name"
                value="<?php echo $nameHTML; ?>">
-    </label></div>
+    </section>
 
-    <div><label>Description
+    <section class="control" style="margin-top: 10px;">
+        <header>
+            <label>Metadata</label>
+        </header>
+        <table id="table1" class="simple-keys-and-values" style="margin: 0px auto; font-size: 0.8em;">
+            <tr><th>location</th><td>/<?php echo $location; ?></td></tr>
+            <tr><th>document type id</th><td class="hash"><?php echo $documentTypeId; ?></td></tr>
+            <tr><th>document group id</th><td class="hash"><?php echo $documentGroupId; ?></td></tr>
+            <tr><th>document group name</th><td><?php echo $documentGroupData->nameHTML; ?></td></tr>
+        </table>
+    </section>
+
+    <section class="control" style="margin-top: 10px;">
+        <header>
+            <label for="description">Description</label>
+        </header>
         <textarea id="description"
                   style="height: 300px;"><?php echo $descriptionHTML; ?></textarea>
-    </label></div>
-
-    <div id="error-log"></div>
+    </section>
 </fieldset>
 
 <script>

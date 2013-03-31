@@ -129,16 +129,39 @@ section.header-metadata-description > div.description
     font-size: 0.8em;
 }
 
-table
+/**
+ * A `simple-key-value` table is intended to have two columns. The left column
+ * contains keys in `th` elements and the right column contains values in `td`
+ * elements.
+ */
+
+table.simple-keys-and-values
 {
-    margin: 1.0em 0.0em 3.0em;
-    border: 1px solid #ddddff;
     border-spacing: 0px;
     table-layout: fixed;
 }
 
-td,
-th
+table.simple-keys-and-values td,
+table.simple-keys-and-values th
+{
+    padding: 0.3em 0.5em;
+}
+
+table.simple-keys-and-values th
+{
+    color: #7f7f7f;
+    font-weight: normal;
+    text-align: right;
+}
+
+table.rename
+{
+    margin: 1.0em 0.0em 3.0em;
+    border: 1px solid #ddddff;
+}
+
+table.rename td,
+table.rename th
 {
     padding: 5px 10px;
     overflow: hidden; /* wrapping behavior */
@@ -146,12 +169,12 @@ th
     white-space: nowrap;
 }
 
-th
+table.rename th
 {
     background-color: #eeeeff;
 }
 
-table tr:nth-child(even)
+table.rename table tr:nth-child(even)
 {
     background-color: #f8f8ff;
 }

@@ -2,8 +2,8 @@
 
 $page = new ColbyOutputManager('admin-html-page');
 
-$page->titleHTML = 'Models';
-$page->descriptionHTML = 'Developer tools for creating and editing models.';
+$page->titleHTML = 'Document Types';
+$page->descriptionHTML = 'Developer tools for creating and editing document types.';
 
 $page->begin();
 
@@ -14,21 +14,53 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
+$documentGroups = Colby::findDocumentGroups();
+
 ?>
 
 <main>
 
-    <div><a href="<?php echo "{$_SERVER['REQUEST_URI']}/edit/"; ?>">Create a new model</a></div>
+    <h1>Document Types</h1>
+
+    <div><a href="<?php echo "{$_SERVER['REQUEST_URI']}/edit/"; ?>">Create a new document type</a></div>
 
     <?php
 
-    $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,model,*.data');
+    foreach ($documentGroups as $documentGroup)
+    {
+        ?>
 
-    displayModels($absoluteDataFilenames, 'colby');
+        <h1><?php echo $documentGroup->metadata->nameHTML; ?></h1>
 
-    $absoluteDataFilenames = glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,model,*.data');
+        <?php
 
-    displayModels($absoluteDataFilenames, 'site');
+        $documentTypes = Colby::findDocumentTypes($documentGroup->id);
+
+        foreach ($documentTypes as $documentType)
+        {
+            $editURL = COLBY_SITE_URL .
+                '/developer/models/edit/' .
+                "?location={$documentGroup->location}" .
+                "&document-group-id={$documentGroup->id}" .
+                "&document-type-id={$documentType->id}";
+
+            ?>
+
+            <section class="header-metadata-description">
+                <h1><?php echo $documentType->metadata->nameHTML; ?></h1>
+                <div class="metadata">
+                    <a href="<?php echo $editURL; ?>">edit</a>
+                    <span class="hash"><?php echo $documentType->id; ?></span>
+                    <span>location: /<?php echo $documentType->location; ?></span>
+                </div>
+                <div class="description formatted-content">
+                    <?php echo $documentType->metadata->descriptionHTML; ?>
+                </div>
+            </section>
+
+            <?php
+        }
+    }
 
     ?>
 
@@ -39,34 +71,3 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 done:
 
 $page->end();
-
-/**
- * @return void
- */
-function displayModels($absoluteDataFilenames, $type)
-{
-    foreach ($absoluteDataFilenames as $absoluteDataFilename)
-    {
-        preg_match('/model,([^,]*).data$/', $absoluteDataFilename, $matches);
-
-        $modelId = $matches[1];
-
-        $editURL = COLBY_SITE_URL . "/developer/models/edit/?model-id={$modelId}";
-
-        $data = unserialize(file_get_contents($absoluteDataFilename));
-
-        ?>
-
-        <section class="header-metadata-description">
-            <h1><?php echo $data->nameHTML; ?></h1>
-            <div class="metadata">
-                <a href="<?php echo $editURL; ?>">edit</a>
-                <span class="hash"><?php echo $modelId; ?></span>
-                <span><?php echo $type; ?></span>
-            </div>
-            <div class="description formatted-content"><?php echo $data->descriptionHTML; ?></div>
-        </section>
-
-        <?php
-    }
-}
