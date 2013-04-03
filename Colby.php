@@ -5,18 +5,15 @@ require_once(__DIR__ . '/../colby-configuration.php');
 class Colby
 {
     // mysqli
-    // holds the mysqli object if the request needs database access
+    // This holds the mysqli object if the request needs database access.
 
     private static $mysqli = null;
-    private static $libraryDirectories = array();
 
-    /**
-     * @return void
-     */
-    public static function addLibraryDirectory($absoluteLibraryDirectory)
-    {
-        self::$libraryDirectories[] = $absoluteLibraryDirectory;
-    }
+    // libraryDirectories
+    // A list of root relative directories to be search when looking for
+    // snippets, handlers, or document related files.
+
+    public static $libraryDirectories = array();
 
     /**
      * If the site is marked as being debugged this function will send a message
@@ -75,8 +72,15 @@ class Colby
 
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $metadataFilenames = glob("{$libraryDirectory}/document-groups/*/group.data");
-            $matchExpression = '/^' . addcslashes(COLBY_SITE_DIRECTORY, '/') . '\/((.*?)\/)?document-groups\/(.*?)\//';
+            $metadataFilenames = glob(
+                COLBY_SITE_DIRECTORY .
+                "/{$libraryDirectory}/document-groups/*/group.data");
+
+            $matchExpression =
+                '/^' .
+                addcslashes(COLBY_SITE_DIRECTORY, '/') .
+                '\/((.*?)\/)?' .
+                'document-groups\/(.*?)\//';
 
             foreach ($metadataFilenames as $metadataFilename)
             {
@@ -104,12 +108,11 @@ class Colby
      */
     public static function findFileForDocumentGroup($filename, $documentGroupId)
     {
-        $relativeFilename = "/document-groups/{$documentGroupId}" .
-                            "/{$filename}";
+        $relativeFilename = "/document-groups/{$documentGroupId}/{$filename}";
 
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $absoluteFilename = "{$libraryDirectory}/{$relativeFilename}";
+            $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/{$relativeFilename}";
 
             if (self::isReadableFile($absoluteFilename))
             {
@@ -131,16 +134,19 @@ class Colby
 
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $metadataFilenames = glob("{$libraryDirectory}/document-groups/{$documentGroupId}/document-types/*/document-type.data");
+            $metadataFilenames = glob(
+                COLBY_SITE_DIRECTORY .
+                "/{$libraryDirectory}" .
+                "/document-groups/{$documentGroupId}" .
+                '/document-types/*/' .
+                'document-type.data');
 
             $matchExpression =
                 '/^' .
                 addcslashes(COLBY_SITE_DIRECTORY, '/') .
                 '\/((.*?)\/)?' .
-                'document-groups\/' .
-                $documentGroupId .
-                '\/document-types\/' .
-                '(.*?)\//';
+                "document-groups\/{$documentGroupId}" .
+                '\/document-types\/(.*?)\//';
 
             foreach ($metadataFilenames as $metadataFilename)
             {
@@ -174,7 +180,7 @@ class Colby
 
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $absoluteFilename = "{$libraryDirectory}/{$relativeFilename}";
+            $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/{$relativeFilename}";
 
             if (self::isReadableFile($absoluteFilename))
             {
@@ -192,7 +198,7 @@ class Colby
     {
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $handlerFilename = "{$libraryDirectory}/handlers/{$filename}";
+            $handlerFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/handlers/{$filename}";
 
             if (self::isReadableFile($handlerFilename))
             {
@@ -210,7 +216,7 @@ class Colby
     {
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $snippetFilename = "{$libraryDirectory}/snippets/{$filename}";
+            $snippetFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/snippets/{$filename}";
 
             if (self::isReadableFile($snippetFilename))
             {
@@ -231,7 +237,7 @@ class Colby
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
 
-            $filenames = glob("{$libraryDirectory}/snippets/{$pattern}");
+            $filenames = glob(COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/snippets/{$pattern}");
 
             $snippetFilenames = array_merge($snippetFilenames, $filenames);
         }
@@ -369,8 +375,8 @@ class Colby
         //    added directory 2
         //    ...
 
-        array_unshift(self::$libraryDirectories, COLBY_DIRECTORY);
-        array_unshift(self::$libraryDirectories, COLBY_SITE_DIRECTORY);
+        array_unshift(self::$libraryDirectories, 'colby');
+        array_unshift(self::$libraryDirectories, '');
 
         // the order of these files might matter some day
         // files that depend on other files should be included after
