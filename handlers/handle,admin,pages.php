@@ -14,9 +14,11 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
     goto done;
 }
 
-$pagesGroupId = 'a3f5d7ead80d4e6cb644ec158a13f3a89a9a0622';
-$pagesGroupDataFilename = Colby::findHandler("handle,admin,group,{$pagesGroupId}.data");
-$pagesGroupData = unserialize(file_get_contents($pagesGroupDataFilename));
+$pagesDocumentGroupId = 'a3f5d7ead80d4e6cb644ec158a13f3a89a9a0622';
+
+$pagesDocumentGroupData = unserialize(file_get_contents(
+    Colby::findFileForDocumentGroup('document-group.data', $pagesDocumentGroupId)
+    ));
 
 $sql = <<<EOT
 SELECT
@@ -27,7 +29,7 @@ SELECT
 FROM
     `ColbyPages`
 WHERE
-    `groupId` = UNHEX('{$pagesGroupId}')
+    `groupId` = UNHEX('{$pagesDocumentGroupId}')
 ORDER BY
     `published`
 EOT;
@@ -77,7 +79,7 @@ foreach ($viewDataFiles as $viewDataFile)
 {
     $viewData = unserialize(file_get_contents($viewDataFile));
 
-    if ($viewData->groupId != $pagesGroupId)
+    if ($viewData->groupId != $pagesDocumentGroupId)
     {
         continue;
     }
