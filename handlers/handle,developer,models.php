@@ -59,34 +59,42 @@ $documentGroups = Colby::findDocumentGroups();
 
         </div>
 
-        <?php
+        <div style="margin: 0px 50px 50px;">
 
-        $documentTypes = Colby::findDocumentTypes($documentGroup->id);
+            <?php
 
-        foreach ($documentTypes as $documentType)
-        {
-            $editURL = COLBY_SITE_URL .
-                '/developer/models/edit/' .
-                "?location={$documentGroup->location}" .
-                "&document-group-id={$documentGroup->id}" .
-                "&document-type-id={$documentType->id}";
+            $documentTypes = Colby::findDocumentTypes($documentGroup->id);
+
+            foreach ($documentTypes as $documentType)
+            {
+                $editURL = COLBY_SITE_URL .
+                    '/developer/models/edit/' .
+                    "?location={$documentGroup->location}" .
+                    "&document-group-id={$documentGroup->id}" .
+                    "&document-type-id={$documentType->id}";
+
+                ?>
+
+                <section class="header-metadata-description">
+                    <h1><?php echo $documentType->metadata->nameHTML; ?></h1>
+                    <div class="metadata">
+                        <a href="<?php echo $editURL; ?>">edit</a>
+                        <span class="hash"><?php echo $documentType->id; ?></span>
+                        <span>location: /<?php echo $documentType->location; ?></span>
+                    </div>
+                    <div class="description formatted-content">
+                        <?php echo $documentType->metadata->descriptionHTML; ?>
+                    </div>
+                </section>
+
+                <?php
+            }
 
             ?>
 
-            <section class="header-metadata-description">
-                <h1><?php echo $documentType->metadata->nameHTML; ?></h1>
-                <div class="metadata">
-                    <a href="<?php echo $editURL; ?>">edit</a>
-                    <span class="hash"><?php echo $documentType->id; ?></span>
-                    <span>location: /<?php echo $documentType->location; ?></span>
-                </div>
-                <div class="description formatted-content">
-                    <?php echo $documentType->metadata->descriptionHTML; ?>
-                </div>
-            </section>
+        </div>
 
-            <?php
-        }
+        <?php
     }
 
     ?>
