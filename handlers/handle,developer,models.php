@@ -22,8 +22,6 @@ $documentGroups = Colby::findDocumentGroups();
 
     <h1>Document Types</h1>
 
-    <div><a href="<?php echo "{$_SERVER['REQUEST_URI']}/edit/"; ?>">Create a new document type</a></div>
-
     <?php
 
     foreach ($documentGroups as $documentGroup)
@@ -31,6 +29,35 @@ $documentGroups = Colby::findDocumentGroups();
         ?>
 
         <h1><?php echo $documentGroup->metadata->nameHTML; ?></h1>
+
+        <div>create a new document type for this group in:</div>
+
+        <div style="font-size: 0.7em;">
+            <style scoped>
+            a.spaced + a.spaced
+            {
+                margin-left: 20px;
+            }
+            </style>
+
+            <?php
+
+            foreach (Colby::$libraryDirectories as $libraryDirectory)
+            {
+                $createURL = COLBY_SITE_URL .
+                    '/developer/models/edit' .
+                    "?location={$libraryDirectory}" .
+                    "&document-group-id={$documentGroup->id}";
+
+                echo '<a href="',
+                    $createURL,
+                    '" class="spaced">',
+                    "/{$libraryDirectory}</a>";
+            }
+
+            ?>
+
+        </div>
 
         <?php
 

@@ -1,9 +1,5 @@
 <?php
 
-$page = ColbyOutputManager::beginVerifiedUserPage('View Editor',
-                                                  'Edit the attributes of a view.',
-                                                  'admin');
-
 $page = new ColbyOutputManager('admin-html-page');
 
 $page->titleHTML = 'View Editor';
