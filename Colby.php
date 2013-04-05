@@ -130,28 +130,9 @@ class Colby
                 '/document-types/*/' .
                 'document-type.data');
 
-            $matchExpression =
-                '/^' .
-                addcslashes(COLBY_SITE_DIRECTORY, '/') .
-                '\/((.*?)\/)?' .
-                "document-groups\/{$documentGroupId}" .
-                '\/document-types\/(.*?)\//';
-
             foreach ($metadataFilenames as $metadataFilename)
             {
-                preg_match($matchExpression, $metadataFilename, $matches);
-
-                $location = $matches[2];
-                $documentTypeId = $matches[3];
-
-                $o = new stdClass();
-
-                $o->id = $documentTypeId;
-                $o->location = $location;
-                $o->metadataFilename = $metadataFilename;
-                $o->metadata = unserialize(file_get_contents($metadataFilename));
-
-                $documentTypes[] = $o;
+                $documentTypes[] = unserialize(file_get_contents($metadataFilename));
             }
         }
 

@@ -24,18 +24,42 @@ $documentTypeDirectory = COLBY_SITE_DIRECTORY .
                          "/document-groups/{$documentGroupId}" .
                          "/document-types/{$documentTypeId}";
 
-$documentTypeDataFilename = "{$documentTypeDirectory}/document-type.data";
-
 if (!is_dir($documentTypeDirectory))
 {
     mkdir($documentTypeDirectory, 0777, true);
 }
 
 /**
- * Create the data object
+ * Load the current data if it exists.
  */
 
-$data = new stdClass();
+$documentTypeDataFilename = "{$documentTypeDirectory}/document-type.data";
+
+
+if (is_file($documentTypeDataFilename))
+{
+    $data = unserialize(file_get_contents($documentTypeDataFilename));
+}
+else
+{
+    $data = new stdClass();
+}
+
+/**
+ * Update the data object
+ */
+
+$data->id = $documentTypeId;
+$data->libraryDirectory = $location;
+
+$updated = time();
+
+if (!isset($data->created))
+{
+    $data->created = $updated;
+}
+
+$data->updated = $updated;
 $data->name = $_POST['name'];
 $data->nameHTML = ColbyConvert::textToHTML($data->name);
 $data->description = $_POST['description'];

@@ -84,14 +84,30 @@ $documentGroups = Colby::findDocumentGroups();
                 ?>
 
                 <section class="header-metadata-description">
-                    <h1><?php echo $documentType->metadata->nameHTML; ?></h1>
+                    <h1><?php echo $documentType->nameHTML; ?></h1>
                     <div class="metadata">
                         <a href="<?php echo $editURL; ?>">edit</a>
-                        <span class="hash"><?php echo $documentType->id; ?></span>
-                        <span>location: /<?php echo $documentType->location; ?></span>
+                        <span>
+                            <h6>document type id</h6>
+                            <div class="hash"><?php echo $documentType->id; ?></div>
+                        </span>
+                        <span>
+                            <h6>library</h6>
+                            <div>/<?php echo $documentType->libraryDirectory; ?></div>
+                        </span>
+                        <span>
+                            <h6>created</h6>
+                            <div class="time"
+                                  data-timestamp="<?php echo $documentType->created * 1000; ?>"></div>
+                        </span>
+                        <span>
+                            <h6>updated</h6>
+                            <div class="time"
+                                  data-timestamp="<?php echo $documentType->updated * 1000; ?>"></div>
+                        </span>
                     </div>
                     <div class="description formatted-content">
-                        <?php echo $documentType->metadata->descriptionHTML; ?>
+                        <?php echo $documentType->descriptionHTML; ?>
                     </div>
                 </section>
 

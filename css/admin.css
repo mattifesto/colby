@@ -117,9 +117,22 @@ section.header-metadata-description > div.metadata
     font-size: 0.7em;
 }
 
+section.header-metadata-description > div.metadata > *
+{
+    display: inline-block;
+    vertical-align: top;
+}
+
 section.header-metadata-description > div.metadata > * + *
 {
     margin-left: 20px;
+}
+
+section.header-metadata-description > div.metadata h6
+{
+    color: #9f9f9f;
+    font-size: 1em;
+    font-weight: normal;
 }
 
 section.header-metadata-description > div.description

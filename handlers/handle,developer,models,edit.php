@@ -16,8 +16,6 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
 $location = $_GET['location'];
 $documentGroupId = $_GET['document-group-id'];
-$documentGroupData = unserialize(file_get_contents(Colby::findFileForDocumentGroup(
-                        'document-group.data', $documentGroupId)));
 
 if (isset($_GET['document-type-id']))
 {
@@ -34,11 +32,16 @@ else
            "&document-type-id={$documentTypeId}");
 }
 
+$documentGroupData = unserialize(file_get_contents(
+    Colby::findFileForDocumentGroup('document-group.data', $documentGroupId)
+    ));
+
+
 $documentTypeDataFilename = COLBY_SITE_DIRECTORY .
-                            "/{$location}/" .
-                            "/document-groups/{$documentGroupId}" .
-                            "/document-types/{$documentTypeId}" .
-                            "/document-type.data";
+    "/{$location}/" .
+    "/document-groups/{$documentGroupId}" .
+    "/document-types/{$documentTypeId}" .
+    '/document-type.data';
 
 if (is_file($documentTypeDataFilename))
 {
