@@ -51,17 +51,6 @@ class Colby
     }
 
     /**
-     * @return bool
-     */
-    public static function isReadableFile($absoluteFilename)
-    {
-        // is_readable: file or directory exists and is readable
-        // is_file: file is a regular file (not a directory)
-
-        return (is_readable($absoluteFilename) && is_file($absoluteFilename));
-    }
-
-    /**
      * @return array
      *  An array of objects containing properties for each available document
      *  group.
@@ -114,7 +103,7 @@ class Colby
         {
             $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/{$relativeFilename}";
 
-            if (self::isReadableFile($absoluteFilename))
+            if (is_file($absoluteFilename))
             {
                 return $absoluteFilename;
             }
@@ -182,7 +171,7 @@ class Colby
         {
             $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/{$relativeFilename}";
 
-            if (self::isReadableFile($absoluteFilename))
+            if (is_file($absoluteFilename))
             {
                 return $absoluteFilename;
             }
@@ -200,7 +189,7 @@ class Colby
         {
             $handlerFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/handlers/{$filename}";
 
-            if (self::isReadableFile($handlerFilename))
+            if (is_file($handlerFilename))
             {
                 return $handlerFilename;
             }
@@ -218,7 +207,7 @@ class Colby
         {
             $snippetFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/snippets/{$filename}";
 
-            if (self::isReadableFile($snippetFilename))
+            if (is_file($snippetFilename))
             {
                 return $snippetFilename;
             }
