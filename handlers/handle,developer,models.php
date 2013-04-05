@@ -20,7 +20,7 @@ $documentGroups = Colby::findDocumentGroups();
 
 <main>
 
-    <h1>Document Types</h1>
+    <h1 style="margin-bottom: 1em; text-align: center;">Document Types</h1>
 
     <?php
 
@@ -28,35 +28,43 @@ $documentGroups = Colby::findDocumentGroups();
     {
         ?>
 
-        <h1><?php echo $documentGroup->metadata->nameHTML; ?></h1>
+        <h2><?php echo $documentGroup->metadata->nameHTML; ?></h2>
 
-        <div>create a new document type for this group in:</div>
+        <div style="font-size: 0.7em;">create a new document type for this group in:
 
-        <div style="font-size: 0.7em;">
-            <style scoped>
-            a.spaced + a.spaced
-            {
-                margin-left: 20px;
-            }
-            </style>
+            <span>
+                <style scoped>
+                a.spaced
+                {
+                    padding: 5px 20px;
+                    margin-left: 20px;
+                    border: 1px solid #ffdfbf;
+                    background-color: #fff7df;
+                }
+                a.spaced:hover
+                {
+                    background-color: #ffefdf;
+                }
+                </style>
 
-            <?php
+                <?php
 
-            foreach (Colby::$libraryDirectories as $libraryDirectory)
-            {
-                $createURL = COLBY_SITE_URL .
-                    '/developer/models/edit' .
-                    "?location={$libraryDirectory}" .
-                    "&document-group-id={$documentGroup->id}";
+                foreach (Colby::$libraryDirectories as $libraryDirectory)
+                {
+                    $createURL = COLBY_SITE_URL .
+                        '/developer/models/edit' .
+                        "?location={$libraryDirectory}" .
+                        "&document-group-id={$documentGroup->id}";
 
-                echo '<a href="',
-                    $createURL,
-                    '" class="spaced">',
-                    "/{$libraryDirectory}</a>";
-            }
+                    echo '<a href="',
+                        $createURL,
+                        '" class="spaced">',
+                        "/{$libraryDirectory}</a>";
+                }
 
-            ?>
+                ?>
 
+            </span>
         </div>
 
         <div style="margin: 0px 50px 50px;">
