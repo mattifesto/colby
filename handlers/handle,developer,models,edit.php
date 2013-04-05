@@ -17,7 +17,7 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 $location = $_GET['location'];
 $documentGroupId = $_GET['document-group-id'];
 $documentGroupData = unserialize(file_get_contents(Colby::findFileForDocumentGroup(
-                        'group.data', $documentGroupId)));
+                        'document-group.data', $documentGroupId)));
 
 if (isset($_GET['document-type-id']))
 {

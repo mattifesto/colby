@@ -22,7 +22,7 @@ $documentGroupDirectory = COLBY_SITE_DIRECTORY .
                   "/{$location}" .
                   "/document-groups/{$documentGroupId}";
 
-$documentGroupDataFilename = "{$documentGroupDirectory}/group.data";
+$documentGroupDataFilename = "{$documentGroupDirectory}/document-group.data";
 
 if (!is_dir($documentGroupDirectory))
 {

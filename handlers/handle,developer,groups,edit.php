@@ -29,7 +29,7 @@ else
 }
 
 $groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/document-groups/{$documentGroupId}";
-$groupDataFilename = "{$groupDirectory}/group.data";
+$groupDataFilename = "{$groupDirectory}/document-group.data";
 
 if (is_file($groupDataFilename))
 {

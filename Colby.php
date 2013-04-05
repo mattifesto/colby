@@ -74,7 +74,7 @@ class Colby
         {
             $metadataFilenames = glob(
                 COLBY_SITE_DIRECTORY .
-                "/{$libraryDirectory}/document-groups/*/group.data");
+                "/{$libraryDirectory}/document-groups/*/document-group.data");
 
             $matchExpression =
                 '/^' .
