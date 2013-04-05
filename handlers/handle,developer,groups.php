@@ -20,9 +20,43 @@ $groups = Colby::findDocumentGroups();
 
 <main>
 
-    <h1>Document Groups</h1>
+    <h1 style="margin-bottom: 1em; text-align: center;">Document Groups</h1>
 
-    <div><a href="<?php echo COLBY_SITE_URL . "/developer/groups/edit/?location="; ?>">Create a new group</a></div>
+    <div style="font-size: 0.7em;">create a new document group in:
+
+        <span>
+            <style scoped>
+            a.spaced
+            {
+                padding: 5px 20px;
+                margin-left: 20px;
+                border: 1px solid #ffdfbf;
+                background-color: #fff7df;
+            }
+            a.spaced:hover
+            {
+                background-color: #ffefdf;
+            }
+            </style>
+
+            <?php
+
+            foreach (Colby::$libraryDirectories as $libraryDirectory)
+            {
+                $createURL = COLBY_SITE_URL .
+                    '/developer/groups/edit' .
+                    "?location={$libraryDirectory}";
+
+                echo '<a href="',
+                    $createURL,
+                    '" class="spaced">',
+                    "/{$libraryDirectory}</a>";
+            }
+
+            ?>
+
+        </span>
+    </div>
 
     <?php
 
