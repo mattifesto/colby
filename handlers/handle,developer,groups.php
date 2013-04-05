@@ -70,9 +70,18 @@ $groups = Colby::findDocumentGroups();
             <h1><?php echo $group->metadata->nameHTML; ?></h1>
             <div class="metadata">
                 <a href="<?php echo $editURL; ?>">edit</a>
-                <span class="hash"><?php echo $group->id; ?></span>
-                <span>location: /<?php echo $group->location; ?></span>
-                <span>stub: <?php echo $group->metadata->stub; ?></span>
+                <span>
+                    <h6>document group id</h6>
+                    <div class="hash"><?php echo $group->id; ?></div>
+                </span>
+                <span>
+                    <h6>location</h6>
+                    <div>/<?php echo $group->location; ?></div>
+                </span>
+                <span>
+                    <h6>stub</h6>
+                    <div><?php echo $group->metadata->stub; ?></div>
+                </span>
             </div>
             <div class="description formatted-content"><?php echo $group->metadata->descriptionHTML; ?></div>
         </section>

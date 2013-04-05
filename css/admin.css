@@ -130,6 +130,7 @@ section.header-metadata-description > div.metadata > * + *
 
 section.header-metadata-description > div.metadata h6
 {
+    margin-bottom: 1px;
     color: #9f9f9f;
     font-size: 1em;
     font-weight: normal;
