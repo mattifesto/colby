@@ -57,39 +57,22 @@ class Colby
      */
     public static function findDocumentGroups()
     {
-        $groups = array();
+        $documentGroups = array();
 
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
             $metadataFilenames = glob(
                 COLBY_SITE_DIRECTORY .
-                "/{$libraryDirectory}/document-groups/*/document-group.data");
-
-            $matchExpression =
-                '/^' .
-                addcslashes(COLBY_SITE_DIRECTORY, '/') .
-                '\/((.*?)\/)?' .
-                'document-groups\/(.*?)\//';
+                "/{$libraryDirectory}/document-groups/*/document-group.data"
+            );
 
             foreach ($metadataFilenames as $metadataFilename)
             {
-                preg_match($matchExpression, $metadataFilename, $matches);
-
-                $location = $matches[2];
-                $groupId = $matches[3];
-
-                $o = new stdClass();
-
-                $o->id = $groupId;
-                $o->location = $location;
-                $o->metadataFilename = $metadataFilename;
-                $o->metadata = unserialize(file_get_contents($metadataFilename));
-
-                $groups[] = $o;
+                $documentGroups[] = unserialize(file_get_contents($metadataFilename));
             }
         }
 
-        return $groups;
+        return $documentGroups;
     }
 
     /**

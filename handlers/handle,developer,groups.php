@@ -14,7 +14,7 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
-$groups = Colby::findDocumentGroups();
+$documentGroups = Colby::findDocumentGroups();
 
 ?>
 
@@ -60,30 +60,32 @@ $groups = Colby::findDocumentGroups();
 
     <?php
 
-    foreach ($groups as $group)
+    foreach ($documentGroups as $documentGroup)
     {
-        $editURL = COLBY_SITE_URL . "/developer/groups/edit/?location={$group->location}&group-id={$group->id}";
+        $editURL = COLBY_SITE_URL .
+            '/developer/groups/edit/' .
+            "?location={$documentGroup->libraryDirectory}&group-id={$documentGroup->id}";
 
         ?>
 
         <section class="header-metadata-description">
-            <h1><?php echo $group->metadata->nameHTML; ?></h1>
+            <h1><?php echo $documentGroup->nameHTML; ?></h1>
             <div class="metadata">
                 <a href="<?php echo $editURL; ?>">edit</a>
                 <span>
                     <h6>document group id</h6>
-                    <div class="hash"><?php echo $group->id; ?></div>
+                    <div class="hash"><?php echo $documentGroup->id; ?></div>
                 </span>
                 <span>
-                    <h6>location</h6>
-                    <div>/<?php echo $group->location; ?></div>
+                    <h6>library</h6>
+                    <div>/<?php echo $documentGroup->libraryDirectory; ?></div>
                 </span>
                 <span>
                     <h6>stub</h6>
-                    <div><?php echo $group->metadata->stub; ?></div>
+                    <div><?php echo $documentGroup->stub; ?></div>
                 </span>
             </div>
-            <div class="description formatted-content"><?php echo $group->metadata->descriptionHTML; ?></div>
+            <div class="description formatted-content"><?php echo $documentGroup->descriptionHTML; ?></div>
         </section>
 
         <?php
