@@ -30,11 +30,10 @@ if (!is_dir($documentTypeDirectory))
 }
 
 /**
- * Load the current data if it exists.
+ * Load the current data file if it exists
  */
 
 $documentTypeDataFilename = "{$documentTypeDirectory}/document-type.data";
-
 
 if (is_file($documentTypeDataFilename))
 {

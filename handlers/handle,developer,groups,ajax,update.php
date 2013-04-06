@@ -19,10 +19,8 @@ $location = $_POST['location'];
 $documentGroupId = $_POST['document-group-id'];
 
 $documentGroupDirectory = COLBY_SITE_DIRECTORY .
-                  "/{$location}" .
-                  "/document-groups/{$documentGroupId}";
-
-$documentGroupDataFilename = "{$documentGroupDirectory}/document-group.data";
+                          "/{$location}" .
+                          "/document-groups/{$documentGroupId}";
 
 if (!is_dir($documentGroupDirectory))
 {
@@ -30,10 +28,35 @@ if (!is_dir($documentGroupDirectory))
 }
 
 /**
- * Create the data object
+ * Load the current data file if it exists
  */
 
-$data = new stdClass();
+$documentGroupDataFilename = "{$documentGroupDirectory}/document-group.data";
+
+if (is_file($documentGroupDataFilename))
+{
+    $data = unserialize(file_get_contents($documentGroupDataFilename));
+}
+else
+{
+    $data = new stdClass();
+}
+
+/**
+ * Update the data object
+ */
+
+$data->id = $documentGroupId;
+$data->libraryDirectory = $location;
+
+$updated = time();
+
+if (!isset($data->created))
+{
+    $data->created = $updated;
+}
+
+$data->updated = $updated;
 $data->name = $_POST['name'];
 $data->nameHTML = ColbyConvert::textToHTML($data->name);
 $data->description = $_POST['description'];
