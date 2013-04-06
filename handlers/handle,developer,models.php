@@ -28,7 +28,7 @@ $documentGroups = Colby::findDocumentGroups();
     {
         ?>
 
-        <h2><?php echo $documentGroup->metadata->nameHTML; ?></h2>
+        <h2><?php echo $documentGroup->nameHTML; ?></h2>
 
         <div style="font-size: 0.7em;">create a new document type for this group in:
 
@@ -77,7 +77,7 @@ $documentGroups = Colby::findDocumentGroups();
             {
                 $editURL = COLBY_SITE_URL .
                     '/developer/models/edit/' .
-                    "?location={$documentGroup->location}" .
+                    "?location={$documentGroup->libraryDirectory}" .
                     "&document-group-id={$documentGroup->id}" .
                     "&document-type-id={$documentType->id}";
 

@@ -23,9 +23,8 @@ if (isset($_GET['group-id']))
 else
 {
     $documentGroupId = sha1(microtime() . rand());
-    $uriParts = explode('?', $_SERVER['REQUEST_URI']);
 
-    header("Location: {$uriParts[0]}?location={$location}&group-id={$documentGroupId}");
+    header("Location: /developer/groups/edit/?location={$location}&group-id={$documentGroupId}");
 }
 
 $groupDirectory = COLBY_SITE_DIRECTORY . "/{$location}/document-groups/{$documentGroupId}";

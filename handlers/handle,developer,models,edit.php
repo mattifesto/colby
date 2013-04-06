@@ -24,9 +24,8 @@ if (isset($_GET['document-type-id']))
 else
 {
     $documentTypeId = sha1(microtime() . rand());
-    $uriParts = explode('?', $_SERVER['REQUEST_URI']);
 
-    header("Location: {$uriParts[0]}" .
+    header("Location: /developer/models/edit/" .
            "?location={$location}" .
            "&document-group-id={$documentGroupId}" .
            "&document-type-id={$documentTypeId}");

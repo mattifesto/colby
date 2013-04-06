@@ -84,6 +84,14 @@ $documentGroups = Colby::findDocumentGroups();
                     <h6>stub</h6>
                     <div><?php echo $documentGroup->stub; ?></div>
                 </span>
+                <span>
+                    <h6>created</h6>
+                    <div class="time" data-timestamp="<?php echo $documentGroup->created * 1000; ?>"></div>
+                </span>
+                <span>
+                    <h6>updated</h6>
+                    <div class="time" data-timestamp="<?php echo $documentGroup->updated * 1000; ?>"></div>
+                </span>
             </div>
             <div class="description formatted-content"><?php echo $documentGroup->descriptionHTML; ?></div>
         </section>
