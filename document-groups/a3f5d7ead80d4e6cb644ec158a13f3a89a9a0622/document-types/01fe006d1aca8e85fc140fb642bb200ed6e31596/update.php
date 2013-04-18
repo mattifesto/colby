@@ -15,8 +15,8 @@ $response->begin();
 
 $archive = ColbyArchive::open($_POST['archive-id']);
 
-$archive->setStringValueForKey($_POST['document-group-id'], 'documentGroupId');
-$archive->setStringValueForKey($_POST['document-type-id'], 'documentTypeId');
+$archive->setStringValueForKey($_POST['document-group-id'], 'documentGroupId', false);
+$archive->setStringValueForKey($_POST['document-type-id'], 'documentTypeId', false);
 
 $archive->setStringValueForKey($_POST['title'], 'title');
 $archive->setStringValueForKey($_POST['subtitle'], 'subtitle');
@@ -52,7 +52,7 @@ $response->uriIsAvailable = updateDatabase($archive, $_POST['uri'], $searchText)
 
 if ($response->uriIsAvailable)
 {
-    $archive->setStringValueForKey($_POST['uri'], 'uri');
+    $archive->setStringValueForKey($_POST['uri'], 'uri', false);
 }
 
 /**
