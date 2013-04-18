@@ -1,23 +1,7 @@
-<?php // View for a page with no images
+<?php // View for a page with an optional image
+      // Required parameters: $archive
 
-$page = ColbyOutputManager();
-
-if (isset($_GET['action']) && 'preview' == $_GET['action'])
-{
-    if (!ColbyUser::current()->isOneOfThe('Administrators'))
-    {
-        $page->titleHTML = 'Authorization Required';
-        $page->descriptionHTML = 'You are not authorized to view this page.';
-
-        $page->begin();
-
-        include Colby::findSnippet('authenticate.php');
-
-        goto done;
-    }
-
-    $archive = ColbyArchive::open($_GET['archive-id']);
-}
+$page = new ColbyOutputManager();
 
 $page->titleHTML = $archive->valueForKey('titleHTML');
 $page->descriptionHTML = $archive->valueForKey('subtitleHTML');

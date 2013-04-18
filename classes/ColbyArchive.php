@@ -11,67 +11,6 @@ class ColbyArchive
     protected $data;
 
     /**
-     * @return ColbyArchive
-     */
-    public static function archiveFromGetData()
-    {
-        $archiveId = isset($_GET['archive-id']) ? $_GET['archive-id'] : '';
-
-        if (empty($archiveId))
-        {
-            $archiveId = sha1(microtime() . rand());
-
-            $parts = explode('?', $_SERVER['REQUEST_URI']);
-
-            $path = $parts[0];
-
-            $queryString = isset($parts[1]) ? $parts[1] : '';
-            $queryString = "archive-id={$archiveId}&{$queryString}";
-
-            header("Location: {$path}?{$queryString}");
-            ob_end_clean();
-            exit;
-        }
-
-        $archive = ColbyArchive::open($archiveId);
-        $archive->model = ColbyPageModel::modelWithArchive($archive);
-
-        if (!$archive->model->viewId())
-        {
-            $archive->model->setViewId($_GET['view-id']);
-        }
-
-        return $archive;
-    }
-
-    /**
-     * @return ColbyArchive
-     */
-    public static function archiveFromPostData()
-    {
-        $archive = ColbyArchive::open($_POST['archive-id']);
-        $archive->model = ColbyPageModel::modelWithArchive($archive);
-
-        if (!$archive->model->viewId())
-        {
-            $archive->model->setViewId($_POST['view-id']);
-        }
-
-        $archive->setStringValueForKey($_POST['title'], 'title');
-        $archive->setStringValueForKey($_POST['subtitle'], 'subtitle');
-        $archive->setBoolValueForKey($_POST['stub-is-locked'], 'stubIsLocked');
-        $archive->setStringValueForKey($_POST['custom-page-stub-text'], 'customPageStubText');
-
-        $archive->model->setPreferredPageStub($_POST['preferred-page-stub']);
-
-        $archive->model->setPublicationData($_POST['is-published'],
-                                            $_POST['published-by'],
-                                            $_POST['publication-date']);
-
-        return $archive;
-    }
-
-    /**
      * @return string
      */
     public function archiveId()
@@ -316,8 +255,6 @@ class ColbyArchive
             $archive->createStorage();
         }
 
-        $archive->model = ColbyPageModel::modelWithArchive($archive);
-
         return $archive;
     }
 
@@ -351,8 +288,6 @@ class ColbyArchive
      */
     public function save()
     {
-        $this->model->updateDatabase();
-
         $absoluteArchiveFilename = $this->path('archive.data');
 
         if (!is_dir($this->path()))
@@ -412,7 +347,16 @@ class ColbyArchive
     {
         $key = strval($key);
 
-        $this->data->$key = !!$boolValue;
+        if ($boolValue === null || $boolValue === '')
+        {
+            $boolValue = null;
+        }
+        else
+        {
+            $boolValue = !!$boolValue;
+        }
+
+        $this->data->$key = $boolValue;
     }
 
     /**
@@ -426,7 +370,16 @@ class ColbyArchive
     {
         $key = strval($key);
 
-        $this->data->$key = floatval($floatValue);
+        if ($floatValue === null || $floatValue === '')
+        {
+            $floatValue = null;
+        }
+        else
+        {
+            $floatValue = floatval($floatValue);
+        }
+
+        $this->data->$key = $floatValue;
     }
 
     /**
@@ -440,7 +393,16 @@ class ColbyArchive
     {
         $key = strval($key);
 
-        $this->data->$key = intval($intValue);
+        if ($intValue === null || $intValue === '')
+        {
+            $intValue = null;
+        }
+        else
+        {
+            $intValue = intval($intValue);
+        }
+
+        $this->data->$key = $intValue;
     }
 
     /**

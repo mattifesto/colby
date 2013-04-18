@@ -236,7 +236,7 @@ class ColbyConvert
      */
     public static function timestampToSQLDateTime($timestamp)
     {
-        if (empty($timestamp))
+        if (!$timestamp)
         {
             return 'NULL';
         }

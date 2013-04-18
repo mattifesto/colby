@@ -23,7 +23,7 @@ $pagesDocumentGroupData = unserialize(file_get_contents(
 $sql = <<<EOT
 SELECT
     LOWER(HEX(`archiveId`)) AS `archiveId`,
-    LOWER(HEX(`modelId`)) AS `modelId`,
+    LOWER(HEX(`modelId`)) AS `documentTypeId`,
     `titleHTML`,
     `published`
 FROM
@@ -50,7 +50,10 @@ $result = Colby::query($sql);
 
     while ($row = $result->fetch_object())
     {
-        $editURL = COLBY_SITE_URL . "/admin/model/{$row->modelId}/edit/?archive-id={$row->archiveId}";
+        $editURL = COLBY_SITE_URL . "/admin/document/edit/" .
+            "?document-group-id={$pagesDocumentGroupId}" .
+            "&document-type-id={$row->documentTypeId}" .
+            "&archive-id={$row->archiveId}";
 
         ?>
 
@@ -70,6 +73,22 @@ $result = Colby::query($sql);
 </tbody></table>
 
 <?php
+
+$documentTypes = Colby::findDocumentTypes($pagesDocumentGroupId);
+
+foreach ($documentTypes as $documentType)
+{
+    $createNewPageURL = COLBY_SITE_URL .
+        '/admin/document/edit/' .
+        "?document-group-id={$pagesDocumentGroupId}" .
+        "&document-type-id={$documentType->id}";
+
+    ?>
+    <div><a href="<?php echo $createNewPageURL; ?>">
+        <?php echo $documentType->nameHTML; ?>
+    </a></div>
+    <?php
+}
 
 $viewDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,view,*.data');
 $viewDataFiles = array_merge($viewDataFiles,

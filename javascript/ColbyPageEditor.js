@@ -2,7 +2,64 @@
 
 var ColbyPageEditor =
 {
-    'formManager' : null
+    'formManager'           : null,
+    'naturalBaseStub'       : null,
+    'naturalURI'            : null
+};
+
+/**
+ * @return void
+ */
+ColbyPageEditor.display = function()
+{
+    /**
+     * Elements
+     */
+
+    var uriElement = document.getElementById('uri');
+    var publicationDateTextElement = document.getElementById('publication-date-text');
+
+    /**
+     * State
+     */
+
+    var isPublished = document.getElementById('is-published').checked;
+    var uriIsCustom = document.getElementById('uri-is-custom').value;
+    var publishedTimeStamp = document.getElementById('published-time-stamp').value;
+
+    /**
+     * Update
+     */
+
+    if (isPublished)
+    {
+        uriElement.disabled = true;
+        publicationDateTextElement.disabled = true;
+    }
+    else
+    {
+        uriElement.disabled = false;
+        publicationDateTextElement.disabled = false;
+    }
+
+    if (!publicationDateTextElement.classList.contains('invalid'))
+    {
+        if (publishedTimeStamp)
+        {
+            var date = new Date(publishedTimeStamp * 1000);
+
+            publicationDateTextElement.value = date.toLocaleString();
+        }
+        else
+        {
+            publicationDateTextElement.value = '';
+        }
+    }
+
+    if (!uriIsCustom)
+    {
+        uriElement.value = ColbyPageEditor.naturalURI;
+    }
 };
 
 /**
@@ -14,150 +71,225 @@ ColbyPageEditor.handleContentLoaded = function()
 
     ColbyPageEditor.formManager.updateCompleteCallback = ColbyPageEditor.updateCompleteCallback;
 
-    if (publicationDate)
-    {
-        var date = new Date(publicationDate);
+    document.getElementById('is-published').addEventListener(
+        'change', ColbyPageEditor.handleIsPublishedChanged, false);
 
-        document.getElementById('publication-date-text').value = date.toLocaleString();
-    }
+    document.getElementById('publication-date-text').addEventListener(
+        'blur', ColbyPageEditor.handlePublicationDateTextBlurred, false);
 
-    if (document.getElementById('is-published').checked)
-    {
-        document.getElementById('custom-page-stub-text').disabled = true;
-        document.getElementById('stub-is-locked').disabled = true;
-    }
+    document.getElementById('title').addEventListener(
+        'input', ColbyPageEditor.handleTitleReceivedInput, false);
 
-    document.getElementById('title').addEventListener('input', ColbyPageEditor.updatePreferredPageStub, false);
-    document.getElementById('custom-page-stub-text').addEventListener('input', ColbyPageEditor.updatePreferredPageStub, false);
-}
+    document.getElementById('uri').addEventListener(
+        'input', ColbyPageEditor.handleURIReceivedInput, false);
 
-/**
- * @return void
- */
-ColbyPageEditor.handlePublicationDateBlurred = function(sender)
-{
-    var date = new Date(sender.value);
+    document.getElementById('uri').addEventListener(
+        'blur', ColbyPageEditor.handleURIBlurred, false);
 
-    if (isNaN(date))
-    {
-        // TODO: turn field red by adding a class
-        // remove it when field is successfully set
+    /**
+     * If this is a new document it won't have a URI value yet so update the
+     * natural URI.
+     */
 
-        alert('Can\'t parse date value "' + sender.value + '".');
+    ColbyPageEditor.updateNaturalURI();
 
-        return;
-    }
+    /**
+     * Update all of the elements that have dependencies.
+     */
 
-    ColbyPageEditor.setPublicationDate(date.getTime());
-}
+    ColbyPageEditor.display();
+};
 
 /**
  * @return void
  */
-ColbyPageEditor.handleIsPublishedChanged = function(sender)
+ColbyPageEditor.handlePublicationDateTextBlurred = function(event)
 {
-    if (sender.checked)
+    var publicationDateTextElement = event.target;
+    var publishedTimeStampElement = document.getElementById('published-time-stamp');
+
+    if (publicationDateTextElement.value.match(/^\s*$/))
     {
-        if (!publicationDate)
-        {
-            ColbyPageEditor.setPublicationDate(new Date().getTime());
-        }
+        /**
+         * The input contains only whitespace so set the time stamp value to
+         * `null` (empty string) and the text input value to an empty string.
+         */
 
-        var publishedBy = document.getElementById('published-by');
-
-        if (!publishedBy.value)
-        {
-            publishedBy.value = currentUserId;
-        }
-
-        // When a post is published the stub is always automatically locked to maintain the permalink. If the user unpublishes the post they have the choice to unlock the stub if desired.
-
-        var locked = document.getElementById('stub-is-locked');
-
-        if (!locked.checked)
-        {
-            locked.checked = true;
-
-            // Simulate the user checking the checkbox indicate the state has changed.
-
-            var event = document.createEvent('Event');
-
-            event.initEvent('change', false, false);
-
-            locked.dispatchEvent(event);
-        }
-
-        document.getElementById('custom-page-stub-text').disabled = true;
-        document.getElementById('stub-is-locked').disabled = true;
+        publishedTimeStampElement.value = '';
+        publicationDateTextElement.value = '';
     }
     else
     {
-        document.getElementById('custom-page-stub-text').disabled = false;
-        document.getElementById('stub-is-locked').disabled = false;
-    }
-}
+        var date = new Date(publicationDateTextElement.value);
 
-/**
- * @return void
- */
-ColbyPageEditor.updatePreferredPageStub = function()
-{
-    if (document.getElementById('stub-is-locked').checked)
-    {
-        return;
-    }
+        if (isNaN(date))
+        {
+            /**
+             * If the date string is invalid, set the time stamp value to
+             * `null` (empty string).
+             */
 
-    var stubText = document.getElementById('custom-page-stub-text').value.trim();
+            publishedTimeStampElement.value = '';
 
-    if (!stubText)
-    {
-        stubText = document.getElementById('title').value.trim();
-    }
+            publicationDateTextElement.classList.add('invalid');
 
-    var pageStub = stubText.toLowerCase();
+            return;
+        }
+        else
+        {
+            // `Math.floor` guarantees an integer value
 
-    pageStub = pageStub.replace(/[^a-z0-9- ]/g, '');
-    pageStub = pageStub.replace(/^[\s-]+|[\s-]+$/, '');
-    pageStub = pageStub.replace(/[\s-]+/g, '-');
+            var unixTimeStamp = Math.floor(date.getTime() / 1000);
 
-    var stub = pageStub;
-
-    if (groupStub)
-    {
-        stub = groupStub + '/' + stub;
+            publishedTimeStampElement.value = unixTimeStamp;
+        }
     }
 
-    document.getElementById('preferred-page-stub').value = pageStub;
-
-    var preferredStubView = document.getElementById('preferred-stub-view');
-
-    preferredStubView.textContent = stub;
-}
-
-/**
- * @return void
- */
-ColbyPageEditor.setPublicationDate = function(timestamp)
-{
-    if (publicationDate == timestamp)
-    {
-        return;
-    }
-
-    publicationDate = timestamp;
-    var date = new Date(timestamp);
-
-    var publicationDateTextElement = document.getElementById('publication-date-text');
-
-    publicationDateTextElement.value = date.toLocaleString();
+    publicationDateTextElement.classList.remove('invalid');
     publicationDateTextElement.classList.add('needs-update');
 
-    var phpPublicationDate = Math.floor(publicationDate / 1000);
-
-    document.getElementById('publication-date').value = phpPublicationDate;
+    /**
+     * Make sure the change is saved to the server.
+     */
 
     ColbyPageEditor.formManager.setNeedsUpdate(true);
-}
+
+    /**
+     * The `display` method will update the publication date text input to
+     * a cononical date format.
+     */
+
+    ColbyPageEditor.display();
+};
+
+/**
+ * @return void
+ */
+ColbyPageEditor.handleIsPublishedChanged = function(event)
+{
+    var isPublishedElement = event.target;
+
+    if (isPublishedElement.checked)
+    {
+        /**
+         * If the published time stamp isn't set, set it to the current time
+         * stamp.
+         */
+
+        var publishedTimeStampElement = document.getElementById('published-time-stamp');
+
+        if (!publishedTimeStampElement.value)
+        {
+            /**
+             * `Math.floor` guarantees an integer value.
+             */
+
+            var unixTimeStamp = Math.floor(Date.now() / 1000);
+
+            publishedTimeStampElement.value = unixTimeStamp;
+
+            /**
+             * Highlight the publication date input so the user will see that
+             * it has changed. (The `display` method will update its value.)
+             */
+
+            document.getElementById('publication-date-text').classList.add('needs-update');
+        }
+
+        /**
+         * If `published-by` isn't set, set it to the if of the current user.
+         */
+
+        var publishedByElement = document.getElementById('published-by');
+
+        if (!publishedByElement.value)
+        {
+            // TODO: Get the current user id from HTML, not global variable.
+
+            publishedByElement.value = currentUserId;
+        }
+
+        /**
+         * When the document is published we specify that the URI is custom so
+         * that it will no longer change if the title is changed.
+         */
+
+        document.getElementById('uri-is-custom').value = 'true';
+    }
+
+    ColbyPageEditor.display();
+};
+
+/**
+ * @return void
+ */
+ColbyPageEditor.handleTitleReceivedInput = function(event)
+{
+    ColbyPageEditor.updateNaturalURI();
+
+    ColbyPageEditor.display();
+};
+
+/**
+ * This function may make changes to the `uri` element's value. It does not
+ * call the `display` method because it doesn't change any dependencies that
+ * would result in any other visual changes.
+ *
+ * @return void
+ */
+ColbyPageEditor.handleURIBlurred = function()
+{
+    var uriElement = document.getElementById('uri')
+
+    var uri = Colby.textToURI(uriElement.value);
+
+    if (!uri || uri == ColbyPageEditor.naturalURI)
+    {
+        uri = ColbyPageEditor.naturalURI;
+
+        document.getElementById('uri-is-custom').value = '';
+    }
+    else
+    {
+        document.getElementById('uri-is-custom').value = 'true';
+    }
+
+    document.getElementById('uri').value = uri;
+};
+
+/**
+ * This method does not call the `display` method because at the time it is
+ * called the user is providing input and there are no other visual updates
+ * required to the page.
+ *
+ * @return void
+ */
+ColbyPageEditor.handleURIReceivedInput = function()
+{
+    document.getElementById('uri-is-custom').value = 'true';
+};
+
+/**
+ * @return void
+ */
+ColbyPageEditor.updateNaturalURI = function()
+{
+    var title = document.getElementById('title').value;
+
+    var uri = Colby.textToURI(title);
+
+    if (!uri)
+    {
+        uri = document.getElementById('archive-id').value;
+    }
+
+    if (ColbyPageEditor.naturalBaseStub)
+    {
+        uri = ColbyPageEditor.naturalBaseStub + '/' + uri;
+    }
+
+    ColbyPageEditor.naturalURI = uri;
+};
 
 /**
  * @return void
@@ -169,24 +301,22 @@ ColbyPageEditor.updateCompleteCallback = function(response)
         return;
     }
 
-    var stub = response.pageStub;
-
-    if (groupStub)
-    {
-        stub = groupStub + '/' + stub;
-    }
-
-    var stubView = document.getElementById('stub-view');
-
-    stubView.textContent = stub;
-
     Colby.updateTimestampForElementWithId(Date.now(), 'modified');
+
+    if (response.uriIsAvailable)
+    {
+        var uriElement = document.getElementById('uri').classList.remove('invalid');
+    }
+    else
+    {
+        var uriElement = document.getElementById('uri').classList.add('invalid');
+    }
 
     // Inform any other interested parties that the update completed by using a custom event.
 
     var event = new CustomEvent('ColbyPageUpdateComplete', { 'detail' : response });
 
     document.dispatchEvent(event);
-}
+};
 
 document.addEventListener('DOMContentLoaded', ColbyPageEditor.handleContentLoaded, false);

@@ -80,8 +80,8 @@ foreach ($groupDataFiles as $groupDataFile)
         <input type="text"
                id="view-id"
                value="<?php echo $viewId; ?>"
-               readonly="readonly"
-               style="font-family: monospace;">
+               style="font-family: monospace;"
+               disabled>
     </label></div>
 
     <div><label>Name

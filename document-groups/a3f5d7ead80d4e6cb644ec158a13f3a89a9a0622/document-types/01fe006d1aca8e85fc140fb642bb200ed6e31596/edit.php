@@ -1,13 +1,16 @@
 <?php // Document editor for a document with image
 
-$modelId = '01fe006d1aca8e85fc140fb642bb200ed6e31596';
-$modelDataFilename = "handle,admin,model,{$modelId}.data";
-$modelData = unserialize(file_get_contents(Colby::findHandler($modelDataFilename)));
+$documentGroupId = 'a3f5d7ead80d4e6cb644ec158a13f3a89a9a0622';
+$documentTypeId = '01fe006d1aca8e85fc140fb642bb200ed6e31596';
+$archiveId = $_GET['archive-id'];
+
+$documentTypeData = unserialize(file_get_contents(
+    Colby::findFileForDocumentType('document-type.data', $documentGroupId, $documentTypeId)));
 
 $page = new ColbyOutputManager('admin-html-page');
 
-$page->titleHTML = $modelData->nameHTML;
-$page->descriptionHTML = $modelData->descriptionHTML;
+$page->titleHTML = $documentTypeData->nameHTML;
+$page->descriptionHTML = $documentTypeData->descriptionHTML;
 
 $page->begin();
 
@@ -18,7 +21,7 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
     goto done;
 }
 
-$archive = ColbyArchive::archiveFromGetData();
+$archive = ColbyArchive::open($archiveId);
 
 ?>
 

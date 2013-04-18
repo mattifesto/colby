@@ -191,6 +191,56 @@ Colby.responseFromXMLHttpRequest = function(xhr)
 };
 
 /**
+ * @return string
+ */
+Colby.textToURI = function(text)
+{
+    /**
+     * Convert all characters to lowercase to start the URI string.
+     */
+
+    var uri = text.toLowerCase();
+
+    /**
+     * Remove all characters from the URI string except lowercase letters,
+     * numbers, forward slashes, hyphens, and spaces.
+     */
+
+    uri = uri.replace(/[^a-z0-9\/\-\ ]/g, '');
+
+    /**
+     * Remove all of the adjacent forward slashes, hyphens, and spaces from
+     * the beginning and the end of the URI.
+     *
+     * Example:
+     *  '//--blog/my-day/ ' --> 'blog/my-day'
+     */
+
+    uri = uri.replace(/^[\/\-\ ]+|[\/\-\ ]+$/g, '');
+
+    /**
+     * Replace all adjacent hyphens, spaces, and forward slashes containing
+     * at least one forward slash with a single forward slash.
+     *
+     * Example:
+     *  'blog--/---- / - /  -my-day' --> 'blog/my-day'
+     */
+
+    uri = uri.replace(/[\-\ ]*\/[\/\-\ ]+/g, '/');
+
+    /**
+     * Replace all adjacent hyphens and spaces with a single hypen.
+     *
+     * Example:
+     *  'blog/my- - - - ----- -day' --> 'blog/my-day'
+     */
+
+    uri = uri.replace(/[\-\ ]+/g, '-');
+
+    return uri;
+}
+
+/**
  * @return void
  */
 Colby.updateTimes = function()

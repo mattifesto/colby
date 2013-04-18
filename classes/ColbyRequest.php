@@ -93,11 +93,11 @@ class ColbyRequest
      * If the $urlPath argument represents a page that can be rendered using
      * a view and an archive, the archive will be returned.
      */
-    public static function archiveForViewRenderedURLPath($urlPath)
+    public static function archiveForURI($uri)
     {
         $archive = null;
 
-        $sqlURLPath = Colby::mysqli()->escape_string($urlPath);
+        $uri = Colby::mysqli()->escape_string($uri);
 
         $sql = <<<EOT
 SELECT
@@ -105,8 +105,8 @@ SELECT
 FROM
     `ColbyPages`
 WHERE
-    `stub` = '{$sqlURLPath}' AND
-    `viewId` IS NOT NULL AND
+    `stub` = '{$uri}' AND
+    `modelId` IS NOT NULL AND
     `published` IS NOT NULL
 EOT;
 
@@ -198,21 +198,28 @@ EOT;
 
             if (!$handlerFilename && COLBY_MYSQL_DATABASE)
             {
-                $urlPath = implode('/', self::$decodedStubs);
+                $uri = implode('/', self::$decodedStubs);
 
                 // 2013.03.24 TODO:
                 // Change this to set a class variable archive which can
                 // be retrived by the handler with `ColbyRequest::$archive`
                 // so that we don't have to rely on local variables across
                 // included files.
+                //
+                // 2013.04.17
+                // Actually use an enclosure or function to make $archive a
+                // local variable unbeknownst to the view. This is already in
+                // a function so it might already be fine. Confirm and document.
 
-                $archive = self::archiveForViewRenderedURLPath($urlPath);
+                $archive = self::archiveForURI($uri);
 
                 if ($archive)
                 {
-                    $viewId = $archive->valueForKey('viewId');
+                    $documentGroupId = $archive->valueForKey('documentGroupId');
+                    $documentTypeId = $archive->valueForKey('documentTypeId');
 
-                    $handlerFilename = Colby::findHandler("handle,admin,view,{$viewId}.php");
+                    $handlerFilename = Colby::findFileForDocumentType(
+                        'view.php', $documentGroupId, $documentTypeId);
                 }
             }
         }

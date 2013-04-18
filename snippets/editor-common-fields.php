@@ -3,27 +3,40 @@
 /**
  * Variables that need to be set:
  *
- * $archive ColbyArchive
- * $modelId string
+ * $archive         ColbyArchive
+ * $archiveId       string
+ * $documentGroupId string
+ * $documentTypeId  string
  */
 
-$viewId = $archive->valueForKey('viewId');
-$archiveId = $archive->archiveId();
+$previewURL = COLBY_SITE_URL . "/admin/document/preview/?archive-id={$archiveId}";
 
-$previewURL = COLBY_SITE_URL . "/admin/view/{$viewId}/?action=preview&archive-id={$archiveId}";
+$publishedTimeStamp = $archive->valueForKey('publishedTimeStamp');
+
+if (!$publishedTimeStamp)
+{
+    /**
+     * TODO: Remove this when we are sure that all documents are using
+     * `publishedTimeStamp` instead of `publicationDate`.
+     */
+
+    $publishedTimeStamp = $archive->valueForKey('publicationDate');
+}
 
 ?>
 
 <input type="hidden" id="archive-id"
-       value="<?php echo $archive->archiveId(); ?>">
-<input type="hidden" id="view-id"
-       value="<?php echo $viewId; ?>">
-<input type="hidden" id="preferred-page-stub"
-       value="<?php echo $archive->valueForKey('preferredPageStub'); ?>">
+       value="<?php echo $archiveId; ?>">
+<input type="hidden" id="document-group-id"
+       value="<?php echo $documentGroupId; ?>">
+<input type="hidden" id="document-type-id"
+       value="<?php echo $documentTypeId; ?>">
 <input type="hidden" id="published-by"
        value="<?php echo $archive->valueForKey('publishedBy'); ?>">
-<input type="hidden" id="publication-date"
-        value="<?php echo $archive->valueForKey('publicationDate'); ?>">
+<input type="hidden" id="published-time-stamp"
+       value="<?php echo $publishedTimeStamp; ?>">
+<input type="hidden" id="uri-is-custom"
+       value="<?php echo $archive->valueForKey('uriIsCustom'); ?>">
 
 <div style="position: absolute; top: 40px; right: 10px; text-align: right;">
     <div><progress value="0" style="width: 100px; margin-bottom: 5px;"></progress></div>
@@ -46,51 +59,18 @@ $previewURL = COLBY_SITE_URL . "/admin/view/{$viewId}/?action=preview&archive-id
 
 <section class="control"
          style="margin-top: 10px;">
+    <header><label for="subtitle">URI</label></header>
+    <input type="text" id="uri"
+           value="<?php echo $archive->valueForKey('uri'); ?>"
+           style="padding-top: 9px; padding-bottom: 9px; font-family: 'Courier New'; font-size: 0.7em;">
+</section>
+
+<section class="control"
+         style="margin-top: 10px;">
     <header><label for="subtitle">Subtitle</label></header>
     <input type="text" id="subtitle"
            value="<?php echo $archive->valueForKey('subtitleHTML'); ?>">
 </section>
-
-<div style="padding: 0px 50px; font-size: 0.75em;">
-    <style scoped="scoped">
-        .stub
-        {
-            font-family: "Courier New", monospace;
-        }
-
-        table.stubs
-        {
-            width: 100%;
-            margin-bottom: 5px;
-        }
-
-        table.stubs tr td:first-child
-        {
-            width: 100px;
-            text-align: right;
-        }
-    </style>
-
-    <table class="stubs"><tr>
-        <td>Preferred URL:</td>
-        <td id="preferred-stub-view" class="stub"><?php echo $archive->model->preferredStub(); ?></td>
-    </tr><tr>
-        <td>Actual URL:</td>
-        <td id="stub-view" class="stub"><?php echo $archive->model->stub(); ?></td>
-    </td></table>
-
-    <label style="float:right; margin-left: 20px;">
-        <input type="checkbox" id="stub-is-locked"
-               <?php if ($archive->valueForKey('stubIsLocked')) echo 'checked'; ?>>
-        Locked
-    </label>
-
-    <label>
-        Custom Stub Text
-        <input type="text" id="custom-page-stub-text"
-               value="<?php echo $archive->valueForKey('customPageStubTextHTML'); ?>">
-    </label>
-</div>
 
 <section class="control"
          style="margin-top: 10px;">
@@ -98,22 +78,19 @@ $previewURL = COLBY_SITE_URL . "/admin/view/{$viewId}/?action=preview&archive-id
         <label for="publication-date-text">Publication Date</label>
         <label style="float: right;">
             <input type="checkbox" id="is-published"
-                   <?php if ($archive->valueForKey('isPublished')) echo 'checked'; ?>
-                   onchange="ColbyPageEditor.handleIsPublishedChanged(this);">
+                   <?php if ($archive->valueForKey('isPublished')) echo 'checked'; ?>>
             Published
         </label>
     </header>
-    <input type="text" id="publication-date-text" class="ignore"
-           onblur="ColbyPageEditor.handlePublicationDateBlurred(this);">
+    <input type="text" id="publication-date-text" class="ignore">
 </section>
 
 <script>
 "use strict";
 
-var ajaxURL = '<?php echo COLBY_SITE_URL . "/admin/model/{$modelId}/ajax/update/"; ?>'
+var ajaxURL = '<?php echo COLBY_SITE_URL . "/admin/document/update/"; ?>'
 var currentUserId = <?php echo ColbyUser::currentUserId(); ?>;
 var groupStub = '<?php echo $archive->valueForKey('groupStub'); ?>';
-var publicationDate = <?php echo $archive->valueForKey('publicationDate') * 1000; ?>;
 </script>
 
 <script src="<?php echo COLBY_SITE_URL . '/colby/javascript/ColbyPageEditor.js'; ?>"></script>

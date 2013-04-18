@@ -48,9 +48,10 @@ textarea
     border: 1px solid LightGray;
 }
 
-input[type="text"][readonly="readonly"]
+input[type="text"]:disabled
 {
     border-color: transparent;
+    color: #505050;
 }
 
 fieldset
@@ -196,6 +197,11 @@ table.rename table tr:nth-child(even)
 .hash
 {
     font-family: Menlo, monospace;
+}
+
+.invalid
+{
+    background-color: #ffdfdf;
 }
 
 .now-updating
