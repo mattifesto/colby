@@ -13,7 +13,7 @@ $page->descriptionHTML = $archive->valueForKey('subtitleHTML');
     <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
     <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
 
-    <div class="formatted-content"><?php echo $archive->valueForKey('contentHTML'); ?></div>
+    <div class="formatted-content"><?php echo $archive->valueForKey('contentFormattedHTML'); ?></div>
 
 </article>
 

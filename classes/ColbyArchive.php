@@ -406,69 +406,19 @@ class ColbyArchive
     }
 
     /**
-     * This method sets a markaround value for the given name. It also converts
-     * the markaround to HTML and sets the HTML value for the key "{$key}HTML".
-     *
-     * @param string $markaroundValue
-     *
-     * The value of this parameter is saved as the value for $key. It is then
-     * converted to HTML and saved as the value for the key "{$key}HTML".
-     *
-     * @param string $key
-     *
-     * @return void
-     */
-    public function setMarkaroundValueForKey($markaroundValue, $key)
-    {
-        $key = strval($key);
-
-        $this->data->$key = strval($markaroundValue);
-
-        $htmlKey = "{$key}HTML";
-
-        $this->data->$htmlKey = ColbyConvert::markaroundToHTML($this->data->$key);
-    }
-
-    /**
-     * Deprecated
-     *  2013.01.14
-     *
-     * @return void
-     */
-    public function setMarkdownValueForKey($markdownValue, $key)
-    {
-        Colby::debugLog('`ColbyArchive::setMarkdownValueForKey` has been deprecated in favor of `ColbyArchive::setMarkaroundValueForKey`');
-
-        self::setMarkaroundValueForKey($markdownValue, $key);
-    }
-
-    /**
      * This method sets a string value for the given name.
      *
      * @param string $stringValue
      *
      * @param string $key
      *
-     * @param bool $shouldAlsoSetHTMLStringValue
-     *
-     *  This parameter specifies whether in addition to setting the value for
-     *  $key to $stringValue, an HTML escaped version of the string should be
-     *  generated and set as the value for the key "{$key}HTML".
-     *
      * @return void
      */
-    public function setStringValueForKey($stringValue, $key, $shouldAlsoSetHTMLStringValue = true)
+    public function setStringValueForKey($stringValue, $key)
     {
         $key = strval($key);
 
         $this->data->$key = strval($stringValue);
-
-        if ($shouldAlsoSetHTMLStringValue)
-        {
-            $htmlKey = "{$key}HTML";
-
-            $this->data->$htmlKey = ColbyConvert::textToHTML($this->data->$key);
-        }
     }
 
     /**
@@ -519,6 +469,8 @@ class ColbyArchive
      */
     public function valueForKey($key)
     {
+        $key = strval($key);
+
         return isset($this->data->$key) ? $this->data->$key : null;
     }
 }

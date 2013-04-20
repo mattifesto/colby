@@ -1,7 +1,9 @@
 <?php
 
-define('SIMPLE_CONTENT_DOCUMENT_MODEL_ID', 'd74e2f3d347395acdb627e7c57516c3c4c94e988');
-define('TEST_GROUP_ID', '427998e34c31e5410b730cd9993d5cc06bff6132');
+define('TEST_DOCUMENT_GROUP_ID', '427998e34c31e5410b730cd9993d5cc06bff6132');
+define('TEST_DOCUMENT_TYPE_ID',  'd74e2f3d347395acdb627e7c57516c3c4c94e988');
+define('TEST_ARCHIVE_ID',        '2626aac5b3aa6ba8ae35e38067e11dc307c537c2');
+define('TEST_URI', 'test/the-test-document');
 
 $response = new ColbyOutputManager('ajax-response');
 
@@ -15,22 +17,16 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 }
 
 //
-// Test ColbyArchiver.php
+// Test ColbyArchive class
 //
 
-ColbyArchiverBasicTest();
-ColbyArchiverInvalidFileIdTest();
-
-//
-// Test ColbyPageModel class
-//
-
-ColbyPageModelCreateAndDeleteTest();
+ColbyArchiveCreateAndDeleteTest();
+ColbyArchiveInvalidFileIdTest();
 
 /*
  * ColbyMarkaroundParser
  */
-include(COLBY_SITE_DIRECTORY . '/colby/tests/TestColbyMarkaroundParser.php');
+include COLBY_SITE_DIRECTORY . '/colby/tests/TestColbyMarkaroundParser.php';
 
 //
 // Unit Tests Complete
@@ -43,38 +39,7 @@ done:
 
 $response->end();
 
-function ColbyArchiverBasicTest()
-{
-    $archiveId = sha1(microtime() . rand());
-
-    $object0 = new stdClass();
-
-    $archive = ColbyArchive::open($archiveId);
-
-    $archive->data()->message = 'test';
-
-    $archive->save();
-
-    $hash = $archive->hash();
-
-    $archive = null;
-
-    $archive = ColbyArchive::open($archiveId, $hash);
-
-    if (false === $archive)
-    {
-        throw new RuntimeException(__FUNCTION__ . ' failed: unable to re-open archive');
-    }
-
-    if ($archive->data()->message != 'test')
-    {
-        throw new RuntimeException(__FUNCTION__ . ' failed: data mismatch');
-    }
-
-    ColbyArchive::delete($archiveId);
-}
-
-function ColbyArchiverInvalidFileIdTest()
+function ColbyArchiveInvalidFileIdTest()
 {
     $archiveId = 'abadf00d';
 
@@ -90,79 +55,55 @@ function ColbyArchiverInvalidFileIdTest()
     throw new RuntimeException(__FUNCTION__ . ' failed');
 }
 
-function ColbyPageModelCreateAndDeleteTest()
+function ColbyArchiveCreateAndDeleteTest()
 {
-    // make sure there isn't a document already left over from a previous failed attempt
+    // Ensure there isn't an already left over from a previous failed test
 
-    $archive = ColbyPageModel::archiveForStub('test/the-test-post');
-
-    if ($archive)
+    if (ColbyArchive::exists(TEST_ARCHIVE_ID))
     {
-        ColbyArchive::delete($archive->archiveId());
+        ColbyArchive::delete(TEST_ARCHIVE_ID);
 
-        if (ColbyPageModel::archiveForStub('test/the-test-post'))
+        if (ColbyArchive::exists(TEST_ARCHIVE_ID))
         {
             throw new RuntimeException(__FUNCTION__ . ' failed: Unable to clean up test evironment.');
         }
-
-        $archive = null;
     }
 
-    // begin tests
+    // Test creating and saving an archive
 
-    $archiveId = sha1(microtime() . rand());
+    $archive = ColbyArchive::open(TEST_ARCHIVE_ID);
 
-    $archive = ColbyArchive::open($archiveId);
-
-    if ($archive->created())
+    if ($archive->created() !== null)
     {
-        throw new RuntimeException(__FUNCTION__ . 'failed: The archive already exists.');
+        throw new RuntimeException(__FUNCTION__ . 'failed: A new unsaved archive should return `null` from the `created` method.');
     }
 
-    $title = 'Test post title';
-    $subtitle = 'Test post subtitle.';
-    $content = 'This is the content for a test post.';
-
-    $model = ColbyPageModel::modelWithArchive($archive);
-    $model->setModelId(SIMPLE_CONTENT_DOCUMENT_MODEL_ID);
-    $model->setGroupId(TEST_GROUP_ID);
-    $model->setGroupStub('test');
+    $title = 'The Title';
 
     $archive->setStringValueForKey($title, 'title');
-    $archive->setStringValueForKey($subtitle, 'subtitle');
-    $archive->setBoolValueForKey(false, 'stubIsLocked');
 
-    $model->setPreferredPageStub('the-test-post');
-
-    $archive->setMarkaroundValueForKey($content, 'content');
-
-    $model->updateDatabase();
     $archive->save();
 
     $archive = null;
-    $model = null;
 
-    $archive = ColbyPageModel::archiveForStub('test/the-test-post');
+    // Test opening an archive
 
-    if (!$archive)
+    $archive = ColbyArchive::open(TEST_ARCHIVE_ID);
+
+    if ($archive->archiveId() !== TEST_ARCHIVE_ID)
     {
-        throw new RuntimeException(__FUNCTION__ . ' failed: Unable to retreive the archive using the stub.');
-    }
-
-    if ($archive->archiveId() != $archiveId)
-    {
-        throw new RuntimeException(__FUNCTION__ . ' failed: Archive id after loading doesn\'t match the save archive id.');
+        throw new RuntimeException(__FUNCTION__ . ' failed: The archive id after opening doesn\'t match the saved archive id.');
     }
 
     $archive = null;
 
-    ColbyArchive::delete($archiveId);
+    // Test deleting an archive
 
-    $archive = ColbyPageModel::archiveForStub('test/the-test-post');
+    ColbyArchive::delete(TEST_ARCHIVE_ID);
 
-    if ($archive)
+    if (ColbyArchive::exists(TEST_ARCHIVE_ID))
     {
-        throw new RuntimeException(__FUNCTION__ . ' failed: The archive is still retreivable after deleting.');
+        throw new RuntimeException(__FUNCTION__ . ' failed: The archive is still exists after deletion.');
     }
 }
 

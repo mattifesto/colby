@@ -15,19 +15,28 @@ $response->begin();
 
 $archive = ColbyArchive::open($_POST['archive-id']);
 
-$archive->setStringValueForKey($_POST['document-group-id'], 'documentGroupId', false);
-$archive->setStringValueForKey($_POST['document-type-id'], 'documentTypeId', false);
+$archive->setStringValueForKey($_POST['document-group-id'], 'documentGroupId');
+$archive->setStringValueForKey($_POST['document-type-id'], 'documentTypeId');
 
 $archive->setStringValueForKey($_POST['title'], 'title');
+$archive->setStringValueForKey(ColbyConvert::textToHTML($_POST['title']), 'titleHTML');
+
 $archive->setStringValueForKey($_POST['subtitle'], 'subtitle');
+$archive->setStringValueForKey(ColbyConvert::textToHTML($_POST['subtitle']), 'subtitleHTML');
+
 $archive->setBoolValueForKey($_POST['uri-is-custom'], 'uriIsCustom');
 $archive->setBoolValueForKey($_POST['is-published'], 'isPublished');
 $archive->setIntValueForKey($_POST['published-by'], 'publishedBy');
 $archive->setIntValueForKey($_POST['published-time-stamp'], 'publishedTimeStamp');
 
-$archive->setMarkaroundValueForKey($_POST['content'], 'content');
+$archive->setStringValueForKey($_POST['content'], 'content');
+$archive->setStringValueForKey(ColbyConvert::markaroundToHTML($_POST['content']), 'contentFormattedHTML');
+
 $archive->setStringValueForKey($_POST['image-caption'], 'imageCaption');
+$archive->setStringValueForKey(ColbyConvert::textToHTML($_POST['image-caption']), 'imageCaptionHTML');
+
 $archive->setStringValueForKey($_POST['image-alternative-text'], 'imageAlternativeText');
+$archive->setStringValueForKey(ColbyConvert::textToHTML($_POST['image-alternative-text']), 'imageAlternativeTextHTML');
 
 /**
  * Define the search text.
