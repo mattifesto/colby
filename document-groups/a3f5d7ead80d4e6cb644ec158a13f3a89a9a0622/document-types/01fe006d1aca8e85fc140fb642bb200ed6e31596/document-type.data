@@ -1,2 +1,2 @@
-O:8:"stdClass":8:{s:2:"id";s:40:"01fe006d1aca8e85fc140fb642bb200ed6e31596";s:16:"libraryDirectory";s:5:"colby";s:4:"name";s:19:"Page with one image";s:8:"nameHTML";s:19:"Page with one image";s:11:"description";s:58:"A page with a title, subtitle, text content and one image.";s:15:"descriptionHTML";s:62:"<p>A page with a title, subtitle, text content and one image.
-";s:7:"created";i:1365202779;s:7:"updated";i:1365202779;}
+O:8:"stdClass":8:{s:2:"id";s:40:"01fe006d1aca8e85fc140fb642bb200ed6e31596";s:16:"libraryDirectory";s:5:"colby";s:4:"name";s:34:"Basic page with one optional image";s:8:"nameHTML";s:34:"Basic page with one optional image";s:11:"description";s:67:"A page with a title, subtitle, text content and one optional image.";s:15:"descriptionHTML";s:71:"<p>A page with a title, subtitle, text content and one optional image.
+";s:7:"created";i:1365202779;s:7:"updated";i:1366518087;}
