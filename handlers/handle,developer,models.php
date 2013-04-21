@@ -85,8 +85,7 @@ $documentGroups = Colby::findDocumentGroups();
 
                 $directoryElementId = "directory" . $i++;
 
-                $directory = $documentType->libraryDirectory ? "{$documentType->libraryDirectory}/" : "";
-                $directory .= "document-groups/{$documentGroup->id}/document-types/{$documentType->id}";
+                $directory = "document-groups/{$documentGroup->id}/document-types/{$documentType->id}";
 
                 ?>
 
