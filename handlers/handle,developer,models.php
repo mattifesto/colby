@@ -24,6 +24,8 @@ $documentGroups = Colby::findDocumentGroups();
 
     <?php
 
+    $i = 0;
+
     foreach ($documentGroups as $documentGroup)
     {
         ?>
@@ -81,6 +83,11 @@ $documentGroups = Colby::findDocumentGroups();
                     "&document-group-id={$documentGroup->id}" .
                     "&document-type-id={$documentType->id}";
 
+                $directoryElementId = "directory" . $i++;
+
+                $directory = $documentType->libraryDirectory ? "{$documentType->libraryDirectory}/" : "";
+                $directory .= "document-groups/{$documentGroup->id}/document-types/{$documentType->id}";
+
                 ?>
 
                 <section class="header-metadata-description">
@@ -104,6 +111,17 @@ $documentGroups = Colby::findDocumentGroups();
                             <h6>updated</h6>
                             <div class="time"
                                   data-timestamp="<?php echo $documentType->updated * 1000; ?>"></div>
+                        </span>
+                        <span>
+                            <h6>directory
+                                <a style="float: right;"
+                                   onclick="document.getElementById('<?php echo $directoryElementId; ?>').select();">select</a>
+                            </h6>
+                            <input type="text"
+                                   id="<?php echo $directoryElementId; ?>"
+                                   value="<?php echo $directory; ?>"
+                                   style="width: 200px;"
+                                   readonly>
                         </span>
                     </div>
                     <div class="description formatted-content">

@@ -80,11 +80,18 @@ class Colby
      */
     public static function findFileForDocumentGroup($filename, $documentGroupId)
     {
-        $relativeFilename = "/document-groups/{$documentGroupId}/{$filename}";
+        $relativeFilename = "document-groups/{$documentGroupId}/{$filename}";
 
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/{$relativeFilename}";
+            if ($libraryDirectory)
+            {
+                $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/{$relativeFilename}";
+            }
+            else
+            {
+                $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$relativeFilename}";
+            }
 
             if (is_file($absoluteFilename))
             {
@@ -127,13 +134,20 @@ class Colby
      */
     public static function findFileForDocumentType($filename, $documentGroupId, $documentTypeId)
     {
-        $relativeFilename = "/document-groups/{$documentGroupId}" .
-                            "/document-types/{$documentTypeId}" .
-                            "/{$filename}";
+        $relativeFilename = "document-groups/{$documentGroupId}/" .
+                            "document-types/{$documentTypeId}/" .
+                            "{$filename}";
 
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/{$relativeFilename}";
+            if ($libraryDirectory)
+            {
+                $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/{$relativeFilename}";
+            }
+            else
+            {
+                $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$relativeFilename}";
+            }
 
             if (is_file($absoluteFilename))
             {

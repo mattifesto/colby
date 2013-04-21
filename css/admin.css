@@ -112,7 +112,6 @@ section.header-metadata-description
 
 section.header-metadata-description > div.metadata
 {
-    padding-top: 5px;
     border-top: 1px solid #eee;
     margin: 5px 0px 20px;
     font-size: 0.7em;
@@ -121,12 +120,8 @@ section.header-metadata-description > div.metadata
 section.header-metadata-description > div.metadata > *
 {
     display: inline-block;
+    margin: 5px 10px;
     vertical-align: top;
-}
-
-section.header-metadata-description > div.metadata > * + *
-{
-    margin-left: 20px;
 }
 
 section.header-metadata-description > div.metadata h6
