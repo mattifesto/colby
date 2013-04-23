@@ -90,35 +90,6 @@ foreach ($documentTypes as $documentType)
     <?php
 }
 
-$viewDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,view,*.data');
-$viewDataFiles = array_merge($viewDataFiles,
-                              glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,view,*.data'));
-
-foreach ($viewDataFiles as $viewDataFile)
-{
-    $viewData = unserialize(file_get_contents($viewDataFile));
-
-    if ($viewData->groupId != $pagesDocumentGroupId)
-    {
-        continue;
-    }
-
-    // Get the view id
-
-    preg_match('/([0-9a-f]{40})/', $viewDataFile, $matches);
-
-    $viewId = $matches[1];
-
-    $editURL = "/admin/model/{$viewData->modelId}/edit/?&view-id={$viewId}";
-
-    ?>
-
-    <p style="font-size: 1.5em;"><a href="<?php echo $editURL; ?>">Create a <?php echo $viewData->nameHTML; ?></a>
-    <p><?php echo $viewData->descriptionHTML; ?>
-
-    <?php
-}
-
 done:
 
 $page->end();
