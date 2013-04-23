@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `ColbyPages`
     `titleHTML` VARCHAR(150) NOT NULL,
     `subtitleHTML` VARCHAR(150) NOT NULL,
     `searchText` LONGTEXT,
-    `published` DATETIME,
+    `published` BIGINT,
     `publishedBy` BIGINT UNSIGNED,
     PRIMARY KEY (`id`),
     UNIQUE KEY `archiveId` (`archiveId`),

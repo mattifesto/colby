@@ -31,7 +31,7 @@ FROM
 WHERE
     `groupId` = UNHEX('{$pagesDocumentGroupId}')
 ORDER BY
-    `published`
+    `published` DESC
 EOT;
 
 $result = Colby::query($sql);
@@ -60,7 +60,7 @@ $result = Colby::query($sql);
         <tr>
             <td><a href="<?php echo $editURL; ?>">edit</a></td>
             <td><?php echo $row->titleHTML; ?></td>
-            <td><?php echo $row->published; ?></td>
+            <td><span class="time" data-timestamp="<?php echo $row->published ? $row->published * 1000 : ''; ?>"></span></td>
         </tr>
 
         <?php

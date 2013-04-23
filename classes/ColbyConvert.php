@@ -232,6 +232,13 @@ class ColbyConvert
     }
 
     /**
+     * This function should basically be deprecated because the MySQL
+     * `DATETIME` type should never be used. Instead store the UNIX time
+     * stamp in a `BIGINT` column. For more information see the snippet for
+     * database upgrade 0006.
+     *
+     * For now, this function is being kept around for reference.
+     *
      * @return string
      */
     public static function timestampToSQLDateTime($timestamp)

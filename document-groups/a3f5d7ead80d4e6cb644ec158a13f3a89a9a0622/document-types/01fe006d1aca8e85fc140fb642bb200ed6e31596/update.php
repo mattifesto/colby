@@ -136,7 +136,7 @@ function updateDatabase($archive, $uri, $searchText)
 
     if ($archive->valueForKey('isPublished'))
     {
-        $published = ColbyConvert::timestampToSQLDateTime($archive->valueForKey('publishedTimeStamp'));
+        $published = $archive->valueForKey('publishedTimeStamp');
     }
     else
     {
