@@ -1,4 +1,4 @@
-<?php // Document updater for a basic page with one optional image
+<?php // Document updater for a basic blog post with one optional image
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {

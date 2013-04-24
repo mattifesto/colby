@@ -1,7 +1,7 @@
-<?php // Document editor for a basic page with one optional image
+<?php // Document editor for a basic blog post with one optional image
 
-$documentGroupId = 'a3f5d7ead80d4e6cb644ec158a13f3a89a9a0622';
-$documentTypeId = '01fe006d1aca8e85fc140fb642bb200ed6e31596';
+$documentGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
+$documentTypeId = 'abb85feaa97ca39b1bdb0e8a29359f1995fdcc8d';
 $archiveId = $_GET['archive-id'];
 
 $documentTypeData = unserialize(file_get_contents(
@@ -73,6 +73,8 @@ $archive = ColbyArchive::open($archiveId);
 
 <script>
 "use strict";
+
+ColbyPageEditor.naturalBaseStub = 'blog';
 
 function updateComplete(event)
 {

@@ -16,10 +16,6 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 
 $pagesDocumentGroupId = 'a3f5d7ead80d4e6cb644ec158a13f3a89a9a0622';
 
-$pagesDocumentGroupData = unserialize(file_get_contents(
-    Colby::findFileForDocumentGroup('document-group.data', $pagesDocumentGroupId)
-    ));
-
 $sql = <<<EOT
 SELECT
     LOWER(HEX(`archiveId`)) AS `archiveId`,
@@ -38,57 +34,66 @@ $result = Colby::query($sql);
 
 ?>
 
-<table style="width: 600px;"><thead>
-    <tr>
-        <th style="width: 30px;"></th>
-        <th style="width: 400px;">Title</th>
-        <th style="width: 100px;">Published</th>
-    </tr>
-</thead><tbody>
+<main>
+    <table style="width: 600px;"><thead>
+        <tr>
+            <th style="width: 30px;"></th>
+            <th style="width: 400px;">Title</th>
+            <th style="width: 100px;">Published</th>
+        </tr>
+    </thead><tbody>
 
-    <?php
+        <?php
 
-    while ($row = $result->fetch_object())
-    {
-        $editURL = COLBY_SITE_URL . "/admin/document/edit/" .
-            "?document-group-id={$pagesDocumentGroupId}" .
-            "&document-type-id={$row->documentTypeId}" .
-            "&archive-id={$row->archiveId}";
+        while ($row = $result->fetch_object())
+        {
+            $editURL = COLBY_SITE_URL . "/admin/document/edit/" .
+                "?document-group-id={$pagesDocumentGroupId}" .
+                "&document-type-id={$row->documentTypeId}" .
+                "&archive-id={$row->archiveId}";
+
+            ?>
+
+            <tr>
+                <td><a href="<?php echo $editURL; ?>">edit</a></td>
+                <td><?php echo $row->titleHTML; ?></td>
+                <td><span class="time"
+                          data-timestamp="<?php echo $row->published ? $row->published * 1000 : ''; ?>">
+                    </span></td>
+            </tr>
+
+            <?php
+        }
+
+        $result->free();
 
         ?>
 
-        <tr>
-            <td><a href="<?php echo $editURL; ?>">edit</a></td>
-            <td><?php echo $row->titleHTML; ?></td>
-            <td><span class="time" data-timestamp="<?php echo $row->published ? $row->published * 1000 : ''; ?>"></span></td>
-        </tr>
+    </tbody></table>
 
+    <?php
+
+    $documentTypes = Colby::findDocumentTypes($pagesDocumentGroupId);
+
+    foreach ($documentTypes as $documentType)
+    {
+        $createNewPageURL = COLBY_SITE_URL .
+            '/admin/document/edit/' .
+            "?document-group-id={$pagesDocumentGroupId}" .
+            "&document-type-id={$documentType->id}";
+
+        ?>
+        <div><a href="<?php echo $createNewPageURL; ?>">
+            <?php echo $documentType->nameHTML; ?>
+        </a></div>
         <?php
     }
 
-    $result->free();
-
     ?>
 
-</tbody></table>
+</main>
 
 <?php
-
-$documentTypes = Colby::findDocumentTypes($pagesDocumentGroupId);
-
-foreach ($documentTypes as $documentType)
-{
-    $createNewPageURL = COLBY_SITE_URL .
-        '/admin/document/edit/' .
-        "?document-group-id={$pagesDocumentGroupId}" .
-        "&document-type-id={$documentType->id}";
-
-    ?>
-    <div><a href="<?php echo $createNewPageURL; ?>">
-        <?php echo $documentType->nameHTML; ?>
-    </a></div>
-    <?php
-}
 
 done:
 

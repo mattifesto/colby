@@ -15,21 +15,20 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 }
 
 
-$blogPostGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
-$blogPostGroupStub = 'blog';
+$blogPostDocumentGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
 
 $sql = <<<EOT
 SELECT
     LOWER(HEX(`archiveId`)) AS `archiveId`,
-    LOWER(HEX(`modelId`)) AS `modelId`,
+    LOWER(HEX(`modelId`)) AS `documentTypeId`,
     `titleHTML`,
     `published`
 FROM
     `ColbyPages`
 WHERE
-    `groupId` = UNHEX('{$blogPostGroupId}')
+    `groupId` = UNHEX('{$blogPostDocumentGroupId}')
 ORDER BY
-    `published`
+    `published` DESC
 EOT;
 
 $result = Colby::query($sql);
@@ -49,14 +48,19 @@ $result = Colby::query($sql);
 
         while ($row = $result->fetch_object())
         {
-            $editURL = COLBY_SITE_URL . "/admin/model/{$row->modelId}/edit/?archive-id={$row->archiveId}";
+            $editURL = COLBY_SITE_URL . "/admin/document/edit/" .
+                "?document-group-id={$blogPostDocumentGroupId}" .
+                "&document-type-id={$row->documentTypeId}" .
+                "&archive-id={$row->archiveId}";
 
             ?>
 
             <tr>
                 <td><a href="<?php echo $editURL; ?>">edit</a></td>
                 <td><?php echo $row->titleHTML; ?></td>
-                <td><?php echo $row->published; ?></td>
+                <td><span class="time"
+                          data-timestamp="<?php echo $row->published ? $row->published * 1000 : ''; ?>">
+                    </span></td>
             </tr>
 
             <?php
@@ -70,32 +74,19 @@ $result = Colby::query($sql);
 
     <?php
 
-    $viewDataFiles = glob(COLBY_SITE_DIRECTORY . '/colby/handlers/handle,admin,view,*.data');
-    $viewDataFiles = array_merge($viewDataFiles,
-                                  glob(COLBY_SITE_DIRECTORY . '/handlers/handle,admin,view,*.data'));
+    $documentTypes = Colby::findDocumentTypes($blogPostDocumentGroupId);
 
-    foreach ($viewDataFiles as $viewDataFile)
+    foreach ($documentTypes as $documentType)
     {
-        $viewData = unserialize(file_get_contents($viewDataFile));
-
-        if ($viewData->groupId != $blogPostGroupId)
-        {
-            continue;
-        }
-
-        // Get the view id
-
-        preg_match('/([0-9a-f]{40})/', $viewDataFile, $matches);
-
-        $viewId = $matches[1];
-
-        $editURL = "/admin/model/{$viewData->modelId}/edit/?&view-id={$viewId}";
+        $createNewBlogPostURL = COLBY_SITE_URL .
+            '/admin/document/edit/' .
+            "?document-group-id={$blogPostDocumentGroupId}" .
+            "&document-type-id={$documentType->id}";
 
         ?>
-
-        <p style="font-size: 1.5em;"><a href="<?php echo $editURL; ?>">Create a <?php echo $viewData->nameHTML; ?></a>
-        <p><?php echo $viewData->descriptionHTML; ?>
-
+        <div><a href="<?php echo $createNewBlogPostURL; ?>">
+            <?php echo $documentType->nameHTML; ?>
+        </a></div>
         <?php
     }
 

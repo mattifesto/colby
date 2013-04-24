@@ -1,7 +1,7 @@
-<?php // View for a basic page with one optional image
+<?php // View for a basic blog post with one optional image
       // Required parameters: $archive
 
-$documentTypeId = '01fe006d1aca8e85fc140fb642bb200ed6e31596';
+$documentTypeId = 'abb85feaa97ca39b1bdb0e8a29359f1995fdcc8d';
 
 $page = new ColbyOutputManager();
 
