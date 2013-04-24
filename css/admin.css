@@ -89,6 +89,18 @@ main
     display: block; /* remove when main is a supported element in all modern browsers */
 }
 
+main > h1
+{
+    text-align: center;
+    margin-bottom: 1.0em;
+}
+
+main > h2
+{
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+}
+
 nav.menu-column
 {
     max-width: 200px;
@@ -140,6 +152,48 @@ section.header-metadata-description > div.description
 }
 
 /**
+ * A `document-list` table is used when you have a list of documents each
+ * of which has an edit link in the first column. It has one header row.
+ */
+
+table.document-list
+{
+    width: 700px;
+    margin-bottom: 50px;
+    border-spacing: 0px;
+    table-layout: fixed;
+}
+
+table.document-list thead th
+{
+    border-bottom: 1px solid #eeeeee;
+}
+
+table.document-list td,
+table.document-list th
+{
+    padding: 2px 5px;
+    overflow: hidden; /* Necessary for ellipsis style. */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+table.document-list tr *:nth-child(1)
+{
+    width: 40px;
+    text-align: center;
+}
+
+table.document-list tr *:nth-child(2)
+{
+}
+
+table.document-list tr *:nth-child(3)
+{
+    width: 175px;
+}
+
+/**
  * A `simple-key-value` table is intended to have two columns. The left column
  * contains keys in `th` elements and the right column contains values in `td`
  * elements.
@@ -163,6 +217,13 @@ table.simple-keys-and-values th
     font-weight: normal;
     text-align: right;
 }
+
+/**
+ * This used to be the default style for all tables before I realized that a
+ * default style for all tables was a really bad idea if you ever wanted to
+ * have a table without that style. I kept it around under the class `rename`
+ * in case it would prove useful. If it is not, remove it.
+ */
 
 table.rename
 {

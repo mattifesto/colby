@@ -35,13 +35,15 @@ $result = Colby::query($sql);
 ?>
 
 <main>
-    <table style="width: 600px;"><thead>
-        <tr>
-            <th style="width: 30px;"></th>
-            <th style="width: 400px;">Title</th>
-            <th style="width: 100px;">Published</th>
-        </tr>
-    </thead><tbody>
+    <h1>Pages</h1>
+
+    <table class="document-list">
+        <thead><tr>
+            <th></th>
+            <th>Title</th>
+            <th>Published</th>
+        </tr></thead>
+        <tbody>
 
         <?php
 
@@ -70,6 +72,8 @@ $result = Colby::query($sql);
         ?>
 
     </tbody></table>
+
+    <h2>Create a new document</h2>
 
     <?php
 

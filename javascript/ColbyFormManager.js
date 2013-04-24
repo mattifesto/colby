@@ -7,6 +7,7 @@ function ColbyFormManager(ajaxURL)
 {
     this.ajaxURL = ajaxURL;
     this.isAjaxIndicatorOn = false;
+    this.needsUpdate = false;
     this.updateCompleteCallback = null;
 
     var elements = document.getElementsByTagName('fieldset');
@@ -44,6 +45,18 @@ function ColbyFormManager(ajaxURL)
     elements = this.fieldsetElement.getElementsByTagName('textarea');
 
     this.addInputListenerToTextAndTextareas(elements);
+
+    var that = this;
+
+    var handleBeforeUnload = function()
+    {
+        if (that.needsUpdate)
+        {
+            that.update();
+        }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload, false);
 }
 
 /**
