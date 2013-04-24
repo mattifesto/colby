@@ -2,9 +2,12 @@
 
 $blogPostsGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
 
-// TODO: when we have a page metadata file, use the title and subtitle in that.
+$page = new ColbyOutputManager();
 
-$page = ColbyOutputManager::beginPage('Blog', 'Blog');
+$page->titleHTML = 'Blog';
+$page->descriptionHTML = 'Index of blog posts.';
+
+$page->begin();
 
 ?>
 
