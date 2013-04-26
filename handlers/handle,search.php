@@ -16,7 +16,12 @@ if ($searchQueryHTML)
     $titleHTML = "{$titleHTML}: {$searchQueryHTML}";
 }
 
-$page = ColbyOutputManager::beginPage($titleHTML, 'Search for site content.');
+$page = new ColbyOutputManager();
+
+$page->titleHTML = $titleHTML;
+$page->descriptionHTML = 'Search for site content.';
+
+$page->begin();
 
 ?>
 
