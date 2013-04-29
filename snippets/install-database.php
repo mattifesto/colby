@@ -113,6 +113,7 @@ CREATE TABLE IF NOT EXISTS `ColbyPages`
     `stub` VARCHAR(100) NOT NULL,
     `titleHTML` VARCHAR(150) NOT NULL,
     `subtitleHTML` VARCHAR(150) NOT NULL,
+    `thumbnailURL` VARCHAR(200),
     `searchText` LONGTEXT,
     `published` BIGINT,
     `publishedBy` BIGINT UNSIGNED,

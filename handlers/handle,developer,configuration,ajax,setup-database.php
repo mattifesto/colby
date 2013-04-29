@@ -85,6 +85,7 @@ else
     include(Colby::findSnippet('upgrade-database-0004.php'));
     include(Colby::findSnippet('upgrade-database-0005.php'));
     include(Colby::findSnippet('upgrade-database-0006.php'));
+    include(Colby::findSnippet('upgrade-database-0007.php'));
 
     include(Colby::findSnippet('upgrade-database-version.php'));
 
