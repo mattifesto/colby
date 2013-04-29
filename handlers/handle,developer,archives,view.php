@@ -16,9 +16,8 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
 $archiveId = $_GET['archive-id'];
 
-$dataPath = ColbyArchive::dataPathForArchiveId($archiveId);
-
-$absoluteArchiveFilename = COLBY_DATA_DIRECTORY . "/{$dataPath}/archive.data";
+$absoluteArchiveFilename = ColbyArchive::absoluteDataDirectoryForArchiveId($archiveId) .
+                           "/archive.data";
 
 if (!is_file($absoluteArchiveFilename))
 {

@@ -12,6 +12,24 @@ class ColbyArchive
 
     /**
      * @return string
+     *  The absolute data directory for this archive.
+     */
+    public function absoluteDataDirectory()
+    {
+        return self::absoluteDataDirectoryForArchiveId($this->data->archiveId);
+    }
+
+    /**
+     * @return string
+     *  The absolute data directory for the archive with the id `archiveId`.
+     */
+    public static function absoluteDataDirectoryForArchiveId($archiveId)
+    {
+        return COLBY_DATA_DIRECTORY . '/' . self::relativeDataPathForArchiveId($archiveId);
+    }
+
+    /**
+     * @return string
      */
     public function archiveId()
     {
@@ -39,62 +57,27 @@ class ColbyArchive
     }
 
     /**
-     * Creates the directory where the archive data will be saved if it the
-     * directory doesn't exist yet.
-     *
-     * @return void
-     */
-    private function createStorage()
-    {
-        $dataPath = self::dataPathForArchiveId($this->data->archiveId);
-
-        $directories = explode('/', $dataPath);
-
-        $absoluteDirectory = COLBY_DATA_DIRECTORY;
-
-        foreach($directories as $directory)
-        {
-            $absoluteDirectory = "{$absoluteDirectory}/$directory";
-
-            if (!is_dir($absoluteDirectory))
-            {
-                mkdir($absoluteDirectory);
-            }
-        }
-    }
-
-    /**
-     * @return stdClass
-     */
-    public function data()
-    {
-        return $this->data;
-    }
-
-    /**
-     * How this function works:
-     *
-     * $archiveId parameter value:
-     *  '4cbd040533a2f43fc6691d773d510cda70f4126a'
-     *
-     * return value:
-     *  '4c/bd/040533a2f43fc6691d773d510cda70f4126a'
-     *
-     * The function replaces the first four characters: '4cbd' with '4c/bd/'
-     * but returns the whole string.
-     *
      * @return string
-     *  Returns a relative path to the archive's data inside the data directory.
+     *  The data URL for this archive.
      */
-    public static function dataPathForArchiveId($archiveId)
+    public function dataURL()
     {
-        return preg_replace('/^(..)(..)/', '$1/$2/', $archiveId);
+        return self::dataURLForArchiveId($this->data->archiveId);
+    }
+
+    /**
+     * @return string
+     *  The data URL for the archive with the id `archiveId`.
+     */
+    public function dataURLForArchiveId($archiveId)
+    {
+        return COLBY_DATA_URL . '/' . self::relativeDataPathForArchiveId($archiveId);
     }
 
     /**
      * @return void
      */
-    public static function delete($archiveId)
+    public static function deleteArchiveWithArchiveId($archiveId)
     {
         $sqlArchiveId = Colby::mysqli()->escape_string($archiveId);
 
@@ -105,18 +88,14 @@ class ColbyArchive
         // NOTE: currently doesn't handle nonexistent archive
         //       assumes no subdirectories
 
-        $dataPath = self::dataPathForArchiveId($archiveId);
-
-        $absoluteArchiveDirectory = COLBY_DATA_DIRECTORY . "/{$dataPath}";
-
-        $files = glob("{$absoluteArchiveDirectory}/*");
+        $files = glob(self::absoluteDataDirectoryForArchiveId($archiveId) . '/*');
 
         foreach ($files as $file)
         {
             unlink($file);
         }
 
-        rmdir($absoluteArchiveDirectory);
+        rmdir(self::absoluteDataDirectoryForArchiveId($archiveId));
     }
 
     /**
@@ -128,19 +107,6 @@ class ColbyArchive
     public function hash()
     {
         return isset($this->attributes->hash) ? $this->attributes->hash : null;
-    }
-
-    /**
-     * @return bool
-     *  Returns true if the archive exists on disk, otherwise false.
-     */
-    public static function exists($archiveId)
-    {
-        $dataPath = self::dataPathForArchiveId($archiveId);
-
-        $absoluteArchiveFilename = COLBY_DATA_DIRECTORY . "/{$dataPath}/archive.data";
-
-        return is_file($absoluteArchiveFilename);
     }
 
     /**
@@ -161,7 +127,7 @@ class ColbyArchive
 
         // NOTE: this function doesn't protect against multiple locks
 
-        $absoluteLockFilename = $this->path('lock.data');
+        $absoluteLockFilename = $this->absoluteDataDirectory() . '/lock.data';
 
         $this->lockResource = fopen($absoluteLockFilename, 'w');
         flock($this->lockResource, $operation);
@@ -223,7 +189,7 @@ class ColbyArchive
 
         // If an archive exists on the disk, load the data.
 
-        $absoluteArchiveFilename = $archive->path('archive.data');
+        $absoluteArchiveFilename = $archive->absoluteDataDirectory() . '/archive.data';
 
         if (is_file($absoluteArchiveFilename))
         {
@@ -250,35 +216,32 @@ class ColbyArchive
             }
         }
         else if (   $shouldCreateStorageNow
-                 && !is_dir($archive->path()))
+                 && !is_dir($archive->absoluteDataDirectory()))
         {
-            $archive->createStorage();
+            mkdir($archive->absoluteDataDirectory(), 0777, true);
         }
 
         return $archive;
     }
 
     /**
-     * This function is named "path" because it can return either a directory
-     * or a filename depending on the value of the $filename parameter.
+     * How this function works:
+     *
+     * $archiveId parameter value:
+     *  '4cbd040533a2f43fc6691d773d510cda70f4126a'
+     *
+     * return value:
+     *  '4c/bd/040533a2f43fc6691d773d510cda70f4126a'
+     *
+     * The function replaces the first four characters: '4cbd' with '4c/bd/'
+     * but returns the whole string.
      *
      * @return string
-     *
-     *  The absolute archive directory for this archive or an absolute
-     *  filename for a file in the archive directory.
+     *  Returns a relative path to the archive's data inside the data directory.
      */
-    public function path($filename = null)
+    public static function relativeDataPathForArchiveId($archiveId)
     {
-        $dataPath = self::dataPathForArchiveId($this->data->archiveId);
-
-        if ($filename)
-        {
-            return COLBY_DATA_DIRECTORY . "/{$dataPath}/{$filename}";
-        }
-        else
-        {
-            return COLBY_DATA_DIRECTORY . "/{$dataPath}";
-        }
+        return preg_replace('/^(..)(..)/', '$1/$2/', $archiveId);
     }
 
     /**
@@ -288,11 +251,11 @@ class ColbyArchive
      */
     public function save()
     {
-        $absoluteArchiveFilename = $this->path('archive.data');
+        $absoluteArchiveFilename = $this->absoluteDataDirectory() . '/archive.data';
 
-        if (!is_dir($this->path()))
+        if (!is_dir($this->absoluteDataDirectory()))
         {
-            $this->createStorage();
+            mkdir($this->absoluteDataDirectory(), 0777, true);
         }
 
         $this->lock(LOCK_EX);
@@ -440,26 +403,6 @@ class ColbyArchive
         $key = strval($key);
 
         unset($this->data->$key);
-    }
-
-    /**
-     * @return string
-     *
-     *  The absolute archive URL for this archive or an absolute URL for a file
-     *  in the archive directory.
-     */
-    public function url($filename = null)
-    {
-        $dataPath = self::dataPathForArchiveId($this->data->archiveId);
-
-        if ($filename)
-        {
-            return COLBY_DATA_URL . "/{$dataPath}/{$filename}";
-        }
-        else
-        {
-            return COLBY_DATA_URL . "/{$dataPath}";
-        }
     }
 
     /**

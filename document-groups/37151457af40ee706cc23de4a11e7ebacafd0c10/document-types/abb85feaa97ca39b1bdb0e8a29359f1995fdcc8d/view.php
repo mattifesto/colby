@@ -65,11 +65,11 @@ $page->begin();
 
     if ($archive->valueForKey('imageFilename'))
     {
-        $absoluteImageURL = $archive->url($archive->valueForKey('imageFilename'));
+        $imageURL = $archive->dataURL() . '/' . $archive->valueForKey('imageFilename');
 
         ?>
 
-        <img src="<?php echo $absoluteImageURL; ?>" alt="" style="max-width: 250px; margin: 0px 25px 10px 0px; float: left;">
+        <img src="<?php echo $imageURL; ?>" alt="" style="max-width: 250px; margin: 0px 25px 10px 0px; float: left;">
 
         <?php
     }

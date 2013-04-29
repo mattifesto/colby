@@ -41,7 +41,7 @@ $archive = ColbyArchive::open($archiveId);
         <div style="float: left;">
             <img id="image-thumbnail"
                  style="float: left; width: 150px; margin-right: 10px;"
-                 src="<?php if ($filename = $archive->valueForKey('imageFilename')) echo $archive->url($filename); ?>">
+                 src="<?php if ($filename = $archive->valueForKey('imageFilename')) echo $archive->dataURL(), '/', $filename; ?>">
         </div>
         <div style="overflow: hidden;">
             <section class="control">

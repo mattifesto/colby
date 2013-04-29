@@ -70,7 +70,7 @@ if ($response->uriIsAvailable)
 
 if (isset($_FILES['image-file']))
 {
-    $absoluteMasterImageFilename = ColbyImage::importUploadedImage('image-file', $archive->path());
+    $absoluteMasterImageFilename = ColbyImage::importUploadedImage('image-file', $archive->absoluteDataDirectory());
 
     // Create an images sized for viewing in the post.
 
@@ -97,7 +97,7 @@ if (isset($_FILES['image-file']))
 
         // TODO: Either support png or force jpg.
 
-        rename($absoluteThumbnailImageFilename, $archive->path('thumbnail.jpg'));
+        rename($absoluteThumbnailImageFilename, $archive->absoluteDataDirectory() . '/thumbnail.jpg');
     }
 
     // Delete the master image if we have no need for it.
@@ -107,7 +107,7 @@ if (isset($_FILES['image-file']))
         unlink($absoluteMasterImageFilename);
     }
 
-    $response->imageURL = $archive->url($archive->valueForKey('imageFilename'));
+    $response->imageURL = $archive->dataURL() . '/' . $archive->valueForKey('imageFilename');
 }
 
 $archive->save();

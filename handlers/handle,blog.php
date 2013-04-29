@@ -70,11 +70,12 @@ EOT;
     {
         while ($row = $result->fetch_object())
         {
-            $dataPath = ColbyArchive::dataPathForArchiveId($row->archiveId);
+            $absoluteThumbnailFilename = ColbyArchive::absoluteDataDirectoryForArchiveId($row->archiveId) .
+                                         '/thumbnail.jpg';
 
-            $url = COLBY_SITE_URL . "/{$row->stub}/";
-            $absoluteThumbnailFilename = COLBY_DATA_DIRECTORY . "/{$dataPath}/thumbnail.jpg";
-            $absoluteThumbnailURL = COLBY_DATA_URL . "/{$dataPath}/thumbnail.jpg";
+            $thumbnailURL = ColbyArchive::dataURLForArchiveId($row->archiveId) . '/thumbnail.jpg';
+
+            $postURL = COLBY_SITE_URL . "/{$row->stub}/";
 
             ?>
 
@@ -95,7 +96,7 @@ EOT;
                     ?>
 
                 </div>
-                <h1><a href="<?php echo $url; ?>"><?php echo $row->titleHTML; ?></a></h1>
+                <h1><a href="<?php echo $postURL; ?>"><?php echo $row->titleHTML; ?></a></h1>
                 <h2><?php echo $row->subtitleHTML; ?></h2>
             </article>
 

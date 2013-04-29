@@ -16,6 +16,14 @@ class Colby
     public static $libraryDirectories = array();
 
     /**
+     * `uniqueHashCounter` is a number that is incremented each time a unique
+     * hash is requested and also used to create the hash and helps guarantee
+     * uniqueness.
+     */
+
+    private static $uniqueHashCounter = 0;
+
+    /**
      * If the site is marked as being debugged this function will send a message
      * to the PHP error log. If the site isn't being debugged it will do
      * nothing.
@@ -410,6 +418,23 @@ class Colby
         }
 
         return $result;
+    }
+
+    /**
+     * @return string
+     *  A unique SHA-1 hash in hexadecimal.
+     *  Example: '90027a5ca28cb5301febdc1f31db512dc663c944'
+     */
+    public static function uniqueSHA1Hash()
+    {
+        $time = microtime();
+        $rand = rand();
+
+        $hash = sha1("i:{self::$uniqueHashCounter} t:{$time} r:{$rand}");
+
+        self::$uniqueHashCounter++;
+
+        return $hash;
     }
 
     //

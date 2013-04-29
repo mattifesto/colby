@@ -59,11 +59,11 @@ function ColbyArchiveCreateAndDeleteTest()
 {
     // Ensure there isn't an already left over from a previous failed test
 
-    if (ColbyArchive::exists(TEST_ARCHIVE_ID))
+    if (is_file(ColbyArchive::absoluteDataDirectoryForArchiveId(TEST_ARCHIVE_ID) . '/archive.data'))
     {
-        ColbyArchive::delete(TEST_ARCHIVE_ID);
+        ColbyArchive::deleteArchiveWithArchiveId(TEST_ARCHIVE_ID);
 
-        if (ColbyArchive::exists(TEST_ARCHIVE_ID))
+        if (is_file(ColbyArchive::absoluteDataDirectoryForArchiveId(TEST_ARCHIVE_ID) . '/archive.data'))
         {
             throw new RuntimeException(__FUNCTION__ . ' failed: Unable to clean up test evironment.');
         }
@@ -99,9 +99,9 @@ function ColbyArchiveCreateAndDeleteTest()
 
     // Test deleting an archive
 
-    ColbyArchive::delete(TEST_ARCHIVE_ID);
+    ColbyArchive::deleteArchiveWithArchiveId(TEST_ARCHIVE_ID);
 
-    if (ColbyArchive::exists(TEST_ARCHIVE_ID))
+    if (is_file(ColbyArchive::absoluteDataDirectoryForArchiveId(TEST_ARCHIVE_ID) . '/archive.data'))
     {
         throw new RuntimeException(__FUNCTION__ . ' failed: The archive is still exists after deletion.');
     }
