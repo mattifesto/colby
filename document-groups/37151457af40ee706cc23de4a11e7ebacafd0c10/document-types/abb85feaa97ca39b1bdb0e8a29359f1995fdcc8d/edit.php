@@ -38,10 +38,10 @@ $archive = ColbyArchive::open($archiveId);
     </section>
 
     <div style="overflow: hidden; margin-top: 10px;">
-        <div style="float: left;">
+        <div style="min-width: 150px; min-height: 150px; margin-right: 10px; float: left; background-color: #efefef;">
             <img id="image-thumbnail"
-                 style="float: left; width: 150px; margin-right: 10px;"
-                 src="<?php if ($filename = $archive->valueForKey('imageFilename')) echo $archive->dataURL(), '/', $filename; ?>">
+                 style="display: block; width: 150px;"
+                 src="<?php if ($filename = $archive->valueForKey('documentImageBasename')) echo $archive->dataURL(), '/', $filename; ?>">
         </div>
         <div style="overflow: hidden;">
             <section class="control">

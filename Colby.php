@@ -429,30 +429,25 @@ class Colby
     {
         $time = microtime();
         $rand = rand();
+        $i = self::$uniqueHashCounter;
 
-        $hash = sha1("i:{self::$uniqueHashCounter} t:{$time} r:{$rand}");
+        $hash = sha1("i:{$i} t:{$time} r:{$rand}");
 
         self::$uniqueHashCounter++;
 
         return $hash;
     }
 
-    //
-    //
-    //
+    /**
+     * Includes the classes that are needed to do image processing.
+     *
+     * @return void
+     */
     public static function useImage()
     {
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyImage.php');
-    }
-
-    //
-    //
-    //
-    public static function useRect()
-    {
-        include_once(COLBY_SITE_DIRECTORY .
-            '/colby/classes/ColbyRect.php');
+        include_once COLBY_DIRECTORY . '/classes/ColbyGeometry.php';
+        include_once COLBY_DIRECTORY . '/classes/ColbyImageResizer.php';
+        include_once COLBY_DIRECTORY . '/classes/ColbyImageUploader.php';
     }
 }
 

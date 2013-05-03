@@ -70,50 +70,97 @@ if ($response->uriIsAvailable)
 
 if (isset($_FILES['image-file']))
 {
-    $absoluteMasterImageFilename = ColbyImage::importUploadedImage('image-file', $archive->absoluteDataDirectory());
+    /**
+     * Complete the image file upload.
+     */
 
-    // Create an images sized for viewing in the post.
+    $uploader = ColbyImageUploader::uploaderForName('image-file');
 
-    $size = getimagesize($absoluteMasterImageFilename);
+    $originalImageFilename = $archive->absoluteDataDirectory() .
+                '/' .
+                Colby::uniqueSHA1Hash() .
+                $uploader->canonicalExtension();
 
-    if ($size[0] > 500)
+    $uploader->moveToFilename($originalImageFilename);
+
+    if ($originalImageBasename = $archive->valueForKey('originalImageBasename'))
     {
-        $absoluteResizedImageFilename = ColbyImage::createImageByFitting($absoluteMasterImageFilename,
-                                                                         array(500, PHP_INT_MAX));
-    }
-    else
-    {
-        $absoluteResizedImageFilename = $absoluteMasterImageFilename;
-    }
+        $filename = $archive->absoluteDataDirectory() . '/' . $originalImageBasename;
 
-    $archive->setStringValueForKey(basename($absoluteResizedImageFilename), 'imageFilename', false);
-
-    // Create a thumbnail image if the master image is large enough.
-
-    if ($size[0] >= 400 && $size[1] >= 400)
-    {
-        $absoluteThumbnailImageFilename = ColbyImage::createImageByFilling($absoluteMasterImageFilename,
-                                                                           array(400, 400));
-
-        // TODO: Either support png or force jpg.
-
-        rename($absoluteThumbnailImageFilename, $archive->absoluteDataDirectory() . '/thumbnail.jpg');
+        if (is_file($filename))
+        {
+            unlink($filename);
+        }
     }
 
-    // Delete the master image if we have no need for it.
+    $archive->setStringValueForKey(basename($originalImageFilename), 'originalImageBasename');
 
-    if ($absoluteResizedImageFilename != $absoluteMasterImageFilename)
+
+    /**
+     * Create the version of the image to be displayed in the document.
+     */
+
+    $resizer = ColbyImageResizer::resizerForFilename($originalImageFilename);
+
+    $documentImageFilename = $archive->absoluteDataDirectory() .
+                '/' .
+                Colby::uniqueSHA1Hash() .
+                $resizer->canonicalExtension();
+
+    $resizer->reduceWidthTo(500);
+    $resizer->saveToFilename($documentImageFilename);
+
+    if ($documentImageBasename = $archive->valueForKey('documentImageBasename'))
     {
-        unlink($absoluteMasterImageFilename);
+        $filename = $archive->absoluteDataDirectory() . '/' . $documentImageBasename;
+
+        if (is_file($filename))
+        {
+            unlink($filename);
+        }
     }
 
-    $response->imageURL = $archive->dataURL() . '/' . $archive->valueForKey('imageFilename');
+    $archive->setStringValueForKey(basename($documentImageFilename), 'documentImageBasename');
+
+
+    /**
+     * Create the version of the image to be used as the thumbnail.
+     */
+
+    $thumbnailImageFilename = $archive->absoluteDataDirectory() .
+                '/thumbnail' .
+                $resizer->canonicalExtension();
+
+    $resizer->reset();
+    $resizer->reduceShortEdgeTo(400);
+    $resizer->cropFromCenterToWidth(400);
+    $resizer->cropFromCenterToHeight(400);
+    $resizer->saveToFilename($thumbnailImageFilename);
+
+    if ($thumbnailImageBasename = $archive->valueForKey('thumbnailImageBasename'))
+    {
+        $filename = $archive->absoluteDataDirectory() . '/' . $thumbnailImageBasename;
+
+        if (is_file($filename))
+        {
+            unlink($filename);
+        }
+    }
+
+    $archive->setStringValueForKey(basename($thumbnailImageFilename), 'thumbnailImageBasename');
+
+
+    /**
+     * Return the document image URL for the editor to display.
+     */
+
+    $response->imageURL = $archive->dataURL() . '/' . $archive->valueForKey('documentImageBasename');
 }
 
 $archive->save();
 
 $response->wasSuccessful = true;
-$response->message = 'Post last updated: ' . ColbyConvert::timestampToLocalUserTime(time());
+$response->message = 'Post successfully updated.';
 
 done:
 

@@ -63,20 +63,22 @@ $page->begin();
 
     <?php
 
-    if ($archive->valueForKey('imageFilename'))
+    if ($documentImageBasename = $archive->valueForKey('documentImageBasename'))
     {
-        $imageURL = $archive->dataURL() . '/' . $archive->valueForKey('imageFilename');
+        $imageURL = $archive->dataURL() . '/' . $documentImageBasename;
 
         ?>
 
-        <img src="<?php echo $imageURL; ?>" alt="" style="max-width: 250px; margin: 0px 25px 10px 0px; float: left;">
+        <img src="<?php echo $imageURL; ?>"
+             alt="<?php echo $archive->valueForKey('imageAlternativeText'); ?>"
+             style="max-width: 250px; margin: 0px 25px 10px 0px; float: left;">
 
         <?php
     }
 
     ?>
 
-    <div class="formatted-content"><?php echo $archive->valueForKey('contentFormattedHTML'); ?></div>
+    <section class="formatted-content"><?php echo $archive->valueForKey('contentFormattedHTML'); ?></section>
 
 </article>
 

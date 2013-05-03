@@ -37,7 +37,24 @@ $page->begin();
     <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
     <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
 
-    <div class="formatted-content"><?php echo $archive->valueForKey('contentFormattedHTML'); ?></div>
+    <?php
+
+    if ($documentImageBasename = $archive->valueForKey('documentImageBasename'))
+    {
+        $imageURL = $archive->dataURL() . '/' . $documentImageBasename;
+
+        ?>
+
+        <img src="<?php echo $imageURL; ?>"
+             alt="<?php echo $archive->valueForKey('imageAlternativeText'); ?>"
+             style="max-width: 250px; margin: 0px 0px 10px 25px; float: right;">
+
+        <?php
+    }
+
+    ?>
+
+    <section class="formatted-content"><?php echo $archive->valueForKey('contentFormattedHTML'); ?></section>
 
 </article>
 
