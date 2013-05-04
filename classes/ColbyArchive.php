@@ -5,10 +5,47 @@ define('COLBY_DATA_URL', COLBY_SITE_URL . '/data');
 
 class ColbyArchive
 {
-    private $lockResource;
+    /**
+     * The `$attributes` property will be set to the object holding the
+     * attributes read from and saved to the archive data file.
+     */
+    protected $attributes = null;
 
-    protected $attributes;
-    protected $data;
+    /**
+     * The `$data` property will be set to the object holding the archive data
+     * read from and saved to the archive data file.
+     */
+    protected $data = null;
+
+    /**
+     * The `$lockResource` will be set to the file resource that is locked
+     * when this class needs exclusive access to archive data.
+     */
+    private $lockResource = null;
+
+    /**
+     * Code that updates the document will set the `$searchText` property to
+     * the search text to be written to the `ColbyDocuments` table when the
+     * archive is saved.
+     */
+    public $searchText = '';
+
+    /**
+     * The `$documentRowId` property will be set to the`id` column value of this
+     * archive's `ColbyDocuments` table row the first time it is queried so that
+     * future database queries can use it. However, it's easiest to call the
+     * `documentRowId` method which will also retrieve it from the database
+     * if necessary.
+     */
+    private $documentRowId = null;
+
+
+    /**
+     * An archive instance should only be created using the `open` method.
+     */
+    private function __construct()
+    {
+    }
 
     /**
      * @return string
@@ -96,6 +133,101 @@ class ColbyArchive
         }
 
         rmdir(self::absoluteDataDirectoryForArchiveId($archiveId));
+    }
+
+    /**
+     * @return bool
+     *  Returns `true` if the URI was available and was set; otherwise `false`.
+     */
+    public function didReserveAndSetURIValue($uri)
+    {
+        $mysqli = Colby::mysqli();
+
+        $uri = $mysqli->escape_string($uri);
+
+        if ($documentRowId = $this->documentRowId())
+        {
+            $sql = <<<EOT
+UPDATE
+    `ColbyPages`
+SET
+    `stub` = '{$uri}'
+WHERE
+    `id` = {$documentRowId}
+EOT;
+        }
+        else
+        {
+            $sql = <<<EOT
+INSERT INTO
+    `ColbyPages`
+(
+    `archiveId`,
+    `stub`,
+    `titleHTML`,
+    `subtitleHTML`
+)
+VALUES
+(
+    UNHEX('{$this->data->archiveId}'),
+    '{$uri}',
+    '',
+    ''
+)
+EOT;
+        }
+
+        try
+        {
+            Colby::query($sql);
+        }
+        catch (Exception $exception)
+        {
+            if (1062 == $mysqli->errno)
+            {
+                return false;
+            }
+            else
+            {
+                throw $exception;
+            }
+        }
+
+        if (!$documentRowId)
+        {
+            $this->documentRowId = intval($mysqli->insert_id);
+        }
+
+        return true;
+    }
+
+    /**
+     * @return int
+     */
+    private function documentRowId()
+    {
+        if (!$this->documentRowId)
+        {
+            $sql = <<<EOT
+SELECT
+    `id`
+FROM
+    `ColbyPages`
+WHERE
+    `archiveId` = UNHEX('{$this->data->archiveId}')
+EOT;
+
+            $result = Colby::query($sql);
+
+            if ($row = $result->fetch_object())
+            {
+                $this->documentRowId = intval($row->id);
+            }
+
+            $result->free();
+        }
+
+        return $this->documentRowId;
     }
 
     /**
@@ -251,6 +383,8 @@ class ColbyArchive
      */
     public function save()
     {
+        $this->saveDatabase();
+
         $absoluteArchiveFilename = $this->absoluteDataDirectory() . '/archive.data';
 
         if (!is_dir($this->absoluteDataDirectory()))
@@ -262,6 +396,11 @@ class ColbyArchive
 
         // if archive already exists on the disk, make sure it hasn't changed
         // since we read it
+        // TODO:
+        // This code is wrong. The place for this check is not in the middle of
+        // the `save` method. Only if the caller cares the caller should check
+        // to see if the hashes differ. Otherwise a call to `save` always
+        // saves.
 
         if (isset($this->attributes->hash))
         {
@@ -297,6 +436,60 @@ class ColbyArchive
         $this->unlock();
 
         return true;
+    }
+
+    /**
+     * @return void
+     */
+    private function saveDatabase()
+    {
+        $documentRowId = $this->documentRowId();
+
+        if (!$documentRowId)
+        {
+            throw new RuntimeException('The `ColbyDocuments` table row should already exist by the time the archive is saved. The row is created by calling the `ColbyArchive::didReserveAndSetURIValue` method.');
+        }
+
+        $mysqli = Colby::mysqli();
+
+        $titleHTML = $mysqli->escape_string($this->valueForKey('titleHTML'));
+        $subtitleHTML = $mysqli->escape_string($this->valueForKey('subtitleHTML'));
+        $thumbnailURL = $mysqli->escape_string($this->valueForKey('thumbnailURL'));
+        $searchText = $mysqli->escape_string($this->searchText);
+
+        if ($this->valueForKey('isPublished'))
+        {
+            $published = intval($archive->valueForKey('publishedTimeStamp'));
+        }
+        else
+        {
+            $published = 'NULL';
+        }
+
+        $publishedBy = intval($this->valueForKey('publishedBy'));
+
+        if (!$publishedBy)
+        {
+            $publishedBy = 'NULL';
+        }
+
+        $sql = <<<EOT
+UPDATE
+    `ColbyPages`
+SET
+    `groupId` = UNHEX('{$this->valueForKey('documentGroupId')}'),
+    `modelId` = UNHEX('{$this->valueForKey('documentTypeId')}'),
+    `titleHTML` = '{$titleHTML}',
+    `subtitleHTML` = '{$subtitleHTML}',
+    `thumbnailURL` = '{$thumbnailURL}',
+    `searchText` = '{$searchText}',
+    `published` = {$published},
+    `publishedBy` = {$publishedBy}
+WHERE
+    `id` = {$documentRowId}
+EOT;
+
+        Colby::query($sql);
     }
 
     /**

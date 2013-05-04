@@ -15,6 +15,29 @@ $response->begin();
 
 $archive = ColbyArchive::open($_POST['archive-id']);
 
+
+/**
+ * The first thing we do is attempt to reserve the requested URI in the
+ * `ColbyDocuments` table and then set it as the value for the 'uri' key in the
+ * archive. If it is successfully reserved (or if it was reserved by a previous
+ * request) we continue updating the document. If it is not successfully
+ * reserved this request fails and the caller should send another request
+ * with another URI. Without a valid and unique URI, we can't successfully save
+ * a document.
+ */
+
+$response->uriIsAvailable = $archive->didReserveAndSetURIValue($_POST['uri']);
+
+if (!$response->uriIsAvailable)
+{
+    goto done;
+}
+
+
+/**
+ *
+ */
+
 $archive->setStringValueForKey($_POST['document-group-id'], 'documentGroupId');
 $archive->setStringValueForKey($_POST['document-type-id'], 'documentTypeId');
 
@@ -38,8 +61,10 @@ $archive->setStringValueForKey(ColbyConvert::textToHTML($_POST['image-caption'])
 $archive->setStringValueForKey($_POST['image-alternative-text'], 'imageAlternativeText');
 $archive->setStringValueForKey(ColbyConvert::textToHTML($_POST['image-alternative-text']), 'imageAlternativeTextHTML');
 
+
 /**
- * Define the search text.
+ * The search text is set as a property on the `ColbyArchive` to be stored in
+ * the `ColbyDocuments` table when the archive is saved.
  */
 
 $searchText = array();
@@ -50,19 +75,8 @@ $searchText[] = $_POST['content'];
 $searchText[] = $_POST['image-caption'];
 $searchText[] = $_POST['image-alternative-text'];
 
-$searchText = implode(' ', $searchText);
+$archive->searchText = implode(' ', $searchText);
 
-/**
- * Make sure the URI is available before saving as the 'uri' value in the
- * archive. This way the database and the archive values will always be in sync.
- */
-
-$response->uriIsAvailable = updateDatabase($archive, $_POST['uri'], $searchText);
-
-if ($response->uriIsAvailable)
-{
-    $archive->setStringValueForKey($_POST['uri'], 'uri', false);
-}
 
 /**
  * 2013.05.02
@@ -79,7 +93,7 @@ if ($documentImageBasename = $archive->valueForKey('imageFilename'))
 }
 
 /**
- *
+ * Process a new image file if one is included with the request.
  */
 
 if (isset($_FILES['image-file']))
@@ -179,138 +193,3 @@ $response->message = 'Page successfully updated.';
 done:
 
 $response->end();
-
-
-/**
- * @return bool
- *  `true` if successful
- *  `false` if the provided URI is not available
- */
-function updateDatabase($archive, $uri, $searchText)
-{
-    $mysqli = Colby::mysqli();
-
-    $archiveId = $archive->archiveId();
-    $titleHTML = $mysqli->escape_string($archive->valueForKey('titleHTML'));
-    $subtitleHTML = $mysqli->escape_string($archive->valueForKey('subtitleHTML'));
-    $searchText = $mysqli->escape_string($searchText);
-
-    if ($archive->valueForKey('isPublished'))
-    {
-        $published = $archive->valueForKey('publishedTimeStamp');
-    }
-    else
-    {
-        $published = 'NULL';
-    }
-
-    $publishedBy = intval($archive->valueForKey('publishedBy'));
-
-    if (!$publishedBy)
-    {
-        $publishedBy = 'NULL';
-    }
-
-    $sql = <<<EOT
-SELECT
-    `id`
-FROM
-    `ColbyPages`
-WHERE
-    `archiveId` = UNHEX('{$archiveId}')
-EOT;
-
-    $result = Colby::query($sql);
-
-    if ($row = $result->fetch_object())
-    {
-        $id = $row->id;
-    }
-    else
-    {
-        $id = null;
-    }
-
-    $result->free();
-
-    if ($id)
-    {
-        $sql = <<<EOT
-UPDATE
-    `ColbyPages`
-SET
-    `stub` = '{$uri}',
-    `titleHTML` = '{$titleHTML}',
-    `subtitleHTML` = '{$subtitleHTML}',
-    `searchText` = '{$searchText}',
-    `published` = {$published},
-    `publishedBy` = {$publishedBy}
-WHERE
-    `id` = {$id}
-EOT;
-
-        try
-        {
-            Colby::query($sql);
-        }
-        catch (Exception $exception)
-        {
-            if (1062 == $mysqli->errno)
-            {
-                return false;
-            }
-            else
-            {
-                throw $exception;
-            }
-        }
-    }
-    else
-    {
-        $sql = <<<EOT
-INSERT INTO
-    `ColbyPages`
-(
-    `archiveId`,
-    `groupId`,
-    `modelId`,
-    `stub`,
-    `titleHTML`,
-    `subtitleHTML`,
-    `searchText`,
-    `published`,
-    `publishedBy`
-)
-VALUES
-(
-    UNHEX('{$archiveId}'),
-    UNHEX('{$archive->valueForKey('documentGroupId')}'),
-    UNHEX('{$archive->valueForKey('documentTypeId')}'),
-    '{$uri}',
-    '{$titleHTML}',
-    '{$subtitleHTML}',
-    '{$searchText}',
-    {$published},
-    {$publishedBy}
-)
-EOT;
-
-        try
-        {
-            Colby::query($sql);
-        }
-        catch (Exception $exception)
-        {
-            if (1062 == $mysqli->errno)
-            {
-                return false;
-            }
-            else
-            {
-                throw $exception;
-            }
-        }
-    }
-
-    return true;
-}
