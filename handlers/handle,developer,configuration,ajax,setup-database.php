@@ -57,7 +57,7 @@ if (!$colbyUsersTableDoesExist)
      * Run install.
      */
 
-    include(Colby::findSnippet('install-database.php'));
+    include Colby::findSnippet('install-database.php');
 
     $response->message = 'The database schema was installed successfully.';
 }
@@ -79,15 +79,15 @@ else
      * Run upgrades.
      */
 
-    include(Colby::findSnippet('upgrade-database-0001.php'));
-    include(Colby::findSnippet('upgrade-database-0002.php'));
-    include(Colby::findSnippet('upgrade-database-0003.php'));
-    include(Colby::findSnippet('upgrade-database-0004.php'));
-    include(Colby::findSnippet('upgrade-database-0005.php'));
-    include(Colby::findSnippet('upgrade-database-0006.php'));
-    include(Colby::findSnippet('upgrade-database-0007.php'));
+    include Colby::findSnippet('upgrade-database-0001.php');
+    include Colby::findSnippet('upgrade-database-0002.php');
+    include Colby::findSnippet('upgrade-database-0003.php');
+    include Colby::findSnippet('upgrade-database-0004.php');
+    include Colby::findSnippet('upgrade-database-0005.php');
+    include Colby::findSnippet('upgrade-database-0006.php');
+    include Colby::findSnippet('upgrade-database-0007.php');
 
-    include(Colby::findSnippet('upgrade-database-version.php'));
+    include Colby::findSnippet('upgrade-database-version.php');
 
     $response->message = 'The database schema was upgraded successfully.';
 }
