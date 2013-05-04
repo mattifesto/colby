@@ -163,6 +163,10 @@ if (isset($_FILES['image-file']))
 
     $archive->setStringValueForKey(basename($thumbnailImageFilename), 'thumbnailImageBasename');
 
+    $thumbnailURL = $archive->dataURL() . '/' . $archive->valueForKey('thumbnailImageBasename');
+
+    $archive->setStringValueForKey($thumbnailURL, 'thumbnailURL');
+
 
     /**
      * Return the document image URL for the editor to display.
