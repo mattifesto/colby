@@ -155,7 +155,8 @@ if (isset($_FILES['image-file']))
     {
         $filename = $archive->absoluteDataDirectory() . '/' . $thumbnailImageBasename;
 
-        if (is_file($filename))
+        if ($filename != $thumbnailImageFilename &&
+            is_file($filename))
         {
             unlink($filename);
         }
