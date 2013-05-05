@@ -51,10 +51,10 @@ $page->begin();
 
     $sql = <<<EOT
 SELECT
-    LOWER(HEX(`archiveId`)) AS `archiveId`,
     `stub`,
     `titleHTML`,
-    `subtitleHTML`
+    `subtitleHTML`,
+    `thumbnailURL`
 FROM
     `ColbyPages`
 WHERE
@@ -70,11 +70,6 @@ EOT;
     {
         while ($row = $result->fetch_object())
         {
-            $absoluteThumbnailFilename = ColbyArchive::absoluteDataDirectoryForArchiveId($row->archiveId) .
-                                         '/thumbnail.jpg';
-
-            $thumbnailURL = ColbyArchive::dataURLForArchiveId($row->archiveId) . '/thumbnail.jpg';
-
             $postURL = COLBY_SITE_URL . "/{$row->stub}/";
 
             ?>
@@ -84,11 +79,11 @@ EOT;
 
                     <?php
 
-                    if (file_exists($absoluteThumbnailFilename))
+                    if ($row->thumbnailURL)
                     {
                         ?>
 
-                        <img src="<?php echo $absoluteThumbnailURL; ?>" alt="" class="thumbnail">
+                        <img src="<?php echo $row->thumbnailURL; ?>" alt="" class="thumbnail">
 
                         <?php
                     }

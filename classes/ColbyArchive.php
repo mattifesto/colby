@@ -459,7 +459,7 @@ EOT;
 
         if ($this->valueForKey('isPublished'))
         {
-            $published = intval($archive->valueForKey('publishedTimeStamp'));
+            $published = intval($this->valueForKey('publishedTimeStamp'));
         }
         else
         {
