@@ -1,7 +1,5 @@
 <?php
 
-// mise en place
-
 global $searchQueryHTML;
 
 $titleHTML = $this->titleHTML;
@@ -13,6 +11,15 @@ $stubs = ColbyRequest::decodedStubs();
 $homeSelectedClass = isset($stubs[0]) ? '' : 'class="selected"';
 $searchSelectedClass = (isset($stubs[0]) && $stubs[0] == 'search') ? 'class="selected"' : '';
 $blogSelectedClass = (isset($stubs[0]) && $stubs[0] == 'blog') ? 'class="selected"' : '';
+
+if (ColbyRequest::$archive)
+{
+    $documentGroupId = ColbyRequest::$archive->valueForKey('documentGroupId');
+    $documentTypeId = ColbyRequest::$archive->valueForKey('documentTypeId');
+
+    $documentTypeStyleSheetURL = Colby::findFileForDocumentType('view.css', $documentGroupId, $documentTypeId,
+                                                                Colby::returnURL);
+}
 
 ?>
 <!doctype html>
@@ -35,6 +42,14 @@ $blogSelectedClass = (isset($stubs[0]) && $stubs[0] == 'blog') ? 'class="selecte
         <link rel="stylesheet"
               type="text/css"
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/shared.css">
+
+        <?php if (isset($documentTypeStyleSheetURL)) { ?>
+
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="<?php echo $documentTypeStyleSheetURL; ?>">
+
+        <?php } ?>
 
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/html5shiv.js"></script>
 

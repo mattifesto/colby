@@ -50,11 +50,26 @@ Colby.beginUpdatingTimes = function()
  */
 Colby.dateToLocaleDateString = function(date)
 {
-    return date.getFullYear() +
-    '/' +
-    (date.getMonth() + 1) +
-    '/' +
-    date.getDate();
+    /**
+     * 2013.05.05
+     *
+     * Currently `toLocaleDateString` uses different date formats on different
+     * browsers, but at least they are all locale specific as far as I know.
+     *
+     * TODO: In the future, when the `options` parameter is available on more
+     * browsers (at this time, it's only available on Chrome) make sure to
+     * specify that the date string should have the following features:
+     *
+     * -   Use the full month name
+     * -   Use the numeric day
+     * -   Use the four digit year
+     *
+     * In English:
+     *
+     *     February 14, 2010
+     */
+
+    return date.toLocaleDateString();
 };
 
 /**
@@ -73,7 +88,7 @@ Colby.dateToLocaleTimeString = function(date)
         formattedMinutes = '0'.concat(formattedMinutes);
     }
 
-    var formattedAMPM = (date.getHours() > 11) ? 'PM' : 'AM';
+    var formattedAMPM = (date.getHours() > 11) ? 'p.m.' : 'a.m.';
 
     return formattedHour +
     ':' +

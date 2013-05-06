@@ -1,0 +1,30 @@
+/**
+ * This is the tyle sheet for a basic blog post.
+ */
+
+article aside
+{
+    width: 250px;
+    margin-right: 25px;
+    float: left;
+}
+
+article figure img
+{
+    max-width: 250px;
+}
+
+article figure figcaption
+{
+    font-style: italic;
+}
+
+article aside div.published
+{
+    margin-top: 50px;
+}
+
+article section.formatted-content
+{
+    overflow: hidden;
+}

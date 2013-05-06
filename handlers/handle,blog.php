@@ -84,7 +84,9 @@ EOT;
                         {
                             ?>
 
-                            <img src="<?php echo $row->thumbnailURL; ?>" alt="" class="thumbnail">
+                            <a href="<?php echo $postURL; ?>">
+                                <img src="<?php echo $row->thumbnailURL; ?>" alt="" class="thumbnail">
+                            </a>
 
                             <?php
                         }

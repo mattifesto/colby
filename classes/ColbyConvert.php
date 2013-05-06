@@ -213,6 +213,23 @@ class ColbyConvert
     }
 
     /**
+     * 2013.05.05
+     *
+     * This function looks up the time zone that Facebook gives us for a user
+     * and converts a timestamp to that time zone. However, Colby has since
+     * moved to sending timestamps to the browser for the browser to convert
+     * to whatever it feels the user's current time zone is.
+     *
+     * So, this function is not very useful especially since a user has to be
+     * logged in. Furthermore, for some reason it's outputting in the RFC3399
+     * format which is really not very friendly.
+     *
+     * Most likely, this function should be removed. I'm letting it stay
+     * for now because I need to think more about whether it is potentially
+     * useful. Also, when we remove this we might want to stop storing the
+     * Facebook time zone data since I can't think of a use for that anymore
+     * either.
+     *
      * @return string
      */
     public static function timestampToLocalUserTime($timestamp)
@@ -229,6 +246,52 @@ class ColbyConvert
         }
 
         return $date->format(DateTime::RFC3339);
+    }
+
+    /**
+     * 2013.05.05
+     *
+     * At this time Colby still supports IE8 and on that browser the javascript
+     * timestamp display does not work. While Colby supports IE8 this function
+     * can provide a readable date string for a timespan that's better than
+     * nothing.
+     *
+     * When all browsers support the javascript timestamp display consider
+     * removing this method.
+     *
+     * @returns string
+     */
+    public static function timestampToOldBrowserReadableTime($timestamp)
+    {
+        /**
+         * The `date` function will convert the timespan to the server's time
+         * zone, which is probably more useful than UTC.
+         *
+         * F   A full textual representation of a month, such as January or
+         *     March
+         *
+         * j   Day of the month without leading zeros
+         *
+         * Y   A full numeric representation of a year, 4 digits
+         *
+         * g   12-hour format of an hour without leading zeros
+         *
+         * i   Minutes with leading zeros
+         *
+         * a   Lowercase Ante meridiem and Post meridiem
+         *
+         * T   Timezone abbreviation
+         */
+
+         return date('F j, Y g:i a T', $timestamp);
+    }
+
+    /**
+     * @return string
+     */
+    public static function timestampToRFC3339($timestamp)
+    {
+        return gmdate(DateTime::RFC3339, $timestamp);
     }
 
     /**

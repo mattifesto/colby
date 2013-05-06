@@ -7,7 +7,13 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
     exit;
 }
 
+/**
+ * Simulate what ColbyRequest would do if it were actually handling a request.
+ */
+
 $archive = ColbyArchive::open($_GET['archive-id']);
+
+ColbyRequest::$archive = $archive;
 
 $documentGroupId = $archive->valueForKey('documentGroupId');
 $documentTypeId = $archive->valueForKey('documentTypeId');

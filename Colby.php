@@ -4,6 +4,12 @@ require_once(__DIR__ . '/../colby-configuration.php');
 
 class Colby
 {
+    /**
+     * These constants are used as parameters to the 'find' methods.
+     */
+    const returnAbsoluteFilename    = 0;
+    const returnURL                 = 1;
+
     // mysqli
     // This holds the mysqli object if the request needs database access.
 
@@ -86,24 +92,40 @@ class Colby
     /**
      * @return string | false
      */
-    public static function findFileForDocumentGroup($filename, $documentGroupId)
+    public static function findFileForDocumentGroup($intraGroupFilename, $documentGroupId,
+                                                    $returnFormat = Colby::returnAbsoluteFilename)
     {
-        $relativeFilename = "document-groups/{$documentGroupId}/{$filename}";
+        $intraLibraryFilename = "document-groups/{$documentGroupId}/{$intraGroupFilename}";
 
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
             if ($libraryDirectory)
             {
-                $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/{$relativeFilename}";
+                $intraSiteFilename = "{$libraryDirectory}/{$intraLibraryFilename}";
             }
             else
             {
-                $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$relativeFilename}";
+                $intraSiteFilename = $intraLibraryFilename;
             }
+
+            $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
 
             if (is_file($absoluteFilename))
             {
-                return $absoluteFilename;
+                switch ($returnFormat)
+                {
+                    case Colby::returnAbsoluteFilename:
+
+                        return $absoluteFilename;
+
+                    case Colby::returnURL:
+
+                        return COLBY_SITE_URL . "/{$intraSiteFilename}";
+
+                    default:
+
+                        throw new InvalidArgumentException('returnFormat');
+                }
             }
         }
 
@@ -140,26 +162,42 @@ class Colby
     /**
      * @return string | false
      */
-    public static function findFileForDocumentType($filename, $documentGroupId, $documentTypeId)
+    public static function findFileForDocumentType($intraTypeFilename, $documentGroupId, $documentTypeId,
+                                                   $returnFormat = Colby::returnAbsoluteFilename)
     {
-        $relativeFilename = "document-groups/{$documentGroupId}/" .
-                            "document-types/{$documentTypeId}/" .
-                            "{$filename}";
+        $intraLibraryFilename = "document-groups/{$documentGroupId}/" .
+                           "document-types/{$documentTypeId}/" .
+                           "{$intraTypeFilename}";
 
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
             if ($libraryDirectory)
             {
-                $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/{$relativeFilename}";
+                $intraSiteFilename = "{$libraryDirectory}/{$intraLibraryFilename}";
             }
             else
             {
-                $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$relativeFilename}";
+                $intraSiteFilename = $intraLibraryFilename;
             }
+
+            $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
 
             if (is_file($absoluteFilename))
             {
-                return $absoluteFilename;
+                switch ($returnFormat)
+                {
+                    case Colby::returnAbsoluteFilename:
+
+                        return $absoluteFilename;
+
+                    case Colby::returnURL:
+
+                        return COLBY_SITE_URL . "/{$intraSiteFilename}";
+
+                    default:
+
+                        throw new InvalidArgumentException('returnFormat');
+                }
             }
         }
 

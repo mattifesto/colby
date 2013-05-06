@@ -70,6 +70,20 @@ input[type="reset"]:hover
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 
+/**
+ * Formatted content
+ */
+
+.formatted-content :first-child
+{
+    margin-top: 0px;
+}
+
+.formatted-content :last-child
+{
+    margin-bottom: 0px;
+}
+
 .formatted-content blockquote
 {
     padding: 3.0em 4.0em;
@@ -177,14 +191,4 @@ input[type="reset"]:hover
     margin: 2.0em 3.0em;
     border: 1px solid #dddddd;
     font-size: 0.85em;
-}
-
-.formatted-content :first-child
-{
-    margin-top: 0px;
-}
-
-.formatted-content :last-child
-{
-    margin-bottom: 0px;
 }

@@ -5,6 +5,13 @@
 
 class ColbyRequest
 {
+    /**
+     * If handling the request involves displaying a document then `$archive`
+     * will be set to the document's archive before the document type's view is
+     * included.
+     */
+    public static $archive = null;
+
     private static $decodedRequestURI;
     // type: stríng
     // example:
@@ -200,23 +207,12 @@ EOT;
             {
                 $uri = implode('/', self::$decodedStubs);
 
-                // 2013.03.24 TODO:
-                // Change this to set a class variable archive which can
-                // be retrived by the handler with `ColbyRequest::$archive`
-                // so that we don't have to rely on local variables across
-                // included files.
-                //
-                // 2013.04.17
-                // Actually use an enclosure or function to make $archive a
-                // local variable unbeknownst to the view. This is already in
-                // a function so it might already be fine. Confirm and document.
+                self::$archive = self::archiveForURI($uri);
 
-                $archive = self::archiveForURI($uri);
-
-                if ($archive)
+                if (self::$archive)
                 {
-                    $documentGroupId = $archive->valueForKey('documentGroupId');
-                    $documentTypeId = $archive->valueForKey('documentTypeId');
+                    $documentGroupId = self::$archive->valueForKey('documentGroupId');
+                    $documentTypeId = self::$archive->valueForKey('documentTypeId');
 
                     $handlerFilename = Colby::findFileForDocumentType(
                         'view.php', $documentGroupId, $documentTypeId);
