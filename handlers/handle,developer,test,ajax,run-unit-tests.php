@@ -101,6 +101,17 @@ function ColbyArchiveCreateAndDeleteTest()
         throw new RuntimeException('The test URI value is not available.');
     }
 
+    /**
+     * 2013.05.07
+     *
+     * At one point, the `didReserveAndSetURIValue` was not setting the 'uri'
+     * value on the archive. This test was added to make sure that it does.
+     */
+    if (TEST_ARCHIVE_ID !== $archive->valueForKey('uri'))
+    {
+        throw new RuntimeException('The URI value was not set properly in the archive.');
+    }
+
     $archive->save();
 
     $archive = null;

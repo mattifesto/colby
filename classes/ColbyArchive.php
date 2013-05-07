@@ -143,7 +143,7 @@ class ColbyArchive
     {
         $mysqli = Colby::mysqli();
 
-        $uri = $mysqli->escape_string($uri);
+        $sqlURI = $mysqli->escape_string($uri);
 
         if ($documentRowId = $this->documentRowId())
         {
@@ -151,7 +151,7 @@ class ColbyArchive
 UPDATE
     `ColbyPages`
 SET
-    `stub` = '{$uri}'
+    `stub` = '{$sqlURI}'
 WHERE
     `id` = {$documentRowId}
 EOT;
@@ -170,7 +170,7 @@ INSERT INTO
 VALUES
 (
     UNHEX('{$this->data->archiveId}'),
-    '{$uri}',
+    '{$sqlURI}',
     '',
     ''
 )
@@ -197,6 +197,8 @@ EOT;
         {
             $this->documentRowId = intval($mysqli->insert_id);
         }
+
+        $this->setStringValueForKey($uri, 'uri');
 
         return true;
     }
