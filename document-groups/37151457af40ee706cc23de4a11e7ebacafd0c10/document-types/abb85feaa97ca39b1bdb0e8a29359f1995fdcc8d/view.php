@@ -29,40 +29,45 @@ $page->begin();
 
 <article>
 
-    <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
-    <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
+    <header>
+        <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
+        <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
+    </header>
 
-    <?php
+    <aside>
 
-    if ($documentImageBasename = $archive->valueForKey('documentImageBasename'))
-    {
-        $imageURL = $archive->dataURL() . '/' . $documentImageBasename;
+        <?php
+
+        if ($documentImageBasename = $archive->valueForKey('documentImageBasename'))
+        {
+            $imageURL = $archive->dataURL() . '/' . $documentImageBasename;
+
+            ?>
+
+                <figure>
+
+                    <img src="<?php echo $imageURL; ?>"
+                         alt="<?php echo $archive->valueForKey('imageAlternativeText'); ?>">
+
+                    <figcaption><?php echo $archive->valueForKey('imageCaptionHTML'); ?></figcaption>
+
+                </figure>
+
+            <?php
+        }
 
         ?>
 
-        <aside>
+        <div class="pair published">
+            <span class="key">Published</span>
+            <time class="value time"
+                  datetime="<?php echo $publishedDateTimeAttribute; ?>"
+                  data-timestamp="<?php echo $publishedDataTimestampAttribute; ?>">
+                <?php echo $publishedTextContent; ?>
+            </time>
+        </div>
 
-            <figure>
-                <img src="<?php echo $imageURL; ?>"
-                     alt="<?php echo $archive->valueForKey('imageAlternativeText'); ?>">
-
-                <figcaption><?php echo $archive->valueForKey('imageCaptionHTML'); ?></figcaption>
-            </figure>
-
-            <div class="published">Published:<br>
-                <time class="time"
-                      datetime="<?php echo $publishedDateTimeAttribute; ?>"
-                      data-timestamp="<?php echo $publishedDataTimestampAttribute; ?>">
-                    <?php echo $publishedTextContent; ?>
-                </time>
-            </div>
-
-        </aside>
-
-        <?php
-    }
-
-    ?>
+    </aside>
 
     <section class="formatted-content"><?php echo $archive->valueForKey('contentFormattedHTML'); ?></section>
 

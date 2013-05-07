@@ -1,9 +1,9 @@
 <?php // View for a basic page with one optional image
-      // Required parameters: $archive
 
 $documentTypeId = '01fe006d1aca8e85fc140fb642bb200ed6e31596';
 
 $page = new ColbyOutputManager();
+$archive = ColbyRequest::$archive;
 
 $page->titleHTML = $archive->valueForKey('titleHTML');
 $page->descriptionHTML = $archive->valueForKey('subtitleHTML');
@@ -34,8 +34,10 @@ $page->begin();
     }
     </style>
 
-    <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
-    <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
+    <header>
+        <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
+        <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
+    </header>
 
     <?php
 

@@ -7,6 +7,8 @@ article aside
     width: 250px;
     margin-right: 25px;
     float: left;
+    color: #888888;
+    font-style: italic;
 }
 
 article figure img
@@ -14,17 +16,20 @@ article figure img
     max-width: 250px;
 }
 
-article figure figcaption
-{
-    font-style: italic;
-}
-
-article aside div.published
+article aside .pair
 {
     margin-top: 50px;
+    text-align: center;
 }
 
-article section.formatted-content
+article aside .pair .key
+{
+    display: block;
+    margin-bottom: 5px;
+    color: #555555;
+}
+
+article .formatted-content
 {
     overflow: hidden;
 }
