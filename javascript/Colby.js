@@ -3,7 +3,9 @@
 var Colby =
 {
     'intervalId' : null,
-    'intervalCount' : 0
+    'intervalCount' : 0,
+    'monthNames' : ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December']
 };
 
 /**
@@ -47,29 +49,34 @@ Colby.beginUpdatingTimes = function()
 
 /**
  * @return string
+ *  This method returns a date in the following format: "February 14, 2010".
  */
 Colby.dateToLocaleDateString = function(date)
 {
     /**
-     * 2013.05.05
+     * 2013.05.07
      *
-     * Currently `toLocaleDateString` uses different date formats on different
-     * browsers, but at least they are all locale specific as far as I know.
+     * Just before this comment was written this function used the
+     * `toLocaleDateString` method because it was thought that it would
+     * produce better localized results. However, mostly what it did was
+     * produce unpredictable results on different browsers. Most of the output
+     * was not even close to the preferred format that this method now
+     * returns.
      *
-     * TODO: In the future, when the `options` parameter is available on more
-     * browsers (at this time, it's only available on Chrome) make sure to
-     * specify that the date string should have the following features:
+     * I had an epiphany that, at least for now, all of the websites that
+     * use Colby are in English anyway so having the goal of writing dates
+     * using the locale was somewhat misguided, especially since it didn't
+     * work anyway.
      *
-     * -   Use the full month name
-     * -   Use the numeric day
-     * -   Use the four digit year
-     *
-     * In English:
-     *
-     *     February 14, 2010
+     * If dates are needed in another language it will be a better approach to
+     * just localize this method rather than relying on browsers to do it. If
+     * the technology improves this decision can be revisited.
      */
 
-    return date.toLocaleDateString();
+    return Colby.monthNames[date.getMonth()] +
+           ' ' +
+           date.getDate() +
+           ', ' + date.getFullYear();
 };
 
 /**

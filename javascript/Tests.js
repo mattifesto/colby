@@ -78,23 +78,10 @@ function doRunJavascriptUnitTests()
         'string' : 'Yesterday at 12:00 a.m.'
     });
 
-    /**
-     * 2013.05.06
-     *
-     * This test is temporarily disabled because we have move to using
-     * toLocaledDateString to produce dates which will return different strings
-     * on different browsers and in different locations.
-     *
-     * Think about whether this can be tested definitively.
-     *
-
     tests.push({
         'date' : new Date('2012/12/14 1:53 pm'),
-        'string' : '2012/12/14 1:53 PM'
+        'string' : 'December 14, 2012 1:53 p.m.'
     });
-
-     *
-     */
 
     // Run tests
 
