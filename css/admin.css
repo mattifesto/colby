@@ -178,6 +178,11 @@ table.document-list th
     white-space: nowrap;
 }
 
+table.document-list td
+{
+    vertical-align: top;
+}
+
 table.document-list tr *:nth-child(1)
 {
     width: 40px;
@@ -191,6 +196,7 @@ table.document-list tr *:nth-child(2)
 table.document-list tr *:nth-child(3)
 {
     width: 175px;
+    font-size: 0.8em;
 }
 
 /**
