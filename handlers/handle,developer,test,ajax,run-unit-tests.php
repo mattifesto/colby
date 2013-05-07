@@ -57,6 +57,15 @@ function ColbyArchiveInvalidFileIdTest()
 
 function ColbyArchiveCreateAndDeleteTest()
 {
+    /**
+     * 2013.05.06
+     *
+     * TODO: The functionality of ColbyArchive has been expanded. These tests
+     * should be improved to test what happens with conflicting URIs and make
+     * sure that the `ColbyPages` table rows are created and deleted with the
+     * archive.
+     */
+
     // Ensure there isn't an already left over from a previous failed test
 
     if (is_file(ColbyArchive::absoluteDataDirectoryForArchiveId(TEST_ARCHIVE_ID) . '/archive.data'))
@@ -65,7 +74,7 @@ function ColbyArchiveCreateAndDeleteTest()
 
         if (is_file(ColbyArchive::absoluteDataDirectoryForArchiveId(TEST_ARCHIVE_ID) . '/archive.data'))
         {
-            throw new RuntimeException(__FUNCTION__ . ' failed: Unable to clean up test evironment.');
+            throw new RuntimeException(__FUNCTION__ . ' failed: Unable to clean up test environment.');
         }
     }
 
@@ -79,8 +88,18 @@ function ColbyArchiveCreateAndDeleteTest()
     }
 
     $title = 'The Title';
+    $subtitle = 'The Subtitle';
 
     $archive->setStringValueForKey($title, 'title');
+    $archive->setStringValueForKey(ColbyConvert::textToHTML($title), 'titleHTML');
+
+    $archive->setStringValueForKey($subtitle, 'subtitle');
+    $archive->setStringValueForKey(ColbyConvert::textToHTML($subtitle), 'subtitleHTML');
+
+    if (!$archive->didReserveAndSetURIValue(TEST_ARCHIVE_ID))
+    {
+        throw new RuntimeException('The test URI value is not available.');
+    }
 
     $archive->save();
 
