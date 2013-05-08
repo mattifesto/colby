@@ -28,6 +28,7 @@ FROM
 WHERE
     `groupId` = UNHEX('{$blogPostDocumentGroupId}')
 ORDER BY
+    ISNULL(`published`) DESC,
     `published` DESC
 EOT;
 

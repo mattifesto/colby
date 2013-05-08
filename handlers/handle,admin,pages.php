@@ -27,6 +27,7 @@ FROM
 WHERE
     `groupId` = UNHEX('{$pagesDocumentGroupId}')
 ORDER BY
+    ISNULL(`published`) DESC,
     `published` DESC
 EOT;
 
