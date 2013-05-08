@@ -166,7 +166,7 @@ table.document-list
 
 table.document-list thead th
 {
-    border-bottom: 1px solid #eeeeee;
+    border-bottom: 1px solid #efefef;
 }
 
 table.document-list td,
@@ -181,6 +181,11 @@ table.document-list th
 table.document-list td
 {
     vertical-align: top;
+}
+
+table.document-list tbody tr:nth-child(even)
+{
+    background-color: #f7f7f7;
 }
 
 table.document-list tr *:nth-child(1)
