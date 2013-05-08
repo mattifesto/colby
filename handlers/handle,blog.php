@@ -12,41 +12,11 @@ $page->begin();
 ?>
 
 <main>
-    <h1 style="text-align: center;">Blog</h1>
+    <header>
+        <h1>Blog</h1>
+    </header>
 
-    <section style="width: 800px; margin: 50px auto 0px;">
-        <style>
-            article
-            {
-                margin-bottom: 20px;
-                overflow: hidden; /* contains floated thumbnail */
-            }
-
-            article > h1
-            {
-                font-size: 1.5em;
-            }
-
-            article > h2
-            {
-                font-size: 1.0em;
-            }
-
-            div.img
-            {
-                width: 100px;
-                height: 100px;
-                margin-right: 10px;
-                float: left;
-                background-color: #fffff8;
-            }
-
-            img.thumbnail
-            {
-                max-width: 100px;
-                max-height: 100px;
-            }
-        </style>
+    <section style="blog-post-summary-list">
 
         <?php
 
@@ -55,7 +25,8 @@ SELECT
     `stub`,
     `titleHTML`,
     `subtitleHTML`,
-    `thumbnailURL`
+    `thumbnailURL`,
+    `published`
 FROM
     `ColbyPages`
 WHERE
@@ -73,10 +44,14 @@ EOT;
             {
                 $postURL = COLBY_SITE_URL . "/{$row->stub}/";
 
+                $publishedDataTimestampAttribute =  $row->published * 1000;
+                $publishedDateTimeAttribute = ColbyConvert::timestampToRFC3339($row->published);
+                $publishedTextContent = ColbyConvert::timestampToOldBrowserReadableTime($row->published);
+
                 ?>
 
-                <article>
-                    <div class="img">
+                <article class="blog-post-summary">
+                    <figure>
 
                         <?php
 
@@ -85,7 +60,7 @@ EOT;
                             ?>
 
                             <a href="<?php echo $postURL; ?>">
-                                <img src="<?php echo $row->thumbnailURL; ?>" alt="" class="thumbnail">
+                                <img src="<?php echo $row->thumbnailURL; ?>" alt="">
                             </a>
 
                             <?php
@@ -93,9 +68,20 @@ EOT;
 
                         ?>
 
-                    </div>
-                    <h1><a href="<?php echo $postURL; ?>"><?php echo $row->titleHTML; ?></a></h1>
-                    <h2><?php echo $row->subtitleHTML; ?></h2>
+                    </figure>
+
+                    <section>
+
+                        <h1><a href="<?php echo $postURL; ?>"><?php echo $row->titleHTML; ?></a></h1>
+                        <h2><?php echo $row->subtitleHTML; ?></h2>
+
+                        <time class="value time"
+                              datetime="<?php echo $publishedDateTimeAttribute; ?>"
+                              data-timestamp="<?php echo $publishedDataTimestampAttribute; ?>">
+                            <?php echo $publishedTextContent; ?>
+                        </time>
+
+                    </section>
                 </article>
 
                 <?php
