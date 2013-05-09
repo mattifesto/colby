@@ -1,6 +1,7 @@
 <?php
 
 $blogPostsGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
+$countOfPostsPerPage = 10;
 
 $page = new ColbyOutputManager();
 
@@ -9,19 +10,11 @@ $page->descriptionHTML = 'Index of blog posts.';
 
 $page->begin();
 
-?>
+$currentPageIndex = isset($_GET['page']) ? max(intval($_GET['page']) - 1, 0) : 0;
+$firstPostOffset =  $currentPageIndex * $countOfPostsPerPage;
 
-<main>
-    <header>
-        <h1>Blog</h1>
-    </header>
-
-    <section style="blog-post-summary-list">
-
-        <?php
-
-        $sql = <<<EOT
-SELECT
+$sql = <<<EOT
+SELECT SQL_CALC_FOUND_ROWS
     `stub`,
     `titleHTML`,
     `subtitleHTML`,
@@ -34,13 +27,35 @@ WHERE
     `published` IS NOT NULL
 ORDER BY
     `published` DESC
+LIMIT
+    {$countOfPostsPerPage}
+OFFSET
+    {$firstPostOffset}
 EOT;
 
-        $result = Colby::query($sql);
+$postsResult = Colby::query($sql);
 
-        if ($result->num_rows > 0)
+$countResult = Colby::query('SELECT FOUND_ROWS() AS `countOfAllPosts`');
+
+$countOfAllPosts = $countResult->fetch_object()->countOfAllPosts;
+$countOfAllPages = ceil($countOfAllPosts / $countOfPostsPerPage);
+
+$countResult->free();
+
+?>
+
+<main>
+    <header>
+        <h1>Blog</h1>
+    </header>
+
+    <section style="blog-post-summary-list">
+
+        <?php
+
+        if ($postsResult->num_rows > 0)
         {
-            while ($row = $result->fetch_object())
+            while ($row = $postsResult->fetch_object())
             {
                 $postURL = COLBY_SITE_URL . "/{$row->stub}/";
 
@@ -88,11 +103,53 @@ EOT;
             }
         }
 
-        $result->free();
+        $postsResult->free();
 
         ?>
 
     </section>
+
+    <section class="page-navigation"><!--
+
+        <?php
+
+            for ($i = 0; $i < $countOfAllPages; $i++)
+            {
+                $pageNumber = $i + 1;
+
+                if ($i === $currentPageIndex)
+                {
+                    ?>
+
+                    --><span class="page-number">
+                        <?php echo $pageNumber; ?>
+                    </span><!--
+
+                    <?php
+                }
+                else
+                {
+                    $pageVariable = '';
+
+                    if ($i)
+                    {
+                        $pageVariable = "?page={$pageNumber}";
+                    }
+
+                    $url = COLBY_SITE_URL . "/blog/{$pageVariable}";
+
+                    ?>
+
+                    --><a class="page-number"
+                       href="<?php echo $url; ?>"><?php echo $pageNumber; ?></a><!--
+
+                    <?php
+                }
+            }
+        ?>
+
+    --></section>
+
 </main>
 
 <?php
