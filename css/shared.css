@@ -86,7 +86,7 @@ input[type="reset"]:hover
 
 .formatted-content blockquote
 {
-    padding: 3.0em 4.0em;
+    padding: 2.0em 4.0em;
     margin: 2.0em 5.0em;
     background-color: #f8f8f8;
     border: 1px solid #dddddd;
@@ -112,7 +112,7 @@ input[type="reset"]:hover
 
 .formatted-content dd
 {
-    margin: 0.25em 3.0em;
+    margin: 0.25em 3.0em 0.6em;
 }
 
 .formatted-content dd + dt
