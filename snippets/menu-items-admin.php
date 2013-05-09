@@ -14,6 +14,12 @@ if (ColbyUser::current()->isOneOfThe('Administrators'))
     <li><h1>Help</h1></li>
 
     <li><a href="/admin/help/markaround-syntax/">Markaround</a></li>
+    <li><a href="/admin/help/title-subtitle/">
+        Title <span style="font-size: 0.8em;">&amp;</span> Subtitle
+    </a></li>
+    <li><a href="/admin/help/caption-alternative-text/">
+        Caption <span style="font-size: 0.8em;">&amp;</span> Alt Text
+    </a></li>
 
     <?php
 }
