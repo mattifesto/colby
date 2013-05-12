@@ -2,8 +2,8 @@
 
 $page = new ColbyOutputManager('admin-html-page');
 
-$page->titleHTML = 'MySQL';
-$page->descriptionHTML = 'Tools to backup the MySQL database used by the site.';
+$page->titleHTML = 'Update';
+$page->descriptionHTML = 'Tools to perform site version updates.';
 
 $page->begin();
 
@@ -17,20 +17,20 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 ?>
 
 <main>
-    <h1>MySQL</h1>
+    <h1>Update</h1>
 
     <div style="margin: 50px 0px; text-align: center;">
-        <progress id="backup-database-progress"
+        <progress id="progress"
                   value="0"
                   style="width: 100px;"></progress>
     </div>
 
     <div style="text-align: center;">
-        <button onclick="DeveloperMySQL.backupDatabase(this);">Backup Database</button>
+        <button onclick="ColbySiteUpdater.update(this);">Update Site</button>
     </div>
 </main>
 
-<script src="<?php echo Colby::findHandler('handle,developer,mysql.js', Colby::returnURL); ?>"></script>
+<script src="<?php echo Colby::findHandler('handle,developer,update.js', Colby::returnURL); ?>"></script>
 
 <?php
 

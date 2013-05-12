@@ -25,15 +25,6 @@ if (!is_dir($absoluteDatabaseBackupsDirectory))
 
 /**
  * Generate a filename for the database backup file.
- *
- * "dbname-database-backup.2013.05.11.123059"
- *
- * Y    A full numeric representation of a year, 4 digits
- * m    Numeric representation of a month, with leading zeros
- * d    Day of the month, 2 digits with leading zeros
- * H    24-hour format of an hour with leading zeros
- * i    Minutes with leading zeros
- * s    Seconds, with leading zeros
  */
 
 $filename = $_SERVER['SERVER_NAME'] . '-' . time() . '.sql';

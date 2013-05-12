@@ -30,6 +30,7 @@ if (ColbyUser::current()->isOneOfThe('Developers'))
 
     <li><h1>Developers</h1></li>
 
+    <li><a href="/developer/update/">Update</a></li>
     <li><a href="/developer/archives/">Archives</a></li>
     <li><a href="/developer/groups/">Document Groups</a></li>
     <li><a href="/developer/models/">Document Types</a></li>
