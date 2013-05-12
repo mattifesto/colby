@@ -207,15 +207,39 @@ class Colby
     /**
      * @return string | false
      */
-    public static function findHandler($filename)
+    public static function findHandler($filename, $returnFormat = Colby::returnAbsoluteFilename)
     {
+        $intraLibraryFilename = "handlers/{$filename}";
+
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $handlerFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/handlers/{$filename}";
-
-            if (is_file($handlerFilename))
+            if ($libraryDirectory)
             {
-                return $handlerFilename;
+                $intraSiteFilename = "{$libraryDirectory}/{$intraLibraryFilename}";
+            }
+            else
+            {
+                $intraSiteFilename = $intraLibraryFilename;
+            }
+
+            $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
+
+            if (is_file($absoluteFilename))
+            {
+                switch ($returnFormat)
+                {
+                    case Colby::returnAbsoluteFilename:
+
+                        return $absoluteFilename;
+
+                    case Colby::returnURL:
+
+                        return COLBY_SITE_URL . "/{$intraSiteFilename}";
+
+                    default:
+
+                        throw new InvalidArgumentException('returnFormat');
+                }
             }
         }
 
