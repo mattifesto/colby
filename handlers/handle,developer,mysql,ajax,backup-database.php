@@ -15,9 +15,12 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
  * Ensure that the 'backup-files' directory exists
  */
 
-if (!is_dir(COLBY_SITE_DIRECTORY . '/backup-files'))
+$intraSiteDatabaseBackupsDirectory = '/tmp/database-backups';
+$absoluteDatabaseBackupsDirectory = COLBY_SITE_DIRECTORY . "/{$intraSiteDatabaseBackupsDirectory}";
+
+if (!is_dir($absoluteDatabaseBackupsDirectory))
 {
-    mkdir(COLBY_SITE_DIRECTORY . '/backup-files');
+    mkdir($absoluteDatabaseBackupsDirectory, 0777, true);
 }
 
 /**
@@ -33,8 +36,8 @@ if (!is_dir(COLBY_SITE_DIRECTORY . '/backup-files'))
  * s    Seconds, with leading zeros
  */
 
-$filename = COLBY_MYSQL_DATABASE . '-database-backup.' . gmdate('Y.m.d.His') . '.sql';
-$intraSiteFilename = "backup-files/{$filename}";
+$filename = $_SERVER['SERVER_NAME'] . '-' . time() . '.sql';
+$intraSiteFilename = "{$intraSiteDatabaseBackupsDirectory}/{$filename}";
 $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
 
 /**
@@ -55,7 +58,7 @@ exec($command);
  */
 
 $response->wasSuccessful = true;
-$response->message = "The database was dumped to the file named: \"{$filename}\".";
+$response->message = "The database was dumped to the file named: \"{$intraSiteFilename}\".";
 
 done:
 

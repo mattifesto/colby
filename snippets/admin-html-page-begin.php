@@ -44,23 +44,6 @@ $adminSelectedClass = (isset($stubs[0]) && $stubs[0] == 'admin') ? 'class="selec
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyXMLHttpRequest.js"></script>
 
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyFormData.js"></script>
-
-        <?php
-
-        if (isset($this->scriptURLs))
-        {
-            foreach ($this->scriptURLs as $src)
-            {
-                ?>
-
-                <script src="<?php echo $src; ?>"></script>
-
-                <?php
-            }
-        }
-
-        ?>
-
     </head>
     <body>
         <nav class="menubar">

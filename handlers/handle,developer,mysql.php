@@ -4,7 +4,6 @@ $page = new ColbyOutputManager('admin-html-page');
 
 $page->titleHTML = 'Document Types';
 $page->descriptionHTML = 'Developer tools for creating and editing document types.';
-$page->scriptURLs = array(Colby::findHandler('handle,developer,mysql.js', Colby::returnURL));
 
 $page->begin();
 
@@ -30,6 +29,8 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
         <button onclick="DeveloperMySQL.backupDatabase(this);">Backup Database</button>
     </div>
 </main>
+
+<script src="<?php echo Colby::findHandler('handle,developer,mysql.js', Colby::returnURL); ?>"></script>
 
 <?php
 
