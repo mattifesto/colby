@@ -14,7 +14,6 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
     goto done;
 }
 
-
 $blogPostDocumentGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
 
 $sql = <<<EOT
