@@ -229,6 +229,50 @@ table.simple-keys-and-values th
     text-align: right;
 }
 
+
+/**
+ * A `check-list` is used for tables that have two columns (upgradable to more)
+ * where the first column is a datum (such as a user name) and the next column
+ * contains a checkbox that refers to an attribute for that datum (such as
+ * whether the user has a specific authorization).
+ */
+table.check-list
+{
+    max-width: 700px;
+    margin-bottom: 50px;
+    border-spacing: 0px;
+    table-layout: fixed;
+}
+
+table.check-list thead th
+{
+    border-bottom: 1px solid #efefef;
+}
+
+table.check-list td,
+table.check-list th
+{
+    padding: 2px 5px 3px;
+    overflow: hidden; /* Necessary for ellipsis style. */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+table.check-list tbody tr:nth-child(even)
+{
+    background-color: #f7f7f7;
+}
+
+table.check-list tr *:nth-child(1)
+{
+}
+
+table.check-list tr *:nth-child(2)
+{
+    text-align: center;
+}
+
+
 /**
  * This used to be the default style for all tables before I realized that a
  * default style for all tables was a really bad idea if you ever wanted to
