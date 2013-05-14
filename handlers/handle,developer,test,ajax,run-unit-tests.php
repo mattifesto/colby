@@ -26,7 +26,7 @@ ColbyArchiveInvalidFileIdTest();
 /*
  * ColbyMarkaroundParser
  */
-include COLBY_SITE_DIRECTORY . '/colby/tests/TestColbyMarkaroundParser.php';
+include COLBY_DIRECTORY . '/snippets/tests/TestColbyMarkaroundParser.php';
 
 //
 // Unit Tests Complete
