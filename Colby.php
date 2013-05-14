@@ -483,6 +483,79 @@ class Colby
     }
 
     /**
+     *
+     */
+    public static function siteSchemaVersionNumber()
+    {
+        $sql = 'SELECT ColbySiteSchemaVersionNumber() as `versionNumber`';
+
+        try
+        {
+            $result = Colby::query($sql);
+        }
+        catch (Exception $exception)
+        {
+            if (1305 == Colby::mysqli()->errno)
+            {
+                /**
+                 * If the `ColbySiteSchemaVersionNumber` function doesn't exist
+                 * that's equivalent to a site schema version number of 0.
+                 */
+
+                return 0;
+            }
+            else
+            {
+                throw $exception;
+            }
+        }
+
+        $versionNumber = $result->fetch_object()->versionNumber;
+
+        $result->free();
+
+        return $versionNumber;
+    }
+
+    /**
+     *
+     */
+    public static function setSiteSchemaVersionNumber($versionNumber)
+    {
+        $sql = 'DROP FUNCTION ColbySiteSchemaVersionNumber';
+
+        try
+        {
+            Colby::query($sql);
+        }
+        catch (Exception $exception)
+        {
+            if (1305 != Colby::mysqli()->errno)
+            {
+                /**
+                 * If the `ColbySiteSchemaVersionNumber` function doesn't exist
+                 * it's okay because we are about to create it; otherwise, we
+                 * throw the exception.
+                 */
+
+                throw $exception;
+            }
+        }
+
+        $versionNumber = intval($versionNumber);
+
+        $sql = <<<EOT
+CREATE FUNCTION ColbySiteSchemaVersionNumber()
+RETURNS BIGINT UNSIGNED
+BEGIN
+    RETURN {$versionNumber};
+END
+EOT;
+
+        Colby::query($sql);
+    }
+
+    /**
      * @return string
      *  A unique SHA-1 hash in hexadecimal.
      *  Example: '90027a5ca28cb5301febdc1f31db512dc663c944'

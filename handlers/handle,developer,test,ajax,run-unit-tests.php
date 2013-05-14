@@ -23,10 +23,14 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 ColbyArchiveCreateAndDeleteTest();
 ColbyArchiveInvalidFileIdTest();
 
-/*
- * ColbyMarkaroundParser
+/**
+ * Include test snippets.
  */
-include COLBY_DIRECTORY . '/snippets/tests/TestColbyMarkaroundParser.php';
+
+$testDirectory = COLBY_DIRECTORY . '/snippets/tests';
+
+include "{$testDirectory}/Test,Colby,siteSchemaVersionNumber.php";
+include "{$testDirectory}/TestColbyMarkaroundParser.php";
 
 //
 // Unit Tests Complete
