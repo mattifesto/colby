@@ -44,6 +44,21 @@ html
     overflow-y: scroll;
 }
 
+/**
+ * 2013.05.20
+ *
+ * The `main` element is supported in newer browsers but is not yet a `block`
+ * element by default. Remove this rule as soon as new browsers define it as
+ * a `block` element in the default stylesheet.
+ *
+ * As of this writing, neither Safari nor Firefox do this.
+ */
+
+main
+{
+    display: block;
+}
+
 a:link,
 a:active,
 a:focus,
