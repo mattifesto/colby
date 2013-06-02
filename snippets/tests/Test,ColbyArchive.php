@@ -34,8 +34,8 @@ class ColbyArchiveTests
     {
         $testArchiveId = '2626aac5b3aa6ba8ae35e38067e11dc307c537c2';
 
-        $archiveDataFilename = ColbyArchive::absoluteDataDirectoryForArchiveId($testArchiveId) .
-                               '/archive.data';
+        $archiveDirectory = ColbyArchive::absoluteDataDirectoryForArchiveId($testArchiveId);
+        $archiveDataFilename = "{$archiveDirectory}/archive.data";
 
         /**
          * 2013.05.06
@@ -58,7 +58,9 @@ class ColbyArchiveTests
             }
         }
 
-        // Test creating and saving an archive
+        /**
+         * Create a new archive
+         */
 
         $archive = ColbyArchive::open($testArchiveId);
 
@@ -67,38 +69,56 @@ class ColbyArchiveTests
             throw new RuntimeException(__FUNCTION__ . 'failed: A new unsaved archive should return `null` from the `created` method.');
         }
 
-        $title = 'The Title';
-        $subtitle = 'The Subtitle';
+        /**
+         * Set some values
+         */
+
+        $title = 'The & Title';
+        $titleHTML = ColbyConvert::textToHTML($title);
+        $subtitle = 'The & Subtitle';
+        $subtitleHTML = ColbyConvert::textToHTML($subtitle);
 
         $archive->setStringValueForKey($title, 'title');
-        $archive->setStringValueForKey(ColbyConvert::textToHTML($title), 'titleHTML');
+        $archive->setStringValueForKey($titleHTML, 'titleHTML');
 
         $archive->setStringValueForKey($subtitle, 'subtitle');
-        $archive->setStringValueForKey(ColbyConvert::textToHTML($subtitle), 'subtitleHTML');
+        $archive->setStringValueForKey($subtitleHTML, 'subtitleHTML');
 
-        if (!$archive->didReserveAndSetURIValue($testArchiveId))
+        /**
+         * Confirm values are set
+         */
+
+        if ($archive->valueForKey('title') !== $title)
         {
-            throw new RuntimeException('The test URI value is not available.');
+            throw new RuntimeException('The value returned doesn\'t match the value set.');
+        }
+
+        if ($archive->valueForKey('titleHTML') !== $titleHTML)
+        {
+            throw new RuntimeException('The value returned doesn\'t match the value set.');
+        }
+
+        if ($archive->valueForKey('subtitle') !== $subtitle)
+        {
+            throw new RuntimeException('The value returned doesn\'t match the value set.');
+        }
+
+        if ($archive->valueForKey('subtitleHTML') !== $subtitleHTML)
+        {
+            throw new RuntimeException('The value returned doesn\'t match the value set.');
         }
 
         /**
-         * 2013.05.07
-         *
-         * At one point, the `didReserveAndSetURIValue` was not setting the 'uri'
-         * value on the archive. This test was added to make sure that it does.
-         *
-         * BUGBUG: This test should be moved.
+         * Save the archive
          */
-        if ($archive->valueForKey('uri') !== $testArchiveId)
-        {
-            throw new RuntimeException('The URI value was not set properly in the archive.');
-        }
 
         $archive->save();
 
         $archive = null;
 
-        // Test opening an archive
+        /**
+         * Re-open the archive
+         */
 
         $archive = ColbyArchive::open($testArchiveId);
 
@@ -107,15 +127,41 @@ class ColbyArchiveTests
             throw new RuntimeException(__FUNCTION__ . ' failed: The archive id after opening doesn\'t match the saved archive id.');
         }
 
+        /**
+         * Confirm that the values are still set
+         */
+
+        if ($archive->valueForKey('title') !== $title)
+        {
+            throw new RuntimeException('The value returned doesn\'t match the value set.');
+        }
+
+        if ($archive->valueForKey('titleHTML') !== $titleHTML)
+        {
+            throw new RuntimeException('The value returned doesn\'t match the value set.');
+        }
+
+        if ($archive->valueForKey('subtitle') !== $subtitle)
+        {
+            throw new RuntimeException('The value returned doesn\'t match the value set.');
+        }
+
+        if ($archive->valueForKey('subtitleHTML') !== $subtitleHTML)
+        {
+            throw new RuntimeException('The value returned doesn\'t match the value set.');
+        }
+
         $archive = null;
 
-        // Test deleting an archive
+        /**
+         * Delete the archive
+         */
 
         ColbyArchive::deleteArchiveWithArchiveId($testArchiveId);
 
-        if (is_file($archiveDataFilename))
+        if (file_exists($archiveDirectory))
         {
-            throw new RuntimeException(__FUNCTION__ . ' failed: The archive is still exists after deletion.');
+            throw new RuntimeException('The archive directory is still exists after deletion.');
         }
     }
 }
