@@ -10,6 +10,7 @@ include_once COLBY_DIRECTORY . '/classes/ColbyDocument.php';
 ColbyDocumentTests::archiveConversionTest();
 ColbyDocumentTests::testDeleteDocumentWithArchiveId();
 ColbyDocumentTests::testSave();
+ColbyDocumentTests::testSetURI();
 
 
 /**
@@ -325,5 +326,102 @@ EOT;
          */
 
         ColbyDocument::deleteDocumentWithArchiveId($testArchiveId);
+    }
+
+    /**
+     * @return void
+     */
+    public static function testSetURI()
+    {
+        $testArchiveId1 = 'bea45060ec5cc3bca2be60a16ce0a3b50b3fdae0';
+        $testArchiveId2 = '55279087e66edd74403a7a6894f18a94a739d7d7';
+
+        $testURI = 'tests/colby-document/test-set-uri';
+
+        /**
+         * If the test failed last time parts of the documents may still exist
+         * so delete them to prepare for this test.
+         */
+
+        ColbyDocument::deleteDocumentWithArchiveId($testArchiveId1);
+        ColbyDocument::deleteDocumentWithArchiveId($testArchiveId2);
+
+        /**
+         * Create the first document and set the URI.
+         */
+
+        $document1 = ColbyDocument::documentWithArchiveId($testArchiveId1);
+        $safeDocumentRowId1 = (int)$document1->archive()->valueForKey('documentRowId');
+
+        $document1->setURI($testURI);
+        $document1->save();
+
+        if ($document1->archive()->valueForKey('uri') !== $testURI)
+        {
+            throw new RuntimeException('The value for the "uri" key does not match the value set.');
+        }
+
+        $document1 = null;
+
+        /**
+         * Verify that the URI saved to the database matches the value that
+         * was set.
+         */
+
+        $sql = "SELECT `stub` FROM `ColbyPages` WHERE `id` = {$safeDocumentRowId1}";
+
+        $result = Colby::query($sql);
+
+        $uri = $result->fetch_object()->stub;
+
+        $result->free();
+
+        if ($uri !== $testURI)
+        {
+            throw new RuntimeException('The uri in the database row does not match the value set.');
+        }
+
+        /**
+         * Create the second document and verify that an error is thrown when
+         * attempting to set the same URI.
+         */
+
+        $document2 = ColbyDocument::documentWithArchiveId($testArchiveId2);
+        $safeDocumentRowId2 = (int)$document2->archive()->valueForKey('documentRowId');
+
+        $testWasSuccessful = false;
+
+        try
+        {
+            $document2->setURI($testURI);
+        }
+        catch (Exception $exception)
+        {
+            if (1062 == Colby::mysqli()->errno)
+            {
+                $testWasSuccessful = true;
+            }
+        }
+
+        if (!$testWasSuccessful)
+        {
+            throw new RuntimeException('The correct behavior was not observed when attempting to set a URI which is already in use for a document.');
+        }
+
+        $document2->save();
+
+        if ($document2->archive()->valueForKey('uri') !== $testArchiveId2)
+        {
+            throw new RuntimeException('The value for the "uri" key does not match the default value set byt the ColbyDocument class.');
+        }
+
+        $document2 = null;
+
+        /**
+         * Delete the test documents.
+         */
+
+        ColbyDocument::deleteDocumentWithArchiveId($testArchiveId1);
+        ColbyDocument::deleteDocumentWithArchiveId($testArchiveId2);
     }
 }

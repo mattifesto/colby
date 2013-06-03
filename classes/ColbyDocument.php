@@ -96,6 +96,12 @@ EOT;
                 Colby::query($sql);
 
                 $documentRowId = Colby::mysqli()->insert_id;
+
+                /**
+                 * Save the URI in the archive.
+                 */
+
+                $document->archive->setStringValueForKey($safeArchiveId, 'uri');
             }
 
             /**
@@ -111,6 +117,11 @@ EOT;
     }
 
     /**
+     * This function updates the database row, except for the URI, and then
+     * saves the archive. The reason the URI is not saved is because this
+     * function should succeed even if the URI is not available. Use the
+     * `setURI` method to update the URI.
+     *
      * @return void
      */
     public function save()
@@ -165,6 +176,13 @@ EOT;
     }
 
     /**
+     * This function attempts to update the URI value in the document row. This
+     * may not succeed if the URI is already used by another document in which
+     * case an exception will be thrown.
+     *
+     * If the URI can be used, the function will also set the 'uri' value on
+     * the archive to the value passed in.
+     *
      * @return void
      */
     public function setURI($uri)
@@ -183,5 +201,7 @@ WHERE
 EOT;
 
         Colby::query($sql);
+
+        $this->archive->setStringValueForKey($uri, 'uri');
     }
 }
