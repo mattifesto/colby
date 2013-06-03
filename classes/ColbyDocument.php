@@ -25,6 +25,9 @@ class ColbyDocument
     }
 
     /**
+     * This function will delete a document. The function will be successful
+     * even if the document does not exist or exists partially.
+     *
      * @return void
      */
     public static function deleteDocumentWithArchiveId($archiveId)
@@ -66,7 +69,7 @@ class ColbyDocument
              * Theoretically this block could go away if all existing document
              * archives were known to have a valid 'documentRowId' value.
              */
-            if ($document->archive()->created())
+            if ($document->archive->created())
             {
                 $sql = "SELECT `id` FROM `ColbyPages` WHERE `archiveId` = UNHEX('{$safeArchiveId}')";
 
@@ -105,5 +108,80 @@ EOT;
         }
 
         return $document;
+    }
+
+    /**
+     * @return void
+     */
+    public function save()
+    {
+        $mysqli = Colby::mysqli();
+
+        $safeDocumentRowId = (int)$this->archive->valueForKey('documentRowId');
+
+        $safeDocumentGroupId = $mysqli->escape_string($this->archive->valueForKey('documentGroupId'));
+        $safeDocumentTypeId = $mysqli->escape_string($this->archive->valueForKey('documentTypeId'));
+
+        $safeTitleHTML = $mysqli->escape_string($this->archive->valueForKey('titleHTML'));
+        $safeSubtitleHTML = $mysqli->escape_string($this->archive->valueForKey('subtitleHTML'));
+        $safeThumbnailURL = $mysqli->escape_string($this->archive->valueForKey('thumbnailURL'));
+        $safeSearchText = $mysqli->escape_string($this->archive->valueForKey('searchText'));
+
+        if ($this->archive->valueForKey('isPublished'))
+        {
+            $safePublished = (int)$this->archive->valueForKey('publishedTimeStamp');
+        }
+        else
+        {
+            $safePublished = 'NULL';
+        }
+
+        $safePublishedBy = (int)$this->archive->valueForKey('publishedBy');
+
+        if (!$safePublishedBy)
+        {
+            $safePublishedBy = 'NULL';
+        }
+
+        $sql = <<<EOT
+UPDATE
+    `ColbyPages`
+SET
+    `groupId` = UNHEX('{$safeDocumentGroupId}'),
+    `modelId` = UNHEX('{$safeDocumentTypeId}'),
+    `titleHTML` = '{$safeTitleHTML}',
+    `subtitleHTML` = '{$safeSubtitleHTML}',
+    `thumbnailURL` = '{$safeThumbnailURL}',
+    `searchText` = '{$safeSearchText}',
+    `published` = {$safePublished},
+    `publishedBy` = {$safePublishedBy}
+WHERE
+    `id` = {$safeDocumentRowId}
+EOT;
+
+        Colby::query($sql);
+
+        $this->archive->save();
+    }
+
+    /**
+     * @return void
+     */
+    public function setURI($uri)
+    {
+        $safeDocumentRowId = (int)$this->archive->valueForKey('documentRowId');
+
+        $safeURI = Colby::mysqli()->escape_string($uri);
+
+        $sql = <<<EOT
+UPDATE
+    `ColbyPages`
+SET
+    `stub` = '{$safeURI}'
+WHERE
+    `id` = {$safeDocumentRowId}
+EOT;
+
+        Colby::query($sql);
     }
 }

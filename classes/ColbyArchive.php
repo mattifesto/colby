@@ -112,118 +112,52 @@ class ColbyArchive
     }
 
     /**
+     * Deletes an archive from disk.
+     *
      * @return void
      */
     public static function deleteArchiveWithArchiveId($archiveId)
     {
-        // NOTE: currently doesn't handle nonexistent archive
-        //       assumes no subdirectories
+        $archiveDirectory = ColbyArchive::absoluteDataDirectoryForArchiveId($archiveId);
 
-        $files = glob(self::absoluteDataDirectoryForArchiveId($archiveId) . '/*');
+        if (!is_dir($archiveDirectory))
+        {
+            return;
+        }
+
+        $files = glob("{$archiveDirectory}/*");
 
         foreach ($files as $file)
         {
             unlink($file);
         }
 
-        rmdir(self::absoluteDataDirectoryForArchiveId($archiveId));
-    }
+        /**
+         * Remove the archive directory and any empty directories below it
+         * until we reach the data directory.
+         */
 
-    /**
-     * @return bool
-     *  Returns `true` if the URI was available and was set; otherwise `false`.
-     */
-    public function didReserveAndSetURIValue($uri)
-    {
-        $mysqli = Colby::mysqli();
+        $directory = $archiveDirectory;
 
-        $sqlURI = $mysqli->escape_string($uri);
+        while (COLBY_DATA_DIRECTORY != $directory)
+        {
+            rmdir($directory);
 
-        if ($documentRowId = $this->documentRowId())
-        {
-            $sql = <<<EOT
-UPDATE
-    `ColbyPages`
-SET
-    `stub` = '{$sqlURI}'
-WHERE
-    `id` = {$documentRowId}
-EOT;
-        }
-        else
-        {
-            $sql = <<<EOT
-INSERT INTO
-    `ColbyPages`
-(
-    `archiveId`,
-    `stub`,
-    `titleHTML`,
-    `subtitleHTML`
-)
-VALUES
-(
-    UNHEX('{$this->data->archiveId}'),
-    '{$sqlURI}',
-    '',
-    ''
-)
-EOT;
-        }
+            /**
+             * Go back one directory: '/foo/bar/baz' --> '/foo/bar'
+             */
 
-        try
-        {
-            Colby::query($sql);
-        }
-        catch (Exception $exception)
-        {
-            if (1062 == $mysqli->errno)
+            $directory = preg_replace('/\/[^\/]+$/', '', $directory);
+
+            /**
+             * If we reach a non-empty directory then stop.
+             */
+
+            if (glob("{$directory}/*"))
             {
-                return false;
-            }
-            else
-            {
-                throw $exception;
+                break;
             }
         }
-
-        if (!$documentRowId)
-        {
-            $this->documentRowId = intval($mysqli->insert_id);
-        }
-
-        $this->setStringValueForKey($uri, 'uri');
-
-        return true;
-    }
-
-    /**
-     * @return int
-     */
-    private function documentRowId()
-    {
-        if (!$this->documentRowId)
-        {
-            $sql = <<<EOT
-SELECT
-    `id`
-FROM
-    `ColbyPages`
-WHERE
-    `archiveId` = UNHEX('{$this->data->archiveId}')
-EOT;
-
-            $result = Colby::query($sql);
-
-            if ($row = $result->fetch_object())
-            {
-                $this->documentRowId = intval($row->id);
-            }
-
-            $result->free();
-        }
-
-        return $this->documentRowId;
     }
 
     /**
@@ -430,60 +364,6 @@ EOT;
         $this->unlock();
 
         return true;
-    }
-
-    /**
-     * @return void
-     */
-    private function saveDatabase()
-    {
-        $documentRowId = $this->documentRowId();
-
-        if (!$documentRowId)
-        {
-            throw new RuntimeException('The `ColbyDocuments` table row should already exist by the time the archive is saved. The row is created by calling the `ColbyArchive::didReserveAndSetURIValue` method.');
-        }
-
-        $mysqli = Colby::mysqli();
-
-        $titleHTML = $mysqli->escape_string($this->valueForKey('titleHTML'));
-        $subtitleHTML = $mysqli->escape_string($this->valueForKey('subtitleHTML'));
-        $thumbnailURL = $mysqli->escape_string($this->valueForKey('thumbnailURL'));
-        $searchText = $mysqli->escape_string($this->searchText);
-
-        if ($this->valueForKey('isPublished'))
-        {
-            $published = intval($this->valueForKey('publishedTimeStamp'));
-        }
-        else
-        {
-            $published = 'NULL';
-        }
-
-        $publishedBy = intval($this->valueForKey('publishedBy'));
-
-        if (!$publishedBy)
-        {
-            $publishedBy = 'NULL';
-        }
-
-        $sql = <<<EOT
-UPDATE
-    `ColbyPages`
-SET
-    `groupId` = UNHEX('{$this->valueForKey('documentGroupId')}'),
-    `modelId` = UNHEX('{$this->valueForKey('documentTypeId')}'),
-    `titleHTML` = '{$titleHTML}',
-    `subtitleHTML` = '{$subtitleHTML}',
-    `thumbnailURL` = '{$thumbnailURL}',
-    `searchText` = '{$searchText}',
-    `published` = {$published},
-    `publishedBy` = {$publishedBy}
-WHERE
-    `id` = {$documentRowId}
-EOT;
-
-        Colby::query($sql);
     }
 
     /**
