@@ -18,23 +18,10 @@ $i = 0;
 
 while ($i < $countOfRecords)
 {
-    $strings = array();
-
-    $j = 0;
-
-    while ($j < 10)
-    {
-        $strings[$j] = Colby::mysqli()->escape_string("This the string with index {$j}.");
-
-        $j++;
-    }
-
     $rowId = $i + 100000;
 
     $sql = <<<EOT
-INSERT INTO `TestMySQLvsColbyArchive`
-(
-    `rowId`,
+SELECT
     `field0`,
     `field1`,
     `field2`,
@@ -45,24 +32,33 @@ INSERT INTO `TestMySQLvsColbyArchive`
     `field7`,
     `field8`,
     `field9`
-)
-VALUES
-(
-    '{$rowId}',
-    '{$strings[0]}',
-    '{$strings[1]}',
-    '{$strings[2]}',
-    '{$strings[3]}',
-    '{$strings[4]}',
-    '{$strings[5]}',
-    '{$strings[6]}',
-    '{$strings[7]}',
-    '{$strings[8]}',
-    '{$strings[9]}'
-)
+FROM
+    `TestMySQLvsColbyArchive`
+WHERE
+    `rowId` = '{$rowId}';
 EOT;
 
-    Colby::query($sql);
+    $result = Colby::query($sql);
+
+    if ($result->num_rows != 1)
+    {
+        throw new RuntimeException("No row found for index: {$i}.");
+    }
+
+    $row = $result->fetch_object();
+
+    $result->free();
+
+    $field0 = $row->field0;
+    $field1 = $row->field1;
+    $field2 = $row->field2;
+    $field3 = $row->field3;
+    $field4 = $row->field4;
+    $field5 = $row->field5;
+    $field6 = $row->field6;
+    $field7 = $row->field7;
+    $field8 = $row->field8;
+    $field9 = $row->field9;
 
     $i++;
 }
@@ -74,7 +70,7 @@ $duration = number_format(microtime(true) - $beginTime, 6);
  */
 
 $response->wasSuccessful = true;
-$response->message = "Inserted {$countOfRecords} records. Test duration: {$duration} seconds.";
+$response->message = "Read {$countOfRecords} records from the database. Test duration: {$duration} seconds.";
 
 done:
 

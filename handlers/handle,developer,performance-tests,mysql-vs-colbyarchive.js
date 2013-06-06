@@ -21,6 +21,14 @@ CPTMySQLvsColbyArchive.ajaxActions =
         'message': 'Testing archive creation.'
     },
     {
+        'uri': '/developer/performance-tests/mysql-vs-colbyarchive/ajax/400-read-database/',
+        'message': 'Reading records from the database.'
+    },
+    {
+        'uri': '/developer/performance-tests/mysql-vs-colbyarchive/ajax/500-read-archives/',
+        'message': 'Reading data form archives.'
+    },
+    {
         'uri': '/developer/performance-tests/mysql-vs-colbyarchive/ajax/900-cleanup/',
         'message': 'Cleaning up the test environment.'
     }

@@ -28,7 +28,7 @@ EOT;
 $sqls[] = <<<EOT
 CREATE TABLE `TestMySQLvsColbyArchive`
 (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `rowId` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `field0` VARCHAR(200),
     `field1` VARCHAR(200),
     `field2` VARCHAR(200),
@@ -39,7 +39,7 @@ CREATE TABLE `TestMySQLvsColbyArchive`
     `field7` VARCHAR(200),
     `field8` VARCHAR(200),
     `field9` VARCHAR(200),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`rowId`)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8
