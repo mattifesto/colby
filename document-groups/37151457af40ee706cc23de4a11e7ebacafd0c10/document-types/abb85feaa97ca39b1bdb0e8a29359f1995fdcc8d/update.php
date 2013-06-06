@@ -7,13 +7,15 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
     exit;
 }
 
+include_once COLBY_DIRECTORY . '/classes/ColbyDocument.php';
 Colby::useImage();
 
 $response = new ColbyOutputManager('ajax-response');
 
 $response->begin();
 
-$archive = ColbyArchive::open($_POST['archive-id']);
+$document = ColbyDocument::documentWithArchiveId($_POST['archive-id']);
+$archive = $document->archive();
 
 
 /**
@@ -26,13 +28,23 @@ $archive = ColbyArchive::open($_POST['archive-id']);
  * a document.
  */
 
-$response->uriIsAvailable = $archive->didReserveAndSetURIValue($_POST['uri']);
-
-if (!$response->uriIsAvailable)
+try
 {
-    goto done;
-}
+    $document->setURI($_POST['uri']);
 
+    $response->uriIsAvailable = true;
+}
+catch (Exception $exception)
+{
+    if (1062 == Colby::mysqli()->errno)
+    {
+        $response->uriIsAvailable = false;
+    }
+    else
+    {
+        throw $exception;
+    }
+}
 
 /**
  *
@@ -176,7 +188,7 @@ if (isset($_FILES['image-file']))
     $response->imageURL = $archive->dataURL() . '/' . $archive->valueForKey('documentImageBasename');
 }
 
-$archive->save();
+$document->save();
 
 $response->wasSuccessful = true;
 $response->message = 'Post successfully updated.';
