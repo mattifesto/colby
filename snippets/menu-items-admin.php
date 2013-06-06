@@ -37,6 +37,10 @@ if (ColbyUser::current()->isOneOfThe('Developers'))
     <li><a href="/developer/mysql/">MySQL</a></li>
     <li><a href="/developer/test/">Tests</a></li>
 
+    <li><h1>Performance Tests</h1></li>
+
+    <li><a href="/developer/performance-tests/mysql-vs-colbyarchive/">MySQL vs ColbyArchive</a></li>
+
     <?php
 }
 
