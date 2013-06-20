@@ -162,7 +162,7 @@ Colby.displayResponse = function(response)
 
     if ('stackTrace' in response)
     {
-        content = '<pre style="font-size: 12px;">' + response.stackTrace + '</pre>';
+        content = '<pre style="max-height: 300px; overflow-y: scroll; font-size: 12px;">' + response.stackTrace + '</pre>';
         classAttribute = 'large-panel';
     }
     else
