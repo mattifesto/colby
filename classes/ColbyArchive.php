@@ -367,6 +367,20 @@ class ColbyArchive
     }
 
     /**
+     * @param array $arrayValue
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function setArrayValueForKey(array $arrayValue, $key)
+    {
+        $key = strval($key);
+
+        $this->data->$key = $arrayValue;
+    }
+
+    /**
      * @param bool $boolValue
      *
      * @param string $key
