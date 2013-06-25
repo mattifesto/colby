@@ -450,6 +450,22 @@ class ColbyArchive
     }
 
     /**
+     * This method sets an object value for the given name.
+     *
+     * @param stdClass $objectValue
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function setObjectValueForKey($objectValue, $key)
+    {
+        $key = strval($key);
+
+        $this->data->$key = (object)$objectValue;
+    }
+
+    /**
      * This method sets a string value for the given name.
      *
      * @param string $stringValue
