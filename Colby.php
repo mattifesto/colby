@@ -371,12 +371,6 @@ class Colby
         set_error_handler('Colby::handleError');
         set_exception_handler('Colby::handleException');
 
-        if (!defined('COLBY_SITE_DIRECTORY'))
-        {
-            throw new RuntimeException(
-                'The constant `COLBY_SITE_DIRECTORY` has not been set.');
-        }
-
         if (!defined('COLBY_SITE_URL'))
         {
             throw new RuntimeException(
@@ -399,13 +393,6 @@ class Colby
         {
             throw new RuntimeException(
                 'The constant `COLBY_SITE_IS_BEING_DEBUGGED` has not been set.');
-        }
-
-        if (!defined('COLBY_DIRECTORY'))
-        {
-            throw new RuntimeException(
-                'The constant `COLBY_DIRECTORY` has not been set.' .
-                'Colby\'s `version.php` should be included in the site\'s `colby-configuration.php` file.');
         }
 
         /**
