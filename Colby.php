@@ -1,6 +1,14 @@
 <?php
 
-require_once(__DIR__ . '/../colby-configuration.php');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/colby-configuration.php';
+
+Colby::initialize();
+
+include_once COLBY_DIRECTORY . '/version.php';
+include_once COLBY_SITE_DIRECTORY . '/version.php';
+include_once COLBY_SITE_DIRECTORY . '/site-configuration.php';
+
+ColbyRequest::handleRequest();
 
 class Colby
 {
@@ -400,20 +408,26 @@ class Colby
                 'Colby\'s `version.php` should be included in the site\'s `colby-configuration.php` file.');
         }
 
-        // Add the website and Colby library directories. They are unshifted
-        // onto the beginning of the array because they should be consulted
-        // before other libraries.
-        //
-        // The order is:
-        //
-        //    COLBY_SITE_DIRECTORY
-        //    COLBY_DIRECTORY
-        //    added directory 1
-        //    added directory 2
-        //    ...
+        /**
+         * The directories first added to the `libraryDirectories` array
+         * are checked for files first and there for have the highest priority.
+         */
 
-        array_unshift(self::$libraryDirectories, 'colby');
-        array_unshift(self::$libraryDirectories, '');
+        /**
+         * 2013.06.29 TODO:
+         *
+         * With the checkin today the site directory and the Colby directory
+         * can exist anywhere under the web document root. The code below
+         * should be changed to something like:
+         *
+         *  self::$libraryDirectories[] = COLBY_SITE_LIBRARY_DIRECTORY;
+         *  self::$libraryDirectories[] = COLBY_LIBRARY_DIRECTORY;
+         *
+         * The names of the constants still need to be thought out.
+         */
+
+        self::$libraryDirectories[] = '';
+        self::$libraryDirectories[] = 'colby';
 
         // the order of these files might matter some day
         // files that depend on other files should be included after
@@ -429,8 +443,19 @@ class Colby
         include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyRequest.php');
 
         include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyUser.php');
+    }
 
-        ColbyRequest::handleRequest();
+    /**
+     * @return void
+     */
+    public static function loadLibrary($libraryDirectory)
+    {
+        $absoluteLibraryDirectory = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}";
+
+        include_once "{$absoluteLibraryDirectory}/version.php";
+        include_once "{$absoluteLibraryDirectory}/library-configuration.php";
+
+        self::$libraryDirectories[] = $libraryDirectory;
     }
 
     /// <summary>
@@ -585,5 +610,3 @@ EOT;
         include_once COLBY_DIRECTORY . '/classes/ColbyImageUploader.php';
     }
 }
-
-Colby::initialize();
