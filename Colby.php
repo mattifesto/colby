@@ -98,7 +98,7 @@ class Colby
     }
 
     /**
-     * @return string | false
+     * @return string | null
      */
     public static function findFileForDocumentGroup($intraGroupFilename, $documentGroupId,
                                                     $returnFormat = Colby::returnAbsoluteFilename)
@@ -137,7 +137,7 @@ class Colby
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -168,7 +168,7 @@ class Colby
     }
 
     /**
-     * @return string | false
+     * @return string | null
      */
     public static function findFileForDocumentType($intraTypeFilename, $documentGroupId, $documentTypeId,
                                                    $returnFormat = Colby::returnAbsoluteFilename)
@@ -209,11 +209,11 @@ class Colby
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
-     * @return string | false
+     * @return string | null
      */
     public static function findHandler($filename, $returnFormat = Colby::returnAbsoluteFilename)
     {
@@ -251,11 +251,11 @@ class Colby
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
-     * @return string | false
+     * @return string | null
      */
     public static function findSnippet($filename)
     {
@@ -269,7 +269,7 @@ class Colby
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
