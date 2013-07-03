@@ -1,16 +1,17 @@
 <?php
 
-define('COLBY_SITE_DIR', $_SERVER['DOCUMENT_ROOT']);
+define('COLBY_SITE_DIRECTORY', $_SERVER['DOCUMENT_ROOT']);
 
-$dataDirectory = COLBY_SITE_DIR . '/data';
+$dataDirectory = COLBY_SITE_DIRECTORY . '/data';
 
-$configurationFilename = COLBY_SITE_DIR . '/colby-configuration.php';
-$gitignoreFilename = COLBY_SITE_DIR . '/.gitignore';
-$htaccessFilename = COLBY_SITE_DIR . '/.htaccess';
-$indexFilename = COLBY_SITE_DIR . '/index.php';
-$versionFilename = COLBY_SITE_DIR . '/version.php';
-$faviconGifFilename = COLBY_SITE_DIR . '/favicon.gif';
-$faviconIcoFilename = COLBY_SITE_DIR . '/favicon.ico';
+$colbyConfigurationFilename =   COLBY_SITE_DIRECTORY . '/colby-configuration.php';
+$siteConfigurationFilename =    COLBY_SITE_DIRECTORY . '/site-configuration.php';
+$gitignoreFilename =            COLBY_SITE_DIRECTORY . '/.gitignore';
+$htaccessFilename =             COLBY_SITE_DIRECTORY . '/.htaccess';
+$indexFilename =                COLBY_SITE_DIRECTORY . '/index.php';
+$versionFilename =              COLBY_SITE_DIRECTORY . '/version.php';
+$faviconGifFilename =           COLBY_SITE_DIRECTORY . '/favicon.gif';
+$faviconIcoFilename =           COLBY_SITE_DIRECTORY . '/favicon.ico';
 
 $shouldPerformInstallation = (isset($_GET['install']) && $_GET['install'] == 'true');
 
@@ -61,17 +62,26 @@ if (!$shouldPerformInstallation)
             <dl>
                 <dt>.htaccess
                 <dd>This file will redirect all requests to the colby system and disallow direct access to certain protected files like Git repostiory files, individual PHP files, and data files.
+
                 <dt>.gitignore
-                <dd>This file will configure git to ignore certain files and directories that will be created when using a Colby site but that shouldn't be checked in. One example is all of the files in the data directory.
+                <dd>This file will configure Git to ignore certain files and directories that will be created when using a Colby site but that shouldn't be checked in. One example is all of the files in the data directory.
+
                 <dt>colby-configuration.php
-                <dd>The setup process will create this file which you will need to edit to provide site metadata and database connection information. You will be reminded of this after this initial setup process is complete.
+                <dd>The setup process will create this file, which you will need to edit, to provide site metadata and database connection information. This file will be ignored by Git and needs to be manually created for each instance of your site. Site instances, such as development, test, and production will each probably have different values for the constants set in this file. You will be reminded to edit the file after this initial setup process is complete.
+
                 <dt>data directory
                 <dd>A directory named 'data' will be created in the website root. This directory will be used to hold the archives. There will be usually one archive per unit of data. A unit of data may be a page, blog post, product, user, but is almost always associated with something that has its own URL and web page.
+
                 <dt>favicon.gif
                 <dt>favicon.ico
                 <dd>Zero length files will be created with these names because the files are often requested by browsers and it is faster to have zero length files available than to run a full Colby request just to generate a 404 error. When these files are zero length browsers treat them as if they didn't exist at all, so it's still effectively a 404, only faster.
+
                 <dt>index.php
-                <dd>All pages on the site will be directed to this file which will send the URLs through the Colby system to generate content. The reason the file is created in your website root is that you may want to customize this file to handle some or all of the URLs in a different way.
+                <dd>Any URL that doesn't refer to an actual file or references a file for which direct access is not allowed, such as &ldquo;.php&rdquo; files, will be redirected to this file which will send the URLs through the Colby system to generate content.
+
+                <dt>site-configuration.php
+                <dd>The setup process will create this file which may be edited to provide configuration settings and perform actions that are shared between all instances of your site. If you need to load libraries, this is the place to do it.
+
                 <dt>version.php
                 <dd>This file contains the version number for the website. It should be incremented by one and checked in for each release. The version number should always be a whole number in the same way the Firefox and Chrome now use only whole number versions that will potentially go quite high.
             </dl>
@@ -120,11 +130,16 @@ if (file_exists($dataDirectory) ||
     exit;
 }
 
+/**
+ * Perform installation
+ */
+
 mkdir($dataDirectory);
-copy(__DIR__ . '/colby-configuration.template.data', $configurationFilename);
+copy(__DIR__ . '/colby-configuration.template.data', $colbyConfigurationFilename);
 copy(__DIR__ . '/gitignore.template.data', $gitignoreFilename);
 copy(__DIR__ . '/htaccess.template.data', $htaccessFilename);
 copy(__DIR__ . '/index.template.data', $indexFilename);
+copy(__DIR__ . '/site-configuration.template.data', $siteConfigurationFilename);
 copy(__DIR__ . '/version.template.data', $versionFilename);
 touch($faviconGifFilename);
 touch($faviconIcoFilename);

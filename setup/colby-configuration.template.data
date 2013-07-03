@@ -2,6 +2,9 @@
 
 define('COLBY_SITE_DIRECTORY', __DIR__);
 define('COLBY_SITE_URL', '');
+define('COLBY_DIRECTORY', COLBY_SITE_DIRECTORY . '/colby');
+define('COLBY_URL', COLBY_SITE_URL . '/colby');
+
 define('COLBY_SITE_NAME', '');
 define('COLBY_SITE_ADMINISTRATOR', '');
 define('COLBY_SITE_IS_BEING_DEBUGGED', false);
@@ -14,6 +17,3 @@ define('COLBY_MYSQL_HOST', '');
 define('COLBY_MYSQL_USER', '');
 define('COLBY_MYSQL_PASSWORD', '');
 define('COLBY_MYSQL_DATABASE', '');
-
-include_once COLBY_SITE_DIRECTORY . '/colby/version.php';
-include_once COLBY_SITE_DIRECTORY . '/version.php';
