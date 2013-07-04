@@ -33,6 +33,8 @@ $descriptionHTML = $this->descriptionHTML;
 
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/html5shiv.js"></script>
 
+        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyEqualize.js"></script>
+
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/Colby.js"></script>
 
         <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyFormManager.js"></script>
