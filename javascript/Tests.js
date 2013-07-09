@@ -15,8 +15,6 @@ ColbyUnitTests.alert = function(html)
     ColbySheet.beginSheet(sheetHTML);
 }
 
-var xhr;
-
 function doRunJavascriptUnitTests()
 {
     var wasSuccessful = true;
@@ -117,25 +115,23 @@ function doRunUnitTests()
 {
     beginAjax();
 
-    xhr = new ColbyXMLHttpRequest();
+    var xhr = ColbyCreateXMLHttpRequest();
     xhr.open('POST', '/developer/test/ajax/run-unit-tests/', true);
     xhr.onload = handleAjaxResponse;
     xhr.send();
-
-    xhr = xhr.request; // Remove this line when moving to direct use of XMLHttpRequest.
 }
 
 function handleAjaxResponse()
 {
-    if (xhr.status == 200)
+    if (this.status == 200)
     {
-        var response = JSON.parse(xhr.responseText);
+        var response = JSON.parse(this.responseText);
     }
     else
     {
         var response =
         {
-            'message' : xhr.status + ': ' + xhr.statusText
+            'message' : this.status + ': ' + this.statusText
         };
     }
 
@@ -162,8 +158,6 @@ function handleAjaxResponse()
         pre.appendChild(t);
         errorLog.appendChild(pre);
     }
-
-    xhr = null;
 
     endAjax();
 }
