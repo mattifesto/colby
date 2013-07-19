@@ -14,6 +14,10 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
+/**
+ *
+ */
+
 $sql = <<<END
 SELECT
     USER() as `user`,
@@ -34,45 +38,119 @@ $result->free();
 <tr><td><?php echo $row->user; ?></td><td><?php echo $row->currentUser; ?></td></tr>
 </tbody></table>
 
-<table><tbody>
+<?php
 
-    <?php
+/**
+ *
+ */
 
-    $sql = <<<END
+$sql = <<<END
 SELECT
-    *
+    `TABLE_NAME` AS `tableName`
 FROM
-    `ColbyUsers`
-ORDER BY
-    `facebookLastName`
+    information_schema.TABLES
+WHERE
+    `TABLE_SCHEMA` = DATABASE() AND
+    `TABLE_NAME` LIKE 'ColbyUsersWhoAre%'
 END;
 
-    $result = Colby::query($sql);
+$result = Colby::query($sql);
 
-    while ($row = $result->fetch_object())
+$friendlyNames = array();
+$tableNames = array();
+$columnNames = array();
+$joins = array();
+
+while ($row = $result->fetch_object())
+{
+    preg_match('/ColbyUsersWhoAre(.*)/', $row->tableName, $matches);
+
+    $friendlyNames[] = $matches[1];
+    $tableNames[] = $row->tableName;
+    $columnNames[] = "`{$row->tableName}`.`added` AS `isIn{$row->tableName}`";
+    $joins[] = "LEFT JOIN `{$row->tableName}` ON `ColbyUsers`.`id` = `{$row->tableName}`.`userId`";
+}
+
+$result->free();
+
+/**
+ *
+ */
+
+$columnNamesClause = implode(",\n", $columnNames);
+$joinsClause = implode("\n", $joins);
+
+$sql = <<<END
+SELECT
+    `ColbyUsers`.`id`,
+    `ColbyUsers`.`facebookId`,
+    `ColbyUsers`.`facebookName`,
+    `ColbyUsers`.`hasBeenVerified`,
+    {$columnNamesClause}
+FROM
+    `ColbyUsers`
+{$joinsClause}
+ORDER BY
+    `ColbyUsers`.`facebookLastName`
+END;
+
+$result = Colby::query($sql);
+
+?>
+
+<table>
+    <style scoped>
+    td, th
     {
-        ?>
-
+        padding: 2px 5px;
+    }
+    </style>
+    <thead>
         <tr>
-            <td><?php echo $row->id; ?></td>
-            <td><?php echo $row->facebookName; ?></td>
-            <td><?php render_checkbox($row); ?></td>
+            <th>Id</th>
+            <th>Name</th>
+
+            <?php
+
+            foreach ($friendlyNames as $friendlyName)
+            {
+                echo "<th>{$friendlyName}</th>\n";
+            }
+
+            ?>
+
         </tr>
+    </thead>
+    <tbody>
 
         <?php
-    }
 
-    $result->free();
+        while ($row = $result->fetch_object())
+        {
+            ?>
 
-    ?>
+            <tr>
+                <td><?php echo $row->id; ?></td>
+                <td><?php echo $row->facebookName; ?></td>
+                <td><?php render_checkbox($row); ?></td>
+            </tr>
 
-</tbody></table>
+            <?php
+        }
+
+        ?>
+
+    </tbody>
+</table>
 
 <?php
+
+$result->free();
 
 done:
 
 $page->end();
+
 
 //
 // functions
