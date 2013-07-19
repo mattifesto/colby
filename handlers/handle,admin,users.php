@@ -7,67 +7,13 @@ $page->descriptionHTML = 'Manage users.';
 
 $page->begin();
 
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
+if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
     include Colby::findSnippet('authenticate.php');
 
     goto done;
 }
 
-?>
-
-<script>
-
-"use strict";
-
-var xhr = null;
-
-///
-///
-///
-function handle_response()
-{
-    var response = null;
-
-    if (xhr.status != 200)
-    {
-        alert(xhr.status +
-              ': ' +
-              xhr.statusText);
-    }
-    else
-    {
-        response = JSON.parse(xhr.responseText);
-
-        if (!response.wasSuccessful)
-        {
-            alert(response.message);
-        }
-
-        xhr = null;
-    }
-
-    return response;
-}
-
-///
-///
-///
-function update_user_verification(id, hasBeenVerified)
-{
-    var formData = new FormData();
-    formData.append('id', id);
-    formData.append('hasBeenVerified', hasBeenVerified ? '1' : '0');
-
-    xhr = new XMLHttpRequest();
-    xhr.open('POST', '/colby/users/update-verification/', true);
-    xhr.onload = handle_response;
-    xhr.send(formData);
-}
-
-</script>
-
-<?php
 $sql = <<<END
 SELECT
     USER() as `user`,
