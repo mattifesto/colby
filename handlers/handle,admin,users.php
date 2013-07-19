@@ -65,9 +65,10 @@ while ($row = $result->fetch_object())
 {
     preg_match('/ColbyUsersWhoAre(.*)/', $row->tableName, $matches);
 
-    $friendlyNames[] = $matches[1];
+    $friendlyName = $matches[1];
+    $friendlyNames[] = $friendlyName;
     $tableNames[] = $row->tableName;
-    $columnNames[] = "`{$row->tableName}`.`added` AS `isIn{$row->tableName}`";
+    $columnNames[] = "`{$row->tableName}`.`added` AS `isIn{$friendlyName}`";
     $joins[] = "LEFT JOIN `{$row->tableName}` ON `ColbyUsers`.`id` = `{$row->tableName}`.`userId`";
 }
 
@@ -132,7 +133,22 @@ $result = Colby::query($sql);
             <tr>
                 <td><?php echo $row->id; ?></td>
                 <td><?php echo $row->facebookName; ?></td>
-                <td><?php render_checkbox($row); ?></td>
+
+                <?php
+
+                foreach ($friendlyNames as $friendlyName)
+                {
+                    $columnName = "isIn{$friendlyName}";
+
+                    echo '<td style="text-align: center;">';
+
+                    renderCheckbox($row->id, $friendlyName, $row->$columnName);
+
+                    echo '</td>';
+                }
+
+                ?>
+
             </tr>
 
             <?php
@@ -142,6 +158,8 @@ $result = Colby::query($sql);
 
     </tbody>
 </table>
+
+<script src="<?php echo COLBY_URL, '/handlers/handle,admin,users.js'; ?>"></script>
 
 <?php
 
@@ -156,29 +174,20 @@ $page->end();
 // functions
 //
 
-function render_checkbox($userRow)
+function renderCheckbox($userId, $groupName, $isInGroup)
 {
     $checked = '';
-    $disabled = '';
 
-    if ($userRow->hasBeenVerified)
+    if ($isInGroup)
     {
         $checked = 'checked="checked"';
-
-        // the "first verified user" can't be un-verified
-
-        if (COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID === $userRow->facebookId)
-        {
-            $disabled = 'disabled="disabled"';
-        }
     }
 
     ?>
 
     <input type="checkbox"
            <?php echo $checked, "\n"; ?>
-           <?php echo $disabled, "\n"; ?>
-           onclick="update_user_verification(<?php echo $userRow->id ?>, this.checked);"> Verified
+           onclick="ColbyUserManagerViewController.updateUserPermissions(<?php echo $userId ?>, <?php echo "'{$groupName}'"; ?>, this);">
 
     <?php
 }

@@ -2,39 +2,58 @@
 
 header('Content-type: application/json');
 
-$response = new stdClass();
-$response->wasSuccessful = false;
-$response->message = 'The request to alter the user\'s verification status was not successful.';
+$response = new ColbyOutputManager('ajax-response');
 
-try
+$response->begin();
+
+if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    // SECURITY: Only verified users can alter the verification status
-    //           of other users.
+    $response->message = 'You are not authorized to use this feature.';
 
-    $userRow = ColbyUser::userRow();
+    goto done;
+}
 
-    if (!$userRow || !$userRow->hasBeenVerified)
-    {
-        goto done;
-    }
+$userId = (int)$_POST['userId'];
+$groupName = $_POST['groupName'];
+$shouldBeInGroup = !!$_POST['shouldBeInGroup'];
 
-    $mysqli = Colby::mysqli();
+$tableName = "ColbyUsersWhoAre{$groupName}";
 
-    $userId = $mysqli->escape_string($_POST['id']);
-    $hasBeenVerified = $mysqli->escape_string($_POST['hasBeenVerified']);
-
-    $sql = "UPDATE `ColbyUsers` SET `hasBeenVerified` = b'{$hasBeenVerified}' WHERE `id` = '{$userId}'";
+if ($shouldBeInGroup)
+{
+    $sql = <<<EOT
+INSERT INTO
+    `{$tableName}`
+VALUES
+(
+    {$userId},
+    NOW()
+)
+ON DUPLICATE KEY UPDATE
+    `added` = `added`
+EOT;
 
     Colby::query($sql);
-
-    $response->wasSuccessful = true;
-    $response->message = 'The request to alter the user\'s verification status was successful.';
 }
-catch (Exception $e)
+else
 {
-    $response->message = 'An exception was thrown while trying to update the user\'s verification status: "' . $e->getMessage() . '"';
+    $sql = <<<EOT
+DELETE FROM
+    `{$tableName}`
+WHERE
+    `userId` = {$userId}
+EOT;
+
+    Colby::query($sql);
 }
+
+/**
+ * Send the response
+ */
+
+$response->wasSuccessful = true;
+$response->message = "The site was successfully updated.";
 
 done:
 
-echo json_encode($response);
+$response->end();
