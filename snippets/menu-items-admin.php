@@ -28,6 +28,10 @@ if (ColbyUser::current()->isOneOfThe('Developers'))
 {
     ?>
 
+    <li><h1>Users</h1></li>
+
+    <li><a href="/admin/users/">Permissions</a></li>
+
     <li><h1>Developers</h1></li>
 
     <li><a href="/developer/update/">Update</a></li>
