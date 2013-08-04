@@ -28,7 +28,7 @@ if (!$shouldPerformInstallation)
                   content="This HTML of this page represents a template for all HTML pages.">
             <link rel="stylesheet"
                   type="text/css"
-                  href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700">
+                  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700">
             <style>
                 *
                 {

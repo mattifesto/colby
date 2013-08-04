@@ -33,7 +33,7 @@ if (ColbyRequest::$archive)
 
         <link rel="stylesheet"
               type="text/css"
-              href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700">
+              href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700">
 
         <link rel="stylesheet"
               type="text/css"
