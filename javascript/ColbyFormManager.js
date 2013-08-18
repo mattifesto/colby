@@ -15,8 +15,6 @@ function ColbyFormManager(ajaxURL)
     if (elements.length != 1)
     {
         throw new Error('There should be exactly one fieldset element on the page.');
-
-        return;
     }
 
     this.fieldsetElement = elements.item(0);
@@ -26,8 +24,6 @@ function ColbyFormManager(ajaxURL)
     if (elements.length != 1)
     {
         throw new Error('There should be exactly one progress element in the fieldset.');
-
-        return;
     }
 
     this.progressElement = elements.item(0);
@@ -69,7 +65,7 @@ ColbyFormManager.prototype.addChangeListenerToCheckboxes = function(collection)
     var handler = function()
     {
         self.handleChange(this);
-    }
+    };
 
     var countOfElements = collection.length;
 
@@ -89,7 +85,7 @@ ColbyFormManager.prototype.addChangeListenerToCheckboxes = function(collection)
 
         element.addEventListener('change', handler, false);
     }
-}
+};
 
 /**
  * @return void
@@ -101,7 +97,7 @@ ColbyFormManager.prototype.addChangeListenerToFiles = function(collection)
     var handler = function()
     {
         self.handleChange(this);
-    }
+    };
 
     var countOfElements = collection.length;
 
@@ -121,7 +117,7 @@ ColbyFormManager.prototype.addChangeListenerToFiles = function(collection)
 
         element.addEventListener('change', handler, false);
     }
-}
+};
 
 /**
  * @return void
@@ -133,7 +129,7 @@ ColbyFormManager.prototype.addChangeListenerToSelects = function(collection)
     var handler = function()
     {
         self.handleChange(this);
-    }
+    };
 
     var countOfElements = collection.length;
 
@@ -153,7 +149,7 @@ ColbyFormManager.prototype.addChangeListenerToSelects = function(collection)
 
         element.addEventListener('change', handler, false);
     }
-}
+};
 
 /**
  * @return void
@@ -165,7 +161,7 @@ ColbyFormManager.prototype.addInputListenerToTextAndTextareas = function(collect
     var handler = function()
     {
         self.handleInput(this);
-    }
+    };
 
     var countOfElements = collection.length;
 
@@ -187,7 +183,7 @@ ColbyFormManager.prototype.addInputListenerToTextAndTextareas = function(collect
 
         element.addEventListener('input', handler, false);
     }
-}
+};
 
 /**
  * @return array
@@ -195,10 +191,11 @@ ColbyFormManager.prototype.addInputListenerToTextAndTextareas = function(collect
 ColbyFormManager.prototype.getFormElements = function()
 {
     var element;
+    var elements;
     var i;
     var arrayOfElements = new Array();
 
-    var elements = this.fieldsetElement.getElementsByTagName('input');
+    elements = this.fieldsetElement.getElementsByTagName('input');
 
     i = 0;
 
@@ -223,7 +220,7 @@ ColbyFormManager.prototype.getFormElements = function()
         i++;
     }
 
-    var elements = this.fieldsetElement.getElementsByTagName('select');
+    elements = this.fieldsetElement.getElementsByTagName('select');
 
     i = 0;
 
@@ -252,7 +249,7 @@ ColbyFormManager.prototype.getFormElements = function()
     }
 
     return arrayOfElements;
-}
+};
 
 /**
  * @return object
@@ -272,7 +269,7 @@ ColbyFormManager.prototype.handleAjaxResponse = function()
     this.setIsAjaxIndicatorOn(false);
 
     return response;
-}
+};
 
 /**
  * @return void
@@ -282,7 +279,7 @@ ColbyFormManager.prototype.handleChange = function(sender)
     sender.parentElement.classList.add('needs-update');
 
     this.setNeedsUpdate(true);
-}
+};
 
 /**
  * @return void
@@ -292,7 +289,7 @@ ColbyFormManager.prototype.handleInput = function(sender)
     sender.classList.add('needs-update');
 
     this.setNeedsUpdate(true);
-}
+};
 
 /**
  *
@@ -318,7 +315,7 @@ ColbyFormManager.prototype.handleUpdateComplete = function()
     {
         this.updateCompleteCallback(response);
     }
-}
+};
 
 /**
  *
@@ -335,7 +332,7 @@ ColbyFormManager.prototype.setIsAjaxIndicatorOn = function(isAjaxIndicatorOn)
     }
 
     this.isAjaxIndicatorOn = isAjaxIndicatorOn;
-}
+};
 
 /**
  *
@@ -356,7 +353,7 @@ ColbyFormManager.prototype.setNeedsUpdate = function(needsUpdate)
         var handler = function()
         {
             self.update();
-        }
+        };
 
         this.timer = setTimeout(handler, 3000);
     }
@@ -371,7 +368,7 @@ ColbyFormManager.prototype.setNeedsUpdate = function(needsUpdate)
             this.timer = null;
         }
     }
-}
+};
 
 /**
  *
@@ -388,6 +385,13 @@ ColbyFormManager.prototype.update = function()
 
     var element = null;
 
+    /**
+     * The reason the index for the `item` method is always 0 is that by
+     * removing the "needs-update" class we remove the element from the
+     * collection. So the next item in the loop is always the item at index 0
+     * until there isn't one.
+     */
+
     while (element = elements.item(0))
     {
         element.classList.add('now-updating');
@@ -399,7 +403,7 @@ ColbyFormManager.prototype.update = function()
     var handler = function()
     {
         self.handleUpdateComplete();
-    }
+    };
 
     elements = this.getFormElements();
 
@@ -427,4 +431,4 @@ ColbyFormManager.prototype.update = function()
     this.xhr.open('POST', this.ajaxURL, true);
     this.xhr.onload = handler;
     this.xhr.send(formData);
-}
+};

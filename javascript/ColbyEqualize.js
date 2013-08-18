@@ -97,7 +97,7 @@ if ((typeof HTMLDocument != "undefined") &&
     HTMLDocument.prototype.getElementsByClassName = function(className)
     {
         return this.querySelectorAll("." + className);
-    }
+    };
 }
 
 /**
@@ -108,7 +108,7 @@ if (!Element.prototype.getElementsByClassName)
     Element.prototype.getElementsByClassName = function(className)
     {
         return this.querySelectorAll("." + className);
-    }
+    };
 }
 
 /**
@@ -137,6 +137,9 @@ else
 /**
  * XMlHttpRequest2
  */
+
+var ColbyCreateXMLHttpRequest = null;
+
 if (typeof FormData === "undefined")
 {
     var FormData = function()
@@ -159,7 +162,7 @@ if (typeof FormData === "undefined")
         return this.data;
     };
 
-    var ColbyCreateXMLHttpRequest = function()
+    ColbyCreateXMLHttpRequest = function()
     {
         var faux = {};
 
@@ -202,7 +205,10 @@ if (typeof FormData === "undefined")
 }
 else
 {
-    var ColbyCreateXMLHttpRequest = function() { return new XMLHttpRequest(); };
+    ColbyCreateXMLHttpRequest = function()
+    {
+        return new XMLHttpRequest();
+    };
 }
 
 /**
