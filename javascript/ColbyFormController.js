@@ -14,6 +14,18 @@ function ColbyFormController()
 }
 
 /**
+ * Form changes:
+ *
+ *  All form elements in the form that do not have the "ignore-changes" class
+ *  will mark the form as changed when they are changed.
+ *
+ * fieldElements:
+ *
+ *  Most form elements that have a `name` attribute value will be placed into
+ *  the `fieldElements` list. For radio buttons, only the currently selected
+ *  radio button for each `name` will be in the `fieldElements` list as the
+ *  value for that `name`.
+ *
  * @return ColbyFormController
  */
 ColbyFormController.formControllerForId = function(formElementId)
@@ -28,11 +40,10 @@ ColbyFormController.formControllerForId = function(formElementId)
     }
 
     /**
-     * Retrieve all off the form fields from the form.
-     *
-     * These are the variables required for this task.
+     * Place all of the form fields in the form into an array.
      */
 
+    var allFieldElements = new Array();
     var element;
     var elements;
     var i;
@@ -47,9 +58,21 @@ ColbyFormController.formControllerForId = function(formElementId)
 
     while (element = elements.item(i))
     {
+        allFieldElements.push(element);
+
         if (element.name)
         {
-            controller.fieldElements[element.name] = element;
+            if ("radio" ==element.type)
+            {
+                if (element.checked)
+                {
+                    controller.fieldElements[element.name] = element;
+                }
+            }
+            else
+            {
+                controller.fieldElements[element.name] = element;
+            }
         }
 
         i++;
@@ -65,6 +88,8 @@ ColbyFormController.formControllerForId = function(formElementId)
 
     while (element = elements.item(i))
     {
+        allFieldElements.push(element);
+
         if (element.name)
         {
             controller.fieldElements[element.name] = element;
@@ -83,6 +108,8 @@ ColbyFormController.formControllerForId = function(formElementId)
 
     while (element = elements.item(i))
     {
+        allFieldElements.push(element);
+
         if (element.name)
         {
             controller.fieldElements[element.name] = element;
@@ -105,9 +132,10 @@ ColbyFormController.formControllerForId = function(formElementId)
         controller.fieldElementHasChanged(/* fieldElement: */ this);
     };
 
-    for (var key in controller.fieldElements)
+
+    for (i = 0; i < allFieldElements.length; i++)
     {
-        element = controller.fieldElements[key];
+        element = allFieldElements[i];
 
         /**
          * Sometimes we don't want to react to changes for specific form
@@ -124,23 +152,24 @@ ColbyFormController.formControllerForId = function(formElementId)
          * The `type` property is always in all lowercase.
          */
 
-        if (element.tagName == "INPUT")
+        if ("INPUT" == element.tagName)
         {
-            if (element.type == "checkbox" ||
-                element.type == "file")
+            if ("checkbox" == element.type ||
+                "file" == element.type ||
+                "radio" == element.type)
             {
                 element.addEventListener("change", fieldElementHasChanged, false);
             }
-            else if (element.type == "text")
+            else if ("text" == element.type)
             {
                 element.addEventListener("input", fieldElementHasChanged, false);
             }
         }
-        else if (element.tagName == "SELECT")
+        else if ("SELECT" == element.tagName)
         {
             element.addEventListener("change", fieldElementHasChanged, false);
         }
-        else if (element.tagName == "TEXTAREA")
+        else if ("TEXTAREA" == element.tagName)
         {
             element.addEventListener("input", fieldElementHasChanged, false);
         }
@@ -184,6 +213,19 @@ ColbyFormController.formControllerForId = function(formElementId)
 ColbyFormController.prototype.fieldElementHasChanged = function(fieldElement)
 {
     this.formHasChanged = true;
+
+    /**
+     * For radio buttons, set the `fieldElements` value for the group to the
+     * `fieldElement` which will be the newly selected radio button in the
+     * group. The newly selected radio button is always the only one to send
+     * the "changed" event.
+     */
+
+    if ("radio" == fieldElement.type &&
+        fieldElement.name)
+    {
+        this.fieldElements[fieldElement.name] = fieldElement;
+    }
 
     /**
      * Add the "has-changed" class to the element and potentially to its
@@ -283,6 +325,39 @@ ColbyFormController.prototype.hasProcessedFormChanges = function()
 ColbyFormController.prototype.processFormChanges = function()
 {
     this.hasProcessedFormChanges();
+};
+
+/**
+ * @return void
+ */
+ColbyFormController.prototype.setRadioButtonGroupValue = function(radioButtonGroupName, value)
+{
+    /**
+     * Because we don't use actual form elements, the `name` attributes are
+     * not specific to a given form element. In most cases this doesn't matter
+     * because of the way we collect elements inside each "form", but it does
+     * affect radio buttons which  are "grouped" together by their `name`
+     * attribute. This means that you can't have two groups of radio buttons
+     * on the same page that use the same `name` attribute value. There's no
+     * fix possible, just make sure the names are distinct.
+     */
+
+    var radioButtonElements = document.getElementsByName(radioButtonGroupName);
+
+    var element;
+    var i = 0;
+
+    while (element = radioButtonElements.item(i))
+    {
+        if (element.value == value)
+        {
+            element.checked = true;
+
+            this.fieldElements[radioButtonGroupName] = element;
+        }
+
+        i++;
+    }
 };
 
 /**
