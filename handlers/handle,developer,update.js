@@ -12,7 +12,7 @@ ColbySiteUpdater.update = function(sender)
     {
         var response = Colby.responseFromXMLHttpRequest(xhr);
 
-            Colby.displayResponse(response);
+        Colby.displayResponse(response);
 
         document.getElementById('progress').setAttribute('value', 0);
 

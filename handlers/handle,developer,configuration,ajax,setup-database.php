@@ -16,7 +16,7 @@
 /**
  * TODO:
  *
- * -   Websites can override individual upgrades to include their own udgrades
+ * -   Websites can override individual upgrades to include their own upgrades
  *     but they can't add an upgrade. They should be able to do that.
  *
  * -   We should have a way of determining that no upgrades are needed. Right

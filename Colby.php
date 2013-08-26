@@ -105,39 +105,7 @@ class Colby
     {
         $intraLibraryFilename = "document-groups/{$documentGroupId}/{$intraGroupFilename}";
 
-        foreach (self::$libraryDirectories as $libraryDirectory)
-        {
-            if ($libraryDirectory)
-            {
-                $intraSiteFilename = "{$libraryDirectory}/{$intraLibraryFilename}";
-            }
-            else
-            {
-                $intraSiteFilename = $intraLibraryFilename;
-            }
-
-            $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
-
-            if (is_file($absoluteFilename))
-            {
-                switch ($returnFormat)
-                {
-                    case Colby::returnAbsoluteFilename:
-
-                        return $absoluteFilename;
-
-                    case Colby::returnURL:
-
-                        return COLBY_SITE_URL . "/{$intraSiteFilename}";
-
-                    default:
-
-                        throw new InvalidArgumentException('returnFormat');
-                }
-            }
-        }
-
-        return null;
+        return self::findFile($intraLibraryFilename, $returnFormat);
     }
 
     /**
@@ -177,15 +145,36 @@ class Colby
                            "document-types/{$documentTypeId}/" .
                            "{$intraTypeFilename}";
 
+        return self::findFile($intraLibraryFilename, $returnFormat);
+    }
+
+    /**
+     * This function searches the website, the Colby system, and the libraries
+     * for a file, usually in that order. The behavior of this function is what
+     * allows the website to override the behavior of the Colby system and the
+     * libraries.
+     *
+     * @param[in] path
+     *
+     *  The relative path of the file to be found, for example:
+     *
+     *  "handlers/handle,view-cart.php"
+     *  "setup/update-database.php"
+     *  "document-groups/a3...22/document-types/01...96/view.php"
+     *
+     * @return string | null
+     */
+    public static function findFile($path, $returnFormat = Colby::returnAbsoluteFilename)
+    {
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
             if ($libraryDirectory)
             {
-                $intraSiteFilename = "{$libraryDirectory}/{$intraLibraryFilename}";
+                $intraSiteFilename = "{$libraryDirectory}/{$path}";
             }
             else
             {
-                $intraSiteFilename = $intraLibraryFilename;
+                $intraSiteFilename = $path;
             }
 
             $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
@@ -217,41 +206,9 @@ class Colby
      */
     public static function findHandler($filename, $returnFormat = Colby::returnAbsoluteFilename)
     {
-        $intraLibraryFilename = "handlers/{$filename}";
+        $path = "handlers/{$filename}";
 
-        foreach (self::$libraryDirectories as $libraryDirectory)
-        {
-            if ($libraryDirectory)
-            {
-                $intraSiteFilename = "{$libraryDirectory}/{$intraLibraryFilename}";
-            }
-            else
-            {
-                $intraSiteFilename = $intraLibraryFilename;
-            }
-
-            $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
-
-            if (is_file($absoluteFilename))
-            {
-                switch ($returnFormat)
-                {
-                    case Colby::returnAbsoluteFilename:
-
-                        return $absoluteFilename;
-
-                    case Colby::returnURL:
-
-                        return COLBY_SITE_URL . "/{$intraSiteFilename}";
-
-                    default:
-
-                        throw new InvalidArgumentException('returnFormat');
-                }
-            }
-        }
-
-        return null;
+        return self::findFile($path, $returnFormat);
     }
 
     /**
@@ -259,17 +216,35 @@ class Colby
      */
     public static function findSnippet($filename)
     {
+        $path = "snippets/{$filename}";
+
+        return self::findFile($path);
+    }
+
+    /**
+     * @return array
+     */
+    public static function globFiles($pattern)
+    {
+        $filenames = array();
+
         foreach (self::$libraryDirectories as $libraryDirectory)
         {
-            $snippetFilename = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/snippets/{$filename}";
-
-            if (is_file($snippetFilename))
+            if ($libraryDirectory)
             {
-                return $snippetFilename;
+                $intraSitePattern = "{$libraryDirectory}/{$pattern}";
             }
+            else
+            {
+                $intraSitePattern = $pattern;
+            }
+
+            $libraryFilenames = glob(COLBY_SITE_DIRECTORY . "/{$intraSitePattern}");
+
+            $filenames = array_merge($filenames, $libraryFilenames);
         }
 
-        return null;
+        return $filenames;
     }
 
     /**
@@ -277,17 +252,9 @@ class Colby
      */
     public static function globSnippets($pattern)
     {
-        $snippetFilenames = array();
+        $pattern = "snippets/{$pattern}";
 
-        foreach (self::$libraryDirectories as $libraryDirectory)
-        {
-
-            $filenames = glob(COLBY_SITE_DIRECTORY . "/{$libraryDirectory}/snippets/{$pattern}");
-
-            $snippetFilenames = array_merge($snippetFilenames, $filenames);
-        }
-
-        return $snippetFilenames;
+        return self::globFiles($pattern);
     }
 
     /**

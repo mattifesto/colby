@@ -11,11 +11,9 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
-$updateSnippetFilename = COLBY_SITE_DIRECTORY . '/snippets/update.php';
-
-if (is_file($updateSnippetFilename))
+if ($filename = Colby::findFile('setup/update.php'))
 {
-    include $updateSnippetFilename;
+    include $filename;
 }
 
 /**

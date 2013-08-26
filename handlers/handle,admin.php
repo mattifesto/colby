@@ -46,6 +46,37 @@ section.widget > header
     text-align: center;
 }
 
+section.widget .version-numbers
+{
+    text-align: center;
+}
+
+section.widget .version-number
+{
+    display: inline-block;
+    padding: 5px;
+}
+
+section.widget .version-number h1
+{
+    color: gray;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+section.widget .version-number .number
+{
+    margin-top: -10px;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+section.widget .version-number + .version-number
+{
+    border-left: 1px solid #dddddd;
+}
+
 </style>
 
 <?php
