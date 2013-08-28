@@ -79,7 +79,7 @@ $documentGroups = Colby::findDocumentGroups();
             {
                 $editURL = COLBY_SITE_URL .
                     '/developer/models/edit/' .
-                    "?location={$documentGroup->libraryDirectory}" .
+                    "?location={$documentType->libraryDirectory}" .
                     "&document-group-id={$documentGroup->id}" .
                     "&document-type-id={$documentType->id}";
 
