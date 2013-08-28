@@ -1,3 +1,5 @@
+<li><h1>General</h1></li>
+
 <li><a href="/admin/">Status</a></li>
 
 <?php

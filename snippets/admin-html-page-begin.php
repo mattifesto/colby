@@ -23,6 +23,10 @@ $adminSelectedClass = (isset($stubs[0]) && $stubs[0] == 'admin') ? 'class="selec
 
         <link rel="stylesheet"
               type="text/css"
+              href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
+
+        <link rel="stylesheet"
+              type="text/css"
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/equalize.css">
 
         <link rel="stylesheet"
