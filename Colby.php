@@ -1,5 +1,7 @@
 <?php
 
+define('COLBY_SYSTEM_DOCUMENTS_DOCUMENT_GROUP_ID', 'adfcbe030b8df95f874d65d3b8a026d6dd67f304');
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/colby-configuration.php';
 
 Colby::initialize();

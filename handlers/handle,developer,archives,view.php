@@ -19,41 +19,150 @@ $archiveId = $_GET['archive-id'];
 $absoluteArchiveFilename = ColbyArchive::absoluteDataDirectoryForArchiveId($archiveId) .
                            "/archive.data";
 
-if (!is_file($absoluteArchiveFilename))
+$root = null;
+
+if (is_file($absoluteArchiveFilename))
 {
-    ?>
-
-    <p>The archive data file doesn't exist.
-    <p><code><?php echo $absoluteArchiveFilename; ?></code>
-
-    <?php
-
-    goto done;
+    $root = unserialize(file_get_contents($absoluteArchiveFilename));
 }
 
-$data = unserialize(file_get_contents($absoluteArchiveFilename));
-
-$dataHTML = ColbyConvert::textToHTML(var_export($data, true));
+$archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
 
 ?>
 
-<style>
-    pre
-    {
-        margin-bottom: 50px;
-    }
+<main>
+    <style>
+        pre
+        {
+            margin-bottom: 50px;
+        }
 
-    h6
-    {
-        margin-bottom: 20px;
-    }
-</style>
+        h6
+        {
+            margin-bottom: 20px;
+        }
 
-<h6>Data</h6>
-<pre><?php echo $dataHTML; ?></pre>
+        section.keys-and-values
+        {
+            margin-bottom: 30px;
+        }
+
+        section.keys-and-values dl
+        {
+            display: inline-block;
+            margin: 10px;
+            vertical-align: top;
+        }
+
+        section.keys-and-values dl dt
+        {
+            font-weight: bold;
+        }
+    </style>
+
+    <header>
+        <h1><?php echo $archiveId; ?></h1>
+        <h2><?php echo $archiveTitleHTML; ?></h2>
+    </header>
+
+    <?php
+
+    displayAttributesForRoot($root);
+
+    displayDataForRoot($root);
+
+    /**
+     * Add a function to show any data not shown by the previous functions.
+     */
+
+    ?>
+
+</main>
 
 <?php
 
 done:
 
 $page->end();
+
+/* ---------------------------------------------------------------- */
+
+function displayAttributesForRoot($root)
+{
+    ?>
+
+    <section class="keys-and-values attributes">
+        <h1>Attributes</h1>
+
+        <?php
+
+        if (!isset($root->attributes))
+        {
+            echo '<p>This archive has no attributes.';
+        }
+        else
+        {
+            foreach ($root->attributes as $key => $value)
+            {
+                displayKeyValuePair($key, $value);
+            }
+        }
+
+        ?>
+
+    </section>
+
+    <?php
+}
+
+function displayDataForRoot($root)
+{
+    ?>
+
+    <section class="keys-and-values data">
+        <h1>Data</h1>
+
+        <?php
+
+        if (!isset($root->data))
+        {
+            echo '<p>This archive has no data.';
+        }
+        else
+        {
+            foreach ($root->data as $key => $value)
+            {
+                displayKeyValuePair($key, $value);
+            }
+        }
+
+        ?>
+
+    </section>
+
+    <?php
+}
+
+function displayKeyValuePair($key, $value)
+{
+    ?>
+
+    <dl>
+        <dt><?php echo ColbyConvert::textToHTML($key); ?><dt>
+        <dd><?php displayValue($value); ?></dd>
+    </dl>
+
+    <?php
+}
+
+function displayValue($value)
+{
+    if (is_object($value))
+    {
+        echo ColbyConvert::textToHTML(var_export($value, true));
+    }
+    else
+    {
+        echo ColbyConvert::textToHTML($value);
+    }
+}

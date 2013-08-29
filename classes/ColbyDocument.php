@@ -57,7 +57,7 @@ class ColbyDocument
             /**
              * If the document has already been created it means that this is
              * an older archive that was created before 'documentRowId' was
-             * a concept. In this case, we will assume there is an row in
+             * a concept. In this case, we will assume there is a row in
              * the database for the document but that its row id hasn't been
              * saved in the archive.
              *
@@ -88,9 +88,19 @@ class ColbyDocument
             {
                 $sql = <<<EOT
 INSERT INTO `ColbyPages`
-    (`archiveId`, `stub`, `titleHTML`, `subtitleHTML`)
+(
+    `archiveId`,
+    `stub`,
+    `titleHTML`,
+    `subtitleHTML`
+)
 VALUES
-    (UNHEX('{$safeArchiveId}'), '{$safeArchiveId}', '', '')
+(
+    UNHEX('{$safeArchiveId}'),
+    '{$safeArchiveId}',
+    '',
+    ''
+)
 EOT;
 
                 Colby::query($sql);
