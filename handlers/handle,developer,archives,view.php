@@ -102,9 +102,20 @@ function displayAttributesForRoot($root)
         }
         else
         {
+            $keysWithTimeValues = array('created', 'modified');
+
             foreach ($root->attributes as $key => $value)
             {
-                displayKeyValuePair($key, $value);
+                if (in_array($key, $keysWithTimeValues))
+                {
+                    $type = 'time';
+                }
+                else
+                {
+                    $type = null;
+                }
+
+                displayKeyValuePair($key, $value, $type);
             }
         }
 
@@ -143,13 +154,24 @@ function displayDataForRoot($root)
     <?php
 }
 
-function displayKeyValuePair($key, $value)
+function displayKeyValuePair($key, $value, $type = null)
 {
     ?>
 
     <dl>
         <dt><?php echo ColbyConvert::textToHTML($key); ?><dt>
-        <dd><?php displayValue($value); ?></dd>
+        <dd><?php
+
+            if ('time' == $type)
+            {
+                displayValueForTime($value);
+            }
+            else
+            {
+                displayValue($value);
+            }
+
+        ?></dd>
     </dl>
 
     <?php
@@ -157,7 +179,7 @@ function displayKeyValuePair($key, $value)
 
 function displayValue($value)
 {
-    if (is_object($value))
+    if (!is_scalar($value))
     {
         echo ColbyConvert::textToHTML(var_export($value, true));
     }
@@ -165,4 +187,11 @@ function displayValue($value)
     {
         echo ColbyConvert::textToHTML($value);
     }
+}
+
+function displayValueForTime($value)
+{
+    $javaScriptTime = $value * 1000;
+
+    echo "<span class=\"time\" data-timestamp=\"{$javaScriptTime}\">{$value}</span>";
 }
