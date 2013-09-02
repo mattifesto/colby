@@ -76,6 +76,8 @@ function explorePart($partIndex)
 
     $countOfArchivesInPart = 0;
 
+    $archiveIdsForPart = array();
+
     foreach ($partArchiveDirectories as $archiveDirectory)
     {
         preg_match('/([0-9a-f]{2})\/([0-9a-f]{2})\/([0-9a-f]{36})/', $archiveDirectory, $matches);
@@ -91,10 +93,58 @@ function explorePart($partIndex)
 
         $partObject->{$archiveId} = $archiveMetaData;
 
+        $archiveIdsForPart[] = $archiveId;
+
         $countOfArchivesInPart++;
     }
 
     $partObject->countOfArchives = $countOfArchivesInPart;
+
+    /**
+     * Get archiveIds for all of the documents in the part.
+     *
+     * CONCAT has three parts:
+     *
+     *  '\\\\'
+     *      This will evaluate to '\\' in the SQL which will then evaluate to
+     *      a single backslash which will escape the character that follows it
+     *      which will be necessary if that character happens to be '%'.
+     *
+     *  UNHEX('{$hexPartIndex}')
+     *      Since `hexPartIndex` is two hex characters this will evaluate to
+     *      a single "binary character set" character.
+     *
+     *  '%'
+     *      This percent is the wildcard character to be used in the context
+     *      of the 'LIKE' keyword.
+     */
+
+    $sql = <<<EOT
+SELECT
+    LOWER(HEX(`archiveId`)) AS `archiveId`
+FROM
+    `ColbyPages`
+WHERE
+    `archiveId` LIKE CONCAT('\\\\', UNHEX('{$hexPartIndex}'), '%')
+EOT;
+
+    $result = Colby::query($sql);
+
+    $documentArchiveIdsForPart = array();
+
+    while ($row = $result->fetch_object())
+    {
+        $documentArchiveIdsForPart[] = $row->archiveId;
+    }
+
+    $result->free();
+
+    $partObject->strayArchiveIds = array_diff($archiveIdsForPart, $documentArchiveIdsForPart);
+    $partObject->strayDocumentArchiveIds = array_diff($documentArchiveIdsForPart, $archiveIdsForPart);
+
+    /**
+     * Save part to archive.
+     */
 
     $parts = $archive->valueForKey('parts');
 
