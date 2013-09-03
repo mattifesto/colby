@@ -40,6 +40,9 @@ if (0 == $partIndex)
     $archive->setStringValueForKey(ColbyConvert::textToHTML($title), 'titleHTML');
     $archive->setStringValueForKey($subtitle, 'subtitle');
     $archive->setStringValueForKey(ColbyConvert::textToHTML($subtitle), 'subtitleHTML');
+
+    $archive->setObjectValueForKey(new ArrayObject(), 'strayArchives');
+    $archive->setObjectValueForKey(new ArrayObject(), 'strayDocuments');
 }
 
 explorePart($partIndex);
@@ -68,15 +71,9 @@ function explorePart($partIndex)
 
     $hexPartIndex = sprintf('%02x', $partIndex);
 
-    $archive = $data->document->archive();
-
-    $partObject = new stdClass();
+    $archivesForPart = array();
 
     $partArchiveDirectories = glob(COLBY_DATA_DIRECTORY . "/{$hexPartIndex}/*/*");
-
-    $countOfArchivesInPart = 0;
-
-    $archiveIdsForPart = array();
 
     foreach ($partArchiveDirectories as $archiveDirectory)
     {
@@ -84,21 +81,14 @@ function explorePart($partIndex)
 
         $archiveId = $matches[1] . $matches[2] . $matches[3];
 
-        $archiveMetaData = new stdClass();
-
         $theArchive = ColbyArchive::open($archiveId);
 
-        $archiveMetaData->titleHTML = $theArchive->valueForKey('titleHTML');
-        $archiveMetaData->subtitleHTML = $theArchive->valueForKey('subtitleHTML');
+        $archiveData = new stdClass();
 
-        $partObject->{$archiveId} = $archiveMetaData;
+        $archiveData->documentGroupId = $theArchive->valueForKey('documentGroupId');
 
-        $archiveIdsForPart[] = $archiveId;
-
-        $countOfArchivesInPart++;
+        $archivesForPart[$archiveId] = $archiveData;
     }
-
-    $partObject->countOfArchives = $countOfArchivesInPart;
 
     /**
      * Get archiveIds for all of the documents in the part.
@@ -121,7 +111,8 @@ function explorePart($partIndex)
 
     $sql = <<<EOT
 SELECT
-    LOWER(HEX(`archiveId`)) AS `archiveId`
+    LOWER(HEX(`archiveId`)) AS `archiveId`,
+    LOWER(HEX(`groupId`)) AS `documentGroupId`
 FROM
     `ColbyPages`
 WHERE
@@ -130,30 +121,51 @@ EOT;
 
     $result = Colby::query($sql);
 
-    $documentArchiveIdsForPart = array();
+    $documentsForPart = array();
 
     while ($row = $result->fetch_object())
     {
-        $documentArchiveIdsForPart[] = $row->archiveId;
+        $documentData = new stdClass();
+
+        $documentData->documentGroupId = $row->documentGroupId;
+
+        $documentsForPart[$row->archiveId] = $documentData;
     }
 
     $result->free();
 
-    $partObject->strayArchiveIds = array_diff($archiveIdsForPart, $documentArchiveIdsForPart);
-    $partObject->strayDocumentArchiveIds = array_diff($documentArchiveIdsForPart, $archiveIdsForPart);
-
     /**
-     * Save part to archive.
+     *
      */
 
-    $parts = $archive->valueForKey('parts');
+    $archiveIdsForPart = array_keys($archivesForPart);
+    $documentArchiveIdsForPart = array_keys($documentsForPart);
 
-    if (null == $parts)
+    $archive = $data->document->archive();
+
+    /**
+     *
+     */
+
+    $strayArchives = $archive->valueForKey('strayArchives');
+
+    $strayArchiveIdsForPart = array_diff($archiveIdsForPart, $documentArchiveIdsForPart);
+
+    foreach ($strayArchiveIdsForPart as $archiveId)
     {
-        $parts = new stdClass();
-
-        $archive->setObjectValueForKey($parts, 'parts');
+        $strayArchives->offsetSet($archiveId, $archivesForPart[$archiveId]);
     }
 
-    $parts->{$hexPartIndex} = $partObject;
+    /**
+     *
+     */
+
+    $strayDocuments = $archive->valueForKey('strayDocuments');
+
+    $strayDocumentArchiveIdsForPart = array_diff($documentArchiveIdsForPart, $archiveIdsForPart);
+
+    foreach ($strayDocumentArchiveIdsForPart as $archiveId)
+    {
+        $strayDocuments->offsetSet($archiveId, $documentsForPart[$archiveId]);
+    }
 }

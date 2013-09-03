@@ -44,54 +44,66 @@ $archive = $document->archive();
 
         <?php
 
-        $parts = $archive->valueForKey('parts');
+        $strayArchives = $archive->valueForKey('strayArchives');
+        $strayArchives->uasort('compareDocumentGroupIds');
 
-        for ($i = 0; $i < 256; $i++)
+        if ($strayArchives)
         {
-            $hexIndex = sprintf('%02x', $i);
 
-            if (isset($parts->{$hexIndex}))
+            echo '<div>';
+
+            $isFirstIteration = true;
+
+            foreach ($strayArchives as $archiveId => $archiveData)
             {
-                $partObject = $parts->{$hexIndex};
+                if ($isFirstIteration ||
+                    $documentGroupId != $archiveData->documentGroupId)
+                {
+                    $isFirstIteration = false;
 
-                ?>
+                    $documentGroupId = $archiveData->documentGroupId;
 
-                <dl>
-                    <dt>part: <?php echo $hexIndex; ?></dt>
+                    echo "<h2>Group: {$documentGroupId}</h2>";
+                }
 
-                    <?php
-
-                    if (isset($partObject->strayArchiveIds) &&
-                        !empty($partObject->strayArchiveIds))
-                    {
-                        $countOfStrayArchiveIds = count($partObject->strayArchiveIds);
-
-                        ?>
-
-                        <dd>Stray archive ids: <?php array_walk($partObject->strayArchiveIds, 'viewLinkForArchiveId'); ?></dd>
-
-                        <?php
-                    }
-
-                    if (isset($partObject->strayDocumentArchiveIds) &&
-                        !empty($partObject->strayDocumentArchiveIds))
-                    {
-                        $countOfStrayDocumentArchiveIds = count($partObject->strayDocumentArchiveIds);
-
-                        ?>
-
-                        <dd>Stray document archive ids: <?php array_walk($partObject->strayDocumentArchiveIds, 'viewLinkForArchiveId'); ?></dd>
-
-                        <?php
-                    }
-
-                    ?>
-
-                </dl>
-
-            <?php
-
+                echo viewLinkForArchiveId($archiveId), ' ';
             }
+
+            echo '</div>';
+        }
+
+        ?>
+
+        <h1>Stray Documents</h1>
+
+        <?php
+
+        $strayDocuments = $archive->valueForKey('strayDocuments');
+        $strayDocuments->uasort('compareDocumentGroupIds');
+
+        if ($strayDocuments)
+        {
+
+            echo '<div>';
+
+            $isFirstIteration = true;
+
+            foreach ($strayDocuments as $archiveId => $archiveData)
+            {
+                if ($isFirstIteration ||
+                    $documentGroupId != $archiveData->documentGroupId)
+                {
+                    $isFirstIteration = false;
+
+                    $documentGroupId = $archiveData->documentGroupId;
+
+                    echo "<h2>Group: {$documentGroupId}</h2>";
+                }
+
+                echo viewLinkForArchiveId($archiveId), ' ';
+            }
+
+            echo '</div>';
         }
 
         ?>
@@ -125,4 +137,24 @@ function viewLinkForArchiveId($archiveId, $key = null)
     }
 
     echo "<a href=\"/developer/archives/view/?archive-id={$archiveId}\">{$archiveId}</a>";
+}
+
+/**
+ *
+ */
+function compareDocumentGroupIds($left, $right)
+{
+    if ($left->documentGroupId == $right->documentGroupId)
+    {
+        return 0;
+    }
+
+    if ($left->documentGroupId > $right->documentGroupId)
+    {
+        return 1;
+    }
+    else
+    {
+        return -1;
+    }
 }
