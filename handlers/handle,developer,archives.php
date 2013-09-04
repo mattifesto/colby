@@ -1,8 +1,7 @@
 <?php
 
-define('COLBY_ARCHIVES_DOCUMENT_ARCHIVE_ID', '5bda1825fe0be9524106061b910fd0b8e1dde0c2');
-
 include_once COLBY_DIRECTORY . '/classes/ColbyDocument.php';
+include_once COLBY_DIRECTORY . '/snippets/shared/documents-administration.php';
 
 $page = new ColbyOutputManager('admin-html-page');
 
@@ -18,7 +17,7 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
-$document = ColbyDocument::documentWithArchiveId(COLBY_ARCHIVES_DOCUMENT_ARCHIVE_ID);
+$document = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
 
 $archive = $document->archive();
 

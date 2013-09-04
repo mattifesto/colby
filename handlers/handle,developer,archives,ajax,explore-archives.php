@@ -1,8 +1,7 @@
 <?php
 
-define('COLBY_ARCHIVES_DOCUMENT_ARCHIVE_ID', '5bda1825fe0be9524106061b910fd0b8e1dde0c2');
-
 include_once COLBY_DIRECTORY . '/classes/ColbyDocument.php';
+include_once COLBY_DIRECTORY . '/snippets/shared/documents-administration.php';
 
 $response = new ColbyOutputManager('ajax-response');
 $response->begin();
@@ -22,10 +21,10 @@ $partIndex = (int)$_POST['part-index'];
 
 if (0 == $partIndex)
 {
-    ColbyDocument::deleteDocumentWithArchiveId(COLBY_ARCHIVES_DOCUMENT_ARCHIVE_ID);
+    ColbyDocument::deleteDocumentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
 }
 
-$document = ColbyDocument::documentWithArchiveId(COLBY_ARCHIVES_DOCUMENT_ARCHIVE_ID);
+$document = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
 
 $data->document = $document;
 
