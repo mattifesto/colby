@@ -6,6 +6,23 @@ var ColbySheet =
     'frame' : 0
 };
 
+/**
+ *
+ */
+ColbySheet.alert = function(html)
+{
+    var sheetHTML = ' \
+<div class="small-panel"> \
+    <div>' + html + '</div> \
+    <div style="text-align: right;"><button onclick="ColbySheet.endSheet();">Dismiss</button></div> \
+</div>';
+
+    ColbySheet.beginSheet(sheetHTML);
+}
+
+/**
+ *
+ */
 ColbySheet.animateIn = function()
 {
     var durationInFrames = 30;
@@ -31,6 +48,9 @@ ColbySheet.animateIn = function()
     ColbySheet.frame++;
 }
 
+/**
+ *
+ */
 ColbySheet.animateOut = function()
 {
     var durationInFrames = 30;
@@ -59,6 +79,9 @@ ColbySheet.animateOut = function()
     ColbySheet.frame++;
 }
 
+/**
+ *
+ */
 ColbySheet.beginSheet = function(contentHTML)
 {
     ColbySheet.createElements();
@@ -78,6 +101,9 @@ ColbySheet.beginSheet = function(contentHTML)
     }
 }
 
+/**
+ *
+ */
 ColbySheet.endSheet = function()
 {
     ColbySheet.frame = 0;
@@ -97,6 +123,9 @@ ColbySheet.endSheet = function()
     }
 }
 
+/**
+ *
+ */
 ColbySheet.createElements = function()
 {
     if (window.webkitRequestAnimationFrame)
@@ -141,6 +170,9 @@ ColbySheet.createElements = function()
     }
 }
 
+/**
+ *
+ */
 ColbySheet.requestAnimationFrame = function(callback)
 {
     if (window.requestAnimationFrame)

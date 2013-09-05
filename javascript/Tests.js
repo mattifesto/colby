@@ -6,13 +6,7 @@ var ColbyUnitTests =
 
 ColbyUnitTests.alert = function(html)
 {
-    var sheetHTML = ' \
-<div class="small-panel"> \
-    <div>' + html + '</div> \
-    <div style="text-align: right;"><button onclick="ColbySheet.endSheet();">Dismiss</button></div> \
-</div>';
-
-    ColbySheet.beginSheet(sheetHTML);
+    ColbySheet.alert(html);
 }
 
 function doRunJavascriptUnitTests()
