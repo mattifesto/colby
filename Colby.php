@@ -390,15 +390,15 @@ class Colby
         // at this time, none of these files depends on another
         // so they are in alphabetical order
 
-        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyArchive.php');
+        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyArchive.php';
 
-        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyConvert.php');
+        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyConvert.php';
 
-        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyOutputManager.php');
+        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyOutputManager.php';
 
-        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyRequest.php');
+        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyRequest.php';
 
-        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyUser.php');
+        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyUser.php';
     }
 
     /**
