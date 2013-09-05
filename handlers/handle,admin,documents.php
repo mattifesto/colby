@@ -26,6 +26,10 @@ $archive = $document->archive();
 <main>
     <h1>Archives</h1>
 
+    <nav style="text-align: center;">
+        <?php renderDocumentsAdministrationMenu(); ?>
+    </nav>
+
     <section>
         <style scoped>
             dl + dl

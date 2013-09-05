@@ -20,3 +20,28 @@ global $documentsAdministrationMenu;
 $documentsAdministrationMenu = $menuBuilder->nestedDictionary();
 
 unset($menuBuilder);
+
+/**
+ *
+ */
+function renderDocumentsAdministrationMenu()
+{
+    global $documentsAdministrationMenu;
+
+    echo '<ul class="horizontal">';
+
+    foreach ($documentsAdministrationMenu->items as $itemKey => $item)
+    {
+        ?>
+
+        <li class="item <?php echo $itemKey; ?>">
+            <a href="<?php echo $item->uri; ?>">
+                <?php echo $item->titleHTML; ?>
+            </a>
+        </li>
+
+        <?php
+    }
+
+    echo '</ul>';
+}
