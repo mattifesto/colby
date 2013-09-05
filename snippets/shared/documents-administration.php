@@ -15,6 +15,9 @@ $menuBuilder->addValue('stray-archives', 'uri', '/admin/documents/stray-archives
 $menuBuilder->addValue('stray-documents', 'titleHTML', 'Stray Documents');
 $menuBuilder->addValue('stray-documents', 'uri', '/admin/documents/stray-documents/');
 
+$menuBuilder->addValue('query-stray-archives', 'titleHTML', 'Query Stray Archives');
+$menuBuilder->addValue('query-stray-archives', 'uri', '/admin/documents/stray-archives/query/');
+
 global $documentsAdministrationMenu;
 
 $documentsAdministrationMenu = $menuBuilder->nestedDictionary();
