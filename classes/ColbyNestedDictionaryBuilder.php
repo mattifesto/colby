@@ -20,9 +20,9 @@
  * helper class is difficult and error prone. However, reading data without
  * this helper class is simple and straightforward.
  */
-class ColbyNestedDictionary
+class ColbyNestedDictionaryBuilder
 {
-    private $data = null;
+    private $nestedDictionary = null;
 
     /**
      * This constructor is private to force use of the static initializers.
@@ -32,39 +32,39 @@ class ColbyNestedDictionary
     }
 
     /**
-     * @return ColbyNestedDictionary
+     * @return ColbyNestedDictionaryBuilder
      */
-    public static function nestedDictionaryWithDataObject(stdClass $dataObject)
+    public static function builderWithNestedDictionary(stdClass $nestedDictionary)
     {
-        $nestedDictionary = new ColbyNestedDictionary();
+        $builder = new ColbyNestedDictionary();
 
         /**
-         * It's up the the developer to make sure they pass in a data object
-         * with the schema required.
+         * It's up the the caller to make sure they pass in an object
+         * with a nested dictionary schema.
          */
 
-        $nestedDictionary->data = $dataObject;
+        $builder->nestedDictionary = $nestedDictionary;
 
-        return $nestedDictionary;
+        return $builder;
     }
 
     /**
-     * @return ColbyNestedDictionary
+     * @return ColbyNestedDictionaryBuilder
      */
-    public static function nestedDictionaryWithTitle($title)
+    public static function builderWithTitle($title)
     {
-        $dataObject = new stdClass();
+        $nestedDictionary = new stdClass();
 
-        $dataObject->title = (string)$title;
-        $dataObject->objectSchema = 'ColbyNestedDictionary';
-        $dataObject->objectSchemaVersion = 1;
-        $dataObject->items = new stdClass();
+        $nestedDictionary->title = (string)$title;
+        $nestedDictionary->objectSchema = 'ColbyNestedDictionary';
+        $nestedDictionary->objectSchemaVersion = 1;
+        $nestedDictionary->items = new stdClass();
 
-        $nestedDictionary = new ColbyNestedDictionary();
+        $builder = new ColbyNestedDictionaryBuilder();
 
-        $nestedDictionary->data = $dataObject;
+        $builder->nestedDictionary = $nestedDictionary;
 
-        return $nestedDictionary;
+        return $builder;
     }
 
     /**
@@ -72,19 +72,19 @@ class ColbyNestedDictionary
      */
     public function addValue($outerKey, $innerKey, $value)
     {
-        if (!isset($this->data->items->{$outerKey}))
+        if (!isset($this->nestedDictionary->items->{$outerKey}))
         {
-            $this->data->items->{$outerKey} = new stdClass();
+            $this->nestedDictionary->items->{$outerKey} = new stdClass();
         }
 
-        $this->data->items->{$outerKey}->{$innerKey} = $value;
+        $this->nestedDictionary->items->{$outerKey}->{$innerKey} = $value;
     }
 
     /**
-     * @return stdClass
+     * @return stdClass with a nested dictionary schema.
      */
-    public function dataObject()
+    public function nestedDictionary()
     {
-        return $this->data;
+        return $this->nestedDictionary;
     }
 }
