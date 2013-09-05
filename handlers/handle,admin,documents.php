@@ -115,7 +115,7 @@ $archive = $document->archive();
     </div>
 </main>
 
-<script src="<?php echo COLBY_URL . '/handlers/handle,developer,archives.js'; ?>"></script>
+<script src="<?php echo COLBY_URL . '/handlers/handle,admin,documents.js'; ?>"></script>
 
 <?php
 
