@@ -28,18 +28,19 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
     <div>
         <div>
-            <label>Field Name: <input type="text" id="field-name"></label>
+            <label>Field Name: <input type="text" id="query-field-name"></label>
         </div>
         <div>
-            <label>Field Value: <input type="text" id="field-value"></label>
+            <label>Field Value: <input type="text" id="query-field-value"></label>
         </div>
         <div style="text-align: center;">
             <progress value="0" max="256" id="progress" style="margin-bottom: 20px;"></progress><br>
-            <a class="big-button" onclick="";">Query Stray Archives</a>
+            <a class="big-button" onclick="ColbyStrayArchivesFinder.runQuery();">Query Stray Archives</a>
         </div>
     </div>
 </main>
 
+<script src="<?php echo COLBY_URL; ?>/handlers/handle,admin,documents,stray-archives,query.js"></script>
 <?php
 
 done:
