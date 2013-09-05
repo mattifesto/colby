@@ -48,3 +48,11 @@ function renderDocumentsAdministrationMenu()
 
     echo '</ul>';
 }
+
+/**
+ *
+ */
+function viewLinkForArchiveId($archiveId)
+{
+    echo "<a href=\"/admin/documents/view/?archive-id={$archiveId}\">{$archiveId}</a>";
+}

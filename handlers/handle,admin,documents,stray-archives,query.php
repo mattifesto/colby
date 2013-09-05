@@ -17,6 +17,8 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
     goto done;
 }
 
+$archive = ColbyArchive::open(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
+
 ?>
 
 <main>
@@ -26,7 +28,40 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
         <?php renderDocumentsAdministrationMenu(); ?>
     </nav>
 
+    <?php
+
+    $reports = $archive->valueForKey('reports');
+
+    if ($reports)
+    {
+        echo '<nav style="text-align: center; font-size: 90%;"><p>Reports<ul class="horizontal">';
+
+        foreach ($reports as $reportId => $report)
+        {
+            $reportURL = COLBY_SITE_URL .
+                         '/admin/documents/stray-archives/view-report/?' .
+                         "report-id={$reportId}";
+            ?>
+
+            <li>
+                <a href="<?php echo $reportURL; ?>">
+                    <?php echo $report->name; ?>
+                </a>
+            </li>
+
+            <?php
+        }
+
+        echo '</ul></nav>';
+    }
+
+
+    ?>
+
     <div>
+        <div>
+            <label>Report Name: <input type="text" id="report-name"></label>
+        </div>
         <div>
             <label>Field Name: <input type="text" id="query-field-name"></label>
         </div>
@@ -41,6 +76,7 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 </main>
 
 <script src="<?php echo COLBY_URL; ?>/handlers/handle,admin,documents,stray-archives,query.js"></script>
+
 <?php
 
 done:

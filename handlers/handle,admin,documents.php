@@ -132,19 +132,6 @@ $page->end();
 /**
  *
  */
-function viewLinkForArchiveId($archiveId, $key = null)
-{
-    if ($key)
-    {
-        echo ', ';
-    }
-
-    echo "<a href=\"/admin/documents/view/?archive-id={$archiveId}\">{$archiveId}</a>";
-}
-
-/**
- *
- */
 function compareDocumentGroupIds($left, $right)
 {
     if ($left->documentGroupId == $right->documentGroupId)

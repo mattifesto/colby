@@ -9,6 +9,15 @@ ColbyStrayArchivesFinder.runQuery = function()
         return;
     }
 
+    var reportName = document.getElementById("report-name").value.trim();
+
+    if (!reportName)
+    {
+        ColbySheet.alert('You must enter a name for the report.');
+
+        return;
+    }
+
     var queryFieldName = document.getElementById("query-field-name").value.trim();
 
     if (!queryFieldName)
@@ -20,6 +29,7 @@ ColbyStrayArchivesFinder.runQuery = function()
 
     var queryFieldValue = document.getElementById("query-field-value").value;
 
+    ColbyStrayArchivesFinder.reportName = reportName;
     ColbyStrayArchivesFinder.queryFieldName = queryFieldName;
     ColbyStrayArchivesFinder.queryFieldValue = queryFieldValue;
     ColbyStrayArchivesFinder.partIndex = 0;
@@ -43,6 +53,7 @@ ColbyStrayArchivesFinder.runQueryForPart = function()
 
     var formData = new FormData();
     formData.append("part-index", ColbyStrayArchivesFinder.partIndex);
+    formData.append("report-name", ColbyStrayArchivesFinder.reportName);
     formData.append("query-field-name", ColbyStrayArchivesFinder.queryFieldName);
     formData.append("query-field-value", ColbyStrayArchivesFinder.queryFieldValue);
 
