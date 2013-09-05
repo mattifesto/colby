@@ -30,92 +30,40 @@ $archive = $document->archive();
         <?php renderDocumentsAdministrationMenu(); ?>
     </nav>
 
-    <section>
-        <style scoped>
-            dl + dl
-            {
-                margin-top: 20px;
-            }
+    <?php
 
-            dd
-            {
-                margin: 10px 10px 0px;
-            }
-        </style>
+    $strayArchiveIds = $archive->valueForKey('strayArchiveIds');
 
-        <h1>Stray Archives</h1>
+    if ($strayArchiveIds)
+    {
+        $countOfStrayArchives = $strayArchiveIds->count();
+    }
+    else
+    {
+        $countOfStrayArchives = 'unknown';
+    }
 
-        <?php
+    $strayDocumentArchiveIds = $archive->valueForKey('strayDocumentArchiveIds');
 
-        $strayArchives = $archive->valueForKey('strayArchives');
-        $strayArchives->uasort('compareDocumentGroupIds');
+    if ($strayDocumentArchiveIds)
+    {
+        $countOfStrayDocuments = $strayDocumentArchiveIds->count();
+    }
+    else
+    {
+        $countOfStrayDocuments = 'unknown';
+    }
 
-        if ($strayArchives)
-        {
+    ?>
 
-            echo '<div>';
-
-            $isFirstIteration = true;
-
-            foreach ($strayArchives as $archiveId => $archiveData)
-            {
-                if ($isFirstIteration ||
-                    $documentGroupId != $archiveData->documentGroupId)
-                {
-                    $isFirstIteration = false;
-
-                    $documentGroupId = $archiveData->documentGroupId;
-
-                    echo "<h2>Group: {$documentGroupId}</h2>";
-                }
-
-                echo viewLinkForArchiveId($archiveId), ' ';
-            }
-
-            echo '</div>';
-        }
-
-        ?>
-
-        <h1>Stray Documents</h1>
-
-        <?php
-
-        $strayDocuments = $archive->valueForKey('strayDocuments');
-        $strayDocuments->uasort('compareDocumentGroupIds');
-
-        if ($strayDocuments)
-        {
-
-            echo '<div>';
-
-            $isFirstIteration = true;
-
-            foreach ($strayDocuments as $archiveId => $archiveData)
-            {
-                if ($isFirstIteration ||
-                    $documentGroupId != $archiveData->documentGroupId)
-                {
-                    $isFirstIteration = false;
-
-                    $documentGroupId = $archiveData->documentGroupId;
-
-                    echo "<h2>Group: {$documentGroupId}</h2>";
-                }
-
-                echo viewLinkForArchiveId($archiveId), ' ';
-            }
-
-            echo '</div>';
-        }
-
-        ?>
-
-    </section>
+    <ul class="horizontal" style="text-align: center;">
+        <li>Stray Archives: <?php echo $countOfStrayArchives; ?></li>
+        <li>Stray Documents: <?php echo $countOfStrayDocuments; ?></li>
+    </ul>
 
     <div style="text-align: center;">
         <progress value="0" max="256" id="progress" style="margin-bottom: 20px;"></progress><br>
-        <a class="big-button" onclick="ColbyArchivesExplorer.regenerateDocument();">Regenerate Archives Document</a>
+        <a class="big-button" onclick="ColbyArchivesExplorer.regenerateDocument();">Find Stray Archives and Documents</a>
     </div>
 </main>
 
@@ -128,23 +76,3 @@ done:
 $page->end();
 
 /* ---------------------------------------------------------------- */
-
-/**
- *
- */
-function compareDocumentGroupIds($left, $right)
-{
-    if ($left->documentGroupId == $right->documentGroupId)
-    {
-        return 0;
-    }
-
-    if ($left->documentGroupId > $right->documentGroupId)
-    {
-        return 1;
-    }
-    else
-    {
-        return -1;
-    }
-}

@@ -40,8 +40,8 @@ if (0 == $partIndex)
     $archive->setStringValueForKey($subtitle, 'subtitle');
     $archive->setStringValueForKey(ColbyConvert::textToHTML($subtitle), 'subtitleHTML');
 
-    $archive->setObjectValueForKey(new ArrayObject(), 'strayArchives');
-    $archive->setObjectValueForKey(new ArrayObject(), 'strayDocuments');
+    $archive->setObjectValueForKey(new ArrayObject(), 'strayArchiveIds');
+    $archive->setObjectValueForKey(new ArrayObject(), 'strayDocumentArchiveIds');
 }
 
 explorePart($partIndex);
@@ -70,23 +70,20 @@ function explorePart($partIndex)
 
     $hexPartIndex = sprintf('%02x', $partIndex);
 
-    $archivesForPart = array();
+    $archiveIdsForPart = array();
 
     $partArchiveDirectories = glob(COLBY_DATA_DIRECTORY . "/{$hexPartIndex}/*/*");
 
     foreach ($partArchiveDirectories as $archiveDirectory)
     {
-        preg_match('/([0-9a-f]{2})\/([0-9a-f]{2})\/([0-9a-f]{36})/', $archiveDirectory, $matches);
+        if (!preg_match('/([0-9a-f]{2})\/([0-9a-f]{2})\/([0-9a-f]{36})/', $archiveDirectory, $matches))
+        {
+            throw new RuntimeException("The archive directory `{$archiveDirectory}` is malformed. Investigate and remove the directory manually to continue.");
+        }
 
         $archiveId = $matches[1] . $matches[2] . $matches[3];
 
-        $theArchive = ColbyArchive::open($archiveId);
-
-        $archiveData = new stdClass();
-
-        $archiveData->documentGroupId = $theArchive->valueForKey('documentGroupId');
-
-        $archivesForPart[$archiveId] = $archiveData;
+        $archiveIdsForPart[] = $archiveId;
     }
 
     /**
@@ -110,8 +107,7 @@ function explorePart($partIndex)
 
     $sql = <<<EOT
 SELECT
-    LOWER(HEX(`archiveId`)) AS `archiveId`,
-    LOWER(HEX(`groupId`)) AS `documentGroupId`
+    LOWER(HEX(`archiveId`)) AS `archiveId`
 FROM
     `ColbyPages`
 WHERE
@@ -120,15 +116,11 @@ EOT;
 
     $result = Colby::query($sql);
 
-    $documentsForPart = array();
+    $documentArchiveIdsForPart = array();
 
     while ($row = $result->fetch_object())
     {
-        $documentData = new stdClass();
-
-        $documentData->documentGroupId = $row->documentGroupId;
-
-        $documentsForPart[$row->archiveId] = $documentData;
+        $documentArchiveIdsForPart[] = $row->archiveId;
     }
 
     $result->free();
@@ -137,34 +129,27 @@ EOT;
      *
      */
 
-    $archiveIdsForPart = array_keys($archivesForPart);
-    $documentArchiveIdsForPart = array_keys($documentsForPart);
-
     $archive = $data->document->archive();
 
-    /**
-     *
-     */
-
-    $strayArchives = $archive->valueForKey('strayArchives');
+    $strayArchiveIds = $archive->valueForKey('strayArchiveIds');
 
     $strayArchiveIdsForPart = array_diff($archiveIdsForPart, $documentArchiveIdsForPart);
 
-    foreach ($strayArchiveIdsForPart as $archiveId)
+    foreach ($strayArchiveIdsForPart as $strayArchiveId)
     {
-        $strayArchives->offsetSet($archiveId, $archivesForPart[$archiveId]);
+        $strayArchiveIds->append($strayArchiveId);
     }
 
     /**
      *
      */
 
-    $strayDocuments = $archive->valueForKey('strayDocuments');
+    $strayDocumentArchiveIds = $archive->valueForKey('strayDocumentArchiveIds');
 
     $strayDocumentArchiveIdsForPart = array_diff($documentArchiveIdsForPart, $archiveIdsForPart);
 
-    foreach ($strayDocumentArchiveIdsForPart as $archiveId)
+    foreach ($strayDocumentArchiveIdsForPart as $strayDocumentArchiveId)
     {
-        $strayDocuments->offsetSet($archiveId, $documentsForPart[$archiveId]);
+        $strayDocumentArchiveIds->append($strayDocumentArchiveId);
     }
 }
