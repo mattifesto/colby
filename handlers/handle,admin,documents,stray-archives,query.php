@@ -39,7 +39,7 @@ $archive = ColbyArchive::open(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
         foreach ($reports->items as $reportId => $report)
         {
             $reportURL = COLBY_SITE_URL .
-                         '/admin/documents/stray-archives/view-report/?' .
+                         '/admin/documents/stray-archives/reports/view/?' .
                          "report-id={$reportId}";
             ?>
 
