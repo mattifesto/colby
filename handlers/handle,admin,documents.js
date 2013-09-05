@@ -31,7 +31,7 @@ ColbyArchivesExplorer.regeneratePart = function()
     var formData = new FormData();
     formData.append("part-index", ColbyArchivesExplorer.partIndex);
 
-    xhr.open('POST', '/developer/archives/ajax/explore-archives/', true);
+    xhr.open('POST', '/admin/documents/ajax/explore-archives/', true);
     xhr.onload = handleAjaxResponse;
     xhr.send(formData);
 };

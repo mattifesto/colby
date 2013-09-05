@@ -135,7 +135,7 @@ function viewLinkForArchiveId($archiveId, $key = null)
         echo ', ';
     }
 
-    echo "<a href=\"/developer/archives/view/?archive-id={$archiveId}\">{$archiveId}</a>";
+    echo "<a href=\"/admin/documents/view/?archive-id={$archiveId}\">{$archiveId}</a>";
 }
 
 /**
