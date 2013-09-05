@@ -36,7 +36,7 @@ $archive = ColbyArchive::open(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
     {
         echo '<nav style="text-align: center; font-size: 90%;"><p>Reports<ul class="horizontal">';
 
-        foreach ($reports as $reportId => $report)
+        foreach ($reports->items as $reportId => $report)
         {
             $reportURL = COLBY_SITE_URL .
                          '/admin/documents/stray-archives/view-report/?' .

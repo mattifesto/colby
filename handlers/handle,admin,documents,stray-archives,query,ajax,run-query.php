@@ -31,28 +31,29 @@ $archive = $document->archive();
 
 if (0 == $partIndex)
 {
-    $reports = $archive->valueForKey('reports');
-
-    if (!$reports)
+    if (!$archive->valueForKey('reports'))
     {
-        $reports = new stdClass();
+        $reportsBuilder = ColbyNestedDictionaryBuilder::builderWithTitle('Stray archive query reports.');
 
-        $archive->setObjectValueForKey($reports, 'reports');
+        $archive->setObjectValueForKey($reportsBuilder->nestedDictionary(), 'reports');
+    }
+    else
+    {
+        $reportsBuilder = ColbyNestedDictionaryBuilder::builderWithNestedDictionary($archive->valueForKey('reports'));
     }
 
-    $report = new stdClass();
+    $reportsBuilder->addValue($reportId, 'name', $reportName);
+    $reportsBuilder->addValue($reportId, 'queryFieldName', $queryFieldName);
+    $reportsBuilder->addValue($reportId, 'queryFieldValue', $queryFieldValue);
 
-    $report->name = $reportName;
-    $report->queryFieldName = $queryFieldName;
-    $report->queryFieldValue = $queryFieldValue;
-    $report->archiveIds = new ArrayObject();
+    $data->resultArchiveIds = new ArrayObject();
 
-    $reports->{$reportId} = $report;
+    $reportsBuilder->addValue($reportId, 'resultArchiveIds', $data->resultArchiveIds);
 }
-
-$report = $archive->valueForKey('reports')->{$reportId};
-
-$data->report = $report;
+else
+{
+    $data->resultArchiveIds = $archive->valueForKey('reports')->items->{$reportId}->resultArchiveIds;
+}
 
 runQueryForPart($partIndex, $queryFieldName, $queryFieldValue);
 
@@ -80,11 +81,9 @@ function runQueryForPart($partIndex, $queryFieldName, $queryFieldValue)
 
     $hexPartIndex = sprintf('%02x', $partIndex);
 
-    $archive = $data->document->archive();
+    $strayArchiveIds = $data->document->archive()->valueForKey('strayArchiveIds');
 
-    $strayArchives = $archive->valueForKey('strayArchives');
-
-    foreach ($strayArchives as $strayArchiveId => $strayArchiveMetaData)
+    foreach ($strayArchiveIds as $strayArchiveId)
     {
         if (substr($strayArchiveId, 0, 2) != $hexPartIndex)
         {
@@ -95,7 +94,7 @@ function runQueryForPart($partIndex, $queryFieldName, $queryFieldValue)
 
         if ($strayArchive->valueForKey($queryFieldName) == $queryFieldValue)
         {
-            $data->report->archiveIds->append($strayArchiveId);
+            $data->resultArchiveIds->append($strayArchiveId);
         }
     }
 }

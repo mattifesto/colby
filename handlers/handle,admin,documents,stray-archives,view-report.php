@@ -24,9 +24,9 @@ $archive = ColbyArchive::open(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
 $reports = $archive->valueForKey('reports');
 $report = null;
 
-if ($reports && isset($reports->{$reportId}))
+if ($reports && isset($reports->items->{$reportId}))
 {
-    $report = $reports->{$reportId};
+    $report = $reports->items->{$reportId};
     $title = "Report: {$report->name}";
 }
 else
@@ -88,7 +88,7 @@ else
                 <dt>Query Field Value</dt>
                 <dd><?php echo ColbyConvert::textToHTML($report->queryFieldValue); ?></dd>
                 <dt>Count of Matching Archives</dt>
-                <dd><?php echo $report->archiveIds->count(); ?></dd>
+                <dd><?php echo $report->resultArchiveIds->count(); ?></dd>
             </dl>
         </section>
 
@@ -99,7 +99,7 @@ else
 
                 <?php
 
-                foreach ($report->archiveIds as $strayArchiveId)
+                foreach ($report->resultArchiveIds as $strayArchiveId)
                 {
                     echo viewLinkForArchiveId($strayArchiveId), "\n";
                 }
