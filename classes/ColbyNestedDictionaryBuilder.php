@@ -36,7 +36,7 @@ class ColbyNestedDictionaryBuilder
      */
     public static function builderWithNestedDictionary(stdClass $nestedDictionary)
     {
-        $builder = new ColbyNestedDictionary();
+        $builder = new ColbyNestedDictionaryBuilder();
 
         /**
          * It's up the the caller to make sure they pass in an object

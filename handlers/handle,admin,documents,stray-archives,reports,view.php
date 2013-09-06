@@ -114,7 +114,15 @@ else
 
     ?>
 
+    <div style="text-align: center;">
+        <progress value="0" id="progress" style="margin-bottom: 20px;"></progress><br>
+        <a class="big-button" onclick="ColbyReportArchiveDeleter.deleteArchives();">Delete the stray archives in this report</a>
+    </div>
 </main>
+
+<input type="hidden" id="report-id" value="<?php echo $reportId; ?>">
+
+<script src="<?php echo COLBY_URL; ?>/handlers/handle,admin,documents,stray-archives,reports,view.js"></script>
 
 <?php
 
