@@ -323,17 +323,14 @@ class Colby
         }
     }
 
-    ///
-    /// this function should be run only once
-    /// it is run automatically when Colby is first included
-    ///
+    /**
+     * This function should be called only once and is called by the system.
+     */
     public static function initialize()
     {
-        // Colby sites always run with all error reporting turned on
-        // in the worst case scenario
-        // the production environment will have newer PHP
-        // which may lead to surprise errors
-        // but those errors should still be fixed in the dev environment
+        /*
+         * Colby sites always run with all error reporting turned on.
+         */
 
         error_reporting(E_ALL | E_STRICT);
 
@@ -390,15 +387,15 @@ class Colby
         // at this time, none of these files depends on another
         // so they are in alphabetical order
 
-        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyArchive.php';
+        include_once COLBY_DIRECTORY . '/classes/ColbyArchive.php';
 
-        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyConvert.php';
+        include_once COLBY_DIRECTORY . '/classes/ColbyConvert.php';
 
-        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyOutputManager.php';
+        include_once COLBY_DIRECTORY . '/classes/ColbyOutputManager.php';
 
-        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyRequest.php';
+        include_once COLBY_DIRECTORY . '/classes/ColbyRequest.php';
 
-        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyUser.php';
+        include_once COLBY_DIRECTORY . '/classes/ColbyUser.php';
     }
 
     /**
