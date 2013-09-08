@@ -1,14 +1,6 @@
 <?php
 
-define('COLBY_SYSTEM_DOCUMENTS_DOCUMENT_GROUP_ID', 'adfcbe030b8df95f874d65d3b8a026d6dd67f304');
-
-require_once $_SERVER['DOCUMENT_ROOT'] . '/colby-configuration.php';
-
 Colby::initialize();
-
-include_once COLBY_DIRECTORY . '/version.php';
-include_once COLBY_SITE_DIRECTORY . '/version.php';
-include_once COLBY_SITE_DIRECTORY . '/site-configuration.php';
 
 ColbyRequest::handleRequest();
 
@@ -328,20 +320,87 @@ class Colby
      */
     public static function initialize()
     {
-        /*
+        /**
          * Colby sites always run with all error reporting turned on.
          */
 
         error_reporting(E_ALL | E_STRICT);
 
+        /**
+         * Includes performed before setting up error handling should use
+         * `require` or `require_once` to halt execution if they aren't
+         * successful.
+         *
+         * Includes performed after setting up error handling should use
+         * `include` or `include_once` which will invoke the error handling
+         * mechanism if they aren't successful.
+         *
+         * Only the following lines should use `require_once`.
+         */
+
+        require_once __DIR__ . '/version.php';
+        require_once __DIR__ . '/constants.php';
+        require_once COLBY_SITE_DIRECTORY . '/version.php';
+
+        /**
+         * Library directories are relative paths from the site directory. So
+         * the site library directory is simply an empty string.
+         */
+
+        $siteLibraryDirectory = '';
+
+        /**
+         * Calculate the Colby system library directory which is the relative
+         * path between the site directory and the Colby system directory.
+         * The Colby system library directory will almost always be "colby".
+         */
+
+        $colbySystemLibraryDirectory = str_replace(COLBY_SITE_DIRECTORY . '/',
+                                                   '',
+                                                   COLBY_SYSTEM_DIRECTORY);
+
+        /**
+         * Add the site and Colby system library directories as the first two
+         * library directories. These library directories are required for
+         * error handling to function properly.
+         *
+         * Library directories at the lowest index in the array are checked
+         * first and therefore have the highest priority. So when searching
+         * for library files, the site will have the highest priority, the
+         * Colby system will have the next highest priority. When the
+         * "site-configuration.php" file is included later in this method,
+         * any additional libraries will have still lower priority with the
+         * libraries loaded earlier having greater priority than the libraries
+         * loaded later.
+         */
+
+        self::$libraryDirectories[] = $siteLibraryDirectory;
+        self::$libraryDirectories[] = $colbySystemLibraryDirectory;
+
+        /**
+         * Set up error handling.
+         */
+
         set_error_handler('Colby::handleError');
         set_exception_handler('Colby::handleException');
 
-        if (!defined('COLBY_SITE_URL'))
-        {
-            throw new RuntimeException(
-                'The constant `COLBY_SITE_URL` has not been set.');
-        }
+        /**
+         * Include the local configuration file. This file is not checked in
+         * and therefore is not shared between different versions of the site.
+         * The COLBY_SITE_URL constant is set in this file.
+         */
+
+        include_once COLBY_SITE_DIRECTORY . '/colby-configuration.php';
+
+        /**
+         * Define COLBY_SYSTEM_URL.
+         */
+
+        define('COLBY_SYSTEM_URL', COLBY_SITE_URL . "/$colbySystemLibraryDirectory");
+
+        /**
+         * Ensure that any required constants have been set.
+         */
 
         if (!defined('COLBY_SITE_NAME'))
         {
@@ -362,30 +421,8 @@ class Colby
         }
 
         /**
-         * The directories first added to the `libraryDirectories` array
-         * are checked for files first and there for have the highest priority.
+         * Load classes that are used for every request.
          */
-
-        /**
-         * 2013.06.29 TODO:
-         *
-         * With the checkin today the site directory and the Colby directory
-         * can exist anywhere under the web document root. The code below
-         * should be changed to something like:
-         *
-         *  self::$libraryDirectories[] = COLBY_SITE_LIBRARY_DIRECTORY;
-         *  self::$libraryDirectories[] = COLBY_LIBRARY_DIRECTORY;
-         *
-         * The names of the constants still need to be thought out.
-         */
-
-        self::$libraryDirectories[] = '';
-        self::$libraryDirectories[] = 'colby';
-
-        // the order of these files might matter some day
-        // files that depend on other files should be included after
-        // at this time, none of these files depends on another
-        // so they are in alphabetical order
 
         include_once COLBY_DIRECTORY . '/classes/ColbyArchive.php';
 
@@ -396,6 +433,14 @@ class Colby
         include_once COLBY_DIRECTORY . '/classes/ColbyRequest.php';
 
         include_once COLBY_DIRECTORY . '/classes/ColbyUser.php';
+
+        /**
+         * Include the site configuration file. This file is checked in and
+         * therefore shared between different versions of the site. Shared
+         * constants are set and any required libraries are loaded in this file.
+         */
+
+        include_once COLBY_SITE_DIRECTORY . '/site-configuration.php';
     }
 
     /**
