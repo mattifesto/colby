@@ -7,7 +7,8 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
     exit;
 }
 
-include_once COLBY_DIRECTORY . '/classes/ColbyDocument.php';
+include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyDocument.php';
+
 Colby::useImage();
 
 $response = new ColbyOutputManager('ajax-response');

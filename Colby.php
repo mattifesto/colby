@@ -292,14 +292,9 @@ class Colby
             if (!$absoluteHandlerFilename)
             {
                 /**
-                 * 2013.03.19
-                 *
-                 * A situation occurred where COLBY_DIRECTORY wasn't set by the
-                 * configuration file which meant that an exception handler file
-                 * was not found. If this happens again, the exception message
-                 * should be sent to the error log. It's possible that other
-                 * configuration issues might also trigger this situation and
-                 * they are very difficult to debug without this code.
+                 * Something would have to be wrong with the system
+                 * configuration to get here, but if that happens we want to
+                 * see the error in the error log otherwise debugging is hard.
                  */
 
                 error_log($exception->getMessage());
@@ -424,15 +419,15 @@ class Colby
          * Load classes that are used for every request.
          */
 
-        include_once COLBY_DIRECTORY . '/classes/ColbyArchive.php';
+        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyArchive.php';
 
-        include_once COLBY_DIRECTORY . '/classes/ColbyConvert.php';
+        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyConvert.php';
 
-        include_once COLBY_DIRECTORY . '/classes/ColbyOutputManager.php';
+        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyOutputManager.php';
 
-        include_once COLBY_DIRECTORY . '/classes/ColbyRequest.php';
+        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyRequest.php';
 
-        include_once COLBY_DIRECTORY . '/classes/ColbyUser.php';
+        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyUser.php';
 
         /**
          * Include the site configuration file. This file is checked in and
@@ -603,8 +598,8 @@ EOT;
      */
     public static function useImage()
     {
-        include_once COLBY_DIRECTORY . '/classes/ColbyGeometry.php';
-        include_once COLBY_DIRECTORY . '/classes/ColbyImageResizer.php';
-        include_once COLBY_DIRECTORY . '/classes/ColbyImageUploader.php';
+        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyGeometry.php';
+        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyImageResizer.php';
+        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyImageUploader.php';
     }
 }

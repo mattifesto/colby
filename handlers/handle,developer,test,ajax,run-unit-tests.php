@@ -20,7 +20,7 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
  * Include test snippets.
  */
 
-$testDirectory = COLBY_DIRECTORY . '/snippets/tests';
+$testDirectory = COLBY_SYSTEM_DIRECTORY . '/snippets/tests';
 
 include "{$testDirectory}/Test,Colby,siteSchemaVersionNumber.php";
 include "{$testDirectory}/Test,ColbyArchive.php";

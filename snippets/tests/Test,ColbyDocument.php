@@ -1,6 +1,6 @@
 <?php
 
-include_once COLBY_DIRECTORY . '/classes/ColbyDocument.php';
+include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyDocument.php';
 
 
 /**

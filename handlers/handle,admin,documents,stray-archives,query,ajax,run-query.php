@@ -1,7 +1,7 @@
 <?php
 
-include_once COLBY_DIRECTORY . '/classes/ColbyDocument.php';
-include_once COLBY_DIRECTORY . '/snippets/shared/documents-administration.php';
+include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyDocument.php';
+include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
 
 $response = new ColbyOutputManager('ajax-response');
 $response->begin();

@@ -1,6 +1,6 @@
 <?php
 
-include_once COLBY_DIRECTORY . '/classes/ColbyNestedDictionaryBuilder.php';
+include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyNestedDictionaryBuilder.php';
 
 define('COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID', '5bda1825fe0be9524106061b910fd0b8e1dde0c2');
 
