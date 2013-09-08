@@ -75,7 +75,7 @@ $archive = ColbyArchive::open(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
     </div>
 </main>
 
-<script src="<?php echo COLBY_URL; ?>/handlers/handle,admin,documents,stray-archives,query.js"></script>
+<script src="<?php echo COLBY_SYSTEM_URL; ?>/handlers/handle,admin,documents,stray-archives,query.js"></script>
 
 <?php
 

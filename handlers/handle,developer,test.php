@@ -16,7 +16,7 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
 ?>
 
-<script src="<?php echo COLBY_URL . '/javascript/Tests.js'; ?>"></script>
+<script src="<?php echo COLBY_SYSTEM_URL . '/javascript/Tests.js'; ?>"></script>
 
 <style>
 input[type=text]

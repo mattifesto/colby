@@ -122,7 +122,7 @@ else
 
 <input type="hidden" id="report-id" value="<?php echo $reportId; ?>">
 
-<script src="<?php echo COLBY_URL; ?>/handlers/handle,admin,documents,stray-archives,reports,view.js"></script>
+<script src="<?php echo COLBY_SYSTEM_URL; ?>/handlers/handle,admin,documents,stray-archives,reports,view.js"></script>
 
 <?php
 

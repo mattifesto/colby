@@ -159,7 +159,7 @@ $result = Colby::query($sql);
     </tbody>
 </table>
 
-<script src="<?php echo COLBY_URL, '/handlers/handle,admin,users.js'; ?>"></script>
+<script src="<?php echo COLBY_SYSTEM_URL, '/handlers/handle,admin,users.js'; ?>"></script>
 
 <?php
 
