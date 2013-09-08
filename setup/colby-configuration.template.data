@@ -1,8 +1,6 @@
 <?php
 
 define('COLBY_SITE_URL', '');
-define('COLBY_DIRECTORY', COLBY_SITE_DIRECTORY . '/colby');
-define('COLBY_URL', COLBY_SITE_URL . '/colby');
 
 define('COLBY_SITE_NAME', '');
 define('COLBY_SITE_ADMINISTRATOR', '');
