@@ -1,4 +1,4 @@
-<?php // Document updater for a basic blog post with one optional image
+<?php // Update COLBY_BLOG_POSTS_DOCUMENT_GROUP_ID -> COLBY_BLOG_POST_DOCUMENT_TYPE_ID
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {

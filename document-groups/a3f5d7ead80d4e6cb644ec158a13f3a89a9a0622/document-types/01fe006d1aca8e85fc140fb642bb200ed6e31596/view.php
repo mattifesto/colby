@@ -1,9 +1,8 @@
-<?php // View for a basic page with one optional image
+<?php // View COLBY_PAGES_DOCUMENT_GROUP_ID -> COLBY_PAGE_DOCUMENT_TYPE_ID
 
-$documentTypeId = '01fe006d1aca8e85fc140fb642bb200ed6e31596';
+$archive = ColbyRequest::$archive;
 
 $page = new ColbyOutputManager();
-$archive = ColbyRequest::$archive;
 
 $page->titleHTML = $archive->valueForKey('titleHTML');
 $page->descriptionHTML = $archive->valueForKey('subtitleHTML');
@@ -12,7 +11,7 @@ $page->begin();
 
 ?>
 
-<article class="document-type-<?php echo $documentTypeId; ?>">
+<article class="document-type-<?php echo COLBY_PAGE_DOCUMENT_TYPE_ID; ?>">
     <style>
     article
     {

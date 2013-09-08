@@ -1,11 +1,9 @@
-<?php // Document editor for a basic blog post with one optional image
+<?php // Edit COLBY_BLOG_POSTS_DOCUMENT_GROUP_ID -> COLBY_BLOG_POST_DOCUMENT_TYPE_ID
 
-$documentGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
-$documentTypeId = 'abb85feaa97ca39b1bdb0e8a29359f1995fdcc8d';
 $archiveId = $_GET['archive-id'];
 
 $documentTypeData = unserialize(file_get_contents(
-    Colby::findFileForDocumentType('document-type.data', $documentGroupId, $documentTypeId)));
+    Colby::findFileForDocumentType('document-type.data', COLBY_BLOG_POSTS_DOCUMENT_GROUP_ID, COLBY_BLOG_POST_DOCUMENT_TYPE_ID)));
 
 $page = new ColbyOutputManager('admin-html-page');
 

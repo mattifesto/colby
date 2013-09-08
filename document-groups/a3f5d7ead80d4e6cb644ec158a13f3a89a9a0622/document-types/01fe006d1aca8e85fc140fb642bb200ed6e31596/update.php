@@ -1,4 +1,4 @@
-<?php // Document updater for a basic page with one optional image
+<?php // Update COLBY_PAGES_DOCUMENT_GROUP_ID -> COLBY_PAGE_DOCUMENT_TYPE_ID
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {

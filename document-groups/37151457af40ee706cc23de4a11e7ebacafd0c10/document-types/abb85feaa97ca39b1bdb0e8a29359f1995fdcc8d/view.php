@@ -1,8 +1,7 @@
-<?php // View for a basic blog post with one optional image
-
-$documentTypeId = 'abb85feaa97ca39b1bdb0e8a29359f1995fdcc8d';
+<?php // View COLBY_BLOG_POSTS_DOCUMENT_GROUP_ID -> COLBY_BLOG_POST_DOCUMENT_TYPE_ID
 
 $page = new ColbyOutputManager();
+
 $archive = ColbyRequest::$archive;
 
 $page->titleHTML = $archive->valueForKey('titleHTML');

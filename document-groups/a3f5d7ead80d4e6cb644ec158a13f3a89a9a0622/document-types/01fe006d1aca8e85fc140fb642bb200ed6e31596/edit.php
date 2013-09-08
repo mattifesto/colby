@@ -1,16 +1,15 @@
-<?php // Document editor for a basic page with one optional image
+<?php // Edit COLBY_PAGES_DOCUMENT_GROUP_ID -> COLBY_PAGE_DOCUMENT_TYPE_ID
 
-$documentGroupId = 'a3f5d7ead80d4e6cb644ec158a13f3a89a9a0622';
-$documentTypeId = '01fe006d1aca8e85fc140fb642bb200ed6e31596';
-$archiveId = $_GET['archive-id'];
+$documentTypeFilename = Colby::findFileForDocumentType('document-type.data',
+                                                       COLBY_PAGES_DOCUMENT_GROUP_ID,
+                                                       COLBY_PAGE_DOCUMENT_TYPE_ID);
 
-$documentTypeData = unserialize(file_get_contents(
-    Colby::findFileForDocumentType('document-type.data', $documentGroupId, $documentTypeId)));
+$documentTypeData = unserialize(file_get_contents($documentTypeFilename));
 
 $page = new ColbyOutputManager('admin-html-page');
 
 $page->titleHTML = $documentTypeData->nameHTML;
-$page->descriptionHTML = $documentTypeData->descriptionHTML;
+$page->descriptionHTML = ColbyConvert::textToHTML($documentTypeData->description);
 
 $page->begin();
 
@@ -20,6 +19,8 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 
     goto done;
 }
+
+$archiveId = $_GET['archive-id'];
 
 $archive = ColbyArchive::open($archiveId);
 
