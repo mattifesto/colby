@@ -33,6 +33,9 @@ $result = Colby::query($sql);
  * Aggregate data to simplify report generation.
  */
 
+$documentGroupNamesForHTML = array();
+$docuemntTypeNamesForHTML = array();
+
 while ($row = $result->fetch_object())
 {
     if (!isset($sections) ||
@@ -45,6 +48,66 @@ while ($row = $result->fetch_object())
         }
 
         $section = new stdClass();
+
+        /**
+         * Get the group name.
+         */
+
+        if (!$row->groupId)
+        {
+            $section->groupNameHTML = 'No Group';
+        }
+        else if (!isset($documentGroupNamesForHTML[$row->groupId]))
+        {
+            $filename = Colby::findFileForDocumentGroup('document-group.data', $row->groupId);
+
+            if ($filename)
+            {
+                $groupData = unserialize(file_get_contents($filename));
+
+                $section->groupNameHTML = $groupData->nameHTML;
+            }
+            else
+            {
+                $section->groupNameHTML = 'Unknown';
+            }
+
+            $documentGroupNamesForHTML[$row->groupId] = $section->groupNameHTML;
+        }
+        else
+        {
+            $section->groupNameHTML = $documentGroupNamesForHTML[$row->groupId];
+        }
+
+        /**
+         * Get the type name.
+         */
+
+        if (!$row->typeId)
+        {
+            $section->typeNameHTML = 'No Type';
+        }
+        else if (!isset($documentTypeNamesForHTML[$row->typeId]))
+        {
+            $filename = Colby::findFileForDocumentType('document-type.data', $row->groupId, $row->typeId);
+
+            if ($filename)
+            {
+                $groupData = unserialize(file_get_contents($filename));
+
+                $section->typeNameHTML = $groupData->nameHTML;
+            }
+            else
+            {
+                $section->typeNameHTML = 'Unknown';
+            }
+
+            $documentTypeNamesForHTML[$row->typeId] = $section->typeNameHTML;
+        }
+        else
+        {
+            $section->typeNameHTML = $documentTypeNamesForHTML[$row->typeId];
+        }
 
         $section->groupId = $row->groupId;
         $section->typeId = $row->typeId;
@@ -82,9 +145,23 @@ $result->free();
             margin-bottom: 10px;
         }
 
-        section.group-type h1
+        section.group-type header h1
         {
+            margin-top: 5px;
             font-size: 1em;
+        }
+
+        section.group-type header h2
+        {
+            margin-top: 5px;
+            color: #3f3f3f;
+            font-size: 0.8em;
+        }
+
+        section.group-type header .hash
+        {
+            margin-top: 2px;
+            color: #7f7f7f;
         }
 
         section.group-type + section.group-type
@@ -104,8 +181,11 @@ $result->free();
 
         <section class="group-type">
             <header>
-                <h1>Group Id: <?php echo $section->groupId; ?></h1>
-                <h1>Type Id: <?php echo $section->typeId; ?></h1>
+                <h1>Group: <?php echo $section->groupNameHTML; ?></h1>
+                <div class="hash"><?php echo $section->groupId; ?></div>
+                <h1>Type: <?php echo $section->typeNameHTML; ?></h1>
+                <div class="hash"><?php echo $section->typeId; ?></div>
+                <h2>Count: <?php echo $section->archiveIds->count(); ?></h2>
             </header>
 
             <?php
