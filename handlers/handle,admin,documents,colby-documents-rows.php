@@ -137,7 +137,7 @@ $result->free();
 
         section.group-type .hash
         {
-            font-size: 0.5em;
+            font-size: 0.55em;
         }
 
         section.group-type header

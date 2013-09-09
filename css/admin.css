@@ -13,7 +13,6 @@ body
 body .page
 {
     overflow: hidden; /* expand to contain floated child (vertical nav menu) */
-    width: 900px;
     margin: 20px auto;
 }
 
@@ -115,8 +114,13 @@ main > h2
 }
 
 /**
- *
+ * Colby standard styles
  */
+
+.fixed-page-width
+{
+    width: 980px;
+}
 
 a.big-button
 {
