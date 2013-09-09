@@ -142,7 +142,16 @@ a.big-button:hover
 }
 
 /**
- * Vertical menu
+ * Menus
+ */
+
+nav ul > li.selected a
+{
+    color: #3f3f3f;
+}
+
+/**
+ * Vertical menus
  */
 
 nav.vertical-menu
