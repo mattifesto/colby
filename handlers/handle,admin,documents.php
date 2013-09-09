@@ -5,7 +5,7 @@ include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration
 
 $page = new ColbyOutputManager('admin-html-page');
 
-$page->titleHTML = 'Archives';
+$page->titleHTML = 'Documents Administration';
 $page->descriptionHTML = 'List, view, delete, and manage archives.';
 
 $page->begin();
@@ -23,12 +23,12 @@ $archive = $document->archive();
 
 ?>
 
-<main>
-    <h1>Archives</h1>
+<nav style="text-align: center; margin-bottom: 20px;">
+    <?php renderDocumentsAdministrationMenu(); ?>
+</nav>
 
-    <nav style="text-align: center;">
-        <?php renderDocumentsAdministrationMenu(); ?>
-    </nav>
+<main>
+    <h1>Documents Administration</h1>
 
     <?php
 

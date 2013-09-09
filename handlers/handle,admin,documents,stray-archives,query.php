@@ -21,20 +21,23 @@ $archive = ColbyArchive::open(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
 
 ?>
 
-<main>
-    <h1>Query Stray Archives</h1>
-
-    <nav style="text-align: center;">
-        <?php renderDocumentsAdministrationMenu(); ?>
-    </nav>
+<nav style="text-align: center; margin-bottom: 20px;">
 
     <?php
+
+    renderDocumentsAdministrationMenu();
 
     $reports = $archive->valueForKey('reports');
 
     if ($reports)
     {
-        echo '<nav style="text-align: center; font-size: 90%;"><p>Reports<ul class="horizontal">';
+        ?>
+
+        <div style="margin: 10px 0px 5px; color: #7f7f7f; font-family: Georgia, serif; font-size: 0.7em; font-style: italic;">~ reports ~</div>
+
+        <ul class="horizontal" style="font-size: 0.9em;">
+
+        <?php
 
         foreach ($reports->items as $reportId => $report)
         {
@@ -52,11 +55,19 @@ $archive = ColbyArchive::open(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
             <?php
         }
 
-        echo '</ul></nav>';
+        ?>
+
+        </ul>
+
+        <?php
     }
 
-
     ?>
+
+</nav>
+
+<main>
+    <h1>Query Stray Archives</h1>
 
     <div>
         <div>

@@ -70,7 +70,8 @@ $adminSelectedClass = (isset($stubs[0]) && $stubs[0] == 'admin') ? 'class="selec
                 <li><?php echo ColbyUser::loginHyperlink(); ?></li>
             </ul>
         </nav>
-        <section>
-            <nav class="menu-column">
+        <div class="page">
+            <nav class="vertical-menu">
                 <ul><?php include Colby::findSnippet('menu-items-admin.php'); ?></ul>
-            </nav>
+            </nav> <!-- vertical-menu -->
+            <div class="content">

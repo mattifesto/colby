@@ -36,6 +36,10 @@ else
 
 ?>
 
+<nav style="text-align: center; margin-bottom: 20px;">
+    <?php renderDocumentsAdministrationMenu(); ?>
+</nav>
+
 <main>
     <style scoped>
 
@@ -67,10 +71,6 @@ else
     </style>
 
     <h1><?php echo $title; ?></h1>
-
-    <nav style="text-align: center;">
-        <?php renderDocumentsAdministrationMenu(); ?>
-    </nav>
 
     <?php
 

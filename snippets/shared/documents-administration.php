@@ -12,17 +12,31 @@ $menuBuilder->addValue('main', 'uri', '/admin/documents/');
 $menuBuilder->addValue('stray-archives', 'titleHTML', 'Stray Archives');
 $menuBuilder->addValue('stray-archives', 'uri', '/admin/documents/stray-archives/');
 
+$menuBuilder->addValue('query-stray-archives', 'titleHTML', 'Query Stray Archives');
+$menuBuilder->addValue('query-stray-archives', 'uri', '/admin/documents/stray-archives/query/');
+
+$menuBuilder->addValue('colby-documents-rows', 'titleHTML', 'ColbyDocuments Rows');
+$menuBuilder->addValue('colby-documents-rows', 'uri', '/admin/documents/colby-documents-rows/');
+
 $menuBuilder->addValue('stray-documents', 'titleHTML', 'Stray Documents');
 $menuBuilder->addValue('stray-documents', 'uri', '/admin/documents/stray-documents/');
 
-$menuBuilder->addValue('query-stray-archives', 'titleHTML', 'Query Stray Archives');
-$menuBuilder->addValue('query-stray-archives', 'uri', '/admin/documents/stray-archives/query/');
 
 global $documentsAdministrationMenu;
 
 $documentsAdministrationMenu = $menuBuilder->nestedDictionary();
 
 unset($menuBuilder);
+
+/**
+ * @return string
+ */
+function linkForArchiveId($archiveId)
+{
+    $href = COLBY_SITE_URL . "/admin/documents/view/?archive-id={$archiveId}";
+
+    return "<a href=\"{$href}\"><span class=\"hash\">{$archiveId}</span></a>";
+}
 
 /**
  *
@@ -54,5 +68,5 @@ function renderDocumentsAdministrationMenu()
  */
 function viewLinkForArchiveId($archiveId)
 {
-    echo "<a href=\"/admin/documents/view/?archive-id={$archiveId}\">{$archiveId}</a>";
+    echo linkForArchiveId($archiveId);
 }

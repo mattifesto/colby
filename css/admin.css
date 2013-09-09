@@ -10,20 +10,20 @@ body
     padding-bottom: 100px;
 }
 
-body > section
+body .page
 {
     overflow: hidden; /* expand to contain floated child (vertical nav menu) */
     width: 900px;
     margin: 20px auto;
 }
 
-body > section > nav
+body .page > .vertical-menu
 {
     float: left;
     margin-right: 2.0em;
 }
 
-body > section > nav + *
+body .page > .content
 {
     overflow: hidden; /* don't wrap underneath the floated nav menu */
 }
@@ -138,24 +138,33 @@ a.big-button:hover
 }
 
 /**
- *
+ * Vertical menu
  */
 
-nav.menu-column
+nav.vertical-menu
 {
     max-width: 200px;
     text-align: center;
 }
 
-nav.menu-column > ul
+nav.vertical-menu > ul
 {
     list-style-type: none;
 }
 
-nav.menu-column > ul > li
+nav.vertical-menu > ul > li
 {
     margin-bottom: 0.5em;
 }
+
+nav.vertical-menu h1
+{
+    font-size: 1.1em;
+}
+
+/**
+ *
+ */
 
 section.header-metadata-description
 {

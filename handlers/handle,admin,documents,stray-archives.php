@@ -23,12 +23,12 @@ $archive = $document->archive();
 
 ?>
 
+<nav style="text-align: center; margin-bottom: 20px;">
+    <?php renderDocumentsAdministrationMenu(); ?>
+</nav>
+
 <main>
     <h1>Stray Archives</h1>
-
-    <nav style="text-align: center;">
-        <?php renderDocumentsAdministrationMenu(); ?>
-    </nav>
 
     <?php
 

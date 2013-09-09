@@ -1,5 +1,7 @@
 <?php
 
+include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
+
 $page = new ColbyOutputManager('admin-html-page');
 
 $page->titleHTML = 'Archive Details';
@@ -30,8 +32,13 @@ $archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
 
 ?>
 
+<nav style="text-align: center; margin-bottom: 20px;">
+    <?php renderDocumentsAdministrationMenu(); ?>
+</nav>
+
 <main>
     <style>
+
         pre
         {
             margin-bottom: 50px;
@@ -50,7 +57,7 @@ $archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
         section.keys-and-values dl
         {
             display: inline-block;
-            margin: 10px;
+            margin: 15px 20px;
             vertical-align: top;
         }
 
@@ -58,6 +65,12 @@ $archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
         {
             font-weight: bold;
         }
+
+        section.keys-and-values dl dd .hash
+        {
+            font-size: 60%;
+        }
+
     </style>
 
     <header>
@@ -66,6 +79,8 @@ $archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
     </header>
 
     <?php
+
+    displayColbyDocumentsTableRow($archiveId);
 
     displayAttributesForRoot($root);
 
@@ -87,6 +102,9 @@ $page->end();
 
 /* ---------------------------------------------------------------- */
 
+/**
+ * @return void
+ */
 function displayAttributesForRoot($root)
 {
     ?>
@@ -126,6 +144,75 @@ function displayAttributesForRoot($root)
     <?php
 }
 
+/**
+ * @return void
+ */
+function displayColbyDocumentsTableRow($archiveId)
+{
+    $archiveIdForSQL = Colby::mysqli()->escape_string($archiveId);
+
+$sql = <<<EOT
+SELECT
+    `id`,
+    LOWER(HEX(`archiveId`)) as `archiveId`,
+    LOWER(HEX(`groupId`)) as `groupId`,
+    LOWER(HEX(`modelId`)) as `modelId`,
+    LOWER(HEX(`viewId`)) as `viewId`,
+    `stub`,
+    `titleHTML`,
+    `subtitleHTML`,
+    `thumbnailURL`,
+    `searchText`,
+    `published`,
+    `publishedBy`
+FROM
+    `ColbyPages`
+WHERE
+    `archiveId` = UNHEX('{$archiveIdForSQL}');
+EOT;
+
+    $result = Colby::query($sql);
+
+    ?>
+
+    <section class="keys-and-values colby-documents-table-row">
+        <h1>ColbyDocuments Table Row</h1>
+
+        <?php
+
+        if ($result->num_rows != 1)
+        {
+            echo "<p>There is no row for this document.";
+        }
+        else
+        {
+            $row = $result->fetch_object();
+
+            foreach ($row as $name => $value)
+            {
+                $type = null;
+
+                if ('published' == $name)
+                {
+                    $type = 'time';
+                }
+
+                displayKeyValuePair($name, $value, $type);
+            }
+        }
+
+        ?>
+
+    </section>
+
+    <?php
+
+    $result->free();
+}
+
+/**
+ * @return void
+ */
 function displayDataForRoot($root)
 {
     ?>
@@ -154,6 +241,9 @@ function displayDataForRoot($root)
     <?php
 }
 
+/**
+ * @return void
+ */
 function displayKeyValuePair($key, $value, $type = null)
 {
     ?>
@@ -177,11 +267,24 @@ function displayKeyValuePair($key, $value, $type = null)
     <?php
 }
 
+/**
+ * @return void
+ */
 function displayValue($value)
 {
     if (!is_scalar($value))
     {
         echo ColbyConvert::textToHTML(var_export($value, true));
+    }
+    else if (is_string($value) &&
+             preg_match('/^[0-9a-fA-F]{40}$/', $value))
+    {
+        /**
+         * This appears to be a sha1 hash.
+         */
+
+        echo "<span class=\"hash\">{$value}</span>";
+
     }
     else
     {
@@ -189,9 +292,19 @@ function displayValue($value)
     }
 }
 
+/**
+ * @return void
+ */
 function displayValueForTime($value)
 {
-    $javaScriptTime = $value * 1000;
+    if (is_numeric($value))
+    {
+        $javaScriptTime = $value * 1000;
 
-    echo "<span class=\"time\" data-timestamp=\"{$javaScriptTime}\">{$value}</span>";
+        echo "<span class=\"time\" data-timestamp=\"{$javaScriptTime}\">{$value}</span>";
+    }
+    else
+    {
+        displayValue($value);
+    }
 }
