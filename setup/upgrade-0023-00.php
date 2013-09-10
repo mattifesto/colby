@@ -54,17 +54,7 @@ EOT;
  * Execute the upgrade.
  */
 
-if (is_callable('doPreUpgradeDatabase0007'))
-{
-    doPreUpgradeDatabase0007();
-}
-
 foreach ($upgradeQueries as $sql)
 {
     Colby::query($sql);
-}
-
-if (is_callable('doPostUpgradeDatabase0007'))
-{
-    doPostUpgradeDatabase0007();
 }
