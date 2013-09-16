@@ -14,7 +14,9 @@ ColbySheet.alert = function(html)
     var sheetHTML = ' \
 <div class="small-panel"> \
     <div>' + html + '</div> \
-    <div style="text-align: right;"><button onclick="ColbySheet.endSheet();">Dismiss</button></div> \
+    <div style="margin-top: 20px; text-align: right;"> \
+        <button onclick="ColbySheet.endSheet();">Dismiss</button> \
+    </div> \
 </div>';
 
     ColbySheet.beginSheet(sheetHTML);

@@ -38,19 +38,16 @@ a:hover
     text-decoration: underline;
 }
 
-input[type="text"],
-textarea
+input[type="text"].big-field
 {
-    display: block;
-    width: 100%;
-    padding: 4px;
-    border: 1px solid LightGray;
+    padding: 6px 12px;
+    border: 1px solid #bfbfbf;
 }
 
-input[type="text"]:disabled
+input[type="text"].big-field:disabled
 {
     border-color: transparent;
-    color: #505050;
+    color: #5f5f5f;
 }
 
 fieldset
@@ -79,8 +76,17 @@ fieldset section.control > input[type="file"],
 fieldset section.control > input[type="text"],
 fieldset section.control > textarea
 {
+    display: block;
+    width: 100%;
     border: none;
     padding: 4px 10px;
+}
+
+fieldset section.control > input[type="file"]:disabled,
+fieldset section.control > input[type="text"]:disabled,
+fieldset section.control > textarea:disabled
+{
+    color: #5f5f5f;
 }
 
 main

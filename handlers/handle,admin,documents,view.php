@@ -92,7 +92,30 @@ $archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
 
     ?>
 
+    <div style="margin-top: 80px; text-align: center;">
+
+        <input type="hidden" id="archive-id" value="<?php echo $archiveId; ?>">
+
+        <div>
+            <input type="text"
+                   id="archive-id-for-confirmation"
+                   placeholder="Enter the document's archive id to enable deletion"
+                   class="big-field"
+                   style="width: 400px; text-align: center;">
+        </div>
+
+        <div style="margin-top: 20px;">
+            <a class="big-button"
+               onclick="ColbyDocumentDeleter.deleteDocument();">
+
+               Delete this document
+            <a>
+        </div>
+    </div>
+
 </main>
+
+<script src="<?php echo COLBY_SYSTEM_URL; ?>/handlers/handle,admin,documents,view.js"></script>
 
 <?php
 
