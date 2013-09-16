@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `ColbyPages`
     `modelId` BINARY(20),
     `viewId` BINARY(20),
     `groupId` BINARY(20),
-    `stub` VARCHAR(100) NOT NULL,
+    `stub` VARCHAR(100),
     `titleHTML` VARCHAR(150) NOT NULL,
     `subtitleHTML` VARCHAR(150) NOT NULL,
     `thumbnailURL` VARCHAR(200),
