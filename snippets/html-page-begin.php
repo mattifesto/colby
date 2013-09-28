@@ -17,7 +17,9 @@ if (ColbyRequest::$archive)
     $documentGroupId = ColbyRequest::$archive->valueForKey('documentGroupId');
     $documentTypeId = ColbyRequest::$archive->valueForKey('documentTypeId');
 
-    $documentTypeStyleSheetURL = Colby::findFileForDocumentType('view.css', $documentGroupId, $documentTypeId,
+    $documentTypeStyleSheetURL = Colby::findFileForDocumentType('view.css',
+                                                                $documentGroupId,
+                                                                $documentTypeId,
                                                                 Colby::returnURL);
 }
 
@@ -32,21 +34,17 @@ if (ColbyRequest::$archive)
               content="<?php echo $descriptionHTML; ?>">
 
         <link rel="stylesheet"
-              type="text/css"
               href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700">
 
         <link rel="stylesheet"
-              type="text/css"
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/equalize.css">
 
         <link rel="stylesheet"
-              type="text/css"
               href="<?php echo COLBY_SITE_URL; ?>/colby/css/shared.css">
 
         <?php if (isset($documentTypeStyleSheetURL)) { ?>
 
             <link rel="stylesheet"
-                  type="text/css"
                   href="<?php echo $documentTypeStyleSheetURL; ?>">
 
         <?php } ?>
