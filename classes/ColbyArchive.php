@@ -221,7 +221,7 @@ class ColbyArchive
      * @param bool $shouldCreateStorageNow
      *
      *  If this parameter is true the storage area for the archive will be
-     *  created before this method returns. This would be desireable if the
+     *  created before this method returns. This would be desirable if the
      *  caller was preparing to save files into the archive before saving
      *  the archive data and needs to be sure the storage area exists.
      *

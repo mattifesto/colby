@@ -42,6 +42,14 @@ class ColbyDocument
     }
 
     /**
+     * This function will create a row in the `ColbyDocuments` table and an
+     * archive for the document. It behaves like the PHP `fopen` function
+     * when passed a mode parameter that allows for writing to the file.
+     *
+     * Because of this behavior, this method should not be called to create
+     * transitory documents. There isn't much of a use case for transitory
+     * documents anyway.
+     *
      * @return ColbyDocument
      */
     public static function documentWithArchiveId($archiveId)

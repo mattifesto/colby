@@ -273,6 +273,41 @@ table.document-list tr *:nth-child(3)
 }
 
 /**
+ * table.formatted-for-admin
+ */
+
+table.formatted-for-admin
+{
+    border-spacing: 0px;
+    table-layout: fixed;
+}
+
+table.formatted-for-admin tbody tr:last-child td,
+table.formatted-for-admin tbody tr:last-child th
+{
+    padding-bottom: 5px;
+}
+
+table.formatted-for-admin td,
+table.formatted-for-admin th
+{
+    padding: 2px 5px;
+}
+
+table.formatted-for-admin td.right,
+table.formatted-for-admin th.right
+{
+    text-align: right;
+}
+
+table.formatted-for-admin tr.border-top td,
+table.formatted-for-admin tr.border-top th
+{
+    padding-top: 5px;
+    border-top: 1px solid #bfbfbf;
+}
+
+/**
  * A `simple-key-value` table is intended to have two columns. The left column
  * contains keys in `th` elements and the right column contains values in `td`
  * elements.
