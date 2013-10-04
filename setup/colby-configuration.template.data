@@ -4,6 +4,7 @@ define('COLBY_SITE_URL', '');
 
 define('COLBY_SITE_NAME', '');
 define('COLBY_SITE_ADMINISTRATOR', '');
+define('COLBY_SITE_ERRORS_SEND_EMAILS', false);
 define('COLBY_SITE_IS_BEING_DEBUGGED', false);
 
 define('COLBY_FACEBOOK_APP_ID', '');
@@ -14,3 +15,17 @@ define('COLBY_MYSQL_HOST', '');
 define('COLBY_MYSQL_USER', '');
 define('COLBY_MYSQL_PASSWORD', '');
 define('COLBY_MYSQL_DATABASE', '');
+
+/**
+
+define('COLBY_EMAIL_LIBRARY_DIRECTORY', COLBY_SITE_DIRECTORY . '/swiftmailer');
+define('COLBY_EMAIL_SENDER', 'mail@example.com');
+define('COLBY_EMAIL_SENDER_NAME', 'Example Mailer');
+
+define('COLBY_EMAIL_SMTP_SERVER', 'smtp.gmail.com');
+define('COLBY_EMAIL_SMTP_PORT', 465);
+define('COLBY_EMAIL_SMTP_SECURITY', 'ssl');
+define('COLBY_EMAIL_SMTP_USER', 'mail@example.com');
+define('COLBY_EMAIL_SMTP_PASSWORD', '********');
+
+ **/
