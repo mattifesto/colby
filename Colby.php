@@ -277,6 +277,37 @@ class Colby
 
         try
         {
+            if (defined('COLBY_EMAIL_LIBRARY_DIRECTORY') &&
+                defined('COLBY_SITE_ERRORS_SEND_EMAILS') &&
+                COLBY_SITE_ERRORS_SEND_EMAILS)
+            {
+                Colby::useEmail();
+
+                $transport = Swift_SmtpTransport::newInstance(COLBY_EMAIL_SMTP_SERVER,
+                                                              COLBY_EMAIL_SMTP_PORT,
+                                                              COLBY_EMAIL_SMTP_SECURITY);
+
+                $transport->setUsername(COLBY_EMAIL_SMTP_USER);
+                $transport->setPassword(COLBY_EMAIL_SMTP_PASSWORD);
+
+                $mailer = Swift_Mailer::newInstance($transport);
+
+                $messageSubject = COLBY_SITE_NAME . ' Error (' . time() . ')';
+                $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
+                $messageTo = array(COLBY_SITE_ADMINISTRATOR);
+                $messageBody = Colby::exceptionStackTrace($exception);
+                $messageBodyHTML = '<pre>' . ColbyConvert::textToHTML($messageBody) . '</pre>';
+
+                $message = Swift_Message::newInstance();
+                $message->setSubject($messageSubject);
+                $message->setFrom($messageFrom);
+                $message->setTo($messageTo);
+                $message->setBody($messageBody);
+                $message->addPart($messageBodyHTML, 'text/html');
+
+                $mailer->send($message);
+            }
+
             $absoluteHandlerFilename = null;
 
             if ($handlerName)
@@ -589,6 +620,25 @@ EOT;
         self::$uniqueHashCounter++;
 
         return $hash;
+    }
+
+    /**
+     * Enable and initialize Swift Mailer email services.
+     */
+    public static function useEmail()
+    {
+        /**
+         * Email is a heavyweight service. Code that wants to use email
+         * should check to see if the service is available first or be
+         * part of a library that ensures email services are available.
+         */
+
+        if (!defined('COLBY_EMAIL_LIBRARY_DIRECTORY'))
+        {
+            throw new RuntimeException('Email service was requested but has not been configured for this website.');
+        }
+
+        include_once COLBY_EMAIL_LIBRARY_DIRECTORY . '/lib/swift_required.php';
     }
 
     /**
