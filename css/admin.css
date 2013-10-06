@@ -219,6 +219,30 @@ section.header-metadata-description > div.description
     font-size: 0.8em;
 }
 
+
+/**
+ * A `simple-keys-and-values` section displays a list of keys and values
+ * in a more compact from than a `simple-keys-and-values` table.
+ */
+
+section.simple-keys-and-values dl
+{
+    display: inline-block;
+    margin: 15px 20px;
+    vertical-align: top;
+}
+
+section.simple-keys-and-values dl dt
+{
+    font-weight: bold;
+}
+
+section.simple-keys-and-values dl dd .hash
+{
+    font-size: 60%;
+}
+
+
 /**
  * A `document-list` table is used when you have a list of documents each
  * of which has an edit link in the first column. It has one header row.
