@@ -5,13 +5,13 @@ define('COLBY_SITE_DIRECTORY', $_SERVER['DOCUMENT_ROOT']);
 $dataDirectory = COLBY_SITE_DIRECTORY . '/data';
 
 $colbyConfigurationFilename =   COLBY_SITE_DIRECTORY . '/colby-configuration.php';
-$siteConfigurationFilename =    COLBY_SITE_DIRECTORY . '/site-configuration.php';
+$faviconGifFilename =           COLBY_SITE_DIRECTORY . '/favicon.gif';
+$faviconIcoFilename =           COLBY_SITE_DIRECTORY . '/favicon.ico';
 $gitignoreFilename =            COLBY_SITE_DIRECTORY . '/.gitignore';
 $htaccessFilename =             COLBY_SITE_DIRECTORY . '/.htaccess';
 $indexFilename =                COLBY_SITE_DIRECTORY . '/index.php';
+$siteConfigurationFilename =    COLBY_SITE_DIRECTORY . '/site-configuration.php';
 $versionFilename =              COLBY_SITE_DIRECTORY . '/version.php';
-$faviconGifFilename =           COLBY_SITE_DIRECTORY . '/favicon.gif';
-$faviconIcoFilename =           COLBY_SITE_DIRECTORY . '/favicon.ico';
 
 $shouldPerformInstallation = (isset($_GET['install']) && $_GET['install'] == 'true');
 
@@ -98,10 +98,11 @@ if (!$shouldPerformInstallation)
 }
 
 if (file_exists($dataDirectory) ||
-    file_exists($configurationFilename) ||
+    file_exists($colbyConfigurationFilename) ||
     file_exists($gitignoreFilename) ||
     file_exists($htaccessFilename) ||
     file_exists($indexFilename) ||
+    file_exists($siteConfigurationFilename) ||
     file_exists($versionFilename))
 {
     // if .htaccess exists correctly in the web root directory
