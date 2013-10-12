@@ -79,10 +79,27 @@ if (!Element.prototype.addEventListener)
     {
         var newType = "on" + type;
 
-        if ('DOMContentLoaded' == type)
+        if ("DOMContentLoaded" == type)
         {
             newType = "onload";
         }
+        else if ("input" == type)
+        {
+            newType = "onchange";
+        }
+
+        this.attachEvent(newType, listener);
+    };
+}
+
+/**
+ * window.addEventListener
+ */
+if (!window.constructor.prototype.addEventListener)
+{
+    window.constructor.prototype.addEventListener = function(type, listener, useCapture)
+    {
+        var newType = "on" + type;
 
         this.attachEvent(newType, listener);
     };
