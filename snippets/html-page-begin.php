@@ -1,9 +1,12 @@
 <?php
 
-global $searchQueryHTML;
+/**
+ * This file is a snippet for use with the `ColbyOutputManager` class. This
+ * snippet will be included by an instance of that class and therefore `$this`
+ * refers to the current instance of a `ColbyOutputManager`.
+ */
 
-$titleHTML = $this->titleHTML;
-$descriptionHTML = $this->descriptionHTML;
+global $searchQueryHTML;
 $searchQueryHTML = isset($searchQueryHTML) ? $searchQueryHTML : '';
 
 $stubs = ColbyRequest::decodedStubs();
@@ -28,10 +31,10 @@ if (ColbyRequest::$archive)
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title><?php echo $titleHTML; ?></title>
+        <title><?php echo $this->titleHTML; ?></title>
 
         <meta name="description"
-              content="<?php echo $descriptionHTML; ?>">
+              content="<?php echo $this->descriptionHTML; ?>">
 
         <link rel="stylesheet"
               href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700">

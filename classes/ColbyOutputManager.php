@@ -2,16 +2,22 @@
 
 class ColbyOutputManager
 {
-    private $template;
+    private $templateName;
+
+    public $cssFilenames = array();
+    public $javaScriptFilenames = array();
+
+    public $titleHTML = '';
+    public $descriptionHTML = '';
 
     /**
      * @return ColbyOutput
      */
-    public function __construct($template = 'html-page')
+    public function __construct($templateName = 'html-page')
     {
-        $this->template = $template;
+        $this->templateName = $templateName;
 
-        $snippetFilename = Colby::findSnippet("{$this->template}-construct.php");
+        $snippetFilename = Colby::findSnippet("{$this->templateName}-construct.php");
 
         if ($snippetFilename)
         {
@@ -28,7 +34,7 @@ class ColbyOutputManager
 
         set_exception_handler(array($this, 'handleException'));
 
-        $snippetFilename = Colby::findSnippet("{$this->template}-begin.php");
+        $snippetFilename = Colby::findSnippet("{$this->templateName}-begin.php");
 
         if ($snippetFilename)
         {
@@ -58,7 +64,7 @@ class ColbyOutputManager
      */
     public function end()
     {
-        $snippetFilename = Colby::findSnippet("{$this->template}-end.php");
+        $snippetFilename = Colby::findSnippet("{$this->templateName}-end.php");
 
         if ($snippetFilename)
         {
@@ -87,6 +93,6 @@ class ColbyOutputManager
 
         // Use the main Colby exception handler to create exception related output.
 
-        Colby::handleException($exception, $this->template);
+        Colby::handleException($exception, $this->templateName);
     }
 }
