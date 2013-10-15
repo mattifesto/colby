@@ -15,21 +15,6 @@ $homeSelectedClass = isset($stubs[0]) ? '' : 'class="selected"';
 $searchSelectedClass = (isset($stubs[0]) && $stubs[0] == 'search') ? 'class="selected"' : '';
 $blogSelectedClass = (isset($stubs[0]) && $stubs[0] == 'blog') ? 'class="selected"' : '';
 
-if (ColbyRequest::$archive)
-{
-    $documentGroupId = ColbyRequest::$archive->valueForKey('documentGroupId');
-    $documentTypeId = ColbyRequest::$archive->valueForKey('documentTypeId');
-
-    $documentTypeStyleSheetURL = Colby::findFileForDocumentType('view.css',
-                                                                $documentGroupId,
-                                                                $documentTypeId,
-                                                                Colby::returnURL);
-
-    if ($documentTypeStyleSheetURL)
-    {
-        $this->cssFilenames[] = $documentTypeStyleSheetURL;
-    }
-}
 
 ?>
 <!doctype html>
