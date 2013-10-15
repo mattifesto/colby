@@ -4,8 +4,9 @@ class ColbyOutputManager
 {
     private $templateName;
 
-    public $cssFilenames = array();
-    public $javaScriptFilenames = array();
+    public $cssURLs = array();
+    public $javaScriptURLs = array();
+    public $javaScriptSnippetFilenames = array();
 
     public $titleHTML = '';
     public $descriptionHTML = '';

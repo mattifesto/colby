@@ -6,11 +6,13 @@
  * refers to the current instance of a `ColbyOutputManager`.
  */
 
-$this->cssFilenames[] = 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700';
-$this->cssFilenames[] = COLBY_SYSTEM_URL . '/css/equalize.css';
-$this->cssFilenames[] = COLBY_SYSTEM_URL . '/css/shared.css';
+$this->cssURLs[] = 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700';
+$this->cssURLs[] = COLBY_SYSTEM_URL . '/css/equalize.css';
+$this->cssURLs[] = COLBY_SYSTEM_URL . '/css/shared.css';
 
-$this->javaScriptFilenames[] = COLBY_SITE_URL . '/colby/javascript/html5shiv.js';
-$this->javaScriptFilenames[] = COLBY_SITE_URL . '/colby/javascript/ColbyEqualize.js';
-$this->javaScriptFilenames[] = COLBY_SITE_URL . '/colby/javascript/Colby.js';
-$this->javaScriptFilenames[] = COLBY_SITE_URL . '/colby/javascript/ColbySheet.js';
+$this->javaScriptURLs[] = COLBY_SYSTEM_URL . '/javascript/html5shiv.js';
+$this->javaScriptURLs[] = COLBY_SYSTEM_URL . '/javascript/ColbyEqualize.js';
+$this->javaScriptURLs[] = COLBY_SYSTEM_URL . '/javascript/Colby.js';
+$this->javaScriptURLs[] = COLBY_SYSTEM_URL . '/javascript/ColbySheet.js';
+
+$this->javaScriptSnippetFilenames[] = COLBY_SYSTEM_DIRECTORY . '/javascript/snippet-google-universal-analytics.php';

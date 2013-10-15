@@ -39,9 +39,9 @@ if (ColbyRequest::$archive)
         <title><?php echo $this->titleHTML; ?></title>
         <meta name="description" content="<?php echo $this->descriptionHTML; ?>">
 
-        <?php foreach ($this->cssFilenames as $cssFilename) { ?>
+        <?php foreach ($this->cssURLs as $cssURL) { ?>
 
-            <link rel="stylesheet" href="<?php echo $cssFilename; ?>">
+            <link rel="stylesheet" href="<?php echo $cssURL; ?>">
 
         <?php } ?>
 

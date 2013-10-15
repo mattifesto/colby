@@ -6,16 +6,30 @@
  * refers to the current instance of a `ColbyOutputManager`.
  */
 
-foreach ($this->javaScriptFilenames as $javaScriptFilename)
-{
+    /**
+     * Javascript files to include.
+     */
+
+    foreach ($this->javaScriptURLs as $javaScriptURL)
+    {
+        ?>
+
+        <script src="<?php echo $javaScriptURL; ?>"></script>
+
+        <?php
+
+    }
+
+    /**
+     * Javascript snippets to add to the page.
+     */
+
+    foreach ($this->javaScriptSnippetFilenames as $javaScriptSnippetFilename)
+    {
+        include $javaScriptSnippetFilename;
+    }
+
     ?>
-
-    <script src="<?php echo $javaScriptFilename; ?>"></script>
-
-    <?php
-}
-
-?>
 
     </body>
 </html>
