@@ -1,9 +1,12 @@
 <?php
 
-global $searchQueryHTML;
+/**
+ * This file is a snippet for use with the `ColbyOutputManager` class. This
+ * snippet will be included by an instance of that class and therefore `$this`
+ * refers to the current instance of a `ColbyOutputManager`.
+ */
 
-$titleHTML = $this->titleHTML;
-$descriptionHTML = $this->descriptionHTML;
+global $searchQueryHTML;
 $searchQueryHTML = isset($searchQueryHTML) ? $searchQueryHTML : '';
 
 $stubs = ColbyRequest::decodedStubs();
@@ -21,6 +24,11 @@ if (ColbyRequest::$archive)
                                                                 $documentGroupId,
                                                                 $documentTypeId,
                                                                 Colby::returnURL);
+
+    if ($documentTypeStyleSheetURL)
+    {
+        $this->cssFilenames[] = $documentTypeStyleSheetURL;
+    }
 }
 
 ?>
@@ -28,34 +36,15 @@ if (ColbyRequest::$archive)
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title><?php echo $titleHTML; ?></title>
+        <title><?php echo $this->titleHTML; ?></title>
+        <meta name="description" content="<?php echo $this->descriptionHTML; ?>">
 
-        <meta name="description"
-              content="<?php echo $descriptionHTML; ?>">
+        <?php foreach ($this->cssURLs as $cssURL) { ?>
 
-        <link rel="stylesheet"
-              href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700">
-
-        <link rel="stylesheet"
-              href="<?php echo COLBY_SITE_URL; ?>/colby/css/equalize.css">
-
-        <link rel="stylesheet"
-              href="<?php echo COLBY_SITE_URL; ?>/colby/css/shared.css">
-
-        <?php if (isset($documentTypeStyleSheetURL)) { ?>
-
-            <link rel="stylesheet"
-                  href="<?php echo $documentTypeStyleSheetURL; ?>">
+            <link rel="stylesheet" href="<?php echo $cssURL; ?>">
 
         <?php } ?>
 
-        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/html5shiv.js"></script>
-
-        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbyEqualize.js"></script>
-
-        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/Colby.js"></script>
-
-        <script src="<?php echo COLBY_SITE_URL; ?>/colby/javascript/ColbySheet.js"></script>
     </head>
     <body>
         <nav class="menubar">

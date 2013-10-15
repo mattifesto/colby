@@ -29,3 +29,19 @@ define('COLBY_EMAIL_SMTP_USER', 'mail@example.com');
 define('COLBY_EMAIL_SMTP_PASSWORD', '********');
 
  **/
+
+/**
+ * This is a real tracking ID that's used just to have a working default for
+ * all newly installed websites. Change it to a tracking ID specific to this
+ * website.
+ */
+
+define('GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID', 'UA-11518627-14');
+
+/**
+ * For older Google Analytics accounts.
+ *
+
+define('GOOGLE_CLASSIC_ANALYTICS_TRACKING_ID', '');
+
+ **/

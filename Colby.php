@@ -260,20 +260,41 @@ class Colby
     }
 
     /**
+     * Every handler needs to buffer its output and set its own exception
+     * handler so that when an exception is thrown the handler discards its
+     * own output buffer and restores the previous exception handler. After
+     * that, it can either simply call this function or even rethrow the
+     * exception since this is the default exception handler.
+     *
+     * This process is automated by the `ColbyOutputManager` class, which
+     * most handlers use, although use of the class is not strictly necessary.
+     *
+     * This function assumes there is no output buffer active and that no
+     * content has been output thus far to the global buffer. If there is,
+     * it is the handler's fault and the handler should be fixed. The rule
+     * is that if a process tries to do something and fails, that process
+     * should clean up its own mess before handing the failure off to
+     * another function.
+     *
      * @return void
      */
     public static function handleException($exception, $handlerName = null)
     {
-        // exception handlers should never throw exceptions
-        // if they do, it's very difficult to debug
-        // in some cases while making more major system changes
-        // throwing exceptions in exception handlers is unavoidable
-        //     errors are converted to exceptions in Colby
-        //     so even if we don't throw, exceptions can occur
-        // so to be sure we always get some good feedback
-        // we wrap all code in an exception handler in a try-catch block
-        // and use error_log as a last resort to find out what went wrong
-        // if an exception is thrown inside this exception handler
+        /**
+         * Exception handlers should never throw exceptions because if they
+         * do, it's very difficult to debug. While working on major system
+         * changes sometimes exceptions get thrown from inside this
+         * exception handler. Since errors are converted to exceptions in
+         * Colby, even though this exception handler doesn't throw
+         * exceptions explicitly, exceptions can occur. To make sure there
+         * is always a record of the exception, this exception handler
+         * wraps all of its code in a try-catch block. If an exception
+         * occurs, it uses error_log as a last resort to create a record
+         * of what went wrong.
+         *
+         * However, this will most likely only occur while this function is
+         * being actively worked on.
+         */
 
         try
         {
