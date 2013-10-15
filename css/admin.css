@@ -128,23 +128,36 @@ main > h2
     width: 980px;
 }
 
-a.big-button
+a.big-button,
+a.small-button
 {
     display: inline-block;
-    padding: 10px 30px;
-    min-width: 100px;
-    background-color:#ffbf7f;
-    border-radius: 5px;
+    background-color:#cfcfff;
     color: #333333;
     font-weight: 600;
     cursor: pointer;
-    text-shadow: 0px 1px 0px #ffcf9f;
+    text-shadow: 0px 1px 0px #efefff;
     user-select: none;
 }
 
-a.big-button:hover
+a.big-button:hover,
+a.small-button:hover
 {
+    background-color:#bfbfff;
     text-decoration: none;
+}
+
+a.big-button
+{
+    padding: 10px 30px;
+    min-width: 100px;
+    border-radius: 5px;
+}
+
+a.small-button
+{
+    padding: 1px 6px 3px;
+    border-radius: 20px;
 }
 
 /**
