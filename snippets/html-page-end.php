@@ -21,7 +21,6 @@
             <script src="<?php echo $javaScriptURL; ?>"></script>
 
             <?php
-
         }
 
         /**
