@@ -88,7 +88,22 @@ if (!Element.prototype.addEventListener)
             newType = "onchange";
         }
 
-        this.attachEvent(newType, listener);
+        /**
+         * In modern browsers, `addEventListener` on an element has the
+         * behavior of passing the element instance as `this` when the listener
+         * is called. IE8's `attachEvent` passes the window instead. To
+         * equalize this behavior we create a listener shim that will call
+         * the original listener passing the element instance as `this`.
+         */
+
+        var self = this;
+
+        var listenerShim = function()
+        {
+            listener.call(self);
+        }
+
+        this.attachEvent(newType, listenerShim);
     };
 }
 

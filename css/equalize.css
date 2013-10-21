@@ -87,6 +87,10 @@ pre
  * changed input[type=text] and input[type=file] to just input
  * I'm leaving this comment in just in case something goes wrong
  * also added the button and select elements
+ *
+ * 2013.10.20
+ * Added the `-moz-box-sizing` property because Firefox hasn't yet implemented
+ * the `box-sizing` propery.
  */
 
 button,
@@ -95,6 +99,7 @@ select,
 textarea
 {
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     font-family: inherit;
     font-size: inherit;
     outline: none;
