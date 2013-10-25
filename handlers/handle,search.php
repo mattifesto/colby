@@ -27,6 +27,7 @@ $page->begin();
 
 <form action="<?php echo COLBY_SITE_URL; ?>/search/" <?php echo $formClass; ?>>
     <style>
+
         form input
         {
             padding: 5px;
@@ -71,6 +72,7 @@ $page->begin();
             width: 100%;
             margin-bottom: 30px;
         }
+
     </style>
     <input type="text" name="search-for" value="<?php echo $searchQueryHTML; ?>">
     <input type="submit" value="Search Now">
@@ -86,19 +88,21 @@ if (empty($searchQuery))
 ?>
 
 <section style="width: 800px; margin: 50px auto 0px;">
-    <style>
-        article
+    <style scoped>
+
+        article.result
         {
-            margin-bottom: 20px;
+            padding: 10px;
             overflow: hidden; /* contains floated thumbnail */
             clear: both;
         }
-        article > h1
+
+        article.result > h1
         {
             font-size: 1.5em;
         }
 
-        article > h2
+        article.result > h2
         {
             font-size: 1.0em;
         }
@@ -109,14 +113,17 @@ if (empty($searchQuery))
             height: 100px;
             margin-right: 10px;
             float: left;
-            background-color: #fffff8;
+            text-align: center;
         }
 
         img.thumbnail
         {
             max-width: 100px;
             max-height: 100px;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+            vertical-align: top;
         }
+
     </style>
 
     <?php
@@ -130,7 +137,8 @@ SELECT
     LOWER(HEX(`groupId`)) AS `groupId`,
     `stub`,
     `titleHTML`,
-    `subtitleHTML`
+    `subtitleHTML`,
+    `thumbnailURL`
 FROM
     `ColbyPages`
 WHERE
@@ -148,21 +156,21 @@ END;
         while ($row = $result->fetch_object())
         {
             $url = COLBY_SITE_URL . "/{$row->stub}/";
-            $absoluteThumbnailFilename = COLBY_DATA_DIRECTORY . "/{$row->archiveId}/thumbnail.jpg";
-            $absoluteThumbnailURL = COLBY_DATA_URL . "/{$row->archiveId}/thumbnail.jpg";
 
             ?>
 
-            <article>
+            <article class="result">
                 <div class="img">
 
                     <?php
 
-                    if (file_exists($absoluteThumbnailFilename))
+                    if ($row->thumbnailURL)
                     {
                         ?>
 
-                        <img src="<?php echo $absoluteThumbnailURL; ?>" alt="" class="thumbnail">
+                        <img class="thumbnail"
+                             src="<?php echo $row->thumbnailURL; ?>"
+                             alt="<?php $row->titleHTML; ?>">
 
                         <?php
                     }
