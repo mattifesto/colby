@@ -104,15 +104,17 @@ $userProperties = json_decode($response);
 
 /**
  * 2013.10.24.1201
- * BUGBUG: This is to address an issue one user is having that when they log
+ * ISSUE: This is to address an issue one user is having that when they log
  * in everything seems to work but the user properties don't contain a `name`
- * property.
+ * property. There is no repro for this issue.
  */
 
 if (!isset($userProperties->name))
 {
     throw new RuntimeException('The user properties do not contain a name: ' .
                                serialize($userProperties) .
+                               ' User properties retrieval URL: ' .
+                               $userPropertiesURL .
                                ' HTTP code: ' .
                                $httpCode);
 }
