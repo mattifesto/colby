@@ -82,7 +82,9 @@ curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
 
 $response = curl_exec($curlHandle);
 
-if (curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) === 400)
+$httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+
+if ($httpCode === 400)
 {
     $object = json_decode($response);
 
@@ -99,6 +101,21 @@ curl_close($curlHandle);
  */
 
 $userProperties = json_decode($response);
+
+/**
+ * 2013.10.24.1201
+ * BUGBUG: This is to address an issue one user is having that when they log
+ * in everything seems to work but the user properties don't contain a `name`
+ * property.
+ */
+
+if (!isset($userProperties->name))
+{
+    throw new RuntimeException('The user properties do not contain a name: ' .
+                               serialize($userProperties) .
+                               ' HTTP code: ' .
+                               $httpCode);
+}
 
 ColbyUser::loginCurrentUser(
     $userAccessToken,
