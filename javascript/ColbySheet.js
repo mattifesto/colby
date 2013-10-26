@@ -15,7 +15,7 @@ ColbySheet.alert = function(html)
 <div class="small-panel"> \
     <div>' + html + '</div> \
     <div style="margin-top: 20px; text-align: right;"> \
-        <button onclick="ColbySheet.endSheet();">Dismiss</button> \
+        <a class="big-button" onclick="ColbySheet.endSheet();">Dismiss</a> \
     </div> \
 </div>';
 
@@ -167,6 +167,8 @@ ColbySheet.createElements = function()
         panel.style.left = '0px';
         panel.style.top = '0px';
         panel.style.width = '100%';
+        panel.style.maxHeight = '100%';
+        panel.style.overflow = 'scroll';
 
         document.body.appendChild(panel);
     }
