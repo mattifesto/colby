@@ -10,7 +10,7 @@
  */
 
 /**
- * Detect whether the upgrade is needed.
+ * Determine whether the upgrade is needed.
  */
 
 $sql = <<<EOT
