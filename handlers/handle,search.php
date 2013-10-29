@@ -7,7 +7,7 @@ global $searchQueryHTML;
 
 $searchQuery = isset($_GET['search-for']) ? $_GET['search-for'] : '';
 $searchQueryHTML = ColbyConvert::textToHTML($searchQuery);
-$formClass = empty($searchQuery) ? 'class="no-query"' : 'class="has-query"';
+$formClass = empty($searchQuery) ? 'class="search-page no-query"' : 'class="search-page has-query"';
 
 $titleHTML = 'Search';
 
@@ -26,28 +26,27 @@ $page->begin();
 ?>
 
 <form action="<?php echo COLBY_SITE_URL; ?>/search/" <?php echo $formClass; ?>>
-    <style>
+    <style scoped>
 
-        form input
+        form.search-page input
         {
             padding: 5px;
         }
 
-        form.has-query
+        form.search-page.has-query > div
         {
-            width: 100%;
             padding: 20px 50px;
             background-color: #f7f7f7;
             border-bottom: 1px solid #dddddd;
         }
 
-        form.has-query input[type=text]
+        form.search-page.has-query input[type=text]
         {
             width: 500px;
             margin-right: 30px;
         }
 
-        form.has-query input[type=submit]
+        form.search-page.has-query input[type=submit]
         {
             position: relative;
             top: -3px;
@@ -55,27 +54,29 @@ $page->begin();
             color: white;
         }
 
-        form.has-query input[type=submit]:hover
+        form.search-page.has-query input[type=submit]:hover
         {
             border: 1px solid #5555aa;
         }
 
-        form.no-query
+        form.search-page.no-query
         {
             width: 500px;
             margin: 100px auto;
             text-align: center;
         }
 
-        form.no-query input[type=text]
+        form.search-page.no-query input[type=text]
         {
             width: 100%;
             margin-bottom: 30px;
         }
 
     </style>
-    <input type="text" name="search-for" value="<?php echo $searchQueryHTML; ?>">
-    <input type="submit" value="Search Now">
+    <div>
+        <input type="text" name="search-for" value="<?php echo $searchQueryHTML; ?>">
+        <input type="submit" value="Search Now">
+    </div>
 </form>
 
 <?php
