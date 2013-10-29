@@ -298,36 +298,7 @@ class Colby
 
         try
         {
-            if (defined('COLBY_EMAIL_LIBRARY_DIRECTORY') &&
-                defined('COLBY_SITE_ERRORS_SEND_EMAILS') &&
-                COLBY_SITE_ERRORS_SEND_EMAILS)
-            {
-                Colby::useEmail();
-
-                $transport = Swift_SmtpTransport::newInstance(COLBY_EMAIL_SMTP_SERVER,
-                                                              COLBY_EMAIL_SMTP_PORT,
-                                                              COLBY_EMAIL_SMTP_SECURITY);
-
-                $transport->setUsername(COLBY_EMAIL_SMTP_USER);
-                $transport->setPassword(COLBY_EMAIL_SMTP_PASSWORD);
-
-                $mailer = Swift_Mailer::newInstance($transport);
-
-                $messageSubject = COLBY_SITE_NAME . ' Error (' . time() . ')';
-                $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
-                $messageTo = array(COLBY_SITE_ADMINISTRATOR);
-                $messageBody = Colby::exceptionStackTrace($exception);
-                $messageBodyHTML = '<pre>' . ColbyConvert::textToHTML($messageBody) . '</pre>';
-
-                $message = Swift_Message::newInstance();
-                $message->setSubject($messageSubject);
-                $message->setFrom($messageFrom);
-                $message->setTo($messageTo);
-                $message->setBody($messageBody);
-                $message->addPart($messageBodyHTML, 'text/html');
-
-                $mailer->send($message);
-            }
+            Colby::reportException($exception);
 
             $absoluteHandlerFilename = null;
 
@@ -358,7 +329,7 @@ class Colby
         }
         catch (Exception $rareException)
         {
-            error_log($rareException->getMessage());
+            error_log('Colby::handleException() RARE EXCEPTION: ' . $rareException->getMessage());
         }
     }
 
@@ -550,6 +521,73 @@ class Colby
         }
 
         return $result;
+    }
+
+    /**
+     * This function is responsible for reporting an exception in various ways
+     * if they are available. For instance if emails services is available and
+     * the system is set up to email exceptions to an administrator, this
+     * function will send that email.
+     *
+     * This function will not throw an exception itself. If it experiences an
+     * exception it will output messages for both the original exception and
+     * the exception that was thrown within to the error log.
+     *
+     * This function can be called form anywhere to report an exception which
+     * is useful when code catches an exception it wants to report but doesn't
+     * want to re-throw.
+     *
+     * @return void
+     */
+    public static function reportException(Exception $exception)
+    {
+        try
+        {
+            /**
+             * Report the exception to the error log
+             */
+
+            error_log('Colby::reportException(): ' . $exception->getMessage());
+
+            /**
+             * Report the exception via email to the administrator
+             */
+
+            if (defined('COLBY_EMAIL_LIBRARY_DIRECTORY') &&
+                defined('COLBY_SITE_ERRORS_SEND_EMAILS') &&
+                COLBY_SITE_ERRORS_SEND_EMAILS)
+            {
+                Colby::useEmail();
+
+                $transport = Swift_SmtpTransport::newInstance(COLBY_EMAIL_SMTP_SERVER,
+                                                              COLBY_EMAIL_SMTP_PORT,
+                                                              COLBY_EMAIL_SMTP_SECURITY);
+
+                $transport->setUsername(COLBY_EMAIL_SMTP_USER);
+                $transport->setPassword(COLBY_EMAIL_SMTP_PASSWORD);
+
+                $mailer = Swift_Mailer::newInstance($transport);
+
+                $messageSubject = COLBY_SITE_NAME . ' Error (' . time() . ')';
+                $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
+                $messageTo = array(COLBY_SITE_ADMINISTRATOR);
+                $messageBody = Colby::exceptionStackTrace($exception);
+                $messageBodyHTML = '<pre>' . ColbyConvert::textToHTML($messageBody) . '</pre>';
+
+                $message = Swift_Message::newInstance();
+                $message->setSubject($messageSubject);
+                $message->setFrom($messageFrom);
+                $message->setTo($messageTo);
+                $message->setBody($messageBody);
+                $message->addPart($messageBodyHTML, 'text/html');
+
+                $mailer->send($message);
+            }
+        }
+        catch (Exception $rareException)
+        {
+            error_log('Colby::reportException() RARE EXCEPTION: ' . $rareException->getMessage());
+        }
     }
 
     /**

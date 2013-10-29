@@ -5,6 +5,105 @@ class ColbyConvert
     /**
      * @return string
      */
+    public static function centsIntToDollarsString($amountInCents)
+    {
+        $amountInCents = (int)$amountInCents;
+
+        /**
+         * 2013.10.26
+         *
+         * BUGBUG: This doesn't handle negative numbers correctly.
+         */
+
+        $amountInCents = sprintf('%03d', $amountInCents);
+
+        $amountInDollars = substr_replace($amountInCents, '.', -2, 0);
+
+        return $amountInDollars;
+    }
+
+    /**
+     * This function converts an amount expressed in dollars with limited
+     * optional formatting to an amount expressed in cents. Fractional cents
+     * are allowed to be passed in, but they will be truncated. So if
+     * "$53.236" is passed in, `5323` will be returned, not `5324`.
+     *
+     * Examples:
+     *
+     * 53.2373483 => 5323
+     * $1.        => 100
+     * 3054       => 305400
+     * $2.5       => 250
+     * $1,045.20  => 104520
+     *
+     * @return int
+     */
+    public static function dollarsToCentsInt($amountInDollars)
+    {
+        $amountInDollars = (string)$amountInDollars;
+
+        /**
+         * Regular expression information
+         *
+         * ^\$?
+         * There may or may not be a dollar sign at the beginning
+         *
+         * ([0-9,]*)
+         * Followed by zero or more digits and commas, this is the dollars amount
+         *
+         * (.
+         * Followed by decimal point
+         *
+         * ([0-9]{0,2})
+         * Followed by between 0 and 2 digits, this is the cents amount
+         *
+         * [0-9]*
+         * Followed by zero or more digits, this is the fractional cents amount
+         * which is ignored
+         *
+         * )?
+         * The cents portion of the amount is optional
+         *
+         * $
+         * There is nothing else before the end of the string
+         *
+         * Capture groups:
+         *
+         *  1   dollars amount including commas
+         *  2   full cents amount including decimal point and fractional cents
+         *  3   cents amount, a single digit represents tens of cents
+         */
+
+        $amountInDollarsExpression = '/^\$?([0-9,]*)(.([0-9]{0,2})[0-9]*)?$/';
+
+        $result = preg_match($amountInDollarsExpression, $amountInDollars, $matches);
+
+        /**
+         * Remove the commas from the dollars amount
+         */
+
+        $dollarsAmount = $matches[1];
+        $dollarsAmount = str_replace(',', '', $dollarsAmount);
+
+        /**
+         * Pad the cents amount if necessary
+         */
+
+        $centsAmount = isset($matches[3]) ? $matches[3] : '00';
+        $centsAmount = str_pad($centsAmount, 2, '0');
+
+        /**
+         * Combine dollars and cents and convert to an integer
+         */
+
+        $amountInCents = (int)"{$dollarsAmount}{$centsAmount}";
+
+        return $amountInCents;
+    }
+
+    /**
+     * @return string
+     */
     public static function markaroundToHTML($markaround)
     {
         include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyMarkaroundParser.php');
