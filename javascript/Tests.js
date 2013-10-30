@@ -93,7 +93,60 @@ function doRunJavascriptUnitTests()
         }
     }
 
-    // Report results
+    /**
+     * Test `Colby.centsToDollars`
+     */
+
+    tests = new Array();
+
+    tests.push({
+        "input" : 0,
+        "expected" : "0.00"
+    });
+
+    tests.push({
+        "input" : "020",
+        "expected" : "0.20"
+    });
+
+    tests.push({
+        "input" : "10",
+        "expected" : "0.10"
+    });
+
+    tests.push({
+        "input" : 110,
+        "expected" : "1.10"
+    });
+
+    tests.push({
+        "input" : 3234393,
+        "expected" : "32343.93"
+    });
+
+    var countOfTests = tests.length;
+
+    for (var i = 0; i < countOfTests; i++)
+    {
+        var output = Colby.centsToDollars(tests[i].input);
+
+        if (output != tests[i].expected)
+        {
+            ColbyUnitTests.errors += "<div>`Colby.centsToDollars` test failed" +
+                                     "<p>input: " + tests[i].input +
+                                     "<p>output: " + output +
+                                     "<p>expected: " + tests[i].expected +
+                                     "</div>";
+
+            wasSuccessful = false;
+
+            break;
+        }
+    }
+
+    /**
+     * Report results
+     */
 
     if (wasSuccessful)
     {
