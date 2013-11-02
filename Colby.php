@@ -547,7 +547,12 @@ class Colby
              * Report the exception to the error log
              */
 
-            error_log('Colby::reportException(): ' . $exception->getMessage());
+            error_log('Exception report for file: ' .
+                $exception->getFile() .
+                ', line: ' .
+                $exception->getLine() .
+                ', message: ' .
+                $exception->getMessage());
 
             /**
              * Report the exception via email to the administrator
