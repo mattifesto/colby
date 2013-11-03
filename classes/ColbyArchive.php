@@ -106,7 +106,7 @@ class ColbyArchive
      * @return string
      *  The data URL for the archive with the id `archiveId`.
      */
-    public function dataURLForArchiveId($archiveId)
+    public static function dataURLForArchiveId($archiveId)
     {
         return COLBY_DATA_URL . '/' . self::relativeDataPathForArchiveId($archiveId);
     }
@@ -118,7 +118,7 @@ class ColbyArchive
      */
     public static function deleteArchiveWithArchiveId($archiveId)
     {
-        $archiveDirectory = ColbyArchive::absoluteDataDirectoryForArchiveId($archiveId);
+        $archiveDirectory = self::absoluteDataDirectoryForArchiveId($archiveId);
 
         if (!is_dir($archiveDirectory))
         {
