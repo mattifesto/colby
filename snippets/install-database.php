@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `ColbyPages`
 (
     `id`                    BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `archiveId`             BINARY(20) NOT NULL,
+    `keyValueData`          LONGTEXT NOT NULL,
     `modelId`               BINARY(20),
     `viewId`                BINARY(20),
     `groupId`               BINARY(20),
@@ -116,11 +117,13 @@ CREATE TABLE IF NOT EXISTS `ColbyPages`
     `thumbnailURL`          VARCHAR(200),
     `searchText`            LONGTEXT,
     `published`             BIGINT,
+    `publishedYearMonth`    CHAR(6) NOT NULL DEFAULT '',
     `publishedBy`           BIGINT UNSIGNED,
     PRIMARY KEY (`id`),
     UNIQUE KEY `archiveId` (`archiveId`),
     UNIQUE KEY `stub` (`stub`),
     KEY `groupId_published` (`groupId`, `published`),
+    KEY `groupId_publishedYearMonth_published` (`groupId`, `publishedYearMonth`, `published`),
     CONSTRAINT `ColbyPages_publishedBy`
         FOREIGN KEY (`publishedBy`)
         REFERENCES `ColbyUsers` (`id`)
@@ -131,7 +134,7 @@ COLLATE=utf8_unicode_ci
 EOT;
 
 /**
- * Create the `ColbyVerifyUser` table.
+ * Create the `ColbyVerifyUser` procedure.
  */
 $sqls[] = <<<EOT
 CREATE PROCEDURE ColbyVerifyUser(IN userId BIGINT UNSIGNED)
