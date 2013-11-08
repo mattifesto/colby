@@ -41,16 +41,16 @@ EOT;
 $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbyUsers`
 (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `hash` BINARY(20) NOT NULL,
-    `facebookId` BIGINT UNSIGNED NOT NULL,
-    `facebookAccessToken` VARCHAR(255),
-    `facebookAccessExpirationTime` INT UNSIGNED,
-    `facebookName` VARCHAR(100) NOT NULL,
-    `facebookFirstName` VARCHAR(50) NOT NULL,
-    `facebookLastName` VARCHAR(50) NOT NULL,
-    `facebookTimeZone` TINYINT NOT NULL DEFAULT '0',
-    `hasBeenVerified` BIT(1) NOT NULL DEFAULT b'0',
+    `id`                            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `hash`                          BINARY(20) NOT NULL,
+    `facebookId`                    BIGINT UNSIGNED NOT NULL,
+    `facebookAccessToken`           VARCHAR(255),
+    `facebookAccessExpirationTime`  INT UNSIGNED,
+    `facebookName`                  VARCHAR(100) NOT NULL,
+    `facebookFirstName`             VARCHAR(50) NOT NULL,
+    `facebookLastName`              VARCHAR(50) NOT NULL,
+    `facebookTimeZone`              TINYINT NOT NULL DEFAULT '0',
+    `hasBeenVerified`               BIT(1) NOT NULL DEFAULT b'0',
     PRIMARY KEY (`id`),
     UNIQUE KEY `facebookId` (`facebookId`),
     UNIQUE KEY `hash` (`hash`),
@@ -67,8 +67,8 @@ EOT;
 $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreAdministrators`
 (
-    `userId` BIGINT UNSIGNED NOT NULL,
-    `added` DATETIME NOT NULL,
+    `userId`    BIGINT UNSIGNED NOT NULL,
+    `added`     DATETIME NOT NULL,
     PRIMARY KEY (`userId`),
     CONSTRAINT `ColbyUsersWhoAreAdministrators_userId`
         FOREIGN KEY (`userId`)
@@ -86,8 +86,8 @@ EOT;
 $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreDevelopers`
 (
-    `userId` BIGINT UNSIGNED NOT NULL,
-    `added` DATETIME NOT NULL,
+    `userId`    BIGINT UNSIGNED NOT NULL,
+    `added`     DATETIME NOT NULL,
     PRIMARY KEY (`userId`),
     CONSTRAINT `ColbyUsersWhoAreDevelopers_userId`
         FOREIGN KEY (`userId`)
@@ -105,18 +105,18 @@ EOT;
 $sqls[] = <<<EOT
 CREATE TABLE IF NOT EXISTS `ColbyPages`
 (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `archiveId` BINARY(20) NOT NULL,
-    `modelId` BINARY(20),
-    `viewId` BINARY(20),
-    `groupId` BINARY(20),
-    `stub` VARCHAR(100),
-    `titleHTML` VARCHAR(150) NOT NULL,
-    `subtitleHTML` VARCHAR(150) NOT NULL,
-    `thumbnailURL` VARCHAR(200),
-    `searchText` LONGTEXT,
-    `published` BIGINT,
-    `publishedBy` BIGINT UNSIGNED,
+    `id`                    BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `archiveId`             BINARY(20) NOT NULL,
+    `modelId`               BINARY(20),
+    `viewId`                BINARY(20),
+    `groupId`               BINARY(20),
+    `stub`                  VARCHAR(100),
+    `titleHTML`             VARCHAR(150) NOT NULL,
+    `subtitleHTML`          VARCHAR(150) NOT NULL,
+    `thumbnailURL`          VARCHAR(200),
+    `searchText`            LONGTEXT,
+    `published`             BIGINT,
+    `publishedBy`           BIGINT UNSIGNED,
     PRIMARY KEY (`id`),
     UNIQUE KEY `archiveId` (`archiveId`),
     UNIQUE KEY `stub` (`stub`),
