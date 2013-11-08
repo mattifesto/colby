@@ -26,9 +26,17 @@ $page->begin();
 
 ?>
 
-<article>
+<article class="centered-block standard-white-space blog-post">
+    <style scoped>
 
-    <header>
+        article.blog-post
+        {
+            width: 600px;
+        }
+
+    </style>
+
+    <header class="standard-document-header">
         <h1><?php echo $archive->valueForKey('titleHTML'); ?></h1>
         <h2><?php echo $archive->valueForKey('subtitleHTML'); ?></h2>
     </header>
