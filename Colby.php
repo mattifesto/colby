@@ -506,9 +506,59 @@ class Colby
         return self::$mysqli;
     }
 
-    ///
-    /// simple way to run a query
-    ///
+    /**
+     * This function is used to run multiple SQL statements with a single request
+     * which will help performance. The function does not allow the caller
+     * to get any results so it may not be useful for queries that return
+     * results. To get results use the `query` function or use the `mysqli`
+     * function to the get the `mysqli` object to use it directly.
+     *
+     * If there is an error in any of the SQL statements an exception will be
+     * thrown.
+     *
+     * @return void
+     */
+    public static function queries($sql)
+    {
+        $mysqli = Colby::mysqli();
+
+        $indexOfTheSQLStatementWithAnError = 0;
+
+        $theFirstSQLStatementWasSuccessful = $mysqli->multi_query($sql);
+
+        if ($theFirstSQLStatementWasSuccessful)
+        {
+            /**
+             * The following code just iterates through any result sets
+             * without retrieving them. There would be result sets if the user
+             * mistakenly included queries, such as SELECT queries, that return
+             * results. If we don't at least loop through each of the result
+             * sets, it will block future queries. Basically we need to flush
+             * the result queue.
+             *
+             * The index is used to track which of the SQL statements contained
+             * the error, if an error occurred. MySQL stops processing as soon
+             * as it finds a statement with an error, so the last result will
+             * always be the statement with the error.
+             */
+
+            while ($mysqli->more_results() && $mysqli->next_result())
+            {
+                $indexOfTheSQLStatementWithAnError++;
+            }
+        }
+
+        if ($mysqli->error)
+        {
+            throw new RuntimeException("Index of the SQL statement with an error: {$indexOfTheSQLStatementWithAnError}\n\nMySQL error: {$mysqli->error}");
+        }
+    }
+
+    /**
+     * This function is used to run a single query and check for errors.
+     *
+     * @return mysqli_result | boolean
+     */
     public static function query($sql)
     {
         $mysqli = Colby::mysqli();
