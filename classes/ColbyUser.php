@@ -175,11 +175,26 @@ WHERE
     `userId` = '{$this->id}'
 EOT;
 
-        $result = Colby::query($sql);
+        $result = Colby::mysqli()->query($sql);
 
-        $isOneOfTheGroup = $result->fetch_object()->isOneOfTheGroup;
+        /**
+         * An error will generally mean that the table doesn't exist in which
+         * case the user is not considered to belong to the group.
+         *
+         * Errors produced for other reasons will be very rare and if they
+         * represent a bad database state they will be caught by other queries.
+         */
 
-        $result->free();
+        if (Colby::mysqli()->error)
+        {
+            $isOneOfTheGroup = false;
+        }
+        else
+        {
+            $isOneOfTheGroup = $result->fetch_object()->isOneOfTheGroup;
+
+            $result->free();
+        }
 
         $this->groups[$group] = !!$isOneOfTheGroup;
 
