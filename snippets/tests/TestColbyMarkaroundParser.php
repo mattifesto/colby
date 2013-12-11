@@ -1,5 +1,6 @@
 <?php
 
+ColbyConvertMarkaroundToHTMLTests::orderedListTest();
 ColbyConvertMarkaroundToHTMLTests::paragraphTest();
 ColbyConvertMarkaroundToHTMLTests::unorderedListTest();
 
@@ -8,6 +9,24 @@ ColbyConvertMarkaroundToHTMLTests::unorderedListTest();
  */
 class ColbyConvertMarkaroundToHTMLTests
 {
+    /**
+     * @return void
+     */
+    public static function orderedListTest()
+    {
+        $markaround = "17.5\" by 21.5\"";
+        $expected = "<p>17.5&quot; by 21.5&quot;\n";
+        $actual = ColbyConvert::markaroundToHTML($markaround);
+
+        self::verifyActualStringIsExpected($actual, $expected);
+
+        $markaround = "17. 5\" by 21.5\"";
+        $expected = "<ol>\n<li><p>5&quot; by 21.5&quot;\n</ol>\n";
+        $actual = ColbyConvert::markaroundToHTML($markaround);
+
+        self::verifyActualStringIsExpected($actual, $expected);
+    }
+
     /**
      * @return void
      */

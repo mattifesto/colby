@@ -154,7 +154,7 @@ class ColbyMarkaroundParser
         {
             return MARKAROUND_LINE_TYPE_HEADING3;
         }
-        else if (preg_match('/^[0-9]+\.\s*./', $this->currentMarkaroundLine))
+        else if (preg_match('/^[0-9]+\.\s+./', $this->currentMarkaroundLine))
         {
             return MARKAROUND_LINE_TYPE_ORDERED_LIST_ITEM;
         }
