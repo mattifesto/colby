@@ -1,12 +1,12 @@
-<li><h1>General</h1></li>
-
-<li><a href="/admin/">Status</a></li>
-
 <?php
 
 if (ColbyUser::current()->isOneOfThe('Administrators'))
 {
     ?>
+
+    <li><h1>General</h1></li>
+
+    <li><a href="/admin/">Status</a></li>
 
     <li><h1>Documents</h1></li>
 

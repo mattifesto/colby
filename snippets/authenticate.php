@@ -1,4 +1,18 @@
 <main>
+    <style scoped>
+
+        main
+        {
+            padding-top:  100px;
+            text-align: center;
+        }
+
+        .big-button
+        {
+            margin-top: 20px;
+        }
+
+    </style>
 
     <?php
 
@@ -16,7 +30,9 @@
 
         <p>You must be logged in to view this page.
 
-        <div><a href="<?php echo ColbyUser::loginURL(); ?>">Log In</a></div>
+        <div>
+            <a href="<?php echo ColbyUser::loginURL(); ?>" class="big-button">Log In</a>
+        </div>
 
         <?php
     }
