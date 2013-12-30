@@ -3,7 +3,7 @@
 $page = new ColbyOutputManager('admin-html-page');
 
 $page->titleHTML = 'Unit Tests';
-$page->descriptionHTML = 'Develeloper tests to make sure there are no regressions in functionality.';
+$page->descriptionHTML = 'Developer tests to make sure there are no regressions in functionality.';
 
 $page->begin();
 

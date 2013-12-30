@@ -22,6 +22,7 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
 $testDirectory = COLBY_SYSTEM_DIRECTORY . '/snippets/tests';
 
+include "{$testDirectory}/Test,Colby,decrypt,encrypt.php";
 include "{$testDirectory}/Test,Colby,siteSchemaVersionNumber.php";
 include "{$testDirectory}/Test,ColbyArchive.php";
 include "{$testDirectory}/Test,ColbyDocument.php";
@@ -37,3 +38,20 @@ $response->message = 'The unit tests ran successfully.';
 done:
 
 $response->end();
+
+
+/* ---------------------------------------------------------------- */
+
+/**
+ * This function is intended to be used with scalar values.
+ */
+function CBCompareAnActualTestResultToAnExpectedTestResult($actualTestResult, $expectedTestResult)
+{
+    if ($actualTestResult !== $expectedTestResult)
+    {
+        $actualForDisplay = ColbyConvert::textToTextWithVisibleWhitespace($actualTestResult);
+        $expectedForDisplay = ColbyConvert::textToTextWithVisibleWhitespace($expectedTestResult);
+
+        throw new RuntimeException("actual: \"{$actualForDisplay}\", expected: \"{$expectedForDisplay}\"");
+    }
+}

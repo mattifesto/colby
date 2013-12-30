@@ -7,10 +7,19 @@ ColbyRequest::handleRequest();
 class Colby
 {
     /**
-     * These constants are used as parameters to the 'find' methods.
+     * These constants are used as parameters to the `find` methods.
      */
+
     const returnAbsoluteFilename    = 0;
     const returnURL                 = 1;
+
+    /**
+     * These constants are used by the `encrypt` and `decrypt` methods.
+     */
+
+    const countOfInitializationVectorBytes  = 16;
+    const encryptionMethod                  = 'aes-256-cbc';
+    const encryptionOptions                 = 0;
 
     // mysqli
     // This holds the mysqli object if the request needs database access.
@@ -51,6 +60,83 @@ class Colby
         {
             error_log("Debug Log: {$message}");
         }
+    }
+
+    /**
+     * @param string $cipherDataString
+     *
+     *  This must be a string that was returned by the `encrypt` function.
+     *
+     * @return mixed
+     *
+     *  The data type of the returned data will match the data type that was
+     *  passed into the `encrypt` function.
+     */
+    public static function decrypt($cipherDataString)
+    {
+        $cipherData = unserialize($cipherDataString);
+
+        if ($cipherData->version != 1)
+        {
+            throw new RuntimeException("Unknown Colby cipher data version: {$cipherData->version}.");
+        }
+
+        $serializedData = openssl_decrypt($cipherData->ciphertext,
+                                          self::encryptionMethod,
+                                          CBEncryptionPassword,
+                                          self::encryptionOptions,
+                                          $cipherData->initializationVector);
+
+        return unserialize($serializedData);
+    }
+
+    /**
+     * Encryption is incredibly complex. This function and the `decrypt`
+     * function appear simple but it took days of research before they were
+     * completed. That research is not apparent here, so here are some notes:
+     *
+     *      -   AES-256 is the encryption method used and is currently the best
+     *          choice.
+     *      -   CBC is the encryption mode used and is currently either the
+     *          best choice or tied for the best choice.
+     *      -   The fact that the initialization vector is publicly visible is
+     *          not a security concern in any way.
+     *
+     * @param mixed $data
+     *
+     *  The `$data` parameter can be of any data type. This function will
+     *  serialize it to a string before encrypting it. The `decrypt` function
+     *  will unserialize it so the same data type is returned and the whole
+     *  process is transparent to the caller.
+     *
+     * @return string
+     *
+     *  The returned string is actually a serialized object. It's fine if the
+     *  caller wants to take advantage of this fact, however it would probably
+     *  be of little use to do so.
+     */
+    public static function encrypt($data)
+    {
+        $serializedData = serialize($data);
+
+        $cipherData = new stdClass();
+
+        /**
+         * The cipher data has a version just in case we need to update the
+         * encryption parameters. This way we will be able to detect and
+         * decrypt data encrypted before the changes.
+         */
+
+        $cipherData->version = 1;
+        $cipherData->initializationVector = openssl_random_pseudo_bytes(self::countOfInitializationVectorBytes);
+
+        $cipherData->ciphertext = openssl_encrypt($serializedData,
+                                                  self::encryptionMethod,
+                                                  CBEncryptionPassword,
+                                                  self::encryptionOptions,
+                                                  $cipherData->initializationVector);
+
+        return serialize($cipherData);
     }
 
     /**
