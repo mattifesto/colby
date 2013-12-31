@@ -1,6 +1,6 @@
 <?php
 
-define('COLBY_USER_COOKIE', 'colby-user');
+define('CBUserCookieName', 'colby-user-encrypted-data');
 
 class ColbyUser
 {
@@ -61,71 +61,45 @@ class ColbyUser
     ///
     public static function initialize()
     {
-        if (isset($_COOKIE[COLBY_USER_COOKIE]))
+        self::initializeCurrentUser();
+    }
+
+    /**
+     * @return void
+     */
+    private static function initializeCurrentUser()
+    {
+        if (!isset($_COOKIE[CBUserCookieName]))
         {
-            $cookie = $_COOKIE[COLBY_USER_COOKIE];
+            return;
+        }
 
-            // get '-' delimited data out of cookie
+        $cookieCipherData = $_COOKIE[CBUserCookieName];
 
-            $cookieData = explode('-', $cookie);
+        try
+        {
+            $cookie = Colby::decrypt($cookieCipherData);
 
-            $cookieUserId = $cookieData[0];
-            $cookieHash = $cookieData[1];
-
-            // get the user row for the user indicated by the cookie
-
-            // NOTE: 2012.09.28
-            // Sometimes when the configuration file has been modified
-            // the user can be logged in and later the database is unavailable.
-            // This is a rare occurrence but we handle it
-            // with a check to make sure COLBY_MYSQL_HOST is set
-            // before attempting to get the user row for the user.
-
-            if (COLBY_MYSQL_HOST)
+            if (time() > $cookie->expirationTimestamp)
             {
-                $userRow = self::userRow($cookieUserId);
-            }
-            else
-            {
-                $userRow = null;
-            }
-
-            if (null === $userRow)
-            {
-                // if no user row was found for the user in the cookie
-                // the cookie is not authentic, remove it
-
-                self::logoutCurrentUser();
+                self::removeUserCookie();
 
                 return;
             }
 
-            // regenerate the hash
-            // compare it against the hash in the cookie
-            // if they match the cookie is authentic
-            // if they don't the cookie is not authentic (or it's stale)
+            /**
+             * Success, the user is now logged in.
+             */
 
-            $hashedValue = $userRow->id .
-                $userRow->facebookAccessToken .
-                $userRow->facebookAccessExpirationTime;
+            self::$currentUserId = $cookie->userId;
+        }
+        catch (Exception $exception)
+        {
+            Colby::reportException($exception);
 
-            $generatedHash = hash('sha512', $hashedValue);
+            self::removeUserCookie();
 
-            if ($cookieHash == $generatedHash)
-            {
-                // NOTE: This is the only place the current user id is set. This is because when the user logs in that request sets the cookie and that's all it does. So the only way a user can be logged in is if the cookie is already set. The user is never logged in any other way or in the middle of a request.
-
-                self::$currentUserId = $cookieUserId;
-            }
-            else
-            {
-                // if the hashed don't match
-                // user is effectively logged out
-                // we have to assume for security purposes the cookie was faked
-                // even if really the user just has an old cookie
-
-                self::logoutCurrentUser();
-            }
+            return;
         }
     }
 
@@ -335,13 +309,31 @@ EOT;
             $id = $mysqli->insert_id;
         }
 
-        $hashedValue = $id . $facebookAccessToken . $facebookAccessExpirationTime;
+        /**
+         * Set the Colby user cookie data.
+         */
 
-        $hash = hash('sha512', $hashedValue);
+        $cookie = new stdClass();
 
-        $cookieValue = $id . '-' . $hash;
+        /**
+         * The only realistic way to best prevent cookie hijacking is to use
+         * HTTPS. As soon as a site becomes relatively popular or makes
+         * enough money to cover the cost, switch. This is what Facebook and
+         * Twitter did. It doesn't prevent physical access attacks, but that's
+         * pretty tough to do.
+         */
 
-        setcookie(COLBY_USER_COOKIE, $cookieValue, 0, '/');
+        $cookie->userId = $id;
+        $cookie->expirationTimestamp = time() + (60 * 60 * 4); /* 4 hours from now */
+
+        $encryptedCookie = Colby::encrypt($cookie);
+
+        /**
+         * TODO: If site uses HTTPS set parameter that only allows cookies to
+         * be transmitted over secure connections.
+         */
+
+        setcookie(CBUserCookieName, $encryptedCookie, time() + (60 * 60 * 24 * 30), '/');
     }
 
     /**
@@ -413,18 +405,13 @@ EOT;
         return $url;
     }
 
-    ///
-    /// this function must be called before any html output to be effective
-    /// it sets a cookie
-    ///
+    /**
+     * This function must be called before any output is generated because it
+     * sets a cookie.
+     */
     public static function logoutCurrentUser()
     {
-        // time = now - 1 day
-        // sure to be in the past in all time zones
-
-        $time = time() - (60 * 60 * 24);
-
-        setcookie(COLBY_USER_COOKIE, '', $time, '/');
+        self::removeUserCookie();
     }
 
     /**
@@ -459,6 +446,20 @@ EOT;
         $url = COLBY_SITE_URL . '/colby/logout/?state=' . urlencode(json_encode($state));
 
         return $url;
+    }
+
+    /**
+     * This function must be called before any output is generated because it
+     * sets a cookie.
+     */
+    private static function removeUserCookie()
+    {
+        // time = now - 1 day
+        // sure to be in the past in all time zones
+
+        $time = time() - (60 * 60 * 24);
+
+        setcookie(CBUserCookieName, '', $time, '/');
     }
 
     /**

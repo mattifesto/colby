@@ -87,6 +87,11 @@ class Colby
                                           self::encryptionOptions,
                                           $cipherData->initializationVector);
 
+        if (false === $serializedData)
+        {
+            throw new RuntimeException("Unable to decrypt the ciphertext: {$cipherData->ciphertext}");
+        }
+
         return unserialize($serializedData);
     }
 
