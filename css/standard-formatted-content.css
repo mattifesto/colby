@@ -1,0 +1,131 @@
+/**
+ * The `formatted-content` class is always used on blocks of standardized
+ * formatted content. It is usually used around blocks of document text.
+ * However, `formatted-content` may be styled differently in different context,
+ * so it should always be used in as a compound style. That is, when
+ * `formatted-content` is specified as a class on an element there should also
+ * be another class specified to indicate which styling of `formatted-content`
+ * is desired.
+ *
+ * Below, the `standard-formatted-content` styling of `formatted-content` is
+ * defined. In this context "standard" is used as a synonym for "built-in".
+ */
+
+.formatted-content.standard-formatted-content :first-child
+{
+    margin-top: 0px;
+}
+
+.formatted-content.standard-formatted-content :last-child
+{
+    margin-bottom: 0px;
+}
+
+.formatted-content.standard-formatted-content blockquote
+{
+    padding: 2.0em 4.0em;
+    margin: 2.0em 5.0em;
+    background-color: #f8f8f8;
+    border: 1px solid #dddddd;
+}
+
+.formatted-content.standard-formatted-content code
+{
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    font-size: 0.85em;
+}
+
+.formatted-content.standard-formatted-content dl
+{
+    margin: 2.0em;
+}
+
+.formatted-content.standard-formatted-content dt
+{
+    margin: 0.25em 0.0em;
+    color: #880000;
+}
+
+.formatted-content.standard-formatted-content dd
+{
+    margin: 0.25em 3.0em 0.6em;
+}
+
+.formatted-content.standard-formatted-content dd + dt
+{
+    margin-top: 1.0em;
+}
+
+.formatted-content.standard-formatted-content h1,
+.formatted-content.standard-formatted-content h2,
+.formatted-content.standard-formatted-content h3
+{
+    margin-top: 2.0em;
+    margin-bottom: 0.5em;
+}
+
+.formatted-content.standard-formatted-content h1+h2,
+.formatted-content.standard-formatted-content h2+h3
+{
+    margin-top: 0.5em;
+}
+
+.formatted-content.standard-formatted-content h1
+{
+    font-size: 1.5em;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.formatted-content.standard-formatted-content h2
+{
+    font-size: 1.2em;
+}
+
+.formatted-content.standard-formatted-content h3
+{
+    font-size: 1.1em;
+    color: #999999;
+}
+
+.formatted-content.standard-formatted-content ol,
+.formatted-content.standard-formatted-content ul
+{
+    margin-top: 2.0em;
+    margin-bottom: 2.0em;
+}
+
+.formatted-content.standard-formatted-content li
+{
+    margin: 0.5em 3.0em;
+}
+
+.formatted-content.standard-formatted-content ol > li
+{
+    list-style-type: decimal;
+}
+
+.formatted-content.standard-formatted-content ul > li
+{
+    list-style-type: disc;
+}
+
+.formatted-content.standard-formatted-content p
+{
+    margin: 0.5em 0.0em;
+    text-align: justify;
+    line-height: 1.6;
+}
+
+.formatted-content.standard-formatted-content > p
+{
+    margin: 1.0em 0.0em;
+}
+
+.formatted-content.standard-formatted-content pre
+{
+    padding: 0.5em 1.0em;
+    margin: 2.0em 3.0em;
+    border: 1px solid #dddddd;
+    font-size: 0.85em;
+}

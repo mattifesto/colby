@@ -22,7 +22,7 @@ $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/help/cap
     <h1>Caption and Alternative Text Help</h1>
 
     <div style="font-size: 14px;">
-        <div class="formatted-content">
+        <div class="formatted-content standard-formatted-content">
             <?php echo ColbyConvert::markaroundToHTML($markaround); ?>
         </div>
     </div>

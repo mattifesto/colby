@@ -76,7 +76,7 @@ $page->begin();
 
     </aside>
 
-    <section class="formatted-content"><?php echo $archive->valueForKey('contentFormattedHTML'); ?></section>
+    <section class="formatted-content standard-formatted-content"><?php echo $archive->valueForKey('contentFormattedHTML'); ?></section>
 
 </article>
 
