@@ -207,6 +207,20 @@ EOT;
             {
                 $uri = implode('/', self::$decodedStubs);
 
+                /**
+                 * 2014.01.07
+                 * TODO:
+                 *
+                 * The web page type id should be retrieved from the database
+                 * and used in the code below before the page archive is
+                 * loaded. The page archive may not even be needed.
+                 * Furthermore, the official location of the page type id
+                 * is the database. The type id in the archive is just for
+                 * reference if the archive is ever orphaned. If these two
+                 * values are different, the value in the database has higher
+                 * priority.
+                 */
+
                 self::$archive = self::archiveForURI($uri);
 
                 if (self::$archive)
@@ -214,8 +228,29 @@ EOT;
                     $documentGroupId = self::$archive->valueForKey('documentGroupId');
                     $documentTypeId = self::$archive->valueForKey('documentTypeId');
 
-                    $handlerFilename = Colby::findFileForDocumentType(
-                        'view.php', $documentGroupId, $documentTypeId);
+                    if (CBSectionedPageTypeId == $documentTypeId)
+                    {
+                        /**
+                         * 2014.01.08
+                         * TODO:
+                         *
+                         * The CBSectionedPageTypeId is handled explicitly
+                         * here and probably should be since it may be the only
+                         * document type ever used.
+                         *
+                         * However, in the else block below the code should
+                         * be changed to use a site defined array of web page
+                         * type ids and handlers because the "document" methods
+                         * and tools for custom page types will be deprecated.
+                         */
+
+                        $handlerFilename = CBSystemDirectory . '/handlers/handle-sectioned-page.php';
+                    }
+                    else
+                    {
+                        $handlerFilename = Colby::findFileForDocumentType(
+                            'view.php', $documentGroupId, $documentTypeId);
+                    }
                 }
             }
         }
