@@ -112,8 +112,8 @@ SELECT
 FROM
     `ColbyPages`
 WHERE
-    `stub` = '{$uri}' AND
-    `modelId` IS NOT NULL AND
+    `URI` = '{$uri}' AND
+    `typeID` IS NOT NULL AND
     `published` IS NOT NULL
 EOT;
 

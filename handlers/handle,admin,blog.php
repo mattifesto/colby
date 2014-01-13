@@ -18,14 +18,14 @@ $blogPostDocumentGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
 
 $sql = <<<EOT
 SELECT
-    LOWER(HEX(`archiveId`)) AS `archiveId`,
-    LOWER(HEX(`modelId`)) AS `documentTypeId`,
+    LOWER(HEX(`archiveID`)) AS `archiveId`,
+    LOWER(HEX(`typeID`)) AS `documentTypeId`,
     `titleHTML`,
     `published`
 FROM
     `ColbyPages`
 WHERE
-    `groupId` = UNHEX('{$blogPostDocumentGroupId}')
+    `groupID` = UNHEX('{$blogPostDocumentGroupId}')
 ORDER BY
     ISNULL(`published`) DESC,
     `published` DESC

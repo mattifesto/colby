@@ -15,7 +15,7 @@ $firstPostOffset =  $currentPageIndex * $countOfPostsPerPage;
 
 $sql = <<<EOT
 SELECT SQL_CALC_FOUND_ROWS
-    `stub`,
+    `URI`,
     `titleHTML`,
     `subtitleHTML`,
     `thumbnailURL`,
@@ -57,7 +57,7 @@ $countResult->free();
         {
             while ($row = $postsResult->fetch_object())
             {
-                $postURL = COLBY_SITE_URL . "/{$row->stub}/";
+                $postURL = COLBY_SITE_URL . "/{$row->URI}/";
 
                 $publishedDataTimestampAttribute =  $row->published * 1000;
                 $publishedDateTimeAttribute = ColbyConvert::timestampToRFC3339($row->published);

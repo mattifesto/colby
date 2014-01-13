@@ -136,7 +136,7 @@ if (empty($searchQuery))
 SELECT
     LOWER(HEX(`archiveId`)) AS `archiveId`,
     LOWER(HEX(`groupId`)) AS `groupId`,
-    `stub`,
+    `URI`,
     `titleHTML`,
     `subtitleHTML`,
     `thumbnailURL`
@@ -156,7 +156,7 @@ END;
     {
         while ($row = $result->fetch_object())
         {
-            $url = COLBY_SITE_URL . "/{$row->stub}/";
+            $url = COLBY_SITE_URL . "/{$row->URI}/";
 
             ?>
 

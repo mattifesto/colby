@@ -47,7 +47,7 @@ class ColbyDocumentTests
 
         $sql = <<<EOT
 INSERT INTO `ColbyPages`
-    (`archiveId`, `stub`, `titleHTML`, `subtitleHTML`)
+    (`archiveID`, `URI`, `titleHTML`, `subtitleHTML`)
 VALUES
     (UNHEX('{$safeArchiveId}'), '{$safeArchiveId}', '', '')
 EOT;
@@ -255,9 +255,9 @@ EOT;
 
         $sql = <<<EOT
 SELECT
-    LOWER(HEX(`archiveId`)) as `archiveId`,
-    LOWER(HEX(`groupId`)) as `documentGroupId`,
-    LOWER(HEX(`modelId`)) as `documentTypeId`,
+    LOWER(HEX(`archiveID`)) as `archiveId`,
+    LOWER(HEX(`groupID`)) as `documentGroupId`,
+    LOWER(HEX(`typeID`)) as `documentTypeId`,
     `titleHTML`,
     `subtitleHTML`,
     `thumbnailURL`,
@@ -267,7 +267,7 @@ SELECT
 FROM
     `ColbyPages`
 WHERE
-    `id` = {$safeDocumentRowId}
+    `ID` = {$safeDocumentRowId}
 EOT;
 
         $result = Colby::query($sql);
@@ -368,11 +368,11 @@ EOT;
          * was set.
          */
 
-        $sql = "SELECT `stub` FROM `ColbyPages` WHERE `id` = {$safeDocumentRowId1}";
+        $sql = "SELECT `URI` FROM `ColbyPages` WHERE `ID` = {$safeDocumentRowId1}";
 
         $result = Colby::query($sql);
 
-        $uri = $result->fetch_object()->stub;
+        $uri = $result->fetch_object()->URI;
 
         $result->free();
 

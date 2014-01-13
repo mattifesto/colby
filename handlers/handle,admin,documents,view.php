@@ -177,11 +177,10 @@ function displayColbyDocumentsTableRow($archiveId)
 $sql = <<<EOT
 SELECT
     `id`,
-    LOWER(HEX(`archiveId`)) as `archiveId`,
-    LOWER(HEX(`groupId`)) as `groupId`,
-    LOWER(HEX(`modelId`)) as `modelId`,
-    LOWER(HEX(`viewId`)) as `viewId`,
-    `stub`,
+    LOWER(HEX(`archiveID`)) as `archiveID`,
+    LOWER(HEX(`groupID`)) as `groupID`,
+    LOWER(HEX(`typeID`)) as `typeID`,
+    `URI`,
     `titleHTML`,
     `subtitleHTML`,
     `thumbnailURL`,

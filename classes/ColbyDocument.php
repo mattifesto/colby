@@ -97,8 +97,8 @@ class ColbyDocument
                 $sql = <<<EOT
 INSERT INTO `ColbyPages`
 (
-    `archiveId`,
-    `stub`,
+    `archiveID`,
+    `URI`,
     `titleHTML`,
     `subtitleHTML`
 )
@@ -176,8 +176,8 @@ EOT;
 UPDATE
     `ColbyPages`
 SET
-    `groupId` = UNHEX('{$safeDocumentGroupId}'),
-    `modelId` = UNHEX('{$safeDocumentTypeId}'),
+    `groupID` = UNHEX('{$safeDocumentGroupId}'),
+    `typeID` = UNHEX('{$safeDocumentTypeId}'),
     `titleHTML` = '{$safeTitleHTML}',
     `subtitleHTML` = '{$safeSubtitleHTML}',
     `thumbnailURL` = '{$safeThumbnailURL}',
@@ -213,9 +213,9 @@ EOT;
 UPDATE
     `ColbyPages`
 SET
-    `stub` = '{$safeURI}'
+    `URI` = '{$safeURI}'
 WHERE
-    `id` = {$safeDocumentRowId}
+    `ID` = {$safeDocumentRowId}
 EOT;
 
         Colby::query($sql);

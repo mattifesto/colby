@@ -4,8 +4,8 @@ include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration
 
 $page = new ColbyOutputManager('admin-html-page');
 
-$page->titleHTML = 'ColbyDocuments Table Rows';
-$page->descriptionHTML = 'Documents that are in the ColbyDocuments table.';
+$page->titleHTML = 'ColbyPages Table Rows';
+$page->descriptionHTML = 'Pages that are in the ColbyPages table.';
 
 $page->begin();
 
@@ -18,13 +18,13 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
 $sql = <<<EOT
 SELECT
-    LOWER(HEX(`groupId`)) as `groupId`,
-    LOWER(HEX(`modelId`)) as `typeId`,
-    LOWER(HEX(`archiveId`)) as `archiveId`
+    LOWER(HEX(`groupID`)) as `groupId`,
+    LOWER(HEX(`typeID`)) as `typeId`,
+    LOWER(HEX(`archiveID`)) as `archiveId`
 FROM
     `ColbyPages`
 ORDER BY
-    `groupId`, `modelId`
+    `groupID`, `typeID`
 EOT;
 
 $result = Colby::query($sql);

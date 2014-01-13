@@ -27,7 +27,7 @@ $link->setAttribute('type', 'application/rss+xml');
 $sql = <<<EOT
 SELECT
     LOWER(HEX(`archiveId`)) AS `archiveId`,
-    `stub`,
+    `URI`,
     `titleHTML`,
     `subtitleHTML`,
     UNIX_TIMESTAMP(`published`) as `published`
@@ -52,7 +52,7 @@ if ($result->num_rows > 0)
 
         $title = htmlspecialchars_decode($row->titleHTML, ENT_QUOTES);
         $subtitle = htmlspecialchars_decode($row->subtitleHTML, ENT_QUOTES);
-        $url = COLBY_SITE_URL . "/{$row->stub}/";
+        $url = COLBY_SITE_URL . "/{$row->URI}/";
         $published = gmdate(DateTime::RSS, $row->published);
 
         appendChildWithText($item, 'title', $title);
