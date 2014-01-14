@@ -88,6 +88,39 @@ foreach ($adminWidgetFilenames as $adminWidgetFilename)
     include $adminWidgetFilename;
 }
 
+if (ColbyUser::current()->isOneOfThe('Developers'))
+{
+    $iniValues = ini_get_all(null, false);
+
+    ?>
+
+    <section class="formatted-content standard-formatted-content">
+        <h1>php.ini values</h1>
+        <dl>
+
+            <?php
+
+            foreach ($iniValues as $key => $value)
+            {
+                if (empty($value))
+                {
+                    $value = '<no value>';
+                }
+
+                $keyHTML = ColbyConvert::textToHTML($key);
+                $valueHTML = ColbyConvert::textToHTML($value);
+
+                echo "<dt>{$keyHTML}</dt><dd>{$valueHTML}</dd>";
+            }
+
+            ?>
+
+        </dl>
+    </section>
+
+    <?php
+}
+
 done:
 
 $page->end();

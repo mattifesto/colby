@@ -194,22 +194,32 @@ Colby.dateToRelativeLocaleString = function(date, now)
  */
 Colby.displayResponse = function(response)
 {
-    var content;
+    var contentHTML;
     var classAttribute;
 
     if ('stackTrace' in response)
     {
-        content = '<pre style="max-height: 300px; overflow-y: scroll; font-size: 12px;">' + response.stackTrace + '</pre>';
+        var stackTraceHTML = Colby.textToHTML(response.stackTrace);
+
+        contentHTML = '<pre style="max-height: 300px; overflow-y: scroll; font-size: 12px;">' +
+                  stackTraceHTML +
+                  '</pre>';
+
         classAttribute = 'large-panel';
     }
     else
     {
-        content = '<div>' + response.message + '</div>';
+        var messageHTML = Colby.textToHTML(response.message);
+
+        contentHTML = '<div>' +
+                  messageHTML +
+                  '</div>';
+
         classAttribute = 'small-panel';
     }
 
     var html = ' \
-<div class="' + classAttribute + '">' + content + ' \
+<div class="' + classAttribute + '">' + contentHTML + ' \
     <div style="text-align: right;"> \
         <button onclick="ColbySheet.endSheet();">Dismiss</button> \
     </div> \
@@ -248,6 +258,22 @@ Colby.responseFromXMLHttpRequest = function(xhr)
 
     return response;
 };
+
+/**
+ * @return string
+ */
+Colby.textToHTML = function(text)
+{
+    var html = String(text);
+
+    html = html.replace(/&/g, "&amp;")
+    html = html.replace(/</g, "&lt;")
+    html = html.replace(/>/g, "&gt;")
+    html = html.replace(/"/g, "&quot;")
+    html = html.replace(/'/g, "&#039;");
+
+    return html;
+}
 
 /**
  * @return string
