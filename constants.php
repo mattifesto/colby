@@ -1,8 +1,6 @@
 <?php
 
-define('COLBY_SYSTEM_DIRECTORY',        __DIR__);
 define('CBSystemDirectory',             __DIR__);
-define('COLBY_SITE_DIRECTORY',          $_SERVER['DOCUMENT_ROOT']);
 define('CBSiteDirectory',               $_SERVER['DOCUMENT_ROOT']);
 
 /**
@@ -28,17 +26,17 @@ define('CBSiteDirectory',               $_SERVER['DOCUMENT_ROOT']);
  *
  * The correct naming for page groups is (note plural):
  *
- *      CBSystemPagesGroupId
- *      CBBlogPostsGroupId
- *      MDPressReleasesGroupId
+ *      CBSystemPagesGroupID
+ *      CBBlogPostsGroupID
+ *      MDPressReleasesGroupID
  *
- * The correct naming for document types is (note singular):
+ * The correct naming for page types is (note singular):
  *
- *      CBSectionedPageTypeId
- *      MDSimplePageTypeId
+ *      CBSectionedPageTypeID
+ *      MDSimplePageTypeID
  */
 
-define('CBBlogPostsGroupId',            '37151457af40ee706cc23de4a11e7ebacafd0c10');
+define('CBBlogPostsGroupID',            '37151457af40ee706cc23de4a11e7ebacafd0c10');
 
 /**
  * Colby will most likely support web pages of multiple types forever, however
@@ -50,11 +48,17 @@ define('CBBlogPostsGroupId',            '37151457af40ee706cc23de4a11e7ebacafd0c1
  * extensibility.
  */
 
-define('CBSectionedPageTypeId',         '89fe3a7d77424ba16c5101eeb0448c7688547ab2');
+define('CBSectionedPageTypeID',         '89fe3a7d77424ba16c5101eeb0448c7688547ab2');
 
 /**
  * Deprecated constants
  */
+
+define('COLBY_SYSTEM_DIRECTORY',        __DIR__);
+define('COLBY_SITE_DIRECTORY',          $_SERVER['DOCUMENT_ROOT']);
+
+define('CBBlogPostsGroupId',            '37151457af40ee706cc23de4a11e7ebacafd0c10');
+define('CBSectionedPageTypeId',         '89fe3a7d77424ba16c5101eeb0448c7688547ab2');
 
 define('COLBY_BLOG_POSTS_DOCUMENT_GROUP_ID',        '37151457af40ee706cc23de4a11e7ebacafd0c10');
 define('COLBY_BLOG_POST_DOCUMENT_TYPE_ID',          'abb85feaa97ca39b1bdb0e8a29359f1995fdcc8d');
