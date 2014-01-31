@@ -150,6 +150,17 @@ class ColbyConvert
         return htmlspecialchars($text, ENT_QUOTES);
     }
 
+    /**
+     * @param string $text
+     *
+     * @return string
+     *  The $text parameter escaped for use in SQL.
+     */
+    public static function textToSQL($text)
+    {
+        return Colby::mysqli()->escape_string($text);
+    }
+
     ///
     /// converts plain text to a very clean URL stub
     ///
