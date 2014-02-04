@@ -237,6 +237,32 @@ Colby.handleContentLoaded = function()
 };
 
 /**
+ * This method generates a random hex string representing a 160-bit number
+ * which is the same length as a SHA-1 hash and can be used as a unique ID.
+ *
+ * @return string
+ */
+Colby.random160 = function()
+{
+    var randomNumbers = new Uint16Array(10);
+
+    crypto.getRandomValues(randomNumbers);
+
+    var random160 = "";
+
+    for (var i = 0; i < 10; i++)
+    {
+        var hex = randomNumbers[i].toString(16);
+
+        hex = "0000".substr(0, 4 - hex.length) + hex;
+
+        random160 = random160 + hex;
+    };
+
+    return random160;
+};
+
+/**
  * @return Object
  */
 Colby.responseFromXMLHttpRequest = function(xhr)
@@ -285,6 +311,11 @@ Colby.textToURI = function(text)
      */
 
     var uri = text.toLowerCase();
+
+    /**
+     * Replace ampersands surrounded by white space with the word "and"
+     */
+    uri = uri.replace(/\s&\s/g, ' and ');
 
     /**
      * Remove all characters from the URI string except lowercase letters,
