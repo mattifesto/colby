@@ -505,7 +505,8 @@ class Colby
          * Define COLBY_SYSTEM_URL.
          */
 
-        define('COLBY_SYSTEM_URL', COLBY_SITE_URL . "/$colbySystemLibraryDirectory");
+        define('CBSystemURL', COLBY_SITE_URL . "/{$colbySystemLibraryDirectory}");
+        define('COLBY_SYSTEM_URL', CBSystemURL); // deprecated
 
         /**
          * Ensure that any required constants have been set.
