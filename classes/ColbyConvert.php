@@ -430,4 +430,12 @@ class ColbyConvert
             return "'{$value}'";
         }
     }
+
+    /**
+     * @return string
+     */
+    public static function timestampToYearMonth($timestamp)
+    {
+        return gmdate('Ym', $timestamp);
+    }
 }
