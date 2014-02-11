@@ -106,7 +106,7 @@ class ColbyConvert
      */
     public static function markaroundToHTML($markaround)
     {
-        include_once(COLBY_SITE_DIRECTORY . '/colby/classes/ColbyMarkaroundParser.php');
+        include_once COLBY_SITE_DIRECTORY . '/colby/classes/ColbyMarkaroundParser.php';
 
         $parser = ColbyMarkaroundParser::parserWithMarkaround($markaround);
 
