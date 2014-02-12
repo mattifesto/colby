@@ -1,0 +1,111 @@
+main > section
+{
+    border:         1px solid #dfdfdf;
+    border-radius:  5px;
+    margin:         10px 0px;
+}
+
+main > section > header
+{
+    background-color: #dfdfdf;
+    padding: 1px 10px 3px;
+}
+
+main > section > div
+{
+    padding:        0px 20px;
+}
+
+main > section input[type=text]
+{
+    border:         1px solid #dfdfdf;
+    border-radius:  5px;
+    padding:        3px 6px;
+}
+
+main > section input[type=text]:disabled
+{
+    border: 1px solid transparent;
+}
+
+main div.container
+{
+    margin: 10px 0px;
+}
+
+.CBPageURIControl.standard
+{
+    margin: 10px 0px;
+}
+
+.CBPageURIControl.standard input[type=checkbox]
+{
+    margin: 0px 5px 0px 30px;
+}
+
+.CBPageURIControl.standard input[type=text]
+{
+    font-family: "Source Code Pro", monospace;
+    font-size: 80%;
+    padding: 5px 6px;
+    width: 100%;
+}
+
+.CBPublicationControl.standard
+{
+    margin: 10px 0px;
+}
+
+.CBPublicationControl.standard label
+{
+    font-size: 80%;
+}
+
+.CBPublicationControl.standard input[type=checkbox]
+{
+    margin-right: 5px;
+}
+
+.CBPublicationControl.standard input[type=text]
+{
+    width: 100%;
+}
+
+.CBSelectionControl.standard select
+{
+    margin-left: 5px;
+}
+
+.CBSelectionControl.standard.page-group
+{
+    margin-left: 50px;
+}
+
+.CBTextControl.standard
+{
+    display:    block;
+    margin:     10px 0px;
+}
+
+.CBTextControl.standard > input
+{
+    width: 100%;
+}
+
+/**
+ *
+ */
+
+div.page-template-option
+{
+    display: inline-block;
+    width: 150px;
+    height: 200px;
+    margin: 10px;
+    border: 1px solid #efefef;
+}
+
+div.page-template-option:hover
+{
+    border: 1px solid #dfdfdf;
+}
