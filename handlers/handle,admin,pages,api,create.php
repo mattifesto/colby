@@ -1,6 +1,7 @@
 <?php
 
 include_once CBSystemDirectory . '/classes/CBDataStore.php';
+include_once CBSystemDirectory . '/classes/CBPages.php';
 
 
 $response = new ColbyOutputManager('ajax-response');
@@ -25,16 +26,18 @@ $dataStoreID = $_POST['data-store-id'];
  *
  */
 
-$dataStore          = new CBDataStore($dataStoreID);
-$dataStoreDirectory = $dataStore->directory();
-$modelFilename      = "{$dataStoreDirectory}/model.json";
+$rowData = CBPages::insertRow($dataStoreID);
 
-if (file_exists($modelFilename))
-{
-    $modelJSON = file_get_contents($modelFilename);
+$response->rowID = $rowData->rowID;
 
-    $response->modelJSON = $modelJSON;
-}
+
+/**
+ *
+ */
+
+$dataStore = new CBDataStore($dataStoreID);
+
+$dataStore->makeDirectory();
 
 
 /**
