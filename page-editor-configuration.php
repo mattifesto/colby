@@ -11,8 +11,8 @@ include_once CBSystemDirectory . '/groups/CBBlogPostsGroupExports.php';
  * Section types
  */
 
-include_once CBSystemDirectory . '/sections/CBStandardHeaderSectionEditor.php';
-include_once CBSystemDirectory . '/sections/CBStandardFooterSectionEditor.php';
+include_once CBSystemDirectory . '/sections/CBStandardPageHeaderSectionEditor.php';
+include_once CBSystemDirectory . '/sections/CBStandardPageFooterSectionEditor.php';
 //include_once CBSystemDirectory . '/sections/CBMarkaroundSectionEditor.php';
 
 

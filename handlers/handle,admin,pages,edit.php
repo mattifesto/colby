@@ -6,7 +6,7 @@ CBHTMLOutput::setTitleHTML('Page Editor');
 CBHTMLOutput::setDescriptionHTML('This is an app for editing pages.');
 CBHTMLOutput::begin();
 
-include CBSystemDirectory . '/sections/admin-header.php';
+include CBSystemDirectory . '/sections/admin-page-header.php';
 
 
 if (ColbyUser::current()->isOneOfThe('Administrators'))
@@ -83,6 +83,6 @@ CBHTMLOutput::exportVariable('CBCurrentUserID', ColbyUser::currentUserId());
 
 done:
 
-include CBSystemDirectory . '/sections/admin-footer.php';
+include CBSystemDirectory . '/sections/admin-page-footer.php';
 
 CBHTMLOutput::render();

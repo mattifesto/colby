@@ -3,7 +3,7 @@
 /**
  *
  */
-function CBStandardFooterSectionEditor(pageModel, sectionModel, sectionElement)
+function CBStandardPageHeaderSectionEditor(pageModel, sectionModel, sectionElement)
 {
     this.pageModel      = pageModel;
     this.sectionModel   = sectionModel;
@@ -20,9 +20,9 @@ function CBStandardFooterSectionEditor(pageModel, sectionModel, sectionElement)
 /**
  * @return void
  */
-CBStandardFooterSectionEditor.register = function()
+CBStandardPageHeaderSectionEditor.register = function()
 {
-    CBPageEditor.registerSectionEditor(CBStandardFooterSectionTypeID, CBStandardFooterSectionEditor);
+    CBPageEditor.registerSectionEditor(CBStandardPageHeaderSectionTypeID, CBStandardPageHeaderSectionEditor);
 }
 
-document.addEventListener("CBPageEditorDidLoad", CBStandardFooterSectionEditor.register, false);
+document.addEventListener("CBPageEditorDidLoad", CBStandardPageHeaderSectionEditor.register, false);

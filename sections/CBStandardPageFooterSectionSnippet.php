@@ -7,4 +7,4 @@
  * to write entire new sections just to get basic functionality.
  */
 
-include Colby::findFile('sections/standard-header.php');
+include Colby::findFile('sections/standard-page-footer.php');
