@@ -63,7 +63,7 @@ CBPageEditor.displayEditor = function()
      * Page information
      */
 
-    var section = new CBSection("Page information");
+    var section = new CBSection(null, "Page information");
 
     mainElement.appendChild(section.outerElement());
 
@@ -76,21 +76,9 @@ CBPageEditor.displayEditor = function()
 
     var displaySection = function(sectionModel)
     {
-        var sectionTitle    = CBSectionDescriptors[sectionModel.sectionTypeID].name;
-        var section         = new CBSection(sectionTitle);
+        var section = CBPageEditor.newCBSectionForModel(sectionModel);
 
         mainElement.appendChild(section.outerElement());
-
-        if (sectionModel)
-        {
-            var sectionEditorConstructor = CBPageEditor.sectionEditors[sectionModel.sectionTypeID];
-
-            var section = new sectionEditorConstructor(CBPageEditor.model, sectionModel, section.innerElement());
-        }
-        else
-        {
-            sectionElement.appendChild(document.createTextNode('No section specified'));
-        }
     };
 
 
@@ -127,6 +115,40 @@ CBPageEditor.DOMContentDidLoad = function()
     document.dispatchEvent(new Event("CBPageEditorDidLoad"));
 
     CBPageEditor.loadModel();
+};
+
+/**
+ * @return void
+ */
+CBPageEditor.insertNewSectionBefore = function(newSectionTypeID, beforeSectionID)
+{
+    var sectionModelJSON        = CBSectionDescriptors[newSectionTypeID].modelJSON;
+    var newSectionModel         = JSON.parse(sectionModelJSON);
+    newSectionModel.sectionID   = Colby.random160();
+
+    var insertBeforeIndex = null;
+
+    var handler = function(value, index, array)
+    {
+        if (value.sectionID == beforeSectionID)
+        {
+            insertBeforeIndex = index;
+
+            return false;
+        }
+
+        return true;
+    };
+
+    CBPageEditor.model.sectionModels.every(handler);
+    CBPageEditor.model.sectionModels.splice(insertBeforeIndex, 0, newSectionModel);
+    CBPageEditor.requestSave();
+
+    var section = CBPageEditor.newCBSectionForModel(newSectionModel);
+
+    var beforeSectionElementID  = "s" + beforeSectionID;
+    var node                    = document.getElementById(beforeSectionElementID);
+    node.parentNode.insertBefore(section.outerElement(), node);
 };
 
 /**
@@ -171,6 +193,27 @@ CBPageEditor.loadModelDidComplete = function()
 
 
 /**
+ * @return CBSection
+ */
+CBPageEditor.newCBSectionForModel = function(sectionModel)
+{
+    if (!sectionModel.sectionID)
+    {
+        sectionModel.sectionID = Colby.random160();
+    }
+
+    var sectionTitle    = CBSectionDescriptors[sectionModel.sectionTypeID].name;
+    var section         = new CBSection(sectionModel.sectionID, sectionTitle);
+    var sectionEditorConstructor = CBPageEditor.sectionEditors[sectionModel.sectionTypeID];
+
+    // TODO: this is an odd model, the editor creates itself and then places itself in the tree. I'm not sure about this.
+
+    new sectionEditorConstructor(CBPageEditor.model, sectionModel, section.innerElement());
+
+    return section;
+}
+
+/**
  * @return void
  */
 CBPageEditor.registerSectionEditor = function(sectionTypeID, sectionEditor)
@@ -178,6 +221,34 @@ CBPageEditor.registerSectionEditor = function(sectionTypeID, sectionEditor)
     CBPageEditor.sectionEditors[sectionTypeID] = sectionEditor;
 };
 
+
+/**
+ * @return void
+ */
+CBPageEditor.removeSection = function(sectionID)
+{
+    var sectionIndex = null;
+
+    var handler = function(value, index, array)
+    {
+        if (value.sectionID == sectionID)
+        {
+            sectionIndex = index;
+
+            return false;
+        }
+
+        return true;
+    };
+
+    CBPageEditor.model.sectionModels.every(handler);
+    CBPageEditor.model.sectionModels.splice(sectionIndex, 1);
+    CBPageEditor.requestSave();
+
+    var sectionElementID    = "s" + sectionID;
+    var node                = document.getElementById(sectionElementID);
+    node.parentNode.removeChild(node);
+};
 
 /**
  * @return void
@@ -232,27 +303,27 @@ CBPageEditor.requestSave = function()
         return;
     }
 
-    if (!CBPageEditor.continuousAjaxRequestToSave)
+    if (!CBPageEditor.saveModelAjaxRequest)
     {
         var URI = "/admin/pages/api/save-model/";
 
-        CBPageEditor.continuousAjaxRequestToSave        = new CBContinuousAjaxRequest(URI);
-        CBPageEditor.continuousAjaxRequestToSave.delay  = 2000;
-        CBPageEditor.continuousAjaxRequestToSave.onload = CBPageEditor.requestSaveDidComplete;
+        CBPageEditor.saveModelAjaxRequest           = new CBContinuousAjaxRequest(URI);
+        CBPageEditor.saveModelAjaxRequest.delay     = 2000;
+        CBPageEditor.saveModelAjaxRequest.onload    = CBPageEditor.saveModelAjaxRequestDidComplete;
     }
 
     var formData = new FormData();
     formData.append("model-json", JSON.stringify(CBPageEditor.model));
 
-    CBPageEditor.continuousAjaxRequestToSave.makeRequestWithFormData(formData);
+    CBPageEditor.saveModelAjaxRequest.makeRequestWithFormData(formData);
 };
 
 /**
  * @return void
  */
-CBPageEditor.requestSaveDidComplete = function()
+CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr)
 {
-    var response = Colby.responseFromXMLHttpRequest(this);
+    var response = Colby.responseFromXMLHttpRequest(xhr);
 
     if (!response.wasSuccessful)
     {
