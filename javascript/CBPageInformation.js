@@ -1,4 +1,4 @@
-"using strict";
+"use strict";
 
 /**
  * This class displays and implements the first section of every page editor
@@ -119,7 +119,7 @@ CBPageInformation.prototype.display = function()
 
     pageGroupControl.appendOption("", "None");
 
-    for (ID in CBPageGroupDescriptors)
+    for (var ID in CBPageGroupDescriptors)
     {
         pageGroupControl.appendOption(ID, CBPageGroupDescriptors[ID].name);
     }

@@ -1,4 +1,4 @@
-"using strict";
+"use strict";
 
 var DeveloperMySQL = {};
 

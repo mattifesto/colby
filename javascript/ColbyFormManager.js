@@ -348,7 +348,7 @@ ColbyFormManager.prototype.setNeedsUpdate = function(needsUpdate)
             clearTimeout(this.timer);
         }
 
-        self = this;
+        var self = this;
 
         var handler = function()
         {
