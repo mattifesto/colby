@@ -55,8 +55,9 @@ CBPageInformation.prototype.display = function()
      *
      */
 
-    var URIControl = new CBPageURIControl("URI");
-    URIControl.setURI(this.pageModel.URI);
+    var URI         = this.pageModel.URI ? this.pageModel.URI : this.generateURI();
+    var URIControl  = new CBPageURIControl("URI");
+    URIControl.setURI(URI);
     URIControl.setIsStatic(this.pageModel.URIIsStatic);
     URIControl.setIsDisabled(this.pageModel.isPublished);
     URIControl.setAction(this, this.translateURI);
@@ -64,6 +65,17 @@ CBPageInformation.prototype.display = function()
     URIControl.rootElement().classList.add("standard");
     this.sectionElement.appendChild(URIControl.rootElement());
     this.URIControl = URIControl;
+
+    if (!this.pageModel.rowID)
+    {
+        var self    = this;
+        var handler = function()
+        {
+            self.translateURI(URIControl);
+        };
+
+        document.addEventListener("CBPageRowWasCreated", handler, false);
+    }
 
     /**
      *
@@ -224,8 +236,8 @@ CBPageInformation.prototype.translateTitle = function(sender)
     {
         var URI     = this.generateURI();
 
-        this.pageModel.URI = URI;
         this.URIControl.setURI(URI);
+        this.translateURI(this.URIControl);
     }
 
     CBPageEditor.requestSave();
@@ -236,9 +248,63 @@ CBPageInformation.prototype.translateTitle = function(sender)
  */
 CBPageInformation.prototype.translateURI = function(sender)
 {
-    this.pageModel.URI          = sender.URI();
-    this.pageModel.URIIsStatic  = sender.isStatic();
+    if (!this.pageModel.rowID)
+    {
+        CBPageEditor.requestCreatePageRow();
+
+        var self    = this;
+        var handler = function()
+        {
+            self.translateURI(sender);
+        }
+
+        document.addEventListener("CBPageRowWasCreated", handler, false);
+    }
+
+    if (!this._requestURIAjaxRequest)
+    {
+        this._requestURIAjaxRequest         = new CBContinuousAjaxRequest("/admin/pages/api/request-uri/");
+        this._requestURIAjaxRequest.delay   = 1000;
+
+        var self = this;
+
+        var handler = function(xhr)
+        {
+            self.requestURIDidComplete(/* xhr: */ xhr);
+        }
+
+        this._requestURIAjaxRequest.onload = handler;
+    }
+
+    var formData = new FormData();
+    formData.append("rowID", this.pageModel.rowID);
+    formData.append("URI", sender.URI());
+    this._requestURIAjaxRequest.makeRequestWithFormData(formData);
+
+    this.pageModel.URIIsStatic = sender.isStatic();
 
     CBPageEditor.requestSave();
 };
 
+/**
+ * @return void
+ */
+CBPageInformation.prototype.requestURIDidComplete = function(xhr)
+{
+    var response = Colby.responseFromXMLHttpRequest(xhr);
+
+    if (!response.wasSuccessful)
+    {
+        Colby.displayResponse(response);
+    }
+    else if (response.URIWasGranted)
+    {
+        this.pageModel.URI = response.URI;
+
+        CBPageEditor.requestSave();
+    }
+    else
+    {
+        // TODO: Provide visual indication that the URI request wasn't granted.
+    }
+};

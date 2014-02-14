@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Expected variables: $dataStoreID
+ */
+
 include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 include_once CBSystemDirectory . '/classes/CBDataStore.php';
 

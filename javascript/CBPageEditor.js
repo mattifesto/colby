@@ -253,7 +253,7 @@ CBPageEditor.removeSection = function(sectionID)
 /**
  * @return void
  */
-CBPageEditor.requestCreate = function()
+CBPageEditor.requestCreatePageRow = function()
 {
     if (CBPageEditor.requestToCreate)
     {
@@ -265,7 +265,7 @@ CBPageEditor.requestCreate = function()
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/admin/pages/api/create/", true);
-    xhr.onload = CBPageEditor.requestCreateDidComplete;
+    xhr.onload = CBPageEditor.requestCreatePageRowDidComplete;
     xhr.send(formData);
 
     CBPageEditor.requestToCreate = xhr;
@@ -274,16 +274,18 @@ CBPageEditor.requestCreate = function()
 /**
  * @return void
  */
-CBPageEditor.requestCreateDidComplete = function()
+CBPageEditor.requestCreatePageRowDidComplete = function()
 {
     var response = Colby.responseFromXMLHttpRequest(this);
 
     if (response.wasSuccessful)
     {
-        CBPageEditor.model.rowID        = response.rowID;
-        CBPageEditor.requestToCreate    = null;
+        CBPageEditor.model.rowID            = response.rowID;
+        CBPageEditor.requestToCreatePageRow = null;
 
         CBPageEditor.requestSave();
+
+        document.dispatchEvent(new Event("CBPageRowWasCreated"));
     }
     else
     {
@@ -298,7 +300,9 @@ CBPageEditor.requestSave = function()
 {
     if (!CBPageEditor.model.rowID)
     {
-        CBPageEditor.requestCreate();
+        CBPageEditor.requestCreatePageRow();
+
+        document.addEventListener("CBPageRowWasCreated", CBPageEditor.requestSave, false);
 
         return;
     }

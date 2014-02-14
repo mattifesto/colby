@@ -205,51 +205,53 @@ EOT;
 
             if (!$handlerFilename && COLBY_MYSQL_DATABASE)
             {
-                $uri = implode('/', self::$decodedStubs);
+                $URI        = implode('/', self::$decodedStubs);
+                $URIForSQL  = ColbyConvert::textToSQL($URI);
 
-                /**
-                 * 2014.01.07
-                 * TODO:
-                 *
-                 * The web page type id should be retrieved from the database
-                 * and used in the code below before the page archive is
-                 * loaded. The page archive may not even be needed.
-                 * Furthermore, the official location of the page type id
-                 * is the database. The type id in the archive is just for
-                 * reference if the archive is ever orphaned. If these two
-                 * values are different, the value in the database has higher
-                 * priority.
-                 */
+                $sql = <<<EOT
 
-                self::$archive = self::archiveForURI($uri);
+                    SELECT
+                        LOWER(HEX(`archiveID`)) as `dataStoreID`,
+                        LOWER(HEX(`typeID`)) as `typeID`,
+                        LOWER(HEX(`groupID`)) as `groupID`
+                    FROM
+                        `ColbyPages`
+                    WHERE
+                        `URI` = '{$URIForSQL}' AND
+                        `published` IS NOT NULL
 
-                if (self::$archive)
+EOT;
+
+                $result = Colby::query($sql);
+
+                $row = $result->fetch_object();
+
+                $result->free();
+
+                if ($row &&
+                    CBPageTypeID == $row->typeID)
                 {
-                    $documentGroupId = self::$archive->valueForKey('documentGroupId');
-                    $documentTypeId = self::$archive->valueForKey('documentTypeId');
+                    $dataStoreID     = $row->dataStoreID;
+                    $handlerFilename = CBSystemDirectory . '/handlers/handle-sectioned-page.php';
+                }
+                else if ($row)
+                {
+                    /**
+                     * This is deprecated code that most likely duplicates some
+                     * of the code above but it doesn't matter. Remove it as
+                     * soon as possible.
+                     */
 
-                    if (CBSectionedPageTypeId == $documentTypeId)
-                    {
-                        /**
-                         * 2014.01.08
-                         * TODO:
-                         *
-                         * The CBSectionedPageTypeId is handled explicitly
-                         * here and probably should be since it may be the only
-                         * document type ever used.
-                         *
-                         * However, in the else block below the code should
-                         * be changed to use a site defined array of web page
-                         * type ids and handlers because the "document" methods
-                         * and tools for custom page types will be deprecated.
-                         */
+                    self::$archive = self::archiveForURI($uri);
 
-                        $handlerFilename = CBSystemDirectory . '/handlers/handle-sectioned-page.php';
-                    }
-                    else
+                    if (self::$archive)
                     {
-                        $handlerFilename = Colby::findFileForDocumentType(
-                            'view.php', $documentGroupId, $documentTypeId);
+                        $documentGroupId    = self::$archive->valueForKey('documentGroupId');
+                        $documentTypeId     = self::$archive->valueForKey('documentTypeId');
+
+                        $handlerFilename    = Colby::findFileForDocumentType('view.php',
+                                                                             $documentGroupId,
+                                                                             $documentTypeId);
                     }
                 }
             }
