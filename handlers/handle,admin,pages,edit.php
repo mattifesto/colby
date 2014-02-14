@@ -18,6 +18,7 @@ if (ColbyUser::current()->isOneOfThe('Administrators'))
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSelectionControl.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBTextControl.js');
+    CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBTextAreaControl.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageInformation.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSection.js');
