@@ -1,4 +1,4 @@
-"using strict";
+"use strict";
 
 function CBContinuousAjaxRequest(URL)
 {
@@ -24,7 +24,7 @@ CBContinuousAjaxRequest.prototype.makeRequestWithFormData = function(formData)
         clearTimeout(this.timerID);
     }
 
-    self = this;
+    var self = this;
 
     var sendRequest = function()
     {
@@ -72,13 +72,16 @@ CBContinuousAjaxRequest.prototype.sendRequestIfReady = function()
  */
 CBContinuousAjaxRequest.didLoad = function()
 {
+    var xhr      = this;
     var self     = this.continuousAjaxRequest;
 
     self.requestIsActive = false;
 
     if (self.onload)
     {
-        self.onload.call(this);
+        var handler = self.onload;
+
+        handler(xhr);
     }
 
     if (!self.queuedFormData && self.allRequestsDidCompleteCallback)
