@@ -19,14 +19,14 @@ include_once Colby::findFile('page-renderer-configuration.php');
 CBHTMLOutput::begin();
 
 
-$dataStore  = new CBDataStore($dataStoreID);
-$modelJSON  = file_get_contents($dataStore->directory() . '/model.json');
-$model      = json_decode($modelJSON);
+$dataStore      = new CBDataStore($dataStoreID);
+$pageModelJSON  = file_get_contents($dataStore->directory() . '/model.json');
+$pageModel      = json_decode($pageModelJSON);
 
-CBHTMLOutput::setTitleHTML($model->titleHTML);
-CBHTMLOutput::setDescriptionHTML($model->descriptionHTML);
+CBHTMLOutput::setTitleHTML($pageModel->titleHTML);
+CBHTMLOutput::setDescriptionHTML($pageModel->descriptionHTML);
 
-foreach ($model->sectionModels as $sectionModel)
+foreach ($pageModel->sectionModels as $sectionModel)
 {
     global $CBSectionSnippets;
 
