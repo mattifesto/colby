@@ -1,0 +1,61 @@
+main
+{
+    text-align: center;
+}
+
+section.widget
+{
+    display: inline-block;
+    width: 300px;
+    min-height: 100px;
+    margin: 5px;
+    border: 1px solid #dddddd;
+    vertical-align: top;
+}
+
+section.widget > div
+{
+    padding: 5px;
+}
+
+section.widget > header
+{
+    padding-top: 5px;
+    padding-bottom: 7px;
+    background-color: #333333;
+    color: #bbbbbb;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+section.widget .version-numbers
+{
+    text-align: center;
+}
+
+section.widget .version-number
+{
+    display: inline-block;
+    padding: 5px;
+}
+
+section.widget .version-number h1
+{
+    color: gray;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+section.widget .version-number .number
+{
+    margin-top: -10px;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+section.widget .version-number + .version-number
+{
+    border-left: 1px solid #dddddd;
+}
