@@ -242,7 +242,7 @@ EOT;
                      * soon as possible.
                      */
 
-                    self::$archive = self::archiveForURI($uri);
+                    self::$archive = self::archiveForURI($URI);
 
                     if (self::$archive)
                     {
