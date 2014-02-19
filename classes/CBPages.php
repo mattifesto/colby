@@ -18,8 +18,33 @@ class CBPages
     /**
      * @return void
      */
-    public static function deleteRow($rowID)
+    public static function deleteRowWithDataStoreID($dataStoreID)
     {
+        $sql = self::sqlToDeleteRowWithDataStoreID($dataStoreID);
+
+        Colby::query($sql);
+    }
+
+    /**
+     * @return void
+     */
+    public static function deleteRowsWithDataStoreIDs($dataStoreIDs)
+    {
+        if (empty($dataStoreIDs))
+        {
+            return;
+        }
+
+        $sqls = array();
+
+        foreach ($dataStoreIDs as $dataStoreID)
+        {
+            $sqls[] = self::sqlToDeleteRowWithDataStoreID($dataStoreID);
+        }
+
+        $sqls = implode(';', $sqls);
+
+        Colby::queries($sqls);
     }
 
     /**
@@ -52,6 +77,25 @@ class CBPages
      */
     public static function insertRows($dataStoreIDs)
     {
+    }
+
+    /**
+     * @return void
+     */
+    public static function sqlToDeleteRowWithDataStoreID($dataStoreID)
+    {
+        $dataStoreIDForSQL = ColbyConvert::textToSQL($dataStoreID);
+
+        $sql = <<<EOT
+
+            DELETE FROM
+                `ColbyPages`
+            WHERE
+                `archiveID` = UNHEX('{$dataStoreIDForSQL}')
+
+EOT;
+
+        return $sql;
     }
 
     /**
@@ -97,6 +141,17 @@ EOT;
             {
                 continue;
             }
+            else if ('descriptionHTML' == $columnName)
+            {
+                /**
+                 * This `subtitleHTML` column will be renamed to
+                 * `descriptionHTML` in the future so `descriptionHTML` is
+                 * allowed so that new code can use the non-deprecated column
+                 * name.
+                 */
+
+                 $columnName = 'subtitleHTML';
+            }
 
             $columnNameForSQL = ColbyConvert::textToSQL($columnName);
 
@@ -139,6 +194,37 @@ EOT;
      */
     public static function tryUpdateRowURI($rowID, $URI)
     {
+        $rowIDForSQL    = (int)$rowID;
+        $URIForSQL      = ColbyConvert::textToSQL($URI);
+
+        $sql = <<<EOT
+
+            UPDATE
+                `ColbyPages`
+            SET
+                `URI` = '{$URIForSQL}'
+            WHERE
+                `ID` = {$rowIDForSQL}
+
+EOT;
+
+        try
+        {
+            Colby::query($sql);
+        }
+        catch (Exception $exception)
+        {
+            if (1062 == Colby::mysqli()->errno)
+            {
+                return false;
+            }
+            else
+            {
+                throw $exception;
+            }
+        }
+
+        return true;
     }
 
     /**
