@@ -26,11 +26,6 @@ class CBDataStore
     }
 
     /**
-     * This method is not meant to be a full featured delete. Any files in the
-     * data store directory must be removed before the method called. This class
-     * did not create the files in the data store directory so it does not own
-     * them and does not have the authority to delete them.
-     *
      * This method does not attempt to remove any intermediate and potentially
      * shared directories that may exist in its path.
      *
@@ -38,6 +33,23 @@ class CBDataStore
      */
     public function delete()
     {
+        $directoryIterator  = new RecursiveDirectoryIterator($this->directory(),
+                                                             RecursiveDirectoryIterator::SKIP_DOTS);
+        $iteratorIterator   = new RecursiveIteratorIterator($directoryIterator,
+                                                            RecursiveIteratorIterator::CHILD_FIRST);
+
+        foreach ($iteratorIterator as $fileInfo)
+        {
+            if ($fileInfo->isFile())
+            {
+                unlink($fileInfo->getPathname());
+            }
+            else
+            {
+                rmdir($fileInfo->getPathname());
+            }
+        }
+
         rmdir($this->directory());
     }
 
