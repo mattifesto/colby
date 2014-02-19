@@ -16,10 +16,12 @@ $model->contentHTML         = '';
 
 define('CBMarkaroundSectionModelJSON', json_encode($model));
 
-if (isset($GLOBALS['CBSectionSnippets']))
-{
-    global $CBSectionSnippets;
+global $CBSectionSnippets;
 
-    $CBSectionSnippets[CBMarkaroundSectionTypeID] = CBSystemDirectory .
-        '/sections/CBMarkaroundSectionSnippet.php';
-}
+$CBSectionSnippets[CBMarkaroundSectionTypeID] = CBSystemDirectory .
+    '/sections/CBMarkaroundSectionSnippetForHTML.php';
+
+global $CBSectionSnippetsForSearchText;
+
+$CBSectionSnippetsForSearchText[CBMarkaroundSectionTypeID] = CBSystemDirectory .
+    '/section/CBMarkaroundSectionSearchTextSnippet.php';
