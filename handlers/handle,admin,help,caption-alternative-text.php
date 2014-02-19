@@ -1,11 +1,12 @@
 <?php
 
-$page = new ColbyOutputManager('admin-html-page');
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
-$page->titleHTML = 'Caption and Alternative Text';
-$page->descriptionHTML = 'Help for creating effective captions and alternative text.';
 
-$page->begin();
+CBHTMLOutput::setTitleHTML('Captions and Alternative Text Help');
+CBHTMLOutput::setDescriptionHTML('Help for creating effective captions and alternative text.');
+CBHTMLOutput::begin();
+
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
@@ -13,6 +14,14 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 
     goto done;
 }
+
+
+include CBSystemDirectory . '/sections/admin-page-header.php';
+
+$selectedMenuItemID     = 'help';
+$selectedSubmenuItemID  = 'caption-alternative-text';
+
+include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/help/caption-alternative-text.txt');
 
@@ -32,4 +41,6 @@ $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/help/cap
 
 done:
 
-$page->end();
+include CBSystemDirectory . '/sections/admin-page-footer.php';
+
+CBHTMLOutput::render();
