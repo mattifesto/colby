@@ -1,0 +1,20 @@
+table.list-of-pages .action
+{
+    cursor: pointer;
+}
+
+table.list-of-pages .action + .action
+{
+    margin-left: 10px;
+}
+
+table.list-of-pages .actions-cell
+{
+    text-align: center;
+    width: 100px;
+}
+
+table.list-of-pages .publication-date-cell
+{
+    width: 250px;
+}

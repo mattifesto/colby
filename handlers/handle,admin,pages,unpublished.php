@@ -5,6 +5,7 @@ include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
 CBHTMLOutput::setTitleHTML('Page Administration');
 CBHTMLOutput::setDescriptionHTML('Create, edit, and delete pages.');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
 CBHTMLOutput::begin();
 
@@ -30,22 +31,13 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 <main>
 
-    <table class="standard-cell-ellipses">
-        <style>
-
-            th.actions,
-            tr.actions
-            {
-                width: 100px;
-            }
-
-        </style>
+    <table class="list-of-pages standard-admin-spacing standard-cell-ellipses">
         <thead><tr>
-            <th class="actions"></th>
-            <th>Title</th>
-            <th>Published</th>
+            <th class="actions-cell"></th>
+            <th class="title-cell">Title</th>
+            <th class="publication-date-cell">Publication Date</th>
         </tr></thead>
-        <tbody>
+        <tbody class="standard-admin-row-colors">
 
         <?php
 
@@ -53,22 +45,22 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
         while ($row = $result->fetch_object())
         {
-            $elementID = "s{$row->dataStoreID}";
+            $elementID = "id-{$row->dataStoreID}";
 
             $editURL = COLBY_SITE_URL . "/admin/pages/edit/" .
                 "?data-store-id={$row->dataStoreID}";
 
-            $deleteAction = "CBPagesAdmin.deletePageByDataStoreID('{$row->dataStoreID}');";
+            $deleteAction = "CBPagesAdmin.deletePageWithDataStoreID('{$row->dataStoreID}');";
 
             ?>
 
             <tr id="<?php echo $elementID; ?>">
-                <td class="actions">
+                <td class="actions-cell">
                     <a href="<?php echo $editURL; ?>">edit</a>
                     <a onclick="<?php echo $deleteAction; ?>" style="cursor: pointer;">delete</a>
                 </td>
-                <td class="title"><?php echo $row->titleHTML; ?></td>
-                <td class="publication-date"><span class="time"
+                <td class="title-cell"><?php echo $row->titleHTML; ?></td>
+                <td class="publication-date-cell"><span class="time"
                           data-timestamp="<?php echo $row->published ? $row->published * 1000 : ''; ?>">
                     </span></td>
             </tr>

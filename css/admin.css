@@ -38,18 +38,6 @@ a:hover
     text-decoration: underline;
 }
 
-input[type="text"].big-field
-{
-    padding: 6px 12px;
-    border: 1px solid #bfbfbf;
-}
-
-input[type="text"].big-field:disabled
-{
-    border-color: transparent;
-    color: #5f5f5f;
-}
-
 fieldset
 {
     border: none;
@@ -120,6 +108,41 @@ main > h2
 }
 
 /**
+ * Micro styles
+ */
+
+table.standard-admin-spacing
+{
+    border-spacing: 0px;
+}
+
+table.standard-admin-spacing td,
+table.standard-admin-spacing th
+{
+    padding: 2px 5px;
+}
+
+table.standard-admin-row-colors tr:nth-child(even),
+table .standard-admin-row-colors tr:nth-child(even)
+{
+    background-color: #f7f7f7;
+}
+
+table.standard-cell-ellipses
+{
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.standard-cell-ellipses td,
+table.standard-cell-ellipses tr
+{
+    overflow: hidden; /* wrapping behavior */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/**
  * Colby standard styles
  */
 
@@ -128,7 +151,6 @@ main > h2
     width: 980px;
 }
 
-a.big-button,
 a.small-button
 {
     display: inline-block;
@@ -141,18 +163,10 @@ a.small-button
     user-select: none;
 }
 
-a.big-button:hover,
 a.small-button:hover
 {
     background-color:#bfbfff;
     text-decoration: none;
-}
-
-a.big-button
-{
-    padding: 10px 30px;
-    min-width: 100px;
-    border-radius: 5px;
 }
 
 a.small-button
