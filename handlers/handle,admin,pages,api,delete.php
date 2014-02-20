@@ -5,8 +5,8 @@ include_once CBSystemDirectory . '/classes/CBPages.php';
 
 
 $response = new ColbyOutputManager('ajax-response');
-$response->begin();
 
+$response->begin();
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
@@ -19,17 +19,23 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
  *
  */
 
-$dataStoreID        = $_POST['data-store-id'];
-$rowData            = CBPages::insertRow($dataStoreID);
-$response->rowID    = $rowData->rowID;
+$dataStoreID            = $_POST['dataStoreID'];
+$response->dataStoreID  = $dataStoreID;
 
 
 /**
  *
  */
 
+Colby::mysqli()->autocommit(false);
+
+CBPages::deleteRowWithDataStoreID($dataStoreID);
+
 $dataStore = new CBDataStore($dataStoreID);
-$dataStore->makeDirectory();
+$dataStore->delete();
+
+Colby::mysqli()->commit();
+Colby::mysqli()->autocommit(true);
 
 
 /**

@@ -1,5 +1,8 @@
 <?php
 
+include_once CBSystemDirectory . '/classes/CBPages.php';
+
+
 $response = new ColbyOutputManager('ajax-response');
 
 $response->begin();
@@ -22,39 +25,14 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
  */
 
 $pageRowID          = $_POST['rowID'];
-$pageRowIDForSQL    = (int)$pageRowID;
 $requestedURI       = $_POST['URI'];
-$requestedURIForSQL = ColbyConvert::textToSQL($requestedURI);
 
-$sql = <<<EOT
 
-    UPDATE
-        `ColbyPages`
-    SET
-        `URI` = '{$requestedURIForSQL}'
-    WHERE
-        `ID` = {$pageRowIDForSQL}
+/**
+ *
+ */
 
-EOT;
-
-try
-{
-    Colby::query($sql);
-}
-catch (Exception $exception)
-{
-    if (1062 == Colby::mysqli()->errno)
-    {
-        $response->URIWasGranted    = false;
-        $response->wasSuccessful    = true;
-
-        goto done;
-    }
-    else
-    {
-        throw $exception;
-    }
-}
+$response->URIWasGranted = CBPages::tryUpdateRowURI($rowID, $requestedURI);
 
 
 /**
@@ -62,7 +40,6 @@ catch (Exception $exception)
  */
 
 $response->URI              = $requestedURI;
-$response->URIWasGranted    = true;
 $response->wasSuccessful    = true;
 
 done:
