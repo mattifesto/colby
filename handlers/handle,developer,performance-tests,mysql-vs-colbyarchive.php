@@ -1,18 +1,27 @@
 <?php
 
-$page = new ColbyOutputManager('admin-html-page');
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
-$page->titleHTML = 'Import Product Data';
-$page->descriptionHTML = 'Import a data file to refresh the product data.';
 
-$page->begin();
+CBHTMLOutput::setTitleHTML('Performance: MySQL vs ColbyArchive');
+CBHTMLOutput::setDescriptionHTML('Test the relative performance of MySQL vs ColbyArchive.');
+CBHTMLOutput::begin();
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
+
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
     include Colby::findSnippet('authenticate.php');
 
     goto done;
 }
+
+
+include CBSystemDirectory . '/sections/admin-page-header.php';
+
+$selectedMenuItemID     = 'test';
+$selectedSubmenuItemID  = 'performance-tests';
+
+include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 ?>
 
@@ -39,6 +48,8 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
 <?php
 
+include CBSystemDirectory . '/sections/admin-page-footer.php';
+
 done:
 
-$page->end();
+CBHTMLOutput::render();

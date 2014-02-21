@@ -1,22 +1,30 @@
 <?php
 
-$page = new ColbyOutputManager('admin-html-page');
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
-$page->titleHTML = 'Unit Tests';
-$page->descriptionHTML = 'Developer tests to make sure there are no regressions in functionality.';
 
-$page->begin();
+CBHTMLOutput::setTitleHTML('Colby Unit Tests');
+CBHTMLOutput::setDescriptionHTML('Developer tests to make sure there are no regressions in functionality.');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Tests.js');
+CBHTMLOutput::begin();
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
+
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
     include Colby::findSnippet('authenticate.php');
 
     goto done;
 }
 
-?>
 
-<script src="<?php echo COLBY_SYSTEM_URL . '/javascript/Tests.js'; ?>"></script>
+include CBSystemDirectory . '/sections/admin-page-header.php';
+
+$selectedMenuItemID     = 'test';
+$selectedSubmenuItemID  = 'test';
+
+include CBSystemDirectory . '/sections/admin-page-menu.php';
+
+?>
 
 <style>
 input[type=text]
@@ -60,7 +68,8 @@ else
 
 <?php
 
+include CBSystemDirectory . '/sections/admin-page-footer.php';
+
 done:
 
-$page->end();
-
+CBHTMLOutput::render();
