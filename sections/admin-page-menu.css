@@ -1,0 +1,79 @@
+nav.CBMenu
+{
+    margin:     0px 0px 30px;
+    text-align: center;
+}
+
+nav.CBMenu a:hover
+{
+    text-decoration: none;
+}
+
+nav.CBMenu ul,
+nav.CBMenu li
+{
+    display: inline-block;
+}
+
+nav.CBMainMenu a
+{
+    color: white;
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
+}
+
+nav.CBMainMenu ul
+{
+    background-color:   #7f7f7f;
+    border-radius:      7px;
+    overflow:           hidden;
+}
+
+nav.CBMainMenu li
+{
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
+    padding:    3px 25px 4px;
+    transition: background-color 0.5s;
+    width:      75px;
+}
+
+nav.CBMainMenu li:hover
+{
+    background-color: #5f5f5f;
+}
+
+nav.CBMainMenu li.CBSelected
+{
+    background-color: #3f3f3f;
+}
+
+
+nav.CBSubMenu a
+{
+    color:      #9f9f9f;
+    transition: color 0.5s;
+}
+
+nav.CBSubMenu ul
+{
+    border-top: 1px solid #dfdfdf;
+}
+
+nav.CBSubMenu li
+{
+    border-top: 1px solid transparent;
+    font-size:  14px;
+    margin:     -1px 25px 0px;
+    padding:    5px 0px;
+}
+
+
+nav.CBSubMenu li.CBSelected
+{
+    border-top: 1px solid #1f1f1f;
+}
+
+nav.CBSubMenu a:hover,
+nav.CBSubMenu li.CBSelected a
+{
+    color:      #1f1f1f;
+}

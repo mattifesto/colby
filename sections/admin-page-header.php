@@ -43,7 +43,4 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbySheet.js');
     </ul>
 </nav>
 <div class="page fixed-page-width">
-    <nav class="vertical-menu">
-        <ul><?php include Colby::findSnippet('menu-items-admin.php'); ?></ul>
-    </nav> <!-- vertical-menu -->
     <div class="content">

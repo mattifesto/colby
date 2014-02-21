@@ -1,52 +1,65 @@
 <?php
 
-if (ColbyUser::current()->isOneOfThe('Administrators'))
-{
-    ?>
+global $CBAdminMenu;
+$CBAdminMenu = new stdClass();
 
-    <li><h1>General</h1></li>
 
-    <li><a href="/admin/">Status</a></li>
+$generalMenu            = new stdClass();
+$generalMenu->status    = newMenuItem('Status', '/admin/');
 
-    <li><h1>Documents</h1></li>
+$CBAdminMenu->general = newMenuItem('General', '/admin/', $generalMenu);
 
-    <li><a href="/admin/pages/">Pages</a></li>
-    <li><a href="/admin/blog/">Blog Posts</a></li>
 
-    <li><h1>Help</h1></li>
+$pagesMenu                  = new stdClass();
+$pagesMenu->edit            = newMenuItem('New Page', '/admin/pages/edit/');
+$pagesMenu->unpublished     = newMenuItem('Unpublished', '/admin/pages/unpublished/');
+$pagesMenu->search          = newMenuItem('Search', '/admin/pages/search/');
+$pagesMenu->{'old-style'}   = newMenuitem('Old Style', '/admin/pages/old-style/');
 
-    <li><a href="/admin/help/markaround-syntax/">Markaround</a></li>
-    <li><a href="/admin/help/title-subtitle/">
-        Title <span style="font-size: 0.8em;">&amp;</span> Subtitle
-    </a></li>
-    <li><a href="/admin/help/caption-alternative-text/">
-        Caption <span style="font-size: 0.8em;">&amp;</span> Alt Text
-    </a></li>
+$CBAdminMenu->pages = newMenuItem('Pages', '/admin/pages/unpublished/', $pagesMenu);
 
-    <?php
-}
+
+$helpMenu = new stdClass();
+$helpMenu->{'markaround-syntax'}        = newMenuItem('Markaround',
+                                                      '/admin/help/markaround-syntax/');
+$helpMenu->{'title-subtitle'}           = newMenuItem('Titles &amp; Descriptions',
+                                                      '/admin/help/title-subtitle/');
+$helpMenu->{'caption-alternative-text'} = newMenuItem('Captions &amp; Alternative Text',
+                                                      '/admin/help/caption-alternative-text');
+
+$CBAdminMenu->help = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
 
 if (ColbyUser::current()->isOneOfThe('Developers'))
 {
-    ?>
+    $generalMenu->permissions       = newMenuItem('Permissions', '/admin/users/');
 
-    <li><h1>Users</h1></li>
+    $developMenu                    = new stdClass();
+    $developMenu->php               = newMenuItem('PHP', '/admin/develop/php/');
+    $developMenu->{'test-pages'}    = newMenuItem('Test Pages', '/admin/develop/test-pages/');
+    $developMenu->update            = newMenuItem('Update', '/developer/update/');
+    $developMenu->documents         = newMenuItem('Documents', '/admin/documents/');
+    $developMenu->groups            = newMenuItem('Groups', '/developer/groups/');
+    $developMenu->model             = newMenuItem('Types', '/developer/models/');
+    $developMenu->mysql             = newMenuItem('MySQL', '/developer/mysql/');
 
-    <li><a href="/admin/users/">Permissions</a></li>
+    $CBAdminMenu->develop = newMenuItem('Develop', '/admin/develop/php/', $developMenu);
 
-    <li><h1>Developers</h1></li>
+    $testMenu                           = new stdClass();
+    $testMenu->test                     = newMenuItem('Unit Tests', '/developer/test/');
+    $testMenu->{'performance-tests'}    = newMenuItem('MySQL vs. ColbyArchive', '/developer/performance-tests/mysql-vs-colbyarchive/');
 
-    <li><a href="/developer/update/">Update</a></li>
-    <li><a href="/admin/documents/">Documents</a></li>
-    <li><a href="/developer/groups/">Document Groups</a></li>
-    <li><a href="/developer/models/">Document Types</a></li>
-    <li><a href="/developer/mysql/">MySQL</a></li>
-    <li><a href="/developer/test/">Tests</a></li>
-
-    <li><h1>Performance Tests</h1></li>
-
-    <li><a href="/developer/performance-tests/mysql-vs-colbyarchive/">MySQL vs ColbyArchive</a></li>
-
-    <?php
+    $CBAdminMenu->test = newMenuItem('Test', '/developer/test/', $testMenu);
 }
 
+/**
+ * @return stdClass
+ */
+function newMenuItem($nameHTML, $URI, $submenu = null)
+{
+    $menuItem           = new stdClass();
+    $menuItem->nameHTML = $nameHTML;
+    $menuItem->URI      = $URI;
+    $menuItem->submenu  = $submenu;
+
+    return $menuItem;
+}
