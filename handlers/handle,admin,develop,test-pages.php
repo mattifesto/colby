@@ -24,7 +24,6 @@ $selectedSubmenuItemID  = 'test-pages';
 
 include CBSystemDirectory . '/sections/admin-page-menu.php';
 
-
 ?>
 
 <main>
@@ -63,8 +62,8 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 <?php
 
-done:
-
 include CBSystemDirectory . '/sections/admin-page-footer.php';
+
+done:
 
 CBHTMLOutput::render();

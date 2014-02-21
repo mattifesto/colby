@@ -1,18 +1,28 @@
 <?php
 
-$page = new ColbyOutputManager('admin-html-page');
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
-$page->titleHTML = 'Update';
-$page->descriptionHTML = 'Tools to perform site version updates.';
 
-$page->begin();
+CBHTMLOutput::setTitleHTML('Update');
+CBHTMLOutput::setDescriptionHTML('Tools to perform site version updates.');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,develop,test-pages.js');
+CBHTMLOutput::begin();
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
+
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
     include Colby::findSnippet('authenticate.php');
 
     goto done;
 }
+
+
+include CBSystemDirectory . '/sections/admin-page-header.php';
+
+$selectedMenuItemID     = 'develop';
+$selectedSubmenuItemID  = 'update';
+
+include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 ?>
 
@@ -34,6 +44,8 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
 <?php
 
+include CBSystemDirectory . '/sections/admin-page-footer.php';
+
 done:
 
-$page->end();
+CBHTMLOutput::render();

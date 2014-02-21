@@ -2,20 +2,30 @@
 
 include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyDocument.php';
 include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
-$page = new ColbyOutputManager('admin-html-page');
 
-$page->titleHTML = 'Documents Administration';
-$page->descriptionHTML = 'List, view, delete, and manage archives.';
+CBHTMLOutput::setTitleHTML('Documents');
+CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,develop,test-pages.js');
+CBHTMLOutput::begin();
 
-$page->begin();
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
     include Colby::findSnippet('authenticate.php');
 
     goto done;
 }
+
+
+include CBSystemDirectory . '/sections/admin-page-header.php';
+
+$selectedMenuItemID     = 'develop';
+$selectedSubmenuItemID  = 'documents';
+
+include CBSystemDirectory . '/sections/admin-page-menu.php';
+
 
 $document = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
 
@@ -71,8 +81,10 @@ $archive = $document->archive();
 
 <?php
 
+include CBSystemDirectory . '/sections/admin-page-footer.php';
+
 done:
 
-$page->end();
+CBHTMLOutput::render();
 
 /* ---------------------------------------------------------------- */
