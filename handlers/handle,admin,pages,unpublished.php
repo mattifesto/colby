@@ -99,7 +99,6 @@ class CBPagesAdmin
 
         SELECT
             LOWER(HEX(`archiveID`)) AS `dataStoreID`,
-            LOWER(HEX(`typeID`)) AS `typeID`,
             `titleHTML`,
             `published`
         FROM

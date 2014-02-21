@@ -75,7 +75,8 @@ function CBSearchForPages($queryText)
         return false;
     }
 
-    $likesForSQL = implode(' AND ', $likesForSQL);
+    $likesForSQL    = implode(' AND ', $likesForSQL);
+    $CBPageTypeID   = CBPageTypeID;
 
     $sql = <<<EOT
 
@@ -86,6 +87,7 @@ function CBSearchForPages($queryText)
         FROM
             `ColbyPages`
         WHERE
+            `typeID` = UNHEX('{$CBPageTypeID}') AND
             {$likesForSQL}
         ORDER BY
             `published` IS NULL DESC,

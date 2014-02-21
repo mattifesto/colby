@@ -17,8 +17,10 @@ nav.CBMenu li
 
 nav.CBMainMenu a
 {
-    color: white;
-    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
+    color:          white;
+    display:        inline-block;
+    text-shadow:    0px -1px 0px rgba(0, 0, 0, 0.5);
+    width:          100%;
 }
 
 nav.CBMainMenu ul
@@ -31,9 +33,9 @@ nav.CBMainMenu ul
 nav.CBMainMenu li
 {
     background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
-    padding:    3px 25px 4px;
+    padding:    3px 0px 4px;
     transition: background-color 0.5s;
-    width:      75px;
+    width:      125px;
 }
 
 nav.CBMainMenu li:hover
