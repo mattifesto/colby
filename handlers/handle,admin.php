@@ -46,9 +46,8 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 
 <?php
 
+include CBSystemDirectory . '/sections/admin-page-footer.php';
 
 done:
-
-include CBSystemDirectory . '/sections/admin-page-footer.php';
 
 CBHTMLOutput::render();

@@ -1,11 +1,12 @@
 <?php
 
-$page = new ColbyOutputManager('admin-html-page');
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
-$page->titleHTML = 'MySQL';
-$page->descriptionHTML = 'Tools to backup the MySQL database used by the site.';
 
-$page->begin();
+CBHTMLOutput::setTitleHTML('MySQL Backup');
+CBHTMLOutput::setDescriptionHTML('Backup the MySQL database.');
+CBHTMLOutput::begin();
+
 
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
@@ -13,6 +14,14 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
     goto done;
 }
+
+
+include CBSystemDirectory . '/sections/admin-page-header.php';
+
+$selectedMenuItemID     = 'develop';
+$selectedSubmenuItemID  = 'mysql';
+
+include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 ?>
 
@@ -34,6 +43,8 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
 <?php
 
+include CBSystemDirectory . '/sections/admin-page-footer.php';
+
 done:
 
-$page->end();
+CBHTMLOutput::render();
