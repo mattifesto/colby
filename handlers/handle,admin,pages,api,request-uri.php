@@ -24,8 +24,8 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
  *
  */
 
-$pageRowID          = $_POST['rowID'];
-$requestedURI       = $_POST['URI'];
+$rowID          = $_POST['rowID'];
+$requestedURI   = $_POST['URI'];
 
 
 /**
