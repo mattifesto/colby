@@ -1,36 +1,41 @@
 <?php
 
-$blogPostsGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
-$countOfPostsPerPage = 10;
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
-$page = new ColbyOutputManager();
 
-$page->titleHTML = 'Blog';
-$page->descriptionHTML = 'Index of blog posts.';
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Blog');
+CBHTMLOutput::setDescriptionHTML('Index of blog posts.');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,blog.css');
 
-$page->begin();
+include_once CBSystemDirectory . '/groups/CBBlogPostsGroup.php';
 
-$currentPageIndex = isset($_GET['page']) ? max(intval($_GET['page']) - 1, 0) : 0;
-$firstPostOffset =  $currentPageIndex * $countOfPostsPerPage;
+
+$blogPostsGroupID       = CBBlogPostsGroupID;
+$countOfPostsPerPage    = 10;
+$currentPageIndex       = isset($_GET['page']) ? max(intval($_GET['page']) - 1, 0) : 0;
+$firstPostOffset        =  $currentPageIndex * $countOfPostsPerPage;
 
 $sql = <<<EOT
-SELECT SQL_CALC_FOUND_ROWS
-    `URI`,
-    `titleHTML`,
-    `subtitleHTML`,
-    `thumbnailURL`,
-    `published`
-FROM
-    `ColbyPages`
-WHERE
-    `groupId` = UNHEX('{$blogPostsGroupId}') AND
-    `published` IS NOT NULL
-ORDER BY
-    `published` DESC
-LIMIT
-    {$countOfPostsPerPage}
-OFFSET
-    {$firstPostOffset}
+
+    SELECT SQL_CALC_FOUND_ROWS
+        `URI`,
+        `titleHTML`,
+        `subtitleHTML`,
+        `thumbnailURL`,
+        `published`
+    FROM
+        `ColbyPages`
+    WHERE
+        `groupId` = UNHEX('{$blogPostsGroupID}') AND
+        `published` IS NOT NULL
+    ORDER BY
+        `published` DESC
+    LIMIT
+        {$countOfPostsPerPage}
+    OFFSET
+        {$firstPostOffset}
+
 EOT;
 
 $postsResult = Colby::query($sql);
@@ -85,7 +90,7 @@ $countResult->free();
 
                     </figure>
 
-                    <section>
+                    <header>
 
                         <h1><a href="<?php echo $postURL; ?>"><?php echo $row->titleHTML; ?></a></h1>
                         <h2><?php echo $row->subtitleHTML; ?></h2>
@@ -96,7 +101,7 @@ $countResult->free();
                             <?php echo $publishedTextContent; ?>
                         </time>
 
-                    </section>
+                    </header>
                 </article>
 
                 <?php
@@ -154,4 +159,4 @@ $countResult->free();
 
 <?php
 
-$page->end();
+CBHTMLOutput::render();

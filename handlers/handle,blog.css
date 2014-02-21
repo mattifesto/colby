@@ -1,0 +1,40 @@
+main
+{
+    margin: 0px auto;
+    width:  800px;
+}
+
+article
+{
+    overflow: hidden;
+}
+
+article > figure
+{
+    float:  left;
+    height: 100px;
+    width:  100px;
+}
+
+article > figure img
+{
+    max-width:  100px;
+    max-height: 100px;
+}
+
+article > header
+{
+    overflow: hidden;
+}
+
+article > header > h1
+{
+    font-size: 24px;
+}
+
+article > header > h2
+{
+    font-size:      16px;
+    font-style:     italic;
+    font-weight:    normal;
+}
