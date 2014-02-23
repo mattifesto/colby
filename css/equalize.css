@@ -7,12 +7,29 @@
  * Things that commonly change from theme to theme should not be placed in this
  * file.
  *
+ * 2014.02.22
+ *  This file was changed because moving to a "sectioned page" model means that
+ *  each of those sections should have no default styles applied but these. So
+ *  I spent some time making sure these are good common defaults.
+ *
+ *  In the future, when making changes keep an eye on the `normalize.css`
+ *  file available on the internet. It's a good resource that I'm not yet
+ *  comfortable using because it keeps the default margins, but it's very
+ *  helpful.
+ */
+
+/**
+ * 2014.02.22
+ *  I made a big change and removed the `padding: 0px;` rule here to get back
+ *  a more reasonable style for form elements. Where needed, default padding has
+ *  been removed from other elements. I looked through the default style sheets
+ *  of most browsers for places where padding was specified and in most places
+ *  it was desirable.
  */
 
 *
 {
     margin: 0px;
-    padding: 0px;
 }
 
 html
@@ -37,6 +54,28 @@ html
 
     text-rendering: optimizeLegibility;
 }
+
+/**
+ * 2014.02.22
+ *  Setting the default font size below matches the browser default in all of
+ *  the cases I can find, although it is user configurable. Many web developers
+ *  favor letting the browser set the default and then using `em` units. This
+ *  doesn't work well because image sizes are not specified in `em` units, they
+ *  are specified in `px` units. Container widths are also generally specified
+ *  in `px` units. So if it matters that text stay in constant proportion to
+ *  images, which it is if you're doing precise design and layout, then the
+ *  fantasy of a flexible default font size is not possible. For people with
+ *  disabilities, all modern devices support quality zooming which means any
+ *  user can zoom the page to read the text and retain the benefit of the
+ *  precise layout. It's not always a perfect solution, but it's the same
+ *  solution implemented for physical items like, books, newspapers, and
+ *  magazines.
+ *
+ *  The `overflow-y: scroll;` rule is set so that all browsers include a
+ *  vertical scrollbar at all times so that the width of the viewport doesn't
+ *  shift between shorter and longer pages, which causes an unpleasant
+ *  distraction.
+ */
 
 html
 {
@@ -77,20 +116,15 @@ pre
     overflow: auto;
 }
 
-/* 2012.06.25
- * added 'input[type=file]' to the list however I'm thinking that
- * all input elements should be included
- * I'm going to be conservative today and not change it
- * but consider it in the future, there should be a definitive answer
- *
- * 2012.10.27
- * changed input[type=text] and input[type=file] to just input
- * I'm leaving this comment in just in case something goes wrong
- * also added the button and select elements
- *
+/**
  * 2013.10.20
- * Added the `-moz-box-sizing` property because Firefox hasn't yet implemented
- * the `box-sizing` propery.
+ *  Added the `-moz-box-sizing` property because Firefox hasn't yet implemented
+ *  the `box-sizing` propery.
+ *
+ * 2014.02.22
+ *  This rule has been here a while. The reason is that it's common to set form
+ *  fields to be 100% wide. If the box sizing isn't "border-box" then the field
+ *  overflows its container in ways that are unattractive.
  */
 
 button,
@@ -100,19 +134,40 @@ textarea
 {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
-    font-family: inherit;
-    font-size: inherit;
-    outline: none;
+    font: inherit;
 }
+
+/**
+ * 2014.02.22
+ *  This property is almost universally set on tables. The `normalize.css` file
+ *  also has this style.
+ */
+
+table
+{
+    border-spacing: 0px;
+}
+
+/**
+ * 2014.02.22
+ *  Added `padding: 0px;` because the general padding rule was removed but
+ *  we still want to remove padding here.
+ *
+ *  The rule `vertical-align: baseline;` is confirmed to be correct here. It
+ *  places the text at the top of the cell except when there are situations
+ *  that affect the baseline (mixed text sizes, form fields) and then it places
+ *  the baseline as close to the top as possible.
+ */
 
 td,
 th
 {
-    text-align: left;
+    padding:        0px;
+    text-align:     left;
     vertical-align: baseline;
 }
 
-/*
+/**
  * Horizontal lists are used on almost every website and the elements and
  * styles used are always the same so it makes sense to have them here.
  *
@@ -136,7 +191,7 @@ ul.horizontal
 
 ul.horizontal > li
 {
-    display: inline;
-    margin-left: 0.75em;
-    margin-right: 0.75em;
+    display:        inline;
+    margin-left:    0.75em;
+    margin-right:   0.75em;
 }
