@@ -1,10 +1,11 @@
 nav.CBMenu
 {
-    margin:     0px 0px 30px;
-    text-align: center;
+    font-family:    "Source Sans Pro", sans-serif;
+    margin-bottom:  30px;
+    text-align:     center;
 }
 
-nav.CBMenu a:hover
+nav.CBMenu a
 {
     text-decoration: none;
 }
@@ -12,13 +13,21 @@ nav.CBMenu a:hover
 nav.CBMenu ul,
 nav.CBMenu li
 {
-    display: inline-block;
+    display:    inline-block;
+    padding:    0px;
+}
+
+nav.CBMainMenu
+{
+    margin-top: 20px;
+    font-size:  14px;
 }
 
 nav.CBMainMenu a
 {
     color:          white;
     display:        inline-block;
+    padding:        5px 0px 6px;
     text-shadow:    0px -1px 0px rgba(0, 0, 0, 0.5);
     width:          100%;
 }
@@ -33,7 +42,6 @@ nav.CBMainMenu ul
 nav.CBMainMenu li
 {
     background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
-    padding:    3px 0px 4px;
     transition: background-color 0.5s;
     width:      125px;
 }

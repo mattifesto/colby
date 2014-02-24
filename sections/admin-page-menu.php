@@ -4,6 +4,7 @@ include_once Colby::findFile('snippets/menu-items-admin.php');
 
 
 CBHTMLOutput::addCSSURL(CBSystemURL . '/sections/admin-page-menu.css');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
 global $CBAdminMenu;
 
