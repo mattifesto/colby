@@ -86,6 +86,17 @@ Colby.centsToDollars = function(cents)
 
 /**
  * @return string
+ */
+Colby.dataStoreIDToURI = function(dataStoreID)
+{
+    var regex = /(..)(..)(.*)/;
+    var matches = regex.exec(dataStoreID);
+
+    return "/data/" + matches[1] + "/" + matches[2] + "/" + matches[3];
+};
+
+/**
+ * @return string
  *  This method returns a date in the following format: "February 14, 2010".
  */
 Colby.dateToLocaleDateString = function(date)
