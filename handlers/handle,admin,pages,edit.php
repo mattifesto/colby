@@ -11,7 +11,10 @@ if (ColbyUser::current()->isOneOfThe('Administrators'))
 {
     CBHTMLOutput::addCSSURL(COLBY_SYSTEM_URL . '/handlers/handle,admin,pages,edit.css');
 
+    CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBContinuousAjaxRequest.js');
+    CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBCheckboxControl.js');
+    CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBFileLinkControl.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSelectionControl.js');
@@ -33,7 +36,7 @@ else
 }
 
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+include CBSystemDirectory . '/sections/equalize.php';
 
 $selectedMenuItemID     = 'pages';
 
@@ -87,8 +90,6 @@ $result->free();
 CBHTMLOutput::exportVariable('CBUsersWhoAreAdministrators', $users);
 CBHTMLOutput::exportVariable('CBCurrentUserID', ColbyUser::currentUserId());
 
-
-include CBSystemDirectory . '/sections/admin-page-footer.php';
 
 done:
 

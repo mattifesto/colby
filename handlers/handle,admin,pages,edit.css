@@ -36,8 +36,8 @@ main div.container
 
 .CBTextAreaControl.standard
 {
-    display: block;
-    margin: 10px 0px;
+    display:    block;
+    margin:     10px 0px;
 }
 
 .CBTextAreaControl.standard label
