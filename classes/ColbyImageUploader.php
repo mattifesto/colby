@@ -68,6 +68,22 @@ class ColbyImageUploader
     }
 
     /**
+     * @return int
+     */
+    public function sizeX()
+    {
+        return $this->info[0];
+    }
+
+    /**
+     * @return int
+     */
+    public function sizeY()
+    {
+        return $this->info[1];
+    }
+
+    /**
      * Detects any errors that occurred when the file was uploaded to the
      * server.
      */

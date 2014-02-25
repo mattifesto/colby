@@ -133,7 +133,7 @@ class ColbyImageResizer
     public function cropFromCenterToHeight($newHeight)
     {
         /**
-         * If the new height is less than the current width, change the output
+         * If the new height is less than the current height, change the output
          * size.
          */
 
