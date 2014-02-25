@@ -35,7 +35,7 @@ function CBMarkaroundSectionEditor(pageModel, sectionModel, sectionElement)
 CBMarkaroundSectionEditor.register = function()
 {
     CBPageEditor.registerSectionEditor(CBMarkaroundSectionTypeID, CBMarkaroundSectionEditor);
-}
+};
 
 /**
  * @return void
@@ -51,7 +51,7 @@ CBMarkaroundSectionEditor.prototype.translateContent = function(sender)
 
         var handler = function(xhr)
         {
-            self.translateContentDidComplete(/* xhr: */ xhr);
+            self.translateContentDidComplete(xhr);
         }
 
         this._request.onload = handler;
@@ -81,7 +81,7 @@ CBMarkaroundSectionEditor.prototype.translateContentDidComplete = function(xhr)
 
         CBPageEditor.requestSave();
     }
-}
+};
 
 /**
  * @return void
