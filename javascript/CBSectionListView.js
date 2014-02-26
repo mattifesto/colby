@@ -6,11 +6,50 @@ function CBSectionListView(list)
     this._element   = document.createElement("div");
     this._element.classList.add("CBSectionListView");
 
+    /**
+     * Add all of the sections already in the list to the view.
+     */
+
     this._list.forEach(this.displaySectionCallback());
 
-    // TODO: Add UI for adding a section to the end of the list
+    /**
+     * Selection control to add a new section to the end of the section list.
+     */
+
+    var appendSectionSelectionControl = new CBSectionSelectionControl();
+    appendSectionSelectionControl.setAction(this, this.appendSection);
+
+    this._element.appendChild(appendSectionSelectionControl.element());
 }
 
+CBSectionListView.prototype.appendSection = function(sender)
+{
+    var sectionTypeID           = sender.value();
+    var sectionModelJSON        = CBSectionDescriptors[sectionTypeID].modelJSON;
+    var sectionModel            = JSON.parse(sectionModelJSON);
+    sectionModel.sectionID      = Colby.random160();
+
+    /**
+     *
+     */
+
+    this._list.push(sectionModel);
+
+    /**
+     *
+     */
+
+    var sectionListItemView             = this.newSectionListItemViewForModel(sectionModel);
+    var appendSectionSelectionElement   = this._element.lastChild;
+    this._element.insertBefore(sectionListItemView, appendSectionSelectionElement);
+
+
+    CBPageEditor.requestSave();
+};
+
+/**
+ * @return Element
+ */
 CBSectionListView.prototype.element = function()
 {
     return this._element;
@@ -78,14 +117,19 @@ CBSectionListView.prototype.deleteSectionCallback = function(sectionModel)
 /**
  * @return void
  */
-CBSectionListView.prototype.insertSection = function(sectionModel, beforeSectionModel)
+CBSectionListView.prototype.insertSection = function(sender)
 {
-    var index = this._list.indexOf(beforeSectionModel);
+    var index = this._list.indexOf(sender.insertBeforeModel);
 
     if (-1 == index)
     {
         return;
     }
+
+    var sectionTypeID           = sender.value();
+    var sectionModelJSON        = CBSectionDescriptors[sectionTypeID].modelJSON;
+    var sectionModel            = JSON.parse(sectionModelJSON);
+    sectionModel.sectionID      = Colby.random160();
 
     /**
      *
@@ -97,66 +141,13 @@ CBSectionListView.prototype.insertSection = function(sectionModel, beforeSection
      *
      */
 
-    var beforeSectionListItemID     = "CBSectionListItemView-" + beforeSectionModel.sectionID;
-    var beforeSectionListItemView   = document.getElementById(beforeSectionListItemID);
+    var beforeSectionListItemViewID = "CBSectionListItemView-" + sender.insertBeforeModel.sectionID;
+    var beforeSectionListItemView   = document.getElementById(beforeSectionListItemViewID);
     var sectionListItemView         = this.newSectionListItemViewForModel(sectionModel);
     beforeSectionListItemView.parentNode.insertBefore(sectionListItemView, beforeSectionListItemView);
 
 
     CBPageEditor.requestSave();
-};
-
-/**
- * @return function
- */
-CBSectionListView.prototype.insertSectionCallback = function(selectionControl, beforeSectionModel)
-{
-    var self                    = this;
-    var insertSectionCallback   = function()
-    {
-        var sectionTypeID           = selectionControl.value();
-        var sectionModelJSON        = CBSectionDescriptors[sectionTypeID].modelJSON;
-        var sectionModel            = JSON.parse(sectionModelJSON);
-        sectionModel.sectionID      = Colby.random160();
-
-        self.insertSection(sectionModel, beforeSectionModel);
-    };
-
-    return insertSectionCallback;
-};
-
-/**
- * @return Element
- */
-CBSectionListView.prototype.newSectionInsertionViewForModel = function(sectionModel)
-{
-    var sectionInsertionView                = document.createElement("div");
-    sectionInsertionView.style.textAlign    = "center";
-
-    /**
-     *
-     */
-
-    var selectionControl    = new CBSelectionControl("insert ");
-    sectionInsertionView.appendChild(selectionControl.rootElement());
-
-    for (var sectionTypeID in CBSectionDescriptors)
-    {
-        selectionControl.appendOption(sectionTypeID, CBSectionDescriptors[sectionTypeID].name);
-    }
-
-    /**
-     *
-     */
-
-    var insertButton            = document.createElement("button");
-    var insertSectionCallback   = this.insertSectionCallback(selectionControl, sectionModel);
-    insertButton.addEventListener('click', insertSectionCallback, false);
-    insertButton.appendChild(document.createTextNode("Insert"));
-    sectionInsertionView.appendChild(insertButton);
-
-
-    return sectionInsertionView;
 };
 
 /**
@@ -176,8 +167,10 @@ CBSectionListView.prototype.newSectionListItemViewForModel = function(model)
      *
      */
 
-    var sectionInsertionView = this.newSectionInsertionViewForModel(model);
-    sectionListItemView.appendChild(sectionInsertionView);
+    var sectionSelectionControl                 = new CBSectionSelectionControl();
+    sectionSelectionControl.insertBeforeModel   = model;
+    sectionSelectionControl.setAction(this, this.insertSection);
+    sectionListItemView.appendChild(sectionSelectionControl.element());
 
     /**
      *
