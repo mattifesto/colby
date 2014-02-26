@@ -109,40 +109,6 @@ CBPageEditor.DOMContentDidLoad = function()
 /**
  * @return void
  */
-CBPageEditor.insertNewSectionBefore = function(newSectionTypeID, beforeSectionID)
-{
-    var sectionModelJSON        = CBSectionDescriptors[newSectionTypeID].modelJSON;
-    var newSectionModel         = JSON.parse(sectionModelJSON);
-    newSectionModel.sectionID   = Colby.random160();
-
-    var insertBeforeIndex = null;
-
-    var handler = function(value, index, array)
-    {
-        if (value.sectionID == beforeSectionID)
-        {
-            insertBeforeIndex = index;
-
-            return false;
-        }
-
-        return true;
-    };
-
-    CBPageEditor.model.sections.every(handler);
-    CBPageEditor.model.sections.splice(insertBeforeIndex, 0, newSectionModel);
-    CBPageEditor.requestSave();
-
-    var section = CBPageEditor.newCBSectionForModel(newSectionModel);
-
-    var beforeSectionElementID  = "s" + beforeSectionID;
-    var node                    = document.getElementById(beforeSectionElementID);
-    node.parentNode.insertBefore(section.outerElement(), node);
-};
-
-/**
- * @return void
- */
 CBPageEditor.loadModel = function()
 {
     var formData = new FormData();
@@ -189,34 +155,6 @@ CBPageEditor.registerSectionEditor = function(sectionTypeID, sectionEditor)
     CBPageEditor.sectionEditors[sectionTypeID] = sectionEditor;
 };
 
-
-/**
- * @return void
- */
-CBPageEditor.removeSection = function(sectionID)
-{
-    var sectionIndex = null;
-
-    var handler = function(value, index, array)
-    {
-        if (value.sectionID == sectionID)
-        {
-            sectionIndex = index;
-
-            return false;
-        }
-
-        return true;
-    };
-
-    CBPageEditor.model.sections.every(handler);
-    CBPageEditor.model.sections.splice(sectionIndex, 1);
-    CBPageEditor.requestSave();
-
-    var sectionElementID    = "s" + sectionID;
-    var node                = document.getElementById(sectionElementID);
-    node.parentNode.removeChild(node);
-};
 
 /**
  * @return void
