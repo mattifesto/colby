@@ -4,28 +4,28 @@
  * This class displays and implements the first section of every page editor
  * which is the page information section.
  */
-function CBPageInformation(pageModel, sectionModel, sectionElement)
+function CBPageInformationEditorView(pageModel)
 {
     var self = this;
 
     this.pageModel      = pageModel;
-    this.sectionElement = sectionElement;
 
     if (!this.pageModel.URI)
     {
         this.pageModel.URI = this.generateURI();
     }
 
-    this.display();
-}
+    this._element   = document.createElement("section");
+    var header      = document.createElement("header");
+    var headerTitle = document.createTextNode("Page Information");
+    this._container = document.createElement("div");
 
-CBPageInformation.schema = "CBPageInformation";
+    this._element.classList.add("CBSectionEditorView");
+    this._element.appendChild(header);
+    header.appendChild(headerTitle);
+    this._element.appendChild(this._container);
 
-/**
- * @return void
- */
-CBPageInformation.prototype.display = function()
-{
+
     /**
      *
      */
@@ -36,7 +36,7 @@ CBPageInformation.prototype.display = function()
     titleControl.setValue(this.pageModel.title);
     titleControl.setAction(this, this.translateTitle);
 
-    this.sectionElement.appendChild(titleControl.rootElement());
+    this._container.appendChild(titleControl.rootElement());
 
 
     /**
@@ -48,7 +48,7 @@ CBPageInformation.prototype.display = function()
     descriptionControl.setAction(this, this.translateDescription);
 
     descriptionControl.rootElement().classList.add("standard");
-    this.sectionElement.appendChild(descriptionControl.rootElement());
+    this._container.appendChild(descriptionControl.rootElement());
 
 
     /**
@@ -63,7 +63,7 @@ CBPageInformation.prototype.display = function()
     URIControl.setAction(this, this.translateURI);
 
     URIControl.rootElement().classList.add("standard");
-    this.sectionElement.appendChild(URIControl.rootElement());
+    this._container.appendChild(URIControl.rootElement());
     this.URIControl = URIControl;
 
     if (!this.pageModel.rowID)
@@ -87,7 +87,7 @@ CBPageInformation.prototype.display = function()
     publicationControl.setAction(this, this.translatePublication);
 
     publicationControl.rootElement().classList.add("standard");
-    this.sectionElement.appendChild(publicationControl.rootElement());
+    this._container.appendChild(publicationControl.rootElement());
 
 
     /**
@@ -97,7 +97,7 @@ CBPageInformation.prototype.display = function()
     var container = document.createElement("div");
     container.classList.add("container");
 
-    this.sectionElement.appendChild(container);
+    this._container.appendChild(container);
 
 
     /**
@@ -149,7 +149,7 @@ CBPageInformation.prototype.display = function()
  *
  * @return string
  */
-CBPageInformation.prototype.generateURI = function()
+CBPageInformationEditorView.prototype.generateURI = function()
 {
         var groupID = this.pageModel.groupID;
         var URI     = "";
@@ -173,11 +173,18 @@ CBPageInformation.prototype.generateURI = function()
         return URI;
 }
 
+/**
+ * @return void
+ */
+CBPageInformationEditorView.prototype.element = function()
+{
+    return this._element;
+};
 
 /**
  * @return void
  */
-CBPageInformation.prototype.translatePageGroup = function(sender)
+CBPageInformationEditorView.prototype.translatePageGroup = function(sender)
 {
     this.pageModel.groupID = sender.value() ? sender.value() : null;
 
@@ -196,7 +203,7 @@ CBPageInformation.prototype.translatePageGroup = function(sender)
 /**
  * @return void
  */
-CBPageInformation.prototype.translatePublication = function(sender)
+CBPageInformationEditorView.prototype.translatePublication = function(sender)
 {
     this.pageModel.isPublished = sender.isPublished();
     this.pageModel.publicationTimeStamp = sender.publicationTimeStamp();
@@ -216,7 +223,7 @@ CBPageInformation.prototype.translatePublication = function(sender)
 /**
  * @return void
  */
-CBPageInformation.prototype.translateDescription = function(sender)
+CBPageInformationEditorView.prototype.translateDescription = function(sender)
 {
     this.pageModel.description = sender.value().trim();
     this.pageModel.descriptionHTML = Colby.textToHTML(this.pageModel.description);
@@ -227,7 +234,7 @@ CBPageInformation.prototype.translateDescription = function(sender)
 /**
  * @return void
  */
-CBPageInformation.prototype.translateTitle = function(sender)
+CBPageInformationEditorView.prototype.translateTitle = function(sender)
 {
     this.pageModel.title = sender.value().trim();
     this.pageModel.titleHTML = Colby.textToHTML(this.pageModel.title);
@@ -246,7 +253,7 @@ CBPageInformation.prototype.translateTitle = function(sender)
 /**
  * @return void
  */
-CBPageInformation.prototype.translateURI = function(sender)
+CBPageInformationEditorView.prototype.translateURI = function(sender)
 {
     if (!this.pageModel.rowID)
     {
@@ -289,7 +296,7 @@ CBPageInformation.prototype.translateURI = function(sender)
 /**
  * @return void
  */
-CBPageInformation.prototype.requestURIDidComplete = function(xhr)
+CBPageInformationEditorView.prototype.requestURIDidComplete = function(xhr)
 {
     var response = Colby.responseFromXMLHttpRequest(xhr);
 

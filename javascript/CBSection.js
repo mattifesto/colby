@@ -3,18 +3,22 @@
 /**
  *
  */
-function CBSection(sectionID, title)
+function CBSectionEditorView(model)
 {
-    var sectionElementID    = "s" + sectionID;
-    var outerElement        = document.createElement("section");
-    outerElement.id         = sectionElementID;
-    this._outerElement  = outerElement;
+    if (!model.sectionID)
+    {
+        model.sectionID = Colby.random160();
+    }
 
+    var title               = CBSectionDescriptors[model.sectionTypeID].name;
 
-    var header      = document.createElement("header");
+    this._element           = document.createElement("section");
+    this._element.id        = "s" + model.sectionID;
+    this._element.classList.add("CBSectionEditorView");
+
+    var header              = document.createElement("header");
     header.appendChild(document.createTextNode(title));
-    this._header    = header;
-    outerElement.appendChild(header);
+    this._element.appendChild(header);
 
 
     var selectionControl    = new CBSelectionControl(" insert ");
@@ -47,29 +51,26 @@ function CBSection(sectionID, title)
 
     var removeSection = function()
     {
-        CBPageEditor.removeSection(sectionID);
+        CBPageEditor.removeSection(this._element.id);
     }
 
     button.addEventListener('click', removeSection, false);
 
 
-    var innerElement    = document.createElement("div");
-    this._innerElement  = innerElement;
-    outerElement.appendChild(innerElement);
+    this._innerElement  = document.createElement("div");
+    this._element.appendChild(this._innerElement);
+
+    var sectionEditorConstructor = CBPageEditor.sectionEditors[model.sectionTypeID];
+
+    // TODO: this is an odd model, the editor creates itself and then places itself in the tree. I'm not sure about this.
+
+    new sectionEditorConstructor(CBPageEditor.model, model, this._innerElement);
 }
 
 /**
  * @return void
  */
-CBSection.prototype.innerElement = function()
+CBSectionEditorView.prototype.element = function()
 {
-    return this._innerElement;
-}
-
-/**
- * @return void
- */
-CBSection.prototype.outerElement = function()
-{
-    return this._outerElement;
+    return this._element;
 }
