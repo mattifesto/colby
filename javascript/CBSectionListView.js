@@ -6,7 +6,7 @@ function CBSectionListView(list)
     this._element   = document.createElement("div");
     this._element.classList.add("CBSectionListView");
 
-    this._list.forEach(this.appendSectionEditorCallback());
+    this._list.forEach(this.displaySectionCallback());
 
     // TODO: Add UI for adding a section to the end of the list
 }
@@ -16,24 +16,27 @@ CBSectionListView.prototype.element = function()
     return this._element;
 };
 
-CBSectionListView.prototype.appendSectionEditorCallback = function()
+/**
+ * @return void
+ */
+CBSectionListView.prototype.displaySection = function(sectionModel)
+{
+    var sectionListItemView = this.newSectionListItemViewForModel(sectionModel);
+    this._element.appendChild(sectionListItemView);
+};
+
+/**
+ * @return function
+ */
+CBSectionListView.prototype.displaySectionCallback = function()
 {
     var self        = this;
     var callback    = function(sectionModel, index, array)
     {
-        self.appendSectionEditorForModel(sectionModel);
+        self.displaySection(sectionModel);
     };
 
     return callback;
-};
-
-/**
- * @return void
- */
-CBSectionListView.prototype.appendSectionEditorForModel = function(model)
-{
-    var sectionListItemView = this.newSectionListItemViewForModel(model);
-    this._element.appendChild(sectionListItemView);
 };
 
 /**
