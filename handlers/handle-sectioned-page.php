@@ -30,7 +30,7 @@ $pageModel      = json_decode($pageModelJSON);
 CBHTMLOutput::setTitleHTML($pageModel->titleHTML);
 CBHTMLOutput::setDescriptionHTML($pageModel->descriptionHTML);
 
-foreach ($pageModel->sectionModels as $sectionModel)
+foreach ($pageModel->sections as $sectionModel)
 {
     global $CBSectionSnippets;
 
