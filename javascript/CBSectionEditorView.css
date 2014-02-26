@@ -1,0 +1,30 @@
+section.CBSectionEditorView
+{
+    border:         1px solid #dfdfdf;
+    border-radius:  5px;
+    margin:         10px 0px;
+}
+
+section.CBSectionEditorView > header
+{
+    background-color: #dfdfdf;
+    padding: 1px 10px 3px;
+}
+
+section.CBSectionEditorView > div
+{
+    padding:        0px 20px;
+}
+
+section.CBSectionEditorView input[type=text].standard,
+section.CBSectionEditorView textarea.standard
+{
+    border:         1px solid #dfdfdf;
+    border-radius:  5px;
+    padding:        3px 6px;
+}
+
+section.CBSectionEditorView input[type=text].standard:disabled
+{
+    border: 1px solid transparent;
+}
