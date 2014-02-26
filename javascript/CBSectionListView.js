@@ -30,13 +30,13 @@ CBSectionListView.prototype.displaySection = function(sectionModel)
  */
 CBSectionListView.prototype.displaySectionCallback = function()
 {
-    var self        = this;
-    var callback    = function(sectionModel, index, array)
+    var self                    = this;
+    var displaySectionCallback  = function(sectionModel, index, array)
     {
         self.displaySection(sectionModel);
     };
 
-    return callback;
+    return displaySectionCallback;
 };
 
 /**
