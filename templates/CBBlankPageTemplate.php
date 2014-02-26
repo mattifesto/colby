@@ -18,6 +18,6 @@ $model->publicationTimeStamp    = null;
 $model->isPublished             = false;
 $model->publishedBy             = null;
 $model->thumbnailURL            = null;
-$model->sectionModels           = array();
+$model->sections                = array();
 
 define('CBBlankPageTemplateModelJSON', json_encode($model));
