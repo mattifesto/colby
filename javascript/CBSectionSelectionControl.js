@@ -10,8 +10,10 @@ function CBSectionSelectionControl()
     this._select    = document.createElement("select");
     this._button    = document.createElement("button");
 
-    this._element.style.textAlign   = "center";
-    this._button.style.marginLeft   = "5px";
+    this._element.style.marginBottom    = "30px";
+    this._element.style.marginTop       = "30px";
+    this._element.style.textAlign       = "center";
+    this._button.style.marginLeft       = "5px";
 
     this._element.appendChild(this._select);
     this._element.appendChild(this._button);

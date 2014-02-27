@@ -30,12 +30,22 @@ $pageModel      = json_decode($pageModelJSON);
 CBHTMLOutput::setTitleHTML($pageModel->titleHTML);
 CBHTMLOutput::setDescriptionHTML($pageModel->descriptionHTML);
 
-foreach ($pageModel->sections as $sectionModel)
-{
-    global $CBSectionSnippets;
 
-    include $CBSectionSnippets[$sectionModel->sectionTypeID];
-}
+CBSectionedPageRenderSections($pageModel->sections, $pageModel);
 
 
 CBHTMLOutput::render();
+
+
+/**
+ * @return void
+ */
+function CBSectionedPageRenderSections($sections, $pageModel)
+{
+    global $CBSectionSnippets;
+
+    foreach ($sections as $sectionModel)
+    {
+        include $CBSectionSnippets[$sectionModel->sectionTypeID];
+    }
+}

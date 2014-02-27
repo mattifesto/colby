@@ -48,3 +48,11 @@ $styles     = implode(' ', $styles);
 ?>
 
 <div style="<?php echo $styles; ?>">
+
+    <?php
+
+    CBSectionedPageRenderSections($sectionModel->children, $pageModel);
+
+    ?>
+
+</div>

@@ -61,6 +61,9 @@ function CBBackgroundBeginSectionEditor(pageModel, sectionModel, sectionElement)
     backgroundColorControl.setAction(this, this.translateBackgroundColor);
     this._sectionElement.appendChild(backgroundColorControl.rootElement());
 
+    var childListView = new CBSectionListView(sectionModel.children);
+    this._sectionElement.appendChild(childListView.element());
+
     this.updateThumbnail();
 }
 
