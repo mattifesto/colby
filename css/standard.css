@@ -83,7 +83,9 @@ textarea.big-field:focus
  * element is very easy.
  */
 
-.centered-block
+
+.centered-block, /* deprecated */
+.standard-centered-block
 {
     display: block;
     margin-left: auto;
@@ -154,6 +156,34 @@ header.standard-document-header h1
 .standard-page-width
 {
     width: 980px;
+}
+
+/**
+ * The following rule addresses a complicated issue. It stems from the fact that
+ * the `html` and often other elements do not grow horizontally with their
+ * children beyond the viewport width. For instance, in a scenario in which
+ * I have two elements in the body, the first with a width of 980px and the
+ * second with a width of 100%, the second element will not have a minimum
+ * width of 980px.
+ *
+ * If the second element has a background and has content that is wider than the
+ * viewport, the page will scroll horizontally but the background will not cover
+ * the entire width of the element's children.
+ *
+ * I have never found a truly clean solution to this problem, but setting the
+ * `html` element's minimum width to the same width as the largest common
+ * element width, such as `standard-page-width` solves the problem for virtually
+ * every situation. There could still be problems if there are elements with set
+ * widths greater than the `standard-page-width` but that's not likely.
+ *
+ * Each site should have its own `standard.css` file and each site has the
+ * option of not declaring this style, but I can't think of many non-academic
+ * cases where it would be harmful to declare it.
+ */
+
+html
+{
+    min-width: 980px;
 }
 
 

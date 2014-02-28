@@ -5,7 +5,7 @@
 ?>
 
 <section id="<?php echo $ID; ?>">
-    <style>
+    <style scoped>
 
         <?php
 
