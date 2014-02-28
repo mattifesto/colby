@@ -15,6 +15,7 @@ $model->imageRepeatVertically               = false;
 $model->imageRepeatHorizontally             = false;
 $model->imageSizeX                          = null;
 $model->imageSizeY                          = null;
+$model->linkURL                             = '';
 $model->minimumSectionHeightIsImageHeight   = true;
 
 define('CBBackgroundSectionModelJSON', json_encode($model));

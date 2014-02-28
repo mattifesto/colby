@@ -61,6 +61,12 @@ function CBBackgroundSectionEditor(pageModel, sectionModel, sectionElement)
     backgroundColorControl.setAction(this, this.translateBackgroundColor);
     this._sectionElement.appendChild(backgroundColorControl.rootElement());
 
+    var linkURLControl = new CBTextControl("Link URL");
+    linkURLControl.rootElement().classList.add("standard");
+    linkURLControl.setValue(sectionModel.linkURL);
+    linkURLControl.setAction(this, this.translateLinkURL);
+    this._sectionElement.appendChild(linkURLControl.rootElement());
+
     var childListView = new CBSectionListView(sectionModel.children);
     this._sectionElement.appendChild(childListView.element());
 
@@ -125,6 +131,16 @@ CBBackgroundSectionEditor.prototype.translateImageDidComplete = function(xhr)
 
         CBPageEditor.requestSave();
     }
+};
+
+/**
+ * @return void
+ */
+CBBackgroundSectionEditor.prototype.translateLinkURL = function(sender)
+{
+    this._sectionModel.linkURL = sender.value().trim();
+
+    CBPageEditor.requestSave();
 };
 
 /**
