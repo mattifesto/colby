@@ -32,6 +32,7 @@ $rowData->rowID         = $model->rowID;
 $rowData->typeID        = CBPageTypeID;
 $rowData->groupID       = $model->groupID;
 $rowData->titleHTML     = $model->titleHTML;
+$rowData->searchText    = CBPageGenerateSearchText($model);
 $rowData->subtitleHTML  = $model->descriptionHTML;
 
 if ($model->isPublished)
@@ -69,3 +70,29 @@ $response->wasSuccessful = true;
 done:
 
 $response->end();
+
+
+/**
+ * @return string
+ */
+function CBPageGenerateSearchText($pageModel)
+{
+    $searchText[] = $pageModel->title;
+    $searchText[] = $pageModel->description;
+
+    global $CBSectionSnippetsForSearchText;
+
+    foreach ($pageModel->sections as $sectionModel)
+    {
+        if (isset($CBSectionSnippetsForSearchText[$sectionModel->sectionTypeID]))
+        {
+            ob_start();
+
+            include $CBSectionSnippetsForSearchText[$sectionModel->sectionTypeID];
+
+            $searchText[] = ob_get_clean();
+        }
+    }
+
+    return implode(' ', $searchText);
+}

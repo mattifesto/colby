@@ -65,6 +65,21 @@ textarea.big-field:focus
     border: 1px solid #9f9f9f;
 }
 
+/**
+ *
+ */
+
+a.standard-link-button
+{
+    color:              rgba(63, 63, 255, 0.7);
+    cursor:             pointer;
+    text-decoration:    none;
+}
+
+a.standard-link-button:hover
+{
+    color: rgba(63, 63, 255, 1.0);
+}
 
 /**
  * The `centered-block` class will most likely be used and be exactly the same

@@ -56,11 +56,21 @@ CBPageEditor.displayEditor = function()
      * Menu
      */
 
-    var nav         = document.createElement("nav");
-    var preview     = document.createElement("a");
-    preview.href    = "/admin/document/preview/?archive-id=" + CBURLQueryVariables["data-store-id"];
+    var nav             = document.createElement("nav");
+    var preview         = document.createElement("a");
+    var makeFrontPage   = document.createElement("a");
+
+    preview.href = "/admin/document/preview/?archive-id=" + CBURLQueryVariables["data-store-id"];
+    makeFrontPage.style.marginLeft = "20px";
+    preview.classList.add("standard-link-button");
+    makeFrontPage.classList.add("standard-link-button");
+
     preview.appendChild(document.createTextNode("preview"));
+    makeFrontPage.appendChild(document.createTextNode("make front page"));
+    makeFrontPage.addEventListener('click', CBPageEditor.makeFrontPage, false);
+
     nav.appendChild(preview);
+    nav.appendChild(makeFrontPage);
     editorContainer.appendChild(nav);
 
     /**
@@ -144,6 +154,32 @@ CBPageEditor.loadModelDidComplete = function()
     {
         Colby.displayResponse(response);
     }
+};
+
+
+/**
+ * @return void
+ */
+CBPageEditor.makeFrontPage = function()
+{
+    var formData = new FormData();
+    formData.append("dataStoreID", CBURLQueryVariables["data-store-id"]);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/admin/pages/api/make-front-page/", true);
+    xhr.onload = CBPageEditor.makeFrontPageDidComplete;
+    xhr.send(formData);
+};
+
+/**
+ * @return void
+ */
+CBPageEditor.makeFrontPageDidComplete = function()
+{
+    var xhr         = this;
+    var response    = Colby.responseFromXMLHttpRequest(xhr);
+
+    Colby.displayResponse(response);
 };
 
 

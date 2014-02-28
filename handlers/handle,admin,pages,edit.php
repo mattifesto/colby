@@ -9,7 +9,8 @@ CBHTMLOutput::begin();
 
 if (ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    CBHTMLOutput::addCSSURL(COLBY_SYSTEM_URL . '/handlers/handle,admin,pages,edit.css');
+    CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
+    CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard.css');
 
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbySheet.js');

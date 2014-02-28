@@ -155,7 +155,25 @@ EOT;
 
         if (0 === $countOfStubs)
         {
-            $handlerFilename = Colby::findHandler('handle-front-page.php');
+            include_once CBSystemDirectory . '/classes/CBDataStore.php';
+
+            $dataStore          = new CBDataStore(CBPageTypeID);
+            $frontPageFilename  = $dataStore->directory() . '/front-page.json';
+
+            if (file_exists($frontPageFilename))
+            {
+                $frontPage          = json_decode(file_get_contents($frontPageFilename));
+                $dataStoreID        = $frontPage->dataStoreID;
+                $handlerFilename    = CBSystemDirectory . '/handlers/handle-sectioned-page.php';
+            }
+            else
+            {
+                /**
+                 * This code is mostly deprecated. Not sure about first run scenarios.
+                 */
+
+                $handlerFilename = Colby::findHandler('handle-front-page.php');
+            }
         }
 
         // redirect requests for
