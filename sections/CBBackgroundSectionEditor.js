@@ -88,8 +88,6 @@ CBBackgroundSectionEditor.prototype.translateBackgroundColor = function(sender)
  */
 CBBackgroundSectionEditor.prototype.translateImage = function(sender)
 {
-    console.log('foo');
-
     if (!this._request)
     {
         this._request = new CBContinuousAjaxRequest("/admin/pages/api/upload-image/");

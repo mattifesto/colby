@@ -2,35 +2,42 @@
 
 include_once CBSystemDirectory . '/classes/CBDataStore.php';
 
-$dataStore          = new CBDataStore($pageModel->dataStoreID);
-$dataStoreURL       = $dataStore->URL();
-$backgroundImageURL = "{$dataStoreURL}/{$sectionModel->imageFilename}";
+$dataStore      = new CBDataStore($pageModel->dataStoreID);
+$dataStoreURL   = $dataStore->URL();
 
-if ($sectionModel->imageRepeatVertically)
+
+$styles = array();
+$styles[] = "position: relative;";
+
+if ($sectionModel->imageFilename)
 {
-    if ($sectionModel->imageRepeatHorizontally)
+    $backgroundImageURL = "{$dataStoreURL}/{$sectionModel->imageFilename}";
+
+    $styles[] = "background-image: url({$backgroundImageURL});";
+    $styles[] = "background-position: center top;";
+
+    if ($sectionModel->imageRepeatVertically)
     {
-        $repeat = "repeat";
+        if ($sectionModel->imageRepeatHorizontally)
+        {
+            $repeat = "repeat";
+        }
+        else
+        {
+            $repeat = "repeat-y";
+        }
+    }
+    else if ($sectionModel->imageRepeatHorizontally)
+    {
+        $repeat = "repeat-x";
     }
     else
     {
-        $repeat = "repeat-y";
+        $repeat = "no-repeat";
     }
-}
-else if ($sectionModel->imageRepeatHorizontally)
-{
-    $repeat = "repeat-x";
-}
-else
-{
-    $repeat = "no-repeat";
-}
 
-$styles = array();
-$styles[]   = "background-image: url({$backgroundImageURL});";
-$styles[]   = "background-position: center top;";
-$styles[]   = "background-repeat: {$repeat};";
-$styles[]   = "position: relative;";
+    $styles[]   = "background-repeat: {$repeat};";
+}
 
 if (!empty($sectionModel->backgroundColor))
 {
@@ -44,7 +51,7 @@ if ($sectionModel->minimumSectionHeightIsImageHeight)
     $styles[] = "min-height: {$sectionModel->imageSizeY}px;";
 }
 
-$styles     = implode(' ', $styles);
+$styles = implode(' ', $styles);
 
 ?>
 

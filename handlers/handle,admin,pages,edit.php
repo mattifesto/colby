@@ -12,6 +12,7 @@ if (ColbyUser::current()->isOneOfThe('Administrators'))
     CBHTMLOutput::addCSSURL(COLBY_SYSTEM_URL . '/handlers/handle,admin,pages,edit.css');
 
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
+    CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbySheet.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBContinuousAjaxRequest.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBCheckboxControl.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBFileLinkControl.js');
@@ -60,7 +61,6 @@ else
 ?>
 
 <main>
-    <h1>Page Editor</h1>
 </main>
 
 <?php
