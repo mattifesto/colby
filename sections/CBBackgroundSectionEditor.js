@@ -4,7 +4,7 @@
 /**
  *
  */
-function CBBackgroundBeginSectionEditor(pageModel, sectionModel, sectionElement)
+function CBBackgroundSectionEditor(pageModel, sectionModel, sectionElement)
 {
     this._pageModel         = pageModel;
     this._sectionModel      = sectionModel;
@@ -70,7 +70,7 @@ function CBBackgroundBeginSectionEditor(pageModel, sectionModel, sectionElement)
 /**
  * @return void
  */
-CBBackgroundBeginSectionEditor.prototype.translateBackgroundColor = function(sender)
+CBBackgroundSectionEditor.prototype.translateBackgroundColor = function(sender)
 {
     this._sectionModel.backgroundColor = sender.value().trim();
 
@@ -80,7 +80,7 @@ CBBackgroundBeginSectionEditor.prototype.translateBackgroundColor = function(sen
 /**
  * @return void
  */
-CBBackgroundBeginSectionEditor.prototype.translateImage = function(sender)
+CBBackgroundSectionEditor.prototype.translateImage = function(sender)
 {
     console.log('foo');
 
@@ -108,7 +108,7 @@ CBBackgroundBeginSectionEditor.prototype.translateImage = function(sender)
 /**
  * @return void
  */
-CBBackgroundBeginSectionEditor.prototype.translateImageDidComplete = function(xhr)
+CBBackgroundSectionEditor.prototype.translateImageDidComplete = function(xhr)
 {
     var response = Colby.responseFromXMLHttpRequest(xhr);
 
@@ -130,7 +130,7 @@ CBBackgroundBeginSectionEditor.prototype.translateImageDidComplete = function(xh
 /**
  * @return void
  */
-CBBackgroundBeginSectionEditor.prototype.translateMinimumSectionHeightIsImageHeight = function(sender)
+CBBackgroundSectionEditor.prototype.translateMinimumSectionHeightIsImageHeight = function(sender)
 {
     this._sectionModel.minimumSectionHeightIsImageHeight = sender.isChecked();
 
@@ -140,7 +140,7 @@ CBBackgroundBeginSectionEditor.prototype.translateMinimumSectionHeightIsImageHei
 /**
  * @return void
  */
-CBBackgroundBeginSectionEditor.prototype.translateRepeatHorizontally = function(sender)
+CBBackgroundSectionEditor.prototype.translateRepeatHorizontally = function(sender)
 {
     this._sectionModel.imageRepeatHorizontally = sender.isChecked();
 
@@ -150,7 +150,7 @@ CBBackgroundBeginSectionEditor.prototype.translateRepeatHorizontally = function(
 /**
  * @return void
  */
-CBBackgroundBeginSectionEditor.prototype.translateRepeatVertically = function(sender)
+CBBackgroundSectionEditor.prototype.translateRepeatVertically = function(sender)
 {
     this._sectionModel.imageRepeatVertically = sender.isChecked();
 
@@ -160,7 +160,7 @@ CBBackgroundBeginSectionEditor.prototype.translateRepeatVertically = function(se
 /**
  * @return void
  */
-CBBackgroundBeginSectionEditor.prototype.updateThumbnail = function()
+CBBackgroundSectionEditor.prototype.updateThumbnail = function()
 {
     if (!this._sectionModel.imageFilename)
     {
@@ -176,9 +176,9 @@ CBBackgroundBeginSectionEditor.prototype.updateThumbnail = function()
 /**
  * @return void
  */
-CBBackgroundBeginSectionEditor.register = function()
+CBBackgroundSectionEditor.register = function()
 {
-    CBPageEditor.registerSectionEditor(CBBackgroundBeginSectionTypeID, CBBackgroundBeginSectionEditor);
+    CBPageEditor.registerSectionEditor(CBBackgroundSectionTypeID, CBBackgroundSectionEditor);
 };
 
-document.addEventListener("CBPageEditorDidLoad", CBBackgroundBeginSectionEditor.register, false);
+document.addEventListener("CBPageEditorDidLoad", CBBackgroundSectionEditor.register, false);

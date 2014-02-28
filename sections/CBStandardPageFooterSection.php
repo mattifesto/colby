@@ -10,9 +10,6 @@ $model->sectionTypeID   = CBStandardPageFooterSectionTypeID;
 
 define('CBStandardPageFooterSectionModelJSON', json_encode($model));
 
-if (isset($GLOBALS['CBSectionSnippets']))
-{
-    global $CBSectionSnippets;
+global $CBSectionSnippets;
 
-    $CBSectionSnippets[CBStandardPageFooterSectionTypeID] = CBSystemDirectory . '/sections/CBStandardPageFooterSectionSnippet.php';
-}
+$CBSectionSnippets[CBStandardPageFooterSectionTypeID] = CBSystemDirectory . '/sections/CBStandardPageFooterSectionSnippet.php';

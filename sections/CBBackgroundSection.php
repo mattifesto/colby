@@ -1,12 +1,12 @@
 <?php
 
-define('CBBackgroundBeginSectionTypeID', 'c4bacd7cf5315e5a07c20072cbb0f355bdb4b8bc');
+define('CBBackgroundSectionTypeID', 'c4bacd7cf5315e5a07c20072cbb0f355bdb4b8bc');
 
 $model                                      = new stdClass();
-$model->schema                              = 'CBBackgroundBeginSection';
+$model->schema                              = 'CBBackgroundSection';
 $model->schemaVersion                       = 1;
 $model->sectionID                           = null;
-$model->sectionTypeID                       = CBBackgroundBeginSectionTypeID;
+$model->sectionTypeID                       = CBBackgroundSectionTypeID;
 $model->backgroundColor                     = '';
 $model->canHaveChildren                     = true;
 $model->children                            = array();
@@ -17,9 +17,9 @@ $model->imageSizeX                          = null;
 $model->imageSizeY                          = null;
 $model->minimumSectionHeightIsImageHeight   = true;
 
-define('CBBackgroundBeginSectionModelJSON', json_encode($model));
+define('CBBackgroundSectionModelJSON', json_encode($model));
 
 global $CBSectionSnippets;
 
-$CBSectionSnippets[CBBackgroundBeginSectionTypeID] = CBSystemDirectory .
-    '/sections/CBBackgroundBeginSectionSnippet.php';
+$CBSectionSnippets[CBBackgroundSectionTypeID] = CBSystemDirectory .
+    '/sections/CBBackgroundSectionSnippetForHTML.php';
