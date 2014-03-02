@@ -9,8 +9,8 @@ CBHTMLOutput::begin();
 
 if (ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
     CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard.css');
+    CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
 
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbySheet.js');
@@ -19,6 +19,7 @@ if (ColbyUser::current()->isOneOfThe('Administrators'))
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBFileLinkControl.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageInformationEditorView.js');
+    CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBPageInformationEditorView.css');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSectionEditorView.js');

@@ -49,7 +49,7 @@ CBPageEditor.displayEditor = function()
     }
 
     var editorContainer = document.createElement("div");
-    editorContainer.classList.add("CBEditorContainer");
+    editorContainer.classList.add("CBPageEditor");
     mainElement.appendChild(editorContainer);
 
     /**
@@ -58,15 +58,14 @@ CBPageEditor.displayEditor = function()
 
     var nav             = document.createElement("nav");
     var preview         = document.createElement("a");
-    var makeFrontPage   = document.createElement("a");
+    var makeFrontPage   = document.createElement("button");
 
     preview.href = "/admin/document/preview/?archive-id=" + CBURLQueryVariables["data-store-id"];
     makeFrontPage.style.marginLeft = "20px";
     preview.classList.add("standard-link-button");
-    makeFrontPage.classList.add("standard-link-button");
 
     preview.appendChild(document.createTextNode("preview"));
-    makeFrontPage.appendChild(document.createTextNode("make front page"));
+    makeFrontPage.appendChild(document.createTextNode("Make This Page the Front Page"));
     makeFrontPage.addEventListener('click', CBPageEditor.makeFrontPage, false);
 
     nav.appendChild(preview);
