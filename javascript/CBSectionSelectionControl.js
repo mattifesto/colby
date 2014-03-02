@@ -9,15 +9,29 @@ function CBSectionSelectionControl()
     this._element   = document.createElement("div");
     this._select    = document.createElement("select");
     this._button    = document.createElement("button");
+    var line        = document.createElement("div");
 
-    this._element.style.marginBottom    = "30px";
-    this._element.style.marginTop       = "30px";
-    this._element.style.textAlign       = "center";
-    this._button.style.marginLeft       = "5px";
+    this._element.style.margin      = "50px auto";
+    this._element.style.maxWidth    = "720px";
+    this._element.style.position    = "relative";
+    this._element.style.textAlign   = "center";
 
+    this._button.style.marginLeft   = "5px";
+
+    line.style.position             = "absolute";
+    line.style.zIndex               = "-1";
+    line.style.width                = "100%";
+    line.style.bottom               = "50%";
+    line.style.borderBottom         = "1px solid rgba(0, 0, 0, 0.2)";
+
+    this._element.appendChild(line);
     this._element.appendChild(this._select);
     this._element.appendChild(this._button);
     this._button.appendChild(document.createTextNode("Insert"));
+
+    /**
+     *
+     */
 
     for (var sectionTypeID in CBSectionDescriptors)
     {
