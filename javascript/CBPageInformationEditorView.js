@@ -1,5 +1,6 @@
 "use strict";
 
+
 /**
  * This class displays and implements the first section of every page editor
  * which is the page information section.
@@ -21,6 +22,7 @@ function CBPageInformationEditorView(pageModel)
     this._container = document.createElement("div");
 
     this._element.classList.add("CBSectionEditorView");
+    this._element.classList.add("CBPageInformationEditorView");
     this._element.appendChild(header);
     header.appendChild(headerTitle);
     this._element.appendChild(this._container);
