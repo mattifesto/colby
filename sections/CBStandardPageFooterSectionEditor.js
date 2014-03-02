@@ -3,19 +3,21 @@
 /**
  *
  */
-function CBStandardPageFooterSectionEditor(pageModel, sectionModel, sectionElement)
+function CBStandardPageFooterSectionEditor(pageModel, sectionModel)
 {
-    this.pageModel      = pageModel;
-    this.sectionModel   = sectionModel;
-    this.sectionElement = sectionElement;
-
-    var div     = document.createElement("div");
-    div.classList.add("container");
-    var text    = document.createTextNode("This section has no configurable properties");
-    div.appendChild(text);
-
-    this.sectionElement.appendChild(div);
+    this._element                   = document.createElement("div");
+    this._element.style.textAlign   = "center";
+    this._element.classList.add("container");
+    this._element.appendChild(document.createTextNode("This section has no configurable properties"));
 }
+
+/**
+ * @return void
+ */
+CBStandardPageFooterSectionEditor.prototype.element = function()
+{
+    return this._element;
+};
 
 /**
  * @return void
