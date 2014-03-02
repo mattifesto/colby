@@ -53,6 +53,16 @@ html
      **/
 
     text-rendering: optimizeLegibility;
+
+    /**
+     * 2014.03.01
+     *  These rules prevent phone browsers from resizing text to a minimum
+     *  size based on phone heuristics. This generally breaks the layout and
+     *  degrades the experience rather then helping the user.
+     */
+
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
 }
 
 /**
@@ -125,6 +135,26 @@ pre
  *  This rule has been here a while. The reason is that it's common to set form
  *  fields to be 100% wide. If the box sizing isn't "border-box" then the field
  *  overflows its container in ways that are unattractive.
+ *
+ * 2014.03.01
+ *  Styles that attempted to equalize the default font of user interface
+ *  elements have been removed.
+ *
+ *  -   Setting the font style on a `button` element removes the default OS
+ *      specific formatting and you can never get it back. The OS formatting
+ *      for administrative purposes works very well if another more established
+ *      button style is not available.
+ *
+ *  -   Setting the font on a `select` element doesn't even work in Safari so
+ *      the various elements become mismatched, not equalized.
+ *
+ *  -   It is often not desirable for the font of `input` elements to be
+ *      inherited. One undesirable style is not better than another undesirable
+ *      style, but having less styles is more desirable than more styles.
+ *
+ *  Attempts to equalize form elements without committing to a full suite of
+ *  styles is futile. It makes the elements look worse and de-equalizes them
+ *  within each browser.
  */
 
 button,
@@ -134,7 +164,6 @@ textarea
 {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
-    font: inherit;
 }
 
 /**
