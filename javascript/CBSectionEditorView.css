@@ -1,19 +1,17 @@
-section.CBSectionEditorView
-{
-    border:         1px solid #dfdfdf;
-    border-radius:  5px;
-    margin:         10px 0px;
-}
-
 section.CBSectionEditorView > header
 {
-    background-color: #dfdfdf;
-    padding: 1px 10px 3px;
+    background-color:   #dfdfdf;
+    border-radius:      5px;
+    margin:             0px auto;
+    padding:            5px 10px;
+    text-align:         center;
+    width:              480px;
 }
 
-section.CBSectionEditorView > div
+section.CBSectionEditorView > header button
 {
-    padding:        0px 20px;
+    display:    block;
+    margin:     5px auto 0px;
 }
 
 section.CBSectionEditorView input[type=text].standard,
