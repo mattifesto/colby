@@ -11,4 +11,5 @@ $descriptor->modelJSON      = CBBackgroundSectionModelJSON;
 
 CBHTMLOutput::exportListItem('CBSectionDescriptors', CBBackgroundSectionTypeID, $descriptor);
 
+CBHTMLOutput::addCSSURL(       CBSystemURL . '/sections/CBBackgroundSectionEditor.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/sections/CBBackgroundSectionEditor.js');

@@ -4,29 +4,18 @@
 /**
  *
  */
-function CBBackgroundSectionEditor(pageModel, sectionModel, sectionElement)
+function CBBackgroundSectionEditor(pageModel, sectionModel)
 {
-    this._pageModel         = pageModel;
-    this._sectionModel      = sectionModel;
-    this._sectionElement    = sectionElement;
-
-    var container                  = document.createElement("div");
-    container.style.height         = "200px";
-    container.style.textAlign      = "center";
-    container.style.marginBottom   = "10px";
-    container.style.marginTop      = "10px";
-    this._sectionElement.appendChild(container);
-
-    this._thumbnail = document.createElement("img");
-    this._thumbnail.style.maxHeight     = "200px";
-    this._thumbnail.style.maxWidth      = "100%";
-    container.appendChild(this._thumbnail);
+    this._pageModel     = pageModel;
+    this._sectionModel  = sectionModel;
+    this._element       = document.createElement("div");
+    this._element.classList.add("section-type-" + sectionModel.sectionTypeID);
 
     var container                  = document.createElement("div");
     container.style.textAlign      = "center";
     container.style.marginBottom   = "10px";
     container.style.marginTop      = "10px";
-    this._sectionElement.appendChild(container);
+    this._element.appendChild(container);
 
     var fileControl    = new CBFileLinkControl("upload background image");
     fileControl.setAction(this, this.translateImage);
@@ -36,7 +25,7 @@ function CBBackgroundSectionEditor(pageModel, sectionModel, sectionElement)
     container.style.textAlign      = "center";
     container.style.marginBottom   = "10px";
     container.style.marginTop      = "10px";
-    this._sectionElement.appendChild(container);
+    this._element.appendChild(container);
 
     var repeatHorizontallyCheckbox = new CBCheckboxControl("Repeat horizontally");
     repeatHorizontallyCheckbox.setIsChecked(sectionModel.imageRepeatHorizontally);
@@ -59,19 +48,35 @@ function CBBackgroundSectionEditor(pageModel, sectionModel, sectionElement)
     backgroundColorControl.rootElement().classList.add("standard");
     backgroundColorControl.setValue(sectionModel.backgroundColor);
     backgroundColorControl.setAction(this, this.translateBackgroundColor);
-    this._sectionElement.appendChild(backgroundColorControl.rootElement());
+    this._element.appendChild(backgroundColorControl.rootElement());
 
     var linkURLControl = new CBTextControl("Link URL");
     linkURLControl.rootElement().classList.add("standard");
     linkURLControl.setValue(sectionModel.linkURL);
     linkURLControl.setAction(this, this.translateLinkURL);
-    this._sectionElement.appendChild(linkURLControl.rootElement());
+    this._element.appendChild(linkURLControl.rootElement());
 
-    var childListView = new CBSectionListView(sectionModel.children);
-    this._sectionElement.appendChild(childListView.element());
+    var childContainer          = document.createElement("div");
+    var childContainerHeader    = document.createElement("header");
+    var childListView           = new CBSectionListView(sectionModel.children);
+
+    childContainer.classList.add("children");
+
+    childContainerHeader.appendChild(document.createTextNode("Background Child Sections"));
+    childContainer.appendChild(childContainerHeader);
+    childContainer.appendChild(childListView.element());
+    this._element.appendChild(childContainer);
 
     this.updateThumbnail();
 }
+
+/**
+ * @return Element
+ */
+CBBackgroundSectionEditor.prototype.element = function()
+{
+    return this._element;
+};
 
 /**
  * @return void
@@ -179,6 +184,12 @@ CBBackgroundSectionEditor.prototype.updateThumbnail = function()
     if (!this._sectionModel.imageFilename)
     {
         return;
+    }
+
+    if (!this._thumbnail)
+    {
+        this._thumbnail = document.createElement("img");
+        this._element.insertBefore(this._thumbnail, this._element.firstChild);
     }
 
     var URI = Colby.dataStoreIDToURI(this._pageModel.dataStoreID);
