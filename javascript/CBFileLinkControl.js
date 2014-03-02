@@ -2,7 +2,9 @@
 
 
 /**
- *
+ * This control provides a single button to activate a hidden file input. It is
+ * preferable to a visible file input in many cases where only the button is
+ * wanted in the interface and not the display of the filename selected.
  */
 function CBFileLinkControl(labelText)
 {
@@ -14,26 +16,24 @@ function CBFileLinkControl(labelText)
     this._input.style.display   = "none";
     this._container.appendChild(this._input);
 
-    var anchor = document.createElement("a");
-    anchor.style.cursor = "pointer";
-    anchor.addEventListener('click', this.anchorClickHandler(), false);
-    anchor.appendChild(document.createTextNode(labelText));
-    this._container.appendChild(anchor);
+    var button = document.createElement("button");
+    button.addEventListener('click', this.clickCallback(), false);
+    button.appendChild(document.createTextNode(labelText));
+    this._container.appendChild(button);
 }
 
 /**
  * @return function
  */
-CBFileLinkControl.prototype.anchorClickHandler = function()
+CBFileLinkControl.prototype.clickCallback = function()
 {
-    var input = this._input;
-
-    var handler = function()
+    var self        = this;
+    var callback    = function()
     {
-        input.click();
+        self._input.click();
     };
 
-    return handler;
+    return callback;
 };
 
 /**
