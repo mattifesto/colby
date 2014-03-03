@@ -2,6 +2,7 @@
 
 include_once CBSystemDirectory . '/classes/CBDataStore.php';
 include_once CBSystemDirectory . '/classes/CBPages.php';
+include_once Colby::findFile('page-renderer-configuration.php');
 
 
 $response = new ColbyOutputManager('ajax-response');
