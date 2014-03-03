@@ -81,19 +81,34 @@ function CBPageGenerateSearchText($pageModel)
     $searchText[] = $pageModel->title;
     $searchText[] = $pageModel->description;
 
-    global $CBSectionSnippetsForSearchText;
-
     foreach ($pageModel->sections as $sectionModel)
     {
-        if (isset($CBSectionSnippetsForSearchText[$sectionModel->sectionTypeID]))
-        {
-            ob_start();
-
-            include $CBSectionSnippetsForSearchText[$sectionModel->sectionTypeID];
-
-            $searchText[] = ob_get_clean();
-        }
+        $searchText[] = CBPageGenerateSectionSearchText($pageModel, $sectionModel);
     }
 
     return implode(' ', $searchText);
+}
+
+/**
+ * This function exists so that the included file will only have access to the
+ * `$pageModel` and `$sectionModel` variables.
+ *
+ * return string
+ */
+function CBPageGenerateSectionSearchText($pageModel, $sectionModel)
+{
+    global $CBSectionSnippetsForSearchText;
+
+    $text = null;
+
+    if (isset($CBSectionSnippetsForSearchText[$sectionModel->sectionTypeID]))
+    {
+        ob_start();
+
+        include $CBSectionSnippetsForSearchText[$sectionModel->sectionTypeID];
+
+        $text = ob_get_clean();
+    }
+
+    return $text;
 }
