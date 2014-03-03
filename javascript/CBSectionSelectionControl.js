@@ -27,7 +27,7 @@ function CBSectionSelectionControl()
     this._element.appendChild(line);
     this._element.appendChild(this._select);
     this._element.appendChild(this._button);
-    this._button.appendChild(document.createTextNode("Insert"));
+    this._button.appendChild(document.createTextNode("Insert Section"));
 
     /**
      *
