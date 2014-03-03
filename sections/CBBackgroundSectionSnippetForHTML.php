@@ -61,18 +61,15 @@ $styles = implode(' ', $styles);
 
     if ($sectionModel->linkURL)
     {
-        $URL = $sectionModel->linkURL;
-
         $anchorStyles   = array();
-        $anchorStyles[] = "bottom: 0px; ";
+        $anchorStyles[] = "bottom: 0px;";
         $anchorStyles[] = "left: 0px;";
         $anchorStyles[] = "position: absolute;";
         $anchorStyles[] = "right: 0px;";
         $anchorStyles[] = "top: 0px;";
+        $anchorStyles   = implode(' ', $anchorStyles);
 
-        $anchorStyles = implode(' ', $anchorStyles);
-
-        echo "<a href=\"{$URL}\" style=\"{$anchorStyles}\"></a>";
+        echo "<a href=\"{$sectionModel->linkURLHTML}\" style=\"{$anchorStyles}\"></a>";
     }
 
     CBSectionedPageRenderSections($sectionModel->children, $pageModel);

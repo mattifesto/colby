@@ -141,7 +141,8 @@ CBBackgroundSectionEditor.prototype.translateImageDidComplete = function(xhr)
  */
 CBBackgroundSectionEditor.prototype.translateLinkURL = function(sender)
 {
-    this._sectionModel.linkURL = sender.value().trim();
+    this._sectionModel.linkURL      = sender.value().trim();
+    this._sectionModel.linkURLHTML  = Colby.textToHTML(this._sectionModel.linkURL);
 
     CBPageEditor.requestSave();
 };
