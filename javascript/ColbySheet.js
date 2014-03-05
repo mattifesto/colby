@@ -142,17 +142,16 @@ ColbySheet.createElements = function()
 
     if (!document.getElementById('sheet-background'))
     {
-        var root = document.createElement('div');
-
-        root.id = 'sheet-background';
-        root.style.visibility = 'hidden';
-        root.style.position = 'fixed';
-        root.style.top = '0px';
-        root.style.left = '0px';
-        root.style.width = '100%';
-        root.style.height = '100%';
-        root.style.backgroundColor = ColbySheet.backgroundColor;
-        root.style.opacity = '0.5';
+        var root                    = document.createElement('div');
+        root.id                     = 'sheet-background';
+        root.style.visibility       = 'hidden';
+        root.style.position         = 'fixed';
+        root.style.top              = '0px';
+        root.style.left             = '0px';
+        root.style.width            = '100%';
+        root.style.height           = '100%';
+        root.style.backgroundColor  = ColbySheet.backgroundColor;
+        root.style.opacity          = '0.5';
 
         document.body.appendChild(root);
     }
