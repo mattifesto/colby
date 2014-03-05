@@ -1,25 +1,26 @@
 <?php
 
-include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyDocument.php';
-include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
+include_once CBSystemDirectory . '/classes/ColbyDocument.php';
+include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
 include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
-
-CBHTMLOutput::setTitleHTML('Documents');
-CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,develop,test-pages.js');
-CBHTMLOutput::begin();
 
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Documents');
+CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
+
+include CBSystemDirectory . '/sections/equalize.php';
+
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,documents.js');
+
 
 $selectedMenuItemID     = 'develop';
 $selectedSubmenuItemID  = 'documents';
@@ -37,8 +38,7 @@ $archive = $document->archive();
     <?php renderDocumentsAdministrationMenu(); ?>
 </nav>
 
-<main>
-    <h1>Documents Administration</h1>
+<main style="font-family: 'Source Sans Pro';">
 
     <?php
 
@@ -73,17 +73,13 @@ $archive = $document->archive();
 
     <div style="text-align: center;">
         <progress value="0" max="256" id="progress" style="margin-bottom: 20px;"></progress><br>
-        <a class="big-button" onclick="ColbyArchivesExplorer.regenerateDocument();">Find Stray Archives and Documents</a>
+        <button onclick="ColbyArchivesExplorer.regenerateDocument();">Find Stray Archives and Documents</button>
     </div>
 </main>
 
-<script src="<?php echo COLBY_SYSTEM_URL . '/handlers/handle,admin,documents.js'; ?>"></script>
-
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer.php';
-
-done:
+include CBSystemDirectory . '/sections/admin-page-footer-2.php';
 
 CBHTMLOutput::render();
 

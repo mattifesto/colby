@@ -3,20 +3,22 @@
 include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
 
-CBHTMLOutput::setTitleHTML('Titles and Descriptions Help');
-CBHTMLOutput::setDescriptionHTML('Help for creating effective titles and descriptions.');
-CBHTMLOutput::begin();
-
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Titles and Descriptions Help');
+CBHTMLOutput::setDescriptionHTML('Help for creating effective titles and descriptions.');
+
+include CBSystemDirectory . '/sections/equalize.php';
+
+CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard-formatted-content.css');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
+
 
 $selectedMenuItemID     = 'help';
 $selectedSubmenuItemID  = 'title-subtitle';
@@ -28,19 +30,24 @@ $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/help/tit
 ?>
 
 <main>
-    <h1>Title and Subtitle Help</h1>
+    <style scoped>
 
-    <div style="font-size: 14px;">
-        <div class="formatted-content standard-formatted-content">
-            <?php echo ColbyConvert::markaroundToHTML($markaround); ?>
-        </div>
+        main
+        {
+            font-family:    "Source Sans Pro";
+            margin:         0px auto;
+            width:          640px;
+        }
+
+    </style>
+
+    <div class="formatted-content standard-formatted-content">
+        <?php echo ColbyConvert::markaroundToHTML($markaround); ?>
     </div>
 </main>
 
 <?php
 
-done:
-
-include CBSystemDirectory . '/sections/admin-page-footer.php';
+include CBSystemDirectory . '/sections/admin-page-footer-2.php';
 
 CBHTMLOutput::render();

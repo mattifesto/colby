@@ -2,9 +2,7 @@
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    include Colby::findHandler('handle-authorization-failed.php');
-
-    exit;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 

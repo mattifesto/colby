@@ -3,20 +3,20 @@
 include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
 
-CBHTMLOutput::setTitleHTML('PHP Information');
-CBHTMLOutput::setDescriptionHTML('Information about the version and setup of PHP running for this website.');
-CBHTMLOutput::begin();
-
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('PHP Information');
+CBHTMLOutput::setDescriptionHTML('Information about the version and setup of PHP running for this website.');
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+include CBSystemDirectory . '/sections/equalize.php';
+
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
+
 
 $selectedMenuItemID     = 'develop';
 $selectedSubmenuItemID  = 'php';
@@ -32,6 +32,7 @@ $iniValues = ini_get_all(null, false);
 
         table.phpini
         {
+            font-family:    "Source Sans Pro";
             margin:         0px auto;
             table-layout:   fixed;
             width:          800px;
@@ -77,11 +78,8 @@ EOT;
     </table>
 </main>
 
-
 <?php
 
-done:
-
-include CBSystemDirectory . '/sections/admin-page-footer.php';
+include CBSystemDirectory . '/sections/admin-page-footer-2.php';
 
 CBHTMLOutput::render();

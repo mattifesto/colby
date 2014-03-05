@@ -4,7 +4,9 @@ $stubs = ColbyRequest::decodedStubs();
 
 $adminSelectedClass = (isset($stubs[0]) && $stubs[0] == 'admin') ? 'class="selected"' : '';
 
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:600');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Code+Pro');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/equalize.css');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/shared.css');

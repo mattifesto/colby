@@ -13,6 +13,8 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Page Editor');
 CBHTMLOutput::setDescriptionHTML('This is an app for editing pages.');
 
+include CBSystemDirectory . '/sections/equalize.php';
+
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard.css');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
 
@@ -40,8 +42,6 @@ include Colby::findFile('page-editor-configuration.php');
 
 CBHTMLOutput::exportVariable('CBURLQueryVariables', $_GET);
 
-
-include CBSystemDirectory . '/sections/equalize.php';
 
 $selectedMenuItemID     = 'pages';
 

@@ -5,27 +5,28 @@ include(Colby::findHandler('handle-ensure-installation.php'));
 include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
 
-CBHTMLOutput::setTitleHTML('Status');
-CBHTMLOutput::setDescriptionHTML('The status of the website');
-CBHTMLOutput::begin();
-
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Status');
+CBHTMLOutput::setDescriptionHTML('The status of the website');
+
+include CBSystemDirectory . '/sections/equalize.php';
+
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:600');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
+
 
 $selectedMenuItemID     = 'general';
 $selectedSubmenuItemID  = 'status';
 
 include CBSystemDirectory . '/sections/admin-page-menu.php';
-
-CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 
 ?>
 
@@ -46,8 +47,6 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer.php';
-
-done:
+include CBSystemDirectory . '/sections/admin-page-footer-2.php';
 
 CBHTMLOutput::render();

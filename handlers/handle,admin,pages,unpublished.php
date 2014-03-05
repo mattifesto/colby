@@ -3,24 +3,25 @@
 include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
 
-CBHTMLOutput::setTitleHTML('Page Administration');
-CBHTMLOutput::setDescriptionHTML('Create, edit, and delete pages.');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
-CBHTMLOutput::begin();
-
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    // TODO: this should display a whole new page instead of a snippet and return instead of goto
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Page Administration');
+CBHTMLOutput::setDescriptionHTML('Create, edit, and delete pages.');
+
+include CBSystemDirectory . '/sections/equalize.php';
+
+CBHTMLOutput::addCSSURL(CBSystemURL . '/css/admin.css');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
+
 
 $selectedMenuItemID     = 'pages';
 $selectedSubmenuItemID  = 'unpublished';
@@ -76,9 +77,7 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer.php';
-
-done:
+include CBSystemDirectory . '/sections/admin-page-footer-2.php';
 
 CBHTMLOutput::render();
 

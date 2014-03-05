@@ -3,21 +3,20 @@
 include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
 
-CBHTMLOutput::setTitleHTML('Test Pages');
-CBHTMLOutput::setDescriptionHTML('Add and remove test pages.');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,develop,test-pages.js');
-CBHTMLOutput::begin();
-
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Test Pages');
+CBHTMLOutput::setDescriptionHTML('Add and remove test pages.');
+
+include CBSystemDirectory . '/sections/equalize.php';
+
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,develop,test-pages.js');
+
 
 $selectedMenuItemID     = 'develop';
 $selectedSubmenuItemID  = 'test-pages';
@@ -50,8 +49,8 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
     </style>
 
     <div style="text-align: center; margin-top: 100px;">
-        <a class="big-button action-button" onclick="CBTestPages.generateTestPages();">Generate</a>
-        <a class="big-button action-button" onclick="CBTestPages.deleteTestPages();">Delete</a>
+        <button onclick="CBTestPages.generateTestPages();">Generate</button>
+        <button class="big-button action-button" onclick="CBTestPages.deleteTestPages();">Delete</button>
     </div>
 
     <div style="text-align: center; margin-top: 100px;">
@@ -62,8 +61,6 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer.php';
-
-done:
+include CBSystemDirectory . '/sections/admin-page-footer-2.php';
 
 CBHTMLOutput::render();

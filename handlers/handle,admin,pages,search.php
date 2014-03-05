@@ -3,24 +3,25 @@
 include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
 
-CBHTMLOutput::setTitleHTML('Search for Pages');
-CBHTMLOutput::setDescriptionHTML('Search for pages to edit.');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
-CBHTMLOutput::begin();
-
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    // TODO: this should display a whole new page instead of a snippet and return instead of goto
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Search for Pages');
+CBHTMLOutput::setDescriptionHTML('Search for pages to edit.');
+
+include CBSystemDirectory . '/sections/equalize.php';
+
+CBHTMLOutput::addCSSURL(CBSystemURL . '/css/admin.css');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
+
 
 $selectedMenuItemID     = 'pages';
 $selectedSubmenuItemID  = 'search';
@@ -35,7 +36,7 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
         <input type="text" id="queryText" class="big-field" style="width: 600px;">
     </div>
     <div style="text-align: center; margin: 30px 0px;">
-        <a class="big-button" onclick="CBPagesAdmin.searchForPages();">search</a>
+        <button onclick="CBPagesAdmin.searchForPages();">search</button>
     </div>
 
     <table class="list-of-pages standard-admin-spacing standard-cell-ellipses">
@@ -52,8 +53,6 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer.php';
-
-done:
+include CBSystemDirectory . '/sections/admin-page-footer-2.php';
 
 CBHTMLOutput::render();

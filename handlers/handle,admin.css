@@ -1,5 +1,6 @@
 main
 {
+    font-family: "Source Sans Pro";
     text-align: center;
 }
 
@@ -44,7 +45,7 @@ section.widget .version-number h1
 {
     color: gray;
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 700;
     text-transform: uppercase;
 }
 
@@ -52,7 +53,7 @@ section.widget .version-number .number
 {
     margin-top: -10px;
     font-size: 40px;
-    font-weight: bold;
+    font-weight: 700;
 }
 
 section.widget .version-number + .version-number
