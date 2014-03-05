@@ -1,15 +1,15 @@
 "use strict";
 
-var ColbyUnitTests =
-{
-};
 
-ColbyUnitTests.alert = function(html)
-{
-    ColbySheet.alert(html);
-}
+/**
+ *
+ */
+var ColbyUnitTests = {};
 
-function doRunJavascriptUnitTests()
+/**
+ * @return string
+ */
+ColbyUnitTests.runJavaScriptTests = function()
 {
     var wasSuccessful = true;
     var now = new Date('2012/12/16 10:51 pm');
@@ -150,75 +150,10 @@ function doRunJavascriptUnitTests()
 
     if (wasSuccessful)
     {
-        ColbyUnitTests.alert('Javascript unit tests passed.');
+        return "Javascript unit tests passed.";
     }
     else
     {
-        ColbyUnitTests.alert('Javascript unit tests failed.\n\n' + ColbyUnitTests.errors);
+        return "Javascript unit tests failed.\n\n" + ColbyUnitTests.errors;
     }
-}
-
-function doRunUnitTests()
-{
-    beginAjax();
-
-    var xhr = ColbyCreateXMLHttpRequest();
-    xhr.open('POST', '/developer/test/ajax/run-unit-tests/', true);
-    xhr.onload = handleAjaxResponse;
-    xhr.send();
-}
-
-function handleAjaxResponse()
-{
-    if (this.status == 200)
-    {
-        var response = JSON.parse(this.responseText);
-    }
-    else
-    {
-        var response =
-        {
-            'message' : this.status + ': ' + this.statusText
-        };
-    }
-
-    var errorLog = document.getElementById('error-log');
-
-    // remove error-log element content
-
-    while (errorLog.firstChild)
-    {
-        errorLog.removeChild(errorLog.firstChild);
-    }
-
-    var p = document.createElement('p');
-    var t = document.createTextNode(response.message);
-
-    p.appendChild(t);
-    errorLog.appendChild(p);
-
-    if ('stackTrace' in response)
-    {
-        var pre = document.createElement('pre');
-        t = document.createTextNode(response.stackTrace);
-
-        pre.appendChild(t);
-        errorLog.appendChild(pre);
-    }
-
-    endAjax();
-}
-
-function beginAjax()
-{
-    var progress = document.getElementById('ajax-communication');
-
-    progress.removeAttribute('value');
-}
-
-function endAjax()
-{
-    var progress = document.getElementById('ajax-communication');
-
-    progress.setAttribute('value', '0');
 }

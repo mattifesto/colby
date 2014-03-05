@@ -3,73 +3,45 @@
 include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
 
-CBHTMLOutput::setTitleHTML('Colby Unit Tests');
-CBHTMLOutput::setDescriptionHTML('Developer tests to make sure there are no regressions in functionality.');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Tests.js');
-CBHTMLOutput::begin();
-
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Colby Unit Tests');
+CBHTMLOutput::setDescriptionHTML('Developer tests to make sure there are no regressions in functionality.');
+
+CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,developer,test.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Tests.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
+
+/**
+ *
+ */
+
+include CBSystemDirectory . '/sections/equalize.php';
+
+/**
+ *
+ */
 
 $selectedMenuItemID     = 'test';
 $selectedSubmenuItemID  = 'test';
 
 include CBSystemDirectory . '/sections/admin-page-menu.php';
 
-?>
-
-<style>
-input[type=text]
-{
-    width: 400px;
-    padding: 2px;
-}
-
-dd
-{
-    margin: 5px 0px 15px;
-}
-</style>
-
-<?php
-
-if (!COLBY_MYSQL_HOST)
-{
-    ?>
-
-    <p>Please finish setting up the colby-configuration.php file and return to this page.
-
-    <?php
-}
-else
-{
-    ?>
-
-    <p>This file was loaded: <span class="time" data-timestamp="<?php echo time() * 1000; ?>"></span>
-    <p><button onclick="doRunUnitTests();">Run unit tests</button>
-    <progress id="ajax-communication" value="0"></progress>
-
-    <p><button onclick="doRunJavascriptUnitTests();">Run Javascript unit tests</button>
-
-    <?php
-}
 
 ?>
 
-<div id="error-log"></div>
+<main>
+</main>
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer.php';
 
-done:
+include CBSystemDirectory . '/sections/admin-page-footer-2.php';
 
 CBHTMLOutput::render();
