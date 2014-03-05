@@ -1,12 +1,11 @@
 <?php
 
-$page = new ColbyOutputManager();
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
-$page->titleHTML = 'Authorization Failed';
-$page->descriptionHTML = 'You are not authorized to view this page.';
-
-$page->begin();
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Authorization Failed');
+CBHTMLOutput::setDescriptionHTML('You are not authorized to view this page.');
 
 include Colby::findSnippet('authenticate.php');
 
-$page->end();
+CBHTMLOutput::render();
