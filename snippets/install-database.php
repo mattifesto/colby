@@ -30,73 +30,81 @@ $sqls = array();
  * MySQL, however, it may not be an option when creating the database.
  */
 $sqls[] = <<<EOT
-ALTER DATABASE
-DEFAULT CHARSET=utf8
-COLLATE=utf8_unicode_ci
+
+    ALTER DATABASE
+    DEFAULT CHARSET=utf8
+    COLLATE=utf8_unicode_ci
+
 EOT;
 
 /**
  * Create the `ColbyUsers` table.
  */
 $sqls[] = <<<EOT
-CREATE TABLE IF NOT EXISTS `ColbyUsers`
-(
-    `id`                            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `hash`                          BINARY(20) NOT NULL,
-    `facebookId`                    BIGINT UNSIGNED NOT NULL,
-    `facebookAccessToken`           VARCHAR(255),
-    `facebookAccessExpirationTime`  INT UNSIGNED,
-    `facebookName`                  VARCHAR(100) NOT NULL,
-    `facebookFirstName`             VARCHAR(50) NOT NULL,
-    `facebookLastName`              VARCHAR(50) NOT NULL,
-    `facebookTimeZone`              TINYINT NOT NULL DEFAULT '0',
-    `hasBeenVerified`               BIT(1) NOT NULL DEFAULT b'0',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `facebookId` (`facebookId`),
-    UNIQUE KEY `hash` (`hash`),
-    KEY `hasBeenVerified_facebookLastName` (`hasBeenVerified`, `facebookLastName`)
-)
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8
-COLLATE=utf8_unicode_ci
+
+    CREATE TABLE IF NOT EXISTS `ColbyUsers`
+    (
+        `id`                            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        `hash`                          BINARY(20) NOT NULL,
+        `facebookId`                    BIGINT UNSIGNED NOT NULL,
+        `facebookAccessToken`           VARCHAR(255),
+        `facebookAccessExpirationTime`  INT UNSIGNED,
+        `facebookName`                  VARCHAR(100) NOT NULL,
+        `facebookFirstName`             VARCHAR(50) NOT NULL,
+        `facebookLastName`              VARCHAR(50) NOT NULL,
+        `facebookTimeZone`              TINYINT NOT NULL DEFAULT '0',
+        `hasBeenVerified`               BIT(1) NOT NULL DEFAULT b'0',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `facebookId` (`facebookId`),
+        UNIQUE KEY `hash` (`hash`),
+        KEY `hasBeenVerified_facebookLastName` (`hasBeenVerified`, `facebookLastName`)
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8
+    COLLATE=utf8_unicode_ci
+
 EOT;
 
 /**
  * Create the `ColbyUsersWhoAreAdministrators` table.
  */
 $sqls[] = <<<EOT
-CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreAdministrators`
-(
-    `userId`    BIGINT UNSIGNED NOT NULL,
-    `added`     DATETIME NOT NULL,
-    PRIMARY KEY (`userId`),
-    CONSTRAINT `ColbyUsersWhoAreAdministrators_userId`
-        FOREIGN KEY (`userId`)
-        REFERENCES `ColbyUsers` (`id`)
-        ON DELETE CASCADE
-)
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8
-COLLATE=utf8_unicode_ci
+
+    CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreAdministrators`
+    (
+        `userId`    BIGINT UNSIGNED NOT NULL,
+        `added`     DATETIME NOT NULL,
+        PRIMARY KEY (`userId`),
+        CONSTRAINT `ColbyUsersWhoAreAdministrators_userId`
+            FOREIGN KEY (`userId`)
+            REFERENCES `ColbyUsers` (`id`)
+            ON DELETE CASCADE
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8
+    COLLATE=utf8_unicode_ci
+
 EOT;
 
 /**
  * Create the `ColbyUsersWhoAreDevelopers` table.
  */
 $sqls[] = <<<EOT
-CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreDevelopers`
-(
-    `userId`    BIGINT UNSIGNED NOT NULL,
-    `added`     DATETIME NOT NULL,
-    PRIMARY KEY (`userId`),
-    CONSTRAINT `ColbyUsersWhoAreDevelopers_userId`
-        FOREIGN KEY (`userId`)
-        REFERENCES `ColbyUsers` (`id`)
-        ON DELETE CASCADE
-)
-ENGINE=InnoDB
-DEFAULT CHARSET=utf8
-COLLATE=utf8_unicode_ci
+
+    CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreDevelopers`
+    (
+        `userId`    BIGINT UNSIGNED NOT NULL,
+        `added`     DATETIME NOT NULL,
+        PRIMARY KEY (`userId`),
+        CONSTRAINT `ColbyUsersWhoAreDevelopers_userId`
+            FOREIGN KEY (`userId`)
+            REFERENCES `ColbyUsers` (`id`)
+            ON DELETE CASCADE
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8
+    COLLATE=utf8_unicode_ci
+
 EOT;
 
 /**
@@ -150,7 +158,7 @@ $sqls[] = <<<EOT
         `keyValueData`          LONGTEXT NOT NULL,
         `typeID`                BINARY(20),
         `groupID`               BINARY(20),
-        `URI `                  VARCHAR(100),
+        `URI`                   VARCHAR(100),
         `titleHTML`             TEXT NOT NULL,
         `subtitleHTML`          TEXT NOT NULL,
         `thumbnailURL`          VARCHAR(200),
@@ -174,20 +182,6 @@ $sqls[] = <<<EOT
 EOT;
 
 /**
- * Create the `ColbyVerifyUser` procedure.
- */
-$sqls[] = <<<EOT
-CREATE PROCEDURE ColbyVerifyUser(IN userId BIGINT UNSIGNED)
-BEGIN
-    UPDATE `ColbyUsers`
-    SET
-        `hasBeenVerified` = b'1'
-    WHERE
-        `id` = userId;
-END
-EOT;
-
-/**
  * Heredocs won't parse constants so the version number must be placed
  * in a variable.
  */
@@ -197,11 +191,13 @@ $versionNumber = COLBY_VERSION_NUMBER;
  * ColbySchemaVersionNumber
  */
 $sqls[] = <<<EOT
-CREATE FUNCTION ColbySchemaVersionNumber()
-RETURNS BIGINT UNSIGNED
-BEGIN
-    RETURN {$versionNumber};
-END
+
+    CREATE FUNCTION ColbySchemaVersionNumber()
+    RETURNS BIGINT UNSIGNED
+    BEGIN
+        RETURN {$versionNumber};
+    END
+
 EOT;
 
 

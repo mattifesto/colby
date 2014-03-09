@@ -63,33 +63,7 @@ if (!$colbyUsersTableDoesExist)
 }
 else
 {
-    /**
-     * The initial insallation can be done by anyone, but one must be an
-     * administrator to upgrade the database.
-     */
-
-    if (!ColbyUser::current()->isOneOfThe('Administrators'))
-    {
-        $response->message = 'You are not authorized to use this feature.';
-
-        goto done;
-    }
-
-    /**
-     * Run upgrades.
-     */
-
-    include Colby::findSnippet('upgrade-database-0001.php');
-    include Colby::findSnippet('upgrade-database-0002.php');
-    include Colby::findSnippet('upgrade-database-0003.php');
-    include Colby::findSnippet('upgrade-database-0004.php');
-    include Colby::findSnippet('upgrade-database-0005.php');
-    include Colby::findSnippet('upgrade-database-0006.php');
-    include Colby::findSnippet('upgrade-database-0007.php');
-
-    include Colby::findSnippet('upgrade-database-version.php');
-
-    $response->message = 'The database schema was upgraded successfully.';
+    $response->message = 'The database schema has already been installed or partially installed.';
 }
 
 /**

@@ -1,20 +1,23 @@
 <?php
 
-define('COLBY_SITE_URL', '');
+define('CBSiteURL',         '');
+define('CBSiteName',        '');
+define('CBSiteNameHTML',    '');
 
-define('COLBY_SITE_NAME', '');
-define('COLBY_SITE_ADMINISTRATOR', '');
-define('COLBY_SITE_ERRORS_SEND_EMAILS', false);
-define('COLBY_SITE_IS_BEING_DEBUGGED', false);
+define('CBSiteAdministratorEmail',          '');
+define('CBSiteDoesSendEmailErrorReports',   false);
+define('CBSiteIsBeingDubugged',             false);
 
-define('COLBY_FACEBOOK_APP_ID', '');
-define('COLBY_FACEBOOK_APP_SECRET', '');
-define('COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID', '');
+define('CBFacebookAppID',               '');
+define('CBFacebookAppSecret',           '');
+define('CBFacebookFirstVerifiedUserID', '');
 
-define('COLBY_MYSQL_HOST', '');
-define('COLBY_MYSQL_USER', '');
-define('COLBY_MYSQL_PASSWORD', '');
-define('COLBY_MYSQL_DATABASE', '');
+define('CBMySQLHost',       '');
+define('CBMySQLUser',       '');
+define('CBMySQLPassword',   '');
+define('CBMySQLDatabase',   '');
+
+define('CBEncryptionPassword', 'Replace this password.');
 
 /**
 
@@ -45,3 +48,20 @@ define('GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID', 'UA-11518627-14');
 define('GOOGLE_CLASSIC_ANALYTICS_TRACKING_ID', '');
 
  **/
+
+/**
+ * Deprecated constants
+ */
+
+define('COLBY_SITE_URL',                        CBSiteURL);
+define('COLBY_SITE_NAME',                       CBSiteName);
+define('COLBY_SITE_ADMINISTRATOR',              CBSiteAdministratorEmail);
+define('COLBY_SITE_ERRORS_SEND_EMAILS',         CBSiteDoesSendEmailErrorReports);
+define('COLBY_SITE_IS_BEING_DEBUGGED',          CBSiteIsBeingDubugged);
+define('COLBY_FACEBOOK_APP_ID',                 CBFacebookAppID);
+define('COLBY_FACEBOOK_APP_SECRET',             CBFacebookAppSecret);
+define('COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID', CBFacebookFirstVerifiedUserID);
+define('COLBY_MYSQL_HOST',                      CBMySQLHost);
+define('COLBY_MYSQL_USER',                      CBMySQLUser);
+define('COLBY_MYSQL_PASSWORD',                  CBMySQLPassword);
+define('COLBY_MYSQL_DATABASE',                  CBMySQLDatabase);
