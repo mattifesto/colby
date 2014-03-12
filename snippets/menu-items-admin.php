@@ -3,11 +3,11 @@
 global $CBAdminMenu;
 $CBAdminMenu = new stdClass();
 
+$CBAdminMenu->home = newMenuItem('Home', '/');
 
 $generalMenu            = new stdClass();
 $generalMenu->status    = newMenuItem('Status', '/admin/');
-
-$CBAdminMenu->general = newMenuItem('General', '/admin/', $generalMenu);
+$CBAdminMenu->general   = newMenuItem('General', '/admin/', $generalMenu);
 
 
 $pagesMenu                  = new stdClass();
@@ -15,19 +15,23 @@ $pagesMenu->edit            = newMenuItem('New Page', '/admin/pages/edit/');
 $pagesMenu->unpublished     = newMenuItem('Unpublished', '/admin/pages/unpublished/');
 $pagesMenu->search          = newMenuItem('Search', '/admin/pages/search/');
 $pagesMenu->{'old-style'}   = newMenuitem('Old Style', '/admin/pages/old-style/');
+$CBAdminMenu->pages         = newMenuItem('Pages', '/admin/pages/unpublished/', $pagesMenu);
 
-$CBAdminMenu->pages = newMenuItem('Pages', '/admin/pages/unpublished/', $pagesMenu);
 
-
-$helpMenu = new stdClass();
-$helpMenu->{'markaround-syntax'}        = newMenuItem('Markaround',
-                                                      '/admin/help/markaround-syntax/');
-$helpMenu->{'title-subtitle'}           = newMenuItem('Titles &amp; Descriptions',
-                                                      '/admin/help/title-subtitle/');
-$helpMenu->{'caption-alternative-text'} = newMenuItem('Captions &amp; Alternative Text',
-                                                      '/admin/help/caption-alternative-text');
-
-$CBAdminMenu->help = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
+$helpMenu                   = new stdClass();
+$menuItemID                 = 'markaround-syntax';
+$menuItemHTML               = 'Markaround';
+$menuItemURI                = '/admin/help/markaround-syntax/';
+$helpMenu->{$menuItemID}    = newMenuItem($menuItemHTML, $menuItemURI);
+$menuItemID                 = 'title-subtitle';
+$menuItemHTML               = 'Titles &amp; Descriptions';
+$menuItemURI                = '/admin/help/title-subtitle/';
+$helpMenu->{$menuItemID}    = newMenuItem($menuItemHTML, $menuItemURI);
+$menuItemID                 = 'caption-alternative-text';
+$menuItemHTML               = 'Captions &amp; Alternative Text';
+$menuItemURI                = '/admin/help/caption-alternative-text';
+$helpMenu->{$menuItemID}    = newMenuItem($menuItemHTML, $menuItemURI);
+$CBAdminMenu->help          = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
 
 if (ColbyUser::current()->isOneOfThe('Developers'))
 {
