@@ -26,9 +26,9 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 
 CBTestPagesGenerator::initialize();
 
-Colby::mysqli()->autocommit(false);
+$timeout    = time() + 20;
 
-for ($i = 0; $i < 10; $i++)
+while (time() < $timeout)
 {
     /**
      * 90% of pages with timestamps will be published.
@@ -60,8 +60,16 @@ for ($i = 0; $i < 10; $i++)
     $rowData->published         = $pageModel->isPublished ? $pageModel->publicationTimeStamp : null;
     $rowData->publishedBy       = $pageModel->publishedBy;
     $rowData->searchText        = CBTestPagesGenerator::searchTextForPage($pageModel);
+
+    /**
+     * Since the page model's URI includes the data store ID it is assumed to
+     * be unique, so we don't call `CBPages::tryUpdateRowURI()` as we normally
+     * would. This helps performance when creating many pages.
+     */
+
+    $rowData->URI               = $pageModel->URI;
+
     CBPages::updateRow($rowData);
-    CBPages::tryUpdateRowURI($rowData->rowID, $pageModel->URI);
 
     $pageModel->rowID = $rowData->rowID;
 
@@ -76,10 +84,9 @@ for ($i = 0; $i < 10; $i++)
     $pageModelJSON      = json_encode($pageModel);
     $dataStoreDirectory = $dataStore->directory();
     file_put_contents("{$dataStoreDirectory}/model.json", $pageModelJSON, LOCK_EX);
-
-    Colby::mysqli()->commit();
 }
 
+$response->countOfTestPages = CBTestPagesGenerator::countOfTestPages();
 $response->wasSuccessful = true;
 
 done:
@@ -93,6 +100,31 @@ class CBTestPagesGenerator
 {
     private static $words           = array();
     private static $countOfWords    = 0;
+
+    /**
+     * @return int
+     */
+    public static function countOfTestPages()
+    {
+        $sql = <<<EOT
+
+            SELECT
+                COUNT(*) AS `countOfTestPages`
+            FROM
+                `ColbyPages`
+            WHERE
+                `URI` LIKE 'test42/%'
+
+EOT;
+
+        $result = Colby::query($sql);
+
+        $row = $result->fetch_object();
+
+        $result->free();
+
+        return (int)$row->countOfTestPages;
+    }
 
     /**
      * @return void
@@ -156,7 +188,7 @@ class CBTestPagesGenerator
 
         global $CBSectionSnippetsForSearchText;
 
-        foreach ($pageModel->sectionModels as $sectionModel)
+        foreach ($pageModel->sections as $sectionModel)
         {
             if (isset($CBSectionSnippetsForSearchText[$sectionModel->sectionTypeID]))
             {

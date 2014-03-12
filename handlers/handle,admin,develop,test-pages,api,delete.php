@@ -19,7 +19,7 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
  *
  */
 
-$timeout                = time() + 10;
+$timeout                = time() + 20;
 $dataStoreIDs           = queryForTestPageDataStoreIDs();
 $processedDataStoreIDs  = array();
 
@@ -38,12 +38,16 @@ while (time() < $timeout &&
 
 CBPages::deleteRowsWithDataStoreIDs($processedDataStoreIDs);
 
-
+$countOfDeletedPages    = count($processedDataStoreIDs);
+$countOfRemainingPages  = count($dataStoreIDs);
 /**
  * Send the response
  */
 
-$response->wasSuccessful = true;
+$response->countOfDeletedPages      = $countOfDeletedPages;
+$response->countOfRemainingPages    = $countOfRemainingPages;
+$response->message          = "{$countOfDeletedPages} pages were deleted, {$countOfRemainingPages} remain.";
+$response->wasSuccessful    = true;
 
 done:
 

@@ -15,6 +15,7 @@ CBHTMLOutput::setDescriptionHTML('Add and remove test pages.');
 
 include CBSystemDirectory . '/sections/equalize.php';
 
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,develop,test-pages.js');
 
 
