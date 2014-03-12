@@ -666,6 +666,19 @@ class Colby
     }
 
     /**
+     * @return string
+     *  Returns the hexadecimal representation of a random 160-bit number. This
+     *  is the same length as a SHA-1 hash and is appropriate for use as a
+     *  unique ID, such as a data store ID.
+     */
+    public static function random160()
+    {
+        $bytes = openssl_random_pseudo_bytes(20);
+
+        return bin2hex($bytes);
+    }
+
+    /**
      * This function is responsible for reporting an exception in various ways
      * if they are available. For instance if emails services is available and
      * the system is set up to email exceptions to an administrator, this
@@ -811,21 +824,16 @@ EOT;
     }
 
     /**
+     * 2014.03.09
+     *  This function is deprecated in favor of `Colby::random160`.
+     *
      * @return string
      *  A unique SHA-1 hash in hexadecimal.
      *  Example: '90027a5ca28cb5301febdc1f31db512dc663c944'
      */
     public static function uniqueSHA1Hash()
     {
-        $time = microtime();
-        $rand = rand();
-        $i = self::$uniqueHashCounter;
-
-        $hash = sha1("i:{$i} t:{$time} r:{$rand}");
-
-        self::$uniqueHashCounter++;
-
-        return $hash;
+        return Colby::random160();
     }
 
     /**
