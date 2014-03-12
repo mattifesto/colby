@@ -85,6 +85,45 @@ Colby.centsToDollars = function(cents)
 };
 
 /**
+ * @return null
+ */
+Colby.createPanel = function()
+{
+    var panel                   = document.createElement("div");
+    panel.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    panel.style.bottom          = "0px";
+    panel.style.left            = "0px";
+    panel.style.position        = "fixed";
+    panel.style.right           = "0px";
+    panel.style.top             = "0px";
+
+    var content                     = document.createElement("pre");
+    content.style.backgroundColor   = "white";
+    content.style.color             = "black";
+    content.style.margin            = "50px auto 0px";
+    content.style.maxHeight         = "50%";
+    content.style.padding           = "20px";
+    content.style.width             = "720px";
+    panel.appendChild(content);
+
+    var buttonContainer                     = document.createElement("div");
+    var button                              = document.createElement("button");
+    var buttonText                          = document.createTextNode("Dismiss");
+    buttonContainer.style.backgroundColor   = "white";
+    buttonContainer.style.textAlign         = "center";
+    buttonContainer.style.margin            = "0px auto";
+    buttonContainer.style.padding           = "20px";
+    buttonContainer.style.width             = "720px";
+    buttonContainer.appendChild(button);
+    button.addEventListener("click", Colby.hidePanel);
+    button.appendChild(buttonText);
+    panel.appendChild(buttonContainer);
+
+    Colby.panel                 = panel;
+    Colby.panelContent          = content;
+};
+
+/**
  * @return string
  */
 Colby.dataStoreIDToURI = function(dataStoreID)
@@ -205,38 +244,16 @@ Colby.dateToRelativeLocaleString = function(date, now)
  */
 Colby.displayResponse = function(response)
 {
-    var contentHTML;
-    var classAttribute;
-
     if ('stackTrace' in response)
     {
-        var stackTraceHTML = Colby.textToHTML(response.stackTrace);
-
-        contentHTML = '<pre style="max-height: 300px; overflow-y: scroll; font-size: 12px;">' +
-                  stackTraceHTML +
-                  '</pre>';
-
-        classAttribute = 'large-panel';
+        Colby.setPanelContent(response.stackTrace);
     }
     else
     {
-        var messageHTML = Colby.textToHTML(response.message);
-
-        contentHTML = '<div>' +
-                  messageHTML +
-                  '</div>';
-
-        classAttribute = 'small-panel';
+        Colby.setPanelContent(response.message);
     }
 
-    var html = ' \
-<div class="' + classAttribute + '">' + contentHTML + ' \
-    <div style="text-align: right;"> \
-        <button onclick="ColbySheet.endSheet();">Dismiss</button> \
-    </div> \
-</div>';
-
-    ColbySheet.beginSheet(html);
+    Colby.showPanel();
 };
 
 /**
@@ -245,6 +262,18 @@ Colby.displayResponse = function(response)
 Colby.handleContentLoaded = function()
 {
     Colby.beginUpdatingTimes();
+};
+
+/**
+ * @return void
+ */
+Colby.hidePanel = function()
+{
+    if (Colby.panel &&
+        Colby.panel.parentNode)
+    {
+        Colby.panel.parentNode.removeChild(Colby.panel);
+    }
 };
 
 /**
@@ -294,6 +323,41 @@ Colby.responseFromXMLHttpRequest = function(xhr)
     }
 
     return response;
+};
+
+/**
+ * @return void
+ */
+Colby.setPanelContent = function(text)
+{
+    if (!Colby.panel)
+    {
+        Colby.createPanel();
+    }
+
+    while (Colby.panelContent.lastChild)
+    {
+        Colby.panelContent.removeChild(Colby.panelContent.lastChild);
+    }
+
+    var textNode = document.createTextNode(text);
+    Colby.panelContent.appendChild(textNode);
+};
+
+/**
+ * @return void
+ */
+Colby.showPanel = function()
+{
+    if (!Colby.panel)
+    {
+        Colby.createPanel();
+    }
+
+    if (!Colby.panel.parentNode)
+    {
+        document.body.appendChild(Colby.panel);
+    }
 };
 
 /**
