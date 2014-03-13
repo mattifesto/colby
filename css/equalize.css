@@ -35,21 +35,41 @@
 html
 {
     /**
-     ** these two styles are very important
-     ** they set the default behavior for absolutely positioned elements
-     ** these elements will be positioned relative to the whole html page
-     ** if not for these styles
-     ** these elements would be positioned relative to the viewport
-     **   (the viewport is the html element's parent)
-     ** this will not affect elements inside a relatively positioned child
-     **/
+     * The following two rules provide more obvious behavior for pages that are
+     * currently either shorter than or taller than the viewport, which is most
+     * pages.
+     *
+     * By default, the `html` element is only as tall as its content, just like
+     * any other block element. By setting the `min-height` to "100%" the `html`
+     * element will always be at least as tall as the viewport.
+     *
+     * By default, absolutely positioned elements are positioned relative to the
+     * viewport. By setting the `html` element's `position` to "relative",
+     * absolutely positioned elements are positioned relative to the `html`
+     * element instead.
+     *
+     * These two rules provide the following benefits:
+     *
+     *  -   For pages shorter than the viewport, the `html` element's background
+     *      will cover the entire height of the viewport instead of just the
+     *      height of the `body` element.
+     *
+     *  -   For pages shorter than the viewport, child elements that are
+     *      absolutely positioned relative to the bottom will be positioned
+     *      relative to the bottom of the viewport.
+     *
+     *  -   For pages taller than the viewport, child elements that are
+     *      absolutely positioned relative to the bottom will be positioned
+     *      relative to the bottom of the natural height of the page.
+     */
 
-    position: relative;
     min-height: 100%;
+    position:   relative;
 
     /**
-     ** optimizeLegibility might eventually be on by default
-     ** keep an eye on it
+     * Setting the `text-rendering` property to "optimizeLegibility" allows
+     * basic font ligatures to be used. This behavior might eventually be on by
+     * default.
      **/
 
     text-rendering: optimizeLegibility;
@@ -83,7 +103,7 @@ html
  *
  *  The `overflow-y: scroll;` rule is set so that all browsers include a
  *  vertical scrollbar at all times so that the width of the viewport doesn't
- *  shift between shorter and longer pages, which causes an unpleasant
+ *  shift between shorter and taller pages, which causes an unpleasant
  *  distraction.
  */
 
