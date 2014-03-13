@@ -54,12 +54,9 @@ class CBHTMLOutput
     /**
      * @return void
      */
-    public static function addJavaScriptURL($javaScriptURL)
+    public static function addJavaScriptURL($javaScriptURL, $isAsync = false)
     {
-        if (!in_array($javaScriptURL, self::$javaScriptURLs))
-        {
-            self::$javaScriptURLs[] = $javaScriptURL;
-        }
+        self::$javaScriptURLs[$javaScriptURL] = $isAsync;
     }
 
     /**
@@ -185,9 +182,11 @@ class CBHTMLOutput
 
         echo "</script>\n";
 
-        foreach (self::$javaScriptURLs as $URL)
+        foreach (self::$javaScriptURLs as $URL => $isAsync)
         {
-            echo '<script src="' . $URL . '"></script>';
+            $async = $isAsync ? 'async ' : '';
+
+            echo '<script ' . $async . 'src="' . $URL . '"></script>';
         }
 
         foreach (self::$javaScriptSnippets as $snippet)
