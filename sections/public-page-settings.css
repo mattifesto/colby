@@ -23,16 +23,16 @@ html
      * situations and it might not even be the best color for the most common
      * situations.
      */
-    
+
     color: #2f2f2f;
-    
+
     /**
      * The default font set by the web browser is generally Times New Roman,
      * which is rarely the desired default font of any site.
      */
-     
+
     font-family: "Source Sans Pro", Helvetica, sans-serif;
-    
+
     /**
      * Setting the `min-width` of the `html` element becomes necessary when
      * considering the following facts:
@@ -78,7 +78,7 @@ html
      * fixed width centered containers plus 10px on each side so that those
      * containers aren't ever touching the sides of the page.
      */
-     
+
      min-width: 980px;
 }
 
