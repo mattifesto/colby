@@ -361,6 +361,15 @@ EOT;
             self::$encodedStubs[] = urlencode($decodedStub);
         }
     }
+
+    /**
+     * @return bool
+     *  Returns `true` if the current request is for the front page.
+     */
+    public static function isForFrontPage()
+    {
+        return !(count(self::$decodedStubs));
+    }
 }
 
 ColbyRequest::initialize();
