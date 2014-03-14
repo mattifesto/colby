@@ -1,4 +1,13 @@
 /**
+ * 2014.03.13
+ *
+ *  This file is deprecated. If a website wants to have shared styles, that's
+ *  fine but there is no official place to do so. The one important style in
+ *  this file was setting the `min-width` property on the `html` element and
+ *  that has moved to the settings style sheets.
+ *
+ * -----
+ *
  * This file exists mainly as documentation of Colby CSS standard styles.
  * While the file may be included, and the styles are approximations of what
  * most sites want, many sites will want to at the very least copy and paste
