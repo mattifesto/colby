@@ -8,6 +8,15 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
+if (!isset($_GET['data-store-id']))
+{
+    $dataStoreID = Colby::random160();
+
+    header("Location: /admin/pages/edit/?data-store-id={$dataStoreID}");
+
+    exit;
+}
+
 
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Page Editor');
@@ -46,18 +55,6 @@ CBHTMLOutput::exportVariable('CBURLQueryVariables', $_GET);
 $selectedMenuItemID     = 'pages';
 
 include CBSystemDirectory . '/sections/admin-page-menu.php';
-
-
-if (isset($_GET['data-store-id']))
-{
-    // load page data model for editing
-}
-else
-{
-    $dataStoreID = Colby::uniqueSHA1Hash();
-
-    header("Location: /admin/pages/edit/?data-store-id={$dataStoreID}");
-}
 
 ?>
 
