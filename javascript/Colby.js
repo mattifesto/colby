@@ -97,7 +97,7 @@ Colby.createPanel = function()
     panel.style.right           = "0px";
     panel.style.top             = "0px";
 
-    var content                     = document.createElement("pre");
+    var content                     = document.createElement("div");
     content.style.backgroundColor   = "white";
     content.style.color             = "black";
     content.style.margin            = "50px auto 0px";
@@ -246,11 +246,15 @@ Colby.displayResponse = function(response)
 {
     if ('stackTrace' in response)
     {
-        Colby.setPanelContent(response.stackTrace);
+        var element     = document.createElement("pre");
+        var textNode    = document.createTextNode(response.stackTrace);
+        element.appendChild(textNode);
+
+        Colby.setPanelElement(element);
     }
     else
     {
-        Colby.setPanelContent(response.message);
+        Colby.setPanelText(response.message);
     }
 
     Colby.showPanel();
@@ -326,9 +330,26 @@ Colby.responseFromXMLHttpRequest = function(xhr)
 };
 
 /**
+ * 2014.03.17
+ *  This method has been deprecated.
+ *
  * @return void
  */
 Colby.setPanelContent = function(text)
+{
+    console.log("The `Colby.setPanelContent()` method has been deprecated.");
+
+    var element     = document.createElement("pre");
+    var textNode    = document.createTextNode(text);
+    element.appendChild(textNode);
+
+    Colby.setPanelElement(element);
+};
+
+/**
+ * @return void
+ */
+Colby.setPanelElement = function(element)
 {
     if (!Colby.panel)
     {
@@ -340,8 +361,15 @@ Colby.setPanelContent = function(text)
         Colby.panelContent.removeChild(Colby.panelContent.lastChild);
     }
 
-    var textNode = document.createTextNode(text);
-    Colby.panelContent.appendChild(textNode);
+    Colby.panelContent.appendChild(element);
+};
+
+/**
+ * @return void
+ */
+Colby.setPanelText = function(text)
+{
+    Colby.setPanelElement(document.createTextNode(text));
 };
 
 /**
