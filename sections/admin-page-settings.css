@@ -1,0 +1,93 @@
+/**
+ * The purpose of a "settings" CSS file is to set better default styles than
+ * the browser defaults for a large group of pages.
+ *
+ * This file should not create styles that would ever need to "backed out" by
+ * a page that uses it. For instance, this file usually sets an anchor text
+ * color to replace the browser default. This can simply be replaced by a page
+ * just like the page would replace the browser default anchor color.
+ *
+ * The styles traditionally set in this file are:
+ *
+ *  -   The `color` of the `a` and `html` elements.
+ *  -   The `font-family` of the `html` element.
+ *  -   The `min-width` of the `html` element.
+ */
+
+html
+{
+    /**
+     * Declaring a color here is not to ordain that color or to confer any
+     * special meaning upon it. Declaring it here means only that is the best
+     * color in default situations. It's cerainly not be the best color in all
+     * situations and it might not even be the best color for the most common
+     * situations.
+     */
+
+    color: #2f2f2f;
+
+    /**
+     * The default font set by the web browser is generally Times New Roman,
+     * which is rarely the desired default font of any site.
+     */
+
+    font-family: "Source Sans Pro", Helvetica, sans-serif;
+
+    /**
+     * Setting the `min-width` of the `html` element becomes necessary when
+     * considering the following facts:
+     *
+     *  -   A block element's default width is its parent element's width, even
+     *      if the block element contains children that are wider than its
+     *      parent.
+     *
+     *  -   The background for a block element only renders within its width.
+     *
+     *  -   As the browser window changes size, all of the children of the body
+     *      with no specific size also change size.
+     *
+     *  -   Sites often use a minimum width for elements which are centered
+     *      within the body so that the layout of those elements never changes.
+     *
+     * Using the HTML below, if the browser window is sized to less that 960px
+     * wide, the background will not display behind the part of the innermost
+     * element that extends beyond the browser window width.
+     *
+     *      <body>
+     *          <div style="background-color: tan;">
+     *              <div style="margin: 0px auto; width: 960px;">
+     *                  Hello, world!
+     *              </div>
+     *          </div>
+     *      </body>
+     *
+     * Assumptions need to be made to fix this issue. The first is that all of
+     * the elements on the page in this scenario that have a constant width have
+     * the same constant width. The second is that elements will never be
+     * introduced in the future with a constant width greater than that or in
+     * ways where the constant width in combination with other properties make
+     * the elements extend further to the right.
+     *
+     * These assumptions are easy to make for most websites and this solution
+     * works well. If these assumptions can't be made, that's a problem that
+     * needs to be fixed on a case-by-case basis.
+     *
+     * ---------
+     *
+     * The value 980px comes from this website's use of 960px as the width for
+     * fixed width centered containers plus 10px on each side so that those
+     * containers aren't ever touching the sides of the page.
+     */
+
+     min-width: 980px;
+}
+
+a
+{
+    color: #2fafff;
+}
+
+a:hover
+{
+    color: #ffaf2f;
+}
