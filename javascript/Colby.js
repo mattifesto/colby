@@ -101,6 +101,7 @@ Colby.createPanel = function()
     content.style.backgroundColor   = "white";
     content.style.color             = "black";
     content.style.margin            = "50px auto 0px";
+    content.style.overflow          = "scroll";
     content.style.maxHeight         = "50%";
     content.style.padding           = "20px";
     content.style.width             = "720px";
