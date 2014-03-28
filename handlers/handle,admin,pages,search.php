@@ -41,7 +41,7 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
     <table class="list-of-pages standard-admin-spacing standard-cell-ellipses">
         <thead><tr>
-            <th class="actions-cell"></th>
+            <th class="actions-cell" style="width: 150px;"></th>
             <th class="title-cell">Title</th>
             <th class="publication-date-cell">Publication Date</th>
         </tr></thead>

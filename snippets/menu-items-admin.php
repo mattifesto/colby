@@ -14,6 +14,7 @@ $pagesMenu                  = new stdClass();
 $pagesMenu->edit            = newMenuItem('New Page', '/admin/pages/edit/');
 $pagesMenu->unpublished     = newMenuItem('Unpublished', '/admin/pages/unpublished/');
 $pagesMenu->search          = newMenuItem('Search', '/admin/pages/search/');
+$pagesMenu->trash           = newMenuItem('Trash', '/admin/pages/trash/');
 $pagesMenu->{'old-style'}   = newMenuitem('Old Style', '/admin/pages/old-style/');
 $CBAdminMenu->pages         = newMenuItem('Pages', '/admin/pages/unpublished/', $pagesMenu);
 

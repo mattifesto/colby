@@ -2,24 +2,25 @@
 
 var CBPagesAdmin = {};
 
+
 /**
  * @return void
  */
-CBPagesAdmin.deletePageWithDataStoreID = function(dataStoreID)
+CBPagesAdmin.movePageWithDataStoreIDToTrash = function(dataStoreID)
 {
     var formData = new FormData();
     formData.append("dataStoreID", dataStoreID);
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/admin/pages/api/delete/", true);
-    xhr.onload = CBPagesAdmin.deletePageWithDataStoreIDDidComplete;
+    xhr.open("POST", "/admin/pages/api/move-to-the-trash/", true);
+    xhr.onload = CBPagesAdmin.movePageWithDataStoreIDToTrashDidComplete;
     xhr.send(formData);
-}
+};
 
 /**
  * @return void
  */
-CBPagesAdmin.deletePageWithDataStoreIDDidComplete = function()
+CBPagesAdmin.movePageWithDataStoreIDToTrashDidComplete = function()
 {
     var xhr         = this;
     var response    = Colby.responseFromXMLHttpRequest(xhr);
@@ -34,7 +35,7 @@ CBPagesAdmin.deletePageWithDataStoreIDDidComplete = function()
     {
         Colby.displayResponse(response);
     }
-}
+};
 
 /**
  * @return void
@@ -51,7 +52,7 @@ CBPagesAdmin.searchForPages = function()
     xhr.open("POST", "/admin/pages/api/search/", true);
     xhr.onload = CBPagesAdmin.searchForPagesDidComplete;
     xhr.send(formData);
-}
+};
 
 /**
  * @return void
@@ -72,7 +73,7 @@ CBPagesAdmin.searchForPagesDidComplete = function()
 
     var queryTextElement = document.getElementById("queryText");
     queryTextElement.disabled = false;
-}
+};
 
 /**
  * @return void
@@ -96,13 +97,27 @@ CBPagesAdmin.showSearchResults = function(matches)
     }
 
     Colby.updateTimes();
-}
+};
 
 
 /**
  * This object will eventually cache table rows to be re-used.
  */
 var CBSearchResultsRow = {};
+
+/**
+ * @return function
+ */
+CBSearchResultsRow.editHandlerForDataStoreID = function(dataStoreID)
+{
+    var href    = "/admin/pages/edit/?data-store-id=" + dataStoreID;
+    var handler = function()
+    {
+        location.href = href;
+    };
+
+    return handler;
+};
 
 /**
  * @return `tr` element
@@ -116,17 +131,17 @@ CBSearchResultsRow.make = function(match)
     var actionsCell = document.createElement("td");
     actionsCell.classList.add("actions-cell");
 
-    var editLink    = document.createElement("a");
-    editLink.href   = "/admin/pages/edit/?data-store-id=" + match.dataStoreID;
-    editLink.classList.add("action");
-    editLink.appendChild(document.createTextNode("edit"));
-    actionsCell.appendChild(editLink);
+    var editButton          = document.createElement("button");
+    var editHandler         = CBSearchResultsRow.editHandlerForDataStoreID(match.dataStoreID);
+    editButton.textContent  = "Edit";
+    editButton.addEventListener("click", editHandler, false);
+    actionsCell.appendChild(editButton);
 
-    var deleteLink  = document.createElement("a");
-    deleteLink.classList.add("action");
-    deleteLink.addEventListener('click', CBSearchResultsRow.deleteHandlerForDataStoreID(match.dataStoreID), false);
-    deleteLink.appendChild(document.createTextNode("delete"));
-    actionsCell.appendChild(deleteLink);
+    var moveToTrashButton           = document.createElement("button");
+    var moveToTrashHandler          = CBSearchResultsRow.moveToTrashHandlerForDataStoreID(match.dataStoreID);
+    moveToTrashButton.textContent   = "Move to Trash";
+    moveToTrashButton.addEventListener("click", moveToTrashHandler, false);
+    actionsCell.appendChild(moveToTrashButton);
 
     tr.appendChild(actionsCell);
 
@@ -150,16 +165,16 @@ CBSearchResultsRow.make = function(match)
 
 
     return tr;
-}
+};
 
 /**
  * @return function
  */
-CBSearchResultsRow.deleteHandlerForDataStoreID = function(dataStoreID)
+CBSearchResultsRow.moveToTrashHandlerForDataStoreID = function(dataStoreID)
 {
     var handler = function()
     {
-        CBPagesAdmin.deletePageWithDataStoreID(dataStoreID);
+        CBPagesAdmin.movePageWithDataStoreIDToTrash(dataStoreID);
     };
 
     return handler;

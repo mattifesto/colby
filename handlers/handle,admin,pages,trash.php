@@ -1,30 +1,22 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
 CBHTMLOutput::begin();
-CBHTMLOutput::setTitleHTML('Page Administration');
-CBHTMLOutput::setDescriptionHTML('Create, edit, and delete pages.');
-
-include CBSystemDirectory . '/sections/equalize.php';
-
-CBHTMLOutput::addCSSURL(CBSystemURL . '/css/admin.css');
+CBHTMLOutput::setTitleHTML('Pages Trash');
+CBHTMLOutput::setDescriptionHTML('Pages that have been put in the trash.');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages,trash.js');
 
+include_once CBSystemDirectory . '/sections/admin-page-settings.php';
 
 $selectedMenuItemID     = 'pages';
-$selectedSubmenuItemID  = 'unpublished';
+$selectedSubmenuItemID  = 'trash';
 
 include CBSystemDirectory . '/sections/admin-page-menu.php';
 
@@ -34,7 +26,7 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
     <table class="list-of-pages">
         <thead><tr>
-            <th class="actions-cell" style="width: 150px;"></th>
+            <th class="actions-cell" style="width: 200px;"></th>
             <th class="title-cell">Title</th>
             <th class="publication-date-cell">Publication Date</th>
         </tr></thead>
@@ -42,22 +34,21 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
         <?php
 
-        $result = CBPagesAdmin::queryForPages();
+        $result = CBPagesAdmin::queryForPagesInTheTrash();
 
         while ($row = $result->fetch_object())
         {
             $elementID = "id-{$row->dataStoreID}";
 
-            $editURL        = COLBY_SITE_URL . "/admin/pages/edit/?data-store-id={$row->dataStoreID}";
-            $editAction     = "location.href = '{$editURL}'";
-            $deleteAction   = "CBPagesAdmin.movePageWithDataStoreIDToTrash('{$row->dataStoreID}');";
+            $recoverAction  = "CBPagesInTheTrash.recoverPageWithDataStoreID('{$row->dataStoreID}');";
+            $deleteAction   = "CBPagesInTheTrash.deletePageWithDataStoreID('{$row->dataStoreID}');";
 
             ?>
 
             <tr id="<?php echo $elementID; ?>">
                 <td class="actions-cell">
-                    <button onclick="<?php echo $editAction; ?>">Edit</button><!--
-                    --><button onclick="<?php echo $deleteAction; ?>">Move to Trash</button>
+                    <button onclick="<?php echo $recoverAction; ?>">Recover</button><!--
+                    --><button onclick="<?php echo $deleteAction; ?>">Delete Permanently</button>
                 </td>
                 <td class="title-cell"><?php echo $row->titleHTML; ?></td>
                 <td class="publication-date-cell"><span class="time"
@@ -89,21 +80,18 @@ class CBPagesAdmin
     /**
      * @return mysqli_result
      */
-    public static function queryForPages()
+    public static function queryForPagesInTheTrash()
     {
         $CBPageTypeID = CBPageTypeID;
 
         $sql = <<<EOT
 
         SELECT
-            LOWER(HEX(`archiveID`)) AS `dataStoreID`,
+            LOWER(HEX(`dataStoreID`)) AS `dataStoreID`,
             `titleHTML`,
             `published`
         FROM
-            `ColbyPages`
-        WHERE
-            `typeID` = UNHEX('{$CBPageTypeID}') AND
-            `published` IS NULL
+            `CBPagesInTheTrash`
         ORDER BY
             `ID` DESC
 

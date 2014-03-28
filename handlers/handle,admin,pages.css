@@ -5,24 +5,39 @@ main
 
 table.list-of-pages
 {
-    width: 960px;
-    margin: 0px auto;
+    margin:         0px auto;
+    table-layout:   fixed;
+    width:          960px;
 }
 
-table.list-of-pages .action
+table.list-of-pages td,
+table.list-of-pages th
 {
-    cursor: pointer;
+    overflow:       hidden; /* wrapping behavior */
+    padding:        2px 5px;
+    text-overflow:  ellipsis;
+    white-space:    nowrap;
 }
 
-table.list-of-pages .action + .action
+table.list-of-pages tr:nth-child(even)
 {
-    margin-left: 10px;
+    background-color: #f7f7f7;
 }
 
 table.list-of-pages .actions-cell
 {
     text-align: center;
-    width: 100px;
+    width:      100px;
+}
+
+table.list-of-pages .actions-cell > a
+{
+    cursor: pointer;
+}
+
+table.list-of-pages .actions-cell > * + *
+{
+    margin-left: 10px;
 }
 
 table.list-of-pages .publication-date-cell

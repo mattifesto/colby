@@ -1,12 +1,10 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBDataStore.php';
+include_once CBSystemDirectory . '/classes/CBAjaxResponse.php';
 include_once CBSystemDirectory . '/classes/CBPages.php';
 
 
-$response = new ColbyOutputManager('ajax-response');
-
-$response->begin();
+$response = new CBAjaxResponse();
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
@@ -14,6 +12,7 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 
     goto done;
 }
+
 
 /**
  *
@@ -27,15 +26,7 @@ $response->dataStoreID  = $dataStoreID;
  *
  */
 
-Colby::mysqli()->autocommit(false);
-
-CBPages::deleteRowWithDataStoreID($dataStoreID);
-
-$dataStore = new CBDataStore($dataStoreID);
-$dataStore->delete();
-
-Colby::mysqli()->commit();
-Colby::mysqli()->autocommit(true);
+CBPages::recoverRowWithDataStoreIDFromTheTrash($dataStoreID);
 
 
 /**
@@ -46,4 +37,4 @@ $response->wasSuccessful = true;
 
 done:
 
-$response->end();
+$response->send();

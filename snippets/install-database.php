@@ -1,10 +1,12 @@
 <?php
 
 /**
- * 2013.01.31
+ * 2014.03.27
  *
- * It will have been determined that the database needs to be installed before
- * this file is included.
+ * This file is now intended to be included during upgrades as well as
+ * installations. It upgrades the `ColbySchemaVersionNumber` function and
+ * running it during upgrades also allows new tables to be added to only this
+ * file so that no separate upgrade file needed.
  */
 
 /**
@@ -12,11 +14,12 @@
  *
 
 DROP TABLE `ColbyPages`;
+DROP TABLE `CBPagesInTheTrash`;
 DROP TABLE `ColbyUsersWhoAreAdministrators`;
 DROP TABLE `ColbyUsersWhoAreDevelopers`;
 DROP TABLE `ColbyUsers`;
-DROP PROCEDURE `ColbyVerifyUser`;
-DROP FUNCTION `ColbySchemaVersionNumber`;
+DROP PROCEDURE IF EXISTS `ColbyVerifyUser`;
+DROP FUNCTION IF EXISTS `ColbySchemaVersionNumber`;
 
  */
 
@@ -29,6 +32,7 @@ $sqls = array();
  * The database should be created with these settings. In the case of hosted
  * MySQL, however, it may not be an option when creating the database.
  */
+
 $sqls[] = <<<EOT
 
     ALTER DATABASE
@@ -37,9 +41,11 @@ $sqls[] = <<<EOT
 
 EOT;
 
+
 /**
- * Create the `ColbyUsers` table.
+ *
  */
+
 $sqls[] = <<<EOT
 
     CREATE TABLE IF NOT EXISTS `ColbyUsers`
@@ -65,9 +71,11 @@ $sqls[] = <<<EOT
 
 EOT;
 
+
 /**
- * Create the `ColbyUsersWhoAreAdministrators` table.
+ *
  */
+
 $sqls[] = <<<EOT
 
     CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreAdministrators`
@@ -86,9 +94,11 @@ $sqls[] = <<<EOT
 
 EOT;
 
+
 /**
- * Create the `ColbyUsersWhoAreDevelopers` table.
+ *
  */
+
 $sqls[] = <<<EOT
 
     CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreDevelopers`
@@ -107,9 +117,8 @@ $sqls[] = <<<EOT
 
 EOT;
 
+
 /**
- * ColbyPages
- *
  * The `ColbyPages` table contains one row for each page for most of the pages
  * on a website. Pages implemented entirely with PHP handlers do not need to
  * have a row in `ColbyPages` to display, but they will need to have a row to
@@ -181,15 +190,57 @@ $sqls[] = <<<EOT
 
 EOT;
 
+
+/**
+ *
+ */
+
+$sqls[] = <<<EOT
+
+    CREATE TABLE IF NOT EXISTS `CBPagesInTheTrash`
+    (
+        `ID`                    BIGINT UNSIGNED NOT NULL,
+        `dataStoreID`           BINARY(20) NOT NULL,
+        `keyValueData`          LONGTEXT NOT NULL,
+        `typeID`                BINARY(20),
+        `groupID`               BINARY(20),
+        `URI`                   VARCHAR(100),
+        `titleHTML`             TEXT NOT NULL,
+        `subtitleHTML`          TEXT NOT NULL,
+        `thumbnailURL`          VARCHAR(200),
+        `searchText`            LONGTEXT,
+        `published`             BIGINT,
+        `publishedYearMonth`    CHAR(6) NOT NULL DEFAULT '',
+        `publishedBy`           BIGINT UNSIGNED,
+        PRIMARY KEY (`ID`),
+        UNIQUE KEY `dataStoreID` (`dataStoreID`)
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8
+    COLLATE=utf8_unicode_ci
+
+EOT;
+
+
 /**
  * Heredocs won't parse constants so the version number must be placed
  * in a variable.
+ *
+ * The version number function is dropped and replaced for two reasons:
+ *
+ *  1. There is no `CREATE FUNCTION IF NOT EXISTS` sytax.
+ *
+ *  2. If the version number has changed, we need a new function anyway.
  */
+
 $versionNumber = COLBY_VERSION_NUMBER;
 
-/**
- * ColbySchemaVersionNumber
- */
+$sqls[] = <<<EOT
+
+    DROP FUNCTION IF EXISTS `ColbySchemaVersionNumber`;
+
+EOT;
+
 $sqls[] = <<<EOT
 
     CREATE FUNCTION ColbySchemaVersionNumber()
@@ -202,8 +253,21 @@ EOT;
 
 
 /**
- * Run setup queries
+ * Remove these deprecated clean-up calls as soon as it's known that they have
+ * been applied to all installations.
  */
+
+$sqls[] = <<<EOT
+
+    DROP PROCEDURE IF EXISTS `ColbyVerifyUser`
+
+EOT;
+
+
+/**
+ *
+ */
+
 foreach ($sqls as $sql)
 {
     Colby::query($sql);

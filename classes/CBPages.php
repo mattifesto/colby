@@ -48,6 +48,16 @@ class CBPages
     }
 
     /**
+     * @return void
+     */
+    public static function deleteRowWithDataStoreIDFromTheTrash($dataStoreID)
+    {
+        $sql = self::sqlToDeleteRowWithDataStoreIDFromTheTrash($dataStoreID);
+
+        Colby::query($sql);
+    }
+
+    /**
      * @param string $dataStoreID
      *
      * @return stdClass
@@ -82,6 +92,86 @@ class CBPages
     /**
      * @return void
      */
+    public static function moveRowWithDataStoreIDToTheTrash($dataStoreID)
+    {
+        $dataStoreIDForSQL = ColbyConvert::textToSQL($dataStoreID);
+
+        $sql = <<<EOT
+
+            INSERT INTO
+                `CBPagesInTheTrash`
+            (
+                `ID`,
+                `dataStoreID`,
+                `keyValueData`,
+                `typeID`,
+                `groupID`,
+                `URI`,
+                `titleHTML`,
+                `subtitleHTML`,
+                `thumbnailURL`,
+                `searchText`,
+                `published`,
+                `publishedYearMonth`,
+                `publishedBy`
+            )
+            SELECT
+                *
+            FROM
+                `ColbyPages`
+            WHERE
+                `archiveID` = UNHEX('{$dataStoreIDForSQL}')
+
+EOT;
+
+        Colby::query($sql);
+
+        self::deleteRowWithDataStoreID($dataStoreID);
+    }
+
+    /**
+     * @return void
+     */
+    public static function recoverRowWithDataStoreIDFromTheTrash($dataStoreID)
+    {
+        $dataStoreIDForSQL = ColbyConvert::textToSQL($dataStoreID);
+
+        $sql = <<<EOT
+
+            INSERT INTO
+                `ColbyPages`
+            (
+                `ID`,
+                `archiveID`,
+                `keyValueData`,
+                `typeID`,
+                `groupID`,
+                `URI`,
+                `titleHTML`,
+                `subtitleHTML`,
+                `thumbnailURL`,
+                `searchText`,
+                `published`,
+                `publishedYearMonth`,
+                `publishedBy`
+            )
+            SELECT
+                *
+            FROM
+                `CBPagesInTheTrash`
+            WHERE
+                `dataStoreID` = UNHEX('{$dataStoreIDForSQL}')
+
+EOT;
+
+        Colby::query($sql);
+
+        self::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
+    }
+
+    /**
+     * @return void
+     */
     public static function sqlToDeleteRowWithDataStoreID($dataStoreID)
     {
         $dataStoreIDForSQL = ColbyConvert::textToSQL($dataStoreID);
@@ -92,6 +182,25 @@ class CBPages
                 `ColbyPages`
             WHERE
                 `archiveID` = UNHEX('{$dataStoreIDForSQL}')
+
+EOT;
+
+        return $sql;
+    }
+
+    /**
+     * @return void
+     */
+    public static function sqlToDeleteRowWithDataStoreIDFromTheTrash($dataStoreID)
+    {
+        $dataStoreIDForSQL = ColbyConvert::textToSQL($dataStoreID);
+
+        $sql = <<<EOT
+
+            DELETE FROM
+                `CBPagesInTheTrash`
+            WHERE
+                `dataStoreID` = UNHEX('{$dataStoreIDForSQL}')
 
 EOT;
 
