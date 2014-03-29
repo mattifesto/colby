@@ -30,7 +30,7 @@ SELECT
     `URI`,
     `titleHTML`,
     `subtitleHTML`,
-    UNIX_TIMESTAMP(`published`) as `published`
+    `published`
 FROM
     `ColbyPages`
 WHERE
