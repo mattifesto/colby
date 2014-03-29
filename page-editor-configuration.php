@@ -16,8 +16,6 @@ include_once CBSystemDirectory . '/sections/CBStandardPageFooterSectionEditor.ph
 
 include_once CBSystemDirectory . '/sections/CBBackgroundSectionEditor.php';
 
-include_once CBSystemDirectory . '/sections/CBMarkaroundSectionEditor.php';
-
 /**
  * Page templates
  */
