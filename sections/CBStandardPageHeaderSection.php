@@ -8,8 +8,16 @@ $model->schemaVersion   = 1;
 $model->sectionID       = null;
 $model->sectionTypeID   = CBStandardPageHeaderSectionTypeID;
 
-define('CBStandardPageHeaderSectionModelJSON', json_encode($model));
 
-global $CBSectionSnippets;
+$descriptor                         = new stdClass();
+$descriptor->modelJSON              = json_encode($model);
+$descriptor->name                   = 'CBStandardPageHeader';
+$descriptor->snippetForHTML         = __DIR__ . '/CBStandardPageHeaderSectionSnippet.php';
+$descriptor->snippetForSearchText   = null;
+$descriptor->URL                    = CBSystemURL . '/sections';
+$descriptor->URLForEditorCSS        = "{$descriptor->URL}/CBStandardPageHeaderSectionEditor.css";
+$descriptor->URLForEditorJavaScript = "{$descriptor->URL}/CBStandardPageHeaderSectionEditor.js";
 
-$CBSectionSnippets[CBStandardPageHeaderSectionTypeID] = CBSystemDirectory . '/sections/CBStandardPageHeaderSectionSnippet.php';
+
+global $CBSections;
+$CBSections[CBStandardPageHeaderSectionTypeID] = $descriptor;

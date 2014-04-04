@@ -41,10 +41,10 @@ CBHTMLOutput::render();
  */
 function CBSectionedPageRenderSections($sections, $pageModel)
 {
-    global $CBSectionSnippets;
+    global $CBSections;
 
     foreach ($sections as $sectionModel)
     {
-        include $CBSectionSnippets[$sectionModel->sectionTypeID];
+        include $CBSections[$sectionModel->sectionTypeID]->snippetForHTML;
     }
 }

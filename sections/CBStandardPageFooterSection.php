@@ -8,8 +8,16 @@ $model->schemaVersion   = 1;
 $model->sectionID       = null;
 $model->sectionTypeID   = CBStandardPageFooterSectionTypeID;
 
-define('CBStandardPageFooterSectionModelJSON', json_encode($model));
 
-global $CBSectionSnippets;
+$descriptor                         = new stdClass();
+$descriptor->modelJSON              = json_encode($model);
+$descriptor->name                   = 'CBStandardPageFooter';
+$descriptor->snippetForHTML         = __DIR__ . '/CBStandardPageFooterSectionSnippet.php';
+$descriptor->snippetForSearchText   = null;
+$descriptor->URL                    = CBSystemURL . '/sections';
+$descriptor->URLForEditorCSS        = null;
+$descriptor->URLForEditorJavaScript = "{$descriptor->URL}/CBStandardPageFooterSectionEditor.js";
 
-$CBSectionSnippets[CBStandardPageFooterSectionTypeID] = CBSystemDirectory . '/sections/CBStandardPageFooterSectionSnippet.php';
+
+global $CBSections;
+$CBSections[CBStandardPageFooterSectionTypeID] = $descriptor;

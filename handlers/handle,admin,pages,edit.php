@@ -49,6 +49,28 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBTextAreaControl.js')
 
 include Colby::findFile('page-editor-configuration.php');
 
+global $CBSections;
+
+foreach ($CBSections as $sectionTypeID => $phpDescriptor)
+{
+    $javaScriptDescriptor               = new stdClass();
+    $javaScriptDescriptor->name         = $phpDescriptor->name;
+    $javaScriptDescriptor->modelJSON    = $phpDescriptor->modelJSON;
+
+    CBHTMLOutput::exportConstant("{$phpDescriptor->name}SectionTypeID");
+    CBHTMLOutput::exportListItem('CBSectionDescriptors', $sectionTypeID, $javaScriptDescriptor);
+
+    if ($phpDescriptor->URLForEditorCSS)
+    {
+        CBHTMLOutput::addCSSURL($phpDescriptor->URLForEditorCSS);
+    }
+
+    if ($phpDescriptor->URLForEditorJavaScript)
+    {
+        CBHTMLOutput::addJavaScriptURL($phpDescriptor->URLForEditorJavaScript);
+    }
+}
+
 CBHTMLOutput::exportVariable('CBURLQueryVariables', $_GET);
 
 

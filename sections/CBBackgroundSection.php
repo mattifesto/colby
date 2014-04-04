@@ -19,9 +19,16 @@ $model->linkURL                             = '';
 $model->linkURLHTML                         = '';
 $model->minimumSectionHeightIsImageHeight   = true;
 
-define('CBBackgroundSectionModelJSON', json_encode($model));
 
-global $CBSectionSnippets;
+$descriptor                         = new stdClass();
+$descriptor->modelJSON              = json_encode($model);
+$descriptor->name                   = 'CBBackground';
+$descriptor->snippetForHTML         = __DIR__ . '/CBBackgroundSectionSnippetForHTML.php';
+$descriptor->snippetForSearchText   = null;
+$descriptor->URL                    = CBSystemURL . '/sections';
+$descriptor->URLForEditorCSS        = null;
+$descriptor->URLForEditorJavaScript = "{$descriptor->URL}/CBBackgroundSectionEditor.js";
 
-$CBSectionSnippets[CBBackgroundSectionTypeID] = CBSystemDirectory .
-    '/sections/CBBackgroundSectionSnippetForHTML.php';
+
+global $CBSections;
+$CBSections[CBBackgroundSectionTypeID] = $descriptor;
