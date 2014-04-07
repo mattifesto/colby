@@ -1,22 +1,18 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
+
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
+
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('PHP Information');
 CBHTMLOutput::setDescriptionHTML('Information about the version and setup of PHP running for this website.');
 
-include CBSystemDirectory . '/sections/equalize.php';
-
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
-
+include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 $selectedMenuItemID     = 'develop';
 $selectedSubmenuItemID  = 'php';
