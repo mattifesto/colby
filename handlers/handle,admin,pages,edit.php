@@ -22,8 +22,6 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Page Editor');
 CBHTMLOutput::setDescriptionHTML('This is an app for editing pages.');
 
-include CBSystemDirectory . '/sections/equalize.php';
-
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard.css');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
 
@@ -47,7 +45,13 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSelectionControl.js'
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBTextControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBTextAreaControl.js');
 
+include CBSystemDirectory . '/sections/admin-page-settings.php';
+
 include Colby::findFile('page-editor-configuration.php');
+
+/**
+ * Export section data
+ */
 
 global $CBSections;
 
@@ -70,6 +74,25 @@ foreach ($CBSections as $sectionTypeID => $phpDescriptor)
         CBHTMLOutput::addJavaScriptURL($phpDescriptor->URLForEditorJavaScript);
     }
 }
+
+/**
+ * Export page template data
+ */
+
+global $CBPageTemplates;
+
+foreach ($CBPageTemplates as $pageTemplateID => $descriptor)
+{
+    CBHTMLOutput::exportListItem('CBPageTemplateDescriptors', $pageTemplateID, $descriptor);
+}
+
+/**
+ * Export query variables
+ *
+ * 2014.04.08
+ *  This can be removed when this page moves to storing the archive ID as a hash
+ *  variable.
+ */
 
 CBHTMLOutput::exportVariable('CBURLQueryVariables', $_GET);
 

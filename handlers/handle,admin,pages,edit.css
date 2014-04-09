@@ -84,16 +84,33 @@
  *
  */
 
-div.page-template-option
+section.CBPageTemplates
 {
-    display: inline-block;
-    width: 150px;
-    height: 200px;
-    margin: 10px;
-    border: 1px solid #efefef;
+    text-align: center;
 }
 
-div.page-template-option:hover
+div.CBPageTemplateOption
 {
-    border: 1px solid #dfdfdf;
+    background-color:   #efefef;
+    display:            inline-table;
+    height:             200px;
+    margin:             10px;
+    vertical-align:     top;
+    width:              150px;
+}
+
+div.CBPageTemplateOption > div
+{
+    display:        table-cell;
+    font-size:      24px;
+    font-weight:    bold;
+    padding:        10px;
+    text-align:     center;
+    vertical-align: middle;
+}
+
+div.CBPageTemplateOption:hover
+{
+    background-color:   #dfdfdf;
+    cursor:             pointer;
 }

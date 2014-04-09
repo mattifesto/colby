@@ -19,5 +19,5 @@ include_once CBSystemDirectory . '/sections/CBBackgroundSection.php';
  * Page templates
  */
 
-include_once CBSystemDirectory . '/templates/CBBlankPageTemplateExports.php';
-include_once CBSystemDirectory . '/templates/CBBlogPostPageTemplateExports.php';
+include_once CBSystemDirectory . '/templates/CBBlankPageTemplate.php';
+include_once CBSystemDirectory . '/templates/CBBlogPostPageTemplate.php';

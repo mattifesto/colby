@@ -20,4 +20,11 @@ $model->publishedBy             = null;
 $model->thumbnailURL            = null;
 $model->sections                = array();
 
-define('CBBlankPageTemplateModelJSON', json_encode($model));
+
+$descriptor             = new stdClass();
+$descriptor->name       = 'CBBlankPage';
+$descriptor->title      = 'Blank Page';
+$descriptor->modelJSON  = json_encode($model);
+
+global $CBPageTemplates;
+$CBPageTemplates[CBBlankPageTemplateID] = $descriptor;

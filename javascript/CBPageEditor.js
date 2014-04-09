@@ -8,7 +8,7 @@ var CBPageEditor =
     sectionEditors: {},
     model:          null,
     needsCreating:  false,
-    needsSaving:    false,
+    needsSaving:    false
 };
 
 /**
@@ -16,10 +16,23 @@ var CBPageEditor =
  */
 CBPageEditor.appendPageTemplateOption = function(template)
 {
-    var textNode            = document.createTextNode(template.name);
-    var pageTemplateOption  = document.createElement("div");
-    pageTemplateOption.classList.add("page-template-option");
-    pageTemplateOption.appendChild(textNode);
+    if (!CBPageEditor.pageTemplatesSection)
+    {
+        var mainElement             = document.getElementsByTagName("main")[0];
+        var pageTemplatesSection    = document.createElement("section");
+        pageTemplatesSection.classList.add("CBPageTemplates");
+        mainElement.appendChild(pageTemplatesSection);
+
+        CBPageEditor.pageTemplatesSection = pageTemplatesSection;
+    }
+
+    var pageTemplateOption              = document.createElement("div");
+    var pageTemplateOptionCell          = document.createElement("div");
+    pageTemplateOptionCell.textContent  = template.title;
+    pageTemplateOption.classList.add("CBPageTemplateOption");
+    pageTemplateOption.appendChild(pageTemplateOptionCell);
+    CBPageEditor.pageTemplatesSection.appendChild(pageTemplateOption);
+
 
     var handler = function()
     {
@@ -31,9 +44,6 @@ CBPageEditor.appendPageTemplateOption = function(template)
     }
 
     pageTemplateOption.addEventListener("click", handler, false);
-
-    var mainElement = document.getElementsByTagName("main")[0];
-    mainElement.appendChild(pageTemplateOption);
 };
 
 /**

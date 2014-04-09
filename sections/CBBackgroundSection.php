@@ -26,7 +26,7 @@ $descriptor->name                   = 'CBBackground';
 $descriptor->snippetForHTML         = __DIR__ . '/CBBackgroundSectionSnippetForHTML.php';
 $descriptor->snippetForSearchText   = null;
 $descriptor->URL                    = CBSystemURL . '/sections';
-$descriptor->URLForEditorCSS        = null;
+$descriptor->URLForEditorCSS        = "{$descriptor->URL}/CBBackgroundSectionEditor.css";
 $descriptor->URLForEditorJavaScript = "{$descriptor->URL}/CBBackgroundSectionEditor.js";
 
 

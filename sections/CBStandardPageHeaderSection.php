@@ -15,7 +15,7 @@ $descriptor->name                   = 'CBStandardPageHeader';
 $descriptor->snippetForHTML         = __DIR__ . '/CBStandardPageHeaderSectionSnippet.php';
 $descriptor->snippetForSearchText   = null;
 $descriptor->URL                    = CBSystemURL . '/sections';
-$descriptor->URLForEditorCSS        = "{$descriptor->URL}/CBStandardPageHeaderSectionEditor.css";
+$descriptor->URLForEditorCSS        = null;
 $descriptor->URLForEditorJavaScript = "{$descriptor->URL}/CBStandardPageHeaderSectionEditor.js";
 
 
