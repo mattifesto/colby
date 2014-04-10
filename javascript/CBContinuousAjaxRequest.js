@@ -1,5 +1,9 @@
 "use strict";
 
+
+/**
+ *
+ */
 function CBContinuousAjaxRequest(URL)
 {
     this.allRequestsDidCompleteCallback = null;
@@ -9,7 +13,6 @@ function CBContinuousAjaxRequest(URL)
     this.requestIsActive                = false;
     this.timerID                        = null;
     this.URL                            = URL;
-    // TODO: need to keep track of whether a request is active in case it takes longer to return than the delay
 }
 
 /**
@@ -79,9 +82,7 @@ CBContinuousAjaxRequest.didLoad = function()
 
     if (self.onload)
     {
-        var handler = self.onload;
-
-        handler(xhr);
+        self.onload.call(undefined, xhr);
     }
 
     if (!self.queuedFormData && self.allRequestsDidCompleteCallback)
