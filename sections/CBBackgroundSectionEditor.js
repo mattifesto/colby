@@ -67,6 +67,11 @@ function CBBackgroundSectionEditor(pageModel, sectionModel)
     childContainer.appendChild(childListView.element());
     this._element.appendChild(childContainer);
 
+    this._imageUploadAjaxRequest        = new CBContinuousAjaxRequest();
+    this._imageUploadAjaxRequest.delay  = 0;
+    this._imageUploadAjaxRequest.onload = this.translateImageDidComplete.bind(this);
+    this._imageUploadAjaxRequest.URL    = "/admin/pages/api/upload-image/";
+
     this.updateThumbnail();
 }
 
@@ -93,25 +98,11 @@ CBBackgroundSectionEditor.prototype.translateBackgroundColor = function(sender)
  */
 CBBackgroundSectionEditor.prototype.translateImage = function(sender)
 {
-    if (!this._request)
-    {
-        this._request = new CBContinuousAjaxRequest("/admin/pages/api/upload-image/");
-
-        var self = this;
-
-        var handler = function(xhr)
-        {
-            self.translateImageDidComplete(xhr);
-        };
-
-        this._request.onload = handler;
-    }
-
     var formData = new FormData();
     formData.append("dataStoreID", this._pageModel.dataStoreID);
     formData.append("image", sender.files()[0]);
 
-    this._request.makeRequestWithFormData(formData);
+    this._imageUploadAjaxRequest.makeRequestWithFormData(formData);
 };
 
 /**

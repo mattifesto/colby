@@ -120,6 +120,11 @@ CBPageEditor.displayPageTemplateChooser = function()
  */
 CBPageEditor.DOMContentDidLoad = function()
 {
+    CBPageEditor.saveModelAjaxRequest           = new CBContinuousAjaxRequest();
+    CBPageEditor.saveModelAjaxRequest.delay     = 2000;
+    CBPageEditor.saveModelAjaxRequest.onload    = CBPageEditor.saveModelAjaxRequestDidComplete;
+    CBPageEditor.saveModelAjaxRequest.URL       = "/admin/pages/api/save-model/";
+
     document.dispatchEvent(new Event("CBPageEditorDidLoad"));
 
     CBPageEditor.loadModel();
@@ -256,15 +261,6 @@ CBPageEditor.requestSave = function()
         document.addEventListener("CBPageRowWasCreated", CBPageEditor.requestSave, false);
 
         return;
-    }
-
-    if (!CBPageEditor.saveModelAjaxRequest)
-    {
-        var URI = "/admin/pages/api/save-model/";
-
-        CBPageEditor.saveModelAjaxRequest           = new CBContinuousAjaxRequest(URI);
-        CBPageEditor.saveModelAjaxRequest.delay     = 2000;
-        CBPageEditor.saveModelAjaxRequest.onload    = CBPageEditor.saveModelAjaxRequestDidComplete;
     }
 
     var formData = new FormData();

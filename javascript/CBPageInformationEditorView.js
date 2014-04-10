@@ -142,6 +142,15 @@ function CBPageInformationEditorView(pageModel)
     pageGroupControl.setAction(this, this.translatePageGroup);
 
     container.appendChild(pageGroupControl.rootElement());
+
+    /**
+     *
+     */
+
+    this._requestURIAjaxRequest         = new CBContinuousAjaxRequest();
+    this._requestURIAjaxRequest.delay   = 1000;
+    this._requestURIAjaxRequest.onload  = this.requestURIDidComplete.bind(this);
+    this._requestURIAjaxRequest.URL     = "/admin/pages/api/request-uri/";
 };
 
 /**
@@ -268,21 +277,6 @@ CBPageInformationEditorView.prototype.translateURI = function(sender)
         }
 
         document.addEventListener("CBPageRowWasCreated", handler, false);
-    }
-
-    if (!this._requestURIAjaxRequest)
-    {
-        this._requestURIAjaxRequest         = new CBContinuousAjaxRequest("/admin/pages/api/request-uri/");
-        this._requestURIAjaxRequest.delay   = 1000;
-
-        var self = this;
-
-        var handler = function(xhr)
-        {
-            self.requestURIDidComplete(/* xhr: */ xhr);
-        }
-
-        this._requestURIAjaxRequest.onload = handler;
     }
 
     var formData = new FormData();
