@@ -45,6 +45,22 @@ function CBSectionedPageRenderSections($sections, $pageModel)
 
     foreach ($sections as $sectionModel)
     {
-        include $CBSections[$sectionModel->sectionTypeID]->snippetForHTML;
+        if (isset($CBSections[$sectionModel->sectionTypeID]) &&
+            $CBSections[$sectionModel->sectionTypeID]->snippetForHTML)
+        {
+            include $CBSections[$sectionModel->sectionTypeID]->snippetForHTML;
+        }
+        else
+        {
+            $schema         = isset($sectionModel->schema) ?
+                                $sectionModel->schema : '<no schema>';
+            $sectionTypeID  = isset($sectionModel->sectionTypeID) ?
+                                $sectionModel->sectionTypeID : '<no section type ID>';
+
+            echo "\n\n",
+                 "<!-- There is no HTML snippet available to display this section.\n",
+                 "     schema:          {$schema}\n",
+                 "     section type ID: {$sectionTypeID} -->\n\n";
+        }
     }
 }

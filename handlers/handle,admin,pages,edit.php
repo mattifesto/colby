@@ -61,7 +61,25 @@ foreach ($CBSections as $sectionTypeID => $phpDescriptor)
     $javaScriptDescriptor->name         = $phpDescriptor->name;
     $javaScriptDescriptor->modelJSON    = $phpDescriptor->modelJSON;
 
-    CBHTMLOutput::exportConstant("{$phpDescriptor->name}SectionTypeID");
+    /**
+     * Originally section types would declare a constant which would be exported
+     * here to be used only once by the `editor.js` file.  But newer sections
+     * don't declare a constant and it's okay that they hardcode the section
+     * type ID in their `editor.js` file. This code should eventually go away
+     * as all sections move to the newer model.
+     */
+
+    $constantName = "{$phpDescriptor->name}SectionTypeID";
+
+    if (defined($constantName))
+    {
+        CBHTMLOutput::exportConstant($constantName);
+    }
+
+    /**
+     *
+     */
+
     CBHTMLOutput::exportListItem('CBSectionDescriptors', $sectionTypeID, $javaScriptDescriptor);
 
     if ($phpDescriptor->URLForEditorCSS)
