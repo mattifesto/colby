@@ -23,9 +23,12 @@ class CBAjaxResponse
      */
     public function cancel()
     {
-        $this->isActive = false;
+        if ($this->isActive)
+        {
+            $this->isActive = false;
 
-        restore_exception_handler();
+            restore_exception_handler();
+        }
     }
 
     /**
