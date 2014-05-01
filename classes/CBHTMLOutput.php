@@ -20,6 +20,9 @@
  */
 class CBHTMLOutput
 {
+    const JSAsync           = 1; // 1 << 0
+    const JSInHeadElement   = 2; // 1 << 1
+
     private static $CSSURLs;
     private static $descriptionHTML;
     private static $exportedLists;
@@ -27,6 +30,7 @@ class CBHTMLOutput
     private static $isActive;
     private static $javaScriptSnippets;
     private static $javaScriptURLs;
+    private static $javaScriptURLsInHead;
     private static $titleHTML;
 
     /**
@@ -54,9 +58,30 @@ class CBHTMLOutput
     /**
      * @return void
      */
-    public static function addJavaScriptURL($javaScriptURL, $isAsync = false)
+    public static function addJavaScriptURL($javaScriptURL, $options = 0)
     {
-        self::$javaScriptURLs[$javaScriptURL] = $isAsync;
+        /**
+         * The options parameter used to be a boolean parameter indicating
+         * whether the JavaScript was asynchronous or not.
+         */
+
+        if (true === $options)
+        {
+            $backtrace = debug_backtrace();
+
+            error_log("Use of a boolean parameter with the `CBHTMLOutput::addJavaScriptURL` method has been deprecated. Used in {$backtrace[0]['file']} on line {$backtrace[0]['line']}");
+
+            $options = CBHTMLOutput::JSAsync;
+        }
+
+        if ($options & CBHTMLOutput::JSInHeadElement)
+        {
+            self::$javaScriptURLsInHead[$javaScriptURL] = !!($options & CBHTMLOutput::JSAsync);
+        }
+        else
+        {
+            self::$javaScriptURLs[$javaScriptURL] = !!($options & CBHTMLOutput::JSAsync);
+        }
     }
 
     /**
@@ -132,6 +157,7 @@ class CBHTMLOutput
                 <meta charset="UTF-8">
                 <title><?php echo self::$titleHTML; ?></title>
                 <meta name="description" content="<?php echo self::$descriptionHTML; ?>">
+                <?php self::renderJavaScriptInHead(); ?>
                 <?php self::renderCSSLinks(); ?>
             </head>
             <body>
@@ -198,6 +224,19 @@ class CBHTMLOutput
     /**
      * @return void
      */
+    private static function renderJavaScriptInHead()
+    {
+        foreach (self::$javaScriptURLsInHead as $URL => $isAsync)
+        {
+            $async = $isAsync ? 'async ' : '';
+
+            echo '<script ' . $async . 'src="' . $URL . '"></script>';
+        }
+    }
+
+    /**
+     * @return void
+     */
     public static function reset()
     {
         if (self::$isActive)
@@ -214,6 +253,7 @@ class CBHTMLOutput
         self::$isActive             = false;
         self::$javaScriptSnippets   = array();
         self::$javaScriptURLs       = array();
+        self::$javaScriptURLsInHead = array();
         self::$titleHTML            = '';
     }
 
