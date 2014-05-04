@@ -25,10 +25,17 @@ CBHTMLOutput::setDescriptionHTML('This is an app for editing pages.');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard.css');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
 
-// TODO: Each control should have a php file to include_once with its js and css file or something and then should be included by the sections that use them instead or something.
+/**
+ * 2014.05.03 These files were originally included here because there was no way
+ * to include JavaScript or CSS dependencies for editors. Now the correct way
+ * to do this is to specify and editor initializer for an editor which can
+ * include JavaScript and CSS dependencies.
+ *
+ * As the various editors take advantage of editor initializers, these includes
+ * should be removed from this file.
+ */
 
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbySheet.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBContinuousAjaxRequest.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBCheckboxControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBFileLinkControl.js');
@@ -90,6 +97,11 @@ foreach ($CBSections as $sectionTypeID => $phpDescriptor)
     if ($phpDescriptor->URLForEditorJavaScript)
     {
         CBHTMLOutput::addJavaScriptURL($phpDescriptor->URLForEditorJavaScript);
+    }
+
+    if (isset($phpDescriptor->editorInitializer))
+    {
+        include_once $phpDescriptor->editorInitializer;
     }
 }
 
