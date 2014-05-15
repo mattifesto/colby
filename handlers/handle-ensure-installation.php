@@ -120,9 +120,12 @@ DatabaseInstaller.installDatabase = function(sender)
         sender.disabled = false;
     };
 
-    xhr.open('POST', '/developer/configuration/ajax/setup-database/', true);
+    var formData = new FormData();
+    formData.append('requestIsForInitialInstallation', true);
+
+    xhr.open('POST', '/developer/update/ajax/perform-update/', true);
     xhr.onload = handleAjaxResponse;
-    xhr.send();
+    xhr.send(formData);
 
     document.getElementById('database-intallation-progress').removeAttribute('value');
 }

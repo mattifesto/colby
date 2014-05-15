@@ -659,7 +659,7 @@ class Colby
 
         if ($mysqli->error)
         {
-            throw new RuntimeException("MySQL error: {$mysqli->error}\n\n{$sql}");
+            throw new RuntimeException("MySQL error: \"{$mysqli->error}\", MySQL error number: $mysqli->errno\n\n{$sql}");
         }
 
         return $result;
