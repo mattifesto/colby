@@ -2,31 +2,50 @@
 
 header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
 
-$page = new ColbyOutputManager();
+include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
-$page->titleHTML = 'Page Not Found';
-$page->descriptionHTML = 'The page you requested was not found.';
 
-$page->begin();
+CBHTMLOutput::setTitleHTML('Page Not Found');
+CBHTMLOutput::setDescriptionHTML('The page you requested was not found.');
+CBHTMLOutput::begin();
+
+include Colby::findFile('sections/public-page-settings.php');
 
 ?>
 
-<p>The page you requested was not found.
+<main>
+    <style scoped>
 
-<p>
-    <code><?php
+        main
+        {
+            text-align: center;
+        }
 
-        // put spaces around the following three characters: / ? &
-        // to allow for nice line break behavior
+        main h1
+        {
+            margin: 50px 0;
+        }
 
-        echo COLBY_SITE_URL,
-            htmlspecialchars(
-                preg_replace('/([\/\?&])/',
-                             ' $1 ',
-                             $_SERVER['REQUEST_URI']));
+    </style>
+
+    <h1>The page you requested was not found.</h1>
+
+    <p>
+        <code><?php
+
+            // put spaces around the following three characters: / ? &
+            // to allow for nice line break behavior
+
+            echo COLBY_SITE_URL,
+                htmlspecialchars(
+                    preg_replace('/([\/\?&])/',
+                                 ' $1 ',
+                                 $_SERVER['REQUEST_URI']));
 
 
-    ?></code>
+        ?></code>
+
+</main>
 
 <?php
 
@@ -41,4 +60,4 @@ if (COLBY_SITE_IS_BEING_DEBUGGED)
     <?php
 }
 
-$page->end();
+CBHTMLOutput::render();
