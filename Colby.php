@@ -530,6 +530,21 @@ class Colby
                 'The constant `COLBY_SITE_IS_BEING_DEBUGGED` has not been set.');
         }
 
+        spl_autoload_register(function($class)
+        {
+            $filename = Colby::findFile("classes/{$class}.php");
+
+            if (!$filename)
+            {
+                $filename = Colby::findFile("classes/{$class}/{$class}.php");
+            }
+
+            if ($filename)
+            {
+                include_once $filename;
+            }
+        });
+
         /**
          * Load classes that are used for every request.
          */
