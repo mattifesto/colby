@@ -33,6 +33,16 @@ function CBSectionSelectionControl()
      *
      */
 
+    for (var i = 0; i < CBPageEditorAvailableViewClassNames.length; i++)
+    {
+        var viewClassName   = CBPageEditorAvailableViewClassNames[i];
+        var option          = document.createElement("option");
+        option.textContent  = viewClassName;
+        option.value        = viewClassName;
+
+        this._select.appendChild(option);
+    }
+
     for (var sectionTypeID in CBSectionDescriptors)
     {
         var option      = document.createElement("option");

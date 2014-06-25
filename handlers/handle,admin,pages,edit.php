@@ -63,13 +63,17 @@ include Colby::findFile('page-editor-configuration.php');
 
 global $CBPageEditorAvailableViewClassNames;
 
-if ($CBPageEditorAvailableViewClassNames)
+if (!$CBPageEditorAvailableViewClassNames)
 {
-    foreach ($CBPageEditorAvailableViewClassNames as $className)
-    {
-        $className::includeEditorDependencies();
-    }
+    $CBPageEditorAvailableViewClassNames = array();
 }
+
+foreach ($CBPageEditorAvailableViewClassNames as $className)
+{
+    $className::includeEditorDependencies();
+}
+
+CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $CBPageEditorAvailableViewClassNames);
 
 
 global $CBSections;
