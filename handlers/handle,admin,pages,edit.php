@@ -60,6 +60,18 @@ include Colby::findFile('page-editor-configuration.php');
  * Export section data
  */
 
+
+global $CBPageEditorAvailableViewClassNames;
+
+if ($CBPageEditorAvailableViewClassNames)
+{
+    foreach ($CBPageEditorAvailableViewClassNames as $className)
+    {
+        $className::includeEditorDependencies();
+    }
+}
+
+
 global $CBSections;
 
 foreach ($CBSections as $sectionTypeID => $phpDescriptor)
