@@ -16,11 +16,10 @@ class CBView
      */
     public static function init()
     {
-        $model = new stdClass();
-
-        /**
-         * TODO: set default model properties here
-         */
+        $model              = new stdClass();
+        $model->className   = get_called_class();
+        $model->ID          = Colby::random160();
+        $model->version     = 1;
 
         return self::initWithModel($model);
     }
@@ -38,6 +37,11 @@ class CBView
      */
     public static function initWithModel($model)
     {
+        if (get_called_class() != $model->className)
+        {
+            throw new InvalidArgumentException('The model provided is not a model for this view class.');
+        }
+
         $view           = new static();
         $view->model    = $model;
 
