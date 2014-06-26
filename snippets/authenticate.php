@@ -7,7 +7,7 @@
             text-align: center;
         }
 
-        .big-button
+        div.CBLogInLink
         {
             margin-top: 20px;
         }
@@ -30,8 +30,8 @@
 
         <p>You must be logged in to view this page.
 
-        <div>
-            <a href="<?php echo ColbyUser::loginURL(); ?>" class="big-button">Log In</a>
+        <div class="CBLogInLink">
+            <a href="<?php echo ColbyUser::loginURL(); ?>">Log in</a>
         </div>
 
         <?php
