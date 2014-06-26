@@ -69,4 +69,12 @@ class CBView
     public function renderHTML()
     {
     }
+
+    /**
+     * @return void
+     */
+    public function searchText()
+    {
+        return '';
+    }
 }

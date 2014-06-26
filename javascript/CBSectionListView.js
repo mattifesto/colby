@@ -24,28 +24,76 @@ function CBSectionListView(list)
 
 CBSectionListView.prototype.appendSection = function(sender)
 {
-    var sectionTypeID           = sender.value();
-    var sectionModelJSON        = CBSectionDescriptors[sectionTypeID].modelJSON;
-    var sectionModel            = JSON.parse(sectionModelJSON);
-    sectionModel.sectionID      = Colby.random160();
+    if ("function" == typeof window[sender.value()])
+    {
+        var viewClassName   = sender.value();
+        var viewConstructor = window[viewClassName];
+        var view            = new viewConstructor();
 
-    /**
-     *
-     */
+        this._list.push(view.model);
 
-    this._list.push(sectionModel);
+        /**
+         * Appending this view as the last view means inserting it before
+         * the new view selection element.
+         */
 
-    /**
-     *
-     */
+        var viewListItemElement             = this.createViewListItemElementForView(view);
+        var appendSectionSelectionElement   = this._element.lastChild;
+        this._element.insertBefore(viewListItemElement, appendSectionSelectionElement);
+    }
+    else
+    {
+        var sectionTypeID           = sender.value();
+        var sectionModelJSON        = CBSectionDescriptors[sectionTypeID].modelJSON;
+        var sectionModel            = JSON.parse(sectionModelJSON);
+        sectionModel.sectionID      = Colby.random160();
 
-    var sectionListItemView             = this.newSectionListItemViewForModel(sectionModel);
-    var appendSectionSelectionElement   = this._element.lastChild;
-    this._element.insertBefore(sectionListItemView, appendSectionSelectionElement);
+        /**
+         *
+         */
 
+        this._list.push(sectionModel);
+
+        /**
+         *
+         */
+
+        var sectionListItemView             = this.newSectionListItemViewForModel(sectionModel);
+        var appendSectionSelectionElement   = this._element.lastChild;
+        this._element.insertBefore(sectionListItemView, appendSectionSelectionElement);
+    }
 
     CBPageEditor.requestSave();
 };
+
+/**
+ * @return Element
+ */
+CBSectionListView.prototype.createViewListItemElementForView = function(view)
+{
+    var viewListItemElement    = document.createElement("div");
+    viewListItemElement.id     = "CBSectionListItemView-" + view.model.ID;
+    viewListItemElement.style.backgroundColor = "blue";
+
+    /**
+     *
+     */
+
+    var sectionSelectionControl                 = new CBSectionSelectionControl();
+    sectionSelectionControl.insertBeforeModel   = view.model;
+    sectionSelectionControl.setAction(this, this.insertSection);
+    viewListItemElement.appendChild(sectionSelectionControl.element());
+
+    /**
+     * TODO: insert code taken from CBSectionEditorView to fill out the element.
+     */
+
+    //var sectionEditorView = new CBSectionEditorView(model, this);
+    //viewListItemElement.appendChild(sectionEditorView.element());
+
+
+    return viewListItemElement;
+}
 
 /**
  * @return Element

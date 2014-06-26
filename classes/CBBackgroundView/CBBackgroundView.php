@@ -11,4 +11,12 @@ class CBBackgroundView extends CBView
 
         return $view;
     }
+
+    /**
+     * @return void
+     */
+    public static function includeEditorDependencies()
+    {
+        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBBackgroundView/CBBackgroundView.js');
+    }
 }

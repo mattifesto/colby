@@ -101,13 +101,23 @@ function CBPageGenerateSectionSearchText($pageModel, $sectionModel)
 
     $text = null;
 
-    if (isset($CBSectionSnippetsForSearchText[$sectionModel->sectionTypeID]))
+
+    if (isset($sectionModel->sectionTypeID) &&
+        isset($CBSectionSnippetsForSearchText[$sectionModel->sectionTypeID]))
     {
         ob_start();
 
         include $CBSectionSnippetsForSearchText[$sectionModel->sectionTypeID];
 
         $text = ob_get_clean();
+    }
+    else
+    {
+        $model          = $sectionModel;
+        $viewClassName  = $model->className;
+        $view           = $viewClassName::initWithModel($model);
+
+        $text = $view->searchText();
     }
 
     return $text;
