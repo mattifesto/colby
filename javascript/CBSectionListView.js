@@ -108,8 +108,19 @@ CBSectionListView.prototype.element = function()
  */
 CBSectionListView.prototype.displaySection = function(sectionModel)
 {
-    var sectionListItemView = this.newSectionListItemViewForModel(sectionModel);
-    this._element.appendChild(sectionListItemView);
+    if (sectionModel.className)
+    {
+        var viewClassName       = sectionModel.className;
+        var viewConstructor     = window[viewClassName];
+        var view                = new viewConstructor();
+        var viewListItemElement = this.createViewListItemElementForView(view);
+    }
+    else
+    {
+        var viewListItemElement = this.newSectionListItemViewForModel(sectionModel);
+    }
+
+    this._element.appendChild(viewListItemElement);
 };
 
 /**
