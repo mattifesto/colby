@@ -73,7 +73,6 @@ CBSectionListView.prototype.createViewListItemElementForView = function(view)
 {
     var viewListItemElement    = document.createElement("div");
     viewListItemElement.id     = "CBSectionListItemView-" + view.model.ID;
-    viewListItemElement.style.backgroundColor = "blue";
 
     /**
      *
@@ -88,9 +87,28 @@ CBSectionListView.prototype.createViewListItemElementForView = function(view)
      * TODO: insert code taken from CBSectionEditorView to fill out the element.
      */
 
-    //var sectionEditorView = new CBSectionEditorView(model, this);
-    //viewListItemElement.appendChild(sectionEditorView.element());
+    var editorElement = document.createElement("section");
+    editorElement.id        = "s" + view.model.sectionID;
+    editorElement.classList.add("CBSectionEditorView");
 
+    var header              = document.createElement("header");
+    header.textContent = view.model.className;
+    editorElement.appendChild(header);
+
+
+    var deleteButton            = document.createElement("button");
+    var deleteSectionCallback   = this.deleteSection.bind(this, view.model);
+    deleteButton.addEventListener('click', deleteSectionCallback, false);
+    deleteButton.appendChild(document.createTextNode("Delete Section"));
+    header.appendChild(deleteButton);
+
+
+    var innerElement  = document.createElement("div");
+    editorElement.appendChild(innerElement);
+
+    innerElement.appendChild(view.editorElement());
+
+    viewListItemElement.appendChild(editorElement);
 
     return viewListItemElement;
 }
@@ -110,9 +128,13 @@ CBSectionListView.prototype.displaySection = function(sectionModel)
 {
     if (sectionModel.className)
     {
+        /**
+         * TODO: Figure out JavaScript view initialization model.
+         */
         var viewClassName       = sectionModel.className;
         var viewConstructor     = window[viewClassName];
         var view                = new viewConstructor();
+        view.model              = sectionModel;
         var viewListItemElement = this.createViewListItemElementForView(view);
     }
     else
@@ -151,7 +173,16 @@ CBSectionListView.prototype.deleteSection = function(sectionModel)
 
     this._list.splice(index, 1);
 
-    var sectionListItemID = "CBSectionListItemView-" + sectionModel.sectionID;
+    if (sectionModel.ID)
+    {
+        var ID = sectionModel.ID;
+    }
+    else
+    {
+        var ID = sectionModel.sectionID;
+    }
+
+    var sectionListItemID = "CBSectionListItemView-" + ID;
     var sectionListItem     = document.getElementById(sectionListItemID);
     sectionListItem.parentNode.removeChild(sectionListItem);
 
@@ -185,26 +216,49 @@ CBSectionListView.prototype.insertSection = function(sender)
         return;
     }
 
-    var sectionTypeID           = sender.value();
-    var sectionModelJSON        = CBSectionDescriptors[sectionTypeID].modelJSON;
-    var sectionModel            = JSON.parse(sectionModelJSON);
-    sectionModel.sectionID      = Colby.random160();
-
-    /**
-     *
-     */
-
-    this._list.splice(index, 0, sectionModel);
-
-    /**
-     *
-     */
-
     var beforeSectionListItemViewID = "CBSectionListItemView-" + sender.insertBeforeModel.sectionID;
     var beforeSectionListItemView   = document.getElementById(beforeSectionListItemViewID);
-    var sectionListItemView         = this.newSectionListItemViewForModel(sectionModel);
-    beforeSectionListItemView.parentNode.insertBefore(sectionListItemView, beforeSectionListItemView);
 
+    if ("function" == typeof window[sender.value()])
+    {
+        var viewClassName   = sender.value();
+        var viewConstructor = window[viewClassName];
+        var view            = new viewConstructor();
+
+        /**
+         *
+         */
+
+        this._list.splice(index, 0, view.model);
+
+        /**
+         * Appending this view as the last view means inserting it before
+         * the new view selection element.
+         */
+
+        var viewListItemElement             = this.createViewListItemElementForView(view);
+        beforeSectionListItemView.parentNode.insertBefore(viewListItemElement, beforeSectionListItemView);
+    }
+    else
+    {
+        var sectionTypeID           = sender.value();
+        var sectionModelJSON        = CBSectionDescriptors[sectionTypeID].modelJSON;
+        var sectionModel            = JSON.parse(sectionModelJSON);
+        sectionModel.sectionID      = Colby.random160();
+
+        /**
+         *
+         */
+
+        this._list.splice(index, 0, sectionModel);
+
+        /**
+         *
+         */
+
+        var sectionListItemView         = this.newSectionListItemViewForModel(sectionModel);
+        beforeSectionListItemView.parentNode.insertBefore(sectionListItemView, beforeSectionListItemView);
+    }
 
     CBPageEditor.requestSave();
 };
