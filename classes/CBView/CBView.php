@@ -68,6 +68,7 @@ class CBView
      */
     public function renderHTML()
     {
+        echo "\n\n<!-- This is the default output of the the `CBView` class. -->\n\n";
     }
 
     /**

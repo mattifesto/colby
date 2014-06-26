@@ -45,8 +45,17 @@ function CBSectionedPageRenderSections($sections, $pageModel)
 
     foreach ($sections as $sectionModel)
     {
-        if (isset($CBSections[$sectionModel->sectionTypeID]) &&
-            $CBSections[$sectionModel->sectionTypeID]->snippetForHTML)
+        if (isset($sectionModel->className))
+        {
+            $model          = $sectionModel;
+            $viewClassName  = $model->className;
+            $view           = $viewClassName::initWithModel($model);
+
+            $view->renderHTML();
+        }
+        else if (isset($sectionModel->sectionTypeID) &&
+                 isset($CBSections[$sectionModel->sectionTypeID]) &&
+                 $CBSections[$sectionModel->sectionTypeID]->snippetForHTML)
         {
             include $CBSections[$sectionModel->sectionTypeID]->snippetForHTML;
         }
