@@ -18,6 +18,31 @@ CBBackgroundViewEditor.prototype.createElement = function()
     this._element.className = "CBBackgroundViewEditor";
 
     this.createUploadBackgroundImageButton();
+    this.createOptionsElement();
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.prototype.createOptionsElement = function()
+{
+    this._optionsElement            = document.createElement("div");
+    this._optionsElement.className  = "options";
+
+    this.createRepeatHorizontallyCheckbox();
+
+    this._element.appendChild(this._optionsElement);
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.prototype.createRepeatHorizontallyCheckbox = function()
+{
+    var checkbox    = document.createElement("input");
+    checkbox.type   = "checkbox";
+
+    this._optionsElement.appendChild(checkbox);
 };
 
 /**

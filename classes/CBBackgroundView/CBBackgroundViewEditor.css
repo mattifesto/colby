@@ -1,5 +1,16 @@
+.CBBackgroundViewEditor
+{
+    margin:     0 auto;
+    max-width:  960px;
+}
+
 .CBBackgroundViewEditor button
 {
     display:    block;
     margin:     10px auto;
+}
+
+.CBBackgroundViewEditor .options
+{
+    text-align: center;
 }
