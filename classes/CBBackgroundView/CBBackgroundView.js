@@ -1,7 +1,7 @@
 "use strict";
 
 
-function CBBackgroundView()
+function CBBackgroundViewEditor()
 {
     this.model              = {};
     this.model.className    = "CBBackgroundView";
@@ -9,12 +9,37 @@ function CBBackgroundView()
     this.model.version      = 1;
 }
 
-CBBackgroundView.prototype.editorElement = function()
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.prototype.createElement = function()
 {
-    var element             = document.createElement("div");
-    element.style.margin    = "10px 0px";
-    element.style.textAlign = "center";
-    element.textContent     = "This is placeholder text for the editor.";
+    this._element           = document.createElement("div");
+    this._element.className = "CBBackgroundViewEditor";
 
-    return element;
-}
+    this.createUploadBackgroundImageButton();
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.prototype.createUploadBackgroundImageButton = function()
+{
+    var button          = document.createElement("button");
+    button.textContent  = "Upload Background Image";
+
+    this._element.appendChild(button);
+};
+
+/**
+ * @return Element
+ */
+CBBackgroundViewEditor.prototype.element = function()
+{
+    if (!this._element)
+    {
+        this.createElement();
+    }
+
+    return this._element;
+};

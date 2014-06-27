@@ -24,20 +24,21 @@ function CBSectionListView(list)
 
 CBSectionListView.prototype.appendSection = function(sender)
 {
-    if ("function" == typeof window[sender.value()])
-    {
-        var viewClassName   = sender.value();
-        var viewConstructor = window[viewClassName];
-        var view            = new viewConstructor();
+    var viewEditorClassName = sender.value() + "Editor";
 
-        this._list.push(view.model);
+    if ("function" == typeof window[viewEditorClassName])
+    {
+        var viewEditorConstructor   = window[viewEditorClassName];
+        var viewEditor              = new viewEditorConstructor();
+
+        this._list.push(viewEditor.model);
 
         /**
          * Appending this view as the last view means inserting it before
          * the new view selection element.
          */
 
-        var viewListItemElement             = this.createViewListItemElementForView(view);
+        var viewListItemElement             = this.createViewListItemElementForViewEditor(viewEditor);
         var appendSectionSelectionElement   = this._element.lastChild;
         this._element.insertBefore(viewListItemElement, appendSectionSelectionElement);
     }
@@ -69,17 +70,17 @@ CBSectionListView.prototype.appendSection = function(sender)
 /**
  * @return Element
  */
-CBSectionListView.prototype.createViewListItemElementForView = function(view)
+CBSectionListView.prototype.createViewListItemElementForViewEditor = function(viewEditor)
 {
     var viewListItemElement    = document.createElement("div");
-    viewListItemElement.id     = "CBSectionListItemView-" + view.model.ID;
+    viewListItemElement.id     = "CBSectionListItemView-" + viewEditor.model.ID;
 
     /**
      *
      */
 
     var sectionSelectionControl                 = new CBSectionSelectionControl();
-    sectionSelectionControl.insertBeforeModel   = view.model;
+    sectionSelectionControl.insertBeforeModel   = viewEditor.model;
     sectionSelectionControl.setAction(this, this.insertSection);
     viewListItemElement.appendChild(sectionSelectionControl.element());
 
@@ -88,16 +89,16 @@ CBSectionListView.prototype.createViewListItemElementForView = function(view)
      */
 
     var editorElement = document.createElement("section");
-    editorElement.id        = "s" + view.model.sectionID;
+    editorElement.id        = "s" + viewEditor.model.sectionID;
     editorElement.classList.add("CBSectionEditorView");
 
     var header              = document.createElement("header");
-    header.textContent = view.model.className;
+    header.textContent = viewEditor.model.className;
     editorElement.appendChild(header);
 
 
     var deleteButton            = document.createElement("button");
-    var deleteSectionCallback   = this.deleteSection.bind(this, view.model);
+    var deleteSectionCallback   = this.deleteSection.bind(this, viewEditor.model);
     deleteButton.addEventListener('click', deleteSectionCallback, false);
     deleteButton.appendChild(document.createTextNode("Delete Section"));
     header.appendChild(deleteButton);
@@ -106,12 +107,12 @@ CBSectionListView.prototype.createViewListItemElementForView = function(view)
     var innerElement  = document.createElement("div");
     editorElement.appendChild(innerElement);
 
-    innerElement.appendChild(view.editorElement());
+    innerElement.appendChild(viewEditor.element());
 
     viewListItemElement.appendChild(editorElement);
 
     return viewListItemElement;
-}
+};
 
 /**
  * @return Element
@@ -131,11 +132,12 @@ CBSectionListView.prototype.displaySection = function(sectionModel)
         /**
          * TODO: Figure out JavaScript view initialization model.
          */
-        var viewClassName       = sectionModel.className;
-        var viewConstructor     = window[viewClassName];
-        var view                = new viewConstructor();
-        view.model              = sectionModel;
-        var viewListItemElement = this.createViewListItemElementForView(view);
+
+        var viewEditorClassName     = sectionModel.className + "Editor";
+        var viewEditorConstructor   = window[viewEditorClassName];
+        var viewEditor              = new viewEditorConstructor();
+        viewEditor.model            = sectionModel;
+        var viewListItemElement     = this.createViewListItemElementForViewEditor(viewEditor);
     }
     else
     {
@@ -218,25 +220,25 @@ CBSectionListView.prototype.insertSection = function(sender)
 
     var beforeSectionListItemViewID = "CBSectionListItemView-" + sender.insertBeforeModel.sectionID;
     var beforeSectionListItemView   = document.getElementById(beforeSectionListItemViewID);
+    var viewEditorClassName         = sender.value() + "Editor";
 
-    if ("function" == typeof window[sender.value()])
+    if ("function" == typeof window[viewEditorClassName])
     {
-        var viewClassName   = sender.value();
-        var viewConstructor = window[viewClassName];
-        var view            = new viewConstructor();
+        var viewEditorConstructor   = window[viewEditorClassName];
+        var viewEditor              = new viewEditorConstructor();
 
         /**
          *
          */
 
-        this._list.splice(index, 0, view.model);
+        this._list.splice(index, 0, viewEditor.model);
 
         /**
          * Appending this view as the last view means inserting it before
          * the new view selection element.
          */
 
-        var viewListItemElement             = this.createViewListItemElementForView(view);
+        var viewListItemElement = this.createViewListItemElementForViewEditor(viewEditor);
         beforeSectionListItemView.parentNode.insertBefore(viewListItemElement, beforeSectionListItemView);
     }
     else
