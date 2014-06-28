@@ -26,10 +26,10 @@ CBSectionListView.prototype.appendSection = function(sender)
 {
     var viewEditorClassName = sender.value() + "Editor";
 
-    if ("function" == typeof window[viewEditorClassName])
+    if ("object" == typeof window[viewEditorClassName])
     {
-        var viewEditorConstructor   = window[viewEditorClassName];
-        var viewEditor              = new viewEditorConstructor();
+        var viewEditorClass     = window[viewEditorClassName];
+        var viewEditor          = Object.create(viewEditorClass).init();
 
         this._list.push(viewEditor.model);
 
@@ -133,11 +133,11 @@ CBSectionListView.prototype.displaySection = function(sectionModel)
          * TODO: Figure out JavaScript view initialization model.
          */
 
-        var viewEditorClassName     = sectionModel.className + "Editor";
-        var viewEditorConstructor   = window[viewEditorClassName];
-        var viewEditor              = new viewEditorConstructor();
-        viewEditor.model            = sectionModel;
-        var viewListItemElement     = this.createViewListItemElementForViewEditor(viewEditor);
+        var viewEditorClassName = sectionModel.className + "Editor";
+        var viewEditorClass     = window[viewEditorClassName];
+        var viewEditor          = Object.create(viewEditorClass).init();
+        viewEditor.model        = sectionModel;
+        var viewListItemElement = this.createViewListItemElementForViewEditor(viewEditor);
     }
     else
     {
@@ -218,14 +218,16 @@ CBSectionListView.prototype.insertSection = function(sender)
         return;
     }
 
-    var beforeSectionListItemViewID = "CBSectionListItemView-" + sender.insertBeforeModel.sectionID;
+    var beforeSectionModelID        = sender.insertBeforeModel.ID ? sender.insertBeforeModel.ID :
+                                                                    sender.insertBeforeModel.sectionID;
+    var beforeSectionListItemViewID = "CBSectionListItemView-" + beforeSectionModelID;
     var beforeSectionListItemView   = document.getElementById(beforeSectionListItemViewID);
     var viewEditorClassName         = sender.value() + "Editor";
 
-    if ("function" == typeof window[viewEditorClassName])
+    if ("object" == typeof window[viewEditorClassName])
     {
-        var viewEditorConstructor   = window[viewEditorClassName];
-        var viewEditor              = new viewEditorConstructor();
+        var viewEditorClass     = window[viewEditorClassName];
+        var viewEditor          = Object.create(viewEditorClass).init();
 
         /**
          *

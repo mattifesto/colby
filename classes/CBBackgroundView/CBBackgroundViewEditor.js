@@ -1,18 +1,24 @@
 "use strict";
 
 
-function CBBackgroundViewEditor()
+var CBBackgroundViewEditor = Object.create(CBViewEditor);
+
+/**
+ * @return CBBackgroundViewEditor
+ */
+CBBackgroundViewEditor.init = function()
 {
-    this.model              = {};
-    this.model.className    = "CBBackgroundView";
-    this.model.ID           = Colby.random160();
-    this.model.version      = 1;
+    CBViewEditor.init.call(this);
+
+    this.model.className = "CBBackgroundView";
+
+    return this;
 }
 
 /**
  * @return void
  */
-CBBackgroundViewEditor.prototype.createElement = function()
+CBBackgroundViewEditor.createElement = function()
 {
     this._element           = document.createElement("div");
     this._element.className = "CBBackgroundViewEditor";
@@ -24,7 +30,7 @@ CBBackgroundViewEditor.prototype.createElement = function()
 /**
  * @return void
  */
-CBBackgroundViewEditor.prototype.createOptionsElement = function()
+CBBackgroundViewEditor.createOptionsElement = function()
 {
     this._optionsElement            = document.createElement("div");
     this._optionsElement.className  = "options";
@@ -37,7 +43,7 @@ CBBackgroundViewEditor.prototype.createOptionsElement = function()
 /**
  * @return void
  */
-CBBackgroundViewEditor.prototype.createRepeatHorizontallyCheckbox = function()
+CBBackgroundViewEditor.createRepeatHorizontallyCheckbox = function()
 {
     var checkbox    = document.createElement("input");
     checkbox.type   = "checkbox";
@@ -48,7 +54,7 @@ CBBackgroundViewEditor.prototype.createRepeatHorizontallyCheckbox = function()
 /**
  * @return void
  */
-CBBackgroundViewEditor.prototype.createUploadBackgroundImageButton = function()
+CBBackgroundViewEditor.createUploadBackgroundImageButton = function()
 {
     var button          = document.createElement("button");
     button.textContent  = "Upload Background Image";
@@ -59,7 +65,7 @@ CBBackgroundViewEditor.prototype.createUploadBackgroundImageButton = function()
 /**
  * @return Element
  */
-CBBackgroundViewEditor.prototype.element = function()
+CBBackgroundViewEditor.element = function()
 {
     if (!this._element)
     {
