@@ -10,7 +10,7 @@ function CBSectionListView(list)
      * Add all of the sections already in the list to the view.
      */
 
-    this._list.forEach(this.displaySectionCallback());
+    this._list.forEach(this.displaySection.bind(this));
 
     /**
      * Selection control to add a new section to the end of the section list.
@@ -143,20 +143,6 @@ CBSectionListView.prototype.displaySection = function(sectionModel)
 };
 
 /**
- * @return function
- */
-CBSectionListView.prototype.displaySectionCallback = function()
-{
-    var self                    = this;
-    var displaySectionCallback  = function(sectionModel, index, array)
-    {
-        self.displaySection(sectionModel);
-    };
-
-    return displaySectionCallback;
-};
-
-/**
  * @return void
  */
 CBSectionListView.prototype.deleteSection = function(sectionModel)
@@ -185,20 +171,6 @@ CBSectionListView.prototype.deleteSection = function(sectionModel)
 
 
     CBPageEditor.requestSave();
-};
-
-/**
- * @return function
- */
-CBSectionListView.prototype.deleteSectionCallback = function(sectionModel)
-{
-    var self                    = this;
-    var deleteSectionCallback   = function()
-    {
-        self.deleteSection(sectionModel);
-    };
-
-    return deleteSectionCallback;
 };
 
 /**

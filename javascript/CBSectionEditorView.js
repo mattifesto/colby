@@ -24,7 +24,7 @@ function CBSectionEditorView(model, sectionListView)
 
 
     var deleteButton            = document.createElement("button");
-    var deleteSectionCallback   = sectionListView.deleteSectionCallback(model);
+    var deleteSectionCallback   = sectionListView.deleteSection.bind(sectionListView, model);
     deleteButton.addEventListener('click', deleteSectionCallback, false);
     deleteButton.appendChild(document.createTextNode("Delete Section"));
     header.appendChild(deleteButton);
