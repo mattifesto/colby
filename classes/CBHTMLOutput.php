@@ -28,7 +28,7 @@ class CBHTMLOutput
     private static $exportedLists;
     private static $exportedVariables;
     private static $isActive;
-    private static $javaScriptSnippets;
+    private static $javaScriptSnippetFilenames;
     private static $javaScriptURLs;
     private static $javaScriptURLsInHead;
     private static $titleHTML;
@@ -47,11 +47,11 @@ class CBHTMLOutput
     /**
      * @return void
      */
-    public static function addJavaScriptSnippet($javaScriptSnippet)
+    public static function addJavaScriptSnippet($javaScriptSnippetFilename)
     {
-        if (!in_array($javaScriptSnippet, self::$javaScriptSnippets))
+        if (!in_array($javaScriptSnippetFilename, self::$javaScriptSnippetFilenames))
         {
-            self::$javaScriptSnippets[] = $javaScriptSnippet;
+            self::$javaScriptSnippetFilenames[] = $javaScriptSnippetFilename;
         }
     }
 
@@ -215,9 +215,9 @@ class CBHTMLOutput
             echo '<script ' . $async . 'src="' . $URL . '"></script>';
         }
 
-        foreach (self::$javaScriptSnippets as $snippet)
+        foreach (self::$javaScriptSnippetFilenames as $snippetFilename)
         {
-            include $snippet;
+            include $snippetFilename;
         }
     }
 
@@ -246,15 +246,15 @@ class CBHTMLOutput
             ob_end_clean();
         }
 
-        self::$CSSURLs              = array();
-        self::$descriptionHTML      = '';
-        self::$exportedLists        = array();
-        self::$exportedVariables    = array();
-        self::$isActive             = false;
-        self::$javaScriptSnippets   = array();
-        self::$javaScriptURLs       = array();
-        self::$javaScriptURLsInHead = array();
-        self::$titleHTML            = '';
+        self::$CSSURLs                      = array();
+        self::$descriptionHTML              = '';
+        self::$exportedLists                = array();
+        self::$exportedVariables            = array();
+        self::$isActive                     = false;
+        self::$javaScriptSnippetFilenames   = array();
+        self::$javaScriptURLs               = array();
+        self::$javaScriptURLsInHead         = array();
+        self::$titleHTML                    = '';
     }
 
     /**
