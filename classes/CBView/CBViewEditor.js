@@ -4,6 +4,8 @@
 var CBViewEditor = {};
 
 /**
+ * This is a designated initializer.
+ *
  * @return CBViewEditor
  */
 CBViewEditor.init = function()
@@ -14,6 +16,18 @@ CBViewEditor.init = function()
         ID          : Colby.random160(),
         version     : 1
     };
+
+    return this;
+};
+
+/**
+ * This is a designated initializer.
+ *
+ * @return CBViewEditor
+ */
+CBViewEditor.initWithModel = function(model)
+{
+    this.model = model;
 
     return this;
 };

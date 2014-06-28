@@ -129,14 +129,9 @@ CBSectionListView.prototype.displaySection = function(sectionModel)
 {
     if (sectionModel.className)
     {
-        /**
-         * TODO: Figure out JavaScript view initialization model.
-         */
-
         var viewEditorClassName = sectionModel.className + "Editor";
         var viewEditorClass     = window[viewEditorClassName];
-        var viewEditor          = Object.create(viewEditorClass).init();
-        viewEditor.model        = sectionModel;
+        var viewEditor          = Object.create(viewEditorClass).initWithModel(sectionModel);
         var viewListItemElement = this.createViewListItemElementForViewEditor(viewEditor);
     }
     else
