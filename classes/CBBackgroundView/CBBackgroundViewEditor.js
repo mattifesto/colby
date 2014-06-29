@@ -15,7 +15,6 @@ CBBackgroundViewEditor.init = function()
     this.model.backgroundColor                     = "";
     this.model.children                            = [];
     this.model.imageFilename                       = null;
-    this.model.imageFilenameHTML                   = null;
     this.model.imageShouldRepeatHorizontally       = false;
     this.model.imageShouldRepeatVertically         = false;
     this.model.imageHeight                         = null;
@@ -26,6 +25,51 @@ CBBackgroundViewEditor.init = function()
 
     return this;
 }
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.backgroundImageFileDidChange = function(backgroundImageFileInputElement)
+{
+    if (this._backgroundImageUploadXHR)
+    {
+        this._backgroundImageUploadXHR.abort();
+        this._backgroundImageUploadXHR = null;
+    }
+
+    var formData    = new FormData();
+    formData.append("dataStoreID", CBPageEditor.model.dataStoreID);
+    formData.append("image", backgroundImageFileInputElement.files[0]);
+
+    var xhr     = new XMLHttpRequest();
+    xhr.onload  = this.backgroundImageFileDidUpload.bind(this);
+    xhr.open("POST", "/admin/pages/api/upload-image/");
+    xhr.send(formData);
+
+    this._backgroundImageUploadXHR = xhr;
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.backgroundImageFileDidUpload = function()
+{
+    var response = Colby.responseFromXMLHttpRequest(this._backgroundImageUploadXHR);
+
+    if (!response.wasSuccessful)
+    {
+        Colby.displayResponse(response);
+    }
+    else
+    {
+        this.model.imageFilename    = response.imageFilename;
+        this.model.imageWidth       = response.imageSizeX;
+        this.model.imageHeight      = response.imageSizeY;
+        //this.updateThumbnail();
+
+        CBPageEditor.requestSave();
+    }
+};
 
 /**
  * @return void
@@ -68,10 +112,23 @@ CBBackgroundViewEditor.createRepeatHorizontallyCheckbox = function()
  */
 CBBackgroundViewEditor.createUploadBackgroundImageButton = function()
 {
-    var button          = document.createElement("button");
-    button.textContent  = "Upload Background Image";
+    var callback;
 
-    this._element.appendChild(button);
+    var fileInputElement             = document.createElement("input");
+    fileInputElement.style.display   = "none";
+    fileInputElement.type            = "file";
+
+    callback = this.backgroundImageFileDidChange.bind(this, fileInputElement);
+    fileInputElement.addEventListener("change", callback);
+
+    var buttonElement           = document.createElement("button");
+    buttonElement.textContent   = "Upload Background Image";
+
+    callback = fileInputElement.click.bind(fileInputElement);
+    buttonElement.addEventListener("click", callback);
+
+    this._element.appendChild(fileInputElement);
+    this._element.appendChild(buttonElement);
 };
 
 /**

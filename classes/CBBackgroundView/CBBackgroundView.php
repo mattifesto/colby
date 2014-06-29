@@ -13,7 +13,6 @@ class CBBackgroundView extends CBView
         $model->backgroundColor                     = '';
         $model->children                            = array();
         $model->imageFilename                       = null;
-        $model->imageFilenameHTML                   = null;
         $model->imageShouldRepeatHorizontally       = false;
         $model->imageShouldRepeatVertically         = false;
         $model->imageHeight                         = null;
