@@ -31,3 +31,16 @@ CBViewEditor.initWithModel = function(model)
 
     return this;
 };
+
+CBViewEditor.element = function()
+{
+    if (!this._element)
+    {
+        this._element                   = document.createElement("div");
+        this._element.style.margin      = "20px 0";
+        this._element.style.textAlign   = "center";
+        this._element.textContent       = "This view has no configurable properties.";
+    }
+
+    return this._element;
+}

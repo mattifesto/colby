@@ -49,10 +49,34 @@ class CBView
     }
 
     /**
+     * This method is implemented to provide working but not useful
+     * functionality for new views to make creating new views simple. It should
+     * eventually be overridden by the subclass.
+     *
      * @return void
      */
     public static function includeEditorDependencies()
     {
+        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBView/CBViewEditor.js');
+
+        $viewClassName      = get_called_class();
+        $editorClassName    = "{$viewClassName}Editor";
+        $snippet            = <<<EOT
+
+            var {$editorClassName} = Object.create(CBViewEditor);
+
+            {$editorClassName}.init = function()
+            {
+                CBViewEditor.init.call(this);
+
+                this.model.className = "{$viewClassName}";
+
+                return this;
+            };
+
+EOT;
+
+        CBHTMLOutput::addJavaScriptSnippetString($snippet);
     }
 
     /**
