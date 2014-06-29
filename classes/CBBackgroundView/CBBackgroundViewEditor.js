@@ -65,7 +65,8 @@ CBBackgroundViewEditor.backgroundImageFileDidUpload = function()
         this.model.imageFilename    = response.imageFilename;
         this.model.imageWidth       = response.imageSizeX;
         this.model.imageHeight      = response.imageSizeY;
-        //this.updateThumbnail();
+
+        this.updateBackgroundImageThumbnail();
 
         CBPageEditor.requestSave();
     }
@@ -81,6 +82,7 @@ CBBackgroundViewEditor.createElement = function()
 
     this.createUploadBackgroundImageButton();
     this.createOptionsElement();
+    this.updateBackgroundImageThumbnail();
 };
 
 /**
@@ -142,4 +144,24 @@ CBBackgroundViewEditor.element = function()
     }
 
     return this._element;
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.updateBackgroundImageThumbnail = function()
+{
+    if (!this.model.imageFilename)
+    {
+        return;
+    }
+
+    if (!this._thumbnail)
+    {
+        this._thumbnail = document.createElement("img");
+        this._element.insertBefore(this._thumbnail, this._element.firstChild);
+    }
+
+    var URI             = Colby.dataStoreIDToURI(CBPageEditor.model.dataStoreID);
+    this._thumbnail.src = URI + "/" + this.model.imageFilename;
 };

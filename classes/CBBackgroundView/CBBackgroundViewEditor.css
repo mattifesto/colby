@@ -10,6 +10,14 @@
     margin:     10px auto;
 }
 
+.CBBackgroundViewEditor img
+{
+    display:    block;
+    margin:     10px auto;
+    max-height: 200px;
+    max-width:  90%;
+}
+
 .CBBackgroundViewEditor .options
 {
     text-align: center;
