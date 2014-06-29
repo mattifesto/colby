@@ -29,6 +29,7 @@ class CBHTMLOutput
     private static $exportedVariables;
     private static $isActive;
     private static $javaScriptSnippetFilenames;
+    private static $javaScriptSnippetStrings;
     private static $javaScriptURLs;
     private static $javaScriptURLsInHead;
     private static $titleHTML;
@@ -53,6 +54,14 @@ class CBHTMLOutput
         {
             self::$javaScriptSnippetFilenames[] = $javaScriptSnippetFilename;
         }
+    }
+
+    /**
+     * @return void
+     */
+    public static function addJavaScriptSnippetString($snippetString)
+    {
+        self::$javaScriptSnippetStrings[] = $snippetString;
     }
 
     /**
@@ -219,6 +228,11 @@ class CBHTMLOutput
         {
             include $snippetFilename;
         }
+
+        foreach (self::$javaScriptSnippetStrings as $snippetString)
+        {
+            echo "\n<script>\n\"use strict\";\n\n{$snippetString}\n\n</script>\n";
+        }
     }
 
     /**
@@ -252,6 +266,7 @@ class CBHTMLOutput
         self::$exportedVariables            = array();
         self::$isActive                     = false;
         self::$javaScriptSnippetFilenames   = array();
+        self::$javaScriptSnippetStrings     = array();
         self::$javaScriptURLs               = array();
         self::$javaScriptURLsInHead         = array();
         self::$titleHTML                    = '';
