@@ -7,7 +7,20 @@ class CBBackgroundView extends CBView
      */
     public static function init()
     {
-        $view = parent::init();
+        $view   = parent::init();
+        $model  = $view->model;
+
+        $model->backgroundColor                     = '';
+        $model->children                            = array();
+        $model->imageFilename                       = null;
+        $model->imageFilenameHTML                   = null;
+        $model->imageShouldRepeatHorizontally       = false;
+        $model->imageShouldRepeatVertically         = false;
+        $model->imageHeight                         = null;
+        $model->imageWidth                          = null;
+        $model->linkURL                             = '';
+        $model->linkURLHTML                         = '';
+        $model->minimumSectionHeightIsImageHeight   = true;
 
         return $view;
     }

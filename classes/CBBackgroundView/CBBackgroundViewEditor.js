@@ -12,6 +12,18 @@ CBBackgroundViewEditor.init = function()
 
     this.model.className = "CBBackgroundView";
 
+    this.model.backgroundColor                     = "";
+    this.model.children                            = [];
+    this.model.imageFilename                       = null;
+    this.model.imageFilenameHTML                   = null;
+    this.model.imageShouldRepeatHorizontally       = false;
+    this.model.imageShouldRepeatVertically         = false;
+    this.model.imageHeight                         = null;
+    this.model.imageWidth                          = null;
+    this.model.linkURL                             = "";
+    this.model.linkURLHTML                         = "";
+    this.model.minimumSectionHeightIsImageHeight   = true;
+
     return this;
 }
 
