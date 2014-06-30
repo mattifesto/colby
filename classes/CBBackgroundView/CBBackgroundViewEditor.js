@@ -12,16 +12,16 @@ CBBackgroundViewEditor.init = function()
 
     this.model.className = "CBBackgroundView";
 
-    this.model.backgroundColor                     = "";
-    this.model.children                            = [];
-    this.model.imageFilename                       = null;
-    this.model.imageShouldRepeatHorizontally       = false;
-    this.model.imageShouldRepeatVertically         = false;
-    this.model.imageHeight                         = null;
-    this.model.imageWidth                          = null;
-    this.model.linkURL                             = "";
-    this.model.linkURLHTML                         = "";
-    this.model.minimumSectionHeightIsImageHeight   = true;
+    this.model.backgroundColor                  = "";
+    this.model.children                         = [];
+    this.model.imageFilename                    = null;
+    this.model.imageShouldRepeatHorizontally    = false;
+    this.model.imageShouldRepeatVertically      = false;
+    this.model.imageHeight                      = null;
+    this.model.imageWidth                       = null;
+    this.model.linkURL                          = "";
+    this.model.linkURLHTML                      = "";
+    this.model.minimumViewHeightIsImageHeight   = true;
 
     return this;
 }
@@ -88,12 +88,34 @@ CBBackgroundViewEditor.createElement = function()
 /**
  * @return void
  */
+CBBackgroundViewEditor.createMinimumViewHeightIsImageHeightOption = function()
+{
+    var ID              = "id-" + Colby.random160();
+    var checkbox        = document.createElement("input");
+    checkbox.checked    = this.model.minimumViewHeightIsImageHeight;
+    checkbox.id         = ID;
+    checkbox.type       = "checkbox";
+    var label           = document.createElement("label");
+    label.htmlFor       = ID;
+    label.textContent   = " Minimum view height is image height";
+
+    checkbox.addEventListener('change', this.minimumViewHeightIsImageHeightDidChange.bind(this, checkbox));
+
+    this._optionsElement.appendChild(checkbox);
+    this._optionsElement.appendChild(label);
+};
+
+/**
+ * @return void
+ */
 CBBackgroundViewEditor.createOptionsElement = function()
 {
     this._optionsElement            = document.createElement("div");
     this._optionsElement.className  = "options";
 
-    this.createRepeatHorizontallyCheckbox();
+    this.createRepeatHorizontallyOption();
+    this.createRepeatVerticallyOption();
+    this.createMinimumViewHeightIsImageHeightOption();
 
     this._element.appendChild(this._optionsElement);
 };
@@ -101,12 +123,41 @@ CBBackgroundViewEditor.createOptionsElement = function()
 /**
  * @return void
  */
-CBBackgroundViewEditor.createRepeatHorizontallyCheckbox = function()
+CBBackgroundViewEditor.createRepeatHorizontallyOption = function()
 {
-    var checkbox    = document.createElement("input");
-    checkbox.type   = "checkbox";
+    var ID              = "id-" + Colby.random160();
+    var checkbox        = document.createElement("input");
+    checkbox.checked    = this.model.imageShouldRepeatHorizontally;
+    checkbox.id         = ID;
+    checkbox.type       = "checkbox";
+    var label           = document.createElement("label");
+    label.htmlFor       = ID;
+    label.textContent   = " Repeat horizontally";
+
+    checkbox.addEventListener('change', this.imageShouldRepeatHorizontallyDidChange.bind(this, checkbox));
 
     this._optionsElement.appendChild(checkbox);
+    this._optionsElement.appendChild(label);
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.createRepeatVerticallyOption = function()
+{
+    var ID              = "id-" + Colby.random160();
+    var checkbox        = document.createElement("input");
+    checkbox.checked    = this.model.imageShouldRepeatVertically;
+    checkbox.id         = ID;
+    checkbox.type       = "checkbox";
+    var label           = document.createElement("label");
+    label.htmlFor       = ID;
+    label.textContent   = " Repeat vertically";
+
+    checkbox.addEventListener('change', this.imageShouldRepeatVerticallyDidChange.bind(this, checkbox));
+
+    this._optionsElement.appendChild(checkbox);
+    this._optionsElement.appendChild(label);
 };
 
 /**
@@ -144,6 +195,36 @@ CBBackgroundViewEditor.element = function()
     }
 
     return this._element;
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.imageShouldRepeatHorizontallyDidChange = function(checkboxElement)
+{
+    this.model.imageShouldRepeatHorizontally = checkboxElement.checked;
+
+    CBPageEditor.requestSave();
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.imageShouldRepeatVerticallyDidChange = function(checkboxElement)
+{
+    this.model.imageShouldRepeatVertically = checkboxElement.checked;
+
+    CBPageEditor.requestSave();
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.minimumViewHeightIsImageHeightDidChange = function(checkboxElement)
+{
+    this.model.minimumViewHeightIsImageHeight = checkboxElement.checked;
+
+    CBPageEditor.requestSave();
 };
 
 /**
