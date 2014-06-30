@@ -39,6 +39,7 @@ $uploader->moveToFilename($absoluteFilename);
  */
 
 $response->imageFilename    = $filename;
+$response->imageURL         = $dataStore->URL() . "/{$filename}";
 $response->imageSizeX       = $uploader->sizeX();
 $response->imageSizeY       = $uploader->sizeY();
 $response->wasSuccessful    = true;

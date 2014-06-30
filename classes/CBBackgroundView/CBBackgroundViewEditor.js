@@ -12,16 +12,17 @@ CBBackgroundViewEditor.init = function()
 
     this.model.className = "CBBackgroundView";
 
-    this.model.backgroundColor                  = "";
-    this.model.backgroundColorHTML              = "";
     this.model.children                         = [];
-    this.model.imageFilename                    = null;
+    this.model.color                            = null;
+    this.model.colorHTML                        = null;
+    this.model.imageHeight                      = null;
     this.model.imageShouldRepeatHorizontally    = false;
     this.model.imageShouldRepeatVertically      = false;
-    this.model.imageHeight                      = null;
+    this.model.imageURL                         = null;
+    this.model.imageURLHTML                     = null;
     this.model.imageWidth                       = null;
-    this.model.linkURL                          = "";
-    this.model.linkURLHTML                      = "";
+    this.model.linkURL                          = null;
+    this.model.linkURLHTML                      = null;
     this.model.minimumViewHeightIsImageHeight   = true;
 
     return this;
@@ -32,8 +33,8 @@ CBBackgroundViewEditor.init = function()
  */
 CBBackgroundViewEditor.backgroundColorDidChange = function(inputElement)
 {
-    this.model.backgroundColor      = inputElement.value;
-    this.model.backgroundColorHTML  = Colby.textToHTML(inputElement.value);
+    this.model.color        = inputElement.value;
+    this.model.colorHTML    = Colby.textToHTML(inputElement.value);
 
     CBPageEditor.requestSave();
 };
@@ -74,7 +75,8 @@ CBBackgroundViewEditor.backgroundImageFileDidUpload = function()
     }
     else
     {
-        this.model.imageFilename    = response.imageFilename;
+        this.model.imageURL         = response.imageURL;
+        this.model.imageURLHTML     = Colby.textToHTML(response.imageURL);
         this.model.imageWidth       = response.imageSizeX;
         this.model.imageHeight      = response.imageSizeY;
 
@@ -112,7 +114,7 @@ CBBackgroundViewEditor.createBackgroundColorTextField = function()
     var inputElement            = document.createElement("input");
     inputElement.id             = ID;
     inputElement.type           = "text";
-    inputElement.value          = this.model.backgroundColor;
+    inputElement.value          = this.model.color;
     var labelElement            = document.createElement("label");
     labelElement.htmlFor        = ID;
     labelElement.textContent    = "Background color";
@@ -321,7 +323,7 @@ CBBackgroundViewEditor.minimumViewHeightIsImageHeightDidChange = function(checkb
  */
 CBBackgroundViewEditor.updateBackgroundImageThumbnail = function()
 {
-    if (!this.model.imageFilename)
+    if (!this.model.imageURL)
     {
         return;
     }
@@ -332,6 +334,5 @@ CBBackgroundViewEditor.updateBackgroundImageThumbnail = function()
         this._element.insertBefore(this._thumbnail, this._element.firstChild);
     }
 
-    var URI             = Colby.dataStoreIDToURI(CBPageEditor.model.dataStoreID);
-    this._thumbnail.src = URI + "/" + this.model.imageFilename;
+    this._thumbnail.src = this.model.imageURL;
 };

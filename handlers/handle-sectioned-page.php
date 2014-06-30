@@ -18,6 +18,16 @@ $dataStore      = new CBDataStore($dataStoreID);
 $pageModelJSON  = file_get_contents($dataStore->directory() . '/model.json');
 $pageModel      = json_decode($pageModelJSON);
 
+/**
+ * At some point in the future we will have an official way of getting the
+ * page object from a "page context" and the page model will not be passed
+ * throughout the rendering calls. As a temporary workaround while making
+ * changes this variable is made available globally.
+ */
+
+global $CBHackSectionedPagesPageModel;
+$CBHackSectionedPagesPageModel = $pageModel;
+
 if (ColbyRequest::isForFrontPage())
 {
     CBHTMLOutput::setTitleHTML(CBSiteNameHTML);

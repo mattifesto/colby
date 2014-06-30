@@ -10,16 +10,17 @@ class CBBackgroundView extends CBView
         $view   = parent::init();
         $model  = $view->model;
 
-        $model->backgroundColor                 = '';
-        $model->backgroundColorHTML             = '';
         $model->children                        = array();
-        $model->imageFilename                   = null;
+        $model->color                           = null;
+        $model->colorHTML                       = null;
+        $model->imageHeight                     = null;
         $model->imageShouldRepeatHorizontally   = false;
         $model->imageShouldRepeatVertically     = false;
-        $model->imageHeight                     = null;
+        $model->imageURL                        = null;
+        $model->imageURLHTML                    = null;
         $model->imageWidth                      = null;
-        $model->linkURL                         = '';
-        $model->linkURLHTML                     = '';
+        $model->linkURL                         = null;
+        $model->linkURLHTML                     = null;
         $model->minimumViewHeightIsImageHeight  = true;
 
         return $view;
@@ -33,5 +34,13 @@ class CBBackgroundView extends CBView
         CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBBackgroundView/CBBackgroundViewEditor.css');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBView/CBViewEditor.js');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBBackgroundView/CBBackgroundViewEditor.js');
+    }
+
+    /**
+     * @return void
+     */
+    public function renderHTML()
+    {
+        include __DIR__ . '/CBBackgroundViewHTML.php';
     }
 }
