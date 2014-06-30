@@ -96,6 +96,7 @@ CBBackgroundViewEditor.createElement = function()
     this.createOptionsElement();
     this.createBackgroundColorTextField();
     this.createLinkURLTextField();
+    this.createChildViewsElement();
 
     this.updateBackgroundImageThumbnail();
 };
@@ -121,6 +122,22 @@ CBBackgroundViewEditor.createBackgroundColorTextField = function()
     containerElement.appendChild(labelElement);
     containerElement.appendChild(inputElement);
     this._element.appendChild(containerElement);
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.createChildViewsElement = function()
+{
+    var childViewsElement               = document.createElement("div");
+    childViewsElement.className         = "children";
+    var childViewsTitleElement          = document.createElement("h1");
+    childViewsTitleElement.textContent  = "CBBackgroundView Child Views";
+    var childListView                   = new CBSectionListView(this.model.children);
+
+    childViewsElement.appendChild(childViewsTitleElement);
+    childViewsElement.appendChild(childListView.element());
+    this._element.appendChild(childViewsElement);
 };
 
 /**
