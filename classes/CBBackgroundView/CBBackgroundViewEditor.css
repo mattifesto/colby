@@ -27,3 +27,22 @@
 {
     margin-left: 50px;
 }
+
+.CBBackgroundViewEditor .text-field
+{
+    margin:     15px 0;
+    text-align: center;
+}
+
+.CBBackgroundViewEditor .text-field label
+{
+    display:        inline-block;
+    margin-right:   10px;
+    text-align:     right;
+    width:          150px;
+}
+
+.CBBackgroundViewEditor .text-field input
+{
+    width: 480px;
+}

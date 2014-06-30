@@ -13,6 +13,7 @@ CBBackgroundViewEditor.init = function()
     this.model.className = "CBBackgroundView";
 
     this.model.backgroundColor                  = "";
+    this.model.backgroundColorHTML              = "";
     this.model.children                         = [];
     this.model.imageFilename                    = null;
     this.model.imageShouldRepeatHorizontally    = false;
@@ -25,6 +26,17 @@ CBBackgroundViewEditor.init = function()
 
     return this;
 }
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.backgroundColorDidChange = function(inputElement)
+{
+    this.model.backgroundColor      = inputElement.value;
+    this.model.backgroundColorHTML  = Colby.textToHTML(inputElement.value);
+
+    CBPageEditor.requestSave();
+};
 
 /**
  * @return void
@@ -82,7 +94,56 @@ CBBackgroundViewEditor.createElement = function()
 
     this.createUploadBackgroundImageButton();
     this.createOptionsElement();
+    this.createBackgroundColorTextField();
+    this.createLinkURLTextField();
+
     this.updateBackgroundImageThumbnail();
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.createBackgroundColorTextField = function()
+{
+    var containerElement        = document.createElement("div");
+    containerElement.className  = "text-field";
+    var ID                      = "id-" + Colby.random160();
+    var inputElement            = document.createElement("input");
+    inputElement.id             = ID;
+    inputElement.type           = "text";
+    inputElement.value          = this.model.backgroundColor;
+    var labelElement            = document.createElement("label");
+    labelElement.htmlFor        = ID;
+    labelElement.textContent    = "Background color";
+
+    inputElement.addEventListener("input", this.backgroundColorDidChange.bind(this, inputElement));
+
+    containerElement.appendChild(labelElement);
+    containerElement.appendChild(inputElement);
+    this._element.appendChild(containerElement);
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.createLinkURLTextField = function()
+{
+    var containerElement        = document.createElement("div");
+    containerElement.className  = "text-field";
+    var ID                      = "id-" + Colby.random160();
+    var inputElement            = document.createElement("input");
+    inputElement.id             = ID;
+    inputElement.type           = "text";
+    inputElement.value          = this.model.linkURL;
+    var labelElement            = document.createElement("label");
+    labelElement.htmlFor        = ID;
+    labelElement.textContent    = "Link URL";
+
+    inputElement.addEventListener("input", this.linkURLDidChange.bind(this, inputElement));
+
+    containerElement.appendChild(labelElement);
+    containerElement.appendChild(inputElement);
+    this._element.appendChild(containerElement);
 };
 
 /**
@@ -99,7 +160,7 @@ CBBackgroundViewEditor.createMinimumViewHeightIsImageHeightOption = function()
     label.htmlFor       = ID;
     label.textContent   = " Minimum view height is image height";
 
-    checkbox.addEventListener('change', this.minimumViewHeightIsImageHeightDidChange.bind(this, checkbox));
+    checkbox.addEventListener("change", this.minimumViewHeightIsImageHeightDidChange.bind(this, checkbox));
 
     this._optionsElement.appendChild(checkbox);
     this._optionsElement.appendChild(label);
@@ -134,7 +195,7 @@ CBBackgroundViewEditor.createRepeatHorizontallyOption = function()
     label.htmlFor       = ID;
     label.textContent   = " Repeat horizontally";
 
-    checkbox.addEventListener('change', this.imageShouldRepeatHorizontallyDidChange.bind(this, checkbox));
+    checkbox.addEventListener("change", this.imageShouldRepeatHorizontallyDidChange.bind(this, checkbox));
 
     this._optionsElement.appendChild(checkbox);
     this._optionsElement.appendChild(label);
@@ -154,7 +215,7 @@ CBBackgroundViewEditor.createRepeatVerticallyOption = function()
     label.htmlFor       = ID;
     label.textContent   = " Repeat vertically";
 
-    checkbox.addEventListener('change', this.imageShouldRepeatVerticallyDidChange.bind(this, checkbox));
+    checkbox.addEventListener("change", this.imageShouldRepeatVerticallyDidChange.bind(this, checkbox));
 
     this._optionsElement.appendChild(checkbox);
     this._optionsElement.appendChild(label);
@@ -213,6 +274,17 @@ CBBackgroundViewEditor.imageShouldRepeatHorizontallyDidChange = function(checkbo
 CBBackgroundViewEditor.imageShouldRepeatVerticallyDidChange = function(checkboxElement)
 {
     this.model.imageShouldRepeatVertically = checkboxElement.checked;
+
+    CBPageEditor.requestSave();
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.linkURLDidChange = function(inputElement)
+{
+    this.model.linkURL      = inputElement.value;
+    this.model.linkURLHTML  = Colby.textToHTML(inputElement.value);
 
     CBPageEditor.requestSave();
 };
