@@ -68,64 +68,6 @@ CBBackgroundViewEditor.initWithModel = function(model)
 /**
  * @return void
  */
-CBBackgroundViewEditor.propertyBackgroundColorDidChange = function(inputElement)
-{
-    this.model.color        = inputElement.value;
-    this.model.colorHTML    = Colby.textToHTML(inputElement.value);
-
-    CBPageEditor.requestSave();
-};
-
-/**
- * @return void
- */
-CBBackgroundViewEditor.propertyBackgroundImageFileDidChange = function(backgroundImageFileInputElement)
-{
-    if (this._backgroundImageUploadXHR)
-    {
-        this._backgroundImageUploadXHR.abort();
-        this._backgroundImageUploadXHR = null;
-    }
-
-    var formData    = new FormData();
-    formData.append("dataStoreID", CBPageEditor.model.dataStoreID);
-    formData.append("image", backgroundImageFileInputElement.files[0]);
-
-    var xhr     = new XMLHttpRequest();
-    xhr.onload  = this.propertyBackgroundImageFileDidUpload.bind(this);
-    xhr.open("POST", "/admin/pages/api/upload-image/");
-    xhr.send(formData);
-
-    this._backgroundImageUploadXHR = xhr;
-};
-
-/**
- * @return void
- */
-CBBackgroundViewEditor.propertyBackgroundImageFileDidUpload = function()
-{
-    var response = Colby.responseFromXMLHttpRequest(this._backgroundImageUploadXHR);
-
-    if (!response.wasSuccessful)
-    {
-        Colby.displayResponse(response);
-    }
-    else
-    {
-        this.model.imageURL         = response.imageURL;
-        this.model.imageURLHTML     = Colby.textToHTML(response.imageURL);
-        this.model.imageWidth       = response.imageSizeX;
-        this.model.imageHeight      = response.imageSizeY;
-
-        this.updateBackgroundImageThumbnail();
-
-        CBPageEditor.requestSave();
-    }
-};
-
-/**
- * @return void
- */
 CBBackgroundViewEditor.createElement = function()
 {
     this._element           = document.createElement("div");
@@ -317,6 +259,64 @@ CBBackgroundViewEditor.element = function()
     }
 
     return this._element;
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.propertyBackgroundColorDidChange = function(inputElement)
+{
+    this.model.color        = inputElement.value;
+    this.model.colorHTML    = Colby.textToHTML(inputElement.value);
+
+    CBPageEditor.requestSave();
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.propertyBackgroundImageFileDidChange = function(backgroundImageFileInputElement)
+{
+    if (this._backgroundImageUploadXHR)
+    {
+        this._backgroundImageUploadXHR.abort();
+        this._backgroundImageUploadXHR = null;
+    }
+
+    var formData    = new FormData();
+    formData.append("dataStoreID", CBPageEditor.model.dataStoreID);
+    formData.append("image", backgroundImageFileInputElement.files[0]);
+
+    var xhr     = new XMLHttpRequest();
+    xhr.onload  = this.propertyBackgroundImageFileDidUpload.bind(this);
+    xhr.open("POST", "/admin/pages/api/upload-image/");
+    xhr.send(formData);
+
+    this._backgroundImageUploadXHR = xhr;
+};
+
+/**
+ * @return void
+ */
+CBBackgroundViewEditor.propertyBackgroundImageFileDidUpload = function()
+{
+    var response = Colby.responseFromXMLHttpRequest(this._backgroundImageUploadXHR);
+
+    if (!response.wasSuccessful)
+    {
+        Colby.displayResponse(response);
+    }
+    else
+    {
+        this.model.imageURL         = response.imageURL;
+        this.model.imageURLHTML     = Colby.textToHTML(response.imageURL);
+        this.model.imageWidth       = response.imageSizeX;
+        this.model.imageHeight      = response.imageSizeY;
+
+        this.updateBackgroundImageThumbnail();
+
+        CBPageEditor.requestSave();
+    }
 };
 
 /**
