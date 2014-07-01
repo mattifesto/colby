@@ -125,18 +125,48 @@ CBSectionListView.prototype.element = function()
 /**
  * @return void
  */
-CBSectionListView.prototype.displaySection = function(sectionModel)
+CBSectionListView.prototype.displaySection = function(model, index, modelArray)
 {
-    if (sectionModel.className)
+    /**
+     * Translate deprecated views into non-deprecated views.
+     */
+
+    if (model.sectionTypeID)
     {
-        var viewEditorClassName = sectionModel.className + "Editor";
+        switch (model.sectionTypeID)
+        {
+            case "c4bacd7cf5315e5a07c20072cbb0f355bdb4b8bc":
+
+                if (CBBackgroundViewEditor)
+                {
+                    var viewEditor      = Object.create(CBBackgroundViewEditor);
+                    viewEditor.initWithModel(model);
+
+                    model               = viewEditor.model;
+                    modelArray[index]   = model;
+                }
+
+                break;
+
+            default:
+
+                break;
+        }
+    }
+
+    /**
+     * Display
+     */
+    if (model.className)
+    {
+        var viewEditorClassName = model.className + "Editor";
         var viewEditorClass     = window[viewEditorClassName];
-        var viewEditor          = Object.create(viewEditorClass).initWithModel(sectionModel);
+        var viewEditor          = Object.create(viewEditorClass).initWithModel(model);
         var viewListItemElement = this.createViewListItemElementForViewEditor(viewEditor);
     }
     else
     {
-        var viewListItemElement = this.newSectionListItemViewForModel(sectionModel);
+        var viewListItemElement = this.newSectionListItemViewForModel(model);
     }
 
     this._element.appendChild(viewListItemElement);

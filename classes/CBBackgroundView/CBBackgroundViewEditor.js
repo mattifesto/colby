@@ -29,6 +29,43 @@ CBBackgroundViewEditor.init = function()
 }
 
 /**
+ * @return CBBackgroundViewEditor
+ */
+CBBackgroundViewEditor.initWithModel = function(model)
+{
+    if ("c4bacd7cf5315e5a07c20072cbb0f355bdb4b8bc" == model.sectionTypeID)
+    {
+        var dataStoreURI = Colby.dataStoreIDToURI(CBPageEditor.model.dataStoreID);
+
+        this.init();
+
+        this.model.children                         = model.children;
+        this.model.color                            = model.backgroundColor;
+        this.model.colorHTML                        = Colby.textToHTML(model.backgroundColor);
+        this.model.imageHeight                      = model.imageSizeY;
+        this.model.imageShouldRepeatHorizontally    = model.imageRepeatHorizontally;
+        this.model.imageShouldRepeatVertically      = model.imageRepeatVertically;
+
+        if (model.imageFilename)
+        {
+            this.model.imageURL                         = dataStoreURI + "/" + model.imageFilename;
+            this.model.imageURLHTML                     = Colby.textToHTML(this.model.imageURL);
+        }
+
+        this.model.imageWidth                       = model.imageSizeX;
+        this.model.linkURL                          = model.linkURL;
+        this.model.linkURLHTML                      = model.linkURLHTML;
+        this.model.minimumViewHeightIsImageHeight   = model.minimumSectionHeightIsImageHeight;
+    }
+    else
+    {
+        CBViewEditor.initWithModel.call(this, model);
+    }
+
+    return this;
+}
+
+/**
  * @return void
  */
 CBBackgroundViewEditor.backgroundColorDidChange = function(inputElement)
