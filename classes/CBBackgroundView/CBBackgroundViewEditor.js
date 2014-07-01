@@ -68,7 +68,7 @@ CBBackgroundViewEditor.initWithModel = function(model)
 /**
  * @return void
  */
-CBBackgroundViewEditor.backgroundColorDidChange = function(inputElement)
+CBBackgroundViewEditor.propertyBackgroundColorDidChange = function(inputElement)
 {
     this.model.color        = inputElement.value;
     this.model.colorHTML    = Colby.textToHTML(inputElement.value);
@@ -79,7 +79,7 @@ CBBackgroundViewEditor.backgroundColorDidChange = function(inputElement)
 /**
  * @return void
  */
-CBBackgroundViewEditor.backgroundImageFileDidChange = function(backgroundImageFileInputElement)
+CBBackgroundViewEditor.propertyBackgroundImageFileDidChange = function(backgroundImageFileInputElement)
 {
     if (this._backgroundImageUploadXHR)
     {
@@ -92,7 +92,7 @@ CBBackgroundViewEditor.backgroundImageFileDidChange = function(backgroundImageFi
     formData.append("image", backgroundImageFileInputElement.files[0]);
 
     var xhr     = new XMLHttpRequest();
-    xhr.onload  = this.backgroundImageFileDidUpload.bind(this);
+    xhr.onload  = this.propertyBackgroundImageFileDidUpload.bind(this);
     xhr.open("POST", "/admin/pages/api/upload-image/");
     xhr.send(formData);
 
@@ -102,7 +102,7 @@ CBBackgroundViewEditor.backgroundImageFileDidChange = function(backgroundImageFi
 /**
  * @return void
  */
-CBBackgroundViewEditor.backgroundImageFileDidUpload = function()
+CBBackgroundViewEditor.propertyBackgroundImageFileDidUpload = function()
 {
     var response = Colby.responseFromXMLHttpRequest(this._backgroundImageUploadXHR);
 
@@ -155,8 +155,9 @@ CBBackgroundViewEditor.createBackgroundColorTextField = function()
     var labelElement            = document.createElement("label");
     labelElement.htmlFor        = ID;
     labelElement.textContent    = "Background color";
+    var callback                = this.propertyBackgroundColorDidChange.bind(this, inputElement);
 
-    inputElement.addEventListener("input", this.backgroundColorDidChange.bind(this, inputElement));
+    inputElement.addEventListener("input", callback);
 
     containerElement.appendChild(labelElement);
     containerElement.appendChild(inputElement);
@@ -194,8 +195,9 @@ CBBackgroundViewEditor.createLinkURLTextField = function()
     var labelElement            = document.createElement("label");
     labelElement.htmlFor        = ID;
     labelElement.textContent    = "Link URL";
+    var callback                = this.propertyLinkURLDidChange.bind(this, inputElement);
 
-    inputElement.addEventListener("input", this.linkURLDidChange.bind(this, inputElement));
+    inputElement.addEventListener("input", callback);
 
     containerElement.appendChild(labelElement);
     containerElement.appendChild(inputElement);
@@ -215,8 +217,9 @@ CBBackgroundViewEditor.createMinimumViewHeightIsImageHeightOption = function()
     var label           = document.createElement("label");
     label.htmlFor       = ID;
     label.textContent   = " Minimum view height is image height";
+    var callback        = this.propertyMinimumViewHeightIsImageHeightDidChange.bind(this, checkbox);
 
-    checkbox.addEventListener("change", this.minimumViewHeightIsImageHeightDidChange.bind(this, checkbox));
+    checkbox.addEventListener("change", callback);
 
     this._optionsElement.appendChild(checkbox);
     this._optionsElement.appendChild(label);
@@ -250,8 +253,9 @@ CBBackgroundViewEditor.createRepeatHorizontallyOption = function()
     var label           = document.createElement("label");
     label.htmlFor       = ID;
     label.textContent   = " Repeat horizontally";
+    var callback        = this.propertyImageShouldRepeatHorizontallyDidChange.bind(this, checkbox);
 
-    checkbox.addEventListener("change", this.imageShouldRepeatHorizontallyDidChange.bind(this, checkbox));
+    checkbox.addEventListener("change", callback);
 
     this._optionsElement.appendChild(checkbox);
     this._optionsElement.appendChild(label);
@@ -270,8 +274,9 @@ CBBackgroundViewEditor.createRepeatVerticallyOption = function()
     var label           = document.createElement("label");
     label.htmlFor       = ID;
     label.textContent   = " Repeat vertically";
+    var callback        = this.propertyImageShouldRepeatVerticallyDidChange.bind(this, checkbox);
 
-    checkbox.addEventListener("change", this.imageShouldRepeatVerticallyDidChange.bind(this, checkbox));
+    checkbox.addEventListener("change", callback);
 
     this._optionsElement.appendChild(checkbox);
     this._optionsElement.appendChild(label);
@@ -288,7 +293,7 @@ CBBackgroundViewEditor.createUploadBackgroundImageButton = function()
     fileInputElement.style.display   = "none";
     fileInputElement.type            = "file";
 
-    callback = this.backgroundImageFileDidChange.bind(this, fileInputElement);
+    callback = this.propertyBackgroundImageFileDidChange.bind(this, fileInputElement);
     fileInputElement.addEventListener("change", callback);
 
     var buttonElement           = document.createElement("button");
@@ -317,7 +322,7 @@ CBBackgroundViewEditor.element = function()
 /**
  * @return void
  */
-CBBackgroundViewEditor.imageShouldRepeatHorizontallyDidChange = function(checkboxElement)
+CBBackgroundViewEditor.propertyImageShouldRepeatHorizontallyDidChange = function(checkboxElement)
 {
     this.model.imageShouldRepeatHorizontally = checkboxElement.checked;
 
@@ -327,7 +332,7 @@ CBBackgroundViewEditor.imageShouldRepeatHorizontallyDidChange = function(checkbo
 /**
  * @return void
  */
-CBBackgroundViewEditor.imageShouldRepeatVerticallyDidChange = function(checkboxElement)
+CBBackgroundViewEditor.propertyImageShouldRepeatVerticallyDidChange = function(checkboxElement)
 {
     this.model.imageShouldRepeatVertically = checkboxElement.checked;
 
@@ -337,7 +342,7 @@ CBBackgroundViewEditor.imageShouldRepeatVerticallyDidChange = function(checkboxE
 /**
  * @return void
  */
-CBBackgroundViewEditor.linkURLDidChange = function(inputElement)
+CBBackgroundViewEditor.propertyLinkURLDidChange = function(inputElement)
 {
     this.model.linkURL      = inputElement.value;
     this.model.linkURLHTML  = Colby.textToHTML(inputElement.value);
@@ -348,7 +353,7 @@ CBBackgroundViewEditor.linkURLDidChange = function(inputElement)
 /**
  * @return void
  */
-CBBackgroundViewEditor.minimumViewHeightIsImageHeightDidChange = function(checkboxElement)
+CBBackgroundViewEditor.propertyMinimumViewHeightIsImageHeightDidChange = function(checkboxElement)
 {
     this.model.minimumViewHeightIsImageHeight = checkboxElement.checked;
 
