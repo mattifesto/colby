@@ -30,6 +30,13 @@
     max-width:  90%;
 }
 
+.CBBackgroundViewEditor > img + div
+{
+    color:      #808080;
+    font-size:  13px;
+    text-align: center;
+}
+
 .CBBackgroundViewEditor > .options
 {
     text-align: center;

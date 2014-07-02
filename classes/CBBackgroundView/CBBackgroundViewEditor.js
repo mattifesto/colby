@@ -372,9 +372,12 @@ CBBackgroundViewEditor.updateBackgroundImageThumbnail = function()
 
     if (!this._thumbnail)
     {
+        this._imageDimensions = document.createElement("div");
+        this._element.insertBefore(this._imageDimensions, this._element.firstChild);
         this._thumbnail = document.createElement("img");
         this._element.insertBefore(this._thumbnail, this._element.firstChild);
     }
 
-    this._thumbnail.src = this.model.imageURL;
+    this._imageDimensions.textContent   = this.model.imageWidth + " × " + this.model.imageHeight;
+    this._thumbnail.src                 = this.model.imageURL;
 };
