@@ -137,9 +137,22 @@ CBSectionListView.prototype.displaySection = function(model, index, modelArray)
         {
             case "c4bacd7cf5315e5a07c20072cbb0f355bdb4b8bc":
 
-                if (CBBackgroundViewEditor)
+                if ("object" == typeof CBBackgroundViewEditor)
                 {
                     var viewEditor      = Object.create(CBBackgroundViewEditor);
+                    viewEditor.initWithModel(model);
+
+                    model               = viewEditor.model;
+                    modelArray[index]   = model;
+                }
+
+                break;
+
+            case "85ad8d3561e980afffc4847803ce83e7aed6af6b":
+
+                if ("object" == typeof LEImageViewEditor)
+                {
+                    var viewEditor      = Object.create(LEImageViewEditor);
                     viewEditor.initWithModel(model);
 
                     model               = viewEditor.model;

@@ -26,7 +26,7 @@ CBBackgroundViewEditor.init = function()
     this.model.minimumViewHeightIsImageHeight   = true;
 
     return this;
-}
+};
 
 /**
  * @return CBBackgroundViewEditor
@@ -63,7 +63,7 @@ CBBackgroundViewEditor.initWithModel = function(model)
     }
 
     return this;
-}
+};
 
 /**
  * @return void
