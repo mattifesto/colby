@@ -41,6 +41,38 @@ class Colby
     private static $uniqueHashCounter = 0;
 
     /**
+     * This autoloader must be the last autoloader because if it does not
+     * find a class it throws an exception. This is necessary because if it
+     * does not throw an exception a fatal error occurs which can't be handled
+     * by Colby and the error goes unnoticed and the visitor gets a blank page.
+     *
+     * Other autoloaders should pass a `true` value for the `$prepend` argument
+     * when calling the `spl_autoload_register` function.
+     *
+     * @return void
+     */
+    public static function autoload($className)
+    {
+        $filename = Colby::findFile("classes/{$className}.php");
+
+        if (!$filename)
+        {
+            $filename = Colby::findFile("classes/{$className}/{$className}.php");
+        }
+
+        if ($filename)
+        {
+            include_once $filename;
+
+            return true;
+        }
+        else
+        {
+            throw new RuntimeException("The class '{$className}' can't be autoloaded.");
+        }
+    }
+
+    /**
      * If the site is marked as being debugged this function will send a message
      * to the PHP error log. If the site isn't being debugged it will do
      * nothing.
@@ -502,6 +534,36 @@ class Colby
         include_once COLBY_SITE_DIRECTORY . '/colby-configuration.php';
 
         /**
+         * The `colby-configuration.php` file will indicate whether the Swift
+         * Mailer email library is enabled for this site or not. We need to
+         * include the required file from that library right after that because
+         * the error handling code checks to see if the library should be
+         * available and then assumes it is. From this point on if the library
+         * is available and an error occurs, even in the remaining lines of
+         * this function, an email will be sent.
+         */
+
+        if (defined('COLBY_EMAIL_LIBRARY_DIRECTORY'))
+        {
+            include_once COLBY_EMAIL_LIBRARY_DIRECTORY . '/lib/swift_required.php';
+        }
+
+        /**
+         * Set up Colby auto loading.
+         *
+         * This autoloading function must be the last autoloading function
+         * because it will throw an exception if it is not able to successfully
+         * load a class. This behavior is necessary because if no exception is
+         * thrown a fatal error will occur and there's nothing Colby can do to
+         * handle it and therefore the error will go unnoticed and the visitor
+         * will get a blank page. Autoloaders added after this should use the
+         * $prepend parameter to `spl_autoload_register` to ensure that they
+         * are not the last autoloader.
+         */
+
+        spl_autoload_register('Colby::autoload');
+
+        /**
          * Define COLBY_SYSTEM_URL.
          */
 
@@ -529,35 +591,6 @@ class Colby
             throw new RuntimeException(
                 'The constant `COLBY_SITE_IS_BEING_DEBUGGED` has not been set.');
         }
-
-        spl_autoload_register(function($class)
-        {
-            $filename = Colby::findFile("classes/{$class}.php");
-
-            if (!$filename)
-            {
-                $filename = Colby::findFile("classes/{$class}/{$class}.php");
-            }
-
-            if ($filename)
-            {
-                include_once $filename;
-            }
-        });
-
-        /**
-         * Load classes that are used for every request.
-         */
-
-        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyArchive.php';
-
-        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyConvert.php';
-
-        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyOutputManager.php';
-
-        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyRequest.php';
-
-        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyUser.php';
 
         /**
          * Include the site configuration file. This file is checked in and
@@ -732,8 +765,6 @@ class Colby
                 defined('COLBY_SITE_ERRORS_SEND_EMAILS') &&
                 COLBY_SITE_ERRORS_SEND_EMAILS)
             {
-                Colby::useEmail();
-
                 $transport = Swift_SmtpTransport::newInstance(COLBY_EMAIL_SMTP_SERVER,
                                                               COLBY_EMAIL_SMTP_PORT,
                                                               COLBY_EMAIL_SMTP_SECURITY);
@@ -852,22 +883,17 @@ EOT;
     }
 
     /**
-     * Enable and initialize Swift Mailer email services.
+     * 2014.07.04
+     *
+     * This method has been deprecated. The Swift Mailer libraries are now
+     * autoloaded if the COLBY_EMAIL_LIBRARY_DIRECTORY constant is defined.
+     * A caller can either check for this constant or just attempt to use
+     * the Swift Mailer classes and an exception will be thrown by the Colby
+     * autoloader if they don't exist.
      */
     public static function useEmail()
     {
-        /**
-         * Email is a heavyweight service. Code that wants to use email
-         * should check to see if the service is available first or be
-         * part of a library that ensures email services are available.
-         */
-
-        if (!defined('COLBY_EMAIL_LIBRARY_DIRECTORY'))
-        {
-            throw new RuntimeException('Email service was requested but has not been configured for this website.');
-        }
-
-        include_once COLBY_EMAIL_LIBRARY_DIRECTORY . '/lib/swift_required.php';
+        /* deprecated */
     }
 
     /**

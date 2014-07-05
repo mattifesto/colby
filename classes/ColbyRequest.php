@@ -86,53 +86,43 @@ class ColbyRequest
         }
     }
 
+    /**
+     * @return stdClass
+     */
+    public static function CBPagesRowForURI($URI)
+    {
+        $URIForSQL  = ColbyConvert::textToSQL($URI);
+
+        $sql = <<<EOT
+
+            SELECT
+                LOWER(HEX(`archiveID`)) as `dataStoreID`,
+                `className`,
+                LOWER(HEX(`typeID`)) as `typeID`,
+                LOWER(HEX(`groupID`)) as `groupID`
+            FROM
+                `ColbyPages`
+            WHERE
+                `URI` = '{$URIForSQL}' AND
+                `published` IS NOT NULL
+
+EOT;
+
+        $result = Colby::query($sql);
+
+        $row = $result->fetch_object();
+
+        $result->free();
+
+        return $row;
+    }
+
     ///
     ///
     ///
     public static function decodedStubs()
     {
         return self::$decodedStubs;
-    }
-
-    /**
-     * @return ColbyArchive | null
-     *
-     * If the $urlPath argument represents a page that can be rendered using
-     * a view and an archive, the archive will be returned.
-     */
-    public static function archiveForURI($uri)
-    {
-        $archive = null;
-
-        $uri = Colby::mysqli()->escape_string($uri);
-
-        $sql = <<<EOT
-SELECT
-    LOWER(HEX(`archiveId`)) AS `archiveId`
-FROM
-    `ColbyPages`
-WHERE
-    `URI` = '{$uri}' AND
-    `typeID` IS NOT NULL AND
-    `published` IS NOT NULL
-EOT;
-
-        $result = Colby::query($sql);
-
-        if ($result->num_rows != 1) // This will either be 1 or 0.
-        {
-            goto done;
-        }
-
-        $archiveId = $result->fetch_object()->archiveId;
-
-        $archive = ColbyArchive::open($archiveId);
-
-        done:
-
-        $result->free();
-
-        return $archive;
     }
 
     /**
@@ -224,52 +214,37 @@ EOT;
             if (!$handlerFilename && COLBY_MYSQL_DATABASE)
             {
                 $URI        = implode('/', self::$decodedStubs);
-                $URIForSQL  = ColbyConvert::textToSQL($URI);
+                $row        = self::CBPagesRowForURI($URI);
 
-                $sql = <<<EOT
-
-                    SELECT
-                        LOWER(HEX(`archiveID`)) as `dataStoreID`,
-                        LOWER(HEX(`typeID`)) as `typeID`,
-                        LOWER(HEX(`groupID`)) as `groupID`
-                    FROM
-                        `ColbyPages`
-                    WHERE
-                        `URI` = '{$URIForSQL}' AND
-                        `published` IS NOT NULL
-
-EOT;
-
-                $result = Colby::query($sql);
-
-                $row = $result->fetch_object();
-
-                $result->free();
-
-                if ($row &&
-                    CBPageTypeID == $row->typeID)
+                if ($row)
                 {
-                    $dataStoreID     = $row->dataStoreID;
-                    $handlerFilename = CBSystemDirectory . '/handlers/handle-sectioned-page.php';
-                }
-                else if ($row)
-                {
-                    /**
-                     * This is deprecated code that most likely duplicates some
-                     * of the code above but it doesn't matter. Remove it as
-                     * soon as possible.
-                     */
-
-                    self::$archive = self::archiveForURI($URI);
-
-                    if (self::$archive)
+                    if ($row->className)
                     {
-                        $documentGroupId    = self::$archive->valueForKey('documentGroupId');
-                        $documentTypeId     = self::$archive->valueForKey('documentTypeId');
+                        $className  = $row->className;
+                        $page       = $className::initWithID($row->dataStoreID);
 
-                        $handlerFilename    = Colby::findFileForDocumentType('view.php',
-                                                                             $documentGroupId,
-                                                                             $documentTypeId);
+                        $page->renderHTML();
+
+                        return;
+                    }
+                    else if (CBPageTypeID == $row->typeID)
+                    {
+                        $dataStoreID     = $row->dataStoreID;
+                        $handlerFilename = CBSystemDirectory . '/handlers/handle-sectioned-page.php';
+                    }
+                    else
+                    {
+                        self::$archive = ColbyArchive::open($row->dataStoreID);
+
+                        if (self::$archive)
+                        {
+                            $documentGroupId    = self::$archive->valueForKey('documentGroupId');
+                            $documentTypeId     = self::$archive->valueForKey('documentTypeId');
+
+                            $handlerFilename    = Colby::findFileForDocumentType('view.php',
+                                                                                 $documentGroupId,
+                                                                                 $documentTypeId);
+                        }
                     }
                 }
             }
