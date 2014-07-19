@@ -17,10 +17,12 @@ include CBSystemDirectory . '/sections/equalize.php';
 
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/admin.css');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,search.css');
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages,search.js');
 
 
 $selectedMenuItemID     = 'pages';
@@ -32,12 +34,7 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 <main>
 
-    <div style="text-align: center;">
-        <input type="text" id="queryText" class="big-field" style="width: 600px;">
-    </div>
-    <div style="text-align: center; margin: 30px 0px;">
-        <button onclick="CBPagesAdmin.searchForPages();">search</button>
-    </div>
+    <div id="CBPagesSearchFormView"></div>
 
     <table class="list-of-pages standard-admin-spacing standard-cell-ellipses">
         <thead><tr>
