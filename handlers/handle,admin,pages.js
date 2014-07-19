@@ -132,7 +132,8 @@ CBSearchResultsRow.make = function(match)
     actionsCell.appendChild(editButton);
 
     var moveToTrashButton           = document.createElement("button");
-    var moveToTrashHandler          = CBSearchResultsRow.moveToTrashHandlerForDataStoreID(match.dataStoreID);
+    var moveToTrashHandler          = CBPagesAdmin.movePageWithDataStoreIDToTrash.bind(null,
+                                                                                       match.dataStoreID);
     moveToTrashButton.textContent   = "Move to Trash";
     moveToTrashButton.addEventListener("click", moveToTrashHandler, false);
     actionsCell.appendChild(moveToTrashButton);
@@ -159,17 +160,4 @@ CBSearchResultsRow.make = function(match)
 
 
     return tr;
-};
-
-/**
- * @return function
- */
-CBSearchResultsRow.moveToTrashHandlerForDataStoreID = function(dataStoreID)
-{
-    var handler = function()
-    {
-        CBPagesAdmin.movePageWithDataStoreIDToTrash(dataStoreID);
-    };
-
-    return handler;
 };
