@@ -108,15 +108,9 @@ var CBSearchResultsRow = {};
 /**
  * @return function
  */
-CBSearchResultsRow.editHandlerForDataStoreID = function(dataStoreID)
+CBSearchResultsRow.editPageWithDataStoreID = function(dataStoreID)
 {
-    var href    = "/admin/pages/edit/?data-store-id=" + dataStoreID;
-    var handler = function()
-    {
-        location.href = href;
-    };
-
-    return handler;
+    location.href = "/admin/pages/edit/?data-store-id=" + dataStoreID;;
 };
 
 /**
@@ -132,7 +126,7 @@ CBSearchResultsRow.make = function(match)
     actionsCell.classList.add("actions-cell");
 
     var editButton          = document.createElement("button");
-    var editHandler         = CBSearchResultsRow.editHandlerForDataStoreID(match.dataStoreID);
+    var editHandler         = CBSearchResultsRow.editPageWithDataStoreID.bind(null, match.dataStoreID);
     editButton.textContent  = "Edit";
     editButton.addEventListener("click", editHandler, false);
     actionsCell.appendChild(editButton);
