@@ -19,11 +19,18 @@ var Colby =
  *
  * @return void
  */
-Colby.handleError = function(message, url, lineNumber)
+Colby.handleError = function(message, URL, lineNumber, columnNumber, error)
 {
-    console.log('message: ' + message + '\n' +
-          'url: ' + url + '\n' +
-          'line number: ' + lineNumber);
+    var formData = new FormData();
+    formData.append("message", message);
+    formData.append("URL", URL);
+    formData.append("lineNumber", lineNumber);
+
+    var XHR = new XMLHttpRequest();
+    XHR.open("POST", "/colby/javascript-error/", true);
+    XHR.send(formData);
+
+    return false;
 };
 
 /**
