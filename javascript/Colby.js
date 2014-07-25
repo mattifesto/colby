@@ -289,9 +289,25 @@ Colby.hidePanel = function()
  */
 Colby.random160 = function()
 {
-    var randomNumbers = new Uint16Array(10);
+    if (typeof Uint16Array !== undefined &&
+        window.crypto &&
+        window.crypto.getRandomValues)
+    {
+        var randomNumbers = new Uint16Array(10);
 
-    crypto.getRandomValues(randomNumbers);
+        crypto.getRandomValues(randomNumbers);
+    }
+    else
+    {
+        var randomNumbers = [];
+
+        for (var i = 0; i < 10; i++)
+        {
+            var uint16 = Math.floor(Math.random() * 0xffff);
+
+            randomNumbers.push(uint16);
+        }
+    }
 
     var random160 = "";
 
