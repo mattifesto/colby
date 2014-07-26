@@ -184,6 +184,29 @@ EOT;
             exit;
         }
 
+        /**
+         * 2014.07.25
+         * If a `robots.txt` file actually exists in the web root directory
+         * this code path will never be taken. Otherwise, default `robots.txt`
+         * implementations are provided which can be overridden by placing
+         * replacements in the main website's `setup` directory.
+         */
+        else if (1 === $countOfStubs &&
+                 'robots.txt' === self::$decodedStubs[0])
+        {
+            if (defined('CBShouldDisallowRobots') &&
+                CBShouldDisallowRobots)
+            {
+                readfile(Colby::findFile('setup/robots_disallow.txt'));
+            }
+            else
+            {
+                readfile(Colby::findFile('setup/robots_allow.txt'));
+            }
+
+            exit;
+        }
+
         // search for handler files
         // handler filenames use encoded stubs
         // (no spaces or special characters)
