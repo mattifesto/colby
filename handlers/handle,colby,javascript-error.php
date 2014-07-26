@@ -3,7 +3,8 @@
 $attributes = array();
 $attributes['User Agent']   = $_SERVER['HTTP_USER_AGENT'];
 $attributes['Message']      = $_POST['message'];
-$attributes['URL']          = $_POST['URL'];
+$attributes['pageURL']      = $_POST['pageURL'];
+$attributes['scriptURL']    = $_POST['scriptURL'];
 $attributes['Line Number']  = $_POST['lineNumber'];
 
 if (class_exists('Swift_SmtpTransport'))
