@@ -1,11 +1,17 @@
 <?php
 
 $attributes = array();
+
+if (isset($_POST['message']))
+{
+    $attributes['Message']      = $_POST['message'];
+    $attributes['Page URL']     = $_POST['pageURL'];
+    $attributes['Script URL']   = $_POST['scriptURL'];
+    $attributes['Line Number']  = $_POST['lineNumber'];
+}
+
 $attributes['User Agent']   = $_SERVER['HTTP_USER_AGENT'];
-$attributes['Message']      = $_POST['message'];
-$attributes['Page URL']     = $_POST['pageURL'];
-$attributes['Script URL']   = $_POST['scriptURL'];
-$attributes['Line Number']  = $_POST['lineNumber'];
+$attributes['IP Address']   = $_SERVER['REMOTE_ADDR'];
 
 if (class_exists('Swift_SmtpTransport'))
 {
