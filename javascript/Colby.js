@@ -24,7 +24,7 @@ Colby.handleError = function(message, scriptURL, lineNumber, columnNumber, error
     var formData = new FormData();
     formData.append("message",      message);
     formData.append("pageURL",      location.href);
-    formData.append("scriptURL",    scriptURL);
+    formData.append("scriptURL",    scriptURL ? scriptURL : "");
     formData.append("lineNumber",   lineNumber);
 
     var XHR = new XMLHttpRequest();
