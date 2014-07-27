@@ -29,6 +29,12 @@ if (isset($_POST['message']))
     $attributes[$key]           = $value;
     $hash                       = sha1("{$key}: {$value}");
     $hashes[$key]               = $hash;
+
+    $key                        = 'Script + Message';
+    $value                      = "{$hashes['Script URL']} + {$hashes['Message']}";
+    $attributes[$key]           = $value;
+    $hash                       = sha1("{$key}: {$value}");
+    $hashes[$key]               = $hash;
 }
 else
 {
