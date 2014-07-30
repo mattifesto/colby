@@ -1,7 +1,5 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBAjaxResponse.php';
-
 /**
  * This Ajax request is allowed to complete in two situations:
  *
