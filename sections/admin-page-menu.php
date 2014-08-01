@@ -1,65 +1,21 @@
 <?php
 
-include_once Colby::findFile('snippets/menu-items-admin.php');
-
-
-CBHTMLOutput::addCSSURL(CBSystemURL . '/sections/admin-page-menu.css');
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
-
-global $CBAdminMenu;
+/**
+ * Use of this file is deprecated. The caller should replace the include of
+ * this file with direct use of the CBAdminPageMenuView.
+ */
 
 if (!isset($selectedMenuItemID))
 {
     $selectedMenuItemID = null;
 }
 
-CBRenderMenu($CBAdminMenu, $selectedMenuItemID, 'CBMainMenu');
-
-if ($selectedMenuItemID &&
-    $CBAdminMenu->{$selectedMenuItemID}->submenu)
+if (!isset($selectedSubmenuItemID))
 {
-    if (!isset($selectedSubmenuItemID))
-    {
-        $selectedSubmenuItemID = null;
-    }
-
-    CBRenderMenu($CBAdminMenu->{$selectedMenuItemID}->submenu, $selectedSubmenuItemID, 'CBSubMenu');
+    $selectedSubmenuItemID = null;
 }
 
-/**
- * @return void
- */
-function CBRenderMenu($menu, $selectedItemID, $class)
-{
-    ?>
-
-    <nav class="CBMenu <?php echo $class; ?>">
-        <ul><!--
-
-            <?php
-
-            foreach ($menu as $itemID => $item)
-            {
-                $classAttribute = '';
-
-                if ($selectedItemID == $itemID)
-                {
-                    $classAttribute = ' class="CBSelected"';
-                }
-
-                echo <<<EOT
-
-                --><li{$classAttribute}>
-                    <a href="{$item->URI}">{$item->nameHTML}</a>
-                </li><!--
-
-EOT;
-            }
-
-            ?>
-
-        --></ul>
-    </nav>
-
-    <?php
-}
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName($selectedMenuItemID);
+$menu->setSelectedSubmenuItemName($selectedSubmenuItemID);
+$menu->renderHTML();
