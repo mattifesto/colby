@@ -1,8 +1,6 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/ColbyDocument.php';
 include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
@@ -15,18 +13,14 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Documents');
 CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
 
-include CBSystemDirectory . '/sections/equalize.php';
+include CBSystemDirectory . '/sections/admin-page-settings.php';
 
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,documents.js');
 
-
-$selectedMenuItemID     = 'develop';
-$selectedSubmenuItemID  = 'documents';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
-
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('develop');
+$menu->setSelectedSubmenuItemName('documents');
+$menu->renderHTML();
 
 $document = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
 
@@ -82,5 +76,3 @@ $archive = $document->archive();
 include CBSystemDirectory . '/sections/admin-page-footer-2.php';
 
 CBHTMLOutput::render();
-
-/* ---------------------------------------------------------------- */
