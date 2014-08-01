@@ -40,6 +40,7 @@ $menu->renderHTML();
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer-2.php';
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
 CBHTMLOutput::render();
