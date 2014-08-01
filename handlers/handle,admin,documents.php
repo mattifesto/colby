@@ -20,9 +20,8 @@ $menu->setSelectedMenuItemName('develop');
 $menu->setSelectedSubmenuItemName('documents');
 $menu->renderHTML();
 
-$document = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
-
-$archive = $document->archive();
+$document   = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
+$archive    = $document->archive();
 
 ?>
 

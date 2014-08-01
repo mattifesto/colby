@@ -61,10 +61,10 @@ ColbyReportArchiveDeleter.ajaxRequestCompleted = function(xhr)
     }
     else
     {
-        var progressElement = document.getElementById('progress');
-
-        progressElement.value = 0;
-
+        var progressElement                 = document.getElementById('progress');
+        progressElement.value               = 0;
         ColbyReportArchiveDeleter.isRunning = false;
+
+        Colby.displayResponse(response);
     }
 };

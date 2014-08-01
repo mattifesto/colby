@@ -1,28 +1,29 @@
 <?php
 
-include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyDocument.php';
-include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
-
-$page = new ColbyOutputManager('admin-html-page');
-
-$page->titleHTML = 'Stray Archive Report';
-$page->descriptionHTML = 'View a stray archive report.';
-
-$page->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-$reportId = $_GET['report-id'];
+include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
 
-$archive = ColbyArchive::open(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Stray Archive Report');
+CBHTMLOutput::setDescriptionHTML('View a stray archive report.');
 
-$reports = $archive->valueForKey('reports');
-$report = null;
+include CBSystemDirectory . '/sections/admin-page-settings.php';
+
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,documents,stray-archives,reports,view.js');
+
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('develop');
+$menu->setSelectedSubmenuItemName('documents');
+$menu->renderHTML();
+
+$reportId   = $_GET['report-id'];
+$archive    = ColbyArchive::open(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
+$reports    = $archive->valueForKey('reports');
+$report     = null;
 
 if ($reports && isset($reports->items->{$reportId}))
 {
@@ -122,11 +123,10 @@ else
 
 <input type="hidden" id="report-id" value="<?php echo $reportId; ?>">
 
-<script src="<?php echo COLBY_SYSTEM_URL; ?>/handlers/handle,admin,documents,stray-archives,reports,view.js"></script>
-
 <?php
 
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
-$page->end();
+CBHTMLOutput::render();
 
