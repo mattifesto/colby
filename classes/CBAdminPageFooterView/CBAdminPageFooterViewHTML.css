@@ -1,0 +1,30 @@
+body
+{
+    padding-bottom: 50px;
+}
+
+.CBAdminPageFooterView
+{
+    border-top:     1px solid #efefef;
+    bottom:         0px;
+    color:          #9f9f9f;
+    font-family:    "Source Sans Pro";
+    font-size:      14px;
+    font-weight:    400;
+    height:         25px;
+    padding-top:    5px;
+    position:       absolute;
+    width:          100%;
+}
+
+.CBAdminPageFooterView ul
+{
+    padding:    0px;
+    text-align: center;
+}
+
+.CBAdminPageFooterView ul li
+{
+    display:    inline;
+    margin:     0px 20px;
+}
