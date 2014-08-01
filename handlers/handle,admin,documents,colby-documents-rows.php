@@ -1,30 +1,34 @@
 <?php
 
-include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
-
-$page = new ColbyOutputManager('admin-html-page');
-
-$page->titleHTML = 'ColbyPages Table Rows';
-$page->descriptionHTML = 'Pages that are in the ColbyPages table.';
-
-$page->begin();
-
-if (!ColbyUser::current()->isOneOfThe('Developers'))
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
+include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
+
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('ColbyPages Table Rows');
+CBHTMLOutput::setDescriptionHTML('Pages that are in the ColbyPages table.');
+
+include CBSystemDirectory . '/sections/admin-page-settings.php';
+
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('develop');
+$menu->setSelectedSubmenuItemName('documents');
+$menu->renderHTML();
+
 $sql = <<<EOT
-SELECT
-    LOWER(HEX(`groupID`)) as `groupId`,
-    LOWER(HEX(`typeID`)) as `typeId`,
-    LOWER(HEX(`archiveID`)) as `archiveId`
-FROM
-    `ColbyPages`
-ORDER BY
-    `groupID`, `typeID`
+
+    SELECT
+        LOWER(HEX(`groupID`)) as `groupId`,
+        LOWER(HEX(`typeID`)) as `typeId`,
+        LOWER(HEX(`archiveID`)) as `archiveId`
+    FROM
+        `ColbyPages`
+    ORDER BY
+        `groupID`, `typeID`
+
 EOT;
 
 $result = Colby::query($sql);
@@ -208,7 +212,7 @@ $result->free();
 
 <?php
 
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
-$page->end();
-
+CBHTMLOutput::render();

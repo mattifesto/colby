@@ -1,13 +1,11 @@
 <?php
 
-include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
-
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
+include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
 
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Documents');
