@@ -2,6 +2,9 @@
 
 var ColbyArchivesExplorer = {};
 
+/**
+ * @return void
+ */
 ColbyArchivesExplorer.regenerateDocument = function()
 {
     if (ColbyArchivesExplorer.documentIsRegenerating)
@@ -19,6 +22,9 @@ ColbyArchivesExplorer.regenerateDocument = function()
     ColbyArchivesExplorer.regeneratePart();
 };
 
+/**
+ * @return void
+ */
 ColbyArchivesExplorer.regeneratePart = function()
 {
     var xhr = new XMLHttpRequest();
@@ -36,6 +42,9 @@ ColbyArchivesExplorer.regeneratePart = function()
     xhr.send(formData);
 };
 
+/**
+ * @return void
+ */
 ColbyArchivesExplorer.regeneratePartCompleted = function(xhr)
 {
     ColbyArchivesExplorer.partIndex++;
@@ -61,6 +70,7 @@ ColbyArchivesExplorer.regeneratePartCompleted = function(xhr)
     }
     else
     {
+        progressElement.value = 0;
         ColbyArchivesExplorer.documentIsRegenerating = false;
     }
 };
