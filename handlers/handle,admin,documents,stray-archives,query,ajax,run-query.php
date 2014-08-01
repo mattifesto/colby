@@ -1,17 +1,13 @@
 <?php
 
-include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyDocument.php';
-include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
-
-$response = new ColbyOutputManager('ajax-response');
-$response->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    $response->message = 'You do not have authorization to perform this action.';
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
+
+include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
+
+$response = new CBAjaxResponse();
 
 global $data;
 
@@ -66,9 +62,7 @@ $document->save();
 $response->wasSuccessful = true;
 $response->message = "Ran query for part {$partIndex}.";
 
-done:
-
-$response->end();
+$response->send();
 
 /* ---------------------------------------------------------------- */
 
