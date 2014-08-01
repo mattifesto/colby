@@ -1,27 +1,22 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
-
-CBHTMLOutput::setTitleHTML('Performance: MySQL vs ColbyArchive');
-CBHTMLOutput::setDescriptionHTML('Test the relative performance of MySQL vs ColbyArchive.');
-CBHTMLOutput::begin();
-
-
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
+if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Performance: MySQL vs ColbyArchive');
+CBHTMLOutput::setDescriptionHTML('Test the relative performance of MySQL vs ColbyArchive.');
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+include CBSystemDirectory . '/sections/admin-page-settings.php';
 
-$selectedMenuItemID     = 'test';
-$selectedSubmenuItemID  = 'performance-tests';
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,developer,performance-tests,mysql-vs-colbyarchive.js');
 
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('test');
+$menu->setSelectedSubmenuItemName('performance-tests');
+$menu->renderHTML();
 
 ?>
 
@@ -43,13 +38,9 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
     </fieldset>
 </main>
 
-<script src="<?php echo Colby::findHandler('handle,developer,performance-tests,mysql-vs-colbyarchive.js',
-                                           Colby::returnURL); ?>"></script>
-
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer.php';
-
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
 CBHTMLOutput::render();

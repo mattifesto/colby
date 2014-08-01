@@ -1,6 +1,6 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
+if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }

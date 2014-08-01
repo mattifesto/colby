@@ -1,32 +1,29 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
-
-CBHTMLOutput::setTitleHTML('MySQL Backup');
-CBHTMLOutput::setDescriptionHTML('Backup the MySQL database.');
-CBHTMLOutput::begin();
-
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
+include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
 
-include CBSystemDirectory . '/sections/admin-page-header.php';
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('MySQL Backup');
+CBHTMLOutput::setDescriptionHTML('Backup the MySQL database.');
 
-$selectedMenuItemID     = 'develop';
-$selectedSubmenuItemID  = 'mysql';
+include CBSystemDirectory . '/sections/admin-page-settings.php';
 
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,developer,mysql.js');
+
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('develop');
+$menu->setSelectedSubmenuItemName('mysql');
+$menu->renderHTML();
 
 ?>
 
 <main>
-    <h1>MySQL</h1>
+    <h1 style="text-align: center;">MySQL</h1>
 
     <div style="margin: 50px 0px; text-align: center;">
         <progress id="backup-database-progress"
@@ -39,12 +36,9 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
     </div>
 </main>
 
-<script src="<?php echo Colby::findHandler('handle,developer,mysql.js', Colby::returnURL); ?>"></script>
-
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer.php';
-
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
 CBHTMLOutput::render();

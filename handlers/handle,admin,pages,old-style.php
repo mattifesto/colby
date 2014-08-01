@@ -1,29 +1,23 @@
 <?php
 
-
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
+if (!ColbyUser::current()->isOneOfThe('Administrators'))
+{
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
+}
 
 CBHTMLOutput::setTitleHTML('Page Administration');
 CBHTMLOutput::setDescriptionHTML('Create, edit, and delete pages.');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
 CBHTMLOutput::begin();
 
+include CBSystemDirectory . '/sections/admin-page-settings.php';
 
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
-{
-    include Colby::findSnippet('authenticate.php');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,old-style.css');
 
-    goto done;
-}
-
-
-include CBSystemDirectory . '/sections/admin-page-header.php';
-
-$selectedMenuItemID     = 'pages';
-$selectedSubmenuItemID  = 'old-style';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('pages');
+$menu->setSelectedSubmenuItemName('old-style');
+$menu->renderHTML();
 
 ?>
 
@@ -155,9 +149,8 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer.php';
-
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
 CBHTMLOutput::render();
 
