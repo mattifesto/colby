@@ -1,25 +1,27 @@
 <?php
 
-include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyDocument.php';
-include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
-
-$page = new ColbyOutputManager('admin-html-page');
-
-$page->titleHTML = 'Stray Documents';
-$page->descriptionHTML = 'List, view, delete, and manage archives.';
-
-$page->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-$document = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
+include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
 
-$archive = $document->archive();
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,documents.js');
+
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Stray Documents');
+CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
+
+include CBSystemDirectory . '/sections/admin-page-settings.php';
+
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('develop');
+$menu->setSelectedSubmenuItemName('documents');
+$menu->renderHTML();
+
+$document   = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
+$archive    = $document->archive();
 
 ?>
 
@@ -58,12 +60,11 @@ $archive = $document->archive();
 
 </main>
 
-<script src="<?php echo COLBY_SYSTEM_URL . '/handlers/handle,admin,documents.js'; ?>"></script>
-
 <?php
 
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
-$page->end();
+CBHTMLOutput::render();
 
 /* ---------------------------------------------------------------- */
