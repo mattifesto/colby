@@ -1,27 +1,27 @@
 <?php
 
-include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
-
-$page = new ColbyOutputManager('admin-html-page');
-
-$page->titleHTML = 'Archive Details';
-$page->descriptionHTML = 'View the contents of an archive.';
-
-$page->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-$archiveId = $_GET['archive-id'];
+include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
 
-$absoluteArchiveFilename = ColbyArchive::absoluteDataDirectoryForArchiveId($archiveId) .
-                           "/archive.data";
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Archive Details');
+CBHTMLOutput::setDescriptionHTML('View the contents of an archive.');
 
-$root = null;
+include CBSystemDirectory . '/sections/admin-page-settings.php';
+
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('develop');
+$menu->setSelectedSubmenuItemName('documents');
+$menu->renderHTML();
+
+$archiveId                  = $_GET['archive-id'];
+$absoluteArchiveFilename    = ColbyArchive::absoluteDataDirectoryForArchiveId($archiveId) .
+                              '/archive.data';
+$root                       = null;
 
 if (is_file($absoluteArchiveFilename))
 {
@@ -119,9 +119,10 @@ $archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
 
 <?php
 
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
-$page->end();
+CBHTMLOutput::render();
 
 /* ---------------------------------------------------------------- */
 
