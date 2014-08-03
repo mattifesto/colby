@@ -2,12 +2,12 @@
 
 $archive = ColbyRequest::$archive;
 
-$page = new ColbyOutputManager();
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML($archive->valueForKey('titleHTML'));
+CBHTMLOutput::setDescriptionHTML($archive->valueForKey('subtitleHTML'));
 
-$page->titleHTML = $archive->valueForKey('titleHTML');
-$page->descriptionHTML = $archive->valueForKey('subtitleHTML');
-
-$page->begin();
+include Colby::findFile('sections/public-page-settings.php');
+include Colby::findFile('sections/standard-page-header.php');
 
 ?>
 
@@ -61,6 +61,6 @@ $page->begin();
 
 <?php
 
-done:
+include Colby::findFile('sections/standard-page-footer.php');
 
-$page->end();
+CBHTMLOutput::render();

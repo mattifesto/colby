@@ -2,21 +2,15 @@
 
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    include Colby::findHandler('handle-authorization-failed-ajax.php');
-
-    exit;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
-
-include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyDocument.php';
 
 Colby::useImage();
 
-$response = new ColbyOutputManager('ajax-response');
+$response = new CBAjaxResponse();
 
-$response->begin();
-
-$document = ColbyDocument::documentWithArchiveId($_POST['archive-id']);
-$archive = $document->archive();
+$document   = ColbyDocument::documentWithArchiveId($_POST['archive-id']);
+$archive    = $document->archive();
 
 
 /**
@@ -208,6 +202,4 @@ $document->save();
 $response->wasSuccessful = true;
 $response->message = 'Page successfully updated.';
 
-done:
-
-$response->end();
+$response->send();

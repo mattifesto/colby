@@ -1,11 +1,13 @@
 <?php // View COLBY_BLOG_POSTS_DOCUMENT_GROUP_ID -> COLBY_BLOG_POST_DOCUMENT_TYPE_ID
 
-$page = new ColbyOutputManager();
-
 $archive = ColbyRequest::$archive;
 
-$page->titleHTML = $archive->valueForKey('titleHTML');
-$page->descriptionHTML = $archive->valueForKey('subtitleHTML');
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML($archive->valueForKey('titleHTML'));
+CBHTMLOutput::setDescriptionHTML($archive->valueForKey('subtitleHTML'));
+
+include Colby::findFile('sections/public-page-settings.php');
+include Colby::findFile('sections/standard-page-header.php');
 
 if ($archive->valueForKey('isPublished'))
 {
@@ -21,8 +23,6 @@ else
     $publishedDateTimeAttribute = '';
     $publishedTextContent = 'not published';
 }
-
-$page->begin();
 
 ?>
 
@@ -82,6 +82,6 @@ $page->begin();
 
 <?php
 
-done:
+include Colby::findFile('sections/standard-page-footer.php');
 
-$page->end();
+CBHTMLOutput::render();
