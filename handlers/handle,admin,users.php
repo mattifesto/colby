@@ -1,30 +1,25 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Permissions');
 CBHTMLOutput::setDescriptionHTML('Manage user permissions.');
 
-include CBSystemDirectory . '/sections/equalize.php';
+include CBSystemDirectory . '/sections/admin-page-settings.php';
+
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,users.js');
 
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
 
-
-$selectedMenuItemID     = 'general';
-$selectedSubmenuItemID  = 'permissions';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
-
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,users.js');
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('general');
+$menu->setSelectedSubmenuItemName('permissions');
+$menu->renderHTML();
 
 /**
  *
@@ -223,7 +218,8 @@ EOT;
 
 $result->free();
 
-include CBSystemDirectory . '/sections/admin-page-footer-2.php';
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
 CBHTMLOutput::render();
 

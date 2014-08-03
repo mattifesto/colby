@@ -1,17 +1,11 @@
 <?php
 
-header('Content-type: application/json');
-
-$response = new ColbyOutputManager('ajax-response');
-
-$response->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    $response->message = 'You are not authorized to use this feature.';
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
+
+$response = new CBAjaxResponse();
 
 $userId = (int)$_POST['userId'];
 $groupName = $_POST['groupName'];
@@ -22,15 +16,17 @@ $tableName = "ColbyUsersWhoAre{$groupName}";
 if ($shouldBeInGroup)
 {
     $sql = <<<EOT
-INSERT INTO
-    `{$tableName}`
-VALUES
-(
-    {$userId},
-    NOW()
-)
-ON DUPLICATE KEY UPDATE
-    `added` = `added`
+
+        INSERT INTO
+            `{$tableName}`
+        VALUES
+        (
+            {$userId},
+            NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+            `added` = `added`
+
 EOT;
 
     Colby::query($sql);
@@ -38,10 +34,12 @@ EOT;
 else
 {
     $sql = <<<EOT
-DELETE FROM
-    `{$tableName}`
-WHERE
-    `userId` = {$userId}
+
+        DELETE FROM
+            `{$tableName}`
+        WHERE
+            `userId` = {$userId}
+
 EOT;
 
     Colby::query($sql);
@@ -54,6 +52,4 @@ EOT;
 $response->wasSuccessful = true;
 $response->message = "The site was successfully updated.";
 
-done:
-
-$response->end();
+$response->send();

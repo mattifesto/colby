@@ -1,15 +1,11 @@
 <?php
 
-$response = new ColbyOutputManager('ajax-response');
-
-$response->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    $response->message = 'You are not authorized to use this feature.';
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
+
+$response = new CBAjaxResponse();
 
 /**
  * Ensure that the 'backup-files' directory exists
@@ -51,6 +47,4 @@ exec($command);
 $response->wasSuccessful = true;
 $response->message = "The database was dumped to the file named: \"{$intraSiteFilename}\".";
 
-done:
-
-$response->end();
+$response->send();

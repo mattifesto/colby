@@ -1,27 +1,33 @@
 <?php
 
-// This is where the search query is processed and made available for any
-// other included file (such as the header) to use.
+/**
+ * 2014.08.03
+ * This file is deprecated. It remains to provide a template for a search page,
+ * but this page would only coincidentally be usable on an actual site. This
+ * file's presence also prevents sites from not having a search page at this
+ * URL. It's not my goal it this moment to remove this file, but its goals
+ * should be determined, alternative solutions should be put in place to
+ * accomplish those goals, and then the file should be removed.
+ */
 
 global $searchQueryHTML;
 
-$searchQuery = isset($_GET['search-for']) ? $_GET['search-for'] : '';
-$searchQueryHTML = ColbyConvert::textToHTML($searchQuery);
-$formClass = empty($searchQuery) ? 'class="search-page no-query"' : 'class="search-page has-query"';
-
-$titleHTML = 'Search';
+$searchQuery        = isset($_GET['search-for']) ? $_GET['search-for'] : '';
+$searchQueryHTML    = ColbyConvert::textToHTML($searchQuery);
+$formClass          = empty($searchQuery) ? 'class="search-page no-query"' : 'class="search-page has-query"';
+$titleHTML          = 'Search';
 
 if ($searchQueryHTML)
 {
     $titleHTML = "{$titleHTML}: {$searchQueryHTML}";
 }
 
-$page = new ColbyOutputManager();
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML($titleHTML);
+CBHTMLOutput::setDescriptionHTML('Search for site content.');
 
-$page->titleHTML = $titleHTML;
-$page->descriptionHTML = 'Search for site content.';
-
-$page->begin();
+include Colby::findFile('sections/public-page-settings.php');
+include Colby::findFile('sections/standard-page-header.php');
 
 ?>
 
@@ -197,4 +203,6 @@ END;
 
 done:
 
-$page->end();
+include Colby::findFile('sections/standard-page-footer.php');
+
+CBHTMLOutput::render();
