@@ -1,6 +1,5 @@
 <?php
 
-
 $attributes = array();
 $hashes     = array();
 

@@ -33,22 +33,6 @@ class Colby
     public static $libraryDirectories = array();
 
     /**
-     * `uniqueHashCounter` is a number that is incremented each time a unique
-     * hash is requested and also used to create the hash and helps guarantee
-     * uniqueness.
-     */
-
-    private static $uniqueHashCounter = 0;
-
-    /**
-     * This autoloader must be the last autoloader because if it does not
-     * find a class it throws an exception. This is necessary because if it
-     * does not throw an exception a fatal error occurs which can't be handled
-     * by Colby and the error goes unnoticed and the visitor gets a blank page.
-     *
-     * Other autoloaders should pass a `true` value for the `$prepend` argument
-     * when calling the `spl_autoload_register` function.
-     *
      * @return void
      */
     public static function autoload($className)
@@ -68,7 +52,7 @@ class Colby
         }
         else
         {
-            throw new RuntimeException("The class '{$className}' can't be autoloaded.");
+            return false;
         }
     }
 
@@ -379,7 +363,9 @@ class Colby
      */
     public static function handleError($errno, $errstr, $errfile, $errline)
     {
-        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        $severity = 2;
+
+        throw new ErrorException($errstr, $errno, $severity, $errfile, $errline);
     }
 
     /**
@@ -457,6 +443,34 @@ class Colby
     }
 
     /**
+     * This function exists to catch and report fatal errors which are not
+     * sent through the traditional PHP error handler.
+     *
+     * Errors that are handled by the traditional PHP error handler will not be
+     * returned by the `error_get_last` function below so we won't accidentally
+     * over-report non-fatal errors.
+     *
+     * @return void
+     */
+    public static function handleShutdown()
+    {
+        $error = error_get_last();
+
+        if ($error)
+        {
+            $severity   = 1;
+            $message    = 'Fatal Error: ' . $error['message'];
+            $number     = $error['type'];
+            $filename   = $error['file'];
+            $line       = $error['line'];
+
+            $exception  = new ErrorException($message, $number, $severity, $filename, $line);
+
+            self::reportException($exception);
+        }
+    }
+
+    /**
      * This function should be called only once and is called by the system.
      */
     public static function initialize()
@@ -524,6 +538,7 @@ class Colby
 
         set_error_handler('Colby::handleError');
         set_exception_handler('Colby::handleException');
+        register_shutdown_function('Colby::handleShutdown');
 
         /**
          * Include the local configuration file. This file is not checked in
