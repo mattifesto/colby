@@ -375,7 +375,7 @@ class Colby
      * that, it can either simply call this function or even rethrow the
      * exception since this is the default exception handler.
      *
-     * This process is automated by the `ColbyOutputManager` class, which
+     * This process is automated by the `CBHTMLOutput` class, which
      * most handlers use, although use of the class is not strictly necessary.
      *
      * This function assumes there is no output buffer active and that no
