@@ -5,14 +5,10 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-
-$documentTypeFilename = Colby::findFileForDocumentType('document-type.data',
-                                                       COLBY_PAGES_DOCUMENT_GROUP_ID,
-                                                       COLBY_PAGE_DOCUMENT_TYPE_ID);
-
-$documentTypeData = unserialize(file_get_contents($documentTypeFilename));
-
-$page = new ColbyOutputManager('admin-html-page');
+$documentTypeFilename   = Colby::findFileForDocumentType('document-type.data',
+                                                         COLBY_PAGES_DOCUMENT_GROUP_ID,
+                                                         COLBY_PAGE_DOCUMENT_TYPE_ID);
+$documentTypeData       = unserialize(file_get_contents($documentTypeFilename));
 
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML($documentTypeData->nameHTML);
