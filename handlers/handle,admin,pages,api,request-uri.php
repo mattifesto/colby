@@ -1,24 +1,11 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBPages.php';
-
-
-$response = new ColbyOutputManager('ajax-response');
-
-$response->begin();
-
-
-/**
- *
- */
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    $response->message = 'You are not authorized to use this feature.';
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
 
+$response = new CBAjaxResponse();
 
 /**
  *
@@ -42,6 +29,4 @@ $response->URIWasGranted = CBPages::tryUpdateRowURI($rowID, $requestedURI);
 $response->URI              = $requestedURI;
 $response->wasSuccessful    = true;
 
-done:
-
-$response->end();
+$response->send();

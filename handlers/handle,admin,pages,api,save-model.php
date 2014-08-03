@@ -1,20 +1,13 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBDataStore.php';
-include_once CBSystemDirectory . '/classes/CBPages.php';
-include_once Colby::findFile('page-renderer-configuration.php');
-
-
-$response = new ColbyOutputManager('ajax-response');
-
-$response->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    $response->message = 'You are not authorized to use this feature.';
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
+
+$response = new CBAjaxResponse();
+
+include_once Colby::findFile('page-renderer-configuration.php');
 
 /**
  *
@@ -68,9 +61,7 @@ file_put_contents("{$dataStoreDirectory}/model.json", $modelJSON, LOCK_EX);
 
 $response->wasSuccessful = true;
 
-done:
-
-$response->end();
+$response->send();
 
 
 /**

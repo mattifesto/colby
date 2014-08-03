@@ -1,21 +1,11 @@
 <?php
 
-$response = new ColbyOutputManager('ajax-response');
-
-$response->begin();
-
-
-/**
- *
- */
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
-    $response->message = 'You are not authorized to use this feature.';
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
 
+$response = new CBAjaxResponse();
 
 /**
  *
@@ -31,6 +21,4 @@ $response->contentHTML          = ColbyConvert::markaroundToHTML($response->cont
 
 $response->wasSuccessful = true;
 
-done:
-
-$response->end();
+$response->send();
