@@ -1,16 +1,12 @@
 <?php
 
-$response = new ColbyOutputManager('ajax-response');
-$response->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    $response->message = 'You do not have authorization to perform this action.';
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
 
-$sqls = array();
+$response   = new CBAjaxResponse();
+$sqls       = array();
 
 /**
  * Remove the test table. It should only exist if a previous test attempt
@@ -54,6 +50,4 @@ while ($i < $countOfArchives)
 $response->wasSuccessful = true;
 $response->message = 'Test environment cleaned up.';
 
-done:
-
-$response->end();
+$response->send();

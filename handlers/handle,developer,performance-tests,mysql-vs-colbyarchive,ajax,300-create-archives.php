@@ -1,20 +1,14 @@
 <?php
 
-$response = new ColbyOutputManager('ajax-response');
-$response->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    $response->message = 'You do not have authorization to perform this action.';
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
 
+$response       = new CBAjaxResponse();
 $countOfRecords = 1000;
-
-$beginTime = microtime(true);
-
-$i = 0;
+$beginTime      = microtime(true);
+$i              = 0;
 
 while ($i < $countOfRecords)
 {
@@ -60,6 +54,4 @@ $duration = number_format(microtime(true) - $beginTime, 6);
 $response->wasSuccessful = true;
 $response->message = "Created {$countOfRecords} archives. Test duration: {$duration} seconds.";
 
-done:
-
-$response->end();
+$response->send();
