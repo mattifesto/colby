@@ -555,7 +555,7 @@ class Colby
          * code block can be removed after the transition is complete.
          */
 
-        if (!defined('CBSiteURL')
+        if (!defined('CBSiteURL'))
         {
             define('CBSiteURL', COLBY_SITE_URL);
         }
