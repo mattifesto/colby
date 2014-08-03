@@ -1,8 +1,16 @@
 <?php
 
+/**
+ * 2014.08.02
+ * This file is loaded almost immediately by `Colby.php`. Assume no other
+ * constants are available. Many of the constants and concepts in this file
+ * have been deprecated. When their transition is complete consider removing
+ * this file and moving what remains directly into the `Colby::initialize`
+ * function.
+ */
+
 define('CBSystemDirectory',             __DIR__);
 define('CBSiteDirectory',               $_SERVER['DOCUMENT_ROOT']);
-
 
 /**
  * Colby will most likely support web pages of multiple types forever, however

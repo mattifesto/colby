@@ -543,10 +543,33 @@ class Colby
         /**
          * Include the local configuration file. This file is not checked in
          * and therefore is not shared between different versions of the site.
-         * The COLBY_SITE_URL constant is set in this file.
+         * The CBSiteURL constant is set in this file.
          */
 
         include_once COLBY_SITE_DIRECTORY . '/colby-configuration.php';
+
+        /**
+         * The `COLBY_SITE_URL` constant was deprecated in favor of `CBSiteURL`.
+         * During the transition, the site's `colby-configuration.php` file may
+         * have set either or both. This code ensures that both are set. This
+         * code block can be removed after the transition is complete.
+         */
+
+        if (!defined('CBSiteURL')
+        {
+            define('CBSiteURL', COLBY_SITE_URL);
+        }
+        else if (!defined('COLBY_SITE_URL'))
+        {
+            define('COLBY_SITE_URL', CBSystemURL);
+        }
+
+        /**
+         * Set the CBSystemURL constant.
+         */
+
+        define('CBSystemURL', CBSiteURL . "/{$colbySystemLibraryDirectory}");
+        define('COLBY_SYSTEM_URL', CBSystemURL); // deprecated
 
         /**
          * The `colby-configuration.php` file will indicate whether the Swift
@@ -577,13 +600,6 @@ class Colby
          */
 
         spl_autoload_register('Colby::autoload');
-
-        /**
-         * Define COLBY_SYSTEM_URL.
-         */
-
-        define('CBSystemURL', COLBY_SITE_URL . "/{$colbySystemLibraryDirectory}");
-        define('COLBY_SYSTEM_URL', CBSystemURL); // deprecated
 
         /**
          * Ensure that any required constants have been set.
