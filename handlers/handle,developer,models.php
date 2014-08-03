@@ -1,18 +1,20 @@
 <?php
 
-$page = new ColbyOutputManager('admin-html-page');
-
-$page->titleHTML = 'Document Types';
-$page->descriptionHTML = 'Developer tools for creating and editing document types.';
-
-$page->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
+
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Document Types');
+CBHTMLOutput::setDescriptionHTML('Developer tools for creating and editing document types.');
+
+include CBSystemDirectory . '/sections/admin-page-settings.php';
+
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('develop');
+$menu->setSelectedSubmenuItemName('types');
+$menu->renderHTML();
 
 $documentGroups = Colby::findDocumentGroups();
 
@@ -144,6 +146,7 @@ $documentGroups = Colby::findDocumentGroups();
 
 <?php
 
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
-$page->end();
+CBHTMLOutput::render();

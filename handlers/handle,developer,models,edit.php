@@ -1,18 +1,22 @@
 <?php
 
-$page = new ColbyOutputManager('admin-html-page');
-
-$page->titleHTML = 'Document Type Properties Editor';
-$page->descriptionHTML = 'Edit the properties of a document type.';
-
-$page->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
+
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Document Type Properties Editor');
+CBHTMLOutput::setDescriptionHTML('Edit the properties of a document type.');
+
+include CBSystemDirectory . '/sections/admin-page-settings.php';
+
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbyFormManager.js');
+
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('develop');
+$menu->setSelectedSubmenuItemName('types');
+$menu->renderHTML();
 
 $location = $_GET['location'];
 $documentGroupId = $_GET['document-group-id'];
@@ -109,6 +113,7 @@ document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
 
 <?php
 
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
-$page->end();
+CBHTMLOutput::render();

@@ -1,15 +1,11 @@
 <?php
 
-$response = new ColbyOutputManager('ajax-response');
-
-$response->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    $response->message = 'You are not authorized to use this feature.';
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
+
+$response = new CBAjaxResponse();
 
 /**
  * Make sure the destination directory is available
@@ -76,6 +72,4 @@ file_put_contents($documentGroupDataFilename, serialize($data));
 $response->wasSuccessful = true;
 $response->message = 'The group was successfully updated.';
 
-done:
-
-$response->end();
+$response->send();

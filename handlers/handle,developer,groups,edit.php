@@ -1,18 +1,22 @@
 <?php
 
-$page = new ColbyOutputManager('admin-html-page');
-
-$page->titleHTML = 'Group Editor';
-$page->descriptionHTML = 'Edit the attributes of a group.';
-
-$page->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
+
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Group Editor');
+CBHTMLOutput::setDescriptionHTML('Edit the attributes of a group.');
+
+include CBSystemDirectory . '/sections/admin-page-settings.php';
+
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbyFormManager.js');
+
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('develop');
+$menu->setSelectedSubmenuItemName('groups');
+$menu->renderHTML();
 
 $location = $_GET['location'];
 
@@ -104,6 +108,7 @@ document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
 
 <?php
 
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
-$page->end();
+CBHTMLOutput::render();

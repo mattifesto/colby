@@ -1,18 +1,20 @@
 <?php
 
-$page = new ColbyOutputManager('admin-html-page');
-
-$page->titleHTML = 'Document Groups';
-$page->descriptionHTML = 'Developer tools for creating and editing document groups.';
-
-$page->begin();
-
 if (!ColbyUser::current()->isOneOfThe('Developers'))
 {
-    include Colby::findSnippet('authenticate.php');
-
-    goto done;
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
+
+CBHTMLOutput::begin();
+CBHTMLOutput::setTitleHTML('Document Groups');
+CBHTMLOutput::setDescriptionHTML('Developer tools for creating and editing document groups.');
+
+include CBSystemDirectory . '/sections/admin-page-settings.php';
+
+$menu = CBAdminPageMenuView::init();
+$menu->setSelectedMenuItemName('develop');
+$menu->setSelectedSubmenuItemName('groups');
+$menu->renderHTML();
 
 $documentGroups = Colby::findDocumentGroups();
 
@@ -105,6 +107,7 @@ $documentGroups = Colby::findDocumentGroups();
 
 <?php
 
-done:
+$footer = CBAdminPageFooterView::init();
+$footer->renderHTML();
 
-$page->end();
+CBHTMLOutput::render();
