@@ -44,6 +44,17 @@ curl_setopt($curlHandle, CURLOPT_URL, $accessTokenURL);
 curl_setopt($curlHandle, CURLOPT_HEADER, 0);
 curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
 
+/**
+ * 2014.08.03
+ * Sometimes Facebook responds very slowly to these requests. It's not the
+ * web, direct requests from the server are also slow. There's a theory that
+ * it has something to do with "round robin DNS", but I never figured that out.
+ * However, setting this time out for some reason makes it respond faster.
+ * There should be a time out regardless, but I just wanted to document the
+ * importance of this.
+ */
+curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 5);
+
 $response = curl_exec($curlHandle);
 
 if (curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) === 400)
@@ -79,6 +90,17 @@ $curlHandle = curl_init();
 curl_setopt($curlHandle, CURLOPT_URL, $userPropertiesURL);
 curl_setopt($curlHandle, CURLOPT_HEADER, 0);
 curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+
+/**
+ * 2014.08.03
+ * Sometimes Facebook responds very slowly to these requests. It's not the
+ * web, direct requests from the server are also slow. There's a theory that
+ * it has something to do with "round robin DNS", but I never figured that out.
+ * However, setting this time out for some reason makes it respond faster.
+ * There should be a time out regardless, but I just wanted to document the
+ * importance of this.
+ */
+curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 5);
 
 $response = curl_exec($curlHandle);
 
