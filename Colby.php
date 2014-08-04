@@ -916,26 +916,21 @@ EOT;
     /**
      * 2014.07.04
      *
-     * This method has been deprecated. The Swift Mailer libraries are now
-     * autoloaded if the COLBY_EMAIL_LIBRARY_DIRECTORY constant is defined.
-     * A caller can either check for this constant or just attempt to use
-     * the Swift Mailer classes and an exception will be thrown by the Colby
-     * autoloader if they don't exist.
+     * This function has been deprecated. Just call `class_exists` on one of the
+     * SwiftMailer classes to see if email functionality is available.
      */
     public static function useEmail()
     {
-        /* deprecated */
+        error_log('Colby::useEmail() is deprecated. Any classes required can be automatically loaded.');
     }
 
     /**
-     * Includes the classes that are needed to do image processing.
-     *
-     * @return void
+     * 2014.08.13
+     * This function has been deprecated. Any image processing classes that are
+     * needed will be auto loaded.
      */
     public static function useImage()
     {
-        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyGeometry.php';
-        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyImageResizer.php';
-        include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyImageUploader.php';
+        error_log('Colby::useImage() is deprecated. Any classes required can be automatically loaded.');
     }
 }
