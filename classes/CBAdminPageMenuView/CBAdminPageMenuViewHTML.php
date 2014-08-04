@@ -9,14 +9,17 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBAdminPageMenuView/CBAdminPageM
 
     <?php
 
-    $this->renderMenu($this->menuModel, $this->selectedMenuItemName, 'CBMenu');
+    $selectedMenuItemName       = $this->model->selectedMenuItemName;
 
-    if ($this->selectedMenuItemName &&
-        $this->menuModel->{$this->selectedMenuItemName}->submenu)
+    $this->renderMenu($this->menuModel, $selectedMenuItemName, 'CBMenu');
+
+    if ($selectedMenuItemName &&
+        isset($this->menuModel->{$selectedMenuItemName}->submenu))
     {
-        $submenu = $this->menuModel->{$this->selectedMenuItemName}->submenu;
+        $submenu                    = $this->menuModel->{$selectedMenuItemName}->submenu;
+        $selectedSubmenuItemName    = $this->model->selectedSubmenuItemName;
 
-        $this->renderMenu($submenu, $this->selectedSubmenuItemName, 'CBSubmenu');
+        $this->renderMenu($submenu, $selectedSubmenuItemName, 'CBSubmenu');
     }
 
     ?>

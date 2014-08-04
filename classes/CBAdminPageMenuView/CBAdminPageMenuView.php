@@ -75,7 +75,7 @@ class CBAdminPageMenuView extends CBView
      */
     public function setSelectedMenuItemName($selectedMenuItemName)
     {
-        $this->selectedMenuItemName = $selectedMenuItemName;
+        $this->model->selectedMenuItemName = $selectedMenuItemName;
     }
 
     /**
@@ -83,6 +83,6 @@ class CBAdminPageMenuView extends CBView
      */
     public function setSelectedSubmenuItemName($selectedSubmenuItemName)
     {
-        $this->selectedSubmenuItemName = $selectedSubmenuItemName;
+        $this->model->selectedSubmenuItemName = $selectedSubmenuItemName;
     }
 }
