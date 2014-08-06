@@ -104,6 +104,7 @@ Colby.createPanel = function()
     panel.style.position        = "fixed";
     panel.style.right           = "0px";
     panel.style.top             = "0px";
+    panel.style.zIndex          = 1000;
 
     var content                     = document.createElement("div");
     content.style.backgroundColor   = "white";
