@@ -30,19 +30,14 @@ CBSelectionControl.prototype.rootElement = function()
  */
 CBSelectionControl.prototype.setAction = function(target, method)
 {
-    if (this.action)
+    if (this.actionCallback)
     {
-        this.select.removeEventListener('change', this.action, false);
+        this.select.removeEventListener('change', this.actionCallback, false);
     }
 
-    var sender = this;
+    this.actionCallback = method.bind(target, this);
 
-    this.sendAction = function()
-    {
-        method.call(target, sender);
-    };
-
-    this.select.addEventListener('change', this.sendAction, false);
+    this.select.addEventListener('change', this.actionCallback, false);
 };
 
 /**

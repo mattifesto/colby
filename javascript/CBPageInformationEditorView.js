@@ -245,6 +245,16 @@ CBPageInformationEditorView.prototype.translateDescription = function(sender)
 /**
  * @return void
  */
+CBPageInformationEditorView.prototype.translatePublishedBy = function(sender)
+{
+    this.pageModel.publishedBy = parseInt(sender.value(), 10);
+
+    CBPageEditor.requestSave();
+};
+
+/**
+ * @return void
+ */
 CBPageInformationEditorView.prototype.translateTitle = function(sender)
 {
     this.pageModel.title = sender.value().trim();
