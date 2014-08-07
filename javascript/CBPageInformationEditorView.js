@@ -276,27 +276,23 @@ CBPageInformationEditorView.prototype.translateTitle = function(sender)
  */
 CBPageInformationEditorView.prototype.translateURI = function(sender)
 {
-    if (!this.pageModel.rowID)
+    if (this.pageModel.rowID)
     {
-        CBPageEditor.requestCreatePageRow();
+        var formData = new FormData();
+        formData.append("rowID", this.pageModel.rowID);
+        formData.append("URI", sender.URI());
+        this._requestURIAjaxRequest.makeRequestWithFormData(formData);
 
-        var self    = this;
-        var handler = function()
-        {
-            self.translateURI(sender);
-        }
+        this.pageModel.URIIsStatic = sender.isStatic();
 
-        document.addEventListener("CBPageRowWasCreated", handler, false);
+        CBPageEditor.requestSave();
     }
+    else if (!this.pageRowWasCreatedListener)
+    {
+        this.pageRowWasCreatedListener = this.translateURI.bind(this, sender);
 
-    var formData = new FormData();
-    formData.append("rowID", this.pageModel.rowID);
-    formData.append("URI", sender.URI());
-    this._requestURIAjaxRequest.makeRequestWithFormData(formData);
-
-    this.pageModel.URIIsStatic = sender.isStatic();
-
-    CBPageEditor.requestSave();
+        document.addEventListener("CBPageRowWasCreated", this.pageRowWasCreatedListener, false);
+    }
 };
 
 /**

@@ -120,10 +120,9 @@ CBPageEditor.displayPageTemplateChooser = function()
  */
 CBPageEditor.DOMContentDidLoad = function()
 {
-    CBPageEditor.saveModelAjaxRequest           = new CBContinuousAjaxRequest();
-    CBPageEditor.saveModelAjaxRequest.delay     = 2000;
-    CBPageEditor.saveModelAjaxRequest.onload    = CBPageEditor.saveModelAjaxRequestDidComplete;
-    CBPageEditor.saveModelAjaxRequest.URL       = "/admin/pages/api/save-model/";
+    this.saveModelTimer                     = Object.create(CBDelayTimer).init();
+    this.saveModelTimer.callback            = this.saveModel.bind(this);
+    this.saveModelTimer.delayInMilliseconds = 2000;
 
     document.dispatchEvent(new Event("CBPageEditorDidLoad"));
 
@@ -211,37 +210,47 @@ CBPageEditor.registerSectionEditor = function(sectionTypeID, sectionEditor)
  */
 CBPageEditor.requestCreatePageRow = function()
 {
-    if (CBPageEditor.requestToCreate)
+    if (this.pageRowWasRequested)
     {
         return;
     }
 
+    this.pageRowWasRequested = true;
+
+    /**
+     * Don't try to save the model until our request is complete.
+     */
+
+    this.saveModelTimer.pause();
+
     var formData = new FormData();
     formData.append("data-store-id", CBPageEditor.model.dataStoreID);
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/admin/pages/api/create/", true);
-    xhr.onload = CBPageEditor.requestCreatePageRowDidComplete;
-    xhr.send(formData);
+    var xhr     = new XMLHttpRequest();
+    xhr.onload  = this.requestCreatePageRowDidComplete.bind(this, xhr);
 
-    CBPageEditor.requestToCreate = xhr;
+    xhr.open("POST", "/admin/pages/api/create/", true);
+    xhr.send(formData);
 };
 
 /**
  * @return void
  */
-CBPageEditor.requestCreatePageRowDidComplete = function()
+CBPageEditor.requestCreatePageRowDidComplete = function(xhr)
 {
-    var response = Colby.responseFromXMLHttpRequest(this);
+    var response = Colby.responseFromXMLHttpRequest(xhr);
 
     if (response.wasSuccessful)
     {
-        CBPageEditor.model.rowID            = response.rowID;
-        CBPageEditor.requestToCreatePageRow = null;
-
-        CBPageEditor.requestSave();
+        CBPageEditor.model.rowID = response.rowID;
 
         document.dispatchEvent(new Event("CBPageRowWasCreated"));
+
+        /**
+         * Now that the row has been created, model saves can resume.
+         */
+
+        this.saveModelTimer.resume();
     }
     else
     {
@@ -254,19 +263,30 @@ CBPageEditor.requestCreatePageRowDidComplete = function()
  */
 CBPageEditor.requestSave = function()
 {
-    if (!CBPageEditor.model.rowID)
+    this.saveModelTimer.restart();
+
+    if (!this.model.rowID && !this.pageRowWasRequested)
     {
-        CBPageEditor.requestCreatePageRow();
-
-        document.addEventListener("CBPageRowWasCreated", CBPageEditor.requestSave, false);
-
-        return;
+        this.requestCreatePageRow();
     }
+};
 
+/**
+ * Do not call this function directly. It should only be called by the save
+ * model timer.
+ *
+ * @return void
+ */
+CBPageEditor.saveModel = function()
+{
     var formData = new FormData();
-    formData.append("model-json", JSON.stringify(CBPageEditor.model));
+    formData.append("model-json", JSON.stringify(this.model));
 
-    CBPageEditor.saveModelAjaxRequest.makeRequestWithFormData(formData);
+    var xhr     = new XMLHttpRequest();
+    xhr.onload  = this.saveModelAjaxRequestDidComplete.bind(this, xhr);
+
+    xhr.open("POST", "/admin/pages/api/save-model/");
+    xhr.send(formData);
 };
 
 /**
@@ -282,7 +302,10 @@ CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr)
     }
 };
 
-/**
- *
- */
-document.addEventListener("DOMContentLoaded", CBPageEditor.DOMContentDidLoad, false);
+
+(function()
+{
+    var listener = CBPageEditor.DOMContentDidLoad.bind(CBPageEditor);
+
+    document.addEventListener("DOMContentLoaded", listener, false);
+})();

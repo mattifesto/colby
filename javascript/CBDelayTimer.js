@@ -1,23 +1,28 @@
 "use strict";
 
 
-/**
- *
- */
-function CBDelayTimer()
+var CBDelayTimer =
 {
-    this.delayInMilliseconds    = 5000;
-    this.pauseRequestCount      = 0;
-    this.status                 = "inactive";
+    delayInMilliseconds : 5000,
+    pauseRequestCount   : 0,
+    status              : "inactive"
+};
 
+/**
+ * @return CBDelayTimer
+ */
+CBDelayTimer.init = function()
+{
     window.addEventListener("beforeunload", this.windowWillUnload.bind(this), false);
-}
+
+    return this;
+};
 
 /**
  * This method will increment the pause request count. While the pause request
  * count is greater than zero, callback execution will be postponed.
  */
-CBDelayTimer.prototype.pause = function()
+CBDelayTimer.pause = function()
 {
     this.pauseRequestCount++;
 };
@@ -26,7 +31,7 @@ CBDelayTimer.prototype.pause = function()
  * This method restarts the timer so that, after this method is called, the
  * callback won't be called until after the full delay has elapsed.
  */
-CBDelayTimer.prototype.restart = function()
+CBDelayTimer.restart = function()
 {
     if (this.timeoutID)
     {
@@ -42,7 +47,7 @@ CBDelayTimer.prototype.restart = function()
  * count goes to zero and the timer is in "pending" status, then the callback
  * will be executed.
  */
-CBDelayTimer.prototype.resume = function()
+CBDelayTimer.resume = function()
 {
     this.pauseRequestCount--;
 
@@ -65,7 +70,7 @@ CBDelayTimer.prototype.resume = function()
  *
  * This is a private method and shouldn't be called by clients of this class.
  */
-CBDelayTimer.prototype.timeoutDidFinish = function()
+CBDelayTimer.timeoutDidFinish = function()
 {
     this.timeoutID = undefined;
 
@@ -93,7 +98,7 @@ CBDelayTimer.prototype.timeoutDidFinish = function()
  * callbacks will not be executed. If they stay, things will continue to run as
  * if they had never attempted to leave the page.
  */
-CBDelayTimer.prototype.windowWillUnload = function()
+CBDelayTimer.windowWillUnload = function()
 {
     if (this.pauseRequestCount > 0)
     {
