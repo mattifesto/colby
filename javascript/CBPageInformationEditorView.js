@@ -68,17 +68,6 @@ function CBPageInformationEditorView(pageModel)
     this._container.appendChild(URIControl.rootElement());
     this.URIControl = URIControl;
 
-    if (!this.pageModel.rowID)
-    {
-        var self    = this;
-        var handler = function()
-        {
-            self.translateURI(URIControl);
-        };
-
-        document.addEventListener("CBPageRowWasCreated", handler, false);
-    }
-
     /**
      *
      */
@@ -144,13 +133,26 @@ function CBPageInformationEditorView(pageModel)
     container.appendChild(pageGroupControl.rootElement());
 
     /**
-     *
+     * This timer requests the updated URI after 1000ms of inactivity.
      */
 
-    this._requestURIAjaxRequest         = new CBContinuousAjaxRequest();
-    this._requestURIAjaxRequest.delay   = 1000;
-    this._requestURIAjaxRequest.onload  = this.requestURIDidComplete.bind(this);
-    this._requestURIAjaxRequest.URL     = "/admin/pages/api/request-uri/";
+    this.requestURITimer                        = Object.create(CBDelayTimer).init();
+    this.requestURITimer.callback               = this.requestURI.bind(this);
+    this.requestURITimer.delayInMilliseconds    = 1000;
+
+    /**
+     * If we don't have a row ID yet, we can't request a URI. Wait for the row
+     * ID to be assigend and then allow URI requests.
+     */
+
+    if (!this.pageModel.rowID)
+    {
+        this.requestURITimer.pause();
+
+        var listener = this.pageRowWasCreated.bind(this);
+
+        document.addEventListener("CBPageRowWasCreated", listener, false);
+    }
 };
 
 /**
@@ -190,6 +192,18 @@ CBPageInformationEditorView.prototype.generateURI = function()
 CBPageInformationEditorView.prototype.element = function()
 {
     return this._element;
+};
+
+/**
+ * If there is no row ID in the model when this object is initialized then
+ * this the URI request timer will be paused and this function will be called
+ * when the row ID is created to resume the timer.
+ *
+ * @return void
+ */
+CBPageInformationEditorView.prototype.pageRowWasCreated = function()
+{
+    this.requestURITimer.resume();
 };
 
 /**
@@ -276,23 +290,34 @@ CBPageInformationEditorView.prototype.translateTitle = function(sender)
  */
 CBPageInformationEditorView.prototype.translateURI = function(sender)
 {
-    if (this.pageModel.rowID)
-    {
-        var formData = new FormData();
-        formData.append("rowID", this.pageModel.rowID);
-        formData.append("URI", sender.URI());
-        this._requestURIAjaxRequest.makeRequestWithFormData(formData);
+    this.pageModel.URIIsStatic  = sender.isStatic();
+    this.proposedURI            = sender.URI();
 
-        this.pageModel.URIIsStatic = sender.isStatic();
+    this.requestURITimer.restart();
 
-        CBPageEditor.requestSave();
-    }
-    else if (!this.pageRowWasCreatedListener)
-    {
-        this.pageRowWasCreatedListener = this.translateURI.bind(this, sender);
+    CBPageEditor.requestSave();
+};
 
-        document.addEventListener("CBPageRowWasCreated", this.pageRowWasCreatedListener, false);
-    }
+/**
+ * This function should never be called directly. It should only be called as
+ * the `requestURITimer` object's callback.
+ *
+ * @return void
+ */
+CBPageInformationEditorView.prototype.requestURI = function()
+{
+    var formData = new FormData();
+
+    formData.append("rowID", this.pageModel.rowID);
+    formData.append("URI", this.proposedURI);
+
+    var xhr     = new XMLHttpRequest();
+    xhr.onload  = this.requestURIDidComplete.bind(this, xhr);
+
+    xhr.open("POST", "/admin/pages/api/request-uri/", true);
+    xhr.send(formData);
+
+    this.URIControl.textField.style.backgroundColor = "#fffff0";
 };
 
 /**
@@ -308,12 +333,13 @@ CBPageInformationEditorView.prototype.requestURIDidComplete = function(xhr)
     }
     else if (response.URIWasGranted)
     {
-        this.pageModel.URI = response.URI;
+        this.pageModel.URI                              = response.URI;
+        this.URIControl.textField.style.backgroundColor = "white";
 
         CBPageEditor.requestSave();
     }
     else
     {
-        // TODO: Provide visual indication that the URI request wasn't granted.
+        this.URIControl.textField.style.backgroundColor = "#fff0f0";
     }
 };
