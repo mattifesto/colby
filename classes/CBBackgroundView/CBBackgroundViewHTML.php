@@ -45,7 +45,7 @@ $styles = implode(' ', $styles);
 
 ?>
 
-<div style="<?php echo $styles; ?>">
+<div class="CBBackgroundView" style="<?php echo $styles; ?>">
 
     <?php
 

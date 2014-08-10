@@ -135,6 +135,10 @@ CBSectionListView.prototype.displaySection = function(model, index, modelArray)
     {
         switch (model.sectionTypeID)
         {
+            /**
+             * Translate CBBackgroundSection to CBBackgroundView.
+             */
+
             case "c4bacd7cf5315e5a07c20072cbb0f355bdb4b8bc":
 
                 if ("object" == typeof CBBackgroundViewEditor)
@@ -147,6 +151,10 @@ CBSectionListView.prototype.displaySection = function(model, index, modelArray)
                 }
 
                 break;
+
+            /**
+             * Translate PMImageSection to LEImageView
+             */
 
             case "85ad8d3561e980afffc4847803ce83e7aed6af6b":
 
