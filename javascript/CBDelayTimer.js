@@ -68,6 +68,11 @@ CBDelayTimer.resume = function()
  * the status will be set to "pending" so that the callback will be executed
  * when the pause request count becomes zero.
  *
+ * If the callback performs an asynchronous request, the callback will need
+ * to call `pause` before making that request and then `resume` after the
+ * request is complete if the caller wishes that callacks should be discontinued
+ * until the asynchronous operation has completed.
+ *
  * This is a private method and shouldn't be called by clients of this class.
  */
 CBDelayTimer.timeoutDidFinish = function()

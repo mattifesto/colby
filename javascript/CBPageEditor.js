@@ -287,6 +287,12 @@ CBPageEditor.saveModel = function()
 
     xhr.open("POST", "/admin/pages/api/save-model/");
     xhr.send(formData);
+
+    /**
+     * Prevent another callback while the model is being saved.
+     */
+
+    this.saveModelTimer.pause();
 };
 
 /**
@@ -294,6 +300,12 @@ CBPageEditor.saveModel = function()
  */
 CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr)
 {
+    /**
+     * Resume callbacks.
+     */
+
+    this.saveModelTimer.resume();
+
     var response = Colby.responseFromXMLHttpRequest(xhr);
 
     if (!response.wasSuccessful)

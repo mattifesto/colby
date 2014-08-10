@@ -318,6 +318,12 @@ CBPageInformationEditorView.prototype.requestURI = function()
     xhr.send(formData);
 
     this.URIControl.textField.style.backgroundColor = "#fffff0";
+
+    /**
+     * Prevent another callback while the URI is being requested.
+     */
+
+    this.requestURITimer.pause();
 };
 
 /**
@@ -325,6 +331,12 @@ CBPageInformationEditorView.prototype.requestURI = function()
  */
 CBPageInformationEditorView.prototype.requestURIDidComplete = function(xhr)
 {
+    /**
+     * Re-enable callbacks.
+     */
+
+    this.requestURITimer.resume();
+
     var response = Colby.responseFromXMLHttpRequest(xhr);
 
     if (!response.wasSuccessful)
