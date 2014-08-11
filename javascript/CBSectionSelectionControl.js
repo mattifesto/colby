@@ -45,6 +45,18 @@ function CBSectionSelectionControl()
 
     for (var sectionTypeID in CBSectionDescriptors)
     {
+        /**
+         * 2014.08.10
+         * Exclude the `PM3Horizontal` section from being added to a page.
+         * Eventually it will be removed altogether and existing instances
+         * will be translated to LETripleView views.
+         */
+
+        if ("a5f3e05b7bb7a8e995e6e95f7e98b46089f6cce3" == sectionTypeID)
+        {
+            continue;
+        }
+
         var option      = document.createElement("option");
         var description = document.createTextNode(CBSectionDescriptors[sectionTypeID].name);
         option.value    = sectionTypeID;

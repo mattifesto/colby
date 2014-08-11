@@ -49,6 +49,21 @@ class CBView
     }
 
     /**
+     * This function creates the a new view of the correct type from any view
+     * model. It would be used when enumerating through views to render them or
+     * perform other non-type specific tasks.
+     *
+     * @return CBView
+     */
+    public static function createViewWithModel($model)
+    {
+        $className  = $model->className;
+        $view       = $className::initWithModel($model);
+
+        return $view;
+    }
+
+    /**
      * This method is implemented to provide working but not useful
      * functionality for new views to make creating new views simple. It should
      * eventually be overridden by the subclass.
