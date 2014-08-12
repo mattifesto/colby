@@ -33,7 +33,7 @@ ColbyReportArchiveDeleter.sendAjaxRequest = function()
     formData.append("report-id", ColbyReportArchiveDeleter.reportId);
 
     xhr.open('POST', '/admin/documents/stray-archives/reports/ajax/delete-report-archives/', true);
-    xhr.onload = function() { ColbyReportArchiveDeleter.ajaxRequestCompleted(xhr) };
+    xhr.onload = this.ajaxRequestCompleted.bind(this, xhr);
     xhr.send(formData);
 };
 

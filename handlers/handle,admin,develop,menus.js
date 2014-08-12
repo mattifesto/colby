@@ -45,10 +45,10 @@ CBMenuEditor.prototype.editingTextAreaInputHandler = function()
     var handler = function()
     {
         self.editingTextAreaHasChanged();
-    }
+    };
 
     return handler;
-}
+};
 
 /**
  *
@@ -68,7 +68,7 @@ CBMenuEditor.prototype.editingTextAreaHasChanged = function()
     {
         this.editingTextArea.style.backgroundColor = "#ffbfbf";
     }
-}
+};
 
 /**
  *

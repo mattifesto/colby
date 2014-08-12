@@ -107,10 +107,10 @@ CBPageURIControl.prototype.initializeEventListeners = function()
     {
         self.updateState();
         self.sendAction();
-    }
+    };
 
     this.checkbox.addEventListener('change', checkboxChanged, false);
-}
+};
 
 /**
  * @return boolean

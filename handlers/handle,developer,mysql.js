@@ -24,4 +24,4 @@ DeveloperMySQL.backupDatabase = function(sender)
     xhr.send();
 
     document.getElementById('backup-database-progress').removeAttribute('value');
-}
+};

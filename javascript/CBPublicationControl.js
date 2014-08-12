@@ -79,10 +79,10 @@ CBPublicationControl.prototype.initializeEventListeners = function()
     {
         self.isPublishedChanged();
         self.sendAction();
-    }
+    };
 
     this._checkbox.addEventListener('change', isPublishedChanged, false);
-}
+};
 
 /**
  * @return boolean
@@ -190,4 +190,3 @@ CBPublicationControl.prototype.textFieldChanged = function()
         }
     }
 };
-

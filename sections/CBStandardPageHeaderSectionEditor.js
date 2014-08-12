@@ -25,6 +25,6 @@ CBStandardPageHeaderSectionEditor.prototype.element = function()
 CBStandardPageHeaderSectionEditor.register = function()
 {
     CBPageEditor.registerSectionEditor(CBStandardPageHeaderSectionTypeID, CBStandardPageHeaderSectionEditor);
-}
+};
 
 document.addEventListener("CBPageEditorDidLoad", CBStandardPageHeaderSectionEditor.register, false);

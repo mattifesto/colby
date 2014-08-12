@@ -101,7 +101,7 @@ if (!Element.prototype.addEventListener)
         var listenerShim = function()
         {
             listener.call(self);
-        }
+        };
 
         this.attachEvent(newType, listenerShim);
     };

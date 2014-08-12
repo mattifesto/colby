@@ -6,6 +6,8 @@
  */
 function CBSectionSelectionControl()
 {
+    var option;
+
     this._element   = document.createElement("div");
     this._select    = document.createElement("select");
     this._button    = document.createElement("button");
@@ -36,7 +38,7 @@ function CBSectionSelectionControl()
     for (var i = 0; i < CBPageEditorAvailableViewClassNames.length; i++)
     {
         var viewClassName   = CBPageEditorAvailableViewClassNames[i];
-        var option          = document.createElement("option");
+        option              = document.createElement("option");
         option.textContent  = viewClassName;
         option.value        = viewClassName;
 
@@ -57,7 +59,7 @@ function CBSectionSelectionControl()
             continue;
         }
 
-        var option      = document.createElement("option");
+        option          = document.createElement("option");
         var description = document.createTextNode(CBSectionDescriptors[sectionTypeID].name);
         option.value    = sectionTypeID;
 

@@ -298,19 +298,22 @@ Colby.hidePanel = function()
  */
 Colby.random160 = function()
 {
+    var i;
+    var randomNumbers;
+
     if (typeof Uint16Array !== undefined &&
         window.crypto &&
         window.crypto.getRandomValues)
     {
-        var randomNumbers = new Uint16Array(10);
+        randomNumbers = new Uint16Array(10);
 
         crypto.getRandomValues(randomNumbers);
     }
     else
     {
-        var randomNumbers = [];
+        randomNumbers = [];
 
-        for (var i = 0; i < 10; i++)
+        for (i = 0; i < 10; i++)
         {
             var uint16 = Math.floor(Math.random() * 0xffff);
 
@@ -320,14 +323,14 @@ Colby.random160 = function()
 
     var random160 = "";
 
-    for (var i = 0; i < 10; i++)
+    for (i = 0; i < 10; i++)
     {
         var hex = randomNumbers[i].toString(16);
 
         hex = "0000".substr(0, 4 - hex.length) + hex;
 
         random160 = random160 + hex;
-    };
+    }
 
     return random160;
 };
@@ -421,14 +424,14 @@ Colby.textToHTML = function(text)
 {
     var html = String(text);
 
-    html = html.replace(/&/g, "&amp;")
-    html = html.replace(/</g, "&lt;")
-    html = html.replace(/>/g, "&gt;")
-    html = html.replace(/"/g, "&quot;")
+    html = html.replace(/&/g, "&amp;");
+    html = html.replace(/</g, "&lt;");
+    html = html.replace(/>/g, "&gt;");
+    html = html.replace(/"/g, "&quot;");
     html = html.replace(/'/g, "&#039;");
 
     return html;
-}
+};
 
 /**
  * @return string

@@ -20,7 +20,7 @@ ColbySheet.alert = function(html)
 </div>';
 
     ColbySheet.beginSheet(sheetHTML);
-}
+};
 
 /**
  *
@@ -48,7 +48,7 @@ ColbySheet.animateIn = function()
     }
 
     ColbySheet.frame++;
-}
+};
 
 /**
  *
@@ -79,7 +79,7 @@ ColbySheet.animateOut = function()
     }
 
     ColbySheet.frame++;
-}
+};
 
 /**
  *
@@ -101,7 +101,7 @@ ColbySheet.beginSheet = function(contentHTML)
     {
         ColbySheet.animateIn();
     }
-}
+};
 
 /**
  *
@@ -123,7 +123,7 @@ ColbySheet.endSheet = function()
         panel.style.visibility = 'hidden';
         panel.style.webkitTransform = 'none';
     }
-}
+};
 
 /**
  *
@@ -171,7 +171,7 @@ ColbySheet.createElements = function()
 
         document.body.appendChild(panel);
     }
-}
+};
 
 /**
  *

@@ -76,4 +76,4 @@ CBViewEditor.element = function()
     }
 
     return this._element;
-}
+};

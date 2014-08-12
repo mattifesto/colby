@@ -11,6 +11,8 @@ var ColbyUnitTests = {};
  */
 ColbyUnitTests.runJavaScriptTests = function()
 {
+    var countOfTests;
+    var i;
     var wasSuccessful = true;
     var now = new Date('2012/12/16 10:51 pm');
     var date = now;
@@ -77,9 +79,9 @@ ColbyUnitTests.runJavaScriptTests = function()
 
     // Run tests
 
-    var countOfTests = tests.length;
+    countOfTests = tests.length;
 
-    for (var i = 0; i < countOfTests; i++)
+    for (i = 0; i < countOfTests; i++)
     {
         var string = Colby.dateToRelativeLocaleString(tests[i].date, now);
 
@@ -124,9 +126,9 @@ ColbyUnitTests.runJavaScriptTests = function()
         "expected" : "32343.93"
     });
 
-    var countOfTests = tests.length;
+    countOfTests = tests.length;
 
-    for (var i = 0; i < countOfTests; i++)
+    for (i = 0; i < countOfTests; i++)
     {
         var output = Colby.centsToDollars(tests[i].input);
 
@@ -156,4 +158,4 @@ ColbyUnitTests.runJavaScriptTests = function()
     {
         return "Javascript unit tests failed.\n\n" + ColbyUnitTests.errors;
     }
-}
+};

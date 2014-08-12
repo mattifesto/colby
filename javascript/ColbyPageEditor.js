@@ -239,7 +239,7 @@ ColbyPageEditor.handleTitleReceivedInput = function(event)
  */
 ColbyPageEditor.handleURIBlurred = function()
 {
-    var uriElement = document.getElementById('uri')
+    var uriElement = document.getElementById('uri');
 
     var uri = Colby.textToURI(uriElement.value);
 
@@ -296,6 +296,8 @@ ColbyPageEditor.updateNaturalURI = function()
  */
 ColbyPageEditor.updateCompleteCallback = function(response)
 {
+    var uriElement;
+
     if (!response.wasSuccessful)
     {
         return;
@@ -305,11 +307,11 @@ ColbyPageEditor.updateCompleteCallback = function(response)
 
     if (response.uriIsAvailable)
     {
-        var uriElement = document.getElementById('uri').classList.remove('invalid');
+        uriElement = document.getElementById('uri').classList.remove('invalid');
     }
     else
     {
-        var uriElement = document.getElementById('uri').classList.add('invalid');
+        uriElement = document.getElementById('uri').classList.add('invalid');
     }
 
     // Inform any other interested parties that the update completed by using a custom event.

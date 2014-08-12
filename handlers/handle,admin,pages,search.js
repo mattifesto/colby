@@ -109,7 +109,7 @@ var CBSearchResultsRow = {};
  */
 CBSearchResultsRow.editPageWithDataStoreID = function(dataStoreID)
 {
-    location.href = "/admin/pages/edit/?data-store-id=" + dataStoreID;;
+    location.href = "/admin/pages/edit/?data-store-id=" + dataStoreID;
 };
 
 /**

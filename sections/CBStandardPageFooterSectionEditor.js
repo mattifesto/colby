@@ -25,6 +25,6 @@ CBStandardPageFooterSectionEditor.prototype.element = function()
 CBStandardPageFooterSectionEditor.register = function()
 {
     CBPageEditor.registerSectionEditor(CBStandardPageFooterSectionTypeID, CBStandardPageFooterSectionEditor);
-}
+};
 
 document.addEventListener("CBPageEditorDidLoad", CBStandardPageFooterSectionEditor.register, false);

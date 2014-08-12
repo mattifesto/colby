@@ -24,4 +24,4 @@ ColbySiteUpdater.update = function(sender)
     xhr.send();
 
     document.getElementById('progress').removeAttribute('value');
-}
+};

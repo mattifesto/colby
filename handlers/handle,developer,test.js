@@ -30,8 +30,8 @@ CBTestPage.DOMContentDidLoad = function()
     button.appendChild(buttonText);
     mainElement.appendChild(button);
 
-    var button              = document.createElement("button");
-    var buttonText          = document.createTextNode("Run JavaScript Tests");
+    button                  = document.createElement("button");
+    buttonText              = document.createTextNode("Run JavaScript Tests");
     button.style.display    = "block";
     button.style.margin     = "50px auto";
     button.addEventListener("click", CBTestPage.runJavaScriptTests);

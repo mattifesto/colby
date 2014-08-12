@@ -41,7 +41,7 @@ CBPageEditor.appendPageTemplateOption = function(template)
         CBPageEditor.needsCreating      = true;
 
         CBPageEditor.displayEditor();
-    }
+    };
 
     pageTemplateOption.addEventListener("click", handler, false);
 };

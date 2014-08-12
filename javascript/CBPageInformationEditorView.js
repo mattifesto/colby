@@ -153,7 +153,7 @@ function CBPageInformationEditorView(pageModel)
 
         document.addEventListener("CBPageRowWasCreated", listener, false);
     }
-};
+}
 
 /**
  * This function generates a URI for the page using the page group prefix and
@@ -184,7 +184,7 @@ CBPageInformationEditorView.prototype.generateURI = function()
         }
 
         return URI;
-}
+};
 
 /**
  * @return void

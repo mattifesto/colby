@@ -24,6 +24,8 @@ function CBSectionListView(list)
 
 CBSectionListView.prototype.appendSection = function(sender)
 {
+    var appendSectionSelectionElement;
+
     var viewEditorClassName = sender.value() + "Editor";
 
     if ("object" == typeof window[viewEditorClassName])
@@ -39,7 +41,7 @@ CBSectionListView.prototype.appendSection = function(sender)
          */
 
         var viewListItemElement             = this.createViewListItemElementForViewEditor(viewEditor);
-        var appendSectionSelectionElement   = this._element.lastChild;
+        appendSectionSelectionElement       = this._element.lastChild;
         this._element.insertBefore(viewListItemElement, appendSectionSelectionElement);
     }
     else
@@ -60,7 +62,7 @@ CBSectionListView.prototype.appendSection = function(sender)
          */
 
         var sectionListItemView             = this.newSectionListItemViewForModel(sectionModel);
-        var appendSectionSelectionElement   = this._element.lastChild;
+        appendSectionSelectionElement       = this._element.lastChild;
         this._element.insertBefore(sectionListItemView, appendSectionSelectionElement);
     }
 
@@ -127,6 +129,9 @@ CBSectionListView.prototype.element = function()
  */
 CBSectionListView.prototype.displaySection = function(model, index, modelArray)
 {
+    var viewEditor;
+    var viewListItemElement;
+
     /**
      * Translate deprecated views into non-deprecated views.
      */
@@ -143,7 +148,7 @@ CBSectionListView.prototype.displaySection = function(model, index, modelArray)
 
                 if ("object" == typeof CBBackgroundViewEditor)
                 {
-                    var viewEditor      = Object.create(CBBackgroundViewEditor);
+                    viewEditor          = Object.create(CBBackgroundViewEditor);
                     viewEditor.initWithModel(model);
 
                     model               = viewEditor.model;
@@ -160,7 +165,7 @@ CBSectionListView.prototype.displaySection = function(model, index, modelArray)
 
                 if ("object" == typeof LEImageViewEditor)
                 {
-                    var viewEditor      = Object.create(LEImageViewEditor);
+                    viewEditor          = Object.create(LEImageViewEditor);
                     viewEditor.initWithModel(model);
 
                     model               = viewEditor.model;
@@ -182,12 +187,12 @@ CBSectionListView.prototype.displaySection = function(model, index, modelArray)
     {
         var viewEditorClassName = model.className + "Editor";
         var viewEditorClass     = window[viewEditorClassName];
-        var viewEditor          = Object.create(viewEditorClass).initWithModel(model);
-        var viewListItemElement = this.createViewListItemElementForViewEditor(viewEditor);
+        viewEditor              = Object.create(viewEditorClass).initWithModel(model);
+        viewListItemElement     = this.createViewListItemElementForViewEditor(viewEditor);
     }
     else
     {
-        var viewListItemElement = this.newSectionListItemViewForModel(model);
+        viewListItemElement     = this.newSectionListItemViewForModel(model);
     }
 
     this._element.appendChild(viewListItemElement);
@@ -198,6 +203,7 @@ CBSectionListView.prototype.displaySection = function(model, index, modelArray)
  */
 CBSectionListView.prototype.deleteSection = function(sectionModel)
 {
+    var ID;
     var index = this._list.indexOf(sectionModel);
 
     if (-1 == index)
@@ -209,11 +215,11 @@ CBSectionListView.prototype.deleteSection = function(sectionModel)
 
     if (sectionModel.ID)
     {
-        var ID = sectionModel.ID;
+        ID = sectionModel.ID;
     }
     else
     {
-        var ID = sectionModel.sectionID;
+        ID = sectionModel.sectionID;
     }
 
     var sectionListItemID = "CBSectionListItemView-" + ID;
