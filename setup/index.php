@@ -1,19 +1,20 @@
 <?php
 
-define('COLBY_SITE_DIRECTORY', $_SERVER['DOCUMENT_ROOT']);
+define('CBSiteDirectory', $_SERVER['DOCUMENT_ROOT']);
 
-$dataDirectory = COLBY_SITE_DIRECTORY . '/data';
+$dataDirectory              = CBSiteDirectory . '/data';
+$tmpDirectory               = CBSiteDirectory . '/tmp';
 
-$colbyConfigurationFilename =   COLBY_SITE_DIRECTORY . '/colby-configuration.php';
-$faviconGifFilename =           COLBY_SITE_DIRECTORY . '/favicon.gif';
-$faviconIcoFilename =           COLBY_SITE_DIRECTORY . '/favicon.ico';
-$gitignoreFilename =            COLBY_SITE_DIRECTORY . '/.gitignore';
-$htaccessFilename =             COLBY_SITE_DIRECTORY . '/.htaccess';
-$indexFilename =                COLBY_SITE_DIRECTORY . '/index.php';
-$siteConfigurationFilename =    COLBY_SITE_DIRECTORY . '/site-configuration.php';
-$versionFilename =              COLBY_SITE_DIRECTORY . '/version.php';
+$colbyConfigurationFilename = CBSiteDirectory . '/colby-configuration.php';
+$faviconGifFilename         = CBSiteDirectory . '/favicon.gif';
+$faviconIcoFilename         = CBSiteDirectory . '/favicon.ico';
+$gitignoreFilename          = CBSiteDirectory . '/.gitignore';
+$htaccessFilename           = CBSiteDirectory . '/.htaccess';
+$indexFilename              = CBSiteDirectory . '/index.php';
+$siteConfigurationFilename  = CBSiteDirectory . '/site-configuration.php';
+$versionFilename            = CBSiteDirectory . '/version.php';
 
-$shouldPerformInstallation = (isset($_GET['install']) && $_GET['install'] == 'true');
+$shouldPerformInstallation  = (isset($_GET['install']) && $_GET['install'] == 'true');
 
 if (!$shouldPerformInstallation)
 {
