@@ -2,13 +2,14 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Template HTML5 Document</title>
+        <title>Colby Installation</title>
         <meta name="description"
               content="This HTML of this page represents a template for all HTML pages.">
         <link rel="stylesheet"
               type="text/css"
               href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700">
         <style>
+
             *
             {
                 font-family: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
@@ -18,6 +19,13 @@
             {
                 width: 600px;
                 margin: 0px auto 100px;
+            }
+
+            code
+            {
+                color:          #8080c0;
+                font-family:    "Menlo", "Courier New", monospace;
+                font-size:      0.8em;
             }
 
             dt
@@ -31,16 +39,47 @@
                 margin-bottom: 1.0em;
                 margin-left: 2.0em;
             }
+
+            h1, h2
+            {
+                text-align: center;
+            }
+
         </style>
     </head>
     <body>
         <h1>Welcome to Colby</h1>
 
-        <p>This page will allow you perform the initial site installation. If you choose to continue some template files will be placed in your sites root directory.
+        <p>This page will allow you perform the initial site installation. If you choose to continue some template files will be placed in your site's root directory.
+
+        <?php if (self::shouldPerformAFullInstallation()) { ?>
+
+            <h2>Full Installation</h2>
+
+            <p>This appears to be a new website so Colby will be installed so that all requests except for allowed direct file requests will be handled by the Colby system.
+
+        <?php } else { ?>
+
+            <h2>Partial Installation</h2>
+
+            <p>It appears that this website is already serving content. Colby will be installed in a way such that any given request can be optionally handled using the Colby system. Individual requests can use Colby and the <code>.htaccess</code> file can be customized to handle groups of requests using Colby.
+
+        <?php } ?>
+
+        <h2>Details</h2>
 
         <dl>
             <dt>.htaccess
-            <dd>This file will redirect all requests to the colby system and disallow direct access to certain protected files like Git repostiory files, individual PHP files, and data files.
+
+            <?php if (self::shouldPerformAFullInstallation()) { ?>
+
+                <dd>This file will redirect all requests to the Colby system and deny direct access to certain protected files like Git repostiory files, individual PHP files, and data files.
+
+            <?php } else { ?>
+
+                <dd>The existing <code>.htaccess</code> file will have entries added to allow Colby administrative URLs to be handled by Colby. Direct access will be denied for <code>.php</code> files in the Colby directory and no access will be allowed for Git repository files anywhere on the entire website. Access to other file types like <code>.json</code> and <code>.data</code> will be denied as well as access to special directories like <code>/tmp</code>.
+
+            <?php } ?>
 
             <dt>.gitignore
             <dd>This file will configure Git to ignore certain files and directories that will be created when using a Colby site but that shouldn't be checked in. One example is all of the files in the data directory.

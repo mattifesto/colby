@@ -13,12 +13,10 @@ class ColbyInstaller {
     private static $faviconGifFilename;
     private static $faviconIcoFilename;
     private static $gitignoreFilename;
-    private static $htaccessFilename;
+    private static $HTAccessFilename;
     private static $indexFilename;
     private static $siteConfigurationFilename;
     private static $versionFilename;
-
-    private static $shouldPerformInstallation;
 
     /**
      * @return void
@@ -32,14 +30,13 @@ class ColbyInstaller {
         self::$faviconGifFilename           = CBSiteDirectory . '/favicon.gif';
         self::$faviconIcoFilename           = CBSiteDirectory . '/favicon.ico';
         self::$gitignoreFilename            = CBSiteDirectory . '/.gitignore';
-        self::$htaccessFilename             = CBSiteDirectory . '/.htaccess';
+        self::$HTAccessFilename             = CBSiteDirectory . '/.htaccess';
         self::$indexFilename                = CBSiteDirectory . '/index.php';
         self::$siteConfigurationFilename    = CBSiteDirectory . '/site-configuration.php';
         self::$versionFilename              = CBSiteDirectory . '/version.php';
 
-        self::$shouldPerformInstallation    = (isset($_GET['install']) && $_GET['install'] == 'true');
 
-        if (self::$shouldPerformInstallation) {
+        if (isset($_GET['install']) && $_GET['install'] == 'true') {
 
             self::install();
 
@@ -57,7 +54,7 @@ class ColbyInstaller {
         if (file_exists(self::$dataDirectory) ||
             file_exists(self::$colbyConfigurationFilename) ||
             file_exists(self::$gitignoreFilename) ||
-            file_exists(self::$htaccessFilename) ||
+            file_exists(self::$HTAccessFilename) ||
             file_exists(self::$indexFilename) ||
             file_exists(self::$siteConfigurationFilename) ||
             file_exists(self::$versionFilename)) {
@@ -90,7 +87,7 @@ class ColbyInstaller {
             mkdir(self::$dataDirectory);
             copy(__DIR__ . '/colby-configuration.template.data', self::$colbyConfigurationFilename);
             copy(__DIR__ . '/gitignore.template.data', self::$gitignoreFilename);
-            copy(__DIR__ . '/htaccess.template.data', self::$htaccessFilename);
+            copy(__DIR__ . '/htaccess.template.data', self::$HTAccessFilename);
             copy(__DIR__ . '/index.template.data', self::$indexFilename);
             copy(__DIR__ . '/site-configuration.template.data', self::$siteConfigurationFilename);
             copy(__DIR__ . '/version.template.data', self::$versionFilename);
@@ -107,5 +104,20 @@ class ColbyInstaller {
     public static function renderPlan() {
 
         include __DIR__ . '/snippets/install-plan.php';
+    }
+
+    /**
+     * This function determines whether a full or partial installation should
+     * occur. In the future this function may do more detailed analysis to
+     * determine the correct course of action.
+     *
+     * For now, if the `index.php` file exists, this will be a partial
+     * installation. Otherwise it will be full installation.
+     *
+     * @return Boolean
+     */
+    private static function shouldPerformAFullInstallation() {
+
+        return !is_file(self::$indexFilename);
     }
 }
