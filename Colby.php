@@ -2,8 +2,6 @@
 
 Colby::initialize();
 
-ColbyRequest::handleRequest();
-
 class Colby
 {
     /**

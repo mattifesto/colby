@@ -10,6 +10,7 @@ class ColbyInstaller {
     private static $tmpDirectory;
 
     private static $colbyConfigurationFilename;
+    private static $colbyFilename;
     private static $faviconGifFilename;
     private static $faviconIcoFilename;
     private static $gitignoreFilename;
@@ -27,6 +28,7 @@ class ColbyInstaller {
         self::$tmpDirectory                 = CBSiteDirectory . '/tmp';
 
         self::$colbyConfigurationFilename   = CBSiteDirectory . '/colby-configuration.php';
+        self::$colbyFilename                = CBSiteDirectory . '/colby.php';
         self::$faviconGifFilename           = CBSiteDirectory . '/favicon.gif';
         self::$faviconIcoFilename           = CBSiteDirectory . '/favicon.ico';
         self::$gitignoreFilename            = CBSiteDirectory . '/.gitignore';
@@ -51,51 +53,85 @@ class ColbyInstaller {
      */
     public static function install() {
 
-        if (file_exists(self::$dataDirectory) ||
-            file_exists(self::$colbyConfigurationFilename) ||
-            file_exists(self::$gitignoreFilename) ||
-            file_exists(self::$HTAccessFilename) ||
-            file_exists(self::$indexFilename) ||
-            file_exists(self::$siteConfigurationFilename) ||
-            file_exists(self::$versionFilename)) {
+        if (!is_dir(self::$dataDirectory)) {
 
-            // if .htaccess exists correctly in the web root directory
-            // the user will not even be able to load this file
-            // so if any of the above files exist
-            // it means that the install is only partially complete
-            // and that shouldn't really ever even happen so just show a message
+            mkdir(self::$dataDirectory);
+        }
 
-            ?>
+        if (!is_dir(self::$tmpDirectory)) {
 
-            <!doctype html>
-            <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Colby Setup</title>
-                    <meta name="description" content="This page is meant to bootstrap a fresh install of a Colby based website.">
-                </head>
-                <body>
-                    <h1>Colby Setup</h1>
-                    <p>This site has been partially setup and is in an unknown state.
-                </body>
-            </html>
+            mkdir(self::$tmpDirectory);
+        }
 
-            <?php
+        if (!is_file(self::$colbyConfigurationFilename)) {
+
+            copy(__DIR__ . '/colby-configuration.template.data', self::$colbyConfigurationFilename);
+        }
+
+        if (!is_file(self::$colbyConfigurationFilename)) {
+
+            copy(__DIR__ . '/gitignore.template.data', self::$gitignoreFilename);
 
         } else {
 
-            mkdir(self::$dataDirectory);
-            copy(__DIR__ . '/colby-configuration.template.data', self::$colbyConfigurationFilename);
-            copy(__DIR__ . '/gitignore.template.data', self::$gitignoreFilename);
-            copy(__DIR__ . '/htaccess.template.data', self::$HTAccessFilename);
-            copy(__DIR__ . '/index.template.data', self::$indexFilename);
-            copy(__DIR__ . '/site-configuration.template.data', self::$siteConfigurationFilename);
-            copy(__DIR__ . '/version.template.data', self::$versionFilename);
-            touch(self::$faviconGifFilename);
-            touch(self::$faviconIcoFilename);
+            $ignoresOld         = file(self::$gitignoreFilename);
+            $ignoresNew         = file(__DIR__ . '/gitignore.template.data');
+            $ignores            = array_merge($ignoresOld, $ignoresNew);
+            $ignores            = array_unique($ignores);
 
-            header('Location: /admin/');
+            sort($ignores);
+
+            $ignores            = implode('', $ignores);
+
+            file_put_contents(self::$gitignoreFilename, $ignores);
         }
+
+        touch(self::$HTAccessFilename);
+
+        if (self::shouldPerformAFullInstallation()) {
+
+            $newData = file_get_contents(__DIR__ . '/htaccess.template.data');
+
+            file_put_contents(self::$HTAccessFilename, $newData, FILE_APPEND);
+
+        } else {
+
+            $newData = file_get_contents(__DIR__ . '/htaccess.partial.template.data');
+
+            file_put_contents(self::$HTAccessFilename, $newData, FILE_APPEND);
+        }
+
+        if (self::shouldPerformAFullInstallation()) {
+
+            copy(__DIR__ . '/index.template.data', self::$indexFilename);
+
+        } else {
+
+            copy(__DIR__ . '/index.template.data', self::$colbyFilename);
+
+        }
+
+        if (!is_file(self::$siteConfigurationFilename)) {
+
+            copy(__DIR__ . '/site-configuration.template.data', self::$siteConfigurationFilename);
+        }
+
+        if (!is_file(self::$versionFilename)) {
+
+            copy(__DIR__ . '/version.template.data', self::$versionFilename);
+        }
+
+        if (!is_file(self::$faviconGifFilename)) {
+
+            touch(self::$faviconGifFilename);
+        }
+
+        if (!is_file(self::$faviconIcoFilename)) {
+
+            touch(self::$faviconIcoFilename);
+        }
+
+        header('Location: /admin/');
     }
 
     /**

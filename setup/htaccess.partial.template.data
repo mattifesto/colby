@@ -1,0 +1,66 @@
+# Colby partial installation settings
+#
+# This website handles requests using both Colby and non-Colby methods. The
+# site's front page is handled via `index.php`, other requests are handled
+# directly using `.php` files, and all Colby handled requests are routed
+# through `colby.php`.
+
+
+# Don't allow file listings for directories.
+
+Options -Indexes
+
+
+# Rewrite section
+
+<IfModule mod_rewrite.c>
+
+RewriteEngine On
+RewriteBase /
+
+# Pass these URLs through without further modification.
+
+RewriteRule ^colby\.php$ - [L]
+RewriteRule ^index\.php$ - [L]
+
+
+# If the URL doesn't reference an existing file, rewrite to `colby.php`.
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . /colby.php [L]
+
+
+# If the request is for an existing data file, rewrite to `colby.php` to
+# deny access to the file. Data files are used to hold private site data
+# that should only be provided to the user if necessary via a handler.
+
+RewriteRule \.data$ /colby.php [L]
+RewriteRule \.json$ /colby.php [L]
+
+
+# If the request is for an existing file whose path contains the string '.git',
+# rewrite to `colby.php` (do not show the file).
+
+RewriteRule \.git /colby.php [L]
+
+
+# If the request is for an existing file in the `/tmp` directory, rewrite to
+# `colby.php` (do not show the file).
+
+RewriteRule ^tmp/ /colby.php [L]
+
+
+# If the request is for an existing PHP file inside the following directores,
+# rewrite to `colby.php` (do not envoke the PHP file). The more directories
+# that can be added to this list, the better.
+
+RewriteRule ^colby/.*\.php$ /colby.php [L]
+RewriteRule ^classes/.*\.php$ /colby.php [L]
+RewriteRule ^data/.*\.php$ /colby.php [L]
+RewriteRule ^handlers/.*\.php$ /colby.php [L]
+RewriteRule ^setup/.*\.php$ /colby.php [L]
+RewriteRule ^snippets/.*\.php$ /colby.php [L]
+RewriteRule ^stripe/.*\.php$ /colby.php [L]
+RewriteRule ^swiftmailer/.*\.php$ /colby.php [L]
+
+</IfModule>
