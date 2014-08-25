@@ -1,37 +1,39 @@
 <?php
 
-define('CBSiteURL',         '');
-define('CBSiteName',        '');
-define('CBSiteNameHTML',    '');
+define('CBSiteURL',                         '');
+define('CBSiteName',                        '');
+define('CBSiteNameHTML',                    '');
 
 define('CBSiteAdministratorEmail',          '');
 define('CBSiteDoesSendEmailErrorReports',   false);
 define('CBSiteIsBeingDubugged',             false);
 
-define('CBFacebookAppID',               '');
-define('CBFacebookAppSecret',           '');
-define('CBFacebookFirstVerifiedUserID', '');
+define('CBFacebookAppID',                   '');
+define('CBFacebookAppSecret',               '');
+define('CBFacebookFirstVerifiedUserID',     '');
 
-define('CBMySQLHost',       '');
-define('CBMySQLUser',       '');
-define('CBMySQLPassword',   '');
-define('CBMySQLDatabase',   '');
+define('CBMySQLHost',                       '');
+define('CBMySQLDatabase',                   '');
+define('CBMySQLUser',                       '');
+define('CBMySQLPassword',                   '');
 
-define('CBEncryptionPassword', 'Replace this password.');
+define('CBEncryptionPassword',              'Replace this password.');
+
 
 /**
 
-define('COLBY_EMAIL_LIBRARY_DIRECTORY', COLBY_SITE_DIRECTORY . '/swiftmailer');
-define('COLBY_EMAIL_SENDER', 'mail@example.com');
-define('COLBY_EMAIL_SENDER_NAME', 'Example Mailer');
-
-define('COLBY_EMAIL_SMTP_SERVER', 'smtp.gmail.com');
-define('COLBY_EMAIL_SMTP_PORT', 465);
-define('COLBY_EMAIL_SMTP_SECURITY', 'ssl');
-define('COLBY_EMAIL_SMTP_USER', 'mail@example.com');
-define('COLBY_EMAIL_SMTP_PASSWORD', '********');
+define('COLBY_EMAIL_LIBRARY_DIRECTORY',     COLBY_SITE_DIRECTORY . '/swiftmailer');
+define('COLBY_EMAIL_SENDER',                'mail@example.com');
+define('COLBY_EMAIL_SENDER_NAME',           'Example Mailer');
+                                            
+define('COLBY_EMAIL_SMTP_SERVER',           'smtp.gmail.com');
+define('COLBY_EMAIL_SMTP_PORT',             465);
+define('COLBY_EMAIL_SMTP_SECURITY',         'ssl');
+define('COLBY_EMAIL_SMTP_USER',             'mail@example.com');
+define('COLBY_EMAIL_SMTP_PASSWORD',         'password');
 
  **/
+
 
 /**
  * This is a real tracking ID that's used just to have a working default for
@@ -39,15 +41,8 @@ define('COLBY_EMAIL_SMTP_PASSWORD', '********');
  * website.
  */
 
-define('GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID', 'UA-11518627-14');
+define('CBGoogleAnalyticsID',               'UA-11518627-14');
 
-/**
- * For older Google Analytics accounts.
- *
-
-define('GOOGLE_CLASSIC_ANALYTICS_TRACKING_ID', '');
-
- **/
 
 /**
  * Deprecated constants
@@ -65,3 +60,4 @@ define('COLBY_MYSQL_HOST',                      CBMySQLHost);
 define('COLBY_MYSQL_USER',                      CBMySQLUser);
 define('COLBY_MYSQL_PASSWORD',                  CBMySQLPassword);
 define('COLBY_MYSQL_DATABASE',                  CBMySQLDatabase);
+define('GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID', CBGoogleAnalyticsID);
