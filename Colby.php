@@ -496,6 +496,21 @@ class Colby
         require_once COLBY_SITE_DIRECTORY . '/version.php';
 
         /**
+         * The site `version.php` file should define either CBSiteVersionNumber
+         * or COLBY_SITE_VERSION_NUMBER. COLBY_SITE_VERSION_NUMBER is
+         * depredated.
+         */
+
+        if (!defined('CBSiteVersionNumber')) {
+
+            define('CBSiteVersionNumber', COLBY_SITE_VERSION_NUMBER);
+
+        } else {
+
+            define('COLBY_SITE_VERSION_NUMBER', CBSiteVersionNumber);
+        }
+
+        /**
          * Library directories are relative paths from the site directory. So
          * the site library directory is simply an empty string.
          */
