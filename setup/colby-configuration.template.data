@@ -42,6 +42,7 @@ define('COLBY_EMAIL_SMTP_PASSWORD',         'password');
  */
 
 define('CBGoogleAnalyticsID',               'UA-11518627-14');
+define('GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID', CBGoogleAnalyticsID);
 
 
 /**
@@ -60,4 +61,3 @@ define('COLBY_MYSQL_HOST',                      CBMySQLHost);
 define('COLBY_MYSQL_USER',                      CBMySQLUser);
 define('COLBY_MYSQL_PASSWORD',                  CBMySQLPassword);
 define('COLBY_MYSQL_DATABASE',                  CBMySQLDatabase);
-define('GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID', CBGoogleAnalyticsID);
