@@ -17,11 +17,10 @@ if ($databaseIsAvailable)
         SELECT
             COUNT(*) AS `count`
         FROM
-            `information_schema`.`ROUTINES`
+            `information_schema`.`TABLES`
         WHERE
-            `ROUTINE_SCHEMA` = DATABASE() AND
-            `ROUTINE_TYPE` = 'FUNCTION' AND
-            `ROUTINE_NAME` = 'ColbySchemaVersionNumber'
+            `TABLE_SCHEMA`  = DATABASE() AND
+            `TABLE_NAME`    = 'CBDictionary'
 
 EOT;
 

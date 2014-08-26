@@ -4,24 +4,19 @@
 
         <?php
 
-        $sql = 'SELECT ColbySchemaVersionNumber() AS `schemaVersionNumber`';
-
-        $result = Colby::query($sql);
-
-        $schemaVersionNumber = $result->fetch_object()->schemaVersionNumber;
-
-        $result->free();
+        $tuple                  = CBDictionaryTuple::initWithKey('CBSystemVersionNumber');
+        $DBSystemVersionNumber  = $tuple->value;
 
         ?>
 
         <section class="version-number">
             <h1>Version</h1>
-            <div class="number"><?php echo COLBY_VERSION_NUMBER; ?></div>
+            <div class="number"><?php echo CBSystemVersionNumber ?></div>
         </section>
 
         <section class="version-number">
             <h1>Database Version</h1>
-            <div class="number"><?php echo $schemaVersionNumber; ?></div>
+            <div class="number"><?php echo $DBSystemVersionNumber; ?></div>
         </section>
     </div>
 </section>

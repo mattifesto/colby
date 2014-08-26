@@ -14,19 +14,17 @@ if (isset($_POST['requestIsForInitialInstallation']))
     $sql = <<<EOT
 
         SELECT
-            COUNT(*) AS `databaseIsInstalled`
+            COUNT(*) AS `count`
         FROM
-            `information_schema`.`ROUTINES`
+            `information_schema`.`TABLES`
         WHERE
-            `ROUTINE_SCHEMA` = DATABASE() AND
-            `ROUTINE_TYPE` = 'FUNCTION' AND
-            `ROUTINE_NAME` = 'ColbySchemaVersionNumber'
+            `TABLE_SCHEMA`  = DATABASE() AND
+            `TABLE_NAME`    = 'CBDictionary'
 
 EOT;
 
-    $result = Colby::query($sql);
-
-    $initialInstallationIsRequired = !$result->fetch_object()->databaseIsInstalled;
+    $result                         = Colby::query($sql);
+    $initialInstallationIsRequired  = !$result->fetch_object()->databaseIsInstalled;
 
     $result->free();
 }

@@ -4,21 +4,21 @@
  * 2014.03.27
  *
  * This file is now intended to be included during upgrades as well as
- * installations. It upgrades the `ColbySchemaVersionNumber` function and
- * running it during upgrades also allows new tables to be added to only this
- * file so that no separate upgrade file needed.
+ * installations. It upgrades the system and site version numbers and allows
+ * new tables to be added to only this file so that a separate upgrade file is
+ * not required.
  */
 
 /**
  * This is the current uninstall SQL:
  *
 
+DROP TABLE `CBDictionary`;
 DROP TABLE `ColbyPages`;
 DROP TABLE `CBPagesInTheTrash`;
 DROP TABLE `ColbyUsersWhoAreAdministrators`;
 DROP TABLE `ColbyUsersWhoAreDevelopers`;
 DROP TABLE `ColbyUsers`;
-DROP PROCEDURE IF EXISTS `ColbyVerifyUser`;
 DROP FUNCTION IF EXISTS `ColbySchemaVersionNumber`;
 
  */
@@ -225,43 +225,36 @@ EOT;
 
 
 /**
- * Heredocs won't parse constants so the version number must be placed
- * in a variable.
  *
- * The version number function is dropped and replaced for two reasons:
- *
- *  1. There is no `CREATE FUNCTION IF NOT EXISTS` sytax.
- *
- *  2. If the version number has changed, we need a new function anyway.
  */
 
-$versionNumber = COLBY_VERSION_NUMBER;
-
 $sqls[] = <<<EOT
 
-    DROP FUNCTION IF EXISTS `ColbySchemaVersionNumber`;
-
-EOT;
-
-$sqls[] = <<<EOT
-
-    CREATE FUNCTION ColbySchemaVersionNumber()
-    RETURNS BIGINT UNSIGNED
-    BEGIN
-        RETURN {$versionNumber};
-    END
+    CREATE TABLE IF NOT EXISTS `CBDictionary`
+    (
+        `key`                   VARCHAR(100),
+        `valueJSON`             LONGTEXT,
+        `number`                BIGINT UNSIGNED NOT NULL DEFAULT 1,
+        PRIMARY KEY (`key`)
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8
+    COLLATE=utf8_unicode_ci
 
 EOT;
 
 
 /**
- * Remove these deprecated clean-up calls as soon as it's known that they have
- * been applied to all installations.
+ * 2014.08.25
+ *  There is an issue with MySQL stored functions that makes some web hosting
+ *  companies disallow their use. The function `ColbySchemaVersionNumber` has
+ *  been replaced by the `CBSystemVersionNumber` value in the `CBDictionary`
+ *  table. This SQL statement can be removed after all sites have been updated.
  */
 
 $sqls[] = <<<EOT
 
-    DROP PROCEDURE IF EXISTS `ColbyVerifyUser`
+    DROP FUNCTION IF EXISTS `ColbySchemaVersionNumber`;
 
 EOT;
 
@@ -274,3 +267,16 @@ foreach ($sqls as $sql)
 {
     Colby::query($sql);
 }
+
+
+/**
+ *
+ */
+
+$tuple = CBDictionaryTuple::initWithKey('CBSystemVersionNumber');
+$tuple->value = CBSystemVersionNumber;
+$tuple->update();
+
+$tuple = CBDictionaryTuple::initWithKey('CBSiteVersionNumber');
+$tuple->value = CBSiteVersionNumber;
+$tuple->update();
