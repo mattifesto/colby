@@ -14,12 +14,13 @@
  *
 
 DROP TABLE `CBDictionary`;
-DROP TABLE `ColbyPages`;
 DROP TABLE `CBPagesInTheTrash`;
+DROP TABLE `ColbyPages`;
 DROP TABLE `ColbyUsersWhoAreAdministrators`;
 DROP TABLE `ColbyUsersWhoAreDevelopers`;
 DROP TABLE `ColbyUsers`;
 DROP FUNCTION IF EXISTS `ColbySchemaVersionNumber`;
+DROP FUNCTION IF EXISTS `ColbySiteSchemaVersionNumber`;
 
  */
 
@@ -255,6 +256,18 @@ EOT;
 $sqls[] = <<<EOT
 
     DROP FUNCTION IF EXISTS `ColbySchemaVersionNumber`;
+
+EOT;
+
+
+/**
+ * `ColbySiteSchemaVersionNumber` has been replaced by the `CBSiteVersionNumber`
+ * value in the `CBDictionary` table.
+ */
+
+$sqls[] = <<<EOT
+
+    DROP FUNCTION IF EXISTS `ColbySiteSchemaVersionNumber`;
 
 EOT;
 

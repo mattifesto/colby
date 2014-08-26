@@ -643,6 +643,23 @@ class Colby
          */
 
         include_once COLBY_SITE_DIRECTORY . '/site-configuration.php';
+
+        /**
+         * 2014.08.26
+         *  This check was added because if magic quotes are enabled bugs that
+         *  are difficult to investigate will appear. Once PHP versions less
+         *  than 5.4 are unacceptable, this code can be removed.
+         */
+
+        if (get_magic_quotes_runtime() || get_magic_quotes_gpc()) {
+
+            $mqr = get_magic_quotes_runtime();
+            $mqr = var_export($mqr, true);
+            $mqg = get_magic_quotes_gpc();
+            $mqg = var_export($mqg, true);
+
+            throw new RuntimeException("Magic quotes are enabled on this server: magic_quotes_runtime={$mqr}, magic_quotes_gpc={$mqg}. Add the line 'php_flag magic_quotes_gpc off' to the `.htaccess` file.");
+        }
     }
 
     /**
@@ -838,79 +855,6 @@ class Colby
         {
             error_log('Colby::reportException() RARE EXCEPTION: ' . $rareException->getMessage());
         }
-    }
-
-    /**
-     *
-     */
-    public static function siteSchemaVersionNumber()
-    {
-        $sql = 'SELECT ColbySiteSchemaVersionNumber() as `versionNumber`';
-
-        try
-        {
-            $result = Colby::query($sql);
-        }
-        catch (Exception $exception)
-        {
-            if (1305 == Colby::mysqli()->errno)
-            {
-                /**
-                 * If the `ColbySiteSchemaVersionNumber` function doesn't exist
-                 * that's equivalent to a site schema version number of 0.
-                 */
-
-                return 0;
-            }
-            else
-            {
-                throw $exception;
-            }
-        }
-
-        $versionNumber = $result->fetch_object()->versionNumber;
-
-        $result->free();
-
-        return $versionNumber;
-    }
-
-    /**
-     *
-     */
-    public static function setSiteSchemaVersionNumber($versionNumber)
-    {
-        $sql = 'DROP FUNCTION ColbySiteSchemaVersionNumber';
-
-        try
-        {
-            Colby::query($sql);
-        }
-        catch (Exception $exception)
-        {
-            if (1305 != Colby::mysqli()->errno)
-            {
-                /**
-                 * If the `ColbySiteSchemaVersionNumber` function doesn't exist
-                 * it's okay because we are about to create it; otherwise, we
-                 * throw the exception.
-                 */
-
-                throw $exception;
-            }
-        }
-
-        $versionNumber = intval($versionNumber);
-
-        $sql = <<<EOT
-CREATE FUNCTION ColbySiteSchemaVersionNumber()
-RETURNS BIGINT UNSIGNED
-BEGIN
-    RETURN {$versionNumber};
-END
-EOT;
-
-        Colby::query($sql);
     }
 
     /**

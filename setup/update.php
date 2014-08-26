@@ -29,13 +29,3 @@ include CBSystemDirectory . '/setup/install-database.php';
  * should be removed and deprecated once all known installations have
  * been upgraded to keep the upgrade process fast and simple.
  */
-
-
-
-
-/**
- * Update the site's schema version number after everything else has been
- * updated successfully.
- */
-
-Colby::setSiteSchemaVersionNumber(COLBY_SITE_VERSION_NUMBER);

@@ -24,7 +24,7 @@ if (isset($_POST['requestIsForInitialInstallation']))
 EOT;
 
     $result                         = Colby::query($sql);
-    $initialInstallationIsRequired  = !$result->fetch_object()->databaseIsInstalled;
+    $initialInstallationIsRequired  = !$result->fetch_object()->count;
 
     $result->free();
 }
