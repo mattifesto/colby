@@ -1,5 +1,6 @@
 <?php
 
-include_once CBSystemDirectory . '/sections/CBStandardPageHeaderSection.php';
-include_once CBSystemDirectory . '/sections/CBStandardPageFooterSection.php';
-include_once CBSystemDirectory . '/sections/CBBackgroundSection.php';
+/**
+ * This file is deprecated. It will be removed when all sites have transitioned
+ * away from using it.
+ */
