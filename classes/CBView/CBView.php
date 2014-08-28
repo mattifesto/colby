@@ -107,7 +107,9 @@ EOT;
      */
     public function renderHTML()
     {
-        echo "\n\n<!-- This is the default output of the the `CBView` class. -->\n\n";
+        $className = get_class($this);
+
+        echo "\n\n<!-- This is the default output for a `{$className}` class. -->\n\n";
     }
 
     /**
