@@ -29,6 +29,10 @@ class CBDataStore
      * This method does not attempt to remove any intermediate and potentially
      * shared directories that may exist in its path.
      *
+     * This method behaves similarly to `rmdir` in that it will fail if the
+     * data store directory does not exist. If in doubt, call `is_dir` with the
+     * value returned by the `directory` function as the parameter.
+     *
      * @return void
      */
     public function delete()
@@ -80,6 +84,6 @@ class CBDataStore
      */
     public function URL()
     {
-        return COLBY_SITE_URL . "/data/{$this->path}";
+        return CBSiteURL . "/data/{$this->path}";
     }
 }
