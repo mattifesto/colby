@@ -44,7 +44,17 @@ Colby::mysqli()->autocommit(false);
 CBPages::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
 
 $dataStore = new CBDataStore($dataStoreID);
-$dataStore->delete();
+
+/**
+ * In most cases the data store directory can be assumed to exists but there
+ * are rare scenarios where it won't and deleting a page shouldn't fail in those
+ * scenarios.
+ */
+
+if (is_dir($dataStore->directory()))
+{
+    $dataStore->delete();
+}
 
 Colby::mysqli()->commit();
 Colby::mysqli()->autocommit(true);
