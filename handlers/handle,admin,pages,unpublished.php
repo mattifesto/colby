@@ -1,8 +1,5 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
-
 if (!ColbyUser::current()->isOneOfThe('Administrators'))
 {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
@@ -10,18 +7,13 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 
 
 CBHTMLOutput::begin();
-CBHTMLOutput::setTitleHTML('Page Administration');
-CBHTMLOutput::setDescriptionHTML('Create, edit, and delete pages.');
+CBHTMLOutput::setTitleHTML('Unpublished Pages');
+CBHTMLOutput::setDescriptionHTML('Pages that haven\'t been published.');
 
-include CBSystemDirectory . '/sections/equalize.php';
+include CBSystemDirectory . '/sections/admin-page-settings.php';
 
-CBHTMLOutput::addCSSURL(CBSystemURL . '/css/admin.css');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
-
 
 $selectedMenuItemID     = 'pages';
 $selectedSubmenuItemID  = 'unpublished';
