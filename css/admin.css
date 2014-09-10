@@ -1,4 +1,14 @@
-/* admin.css */
+/**
+ * 2014.09.10
+ *  This style sheet is deprecated and should not be used. If you are deciding
+ *  whether you should use this page, you shouldn't. You should be creating
+ *  views that have their own style sheets. If there are global styles that
+ *  need to be applied to every admin page, those go in
+ *  `sections/admin-page-settings.css` but that will almost never happen.
+ *
+ *  If you see this style sheet included somewhere, work to remove it or the
+ *  page that is using it. The method to use is to create views.
+ */
 
 html
 {
