@@ -1,5 +1,4 @@
 <div class="CBRecentlyEditedPagesView">
-    Recently Edited Pages
 
     <?php
 

@@ -168,9 +168,14 @@ EOT;
      * means that the value member variable has become stale.
      *
      * @return bool
+     *  If the value was updated, `true` will be returned; otherwise `false`.
      */
     public function updateForNumber()
     {
-        // TODO: Implement
+        // TODO: Implement correctly
+
+        $this->update();
+
+        return true;
     }
 }

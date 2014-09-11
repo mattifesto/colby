@@ -44,6 +44,7 @@ else
 
 CBPages::updateRow($rowData);
 
+CBPageUpdateRecentlyEditedPages($model);
 
 /**
  *
@@ -111,4 +112,56 @@ function CBPageGenerateSectionSearchText($pageModel, $sectionModel)
     }
 
     return $text;
+}
+
+/**
+ * @return void
+ */
+function CBPageUpdateRecentlyEditedPages($model) {
+
+    $hasUpdated = false;
+
+    while (!$hasUpdated) {
+
+        $tuple = CBDictionaryTuple::initWithKey('CBRecentlyEditedPages');
+
+        if ($tuple->value) {
+
+            $pages = $tuple->value;
+
+        } else {
+
+            $pages = array();
+        }
+
+        $tuple->value = CBPageUpdateRecentlyEditedPagesArray($pages, $model);
+
+        $hasUpdated = $tuple->updateForNumber();
+    }
+}
+
+/**
+ * @return array
+ */
+function CBPageUpdateRecentlyEditedPagesArray($pages, $model) {
+
+    foreach ($pages as $index => $page) {
+
+        if ($page->dataStoreID == $model->dataStoreID) {
+
+            unset($pages[$index]);
+
+            break;
+        }
+    }
+
+    $page = new stdClass();
+    $page->dataStoreID  = $model->dataStoreID;
+    $page->published    = $model->publicationTimeStamp;
+    $page->title        = $model->title;
+    $page->updated      = time();
+
+    array_unshift($pages, $page);
+
+    return array_values($pages);
 }

@@ -7,25 +7,16 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 
 $response = new CBAjaxResponse();
 
-$response->pages = array();
+$tuple = CBDictionaryTuple::initWithKey('CBRecentlyEditedPages');
 
-$page = new stdClass();
-$rand = bin2hex(openssl_random_pseudo_bytes(1));
-$page->title = "Hello, World! {$rand}";
+if ($tuple->value) {
 
-$response->pages[] = $page;
+    $response->pages = $tuple->value;
 
-$page = new stdClass();
-$rand = bin2hex(openssl_random_pseudo_bytes(1));
-$page->title = "Hello, World! {$rand}";
+} else {
 
-$response->pages[] = $page;
-
-$page = new stdClass();
-$rand = bin2hex(openssl_random_pseudo_bytes(1));
-$page->title = "Hello, World! {$rand}";
-
-$response->pages[] = $page;
+    $response->pages = array();
+}
 
 /**
  * Send the response
