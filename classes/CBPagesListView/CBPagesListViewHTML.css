@@ -16,6 +16,17 @@
     padding: 1px 5px 3px;
 }
 
+/**
+ * Enable elipses for overflow
+ */
+.CBPagesListView table td,
+.CBPagesListView table th
+{
+    overflow:       hidden;
+    text-overflow:  ellipsis;
+    white-space:    nowrap;
+}
+
 .CBPagesListView table tr:nth-child(even)
 {
     background-color: #e0e0e0;
