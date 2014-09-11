@@ -95,6 +95,8 @@ CBRecentlyEditedPagesViewController.refreshListDataDidComplete = function(xhr)
         this.listViewController.addListItem(response.pages[i]);
     }
 
+    Colby.beginUpdatingTimes();
+
     this.refreshTimer.restart();
 };
 

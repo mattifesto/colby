@@ -23,8 +23,54 @@ CBPagesListViewController.initWithElement = function(element)
 CBPagesListViewController.addListItem = function(listItem)
 {
     var tr = document.createElement("tr");
-    var td = document.createElement("td");
+
+    /**
+     * Buttons
+     */
+
+    var td              = document.createElement("td");
+    var button          = document.createElement("button");
+    button.textContent  = "Edit";
+    var editListener    = function() {
+
+        location.href = "/admin/pages/edit/?data-store-id=" + listItem.dataStoreID;
+    };
+
+    button.addEventListener("click", editListener);
+
+    td.appendChild(button);
+    tr.appendChild(td);
+
+    /**
+     * Title
+     */
+
+    td = document.createElement("td");
     td.textContent = listItem.title;
+    tr.appendChild(td);
+
+    /**
+     * Published
+     */
+
+    td = document.createElement("td");
+    var span        = document.createElement("span");
+    span.className  = "time";
+
+    span.setAttribute("data-timestamp", listItem.published * 1000);
+    td.appendChild(span);
+    tr.appendChild(td);
+
+    /**
+     * Updated
+     */
+
+    td              = document.createElement("td");
+    span            = document.createElement("span");
+    span.className  = "time";
+
+    span.setAttribute("data-timestamp", listItem.updated * 1000);
+    td.appendChild(span);
     tr.appendChild(td);
 
     this.table.tBodies[0].appendChild(tr);
