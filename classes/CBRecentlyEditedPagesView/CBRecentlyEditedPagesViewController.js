@@ -3,7 +3,8 @@
 var CBRecentlyEditedPagesViewController =
 {
     element             : null,
-    listViewController  : null
+    listViewController  : null,
+    refreshListTimer    : null
 };
 
 /**
@@ -11,29 +12,40 @@ var CBRecentlyEditedPagesViewController =
  */
 CBRecentlyEditedPagesViewController.initWithElement = function(element)
 {
+    this.element            = element;
+    var listView            = element.getElementsByClassName("CBPagesListView")[0];
+    this.listViewController = CBPagesListViewController.controllerForElement(listView);
+    this.refreshListTimer   = Object.create(CBDelayTimer).init();
+
+    this.listViewController.addListItem();
+    this.listViewController.addListItem();
+    this.listViewController.addListItem();
+
+    return this;
+};
+
+/**
+ * @return instance type
+ */
+CBRecentlyEditedPagesViewController.controllerForElement = function(element)
+{
     if (element.controller)
     {
-        throw "This element already has a controller.";
+        if (CBRecentlyEditedPagesViewController.isPrototypeOf(element.controller))
+        {
+            return element.controller;
+        }
+        else
+        {
+            throw "The controller for the element is not of the expected type.";
+        }
     }
-
-    var controller      = Object.create(CBRecentlyEditedPagesViewController);
-    controller.element  = element;
-
-    var listView        = element.getElementsByClassName("CBPagesListView")[0];
-
-    if (!listView.controller)
+    else
     {
-        var listViewController  = CBPagesListViewController.initWithElement(listView);
-        listView.controller     = listViewController;
+        element.controller = Object.create(CBRecentlyEditedPagesViewController).initWithElement(element);
+
+        return element.controller;
     }
-
-    controller.listViewController = listView.controller;
-
-    controller.listViewController.addListItem();
-    controller.listViewController.addListItem();
-    controller.listViewController.addListItem();
-
-    return controller;
 };
 
 /**
@@ -47,13 +59,13 @@ CBRecentlyEditedPagesViewController.DOMContentDidLoad = function()
     {
         var element = elements[i];
 
-        if (!element.controller)
-        {
-            element.controller = CBRecentlyEditedPagesViewController.initWithElement(element);
-        }
+        element.controller = this.controllerForElement(element);
     }
 };
 
+/**
+ *
+ */
 (function()
 {
     var object      = CBRecentlyEditedPagesViewController;

@@ -24,6 +24,10 @@ class CBRecentlyEditedPagesView extends CBView
 
         CBHTMLOutput::addJavaScriptURL($URL);
 
+        $URL = CBSystemURL . '/javascript/CBDelayTimer.js';
+
+        CBHTMLOutput::addJavaScriptURL($URL);
+
         include __DIR__ . '/CBRecentlyEditedPagesViewHTML.php';
     }
 }

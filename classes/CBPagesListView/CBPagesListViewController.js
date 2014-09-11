@@ -11,16 +11,34 @@ var CBPagesListViewController =
  */
 CBPagesListViewController.initWithElement = function(element)
 {
+    this.element  = element;
+    this.table    = element.getElementsByTagName("table")[0];
+
+    return this;
+};
+
+/**
+ * @return instance type
+ */
+CBPagesListViewController.controllerForElement = function(element)
+{
     if (element.controller)
     {
-        throw "This element already has a controller.";
+        if (CBPagesListViewController.isPrototypeOf(element.controller))
+        {
+            return element.controller;
+        }
+        else
+        {
+            throw "The controller for the element is not of the expected type.";
+        }
     }
+    else
+    {
+        element.controller = Object.create(CBPagesListViewController).initWithElement(element);
 
-    var controller      = Object.create(CBPagesListViewController);
-    controller.element  = element;
-    controller.table    = element.getElementsByTagName("table")[0];
-
-    return controller;
+        return element.controller;
+    }
 };
 
 /**
@@ -47,13 +65,13 @@ CBPagesListViewController.DOMContentDidLoad = function()
     {
         var element = elements[i];
 
-        if (!element.controller)
-        {
-            element.controller = CBPagesListViewController.initWithElement(element);
-        }
+        element.controller = this.controllerForElement(element);
     }
 };
 
+/**
+ *
+ */
 (function()
 {
     var listener = CBPagesListViewController.DOMContentDidLoad.bind(CBPagesListViewController);
