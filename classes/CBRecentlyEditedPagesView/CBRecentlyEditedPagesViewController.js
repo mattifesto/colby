@@ -4,7 +4,7 @@ var CBRecentlyEditedPagesViewController =
 {
     element             : null,
     listViewController  : null,
-    refreshListTimer    : null
+    refreshTimer        : null
 };
 
 /**
@@ -15,11 +15,12 @@ CBRecentlyEditedPagesViewController.initWithElement = function(element)
     this.element            = element;
     var listView            = element.getElementsByClassName("CBPagesListView")[0];
     this.listViewController = CBPagesListViewController.controllerForElement(listView);
-    this.refreshListTimer   = Object.create(CBDelayTimer).init();
 
-    this.listViewController.addListItem();
-    this.listViewController.addListItem();
-    this.listViewController.addListItem();
+    this.refreshTimer                       = Object.create(CBDelayTimer).init();
+    this.refreshTimer.callback              = this.refreshListData.bind(this);
+    this.refreshTimer.delayInMilliseconds   = 20000;
+
+    this.refreshListData();
 
     return this;
 };
@@ -61,6 +62,40 @@ CBRecentlyEditedPagesViewController.DOMContentDidLoad = function()
 
         element.controller = this.controllerForElement(element);
     }
+};
+
+/**
+ * @return instance type
+ */
+CBRecentlyEditedPagesViewController.refreshListData = function()
+{
+    var xhr = new XMLHttpRequest();
+    xhr.onload  = this.refreshListDataDidComplete.bind(this, xhr);
+
+    xhr.open("POST", "/admin/pages/api/get-recently-edited-pages/");
+    xhr.send();
+};
+
+/**
+ * @return instance type
+ */
+CBRecentlyEditedPagesViewController.refreshListDataDidComplete = function(xhr)
+{
+    var response = Colby.responseFromXMLHttpRequest(xhr);
+
+    if (!response.wasSuccessful)
+    {
+        Colby.displayResponse(response);
+    }
+
+    this.listViewController.clear();
+
+    for (var i = 0; i < response.pages.length; i++)
+    {
+        this.listViewController.addListItem(response.pages[i]);
+    }
+
+    this.refreshTimer.restart();
 };
 
 /**

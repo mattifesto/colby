@@ -10,17 +10,20 @@ $response = new CBAjaxResponse();
 $response->pages = array();
 
 $page = new stdClass();
-$page->title = "Hello, World! 1";
+$rand = bin2hex(openssl_random_pseudo_bytes(1));
+$page->title = "Hello, World! {$rand}";
 
 $response->pages[] = $page;
 
 $page = new stdClass();
-$page->title = "Hello, World! 2";
+$rand = bin2hex(openssl_random_pseudo_bytes(1));
+$page->title = "Hello, World! {$rand}";
 
 $response->pages[] = $page;
 
 $page = new stdClass();
-$page->title = "Hello, World! 3";
+$rand = bin2hex(openssl_random_pseudo_bytes(1));
+$page->title = "Hello, World! {$rand}";
 
 $response->pages[] = $page;
 

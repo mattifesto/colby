@@ -18,6 +18,32 @@ CBPagesListViewController.initWithElement = function(element)
 };
 
 /**
+ * @return void
+ */
+CBPagesListViewController.addListItem = function(listItem)
+{
+    var tr = document.createElement("tr");
+    var td = document.createElement("td");
+    td.textContent = listItem.title;
+    tr.appendChild(td);
+
+    this.table.tBodies[0].appendChild(tr);
+};
+
+/**
+ * @return void
+ */
+CBPagesListViewController.clear = function()
+{
+    var tBody = this.table.tBodies[0];
+
+    while (tBody.firstChild)
+    {
+        tBody.removeChild(tBody.firstChild);
+    }
+};
+
+/**
  * @return instance type
  */
 CBPagesListViewController.controllerForElement = function(element)
@@ -41,18 +67,6 @@ CBPagesListViewController.controllerForElement = function(element)
     }
 };
 
-/**
- * @return void
- */
-CBPagesListViewController.addListItem = function(listItem)
-{
-    var tr = document.createElement("tr");
-    var td = document.createElement("td");
-    td.textContent = "testing";
-    tr.appendChild(td);
-
-    this.table.tBodies[0].appendChild(tr);
-};
 
 /**
  * @return void
