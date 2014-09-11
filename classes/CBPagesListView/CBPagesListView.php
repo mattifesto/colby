@@ -7,7 +7,10 @@ class CBPagesListView extends CBView
      */
     public function renderHTML()
     {
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBPagesListView/CBPagesListViewController.js');
+        $baseURL = CBSystemURL . '/classes/CBPagesListView';
+
+        CBHTMLOutput::addCSSURL("{$baseURL}/CBPagesListViewHTML.css");
+        CBHTMLOutput::addJavaScriptURL("{$baseURL}/CBPagesListViewController.js");
 
         include __DIR__ . '/CBPagesListViewHTML.php';
     }

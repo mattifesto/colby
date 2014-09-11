@@ -1,3 +1,14 @@
 <div class="CBPagesListView">
-    Pages List View
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Published</th>
+                <th>Last Edited</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </div>

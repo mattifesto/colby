@@ -1,0 +1,10 @@
+.CBPagesListView
+{
+    margin: 0 auto;
+    width:  960px;
+}
+
+.CBPagesListView table
+{
+    width: 100%;
+}

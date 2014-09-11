@@ -29,9 +29,9 @@ CBRecentlyEditedPagesViewController.initWithElement = function(element)
 
     controller.listViewController = listView.controller;
 
-    var test            = document.createElement("div");
-    test.textContent    = "Recent Test Text";
-    element.appendChild(test);
+    controller.listViewController.addListItem();
+    controller.listViewController.addListItem();
+    controller.listViewController.addListItem();
 
     return controller;
 };

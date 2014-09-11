@@ -2,7 +2,8 @@
 
 var CBPagesListViewController =
 {
-    element : null
+    element : null,
+    table   : null
 };
 
 /**
@@ -17,12 +18,22 @@ CBPagesListViewController.initWithElement = function(element)
 
     var controller      = Object.create(CBPagesListViewController);
     controller.element  = element;
-
-    var test            = document.createElement("div");
-    test.textContent    = "Test Text";
-    element.appendChild(test);
+    controller.table    = element.getElementsByTagName("table")[0];
 
     return controller;
+};
+
+/**
+ * @return void
+ */
+CBPagesListViewController.addListItem = function(listItem)
+{
+    var tr = document.createElement("tr");
+    var td = document.createElement("td");
+    td.textContent = "testing";
+    tr.appendChild(td);
+
+    this.table.tBodies[0].appendChild(tr);
 };
 
 /**
