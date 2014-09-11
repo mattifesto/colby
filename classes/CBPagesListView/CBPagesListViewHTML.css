@@ -6,5 +6,38 @@
 
 .CBPagesListView table
 {
-    width: 100%;
+    table-layout:   fixed;
+    width:          100%;
+}
+
+.CBPagesListView table td,
+.CBPagesListView table th
+{
+    padding: 1px 5px 3px;
+}
+
+.CBPagesListView table tr:nth-child(even)
+{
+    background-color: #e0e0e0;
+}
+
+.CBPagesListView table th.actions
+{
+    width:      100px;
+}
+
+.CBPagesListView table th.published,
+.CBPagesListView table th.updated
+{
+    width: 175px;
+}
+
+.CBPagesListView table span.time
+{
+    font-size: 0.8em;
+}
+
+.CBPagesListView table td:nth-child(1)
+{
+    text-align: center;
 }

@@ -2,10 +2,10 @@
     <table>
         <thead>
             <tr>
-                <th></th>
-                <th>Title</th>
-                <th>Published</th>
-                <th>Last Edited</th>
+                <th class="actions"></th>
+                <th class="title">Title</th>
+                <th class="published">Published</th>
+                <th class="updated">Last Updated</th>
             </tr>
         </thead>
         <tbody>
