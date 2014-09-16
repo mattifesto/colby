@@ -6,7 +6,7 @@ define('CBSiteNameHTML',                    '');
 
 define('CBSiteAdministratorEmail',          '');
 define('CBSiteDoesSendEmailErrorReports',   false);
-define('CBSiteIsBeingDubugged',             false);
+define('CBSiteIsBeingDebugged',             false);
 
 define('CBFacebookAppID',                   '');
 define('CBFacebookAppSecret',               '');
@@ -53,7 +53,7 @@ define('COLBY_SITE_URL',                        CBSiteURL);
 define('COLBY_SITE_NAME',                       CBSiteName);
 define('COLBY_SITE_ADMINISTRATOR',              CBSiteAdministratorEmail);
 define('COLBY_SITE_ERRORS_SEND_EMAILS',         CBSiteDoesSendEmailErrorReports);
-define('COLBY_SITE_IS_BEING_DEBUGGED',          CBSiteIsBeingDubugged);
+define('COLBY_SITE_IS_BEING_DEBUGGED',          CBSiteIsBeingDebugged);
 define('COLBY_FACEBOOK_APP_ID',                 CBFacebookAppID);
 define('COLBY_FACEBOOK_APP_SECRET',             CBFacebookAppSecret);
 define('COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID', CBFacebookFirstVerifiedUserID);
