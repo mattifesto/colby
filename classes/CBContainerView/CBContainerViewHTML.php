@@ -2,10 +2,7 @@
 
     <?php
 
-    foreach ($this->subviews as $subview) {
-
-        $subview->renderHTML();
-    }
+    $this->renderSubviews();
 
     ?>
 
