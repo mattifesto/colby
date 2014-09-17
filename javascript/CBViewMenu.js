@@ -1,11 +1,25 @@
 "use strict";
 
+var CBViewMenu = {};
+
+/**
+ * @return instance type
+ */
+CBViewMenu.menu = function() {
+
+    var menu = Object.create(CBViewMenu);
+
+    menu.init();
+
+    return menu;
+}
+
 /**
  * This control is used exclusively by the CBSectionListView object and it
  * it contains behavior and styling specific to that use.
  */
-function CBSectionSelectionControl()
-{
+CBViewMenu.init = function() {
+
     var option;
 
     this._element   = document.createElement("div");
@@ -49,7 +63,7 @@ function CBSectionSelectionControl()
 /**
  * @return Element
  */
-CBSectionSelectionControl.prototype.element = function()
+CBViewMenu.element = function()
 {
     return this._element;
 };
@@ -57,7 +71,7 @@ CBSectionSelectionControl.prototype.element = function()
 /**
  * @return void
  */
-CBSectionSelectionControl.prototype.setAction = function(target, method)
+CBViewMenu.setAction = function(target, method)
 {
     if (this._action)
     {
@@ -76,7 +90,7 @@ CBSectionSelectionControl.prototype.setAction = function(target, method)
 /**
  * @return string
  */
-CBSectionSelectionControl.prototype.value = function()
+CBViewMenu.value = function()
 {
     return this._select.value;
 };

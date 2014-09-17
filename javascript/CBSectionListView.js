@@ -1,5 +1,9 @@
 "use strict";
 
+
+/**
+ *
+ */
 function CBSectionListView(list)
 {
     this._list      = list;
@@ -13,15 +17,19 @@ function CBSectionListView(list)
     this._list.forEach(this.displaySection.bind(this));
 
     /**
-     * Selection control to add a new section to the end of the section list.
+     * View menu to append a new view to the container.
      */
 
-    var appendSectionSelectionControl = new CBSectionSelectionControl();
-    appendSectionSelectionControl.setAction(this, this.appendSection);
+    var viewMenu = CBViewMenu.menu();
 
-    this._element.appendChild(appendSectionSelectionControl.element());
+    viewMenu.setAction(this, this.appendSection);
+
+    this._element.appendChild(viewMenu.element());
 }
 
+/**
+ *
+ */
 CBSectionListView.prototype.appendSection = function(sender)
 {
     var appendSectionSelectionElement;
@@ -81,10 +89,11 @@ CBSectionListView.prototype.createViewListItemElementForViewEditor = function(vi
      *
      */
 
-    var sectionSelectionControl                 = new CBSectionSelectionControl();
-    sectionSelectionControl.insertBeforeModel   = viewEditor.model;
-    sectionSelectionControl.setAction(this, this.insertSection);
-    viewListItemElement.appendChild(sectionSelectionControl.element());
+    var viewMenu                = CBViewMenu.menu();
+    viewMenu.insertBeforeModel  = viewEditor.model;
+
+    viewMenu.setAction(this, this.insertSection);
+    viewListItemElement.appendChild(viewMenu.element());
 
     /**
      * TODO: insert code taken from CBSectionEditorView to fill out the element.
@@ -308,10 +317,11 @@ CBSectionListView.prototype.newSectionListItemViewForModel = function(model)
      *
      */
 
-    var sectionSelectionControl                 = new CBSectionSelectionControl();
-    sectionSelectionControl.insertBeforeModel   = model;
-    sectionSelectionControl.setAction(this, this.insertSection);
-    sectionListItemView.appendChild(sectionSelectionControl.element());
+    var viewMenu                = CBViewMenu.menu();
+    viewMenu.insertBeforeModel  = model;
+
+    viewMenu.setAction(this, this.insertSection);
+    sectionListItemView.appendChild(viewMenu.element());
 
     /**
      *
