@@ -48,7 +48,8 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.j
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSectionEditorView.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBSectionEditorView.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSectionListView.js');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSectionSelectionControl.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewMenu.js');
+CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBViewMenu.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSelectionControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBTextControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBTextAreaControl.js');
