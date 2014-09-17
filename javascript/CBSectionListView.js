@@ -20,9 +20,8 @@ function CBSectionListView(list)
      * View menu to append a new view to the container.
      */
 
-    var viewMenu = CBViewMenu.menu();
-
-    viewMenu.setAction(this, this.appendSection);
+    var viewMenu        = CBViewMenu.menu();
+    viewMenu.callback   = this.appendSection.bind(this, viewMenu);
 
     this._element.appendChild(viewMenu.element());
 }
@@ -30,11 +29,11 @@ function CBSectionListView(list)
 /**
  *
  */
-CBSectionListView.prototype.appendSection = function(sender)
+CBSectionListView.prototype.appendSection = function(viewMenu)
 {
     var appendSectionSelectionElement;
 
-    var viewEditorClassName = sender.value() + "Editor";
+    var viewEditorClassName = viewMenu.value() + "Editor";
 
     if ("object" == typeof window[viewEditorClassName])
     {
@@ -54,7 +53,7 @@ CBSectionListView.prototype.appendSection = function(sender)
     }
     else
     {
-        var sectionTypeID           = sender.value();
+        var sectionTypeID           = viewMenu.value();
         var sectionModelJSON        = CBSectionDescriptors[sectionTypeID].modelJSON;
         var sectionModel            = JSON.parse(sectionModelJSON);
         sectionModel.sectionID      = Colby.random160();
@@ -89,10 +88,10 @@ CBSectionListView.prototype.createViewListItemElementForViewEditor = function(vi
      *
      */
 
-    var viewMenu                = CBViewMenu.menu();
-    viewMenu.insertBeforeModel  = viewEditor.model;
+    var viewMenu                    = CBViewMenu.menu();
+    viewMenu.modelToInsertBefore    = viewEditor.model;
+    viewMenu.callback               = this.insertSection.bind(this, viewMenu);
 
-    viewMenu.setAction(this, this.insertSection);
     viewListItemElement.appendChild(viewMenu.element());
 
     /**
@@ -242,20 +241,22 @@ CBSectionListView.prototype.deleteSection = function(sectionModel)
 /**
  * @return void
  */
-CBSectionListView.prototype.insertSection = function(sender)
+CBSectionListView.prototype.insertSection = function(viewMenu)
 {
-    var index = this._list.indexOf(sender.insertBeforeModel);
+    var index = this._list.indexOf(viewMenu.modelToInsertBefore);
 
     if (-1 == index)
     {
         return;
     }
 
-    var beforeSectionModelID        = sender.insertBeforeModel.ID ? sender.insertBeforeModel.ID :
-                                                                    sender.insertBeforeModel.sectionID;
+    var beforeSectionModelID        = viewMenu.modelToInsertBefore.ID ?
+                                      viewMenu.modelToInsertBefore.ID :
+                                      viewMenu.modelToInsertBefore.sectionID;
+
     var beforeSectionListItemViewID = "CBSectionListItemView-" + beforeSectionModelID;
     var beforeSectionListItemView   = document.getElementById(beforeSectionListItemViewID);
-    var viewEditorClassName         = sender.value() + "Editor";
+    var viewEditorClassName         = viewMenu.value() + "Editor";
 
     if ("object" == typeof window[viewEditorClassName])
     {
@@ -278,7 +279,7 @@ CBSectionListView.prototype.insertSection = function(sender)
     }
     else
     {
-        var sectionTypeID           = sender.value();
+        var sectionTypeID           = viewMenu.value();
         var sectionModelJSON        = CBSectionDescriptors[sectionTypeID].modelJSON;
         var sectionModel            = JSON.parse(sectionModelJSON);
         sectionModel.sectionID      = Colby.random160();
@@ -317,10 +318,10 @@ CBSectionListView.prototype.newSectionListItemViewForModel = function(model)
      *
      */
 
-    var viewMenu                = CBViewMenu.menu();
-    viewMenu.insertBeforeModel  = model;
+    var viewMenu                    = CBViewMenu.menu();
+    viewMenu.modelToInsertBefore    = model;
+    viewMenu.callback               = this.insertSection.bind(this, viewMenu);
 
-    viewMenu.setAction(this, this.insertSection);
     sectionListItemView.appendChild(viewMenu.element());
 
     /**
