@@ -3,8 +3,12 @@
 
 var CBMarkaround = {};
 
-CBMarkaround.parse = function(markaround)
-{
+/**
+ * @return string
+ *  HTML created from the markaround parameter.
+ */
+CBMarkaround.parse = function(markaround) {
+
     var HTML    = '';
     var lines   = markaround.split(/\r?\n/);
     var state   = null;

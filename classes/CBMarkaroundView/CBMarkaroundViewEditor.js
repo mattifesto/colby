@@ -31,6 +31,10 @@ CBMarkaroundViewEditor.createElement = function() {
     label.htmlFor           = this._textarea.id;
     label.textContent       = this.labelText;
 
+    var listener = this.markaroundDidChange.bind(this);
+
+    this._textarea.addEventListener("input", listener);
+
     this._element.appendChild(label);
     this._element.appendChild(this._textarea);
 };
@@ -46,4 +50,23 @@ CBMarkaroundViewEditor.element = function() {
     }
 
     return this._element;
+};
+
+/**
+ * TODO
+ *  This method should restart a CBDelayTimer which will send the markaround
+ *  to the server to be parsed. This will accomplish two things:
+ *
+ *      1. The markaround will be processed asynchonously and not slow down
+ *         the user interface.
+ *      2. The markaround won't be process for every single keystroke.
+ *
+ * @return void
+ */
+CBMarkaroundViewEditor.markaroundDidChange = function() {
+
+    this.model.markaround   = this._textarea.value;
+    this.model.HTML         = CBMarkaround.parse(this.model.markaround);
+
+    CBPageEditor.requestSave();
 };

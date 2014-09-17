@@ -22,6 +22,7 @@ class CBMarkaroundView extends CBView {
     public static function includeEditorDependencies() {
 
         CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBMarkaroundView/CBMarkaroundViewEditor.css');
+        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBMarkaround.js');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBView/CBViewEditor.js');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBMarkaroundView/CBMarkaroundViewEditor.js');
     }
