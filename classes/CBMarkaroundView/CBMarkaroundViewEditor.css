@@ -1,0 +1,17 @@
+.CBMarkaroundViewEditor
+{
+    margin: 10px auto;
+    width:  480px;
+}
+
+.CBMarkaroundViewEditor > label
+{
+    margin-bottom: 5px;
+}
+
+.CBMarkaroundViewEditor > textarea
+{
+    display:    block;
+    height:     200px;
+    width:      100%;
+}
