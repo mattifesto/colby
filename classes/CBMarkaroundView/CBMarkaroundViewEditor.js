@@ -27,6 +27,7 @@ CBMarkaroundViewEditor.createElement = function() {
     this._element.className = "CBMarkaroundViewEditor";
     this._textarea          = document.createElement("textarea");
     this._textarea.id       = Colby.random160();
+    this._textarea.value    = this.model.markaround;
     var label               = document.createElement("label");
     label.htmlFor           = this._textarea.id;
     label.textContent       = this.labelText;
