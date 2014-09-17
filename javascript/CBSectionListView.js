@@ -68,12 +68,46 @@ CBSectionListView.prototype.appendSection = function(viewMenu)
          *
          */
 
-        var sectionListItemView             = this.newSectionListItemViewForModel(sectionModel);
+        var sectionListItemView             = this.createSectionListItemViewForModel(sectionModel);
         appendSectionSelectionElement       = this._element.lastChild;
         this._element.insertBefore(sectionListItemView, appendSectionSelectionElement);
     }
 
     CBPageEditor.requestSave();
+};
+
+/**
+ * @return Element
+ */
+CBSectionListView.prototype.createSectionListItemViewForModel = function(model)
+{
+    if (!model.sectionID)
+    {
+        model.sectionID = Colby.random160();
+    }
+
+    var sectionListItemView    = document.createElement("div");
+    sectionListItemView.id     = "CBSectionListItemView-" + model.sectionID;
+
+    /**
+     *
+     */
+
+    var viewMenu                    = CBViewMenu.menu();
+    viewMenu.modelToInsertBefore    = model;
+    viewMenu.callback               = this.insertSection.bind(this, viewMenu);
+
+    sectionListItemView.appendChild(viewMenu.element());
+
+    /**
+     *
+     */
+
+    var sectionEditorView = new CBSectionEditorView(model, this);
+    sectionListItemView.appendChild(sectionEditorView.element());
+
+
+    return sectionListItemView;
 };
 
 /**
@@ -200,7 +234,7 @@ CBSectionListView.prototype.displaySection = function(model, index, modelArray)
     }
     else
     {
-        viewListItemElement     = this.newSectionListItemViewForModel(model);
+        viewListItemElement     = this.createSectionListItemViewForModel(model);
     }
 
     this._element.appendChild(viewListItemElement);
@@ -294,43 +328,9 @@ CBSectionListView.prototype.insertSection = function(viewMenu)
          *
          */
 
-        var sectionListItemView         = this.newSectionListItemViewForModel(sectionModel);
+        var sectionListItemView         = this.createSectionListItemViewForModel(sectionModel);
         beforeSectionListItemView.parentNode.insertBefore(sectionListItemView, beforeSectionListItemView);
     }
 
     CBPageEditor.requestSave();
-};
-
-/**
- * @return Element
- */
-CBSectionListView.prototype.newSectionListItemViewForModel = function(model)
-{
-    if (!model.sectionID)
-    {
-        model.sectionID = Colby.random160();
-    }
-
-    var sectionListItemView    = document.createElement("div");
-    sectionListItemView.id     = "CBSectionListItemView-" + model.sectionID;
-
-    /**
-     *
-     */
-
-    var viewMenu                    = CBViewMenu.menu();
-    viewMenu.modelToInsertBefore    = model;
-    viewMenu.callback               = this.insertSection.bind(this, viewMenu);
-
-    sectionListItemView.appendChild(viewMenu.element());
-
-    /**
-     *
-     */
-
-    var sectionEditorView = new CBSectionEditorView(model, this);
-    sectionListItemView.appendChild(sectionEditorView.element());
-
-
-    return sectionListItemView;
 };
