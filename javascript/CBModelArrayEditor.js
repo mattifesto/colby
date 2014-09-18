@@ -28,7 +28,7 @@ CBModelArrayEditor.initWithModelArray = function(modelArray) {
      * Add all of the sections already in the list to the view.
      */
 
-    this.modelArray.forEach(this.displaySection.bind(this));
+    this.modelArray.forEach(this.displayViewEditor.bind(this));
 
     /**
      * View menu to append a new view to the container.
@@ -127,54 +127,6 @@ CBModelArrayEditor.createSectionListItemViewForModel = function(model) {
 /**
  * @return Element
  */
-CBModelArrayEditor.createViewListItemElementForViewEditor = function(viewEditor) {
-
-    var viewListItemElement    = document.createElement("div");
-    viewListItemElement.id     = "CBSectionListItemView-" + viewEditor.model.ID;
-
-    /**
-     *
-     */
-
-    var viewMenu                    = CBViewMenu.menu();
-    viewMenu.modelToInsertBefore    = viewEditor.model;
-    viewMenu.callback               = this.insertSection.bind(this, viewMenu);
-
-    viewListItemElement.appendChild(viewMenu.element());
-
-    /**
-     * TODO: insert code taken from CBSectionEditorView to fill out the element.
-     */
-
-    var editorElement = document.createElement("section");
-    editorElement.id        = "s" + viewEditor.model.sectionID;
-    editorElement.classList.add("CBSectionEditorView");
-
-    var header              = document.createElement("header");
-    header.textContent = viewEditor.model.className;
-    editorElement.appendChild(header);
-
-
-    var deleteButton            = document.createElement("button");
-    var deleteSectionCallback   = this.deleteSection.bind(this, viewEditor.model);
-    deleteButton.addEventListener('click', deleteSectionCallback, false);
-    deleteButton.appendChild(document.createTextNode("Delete Section"));
-    header.appendChild(deleteButton);
-
-
-    var innerElement  = document.createElement("div");
-    editorElement.appendChild(innerElement);
-
-    innerElement.appendChild(viewEditor.element());
-
-    viewListItemElement.appendChild(editorElement);
-
-    return viewListItemElement;
-};
-
-/**
- * @return Element
- */
 CBModelArrayEditor.element = function() {
 
     return this._element;
@@ -183,7 +135,7 @@ CBModelArrayEditor.element = function() {
 /**
  * @return void
  */
-CBModelArrayEditor.displaySection = function(model, index, modelArray) {
+CBModelArrayEditor.displayViewEditor = function(model, index, modelArray) {
 
     var viewEditor;
     var viewListItemElement;
@@ -237,21 +189,31 @@ CBModelArrayEditor.displaySection = function(model, index, modelArray) {
     }
 
     /**
+     *
+     */
+
+    var viewMenu                    = CBViewMenu.menu();
+    viewMenu.modelToInsertBefore    = model;
+    viewMenu.callback               = this.insertSection.bind(this, viewMenu);
+
+    this._element.appendChild(viewMenu.element());
+
+    /**
      * Display
      */
     if (model.className)
     {
-        var viewEditorClassName = model.className + "Editor";
-        var viewEditorClass     = window[viewEditorClassName];
-        viewEditor              = Object.create(viewEditorClass).initWithModel(model);
-        viewListItemElement     = this.createViewListItemElementForViewEditor(viewEditor);
+        viewEditor                  = CBViewEditor.editorForViewModel(model);
+        viewEditor.deleteCallback   = this.deleteSection.bind(this, model);
+
+        this._element.appendChild(viewEditor.outerElement());
     }
     else
     {
         viewListItemElement     = this.createSectionListItemViewForModel(model);
-    }
 
-    this._element.appendChild(viewListItemElement);
+        this._element.appendChild(viewListItemElement);
+    }
 };
 
 /**
