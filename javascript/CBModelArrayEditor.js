@@ -108,8 +108,7 @@ CBModelArrayEditor.createSectionListItemViewForModel = function(model) {
      */
 
     var viewMenu                    = CBViewMenu.menu();
-    viewMenu.modelToInsertBefore    = model;
-    viewMenu.callback               = this.insertSection.bind(this, viewMenu);
+    viewMenu.callback               = this.insertView.bind(this, viewMenu);
 
     sectionListItemView.appendChild(viewMenu.element());
 
@@ -193,8 +192,7 @@ CBModelArrayEditor.displayViewEditor = function(model, index, modelArray) {
      */
 
     var viewMenu                    = CBViewMenu.menu();
-    viewMenu.modelToInsertBefore    = model;
-    viewMenu.callback               = this.insertSection.bind(this, viewMenu);
+    viewMenu.callback               = this.insertView.bind(this, viewMenu);
 
     this._element.appendChild(viewMenu.element());
 
@@ -251,62 +249,40 @@ CBModelArrayEditor.deleteSection = function(sectionModel) {
 /**
  * @return void
  */
-CBModelArrayEditor.insertSection = function(viewMenu) {
+CBModelArrayEditor.insertView = function(viewMenu) {
 
-    var index = this.modelArray.indexOf(viewMenu.modelToInsertBefore);
+    var elementToInsertBefore   = viewMenu.element();
+    var modelToInsertBefore     = viewMenu.element().nextSibling.model;
+
+    var index = this.modelArray.indexOf(modelToInsertBefore);
 
     if (-1 == index)
     {
         return;
     }
 
-    var beforeSectionModelID        = viewMenu.modelToInsertBefore.ID ?
-                                      viewMenu.modelToInsertBefore.ID :
-                                      viewMenu.modelToInsertBefore.sectionID;
+    /**
+     *
+     */
 
-    var beforeSectionListItemViewID = "CBSectionListItemView-" + beforeSectionModelID;
-    var beforeSectionListItemView   = document.getElementById(beforeSectionListItemViewID);
-    var viewEditorClassName         = viewMenu.value() + "Editor";
+    var newViewMenu         = CBViewMenu.menu();
+    newViewMenu.callback    = this.insertView.bind(this, newViewMenu);
 
-    if ("object" == typeof window[viewEditorClassName])
-    {
-        var viewEditorClass     = window[viewEditorClassName];
-        var viewEditor          = Object.create(viewEditorClass).init();
+    this._element.insertBefore(newViewMenu.element(), elementToInsertBefore);
 
-        /**
-         *
-         */
+    /**
+     *
+     */
 
-        this.modelArray.splice(index, 0, viewEditor.model);
+    var viewEditor  = CBViewEditor.editorForViewClassName(viewMenu.value());
 
-        /**
-         * Appending this view as the last view means inserting it before
-         * the new view selection element.
-         */
+    this._element.insertBefore(viewEditor.outerElement(), elementToInsertBefore);
 
-        var viewListItemElement = this.createViewListItemElementForViewEditor(viewEditor);
-        beforeSectionListItemView.parentNode.insertBefore(viewListItemElement, beforeSectionListItemView);
-    }
-    else
-    {
-        var sectionTypeID           = viewMenu.value();
-        var sectionModelJSON        = CBSectionDescriptors[sectionTypeID].modelJSON;
-        var sectionModel            = JSON.parse(sectionModelJSON);
-        sectionModel.sectionID      = Colby.random160();
+    /**
+     *
+     */
 
-        /**
-         *
-         */
-
-        this.modelArray.splice(index, 0, sectionModel);
-
-        /**
-         *
-         */
-
-        var sectionListItemView         = this.createSectionListItemViewForModel(sectionModel);
-        beforeSectionListItemView.parentNode.insertBefore(sectionListItemView, beforeSectionListItemView);
-    }
+    this.modelArray.splice(index, 0, viewEditor.model);
 
     CBPageEditor.requestSave();
 };

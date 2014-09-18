@@ -96,14 +96,16 @@ CBViewEditor.outerElement = function() {
 
     if (!this._outerElement) {
 
-        this._outerElement = document.createElement("section");
+        this._outerElement          = document.createElement("section");
+        this._outerElement.model    = this.model;
+        var header                  = document.createElement("header");
+        var h1                      = document.createElement("h1");
+        h1.textContent              = this.model.className;
+
         this._outerElement.classList.add("CBViewEditorChrome");
         this._outerElement.classList.add(this.chromeClass);
         this._outerElement.classList.add(this.model.className);
 
-        var header      = document.createElement("header");
-        var h1          = document.createElement("h1");
-        h1.textContent  = this.model.className;
 
         header.appendChild(h1);
 
