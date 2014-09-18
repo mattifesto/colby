@@ -1,0 +1,12 @@
+.CBViewEditorChrome.CBViewEditorStandardChrome
+{
+    border:     1px solid #808080;
+    margin:     10px;
+}
+
+.CBViewEditorChrome.CBViewEditorStandardChrome > header
+{
+    border-bottom:  1px solid #c0c0c0;
+    padding:        5px 5px 10px;
+    text-align:     center;
+}

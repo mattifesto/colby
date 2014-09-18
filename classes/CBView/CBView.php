@@ -72,6 +72,7 @@ class CBView
      */
     public static function includeEditorDependencies()
     {
+        CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBView/CBViewEditor.css');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBView/CBViewEditor.js');
 
         $viewClassName      = get_called_class();

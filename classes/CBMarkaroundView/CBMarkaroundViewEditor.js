@@ -2,6 +2,7 @@
 
 
 var CBMarkaroundViewEditor          = Object.create(CBViewEditor);
+CBMarkaroundViewEditor.chromeClass  = "CBMarkaroundViewEditorChrome";
 CBMarkaroundViewEditor.labelText    = "Markaround";
 
 /**
