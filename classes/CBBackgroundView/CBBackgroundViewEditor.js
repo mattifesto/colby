@@ -115,7 +115,7 @@ CBBackgroundViewEditor.createChildViewsElement = function()
     childViewsElement.className         = "children";
     var childViewsTitleElement          = document.createElement("h1");
     childViewsTitleElement.textContent  = "CBBackgroundView Child Views";
-    var childListView                   = new CBSectionListView(this.model.children);
+    var childListView                   = CBModelArrayEditor.editorForModelArray(this.model.children);
 
     childViewsElement.appendChild(childViewsTitleElement);
     childViewsElement.appendChild(childListView.element());

@@ -1,20 +1,34 @@
 "use strict";
 
 
+var CBModelArrayEditor = {}
+
 /**
- *
+ * @return instance type
  */
-function CBSectionListView(list)
-{
-    this._list      = list;
+CBModelArrayEditor.editorForModelArray = function(modelArray) {
+
+    var editor = Object.create(CBModelArrayEditor);
+
+    editor.initWithModelArray(modelArray);
+
+    return editor;
+};
+
+/**
+ * @return void
+ */
+CBModelArrayEditor.initWithModelArray = function(modelArray) {
+
+    this.modelArray      = modelArray;
     this._element   = document.createElement("div");
-    this._element.classList.add("CBSectionListView");
+    this._element.classList.add("CBModelArrayEditor");
 
     /**
      * Add all of the sections already in the list to the view.
      */
 
-    this._list.forEach(this.displaySection.bind(this));
+    this.modelArray.forEach(this.displaySection.bind(this));
 
     /**
      * View menu to append a new view to the container.
@@ -24,13 +38,13 @@ function CBSectionListView(list)
     viewMenu.callback   = this.appendSection.bind(this, viewMenu);
 
     this._element.appendChild(viewMenu.element());
-}
+};
 
 /**
  *
  */
-CBSectionListView.prototype.appendSection = function(viewMenu)
-{
+CBModelArrayEditor.appendSection = function(viewMenu) {
+
     var appendSectionSelectionElement;
 
     var viewEditorClassName = viewMenu.value() + "Editor";
@@ -40,7 +54,7 @@ CBSectionListView.prototype.appendSection = function(viewMenu)
         var viewEditorClass     = window[viewEditorClassName];
         var viewEditor          = Object.create(viewEditorClass).init();
 
-        this._list.push(viewEditor.model);
+        this.modelArray.push(viewEditor.model);
 
         /**
          * Appending this view as the last view means inserting it before
@@ -62,7 +76,7 @@ CBSectionListView.prototype.appendSection = function(viewMenu)
          *
          */
 
-        this._list.push(sectionModel);
+        this.modelArray.push(sectionModel);
 
         /**
          *
@@ -79,8 +93,8 @@ CBSectionListView.prototype.appendSection = function(viewMenu)
 /**
  * @return Element
  */
-CBSectionListView.prototype.createSectionListItemViewForModel = function(model)
-{
+CBModelArrayEditor.createSectionListItemViewForModel = function(model) {
+
     if (!model.sectionID)
     {
         model.sectionID = Colby.random160();
@@ -113,8 +127,8 @@ CBSectionListView.prototype.createSectionListItemViewForModel = function(model)
 /**
  * @return Element
  */
-CBSectionListView.prototype.createViewListItemElementForViewEditor = function(viewEditor)
-{
+CBModelArrayEditor.createViewListItemElementForViewEditor = function(viewEditor) {
+
     var viewListItemElement    = document.createElement("div");
     viewListItemElement.id     = "CBSectionListItemView-" + viewEditor.model.ID;
 
@@ -161,16 +175,16 @@ CBSectionListView.prototype.createViewListItemElementForViewEditor = function(vi
 /**
  * @return Element
  */
-CBSectionListView.prototype.element = function()
-{
+CBModelArrayEditor.element = function() {
+
     return this._element;
 };
 
 /**
  * @return void
  */
-CBSectionListView.prototype.displaySection = function(model, index, modelArray)
-{
+CBModelArrayEditor.displaySection = function(model, index, modelArray) {
+
     var viewEditor;
     var viewListItemElement;
 
@@ -243,17 +257,17 @@ CBSectionListView.prototype.displaySection = function(model, index, modelArray)
 /**
  * @return void
  */
-CBSectionListView.prototype.deleteSection = function(sectionModel)
-{
+CBModelArrayEditor.deleteSection = function(sectionModel) {
+
     var ID;
-    var index = this._list.indexOf(sectionModel);
+    var index = this.modelArray.indexOf(sectionModel);
 
     if (-1 == index)
     {
         return;
     }
 
-    this._list.splice(index, 1);
+    this.modelArray.splice(index, 1);
 
     if (sectionModel.ID)
     {
@@ -275,9 +289,9 @@ CBSectionListView.prototype.deleteSection = function(sectionModel)
 /**
  * @return void
  */
-CBSectionListView.prototype.insertSection = function(viewMenu)
-{
-    var index = this._list.indexOf(viewMenu.modelToInsertBefore);
+CBModelArrayEditor.insertSection = function(viewMenu) {
+
+    var index = this.modelArray.indexOf(viewMenu.modelToInsertBefore);
 
     if (-1 == index)
     {
@@ -301,7 +315,7 @@ CBSectionListView.prototype.insertSection = function(viewMenu)
          *
          */
 
-        this._list.splice(index, 0, viewEditor.model);
+        this.modelArray.splice(index, 0, viewEditor.model);
 
         /**
          * Appending this view as the last view means inserting it before
@@ -322,7 +336,7 @@ CBSectionListView.prototype.insertSection = function(viewMenu)
          *
          */
 
-        this._list.splice(index, 0, sectionModel);
+        this.modelArray.splice(index, 0, sectionModel);
 
         /**
          *

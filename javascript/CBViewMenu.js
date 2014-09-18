@@ -15,7 +15,7 @@ CBViewMenu.menu = function() {
 };
 
 /**
- * This control is used exclusively by the CBSectionListView object and it
+ * This control is used exclusively by the CBModelArrayEditor object and it
  * it contains behavior and styling specific to that use.
  */
 CBViewMenu.init = function() {

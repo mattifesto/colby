@@ -93,7 +93,7 @@ CBPageEditor.displayEditor = function()
      *
      */
 
-    var sectionListView = new CBSectionListView(CBPageEditor.model.sections);
+    var sectionListView = CBModelArrayEditor.editorForModelArray(CBPageEditor.model.sections);
     editorContainer.appendChild(sectionListView.element());
 };
 
