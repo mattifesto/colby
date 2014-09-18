@@ -114,7 +114,7 @@ CBViewEditor.outerElement = function() {
             var deleteButton            = document.createElement("button");
             deleteButton.textContent    = "Delete View";
 
-            deleteButton.addEventListener(this.deleteCallback);
+            deleteButton.addEventListener("click", this.deleteCallback);
 
             header.appendChild(deleteButton);
         }

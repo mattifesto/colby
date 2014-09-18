@@ -202,7 +202,7 @@ CBModelArrayEditor.displayViewEditor = function(model, index, modelArray) {
     if (model.className)
     {
         viewEditor                  = CBViewEditor.editorForViewModel(model);
-        viewEditor.deleteCallback   = this.deleteSection.bind(this, model);
+        viewEditor.deleteCallback   = this.deleteView.bind(this, viewEditor);
 
         this._element.appendChild(viewEditor.outerElement());
     }
@@ -217,31 +217,22 @@ CBModelArrayEditor.displayViewEditor = function(model, index, modelArray) {
 /**
  * @return void
  */
-CBModelArrayEditor.deleteSection = function(sectionModel) {
+CBModelArrayEditor.deleteView = function(viewEditor) {
 
-    var ID;
-    var index = this.modelArray.indexOf(sectionModel);
+    var viewModel   = viewEditor.model;
+    var index       = this.modelArray.indexOf(viewModel);
 
     if (-1 == index)
     {
         return;
     }
 
+    var viewMenuElement = viewEditor.outerElement().previousSibling;
+
+    this._element.removeChild(viewMenuElement);
+    this._element.removeChild(viewEditor.outerElement());
+
     this.modelArray.splice(index, 1);
-
-    if (sectionModel.ID)
-    {
-        ID = sectionModel.ID;
-    }
-    else
-    {
-        ID = sectionModel.sectionID;
-    }
-
-    var sectionListItemID = "CBSectionListItemView-" + ID;
-    var sectionListItem     = document.getElementById(sectionListItemID);
-    sectionListItem.parentNode.removeChild(sectionListItem);
-
 
     CBPageEditor.requestSave();
 };
