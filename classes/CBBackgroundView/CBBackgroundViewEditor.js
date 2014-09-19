@@ -1,7 +1,8 @@
 "use strict";
 
 
-var CBBackgroundViewEditor = Object.create(CBViewEditor);
+var CBBackgroundViewEditor          = Object.create(CBViewEditor);
+CBBackgroundViewEditor.chromeClass  = "CBBackgroundViewEditorChrome";
 
 /**
  * @return CBBackgroundViewEditor
@@ -70,8 +71,12 @@ CBBackgroundViewEditor.initWithModel = function(model)
  */
 CBBackgroundViewEditor.createElement = function()
 {
-    this._element           = document.createElement("div");
-    this._element.className = "CBBackgroundViewEditor";
+    this._element                   = document.createElement("div");
+    this._element.className         = "CBBackgroundViewEditor";
+    this._controlsElement           = document.createElement("div");
+    this._controlsElement.className = "CBBackgroundViewEditorControls";
+
+    this._element.appendChild(this._controlsElement);
 
     this.createUploadBackgroundImageButton();
     this.createOptionsElement();
@@ -103,7 +108,7 @@ CBBackgroundViewEditor.createBackgroundColorTextField = function()
 
     containerElement.appendChild(labelElement);
     containerElement.appendChild(inputElement);
-    this._element.appendChild(containerElement);
+    this._controlsElement.appendChild(containerElement);
 };
 
 /**
@@ -111,15 +116,9 @@ CBBackgroundViewEditor.createBackgroundColorTextField = function()
  */
 CBBackgroundViewEditor.createChildViewsElement = function()
 {
-    var childViewsElement               = document.createElement("div");
-    childViewsElement.className         = "children";
-    var childViewsTitleElement          = document.createElement("h1");
-    childViewsTitleElement.textContent  = "CBBackgroundView Child Views";
-    var childListView                   = CBModelArrayEditor.editorForModelArray(this.model.children);
+    var modelArrayEditor = CBModelArrayEditor.editorForModelArray(this.model.children);
 
-    childViewsElement.appendChild(childViewsTitleElement);
-    childViewsElement.appendChild(childListView.element());
-    this._element.appendChild(childViewsElement);
+    this._element.appendChild(modelArrayEditor.element());
 };
 
 /**
@@ -143,7 +142,7 @@ CBBackgroundViewEditor.createLinkURLTextField = function()
 
     containerElement.appendChild(labelElement);
     containerElement.appendChild(inputElement);
-    this._element.appendChild(containerElement);
+    this._controlsElement.appendChild(containerElement);
 };
 
 /**
@@ -179,7 +178,7 @@ CBBackgroundViewEditor.createOptionsElement = function()
     this.createRepeatVerticallyOption();
     this.createMinimumViewHeightIsImageHeightOption();
 
-    this._element.appendChild(this._optionsElement);
+    this._controlsElement.appendChild(this._optionsElement);
 };
 
 /**
@@ -244,8 +243,8 @@ CBBackgroundViewEditor.createUploadBackgroundImageButton = function()
     callback = fileInputElement.click.bind(fileInputElement);
     buttonElement.addEventListener("click", callback);
 
-    this._element.appendChild(fileInputElement);
-    this._element.appendChild(buttonElement);
+    this._controlsElement.appendChild(fileInputElement);
+    this._controlsElement.appendChild(buttonElement);
 };
 
 /**
@@ -372,10 +371,12 @@ CBBackgroundViewEditor.updateBackgroundImageThumbnail = function()
 
     if (!this._thumbnail)
     {
+        var parentElement = this._controlsElement;
+
         this._imageDimensions = document.createElement("div");
-        this._element.insertBefore(this._imageDimensions, this._element.firstChild);
+        parentElement.insertBefore(this._imageDimensions, parentElement.firstChild);
         this._thumbnail = document.createElement("img");
-        this._element.insertBefore(this._thumbnail, this._element.firstChild);
+        parentElement.insertBefore(this._thumbnail, parentElement.firstChild);
     }
 
     this._imageDimensions.textContent   = this.model.imageWidth + " × " + this.model.imageHeight;

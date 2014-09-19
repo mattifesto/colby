@@ -1,59 +1,69 @@
-.CBBackgroundViewEditor
+.CBViewEditorChrome.CBBackgroundViewEditorChrome
 {
-    margin:     0 auto;
-    max-width:  960px;
+    border-color:   hsl(60, 100%, 90%);
+    border-radius:  20px;
+    border-style:   solid;
+    border-width:   5px 10px 10px;
+    margin:         20px;
 }
 
-.CBBackgroundViewEditor > button
+.CBViewEditorChrome.CBBackgroundViewEditorChrome > header
+{
+    background-color:   hsl(60, 100%, 90%);
+    padding:            0 10px 10px;
+    text-align:         center;
+}
+
+.CBBackgroundViewEditor > .CBModelArrayEditor
+{
+    background-color: white;
+}
+
+.CBBackgroundViewEditorControls
+{
+    background-color:   hsl(60, 100%, 90%);
+    overflow:           hidden;     /* Contain margins */
+}
+
+.CBBackgroundViewEditorControls > button
 {
     display:    block;
     margin:     10px auto 30px;
 }
 
-.CBBackgroundViewEditor > .children
+.CBBackgroundViewEditorControls > img
 {
-    border:         2px solid #c0c0c0;
-    border-radius:  5px;
-}
-
-.CBBackgroundViewEditor > .children > h1
-{
-    text-align: center;
-    font:       inherit;
-}
-
-.CBBackgroundViewEditor > img
-{
+    border:     50px solid white;
     display:    block;
     margin:     10px auto;
     max-height: 200px;
     max-width:  90%;
 }
 
-.CBBackgroundViewEditor > img + div
+.CBBackgroundViewEditorControls > img + div
 {
     color:      #808080;
     font-size:  13px;
     text-align: center;
 }
 
-.CBBackgroundViewEditor > .options
+.CBBackgroundViewEditorControls > .options
 {
     text-align: center;
 }
 
-.CBBackgroundViewEditor > .options label + input
+.CBBackgroundViewEditorControls > .options label + input
 {
     margin-left: 50px;
 }
 
-.CBBackgroundViewEditor > .text-field
+.CBBackgroundViewEditorControls > .text-field
 {
     margin:     15px 0;
     text-align: center;
 }
 
-.CBBackgroundViewEditor > .text-field label
+.CBBackgroundViewEditorControls > .text-field label
 {
     display:        inline-block;
     margin-right:   10px;
@@ -61,7 +71,7 @@
     width:          150px;
 }
 
-.CBBackgroundViewEditor > .text-field input
+.CBBackgroundViewEditorControls > .text-field input
 {
     width: 480px;
 }
