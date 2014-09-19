@@ -1,12 +1,20 @@
+.CBViewEditorChrome > header h1
+{
+    font-size: 18px;
+}
+
 .CBViewEditorChrome.CBViewEditorStandardChrome
 {
-    border:     1px solid #808080;
-    margin:     10px;
+    border-color:   #f8f4ec;
+    border-radius:  20px;
+    border-style:   solid;
+    border-width:   5px 10px 10px;
+    margin:         20px;
 }
 
 .CBViewEditorChrome.CBViewEditorStandardChrome > header
 {
-    border-bottom:  1px solid #c0c0c0;
-    padding:        5px 5px 10px;
-    text-align:     center;
+    background-color:   #f8f4ec;
+    padding:            0 10px 10px;
+    text-align:         center;
 }
