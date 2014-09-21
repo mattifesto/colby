@@ -1,6 +1,6 @@
 .CBViewEditorChrome.CBBackgroundViewEditorChrome
 {
-    border-color:   hsl(60, 100%, 90%);
+    border-color:   hsl(30, 50%, 85%);
     border-radius:  20px;
     border-style:   solid;
     border-width:   5px 10px 10px;
@@ -9,7 +9,7 @@
 
 .CBViewEditorChrome.CBBackgroundViewEditorChrome > header
 {
-    background-color:   hsl(60, 100%, 90%);
+    background-color:   hsl(30, 50%, 85%);
     padding:            0 10px 10px;
     text-align:         center;
 }
@@ -21,7 +21,7 @@
 
 .CBBackgroundViewEditorControls
 {
-    background-color:   hsl(60, 100%, 90%);
+    background-color:   hsl(30, 50%, 85%);
     overflow:           hidden;     /* Contain margins */
 }
 
@@ -33,7 +33,7 @@
 
 .CBBackgroundViewEditorControls > img
 {
-    border:     50px solid white;
+    border:     40px solid white;
     display:    block;
     margin:     10px auto;
     max-height: 200px;
@@ -59,19 +59,16 @@
 
 .CBBackgroundViewEditorControls > .text-field
 {
-    margin:     15px 0;
-    text-align: center;
+    margin: 15px auto;
+    width:  480px;
 }
 
 .CBBackgroundViewEditorControls > .text-field label
 {
-    display:        inline-block;
-    margin-right:   10px;
-    text-align:     right;
-    width:          150px;
+    display:        block;
 }
 
 .CBBackgroundViewEditorControls > .text-field input
 {
-    width: 480px;
+    width: 100%;
 }
