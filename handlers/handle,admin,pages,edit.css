@@ -4,6 +4,14 @@
     text-align: center;
 }
 
+/**
+ * Container view borders should be 10px away from the edge of the page.
+ */
+.CBPageEditor > .CBModelArrayEditor
+{
+    padding: 0 10px;
+}
+
 .CBTextAreaControl.standard
 {
     display:    block;
