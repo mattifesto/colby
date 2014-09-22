@@ -79,7 +79,7 @@ class CBView {
      */
     public function model() {
 
-        return $model;
+        return $this->model;
     }
 
     /**

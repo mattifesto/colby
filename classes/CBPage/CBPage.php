@@ -1,21 +1,19 @@
 <?php
 
-class CBPage
-{
+class CBPage {
+
     protected $ID;
 
     /**
      * @return instance type
      */
-    private function __construct()
-    {
-    }
+    private function __construct() { }
 
     /**
      * @return instance type
      */
-    public static function init()
-    {
+    public static function init() {
+
         $page       = new static();
         $page->ID   = Colby::random160();
 
@@ -33,8 +31,8 @@ class CBPage
      *
      * @return instance type
      */
-    public static function initWithID($ID)
-    {
+    public static function initWithID($ID) {
+
         $page       = new static();
         $page->ID   = $ID;
 
@@ -44,7 +42,5 @@ class CBPage
     /**
      *
      */
-    public function renderHTML()
-    {
-    }
+    public function renderHTML() { }
 }

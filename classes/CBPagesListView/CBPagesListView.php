@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This view is used by admin pages to create a table containing a list of
+ * pages. For instance, a list of pages available for editing.
+ */
 class CBPagesListView extends CBView
 {
     /**

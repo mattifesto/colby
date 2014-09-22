@@ -26,7 +26,7 @@ CBViewMenu.init = function() {
     this._element.className = "CBViewMenu";
     this._select            = document.createElement("select");
     var button              = document.createElement("button");
-    button.textContent      = "Insert Section";
+    button.textContent      = "Insert View";
     var line                = document.createElement("div");
 
     var listener = this.insertView.bind(this);

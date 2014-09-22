@@ -127,11 +127,15 @@ foreach ($CBSections as $sectionTypeID => $phpDescriptor)
  * Export page template data
  */
 
-global $CBPageTemplates;
+global $CBPageTemplateClassNames;
 
-foreach ($CBPageTemplates as $pageTemplateID => $descriptor)
+foreach ($CBPageTemplateClassNames as $className)
 {
-    CBHTMLOutput::exportListItem('CBPageTemplateDescriptors', $pageTemplateID, $descriptor);
+    $descriptor             = new stdClass();
+    $descriptor->modelJSON  = json_encode($className::model());
+    $descriptor->title      = $className::title();
+
+    CBHTMLOutput::exportListItem('CBPageTemplateDescriptors', $className, $descriptor);
 }
 
 /**

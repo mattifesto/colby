@@ -18,14 +18,9 @@ class CBContainerView extends CBView {
     /**
      * @return void
      */
-    public function addSubview($view) {
+    public function addSubview(CBView $view) {
 
-        /**
-         * TODO:
-         *  I'm not exactly sure how to implement this. Does this class just
-         *  hang onto the model objects of the subviews? I think that would
-         *  work.
-         */
+        $this->model->subviewModels[] = $view->model();
     }
 
     /**
@@ -33,8 +28,8 @@ class CBContainerView extends CBView {
      */
     public static function includeEditorDependencies() {
 
-        //CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBBackgroundView/CBBackgroundViewEditor.css');
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBView/CBViewEditor.js');
+        parent::includeEditorDependencies();
+
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBContainerView/CBContainerViewEditor.js');
     }
 
