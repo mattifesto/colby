@@ -5,15 +5,22 @@
 
 .CBViewEditorChrome.CBViewEditorStandardChrome
 {
-    border-color:   #f8f4ec;
-    border-radius:  20px;
-    border-style:   solid;
-    border-width:   5px 10px 10px;
+    background-color:   hsl(30, 50%, 85%);
+    border-color:       hsl(30, 50%, 85%);
+    border-radius:      20px;
+    border-style:       solid;
+    border-width:       5px 10px 10px;
+    margin:             0 auto;
+    width:              480px;
 }
 
 .CBViewEditorChrome.CBViewEditorStandardChrome > header
 {
-    background-color:   #f8f4ec;
     padding:            0 10px 10px;
     text-align:         center;
+}
+
+.CBViewEditorChrome.CBViewEditorStandardChrome > div
+{
+    text-align: center;
 }

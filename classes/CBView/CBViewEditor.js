@@ -16,8 +16,8 @@ var CBViewEditor =
  */
 CBViewEditor.editorForViewModel = function(viewModel) {
 
-    var editorClassName = viewModel.className + "Editor";
-    var editor          = Object.create(window[editorClassName]);
+    var prototype   = this.editorPrototypeForViewClassName(viewModel.className);
+    var editor      = Object.create(prototype);
 
     editor.initWithModel(viewModel);
 
@@ -29,14 +29,19 @@ CBViewEditor.editorForViewModel = function(viewModel) {
  * given view class name. It would mostly be used to create both a new view
  * and an editor to edit it when the user adds a view to their page.
  *
+ * The model's `className` property is set by this method to allow simple views
+ * with no properties to use this class as their view editor.
+ *
  * @return instance type
  */
 CBViewEditor.editorForViewClassName = function(viewClassName) {
 
-    var editorClassName = viewClassName + "Editor";
-    var editor          = Object.create(window[editorClassName]);
+    var prototype   = this.editorPrototypeForViewClassName(viewClassName);
+    var editor      = Object.create(prototype);
 
     editor.init();
+
+    editor.model.className = viewClassName;
 
     return editor;
 };
@@ -71,15 +76,36 @@ CBViewEditor.initWithModel = function(viewModel) {
 };
 
 /**
+ * If a prototype object exists for the standard editor class name, then it will
+ * be returned. Otherwise this object will be returned. In that case, an
+ * instance of a generic editor will be created which will preserve the model
+ * but not allow any of its properties to be edited.
+ *
+ * @return string
+ */
+CBViewEditor.editorPrototypeForViewClassName = function(viewClassName) {
+
+    var editorClassName = viewClassName + "Editor";
+    var prototype       = window[editorClassName];
+
+    if (prototype) {
+
+        return prototype;
+
+    } else {
+
+        return this;
+    }
+};
+
+/**
  * @return Element
  */
 CBViewEditor.element = function() {
 
-    if (!this._element)
-    {
+    if (!this._element) {
+
         this._element                   = document.createElement("div");
-        this._element.style.margin      = "20px 0";
-        this._element.style.textAlign   = "center";
         this._element.textContent       = "This view has no configurable properties.";
     }
 

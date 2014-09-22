@@ -1,21 +1,19 @@
 <?php
 
-class CBView
-{
+class CBView {
+
     protected $model;
 
     /**
      * @return instance type
      */
-    private function __construct()
-    {
-    }
+    private function __construct() { }
 
     /**
      * @return instance type
      */
-    public static function init()
-    {
+    public static function init() {
+
         $model              = new stdClass();
         $model->className   = get_called_class();
         $model->ID          = Colby::random160();
@@ -35,8 +33,8 @@ class CBView
      *
      * @return instance type
      */
-    public static function initWithModel($model)
-    {
+    public static function initWithModel($model) {
+
         if (get_called_class() != $model->className)
         {
             throw new InvalidArgumentException('The model provided is not a model for this view class.');
@@ -55,8 +53,8 @@ class CBView
      *
      * @return CBView
      */
-    public static function createViewWithModel($model)
-    {
+    public static function createViewWithModel($model) {
+
         $className  = $model->className;
         $view       = $className::initWithModel($model);
 
@@ -70,44 +68,25 @@ class CBView
      *
      * @return void
      */
-    public static function includeEditorDependencies()
-    {
+    public static function includeEditorDependencies() {
+
         CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBView/CBViewEditor.css');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBView/CBViewEditor.js');
-
-        $viewClassName      = get_called_class();
-        $editorClassName    = "{$viewClassName}Editor";
-        $snippet            = <<<EOT
-
-            var {$editorClassName} = Object.create(CBViewEditor);
-
-            {$editorClassName}.init = function()
-            {
-                CBViewEditor.init.call(this);
-
-                this.model.className = "{$viewClassName}";
-
-                return this;
-            };
-
-EOT;
-
-        CBHTMLOutput::addJavaScriptSnippetString($snippet);
     }
 
     /**
      * @return object
      */
-    public function model()
-    {
+    public function model() {
+
         return $model;
     }
 
     /**
      * @return void
      */
-    public function renderHTML()
-    {
+    public function renderHTML() {
+
         $className = get_class($this);
 
         echo "\n\n<!-- This is the default output for a `{$className}` class. -->\n\n";
@@ -116,8 +95,8 @@ EOT;
     /**
      * @return void
      */
-    public function searchText()
-    {
+    public function searchText() {
+
         return '';
     }
 }
