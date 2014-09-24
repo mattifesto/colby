@@ -15,7 +15,7 @@
 
 .CBBackgroundViewEditor > .CBModelArrayEditor
 {
-    background-color: white;
+    padding: 20px;
 }
 
 .CBBackgroundViewEditorControls
@@ -32,11 +32,17 @@
 
 .CBBackgroundViewEditorControls > img
 {
-    border:     40px solid white;
-    display:    block;
-    margin:     10px auto;
-    max-height: 200px;
-    max-width:  90%;
+    background-color:   hsl(0, 0%, 100%);
+    display:            block;
+    margin:             10px auto;
+    max-height:         200px;
+    max-width:          400px;
+    padding:            40px;
+}
+
+.CBBackgroundViewEditorControls > img.dark-background
+{
+    background-color:   hsl(0, 0%, 20%);
 }
 
 .CBBackgroundViewEditorControls > img + div

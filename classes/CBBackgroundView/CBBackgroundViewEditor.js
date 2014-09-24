@@ -362,6 +362,21 @@ CBBackgroundViewEditor.propertyMinimumViewHeightIsImageHeightDidChange = functio
 /**
  * @return void
  */
+CBBackgroundViewEditor.thumbnailWasClicked = function() {
+
+    if ("dark-background" == this._thumbnail.className) {
+
+        this._thumbnail.className = "";
+
+    } else {
+
+        this._thumbnail.className = "dark-background";
+    }
+};
+
+/**
+ * @return void
+ */
 CBBackgroundViewEditor.updateBackgroundImageThumbnail = function()
 {
     if (!this.model.imageURL)
@@ -377,6 +392,10 @@ CBBackgroundViewEditor.updateBackgroundImageThumbnail = function()
         parentElement.insertBefore(this._imageDimensions, parentElement.firstChild);
         this._thumbnail = document.createElement("img");
         parentElement.insertBefore(this._thumbnail, parentElement.firstChild);
+
+        var listener = this.thumbnailWasClicked.bind(this);
+
+        this._thumbnail.addEventListener("click", listener);
     }
 
     this._imageDimensions.textContent   = this.model.imageWidth + " × " + this.model.imageHeight;
