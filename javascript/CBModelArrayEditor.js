@@ -20,8 +20,9 @@ CBModelArrayEditor.editorForModelArray = function(modelArray) {
  */
 CBModelArrayEditor.initWithModelArray = function(modelArray) {
 
-    this.modelArray      = modelArray;
+    this.modelArray = modelArray;
     this._element   = document.createElement("div");
+
     this._element.classList.add("CBModelArrayEditor");
 
     /**
