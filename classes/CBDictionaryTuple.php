@@ -45,7 +45,17 @@ class CBDictionaryTuple
      */
     public static function deleteForKey($key)
     {
-        // TODO: Implement
+        $keyForSQL  = ColbyConvert::textToSQL($key);
+        $SQL        = <<<EOT
+
+            DELETE FROM
+                `CBDictionary`
+            WHERE
+                `key` = '{$keyForSQL}'
+
+EOT;
+
+        Colby::query($SQL);
     }
 
     /**
