@@ -56,12 +56,9 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBTextAreaControl.js')
 
 include CBSystemDirectory . '/sections/admin-page-settings.php';
 
-include Colby::findFile('page-editor-configuration.php');
-
 /**
- * Export section data
+ * Export views available to the editor
  */
-
 
 global $CBPageEditorAvailableViewClassNames;
 
@@ -77,54 +74,8 @@ foreach ($CBPageEditorAvailableViewClassNames as $className)
 
 CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $CBPageEditorAvailableViewClassNames);
 
-
-global $CBSections;
-
-foreach ($CBSections as $sectionTypeID => $phpDescriptor)
-{
-    $javaScriptDescriptor               = new stdClass();
-    $javaScriptDescriptor->name         = $phpDescriptor->name;
-    $javaScriptDescriptor->modelJSON    = $phpDescriptor->modelJSON;
-
-    /**
-     * Originally section types would declare a constant which would be exported
-     * here to be used only once by the `editor.js` file.  But newer sections
-     * don't declare a constant and it's okay that they hardcode the section
-     * type ID in their `editor.js` file. This code should eventually go away
-     * as all sections move to the newer model.
-     */
-
-    $constantName = "{$phpDescriptor->name}SectionTypeID";
-
-    if (defined($constantName))
-    {
-        CBHTMLOutput::exportConstant($constantName);
-    }
-
-    /**
-     *
-     */
-
-    CBHTMLOutput::exportListItem('CBSectionDescriptors', $sectionTypeID, $javaScriptDescriptor);
-
-    if ($phpDescriptor->URLForEditorCSS)
-    {
-        CBHTMLOutput::addCSSURL($phpDescriptor->URLForEditorCSS);
-    }
-
-    if ($phpDescriptor->URLForEditorJavaScript)
-    {
-        CBHTMLOutput::addJavaScriptURL($phpDescriptor->URLForEditorJavaScript);
-    }
-
-    if (isset($phpDescriptor->editorInitializer))
-    {
-        include_once $phpDescriptor->editorInitializer;
-    }
-}
-
 /**
- * Export page template data
+ * Export page templates
  */
 
 global $CBPageTemplateClassNames;

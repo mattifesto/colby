@@ -16,15 +16,14 @@ function CBPageInformationEditorView(pageModel)
         this.pageModel.URI = this.generateURI();
     }
 
-    this._element   = document.createElement("section");
-    var header      = document.createElement("header");
-    var headerTitle = document.createTextNode("Page Information");
-    this._container = document.createElement("div");
+    this._element       = document.createElement("section");
+    var header          = document.createElement("header");
+    header.textContent  = "Page Information";
+    this._container     = document.createElement("div");
 
     this._element.classList.add("CBSectionEditorView");
     this._element.classList.add("CBPageInformationEditorView");
     this._element.appendChild(header);
-    header.appendChild(headerTitle);
     this._element.appendChild(this._container);
 
 
@@ -111,26 +110,6 @@ function CBPageInformationEditorView(pageModel)
 
     container.appendChild(publishedByControl.rootElement());
 
-
-    /**
-     *
-     */
-
-    var pageGroupControl = new CBSelectionControl("Page Group");
-    pageGroupControl.rootElement().classList.add("standard");
-    pageGroupControl.rootElement().classList.add("page-group");
-
-    pageGroupControl.appendOption("", "None");
-
-    for (var ID in CBPageGroupDescriptors)
-    {
-        pageGroupControl.appendOption(ID, CBPageGroupDescriptors[ID].name);
-    }
-
-    pageGroupControl.setValue(this.pageModel.groupID);
-    pageGroupControl.setAction(this, this.translatePageGroup);
-
-    container.appendChild(pageGroupControl.rootElement());
 
     /**
      * This timer requests the updated URI after 1000ms of inactivity.
