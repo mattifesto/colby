@@ -57,7 +57,11 @@ CBPagesListViewController.addListItem = function(listItem)
     var span        = document.createElement("span");
     span.className  = "time";
 
-    span.setAttribute("data-timestamp", listItem.published * 1000);
+    if (listItem.isPublished) {
+
+        span.setAttribute("data-timestamp", listItem.publicationTimeStamp * 1000);
+    }
+
     td.appendChild(span);
     tr.appendChild(td);
 

@@ -277,8 +277,16 @@ CBPageEditor.requestSave = function()
  *
  * @return void
  */
-CBPageEditor.saveModel = function()
-{
+CBPageEditor.saveModel = function() {
+
+    var timeStampInSeconds  = Math.floor(Date.now() / 1000);
+    this.model.updated      = timeStampInSeconds;
+
+    if (!this.model.created) {
+
+        this.model.created = timeStampInSeconds;
+    }
+
     var formData = new FormData();
     formData.append("model-json", JSON.stringify(this.model));
 
