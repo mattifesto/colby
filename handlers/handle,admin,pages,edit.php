@@ -78,9 +78,9 @@ CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $CBPageEdito
  * Export page templates
  */
 
-global $CBPageTemplateClassNames;
+global $CBPageEditorAvailablePageTemplateClassNames;
 
-foreach ($CBPageTemplateClassNames as $className)
+foreach ($CBPageEditorAvailablePageTemplateClassNames as $className)
 {
     $descriptor             = new stdClass();
     $descriptor->modelJSON  = json_encode($className::model());
