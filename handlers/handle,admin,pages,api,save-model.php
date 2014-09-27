@@ -173,15 +173,34 @@ EOT;
 }
 
 /**
+ * This removes the page from all page lists that this handler is capable of
+ * adding it to. This is because instead of doing a "add list if not already
+ * added" it's more efficient to remove from any possible lists and then add
+ * all the relevant ones back.
+ *
+ * This also solves a problem that could occur where a list may be removed from
+ * the model, but not the database. This would be rare, but if it were to occur
+ * the page would never be removed from that list. This way after executing this
+ * function and then refreshing the lists, the lists are guaranteed to be
+ * synchronized.
+ *
+ * This process does not remove the post from non-editable lists so any
+ * processes that use custom lists will not be affected.
+ *
  * @return void
  */
 function CBPageRemoveFromEditablePageLists($model) {
 
     global $CBPageEditorAvailablePageListClassNames;
 
-    $listClassNamesForSQL = array("'CBRecentlyEditedPages'");
+    $listClassNames         = array_merge($CBPageEditorAvailablePageListClassNames,
+                                          $model->listClassNames,
+                                          ['CBRecentlyEditedPages']);
 
-    foreach ($CBPageEditorAvailablePageListClassNames as $listClassName) {
+    $listClassNames         = array_unique($listClassNames);
+    $listClassNamesForSQL   = array();
+
+    foreach ($listClassNames as $listClassName) {
 
         $classNameForSQL        = ColbyConvert::textToSQL($listClassName);
         $classNameForSQL        = "'{$classNameForSQL}'";

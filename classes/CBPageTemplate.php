@@ -21,6 +21,11 @@
  *  `created` property to the same value as the `updated` property if the
  *  `created` property is not yet set. There's no need to try to guess when the
  *  page was actually created if that information is not readily available.
+ *
+ * 2014.09.26 Version 3
+ *
+ *  Added the `listClassNames` propery which holds an array of list class
+ *  names representing the lists which include this page.
  */
 class CBPageTemplate {
 
@@ -36,11 +41,12 @@ class CBPageTemplate {
         $model->descriptionHTML         = '';
         $model->groupID                 = null;
         $model->isPublished             = false;
+        $model->listClassNames          = array();
         $model->publicationTimeStamp    = null;
         $model->publishedBy             = null;
         $model->rowID                   = null;
         $model->schema                  = 'CBPage';
-        $model->schemaVersion           = 2;
+        $model->schemaVersion           = 3;
         $model->sections                = array();
         $model->thumbnailURL            = null;
         $model->title                   = '';
