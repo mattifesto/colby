@@ -1,8 +1,29 @@
-section.CBPageInformationEditorView
+.CBPageInformationEditorView
 {
     background-color:   rgba(0, 0, 0, 0.05);
     border-radius:      10px;
     margin:             10px auto;
     padding:            10px 20px;
-    width:              960px;
+    width:              720px;
+}
+
+.CBPageInformationProperties
+{
+    display:    inline-block;
+    width:      480px;
+}
+
+.CBPageInformationPageListsEditor
+{
+    display:        inline-block;
+    height:         200px;
+    margin-left:    10px;
+    overflow-y:     scroll;
+    vertical-align: top;
+    width:          230px;
+}
+
+.CBPageInformationPageListsEditor input[type=checkbox]
+{
+    margin-right: 0.5em;
 }

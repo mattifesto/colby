@@ -75,6 +75,14 @@ foreach ($CBPageEditorAvailableViewClassNames as $className)
 CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $CBPageEditorAvailableViewClassNames);
 
 /**
+ * Export page lists
+ */
+
+global $CBPageEditorAvailablePageListClassNames;
+
+CBHTMLOutput::exportVariable('CBPageEditorAvailablePageListClassNames', $CBPageEditorAvailablePageListClassNames);
+
+/**
  * Export page templates
  */
 

@@ -16,13 +16,15 @@
  * that contains the library.
  */
 
-global $CBPageEditorAvailableViewClassNames;
+global $CBPageEditorAvailablePageListClassNames;
+$CBPageEditorAvailablePageListClassNames = array(
+    'CBFavorites');
 
+global $CBPageEditorAvailablePageTemplateClassNames;
+$CBPageEditorAvailablePageTemplateClassNames = array(
+    'CBPageTemplate');
+
+global $CBPageEditorAvailableViewClassNames;
 $CBPageEditorAvailableViewClassNames = array(
     'CBBackgroundView',
     'CBMarkaroundView');
-
-global $CBPageTemplateClassNames;
-
-$CBPageTemplateClassNames = array(
-    'CBPageTemplate');

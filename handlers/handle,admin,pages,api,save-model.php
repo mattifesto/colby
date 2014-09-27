@@ -45,7 +45,8 @@ else
 
 CBPages::updateRow($rowData);
 
-CBPageRemoveFromAllPageLists($model);
+CBPageRemoveFromEditablePageLists($model);
+CBPageAddToPageLists($model);
 CBPageUpdateRecentlyEditedPagesList($model);
 
 /**
@@ -146,15 +147,56 @@ function CBPageGenerateSectionSearchText($pageModel, $sectionModel)
 /**
  * @return void
  */
-function CBPageRemoveFromAllPageLists($model) {
+function CBPageAddToPageLists($model) {
 
     $pageRowID  = (int)$model->rowID;
-    $SQL        = <<<EOT
+    $updated    = (int)$model->updated;
+    $yearMonth  = gmdate('Ym', $updated);
+
+    foreach ($model->listClassNames as $className) {
+
+        $classNameForSQL    = ColbyConvert::textToSQL($className);
+        $SQL                = <<<EOT
+
+            INSERT INTO
+                `CBPageLists`
+            SET
+                `pageRowID`     = {$pageRowID},
+                `listClassName` = '{$classNameForSQL}',
+                `sort1`         = {$yearMonth},
+                `sort2`         = {$updated}
+
+EOT;
+
+        Colby::query($SQL);
+    }
+}
+
+/**
+ * @return void
+ */
+function CBPageRemoveFromEditablePageLists($model) {
+
+    global $CBPageEditorAvailablePageListClassNames;
+
+    $listClassNamesForSQL = array("'CBRecentlyEditedPages'");
+
+    foreach ($CBPageEditorAvailablePageListClassNames as $listClassName) {
+
+        $classNameForSQL        = ColbyConvert::textToSQL($listClassName);
+        $classNameForSQL        = "'{$classNameForSQL}'";
+        $listClassNamesForSQL[] = $classNameForSQL;
+    }
+
+    $listClassNamesForSQL   = implode(',', $listClassNamesForSQL);
+    $pageRowID      = (int)$model->rowID;
+    $SQL            = <<<EOT
 
         DELETE FROM
             `CBPageLists`
         WHERE
-            `pageRowID` = {$pageRowID}
+            `pageRowID` = {$pageRowID} AND
+            `listClassName` IN ({$listClassNamesForSQL})
 
 EOT;
 
