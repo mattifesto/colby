@@ -10,6 +10,11 @@ class CBView {
     private function __construct() { }
 
     /**
+     * This method is called to create a new view. Override this method to add
+     * custom properties to the model and to do additional initialization.
+     *
+     * Overrides must call this function to get the instance.
+     *
      * @return instance type
      */
     public static function init() {
@@ -19,17 +24,18 @@ class CBView {
         $model->ID          = Colby::random160();
         $model->version     = 1;
 
-        return self::initWithModel($model);
+        $view               = new static();
+        $view->model        = $model;
+
+        return $view;
     }
 
     /**
-     * This is the designated initializer. This is the only function that
-     * creates an instance of the class.
+     * This method is called when a model already exists for a view. Override
+     * this method if you need to do additional initialization aside from just
+     * storing the model.
      *
-     * @param object $model
-     *
-     *  We trust that the object passed here is an appropriate model for this
-     *  view which was created by another instance of this class.
+     * Overrides must call this function to get the instance.
      *
      * @return instance type
      */
@@ -53,7 +59,7 @@ class CBView {
      *
      * @return CBView
      */
-    public static function createViewWithModel($model) {
+    final public static function createViewWithModel($model) {
 
         $className  = $model->className;
         $view       = $className::initWithModel($model);

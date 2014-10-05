@@ -47,9 +47,7 @@ CBViewEditor.editorForViewClassName = function(viewClassName) {
 };
 
 /**
- * This is a designated initializer.
- *
- * @return CBViewEditor
+ * @return instance type
  */
 CBViewEditor.init = function() {
 
@@ -64,9 +62,7 @@ CBViewEditor.init = function() {
 };
 
 /**
- * This is a designated initializer.
- *
- * @return CBViewEditor
+ * @return instance type
  */
 CBViewEditor.initWithModel = function(viewModel) {
 

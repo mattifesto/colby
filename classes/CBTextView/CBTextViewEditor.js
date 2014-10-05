@@ -1,8 +1,13 @@
 "use strict";
 
-var CBTextViewEditor            = Object.create(CBViewEditor);
-CBTextViewEditor.chromeClass    = "CBTextViewEditorChrome";
-CBTextViewEditor.labelText      = "Text";
+var CBTextViewEditor                    = Object.create(CBViewEditor);
+CBTextViewEditor.contentTypeSingleLine  = 0;
+CBTextViewEditor.contentTypeMultiLine   = 1;
+CBTextViewEditor.contentTypeMarkaround  = 2;
+CBTextViewEditor.chromeClass            = "CBTextViewEditorChrome";
+CBTextViewEditor.labelText              = "Text";
+CBTextViewEditor.editorIsMultiLine      = false;
+CBTextViewEditor.contentType            = CBTextViewEditor.contentTypeSingleLine;
 
 /**
  * @return instance type
@@ -25,9 +30,18 @@ CBTextViewEditor.createElement = function() {
 
     this._element           = document.createElement("div");
     this._element.className = this.model.className;
-    this._input             = document.createElement("input");
+
+    if (this.editorIsMultiLine) {
+
+        this._input         = document.createElement("textarea");
+
+    } else {
+
+        this._input         = document.createElement("input");
+        this._input.type    = "text";
+    }
+
     this._input.id          = Colby.random160();
-    this._input.type        = "text";
     this._input.value       = this.model.text;
     var label               = document.createElement("label");
     label.htmlFor           = this._input.id;
@@ -61,7 +75,32 @@ CBTextViewEditor.textDidChange = function() {
 
     var text        = this._input.value;
     this.model.text = text;
-    this.model.HTML = Colby.textToHTML(text);
+
+    switch (this.contentType) {
+
+        case CBTextViewEditor.contentTypeSingleLine:
+
+            this.model.HTML = Colby.textToHTML(text);
+            break;
+
+        case CBTextViewEditor.contentTypeMultiLine:
+
+            /**
+             * TODO: Add multi-line non-markaround parsing.
+             */
+
+            this.model.HTML = CBMarkaround.parse(text);
+            break;
+
+        case CBTextViewEditor.contentTypeMarkaround:
+
+            this.model.HTML = CBMarkaround.parse(text);
+            break;
+
+        default:
+
+            throw "Unhandled case in switch statement.";
+    }
 
     CBPageEditor.requestSave();
 };

@@ -14,6 +14,8 @@ class CBTextView extends CBView {
 
         $view->model->text  = '';
         $view->model->HTML  = '';
+
+        return $view;
     }
 
     /**
@@ -23,6 +25,7 @@ class CBTextView extends CBView {
 
         parent::includeEditorDependencies();
 
+        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBMarkaround.js');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBTextView/CBTextViewEditor.js');
     }
 
