@@ -65,4 +65,38 @@ class CBPageTemplate {
 
         return 'Blank Page';
     }
+
+    /**
+     * This function upgrades page models to the latest specifications. The
+     * best place for this fuction will probably change in the future.
+     *
+     * @return void
+     */
+    public static function upgradeModel($model) {
+
+        /**
+         * Version 2
+         */
+
+        if (!isset($model->updated)) {
+
+            $model->updated = time();
+        }
+
+        if (!isset($model->created)) {
+
+            $model->created = $model->updated;
+        }
+
+        /**
+         * Version 3
+         */
+
+        if (!isset($model->listClassNames)) {
+
+            $model->listClassNames = array();
+        }
+
+        $model->schemaVersion = 3;
+    }
 }

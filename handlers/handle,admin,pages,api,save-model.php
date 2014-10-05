@@ -15,6 +15,9 @@ include_once Colby::findFile('page-renderer-configuration.php');
 
 $modelJSON      = $_POST['model-json'];
 $model          = json_decode($modelJSON);
+
+CBPageTemplate::upgradeModel($model);
+
 $summaryView    = CBPageCreatePageSummaryViewWithPageModel($model);
 
 /**
@@ -50,9 +53,10 @@ CBPageAddToPageLists($model);
 CBPageUpdateRecentlyEditedPagesList($model);
 
 /**
- *
+ * Re-encode the model to JSON in case any changes have been made and then save.
  */
 
+$modelJSON          = json_encode($model);
 $dataStore          = new CBDataStore($model->dataStoreID);
 $dataStoreDirectory = $dataStore->directory();
 
