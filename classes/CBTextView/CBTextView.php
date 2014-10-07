@@ -19,6 +19,14 @@ class CBTextView extends CBView {
     }
 
     /**
+     * @return string
+     */
+    public static function HTML() {
+
+        return $this->model->HTML;
+    }
+
+    /**
      * @return void
      */
     public static function includeEditorDependencies() {
@@ -40,9 +48,17 @@ class CBTextView extends CBView {
     }
 
     /**
-     * @return void
+     * @return string
      */
     public function searchText() {
+
+        return $this->model->text;
+    }
+
+    /**
+     * @return string
+     */
+    public function Text() {
 
         return $this->model->text;
     }
