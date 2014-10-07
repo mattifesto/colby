@@ -68,6 +68,15 @@ class ColbyImageUploader
     }
 
     /**
+     * @return string
+     *  Returns the hexadecimal sha1 has of the uploaded image.
+     */
+    public function sha1()
+    {
+        return sha1($_FILES[$this->name]['tmp_name']);
+    }
+
+    /**
      * @return int
      */
     public function sizeX()

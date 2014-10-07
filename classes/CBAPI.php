@@ -21,7 +21,7 @@ class CBAPI
     protected function init() { }
 
     /**
-     * @return instance type
+     * @return void
      */
     final public static function call() {
 
@@ -32,7 +32,7 @@ class CBAPI
 
             $api->init();
 
-            $api->response->succeeded = $api->process();
+            $api->response->wasSuccessful = $api->process();
         }
 
         $api->response->send();
@@ -40,8 +40,14 @@ class CBAPI
 
     /**
      * Override this function to implement the logic of your API.
+     *
+     * @return bool
+     *  Return `true` if the API succeeded and `false` if not.
      */
-    protected function process() { }
+    protected function process() {
+
+        return true;
+    }
 
     /**
      * Override this function to allow users to use your API. Processing will

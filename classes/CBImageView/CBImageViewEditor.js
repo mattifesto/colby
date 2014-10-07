@@ -17,6 +17,7 @@ CBImageViewEditor.init = function() {
     this.model.alternativeTextViewModel = this.alternativeTextViewEditor.model;
     this.model.displayHeight            = null;
     this.model.displayWidth             = null;
+    this.model.filename                 = null;
     this.model.maxHeight                = null;
     this.model.maxWidth                 = null;
     this.model.URL                      = null;
@@ -53,14 +54,15 @@ CBImageViewEditor.createImageEditorElement = function() {
 
     button.addEventListener("click", listener);
 
-    listener            = this.fileDidChange.bind(this);
+    listener            = this.uploadImage.bind(this);
 
     input.addEventListener("change", listener);
 
     element.appendChild(button);
     element.appendChild(input);
 
-    this._imageEditorElement = element;
+    this._imageEditorElement    = element;
+    this._input                 = input;
 
     return this._imageEditorElement;
 };
@@ -104,6 +106,90 @@ CBImageViewEditor.imageEditorElement = function() {
 /**
  * @return void
  */
-CBImageViewEditor.fileDidChange = function() {
+CBImageViewEditor.thumbnailWasClicked = function() {
 
+    if ("dark-background" == this._thumbnail.className) {
+
+        this._thumbnail.className = "";
+
+    } else {
+
+        this._thumbnail.className = "dark-background";
+    }
+};
+
+/**
+ * @return void
+ */
+CBImageViewEditor.uploadImage = function() {
+
+    if (this.xhr)
+    {
+        this.xhr.abort();
+        this.xhr = null;
+    }
+
+    var formData = new FormData();
+    formData.append("dataStoreID", CBPageEditor.model.dataStoreID);
+    formData.append("image", this._input.files[0]);
+
+    var xhr     = new XMLHttpRequest();
+    xhr.onload  = this.uploadImageDidComplete.bind(this);
+    xhr.open("POST", "/api/?className=CBAPIUploadImage");
+    xhr.send(formData);
+
+    this._xhr = xhr;
+};
+
+/**
+ * @return void
+ */
+CBImageViewEditor.uploadImageDidComplete = function() {
+
+    var response = Colby.responseFromXMLHttpRequest(this._xhr);
+
+    if (!response.wasSuccessful)
+    {
+        Colby.displayResponse(response);
+    }
+    else
+    {
+        this.model.actualHeight             = response.actualHeight;
+        this.model.actualWidth              = response.actualWidth;
+        this.model.filename                 = response.filename;
+        this.model.URL                      = response.URL;
+        this.model.URLForHTML               = response.URLForHTML;
+
+        this.updateThumbnail();
+
+        CBPageEditor.requestSave();
+    }
+
+    this._xhr = null;
+};
+
+/**
+ * @return void
+ */
+CBImageViewEditor.updateThumbnail = function() {
+
+    if (!this.model.URL)
+    {
+        return;
+    }
+
+    if (!this._thumbnail)
+    {
+        this._imageDimensions = document.createElement("div");
+        this._imageEditorElement.insertBefore(this._imageDimensions, this._imageEditorElement.firstChild);
+        this._thumbnail = document.createElement("img");
+        this._imageEditorElement.insertBefore(this._thumbnail, this._imageEditorElement.firstChild);
+
+        var listener = this.thumbnailWasClicked.bind(this);
+
+        this._thumbnail.addEventListener("click", listener);
+    }
+
+    this._imageDimensions.textContent   = this.model.actualWidth + " × " + this.model.actualHeight;
+    this._thumbnail.src                 = this.model.URL;
 };

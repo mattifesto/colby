@@ -14,6 +14,7 @@ class CBImageView extends CBView {
         $view->model->alternativeTextViewModel  = $view->textView->model();
         $view->model->displayHeight             = null;
         $view->model->displayWidth              = null;
+        $view->model->filename                  = null;
         $view->model->maxHeight                 = null;
         $view->model->maxWidth                  = null;
         $view->model->URL                       = null;
