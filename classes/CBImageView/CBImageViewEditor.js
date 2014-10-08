@@ -1,7 +1,7 @@
 "use strict";
 
 var CBImageViewEditor           = Object.create(CBViewEditor);
-CBImageViewEditor.chromeClass   = "CBTextViewEditorChrome";
+CBImageViewEditor.chromeClass   = "CBImageViewEditorChrome";
 
 /**
  * @return instance type
@@ -45,6 +45,7 @@ CBImageViewEditor.initWithModel = function(viewModel) {
 CBImageViewEditor.createImageEditorElement = function() {
 
     var element         = document.createElement("div");
+    element.className   = "CBImageViewImageEditor";
     var button          = document.createElement("button");
     button.textContent  = "Upload Image";
     var input           = document.createElement("input");
@@ -74,7 +75,8 @@ CBImageViewEditor.element = function() {
 
     if (!this._element) {
 
-        this._element = document.createElement("div");
+        this._element           = document.createElement("div");
+        this._element.className = "CBImageViewEditor";
         this._element.appendChild(this.imageEditorElement());
         this._element.appendChild(this.alternativeTextEditorElement());
     }
@@ -87,6 +89,7 @@ CBImageViewEditor.element = function() {
  */
 CBImageViewEditor.alternativeTextEditorElement = function() {
 
+    this.alternativeTextViewEditor.labelText = "Alternative Text";
     return this.alternativeTextViewEditor.element();
 };
 
@@ -98,6 +101,7 @@ CBImageViewEditor.imageEditorElement = function() {
     if (!this._imageEditorElement)
     {
         this.createImageEditorElement();
+        this.updateThumbnail();
     }
 
     return this._imageEditorElement;

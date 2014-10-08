@@ -42,6 +42,10 @@ class CBImageView extends CBView {
         parent::includeEditorDependencies();
         CBTextView::includeEditorDependencies();
 
+        $URL = CBSystemURL . '/classes/CBImageView/CBImageViewEditor.css';
+
+        CBHTMLOutput::addCSSURL($URL);
+
         $URL = CBSystemURL . '/classes/CBImageView/CBImageViewEditor.js';
 
         CBHTMLOutput::addJavaScriptURL($URL);

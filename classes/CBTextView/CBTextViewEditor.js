@@ -29,7 +29,7 @@ CBTextViewEditor.init = function() {
 CBTextViewEditor.createElement = function() {
 
     this._element           = document.createElement("div");
-    this._element.className = this.model.className;
+    this._element.className = "CBTextViewEditor";
 
     if (this.editorIsMultiLine) {
 

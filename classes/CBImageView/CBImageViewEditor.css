@@ -1,0 +1,49 @@
+.CBViewEditorChrome.CBImageViewEditorChrome
+{
+    background-color:   hsl(120, 50%, 90%);
+    border-color:       hsl(120, 50%, 90%);
+    border-radius:      5px;
+    border-style:       solid;
+    border-width:       5px 10px 10px;
+    margin:             0 auto;
+    width:              480px;
+}
+
+.CBViewEditorChrome.CBImageViewEditorChrome > header
+{
+    padding:            0 10px 10px;
+    text-align:         center;
+}
+
+.CBImageViewImageEditor > button
+{
+    display:    block;
+    margin:     10px auto 30px;
+}
+
+.CBImageViewImageEditor > img
+{
+    background-color:   hsl(0, 0%, 100%);
+    display:            block;
+    margin:             10px auto;
+    max-height:         200px;
+    max-width:          400px;
+    padding:            40px;
+}
+
+.CBImageViewImageEditor > img.dark-background
+{
+    background-color:   hsl(0, 0%, 20%);
+}
+
+.CBImageViewImageEditor > img + div
+{
+    color:      #808080;
+    font-size:  13px;
+    text-align: center;
+}
+
+.CBImageViewEditor .CBTextViewEditor input
+{
+    width: 480px;
+}
