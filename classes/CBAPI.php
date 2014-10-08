@@ -17,6 +17,9 @@ class CBAPI
 
     /**
      * Override this function to implement the initialation of your API.
+     * Gathering and validating POST or GET variables should happen here.
+     *
+     * @return void
      */
     protected function init() { }
 
