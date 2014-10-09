@@ -1,7 +1,15 @@
 "use strict";
 
-var CBImageViewEditor           = Object.create(CBViewEditor);
-CBImageViewEditor.chromeClass   = "CBImageViewEditorChrome";
+var CBImageViewEditor = Object.create(CBViewEditor);
+
+Colby.extend(CBImageViewEditor, {
+
+    chromeClass     : "CBImageViewEditorChrome",
+    cropToHeight    : null,
+    cropToWidth     : null,
+    reduceToHeight  : null,
+    reduceToWidth   : null
+});
 
 /**
  * @return instance type
@@ -136,6 +144,26 @@ CBImageViewEditor.uploadImage = function() {
     var formData = new FormData();
     formData.append("dataStoreID", CBPageEditor.model.dataStoreID);
     formData.append("image", this._input.files[0]);
+
+    if (this.cropToHeight) {
+
+        formData.append("cropToHeight", this.cropToHeight);
+    }
+
+    if (this.cropToWidth) {
+
+        formData.append("cropToWidth", this.cropToWidth);
+    }
+
+    if (this.reduceToHeight) {
+
+        formData.append("reduceToHeight", this.reduceToHeight);
+    }
+
+    if (this.reduceToWidth) {
+
+        formData.append("reduceToWidth", this.reduceToWidth);
+    }
 
     var xhr     = new XMLHttpRequest();
     xhr.onload  = this.uploadImageDidComplete.bind(this);

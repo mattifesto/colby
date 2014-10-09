@@ -68,7 +68,7 @@ class ColbyImageResizer
             throw new RuntimeException("The file \"{$filename}\" is not a valid image file.");
         }
 
-        $resizer->inputSize = new ColbySize($imageSizeInfo[0], $imageSizeInfo[1]);
+        $resizer->inputSize = new CBSize($imageSizeInfo[0], $imageSizeInfo[1]);
 
         $resizer->inputType = $imageSizeInfo[2];
 
@@ -108,7 +108,7 @@ class ColbyImageResizer
             return;
         }
 
-        $this->outputSize = new ColbySize($newWidth, $this->outputSize->height());
+        $this->outputSize = new CBSize($newWidth, $this->outputSize->height());
 
         /**
          * Since this is a crop and not just a resize, the source rectangle for
@@ -121,7 +121,7 @@ class ColbyImageResizer
         $oldSourceRectX = $this->sourceRect->origin()->x();
         $newSourceRectX = $oldSourceRectX + (($oldSourceRectWidth - $newSourceRectWidth) / 2);
 
-        $this->sourceRect = new ColbyRect($newSourceRectX, $this->sourceRect->origin()->y(),
+        $this->sourceRect = new CBRect($newSourceRectX, $this->sourceRect->origin()->y(),
                                           $newSourceRectWidth, $this->sourceRect->size()->height());
 
         $this->outputResource = null;
@@ -144,7 +144,7 @@ class ColbyImageResizer
             return;
         }
 
-        $this->outputSize = new ColbySize($this->outputSize->width(), $newHeight);
+        $this->outputSize = new CBSize($this->outputSize->width(), $newHeight);
 
         /**
          * Since this is a crop and not just a resize, the source rectangle for
@@ -157,7 +157,7 @@ class ColbyImageResizer
         $oldSourceRectY = $this->sourceRect->origin()->y();
         $newSourceRectY = $oldSourceRectY + (($oldSourceRectHeight - $newSourceRectHeight) / 2);
 
-        $this->sourceRect = new ColbyRect($this->sourceRect->origin()->x(), $newSourceRectY,
+        $this->sourceRect = new CBRect($this->sourceRect->origin()->x(), $newSourceRectY,
                                           $this->sourceRect->size()->width(), $newSourceRectHeight);
 
         $this->outputResource = null;
@@ -210,7 +210,7 @@ class ColbyImageResizer
 
         $newWidth = $newHeight * ($this->inputSize->width() / $this->inputSize->height());
 
-        $this->outputSize = new ColbySize($newWidth, $newHeight);
+        $this->outputSize = new CBSize($newWidth, $newHeight);
 
         $this->outputResource = null;
     }
@@ -256,7 +256,7 @@ class ColbyImageResizer
 
         $newHeight = $newWidth * ($this->inputSize->height() / $this->inputSize->width());
 
-        $this->outputSize = new ColbySize($newWidth, $newHeight);
+        $this->outputSize = new CBSize($newWidth, $newHeight);
 
         $this->outputResource = null;
     }
@@ -266,7 +266,7 @@ class ColbyImageResizer
      */
     public function reset()
     {
-        $this->sourceRect = new ColbyRect(0, 0, $this->inputSize->width(), $this->inputSize->height());
+        $this->sourceRect = new CBRect(0, 0, $this->inputSize->width(), $this->inputSize->height());
 
         $this->outputSize = $this->inputSize;
 
@@ -295,7 +295,7 @@ class ColbyImageResizer
                 return;
             }
 
-            $destinationRect = new ColbyRect(0, 0, $this->outputSize->width(), $this->outputSize->height());
+            $destinationRect = new CBRect(0, 0, $this->outputSize->width(), $this->outputSize->height());
             $sourceRect = $this->sourceRect;
 
             $this->outputResource = imagecreatetruecolor($destinationRect->size()->width(),

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This API uploads an image to a data store and optionally creates a resized
+ * version of the image.
+ *
+ * The resizing operation first reduces the image size and then applies the
+ * cropping. This is because the dimension of the original image may not be
+ * known to the caller. Since the caller specifies the image size parameters
+ * they will be able to product appropriate cropping parameters.
+ */
 class CBAPIUploadImage extends CBAPI {
 
     private $cropToHeight   = null;
@@ -75,12 +84,64 @@ class CBAPIUploadImage extends CBAPI {
 
         $uploader->moveToFilename($absoluteFilename);
 
+        if ($this->sizeIdentifier) {
+
+            $destinationFilename    = $dataStore->directory() .
+                                      '/' .
+                                      $uploader->sha1() .
+                                      "-{$this->sizeIdentifier}" .
+                                      $uploader->canonicalExtension();
+
+            $this->resizeImage($absoluteFilename, $destinationFilename);
+
+        } else {
+
+            $response               = $this->response;
+            $response->actualWidth  = $uploader->sizeX();
+            $response->actualHeight = $uploader->sizeY();
+            $response->filename     = $filename;
+            $response->URL          = $dataStore->URL() . "/{$filename}";
+            $response->URLForHTML   = ColbyConvert::textToHTML($response->URL);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    protected function resizeImage($sourceFilename, $destinationFilename) {
+
+        $dataStore  = new CBDataStore($this->dataStoreID);
+        $resizer    = ColbyImageResizer::resizerForFilename($sourceFilename);
+
+        if ($this->reduceToWidth) {
+
+            $resizer->reduceWidthTo($this->reduceToWidth);
+        }
+
+        if ($this->reduceToHeight) {
+
+            $resizer->reduceHeightTo($this->reduceToHeight);
+        }
+
+        if ($this->cropToWidth) {
+
+            $resizer->cropFromCenterToWidth($this->cropToWidth);
+        }
+
+        if ($this->cropToHeight) {
+
+            $resizer->cropFromCenterToHeight($this->cropToHeight);
+        }
+
+        $resizer->saveToFilename($destinationFilename);
+
+        $size                   = getimagesize($destinationFilename);
         $response               = $this->response;
-        $response->actualWidth  = $uploader->sizeX();
-        $response->actualHeight = $uploader->sizeY();
-        $response->filename     = $filename;
-        $response->URL          = $dataStore->URL() . "/{$filename}";
-        $response->URLForHtml   = ColbyConvert::textToHTML($response->URL);
+        $response->actualWidth  = $size[0];
+        $response->actualHeight = $size[1];
+        $response->filename     = basename($destinationFilename);
+        $response->URL          = $dataStore->URL() . "/{$response->filename}";
+        $response->URLForHTML   = ColbyConvert::textToHTML($response->URL);
     }
 
     /**

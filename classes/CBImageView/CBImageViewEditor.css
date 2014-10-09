@@ -43,6 +43,12 @@
     text-align: center;
 }
 
+.CBImageViewEditor .CBTextViewEditor
+{
+    margin: 10px auto 0;
+    width: 480px;
+}
+
 .CBImageViewEditor .CBTextViewEditor input
 {
     width: 480px;
