@@ -45,30 +45,34 @@ $iniValues = ini_get_all(null, false);
     </style>
     <table class="phpini">
         <tbody>
+            <tr>
+                <th style="text-align: right;">PHP Version</th>
+                <td><?php echo phpversion() ?></td>
+            </tr>
 
-        <?php
+            <?php
 
-        foreach ($iniValues as $key => $value)
-        {
-            if (empty($value))
+            foreach ($iniValues as $key => $value)
             {
-                $value = '<no value>';
-            }
+                if (empty($value))
+                {
+                    $value = '<no value>';
+                }
 
-            $keyHTML = ColbyConvert::textToHTML($key);
-            $valueHTML = ColbyConvert::textToHTML($value);
+                $keyHTML = ColbyConvert::textToHTML($key);
+                $valueHTML = ColbyConvert::textToHTML($value);
 
-            echo <<<EOT
+                echo <<<EOT
 
-                <tr>
-                    <th style="text-align: right;">{$keyHTML}</th>
-                    <td>{$valueHTML}</td>
-                </tr>
+                    <tr>
+                        <th style="text-align: right;">{$keyHTML}</th>
+                        <td>{$valueHTML}</td>
+                    </tr>
 
 EOT;
-        }
+            }
 
-        ?>
+            ?>
 
         </tbody>
     </table>
