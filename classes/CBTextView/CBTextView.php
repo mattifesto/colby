@@ -21,7 +21,7 @@ class CBTextView extends CBView {
     /**
      * @return string
      */
-    public static function HTML() {
+    public function HTML() {
 
         return $this->model->HTML;
     }
