@@ -16,10 +16,30 @@ var CBViewEditor =
  */
 CBViewEditor.editorForViewModel = function(viewModel) {
 
-    var prototype   = this.editorPrototypeForViewClassName(viewModel.className);
-    var editor      = Object.create(prototype);
+    var editor;
 
-    editor.initWithModel(viewModel);
+    try {
+
+        var prototype   = this.editorPrototypeForViewClassName(viewModel.className);
+        editor          = Object.create(prototype);
+
+        editor.initWithModel(viewModel);
+
+    } catch(error) {
+
+        if (error instanceof Error) {
+
+            Colby.handleError(error.message, error.sourceURL, error.line, error.column, error);
+
+        } else {
+
+            Colby.handleError(error);
+        }
+
+        editor = Object.create(this);
+
+        editor.init();
+    }
 
     return editor;
 };
