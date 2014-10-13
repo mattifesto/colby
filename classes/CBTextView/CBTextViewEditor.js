@@ -104,3 +104,17 @@ CBTextViewEditor.textDidChange = function() {
 
     CBPageEditor.requestSave();
 };
+
+Colby.extend(CBTextViewEditor, {
+
+    /**
+     * @return void
+     */
+    setText : function(text) {
+
+        this.model.text = text;
+        this.model.HTML = Colby.textToHTML(text);
+
+        CBPageEditor.requestSave();
+    }
+});

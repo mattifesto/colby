@@ -56,9 +56,18 @@ class CBTextView extends CBView {
     }
 
     /**
+     * @return void
+     */
+    public function setText($text) {
+
+        $this->model->text  = (string)$text;
+        $this->model->HTML  = ColbyConvert::textToHTML($this->model->text);
+    }
+
+    /**
      * @return string
      */
-    public function Text() {
+    public function text() {
 
         return $this->model->text;
     }
