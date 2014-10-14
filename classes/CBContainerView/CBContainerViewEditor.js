@@ -2,6 +2,11 @@
 
 var CBContainerViewEditor = Object.create(CBViewEditor);
 
+Colby.extend(CBContainerViewEditor, {
+
+    editorElementClasses : ["CBContainerViewEditor"]
+});
+
 /**
  * @return CBContainerViewEditor
  */
@@ -33,8 +38,10 @@ CBContainerViewEditor.createChildViewsElement = function() {
  */
 CBContainerViewEditor.createElement = function() {
 
-    this._element           = document.createElement("div");
-    this._element.className = "CBContainerViewEditor";
+    var element     = document.createElement("div");
+    this._element   = element;
+
+    this.editorElementClasses.forEach(function(elementClass) { element.classList.add(elementClass) });
 
     this.createChildViewsElement();
 };
