@@ -5,18 +5,29 @@ var CBTextViewEditor = Object.create(CBViewEditor);
 Colby.extend(CBTextViewEditor, {
 
     chromeClass                         : "CBTextViewEditorChrome",
-    contentType                         : 0,
-    contentTypeSingleLinePlainText      : 0,
-    contentTypeSingleLineFormattedText  : 1,
-    contentTypeMultiLinePlainText       : 2,
-    contentTypeMultiLineFormattedText   : 3,
-    contentTypeMultiLineMarkaround      : 4,
     editorIsMultiLine                   : false,
     labelText                           : "Text",
 
-    setContentType : function(contentType) {
+    /**
+     * @return void
+     */
+    setText : function(text) {
 
-        this.model.contentType = parseInt(contentType)
+        this.model.text = text;
+        this.model.HTML = this.textToHTML(text);
+
+        CBPageEditor.requestSave();
+    },
+
+    /**
+     * Subclasses may override this function to provide custom text to HTML
+     * conversion for simple markup and markdown scenarios.
+     *
+     * @return string
+     */
+    textToHTML : function (text) {
+
+        return Colby.textToHTML(text);
     }
 });
 
@@ -29,7 +40,6 @@ CBTextViewEditor.init = function() {
     CBViewEditor.init.call(this);
 
     this.model.className    = "CBTextView";
-    this.model.contentType  = this.contentTypeSingleLinePlainText;
     this.model.text         = "";
     this.model.HTML         = "";
 
@@ -86,59 +96,5 @@ CBTextViewEditor.element = function() {
  */
 CBTextViewEditor.textDidChange = function() {
 
-    var text        = this._input.value;
-    this.model.text = text;
-
-    /**
-     * 2014.10.14 TODO:
-     *  Most of these content types are not supported correctly and need to
-     *  be implemented.
-     */
-    switch (this.model.contentType) {
-
-        case this.contentTypeSingleLinePlainText:
-
-            this.model.HTML = Colby.textToHTML(text);
-            break;
-
-        case this.contentTypeSingleLineFormattedText:
-
-            this.model.HTML = Colby.textToHTML(text);
-            break;
-
-        case this.contentTypeMultiLinePlainText:
-
-            this.model.HTML = CBMarkaround.parse(text);
-            break;
-
-        case this.contentTypeMultiLineFormattedText:
-
-            this.model.HTML = CBMarkaround.parse(text);
-            break;
-
-        case this.contentTypeMultiLineMarkaround:
-
-            this.model.HTML = CBMarkaround.parse(text);
-            break;
-
-        default:
-
-            throw "Unhandled case in switch statement.";
-    }
-
-    CBPageEditor.requestSave();
+    this.setText(this._input.value);
 };
-
-Colby.extend(CBTextViewEditor, {
-
-    /**
-     * @return void
-     */
-    setText : function(text) {
-
-        this.model.text = text;
-        this.model.HTML = Colby.textToHTML(text);
-
-        CBPageEditor.requestSave();
-    }
-});

@@ -6,12 +6,6 @@
  */
 class CBTextView extends CBView {
 
-    const contentTypeSingleLinePlainText        = 0;
-    const contentTypeSingleLineFormattedText    = 1;
-    const contentTypeMultiLinePlainText         = 2;
-    const contentTypeMultiLineFormattedText     = 3;
-    const contentTypeMultiLineMarkaround        = 4;
-
     /**
      * @return instance type
      */
@@ -21,7 +15,6 @@ class CBTextView extends CBView {
 
         $view->model->text          = '';
         $view->model->HTML          = '';
-        $view->model->contentType   = self::contentTypeSingleLinePlainText;
 
         return $view;
     }
@@ -40,28 +33,13 @@ class CBTextView extends CBView {
 
         $view = parent::initWithModel($model);
 
-        if (!isset($model->contentType)) {
-
-            $model->contentType = self::contentTypeSingleLinePlainText;
-        }
-
         return $view;
-    }
-
-    /**
-     * @return void
-     */
-    public function setContentType($contentType) {
-
-        $this->model->contentType = (int)$contentType;
-
-        $this->setText($this->model->text);
     }
 
     /**
      * @return string
      */
-    public function HTML() {
+    final public function HTML() {
 
         return $this->model->HTML;
     }
@@ -73,7 +51,6 @@ class CBTextView extends CBView {
 
         parent::includeEditorDependencies();
 
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBMarkaround.js');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBTextView/CBTextViewEditor.js');
     }
 
@@ -82,19 +59,7 @@ class CBTextView extends CBView {
      */
     public function renderHTML() {
 
-        $className = get_class($this);
-
-        if ($this->model->contentType == self::contentTypeSingleLinePlainText ||
-            $this->model->contentType == self::contentTypeSingleLineFormattedText) {
-
-            $tagName = 'span';
-
-        } else {
-
-            $tagName = 'div';
-        }
-
-        echo "<{$tagName} class=\"{$className}\">{$this->model->HTML}</{$tagName}>";
+        echo "<span class=\"CBTextView\">{$this->model->HTML}</span>";
     }
 
     /**
@@ -108,21 +73,30 @@ class CBTextView extends CBView {
     /**
      * @return void
      */
-    public function setText($text) {
+    final public function setText($text) {
 
-        /**
-         * 2014.10.14 TODO:
-         *  This should do different things based on the content type.
-         */
-        $this->model->text  = (string)$text;
-        $this->model->HTML  = ColbyConvert::textToHTML($this->model->text);
+        $text               = (string)$text;
+        $HTML               = $this->textToHTML($text);
+        $this->model->text  = $text;
+        $this->model->HTML  = $HTML;
     }
 
     /**
      * @return string
      */
-    public function text() {
+    final public function text() {
 
         return $this->model->text;
+    }
+
+    /**
+     * Subclasses may override this function to provide custom text to HTML
+     * conversion for simple markup and markdown scenarios.
+     *
+     * @return string
+     */
+    public function textToHTML($text) {
+
+        return ColbyConvert::textToHTML($text);
     }
 }
