@@ -39,6 +39,26 @@ class CBPageExporter {
     }
 
     /**
+     * @return string
+     */
+    private function destinationFilename() {
+
+        $modelFilename = $this->dataStore->directory() . '/model.json';
+
+        if (is_file($modelFilename)) {
+
+            $modelJSON  = file_get_contents($modelFilename);
+            $model      = json_decode($modelJSON);
+
+            return "{$model->title}.cbpage";
+
+        } else {
+
+            return "{$this->dataStoreID}.cbpage";
+        }
+    }
+
+    /**
      * @return void
      */
     private function init() {
@@ -79,7 +99,7 @@ class CBPageExporter {
     private function process() {
 
         $this->dataStore            = new CBDataSTore($this->dataStoreID);
-        $this->destinationFilename  = "{$this->dataStoreID}.cbpage";
+        $this->destinationFilename  = $this->destinationFilename();
         $this->zipFilename          = CBSiteDirectory . "/tmp/{$this->dataStoreID}.cbpage";
         $this->zipArchive           = new ZipArchive();
 
@@ -121,7 +141,6 @@ class CBPageExporter {
 
         return ColbyUser::current()->isOneOfThe('Administrators');
     }
-
 }
 
 $exporter = new CBPageExporter();
