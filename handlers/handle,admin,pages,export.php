@@ -98,7 +98,7 @@ class CBPageExporter {
      */
     private function process() {
 
-        $this->dataStore            = new CBDataSTore($this->dataStoreID);
+        $this->dataStore            = new CBDataStore($this->dataStoreID);
         $this->destinationFilename  = $this->destinationFilename();
         $this->zipFilename          = CBSiteDirectory . "/tmp/{$this->dataStoreID}.cbpage";
         $this->zipArchive           = new ZipArchive();
