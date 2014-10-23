@@ -1,7 +1,7 @@
 "use strict";
 
-var CBPagesListViewController =
-{
+var CBPagesListViewController = {
+
     element : null,
     table   : null
 };
@@ -37,6 +37,17 @@ CBPagesListViewController.addListItem = function(listItem)
     };
 
     button.addEventListener("click", editListener);
+
+    td.appendChild(button);
+
+    button              = document.createElement("button");
+    button.textContent  = "Export";
+    var exportListener  = function() {
+
+        location.href = "/admin/pages/export/?data-store-id=" + listItem.dataStoreID;
+    };
+
+    button.addEventListener("click", exportListener);
 
     td.appendChild(button);
     tr.appendChild(td);

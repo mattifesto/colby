@@ -17,6 +17,12 @@ $pagesMenu->{'recently-edited'} = newMenuItem('Recently Edited', '/admin/pages/r
 $pagesMenu->search              = newMenuItem('Search', '/admin/pages/search/');
 $pagesMenu->trash               = newMenuItem('Trash', '/admin/pages/trash/');
 $pagesMenu->{'old-style'}       = newMenuitem('Old Style', '/admin/pages/old-style/');
+
+if (ColbyUser::current()->isOneOfThe('Developers')) {
+
+    $pagesMenu->import          = newMenuItem('Import', '/admin/pages/import/');
+}
+
 $CBAdminMenu->pages             = newMenuItem('Pages', '/admin/pages/unpublished/', $pagesMenu);
 
 
