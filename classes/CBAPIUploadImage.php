@@ -79,27 +79,31 @@ class CBAPIUploadImage extends CBAPI {
 
         $dataStore          = new CBDataStore($this->dataStoreID);
         $uploader           = ColbyImageUploader::uploaderForName('image');
-        $filename           = $uploader->sha1() . $uploader->canonicalExtension();
-        $absoluteFilename   = $dataStore->directory() . "/{$filename}";
+        $imageHash          = $uploader->sha1();
+        $imageExtension     = $uploader->canonicalExtension();
+        $temporaryFilepath  = $dataStore->directory() . "/{$imageHash}{$imageExtension}";
 
-        $uploader->moveToFilename($absoluteFilename);
+        $uploader->moveToFilename($temporaryFilepath);
 
         if ($this->sizeIdentifier) {
 
-            $destinationFilename    = $dataStore->directory() .
-                                      '/' .
-                                      $uploader->sha1() .
-                                      "-{$this->sizeIdentifier}" .
-                                      $uploader->canonicalExtension();
+            $permanentFilepath = $dataStore->directory() .
+                                 "/{$imageHash}-{$this->sizeIdentifier}{$imageExtension}";
 
-            $this->resizeImage($absoluteFilename, $destinationFilename);
+            $this->resizeImage($temporaryFilepath, $permanentFilepath);
+
+            unlink($temporaryFilepath);
 
         } else {
+
+            $filenameFromDataStore  = "{$imageHash}-original{$imageExtension}";
+            $permanentFilepath      = $dataStore->directory() .
+                                      "/{$filenameFromDataStore}";
 
             $response               = $this->response;
             $response->actualWidth  = $uploader->sizeX();
             $response->actualHeight = $uploader->sizeY();
-            $response->filename     = $filename;
+            $response->filename     = $filenameFromDataStore;
             $response->URL          = $dataStore->URL() . "/{$filename}";
             $response->URLForHTML   = ColbyConvert::textToHTML($response->URL);
         }
@@ -108,10 +112,10 @@ class CBAPIUploadImage extends CBAPI {
     /**
      * @return void
      */
-    protected function resizeImage($sourceFilename, $destinationFilename) {
+    protected function resizeImage($sourceFilepath, $destinationFilepath) {
 
         $dataStore  = new CBDataStore($this->dataStoreID);
-        $resizer    = ColbyImageResizer::resizerForFilename($sourceFilename);
+        $resizer    = ColbyImageResizer::resizerForFilename($sourceFilepath);
 
         if ($this->reduceToWidth) {
 
@@ -133,13 +137,13 @@ class CBAPIUploadImage extends CBAPI {
             $resizer->cropFromCenterToHeight($this->cropToHeight);
         }
 
-        $resizer->saveToFilename($destinationFilename);
+        $resizer->saveToFilename($destinationFilepath);
 
-        $size                   = getimagesize($destinationFilename);
+        $size                   = getimagesize($destinationFilepath);
         $response               = $this->response;
         $response->actualWidth  = $size[0];
         $response->actualHeight = $size[1];
-        $response->filename     = basename($destinationFilename);
+        $response->filename     = basename($destinationFilepath);
         $response->URL          = $dataStore->URL() . "/{$response->filename}";
         $response->URLForHTML   = ColbyConvert::textToHTML($response->URL);
     }
