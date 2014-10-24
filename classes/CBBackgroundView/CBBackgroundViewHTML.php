@@ -62,9 +62,10 @@ $styles = implode(' ', $styles);
         echo "<a href=\"{$this->model->linkURLHTML}\" style=\"{$anchorStyles}\"></a>";
     }
 
-    global $CBHackSectionedPagesPageModel;
+    foreach ($this->subviews as $subview) {
 
-    CBSectionedPageRenderSections($this->model->children, $CBHackSectionedPagesPageModel);
+        $subview->renderHTML();
+    }
 
     ?>
 
