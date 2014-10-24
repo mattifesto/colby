@@ -3,6 +3,25 @@
 /**
  * This page class represents an instance of an editable page containing
  * a list of views. This is the page type created by the Colby page editor.
+ *
+ * 2014.09.25 Version 2
+ *
+ *  Added the `created` and `updated` properties. When pages were first
+ *  developed this information was provided by the `ColbyArchive` class. But
+ *  `ColbyArchive` has been deprecated and for pages that don't use it, this
+ *  information is not available.
+ *
+ *  The design of these properties requires that if the properties do not exist
+ *  it should not cause an error. If they do not exist, it is okay for a process
+ *  to set them to reasonable values if it needs them. It is okay to set the
+ *  `created` property to the same value as the `updated` property if the
+ *  `created` property is not yet set. There's no need to try to guess when the
+ *  page was actually created if that information is not readily available.
+ *
+ * 2014.09.26 Version 3
+ *
+ *  Added the `listClassNames` property which holds an array of list class
+ *  names representing the lists which include this page.
  */
 class CBViewPage extends CBPage {
 
@@ -14,6 +33,8 @@ class CBViewPage extends CBPage {
      *  The code in this function was first copied out of `CBPageTemplate`.
      *  This is the correct home for the code and that class should eventually
      *  either be replaced by or at the very least call this class to replace
+     *  its functions.
+     *
      * @return instance type
      */
     public static function init() {
@@ -67,6 +88,8 @@ class CBViewPage extends CBPage {
         $modelJSON      = file_get_contents($dataStore->directory() . '/model.json');
         $page->model    = json_decode($modelJSON);
         $page->subviews = array();
+
+        $page->upgradeModel();
 
         foreach ($page->model->sections as $subviewModel) {
 
@@ -133,6 +156,14 @@ EOT;
     }
 
     /**
+     * @return stdClass
+     */
+    public function model() {
+
+        return $this->model;
+    }
+
+    /**
      * This function updates the page data in the database and saves the page
      * model file.
      *
@@ -196,6 +227,47 @@ EOT;
     }
 
     /**
+     * This function removes the post from all editable page lists because
+     * editable page lists are specified in `$this->model->listClassNames`.
+     * This page may be in other page lists but those are managed by other
+     * processes.
+     *
+     * @return void
+     */
+    private function removeFromEditablePageLists() {
+
+        global $CBPageEditorAvailablePageListClassNames;
+
+        $listClassNames         = array_merge($CBPageEditorAvailablePageListClassNames,
+                                              $this->model->listClassNames,
+                                              ['CBRecentlyEditedPages']);
+
+        $listClassNames         = array_unique($listClassNames);
+        $listClassNamesForSQL   = array();
+
+        foreach ($listClassNames as $listClassName) {
+
+            $classNameForSQL        = ColbyConvert::textToSQL($listClassName);
+            $classNameForSQL        = "'{$classNameForSQL}'";
+            $listClassNamesForSQL[] = $classNameForSQL;
+        }
+
+        $listClassNamesForSQL   = implode(',', $listClassNamesForSQL);
+        $pageRowID              = (int)$this->model->rowID;
+        $SQL                    = <<<EOT
+
+            DELETE FROM
+                `CBPageLists`
+            WHERE
+                `pageRowID` = {$pageRowID} AND
+                `listClassName` IN ({$listClassNamesForSQL})
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
      * @return void
      */
     private function updateDatabase() {
@@ -235,43 +307,35 @@ EOT;
     }
 
     /**
-     * This function removes the post from all editable page lists because
-     * editable page lists are specified in `$this->model->listClassNames`.
-     * This page may be in other page lists but those are managed by other
-     * processes.
-     *
      * @return void
      */
-    private function removeFromEditablePageLists() {
+    private function upgradeModel() {
 
-        global $CBPageEditorAvailablePageListClassNames;
+        $model = $this->model;
 
-        $listClassNames         = array_merge($CBPageEditorAvailablePageListClassNames,
-                                              $this->model->listClassNames,
-                                              ['CBRecentlyEditedPages']);
+        /**
+         * Version 2
+         */
 
-        $listClassNames         = array_unique($listClassNames);
-        $listClassNamesForSQL   = array();
+        if (!isset($model->updated)) {
 
-        foreach ($listClassNames as $listClassName) {
-
-            $classNameForSQL        = ColbyConvert::textToSQL($listClassName);
-            $classNameForSQL        = "'{$classNameForSQL}'";
-            $listClassNamesForSQL[] = $classNameForSQL;
+            $model->updated = time();
         }
 
-        $listClassNamesForSQL   = implode(',', $listClassNamesForSQL);
-        $pageRowID              = (int)$this->model->rowID;
-        $SQL                    = <<<EOT
+        if (!isset($model->created)) {
 
-            DELETE FROM
-                `CBPageLists`
-            WHERE
-                `pageRowID` = {$pageRowID} AND
-                `listClassName` IN ({$listClassNamesForSQL})
+            $model->created = $model->updated;
+        }
 
-EOT;
+        /**
+         * Version 3
+         */
 
-        Colby::query($SQL);
+        if (!isset($model->listClassNames)) {
+
+            $model->listClassNames = array();
+        }
+
+        $model->schemaVersion = 3;
     }
 }

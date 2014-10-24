@@ -8,27 +8,20 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 $response = new CBAjaxResponse();
 
 /**
- *
+ * Get parameter values.
  */
 
 $dataStoreID = $_POST['data-store-id'];
 
-
 /**
- *
+ * CBViewPage will load and upgrade the model including all of its subviews.
+ * Because of this, the editor code can assume current models and doesn't need
+ * duplicate any update code.
  */
 
-$dataStore          = new CBDataStore($dataStoreID);
-$dataStoreDirectory = $dataStore->directory();
-$modelFilename      = "{$dataStoreDirectory}/model.json";
-
-if (file_exists($modelFilename))
-{
-    $modelJSON = file_get_contents($modelFilename);
-
-    $response->modelJSON = $modelJSON;
-}
-
+$page                   = CBViewPage::initWithID($dataStoreID);
+$model                  = $page->model();
+$response->modelJSON    = json_encode($model);
 
 /**
  * Send the response
