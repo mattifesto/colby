@@ -2,15 +2,32 @@
 
 class CBContainerView extends CBView {
 
+    protected $subviews;
+
     /**
      * @return instance type
      */
     public static function init() {
 
-        $view   = parent::init();
-        $model  = $view->model;
+        $view                       = parent::init();
+        $view->model->subviewModels = array();
+        $view->subviews             = array();
 
-        $model->subviewModels = array();
+        return $view;
+    }
+
+    /**
+     * @return instance type
+     */
+    public static function initWithModel($model) {
+
+        $view           = parent::initWithModel($model);
+        $view->subviews = array();
+
+        foreach ($view->model->subviewModels as $subviewModel) {
+
+            $view->subviews[] = CBView::createViewWithModel($subviewModel);
+        }
 
         return $view;
     }
@@ -46,12 +63,9 @@ class CBContainerView extends CBView {
      */
     protected function renderSubviews() {
 
-        foreach ($this->model->subviewModels as $subviewModel) {
+        foreach ($this->subviews as $subview) {
 
-            $viewClassName  = $subviewModel->className;
-            $view           = $viewClassName::initWithModel($subviewModel);
-
-            $view->renderHTML();
+            $subview->renderHTML();
         }
     }
 }
