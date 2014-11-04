@@ -62,31 +62,51 @@ class CBViewPage extends CBPage {
 
         $page                           = parent::init();
         $page->model                    = $model;
+        $page->model->dataStoreID       = $page->ID;
         $page->subviews                 = array();
 
         return $page;
     }
 
     /**
-     * @return instance
+     * @return instance type | null
      */
     public static function initForImportWithID($ID)
     {
-        $page               = self::initWithID($ID);
-        $page->model->rowID = null;
+        $page = self::initWithID($ID);
+
+        if ($page) {
+
+            /**
+             * This page is being imported from another site and therefore the
+             * row ID won't refer to the correct row. Setting the row ID to null
+             * will cause a row to be generated for the page in this site's
+             * database.
+             */
+
+            $page->model->rowID = null;
+        }
 
         return $page;
     }
 
     /**
-     * @return instance
+     * @return instance type | null
      */
     public static function initWithID($ID)
     {
-        $page           = parent::initWithID($ID);
         $dataStore      = new CBDataStore($ID);
+        $modelFilepath  = $dataStore->directory() . '/model.json';
+
+        if (!file_exists($modelFilepath)) {
+
+            return null;
+        }
+
         $modelJSON      = file_get_contents($dataStore->directory() . '/model.json');
+        $page           = parent::init();
         $page->model    = json_decode($modelJSON);
+        $page->ID       = $page->model->dataStoreID;
         $page->subviews = array();
 
         $page->upgradeModel();

@@ -36,6 +36,13 @@ CBPageEditor.appendPageTemplateOption = function(template)
 
     var handler = function()
     {
+        /**
+         * The template model will have a unique data store ID but it is
+         * replaced here because the editor page has been assigned a data store
+         * ID so that a reload will reload the same page instance. There may
+         * be opportunity to improve clarity of this process.
+         */
+
         CBPageEditor.model              = JSON.parse(template.modelJSON);
         CBPageEditor.model.dataStoreID  = CBURLQueryVariables["data-store-id"];
         CBPageEditor.needsCreating      = true;
