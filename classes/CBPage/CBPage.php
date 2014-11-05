@@ -2,8 +2,6 @@
 
 class CBPage {
 
-    protected $ID;
-
     /**
      * @return instance type
      */
@@ -14,14 +12,7 @@ class CBPage {
      */
     public static function init() {
 
-        /**
-         * 2014.11.03 TODO
-         *  This ID property is not useful. The ID will usually be stored in the
-         *  page model. This just creates the potential for conflict.
-         */
-
-        $page       = new static();
-        $page->ID   = Colby::random160();
+        $page = new static();
 
         return $page;
     }
