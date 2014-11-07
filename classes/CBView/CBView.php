@@ -61,8 +61,17 @@ class CBView {
      */
     final public static function createViewWithModel($model) {
 
-        $className  = $model->className;
-        $view       = $className::initWithModel($model);
+        if (isset($model->className) &&
+            class_exists($model->className)) {
+
+            $className = $model->className;
+            $view = $className::initWithModel($model);
+
+        } else {
+
+            $view = self::init();
+            $view->model = $model;
+        }
 
         return $view;
     }

@@ -117,24 +117,11 @@ CBModelArrayEditor.displayViewEditor = function(model, index, modelArray) {
     /**
      * Display
      */
-    if (model.className)
-    {
-        viewEditor                  = CBViewEditor.editorForViewModel(model);
-        viewEditor.deleteCallback   = this.deleteView.bind(this, viewEditor);
 
-        this._element.appendChild(viewEditor.outerElement());
-    }
-    else
-    {
-        /**
-         * TODO: Upgrade the CBViewEditor code to create a default editor for
-         * models it doesn't recognize and remove this else block.
-         *
-         * This will also allow the removal of the code in CBView.php that
-         * creates a mini custom editor where one isn't define and allow
-         * subclasses to call CBView::includeEditorDependencies.
-         */
-    }
+    viewEditor                  = CBViewEditor.editorForViewModel(model);
+    viewEditor.deleteCallback   = this.deleteView.bind(this, viewEditor);
+
+    this._element.appendChild(viewEditor.outerElement());
 };
 
 /**

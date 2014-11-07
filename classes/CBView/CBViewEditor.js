@@ -101,6 +101,11 @@ CBViewEditor.initWithModel = function(viewModel) {
  */
 CBViewEditor.editorPrototypeForViewClassName = function(viewClassName) {
 
+    if (undefined === viewClassName) {
+
+        return CBViewEditor;
+    }
+
     var editorClassName = viewClassName + "Editor";
     var prototype       = window[editorClassName];
 
@@ -110,7 +115,7 @@ CBViewEditor.editorPrototypeForViewClassName = function(viewClassName) {
 
     } else {
 
-        return this;
+        return CBViewEditor;
     }
 };
 
@@ -142,7 +147,15 @@ CBViewEditor.outerElement = function() {
         this._outerElement.model    = this.model;
         var header                  = document.createElement("header");
         var h1                      = document.createElement("h1");
-        h1.textContent              = this.model.className;
+
+        if (this.model.className) {
+
+            h1.textContent = this.model.className;
+
+        } else {
+
+            h1.textContent = "Unrecognized View";
+        }
 
         this._outerElement.classList.add("CBViewEditorChrome");
         this._outerElement.classList.add(this.chromeClass);

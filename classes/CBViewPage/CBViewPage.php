@@ -113,6 +113,13 @@ class CBViewPage extends CBPage {
 
         foreach ($page->model->sections as $subviewModel) {
 
+            /**
+             * Instantiating the each view will upgrade its model in place
+             * adding and removing properties as appropriate. Because of this
+             * in place upgrade, the reference to the model object will not
+             * need to be updated in the page model.
+             */
+
             $page->subviews[] = CBView::createViewWithModel($subviewModel);
         }
 
