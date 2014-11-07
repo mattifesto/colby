@@ -1,4 +1,4 @@
 <?php
 
-define('CBSystemVersionNumber', 107);
+define('CBSystemVersionNumber', 108);
 define('COLBY_VERSION_NUMBER', CBSystemVersionNumber); // Deprecated
