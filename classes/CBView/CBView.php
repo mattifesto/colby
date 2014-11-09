@@ -61,8 +61,17 @@ class CBView {
      */
     final public static function createViewWithModel($model) {
 
-        if (isset($model->className) &&
-            class_exists($model->className)) {
+        $modelIsRecognized  = isset($model->className) && class_exists($model->className);
+        $upgraderDoesExist  = class_exists('CBViewModelUpgrader');
+
+        if (!$modelIsRecognized && $upgraderDoesExist) {
+
+            CBViewModelUpgrader::upgradeModel($model);
+
+            $modelIsRecognized = isset($model->className) && class_exists($model->className);
+        }
+
+        if ($modelIsRecognized) {
 
             $className = $model->className;
             $view = $className::initWithModel($model);

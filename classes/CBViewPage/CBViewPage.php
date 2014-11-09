@@ -25,6 +25,8 @@
  */
 class CBViewPage extends CBPage {
 
+    private static $pageContext;
+
     protected $model;
     protected $subviews;
 
@@ -103,11 +105,12 @@ class CBViewPage extends CBPage {
             return null;
         }
 
-        $modelJSON      = file_get_contents($dataStore->directory() . '/model.json');
-        $page           = parent::init();
-        $page->model    = json_decode($modelJSON);
-        $page->ID       = $page->model->dataStoreID;
-        $page->subviews = array();
+        $modelJSON          = file_get_contents($dataStore->directory() . '/model.json');
+        $page               = parent::init();
+        $page->model        = json_decode($modelJSON);
+        $page->ID           = $page->model->dataStoreID;
+        $page->subviews     = array();
+        self::$pageContext  = $page;
 
         $page->upgradeModel();
 
@@ -122,6 +125,8 @@ class CBViewPage extends CBPage {
 
             $page->subviews[] = CBView::createViewWithModel($subviewModel);
         }
+
+        self::$pageContext = null;
 
         return $page;
     }
@@ -188,6 +193,14 @@ EOT;
     public function model() {
 
         return $this->model;
+    }
+
+    /**
+     * @return instance type
+     */
+    public static function pageContext() {
+
+        return self::$pageContext;
     }
 
     /**

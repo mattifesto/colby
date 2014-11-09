@@ -66,6 +66,14 @@ class CBDataStore
     }
 
     /**
+     * @return string
+     */
+    public function directoryNameFromDocumentRoot() {
+
+        return "data/{$this->path}";
+    }
+
+    /**
      * This class expects that the creation of a data store directory is an
      * important event and it happens exactly when it needs to happen and at
      * no other time. Clients need to plan for when in the lifetime of the

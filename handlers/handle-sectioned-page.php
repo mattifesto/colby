@@ -4,8 +4,6 @@
  * Expected variables: $dataStoreID
  */
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-include_once CBSystemDirectory . '/classes/CBDataStore.php';
 include_once Colby::findFile('page-renderer-configuration.php');
 
 
@@ -13,10 +11,8 @@ CBHTMLOutput::begin();
 
 include Colby::findFile('sections/public-page-settings.php');
 
-
-$dataStore      = new CBDataStore($dataStoreID);
-$pageModelJSON  = file_get_contents($dataStore->directory() . '/model.json');
-$pageModel      = json_decode($pageModelJSON);
+$viewPage       = CBViewPage::initWithID($dataStoreID);
+$pageModel      = $viewPage->model();
 
 /**
  * At some point in the future we will have an official way of getting the
