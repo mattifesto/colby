@@ -154,8 +154,18 @@ function CBPageGenerateSectionSearchText($pageModel, $sectionModel)
 function CBPageAddToPageLists($model) {
 
     $pageRowID  = (int)$model->rowID;
-    $updated    = (int)$model->updated;
-    $yearMonth  = gmdate('Ym', $updated);
+
+    if ($model->isPublished &&
+        $model->publicationTimeStamp) {
+
+        $publishedForSQL    = (int)$model->publicationTimeStamp;
+        $yearMonthForSQL    = gmdate('Ym', $publishedForSQL);
+
+    } else {
+
+        $publishedForSQL    = 'NULL';
+        $yearMonthForSQL    = 'NULL';
+    }
 
     foreach ($model->listClassNames as $className) {
 
@@ -167,8 +177,8 @@ function CBPageAddToPageLists($model) {
             SET
                 `pageRowID`     = {$pageRowID},
                 `listClassName` = '{$classNameForSQL}',
-                `sort1`         = {$yearMonth},
-                `sort2`         = {$updated}
+                `sort1`         = {$yearMonthForSQL},
+                `sort2`         = {$publishedForSQL}
 
 EOT;
 
