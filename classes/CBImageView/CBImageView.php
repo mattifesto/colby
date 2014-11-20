@@ -52,6 +52,14 @@ class CBImageView extends CBView {
     }
 
     /**
+     * @return bool
+     */
+    public function hasImage() {
+
+        return !!$this->model->filename;
+    }
+
+    /**
      * @return void
      */
     public function renderHTML() {
