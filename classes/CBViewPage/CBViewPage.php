@@ -310,6 +310,49 @@ EOT;
     /**
      * @return void
      */
+    public function renderHTML() {
+
+        self::$pageContext = $this;
+
+        /**
+         * 2014.12.31
+         * `CBHackSectionedPagesPageModel` was a temporary mothod of providing
+         * the page context while rendering. Its users should be updaded to
+         * use the `pageContext` method on this class and it should be
+         * removed.
+         */
+
+        global $CBHackSectionedPagesPageModel;
+        $CBHackSectionedPagesPageModel = $this->model;
+
+        CBHTMLOutput::begin();
+
+        include Colby::findFile('sections/public-page-settings.php');
+
+        if (ColbyRequest::isForFrontPage())
+        {
+            CBHTMLOutput::setTitleHTML(CBSiteNameHTML);
+        }
+        else
+        {
+            CBHTMLOutput::setTitleHTML($this->model->titleHTML);
+        }
+
+        CBHTMLOutput::setDescriptionHTML($this->model->descriptionHTML);
+
+        foreach ($this->subviews as $subview) {
+
+            $subview->renderHTML();
+        }
+
+        CBHTMLOutput::render();
+
+        self::$pageContext = null;
+    }
+
+    /**
+     * @return void
+     */
     private function updateDatabase() {
 
         $summaryView            = $this->createSummaryView();
