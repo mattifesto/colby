@@ -36,6 +36,15 @@ class CBAPI
             $api->init();
 
             $api->response->wasSuccessful = $api->process();
+
+        } else {
+
+            if (!$api->response->message) {
+
+                $className = get_called_class();
+
+                $api->response->message = "You are not authorized to call the '{$className}' API.";
+            }
         }
 
         $api->response->send();

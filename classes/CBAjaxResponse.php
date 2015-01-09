@@ -7,7 +7,7 @@ class CBAjaxResponse
 {
     private $isActive       = true;
 
-    public $message         = 'No response message was provided.';
+    public $message         = '';
     public $wasSuccessful   = false;
 
     /**
