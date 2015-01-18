@@ -34,13 +34,13 @@ function CBPageInformationEditorView(pageModel)
 
     this._element               = document.createElement("section");
 
-    this._container             = document.createElement("div");
-    this._container.className   = "CBPageInformationProperties";
-
     this._element.classList.add("CBSectionEditorView");
     this._element.classList.add("CBPageInformationEditorView");
+
     this._element.appendChild(createHeaderElement());
-    this._element.appendChild(this._container);
+
+    var propertiesContainer = createPropertiesContainerElement();
+    this._element.appendChild(propertiesContainer);
 
     /**
      *
@@ -59,7 +59,7 @@ function CBPageInformationEditorView(pageModel)
     titleControl.setValue(this.pageModel.title);
     titleControl.setAction(this, this.translateTitle);
 
-    this._container.appendChild(titleControl.rootElement());
+    propertiesContainer.appendChild(titleControl.rootElement());
 
 
     /**
@@ -71,7 +71,7 @@ function CBPageInformationEditorView(pageModel)
     descriptionControl.setAction(this, this.translateDescription);
 
     descriptionControl.rootElement().classList.add("standard");
-    this._container.appendChild(descriptionControl.rootElement());
+    propertiesContainer.appendChild(descriptionControl.rootElement());
 
 
     /**
@@ -86,7 +86,7 @@ function CBPageInformationEditorView(pageModel)
     URIControl.setAction(this, this.translateURI);
 
     URIControl.rootElement().classList.add("standard");
-    this._container.appendChild(URIControl.rootElement());
+    propertiesContainer.appendChild(URIControl.rootElement());
     this.URIControl = URIControl;
 
     /**
@@ -99,17 +99,17 @@ function CBPageInformationEditorView(pageModel)
     publicationControl.setAction(this, this.translatePublication);
 
     publicationControl.rootElement().classList.add("standard");
-    this._container.appendChild(publicationControl.rootElement());
+    propertiesContainer.appendChild(publicationControl.rootElement());
 
 
     /**
      *
      */
 
-    var container = document.createElement("div");
-    container.classList.add("container");
+    var publishedByContainer = document.createElement("div");
+    publishedByContainer.classList.add("container");
 
-    this._container.appendChild(container);
+    propertiesContainer.appendChild(publishedByContainer);
 
 
     /**
@@ -130,7 +130,7 @@ function CBPageInformationEditorView(pageModel)
     publishedByControl.setValue(this.pageModel.publishedBy);
     publishedByControl.setAction(this, this.translatePublishedBy);
 
-    container.appendChild(publishedByControl.rootElement());
+    publishedByContainer.appendChild(publishedByControl.rootElement());
 
     /**
      * This timer requests the updated URI after 1000ms of inactivity.
@@ -157,11 +157,21 @@ function CBPageInformationEditorView(pageModel)
     /**
      * @return {Element}
      */
-    function createHeaderElement() {
-        var element         = document.createElement("header");
-        element.textContent = "Page Information";
+    function createPropertiesContainerElement() {
+        var container       = document.createElement("div");
+        container.className = "CBPageInformationProperties";
 
-        return element;
+        return container;
+    }
+
+    /**
+     * @return {Element}
+     */
+    function createHeaderElement() {
+        var header          = document.createElement("header");
+        header.textContent  = "Page Information";
+
+        return header;
     }
 }
 
