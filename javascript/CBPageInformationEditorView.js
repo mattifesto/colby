@@ -88,7 +88,7 @@ function CBPageInformationEditorView(pageModel)
     var publicationControl = new CBPublicationControl();
     publicationControl.setPublicationTimeStamp(this.pageModel.publicationTimeStamp);
     publicationControl.setIsPublished(this.pageModel.isPublished);
-    publicationControl.setAction(this, this.translatePublication);
+    publicationControl.setAction(undefined, valuesForPublicationHaveChanged);
 
     publicationControl.rootElement().classList.add("standard");
     propertiesContainer.appendChild(publicationControl.rootElement());
@@ -199,6 +199,27 @@ function CBPageInformationEditorView(pageModel)
     function valueForDescriptionHasChanged(sender) {
         pageModel.description       = sender.value().trim();
         pageModel.descriptionHTML   = Colby.textToHTML(pageModel.description);
+
+        CBPageEditor.requestSave();
+    }
+
+    /**
+     * @param {CBPublicationControl} sender
+     *
+     * @return {undefined}
+     */
+    function valuesForPublicationHaveChanged(sender) {
+        pageModel.isPublished = sender.isPublished();
+        pageModel.publicationTimeStamp = sender.publicationTimeStamp();
+
+        if (pageModel.isPublished)
+        {
+            pageModel.URIIsStatic = true;
+
+            URIControl.setIsStatic(true);
+        }
+
+        URIControl.setIsDisabled(pageModel.isPublished);
 
         CBPageEditor.requestSave();
     }
@@ -349,27 +370,6 @@ CBPageInformationEditorView.prototype.translatePageGroup = function(sender)
         this.pageModel.URI = URI;
         this.URIControl.setURI(URI);
     }
-
-    CBPageEditor.requestSave();
-};
-
-
-/**
- * @return void
- */
-CBPageInformationEditorView.prototype.translatePublication = function(sender)
-{
-    this.pageModel.isPublished = sender.isPublished();
-    this.pageModel.publicationTimeStamp = sender.publicationTimeStamp();
-
-    if (this.pageModel.isPublished)
-    {
-        this.pageModel.URIIsStatic = true;
-
-        this.URIControl.setIsStatic(true);
-    }
-
-    this.URIControl.setIsDisabled(this.pageModel.isPublished);
 
     CBPageEditor.requestSave();
 };
