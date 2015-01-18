@@ -386,24 +386,6 @@ CBPageInformationEditorView.prototype.pageRowWasCreated = function()
 /**
  * @return void
  */
-CBPageInformationEditorView.prototype.translatePageGroup = function(sender)
-{
-    this.pageModel.groupID = sender.value() ? sender.value() : null;
-
-    if (!this.pageModel.URIIsStatic)
-    {
-        var URI     = this.generateURI();
-
-        this.pageModel.URI = URI;
-        this.URIControl.setURI(URI);
-    }
-
-    CBPageEditor.requestSave();
-};
-
-/**
- * @return void
- */
 CBPageInformationEditorView.prototype.translateTitle = function(sender)
 {
     this.pageModel.title = sender.value().trim();
