@@ -229,8 +229,13 @@ Colby.dateToRelativeLocaleString = function(date, now)
 
     var string;
 
+    // date is in the future by more than 60 seconds
+    if (timespan < (1000 * -60)) {
+        string = Colby.dateToLocaleDateString(date) + ' ' + Colby.dateToLocaleTimeString(date);
+    }
+
     // less than 60 seconds
-    if (timespan < (1000 * 60))
+    else if (timespan < (1000 * 60))
     {
         string = Math.floor(timespan / 1000) + ' seconds ago';
     }
