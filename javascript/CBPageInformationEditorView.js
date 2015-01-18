@@ -85,13 +85,7 @@ function CBPageInformationEditorView(pageModel)
      *
      */
 
-    var publicationControl = new CBPublicationControl();
-    publicationControl.setPublicationTimeStamp(this.pageModel.publicationTimeStamp);
-    publicationControl.setIsPublished(this.pageModel.isPublished);
-    publicationControl.setAction(undefined, valuesForPublicationHaveChanged);
-
-    publicationControl.rootElement().classList.add("standard");
-    propertiesContainer.appendChild(publicationControl.rootElement());
+    propertiesContainer.appendChild(createPublicationControlElement());
 
 
     /**
@@ -177,6 +171,20 @@ function CBPageInformationEditorView(pageModel)
         container.className = "CBPageInformationProperties";
 
         return container;
+    }
+
+    /**
+     * @return {Element}
+     */
+    function createPublicationControlElement() {
+        var control = new CBPublicationControl();
+
+        control.setPublicationTimeStamp(pageModel.publicationTimeStamp);
+        control.setIsPublished(pageModel.isPublished);
+        control.setAction(undefined, valuesForPublicationHaveChanged);
+        control.rootElement().classList.add("standard");
+
+        return control.rootElement();
     }
 
     /**
