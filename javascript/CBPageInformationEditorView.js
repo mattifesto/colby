@@ -27,12 +27,19 @@ function CBPageInformationEditorView(pageModel)
 {
     this.pageModel      = pageModel;
 
+    /**
+     * export functions (temporary)
+     */
+
+    this.generateURI = generateURI;
+
+
     if (!this.pageModel.URI)
     {
-        this.pageModel.URI = this.generateURI();
+        this.pageModel.URI = generateURI();
     }
 
-    this._element               = createRootElement();
+    this._element = createRootElement();
 
     this._element.appendChild(createHeaderElement());
 
@@ -70,7 +77,7 @@ function CBPageInformationEditorView(pageModel)
      *
      */
 
-    var URI         = this.pageModel.URI ? this.pageModel.URI : this.generateURI();
+    var URI         = this.pageModel.URI ? this.pageModel.URI : generateURI();
     var URIControl  = new CBPageURIControl("URI");
     URIControl.setURI(URI);
     URIControl.setIsStatic(this.pageModel.URIIsStatic);
@@ -208,6 +215,21 @@ function CBPageInformationEditorView(pageModel)
     }
 
     /**
+     * @return {string}
+     */
+    function generateURI() {
+        var URI;
+
+        if (pageModel.title.length > 0) {
+            URI = Colby.textToURI(pageModel.title);
+        } else {
+            URI = pageModel.dataStoreID;
+        }
+
+        return URI;
+    }
+
+    /**
      * @param {CBTextControl} sender
      *
      * @return {undefined}
@@ -330,37 +352,6 @@ CBPageInformationEditorView.prototype.createPageListOption = function(listClassN
     checkbox.addEventListener("change", listener);
 
     return container;
-};
-
-/**
- * This function generates a URI for the page using the page group prefix and
- * the current page title. It does not change the model or take into account
- * whether the user has set the page URI to be static.
- *
- * @return string
- */
-CBPageInformationEditorView.prototype.generateURI = function()
-{
-        var groupID = this.pageModel.groupID;
-        var URI     = "";
-
-        if (groupID && CBPageGroupDescriptors[groupID])
-        {
-            var URIPrefix = CBPageGroupDescriptors[groupID].URIPrefix;
-
-            URI = URIPrefix + "/";
-        }
-
-        if (this.pageModel.title.length > 0)
-        {
-            URI = URI + Colby.textToURI(this.pageModel.title);
-        }
-        else
-        {
-            URI = URI + this.pageModel.dataStoreID;
-        }
-
-        return URI;
 };
 
 /**
