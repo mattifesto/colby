@@ -32,10 +32,7 @@ function CBPageInformationEditorView(pageModel)
         this.pageModel.URI = this.generateURI();
     }
 
-    this._element               = document.createElement("section");
-
-    this._element.classList.add("CBSectionEditorView");
-    this._element.classList.add("CBPageInformationEditorView");
+    this._element               = createRootElement();
 
     this._element.appendChild(createHeaderElement());
 
@@ -172,6 +169,18 @@ function CBPageInformationEditorView(pageModel)
         container.className = "CBPageInformationProperties";
 
         return container;
+    }
+
+    /**
+     * @return {Element}
+     */
+    function createRootElement() {
+        var rootElement = document.createElement("section");
+
+        rootElement.classList.add("CBSectionEditorView");
+        rootElement.classList.add("CBPageInformationEditorView");
+
+        return rootElement;
     }
 }
 
