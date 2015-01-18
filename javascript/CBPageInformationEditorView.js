@@ -13,9 +13,10 @@ function createPageInformationEditorElement(args) {
 
     args = undefined;
 
-    var view = new CBPageInformationEditorView(model);
+    var view    = new CBPageInformationEditorView(model);
+    var element = view.element();
 
-    return view.element();
+    return element;
 }
 
 /**
@@ -24,8 +25,6 @@ function createPageInformationEditorElement(args) {
  */
 function CBPageInformationEditorView(pageModel)
 {
-    var self = this;
-
     this.pageModel      = pageModel;
 
     if (!this.pageModel.URI)
