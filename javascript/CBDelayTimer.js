@@ -28,8 +28,13 @@ CBDelayTimer.pause = function()
 };
 
 /**
- * This method restarts the timer so that, after this method is called, the
- * callback won't be called until after the full delay has elapsed.
+ * This method starts or restarts the timer so that the callback will be called
+ * after the full delay has elapsed if no other events occur such as another
+ * restart or a pause.
+ *
+ * This method is the way the delayed operation is set to execute and provides
+ * the core functionality of the class. Without a call to this method, nothing
+ * will happen.
  */
 CBDelayTimer.restart = function()
 {

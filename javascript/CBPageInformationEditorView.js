@@ -1,5 +1,22 @@
 "use strict";
 
+/**
+ * @param {Object} args
+ *  The parameters for this functions should be passed as values on this object.
+ *
+ * @param {Object} model
+ *  Required. The page model.
+ */
+function createPageInformationEditorElement(args) {
+
+    var model = args.model;
+
+    args = undefined;
+
+    var view = new CBPageInformationEditorView(model);
+
+    return view.element();
+}
 
 /**
  * This class displays and implements the first section of every page editor

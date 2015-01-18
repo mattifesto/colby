@@ -93,8 +93,8 @@ CBPageEditor.displayEditor = function()
      * Page information
      */
 
-    var pageInformationEditorView = new CBPageInformationEditorView(CBPageEditor.model);
-    editorContainer.appendChild(pageInformationEditorView.element());
+    var element = createPageInformationEditorElement({model: CBPageEditor.model});
+    editorContainer.appendChild(element);
 
     /**
      *
