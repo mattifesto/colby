@@ -102,21 +102,8 @@ function CBPageInformationEditorView(pageModel)
      *
      */
 
-    var publishedByControl = new CBSelectionControl("Published By");
-    publishedByControl.rootElement().classList.add("standard");
-    publishedByControl.rootElement().classList.add("published-by");
+    publishedByContainer.appendChild(createPublishedByControlElement());
 
-    for (var i = 0; i < CBUsersWhoAreAdministrators.length; i++)
-    {
-        var user = CBUsersWhoAreAdministrators[i];
-
-        publishedByControl.appendOption(user.ID, user.name);
-    }
-
-    publishedByControl.setValue(this.pageModel.publishedBy);
-    publishedByControl.setAction(undefined, valueForPublishedByHasChanged);
-
-    publishedByContainer.appendChild(publishedByControl.rootElement());
 
     /**
      * This timer requests the updated URI after 1000ms of inactivity.
@@ -183,6 +170,27 @@ function CBPageInformationEditorView(pageModel)
         control.setIsPublished(pageModel.isPublished);
         control.setAction(undefined, valuesForPublicationHaveChanged);
         control.rootElement().classList.add("standard");
+
+        return control.rootElement();
+    }
+
+    /**
+     * @return {Element}
+     */
+    function createPublishedByControlElement() {
+        var control = new CBSelectionControl("Published By");
+
+        control.rootElement().classList.add("standard");
+        control.rootElement().classList.add("published-by");
+
+        for (var i = 0; i < CBUsersWhoAreAdministrators.length; i++) {
+            var user = CBUsersWhoAreAdministrators[i];
+
+            control.appendOption(user.ID, user.name);
+        }
+
+        control.setValue(pageModel.publishedBy);
+        control.setAction(undefined, valueForPublishedByHasChanged);
 
         return control.rootElement();
     }
