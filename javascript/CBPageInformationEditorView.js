@@ -63,12 +63,7 @@ function CBPageInformationEditorView(pageModel)
      *
      */
 
-    var descriptionControl = new CBTextControl("Description");
-    descriptionControl.setValue(this.pageModel.description);
-    descriptionControl.setAction(this, valueForDescriptionHasChanged);
-
-    descriptionControl.rootElement().classList.add("standard");
-    propertiesContainer.appendChild(descriptionControl.rootElement());
+    propertiesContainer.appendChild(createDescriptionControlElement());
 
 
     /**
@@ -154,6 +149,19 @@ function CBPageInformationEditorView(pageModel)
     /**
      * @return {Element}
      */
+    function createDescriptionControlElement() {
+        var descriptionControl = new CBTextControl("Description");
+
+        descriptionControl.setValue(pageModel.description);
+        descriptionControl.setAction(undefined, valueForDescriptionHasChanged);
+        descriptionControl.rootElement().classList.add("standard");
+
+        return descriptionControl.rootElement();
+    }
+
+    /**
+     * @return {Element}
+     */
     function createHeaderElement() {
         var header          = document.createElement("header");
         header.textContent  = "Page Information";
@@ -184,6 +192,8 @@ function CBPageInformationEditorView(pageModel)
     }
 
     /**
+     * @param {CBTextControl} sender
+     *
      * @return {undefined}
      */
     function valueForDescriptionHasChanged(sender) {
