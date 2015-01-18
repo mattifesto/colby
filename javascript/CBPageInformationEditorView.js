@@ -33,14 +33,13 @@ function CBPageInformationEditorView(pageModel)
     }
 
     this._element               = document.createElement("section");
-    var header                  = document.createElement("header");
-    header.textContent          = "Page Information";
+
     this._container             = document.createElement("div");
     this._container.className   = "CBPageInformationProperties";
 
     this._element.classList.add("CBSectionEditorView");
     this._element.classList.add("CBPageInformationEditorView");
-    this._element.appendChild(header);
+    this._element.appendChild(createHeaderElement());
     this._element.appendChild(this._container);
 
     /**
@@ -153,6 +152,16 @@ function CBPageInformationEditorView(pageModel)
         var listener = this.pageRowWasCreated.bind(this);
 
         document.addEventListener("CBPageRowWasCreated", listener, false);
+    }
+
+    /**
+     * @return {Element}
+     */
+    function createHeaderElement() {
+        var element         = document.createElement("header");
+        element.textContent = "Page Information";
+
+        return element;
     }
 }
 
