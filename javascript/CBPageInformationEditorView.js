@@ -114,7 +114,7 @@ function CBPageInformationEditorView(pageModel)
     }
 
     publishedByControl.setValue(this.pageModel.publishedBy);
-    publishedByControl.setAction(this, this.translatePublishedBy);
+    publishedByControl.setAction(undefined, valueForPublishedByHasChanged);
 
     publishedByContainer.appendChild(publishedByControl.rootElement());
 
@@ -207,6 +207,17 @@ function CBPageInformationEditorView(pageModel)
     function valueForDescriptionHasChanged(sender) {
         pageModel.description       = sender.value().trim();
         pageModel.descriptionHTML   = Colby.textToHTML(pageModel.description);
+
+        CBPageEditor.requestSave();
+    }
+
+    /**
+     * @param {CBSelectionControl} sender
+     *
+     * @return {undefined}
+     */
+    function valueForPublishedByHasChanged(sender) {
+        pageModel.publishedBy = parseInt(sender.value(), 10);
 
         CBPageEditor.requestSave();
     }
@@ -378,16 +389,6 @@ CBPageInformationEditorView.prototype.translatePageGroup = function(sender)
         this.pageModel.URI = URI;
         this.URIControl.setURI(URI);
     }
-
-    CBPageEditor.requestSave();
-};
-
-/**
- * @return void
- */
-CBPageInformationEditorView.prototype.translatePublishedBy = function(sender)
-{
-    this.pageModel.publishedBy = parseInt(sender.value(), 10);
 
     CBPageEditor.requestSave();
 };
