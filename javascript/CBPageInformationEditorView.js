@@ -65,7 +65,7 @@ function CBPageInformationEditorView(pageModel)
 
     var descriptionControl = new CBTextControl("Description");
     descriptionControl.setValue(this.pageModel.description);
-    descriptionControl.setAction(this, this.translateDescription);
+    descriptionControl.setAction(this, valueForDescriptionHasChanged);
 
     descriptionControl.rootElement().classList.add("standard");
     propertiesContainer.appendChild(descriptionControl.rootElement());
@@ -181,6 +181,16 @@ function CBPageInformationEditorView(pageModel)
         rootElement.classList.add("CBPageInformationEditorView");
 
         return rootElement;
+    }
+
+    /**
+     * @return {undefined}
+     */
+    function valueForDescriptionHasChanged(sender) {
+        pageModel.description       = sender.value().trim();
+        pageModel.descriptionHTML   = Colby.textToHTML(pageModel.description);
+
+        CBPageEditor.requestSave();
     }
 }
 
@@ -350,17 +360,6 @@ CBPageInformationEditorView.prototype.translatePublication = function(sender)
     }
 
     this.URIControl.setIsDisabled(this.pageModel.isPublished);
-
-    CBPageEditor.requestSave();
-};
-
-/**
- * @return void
- */
-CBPageInformationEditorView.prototype.translateDescription = function(sender)
-{
-    this.pageModel.description = sender.value().trim();
-    this.pageModel.descriptionHTML = Colby.textToHTML(this.pageModel.description);
 
     CBPageEditor.requestSave();
 };
