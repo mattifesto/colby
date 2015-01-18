@@ -157,21 +157,21 @@ function CBPageInformationEditorView(pageModel)
     /**
      * @return {Element}
      */
-    function createPropertiesContainerElement() {
-        var container       = document.createElement("div");
-        container.className = "CBPageInformationProperties";
-
-        return container;
-    }
-
-    /**
-     * @return {Element}
-     */
     function createHeaderElement() {
         var header          = document.createElement("header");
         header.textContent  = "Page Information";
 
         return header;
+    }
+
+    /**
+     * @return {Element}
+     */
+    function createPropertiesContainerElement() {
+        var container       = document.createElement("div");
+        container.className = "CBPageInformationProperties";
+
+        return container;
     }
 }
 
