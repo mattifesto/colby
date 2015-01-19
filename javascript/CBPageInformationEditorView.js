@@ -33,8 +33,7 @@ function CBPageInformationEditorView(pageModel)
      * export functions (temporary)
      */
 
-    this.generateURI                = generateURI;
-    this.valuesForURIHaveChanged    = valuesForURIHaveChanged;
+    // place exports here
 
     if (!this.pageModel.URI)
     {
@@ -62,8 +61,8 @@ function CBPageInformationEditorView(pageModel)
     var titleControl = new CBTextControl("Title");
     titleControl.rootElement().classList.add("standard");
 
-    titleControl.setValue(this.pageModel.title);
-    titleControl.setAction(this, this.translateTitle);
+    titleControl.setValue(pageModel.title);
+    titleControl.setAction(undefined, valueForTitleHasChanged);
 
     propertiesContainer.appendChild(titleControl.rootElement());
 
@@ -79,16 +78,16 @@ function CBPageInformationEditorView(pageModel)
      *
      */
 
-    var URI         = this.pageModel.URI ? this.pageModel.URI : generateURI();
+    var URI         = pageModel.URI ? pageModel.URI : generateURI();
     var URIControl  = new CBPageURIControl("URI");
+
     URIControl.setURI(URI);
-    URIControl.setIsStatic(this.pageModel.URIIsStatic);
-    URIControl.setIsDisabled(this.pageModel.isPublished);
-    URIControl.setAction(this, this.translateURI);
+    URIControl.setIsStatic(pageModel.URIIsStatic);
+    URIControl.setIsDisabled(pageModel.isPublished);
+    URIControl.setAction(undefined, valuesForURIHaveChanged);
 
     URIControl.rootElement().classList.add("standard");
     propertiesContainer.appendChild(URIControl.rootElement());
-    this.URIControl = URIControl;
 
     /**
      *
@@ -317,6 +316,24 @@ function CBPageInformationEditorView(pageModel)
     }
 
     /**
+     * @param {CBTextControl} sender
+     *
+     * @return {undefined}
+     */
+    function valueForTitleHasChanged(sender) {
+        pageModel.title     = sender.value().trim();
+        pageModel.titleHTML = Colby.textToHTML(pageModel.title);
+
+        if (!pageModel.URIIsStatic)
+        {
+            URIControl.setURI(generateURI());
+            valuesForURIHaveChanged(URIControl);
+        }
+
+        CBPageEditor.requestSave();
+    }
+
+    /**
      * @param {CBPublicationControl} sender
      *
      * @return {undefined}
@@ -438,23 +455,4 @@ CBPageInformationEditorView.prototype.createPageListOption = function(listClassN
 CBPageInformationEditorView.prototype.element = function()
 {
     return this._element;
-};
-
-/**
- * @return void
- */
-CBPageInformationEditorView.prototype.translateTitle = function(sender)
-{
-    this.pageModel.title = sender.value().trim();
-    this.pageModel.titleHTML = Colby.textToHTML(this.pageModel.title);
-
-    if (!this.pageModel.URIIsStatic)
-    {
-        var URI     = this.generateURI();
-
-        this.URIControl.setURI(URI);
-        this.valuesForURIHaveChanged(this.URIControl);
-    }
-
-    CBPageEditor.requestSave();
 };
