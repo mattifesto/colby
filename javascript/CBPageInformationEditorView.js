@@ -34,7 +34,7 @@ function CBPageInformationEditorView(pageModel)
      */
 
     this.generateURI                = generateURI;
-    this.valuesForURIHaveChanged    = translateURI;
+    this.valuesForURIHaveChanged    = valuesForURIHaveChanged;
 
     if (!this.pageModel.URI)
     {
