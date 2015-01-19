@@ -33,7 +33,7 @@ function CBPageInformationEditorView(pageModel)
      * export functions (temporary)
      */
 
-    this.checkboxDidChangeForListClassName = checkboxDidChangeForListClassName;
+    this.createPageListOptionElement = createPageListOptionElement;
 
 
     if (!this.pageModel.URI)
@@ -141,7 +141,6 @@ function CBPageInformationEditorView(pageModel)
      * @return {undefined}
      */
     function checkboxDidChangeForListClassName(args) {
-
         var checkbox        = args.checkbox;
         var listClassName   = args.listClassName;
 
@@ -186,6 +185,39 @@ function CBPageInformationEditorView(pageModel)
         header.textContent  = "Page Information";
 
         return header;
+    }
+
+    /**
+     * @param {string} listClassName
+     *
+     * @return {Element}
+     */
+    function createPageListOptionElement(args) {
+        var listClassName   = args.listClassName;
+
+        var container       = document.createElement("div");
+        var checkbox        = document.createElement("input");
+        checkbox.type       = "checkbox";
+        var label           = document.createElement("label");
+        label.textContent   = listClassName;
+
+        container.appendChild(checkbox);
+        container.appendChild(label);
+
+        if (pageModel.listClassNames) {
+            var index = pageModel.listClassNames.indexOf(listClassName);
+
+            if (index >= 0) {
+                checkbox.checked = true;
+            }
+        }
+
+        var args        = {checkbox: checkbox, listClassName: listClassName};
+        var listener    = checkboxDidChangeForListClassName.bind(undefined, args);
+
+        checkbox.addEventListener("change", listener);
+
+        return container;
     }
 
     /**
@@ -412,40 +444,12 @@ CBPageInformationEditorView.prototype.createPageListsEditor = function() {
     var countOfListClassNames = CBPageEditorAvailablePageListClassNames.length;
 
     for (var i = 0; i < countOfListClassNames; i++) {
+        var args = {listClassName: CBPageEditorAvailablePageListClassNames[i]};
 
-        element.appendChild(this.createPageListOption(CBPageEditorAvailablePageListClassNames[i]));
+        element.appendChild(this.createPageListOptionElement(args));
     }
 
     return element;
-};
-
-/**
- * @return Element
- */
-CBPageInformationEditorView.prototype.createPageListOption = function(listClassName) {
-
-    var container   = document.createElement("div");
-    var checkbox    = document.createElement("input");
-    checkbox.type   = "checkbox";
-    var label       = document.createElement("label");
-    label.textContent   = listClassName;
-
-    container.appendChild(checkbox);
-    container.appendChild(label);
-
-    if (this.pageModel.listClassNames) {
-        var index = this.pageModel.listClassNames.indexOf(listClassName);
-
-        if (index >= 0) {
-            checkbox.checked = true;
-        }
-    }
-
-    var args        = {checkbox: checkbox, listClassName: listClassName};
-    var listener    = this.checkboxDidChangeForListClassName.bind(undefined, args);
-    checkbox.addEventListener("change", listener);
-
-    return container;
 };
 
 /**
