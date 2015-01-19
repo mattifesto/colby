@@ -33,7 +33,8 @@ function CBPageInformationEditorView(pageModel)
      * export functions (temporary)
      */
 
-    // place exports here
+    this.checkboxDidChangeForListClassName = checkboxDidChangeForListClassName;
+
 
     if (!this.pageModel.URI)
     {
@@ -131,6 +132,37 @@ function CBPageInformationEditorView(pageModel)
         requestURITimer.pause();
 
         document.addEventListener("CBPageRowWasCreated", pageRowWasCreated, false);
+    }
+
+    /**
+     * @param {Element} checkbox
+     * @param {string} listClassName
+     *
+     * @return {undefined}
+     */
+    function checkboxDidChangeForListClassName(args) {
+
+        var checkbox        = args.checkbox;
+        var listClassName   = args.listClassName;
+
+        if (!pageModel.listClassNames)
+        {
+            pageModel.listClassNames = [];
+        }
+
+        var index = pageModel.listClassNames.indexOf(listClassName);
+
+        if (checkbox.checked) {
+            if (index < 0) {
+                pageModel.listClassNames.push(listClassName);
+            }
+        } else {
+            if (index >= 0) {
+                pageModel.listClassNames.splice(index, 1);
+            }
+        }
+
+        CBPageEditor.requestSave();
     }
 
     /**
@@ -370,38 +402,6 @@ function CBPageInformationEditorView(pageModel)
 }
 
 /**
- * @return void
- */
-CBPageInformationEditorView.prototype.checkboxDidChangeForListClassName = function(checkbox, listClassName) {
-
-    var model = this.pageModel;
-
-    if (!model.listClassNames)
-    {
-        model.listClassNames = [];
-    }
-
-    var index = model.listClassNames.indexOf(listClassName);
-
-    if (checkbox.checked) {
-
-        if (index < 0) {
-
-            model.listClassNames.push(listClassName);
-        }
-
-    } else {
-
-        if (index >= 0) {
-
-            model.listClassNames.splice(index, 1);
-        }
-    }
-
-    CBPageEditor.requestSave();
-};
-
-/**
  * @return Element
  */
 CBPageInformationEditorView.prototype.createPageListsEditor = function() {
@@ -434,16 +434,15 @@ CBPageInformationEditorView.prototype.createPageListOption = function(listClassN
     container.appendChild(label);
 
     if (this.pageModel.listClassNames) {
-
         var index = this.pageModel.listClassNames.indexOf(listClassName);
 
         if (index >= 0) {
-
             checkbox.checked = true;
         }
     }
 
-    var listener = this.checkboxDidChangeForListClassName.bind(this, checkbox, listClassName);
+    var args        = {checkbox: checkbox, listClassName: listClassName};
+    var listener    = this.checkboxDidChangeForListClassName.bind(undefined, args);
     checkbox.addEventListener("change", listener);
 
     return container;
