@@ -29,13 +29,6 @@ function CBPageInformationEditorView(pageModel)
 
     var proposedURI;
 
-    /**
-     * export functions (temporary)
-     */
-
-    this.createPageListOptionElement = createPageListOptionElement;
-
-
     if (!this.pageModel.URI)
     {
         this.pageModel.URI = generateURI();
@@ -52,8 +45,8 @@ function CBPageInformationEditorView(pageModel)
      *
      */
 
-    var pageListsEditor = this.createPageListsEditor();
-    this._element.appendChild(pageListsEditor);
+    this._element.appendChild(createPageListsEditorElement());
+
 
     /**
      *
@@ -218,6 +211,24 @@ function CBPageInformationEditorView(pageModel)
         checkbox.addEventListener("change", listener);
 
         return container;
+    }
+
+    /**
+     * @return {Element}
+     */
+    function createPageListsEditorElement() {
+        var count           = CBPageEditorAvailablePageListClassNames.length;
+        var element         = document.createElement("div");
+        element.className   = "CBPageInformationPageListsEditor";
+
+        for (var i = 0; i < count; i++) {
+            var args            = {listClassName: CBPageEditorAvailablePageListClassNames[i]};
+            var optionElement   = createPageListOptionElement(args);
+
+            element.appendChild(optionElement);
+        }
+
+        return element;
     }
 
     /**
@@ -432,25 +443,6 @@ function CBPageInformationEditorView(pageModel)
         CBPageEditor.requestSave();
     }
 }
-
-/**
- * @return Element
- */
-CBPageInformationEditorView.prototype.createPageListsEditor = function() {
-
-    var element         = document.createElement("div");
-    element.className   = "CBPageInformationPageListsEditor";
-
-    var countOfListClassNames = CBPageEditorAvailablePageListClassNames.length;
-
-    for (var i = 0; i < countOfListClassNames; i++) {
-        var args = {listClassName: CBPageEditorAvailablePageListClassNames[i]};
-
-        element.appendChild(this.createPageListOptionElement(args));
-    }
-
-    return element;
-};
 
 /**
  * @return void
