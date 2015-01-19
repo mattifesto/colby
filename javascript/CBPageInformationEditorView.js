@@ -31,8 +31,8 @@ function CBPageInformationEditorView(pageModel)
      * export functions (temporary)
      */
 
-    this.generateURI = generateURI;
-
+    this.generateURI            = generateURI;
+    this.requestURIDidComplete  = requestURIDidComplete
 
     if (!this.pageModel.URI)
     {
@@ -252,6 +252,35 @@ function CBPageInformationEditorView(pageModel)
     }
 
     /**
+     * @return {undefined}
+     */
+    function requestURIDidComplete(xhr) {
+
+        /**
+         * Because the request is complete further requests can be processed.
+         */
+        requestURITimer.resume();
+
+        var response = Colby.responseFromXMLHttpRequest(xhr);
+
+        if (!response.wasSuccessful)
+        {
+            Colby.displayResponse(response);
+        }
+        else if (response.URIWasGranted)
+        {
+            pageModel.URI                               = response.URI;
+            URIControl.textField.style.backgroundColor  = "white";
+
+            CBPageEditor.requestSave();
+        }
+        else
+        {
+            URIControl.textField.style.backgroundColor  = "#fff0f0";
+        }
+    }
+
+    /**
      * @param {CBSelectionControl} sender
      *
      * @return {undefined}
@@ -418,7 +447,7 @@ CBPageInformationEditorView.prototype.requestURI = function()
     formData.append("URI", this.proposedURI);
 
     var xhr     = new XMLHttpRequest();
-    xhr.onload  = this.requestURIDidComplete.bind(this, xhr);
+    xhr.onload  = this.requestURIDidComplete.bind(undefined, xhr);
 
     xhr.open("POST", "/admin/pages/api/request-uri/", true);
     xhr.send(formData);
@@ -432,32 +461,3 @@ CBPageInformationEditorView.prototype.requestURI = function()
     this.requestURITimer.pause();
 };
 
-/**
- * @return void
- */
-CBPageInformationEditorView.prototype.requestURIDidComplete = function(xhr)
-{
-    /**
-     * Re-enable callbacks.
-     */
-
-    this.requestURITimer.resume();
-
-    var response = Colby.responseFromXMLHttpRequest(xhr);
-
-    if (!response.wasSuccessful)
-    {
-        Colby.displayResponse(response);
-    }
-    else if (response.URIWasGranted)
-    {
-        this.pageModel.URI                              = response.URI;
-        this.URIControl.textField.style.backgroundColor = "white";
-
-        CBPageEditor.requestSave();
-    }
-    else
-    {
-        this.URIControl.textField.style.backgroundColor = "#fff0f0";
-    }
-};
