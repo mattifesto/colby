@@ -240,18 +240,6 @@ function CBPageInformationEditorView(pageModel)
     }
 
     /**
-     * @param {CBTextControl} sender
-     *
-     * @return {undefined}
-     */
-    function valueForDescriptionHasChanged(sender) {
-        pageModel.description       = sender.value().trim();
-        pageModel.descriptionHTML   = Colby.textToHTML(pageModel.description);
-
-        CBPageEditor.requestSave();
-    }
-
-    /**
      * @return {undefined}
      */
     function requestURIDidComplete(xhr) {
@@ -278,6 +266,18 @@ function CBPageInformationEditorView(pageModel)
         {
             URIControl.textField.style.backgroundColor  = "#fff0f0";
         }
+    }
+
+    /**
+     * @param {CBTextControl} sender
+     *
+     * @return {undefined}
+     */
+    function valueForDescriptionHasChanged(sender) {
+        pageModel.description       = sender.value().trim();
+        pageModel.descriptionHTML   = Colby.textToHTML(pageModel.description);
+
+        CBPageEditor.requestSave();
     }
 
     /**
