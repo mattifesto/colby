@@ -116,7 +116,8 @@ function CBPageInformationEditorView(pageModel)
      * This timer requests the updated URI after 1000ms of inactivity.
      */
 
-    this.requestURITimer                        = Object.create(CBDelayTimer).init();
+    var requestURITimer                         = Object.create(CBDelayTimer).init();
+    this.requestURITimer                        = requestURITimer;
     this.requestURITimer.callback               = this.requestURI.bind(this);
     this.requestURITimer.delayInMilliseconds    = 1000;
 
@@ -125,13 +126,11 @@ function CBPageInformationEditorView(pageModel)
      * ID to be assigend and then allow URI requests.
      */
 
-    if (!this.pageModel.rowID)
+    if (!pageModel.rowID)
     {
-        this.requestURITimer.pause();
+        requestURITimer.pause();
 
-        var listener = this.pageRowWasCreated.bind(this);
-
-        document.addEventListener("CBPageRowWasCreated", listener, false);
+        document.addEventListener("CBPageRowWasCreated", pageRowWasCreated, false);
     }
 
     /**
@@ -227,6 +226,17 @@ function CBPageInformationEditorView(pageModel)
         }
 
         return URI;
+    }
+
+    /**
+     * If there is no row ID in the model when this object is initialized then
+     * this the URI request timer will be paused and this function will be called
+     * when the row ID is created to resume the timer.
+     *
+     * @return {undefined}
+     */
+    function pageRowWasCreated() {
+        requestURITimer.resume();
     }
 
     /**
@@ -360,18 +370,6 @@ CBPageInformationEditorView.prototype.createPageListOption = function(listClassN
 CBPageInformationEditorView.prototype.element = function()
 {
     return this._element;
-};
-
-/**
- * If there is no row ID in the model when this object is initialized then
- * this the URI request timer will be paused and this function will be called
- * when the row ID is created to resume the timer.
- *
- * @return void
- */
-CBPageInformationEditorView.prototype.pageRowWasCreated = function()
-{
-    this.requestURITimer.resume();
 };
 
 /**
