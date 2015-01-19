@@ -1,51 +1,36 @@
 "use strict";
 
+
 /**
- * @param {Object} args
- *  The parameters for this functions should be passed as values on this object.
- *
  * @param {Object} model
  *  Required. The page model.
+ *
+ * @return {Element}
  */
 function createPageInformationEditorElement(args) {
+    var pageModel   = args.model;
+    args            = undefined;
 
-    var model = args.model;
-
-    args = undefined;
-
-    var view    = new CBPageInformationEditorView(model);
-    var element = view.element();
-
-    return element;
-}
-
-/**
- * This class displays and implements the first section of every page editor
- * which is the page information section.
- */
-function CBPageInformationEditorView(pageModel)
-{
-    this.pageModel      = pageModel;
-
+    var pageInformationEditorElement;
     var proposedURI;
 
-    if (!this.pageModel.URI)
+    if (!pageModel.URI)
     {
-        this.pageModel.URI = generateURI();
+        pageModel.URI = generateURI();
     }
 
-    this._element = createRootElement();
+    pageInformationEditorElement = createRootElement();
 
-    this._element.appendChild(createHeaderElement());
+    pageInformationEditorElement.appendChild(createHeaderElement());
 
     var propertiesContainer = createPropertiesContainerElement();
-    this._element.appendChild(propertiesContainer);
+    pageInformationEditorElement.appendChild(propertiesContainer);
 
     /**
      *
      */
 
-    this._element.appendChild(createPageListsEditorElement());
+    pageInformationEditorElement.appendChild(createPageListsEditorElement());
 
 
     /**
@@ -126,6 +111,9 @@ function CBPageInformationEditorView(pageModel)
 
         document.addEventListener("CBPageRowWasCreated", pageRowWasCreated, false);
     }
+
+    return pageInformationEditorElement;
+
 
     /**
      * @param {Element} checkbox
@@ -443,11 +431,3 @@ function CBPageInformationEditorView(pageModel)
         CBPageEditor.requestSave();
     }
 }
-
-/**
- * @return void
- */
-CBPageInformationEditorView.prototype.element = function()
-{
-    return this._element;
-};
