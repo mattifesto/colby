@@ -27,12 +27,14 @@ function CBPageInformationEditorView(pageModel)
 {
     this.pageModel      = pageModel;
 
+    var proposedURI;
+
     /**
      * export functions (temporary)
      */
 
     this.generateURI            = generateURI;
-    this.requestURIDidComplete  = requestURIDidComplete
+    this.setProposedURI         = setProposedURI;
 
     if (!this.pageModel.URI)
     {
@@ -118,7 +120,7 @@ function CBPageInformationEditorView(pageModel)
 
     var requestURITimer                         = Object.create(CBDelayTimer).init();
     this.requestURITimer                        = requestURITimer;
-    this.requestURITimer.callback               = this.requestURI.bind(this);
+    this.requestURITimer.callback               = requestURI;
     this.requestURITimer.delayInMilliseconds    = 1000;
 
     /**
@@ -240,6 +242,30 @@ function CBPageInformationEditorView(pageModel)
     }
 
     /**
+     * This function is the callback for the `requestURITimer`.
+     *
+     * @return {undefined}
+     */
+    function requestURI() {
+        var formData = new FormData();
+
+        formData.append("rowID", pageModel.rowID);
+        formData.append("URI", proposedURI);
+
+        var xhr     = new XMLHttpRequest();
+        xhr.onload  = requestURIDidComplete.bind(undefined, xhr);
+        xhr.open("POST", "/admin/pages/api/request-uri/", true);
+        xhr.send(formData);
+
+        URIControl.textField.style.backgroundColor = "#fffff0";
+
+        /**
+         * Prevent another callback while the URI is being requested.
+         */
+        requestURITimer.pause();
+    }
+
+    /**
      * @return {undefined}
      */
     function requestURIDidComplete(xhr) {
@@ -266,6 +292,16 @@ function CBPageInformationEditorView(pageModel)
         {
             URIControl.textField.style.backgroundColor  = "#fff0f0";
         }
+    }
+
+    /**
+     * This is a transitional function and should be removed once all functions
+     * are inside the closure.
+     *
+     * @return {undefined}
+     */
+    function setProposedURI(value) {
+        proposedURI = value;
     }
 
     /**
@@ -426,38 +462,15 @@ CBPageInformationEditorView.prototype.translateTitle = function(sender)
 CBPageInformationEditorView.prototype.translateURI = function(sender)
 {
     this.pageModel.URIIsStatic  = sender.isStatic();
-    this.proposedURI            = sender.URI();
+
+    /**
+     * Change this to just set the closure variable when this function moves
+     * inside the closure.
+     */
+    this.setProposedURI(sender.URI());
 
     this.requestURITimer.restart();
 
     CBPageEditor.requestSave();
-};
-
-/**
- * This function should never be called directly. It should only be called as
- * the `requestURITimer` object's callback.
- *
- * @return void
- */
-CBPageInformationEditorView.prototype.requestURI = function()
-{
-    var formData = new FormData();
-
-    formData.append("rowID", this.pageModel.rowID);
-    formData.append("URI", this.proposedURI);
-
-    var xhr     = new XMLHttpRequest();
-    xhr.onload  = this.requestURIDidComplete.bind(undefined, xhr);
-
-    xhr.open("POST", "/admin/pages/api/request-uri/", true);
-    xhr.send(formData);
-
-    this.URIControl.textField.style.backgroundColor = "#fffff0";
-
-    /**
-     * Prevent another callback while the URI is being requested.
-     */
-
-    this.requestURITimer.pause();
 };
 
