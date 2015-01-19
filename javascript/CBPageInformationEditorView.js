@@ -33,8 +33,8 @@ function CBPageInformationEditorView(pageModel)
      * export functions (temporary)
      */
 
-    this.generateURI            = generateURI;
-    this.setProposedURI         = setProposedURI;
+    this.generateURI                = generateURI;
+    this.valuesForURIHaveChanged    = translateURI;
 
     if (!this.pageModel.URI)
     {
@@ -118,10 +118,9 @@ function CBPageInformationEditorView(pageModel)
      * This timer requests the updated URI after 1000ms of inactivity.
      */
 
-    var requestURITimer                         = Object.create(CBDelayTimer).init();
-    this.requestURITimer                        = requestURITimer;
-    this.requestURITimer.callback               = requestURI;
-    this.requestURITimer.delayInMilliseconds    = 1000;
+    var requestURITimer                 = Object.create(CBDelayTimer).init();
+    requestURITimer.callback            = requestURI;
+    requestURITimer.delayInMilliseconds = 1000;
 
     /**
      * If we don't have a row ID yet, we can't request a URI. Wait for the row
@@ -295,16 +294,6 @@ function CBPageInformationEditorView(pageModel)
     }
 
     /**
-     * This is a transitional function and should be removed once all functions
-     * are inside the closure.
-     *
-     * @return {undefined}
-     */
-    function setProposedURI(value) {
-        proposedURI = value;
-    }
-
-    /**
      * @param {CBTextControl} sender
      *
      * @return {undefined}
@@ -344,6 +333,20 @@ function CBPageInformationEditorView(pageModel)
         }
 
         URIControl.setIsDisabled(pageModel.isPublished);
+
+        CBPageEditor.requestSave();
+    }
+
+    /**
+     * @param {URIControl} sender
+     *
+     * @return {undefined}
+     */
+    function valuesForURIHaveChanged(sender) {
+        pageModel.URIIsStatic   = sender.isStatic();
+        proposedURI             = sender.URI();
+
+        requestURITimer.restart();
 
         CBPageEditor.requestSave();
     }
@@ -450,27 +453,8 @@ CBPageInformationEditorView.prototype.translateTitle = function(sender)
         var URI     = this.generateURI();
 
         this.URIControl.setURI(URI);
-        this.translateURI(this.URIControl);
+        this.valuesForURIHaveChanged(this.URIControl);
     }
 
     CBPageEditor.requestSave();
 };
-
-/**
- * @return void
- */
-CBPageInformationEditorView.prototype.translateURI = function(sender)
-{
-    this.pageModel.URIIsStatic  = sender.isStatic();
-
-    /**
-     * Change this to just set the closure variable when this function moves
-     * inside the closure.
-     */
-    this.setProposedURI(sender.URI());
-
-    this.requestURITimer.restart();
-
-    CBPageEditor.requestSave();
-};
-
