@@ -27,6 +27,7 @@ $testDirectory = COLBY_SYSTEM_DIRECTORY . '/snippets/tests';
 include "{$testDirectory}/Test,Colby,decrypt,encrypt.php";
 include "{$testDirectory}/Test,ColbyArchive.php";
 include "{$testDirectory}/Test,ColbyDocument.php";
+include "{$testDirectory}/TestColbyConvert.php";
 include "{$testDirectory}/TestColbyMarkaroundParser.php";
 
 /**

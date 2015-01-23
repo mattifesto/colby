@@ -151,6 +151,38 @@ class ColbyConvert
     }
 
     /**
+     * @note: functional programming
+     * @note: needs testing
+     *
+     * This function has been analyzed to do exactly what it needs to do. It
+     * focuses on the three most common line delimiters: "\r\n", "\r", and "\n".
+     * Any and all of these will be treated as a line ending. "\r\n" will be
+     * treated as a single line ending, but "\n\r" will be two. "\r\n\n" will
+     * also be two line endings and so will "\r\n\r\n" and "\r\n\r".
+     *
+     * This function has the additional benefit of guaranteeing that no lone
+     * line ending characters will remain in any of the strings in the returned
+     * array.
+     *
+     * This function is meant to commonly used and be considered very safe
+     * because it handles line splitting perfectly in all situations except for
+     * those where custom line ending rules are in effect.
+     *
+     * The "\R" regular expression escape sequence appears to represent the
+     * same thing as the regular expression used in this function, according
+     * to tests. However, since this escape sequence is undocumented, it is not
+     * used in this function.
+     *
+     * @param string $text
+     *
+     * @return array
+     *  An array of strings.
+     */
+    public static function textToLineArray($text) {
+        return preg_split('/(\r\n|\r|\n)/', $text);
+    }
+
+    /**
      * @param string $text
      *
      * @return string

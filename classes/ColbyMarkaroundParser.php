@@ -249,14 +249,9 @@ class ColbyMarkaroundParser
      */
     private function parse()
     {
-        $this->currentState = MARKAROUND_STATE_NONE;
-        $this->htmlArray = array();
-
-        // Remove all carriage return characters so that only newlines separate lines. If there are random carriage returns in odd places (not adjacent to newlines) they will be ignored.
-
-        $markaround = preg_replace('/\r/', '', $this->markaround);
-
-        $markaroundLines = preg_split('/\n/', $markaround);
+        $this->currentState     = MARKAROUND_STATE_NONE;
+        $this->htmlArray        = array();
+        $markaroundLines        = ColbyConvert::textToLineArray($this->markaround);
 
         foreach ($markaroundLines as $markaroundLine)
         {
