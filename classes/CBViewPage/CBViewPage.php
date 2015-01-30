@@ -280,7 +280,7 @@ EOT;
 
         $listClassNames         = array_merge($CBPageEditorAvailablePageListClassNames,
                                               $this->model->listClassNames,
-                                              ['CBRecentlyEditedPages']);
+                                              array('CBRecentlyEditedPages'));
 
         $listClassNames         = array_unique($listClassNames);
         $listClassNamesForSQL   = array();

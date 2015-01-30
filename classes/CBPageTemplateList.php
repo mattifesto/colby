@@ -7,7 +7,7 @@
 class CBPageTemplateList implements IteratorAggregate {
 
     private static $instance;
-    private static $list = ['CBPageTemplate'];
+    private static $list = array('CBPageTemplate');
 
     /**
      * @return instance type
