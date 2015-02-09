@@ -102,7 +102,7 @@ CBTestPage.runPHPTests = function()
 {
     var xhr     = new XMLHttpRequest();
     xhr.onload  = CBTestPage.runPHPTestsDidComplete;
-    xhr.open('POST', '/developer/test/ajax/run-unit-tests/', true);
+    xhr.open('POST', '/api/?class=CBUnitTests&function=runAllForAjax', true);
     xhr.send();
 
     CBTestPage.setPanelText("Waiting for response...");

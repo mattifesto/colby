@@ -1,10 +1,18 @@
 <?php
 
-ColbyConvertTests::testTextToLineArray();
+class CBUnitTestsForColbyConvert {
 
-class ColbyConvertTests {
+    /**
+     * @return void
+     */
+    public static function runAll() {
+        self::runTestForTestToLineArray();
+    }
 
-    public static function testTextToLineArray() {
+    /**
+     * return void
+     */
+    public static function runTestForTestToLineArray() {
         $text       = "abc \r bcd \n cde \r\n def \n\r efg \r\n\r fgh \r\n\n ghi \r\r\n hij \r\n\r\n ijk";
         $expected   = ['abc ', ' bcd ', ' cde ', ' def ',
                        '', ' efg ', '', ' fgh ', '', ' ghi ', '', ' hij ', '', ' ijk'];
