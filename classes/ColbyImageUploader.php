@@ -73,7 +73,7 @@ class ColbyImageUploader
      */
     public function sha1()
     {
-        return sha1($_FILES[$this->name]['tmp_name']);
+        return sha1_file($_FILES[$this->name]['tmp_name']);
     }
 
     /**

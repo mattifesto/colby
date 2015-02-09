@@ -14,7 +14,7 @@ $response = new CBAjaxResponse();
 $dataStoreID        = $_POST['dataStoreID'];
 $dataStore          = new CBDataStore($dataStoreID);
 $uploader           = ColbyImageUploader::uploaderForName('image');
-$filename           = Colby::uniqueSHA1Hash() . $uploader->canonicalExtension();
+$filename           = $uploader->sha1() . '-original' .  $uploader->canonicalExtension();
 $absoluteFilename   = $dataStore->directory() . "/{$filename}";
 
 $uploader->moveToFilename($absoluteFilename);

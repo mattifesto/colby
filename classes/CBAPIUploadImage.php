@@ -100,11 +100,13 @@ class CBAPIUploadImage extends CBAPI {
             $permanentFilepath      = $dataStore->directory() .
                                       "/{$filenameFromDataStore}";
 
+            rename($temporaryFilepath, $permanentFilepath);
+
             $response               = $this->response;
             $response->actualWidth  = $uploader->sizeX();
             $response->actualHeight = $uploader->sizeY();
             $response->filename     = $filenameFromDataStore;
-            $response->URL          = $dataStore->URL() . "/{$filename}";
+            $response->URL          = $dataStore->URL() . "/{$filenameFromDataStore}";
             $response->URLForHTML   = ColbyConvert::textToHTML($response->URL);
         }
     }
