@@ -23,7 +23,7 @@
  *  Added the `listClassNames` property which holds an array of list class
  *  names representing the lists which include this page.
  */
-class CBViewPage extends CBPage {
+final class CBViewPage extends CBPage {
 
     private static $pageContext;
 
@@ -105,14 +105,24 @@ class CBViewPage extends CBPage {
             return null;
         }
 
-        $modelJSON          = file_get_contents($dataStore->directory() . '/model.json');
+        $modelJSON  = file_get_contents($dataStore->directory() . '/model.json');
+        $model      = json_decode($modelJSON);
+
+        return self::initWithModel($model);
+    }
+
+    /**
+     * @return instance type
+     */
+    public static function initWithModel($model) {
         $page               = parent::init();
-        $page->model        = json_decode($modelJSON);
+        $page->model        = $model;
         $page->ID           = $page->model->dataStoreID;
         $page->subviews     = array();
-        self::$pageContext  = $page;
 
         $page->upgradeModel();
+
+        self::$pageContext = $page;
 
         foreach ($page->model->sections as $subviewModel) {
 
@@ -221,7 +231,7 @@ EOT;
             $dataStoreID    = $this->model->dataStoreID;
             $mysqli         = Colby::mysqli();
 
-            $mysqli->autocommit(false);
+            Colby::query('START TRANSACTION');
 
             if (!$this->model->rowID) {
 
@@ -241,25 +251,23 @@ EOT;
 
         } catch (Exception $exception) {
 
-            $mysqli->rollback();
+            Colby::query('ROLLBACK');
 
             throw $exception;
         }
 
-        $mysqli->commit();
+        Colby::query('COMMIT');
     }
 
     /**
      * @return string
      */
     private function searchText() {
-
         $searchText     = array();
         $searchText[]   = $this->model->title;
         $searchText[]   = $this->model->description;
 
         foreach ($this->subviews as $subview) {
-
             $searchText[] = $subview->searchText();
         }
 
@@ -358,6 +366,7 @@ EOT;
         $summaryView            = $this->createSummaryView();
 
         $rowData                = new stdClass();
+        $rowData->className     = 'CBViewPage';
         $rowData->keyValueData  = json_encode($summaryView->model());
         $rowData->rowID         = $this->model->rowID;
         $rowData->typeID        = CBPageTypeID;
