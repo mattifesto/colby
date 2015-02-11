@@ -11,7 +11,7 @@ $response = new CBAjaxResponse();
  * Ensure that the 'backup-files' directory exists
  */
 
-$intraSiteDatabaseBackupsDirectory = '/tmp/database-backups';
+$intraSiteDatabaseBackupsDirectory = 'tmp/database-backups';
 $absoluteDatabaseBackupsDirectory = COLBY_SITE_DIRECTORY . "/{$intraSiteDatabaseBackupsDirectory}";
 
 if (!is_dir($absoluteDatabaseBackupsDirectory))
@@ -31,14 +31,34 @@ $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
  * Generate the command and execute.
  */
 
-$host = escapeshellarg(COLBY_MYSQL_HOST);
-$user = escapeshellarg(COLBY_MYSQL_USER);
-$password = escapeshellarg(COLBY_MYSQL_PASSWORD);
-$database = escapeshellarg(COLBY_MYSQL_DATABASE);
+$host       = escapeshellarg(COLBY_MYSQL_HOST);
+$user       = escapeshellarg(COLBY_MYSQL_USER);
+$password   = escapeshellarg(COLBY_MYSQL_PASSWORD);
+$database   = escapeshellarg(COLBY_MYSQL_DATABASE);
+$output     = array();
 
-$command = "mysqldump -h {$host} -u {$user} --password={$password} --databases {$database} --add-drop-database --extended-insert=FALSE --hex-blob --routines --result-file={$absoluteFilename}";
+/**
+ * 2015.02.10
+ * I'm having trouble with development environments on Mac OS X Yosemite not
+ * loading the `.bash_profile`. This means that `mysqldump` is not in the path.
+ * Set `CBMySQLDirectory` in the `colby-configuration.php` file to the directory
+ * that contains the MySQL binaries to work around whatever is happening here.
+ */
 
-exec($command);
+$command    = 'mysqldump';
+$command    = defined('CBMySQLDirectory') ? CBMySQLDirectory . "/{$command}" : $command;
+$command    = "{$command} -h {$host} -u {$user} --password={$password} --databases {$database} --add-drop-database --extended-insert=FALSE --hex-blob --routines --result-file={$absoluteFilename}";
+
+exec($command, $output, $result);
+
+if ($result) {
+    $response->message = "An error occured: {$result}\n\n" .
+                         "Output:\n" .
+                         implode("\n", $output);
+    $response->send();
+
+    return 1;
+}
 
 /**
  * Send the response
