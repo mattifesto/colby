@@ -145,8 +145,6 @@ EOT;
 
         if (0 === $countOfStubs)
         {
-            include_once CBSystemDirectory . '/classes/CBDataStore.php';
-
             $dataStore          = new CBDataStore(CBPageTypeID);
             $frontPageFilename  = $dataStore->directory() . '/front-page.json';
 
