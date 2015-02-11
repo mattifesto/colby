@@ -145,13 +145,11 @@ final class CBViewPage extends CBPage {
      * @return void
      */
     private function addToPageLists() {
-
         $pageRowID  = (int)$this->model->rowID;
         $updated    = (int)$this->model->updated;
         $yearMonth  = gmdate('Ym', $updated);
 
         foreach ($this->model->listClassNames as $className) {
-
             $classNameForSQL    = ColbyConvert::textToSQL($className);
             $SQL                = <<<EOT
 
@@ -167,6 +165,27 @@ EOT;
 
             Colby::query($SQL);
         }
+    }
+
+    /**
+     * @return void
+     */
+    public static function addToRecentlyEditedPagesList($model) {
+        $pageRowID  = (int)$model->rowID;
+        $updated    = (int)$model->updated;
+        $SQL        = <<<EOT
+
+            INSERT INTO
+                `CBPageLists`
+            SET
+                `pageRowID`     = {$pageRowID},
+                `listClassName` = 'CBRecentlyEditedPages',
+                `sort1`         = {$updated},
+                `sort2`         = NULL
+
+EOT;
+
+        Colby::query($SQL);
     }
 
     /**
@@ -257,6 +276,33 @@ EOT;
         }
 
         Colby::query('COMMIT');
+    }
+
+    /**
+     * @return void
+     */
+    public static function saveEditedPageForAjax() {
+        $response       = new CBAjaxResponse();
+        $modelJSON      = $_POST['model-json'];
+        $model          = json_decode($modelJSON);
+        $page           = CBViewPage::initWithModel($model);
+
+        $page->save();
+
+        self::addToRecentlyEditedPagesList($model);
+
+        $response->wasSuccessful = true;
+        $response->send(); error_log('save');
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function saveEditedPageForAjaxPermissions() {
+        $permissions        = new stdClass();
+        $permissions->group = 'Administrators';
+
+        return $permissions;
     }
 
     /**

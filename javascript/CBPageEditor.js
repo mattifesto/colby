@@ -300,7 +300,7 @@ CBPageEditor.saveModel = function() {
     var xhr     = new XMLHttpRequest();
     xhr.onload  = this.saveModelAjaxRequestDidComplete.bind(this, xhr);
 
-    xhr.open("POST", "/admin/pages/api/save-model/");
+    xhr.open("POST", "/api/?class=CBViewPage&function=saveEditedPageForAjax");
     xhr.send(formData);
 
     /**
