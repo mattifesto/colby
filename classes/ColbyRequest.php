@@ -148,14 +148,13 @@ EOT;
             $dataStore          = new CBDataStore(CBPageTypeID);
             $frontPageFilename  = $dataStore->directory() . '/front-page.json';
 
-            if (file_exists($frontPageFilename))
-            {
-                $frontPage          = json_decode(file_get_contents($frontPageFilename));
-                $dataStoreID        = $frontPage->dataStoreID;
-                $handlerFilename    = CBSystemDirectory . '/handlers/handle-sectioned-page.php';
-            }
-            else
-            {
+            if (file_exists($frontPageFilename)) {
+                $frontPage  = json_decode(file_get_contents($frontPageFilename));
+                $page       = CBViewPage::initWithID($frontPage->dataStoreID);
+
+                $page->renderHTML();
+                return;
+            } else {
                 /**
                  * This code is mostly deprecated. Not sure about first run scenarios.
                  */
@@ -239,22 +238,17 @@ EOT;
 
                 if ($row)
                 {
-                    if ($row->className)
-                    {
+                    if (!$row->className && CBPageTypeID == $row->typeID) {
+                        $row->className = 'CBViewPage';
+                    }
+
+                    if ($row->className) {
                         $className  = $row->className;
                         $page       = $className::initWithID($row->dataStoreID);
 
                         $page->renderHTML();
-
                         return;
-                    }
-                    else if (CBPageTypeID == $row->typeID)
-                    {
-                        $dataStoreID     = $row->dataStoreID;
-                        $handlerFilename = CBSystemDirectory . '/handlers/handle-sectioned-page.php';
-                    }
-                    else
-                    {
+                    } else {
                         self::$archive = ColbyArchive::open($row->dataStoreID);
 
                         if (self::$archive)

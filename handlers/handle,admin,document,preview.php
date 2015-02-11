@@ -21,6 +21,7 @@ $dataStoreIDForSQL  = ColbyConvert::textToSQL($dataStoreID);
 $sql = <<<EOT
 
     SELECT
+        `className`,
         LOWER(HEX(`typeID`)) as `typeID`
     FROM
         `ColbyPages`
@@ -42,12 +43,15 @@ if (!$row)
     return 1;
 }
 
-if (CBPageTypeID == $row->typeID)
-{
-    include CBSystemDirectory . '/handlers/handle-sectioned-page.php';
+if (!$row->className && CBPageTypeID == $row->typeID) {
+    $row->className = 'CBViewPage';
 }
-else
-{
+
+if ($row->className) {
+    $className  = $row->className;
+    $page       = $className::initWithID($dataStoreID);
+    $page->renderHTML();
+} else {
     $archive = ColbyArchive::open($_GET['archive-id']);
 
     ColbyRequest::$archive = $archive;
