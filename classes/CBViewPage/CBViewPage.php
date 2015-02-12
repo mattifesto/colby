@@ -292,7 +292,7 @@ EOT;
         self::addToRecentlyEditedPagesList($model);
 
         $response->wasSuccessful = true;
-        $response->send(); error_log('save');
+        $response->send();
     }
 
     /**
