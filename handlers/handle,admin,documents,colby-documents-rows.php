@@ -175,6 +175,8 @@ $result->free();
 
     </style>
 
+    <?php renderPagesOverview(); ?>
+
     <h1>ColbyDocuments Table Rows</h1>
 
     <?php
@@ -216,3 +218,76 @@ $footer = CBAdminPageFooterView::init();
 $footer->renderHTML();
 
 CBHTMLOutput::render();
+
+/**
+ * @return void
+ */
+function renderPagesOverview() {
+
+    ?>
+
+    <table id="overview">
+        <style>
+
+            #overview {
+                margin: 20px auto;
+            }
+
+            #overview td {
+                padding: 2px 5px;
+            }
+
+            #overview td + td {
+                text-align: right;
+            }
+
+        </style>
+
+    <?php
+
+    $SQL = <<<EOT
+
+        SELECT
+            `className`,
+            count(*) AS `count`
+        FROM
+            `ColbyPages`
+        WHERE
+            `className` IS NOT NULL
+        GROUP BY
+            `className`
+
+EOT;
+
+    $result = Colby::query($SQL);
+
+    while ($row = $result->fetch_object()) {
+        echo "<tr><td>className: {$row->className}</td><td>{$row->count}</td></tr>";
+    }
+
+    $result->free();
+
+    $SQL = <<<EOT
+
+        SELECT
+            HEX(`typeID`) as `typeID`,
+            count(*) as `count`
+        FROM
+            `ColbyPages`
+        WHERE
+            `className` IS NULL
+        GROUP BY
+            `typeID`
+
+EOT;
+
+    $result = Colby::query($SQL);
+
+    while ($row = $result->fetch_object()) {
+        echo "<tr><td>typeID: {$row->typeID}</td><td>{$row->count}</td></tr>";
+    }
+
+    $result->free();
+
+    echo '</table>';
+}
