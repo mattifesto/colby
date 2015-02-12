@@ -307,6 +307,8 @@ foreach ($sqls as $sql)
     Colby::query($sql);
 }
 
+// 2015.02.11
+CBUpgradesForVersion119::run();
 
 /**
  *

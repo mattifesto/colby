@@ -66,9 +66,7 @@ function CBSearchForPages($queryText)
     }
 
     $likesForSQL    = implode(' AND ', $likesForSQL);
-    $CBPageTypeID   = CBPageTypeID;
-
-    $sql = <<<EOT
+    $sql            = <<<EOT
 
         SELECT
             LOWER(HEX(`archiveID`)) AS `dataStoreID`,
@@ -77,7 +75,7 @@ function CBSearchForPages($queryText)
         FROM
             `ColbyPages`
         WHERE
-            `typeID` = UNHEX('{$CBPageTypeID}') AND
+            `className` = 'CBViewPage' AND
             {$likesForSQL}
         ORDER BY
             `published` IS NULL DESC,

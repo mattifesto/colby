@@ -83,8 +83,6 @@ class CBPagesAdmin
      */
     public static function queryForPages()
     {
-        $CBPageTypeID = CBPageTypeID;
-
         $sql = <<<EOT
 
         SELECT
@@ -94,7 +92,7 @@ class CBPagesAdmin
         FROM
             `ColbyPages`
         WHERE
-            `typeID` = UNHEX('{$CBPageTypeID}') AND
+            `className` = 'CBViewPage' AND
             `published` IS NULL
         ORDER BY
             `ID` DESC

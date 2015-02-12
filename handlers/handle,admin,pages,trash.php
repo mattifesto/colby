@@ -82,8 +82,6 @@ class CBPagesAdmin
      */
     public static function queryForPagesInTheTrash()
     {
-        $CBPageTypeID = CBPageTypeID;
-
         $sql = <<<EOT
 
         SELECT

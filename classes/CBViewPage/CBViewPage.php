@@ -415,7 +415,7 @@ EOT;
         $rowData->className     = 'CBViewPage';
         $rowData->keyValueData  = json_encode($summaryView->model());
         $rowData->rowID         = $this->model->rowID;
-        $rowData->typeID        = CBPageTypeID;
+        $rowData->typeID        = null;
         $rowData->groupID       = $this->model->groupID;
         $rowData->titleHTML     = $this->model->titleHTML;
         $rowData->searchText    = $this->searchText();
