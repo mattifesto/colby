@@ -9,7 +9,6 @@ $classURL = CBSystemURL . '/classes/CBAdminPageForUpdate';
 
 CBHTMLOutput::setTitleHTML('Update');
 CBHTMLOutput::setDescriptionHTML('Tools to perform site version updates.');
-//CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,develop,test-pages.js');
 CBHTMLOutput::begin();
 
 include CBSystemDirectory . '/sections/admin-page-settings.php';
@@ -21,10 +20,13 @@ $menu->setSelectedMenuItemName('develop');
 $menu->setSelectedSubmenuItemName('update');
 $menu->renderHTML();
 
+$head = CPView::specForClassName('CPAdminSectionHeaderView');
+$head->title = 'Update';
+
 ?>
 
 <main>
-    <h1>Update</h1>
+    <?php CPView::renderAsHTML(CPView::compile($head)) ?>
 
     <div style="margin: 50px 0px; text-align: center;">
         <progress id="progress"
