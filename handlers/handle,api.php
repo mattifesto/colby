@@ -18,7 +18,7 @@ if ($function) {
 
         $permissions = call_user_func($permissionsFunction);
 
-        if (ColbyUser::current()->isOneOfThe($permissions->group)) {
+        if ('Public' === $permissions->group || ColbyUser::current()->isOneOfThe($permissions->group)) {
             call_user_func($function, $args);
         } else {
             $response           = new CBAjaxResponse();

@@ -137,7 +137,7 @@ DatabaseInstaller.installDatabase = function(sender)
     var formData = new FormData();
     formData.append('requestIsForInitialInstallation', true);
 
-    xhr.open('POST', '/developer/update/ajax/perform-update/', true);
+    xhr.open('POST', '/api/?class=CBAdminPageForUpdate&function=updateForAjax', true);
     xhr.onload = handleAjaxResponse;
     xhr.send(formData);
 

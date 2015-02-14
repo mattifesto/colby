@@ -19,7 +19,7 @@ ColbySiteUpdater.update = function(sender)
         sender.disabled = false;
     };
 
-    xhr.open('POST', '/developer/update/ajax/perform-update/', true);
+    xhr.open('POST', '/api/?class=CBAdminPageForUpdate&function=updateForAjax', true);
     xhr.onload = handleAjaxResponse;
     xhr.send();
 
