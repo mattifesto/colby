@@ -74,17 +74,14 @@ class CBDataStore
     }
 
     /**
-     * This class expects that the creation of a data store directory is an
-     * important event and it happens exactly when it needs to happen and at
-     * no other time. Clients need to plan for when in the lifetime of the
-     * data stores they use that the directory is created and call this method
-     * precisely at that time.
+     * This function has "create if not exists" semantics.
      *
      * @return void
      */
-    public function makeDirectory()
-    {
-        mkdir($this->directory(), /* mode: */ 0777, /* recursive: */ true);
+    public function makeDirectory() {
+        if (!is_dir($this->directory())) {
+            mkdir($this->directory(), /* mode: */ 0777, /* recursive: */ true);
+        }
     }
 
     /**
