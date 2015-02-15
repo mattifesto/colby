@@ -102,6 +102,37 @@ CBImageViewEditor.alternativeTextEditorElement = function() {
 };
 
 /**
+ * The primary purpose of the returned function is to toggle the background on
+ * an image thumbnail so that a page editor can see an image with transparency
+ * in different contexts. It can be called in response to some UI event, such
+ * as a click on the image.
+ *
+ * @return function
+ */
+CBImageViewEditor.functionToToggleBackground = function(element) {
+    return function() {
+        if ("dark-background" == element.className) {
+            element.className = "";
+        } else {
+            element.className = "dark-background";
+        }
+    };
+};
+
+/**
+ * The primary purpose of the returned function is to update an element whose
+ * purpose is to display the dimensions of an image. The function is generally
+ * called in response to the image element sending a load event.
+ *
+ * @return function
+ */
+CBImageViewEditor.functionToUpdateDimensions = function(imageElement, dimensionsElement) {
+    return function() {
+        dimensionsElement.textContent = imageElement.naturalWidth + " × " + imageElement.naturalHeight;
+    };
+};
+
+/**
  * @return Element
  */
 CBImageViewEditor.imageEditorElement = function() {
@@ -113,21 +144,6 @@ CBImageViewEditor.imageEditorElement = function() {
     }
 
     return this._imageEditorElement;
-};
-
-/**
- * @return void
- */
-CBImageViewEditor.thumbnailWasClicked = function() {
-
-    if ("dark-background" == this._thumbnail.className) {
-
-        this._thumbnail.className = "";
-
-    } else {
-
-        this._thumbnail.className = "dark-background";
-    }
 };
 
 /**
@@ -212,16 +228,19 @@ CBImageViewEditor.updateThumbnail = function() {
 
     if (!this._thumbnail)
     {
-        this._imageDimensions = document.createElement("div");
-        this._imageEditorElement.insertBefore(this._imageDimensions, this._imageEditorElement.firstChild);
-        this._thumbnail = document.createElement("img");
-        this._imageEditorElement.insertBefore(this._thumbnail, this._imageEditorElement.firstChild);
+        var thumbnail   = document.createElement("img");
+        var dimensions  = document.createElement("div");
 
-        var listener = this.thumbnailWasClicked.bind(this);
+        thumbnail.addEventListener("click",
+            CBImageViewEditor.functionToToggleBackground(thumbnail));
+        thumbnail.addEventListener("load",
+            CBImageViewEditor.functionToUpdateDimensions(thumbnail, dimensions));
 
-        this._thumbnail.addEventListener("click", listener);
+        this._imageEditorElement.insertBefore(dimensions, this._imageEditorElement.firstChild);
+        this._imageEditorElement.insertBefore(thumbnail, this._imageEditorElement.firstChild);
+
+        this._thumbnail = thumbnail;
     }
 
-    this._imageDimensions.textContent   = this.model.actualWidth + " × " + this.model.actualHeight;
-    this._thumbnail.src                 = this.model.URL;
+    this._thumbnail.src = this.model.URL;
 };
