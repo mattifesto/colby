@@ -15,9 +15,7 @@ class CBAdminPageForImages {
         CBHTMLOutput::begin();
 
         include CBSystemDirectory . '/sections/admin-page-settings.php';
-
         include __DIR__ . '/CBAdminPageForImagesHTML.php';
-
 
         CBHTMLOutput::render();
     }

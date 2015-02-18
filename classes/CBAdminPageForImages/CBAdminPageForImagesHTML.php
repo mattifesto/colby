@@ -16,6 +16,10 @@ $menu->renderHTML();
 
     CPView::renderAsHTML(CPView::compile($head));
 
+    $list = CPView::specForClassName('CPAdminImageListView');
+
+    CPView::renderASHTML(CPView::compile($list));
+
     ?>
 
 </main>
