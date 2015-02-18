@@ -78,7 +78,7 @@ EOT;
 
         $images = self::queryForRecentlyModifiedImages();
 
-        echo '<table>';
+        echo '<div class="CPAdminImageListView"><table>';
 
         foreach ($images as $image) {
             $created        = self::timestampToHTML($image->created);
@@ -89,7 +89,7 @@ EOT;
             echo "<tr><td>$thumbnail</td><td>{$description}</td><td>{$created}</td><td>{$modified}</td></tr>";
         }
 
-        echo '</table>';
+        echo '</table></div>';
     }
 
     /**
@@ -99,5 +99,14 @@ EOT;
         $javaScriptTimestamp = $timestamp * 1000;
 
         return "<span class=\"time\" data-timestamp=\"{$javaScriptTimestamp}\"></span>";
+    }
+
+    /**
+     * @return array
+     */
+    public static function URLsForCSS() {
+        $URL = CBSystemURL . '/classes/CPView/views/CPAdminImageListView';
+
+        return [$URL . '/CPAdminImageListViewHTML.css'];
     }
 }

@@ -1,0 +1,9 @@
+.CPAdminImageListView table
+{
+    margin: 0px auto;
+}
+
+.CPAdminImageListView table td
+{
+    padding: 2px 5px;
+}

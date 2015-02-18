@@ -33,6 +33,15 @@ class CPView {
      */
     public static function renderAsHTML($model) {
         $className = $model->viewClassName;
+
+        if (is_callable("{$className}::URLsForCSS")) {
+            $URLs = $className::URLsForCSS();
+
+            foreach ($URLs as $URL) {
+                CBHTMLOutput::addCSSURL($URL);
+            }
+        }
+
         $className::renderAsHTML($model);
     }
 
