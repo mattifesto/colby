@@ -68,9 +68,10 @@ class CBDataStore
     /**
      * @return string
      */
-    public function directoryNameFromDocumentRoot() {
+    public static function directoryNameFromDocumentRoot($ID) {
+        $directoryName = preg_replace('/^(..)(..)/', '$1/$2/', $ID);
 
-        return "data/{$this->path}";
+        return "data/{$directoryName}";
     }
 
     /**
