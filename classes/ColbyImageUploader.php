@@ -32,7 +32,7 @@ class ColbyImageUploader
 
         $uploader->name = $name;
 
-        $uploader->verifyUploadedFile();
+        self::verifyUploadedFile($name);
 
         $uploader->info = getimagesize($_FILES[$name]['tmp_name']);
 
@@ -95,12 +95,16 @@ class ColbyImageUploader
     /**
      * Detects any errors that occurred when the file was uploaded to the
      * server.
+     *
+     * 2015.02.17
+     * TODO: This function is general for any uploaded file and should be moved
+     * to a more appropriate class.
      */
-    private function verifyUploadedFile()
+    public static function verifyUploadedFile($name)
     {
-        if ($_FILES[$this->name]['error'] != UPLOAD_ERR_OK)
+        if ($_FILES[$name]['error'] != UPLOAD_ERR_OK)
         {
-            switch ($_FILES[$this->name]['error'])
+            switch ($_FILES[$name]['error'])
             {
                 case UPLOAD_ERR_INI_SIZE:
 

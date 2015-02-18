@@ -5,6 +5,48 @@ class CBImages {
     /**
      * @return void
      */
+    public static function reduceImageFile($sourceFilepath, $destinationFilepath, $projection) {
+        $src    = $projection->source;
+        $dst    = $projection->destination;
+        $size   = getimagesize($sourceFilepath);
+        $output = imagecreatetruecolor($dst->width, $dst->height);
+
+        switch ($size[2]) {
+            case IMAGETYPE_GIF:
+                $input = imagecreatefromgif($sourceFilepath);
+                break;
+            case IMAGETYPE_JPEG:
+                $input = imagecreatefromjpeg($sourceFilepath);
+                break;
+            case IMAGETYPE_PNG:
+                $input = imagecreatefrompng($sourceFilepath);
+                break;
+            default:
+                throw new RuntimeException(
+                    "The image type for the file \"{$sourceFilepath}\" is not supported.");
+                break;
+        }
+
+        imagecopyresampled($output, $input,
+            $dst->x,     $dst->y,      $src->x,     $src->y,
+            $dst->width, $dst->height, $src->width, $src->height);
+
+        switch ($size[2]) {
+            case IMAGETYPE_GIF:
+                imagegif($output, $destinationFilepath);
+                break;
+            case IMAGETYPE_JPEG:
+                imagejpeg($output, $destinationFilepath, /* quality: */ 90);
+                break;
+            case IMAGETYPE_PNG:
+                imagepng($output, $destinationFilepath);
+                break;
+        }
+    }
+
+    /**
+     * @return void
+     */
     public static function update() {
 
         $SQL = <<<EOT
@@ -13,6 +55,7 @@ class CBImages {
             (
                 `ID`        BINARY(20) NOT NULL,
                 `created`   BIGINT NOT NULL,
+                `extension` VARCHAR(10) NOT NULL,
                 `modified`  BIGINT NOT NULL,
 
                 PRIMARY KEY (`ID`)
@@ -29,17 +72,18 @@ EOT;
     /**
      * @return void
      */
-    private static function updateRow($ID, $timestamp) {
-        $timestampAsSQL = (int)$timestamp;
+    private static function updateRow($ID, $timestamp, $extension) {
+        $extensionAsSQL = ColbyConvert::textToSQL($extension);
+        $extensionAsSQL = "'{$extension}'";
         $IDAsSQL        = ColbyConvert::textToSQL($ID);
         $IDAsSQL        = "UNHEX('{$IDAsSQL}')";
-
-        $SQL = <<<EOT
+        $timestampAsSQL = (int)$timestamp;
+        $SQL            = <<<EOT
 
             INSERT INTO `CBImages`
-                (`ID`, `created`, `modified`)
+                (`ID`, `created`, `extension`, `modified`)
             VALUES
-                ({$IDAsSQL}, {$timestampAsSQL}, {$timestampAsSQL})
+                ({$IDAsSQL}, {$timestampAsSQL}, {$extensionAsSQL}, {$timestampAsSQL})
             ON DUPLICATE KEY UPDATE
                 `modified` = {$timestampAsSQL}
 
@@ -54,19 +98,25 @@ EOT;
     public static function uploadImageForAjax() {
         $response = new CBAjaxResponse();
 
+        ColbyImageUploader::verifyUploadedFile('image');
+
         Colby::query('START TRANSACTION');
 
         try {
-            $timestamp  = isset($_POST['timestamp']) ? $_POST['timestamp'] : time();
-            $uploader   = ColbyImageUploader::uploaderForName('image');
-            $ID         = $uploader->sha1();
-            $dataStore  = new CBDataStore($ID);
-            $filename   = 'original' .  $uploader->canonicalExtension();
-            $filepath   = $dataStore->directory() . "/{$filename}";
+            $timestamp          = isset($_POST['timestamp']) ? $_POST['timestamp'] : time();
+            $temporaryFilepath  = $_FILES['image']['tmp_name'];
 
-            self::updateRow($ID, $timestamp);
+            $size               = getimagesize($temporaryFilepath);
+            $type               = $size[2];
+            $extension          = image_type_to_extension($type, /* include dot: */ false);
+            $ID                 = sha1_file($temporaryFilepath);
+            $dataStore          = new CBDataStore($ID);
+            $filename           = "original.{$extension}";
+            $permanentFilepath  = $dataStore->directory() . "/{$filename}";
+
+            self::updateRow($ID, $timestamp, $extension);
             $dataStore->makeDirectory();
-            $uploader->moveToFilename($filepath);
+            move_uploaded_file($temporaryFilepath, $permanentFilepath);
         } catch (Exception $exception) {
             Colby::query('ROLLBACK');
             throw $exception;
@@ -76,8 +126,8 @@ EOT;
 
         $response->imageFilename    = $filename;
         $response->imageURL         = $dataStore->URL() . "/{$filename}";
-        $response->imageSizeX       = $uploader->sizeX();
-        $response->imageSizeY       = $uploader->sizeY();
+        $response->imageSizeX       = $size[0];
+        $response->imageSizeY       = $size[1];
         $response->wasSuccessful    = true;
 
         $response->send();
