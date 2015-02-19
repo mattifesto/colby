@@ -109,14 +109,12 @@ CBImageViewEditor.alternativeTextEditorElement = function() {
  *
  * @return function
  */
-CBImageViewEditor.functionToToggleBackground = function(element) {
-    return function() {
-        if ("dark-background" == element.className) {
-            element.className = "";
-        } else {
-            element.className = "dark-background";
-        }
-    };
+CBImageViewEditor.toggleBackground = function(element) {
+    if ("dark-background" == element.className) {
+        element.className = "";
+    } else {
+        element.className = "dark-background";
+    }
 };
 
 /**
@@ -126,10 +124,8 @@ CBImageViewEditor.functionToToggleBackground = function(element) {
  *
  * @return function
  */
-CBImageViewEditor.functionToUpdateDimensions = function(imageElement, dimensionsElement) {
-    return function() {
-        dimensionsElement.textContent = imageElement.naturalWidth + " × " + imageElement.naturalHeight;
-    };
+CBImageViewEditor.updateDimensions = function(imageElement, dimensionsElement) {
+    dimensionsElement.textContent = imageElement.naturalWidth + " × " + imageElement.naturalHeight;
 };
 
 /**
@@ -232,9 +228,9 @@ CBImageViewEditor.updateThumbnail = function() {
         var dimensions  = document.createElement("div");
 
         thumbnail.addEventListener("click",
-            CBImageViewEditor.functionToToggleBackground(thumbnail));
+            CBImageViewEditor.toggleBackground.bind(undefined, thumbnail));
         thumbnail.addEventListener("load",
-            CBImageViewEditor.functionToUpdateDimensions(thumbnail, dimensions));
+            CBImageViewEditor.updateDimensions.bind(undefined, thumbnail, dimensions));
 
         this._imageEditorElement.insertBefore(dimensions, this._imageEditorElement.firstChild);
         this._imageEditorElement.insertBefore(thumbnail, this._imageEditorElement.firstChild);
