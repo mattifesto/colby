@@ -179,7 +179,7 @@ CBImageViewEditor.uploadImage = function() {
 
     var xhr     = new XMLHttpRequest();
     xhr.onload  = this.uploadImageDidComplete.bind(this);
-    xhr.open("POST", "/api/?className=CBAPIUploadImage");
+    xhr.open("POST", "/api/?class=CBImages&function=uploadAndReduceForAjax");
     xhr.send(formData);
 
     this._xhr = xhr;

@@ -93,18 +93,106 @@ EOT;
     }
 
     /**
+     * This function was initially created to replace a class named
+     * CBAPIUploadImage. The API is not ideal, but it matches what that class
+     * had. Eventually this function should be replace with a better API.
+     *
+     * @return void
+     */
+    public static function uploadAndReduceForAjax() {
+        $response = new CBAjaxResponse();
+
+        $originalInfo           = self::uploadImageWithName('image');
+        $originalFilename       = "original.{$originalInfo->extension}";
+        $dataStore              = new CBDataStore($originalInfo->ID);
+        $projection             = CBProjection::withSize($originalInfo->size[0], $originalInfo->size[1]);
+        $destinationFilename    = '';
+
+        if (isset($_POST['reduceToWidth'])) {
+            $width                  = (int)$_POST['reduceToWidth'];
+            $destinationFilename   .= "rw{$width}";
+            $projection             = CBProjection::reduceWidth($projection, $width);
+        }
+
+        if (isset($_POST['reduceToHeight'])) {
+            $height                 = (int)$_POST['reduceToHeight'];
+            $destinationFilename   .= "rh{$height}";
+            $projection             = CBProjection::reduceHeight($projection, $height);
+        }
+
+        if (isset($_POST['cropToWidth'])) {
+            $width                  = (int)$_POST['cropToWidth'];
+            $destinationFilename   .= "cwc{$width}";
+            $projection             = CBProjection::cropWidthFromCenter($projection, $width);
+        }
+
+        if (isset($_POST['cropToHeight'])) {
+            $height                 = (int)$_POST['cropToHeight'];
+            $destinationFilename   .= "chc{$height}";
+            $projection             = CBProjection::cropHeightFromCenter($projection, $height);
+        }
+
+        if ($destinationFilename) {
+            $destinationFilename = "{$destinationFilename}.{$originalInfo->extension}";
+        } else {
+            throw new RuntimeException('No image reduction parameters specified.');
+        }
+
+        $originalFilepath       = $dataStore->directory() . "/{$originalFilename}";
+        $destinationFilepath    = $dataStore->directory() . "/{$destinationFilename}";
+
+        self::reduceImageFile($originalFilepath, $destinationFilepath, $projection);
+
+        $size                       = getimagesize($destinationFilepath);
+        $response->filename         = $destinationFilename;
+        $response->URL              = $dataStore->URL() . "/{$destinationFilename}";
+        $response->URLForHTML       = ColbyConvert::textToHTML($response->URL);
+        $response->actualWidth      = $size[0];
+        $response->actualHeight     = $size[1];
+        $response->wasSuccessful    = true;
+
+        $response->send();
+    }
+
+    /**
+     * @return void
+     */
+    public static function uploadAndReduceForAjaxPermissions() {
+        $permissions        = new stdClass();
+        $permissions->group = 'Administrators';
+
+        return $permissions;
+    }
+
+    /**
      * @return void
      */
     public static function uploadImageForAjax() {
         $response = new CBAjaxResponse();
 
-        ColbyImageUploader::verifyUploadedFile('image');
+        $info       = self::uploadImageWithName('image');
+        $dataStore  = new CBDataStore($info->ID);
+
+        $response->imageFilename    = "original.{$info->extension}";
+        $response->imageURL         = $dataStore->URL() . "/{$response->imageFilename}";
+        $response->imageSizeX       = $info->size[0];
+        $response->imageSizeY       = $info->size[1];
+        $response->wasSuccessful    = true;
+
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function uploadImageWithName($name) {
+        ColbyImageUploader::verifyUploadedFile($name);
 
         Colby::query('START TRANSACTION');
 
         try {
             $timestamp          = isset($_POST['timestamp']) ? $_POST['timestamp'] : time();
-            $temporaryFilepath  = $_FILES['image']['tmp_name'];
+            $temporaryFilepath  = $_FILES[$name]['tmp_name'];
 
             $size               = getimagesize($temporaryFilepath);
             $type               = $size[2];
@@ -124,12 +212,11 @@ EOT;
 
         Colby::query('COMMIT');
 
-        $response->imageFilename    = $filename;
-        $response->imageURL         = $dataStore->URL() . "/{$filename}";
-        $response->imageSizeX       = $size[0];
-        $response->imageSizeY       = $size[1];
-        $response->wasSuccessful    = true;
+        $info               = new stdClass();
+        $info->size         = $size;
+        $info->ID           = $ID;
+        $info->extension    = $extension;
 
-        $response->send();
+        return $info;
     }
 }

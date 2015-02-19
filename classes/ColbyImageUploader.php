@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * 2015.02.18
+ * This class is deprecated, use CBImages instead.
+ */
 class ColbyImageUploader
 {
     /**
