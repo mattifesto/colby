@@ -180,12 +180,12 @@ final class CBViewPage extends CBPage {
     /**
      * @return void
      */
-    private function addToPageLists() {
-        $pageRowID  = (int)$this->model->rowID;
-        $updated    = (int)$this->model->updated;
+    private static function addToPageLists($model) {
+        $pageRowID  = (int)$model->rowID;
+        $updated    = (int)$model->updated;
         $yearMonth  = gmdate('Ym', $updated);
 
-        foreach ($this->model->listClassNames as $className) {
+        foreach ($model->listClassNames as $className) {
             $classNameForSQL    = ColbyConvert::textToSQL($className);
             $SQL                = <<<EOT
 
@@ -336,12 +336,12 @@ EOT;
      *
      * @return void
      */
-    private function removeFromEditablePageLists() {
+    private static function removeFromEditablePageLists($model) {
 
         global $CBPageEditorAvailablePageListClassNames;
 
         $listClassNames         = array_merge($CBPageEditorAvailablePageListClassNames,
-                                              $this->model->listClassNames,
+                                              $model->listClassNames,
                                               array('CBRecentlyEditedPages'));
 
         $listClassNames         = array_unique($listClassNames);
@@ -355,7 +355,7 @@ EOT;
         }
 
         $listClassNamesForSQL   = implode(',', $listClassNamesForSQL);
-        $pageRowID              = (int)$this->model->rowID;
+        $pageRowID              = (int)$model->rowID;
         $SQL                    = <<<EOT
 
             DELETE FROM
@@ -443,11 +443,11 @@ EOT;
 
         CBPages::updateRow($rowData);
 
-        $this->removeFromEditablePageLists();
+        self::removeFromEditablePageLists($this->model);
 
         if ($this->model->isPublished) {
 
-            $this->addToPageLists();
+            self::addToPageLists($this->model);
         }
     }
 
