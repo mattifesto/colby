@@ -33,29 +33,7 @@ class CBPageTemplate {
      * @return stdClass
      */
     public static function model() {
-
-        $model                          = new stdClass();
-        $model->created                 = null;
-        $model->dataStoreID             = null;
-        $model->description             = '';
-        $model->descriptionHTML         = '';
-        $model->groupID                 = null;
-        $model->isPublished             = false;
-        $model->listClassNames          = array();
-        $model->publicationTimeStamp    = null;
-        $model->publishedBy             = null;
-        $model->rowID                   = null;
-        $model->schema                  = 'CBPage';
-        $model->schemaVersion           = 3;
-        $model->sections                = array();
-        $model->thumbnailURL            = null;
-        $model->title                   = '';
-        $model->titleHTML               = '';
-        $model->updated                 = null;
-        $model->URI                     = null;
-        $model->URIIsStatic             = false;
-
-        return $model;
+        return CBViewPage::createDefaultModel();
     }
 
     /**

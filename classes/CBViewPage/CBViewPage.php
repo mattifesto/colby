@@ -31,16 +31,16 @@ final class CBViewPage extends CBPage {
     protected $subviews;
 
     /**
-     * 2014.10.22
-     *  The code in this function was first copied out of `CBPageTemplate`.
-     *  This is the correct home for the code and that class should eventually
-     *  either be replaced by or at the very least call this class to replace
-     *  its functions.
+     * 2015.02.20
+     * This function is being created as deprecated. The reason is that this
+     * class is moving to a paradigm where the default model object is just an
+     * empty stdClass. If a property doesn't exist, its value is considered to
+     * be null-ish. For now, however, the code still expects all of these
+     * properties to exist.
      *
-     * @return instance type
+     * @return stdClass
      */
-    public static function init() {
-
+    public static function createDefaultModel() {
         $model                          = new stdClass();
         $model->created                 = null;
         $model->dataStoreID             = null;
@@ -62,8 +62,15 @@ final class CBViewPage extends CBPage {
         $model->URI                     = null;
         $model->URIIsStatic             = false;
 
+        return $model;
+    }
+
+    /**
+     * @return instance type
+     */
+    public static function init() {
         $page                           = parent::init();
-        $page->model                    = $model;
+        $page->model                    = self::createDefaultModel();
         $page->model->dataStoreID       = $page->ID;
         $page->subviews                 = array();
 
