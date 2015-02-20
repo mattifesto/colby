@@ -60,19 +60,13 @@ include CBSystemDirectory . '/sections/admin-page-settings.php';
  * Export views available to the editor
  */
 
-global $CBPageEditorAvailableViewClassNames;
-
-if (!$CBPageEditorAvailableViewClassNames)
-{
-    $CBPageEditorAvailableViewClassNames = array();
-}
-
-foreach ($CBPageEditorAvailableViewClassNames as $className)
+foreach (CBViewPageViews::availableViewClassNames() as $className)
 {
     $className::includeEditorDependencies();
 }
 
-CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $CBPageEditorAvailableViewClassNames);
+CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames',
+                             CBViewPageViews::availableViewClassNames());
 
 /**
  * Export page lists
