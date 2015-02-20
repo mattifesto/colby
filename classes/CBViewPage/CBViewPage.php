@@ -31,6 +31,35 @@ final class CBViewPage extends CBPage {
     protected $subviews;
 
     /**
+     * @return stdClass
+     */
+    public static function compileSpecificationModelToRenderModel($model) {
+        return json_decode(json_encode($model));
+    }
+
+    /**
+     * @return stdClass
+     */
+    private static function compileSpecificationModelToSummaryViewModel($model) {
+        $summaryView                            = CBPageSummaryView::init();
+        $summaryViewModel                       = $summaryView->model();
+        $summaryViewModel->created              = $model->created;
+        $summaryViewModel->dataStoreID          = $model->dataStoreID;
+        $summaryViewModel->description          = $model->description;
+        $summaryViewModel->descriptionHTML      = $model->descriptionHTML;
+        $summaryViewModel->isPublished          = $model->isPublished;
+        $summaryViewModel->publicationTimeStamp = $model->publicationTimeStamp;
+        $summaryViewModel->publishedBy          = $model->publishedBy;
+        $summaryViewModel->thumbnailURL         = $model->thumbnailURL;
+        $summaryViewModel->title                = $model->title;
+        $summaryViewModel->titleHTML            = $model->titleHTML;
+        $summaryViewModel->updated              = $model->updated;
+        $summaryViewModel->URI                  = $model->URI;
+
+        return $summaryViewModel;
+    }
+
+    /**
      * 2015.02.20
      * This function is being created as deprecated. The reason is that this
      * class is moving to a paradigm where the default model object is just an
@@ -193,34 +222,6 @@ EOT;
 EOT;
 
         Colby::query($SQL);
-    }
-
-    /**
-     * This code was copied from `handle,admin,pages,api,save-model.php`. This
-     * is the correct home for the code but the two locations will need to be
-     * kept in sync until that file is updated to use this class.
-     *
-     * @return CBView
-     */
-    private function createSummaryView() {
-
-        $summaryView                            = CBPageSummaryView::init();
-        $summaryViewModel                       = $summaryView->model();
-
-        $summaryViewModel->created              = $this->model->created;
-        $summaryViewModel->dataStoreID          = $this->model->dataStoreID;
-        $summaryViewModel->description          = $this->model->description;
-        $summaryViewModel->descriptionHTML      = $this->model->descriptionHTML;
-        $summaryViewModel->isPublished          = $this->model->isPublished;
-        $summaryViewModel->publicationTimeStamp = $this->model->publicationTimeStamp;
-        $summaryViewModel->publishedBy          = $this->model->publishedBy;
-        $summaryViewModel->thumbnailURL         = $this->model->thumbnailURL;
-        $summaryViewModel->title                = $this->model->title;
-        $summaryViewModel->titleHTML            = $this->model->titleHTML;
-        $summaryViewModel->updated              = $this->model->updated;
-        $summaryViewModel->URI                  = $this->model->URI;
-
-        return $summaryView;
     }
 
     /**
@@ -416,11 +417,10 @@ EOT;
      */
     private function updateDatabase() {
 
-        $summaryView            = $this->createSummaryView();
-
+        $summaryViewModel       = self::compileSpecificationModelToSummaryViewModel($this->model);
         $rowData                = new stdClass();
         $rowData->className     = 'CBViewPage';
-        $rowData->keyValueData  = json_encode($summaryView->model());
+        $rowData->keyValueData  = json_encode($summaryViewModel);
         $rowData->rowID         = $this->model->rowID;
         $rowData->typeID        = null;
         $rowData->groupID       = $this->model->groupID;
