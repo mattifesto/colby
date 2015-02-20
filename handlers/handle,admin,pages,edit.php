@@ -82,29 +82,10 @@ CBHTMLOutput::exportVariable('CBPageEditorAvailablePageListClassNames', $CBPageE
 
 global $CBPageEditorAvailablePageTemplateClassNames;
 
-if ($CBPageEditorAvailablePageTemplateClassNames) {
-
-    /**
-     * Use of the `CBPageEditorAvailablePageTemplateClassNames` global variable
-     * has been deprecated. Use a custom implementation of the
-     * `CBPageTemplateList` class instead.
-     */
-
-    foreach ($CBPageEditorAvailablePageTemplateClassNames as $className)
-    {
-        $descriptor             = new stdClass();
-        $descriptor->modelJSON  = json_encode($className::model());
-        $descriptor->title      = $className::title();
-
-        CBHTMLOutput::exportListItem('CBPageTemplateDescriptors', $className, $descriptor);
-    }
-
+if ($CBPageEditorAvailablePageTemplateClassNames || class_exists('CBPageTemplateList')) {
+    throw new Exception('This website needs to be updated to use the CBViewPageTemplates class.');
 } else {
-
-    $pageTemplateList = CBPageTemplateList::init();
-
-    foreach ($pageTemplateList as $pageTemplateClassName) {
-
+    foreach (CBViewPageTemplates::availableTemplateClassNames() as $pageTemplateClassName) {
         $descriptor             = new stdClass();
         $descriptor->modelJSON  = json_encode($pageTemplateClassName::model());
         $descriptor->title      = $pageTemplateClassName::title();
