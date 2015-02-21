@@ -25,6 +25,53 @@ final class CBViewPage {
     private static $renderModelContext;
 
     /**
+     * @return void
+     */
+    private static function addToPageLists($model) {
+        $pageRowID  = (int)$model->rowID;
+        $updated    = (int)$model->updated;
+        $yearMonth  = gmdate('Ym', $updated);
+
+        foreach ($model->listClassNames as $className) {
+            $classNameForSQL    = ColbyConvert::textToSQL($className);
+            $SQL                = <<<EOT
+
+                INSERT INTO
+                    `CBPageLists`
+                SET
+                    `pageRowID`     = {$pageRowID},
+                    `listClassName` = '{$classNameForSQL}',
+                    `sort1`         = {$yearMonth},
+                    `sort2`         = {$updated}
+
+EOT;
+
+            Colby::query($SQL);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public static function addToRecentlyEditedPagesList($model) {
+        $pageRowID  = (int)$model->rowID;
+        $updated    = (int)$model->updated;
+        $SQL        = <<<EOT
+
+            INSERT INTO
+                `CBPageLists`
+            SET
+                `pageRowID`     = {$pageRowID},
+                `listClassName` = 'CBRecentlyEditedPages',
+                `sort1`         = {$updated},
+                `sort2`         = NULL
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
      * @return stdClass
      */
     public static function compileSpecificationModelToRenderModel($model) {
@@ -89,50 +136,87 @@ final class CBViewPage {
     }
 
     /**
+     * This function removes the post from all editable page lists because
+     * editable page lists are specified in `$specificationModel->listClassNames`.
+     * This page may be in other page lists but those are managed by other
+     * processes.
+     *
      * @return void
      */
-    private static function addToPageLists($model) {
-        $pageRowID  = (int)$model->rowID;
-        $updated    = (int)$model->updated;
-        $yearMonth  = gmdate('Ym', $updated);
+    private static function removeFromEditablePageLists($model) {
 
-        foreach ($model->listClassNames as $className) {
-            $classNameForSQL    = ColbyConvert::textToSQL($className);
-            $SQL                = <<<EOT
+        global $CBPageEditorAvailablePageListClassNames;
 
-                INSERT INTO
-                    `CBPageLists`
-                SET
-                    `pageRowID`     = {$pageRowID},
-                    `listClassName` = '{$classNameForSQL}',
-                    `sort1`         = {$yearMonth},
-                    `sort2`         = {$updated}
+        $listClassNames         = array_merge($CBPageEditorAvailablePageListClassNames,
+                                              $model->listClassNames,
+                                              array('CBRecentlyEditedPages'));
+
+        $listClassNames         = array_unique($listClassNames);
+        $listClassNamesForSQL   = array();
+
+        foreach ($listClassNames as $listClassName) {
+
+            $classNameForSQL        = ColbyConvert::textToSQL($listClassName);
+            $classNameForSQL        = "'{$classNameForSQL}'";
+            $listClassNamesForSQL[] = $classNameForSQL;
+        }
+
+        $listClassNamesForSQL   = implode(',', $listClassNamesForSQL);
+        $pageRowID              = (int)$model->rowID;
+        $SQL                    = <<<EOT
+
+            DELETE FROM
+                `CBPageLists`
+            WHERE
+                `pageRowID` = {$pageRowID} AND
+                `listClassName` IN ({$listClassNamesForSQL})
 
 EOT;
 
-            Colby::query($SQL);
-        }
+        Colby::query($SQL);
     }
 
     /**
      * @return void
      */
-    public static function addToRecentlyEditedPagesList($model) {
-        $pageRowID  = (int)$model->rowID;
-        $updated    = (int)$model->updated;
-        $SQL        = <<<EOT
+    public static function renderAsHTML($renderModel) {
+        $renderModel = self::upgradeRenderModel($renderModel);
 
-            INSERT INTO
-                `CBPageLists`
-            SET
-                `pageRowID`     = {$pageRowID},
-                `listClassName` = 'CBRecentlyEditedPages',
-                `sort1`         = {$updated},
-                `sort2`         = NULL
+        self::$renderModelContext = $renderModel;
 
-EOT;
+        CBHTMLOutput::begin();
 
-        Colby::query($SQL);
+        include Colby::findFile('sections/public-page-settings.php');
+
+        if (ColbyRequest::isForFrontPage()) {
+            CBHTMLOutput::setTitleHTML(CBSiteNameHTML);
+        } else {
+            CBHTMLOutput::setTitleHTML($renderModel->titleHTML);
+        }
+
+        CBHTMLOutput::setDescriptionHTML($renderModel->descriptionHTML);
+
+        foreach ($renderModel->sections as $viewRenderModel) {
+            CBView::renderAsHTMLForRenderModel($viewRenderModel);
+        }
+
+        CBHTMLOutput::render();
+
+        self::$renderModelContext = null;
+    }
+
+    /**
+     * @return void
+     */
+    public static function renderAsHTMLForID($ID) {
+        $dataStore              = new CBDataStore($ID);
+        $renderModelFilepath    = $dataStore->directory() . '/render-model.json';
+
+        if (!is_file($renderModelFilepath)) {
+            $renderModelFilepath = $dataStore->directory() . '/model.json';
+        }
+
+        self::renderAsHTML(json_decode(file_get_contents($renderModelFilepath)));
     }
 
     /**
@@ -229,90 +313,6 @@ EOT;
         }
 
         return implode(' ', $searchText);
-    }
-
-    /**
-     * This function removes the post from all editable page lists because
-     * editable page lists are specified in `$specificationModel->listClassNames`.
-     * This page may be in other page lists but those are managed by other
-     * processes.
-     *
-     * @return void
-     */
-    private static function removeFromEditablePageLists($model) {
-
-        global $CBPageEditorAvailablePageListClassNames;
-
-        $listClassNames         = array_merge($CBPageEditorAvailablePageListClassNames,
-                                              $model->listClassNames,
-                                              array('CBRecentlyEditedPages'));
-
-        $listClassNames         = array_unique($listClassNames);
-        $listClassNamesForSQL   = array();
-
-        foreach ($listClassNames as $listClassName) {
-
-            $classNameForSQL        = ColbyConvert::textToSQL($listClassName);
-            $classNameForSQL        = "'{$classNameForSQL}'";
-            $listClassNamesForSQL[] = $classNameForSQL;
-        }
-
-        $listClassNamesForSQL   = implode(',', $listClassNamesForSQL);
-        $pageRowID              = (int)$model->rowID;
-        $SQL                    = <<<EOT
-
-            DELETE FROM
-                `CBPageLists`
-            WHERE
-                `pageRowID` = {$pageRowID} AND
-                `listClassName` IN ({$listClassNamesForSQL})
-
-EOT;
-
-        Colby::query($SQL);
-    }
-
-    /**
-     * @return void
-     */
-    public static function renderAsHTML($renderModel) {
-        $renderModel = self::upgradeRenderModel($renderModel);
-
-        self::$renderModelContext = $renderModel;
-
-        CBHTMLOutput::begin();
-
-        include Colby::findFile('sections/public-page-settings.php');
-
-        if (ColbyRequest::isForFrontPage()) {
-            CBHTMLOutput::setTitleHTML(CBSiteNameHTML);
-        } else {
-            CBHTMLOutput::setTitleHTML($renderModel->titleHTML);
-        }
-
-        CBHTMLOutput::setDescriptionHTML($renderModel->descriptionHTML);
-
-        foreach ($renderModel->sections as $viewRenderModel) {
-            CBView::renderAsHTMLForRenderModel($viewRenderModel);
-        }
-
-        CBHTMLOutput::render();
-
-        self::$renderModelContext = null;
-    }
-
-    /**
-     * @return void
-     */
-    public static function renderAsHTMLForID($ID) {
-        $dataStore              = new CBDataStore($ID);
-        $renderModelFilepath    = $dataStore->directory() . '/render-model.json';
-
-        if (!is_file($renderModelFilepath)) {
-            $renderModelFilepath = $dataStore->directory() . '/model.json';
-        }
-
-        self::renderAsHTML(json_decode(file_get_contents($renderModelFilepath)));
     }
 
     /**
