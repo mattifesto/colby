@@ -1,9 +1,6 @@
 <?php
 
 /**
- * This page class represents an instance of an editable page containing
- * a list of views. This is the page type created by the Colby page editor.
- *
  * 2014.09.25 Version 2
  *
  *  Added the `created` and `updated` properties. When pages were first
@@ -23,13 +20,9 @@
  *  Added the `listClassNames` property which holds an array of list class
  *  names representing the lists which include this page.
  */
-final class CBViewPage extends CBPage {
+final class CBViewPage {
 
     private static $renderModelContext;
-    private static $pageContext;
-
-    protected $model;
-    protected $subviews;
 
     /**
      * @return stdClass
@@ -96,66 +89,6 @@ final class CBViewPage extends CBPage {
     }
 
     /**
-     * @return instance type
-     */
-    public static function init() {
-        $page                           = parent::init();
-        $page->model                    = self::createDefaultModel();
-        $page->model->dataStoreID       = $page->ID;
-        $page->subviews                 = array();
-
-        return $page;
-    }
-
-    /**
-     * @return instance type | null
-     */
-    public static function initForImportWithID($ID)
-    {
-        $page = self::initWithID($ID);
-
-        if ($page) {
-
-            /**
-             * This page is being imported from another site and therefore the
-             * row ID won't refer to the correct row. Setting the row ID to null
-             * will cause a row to be generated for the page in this site's
-             * database.
-             */
-
-            $page->model->rowID = null;
-        }
-
-        return $page;
-    }
-
-    /**
-     * @return instance type | null
-     */
-    public static function initWithID($ID)
-    {
-        $dataStore      = new CBDataStore($ID);
-        $modelFilepath  = $dataStore->directory() . '/model.json';
-
-        if (!file_exists($modelFilepath)) {
-
-            return null;
-        }
-
-        $modelJSON  = file_get_contents($dataStore->directory() . '/model.json');
-        $model      = json_decode($modelJSON);
-
-        return self::initWithModel($model);
-    }
-
-    /**
-     * @return instance type
-     */
-    public static function initWithModel($model) {
-        throw new Exception('This method is deprecated for this class.');
-    }
-
-    /**
      * @return void
      */
     private static function addToPageLists($model) {
@@ -205,21 +138,6 @@ EOT;
     /**
      * @return stdClass
      */
-    public function model() {
-
-        return $this->model;
-    }
-
-    /**
-     * @return instance type
-     */
-    public static function pageContext() {
-        return self::$pageContext;
-    }
-
-    /**
-     * @return stdClass
-     */
     public static function renderModelContext() {
         return self::$renderModelContext;
     }
@@ -235,33 +153,35 @@ EOT;
      *
      * @return void
      */
-    public function save() {
+    public static function save($specificationModel) {
 
         try {
 
-            $dataStoreID    = $this->model->dataStoreID;
+            $dataStoreID    = $specificationModel->dataStoreID;
             $mysqli         = Colby::mysqli();
 
             Colby::query('START TRANSACTION');
 
-            if (!$this->model->rowID) {
+            if (!$specificationModel->rowID) {
 
                 CBPages::deleteRowWithDataStoreID($dataStoreID);
                 CBPages::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
 
-                $rowData            = CBPages::insertRow($dataStoreID);
-                $this->model->rowID = $rowData->rowID;
+                $rowData                    = CBPages::insertRow($dataStoreID);
+                $specificationModel->rowID  = $rowData->rowID;
             }
 
-            $this->updateDatabase();
+            self::updateDatabase($specificationModel);
 
             $dataStore  = new CBDataStore($dataStoreID);
 
-            $specificationModelJSON = json_encode($this->model);
+            $specificationModelJSON = json_encode($specificationModel);
             file_put_contents($dataStore->directory() . '/model.json', $specificationModelJSON, LOCK_EX);
 
-            $renderModelJSON = json_encode(self::compileSpecificationModelToRenderModel($this->model));
+            $renderModelJSON = json_encode(self::compileSpecificationModelToRenderModel($specificationModel));
             file_put_contents($dataStore->directory() . '/render-model.json', $renderModelJSON, LOCK_EX);
+
+            self::addToRecentlyEditedPagesList($specificationModel);
 
         } catch (Exception $exception) {
 
@@ -277,14 +197,10 @@ EOT;
      * @return void
      */
     public static function saveEditedPageForAjax() {
-        $response       = new CBAjaxResponse();
-        $modelJSON      = $_POST['model-json'];
-        $model          = json_decode($modelJSON);
-        $page           = CBViewPage::initWithModel($model);
+        $response           = new CBAjaxResponse();
+        $specificationModel = json_decode($_POST['model-json']);
 
-        $page->save();
-
-        self::addToRecentlyEditedPagesList($model);
+        self::save($specificationModel);
 
         $response->wasSuccessful = true;
         $response->send();
@@ -303,13 +219,13 @@ EOT;
     /**
      * @return string
      */
-    private function searchText() {
+    private static function searchText($specificationModel) {
         $searchText     = array();
-        $searchText[]   = $this->model->title;
-        $searchText[]   = $this->model->description;
+        $searchText[]   = $specificationModel->title;
+        $searchText[]   = $specificationModel->description;
 
-        foreach ($this->subviews as $subview) {
-            $searchText[] = $subview->searchText();
+        foreach ($specificationModel->sections as $viewSpecificationModel) {
+            $searchText[] = CBView::searchTextForSpecificationModel($viewSpecificationModel);
         }
 
         return implode(' ', $searchText);
@@ -317,7 +233,7 @@ EOT;
 
     /**
      * This function removes the post from all editable page lists because
-     * editable page lists are specified in `$this->model->listClassNames`.
+     * editable page lists are specified in `$specificationModel->listClassNames`.
      * This page may be in other page lists but those are managed by other
      * processes.
      *
@@ -400,13 +316,6 @@ EOT;
     }
 
     /**
-     * @return void
-     */
-    public function renderHTML() {
-        throw new Exception('This method is deprecated, use `renderAsHTML`.');
-    }
-
-    /**
      * @return stdClass
      */
     public static function specificationModelWithID($ID) {
@@ -419,23 +328,23 @@ EOT;
     /**
      * @return void
      */
-    private function updateDatabase() {
+    private static function updateDatabase($specificationModel) {
 
-        $summaryViewModel       = self::compileSpecificationModelToSummaryViewModel($this->model);
+        $summaryViewModel       = self::compileSpecificationModelToSummaryViewModel($specificationModel);
         $rowData                = new stdClass();
         $rowData->className     = 'CBViewPage';
         $rowData->keyValueData  = json_encode($summaryViewModel);
-        $rowData->rowID         = $this->model->rowID;
+        $rowData->rowID         = $specificationModel->rowID;
         $rowData->typeID        = null;
-        $rowData->groupID       = $this->model->groupID;
-        $rowData->titleHTML     = $this->model->titleHTML;
-        $rowData->searchText    = $this->searchText();
-        $rowData->subtitleHTML  = $this->model->descriptionHTML;
+        $rowData->groupID       = $specificationModel->groupID;
+        $rowData->titleHTML     = $specificationModel->titleHTML;
+        $rowData->searchText    = self::searchText($specificationModel);
+        $rowData->subtitleHTML  = $specificationModel->descriptionHTML;
 
-        if ($this->model->isPublished)
+        if ($specificationModel->isPublished)
         {
-            $rowData->published             = $this->model->publicationTimeStamp;
-            $rowData->publishedBy           = $this->model->publishedBy;
+            $rowData->published             = $specificationModel->publicationTimeStamp;
+            $rowData->publishedBy           = $specificationModel->publishedBy;
             $rowData->publishedYearMonth    = ColbyConvert::timestampToYearMonth($rowData->published);
         }
         else
@@ -447,11 +356,11 @@ EOT;
 
         CBPages::updateRow($rowData);
 
-        self::removeFromEditablePageLists($this->model);
+        self::removeFromEditablePageLists($specificationModel);
 
-        if ($this->model->isPublished) {
+        if ($specificationModel->isPublished) {
 
-            self::addToPageLists($this->model);
+            self::addToPageLists($specificationModel);
         }
     }
 

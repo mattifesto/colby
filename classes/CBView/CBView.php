@@ -137,4 +137,23 @@ class CBView {
 
         return '';
     }
+
+    /**
+     * 2015.02.20
+     * `searchTextNew` is a temporary function name until we can move
+     * `searchText` to be static for all view classes.
+     *
+     * @return string
+     */
+    public static function searchTextForSpecificationModel($specificationModel) {
+        $className = $specificationModel->className;
+
+        if (is_callable("{$className}::searchTextNew")) {
+            return $className::searchTextNew($specificationModel);
+        } else {
+            /* Deprecated */
+            $view = self::createViewWithModel($specificationModel);
+            return $view->searchText();
+        }
+    }
 }
