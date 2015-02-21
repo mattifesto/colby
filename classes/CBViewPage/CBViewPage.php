@@ -25,6 +25,7 @@
  */
 final class CBViewPage extends CBPage {
 
+    private static $renderModelContext;
     private static $pageContext;
 
     protected $model;
@@ -151,30 +152,7 @@ final class CBViewPage extends CBPage {
      * @return instance type
      */
     public static function initWithModel($model) {
-        $page               = parent::init();
-        $page->model        = $model;
-        $page->ID           = $page->model->dataStoreID;
-        $page->subviews     = array();
-
-        $page->upgradeModel();
-
-        self::$pageContext = $page;
-
-        foreach ($page->model->sections as $subviewModel) {
-
-            /**
-             * Instantiating the each view will upgrade its model in place
-             * adding and removing properties as appropriate. Because of this
-             * in place upgrade, the reference to the model object will not
-             * need to be updated in the page model.
-             */
-
-            $page->subviews[] = CBView::createViewWithModel($subviewModel);
-        }
-
-        self::$pageContext = null;
-
-        return $page;
+        throw new Exception('This method is deprecated for this class.');
     }
 
     /**
@@ -236,8 +214,14 @@ EOT;
      * @return instance type
      */
     public static function pageContext() {
-
         return self::$pageContext;
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function renderModelContext() {
+        return self::$renderModelContext;
     }
 
     /**
@@ -271,10 +255,13 @@ EOT;
 
             $this->updateDatabase();
 
-            $modelJSON  = json_encode($this->model);
             $dataStore  = new CBDataStore($dataStoreID);
 
-            file_put_contents($dataStore->directory() . '/model.json', $modelJSON, LOCK_EX);
+            $specificationModelJSON = json_encode($this->model);
+            file_put_contents($dataStore->directory() . '/model.json', $specificationModelJSON, LOCK_EX);
+
+            $renderModelJSON = json_encode(self::compileSpecificationModelToRenderModel($this->model));
+            file_put_contents($dataStore->directory() . '/render-model.json', $renderModelJSON, LOCK_EX);
 
         } catch (Exception $exception) {
 
@@ -372,44 +359,61 @@ EOT;
     /**
      * @return void
      */
-    public function renderHTML() {
+    public static function renderAsHTML($renderModel) {
+        $renderModel = self::upgradeRenderModel($renderModel);
 
-        self::$pageContext = $this;
-
-        /**
-         * 2014.12.31
-         * `CBHackSectionedPagesPageModel` was a temporary mothod of providing
-         * the page context while rendering. Its users should be updaded to
-         * use the `pageContext` method on this class and it should be
-         * removed.
-         */
-
-        global $CBHackSectionedPagesPageModel;
-        $CBHackSectionedPagesPageModel = $this->model;
+        self::$renderModelContext = $renderModel;
 
         CBHTMLOutput::begin();
 
         include Colby::findFile('sections/public-page-settings.php');
 
-        if (ColbyRequest::isForFrontPage())
-        {
+        if (ColbyRequest::isForFrontPage()) {
             CBHTMLOutput::setTitleHTML(CBSiteNameHTML);
-        }
-        else
-        {
-            CBHTMLOutput::setTitleHTML($this->model->titleHTML);
+        } else {
+            CBHTMLOutput::setTitleHTML($renderModel->titleHTML);
         }
 
-        CBHTMLOutput::setDescriptionHTML($this->model->descriptionHTML);
+        CBHTMLOutput::setDescriptionHTML($renderModel->descriptionHTML);
 
-        foreach ($this->subviews as $subview) {
-
-            $subview->renderHTML();
+        foreach ($renderModel->sections as $viewRenderModel) {
+            CBView::renderAsHTMLForRenderModel($viewRenderModel);
         }
 
         CBHTMLOutput::render();
 
-        self::$pageContext = null;
+        self::$renderModelContext = null;
+    }
+
+    /**
+     * @return void
+     */
+    public static function renderAsHTMLForID($ID) {
+        $dataStore              = new CBDataStore($ID);
+        $renderModelFilepath    = $dataStore->directory() . '/render-model.json';
+
+        if (!is_file($renderModelFilepath)) {
+            $renderModelFilepath = $dataStore->directory() . '/model.json';
+        }
+
+        self::renderAsHTML(json_decode(file_get_contents($renderModelFilepath)));
+    }
+
+    /**
+     * @return void
+     */
+    public function renderHTML() {
+        throw new Exception('This method is deprecated, use `renderAsHTML`.');
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function specificationModelWithID($ID) {
+        $dataStore  = new CBDataStore($ID);
+        $filepath   = $dataStore->directory() . '/model.json';
+
+        return self::upgradeSpecificationModel(json_decode(file_get_contents($filepath)));
     }
 
     /**
@@ -454,9 +458,7 @@ EOT;
     /**
      * @return void
      */
-    private function upgradeModel() {
-
-        $model = $this->model;
+    private static function upgradeRenderModel($model) {
 
         /**
          * Version 2
@@ -482,5 +484,40 @@ EOT;
         }
 
         $model->schemaVersion = 3;
+
+        return $model;
+    }
+
+    /**
+     * @return void
+     */
+    private static function upgradeSpecificationModel($model) {
+
+        /**
+         * Version 2
+         */
+
+        if (!isset($model->updated)) {
+
+            $model->updated = time();
+        }
+
+        if (!isset($model->created)) {
+
+            $model->created = $model->updated;
+        }
+
+        /**
+         * Version 3
+         */
+
+        if (!isset($model->listClassNames)) {
+
+            $model->listClassNames = array();
+        }
+
+        $model->schemaVersion = 3;
+
+        return $model;
     }
 }

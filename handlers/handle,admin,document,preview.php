@@ -48,10 +48,17 @@ if (!$row->className && CBPageTypeID == $row->typeID) {
 }
 
 if ($row->className) {
-    $className  = $row->className;
-    $page       = $className::initWithID($dataStoreID);
-    $page->renderHTML();
+    $className = $row->className;
+
+    if (is_callable("{$className}::renderAsHTMLForID")) {
+        $className::renderAsHTMLForID($dataStoreID);
+    } else {
+        /* Deprecated */
+        $page = $className::initWithID($dataStoreID);
+        $page->renderHTML();
+    }
 } else {
+    /* Deprecated */
     $archive = ColbyArchive::open($_GET['archive-id']);
 
     ColbyRequest::$archive = $archive;

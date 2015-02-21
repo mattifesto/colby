@@ -149,10 +149,10 @@ EOT;
             $frontPageFilename  = $dataStore->directory() . '/front-page.json';
 
             if (file_exists($frontPageFilename)) {
-                $frontPage  = json_decode(file_get_contents($frontPageFilename));
-                $page       = CBViewPage::initWithID($frontPage->dataStoreID);
+                $frontPage = json_decode(file_get_contents($frontPageFilename));
 
-                $page->renderHTML();
+                CBViewPage::renderAsHTMLForID($frontPage->dataStoreID);
+
                 return;
             } else {
                 /**
@@ -243,12 +243,19 @@ EOT;
                     }
 
                     if ($row->className) {
-                        $className  = $row->className;
-                        $page       = $className::initWithID($row->dataStoreID);
+                        $className = $row->className;
 
-                        $page->renderHTML();
+                        if (is_callable("{$className}::renderAsHTMLForID")) {
+                            $className::renderAsHTMLForID($row->dataStoreID);
+                        } else {
+                            /* Deprecated */
+                            $page = $className::initWithID($row->dataStoreID);
+                            $page->renderHTML();
+                        }
+
                         return;
                     } else {
+                        /* Deprecated */
                         self::$archive = ColbyArchive::open($row->dataStoreID);
 
                         if (self::$archive)
