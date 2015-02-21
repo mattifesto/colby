@@ -74,8 +74,66 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function compileSpecificationModelToRenderModel($model) {
-        return json_decode(json_encode($model));
+    public static function compileSpecificationModelToRenderModel($specificationModel) {
+
+        $s = $specificationModel;
+
+        /**
+         * Required values
+         */
+
+        $r              = new stdClass();
+        $r->dataStoreID = $s->dataStoreID;
+        $r->created     = $s->created;
+        $r->updated     = $s->updated;
+
+        /**
+         * Optional values
+         */
+
+        $r->description             = isset($s->description) ? $s->description : '';
+        $r->isPublished             = isset($s->isPublished) ? $s->isPublished : false;
+        $r->listClassNames          = isset($s->listClassNames) ? $s->listClassNames : array();
+        $r->publicationTimeStamp    = isset($s->publicationTimeStamp) ? $s->publicationTimeStamp : null;
+        $r->publishedBy             = isset($s->publishedBy) ? $s->publishedBy : null;
+        $r->rowID                   = isset($s->rowID) ? $s->rowID : null; /* Deprecated */
+        $r->schemaVersion           = isset($s->schemaVersion) ? $s->schemaVersion : null; /* Deprecated? */
+        $r->thumbnailURL            = isset($s->thumbnailURL) ? $s->thumbnailURL : null;
+        $r->title                   = isset($s->title) ? $s->title : '';
+
+        /**
+         * Views
+         */
+
+        if (isset($s->sections)) {
+            $r->sections = array_map(function($vs) {
+                return CBView::compileSpecificationModelToRenderModel($vs);
+            }, $s->sections);
+        } else {
+            $r->sections = array();
+        }
+
+        /**
+         * Computed values
+         */
+
+        $r->descriptionHTML         = ColbyConvert::textToHTML($r->description);
+        $r->thumbnailURLAsHTML      = ColbyConvert::textToHTML($r->thumbnailURL);
+        $r->titleHTML               = ColbyConvert::textToHTML($r->title);
+
+        /**
+         * 2015.02.20 TODO
+         * URI should be updated in the ColbyPages table during this process.
+         * I'm not sure if this is the place to do it, but the render model URI
+         * should be the actual confirmed URI while the specification model URI
+         * is the desired URI which may not become the actual URI if it is
+         * already in use.
+         */
+
+        $r->URI                     = $s->URI;
+        $r->URIAsHTML               = ColbyConvert::textToHTML($r->URI);
+
+        return $r;
     }
 
     /**
@@ -255,6 +313,13 @@ EOT;
                 $specificationModel->rowID  = $rowData->rowID;
             }
 
+            /**
+             * 2015.02.20 TODO
+             * We either need to pass the render model or do a lot more work in
+             * updateDatabase because the specification model is no longer
+             * guaranteed to have the values updateDatabase expects.
+             */
+
             self::updateDatabase($specificationModel);
 
             $dataStore  = new CBDataStore($dataStoreID);
@@ -322,7 +387,7 @@ EOT;
         $dataStore  = new CBDataStore($ID);
         $filepath   = $dataStore->directory() . '/model.json';
 
-        return self::upgradeSpecificationModel(json_decode(file_get_contents($filepath)));
+        return json_decode(file_get_contents($filepath));
     }
 
     /**
@@ -368,39 +433,6 @@ EOT;
      * @return void
      */
     private static function upgradeRenderModel($model) {
-
-        /**
-         * Version 2
-         */
-
-        if (!isset($model->updated)) {
-
-            $model->updated = time();
-        }
-
-        if (!isset($model->created)) {
-
-            $model->created = $model->updated;
-        }
-
-        /**
-         * Version 3
-         */
-
-        if (!isset($model->listClassNames)) {
-
-            $model->listClassNames = array();
-        }
-
-        $model->schemaVersion = 3;
-
-        return $model;
-    }
-
-    /**
-     * @return void
-     */
-    private static function upgradeSpecificationModel($model) {
 
         /**
          * Version 2

@@ -10,6 +10,13 @@ class CBView {
     private function __construct() { }
 
     /**
+     * @return stdClass
+     */
+    public static function compileSpecificationModelToRenderModel($specificationModel) {
+        return json_decode(json_encode($specificationModel));
+    }
+
+    /**
      * This method is called to create a new view. Override this method to add
      * custom properties to the model and to do additional initialization.
      *
