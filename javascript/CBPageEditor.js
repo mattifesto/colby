@@ -211,71 +211,12 @@ CBPageEditor.registerSectionEditor = function(sectionTypeID, sectionEditor)
     CBPageEditor.sectionEditors[sectionTypeID] = sectionEditor;
 };
 
-
-/**
- * @return void
- */
-CBPageEditor.requestCreatePageRow = function()
-{
-    if (this.pageRowWasRequested)
-    {
-        return;
-    }
-
-    this.pageRowWasRequested = true;
-
-    /**
-     * Don't try to save the model until our request is complete.
-     */
-
-    this.saveModelTimer.pause();
-
-    var formData = new FormData();
-    formData.append("data-store-id", CBPageEditor.model.dataStoreID);
-
-    var xhr     = new XMLHttpRequest();
-    xhr.onload  = this.requestCreatePageRowDidComplete.bind(this, xhr);
-
-    xhr.open("POST", "/admin/pages/api/create/", true);
-    xhr.send(formData);
-};
-
-/**
- * @return void
- */
-CBPageEditor.requestCreatePageRowDidComplete = function(xhr)
-{
-    var response = Colby.responseFromXMLHttpRequest(xhr);
-
-    if (response.wasSuccessful)
-    {
-        CBPageEditor.model.rowID = response.rowID;
-
-        document.dispatchEvent(new Event("CBPageRowWasCreated"));
-
-        /**
-         * Now that the row has been created, model saves can resume.
-         */
-
-        this.saveModelTimer.resume();
-    }
-    else
-    {
-        Colby.displayResponse(response);
-    }
-};
-
 /**
  * @return void
  */
 CBPageEditor.requestSave = function()
 {
     this.saveModelTimer.restart();
-
-    if (!this.model.rowID && !this.pageRowWasRequested)
-    {
-        this.requestCreatePageRow();
-    }
 };
 
 /**
@@ -323,8 +264,14 @@ CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr)
 
     var response = Colby.responseFromXMLHttpRequest(xhr);
 
-    if (!response.wasSuccessful)
-    {
+    if (response.wasSuccessful) {
+        if ('iteration' in this.model) {
+            this.model.iteration++;
+        } else {
+            this.model.iteration    = 1;
+            this.model.rowID        = response.rowID;
+        }
+    } else {
         Colby.displayResponse(response);
     }
 };

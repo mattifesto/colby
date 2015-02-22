@@ -6,7 +6,12 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 }
 
 $response                   = new CBAjaxResponse();
-$response->modelJSON        = json_encode(CBViewPage::specificationModelWithID($_POST['data-store-id']));
+$specificationModel         = CBViewPage::specificationModelWithID($_POST['data-store-id']);
+
+if (false !== $specificationModel) {
+    $response->modelJSON    = json_encode($specificationModel);
+}
+
 $response->wasSuccessful    = true;
 
 $response->send();

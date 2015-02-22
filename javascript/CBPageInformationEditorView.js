@@ -12,7 +12,6 @@ function createPageInformationEditorElement(args) {
     args            = undefined;
 
     var pageInformationEditorElement;
-    var proposedURI;
 
     if (!pageModel.URI)
     {
@@ -91,26 +90,6 @@ function createPageInformationEditorElement(args) {
 
     publishedByContainer.appendChild(createPublishedByControlElement());
 
-
-    /**
-     * This timer requests the updated URI after 1000ms of inactivity.
-     */
-
-    var requestURITimer                 = Object.create(CBDelayTimer).init();
-    requestURITimer.callback            = requestURI;
-    requestURITimer.delayInMilliseconds = 1000;
-
-    /**
-     * If we don't have a row ID yet, we can't request a URI. Wait for the row
-     * ID to be assigend and then allow URI requests.
-     */
-
-    if (!pageModel.rowID)
-    {
-        requestURITimer.pause();
-
-        document.addEventListener("CBPageRowWasCreated", pageRowWasCreated, false);
-    }
 
     return pageInformationEditorElement;
 
@@ -292,70 +271,6 @@ function createPageInformationEditorElement(args) {
     }
 
     /**
-     * If there is no row ID in the model when this object is initialized then
-     * this the URI request timer will be paused and this function will be called
-     * when the row ID is created to resume the timer.
-     *
-     * @return {undefined}
-     */
-    function pageRowWasCreated() {
-        requestURITimer.resume();
-    }
-
-    /**
-     * This function is the callback for the `requestURITimer`.
-     *
-     * @return {undefined}
-     */
-    function requestURI() {
-        var formData = new FormData();
-
-        formData.append("rowID", pageModel.rowID);
-        formData.append("URI", proposedURI);
-
-        var xhr     = new XMLHttpRequest();
-        xhr.onload  = requestURIDidComplete.bind(undefined, xhr);
-        xhr.open("POST", "/admin/pages/api/request-uri/", true);
-        xhr.send(formData);
-
-        URIControl.textField.style.backgroundColor = "#fffff0";
-
-        /**
-         * Prevent another callback while the URI is being requested.
-         */
-        requestURITimer.pause();
-    }
-
-    /**
-     * @return {undefined}
-     */
-    function requestURIDidComplete(xhr) {
-
-        /**
-         * Because the request is complete further requests can be processed.
-         */
-        requestURITimer.resume();
-
-        var response = Colby.responseFromXMLHttpRequest(xhr);
-
-        if (!response.wasSuccessful)
-        {
-            Colby.displayResponse(response);
-        }
-        else if (response.URIWasGranted)
-        {
-            pageModel.URI                               = response.URI;
-            URIControl.textField.style.backgroundColor  = "white";
-
-            CBPageEditor.requestSave();
-        }
-        else
-        {
-            URIControl.textField.style.backgroundColor  = "#fff0f0";
-        }
-    }
-
-    /**
      * @param {CBTextControl} sender
      *
      * @return {undefined}
@@ -423,10 +338,8 @@ function createPageInformationEditorElement(args) {
      * @return {undefined}
      */
     function valuesForURIHaveChanged(sender) {
+        pageModel.URI           = sender.URI();
         pageModel.URIIsStatic   = sender.isStatic();
-        proposedURI             = sender.URI();
-
-        requestURITimer.restart();
 
         CBPageEditor.requestSave();
     }

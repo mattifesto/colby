@@ -66,16 +66,13 @@ class CBPages
      *  new row. This object can be populated with values for other columns
      *  and passed into the `updateRow` method.
      */
-    public static function insertRow($dataStoreID)
-    {
-        $sql = self::sqlToInsertRow($dataStoreID);
+    public static function insertRow($ID) {
+        Colby::query(self::sqlToInsertRow($ID));
 
-        Colby::query($sql);
-
-        $rowID = Colby::mysqli()->insert_id;
-
-        $rowData        = new stdClass();
-        $rowData->rowID = $rowID;
+        $rowData            = new stdClass();
+        $rowData->iteration = 1;
+        $rowData->rowID     = Colby::mysqli()->insert_id;
+        $rowData->URI       = null;
 
         return $rowData;
     }
@@ -169,6 +166,33 @@ EOT;
         Colby::query($sql);
 
         self::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function selectIterationAndURIForUpdate($ID) {
+        $IDAsSQL    = ColbyConvert::textToSQL($ID);
+        $IDAsSQL    = "UNHEX('{$IDAsSQL}')";
+        $SQL        = <<<EOT
+
+            SELECT
+                `iteration`,
+                `URI`
+            FROM
+                `ColbyPages`
+            WHERE
+                `archiveID` = {$IDAsSQL}
+            FOR UPDATE
+
+EOT;
+
+        $result = Colby::query($SQL);
+        $data   = $result->fetch_object();
+
+        $result->free();
+
+        return $data;
     }
 
     /**
@@ -301,27 +325,27 @@ EOT;
      * @return bool
      *
      *  Returns true if the row's URI was updated and false of the URI is
-     *  already used by another row.
+     *  already used by another page.
      */
-    public static function tryUpdateRowURI($rowID, $URI)
+    public static function updateURI($ID, $URI)
     {
-        $rowIDForSQL    = (int)$rowID;
-        $URIForSQL      = ColbyConvert::textToSQL($URI);
-
-        $sql = <<<EOT
+        $IDAsSQL    = ColbyConvert::textToSQL($ID);
+        $IDAsSQL    = "UNHEX('{$IDAsSQL}')";
+        $URIAsSQL   = ColbyConvert::textToSQL($URI);
+        $SQL        = <<<EOT
 
             UPDATE
                 `ColbyPages`
             SET
-                `URI` = '{$URIForSQL}'
+                `URI` = '{$URIAsSQL}'
             WHERE
-                `ID` = {$rowIDForSQL}
+                `archiveID` = {$IDAsSQL}
 
 EOT;
 
         try
         {
-            Colby::query($sql);
+            Colby::query($SQL);
         }
         catch (Exception $exception)
         {

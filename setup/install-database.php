@@ -169,6 +169,7 @@ $sqls[] = <<<EOT
         `className`             VARCHAR(80),
         `typeID`                BINARY(20),
         `groupID`               BINARY(20),
+        `iteration`             BIGINT UNSIGNED NOT NULL DEFAULT 1,
         `URI`                   VARCHAR(100),
         `titleHTML`             TEXT NOT NULL,
         `subtitleHTML`          TEXT NOT NULL,
@@ -311,6 +312,9 @@ CBImages::update();
 
 // 2015.02.11
 CBUpgradesForVersion119::run();
+
+// 2015.02.21
+CBUpgradesForVersion123::run();
 
 /**
  *

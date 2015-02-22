@@ -122,16 +122,10 @@ EOT;
         $r->titleHTML               = ColbyConvert::textToHTML($r->title);
 
         /**
-         * 2015.02.20 TODO
-         * URI should be updated in the ColbyPages table during this process.
-         * I'm not sure if this is the place to do it, but the render model URI
-         * should be the actual confirmed URI while the specification model URI
-         * is the desired URI which may not become the actual URI if it is
-         * already in use.
+         * The URI and URIAsHTML values will be set in the save function
+         * because the values are dependent on whether the URI is available or
+         * not.
          */
-
-        $r->URI                     = $s->URI;
-        $r->URIAsHTML               = ColbyConvert::textToHTML($r->URI);
 
         return $r;
     }
@@ -286,32 +280,41 @@ EOT;
 
     /**
      * This function updates the page data in the database and saves the page
-     * model file.
-     *
-     * If the page happens to be in the trash, it will be moved out of the
-     * trash. Saving pages in the trash is a contradictory behavior, so if a
-     * page is in the trash and belongs in the trash, don't save it unless you
-     * also want to move it out of the trash.
+     * model files.
      *
      * @return void
      */
     public static function save($specificationModel) {
 
+        $renderModel = self::compileSpecificationModelToRenderModel($specificationModel);
+
         try {
 
-            $dataStoreID    = $specificationModel->dataStoreID;
-            $mysqli         = Colby::mysqli();
+            $ID = $specificationModel->dataStoreID;
 
             Colby::query('START TRANSACTION');
 
-            if (!$specificationModel->rowID) {
+            if (isset($specificationModel->iteration)) {
+                $data = CBPages::selectIterationAndURIForUpdate($ID);
 
-                CBPages::deleteRowWithDataStoreID($dataStoreID);
-                CBPages::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
+                if ($data->iteration != $specificationModel->iteration) {
+                    throw new RuntimeException('This page has been updated by another user.');
+                }
 
-                $rowData                    = CBPages::insertRow($dataStoreID);
-                $specificationModel->rowID  = $rowData->rowID;
+                $specificationModel->iteration++;
+            } else {
+                $data                           = CBPages::insertRow($ID);
+                $specificationModel->iteration  = $data->iteration;
+                $specificationModel->rowID      = $data->rowID;
             }
+
+            if ($data->URI != $specificationModel->URI && CBPages::updateURI($ID, $specificationModel->URI)) {
+                $renderModel->URI = $specificationModel->URI;
+            } else {
+                $renderModel->URI = $data->URI;
+            }
+
+            $renderModel->URIAsHTML = ColbyConvert::textToHTML($renderModel->URI);
 
             /**
              * 2015.02.20 TODO
@@ -322,18 +325,14 @@ EOT;
 
             self::updateDatabase($specificationModel);
 
-            $dataStore  = new CBDataStore($dataStoreID);
-
+            $dataStore              = new CBDataStore($ID);
             $specificationModelJSON = json_encode($specificationModel);
+            $renderModelJSON        = json_encode($renderModel);
+
+            $dataStore->makeDirectory();
             file_put_contents($dataStore->directory() . '/model.json', $specificationModelJSON, LOCK_EX);
-
-            $renderModelJSON = json_encode(self::compileSpecificationModelToRenderModel($specificationModel));
             file_put_contents($dataStore->directory() . '/render-model.json', $renderModelJSON, LOCK_EX);
-
-            self::addToRecentlyEditedPagesList($specificationModel);
-
         } catch (Exception $exception) {
-
             Colby::query('ROLLBACK');
 
             throw $exception;
@@ -351,7 +350,8 @@ EOT;
 
         self::save($specificationModel);
 
-        $response->wasSuccessful = true;
+        $response->rowID            = $specificationModel->rowID;
+        $response->wasSuccessful    = true;
         $response->send();
     }
 
@@ -381,13 +381,23 @@ EOT;
     }
 
     /**
-     * @return stdClass
+     * @return stdClass | false
      */
     public static function specificationModelWithID($ID) {
         $dataStore  = new CBDataStore($ID);
         $filepath   = $dataStore->directory() . '/model.json';
 
-        return json_decode(file_get_contents($filepath));
+        if (is_file($filepath)) {
+            $model = json_decode(file_get_contents($filepath));
+        } else {
+            return false;
+        }
+
+        if (!isset($model->iteration)) {
+            $model->iteration = 1;
+        }
+
+        return $model;
     }
 
     /**
@@ -402,6 +412,7 @@ EOT;
         $rowData->rowID         = $specificationModel->rowID;
         $rowData->typeID        = null;
         $rowData->groupID       = $specificationModel->groupID;
+        $rowData->iteration     = $specificationModel->iteration;
         $rowData->titleHTML     = $specificationModel->titleHTML;
         $rowData->searchText    = self::searchText($specificationModel);
         $rowData->subtitleHTML  = $specificationModel->descriptionHTML;
@@ -427,6 +438,8 @@ EOT;
 
             self::addToPageLists($specificationModel);
         }
+
+        self::addToRecentlyEditedPagesList($specificationModel);
     }
 
     /**
