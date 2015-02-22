@@ -133,15 +133,16 @@ EOT;
         }
 
         if ($destinationFilename) {
-            $destinationFilename = "{$destinationFilename}.{$originalInfo->extension}";
+            $destinationFilename    = "{$destinationFilename}.{$originalInfo->extension}";
+            $originalFilepath       = $dataStore->directory() . "/{$originalFilename}";
+            $destinationFilepath    = $dataStore->directory() . "/{$destinationFilename}";
+
+            self::reduceImageFile($originalFilepath, $destinationFilepath, $projection);
         } else {
-            throw new RuntimeException('No image reduction parameters specified.');
+            $destinationFilename    = $originalFilename;
+            $originalFilepath       = $dataStore->directory() . "/{$originalFilename}";
+            $destinationFilepath    = $dataStore->directory() . "/{$destinationFilename}";
         }
-
-        $originalFilepath       = $dataStore->directory() . "/{$originalFilename}";
-        $destinationFilepath    = $dataStore->directory() . "/{$destinationFilename}";
-
-        self::reduceImageFile($originalFilepath, $destinationFilepath, $projection);
 
         $size                       = getimagesize($destinationFilepath);
         $response->filename         = $destinationFilename;
