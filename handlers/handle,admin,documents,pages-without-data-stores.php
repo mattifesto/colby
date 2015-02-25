@@ -1,7 +1,6 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
-{
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
@@ -20,8 +19,8 @@ $menu->setSelectedMenuItemName('develop');
 $menu->setSelectedSubmenuItemName('documents');
 $menu->renderHTML();
 
-$document   = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
-$archive    = $document->archive();
+$dataStore  = new CBDataStore(CBPagesAdministrationDataStoreID);
+$filepath   = $dataStore->directory() . '/data.json';
 
 ?>
 
@@ -30,23 +29,22 @@ $archive    = $document->archive();
 </nav>
 
 <main>
-    <h1>Stray Documents</h1>
+    <h1>Pages without Data Stores</h1>
 
     <?php
 
-    $strayDocumentArchiveIds = $archive->valueForKey('strayDocumentArchiveIds');
+    if (is_file($filepath)) {
+        $data = json_decode(file_get_contents($filepath));
 
-    if ($strayDocumentArchiveIds && $strayDocumentArchiveIds->count() > 0)
-    {
         ?>
 
         <section>
 
             <?php
 
-            foreach ($strayDocumentArchiveIds as $strayDocumentArchiveId)
+            foreach ($data->pagesWithoutDataStores as $ID)
             {
-                echo viewLinkForArchiveId($strayDocumentArchiveId), ' ';
+                echo viewLinkForArchiveId($ID), ' ';
             }
 
             ?>

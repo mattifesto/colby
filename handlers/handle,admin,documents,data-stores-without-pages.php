@@ -1,7 +1,6 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
-{
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
@@ -28,7 +27,7 @@ $filepath   = $dataStore->directory() . '/data.json';
 </nav>
 
 <main>
-    <h1>Stray Archives</h1>
+    <h1>Data Stores without Pages</h1>
 
     <?php
 
