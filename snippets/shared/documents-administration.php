@@ -6,20 +6,17 @@ define('CBPagesAdministrationDataStoreID', '5bda1825fe0be9524106061b910fd0b8e1dd
 
 $menuBuilder = ColbyNestedDictionaryBuilder::builderWithTitle('Documents Administration Menu');
 
-$menuBuilder->addValue('main', 'titleHTML', 'Main');
+$menuBuilder->addValue('main', 'titleHTML', 'Overview');
 $menuBuilder->addValue('main', 'uri', '/admin/documents/');
-
-$menuBuilder->addValue('stray-archives', 'titleHTML', 'Stray Archives');
-$menuBuilder->addValue('stray-archives', 'uri', '/admin/documents/stray-archives/');
-
-$menuBuilder->addValue('query-stray-archives', 'titleHTML', 'Query Stray Archives');
-$menuBuilder->addValue('query-stray-archives', 'uri', '/admin/documents/stray-archives/query/');
 
 $menuBuilder->addValue('colby-documents-rows', 'titleHTML', 'ColbyPages Rows');
 $menuBuilder->addValue('colby-documents-rows', 'uri', '/admin/documents/colby-pages-rows/');
 
-$menuBuilder->addValue('stray-documents', 'titleHTML', 'Stray Documents');
-$menuBuilder->addValue('stray-documents', 'uri', '/admin/documents/stray-documents/');
+$menuBuilder->addValue('stray-archives', 'titleHTML', 'Data Stores without Pages');
+$menuBuilder->addValue('stray-archives', 'uri', '/admin/documents/data-stores-without-pages/');
+
+$menuBuilder->addValue('stray-documents', 'titleHTML', 'Pages without Data Stores');
+$menuBuilder->addValue('stray-documents', 'uri', '/admin/documents/pages-without-data-stores/');
 
 
 global $documentsAdministrationMenu;
