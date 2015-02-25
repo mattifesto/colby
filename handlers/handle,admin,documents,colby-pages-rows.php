@@ -26,6 +26,8 @@ $sql = <<<EOT
         LOWER(HEX(`archiveID`)) as `archiveId`
     FROM
         `ColbyPages`
+    WHERE
+        `className` IS NULL
     ORDER BY
         `groupID`, `typeID`
 
@@ -175,9 +177,9 @@ $result->free();
 
     </style>
 
-    <?php renderPagesOverview(); ?>
+    <?php PagesSummaryView::renderAsHTML(); ?>
 
-    <h1>ColbyDocuments Table Rows</h1>
+    <h1>ColbyPages Rows with a NULL `className`</h1>
 
     <?php
 
@@ -222,72 +224,79 @@ CBHTMLOutput::render();
 /**
  * @return void
  */
-function renderPagesOverview() {
+class PagesSummaryView {
 
-    ?>
+    /**
+     * @return void
+     */
+    public static function renderAsHTML($renderModel = null) {
 
-    <table id="overview">
-        <style>
+        ?>
 
-            #overview {
-                margin: 20px auto;
-            }
+        <table id="overview">
+            <style>
 
-            #overview td {
-                padding: 2px 5px;
-            }
+                #overview {
+                    margin: 20px auto;
+                }
 
-            #overview td + td {
-                text-align: right;
-            }
+                #overview td {
+                    padding: 2px 5px;
+                }
 
-        </style>
+                #overview td + td {
+                    text-align: right;
+                }
 
-    <?php
+            </style>
 
-    $SQL = <<<EOT
+        <?php
 
-        SELECT
-            `className`,
-            count(*) AS `count`
-        FROM
-            `ColbyPages`
-        WHERE
-            `className` IS NOT NULL
-        GROUP BY
-            `className`
+        $SQL = <<<EOT
 
-EOT;
-
-    $result = Colby::query($SQL);
-
-    while ($row = $result->fetch_object()) {
-        echo "<tr><td>className: {$row->className}</td><td>{$row->count}</td></tr>";
-    }
-
-    $result->free();
-
-    $SQL = <<<EOT
-
-        SELECT
-            HEX(`typeID`) as `typeID`,
-            count(*) as `count`
-        FROM
-            `ColbyPages`
-        WHERE
-            `className` IS NULL
-        GROUP BY
-            `typeID`
+            SELECT
+                `className`,
+                count(*) AS `count`
+            FROM
+                `ColbyPages`
+            WHERE
+                `className` IS NOT NULL
+            GROUP BY
+                `className`
 
 EOT;
 
-    $result = Colby::query($SQL);
+        $result = Colby::query($SQL);
 
-    while ($row = $result->fetch_object()) {
-        echo "<tr><td>typeID: {$row->typeID}</td><td>{$row->count}</td></tr>";
+        while ($row = $result->fetch_object()) {
+            echo "<tr><td>className: {$row->className}</td><td>{$row->count}</td></tr>";
+        }
+
+        $result->free();
+
+        $SQL = <<<EOT
+
+            SELECT
+                HEX(`typeID`) as `typeID`,
+                count(*) as `count`
+            FROM
+                `ColbyPages`
+            WHERE
+                `className` IS NULL
+            GROUP BY
+                `typeID`
+
+EOT;
+
+        $result = Colby::query($SQL);
+
+        while ($row = $result->fetch_object()) {
+            $typeID = ($row->typeID === null) ? 'NULL' : $row->typeID;
+            echo "<tr><td>typeID: {$typeID}</td><td>{$row->count}</td></tr>";
+        }
+
+        $result->free();
+
+        echo '</table>';
     }
-
-    $result->free();
-
-    echo '</table>';
 }

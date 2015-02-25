@@ -50,7 +50,7 @@ if (ColbyUser::current()->isOneOfThe('Developers'))
     $developMenu->menus             = newMenuItem('Menus', '/admin/develop/menus/');
     $developMenu->php               = newMenuItem('PHP', '/admin/develop/php/');
     $developMenu->update            = newMenuItem('Update', '/developer/update/');
-    $developMenu->documents         = newMenuItem('Documents', '/admin/documents/');
+    $developMenu->documents         = newMenuItem('Pages', '/admin/documents/');
     $developMenu->groups            = newMenuItem('Groups', '/developer/groups/');
     $developMenu->model             = newMenuItem('Types', '/developer/models/');
     $developMenu->mysql             = newMenuItem('MySQL', '/developer/mysql/');

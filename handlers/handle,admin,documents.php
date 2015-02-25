@@ -20,8 +20,12 @@ $menu->setSelectedMenuItemName('develop');
 $menu->setSelectedSubmenuItemName('documents');
 $menu->renderHTML();
 
-$document   = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
-$archive    = $document->archive();
+$dataStore  = new CBDataStore(CBPagesAdministrationDataStoreID);
+$filepath   = $dataStore->directory(). '/data.json';
+
+if (is_file($filepath)) {
+    $data = json_decode(file_get_contents($filepath));
+}
 
 ?>
 
@@ -33,33 +37,19 @@ $archive    = $document->archive();
 
     <?php
 
-    $strayArchiveIds = $archive->valueForKey('strayArchiveIds');
-
-    if ($strayArchiveIds)
-    {
-        $countOfStrayArchives = $strayArchiveIds->count();
-    }
-    else
-    {
-        $countOfStrayArchives = 'unknown';
-    }
-
-    $strayDocumentArchiveIds = $archive->valueForKey('strayDocumentArchiveIds');
-
-    if ($strayDocumentArchiveIds)
-    {
-        $countOfStrayDocuments = $strayDocumentArchiveIds->count();
-    }
-    else
-    {
-        $countOfStrayDocuments = 'unknown';
+    if (isset($data)) {
+        $countOfDataStoresWithoutPages = count($data->dataStoresWithoutPages);
+        $countOfPagesWithoutDataStores = count($data->pagesWithoutDataStores);
+    } else {
+        $countOfDataStoresWithoutPages = 'Unknown';
+        $countOfPagesWithoutDataStores = 'Unknown';
     }
 
     ?>
 
     <ul class="horizontal" style="text-align: center;">
-        <li>Stray Archives: <?php echo $countOfStrayArchives; ?></li>
-        <li>Stray Documents: <?php echo $countOfStrayDocuments; ?></li>
+        <li>Data Stores without Pages: <?php echo $countOfDataStoresWithoutPages; ?></li>
+        <li>Pages without Data Stores: <?php echo $countOfPagesWithoutDataStores; ?></li>
     </ul>
 
     <div style="text-align: center;">

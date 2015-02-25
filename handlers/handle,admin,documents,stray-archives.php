@@ -18,8 +18,8 @@ $menu->setSelectedMenuItemName('develop');
 $menu->setSelectedSubmenuItemName('documents');
 $menu->renderHTML();
 
-$document   = ColbyDocument::documentWithArchiveId(COLBY_DOCUMENTS_ADMINISTRATION_SHARED_ARCHIVE_ID);
-$archive    = $document->archive();
+$dataStore  = new CBDataStore(CBPagesAdministrationDataStoreID);
+$filepath   = $dataStore->directory() . '/data.json';
 
 ?>
 
@@ -32,19 +32,18 @@ $archive    = $document->archive();
 
     <?php
 
-    $strayArchiveIds = $archive->valueForKey('strayArchiveIds');
+    if (is_file($filepath)) {
+        $data = json_decode(file_get_contents($filepath));
 
-    if ($strayArchiveIds && $strayArchiveIds->count() > 0)
-    {
         ?>
 
         <section>
 
             <?php
 
-            foreach ($strayArchiveIds as $strayArchiveId)
+            foreach ($data->dataStoresWithoutPages as $ID)
             {
-                echo viewLinkForArchiveId($strayArchiveId), ' ';
+                echo viewLinkForArchiveId($ID), ' ';
             }
 
             ?>
