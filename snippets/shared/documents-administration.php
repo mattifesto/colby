@@ -15,8 +15,8 @@ $menuBuilder->addValue('stray-archives', 'uri', '/admin/documents/stray-archives
 $menuBuilder->addValue('query-stray-archives', 'titleHTML', 'Query Stray Archives');
 $menuBuilder->addValue('query-stray-archives', 'uri', '/admin/documents/stray-archives/query/');
 
-$menuBuilder->addValue('colby-documents-rows', 'titleHTML', 'ColbyDocuments Rows');
-$menuBuilder->addValue('colby-documents-rows', 'uri', '/admin/documents/colby-documents-rows/');
+$menuBuilder->addValue('colby-documents-rows', 'titleHTML', 'ColbyPages Rows');
+$menuBuilder->addValue('colby-documents-rows', 'uri', '/admin/documents/colby-pages-rows/');
 
 $menuBuilder->addValue('stray-documents', 'titleHTML', 'Stray Documents');
 $menuBuilder->addValue('stray-documents', 'uri', '/admin/documents/stray-documents/');
