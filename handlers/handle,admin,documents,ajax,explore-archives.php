@@ -22,6 +22,7 @@ if (0 == $partIndex || !is_file($filepath)) {
 
 DataStoreExplorer::explorePart($partIndex, $data);
 
+$dataStore->makeDirectory();
 file_put_contents($filepath, json_encode($data));
 
 /**
