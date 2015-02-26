@@ -199,8 +199,9 @@ EOT;
 
         global $CBPageEditorAvailablePageListClassNames;
 
+        $listClassNames         = isset($model->listClassNames) ? $model->listClassNames : array();
         $listClassNames         = array_merge($CBPageEditorAvailablePageListClassNames,
-                                              $model->listClassNames,
+                                              $listClassNames,
                                               array('CBRecentlyEditedPages'));
 
         $listClassNames         = array_unique($listClassNames);
