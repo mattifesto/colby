@@ -18,17 +18,7 @@ $menu->setSelectedMenuItemName('develop');
 $menu->setSelectedSubmenuItemName('documents');
 $menu->renderHTML();
 
-$archiveId                  = $_GET['archive-id'];
-$absoluteArchiveFilename    = ColbyArchive::absoluteDataDirectoryForArchiveId($archiveId) .
-                              '/archive.data';
-$root                       = null;
-
-if (is_file($absoluteArchiveFilename))
-{
-    $root = unserialize(file_get_contents($absoluteArchiveFilename));
-}
-
-$archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
+$ID = $_GET['archive-id'];
 
 ?>
 
@@ -74,17 +64,14 @@ $archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
     </style>
 
     <header>
-        <h1><?php echo $archiveId; ?></h1>
-        <h2><?php echo $archiveTitleHTML; ?></h2>
+        <h1><?php echo $ID; ?></h1>
     </header>
 
     <?php
 
-    displayColbyDocumentsTableRow($archiveId);
+    renderColbyPagesRowForID($ID);
 
-    displayAttributesForRoot($root);
-
-    displayDataForRoot($root);
+    renderDataStoreFileListForID($ID)
 
     /**
      * Add a function to show any data not shown by the previous functions.
@@ -94,7 +81,7 @@ $archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
 
     <div style="margin-top: 80px; text-align: center;">
 
-        <input type="hidden" id="archive-id" value="<?php echo $archiveId; ?>">
+        <input type="hidden" id="archive-id" value="<?= $ID ?>">
 
         <div>
             <input type="text"
@@ -115,7 +102,7 @@ $archiveTitleHTML = isset($root->data->titleHTML) ? $root->data->titleHTML : '';
 
 </main>
 
-<script src="<?php echo COLBY_SYSTEM_URL; ?>/handlers/handle,admin,documents,view.js"></script>
+<script src="<?= CBSystemURL ?>/handlers/handle,admin,documents,view.js"></script>
 
 <?php
 
@@ -129,69 +116,28 @@ CBHTMLOutput::render();
 /**
  * @return void
  */
-function displayAttributesForRoot($root)
+function renderColbyPagesRowForID($ID)
 {
-    ?>
+    $IDAsSQL    = ColbyConvert::textToSQL($ID);
+    $sql        = <<<EOT
 
-    <section class="keys-and-values attributes">
-        <h1>Attributes</h1>
+        SELECT
+            `id`,
+            LOWER(HEX(`archiveID`)) as `archiveID`,
+            LOWER(HEX(`groupID`)) as `groupID`,
+            LOWER(HEX(`typeID`)) as `typeID`,
+            `URI`,
+            `titleHTML`,
+            `subtitleHTML`,
+            `thumbnailURL`,
+            `searchText`,
+            `published`,
+            `publishedBy`
+        FROM
+            `ColbyPages`
+        WHERE
+            `archiveId` = UNHEX('{$IDAsSQL}')
 
-        <?php
-
-        if (!isset($root->attributes))
-        {
-            echo '<p>This archive has no attributes.';
-        }
-        else
-        {
-            $keysWithTimeValues = array('created', 'modified');
-
-            foreach ($root->attributes as $key => $value)
-            {
-                if (in_array($key, $keysWithTimeValues))
-                {
-                    $type = 'time';
-                }
-                else
-                {
-                    $type = null;
-                }
-
-                displayKeyValuePair($key, $value, $type);
-            }
-        }
-
-        ?>
-
-    </section>
-
-    <?php
-}
-
-/**
- * @return void
- */
-function displayColbyDocumentsTableRow($archiveId)
-{
-    $archiveIdForSQL = Colby::mysqli()->escape_string($archiveId);
-
-$sql = <<<EOT
-SELECT
-    `id`,
-    LOWER(HEX(`archiveID`)) as `archiveID`,
-    LOWER(HEX(`groupID`)) as `groupID`,
-    LOWER(HEX(`typeID`)) as `typeID`,
-    `URI`,
-    `titleHTML`,
-    `subtitleHTML`,
-    `thumbnailURL`,
-    `searchText`,
-    `published`,
-    `publishedBy`
-FROM
-    `ColbyPages`
-WHERE
-    `archiveId` = UNHEX('{$archiveIdForSQL}');
 EOT;
 
     $result = Colby::query($sql);
@@ -199,13 +145,13 @@ EOT;
     ?>
 
     <section class="keys-and-values colby-documents-table-row">
-        <h1>ColbyDocuments Table Row</h1>
+        <h1>ColbyPages Row Data</h1>
 
         <?php
 
         if ($result->num_rows != 1)
         {
-            echo "<p>There is no row for this document.";
+            echo "<p>This ID does not represent a page.";
         }
         else
         {
@@ -236,32 +182,33 @@ EOT;
 /**
  * @return void
  */
-function displayDataForRoot($root)
-{
-    ?>
+function renderDataStoreFileListForID($ID) {
+    $dataStore = new CBDataStore($ID);
 
-    <section class="keys-and-values data">
-        <h1>Data</h1>
+    if (!is_dir($dataStore->directory())) {
+        return;
+    }
 
-        <?php
+    $list   = array();
+    $handle = opendir($dataStore->directory());
 
-        if (!isset($root->data))
-        {
-            echo '<p>This archive has no data.';
-        }
-        else
-        {
-            foreach ($root->data as $key => $value)
-            {
-                displayKeyValuePair($key, $value);
-            }
+    while (false !== ($filename = readdir($handle))) {
+        if (is_dir($filename)) {
+            $filename = "{$filename} (directory)";
         }
 
-        ?>
+        $list[] = $filename;
+    }
 
-    </section>
+    echo '<section style="background-color: hsl(30, 50%, 95%); width: 500px; margin: 0 auto; padding: 5px 20px 20px;">',
+         '<h1 style="margin-bottom: 20px; text-align: center;">Data Store Directory Listing</h1>';
 
-    <?php
+    foreach ($list as $filename) {
+        $filenameAsHTML = ColbyConvert::textToHTML($filename);
+        echo "<p><code>{$filenameAsHTML}</code>";
+    }
+
+    echo '</section>';
 }
 
 /**
