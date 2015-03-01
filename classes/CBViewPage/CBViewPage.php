@@ -28,11 +28,12 @@ final class CBViewPage {
      * @return void
      */
     private static function addToPageLists($model) {
-        $pageRowID  = (int)$model->rowID;
-        $updated    = (int)$model->updated;
-        $yearMonth  = gmdate('Ym', $updated);
+        $pageRowID      = (int)$model->rowID;
+        $updated        = (int)$model->updated;
+        $yearMonth      = gmdate('Ym', $updated);
+        $listClassNames = isset($model->listClassNames) ? $model->listClassNames : array();
 
-        foreach ($model->listClassNames as $className) {
+        foreach ($listClassNames as $className) {
             $classNameForSQL    = ColbyConvert::textToSQL($className);
             $SQL                = <<<EOT
 
