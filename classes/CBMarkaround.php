@@ -34,6 +34,14 @@ class CBMarkaround {
 
         $patterns[]     = self::expressionForSpan('\*', '\*');
         $replacements[] = '<b>$1</b>';
+        $patterns[]     = self::expressionForSpan('_', '_');
+        $replacements[] = '<i>$1</i>';
+        $patterns[]     = self::expressionForSpan('{', '}');
+        $replacements[] = '<cite>$1</cite>';
+        $patterns[]     = self::expressionForSpan('`', '`');
+        $replacements[] = '<code>$1</code>';
+        $patterns[]     = '/ (?<=^|\s) \/ (?=\s|$) /x';
+        $replacements[] = '<br>';
 
         $paragraph = preg_replace($patterns, $replacements, $paragraph);
 
