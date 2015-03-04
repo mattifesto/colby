@@ -1,14 +1,16 @@
 <?php
 
-ColbyConvertMarkaroundToHTMLTests::orderedListTest();
-ColbyConvertMarkaroundToHTMLTests::paragraphTest();
-ColbyConvertMarkaroundToHTMLTests::unorderedListTest();
+class CBUnitTestsForColbyMarkaroundParser {
 
-/**
- *
- */
-class ColbyConvertMarkaroundToHTMLTests
-{
+    /**
+     * @return void
+     */
+    public static function runAll() {
+        self::orderedListTest();
+        self::paragraphTest();
+        self::unorderedListTest();
+    }
+
     /**
      * @return void
      */
@@ -63,7 +65,8 @@ class ColbyConvertMarkaroundToHTMLTests
             $expected2 = ColbyConvert::textToTextWithVisibleWhitespace($expected);
             $actual2 = ColbyConvert::textToTextWithVisibleWhitespace($actual);
 
-            throw new RuntimeException("expected: \"{$expected2}\", actual: \"{$actual2}\"");
+            throw new RuntimeException(__METHOD__ .
+                ": expected: \"{$expected2}\", actual: \"{$actual2}\"");
         }
     }
 }

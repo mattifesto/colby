@@ -184,64 +184,13 @@ class ColbyMarkaroundParser
     {
         if ($this->currentParagraphText)
         {
-            $html = $this->paragraphTextToHTML($this->currentParagraphText);
+            $html = CBMarkaround::paragraphToHTML($this->currentParagraphText);
             $html = "<p>{$html}\n";
 
             $this->htmlArray[] = $html;
 
             $this->currentParagraphText = null;
         }
-    }
-
-    /**
-     * This function converts markaround paragraph text to HTML by converting
-     * special characters to inline formatting.
-     *
-     * *bold*       --> <b>bold</b>
-     * _italic_     --> <i>italic</i>
-     * `code`       --> <code>code</code>
-     * {citation}   --> <cite>citation</cite>
-     *
-     * @param string $markaroundParagraphText
-     *  The markaround text for the paragraph to be formatted.
-     *
-     * @return string
-     */
-    private function paragraphTextToHTML($paragraphText)
-    {
-        $patterns = array();
-        $replacements = array();
-
-        /* this pattern represents non-empty strings of text surrounded by asterisks
-         * that haven't been escaped with a backslash
-         *
-         * '(?<!\\\\)\*' --> an asterisk _not_ preceded by a backslash
-         * uses regular expression lookbehind syntax: '(?<!' … ')'
-         */
-        $patterns[] = '/(?<!\\\\)\*(.+?)(?<!\\\\)\*/';
-        $replacements[] = '<b>$1</b>';
-
-        $patterns[] = '/(?<!\\\\)_(.+?)(?<!\\\\)_/';
-        $replacements[] = '<i>$1</i>';
-
-        $patterns[] = '/(?<!\\\\)`(.+?)(?<!\\\\)`/';
-        $replacements[] = '<code>$1</code>';
-
-        $patterns[] = '/(?<!\\\\){(.+?)(?<!\\\\)}/';
-        $replacements[] = '<cite>$1</cite>';
-
-        /* this pattern represents any character preceded by a backslash
-         */
-        $patterns[] = '/[\\\\](.)/';
-        $replacements[] = '$1';
-
-        // First escape any special characters
-
-        $html = ColbyConvert::textToHTML($paragraphText);
-
-        // Then create the inline elements
-
-        return preg_replace($patterns, $replacements, $html);
     }
 
     /**
