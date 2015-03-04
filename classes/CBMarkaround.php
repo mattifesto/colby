@@ -3,7 +3,7 @@
 class CBMarkaround {
 
     /**
-     * #note functional programming
+     * @note functional programming
      *
      * Applies inline formatting rules to a paragraph of text.
      *
