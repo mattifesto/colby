@@ -27,6 +27,7 @@ class CBUnitTestsForCBMarkaround {
                             'Hello _ world!');
         $tests[]    = array('Hello \\` world!',
                             'Hello ` world!');
+
         $tests[]    = array('Hello *world*!',
                             'Hello <b>world</b>!');
         $tests[]    = array('Hello _world_!',
@@ -37,6 +38,26 @@ class CBUnitTestsForCBMarkaround {
                             'Hello <code>world</code>!');
         $tests[]    = array('Hello / earth/world!',
                             'Hello <br> earth/world!');
+
+        $tests[]    = array('Hello * world*!',
+                            'Hello * world*!');
+        $tests[]    = array('Hello _ world_!',
+                            'Hello _ world_!');
+        $tests[]    = array('Hello { world}!',
+                            'Hello { world}!');
+        $tests[]    = array('Hello ` world`!',
+                            'Hello ` world`!');
+
+        $tests[]    = array('Hello \*world*!',
+                            'Hello *world*!');
+        $tests[]    = array('Hello \_world_!',
+                            'Hello _world_!');
+        $tests[]    = array('Hello \{world}!',
+                            'Hello {world}!');
+        $tests[]    = array('Hello \`world`!',
+                            'Hello `world`!');
+        $tests[]    = array('Hello \/ earth/world!',
+                            'Hello / earth/world!');
 
         foreach ($tests as $test) {
             $actual = CBMarkaround::paragraphToHTML($test[0]);
