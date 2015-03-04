@@ -59,6 +59,9 @@ class CBUnitTestsForCBMarkaround {
         $tests[]    = array('Hello \/ earth/world!',
                             'Hello / earth/world!');
 
+        $tests[]    = array('{words{separated}by{curlybrackets}}',
+                            '<cite>words{separated</cite>by<cite>curlybrackets</cite>}');
+
         foreach ($tests as $test) {
             $actual = CBMarkaround::paragraphToHTML($test[0]);
             if ($actual != $test[1]) {
