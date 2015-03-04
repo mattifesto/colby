@@ -251,7 +251,7 @@ class ColbyMarkaroundParser
     {
         $this->currentState     = MARKAROUND_STATE_NONE;
         $this->htmlArray        = array();
-        $markaroundLines        = ColbyConvert::textToLineArray($this->markaround);
+        $markaroundLines        = ColbyConvert::textToLines($this->markaround);
 
         foreach ($markaroundLines as $markaroundLine)
         {
