@@ -19,6 +19,7 @@ class CBUnitTests {
         // New style
 
         CBUnitTestsForCBDataStore::runAll();
+        CBUnitTestsForCBMarkaround::runAll();
         CBUnitTestsForColbyConvert::runAll();
     }
 
