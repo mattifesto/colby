@@ -94,24 +94,28 @@ class ColbyDocument
              */
             else
             {
-                $sql = <<<EOT
-INSERT INTO `ColbyPages`
-(
-    `archiveID`,
-    `URI`,
-    `titleHTML`,
-    `subtitleHTML`
-)
-VALUES
-(
-    UNHEX('{$safeArchiveId}'),
-    '{$safeArchiveId}',
-    '',
-    ''
-)
+                $SQL = <<<EOT
+
+                    INSERT INTO `ColbyPages`
+                    (
+                        `archiveID`,
+                        `keyValueData`,
+                        `URI`,
+                        `titleHTML`,
+                        `subtitleHTML`
+                    )
+                    VALUES
+                    (
+                        UNHEX('{$safeArchiveId}'),
+                        '',
+                        '{$safeArchiveId}',
+                        '',
+                        ''
+                    )
+
 EOT;
 
-                Colby::query($sql);
+                Colby::query($SQL);
 
                 $documentRowId = Colby::mysqli()->insert_id;
 

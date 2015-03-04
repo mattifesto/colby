@@ -46,10 +46,12 @@ class ColbyDocumentTests
         $safeArchiveId = Colby::mysqli()->escape_string($testArchiveId);
 
         $sql = <<<EOT
-INSERT INTO `ColbyPages`
-    (`archiveID`, `URI`, `titleHTML`, `subtitleHTML`)
-VALUES
-    (UNHEX('{$safeArchiveId}'), '{$safeArchiveId}', '', '')
+
+            INSERT INTO `ColbyPages`
+                (`archiveID`, `keyValueData`, `URI`, `titleHTML`, `subtitleHTML`)
+            VALUES
+                (UNHEX('{$safeArchiveId}'), '', '{$safeArchiveId}', 'ColbyConvert Unit Test', '')
+
 EOT;
 
         Colby::query($sql);
