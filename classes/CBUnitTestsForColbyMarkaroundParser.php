@@ -17,14 +17,14 @@ class CBUnitTestsForColbyMarkaroundParser {
     public static function orderedListTest()
     {
         $markaround = "17.5\" by 21.5\"";
-        $expected = "<p>17.5&quot; by 21.5&quot;\n";
-        $actual = ColbyConvert::markaroundToHTML($markaround);
+        $expected   = "<p>17.5&quot; by 21.5&quot;\n";
+        $actual     = ColbyConvert::markaroundToHTML($markaround);
 
         self::verifyActualStringIsExpected($actual, $expected);
 
         $markaround = "17. 5\" by 21.5\"";
-        $expected = "<ol>\n<li><p>5&quot; by 21.5&quot;\n</ol>\n";
-        $actual = ColbyConvert::markaroundToHTML($markaround);
+        $expected   = "<ol>\n<li><p>5&quot; by 21.5&quot;\n</ol>\n";
+        $actual     = ColbyConvert::markaroundToHTML($markaround);
 
         self::verifyActualStringIsExpected($actual, $expected);
     }
@@ -34,9 +34,9 @@ class CBUnitTestsForColbyMarkaroundParser {
      */
     public static function paragraphTest()
     {
-        $markaround = "Hello";
-        $expected = "<p>Hello\n";
-        $actual = ColbyConvert::markaroundToHTML($markaround);
+        $markaround = "Hello *world!*";
+        $expected   = "<p>Hello <b>world!</b>\n";
+        $actual     = ColbyConvert::markaroundToHTML($markaround);
 
         self::verifyActualStringIsExpected($actual, $expected);
     }
@@ -46,11 +46,9 @@ class CBUnitTestsForColbyMarkaroundParser {
      */
     public static function unorderedListTest()
     {
-        // Unordered lists
-
         $markaround = "-Hello";
-        $expected = "<ul>\n<li><p>Hello\n</ul>\n";
-        $actual = ColbyConvert::markaroundToHTML($markaround);
+        $expected   = "<ul>\n<li><p>Hello\n</ul>\n";
+        $actual     = ColbyConvert::markaroundToHTML($markaround);
 
         self::verifyActualStringIsExpected($actual, $expected);
     }
@@ -62,8 +60,8 @@ class CBUnitTestsForColbyMarkaroundParser {
     {
         if ($actual != $expected)
         {
-            $expected2 = ColbyConvert::textToTextWithVisibleWhitespace($expected);
-            $actual2 = ColbyConvert::textToTextWithVisibleWhitespace($actual);
+            $expected2  = ColbyConvert::textToTextWithVisibleWhitespace($expected);
+            $actual2    = ColbyConvert::textToTextWithVisibleWhitespace($actual);
 
             throw new RuntimeException(__METHOD__ .
                 ": expected: \"{$expected2}\", actual: \"{$actual2}\"");
