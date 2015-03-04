@@ -32,7 +32,10 @@ class CBMarkaround {
             $paragraph  = preg_replace("/{$pattern}/", $hash, $paragraph);
         }
 
-        //
+        $patterns[]     = self::expressionForSpan('\*', '\*');
+        $replacements[] = '<b>$1</b>';
+
+        $paragraph = preg_replace($patterns, $replacements, $paragraph);
 
         foreach ($escapes as $pattern => $replacement) {
             $hash       = sha1($pattern);
@@ -40,5 +43,22 @@ class CBMarkaround {
         }
 
         return $paragraph;
+    }
+
+    /**
+     * @return string
+     */
+    private static function expressionForSpan($openExpression, $closeExpression) {
+        return "/
+
+            {$openExpression}
+            (
+                (?=\S)      # content must start with a non-whitspace character
+                .+?         # content always has at least one character
+                (?<=\S)     # content must end with a non-whitespace character
+            )
+            {$closeExpression}
+
+            /x";
     }
 }

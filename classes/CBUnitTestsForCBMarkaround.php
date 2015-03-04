@@ -13,7 +13,6 @@ class CBUnitTestsForCBMarkaround {
      * @return void
      */
     public static function runTestForParagraphToHTML() {
-        $tests      = array();
         $tests[]    = array('Hello \\\\ world!',
                             'Hello \\ world!');
         $tests[]    = array('Hello \/ world!',
@@ -28,12 +27,15 @@ class CBUnitTestsForCBMarkaround {
                             'Hello _ world!');
         $tests[]    = array('Hello \\` world!',
                             'Hello ` world!');
+        $tests[]    = array('Hello *world*!',
+                            'Hello <b>world</b>!');
 
         foreach ($tests as $test) {
             $actual = CBMarkaround::paragraphToHTML($test[0]);
             if ($actual != $test[1]) {
-                $s = __METHOD__ . ": The input '{$test[0]}' did not produce " .
-                "the expected output '{$test[1]}'.";
+                $s = __METHOD__ . ": The input '{$test[0]}' produced the " .
+                "output '{$actual}' instead of the expected output " .
+                "'{$test[1]}'.";
                 throw new RuntimeException($s);
             }
         }
