@@ -107,9 +107,7 @@ EOT;
          */
 
         if (isset($s->sections)) {
-            $r->sections = array_map(function($vs) {
-                return CBView::compileSpecificationModelToRenderModel($vs);
-            }, $s->sections);
+            $r->sections = array_map('CBView::compile', $s->sections);
         } else {
             $r->sections = array();
         }

@@ -10,6 +10,23 @@ class CBView {
     private function __construct() { }
 
     /**
+     * This is a temporary function. It will be replaced with
+     * `compileSpecificationModelToRenderModel` when views are all statically
+     * implemented and no longer inherit from this class.
+     *
+     * @return stdClass
+     */
+    public static function compile($specificationModel) {
+        $function = "{$specificationModel->className}::compileSpecificationModelToRenderModel";
+
+        if (is_callable($function)) {
+            return call_user_func($function, $specificationModel);
+        } else {
+            return CBView::compileSpecificationModelToRenderModel($specificationModel);
+        }
+    }
+
+    /**
      * @return stdClass
      */
     public static function compileSpecificationModelToRenderModel($specificationModel) {

@@ -41,6 +41,17 @@ class CBContainerView extends CBView {
     }
 
     /**
+     * @return stdClass
+     */
+    public static function compileSpecificationModelToRenderModel($specificationModel) {
+        $r                  = new stdClass();
+        $r->className       = $specificationModel->className;
+        $r->subviewModels   = array_map('CBView::compile', $specificationModel->subviewModels);
+
+        return $r;
+    }
+
+    /**
      * @return void
      */
     public static function includeEditorDependencies() {
