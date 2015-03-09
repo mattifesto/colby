@@ -195,11 +195,9 @@ EOT;
      * @return void
      */
     private static function removeFromEditablePageLists($model) {
-
-        global $CBPageEditorAvailablePageListClassNames;
-
+        $availableListNames     = CBViewPageLists::availableListNames();
         $listClassNames         = isset($model->listClassNames) ? $model->listClassNames : array();
-        $listClassNames         = array_merge($CBPageEditorAvailablePageListClassNames,
+        $listClassNames         = array_merge($availableListNames,
                                               $listClassNames,
                                               array('CBRecentlyEditedPages'));
 

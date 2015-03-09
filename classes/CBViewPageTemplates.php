@@ -8,7 +8,7 @@
 class CBViewPageTemplates {
 
     /**
-     * array
+     * @return array
      */
     public static function availableTemplateClassNames() {
         return array('CBPageTemplate');

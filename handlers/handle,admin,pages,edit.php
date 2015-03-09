@@ -72,9 +72,9 @@ CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames',
  * Export page lists
  */
 
-global $CBPageEditorAvailablePageListClassNames;
+$listNames = CBViewPageLists::availableListNames();
 
-CBHTMLOutput::exportVariable('CBPageEditorAvailablePageListClassNames', $CBPageEditorAvailablePageListClassNames);
+CBHTMLOutput::exportVariable('CBPageEditorAvailablePageListClassNames', $listNames);
 
 /**
  * Export page templates
