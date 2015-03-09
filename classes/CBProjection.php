@@ -10,6 +10,17 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
+    public static function copyProjection($projection) {
+        $p              = new stdClass();
+        $p->source      = CBRect::copyRect($projection->source);
+        $p->destination = CBRect::copyRect($projection->destination);
+
+        return $p;
+    }
+
+    /**
+     * @return stdClass (projection)
+     */
     public static function withSize($width, $height) {
         $p              = new stdClass();
         $p->source      = CBRect::withSize($width, $height);
