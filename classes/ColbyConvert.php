@@ -114,7 +114,7 @@ class ColbyConvert
     public static function linesToParagraphs($lines) {
         $paragraphs = array_reduce($lines, function($carry, $string) {
             if (trim($string) == '') {
-                array_push($carry, []);
+                array_push($carry, array());
             } else {
                 $array          = end($carry);
                 $array[]        = $string;
@@ -122,7 +122,7 @@ class ColbyConvert
                 $carry[$key]    = $array;
             }
             return $carry;
-        }, [[]]);
+        }, array(array()));
 
         $paragraphs = array_filter($paragraphs, function($paragraph) { return !empty($paragraph); });
 
