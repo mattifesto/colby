@@ -145,13 +145,13 @@ final class CBView {
     /**
      * @return void
      */
-    public static function renderAsHTMLForRenderModel($renderModel) {
-        $className = $renderModel->className;
+    public static function renderModelAsHTML($model) {
+        $function = "{$model->className}::renderModelAsHTML";
 
-        if (is_callable("{$className}::renderAsHTML")) {
-            $className::renderAsHTML($renderModel);
+        if (is_callable($function)) {
+            call_user_func($function, $model);
         } else {
-            $view = self::createViewWithModel($renderModel);
+            $view = self::createViewWithModel($model);
             $view->renderHTML();
         }
     }

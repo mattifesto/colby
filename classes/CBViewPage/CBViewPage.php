@@ -229,35 +229,6 @@ EOT;
     /**
      * @return void
      */
-    public static function renderAsHTML($renderModel) {
-        $renderModel = self::upgradeRenderModel($renderModel);
-
-        self::$renderModelContext = $renderModel;
-
-        CBHTMLOutput::begin();
-
-        include Colby::findFile('sections/public-page-settings.php');
-
-        if (ColbyRequest::isForFrontPage()) {
-            CBHTMLOutput::setTitleHTML(CBSiteNameHTML);
-        } else {
-            CBHTMLOutput::setTitleHTML($renderModel->titleHTML);
-        }
-
-        CBHTMLOutput::setDescriptionHTML($renderModel->descriptionHTML);
-
-        foreach ($renderModel->sections as $viewRenderModel) {
-            CBView::renderAsHTMLForRenderModel($viewRenderModel);
-        }
-
-        CBHTMLOutput::render();
-
-        self::$renderModelContext = null;
-    }
-
-    /**
-     * @return void
-     */
     public static function renderAsHTMLForID($ID) {
         $dataStore              = new CBDataStore($ID);
         $renderModelFilepath    = $dataStore->directory() . '/render-model.json';
@@ -266,7 +237,36 @@ EOT;
             $renderModelFilepath = $dataStore->directory() . '/model.json';
         }
 
-        self::renderAsHTML(json_decode(file_get_contents($renderModelFilepath)));
+        self::renderModelAsHTML(json_decode(file_get_contents($renderModelFilepath)));
+    }
+
+    /**
+     * @return void
+     */
+    public static function renderModelAsHTML($model) {
+        $model = self::upgradeRenderModel($model);
+
+        self::$renderModelContext = $model;
+
+        CBHTMLOutput::begin();
+
+        include Colby::findFile('sections/public-page-settings.php');
+
+        if (ColbyRequest::isForFrontPage()) {
+            CBHTMLOutput::setTitleHTML(CBSiteNameHTML);
+        } else {
+            CBHTMLOutput::setTitleHTML($model->titleHTML);
+        }
+
+        CBHTMLOutput::setDescriptionHTML($model->descriptionHTML);
+
+        foreach ($model->sections as $modelForView) {
+            CBView::renderModelAsHTML($modelForView);
+        }
+
+        CBHTMLOutput::render();
+
+        self::$renderModelContext = null;
     }
 
     /**

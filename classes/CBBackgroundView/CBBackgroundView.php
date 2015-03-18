@@ -1,6 +1,6 @@
 <?php
 
-class CBBackgroundView extends CBView {
+final class CBBackgroundView {
 
     protected $subviews;
 
@@ -9,10 +9,10 @@ class CBBackgroundView extends CBView {
      */
     public static function init()
     {
-        $view           = parent::init();
-        $view->subviews = array();
-        $model          = $view->model;
+        $view                                   = new self();
+        $view->subviews                         = array();
 
+        $model                                  = CBView::modelWithClassName(__CLASS__);
         $model->children                        = array();
         $model->color                           = null;
         $model->colorHTML                       = null;
@@ -26,6 +26,8 @@ class CBBackgroundView extends CBView {
         $model->linkURLHTML                     = null;
         $model->minimumViewHeightIsImageHeight  = true;
 
+        $view->model                            = $model;
+
         return $view;
     }
 
@@ -34,11 +36,11 @@ class CBBackgroundView extends CBView {
      */
     public static function initWithModel($model) {
 
-        $view           = parent::initWithModel($model);
+        $view           = new self();
+        $view->model    = $model;
         $view->subviews = array();
 
         foreach ($view->model->children as $subviewModel) {
-
             $view->subviews[] = CBView::createViewWithModel($subviewModel);
         }
 
