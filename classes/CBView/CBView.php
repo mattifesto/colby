@@ -1,6 +1,6 @@
 <?php
 
-class CBView {
+final class CBView {
 
     protected $model;
 
@@ -131,6 +131,18 @@ class CBView {
     }
 
     /**
+     * @note functional programming
+     *
+     * @return stdClass
+     */
+    public static function modelWithClassName($className) {
+        $model              = new stdClass();
+        $model->className   = (string)$className;
+
+        return $model;
+    }
+
+    /**
      * @return void
      */
     public static function renderAsHTMLForRenderModel($renderModel) {
@@ -179,5 +191,32 @@ class CBView {
             $view = self::createViewWithModel($specificationModel);
             return $view->searchText();
         }
+    }
+
+    /**
+     * This function transforms a view specification into a model. This
+     * function always succeeds. If the view class has no `specToModel`
+     * function the model will be created with only a `className` property. All
+     * other specification properties will be ignored. If there isn't even a
+     * `className` property specified, a model will be created with a
+     * `className` of "CBView".
+     *
+     * @note functional programming
+     *
+     * @return stdClass
+     */
+    public static function specToModel($spec) {
+        if (isset($spec->className) && $spec->className != 'CBView') {
+            $function = "{$spec->className}::specToModel";
+
+            if (is_callable($function)) {
+                return call_user_func($function, $spec);
+            }
+        }
+
+        $model              = new stdClass();
+        $model->className   = isset($spec->className) ? $spec->className : 'CBView';
+
+        return $model;
     }
 }

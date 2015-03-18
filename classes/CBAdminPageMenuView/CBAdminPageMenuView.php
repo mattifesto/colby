@@ -4,52 +4,35 @@
  * This view is meant to be used directly by all admin page handlers to render
  * the administration menu.
  */
-class CBAdminPageMenuView extends CBView
-{
-    private $menuModel;
+final class CBAdminPageMenuView {
 
     /**
+     * @deprecated
+     *
      * @return instance type
      */
-    public static function init()
-    {
-        $view                                   = parent::init();
+    public static function init() {
+        $view                                   = new self();
+        $view->model                            = CBView::modelWithClassName(__CLASS__);
         $view->model->selectedMenuItemName      = null;
         $view->model->selectedSubmenuItemName   = null;
-
-        /**
-         * The `Colby::findFile` function is used so that the website can
-         * override the file to include its own administrative menu options.
-         */
-
-        include_once Colby::findFile('snippets/menu-items-admin.php');
-
-        /**
-         * 2014.07.31 TODO
-         * In the future the `menu-items-admin.php` snippet will directly
-         * modify `$this->menuModel` but currently this file is shared with
-         * another implementation so we just assign the global variable it sets.
-         */
-
-        global $CBAdminMenu;
-
-        $view->menuModel = $CBAdminMenu;
 
         return $view;
     }
 
     /**
+     * @deprecated
+     *
      * @return void
      */
-    public function renderHTML()
-    {
-        include __DIR__ . '/CBAdminPageMenuViewHTML.php';
+    public function renderHTML() {
+        self::renderModelAsHTML($this->model);
     }
 
     /**
      * @return void
      */
-    public function renderMenu($menu, $selectedMenuItemName, $class)
+    public static function renderMenu($menu, $selectedMenuItemName, $class)
     {
         echo "\n\n<nav class=\"{$class}\"><ul>";
 
@@ -71,7 +54,39 @@ class CBAdminPageMenuView extends CBView
     }
 
     /**
+     * @note functional programming
      *
+     * @return void
+     */
+    public static function renderModelAsHTML($model) {
+
+        CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
+        CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBAdminPageMenuView/CBAdminPageMenuViewHTML.css');
+
+        /**
+         * The `Colby::findFile` function is used so that the website can
+         * override the file to include its own administrative menu options.
+         */
+
+        include_once Colby::findFile('snippets/menu-items-admin.php');
+
+        /**
+         * 2015.03.18
+         * While moving this view to the latest API paradigm I notice that the
+         * use of a global variable here is somewhat clunky. This will need to
+         * be changed eventually.
+         */
+
+        global $CBAdminMenu;
+        $menuModel = $CBAdminMenu;
+
+        include __DIR__ . '/CBAdminPageMenuViewHTML.php';
+    }
+
+    /**
+     * @deprecated
+     *
+     * @return void
      */
     public function setSelectedMenuItemName($selectedMenuItemName)
     {
@@ -79,7 +94,9 @@ class CBAdminPageMenuView extends CBView
     }
 
     /**
+     * @deprecated
      *
+     * @return void
      */
     public function setSelectedSubmenuItemName($selectedSubmenuItemName)
     {

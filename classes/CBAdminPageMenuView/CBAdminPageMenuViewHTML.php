@@ -1,25 +1,18 @@
-<?php
-
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBAdminPageMenuView/CBAdminPageMenuViewHTML.css');
-
-?>
-
 <section class="CBAdminPageMenuView">
 
     <?php
 
-    $selectedMenuItemName       = $this->model->selectedMenuItemName;
+    $selectedMenuItemName       = $model->selectedMenuItemName;
 
-    $this->renderMenu($this->menuModel, $selectedMenuItemName, 'CBMenu');
+    self::renderMenu($menuModel, $selectedMenuItemName, 'CBMenu');
 
     if ($selectedMenuItemName &&
-        isset($this->menuModel->{$selectedMenuItemName}->submenu))
+        isset($menuModel->{$selectedMenuItemName}->submenu))
     {
-        $submenu                    = $this->menuModel->{$selectedMenuItemName}->submenu;
-        $selectedSubmenuItemName    = $this->model->selectedSubmenuItemName;
+        $submenu                    = $menuModel->{$selectedMenuItemName}->submenu;
+        $selectedSubmenuItemName    = $model->selectedSubmenuItemName;
 
-        $this->renderMenu($submenu, $selectedSubmenuItemName, 'CBSubmenu');
+        self::renderMenu($submenu, $selectedSubmenuItemName, 'CBSubmenu');
     }
 
     ?>
