@@ -2,36 +2,12 @@
 
 final class CBView {
 
-    protected $model;
+    public $model;
 
     /**
      * @return instance type
      */
     private function __construct() { }
-
-    /**
-     * This is a temporary function. It will be replaced with
-     * `compileSpecificationModelToRenderModel` when views are all statically
-     * implemented and no longer inherit from this class.
-     *
-     * @return stdClass
-     */
-    public static function compile($specificationModel) {
-        $function = "{$specificationModel->className}::compileSpecificationModelToRenderModel";
-
-        if (is_callable($function)) {
-            return call_user_func($function, $specificationModel);
-        } else {
-            return CBView::compileSpecificationModelToRenderModel($specificationModel);
-        }
-    }
-
-    /**
-     * @return stdClass
-     */
-    public static function compileSpecificationModelToRenderModel($specificationModel) {
-        return json_decode(json_encode($specificationModel));
-    }
 
     /**
      * This method is called to create a new view. Override this method to add
@@ -117,17 +93,8 @@ final class CBView {
      * @return void
      */
     public static function includeEditorDependencies() {
-
         CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBView/CBViewEditor.css');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBView/CBViewEditor.js');
-    }
-
-    /**
-     * @return object
-     */
-    public function model() {
-
-        return $this->model;
     }
 
     /**
@@ -167,55 +134,56 @@ final class CBView {
     }
 
     /**
-     * @return void
+     * @return string
      */
-    public function searchText() {
+    public static function modelToSearchText(stdClass $model = null) {
+        if (isset($model->className) && $model->className != 'CBView') {
+            $function = "{$model->className}::modelToSearchText";
+
+            if (is_callable($function)) {
+                return call_user_func($function, $model);
+            }
+        }
 
         return '';
     }
 
     /**
-     * 2015.02.20
-     * `searchTextNew` is a temporary function name until we can move
-     * `searchText` to be static for all view classes.
-     *
-     * @return string
-     */
-    public static function searchTextForSpecificationModel($specificationModel) {
-        $className = $specificationModel->className;
-
-        if (is_callable("{$className}::searchTextNew")) {
-            return $className::searchTextNew($specificationModel);
-        } else {
-            /* Deprecated */
-            $view = self::createViewWithModel($specificationModel);
-            return $view->searchText();
-        }
-    }
-
-    /**
      * This function transforms a view specification into a model. This
      * function always succeeds. If the view class has no `specToModel`
-     * function the model will be created with only a `className` property. All
-     * other specification properties will be ignored. If there isn't even a
-     * `className` property specified, a model will be created with a
-     * `className` of "CBView".
+     * function the model will be a copy of the specification. If the
+     * specification has no `className` property, the `className` property
+     * on the model will be set to "CBView".
      *
      * @note functional programming
      *
      * @return stdClass
      */
-    public static function specToModel($spec) {
+    public static function specToModel(stdClass $spec = null) {
         if (isset($spec->className) && $spec->className != 'CBView') {
             $function = "{$spec->className}::specToModel";
 
             if (is_callable($function)) {
                 return call_user_func($function, $spec);
             }
+
+            // deprecated
+
+            $function = "{$spec->className}::compileSpecificationModelToRenderModel";
+
+            if (is_callable($function)) {
+                error_log("`{$function}` should be renamed to `specToModel`");
+                return call_user_func($function, $spec);
+            }
         }
 
-        $model              = new stdClass();
-        $model->className   = isset($spec->className) ? $spec->className : 'CBView';
+        if ($spec) {
+            $model = json_decode(json_encode($spec));
+        } else {
+            $model = new stdClass();
+        }
+
+        $model->className = isset($model->className) ? $model->className : 'CBView';
 
         return $model;
     }

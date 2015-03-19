@@ -58,6 +58,21 @@ final class CBBackgroundView {
     }
 
     /**
+     * @note functional programming
+     *
+     * @return string
+     */
+    public static function modelToSearchText(stdClass $model = null) {
+        if (isset($model->children)) {
+            $text = array_map('CBView::modelToSearchText', $model->children);
+
+            return implode(' ', $text);
+        }
+
+        return '';
+    }
+
+    /**
      * @return void
      */
     public function renderHTML()

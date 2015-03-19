@@ -1,6 +1,6 @@
 <?php
 
-class CBContainerView extends CBView {
+final class CBContainerView {
 
     protected $subviews;
 
@@ -9,7 +9,8 @@ class CBContainerView extends CBView {
      */
     public static function init() {
 
-        $view                       = parent::init();
+        $view                       = new self();
+        $view->model                = CBView::modelWithClassName(__CLASS__);
         $view->model->subviewModels = array();
         $view->subviews             = array();
 
@@ -21,11 +22,11 @@ class CBContainerView extends CBView {
      */
     public static function initWithModel($model) {
 
-        $view           = parent::initWithModel($model);
+        $view           = new self();
+        $view->model    = $model;
         $view->subviews = array();
 
         foreach ($view->model->subviewModels as $subviewModel) {
-
             $view->subviews[] = CBView::createViewWithModel($subviewModel);
         }
 
@@ -55,17 +56,30 @@ class CBContainerView extends CBView {
      * @return void
      */
     public static function includeEditorDependencies() {
-
-        parent::includeEditorDependencies();
+        CBView::includeEditorDependencies();
 
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBContainerView/CBContainerViewEditor.js');
+    }
+
+    /**
+     * @note functional programming
+     *
+     * @return string
+     */
+    public static function modelToSearchText(stdClass $model = null) {
+        if (isset($model->subviewModels)) {
+            $text = array_map('CBView::modelToSearchText', $model->subviewModels);
+
+            return implode(' ', $text);
+        }
+
+        return '';
     }
 
     /**
      * @return void
      */
     public function renderHTML() {
-
         include __DIR__ . '/CBContainerViewHTML.php';
     }
 

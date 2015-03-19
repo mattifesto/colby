@@ -1,17 +1,17 @@
 <?php
 
-class CBImageView extends CBView {
+final class CBImageView {
 
     /**
      * @return instance type
      */
     public static function init() {
-
-        $view                                   = parent::init();
+        $view                                   = new self();
         $view->alternativeTextView              = CBTextView::init();
+        $view->model                            = CBView::modelWithClassName(__CLASS__);
         $view->model->actualHeight              = null;
         $view->model->actualWidth               = null;
-        $view->model->alternativeTextViewModel  = $view->alternativeTextView->model();
+        $view->model->alternativeTextViewModel  = $view->alternativeTextView->model;
         $view->model->displayHeight             = null;
         $view->model->displayWidth              = null;
         $view->model->filename                  = null;
@@ -27,8 +27,8 @@ class CBImageView extends CBView {
      * @return instance type
      */
     public static function initWithModel($model) {
-
-        $view                       = parent::initWithModel($model);
+        $view                       = new self();
+        $view->model                = $model;
         $view->alternativeTextView  = CBTextView::initWithModel($view->model->alternativeTextViewModel);
 
         return $view;
@@ -38,16 +38,13 @@ class CBImageView extends CBView {
      * @return void
      */
     public static function includeEditorDependencies() {
-
-        parent::includeEditorDependencies();
+        CBView::includeEditorDependencies();
         CBTextView::includeEditorDependencies();
 
         $URL = CBSystemURL . '/classes/CBImageView/CBImageViewEditor.css';
-
         CBHTMLOutput::addCSSURL($URL);
 
         $URL = CBSystemURL . '/classes/CBImageView/CBImageViewEditor.js';
-
         CBHTMLOutput::addJavaScriptURL($URL);
     }
 
@@ -57,6 +54,17 @@ class CBImageView extends CBView {
     public function hasImage() {
 
         return !!$this->model->filename;
+    }
+
+    /**
+     * @return string
+     */
+    public static function modelToSearchText(stdClass $model = null) {
+        if (isset($model->alternativeTextViewModel)) {
+            return CBView::modelToSearchText($model->alternativeTextViewModel);
+        }
+
+        return '';
     }
 
     /**
@@ -107,13 +115,4 @@ class CBImageView extends CBView {
 
         <?php
     }
-
-    /**
-     * @return string
-     */
-    public function searchText() {
-
-        return $this->alternativeTextView->searchText();
-    }
-
 }

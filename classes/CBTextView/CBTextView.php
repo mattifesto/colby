@@ -4,17 +4,16 @@
 /**
  *
  */
-class CBTextView extends CBView {
+final class CBTextView {
 
     /**
      * @return instance type
      */
     public static function init() {
-
-        $view = parent::init();
-
-        $view->model->text          = '';
-        $view->model->HTML          = '';
+        $view               = new self();
+        $view->model        = CBView::modelWithClassName(__CLASS__);
+        $view->model->text  = '';
+        $view->model->HTML  = '';
 
         return $view;
     }
@@ -30,8 +29,8 @@ class CBTextView extends CBView {
      * @return instance type
      */
     public static function initWithModel($model) {
-
-        $view = parent::initWithModel($model);
+        $view           = new self();
+        $view->model    = $model;
 
         return $view;
     }
@@ -40,7 +39,6 @@ class CBTextView extends CBView {
      * @return string
      */
     final public function HTML() {
-
         return $this->model->HTML;
     }
 
@@ -48,10 +46,20 @@ class CBTextView extends CBView {
      * @return void
      */
     public static function includeEditorDependencies() {
-
-        parent::includeEditorDependencies();
+        CBView::includeEditorDependencies();
 
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBTextView/CBTextViewEditor.js');
+    }
+
+    /**
+     * @return string
+     */
+    public static function modelToSearchText(stdClass $model = null) {
+        if (isset($model->text)) {
+            return $model->text;
+        }
+
+        return '';
     }
 
     /**
@@ -60,14 +68,6 @@ class CBTextView extends CBView {
     public function renderHTML() {
 
         echo "<span class=\"CBTextView\">{$this->model->HTML}</span>";
-    }
-
-    /**
-     * @return string
-     */
-    public function searchText() {
-
-        return $this->model->text;
     }
 
     /**
@@ -84,7 +84,7 @@ class CBTextView extends CBView {
     /**
      * @return string
      */
-    final public function text() {
+    public function text() {
 
         return $this->model->text;
     }

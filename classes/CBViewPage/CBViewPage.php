@@ -75,8 +75,7 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function compileSpecificationModelToRenderModel($specificationModel) {
-
+    public static function specToModel($specificationModel) {
         $s = $specificationModel;
 
         /**
@@ -94,6 +93,7 @@ EOT;
 
         $r->description             = isset($s->description) ? $s->description : '';
         $r->isPublished             = isset($s->isPublished) ? $s->isPublished : false;
+        $r->iteration               = $s->iteration;
         $r->listClassNames          = isset($s->listClassNames) ? $s->listClassNames : array();
         $r->publicationTimeStamp    = isset($s->publicationTimeStamp) ? $s->publicationTimeStamp : null;
         $r->publishedBy             = isset($s->publishedBy) ? $s->publishedBy : null;
@@ -107,7 +107,7 @@ EOT;
          */
 
         if (isset($s->sections)) {
-            $r->sections = array_map('CBView::compile', $s->sections);
+            $r->sections = array_map('CBView::specToModel', $s->sections);
         } else {
             $r->sections = array();
         }
@@ -134,7 +134,7 @@ EOT;
      */
     private static function compileSpecificationModelToSummaryViewModel($model) {
         $summaryView                            = CBPageSummaryView::init();
-        $summaryViewModel                       = $summaryView->model();
+        $summaryViewModel                       = $summaryView->model;
         $summaryViewModel->created              = $model->created;
         $summaryViewModel->dataStoreID          = $model->dataStoreID;
         $summaryViewModel->description          = $model->description;
@@ -283,13 +283,9 @@ EOT;
      * @return void
      */
     public static function save($specificationModel) {
-
-        $renderModel = self::compileSpecificationModelToRenderModel($specificationModel);
+        $ID = $specificationModel->dataStoreID;
 
         try {
-
-            $ID = $specificationModel->dataStoreID;
-
             Colby::query('START TRANSACTION');
 
             if (isset($specificationModel->iteration)) {
@@ -306,6 +302,8 @@ EOT;
                 $specificationModel->rowID      = $data->rowID;
             }
 
+            $renderModel = self::specToModel($specificationModel);
+
             if ($data->URI != $specificationModel->URI && CBPages::updateURI($ID, $specificationModel->URI)) {
                 $renderModel->URI = $specificationModel->URI;
             } else {
@@ -314,14 +312,7 @@ EOT;
 
             $renderModel->URIAsHTML = ColbyConvert::textToHTML($renderModel->URI);
 
-            /**
-             * 2015.02.20 TODO
-             * We either need to pass the render model or do a lot more work in
-             * updateDatabase because the specification model is no longer
-             * guaranteed to have the values updateDatabase expects.
-             */
-
-            self::updateDatabase($specificationModel);
+            self::updateDatabase($renderModel);
 
             $dataStore              = new CBDataStore($ID);
             $specificationModelJSON = json_encode($specificationModel);
@@ -366,13 +357,13 @@ EOT;
     /**
      * @return string
      */
-    private static function searchText($specificationModel) {
+    private static function modelToSearchText($model) {
         $searchText     = array();
-        $searchText[]   = $specificationModel->title;
-        $searchText[]   = $specificationModel->description;
+        $searchText[]   = $model->title;
+        $searchText[]   = $model->description;
 
-        foreach ($specificationModel->sections as $viewSpecificationModel) {
-            $searchText[] = CBView::searchTextForSpecificationModel($viewSpecificationModel);
+        foreach ($model->sections as $modelForView) {
+            $searchText[] = CBView::modelToSearchText($modelForView);
         }
 
         return implode(' ', $searchText);
@@ -401,24 +392,24 @@ EOT;
     /**
      * @return void
      */
-    private static function updateDatabase($specificationModel) {
+    private static function updateDatabase($model) {
 
-        $summaryViewModel       = self::compileSpecificationModelToSummaryViewModel($specificationModel);
+        $summaryViewModel       = self::compileSpecificationModelToSummaryViewModel($model);
         $rowData                = new stdClass();
         $rowData->className     = 'CBViewPage';
         $rowData->keyValueData  = json_encode($summaryViewModel);
-        $rowData->rowID         = $specificationModel->rowID;
+        $rowData->rowID         = $model->rowID;
         $rowData->typeID        = null;
-        $rowData->groupID       = $specificationModel->groupID;
-        $rowData->iteration     = $specificationModel->iteration;
-        $rowData->titleHTML     = $specificationModel->titleHTML;
-        $rowData->searchText    = self::searchText($specificationModel);
-        $rowData->subtitleHTML  = $specificationModel->descriptionHTML;
+        $rowData->groupID       = null;
+        $rowData->iteration     = $model->iteration;
+        $rowData->titleHTML     = $model->titleHTML;
+        $rowData->searchText    = self::modelToSearchText($model);
+        $rowData->subtitleHTML  = $model->descriptionHTML;
 
-        if ($specificationModel->isPublished)
+        if ($model->isPublished)
         {
-            $rowData->published             = $specificationModel->publicationTimeStamp;
-            $rowData->publishedBy           = $specificationModel->publishedBy;
+            $rowData->published             = $model->publicationTimeStamp;
+            $rowData->publishedBy           = $model->publishedBy;
             $rowData->publishedYearMonth    = ColbyConvert::timestampToYearMonth($rowData->published);
         }
         else
@@ -430,14 +421,13 @@ EOT;
 
         CBPages::updateRow($rowData);
 
-        self::removeFromEditablePageLists($specificationModel);
+        self::removeFromEditablePageLists($model);
 
-        if ($specificationModel->isPublished) {
-
-            self::addToPageLists($specificationModel);
+        if ($model->isPublished) {
+            self::addToPageLists($model);
         }
 
-        self::addToRecentlyEditedPagesList($specificationModel);
+        self::addToRecentlyEditedPagesList($model);
     }
 
     /**

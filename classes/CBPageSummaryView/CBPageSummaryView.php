@@ -1,6 +1,6 @@
 <?php
 
-class CBPageSummaryView extends CBView {
+final class CBPageSummaryView {
 
     /**
      * The properties on the model are a subset of the properties for a page
@@ -10,9 +10,9 @@ class CBPageSummaryView extends CBView {
      * @return instance type
      */
     public static function init() {
-
-        $view   = parent::init();
-        $model  = $view->model;
+        $view           = new self();
+        $view->model    = CBView::modelWithClassName(__CLASS__);
+        $model          = $view->model;
 
         $model->created                 = null;
         $model->dataStoreID             = null;
