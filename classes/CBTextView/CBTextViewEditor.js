@@ -12,9 +12,7 @@ Colby.extend(CBTextViewEditor, {
      * @return void
      */
     setText : function(text) {
-
         this.model.text = text;
-        this.model.HTML = this.textToHTML(text);
 
         CBPageEditor.requestSave();
     },
@@ -26,7 +24,6 @@ Colby.extend(CBTextViewEditor, {
      * @return string
      */
     textToHTML : function (text) {
-
         return Colby.textToHTML(text);
     }
 });
@@ -36,12 +33,9 @@ Colby.extend(CBTextViewEditor, {
  * @return instance type
  */
 CBTextViewEditor.init = function() {
-
     CBViewEditor.init.call(this);
 
     this.model.className    = "CBTextView";
-    this.model.text         = "";
-    this.model.HTML         = "";
 
     return this;
 };
@@ -50,22 +44,18 @@ CBTextViewEditor.init = function() {
  * @return void
  */
 CBTextViewEditor.createElement = function() {
-
     this._element           = document.createElement("div");
     this._element.className = "CBTextViewEditor";
 
     if (this.editorIsMultiLine) {
-
         this._input         = document.createElement("textarea");
-
     } else {
-
         this._input         = document.createElement("input");
         this._input.type    = "text";
     }
 
     this._input.id          = Colby.random160();
-    this._input.value       = this.model.text;
+    this._input.value       = this.model.text || '';
     var label               = document.createElement("label");
     label.htmlFor           = this._input.id;
     label.textContent       = this.labelText;
@@ -82,9 +72,7 @@ CBTextViewEditor.createElement = function() {
  * @return Element
  */
 CBTextViewEditor.element = function() {
-
-    if (!this._element)
-    {
+    if (!this._element) {
         this.createElement();
     }
 
@@ -95,6 +83,5 @@ CBTextViewEditor.element = function() {
  * @return void
  */
 CBTextViewEditor.textDidChange = function() {
-
     this.setText(this._input.value);
 };

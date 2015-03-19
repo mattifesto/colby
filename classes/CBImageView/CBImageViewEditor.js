@@ -37,12 +37,14 @@ CBImageViewEditor.init = function() {
 /**
  * @return instance type
  */
-CBImageViewEditor.initWithModel = function(viewModel) {
+CBImageViewEditor.initWithModel = function(model) {
+    CBViewEditor.initWithModel.call(this, model);
 
-    CBViewEditor.initWithModel.call(this, viewModel);
+    if (!model.alternativeTextViewModel) {
+        model.alternativeTextViewModel = {"className":"CBTextView"};
+    }
 
-    var alternativeTextViewModel    = this.model.alternativeTextViewModel;
-    this.alternativeTextViewEditor  = CBViewEditor.editorForViewModel(alternativeTextViewModel);
+    this.alternativeTextViewEditor  = CBViewEditor.editorForViewModel(model.alternativeTextViewModel);
 
     return this;
 };
