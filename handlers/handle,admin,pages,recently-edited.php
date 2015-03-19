@@ -20,18 +20,12 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 <main>
 
-    <?php
-
-    $view = CBRecentlyEditedPagesView::init();
-
-    $view->renderHTML();
-
-    ?>
+    <?php CBRecentlyEditedPagesView::renderModelAsHTML(); ?>
 
 </main>
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer-2.php';
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();

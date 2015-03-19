@@ -1,33 +1,21 @@
 <?php
 
-class CBRecentlyEditedPagesView extends CBView
-{
-    protected $pagesListView;
-
-    /**
-     * @return instance type
-     */
-    public static function init()
-    {
-        $view                   = parent::init();
-        $view->pagesListView    = CBPagesListView::init();
-
-        return $view;
-    }
+final class CBRecentlyEditedPagesView {
 
     /**
      * @return void
      */
-    public function renderHTML()
-    {
+    public static function renderModelAsHTML(stdClass $model = null) {
         $URL = CBSystemURL . '/classes/CBRecentlyEditedPagesView/CBRecentlyEditedPagesViewController.js';
-
         CBHTMLOutput::addJavaScriptURL($URL);
 
         $URL = CBSystemURL . '/javascript/CBDelayTimer.js';
-
         CBHTMLOutput::addJavaScriptURL($URL);
 
-        include __DIR__ . '/CBRecentlyEditedPagesViewHTML.php';
+        echo '<div class="CBRecentlyEditedPagesView">';
+
+        CBPagesListView::renderModelAsHTML();
+
+        echo '</div>';
     }
 }

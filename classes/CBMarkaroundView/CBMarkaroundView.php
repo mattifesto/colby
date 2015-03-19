@@ -1,25 +1,12 @@
 <?php
 
-class CBMarkaroundView extends CBView {
-
-    /**
-     * @return instance type
-     */
-    public static function init() {
-
-        $view   = parent::init();
-        $model  = $view->model;
-
-        $model->markaround  = '';
-        $model->HTML        = '';
-
-        return $view;
-    }
+final class CBMarkaroundView {
 
     /**
      * @return void
      */
     public static function includeEditorDependencies() {
+        CBView::includeEditorDependencies();
 
         CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBMarkaroundView/CBMarkaroundViewEditor.css');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBMarkaround.js');
@@ -28,10 +15,33 @@ class CBMarkaroundView extends CBView {
     }
 
     /**
+     * @return string
+     */
+    public static function modelToSearchText(stdClass $model = null) {
+        return isset($model->markaround) ? $model->markaround : '';
+    }
+
+    /**
      * @return void
      */
-    public function renderHTML() {
+    public static function renderModelAsHTML(stdClass $model = null) {
+        echo '<section class="CBMarkaroundView">';
 
-        include __DIR__ . '/CBMarkaroundViewHTML.php';
+        if (exists($model->HTML)) {
+            echo $model->HTML;
+        }
+
+        echo '</section>';
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function specToModel(stdClass $spec = null) {
+        $model              = CBView::modelWithClassName(__CLASS__);
+        $model->markaround  = isset($spec->markaround) ? $spec->markaround : null;
+        $model->HTML        = ColbyConvert::markaroundToHTML($model->markaround);
+
+        return $model;
     }
 }

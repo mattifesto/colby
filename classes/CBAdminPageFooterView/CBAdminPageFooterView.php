@@ -23,7 +23,7 @@ final class CBAdminPageFooterView {
      *
      * @return void
      */
-    public function renderModelAsHTML($model) {
+    public static function renderModelAsHTML(stdClass $model = null) {
         include __DIR__ . '/CBAdminPageFooterViewHTML.php';
     }
 

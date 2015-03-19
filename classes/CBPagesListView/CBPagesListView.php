@@ -4,12 +4,12 @@
  * This view is used by admin pages to create a table containing a list of
  * pages. For instance, a list of pages available for editing.
  */
-class CBPagesListView extends CBView
-{
+final class CBPagesListView {
+
     /**
      * @return void
      */
-    public function renderHTML()
+    public static function renderModelAsHTML(stdClass $model = null)
     {
         $baseURL = CBSystemURL . '/classes/CBPagesListView';
 
