@@ -52,7 +52,6 @@ final class CBImageView {
      * @return bool
      */
     public function hasImage() {
-
         return !!$this->model->filename;
     }
 
@@ -60,11 +59,9 @@ final class CBImageView {
      * @return string
      */
     public static function modelToSearchText(stdClass $model = null) {
-        if (isset($model->alternativeTextViewModel)) {
-            return CBView::modelToSearchText($model->alternativeTextViewModel);
-        }
+        $altTextModel = isset($model->alternativeTextViewModel) ? $model->alternativeTextViewModel : null;
 
-        return '';
+        return CBTextView::modelToSearchText($altTextModel);
     }
 
     /**
@@ -114,5 +111,26 @@ final class CBImageView {
              style="<?= $styles ?>">
 
         <?php
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function specToModel(stdClass $spec = null) {
+        $model                  = CBView::modelWithClassName(__CLASS__);
+        $model->actualHeight    = isset($spec->actualHeight) ? $spec->actualHeight : null;
+        $model->actualWidth     = isset($spec->actualWidth) ? $spec->actualWidth : null;
+        $model->displayHeight   = isset($spec->displayHeight) ? $spec->displayHeight : null;
+        $model->displayWidth    = isset($spec->displayWidth) ? $spec->displayWidth : null;
+        $model->filename        = isset($spec->filename) ? $spec->filename : null;
+        $model->maxHeight       = isset($spec->maxHeight) ? $spec->maxHeight : null;
+        $model->maxWidth        = isset($spec->maxWidth) ? $spec->maxWidth : null;
+        $model->URL             = isset($spec->URL) ? $spec->URL : null;
+        $model->URLForHTML      = isset($spec->URLForHTML) ? $spec->URLForHTML : null;
+        $altTextSpec            = isset($spec->alternativeTextViewModel) ? $spec->alternativeTextViewModel : null;
+
+        $model->alternativeTextViewModel = CBTextView::specToModel($altTextSpec);
+
+        return $model;
     }
 }

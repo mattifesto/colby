@@ -1,9 +1,5 @@
 <?php
 
-
-/**
- *
- */
 final class CBTextView {
 
     /**
@@ -38,7 +34,7 @@ final class CBTextView {
     /**
      * @return string
      */
-    final public function HTML() {
+    public function HTML() {
         return $this->model->HTML;
     }
 
@@ -66,37 +62,39 @@ final class CBTextView {
      * @return void
      */
     public function renderHTML() {
-
         echo "<span class=\"CBTextView\">{$this->model->HTML}</span>";
     }
 
     /**
      * @return void
      */
-    final public function setText($text) {
+    public function setText($text) {
+        $this->model->text  = (string)$text;
+        $this->model->HTML  = self::textToHTML($this->model->text);
+    }
 
-        $text               = (string)$text;
-        $HTML               = $this->textToHTML($text);
-        $this->model->text  = $text;
-        $this->model->HTML  = $HTML;
+    /**
+     * @return stdClass
+     */
+    public static function specToModel($spec) {
+        $model          = CBView::modelWithClassName(__CLASS__);
+        $model->text    = isset($spec->text) ? (string)$spec->text : '';
+        $model->HTML    = self::textToHTML($model->text);
+
+        return $model;
     }
 
     /**
      * @return string
      */
     public function text() {
-
         return $this->model->text;
     }
 
     /**
-     * Subclasses may override this function to provide custom text to HTML
-     * conversion for simple markup and markdown scenarios.
-     *
      * @return string
      */
-    public function textToHTML($text) {
-
+    public static function textToHTML($text) {
         return ColbyConvert::textToHTML($text);
     }
 }
