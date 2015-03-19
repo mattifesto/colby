@@ -3,14 +3,14 @@
 $styles = array();
 $styles[] = "position: relative;";
 
-if ($this->model->imageURL)
+if ($model->imageURL)
 {
-    $styles[] = "background-image: url({$this->model->imageURLHTML});";
+    $styles[] = "background-image: url({$model->imageURLHTML});";
     $styles[] = "background-position: center top;";
 
-    if ($this->model->imageShouldRepeatVertically)
+    if ($model->imageShouldRepeatVertically)
     {
-        if ($this->model->imageRepeatHorizontally)
+        if ($model->imageRepeatHorizontally)
         {
             $repeat = "repeat";
         }
@@ -19,7 +19,7 @@ if ($this->model->imageURL)
             $repeat = "repeat-y";
         }
     }
-    else if ($this->model->imageShouldRepeatHorizontally)
+    else if ($model->imageShouldRepeatHorizontally)
     {
         $repeat = "repeat-x";
     }
@@ -31,14 +31,14 @@ if ($this->model->imageURL)
     $styles[]   = "background-repeat: {$repeat};";
 }
 
-if (!empty($this->model->color))
+if (!empty($model->color))
 {
-    $styles[] = "background-color: {$this->model->colorHTML};";
+    $styles[] = "background-color: {$model->colorHTML};";
 }
 
-if ($this->model->minimumViewHeightIsImageHeight)
+if ($model->minimumViewHeightIsImageHeight)
 {
-    $styles[] = "min-height: {$this->model->imageHeight}px;";
+    $styles[] = "min-height: {$model->imageHeight}px;";
 }
 
 $styles = implode(' ', $styles);
@@ -49,7 +49,7 @@ $styles = implode(' ', $styles);
 
     <?php
 
-    if ($this->model->linkURL)
+    if ($model->linkURL)
     {
         $anchorStyles   = array();
         $anchorStyles[] = "bottom: 0px;";
@@ -59,13 +59,10 @@ $styles = implode(' ', $styles);
         $anchorStyles[] = "top: 0px;";
         $anchorStyles   = implode(' ', $anchorStyles);
 
-        echo "<a href=\"{$this->model->linkURLHTML}\" style=\"{$anchorStyles}\"></a>";
+        echo "<a href=\"{$model->linkURLHTML}\" style=\"{$anchorStyles}\"></a>";
     }
 
-    foreach ($this->subviews as $subview) {
-
-        $subview->renderHTML();
-    }
+    array_walk($model->children, 'CBView::renderModelAsHTML');
 
     ?>
 

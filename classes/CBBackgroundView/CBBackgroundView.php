@@ -2,64 +2,17 @@
 
 final class CBBackgroundView {
 
-    protected $subviews;
-
-    /**
-     * @return instance type
-     */
-    public static function init()
-    {
-        $view                                   = new self();
-        $view->subviews                         = array();
-
-        $model                                  = CBView::modelWithClassName(__CLASS__);
-        $model->children                        = array();
-        $model->color                           = null;
-        $model->colorHTML                       = null;
-        $model->imageHeight                     = null;
-        $model->imageShouldRepeatHorizontally   = false;
-        $model->imageShouldRepeatVertically     = false;
-        $model->imageURL                        = null;
-        $model->imageURLHTML                    = null;
-        $model->imageWidth                      = null;
-        $model->linkURL                         = null;
-        $model->linkURLHTML                     = null;
-        $model->minimumViewHeightIsImageHeight  = true;
-
-        $view->model                            = $model;
-
-        return $view;
-    }
-
-    /**
-     * @return instance type
-     */
-    public static function initWithModel($model) {
-
-        $view           = new self();
-        $view->model    = $model;
-        $view->subviews = array();
-
-        foreach ($view->model->children as $subviewModel) {
-            $view->subviews[] = CBView::createViewWithModel($subviewModel);
-        }
-
-        return $view;
-    }
-
     /**
      * @return void
      */
-    public static function includeEditorDependencies()
-    {
+    public static function includeEditorDependencies() {
+        CBView::includeEditorDependencies();
+
         CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBBackgroundView/CBBackgroundViewEditor.css');
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBView/CBViewEditor.js');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBBackgroundView/CBBackgroundViewEditor.js');
     }
 
     /**
-     * @note functional programming
-     *
      * @return string
      */
     public static function modelToSearchText(stdClass $model = null) {
@@ -75,8 +28,37 @@ final class CBBackgroundView {
     /**
      * @return void
      */
-    public function renderHTML()
-    {
+    public static function renderModelAsHTML(stdClass $model = null) {
+        if (!$model) {
+            $model = self::specToModel();
+        }
+
         include __DIR__ . '/CBBackgroundViewHTML.php';
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function specToModel(stdClass $spec = null) {
+        $model                                  = CBView::modelWithClassName(__CLASS__);
+        $model->color                           = isset($spec->color) ? $spec->color : null;
+        $model->colorHTML                       = ColbyConvert::textToHTML($model->color);
+        $model->imageHeight                     = isset($spec->imageHeight) ? $spec->imageHeight : null;
+        $model->imageShouldRepeatHorizontally   = isset($spec->imageShouldRepeatHorizontally) ?
+                                                    $spec->imageShouldRepeatHorizontally : false;
+        $model->imageShouldRepeatVertically     = isset($spec->imageShouldRepeatVertically) ?
+                                                    $spec->imageShouldRepeatVertically : false;
+        $model->imageURL                        = isset($spec->imageURL) ? $spec->imageURL : null;
+        $model->imageURLHTML                    = ColbyConvert::textToHTML($model->imageURL);
+        $model->imageWidth                      = isset($spec->imageWidth) ? $spec->imageWidth : null;
+        $model->linkURL                         = isset($spec->linkURL) ? $spec->linkURL : null;
+        $model->linkURLHTML                     = ColbyConvert::textToHTML($model->linkURL);
+        $model->minimumViewHeightIsImageHeight  = isset($spec->minimumViewHeightIsImageHeight) ?
+                                                    $spec->minimumViewHeightIsImageHeight : null;
+
+        $subviewSpecs       = isset($spec->children) ? $spec->children : [];
+        $model->children    = array_map('CBView::specToModel', $subviewSpecs);
+
+        return $model;
     }
 }

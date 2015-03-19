@@ -1,56 +1,14 @@
 <?php
 
+/**
+ * 2015.03.19
+ * This class was intented to be used as a base class for container views. The
+ * paradigm has changed so that each view class stands on its own so this class
+ * is now more of an example of how to implement a container view. This class
+ * may be deprecated and eventually removed if it doesn't provide any useful
+ * benefit.
+ */
 final class CBContainerView {
-
-    protected $subviews;
-
-    /**
-     * @return instance type
-     */
-    public static function init() {
-
-        $view                       = new self();
-        $view->model                = CBView::modelWithClassName(__CLASS__);
-        $view->model->subviewModels = array();
-        $view->subviews             = array();
-
-        return $view;
-    }
-
-    /**
-     * @return instance type
-     */
-    public static function initWithModel($model) {
-
-        $view           = new self();
-        $view->model    = $model;
-        $view->subviews = array();
-
-        foreach ($view->model->subviewModels as $subviewModel) {
-            $view->subviews[] = CBView::createViewWithModel($subviewModel);
-        }
-
-        return $view;
-    }
-
-    /**
-     * @return void
-     */
-    public function addSubview(CBView $view) {
-
-        $this->model->subviewModels[] = $view->model();
-    }
-
-    /**
-     * @return stdClass
-     */
-    public static function compileSpecificationModelToRenderModel($specificationModel) {
-        $r                  = new stdClass();
-        $r->className       = $specificationModel->className;
-        $r->subviewModels   = array_map('CBView::compile', $specificationModel->subviewModels);
-
-        return $r;
-    }
 
     /**
      * @return void
@@ -62,8 +20,6 @@ final class CBContainerView {
     }
 
     /**
-     * @note functional programming
-     *
      * @return string
      */
     public static function modelToSearchText(stdClass $model = null) {
@@ -79,18 +35,24 @@ final class CBContainerView {
     /**
      * @return void
      */
-    public function renderHTML() {
-        include __DIR__ . '/CBContainerViewHTML.php';
+    public static function renderModelAsHTML(stdClass $model = null) {
+        echo '<div class="CBContainerView">';
+
+        if (isset($model->subviewModels)) {
+            array_walk($model->subviewModels, 'CBView::renderModelAsHTML');
+        }
+
+        echo '</div>';
     }
 
     /**
-     * @return void
+     * @return stdClass
      */
-    protected function renderSubviews() {
+    public static function specToModel(stdClass $spec = null) {
+        $model                  = CBView::modelWithClassName(__CLASS__);
+        $subviewModels          = isset($spec->subviewModels) ? $spec->subviewModels : [];
+        $model->subviewModels   = array_map('CBView::specToModel', $spec->subviewModels);
 
-        foreach ($this->subviews as $subview) {
-
-            $subview->renderHTML();
-        }
+        return $model;
     }
 }
