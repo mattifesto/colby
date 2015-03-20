@@ -112,14 +112,24 @@ final class CBView {
     /**
      * @return void
      */
-    public static function renderModelAsHTML($model) {
-        $function = "{$model->className}::renderModelAsHTML";
+    public static function renderModelAsHTML(stdClass $model = null) {
+        if (isset($model->className) && $model->className != 'CBView') {
+            $function = "{$model->className}::renderModelAsHTML";
 
-        if (is_callable($function)) {
-            call_user_func($function, $model);
+            if (is_callable($function)) {
+                call_user_func($function, $model);
+            } else {
+                $view = self::createViewWithModel($model);
+                $view->renderHTML();
+            }
         } else {
-            $view = self::createViewWithModel($model);
-            $view->renderHTML();
+            if (CBSiteIsBeingDebugged) {
+                $modelAsJSONAsHTML = ': ' . str_replace('--', ' - - ', json_encode($model));
+            } else {
+                $modelAsJSONAsHTML = '';
+            }
+
+            echo "<!-- CBView default output{$modelAsJSONAsHTML} -->";
         }
     }
 
