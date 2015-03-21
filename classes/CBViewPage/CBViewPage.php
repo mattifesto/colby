@@ -28,22 +28,30 @@ final class CBViewPage {
      * @return void
      */
     private static function addToPageLists($model) {
-        $pageRowID      = (int)$model->rowID;
-        $updated        = (int)$model->updated;
-        $yearMonth      = gmdate('Ym', $updated);
+        $pageRowID = (int)$model->rowID;
+
+        if ($model->isPublished) {
+            $publishedAsSQL = (int)$model->publicationTimeStamp;
+            $yearMonthAsSQL = ColbyConvert::timestampToYearMonth($model->publicationTimeStamp);
+            $yearMonthAsSQL = "'{$yearMonthAsSQL}'";
+        } else {
+            $publishedAsSQL = 'NULL';
+            $yearMonthAsSQL = 'NULL';
+        }
+
         $listClassNames = isset($model->listClassNames) ? $model->listClassNames : array();
 
         foreach ($listClassNames as $className) {
-            $classNameForSQL    = ColbyConvert::textToSQL($className);
-            $SQL                = <<<EOT
+            $classNameAsSQL = ColbyConvert::textToSQL($className);
+            $SQL            = <<<EOT
 
                 INSERT INTO
                     `CBPageLists`
                 SET
                     `pageRowID`     = {$pageRowID},
-                    `listClassName` = '{$classNameForSQL}',
-                    `sort1`         = {$yearMonth},
-                    `sort2`         = {$updated}
+                    `listClassName` = '{$classNameAsSQL}',
+                    `sort1`         = {$yearMonthAsSQL},
+                    `sort2`         = {$publishedAsSQL}
 
 EOT;
 
