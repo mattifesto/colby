@@ -383,6 +383,15 @@ class ColbyConvert
     }
 
     /**
+     * @return string
+     */
+    public static function timestampToHTML($timestamp) {
+        $timestampForJavaScript = $timestamp * 1000;
+
+        return "<time class=\"time\" data-timestamp=\"{$timestampForJavaScript}\"></time>";
+    }
+
+    /**
      * 2013.05.05
      *
      * This function looks up the time zone that Facebook gives us for a user
