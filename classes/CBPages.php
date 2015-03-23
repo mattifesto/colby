@@ -67,23 +67,31 @@ class CBPages
      *  and passed into the `updateRow` method.
      */
     public static function insertRow($ID) {
-        Colby::query(self::sqlToInsertRow($ID));
+        $ID         = (string)$ID;
+        $IDAsSQL    = ColbyConvert::textToSQL($ID);
+        $SQL        = <<<EOT
+
+            INSERT INTO
+                `ColbyPages`
+            SET
+                `archiveID`             = UNHEX('{$IDAsSQL}'),
+                `keyValueData`          = '',
+                `titleHTML`             = '',
+                `subtitleHTML`          = '',
+                `searchText`            = '',
+                `publishedYearMonth`    = '',
+                `URI`                   = '{$IDAsSQL}'
+
+EOT;
+
+        Colby::query($SQL);
 
         $rowData            = new stdClass();
         $rowData->iteration = 1;
         $rowData->rowID     = Colby::mysqli()->insert_id;
-        $rowData->URI       = null;
+        $rowData->URI       = $ID;
 
         return $rowData;
-    }
-
-    /**
-     * @param array<string> $dataStoreIDs
-     *
-     * @return array<stdClass>
-     */
-    public static function insertRows($dataStoreIDs)
-    {
     }
 
     /**
@@ -227,30 +235,6 @@ EOT;
                 `CBPagesInTheTrash`
             WHERE
                 `dataStoreID` = UNHEX('{$dataStoreIDForSQL}')
-
-EOT;
-
-        return $sql;
-    }
-
-    /**
-     * @return string
-     */
-    private static function sqlToInsertRow($dataStoreID)
-    {
-        $dataStoreIDForSQL = ColbyConvert::textToSQL($dataStoreID);
-
-        $sql = <<<EOT
-
-            INSERT INTO
-                `ColbyPages`
-            SET
-                `archiveID`             = UNHEX('{$dataStoreIDForSQL}'),
-                `keyValueData`          = '',
-                `titleHTML`             = '',
-                `subtitleHTML`          = '',
-                `searchText`            = '',
-                `publishedYearMonth`    = ''
 
 EOT;
 
