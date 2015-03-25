@@ -49,15 +49,4 @@ include Colby::findFile('sections/public-page-settings.php');
 
 <?php
 
-if (COLBY_SITE_IS_BEING_DEBUGGED)
-{
-    ?>
-
-    <div style="padding: 0px 50px; margin-top: 100px; font-size: 12px;">
-        <pre><?php echo ColbyConvert::textToHTML(var_export($_SERVER, true)); ?></pre>
-    </div>
-
-    <?php
-}
-
 CBHTMLOutput::render();

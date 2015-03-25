@@ -68,10 +68,8 @@ class Colby
      *
      * @return void
      */
-    public static function debugLog($message)
-    {
-        if (COLBY_SITE_IS_BEING_DEBUGGED)
-        {
+    public static function debugLog($message) {
+        if (self::siteIsBeingDebugged()) {
             error_log("Debug Log: {$message}");
         }
     }
@@ -630,12 +628,6 @@ class Colby
                 'The constant `COLBY_SITE_ADMINISTRATOR` has not been set.');
         }
 
-        if (!defined('COLBY_SITE_IS_BEING_DEBUGGED'))
-        {
-            throw new RuntimeException(
-                'The constant `COLBY_SITE_IS_BEING_DEBUGGED` has not been set.');
-        }
-
         /**
          * Include the site configuration file. This file is checked in and
          * therefore shared between different versions of the site. Shared
@@ -855,6 +847,17 @@ class Colby
         {
             error_log('Colby::reportException() RARE EXCEPTION: ' . $rareException->getMessage());
         }
+    }
+
+    /**
+     * This function should be called instead of directly using the
+     * `CBSiteIsBeingDebugged` constant. The method by which this function
+     * decides to return true may change over time.
+     *
+     * @return bool
+     */
+    public static function siteIsBeingDebugged() {
+        return defined('CBSiteIsBeingDebugged') && CBSiteIsBeingDebugged;
     }
 
     /**

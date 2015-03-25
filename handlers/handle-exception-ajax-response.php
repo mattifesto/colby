@@ -6,7 +6,7 @@ $response = new stdClass();
 $response->wasSuccessful = false;
 $response->message = get_class($exception) . ': ' . $exception->getMessage();
 
-if (defined('CBSiteIsBeingDubugged') && CBSiteIsBeingDubugged) {
+if (Colby::siteIsBeingDebugged()) {
     $response->stackTrace = Colby::exceptionStackTrace($exception);
 }
 

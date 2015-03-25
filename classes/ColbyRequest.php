@@ -272,30 +272,35 @@ EOT;
             }
         }
 
-        if ($handlerFilename)
-        {
-            // this is a valid set of stubs but the URL may not be canonical
-            // calling canonicalizeRequestURI will return if the URI
-            // is canonical or it will redirect and end the process
-            // if the URI isn't canonical
+        if ($handlerFilename) {
+
+            /**
+             * At this point we know that this is a valid set of stubs but the
+             * URL may not be canonical. Calling `canonicalizeRequestURI` will
+             * return if the URI is canonical or it will redirect and end the
+             * process if the URI isn't canonical.
+             */
 
             self::canonicalizeRequestURI();
 
             $result = include($handlerFilename);
 
-            if (1 === $result)
-            {
-                // file was included and did not return a special value
-                // we take this to mean everything went fine and we're done
+            if (1 === $result) {
+
+                /**
+                 * The handler file was included successfully so we're done.
+                 */
 
                 return;
             }
         }
 
-        // Either no valid handler was found or the handler returned a value
-        // indicating that the page wasn't found.
+        /**
+         * Either no valid handler was found or the handler returned a value
+         * indicating that the page wasn't found.
+         */
 
-        include(Colby::findHandler('handle-default.php'));
+        include Colby::findHandler('handle-default.php');
     }
 
     ///

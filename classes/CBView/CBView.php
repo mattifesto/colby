@@ -123,7 +123,7 @@ final class CBView {
                 $view->renderHTML();
             }
         } else {
-            if (CBSiteIsBeingDebugged) {
+            if (Colby::siteIsBeingDebugged) {
                 $modelAsJSONAsHTML = ': ' . str_replace('--', ' - - ', json_encode($model));
             } else {
                 $modelAsJSONAsHTML = '';
