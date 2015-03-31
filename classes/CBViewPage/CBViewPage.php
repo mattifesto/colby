@@ -141,8 +141,7 @@ EOT;
      * @return stdClass
      */
     private static function compileSpecificationModelToSummaryViewModel($model) {
-        $summaryView                            = CBPageSummaryView::init();
-        $summaryViewModel                       = $summaryView->model;
+        $summaryViewModel                       = CBPageSummaryView::specToModel();
         $summaryViewModel->created              = $model->created;
         $summaryViewModel->dataStoreID          = $model->dataStoreID;
         $summaryViewModel->description          = $model->description;
