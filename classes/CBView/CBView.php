@@ -92,15 +92,6 @@ final class CBView {
             if (is_callable($function)) {
                 return call_user_func($function, $spec);
             }
-
-            // deprecated
-
-            $function = "{$spec->className}::compileSpecificationModelToRenderModel";
-
-            if (is_callable($function)) {
-                error_log("`{$function}` should be renamed to `specToModel`");
-                return call_user_func($function, $spec);
-            }
         }
 
         if ($spec) {
