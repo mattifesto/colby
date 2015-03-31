@@ -7,29 +7,6 @@
 final class CBAdminPageMenuView {
 
     /**
-     * @deprecated
-     *
-     * @return instance type
-     */
-    public static function init() {
-        $view                                   = new self();
-        $view->model                            = CBView::modelWithClassName(__CLASS__);
-        $view->model->selectedMenuItemName      = null;
-        $view->model->selectedSubmenuItemName   = null;
-
-        return $view;
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return void
-     */
-    public function renderHTML() {
-        self::renderModelAsHTML($this->model);
-    }
-
-    /**
      * @return void
      */
     public static function renderMenu($menu, $selectedMenuItemName, $class)
@@ -54,12 +31,11 @@ final class CBAdminPageMenuView {
     }
 
     /**
-     * @note functional programming
+     * @param stdClass $model
      *
      * @return void
      */
-    public static function renderModelAsHTML($model) {
-
+    public static function renderModelAsHTML(stdClass $model = null) {
         CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
         CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBAdminPageMenuView/CBAdminPageMenuViewHTML.css');
 
@@ -84,22 +60,17 @@ final class CBAdminPageMenuView {
     }
 
     /**
-     * @deprecated
+     * @param stdClass $spec
      *
-     * @return void
+     * @return stdClass
      */
-    public function setSelectedMenuItemName($selectedMenuItemName)
-    {
-        $this->model->selectedMenuItemName = $selectedMenuItemName;
-    }
+    public static function specToModel(stdClass $spec = null) {
+        $model                          = CBView::modelWithClassName(__CLASS__);
+        $model->selectedMenuItemName    = isset($spec->selectedMenuItemName) ?
+                                            (string)$spec->selectedMenuItemName : '';
+        $model->selectedSubmenuItemName = isset($spec->selectedSubmenuItemName) ?
+                                            (string)$spec->selectedSubmenuItemName : '';
 
-    /**
-     * @deprecated
-     *
-     * @return void
-     */
-    public function setSelectedSubmenuItemName($selectedSubmenuItemName)
-    {
-        $this->model->selectedSubmenuItemName = $selectedSubmenuItemName;
+        return $model;
     }
 }
