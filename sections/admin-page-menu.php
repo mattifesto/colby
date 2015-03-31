@@ -15,7 +15,8 @@ if (!isset($selectedSubmenuItemID))
     $selectedSubmenuItemID = null;
 }
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName($selectedMenuItemID);
-$menu->setSelectedSubmenuItemName($selectedSubmenuItemID);
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = $selectedMenuItemID;
+$spec->selectedSubmenuItemName  = $selectedSubmenuItemID;
+
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));

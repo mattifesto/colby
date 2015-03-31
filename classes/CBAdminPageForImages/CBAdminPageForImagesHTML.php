@@ -1,9 +1,10 @@
 <?php
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('develop');
-$menu->setSelectedSubmenuItemName('images');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'develop';
+$spec->selectedSubmenuItemName  = 'images';
+
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>
 
@@ -26,5 +27,4 @@ $menu->renderHTML();
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();

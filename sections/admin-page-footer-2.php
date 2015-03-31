@@ -5,5 +5,4 @@
  * in the files that include it.
  */
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
