@@ -2,89 +2,6 @@
 
 final class CBView {
 
-    public $model;
-
-    /**
-     * @return instance type
-     */
-    private function __construct() { }
-
-    /**
-     * This method is called to create a new view. Override this method to add
-     * custom properties to the model and to do additional initialization.
-     *
-     * Overrides must call this function to get the instance.
-     *
-     * @return instance type
-     */
-    public static function init() {
-
-        $model              = new stdClass();
-        $model->className   = get_called_class();
-        $model->ID          = Colby::random160();
-        $model->version     = 1;
-
-        $view               = new static();
-        $view->model        = $model;
-
-        return $view;
-    }
-
-    /**
-     * This method is called when a model already exists for a view. Override
-     * this method if you need to do additional initialization aside from just
-     * storing the model.
-     *
-     * Overrides must call this function to get the instance.
-     *
-     * @return instance type
-     */
-    public static function initWithModel($model) {
-
-        if (get_called_class() != $model->className)
-        {
-            throw new InvalidArgumentException('The model provided is not a model for this view class.');
-        }
-
-        $view           = new static();
-        $view->model    = $model;
-
-        return $view;
-    }
-
-    /**
-     * This function creates the a new view of the correct type from any view
-     * model. It would be used when enumerating through views to render them or
-     * perform other non-type specific tasks.
-     *
-     * @return CBView
-     */
-    final public static function createViewWithModel($model) {
-
-        $modelIsRecognized  = isset($model->className) && class_exists($model->className);
-        $upgraderDoesExist  = class_exists('CBViewModelUpgrader');
-
-        if (!$modelIsRecognized && $upgraderDoesExist) {
-
-            CBViewModelUpgrader::upgradeModel($model);
-
-            $modelIsRecognized = isset($model->className) && class_exists($model->className);
-        }
-
-        if ($modelIsRecognized) {
-
-            $className = $model->className;
-            $view = $className::initWithModel($model);
-
-        } else {
-
-            $view = self::init();
-            $view->model = $model;
-        }
-
-        return $view;
-    }
-
     /**
      * This method is implemented to provide working but not useful
      * functionality for new views to make creating new views simple. It should
@@ -113,34 +30,33 @@ final class CBView {
      * @return void
      */
     public static function renderModelAsHTML(stdClass $model = null) {
+
+        /**
+         * 2015.03.31 TODO:
+         *  When views were instances, we called the following generic model
+         *  upgrader function. I'm not entirely sure that this function isn't
+         *  still necessary.
+         *
+         *  It upgrades the model in place, so it's not a very good function.
+         *
+         *  CBViewModelUpgrader::upgradeModel($model);
+         */
+
         if (isset($model->className) && $model->className != 'CBView') {
             $function = "{$model->className}::renderModelAsHTML";
 
             if (is_callable($function)) {
-                call_user_func($function, $model);
-            } else {
-                $view = self::createViewWithModel($model);
-                $view->renderHTML();
+                return call_user_func($function, $model);
             }
-        } else {
-            if (Colby::siteIsBeingDebugged) {
-                $modelAsJSONAsHTML = ': ' . str_replace('--', ' - - ', json_encode($model));
-            } else {
-                $modelAsJSONAsHTML = '';
-            }
-
-            echo "<!-- CBView default output{$modelAsJSONAsHTML} -->";
         }
-    }
 
-    /**
-     * @return void
-     */
-    public function renderHTML() {
+        if (Colby::siteIsBeingDebugged()) {
+            $modelAsJSONAsHTML = ': ' . str_replace('--', ' - - ', json_encode($model));
+        } else {
+            $modelAsJSONAsHTML = '';
+        }
 
-        $className = get_class($this);
-
-        echo "\n\n<!-- This is the default output for a `{$className}` class. -->\n\n";
+        echo "<!-- CBView default output{$modelAsJSONAsHTML} -->";
     }
 
     /**

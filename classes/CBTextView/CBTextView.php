@@ -35,7 +35,7 @@ final class CBTextView {
     public static function specToModel(stdClass $spec = null) {
         $model          = CBView::modelWithClassName(__CLASS__);
         $model->text    = isset($spec->text) ? (string)$spec->text : '';
-        $model->HTML    = self::textToHTML($model->text);
+        $model->HTML    = ColbyConvert::textToHTML($model->text);
 
         return $model;
     }

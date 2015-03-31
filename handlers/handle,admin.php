@@ -16,10 +16,11 @@ include CBSystemDirectory . '/sections/admin-page-settings.php';
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:600');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('general');
-$menu->setSelectedSubmenuItemName('status');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'general';
+$spec->selectedSubmenuItemName  = 'status';
+
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>
 
@@ -40,7 +41,6 @@ $menu->renderHTML();
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();
