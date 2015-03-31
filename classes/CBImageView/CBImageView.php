@@ -52,7 +52,14 @@ final class CBImageView {
      * @return bool
      */
     public function hasImage() {
-        return !!$this->model->filename;
+        return self::modelHasImage($this->model);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function modelHasImage(stdClass $model = null) {
+        return !!$model->filename;
     }
 
     /**
