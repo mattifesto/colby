@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * 2015.04.01
+ * This class is basically deprecated. It should be removed once it's known to
+ * be safe to remove it. The idea was that this would be a sort of test
+ * scenario for the markaround parser but the problem is that it's not actually
+ * useful as a view which makes it very misleading.
+ */
 final class CBMarkaroundView {
 
     /**
@@ -18,20 +25,14 @@ final class CBMarkaroundView {
      * @return string
      */
     public static function modelToSearchText(stdClass $model = null) {
-        return isset($model->markaround) ? $model->markaround : '';
+        return $model->markaround;
     }
 
     /**
      * @return void
      */
     public static function renderModelAsHTML(stdClass $model = null) {
-        echo '<section class="CBMarkaroundView">';
-
-        if (exists($model->HTML)) {
-            echo $model->HTML;
-        }
-
-        echo '</section>';
+        echo "<section class=\"CBMarkaroundView\">{$model->HTML}</section>";
     }
 
     /**
