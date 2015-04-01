@@ -19,10 +19,11 @@ include CBSystemDirectory . '/sections/admin-page-settings.php';
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/admin.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbyFormManager.js');
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('pages');
-$menu->setSelectedSubmenuItemName('old-style');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'pages';
+$spec->selectedSubmenuItemName  = 'old-style';
+
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 $archiveId  = $_GET['archive-id'];
 $archive    = ColbyArchive::open($archiveId);
@@ -97,7 +98,6 @@ document.addEventListener('ColbyPageUpdateComplete', updateComplete, false);
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();

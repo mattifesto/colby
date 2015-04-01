@@ -5,8 +5,6 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
     return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
 
-Colby::useImage();
-
 $response = new CBAjaxResponse();
 
 $document   = ColbyDocument::documentWithArchiveId($_POST['archive-id']);

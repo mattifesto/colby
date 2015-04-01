@@ -14,10 +14,11 @@ include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,old-style.css');
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('pages');
-$menu->setSelectedSubmenuItemName('old-style');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'pages';
+$spec->selectedSubmenuItemName  = 'old-style';
+
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>
 
@@ -149,8 +150,7 @@ $menu->renderHTML();
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();
 
