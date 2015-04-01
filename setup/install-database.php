@@ -316,6 +316,9 @@ CBUpgradesForVersion119::run();
 // 2015.02.21
 CBUpgradesForVersion123::run();
 
+// 2015.03.31
+CBUpgradesForVersion134::run();
+
 /**
  *
  */
