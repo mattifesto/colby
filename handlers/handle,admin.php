@@ -19,7 +19,6 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 $spec                           = new stdClass();
 $spec->selectedMenuItemName     = 'general';
 $spec->selectedSubmenuItemName  = 'status';
-
 CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>

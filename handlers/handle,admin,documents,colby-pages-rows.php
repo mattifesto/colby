@@ -13,10 +13,10 @@ CBHTMLOutput::setDescriptionHTML('Pages that are in the ColbyPages table.');
 
 include CBSystemDirectory . '/sections/admin-page-settings.php';
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('develop');
-$menu->setSelectedSubmenuItemName('documents');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'develop';
+$spec->selectedSubmenuItemName  = 'documents';
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 $sql = <<<EOT
 
@@ -216,8 +216,7 @@ $result->free();
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();
 

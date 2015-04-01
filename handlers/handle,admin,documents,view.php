@@ -13,10 +13,10 @@ CBHTMLOutput::setDescriptionHTML('View the contents of an archive.');
 
 include CBSystemDirectory . '/sections/admin-page-settings.php';
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('develop');
-$menu->setSelectedSubmenuItemName('documents');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'develop';
+$spec->selectedSubmenuItemName  = 'documents';
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 $ID = $_GET['archive-id'];
 
@@ -106,8 +106,7 @@ $ID = $_GET['archive-id'];
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();
 

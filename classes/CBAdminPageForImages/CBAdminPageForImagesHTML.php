@@ -3,7 +3,6 @@
 $spec                           = new stdClass();
 $spec->selectedMenuItemName     = 'develop';
 $spec->selectedSubmenuItemName  = 'images';
-
 CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>

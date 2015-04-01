@@ -15,10 +15,10 @@ include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,documents.js');
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('develop');
-$menu->setSelectedSubmenuItemName('documents');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'develop';
+$spec->selectedSubmenuItemName  = 'documents';
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 $dataStore  = new CBDataStore(CBPagesAdministrationDataStoreID);
 $filepath   = $dataStore->directory(). '/data.json';
@@ -60,7 +60,6 @@ if (is_file($filepath)) {
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();
