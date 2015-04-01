@@ -16,10 +16,10 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,users.js');
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('general');
-$menu->setSelectedSubmenuItemName('permissions');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'general';
+$spec->selectedSubmenuItemName  = 'permissions';
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 /**
  *
@@ -218,8 +218,7 @@ EOT;
 
 $result->free();
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();
 

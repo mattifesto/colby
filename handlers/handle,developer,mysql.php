@@ -15,10 +15,10 @@ include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,developer,mysql.js');
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('develop');
-$menu->setSelectedSubmenuItemName('mysql');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'develop';
+$spec->selectedSubmenuItemName  = 'mysql';
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>
 
@@ -38,7 +38,6 @@ $menu->renderHTML();
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();

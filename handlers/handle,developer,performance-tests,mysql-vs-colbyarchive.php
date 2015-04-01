@@ -13,10 +13,10 @@ include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,developer,performance-tests,mysql-vs-colbyarchive.js');
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('test');
-$menu->setSelectedSubmenuItemName('performance-tests');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'test';
+$spec->selectedSubmenuItemName  = 'performance-tests';
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>
 
@@ -40,7 +40,6 @@ $menu->renderHTML();
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();

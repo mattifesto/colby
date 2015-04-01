@@ -13,10 +13,10 @@ include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbyFormManager.js');
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('develop');
-$menu->setSelectedSubmenuItemName('groups');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'develop';
+$spec->selectedSubmenuItemName  = 'groups';
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 $location = $_GET['location'];
 
@@ -108,7 +108,6 @@ document.addEventListener('DOMContentLoaded', handleContentLoaded, false);
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();

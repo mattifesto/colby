@@ -11,10 +11,10 @@ CBHTMLOutput::setDescriptionHTML('Developer tools for creating and editing docum
 
 include CBSystemDirectory . '/sections/admin-page-settings.php';
 
-$menu = CBAdminPageMenuView::init();
-$menu->setSelectedMenuItemName('develop');
-$menu->setSelectedSubmenuItemName('types');
-$menu->renderHTML();
+$spec                           = new stdClass();
+$spec->selectedMenuItemName     = 'develop';
+$spec->selectedSubmenuItemName  = 'types';
+CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 $documentGroups = Colby::findDocumentGroups();
 
@@ -146,7 +146,6 @@ $documentGroups = Colby::findDocumentGroups();
 
 <?php
 
-$footer = CBAdminPageFooterView::init();
-$footer->renderHTML();
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();
