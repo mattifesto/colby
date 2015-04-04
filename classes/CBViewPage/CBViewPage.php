@@ -413,17 +413,14 @@ EOT;
         $rowData->searchText    = self::modelToSearchText($model);
         $rowData->subtitleHTML  = $model->descriptionHTML;
 
-        if ($model->isPublished)
-        {
-            $rowData->published             = $model->publicationTimeStamp;
-            $rowData->publishedBy           = $model->publishedBy;
-            $rowData->publishedYearMonth    = ColbyConvert::timestampToYearMonth($rowData->published);
-        }
-        else
-        {
-            $rowData->published             = null;
-            $rowData->publishedBy           = null;
-            $rowData->publishedYearMonth    = '';
+        if ($model->isPublished) {
+            $rowData->published         = $model->publicationTimeStamp;
+            $rowData->publishedBy       = $model->publishedBy;
+            $rowData->publishedMonth    = (int)ColbyConvert::timestampToYearMonth($rowData->published);
+        } else {
+            $rowData->published         = null;
+            $rowData->publishedBy       = null;
+            $rowData->publishedMonth    = null;
         }
 
         CBPages::updateRow($rowData);
