@@ -167,6 +167,7 @@ $sqls[] = <<<EOT
         `archiveID`             BINARY(20) NOT NULL,
         `keyValueData`          LONGTEXT NOT NULL,
         `className`             VARCHAR(80),
+        `classNameForKind`      VARCHAR(80),
         `typeID`                BINARY(20),
         `groupID`               BINARY(20),
         `iteration`             BIGINT UNSIGNED NOT NULL DEFAULT 1,
@@ -176,13 +177,12 @@ $sqls[] = <<<EOT
         `thumbnailURL`          VARCHAR(200),
         `searchText`            LONGTEXT,
         `published`             BIGINT,
-        `publishedYearMonth`    CHAR(6) NOT NULL DEFAULT '',
         `publishedBy`           BIGINT UNSIGNED,
+        `publishedMonth`        MEDIUMINT,
         PRIMARY KEY (`ID`),
         UNIQUE KEY `archiveID` (`archiveID`),
         UNIQUE KEY `stub` (`URI`),
-        KEY `groupID_published` (`groupID`, `published`),
-        KEY `groupID_publishedYearMonth_published` (`groupID`, `publishedYearMonth`, `published`),
+        KEY `classNameForKind_publishedMonth_published` (`classNameForKind`, `publishedMonth`, `published`),
         CONSTRAINT `ColbyPages_publishedBy`
             FOREIGN KEY (`publishedBy`)
             REFERENCES `ColbyUsers` (`id`)
@@ -206,16 +206,18 @@ $sqls[] = <<<EOT
         `dataStoreID`           BINARY(20) NOT NULL,
         `keyValueData`          LONGTEXT NOT NULL,
         `className`             VARCHAR(80),
+        `classNameForKind`      VARCHAR(80),
         `typeID`                BINARY(20),
         `groupID`               BINARY(20),
+        `iteration`             BIGINT UNSIGNED NOT NULL DEFAULT 1,
         `URI`                   VARCHAR(100),
         `titleHTML`             TEXT NOT NULL,
         `subtitleHTML`          TEXT NOT NULL,
         `thumbnailURL`          VARCHAR(200),
         `searchText`            LONGTEXT,
         `published`             BIGINT,
-        `publishedYearMonth`    CHAR(6) NOT NULL DEFAULT '',
         `publishedBy`           BIGINT UNSIGNED,
+        `publishedMonth`        MEDIUMINT,
         PRIMARY KEY (`ID`),
         UNIQUE KEY `dataStoreID` (`dataStoreID`)
     )
@@ -318,6 +320,9 @@ CBUpgradesForVersion123::run();
 
 // 2015.03.31
 CBUpgradesForVersion134::run();
+
+// 2015.04.04
+CBUpgradesForVersion136::run();
 
 /**
  *
