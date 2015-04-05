@@ -79,7 +79,6 @@ class CBPages
                 `titleHTML`             = '',
                 `subtitleHTML`          = '',
                 `searchText`            = '',
-                `publishedYearMonth`    = '',
                 `URI`                   = '{$IDAsSQL}'
 
 EOT;
@@ -110,6 +109,7 @@ EOT;
                 `dataStoreID`,
                 `keyValueData`,
                 `className`,
+                `classNameForKind`,
                 `typeID`,
                 `groupID`,
                 `iteration`,
@@ -119,8 +119,8 @@ EOT;
                 `thumbnailURL`,
                 `searchText`,
                 `published`,
-                `publishedYearMonth`,
-                `publishedBy`
+                `publishedBy`,
+                `publishedMonth`
             )
             SELECT
                 *
@@ -152,6 +152,7 @@ EOT;
                 `archiveID`,
                 `keyValueData`,
                 `className`,
+                `classNameForKind`,
                 `typeID`,
                 `groupID`,
                 `iteration`,
@@ -161,8 +162,8 @@ EOT;
                 `thumbnailURL`,
                 `searchText`,
                 `published`,
-                `publishedYearMonth`,
-                `publishedBy`
+                `publishedBy`,
+                `publishedMonth`
             )
             SELECT
                 *

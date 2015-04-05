@@ -126,34 +126,6 @@ EOT;
  * be found via search or to be included in various lists of pages generated
  * using the table, including the site map.
  *
- * `ColbyPages` organizes pages by "group", although a page does not need to
- * have a group. Groups facilitate creating lists of pages for specific and
- * common purposes, for instance, a list of blog posts or press releases. A
- * simple independent page such as an "about" page would most likely not have
- * a group.
- *
- * The purpose of the columns of `ColbyPages` is to have enough data to
- * facilitate quickly creating simple lists of pages and a site map. The table
- * contains fields for titleHTML, subtitleHTML, thumbnailURL, published,
- * publishedYearMonth, and publishedBy. If any group specific information
- * is needed for each page, an additional data store such as a group specific
- * table or an archive should be created.
- *
- * The `keyValueData` schema for this table:
- *
- *      schema              "ColbyPage"
- *      schemaVersion:      1
- *      groupKeyValueData:  <key-value data>
- *      typeKeyValueData:   <key-value data>
- *
- * The group and type key-value data properties can hold key-value data related
- * to the group and type. Any other necessary data should be kept in an
- * additional data store such as a group specific table or an archive.
- *
- * The primary extensibility method for this table is to create another domain
- * specific table. Creating domain specific tables is encouraged because it
- * reduces the need for backward compatibility.
- *
  * This table is meant to be as generically useful and unchanging as possible.
  * Changes to this table will only be made to fix bugs, simplify it, or extend
  * it where there is universal and obvious need.
