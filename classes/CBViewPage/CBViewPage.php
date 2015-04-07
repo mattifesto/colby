@@ -83,50 +83,49 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function specToModel($specificationModel) {
-        $s = $specificationModel;
+    public static function specToModel($spec) {
 
         /**
          * Required values
          */
 
-        $r              = new stdClass();
-        $r->dataStoreID = $s->dataStoreID;
-        $r->created     = $s->created;
-        $r->updated     = $s->updated;
+        $model              = new stdClass();
+        $model->dataStoreID = $spec->dataStoreID;
+        $model->created     = $spec->created;
+        $model->updated     = $spec->updated;
 
         /**
          * Optional values
          */
 
-        $r->description             = isset($s->description) ? $s->description : '';
-        $r->isPublished             = isset($s->isPublished) ? $s->isPublished : false;
-        $r->iteration               = $s->iteration;
-        $r->listClassNames          = isset($s->listClassNames) ? $s->listClassNames : array();
-        $r->publicationTimeStamp    = isset($s->publicationTimeStamp) ? $s->publicationTimeStamp : null;
-        $r->publishedBy             = isset($s->publishedBy) ? $s->publishedBy : null;
-        $r->rowID                   = isset($s->rowID) ? $s->rowID : null; /* Deprecated */
-        $r->schemaVersion           = isset($s->schemaVersion) ? $s->schemaVersion : null; /* Deprecated? */
-        $r->thumbnailURL            = isset($s->thumbnailURL) ? $s->thumbnailURL : null;
-        $r->title                   = isset($s->title) ? $s->title : '';
+        $model->description             = isset($spec->description) ? $spec->description : '';
+        $model->isPublished             = isset($spec->isPublished) ? $spec->isPublished : false;
+        $model->iteration               = $spec->iteration;
+        $model->listClassNames          = isset($spec->listClassNames) ? $spec->listClassNames : array();
+        $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? $spec->publicationTimeStamp : null;
+        $model->publishedBy             = isset($spec->publishedBy) ? $spec->publishedBy : null;
+        $model->rowID                   = isset($spec->rowID) ? $spec->rowID : null; /* Deprecated */
+        $model->schemaVersion           = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
+        $model->thumbnailURL            = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null;
+        $model->title                   = isset($spec->title) ? $spec->title : '';
 
         /**
          * Views
          */
 
-        if (isset($s->sections)) {
-            $r->sections = array_map('CBView::specToModel', $s->sections);
+        if (isset($spec->sections)) {
+            $model->sections = array_map('CBView::specToModel', $spec->sections);
         } else {
-            $r->sections = array();
+            $model->sections = array();
         }
 
         /**
          * Computed values
          */
 
-        $r->descriptionHTML         = ColbyConvert::textToHTML($r->description);
-        $r->thumbnailURLAsHTML      = ColbyConvert::textToHTML($r->thumbnailURL);
-        $r->titleHTML               = ColbyConvert::textToHTML($r->title);
+        $model->descriptionHTML         = ColbyConvert::textToHTML($model->description);
+        $model->thumbnailURLAsHTML      = ColbyConvert::textToHTML($model->thumbnailURL);
+        $model->titleHTML               = ColbyConvert::textToHTML($model->title);
 
         /**
          * The URI and URIAsHTML values will be set in the save function
@@ -134,7 +133,7 @@ EOT;
          * not.
          */
 
-        return $r;
+        return $model;
     }
 
     /**
@@ -195,7 +194,7 @@ EOT;
 
     /**
      * This function removes the post from all editable page lists because
-     * editable page lists are specified in `$specificationModel->listClassNames`.
+     * editable page lists are specified in `$spec->listClassNames`.
      * This page may be in other page lists but those are managed by other
      * processes.
      *
@@ -289,30 +288,30 @@ EOT;
      *
      * @return void
      */
-    public static function save($specificationModel) {
-        $ID = $specificationModel->dataStoreID;
+    public static function save($spec) {
+        $ID = $spec->dataStoreID;
 
         try {
             Colby::query('START TRANSACTION');
 
-            if (isset($specificationModel->iteration)) {
+            if (isset($spec->iteration)) {
                 $data = CBPages::selectIterationAndURIForUpdate($ID);
 
-                if ($data->iteration != $specificationModel->iteration) {
+                if ($data->iteration != $spec->iteration) {
                     throw new RuntimeException('This page has been updated by another user.');
                 }
 
-                $specificationModel->iteration++;
+                $spec->iteration++;
             } else {
                 $data                           = CBPages::insertRow($ID);
-                $specificationModel->iteration  = $data->iteration;
-                $specificationModel->rowID      = $data->rowID;
+                $spec->iteration  = $data->iteration;
+                $spec->rowID      = $data->rowID;
             }
 
-            $renderModel = self::specToModel($specificationModel);
+            $renderModel = self::specToModel($spec);
 
-            if ($data->URI != $specificationModel->URI && CBPages::updateURI($ID, $specificationModel->URI)) {
-                $renderModel->URI = $specificationModel->URI;
+            if ($data->URI != $spec->URI && CBPages::updateURI($ID, $spec->URI)) {
+                $renderModel->URI = $spec->URI;
             } else {
                 $renderModel->URI = $data->URI;
             }
@@ -322,11 +321,11 @@ EOT;
             self::updateDatabase($renderModel);
 
             $dataStore              = new CBDataStore($ID);
-            $specificationModelJSON = json_encode($specificationModel);
+            $specJSON = json_encode($spec);
             $renderModelJSON        = json_encode($renderModel);
 
             $dataStore->makeDirectory();
-            file_put_contents($dataStore->directory() . '/model.json', $specificationModelJSON, LOCK_EX);
+            file_put_contents($dataStore->directory() . '/model.json', $specJSON, LOCK_EX);
             file_put_contents($dataStore->directory() . '/render-model.json', $renderModelJSON, LOCK_EX);
         } catch (Exception $exception) {
             Colby::query('ROLLBACK');
@@ -342,11 +341,11 @@ EOT;
      */
     public static function saveEditedPageForAjax() {
         $response           = new CBAjaxResponse();
-        $specificationModel = json_decode($_POST['model-json']);
+        $spec = json_decode($_POST['model-json']);
 
-        self::save($specificationModel);
+        self::save($spec);
 
-        $response->rowID            = $specificationModel->rowID;
+        $response->rowID            = $spec->rowID;
         $response->wasSuccessful    = true;
         $response->send();
     }
