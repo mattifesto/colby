@@ -58,11 +58,22 @@ class CBDataStore
     }
 
     /**
+     * @deprecated use `directoryForID`
+     *
      * @return string
      */
     public function directory()
     {
         return CBSiteDirectory . "/data/{$this->path}";
+    }
+
+    /**
+     * @return string
+     */
+    public static function directoryForID($ID) {
+        $directoryName = self::directoryNameFromDocumentRoot($ID);
+
+        return CBSiteDirectory . "/{$directoryName}";
     }
 
     /**
@@ -75,6 +86,8 @@ class CBDataStore
     }
 
     /**
+     * @deprecated use `makeDirectoryForID`
+     *
      * This function has "create if not exists" semantics.
      *
      * @return void
@@ -82,6 +95,19 @@ class CBDataStore
     public function makeDirectory() {
         if (!is_dir($this->directory())) {
             mkdir($this->directory(), /* mode: */ 0777, /* recursive: */ true);
+        }
+    }
+
+    /**
+     * This function has "create if not exists" semantics.
+     *
+     * @return void
+     */
+    public static function makeDirectoryForID($ID) {
+        $directory = self::directoryForID($ID);
+
+        if (!is_dir($directory)) {
+            mkdir($directory, /* mode: */ 0777, /* recursive: */ true);
         }
     }
 

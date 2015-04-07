@@ -236,14 +236,14 @@ EOT;
      * @return void
      */
     public static function renderAsHTMLForID($ID) {
-        $dataStore              = new CBDataStore($ID);
-        $renderModelFilepath    = $dataStore->directory() . '/render-model.json';
+        $directory  = CBDataStore::directoryForID($ID);
+        $filepath   = "{$directory}/render-model.json"; // deprecated
 
-        if (!is_file($renderModelFilepath)) {
-            $renderModelFilepath = $dataStore->directory() . '/model.json';
+        if (!is_file($filepath)) {
+            $filepath = "{$directory}/model.json";
         }
 
-        self::renderModelAsHTML(json_decode(file_get_contents($renderModelFilepath)));
+        self::renderModelAsHTML(json_decode(file_get_contents($filepath)));
     }
 
     /**
@@ -303,30 +303,34 @@ EOT;
 
                 $spec->iteration++;
             } else {
-                $data                           = CBPages::insertRow($ID);
-                $spec->iteration  = $data->iteration;
-                $spec->rowID      = $data->rowID;
+                $data               = CBPages::insertRow($ID);
+                $spec->iteration    = $data->iteration;
+                $spec->rowID        = $data->rowID;
             }
 
-            $renderModel = self::specToModel($spec);
+            $model = self::specToModel($spec);
 
             if ($data->URI != $spec->URI && CBPages::updateURI($ID, $spec->URI)) {
-                $renderModel->URI = $spec->URI;
+                $model->URI = $spec->URI;
             } else {
-                $renderModel->URI = $data->URI;
+                $model->URI = $data->URI;
             }
 
-            $renderModel->URIAsHTML = ColbyConvert::textToHTML($renderModel->URI);
+            $model->URIAsHTML = ColbyConvert::textToHTML($model->URI);
 
-            self::updateDatabase($renderModel);
+            self::updateDatabase($model);
 
-            $dataStore              = new CBDataStore($ID);
-            $specJSON = json_encode($spec);
-            $renderModelJSON        = json_encode($renderModel);
+            $directory  = CBDataStore::directoryForID($ID);
+            $specJSON   = json_encode($spec);
+            $modelJSON  = json_encode($model);
 
-            $dataStore->makeDirectory();
-            file_put_contents($dataStore->directory() . '/model.json', $specJSON, LOCK_EX);
-            file_put_contents($dataStore->directory() . '/render-model.json', $renderModelJSON, LOCK_EX);
+            CBDataStore::makeDirectoryForID($ID);
+            file_put_contents("{$directory}/spec.json", $specJSON, LOCK_EX);
+            file_put_contents("{$directory}/model.json", $modelJSON, LOCK_EX);
+
+            if (is_file($filepath = "{$directory}/render-model.json")) {
+                unlink($filepath);
+            }
         } catch (Exception $exception) {
             Colby::query('ROLLBACK');
 
@@ -378,21 +382,22 @@ EOT;
     /**
      * @return stdClass | false
      */
-    public static function specificationModelWithID($ID) {
-        $dataStore  = new CBDataStore($ID);
-        $filepath   = $dataStore->directory() . '/model.json';
+    public static function specWithID($ID) {
+        $directory  = CBDataStore::directoryForID($ID);
 
-        if (is_file($filepath)) {
-            $model = json_decode(file_get_contents($filepath));
+        if (is_file($filepath = "{$directory}/spec.json")) {
+            $spec = json_decode(file_get_contents($filepath));
+        } else if (is_file($filepath = "{$directory}/model.json")) {
+            $spec = json_decode(file_get_contents($filepath));
         } else {
             return false;
         }
 
-        if (!isset($model->iteration)) {
-            $model->iteration = 1;
+        if (!isset($spec->iteration)) {
+            $spec->iteration = 1;
         }
 
-        return $model;
+        return $spec;
     }
 
     /**
