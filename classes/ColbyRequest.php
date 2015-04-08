@@ -98,6 +98,7 @@ class ColbyRequest
             SELECT
                 LOWER(HEX(`archiveID`)) as `dataStoreID`,
                 `className`,
+                `iteration`,
                 LOWER(HEX(`typeID`)) as `typeID`,
                 LOWER(HEX(`groupID`)) as `groupID`
             FROM
@@ -236,17 +237,12 @@ EOT;
                 $URI        = implode('/', self::$decodedStubs);
                 $row        = self::CBPagesRowForURI($URI);
 
-                if ($row)
-                {
-                    if (!$row->className && CBPageTypeID == $row->typeID) {
-                        $row->className = 'CBViewPage';
-                    }
-
+                if ($row) {
                     if ($row->className) {
                         $className = $row->className;
 
-                        if (is_callable("{$className}::renderAsHTMLForID")) {
-                            $className::renderAsHTMLForID($row->dataStoreID);
+                        if (is_callable($function = "{$className}::renderAsHTMLForID")) {
+                            call_user_func($function, $row->dataStoreID, $row->iteration);
                         } else {
                             /* Deprecated */
                             $page = $className::initWithID($row->dataStoreID);

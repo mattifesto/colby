@@ -1,17 +1,39 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
-{
+if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
 
-$response   = new CBAjaxResponse();
-$spec        = CBViewPage::specWithID($_POST['data-store-id']);
+$response       = new CBAjaxResponse();
+$pageID         = $_POST['data-store-id'];
+$pageIDAsSQL    = ColbyConvert::textToSQL($pageID);
+$SQL            = <<<EOT
 
-if (false !== $spec) {
-    $response->modelJSON = json_encode($spec);
+    SELECT
+        `iteration`
+    FROM
+        `ColbyPages`
+    WHERE
+        `archiveID` = UNHEX('{$pageIDAsSQL}')
+
+EOT;
+
+$result     = Colby::query($SQL);
+$row        = $result->fetch_object();
+
+$result->free();
+
+if (!$row) {
+    throw new RuntimeException("No page was found for the page ID: {$pageID}");
 }
 
-$response->wasSuccessful = true;
+$spec = CBViewPage::specWithID($pageID, $row->iteration);
+
+if (!$spec) {
+    throw new RuntimeException("No spec was found for the page ID: {$pageID}");
+}
+
+$response->modelJSON        = json_encode($spec);
+$response->wasSuccessful    = true;
 
 $response->send();

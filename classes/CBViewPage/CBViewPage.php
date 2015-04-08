@@ -235,11 +235,29 @@ EOT;
     /**
      * @return void
      */
-    public static function renderAsHTMLForID($ID) {
+    public static function renderAsHTMLForID($ID, $iteration) {
         $directory  = CBDataStore::directoryForID($ID);
-        $filepath   = "{$directory}/render-model.json"; // deprecated
 
-        if (!is_file($filepath)) {
+        if (is_file($filepath = "{$directory}/model-{$iteration}.json")) {
+
+            // Pages edited after installing version 137 of Colby will have a
+            // model file saved for each iteration.
+
+        } else if (is_file($filepath = "{$directory}/render-model.json")) {
+
+            // If this file exists it means that this page was editing during
+            // a small window of time in which this was the name of the model
+            // file. Whenever a page is edited this file is deleted, but if
+            // the page hasn't been edited since that time it will still exist.
+
+        } else {
+
+            // If neither of the two previous files exist the name of the
+            // model file will be "model.json". TODO: It would be nice to
+            // create an update that would go through every view page and
+            // canonicalize this filename so that these final two conditions
+            // can be removed.
+
             $filepath = "{$directory}/model.json";
         }
 
@@ -308,7 +326,8 @@ EOT;
                 $spec->rowID        = $data->rowID;
             }
 
-            $model = self::specToModel($spec);
+            $iteration  = $spec->iteration;
+            $model      = self::specToModel($spec);
 
             if ($data->URI != $spec->URI && CBPages::updateURI($ID, $spec->URI)) {
                 $model->URI = $spec->URI;
@@ -325,8 +344,8 @@ EOT;
             $modelJSON  = json_encode($model);
 
             CBDataStore::makeDirectoryForID($ID);
-            file_put_contents("{$directory}/spec.json", $specJSON, LOCK_EX);
-            file_put_contents("{$directory}/model.json", $modelJSON, LOCK_EX);
+            file_put_contents("{$directory}/spec-{$iteration}.json", $specJSON, LOCK_EX);
+            file_put_contents("{$directory}/model-{$iteration}.json", $modelJSON, LOCK_EX);
 
             if (is_file($filepath = "{$directory}/render-model.json")) {
                 unlink($filepath);
@@ -382,16 +401,32 @@ EOT;
     /**
      * @return stdClass | false
      */
-    public static function specWithID($ID) {
+    public static function specWithID($ID, $iteration) {
         $directory  = CBDataStore::directoryForID($ID);
 
-        if (is_file($filepath = "{$directory}/spec.json")) {
-            $spec = json_decode(file_get_contents($filepath));
+        if (is_file($filepath = "{$directory}/spec-{$iteration}.json")) {
+
+            // Pages edited after installing version 137 of Colby will have a
+            // spec file saved for each iteration.
+
+        } else if (is_file($filepath = "{$directory}/spec.json")) {
+
+            // Pages edited for a brief time before version 137 will have a
+            // spec file with this name.
+
         } else if (is_file($filepath = "{$directory}/model.json")) {
-            $spec = json_decode(file_get_contents($filepath));
+
+            // Pages that were last edited before the spec/model split use the
+            // model file as the spec file. TODO: It would be nice to
+            // create an update that would go through every view page and
+            // canonicalize this filename so that these final two conditions
+            // can be removed.
+
         } else {
             return false;
         }
+
+        $spec = json_decode(file_get_contents($filepath));
 
         if (!isset($spec->iteration)) {
             $spec->iteration = 1;
