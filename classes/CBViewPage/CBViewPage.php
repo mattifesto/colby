@@ -347,6 +347,23 @@ EOT;
             file_put_contents("{$directory}/spec-{$iteration}.json", $specJSON, LOCK_EX);
             file_put_contents("{$directory}/model-{$iteration}.json", $modelJSON, LOCK_EX);
 
+            /**
+             * If the spec and model for the last iteration were saved less
+             * than 30 seconds ago, remove them. We don't need every iteration
+             * archived, just the ones before a long pause in editing.
+             */
+
+            $previous   = $iteration - 1;
+            $time       = filemtime($filepath = "{$directory}/spec-{$previous}.json");
+
+            if (time() - $time < 30) {
+                unlink($filepath);
+                unlink("{$directory}/model-{$previous}.json");
+            }
+
+            /**
+             * Remove deprecated file.
+             */
             if (is_file($filepath = "{$directory}/render-model.json")) {
                 unlink($filepath);
             }
