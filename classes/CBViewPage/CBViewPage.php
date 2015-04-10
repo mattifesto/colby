@@ -353,10 +353,10 @@ EOT;
              * archived, just the ones before a long pause in editing.
              */
 
-            $previous   = $iteration - 1;
-            $time       = filemtime($filepath = "{$directory}/spec-{$previous}.json");
+            $previous = $iteration - 1;
 
-            if (time() - $time < 30) {
+            if (is_file($filepath = "{$directory}/spec-{$previous}.json") &&
+                time() - filemtime($filepath) < 30) {
                 unlink($filepath);
                 unlink("{$directory}/model-{$previous}.json");
             }
