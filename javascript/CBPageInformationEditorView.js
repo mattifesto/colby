@@ -2,14 +2,15 @@
 
 
 /**
- * @param {Object} model
- *  Required. The page model.
+ * @param model
+ *  The page model
+ * @param handlePropertyChanged
+ *  The function to call when any model property value changes.
  *
  * @return {Element}
  */
 function createPageInformationEditorElement(args) {
     var pageModel   = args.model;
-    args            = undefined;
 
     var pageInformationEditorElement;
 
@@ -36,20 +37,8 @@ function createPageInformationEditorElement(args) {
      *
      */
 
-    var titleControl = new CBTextControl("Title");
-    titleControl.rootElement().classList.add("standard");
-
-    titleControl.setValue(pageModel.title);
-    titleControl.setAction(undefined, valueForTitleHasChanged);
-
-    propertiesContainer.appendChild(titleControl.rootElement());
-
-
-    /**
-     *
-     */
-
-    propertiesContainer.appendChild(createDescriptionControlElement());
+    propertiesContainer.appendChild(createTitleField({ handlePropertyChanged: args.handlePropertyChanged }));
+    propertiesContainer.appendChild(createDescriptionField({ handlePropertyChanged: args.handlePropertyChanged }));
 
 
     /**
@@ -90,6 +79,11 @@ function createPageInformationEditorElement(args) {
 
     publishedByContainer.appendChild(createPublishedByControlElement());
 
+    /**
+     * No need for args in the closure after this function has run.
+     */
+
+    args = undefined;
 
     return pageInformationEditorElement;
 
@@ -125,16 +119,18 @@ function createPageInformationEditorElement(args) {
     }
 
     /**
+     * @param handePropertyChanged
+     *
      * @return {Element}
      */
-    function createDescriptionControlElement() {
-        var descriptionControl = new CBTextControl("Description");
+    function createDescriptionField(args) {
+        var field = CBPageEditor.textFieldBoundToProperty({
+            handlePropertyChanged   : args.handlePropertyChanged,
+            labelText               : "Description",
+            model                   : pageModel,
+            property                : 'description' });
 
-        descriptionControl.setValue(pageModel.description);
-        descriptionControl.setAction(undefined, valueForDescriptionHasChanged);
-        descriptionControl.rootElement().classList.add("standard");
-
-        return descriptionControl.rootElement();
+        return field;
     }
 
     /**
@@ -256,6 +252,33 @@ function createPageInformationEditorElement(args) {
     }
 
     /**
+     * @param handlePropertyChanged
+     *
+     * @return Element
+     */
+    function createTitleField(args) {
+        var handlePropertyChanged   = args.handlePropertyChanged;
+        var handler                 = function() {
+            if (!pageModel.URIIsStatic) {
+                URIControl.setURI(generateURI());
+                valuesForURIHaveChanged(URIControl);
+            }
+
+            handlePropertyChanged.call();
+        }
+
+        var field = CBPageEditor.textFieldBoundToProperty({
+            handlePropertyChanged   : handler,
+            labelText               : "Title",
+            model                   : pageModel,
+            property                : 'title' });
+
+        args = undefined;
+
+        return field;
+    }
+
+    /**
      * @return {string}
      */
     function generateURI() {
@@ -271,42 +294,12 @@ function createPageInformationEditorElement(args) {
     }
 
     /**
-     * @param {CBTextControl} sender
-     *
-     * @return {undefined}
-     */
-    function valueForDescriptionHasChanged(sender) {
-        pageModel.description       = sender.value().trim();
-        pageModel.descriptionHTML   = Colby.textToHTML(pageModel.description);
-
-        CBPageEditor.requestSave();
-    }
-
-    /**
      * @param {CBSelectionControl} sender
      *
      * @return {undefined}
      */
     function valueForPublishedByHasChanged(sender) {
         pageModel.publishedBy = parseInt(sender.value(), 10);
-
-        CBPageEditor.requestSave();
-    }
-
-    /**
-     * @param {CBTextControl} sender
-     *
-     * @return {undefined}
-     */
-    function valueForTitleHasChanged(sender) {
-        pageModel.title     = sender.value().trim();
-        pageModel.titleHTML = Colby.textToHTML(pageModel.title);
-
-        if (!pageModel.URIIsStatic)
-        {
-            URIControl.setURI(generateURI());
-            valuesForURIHaveChanged(URIControl);
-        }
 
         CBPageEditor.requestSave();
     }

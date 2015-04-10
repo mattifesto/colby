@@ -51,8 +51,6 @@ CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBSectionEditorView.cs
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewMenu.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBViewMenu.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSelectionControl.js');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBTextControl.js');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBTextAreaControl.js');
 
 include CBSystemDirectory . '/sections/admin-page-settings.php';
 

@@ -7,6 +7,13 @@
     width:              720px;
 }
 
+.CBPageInformationEditorView .CBPageEditorTextField > input {
+    display:    block;
+    padding:    3px 4px;
+    width:      100%;
+}
+
+
 .CBPageInformationProperties
 {
     display:    inline-block;
