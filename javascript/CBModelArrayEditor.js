@@ -118,10 +118,12 @@ CBModelArrayEditor.displayViewEditor = function(model, index, modelArray) {
      * Display
      */
 
-    viewEditor                  = CBViewEditor.editorForViewModel(model);
-    viewEditor.deleteCallback   = this.deleteView.bind(this, viewEditor);
+    var handleViewDeleted   = this.deleteView.bind(this, viewEditor);
+    var viewEditorWidget    = CBViewEditorWidgetFactory.widgetForSpec({
+        spec                : model,
+        handleViewDeleted   : handleViewDeleted });
 
-    this._element.appendChild(viewEditor.outerElement());
+    this._element.appendChild(viewEditorWidget);
 };
 
 /**
