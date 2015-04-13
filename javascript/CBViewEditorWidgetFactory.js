@@ -7,7 +7,7 @@ var CBViewEditorWidgetFactory = {
      * @param handleModelChanged
      * @param handleViewDeleted
      *
-     * @return element
+     * @return Element
      */
     widgetForSpec : function(args) {
         /* deprecated code just to make this work at first*/

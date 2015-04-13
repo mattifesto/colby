@@ -8,7 +8,8 @@ final class CBTextView {
     public static function includeEditorDependencies() {
         CBView::includeEditorDependencies();
 
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBTextView/CBTextViewEditor.js');
+        CBHTMLOutput::addJavaScriptURL(self::URL('CBTextViewEditor.js'));
+        CBHTMLOutput::addJavaScriptURL(self::URL('CBTextViewEditorFactory.js'));
     }
 
     /**
@@ -38,5 +39,12 @@ final class CBTextView {
         $model->HTML    = ColbyConvert::textToHTML($model->text);
 
         return $model;
+    }
+
+    /**
+     * @return string
+     */
+    private static function URL($filename) {
+        return CBSystemURL . "/classes/CBTextView/{$filename}";
     }
 }

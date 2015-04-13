@@ -18,11 +18,10 @@ CBImageViewEditor.init = function() {
 
     CBViewEditor.init.call(this);
 
-    this.alternativeTextViewEditor      = CBViewEditor.editorForViewClassName("CBTextView");
     this.model.className                = "CBImageView";
     this.model.actualHeight             = null;
     this.model.actualWidth              = null;
-    this.model.alternativeTextViewModel = this.alternativeTextViewEditor.model;
+    this.model.alternativeTextViewModel = { className : "CBTextView" };
     this.model.displayHeight            = null;
     this.model.displayWidth             = null;
     this.model.filename                 = null;
@@ -41,10 +40,8 @@ CBImageViewEditor.initWithModel = function(model) {
     CBViewEditor.initWithModel.call(this, model);
 
     if (!model.alternativeTextViewModel) {
-        model.alternativeTextViewModel = {"className":"CBTextView"};
+        model.alternativeTextViewModel = { className : "CBTextView" };
     }
-
-    this.alternativeTextViewEditor  = CBViewEditor.editorForViewModel(model.alternativeTextViewModel);
 
     return this;
 };
@@ -88,19 +85,12 @@ CBImageViewEditor.element = function() {
         this._element           = document.createElement("div");
         this._element.className = "CBImageViewEditor";
         this._element.appendChild(this.imageEditorElement());
-        this._element.appendChild(this.alternativeTextEditorElement());
+        this._element.appendChild(CBTextViewEditorFactory.createEditor({
+            spec        : this.model.alternativeTextViewModel,
+            labelText   : "Alternative Text" }));
     }
 
     return this._element;
-};
-
-/**
- * @return Element
- */
-CBImageViewEditor.alternativeTextEditorElement = function() {
-
-    this.alternativeTextViewEditor.labelText = "Alternative Text";
-    return this.alternativeTextViewEditor.element();
 };
 
 /**
