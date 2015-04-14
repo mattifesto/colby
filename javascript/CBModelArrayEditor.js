@@ -17,6 +17,85 @@ var CBModelArrayEditor = {
     },
 
     /**
+     * @param {Object}  beforeSpec
+     * @param {Element} containerElement
+     * @param {Object}  menuState
+     * @param {Array}   specArray
+     *
+     * @return void
+     */
+    handleInsertRequested : function(args) {
+        var spec    = { "className" : args.menuState.selectedViewClassName };
+        var index   = args.beforeSpec ? args.specArray.indexOf(args.beforeSpec) : args.specArray.length;
+
+        if (-1 == index) {
+            throw "View specification not found in list.";
+        }
+
+        args.specArray.splice(index, 0, spec);
+
+        var menuElement         = CBModelArrayEditor.createMenuElement({
+            containerElement    : args.containerElement,
+            spec                : spec,
+            specArray           : args.specArray });
+
+        var viewEditorWidget    = CBModelArrayEditor.createViewEditorWidget({
+            containerElement    : args.containerElement,
+            spec                : spec,
+            specArray           : args.specArray });
+
+        var beforeElement       = args.containerElement.children[index * 2];
+
+        args.containerElement.insertBefore(menuElement,         beforeElement);
+        args.containerElement.insertBefore(viewEditorWidget,    beforeElement);
+
+        CBPageEditor.requestSave();
+    },
+
+    /**
+     * @param {Element} containerElement
+     * @param {Object}  spec
+     * @param {Array}   specArray
+     *
+     * @return {Element}
+     */
+    createMenuElement : function(args) {
+        var menuState               = {};
+
+        var handleInsertRequested   = CBModelArrayEditor.handleInsertRequested.bind(undefined, {
+            beforeSpec              : args.spec,
+            containerElement        : args.containerElement,
+            menuState               : menuState,
+            specArray               : args.specArray });
+
+        var menuElement             = CBViewMenu.createMenu({
+            handleInsertRequested   : handleInsertRequested,
+            menuState               : menuState });
+
+        return menuElement;
+    },
+
+    /**
+     * @param {Element} containerElement
+     * @param {Object}  spec
+     * @param {Array}   specArray
+     *
+     * @return {Element}
+     */
+    createViewEditorWidget : function(args) {
+        var handleViewDeleted   = CBModelArrayEditor.removeSpec.bind(undefined, {
+            array               : args.specArray,
+            editor              : args.containerElement,
+            spec                : args.spec });
+
+        var viewEditorWidget    = CBViewEditorWidgetFactory.widgetForSpec({
+            spec                : args.spec,
+            handleViewDeleted   : handleViewDeleted });
+
+        return viewEditorWidget;
+    },
+
+    /**
      * @param {Array}   array
      * @param {Element} editor
      * @param {Object}  spec
@@ -60,10 +139,12 @@ CBModelArrayEditor.initWithModelArray = function(modelArray) {
      * View menu to append a new view to the container.
      */
 
-    var viewMenu        = CBViewMenu.menu();
-    viewMenu.callback   = this.insertView.bind(this, viewMenu);
+    var menuElement         = CBModelArrayEditor.createMenuElement({
+        containerElement    : this._element,
+        spec                : undefined,
+        specArray           : modelArray });
 
-    this._element.appendChild(viewMenu.element());
+    this._element.appendChild(menuElement);
 };
 
 /**
@@ -122,28 +203,17 @@ CBModelArrayEditor.displayViewEditor = function(model, index, modelArray) {
         }
     }
 
-    /**
-     *
-     */
-
-    var viewMenu                    = CBViewMenu.menu();
-    viewMenu.callback               = this.insertView.bind(this, viewMenu);
-
-    this._element.appendChild(viewMenu.element());
-
-    /**
-     * Display
-     */
-
-    var handleViewDeleted   = CBModelArrayEditor.removeSpec.bind(undefined, {
-        array   : modelArray,
-        editor  : this._element,
-        spec    : model });
-
-    var viewEditorWidget    = CBViewEditorWidgetFactory.widgetForSpec({
+    var menuElement         = CBModelArrayEditor.createMenuElement({
+        containerElement    : this._element,
         spec                : model,
-        handleViewDeleted   : handleViewDeleted });
+        specArray           : modelArray });
 
+    var viewEditorWidget    = CBModelArrayEditor.createViewEditorWidget({
+        containerElement    : this._element,
+        spec                : model,
+        specArray           : modelArray });
+
+    this._element.appendChild(menuElement);
     this._element.appendChild(viewEditorWidget);
 };
 
