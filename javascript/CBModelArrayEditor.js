@@ -1,18 +1,43 @@
 "use strict";
 
 
-var CBModelArrayEditor = {}
+var CBModelArrayEditor = {
 
-/**
- * @return instance type
- */
-CBModelArrayEditor.editorForModelArray = function(modelArray) {
+    /**
+     * @param {Array} array
+     *
+     * @return {Element}
+     */
+    createEditor : function(args) {
+        var editor = Object.create(CBModelArrayEditor);
 
-    var editor = Object.create(CBModelArrayEditor);
+        editor.initWithModelArray(args.array);
 
-    editor.initWithModelArray(modelArray);
+        return editor.element();
+    },
 
-    return editor;
+    /**
+     * @param {Array}   array
+     * @param {Element} editor
+     * @param {Object}  spec
+     *
+     * @return void
+     */
+    removeSpec : function(args) {
+        var index = args.array.indexOf(args.spec);
+
+        if (-1 == index) {
+            throw "View specification not found in list.";
+        }
+
+        // Remove both the insert menu and the editor widget.
+        args.editor.removeChild(args.editor.children[index * 2]);
+        args.editor.removeChild(args.editor.children[index * 2]);
+
+        args.array.splice(index, 1);
+
+        CBPageEditor.requestSave();
+    }
 };
 
 /**
@@ -39,14 +64,6 @@ CBModelArrayEditor.initWithModelArray = function(modelArray) {
     viewMenu.callback   = this.insertView.bind(this, viewMenu);
 
     this._element.appendChild(viewMenu.element());
-};
-
-/**
- * @return Element
- */
-CBModelArrayEditor.element = function() {
-
-    return this._element;
 };
 
 /**
@@ -118,7 +135,11 @@ CBModelArrayEditor.displayViewEditor = function(model, index, modelArray) {
      * Display
      */
 
-    var handleViewDeleted   = this.deleteView.bind(this, viewEditor);
+    var handleViewDeleted   = CBModelArrayEditor.removeSpec.bind(undefined, {
+        array   : modelArray,
+        editor  : this._element,
+        spec    : model });
+
     var viewEditorWidget    = CBViewEditorWidgetFactory.widgetForSpec({
         spec                : model,
         handleViewDeleted   : handleViewDeleted });
@@ -197,4 +218,11 @@ CBModelArrayEditor.insertView = function(viewMenu) {
     }
 
     CBPageEditor.requestSave();
+};
+
+/**
+ * @return void
+ */
+CBModelArrayEditor.element = function() {
+    return this._element;
 };

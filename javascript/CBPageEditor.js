@@ -143,8 +143,8 @@ CBPageEditor.displayEditor = function()
      *
      */
 
-    var sectionListView = CBModelArrayEditor.editorForModelArray(CBPageEditor.model.sections);
-    editorContainer.appendChild(sectionListView.element());
+    editorContainer.appendChild(CBModelArrayEditor.createEditor({
+        array : CBPageEditor.model.sections }));
 };
 
 /**

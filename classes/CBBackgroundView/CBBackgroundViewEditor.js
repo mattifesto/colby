@@ -82,7 +82,9 @@ CBBackgroundViewEditor.createElement = function()
     this.createOptionsElement();
     this.createBackgroundColorTextField();
     this.createLinkURLTextField();
-    this.createChildViewsElement();
+
+    this._element.appendChild(CBModelArrayEditor.createEditor({
+        array : this.model.children }));
 
     this.updateBackgroundImageThumbnail();
 };
@@ -109,16 +111,6 @@ CBBackgroundViewEditor.createBackgroundColorTextField = function()
     containerElement.appendChild(labelElement);
     containerElement.appendChild(inputElement);
     this._controlsElement.appendChild(containerElement);
-};
-
-/**
- * @return void
- */
-CBBackgroundViewEditor.createChildViewsElement = function()
-{
-    var modelArrayEditor = CBModelArrayEditor.editorForModelArray(this.model.children);
-
-    this._element.appendChild(modelArrayEditor.element());
 };
 
 /**

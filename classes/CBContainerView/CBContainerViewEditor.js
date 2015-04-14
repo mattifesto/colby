@@ -27,9 +27,10 @@ CBContainerViewEditor.createChildViewsElement = function() {
 
     var childViewsElement               = document.createElement("div");
     childViewsElement.className         = "CBContainerViewEditorSubviews";
-    var childListView                   = CBModelArrayEditor.editorForModelArray(this.model.subviewModels);
 
-    childViewsElement.appendChild(childListView.element());
+    childViewsElement.appendChild(CBModelArrayEditor.createEditor({
+        array : this.model.subviewModels }));
+
     this._element.appendChild(childViewsElement);
 };
 
