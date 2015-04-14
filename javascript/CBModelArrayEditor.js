@@ -9,11 +9,50 @@ var CBModelArrayEditor = {
      * @return {Element}
      */
     createEditor : function(args) {
-        var editor = Object.create(CBModelArrayEditor);
+        var element     = document.createElement("div");
+        var specArray   = args.array;
 
-        editor.initWithModelArray(args.array);
+        element.classList.add("CBModelArrayEditor");
 
-        return editor.element();
+        /**
+         * Upgrade specs
+         */
+
+        specArray.forEach(CBModelArrayEditor.upgradeSpec);
+
+        /**
+         * Add all of the sections already in the list to the view.
+         */
+
+        specArray.forEach(function(spec) {
+            var menuElement         = CBModelArrayEditor.createMenuElement({
+                containerElement    : element,
+                spec                : spec,
+                specArray           : specArray });
+
+            var viewEditorWidget    = CBModelArrayEditor.createViewEditorWidget({
+                containerElement    : element,
+                spec                : spec,
+                specArray           : specArray });
+
+            element.appendChild(menuElement);
+            element.appendChild(viewEditorWidget);
+
+            return element;
+        });
+
+        /**
+         * View menu to append a new view to the container.
+         */
+
+        var menuElement         = CBModelArrayEditor.createMenuElement({
+            containerElement    : element,
+            spec                : undefined,
+            specArray           : specArray });
+
+        element.appendChild(menuElement);
+
+        return element;
     },
 
     /**
@@ -116,183 +155,54 @@ var CBModelArrayEditor = {
         args.array.splice(index, 1);
 
         CBPageEditor.requestSave();
-    }
-};
-
-/**
- * @return void
- */
-CBModelArrayEditor.initWithModelArray = function(modelArray) {
-
-    this.modelArray = modelArray;
-    this._element   = document.createElement("div");
-
-    this._element.classList.add("CBModelArrayEditor");
+    },
 
     /**
-     * Add all of the sections already in the list to the view.
+     * @return void
      */
-
-    this.modelArray.forEach(this.displayViewEditor.bind(this));
-
-    /**
-     * View menu to append a new view to the container.
-     */
-
-    var menuElement         = CBModelArrayEditor.createMenuElement({
-        containerElement    : this._element,
-        spec                : undefined,
-        specArray           : modelArray });
-
-    this._element.appendChild(menuElement);
-};
-
-/**
- * @return void
- */
-CBModelArrayEditor.displayViewEditor = function(model, index, modelArray) {
-
-    var viewEditor;
-    var viewListItemElement;
-
-    /**
-     * Translate deprecated views into non-deprecated views.
-     */
-
-    if (model.sectionTypeID)
-    {
-        switch (model.sectionTypeID)
+    upgradeSpec : function(model, index, modelArray) {
+        if (model.sectionTypeID)
         {
-            /**
-             * Translate CBBackgroundSection to CBBackgroundView.
-             */
+            switch (model.sectionTypeID)
+            {
+                /**
+                 * Translate CBBackgroundSection to CBBackgroundView.
+                 */
 
-            case "c4bacd7cf5315e5a07c20072cbb0f355bdb4b8bc":
+                case "c4bacd7cf5315e5a07c20072cbb0f355bdb4b8bc":
 
-                if ("object" == typeof CBBackgroundViewEditor)
-                {
-                    viewEditor          = Object.create(CBBackgroundViewEditor);
-                    viewEditor.initWithModel(model);
+                    if ("object" == typeof CBBackgroundViewEditor)
+                    {
+                        viewEditor          = Object.create(CBBackgroundViewEditor);
+                        viewEditor.initWithModel(model);
 
-                    model               = viewEditor.model;
-                    modelArray[index]   = model;
-                }
+                        model               = viewEditor.model;
+                        modelArray[index]   = model;
+                    }
 
-                break;
+                    break;
 
-            /**
-             * Translate PMImageSection to LEImageView
-             */
+                /**
+                 * Translate PMImageSection to LEImageView
+                 */
 
-            case "85ad8d3561e980afffc4847803ce83e7aed6af6b":
+                case "85ad8d3561e980afffc4847803ce83e7aed6af6b":
 
-                if ("object" == typeof LEImageViewEditor)
-                {
-                    viewEditor          = Object.create(LEImageViewEditor);
-                    viewEditor.initWithModel(model);
+                    if ("object" == typeof LEImageViewEditor)
+                    {
+                        viewEditor          = Object.create(LEImageViewEditor);
+                        viewEditor.initWithModel(model);
 
-                    model               = viewEditor.model;
-                    modelArray[index]   = model;
-                }
+                        model               = viewEditor.model;
+                        modelArray[index]   = model;
+                    }
 
-                break;
+                    break;
 
-            default:
+                default:
 
-                break;
+                    break;
+            }
         }
     }
-
-    var menuElement         = CBModelArrayEditor.createMenuElement({
-        containerElement    : this._element,
-        spec                : model,
-        specArray           : modelArray });
-
-    var viewEditorWidget    = CBModelArrayEditor.createViewEditorWidget({
-        containerElement    : this._element,
-        spec                : model,
-        specArray           : modelArray });
-
-    this._element.appendChild(menuElement);
-    this._element.appendChild(viewEditorWidget);
-};
-
-/**
- * @return void
- */
-CBModelArrayEditor.deleteView = function(viewEditor) {
-
-    var viewModel   = viewEditor.model;
-    var index       = this.modelArray.indexOf(viewModel);
-
-    if (-1 == index)
-    {
-        return;
-    }
-
-    var viewMenuElement = viewEditor.outerElement().previousSibling;
-
-    this._element.removeChild(viewMenuElement);
-    this._element.removeChild(viewEditor.outerElement());
-
-    this.modelArray.splice(index, 1);
-
-    CBPageEditor.requestSave();
-};
-
-/**
- * @return void
- */
-CBModelArrayEditor.insertView = function(viewMenu) {
-
-    var elementToInsertBefore   = viewMenu.element();
-
-    /**
-     *
-     */
-
-    var newViewMenu         = CBViewMenu.menu();
-    newViewMenu.callback    = this.insertView.bind(this, newViewMenu);
-
-    this._element.insertBefore(newViewMenu.element(), elementToInsertBefore);
-
-    /**
-     *
-     */
-
-    var viewEditor              = CBViewEditor.editorForViewClassName(viewMenu.value());
-    viewEditor.deleteCallback   = this.deleteView.bind(this, viewEditor);
-
-    this._element.insertBefore(viewEditor.outerElement(), elementToInsertBefore);
-
-    /**
-     *
-     */
-
-    if (viewMenu.element().nextSibling)
-    {
-        var modelToInsertBefore     = viewMenu.element().nextSibling.model;
-
-        var index = this.modelArray.indexOf(modelToInsertBefore);
-
-        if (-1 == index)
-        {
-            return;
-        }
-
-        this.modelArray.splice(index, 0, viewEditor.model);
-    }
-    else
-    {
-        this.modelArray.push(viewEditor.model);
-    }
-
-    CBPageEditor.requestSave();
-};
-
-/**
- * @return void
- */
-CBModelArrayEditor.element = function() {
-    return this._element;
 };
