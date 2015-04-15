@@ -356,15 +356,20 @@ EOT;
             $previous = $iteration - 1;
 
             if (is_file($filepath = "{$directory}/spec-{$previous}.json") &&
-                time() - filemtime($filepath) < 30) {
+                    time() - filemtime($filepath) < /* 2 minutes: */ (2 * 60)) {
                 unlink($filepath);
                 unlink("{$directory}/model-{$previous}.json");
             }
 
             /**
-             * Remove deprecated file.
+             * Remove deprecated files.
              */
+
             if (is_file($filepath = "{$directory}/render-model.json")) {
+                unlink($filepath);
+            }
+
+            if (is_file($filepath = "{$directory}/model.json")) {
                 unlink($filepath);
             }
         } catch (Exception $exception) {
