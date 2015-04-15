@@ -20,6 +20,10 @@ class CBImages {
                 break;
             case IMAGETYPE_PNG:
                 $input = imagecreatefrompng($sourceFilepath);
+                imagealphablending($output, false);
+                imagesavealpha($output, true);
+                $transparent = imagecolorallocatealpha($output, 255, 255, 255, 127);
+                imagefilledrectangle($output, 0, 0, $dst->width, $dst->height, $transparent);
                 break;
             default:
                 throw new RuntimeException(
