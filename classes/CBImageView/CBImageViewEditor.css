@@ -15,13 +15,13 @@
     text-align:         center;
 }
 
-.CBImageViewImageEditor > button
+.CBImageViewEditor > button
 {
     display:    block;
     margin:     10px auto 30px;
 }
 
-.CBImageViewImageEditor > img
+.CBImageViewEditor > img
 {
     background-color:   hsl(0, 0%, 100%);
     display:            block;
@@ -31,12 +31,12 @@
     padding:            40px;
 }
 
-.CBImageViewImageEditor > img.dark-background
+.CBImageViewEditor > img.dark-background
 {
     background-color:   hsl(0, 0%, 20%);
 }
 
-.CBImageViewImageEditor > img + div
+.CBImageViewEditor > img + div
 {
     color:      #808080;
     font-size:  13px;

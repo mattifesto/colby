@@ -9,11 +9,8 @@ final class CBImageView {
         CBView::includeEditorDependencies();
         CBTextView::includeEditorDependencies();
 
-        $URL = CBSystemURL . '/classes/CBImageView/CBImageViewEditor.css';
-        CBHTMLOutput::addCSSURL($URL);
-
-        $URL = CBSystemURL . '/classes/CBImageView/CBImageViewEditor.js';
-        CBHTMLOutput::addJavaScriptURL($URL);
+        CBHTMLOutput::addCSSURL(self::URL('CBImageViewEditor.css'));
+        CBHTMLOutput::addJavaScriptURL(self::URL('CBImageViewEditorFactory.js'));
     }
 
     /**
@@ -92,11 +89,18 @@ final class CBImageView {
         $model->maxHeight       = isset($spec->maxHeight) ? $spec->maxHeight : null;
         $model->maxWidth        = isset($spec->maxWidth) ? $spec->maxWidth : null;
         $model->URL             = isset($spec->URL) ? $spec->URL : null;
-        $model->URLForHTML      = isset($spec->URLForHTML) ? $spec->URLForHTML : null;
+        $model->URLForHTML      = ColbyConvert::textToHTML($model->URL);
         $altTextSpec            = isset($spec->alternativeTextViewModel) ? $spec->alternativeTextViewModel : null;
 
         $model->alternativeTextViewModel = CBTextView::specToModel($altTextSpec);
 
         return $model;
+    }
+
+    /**
+     * @return string
+     */
+    public static function URL($filename) {
+        return CBSystemURL . "/classes/CBImageView/{$filename}";
     }
 }
