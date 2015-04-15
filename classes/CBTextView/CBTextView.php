@@ -8,7 +8,7 @@ final class CBTextView {
     public static function includeEditorDependencies() {
         CBView::includeEditorDependencies();
 
-        CBHTMLOutput::addJavaScriptURL(self::URL('CBTextViewEditor.js'));
+        CBHTMLOutput::addCSSURL(self::URL('CBTextViewEditor.css'));
         CBHTMLOutput::addJavaScriptURL(self::URL('CBTextViewEditorFactory.js'));
     }
 

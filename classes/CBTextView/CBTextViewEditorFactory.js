@@ -3,15 +3,56 @@
 var CBTextViewEditorFactory = {
 
     /**
-     * @param labelText
-     * @param spec
+     * @param {function}    handleSpecChanged
+     * @param {string}      labelText
+     * @param {Object}      spec
      *
      * @return Element
      */
     createEditor : function(args) {
-        var deprecatedViewEditor        = CBViewEditor.editorForViewModel(args.spec);
-        deprecatedViewEditor.labelText  = args.labelText;
+        var element         = document.createElement("div");
+        element.className   = "CBTextViewEditor";
+        var label           = document.createElement("label");
+        label.textContent   = args.labelText || "Text";
+        var input           = document.createElement("input");
+        input.type          = "text";
+        input.value         = args.spec.text || "";
 
-        return deprecatedViewEditor.element();
+        input.addEventListener("input", CBTextViewEditorFactory.handleInput.bind(undefined, {
+            handleSpecChanged   : args.handleSpecChanged,
+            inputElement        : input,
+            spec                : args.spec }));
+
+        label.appendChild(input);
+        element.appendChild(label);
+
+        return element;
+    },
+
+    /**
+     * @return {string}
+     */
+    CSSWidth : function() {
+        return "400px";
+    },
+
+    /**
+     * @param {function}    handleSpecChanged
+     * @param {Element}     inputElement
+     * @param {Object}      spec
+     *
+     * @return {undefined}
+     */
+    handleInput : function(args) {
+        args.spec.text = args.inputElement.value;
+
+        args.handleSpecChanged.call();
+    },
+
+    /**
+     * @return {string}
+     */
+    widgetClassName : function() {
+        return "CBTextViewEditorWidget";
     }
 };
