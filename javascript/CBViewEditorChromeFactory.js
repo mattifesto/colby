@@ -18,6 +18,8 @@ var CBViewEditorChromeFactory = {
         var button          = document.createElement("button");
         button.textContent  = "Delete View";
 
+        button.addEventListener("click", args.handleViewDeleted);
+
         header.appendChild(h1);
         header.appendChild(button);
         element.appendChild(header);
