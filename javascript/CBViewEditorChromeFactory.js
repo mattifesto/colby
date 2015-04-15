@@ -23,12 +23,6 @@ var CBViewEditorChromeFactory = {
         element.appendChild(header);
         element.appendChild(args.editorElement);
 
-        var width;
-
-        if (typeof factory.CSSWidth == "function" && (width = factory.CSSWidth()) !== undefined) {
-            element.style.width = width;
-        }
-
         return element;
     }
 };

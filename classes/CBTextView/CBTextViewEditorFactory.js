@@ -30,13 +30,6 @@ var CBTextViewEditorFactory = {
     },
 
     /**
-     * @return {string}
-     */
-    CSSWidth : function() {
-        return "400px";
-    },
-
-    /**
      * @param {function}    handleSpecChanged
      * @param {Element}     inputElement
      * @param {Object}      spec
