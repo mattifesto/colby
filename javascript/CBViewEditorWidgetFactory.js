@@ -9,7 +9,7 @@ var CBViewEditorWidgetFactory = {
      *
      * @return Element
      */
-    widgetForSpec : function(args) {
+    createWidget : function(args) {
         var factory;
 
         if ((factory = window[args.spec.className + "EditorFactory"])) {

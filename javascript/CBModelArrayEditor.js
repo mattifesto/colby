@@ -127,7 +127,7 @@ var CBModelArrayEditor = {
             editor              : args.containerElement,
             spec                : args.spec });
 
-        var viewEditorWidget    = CBViewEditorWidgetFactory.widgetForSpec({
+        var viewEditorWidget    = CBViewEditorWidgetFactory.createWidget({
             spec                : args.spec,
             handleViewDeleted   : handleViewDeleted });
 
