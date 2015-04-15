@@ -10,11 +10,30 @@ var CBViewEditorWidgetFactory = {
      * @return Element
      */
     widgetForSpec : function(args) {
-        /* deprecated code just to make this work at first*/
+        var factory;
 
-        var viewEditor              = CBViewEditor.editorForViewModel(args.spec);
-        viewEditor.deleteCallback   = args.handleViewDeleted;
+        if ((factory = window[args.spec.className + "EditorFactory"])) {
+            var editorElement       = factory.createEditor({
+                handleSpecChanged   : CBPageEditor.requestSave.bind(CBPageEditor),
+                spec                : args.spec });
 
-        return viewEditor.outerElement();
+            var chromeElement       = CBViewEditorChromeFactory.createChrome({
+                editorElement       : editorElement,
+                editorFactory       : factory,
+                handleViewDeleted   : args.handleViewDeleted });
+
+            if (typeof factory.widgetClassName == "function") {
+                chromeElement.className = factory.widgetClassName();
+            } else {
+                chromeElement.className = "CBViewEditorWidget";
+            }
+
+            return chromeElement;
+        } else {
+            var viewEditor              = CBViewEditor.editorForViewModel(args.spec);
+            viewEditor.deleteCallback   = args.handleViewDeleted;
+
+            return viewEditor.outerElement();
+        }
     }
 };
