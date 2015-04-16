@@ -1,36 +1,48 @@
-.CBPageInformationEditorView
-{
-    background-color:   rgba(0, 0, 0, 0.05);
+.CBPageInformationEditor {
+    background-color:   hsl(30, 10%, 90%);
+    border:             1px solid hsl(30, 10%, 80%);
     border-radius:      10px;
     margin:             10px auto;
-    padding:            10px 20px;
+    overflow:           hidden; /* clip to rounded corners */
     width:              720px;
 }
 
-.CBPageInformationEditorView .CBPageEditorTextField > input {
+.CBPageInformationEditor header {
+    background-color:   hsl(30, 10%, 80%);
+    padding:            7px 10px 10px;
+    text-align:         center;
+}
+
+.CBPageInformationEditor > div {
+    xpadding:            10px 20px;
+}
+
+.CBPageInformationEditor .CBStringEditor + .CBStringEditor {
+    margin-top: 10px;
+}
+
+.CBPageInformationEditor input[type=text] {
     display:    block;
-    padding:    3px 4px;
+    padding:    5px;
     width:      100%;
 }
 
-
-.CBPageInformationProperties
-{
+.CBPageInformationProperties {
     display:    inline-block;
-    width:      480px;
+    padding:    10px;
+    width:      460px;
 }
 
-.CBPageInformationPageListsEditor
-{
+.CBPageInformationPageListsEditor {
     display:        inline-block;
     height:         200px;
     margin-left:    10px;
     overflow-y:     scroll;
+    padding:        10px;
     vertical-align: top;
-    width:          230px;
+    width:          210px;
 }
 
-.CBPageInformationPageListsEditor input[type=checkbox]
-{
+.CBPageInformationPageListsEditor input[type=checkbox] {
     margin-right: 0.5em;
 }

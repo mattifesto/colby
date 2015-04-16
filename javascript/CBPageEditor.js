@@ -3,53 +3,6 @@
 var CBPageEditor = {
     sectionEditors  : {},
     model           : null,
-
-    /**
-     * Creates a text field with a label bound to a property.
-     *
-     * @param labelText
-     * @param model
-     * @param property
-     * @param handlePropertyChanged
-     *
-     * @return Element
-     *  A `label` element with a child `input` element.
-     */
-    textFieldBoundToProperty : function(args) {
-        var control         = document.createElement("label");
-        control.className   = "CBPageEditorTextField";
-        control.textContent = args.labelText;
-        control.appendChild(CBPageEditor.textInputBoundToProperty(args));
-
-        return control;
-    },
-
-    /**
-     * Creates text `input` element bound do a model property.
-     *
-     * @param model
-     * @param property
-     * @param handlePropertyChanged
-     *
-     * @return Element
-     *  An text `input` element.
-     */
-    textInputBoundToProperty : function(args) {
-        var model       = args.model;
-        var property    = args.property;
-        var handler     = args.handlePropertyChanged;
-        args            = null;
-        var input       = document.createElement("input");
-        input.type      = "text";
-        input.value     = model[property];
-
-        input.addEventListener("input", function() {
-            model[property] = input.value;
-            handler.call();
-        });
-
-        return input;
-    }
 };
 
 /**
@@ -133,7 +86,7 @@ CBPageEditor.displayEditor = function()
      * Page information
      */
 
-    var element = createPageInformationEditorElement({
+    var element = CBPageInformationEditorFactory.createEditor({
         handlePropertyChanged   : function() { CBPageEditor.requestSave(); },
         model                   : CBPageEditor.model });
 
