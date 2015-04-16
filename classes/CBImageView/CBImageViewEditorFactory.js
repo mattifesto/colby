@@ -17,6 +17,8 @@ var CBImageViewEditorFactory = {
 
         var element             = document.createElement("div");
         element.className       = "CBImageViewEditor";
+        var background          = document.createElement("div");
+        background.className    = "background";
         var thumbnail           = document.createElement("img");
         var dimensions          = document.createElement("div");
         dimensions.textContent  = "no image";
@@ -26,8 +28,8 @@ var CBImageViewEditorFactory = {
         input.type              = "file";
         input.style.display     = "none";
 
-        thumbnail.addEventListener("click", CBImageViewEditorFactory.handleThumbnailClicked.bind(undefined, {
-            imageElement    : thumbnail }));
+        background.addEventListener("click", CBImageViewEditorFactory.handleBackgroundClicked.bind(undefined, {
+            element : background }));
 
         thumbnail.addEventListener("load", CBImageViewEditorFactory.handleThumbnailLoaded.bind(undefined, {
             dimensionsElement   : dimensions,
@@ -46,7 +48,8 @@ var CBImageViewEditorFactory = {
             spec                : args.spec,
             uploadButtonElement : button }));
 
-        element.appendChild(thumbnail);
+        background.appendChild(thumbnail);
+        element.appendChild(background);
         element.appendChild(dimensions);
         element.appendChild(button);
         element.appendChild(input);
@@ -62,6 +65,15 @@ var CBImageViewEditorFactory = {
         }
 
         return element;
+    },
+
+    /**
+     * @param {Element} element
+     *
+     * @return {undefined}
+     */
+    handleBackgroundClicked : function(args) {
+        args.element.classList.toggle("dark");
     },
 
     /**
@@ -133,19 +145,6 @@ var CBImageViewEditorFactory = {
             args.imageElement.src   = args.spec.URL;
 
             args.handleSpecChanged.call();
-        }
-    },
-
-    /**
-     * @param {Element} imageElement
-     *
-     * @return {undefined}
-     */
-    handleThumbnailClicked : function(args) {
-        if ("dark-background" == args.imageElement.className) {
-            args.imageElement.className = "";
-        } else {
-            args.imageElement.className = "dark-background";
         }
     },
 

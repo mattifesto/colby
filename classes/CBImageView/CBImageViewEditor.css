@@ -30,29 +30,30 @@
  * behind shared styles like this need to be cleaned up.
  */
 
-.CBImageViewEditor > button
-{
+.CBImageViewEditor > button {
     display:    block;
     margin:     10px auto 30px;
 }
 
-.CBImageViewEditor > img
-{
+.CBImageViewEditor > .background {
     background-color:   white;
-    display:            block;
-    margin:             10px auto;
-    max-height:         200px;
-    max-width:          400px;
-    padding:            40px;
+    display:            flex;
+    display:            -webkit-flex;
+    height:             200px;
+    padding:            10px;
 }
 
-.CBImageViewEditor > img.dark-background
-{
-    background-color:   hsl(0, 0%, 20%);
+.CBImageViewEditor > .background.dark {
+    background-color: hsl(0, 0%, 20%);
 }
 
-.CBImageViewEditor > img + div
-{
+.CBImageViewEditor > .background img {
+    margin:     auto;
+    max-height: 200px;
+    max-width:  400px;
+}
+
+.CBImageViewEditor > .background + div {
     color:      #808080;
     font-size:  13px;
     text-align: center;
