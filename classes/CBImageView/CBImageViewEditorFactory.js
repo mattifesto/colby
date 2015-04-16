@@ -15,15 +15,16 @@ var CBImageViewEditorFactory = {
     createEditor : function(args) {
         CBImageViewEditorFactory.prepareSpec(args.spec);
 
-        var element         = document.createElement("div");
-        element.className   = "CBImageViewEditor";
-        var thumbnail       = document.createElement("img");
-        var dimensions      = document.createElement("div");
-        var button          = document.createElement("button");
-        button.textContent  = "Upload Image";
-        var input           = document.createElement("input");
-        input.type          = "file";
-        input.style.display = "none";
+        var element             = document.createElement("div");
+        element.className       = "CBImageViewEditor";
+        var thumbnail           = document.createElement("img");
+        var dimensions          = document.createElement("div");
+        dimensions.textContent  = "no image";
+        var button              = document.createElement("button");
+        button.textContent      = "Upload Image";
+        var input               = document.createElement("input");
+        input.type              = "file";
+        input.style.display     = "none";
 
         thumbnail.addEventListener("click", CBImageViewEditorFactory.handleThumbnailClicked.bind(undefined, {
             imageElement    : thumbnail }));
@@ -50,9 +51,10 @@ var CBImageViewEditorFactory = {
         element.appendChild(button);
         element.appendChild(input);
 
-        element.appendChild(CBTextViewEditorFactory.createEditor({
+        element.appendChild(CBStringEditorFactory.createSingleLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Alternative Text",
+            propertyName        : "text",
             spec                : args.spec.alternativeTextViewModel }));
 
         if (args.spec.URL) {
@@ -166,5 +168,12 @@ var CBImageViewEditorFactory = {
         if (!spec.alternativeTextViewModel) {
             spec.alternativeTextViewModel = { className : "CBTextView" };
         }
+    },
+
+    /**
+     * @return {string}
+     */
+    widgetClassName : function() {
+        return "CBImageViewEditorWidget";
     }
 };

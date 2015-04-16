@@ -1,5 +1,4 @@
-.CBViewEditorChrome.CBImageViewEditorChrome
-{
+.CBImageViewEditorWidget {
     background-color:   hsl(120, 50%, 90%);
     border-color:       hsl(120, 50%, 90%);
     border-radius:      5px;
@@ -9,11 +8,27 @@
     width:              480px;
 }
 
-.CBViewEditorChrome.CBImageViewEditorChrome > header
-{
+.CBImageViewEditorWidget > header {
     padding:            0 10px 10px;
     text-align:         center;
 }
+
+.CBImageViewEditorWidget .CBStringEditor {
+    margin-top: 10px;
+}
+
+.CBImageViewEditorWidget .CBStringEditor input[type=text] {
+    border:     1px solid hsl(120, 50%, 80%);
+    padding:    5px;
+    width:      100%;
+}
+
+/**
+ * 2015.04.16
+ * These are shared styles since other editors use this editor to edit their
+ * image. This is not a great idea, but it's based on saving time. The concepts
+ * behind shared styles like this need to be cleaned up.
+ */
 
 .CBImageViewEditor > button
 {
@@ -23,7 +38,7 @@
 
 .CBImageViewEditor > img
 {
-    background-color:   hsl(0, 0%, 100%);
+    background-color:   white;
     display:            block;
     margin:             10px auto;
     max-height:         200px;
@@ -41,15 +56,4 @@
     color:      #808080;
     font-size:  13px;
     text-align: center;
-}
-
-.CBImageViewEditor .CBTextViewEditor
-{
-    margin: 10px auto 0;
-    width: 480px;
-}
-
-.CBImageViewEditor .CBTextViewEditor input
-{
-    width: 480px;
 }

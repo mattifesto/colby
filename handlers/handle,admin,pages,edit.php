@@ -48,6 +48,7 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSectionEditorView.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBSectionEditorView.css');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBStringEditorFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewEditorChromeFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewEditorWidgetFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewMenu.js');
