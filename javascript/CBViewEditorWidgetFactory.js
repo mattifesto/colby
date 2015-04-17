@@ -19,8 +19,8 @@ var CBViewEditorWidgetFactory = {
 
             var chromeElement       = CBViewEditorChromeFactory.createChrome({
                 editorElement       : editorElement,
-                editorFactory       : factory,
-                handleViewDeleted   : args.handleViewDeleted });
+                handleViewDeleted   : args.handleViewDeleted,
+                title               : args.spec.className });
 
             if (typeof factory.widgetClassName == "function") {
                 chromeElement.className = factory.widgetClassName();
