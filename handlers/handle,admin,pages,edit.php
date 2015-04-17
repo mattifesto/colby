@@ -36,6 +36,7 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
  */
 
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBBooleanEditorFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBContinuousAjaxRequest.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBCheckboxControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
