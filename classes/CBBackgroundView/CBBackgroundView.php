@@ -8,8 +8,8 @@ final class CBBackgroundView {
     public static function includeEditorDependencies() {
         CBView::includeEditorDependencies();
 
-        CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBBackgroundView/CBBackgroundViewEditor.css');
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBBackgroundView/CBBackgroundViewEditor.js');
+        CBHTMLOutput::addCSSURL(self::URL('CBBackgroundViewEditor.css'));
+        CBHTMLOutput::addJavaScriptURL(self::URL('CBBackgroundViewEditorFactory.js'));
     }
 
     /**
@@ -54,11 +54,18 @@ final class CBBackgroundView {
         $model->linkURL                         = isset($spec->linkURL) ? $spec->linkURL : null;
         $model->linkURLHTML                     = ColbyConvert::textToHTML($model->linkURL);
         $model->minimumViewHeightIsImageHeight  = isset($spec->minimumViewHeightIsImageHeight) ?
-                                                    $spec->minimumViewHeightIsImageHeight : null;
+                                                    $spec->minimumViewHeightIsImageHeight : true;
 
         $subviewSpecs       = isset($spec->children) ? $spec->children : [];
         $model->children    = array_map('CBView::specToModel', $subviewSpecs);
 
         return $model;
+    }
+
+    /**
+     * @return string
+     */
+    public static function URL($filename) {
+        return CBSystemURL . "/classes/CBBackgroundView/{$filename}";
     }
 }

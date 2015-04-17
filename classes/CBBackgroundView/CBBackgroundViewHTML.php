@@ -10,7 +10,7 @@ if ($model->imageURL)
 
     if ($model->imageShouldRepeatVertically)
     {
-        if ($model->imageRepeatHorizontally)
+        if ($model->imageShouldRepeatHorizontally)
         {
             $repeat = "repeat";
         }

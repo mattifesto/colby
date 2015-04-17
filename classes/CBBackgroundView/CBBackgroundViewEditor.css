@@ -1,79 +1,49 @@
-.CBViewEditorChrome.CBBackgroundViewEditorChrome
-{
+.CBBackgroundViewEditorWidget {
     border-color:   hsl(30, 50%, 85%);
     border-radius:  20px;
     border-style:   solid;
     border-width:   5px 10px 10px;
 }
 
-.CBViewEditorChrome.CBBackgroundViewEditorChrome > header
-{
+.CBBackgroundViewEditorWidget > header {
     background-color:   hsl(30, 50%, 85%);
     padding:            0 10px 10px;
     text-align:         center;
 }
 
-.CBBackgroundViewEditor > .CBModelArrayEditor
-{
+.CBBackgroundViewEditor > .CBModelArrayEditor {
     padding: 20px;
 }
 
-.CBBackgroundViewEditorControls
-{
+.CBBackgroundViewEditor > .properties {
     background-color:   hsl(30, 50%, 85%);
-    overflow:           hidden;     /* Contain margins */
+    padding-bottom:     10px;
 }
 
-.CBBackgroundViewEditorControls > button
-{
-    display:    block;
-    margin:     10px auto 30px;
+.CBBackgroundViewEditor > .properties > .options {
+    margin:     10px 0;
+    text-align:     center;
 }
 
-.CBBackgroundViewEditorControls > img
-{
-    background-color:   hsl(0, 0%, 100%);
-    display:            block;
-    margin:             10px auto;
-    max-height:         200px;
-    max-width:          400px;
-    padding:            40px;
+.CBBackgroundViewEditor > .properties > .options > .CBBooleanEditor {
+    display: inline;
 }
 
-.CBBackgroundViewEditorControls > img.dark-background
-{
-    background-color:   hsl(0, 0%, 20%);
+.CBBackgroundViewEditor > .properties > .options > .CBBooleanEditor label {
+    margin-left: 5px;
 }
 
-.CBBackgroundViewEditorControls > img + div
-{
-    color:      #808080;
-    font-size:  13px;
-    text-align: center;
-}
-
-.CBBackgroundViewEditorControls > .options
-{
-    text-align: center;
-}
-
-.CBBackgroundViewEditorControls > .options label + input
-{
+.CBBackgroundViewEditor > .properties > .options > .CBBooleanEditor + .CBBooleanEditor {
     margin-left: 50px;
 }
 
-.CBBackgroundViewEditorControls > .text-field
-{
-    margin: 15px auto;
+.CBBackgroundViewEditor > .properties > .CBStringEditor {
+    margin: 5px auto 0;
     width:  480px;
 }
 
-.CBBackgroundViewEditorControls > .text-field label
-{
-    display:        block;
-}
-
-.CBBackgroundViewEditorControls > .text-field input
-{
-    width: 100%;
+.CBBackgroundViewEditor > .properties > .CBStringEditor input {
+    border:     1px solid hsl(30, 50%, 75%);
+    padding:    5px;
+    width:      100%;
 }
