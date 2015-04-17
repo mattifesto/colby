@@ -40,6 +40,8 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBContinuousAjaxReques
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBCheckboxControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBFileLinkControl.js');
+CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBImageEditorFactory.css');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBImageEditorFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBModelArrayEditor.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageInformationEditorView.js');
