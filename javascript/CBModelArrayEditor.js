@@ -26,11 +26,13 @@ var CBModelArrayEditor = {
         args.specArray.forEach(function(spec) {
             var menuElement         = CBModelArrayEditor.createMenuElement({
                 containerElement    : element,
+                handleSpecChanged   : args.handleSpecChanged,
                 spec                : spec,
                 specArray           : args.specArray });
 
             var viewEditorWidget    = CBModelArrayEditor.createViewEditorWidget({
                 containerElement    : element,
+                handleSpecChanged   : args.handleSpecChanged,
                 spec                : spec,
                 specArray           : args.specArray });
 
@@ -46,6 +48,7 @@ var CBModelArrayEditor = {
 
         var menuElement         = CBModelArrayEditor.createMenuElement({
             containerElement    : element,
+            handleSpecChanged   : args.handleSpecChanged,
             spec                : undefined,
             specArray           : args.specArray });
 
@@ -55,10 +58,11 @@ var CBModelArrayEditor = {
     },
 
     /**
-     * @param {Object}  beforeSpec
-     * @param {Element} containerElement
-     * @param {Object}  menuState
-     * @param {Array}   specArray
+     * @param {Object}      beforeSpec
+     * @param {Element}     containerElement
+     * @param {function}    handleSpecChanged
+     * @param {Object}      menuState
+     * @param {Array}       specArray
      *
      * @return void
      */
@@ -74,11 +78,13 @@ var CBModelArrayEditor = {
 
         var menuElement         = CBModelArrayEditor.createMenuElement({
             containerElement    : args.containerElement,
+            handleSpecChanged   : args.handleSpecChanged,
             spec                : spec,
             specArray           : args.specArray });
 
         var viewEditorWidget    = CBModelArrayEditor.createViewEditorWidget({
             containerElement    : args.containerElement,
+            handleSpecChanged   : args.handleSpecChanged,
             spec                : spec,
             specArray           : args.specArray });
 
@@ -87,13 +93,14 @@ var CBModelArrayEditor = {
         args.containerElement.insertBefore(menuElement,         beforeElement);
         args.containerElement.insertBefore(viewEditorWidget,    beforeElement);
 
-        CBPageEditor.requestSave();
+        args.handleSpecChanged.call();
     },
 
     /**
-     * @param {Element} containerElement
-     * @param {Object}  spec
-     * @param {Array}   specArray
+     * @param {Element}     containerElement
+     * @param {function}    handleSpecChanged
+     * @param {Object}      spec
+     * @param {Array}       specArray
      *
      * @return {Element}
      */
@@ -103,6 +110,7 @@ var CBModelArrayEditor = {
         var handleInsertRequested   = CBModelArrayEditor.handleInsertRequested.bind(undefined, {
             beforeSpec              : args.spec,
             containerElement        : args.containerElement,
+            handleSpecChanged       : args.handleSpecChanged,
             menuState               : menuState,
             specArray               : args.specArray });
 
@@ -114,17 +122,19 @@ var CBModelArrayEditor = {
     },
 
     /**
-     * @param {Element} containerElement
-     * @param {Object}  spec
-     * @param {Array}   specArray
+     * @param {Element}     containerElement
+     * @param {function}    handleSpecChanged
+     * @param {Object}      spec
+     * @param {Array}       specArray
      *
      * @return {Element}
      */
     createViewEditorWidget : function(args) {
         var handleViewDeleted   = CBModelArrayEditor.removeSpec.bind(undefined, {
-            array               : args.specArray,
             editor              : args.containerElement,
-            spec                : args.spec });
+            handleSpecChanged   : args.handleSpecChanged,
+            spec                : args.spec,
+            specArray           : args.specArray });
 
         var viewEditorWidget    = CBViewEditorWidgetFactory.createWidget({
             spec                : args.spec,
@@ -134,14 +144,15 @@ var CBModelArrayEditor = {
     },
 
     /**
-     * @param {Array}   array
-     * @param {Element} editor
-     * @param {Object}  spec
+     * @param {Element}     editor
+     * @param {function}    handleSpecChanged
+     * @param {Object}      spec
+     * @param {Array}       specArray
      *
      * @return void
      */
     removeSpec : function(args) {
-        var index = args.array.indexOf(args.spec);
+        var index = args.specArray.indexOf(args.spec);
 
         if (-1 == index) {
             throw "View specification not found in list.";
@@ -151,9 +162,9 @@ var CBModelArrayEditor = {
         args.editor.removeChild(args.editor.children[index * 2]);
         args.editor.removeChild(args.editor.children[index * 2]);
 
-        args.array.splice(index, 1);
+        args.specArray.splice(index, 1);
 
-        CBPageEditor.requestSave();
+        args.handleSpecChanged.call();
     },
 
     /**
