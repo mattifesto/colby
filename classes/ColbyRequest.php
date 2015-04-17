@@ -87,13 +87,41 @@ class ColbyRequest
     }
 
     /**
+     * This function only returns the current iteration because it's needed
+     * when the front page is being rendered. In the future, this process will
+     * probably change.
+     *
+     * @return stdClass
+     */
+    public static function CBPagesRowForID($ID)
+    {
+        $IDAsSQL    = ColbyConvert::textToSQL($ID);
+        $SQL        = <<<EOT
+
+            SELECT
+                `iteration`
+            FROM
+                `ColbyPages`
+            WHERE
+                `archiveID` = UNHEX('{$IDAsSQL}')
+
+EOT;
+
+        $result = Colby::query($SQL);
+        $row    = $result->fetch_object();
+
+        $result->free();
+
+        return $row;
+    }
+
+    /**
      * @return stdClass
      */
     public static function CBPagesRowForURI($URI)
     {
-        $URIForSQL  = ColbyConvert::textToSQL($URI);
-
-        $sql = <<<EOT
+        $URIAsSQL   = ColbyConvert::textToSQL($URI);
+        $SQL        = <<<EOT
 
             SELECT
                 LOWER(HEX(`archiveID`)) as `dataStoreID`,
@@ -104,14 +132,13 @@ class ColbyRequest
             FROM
                 `ColbyPages`
             WHERE
-                `URI` = '{$URIForSQL}' AND
+                `URI` = '{$URIAsSQL}' AND
                 `published` IS NOT NULL
 
 EOT;
 
-        $result = Colby::query($sql);
-
-        $row = $result->fetch_object();
+        $result = Colby::query($SQL);
+        $row    = $result->fetch_object();
 
         $result->free();
 
@@ -150,9 +177,10 @@ EOT;
             $frontPageFilename  = $dataStore->directory() . '/front-page.json';
 
             if (file_exists($frontPageFilename)) {
-                $frontPage = json_decode(file_get_contents($frontPageFilename));
+                $frontPage  = json_decode(file_get_contents($frontPageFilename));
+                $row        = self::CBPagesRowForID($frontPage->dataStoreID);
 
-                CBViewPage::renderAsHTMLForID($frontPage->dataStoreID);
+                CBViewPage::renderAsHTMLForID($frontPage->dataStoreID, $row->iteration);
 
                 return;
             } else {
