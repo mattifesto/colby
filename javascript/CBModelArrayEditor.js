@@ -4,36 +4,35 @@
 var CBModelArrayEditor = {
 
     /**
-     * @param {Array} array
+     * @param {function}    handleSpecChanged
+     * @param {Array}       specArray
      *
      * @return {Element}
      */
     createEditor : function(args) {
-        var element     = document.createElement("div");
-        var specArray   = args.array;
-
-        element.classList.add("CBModelArrayEditor");
+        var element         = document.createElement("div");
+        element.className   = "CBModelArrayEditor";
 
         /**
          * Upgrade specs
          */
 
-        specArray.forEach(CBModelArrayEditor.upgradeSpec);
+        args.specArray.forEach(CBModelArrayEditor.upgradeSpec);
 
         /**
          * Add all of the sections already in the list to the view.
          */
 
-        specArray.forEach(function(spec) {
+        args.specArray.forEach(function(spec) {
             var menuElement         = CBModelArrayEditor.createMenuElement({
                 containerElement    : element,
                 spec                : spec,
-                specArray           : specArray });
+                specArray           : args.specArray });
 
             var viewEditorWidget    = CBModelArrayEditor.createViewEditorWidget({
                 containerElement    : element,
                 spec                : spec,
-                specArray           : specArray });
+                specArray           : args.specArray });
 
             element.appendChild(menuElement);
             element.appendChild(viewEditorWidget);
@@ -48,7 +47,7 @@ var CBModelArrayEditor = {
         var menuElement         = CBModelArrayEditor.createMenuElement({
             containerElement    : element,
             spec                : undefined,
-            specArray           : specArray });
+            specArray           : args.specArray });
 
         element.appendChild(menuElement);
 

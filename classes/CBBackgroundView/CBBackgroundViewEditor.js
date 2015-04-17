@@ -84,7 +84,8 @@ CBBackgroundViewEditor.createElement = function()
     this.createLinkURLTextField();
 
     this._element.appendChild(CBModelArrayEditor.createEditor({
-        array : this.model.children }));
+        handleSpecChanged   : CBPageEditor.requestSave.bind(CBPageEditor),
+        specArray           : this.model.children }));
 
     this.updateBackgroundImageThumbnail();
 };

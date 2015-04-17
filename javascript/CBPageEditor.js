@@ -97,7 +97,8 @@ CBPageEditor.displayEditor = function()
      */
 
     editorContainer.appendChild(CBModelArrayEditor.createEditor({
-        array : CBPageEditor.model.sections }));
+        handleSpecChanged   : CBPageEditor.requestSave.bind(CBPageEditor),
+        specArray           : CBPageEditor.model.sections }));
 };
 
 /**

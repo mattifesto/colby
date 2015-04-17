@@ -29,7 +29,8 @@ CBContainerViewEditor.createChildViewsElement = function() {
     childViewsElement.className         = "CBContainerViewEditorSubviews";
 
     childViewsElement.appendChild(CBModelArrayEditor.createEditor({
-        array : this.model.subviewModels }));
+        handleSpecChanged   : CBPageEditor.requestSave.bind(CBPageEditor),
+        specArray           : this.model.subviewModels }));
 
     this._element.appendChild(childViewsElement);
 };
