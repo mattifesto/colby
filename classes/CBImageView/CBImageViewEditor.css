@@ -32,7 +32,7 @@
 
 .CBImageViewEditor > button {
     display:    block;
-    margin:     10px auto 30px;
+    margin:     10px auto 0;
 }
 
 .CBImageViewEditor > .background {
