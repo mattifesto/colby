@@ -3,9 +3,9 @@
 var CBViewEditorWidgetFactory = {
 
     /**
-     * @param spec
-     * @param handleModelChanged
+     * @param handleSpecChanged
      * @param handleViewDeleted
+     * @param spec
      *
      * @return Element
      */
