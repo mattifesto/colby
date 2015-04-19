@@ -77,12 +77,32 @@ class CBDataStore
     }
 
     /**
+     * @param string $ID
+     *      example: "1ab9879ccb12eaaeda7b81b08fa433fde8bc86e3"
+     *
      * @return string
+     *      example: "data/1a/b9/879ccb12eaaeda7b81b08fa433fde8bc86e3"
      */
     public static function directoryNameFromDocumentRoot($ID) {
         $directoryName = preg_replace('/^(..)(..)/', '$1/$2/', $ID);
 
         return "data/{$directoryName}";
+    }
+
+    /**
+     * Returns an absolute filename given a data store ID and the filename of
+     * a file stored inside the data store directory.
+     *
+     * @param string filename
+     * @param string ID
+     *
+     * @return string
+     */
+    public static function filepath($args) {
+        $filename = $ID = '';
+        extract($args, EXTR_IF_EXISTS);
+
+        return directoryForID($ID) . "/{$filename}";
     }
 
     /**
