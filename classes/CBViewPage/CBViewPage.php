@@ -137,6 +137,21 @@ EOT;
     }
 
     /**
+     * @return string
+     */
+    private static function modelToSearchText($model) {
+        $searchText     = array();
+        $searchText[]   = $model->title;
+        $searchText[]   = $model->description;
+
+        foreach ($model->sections as $modelForView) {
+            $searchText[] = CBView::modelToSearchText($modelForView);
+        }
+
+        return implode(' ', $searchText);
+    }
+
+    /**
      * This function removes the post from all editable page lists because
      * editable page lists are specified in `$spec->listClassNames`.
      * This page may be in other page lists but those are managed by other
@@ -347,21 +362,6 @@ EOT;
         $permissions->group = 'Administrators';
 
         return $permissions;
-    }
-
-    /**
-     * @return string
-     */
-    private static function modelToSearchText($model) {
-        $searchText     = array();
-        $searchText[]   = $model->title;
-        $searchText[]   = $model->description;
-
-        foreach ($model->sections as $modelForView) {
-            $searchText[] = CBView::modelToSearchText($modelForView);
-        }
-
-        return implode(' ', $searchText);
     }
 
     /**
