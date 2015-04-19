@@ -83,62 +83,6 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function specToModel($spec) {
-
-        /**
-         * Required values
-         */
-
-        $model              = new stdClass();
-        $model->dataStoreID = $spec->dataStoreID;
-        $model->created     = $spec->created;
-        $model->updated     = $spec->updated;
-
-        /**
-         * Optional values
-         */
-
-        $model->description             = isset($spec->description) ? $spec->description : '';
-        $model->isPublished             = isset($spec->isPublished) ? $spec->isPublished : false;
-        $model->iteration               = $spec->iteration;
-        $model->listClassNames          = isset($spec->listClassNames) ? $spec->listClassNames : array();
-        $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? $spec->publicationTimeStamp : null;
-        $model->publishedBy             = isset($spec->publishedBy) ? $spec->publishedBy : null;
-        $model->rowID                   = isset($spec->rowID) ? $spec->rowID : null; /* Deprecated */
-        $model->schemaVersion           = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
-        $model->thumbnailURL            = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null;
-        $model->title                   = isset($spec->title) ? $spec->title : '';
-
-        /**
-         * Views
-         */
-
-        if (isset($spec->sections)) {
-            $model->sections = array_map('CBView::specToModel', $spec->sections);
-        } else {
-            $model->sections = array();
-        }
-
-        /**
-         * Computed values
-         */
-
-        $model->descriptionHTML         = ColbyConvert::textToHTML($model->description);
-        $model->thumbnailURLAsHTML      = ColbyConvert::textToHTML($model->thumbnailURL);
-        $model->titleHTML               = ColbyConvert::textToHTML($model->title);
-
-        /**
-         * The URI and URIAsHTML values will be set in the save function
-         * because the values are dependent on whether the URI is available or
-         * not.
-         */
-
-        return $model;
-    }
-
-    /**
-     * @return stdClass
-     */
     private static function compileSpecificationModelToSummaryViewModel($model) {
         $summaryViewModel                       = CBPageSummaryView::specToModel();
         $summaryViewModel->created              = $model->created;
@@ -418,6 +362,62 @@ EOT;
         }
 
         return implode(' ', $searchText);
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function specToModel($spec) {
+
+        /**
+         * Required values
+         */
+
+        $model              = new stdClass();
+        $model->dataStoreID = $spec->dataStoreID;
+        $model->created     = $spec->created;
+        $model->updated     = $spec->updated;
+
+        /**
+         * Optional values
+         */
+
+        $model->description             = isset($spec->description) ? $spec->description : '';
+        $model->isPublished             = isset($spec->isPublished) ? $spec->isPublished : false;
+        $model->iteration               = $spec->iteration;
+        $model->listClassNames          = isset($spec->listClassNames) ? $spec->listClassNames : array();
+        $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? $spec->publicationTimeStamp : null;
+        $model->publishedBy             = isset($spec->publishedBy) ? $spec->publishedBy : null;
+        $model->rowID                   = isset($spec->rowID) ? $spec->rowID : null; /* Deprecated */
+        $model->schemaVersion           = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
+        $model->thumbnailURL            = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null;
+        $model->title                   = isset($spec->title) ? $spec->title : '';
+
+        /**
+         * Views
+         */
+
+        if (isset($spec->sections)) {
+            $model->sections = array_map('CBView::specToModel', $spec->sections);
+        } else {
+            $model->sections = array();
+        }
+
+        /**
+         * Computed values
+         */
+
+        $model->descriptionHTML         = ColbyConvert::textToHTML($model->description);
+        $model->thumbnailURLAsHTML      = ColbyConvert::textToHTML($model->thumbnailURL);
+        $model->titleHTML               = ColbyConvert::textToHTML($model->title);
+
+        /**
+         * The URI and URIAsHTML values will be set in the save function
+         * because the values are dependent on whether the URI is available or
+         * not.
+         */
+
+        return $model;
     }
 
     /**
