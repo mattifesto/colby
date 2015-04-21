@@ -102,7 +102,7 @@ class CBDataStore
         $filename = $ID = '';
         extract($args, EXTR_IF_EXISTS);
 
-        return directoryForID($ID) . "/{$filename}";
+        return self::directoryForID($ID) . "/{$filename}";
     }
 
     /**
