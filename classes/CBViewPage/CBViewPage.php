@@ -265,7 +265,10 @@ EOT;
      *
      * @return void
      */
-    public static function save($spec) {
+    public static function save($args) {
+        $spec = $updatePageLists = false;
+        extract($args, EXTR_IF_EXISTS);
+
         $ID = $spec->dataStoreID;
 
         try {
@@ -296,7 +299,9 @@ EOT;
 
             $model->URIAsHTML = ColbyConvert::textToHTML($model->URI);
 
-            self::updateDatabase($model);
+            self::updateDatabase([
+                'model'             => $model,
+                'updatePageLists'   => $updatePageLists]);
 
             $directory  = CBDataStore::directoryForID($ID);
             $specJSON   = json_encode($spec);
@@ -347,7 +352,9 @@ EOT;
         $response           = new CBAjaxResponse();
         $spec = json_decode($_POST['model-json']);
 
-        self::save($spec);
+        self::save([
+            'spec'              => $spec,
+            'updatePageLists'   => true]);
 
         $response->rowID            = $spec->rowID;
         $response->wasSuccessful    = true;
@@ -460,7 +467,9 @@ EOT;
     /**
      * @return void
      */
-    private static function updateDatabase($model) {
+    private static function updateDatabase($args) {
+        $model = $updatePageLists = false;
+        extract($args, EXTR_IF_EXISTS);
 
         $summaryViewModel       = self::compileSpecificationModelToSummaryViewModel($model);
         $rowData                = new stdClass();
@@ -486,13 +495,15 @@ EOT;
 
         CBPages::updateRow($rowData);
 
-        self::removeFromEditablePageLists($model);
+        if ($updatePageLists === true) {
+            self::removeFromEditablePageLists($model);
 
-        if ($model->isPublished) {
-            self::addToPageLists($model);
+            if ($model->isPublished) {
+                self::addToPageLists($model);
+            }
+
+            self::addToRecentlyEditedPagesList($model);
         }
-
-        self::addToRecentlyEditedPagesList($model);
     }
 
     /**
