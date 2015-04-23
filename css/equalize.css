@@ -1,246 +1,157 @@
-/**
- * This file is used to give all platforms and browsers an equal base for css.
- * If there is anything very basic that's different among platforms or browsers
- * then rules should be added to this file to equalize and make the experience
- * the same for all browsers and platforms.
- *
- * Things that commonly change from theme to theme should not be placed in this
- * file.
- *
- * 2014.02.22
- *  This file was changed because moving to a "sectioned page" model means that
- *  each of those sections should have no default styles applied but these. So
- *  I spent some time making sure these are good common defaults.
- *
- *  In the future, when making changes keep an eye on the `normalize.css`
- *  file available on the internet. It's a good resource that I'm not yet
- *  comfortable using because it keeps the default margins, but it's very
- *  helpful.
- */
+/*
 
-/**
- * 2014.02.22
- *  I made a big change and removed the `padding: 0px;` rule here to get back
- *  a more reasonable style for form elements. Where needed, default padding has
- *  been removed from other elements. I looked through the default style sheets
- *  of most browsers for places where padding was specified and in most places
- *  it was desirable.
- */
+    This file is used to give all platforms and browsers an equal starting point for CSS. If there is anything very basic that's different among platforms or browsers then rules should be added to this file to equalize and make the experience the same for all browsers and platforms.
+    Rules that commonly change between themes or sites should not be placed in this file.
 
-*
-{
-    margin: 0px;
+*/
+
+
+* {
+    margin: 0; /* 1 */
 }
 
-html
-{
-    /**
-     * The following two rules provide more obvious behavior for pages that are
-     * currently either shorter than or taller than the viewport, which is most
-     * pages.
-     *
-     * By default, the `html` element is only as tall as its content, just like
-     * any other block element. By setting the `min-height` to "100%" the `html`
-     * element will always be at least as tall as the viewport.
-     *
-     * By default, absolutely positioned elements are positioned relative to the
-     * viewport. By setting the `html` element's `position` to "relative",
-     * absolutely positioned elements are positioned relative to the `html`
-     * element instead.
-     *
-     * These two rules provide the following benefits:
-     *
-     *  -   For pages shorter than the viewport, the `html` element's background
-     *      will cover the entire height of the viewport instead of just the
-     *      height of the `body` element.
-     *
-     *  -   For pages shorter than the viewport, child elements that are
-     *      absolutely positioned relative to the bottom will be positioned
-     *      relative to the bottom of the viewport.
-     *
-     *  -   For pages taller than the viewport, child elements that are
-     *      absolutely positioned relative to the bottom will be positioned
-     *      relative to the bottom of the natural height of the page.
-     */
-
-    min-height: 100%;
-    position:   relative;
-
-    /**
-     * Setting the `text-rendering` property to "optimizeLegibility" allows
-     * basic font ligatures to be used. This behavior might eventually be on by
-     * default.
-     **/
-
-    text-rendering: optimizeLegibility;
-
-    /**
-     * 2014.03.01
-     *  These rules prevent phone browsers from resizing text to a minimum
-     *  size based on phone heuristics. This generally breaks the layout and
-     *  degrades the experience rather then helping the user.
-     */
-
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
+html {
+    font-size:                  16px;               /* 1 */
+    height:                     100%;               /* 2 */
+    overflow-y:                 scroll;             /* 3 */
+    text-rendering:             optimizeLegibility; /* 4 */
+    -ms-text-size-adjust:       100%;               /* 5 */
+    -webkit-text-size-adjust:   100%;               /* 5 */
 }
 
-/**
- * 2014.02.22
- *  Setting the default font size below matches the browser default in all of
- *  the cases I can find, although it is user configurable. Many web developers
- *  favor letting the browser set the default and then using `em` units. This
- *  doesn't work well because image sizes are not specified in `em` units, they
- *  are specified in `px` units. Container widths are also generally specified
- *  in `px` units. So if it matters that text stay in constant proportion to
- *  images, which it is if you're doing precise design and layout, then the
- *  fantasy of a flexible default font size is not possible. For people with
- *  disabilities, all modern devices support quality zooming which means any
- *  user can zoom the page to read the text and retain the benefit of the
- *  precise layout. It's not always a perfect solution, but it's the same
- *  solution implemented for physical items like, books, newspapers, and
- *  magazines.
- *
- *  The `overflow-y: scroll;` rule is set so that all browsers include a
- *  vertical scrollbar at all times so that the width of the viewport doesn't
- *  shift between shorter and taller pages, which causes an unpleasant
- *  distraction.
- */
-
-html
-{
-    font-size: 16px;
-    overflow-y: scroll;
+body {
+    display:                flex;           /* 1 */
+    display:                -webkit-flex;
+    flex-direction:         column;         /* 1 */
+    -webkit-flex-direction: column;
+    min-height:             100%;           /* 2 */
+    position:               relative;       /* 3 */
 }
 
-/**
- * 2013.05.20
- *
- * The `main` element is supported in newer browsers but is not yet a `block`
- * element by default. Remove this rule as soon as new browsers define it as
- * a `block` element in the default stylesheet.
- *
- * As of this writing, neither Safari nor Firefox do this.
- */
-
-main
-{
-    display: block;
+body > * {
+    -webkit-flex:           none;           /* 4 */
 }
 
-a:link,
-a:active,
-a:focus,
-a:hover
-{
+body > .flex-fill {
+    -webkit-flex:           1 0 auto;       /* 5 */
+    flex:                   1 0 auto;
+}
+
+main {
+    display: block; /* 1 */
+}
+
+a:link, a:active, a:focus, a:hover {
     outline: none;
 }
 
-a img
-{
+a img {
     border: none;
 }
 
-pre
-{
+pre {
     overflow: auto;
 }
 
-/**
- * 2013.10.20
- *  Added the `-moz-box-sizing` property because Firefox hasn't yet implemented
- *  the `box-sizing` propery.
- *
- * 2014.02.22
- *  This rule has been here a while. The reason is that it's common to set form
- *  fields to be 100% wide. If the box sizing isn't "border-box" then the field
- *  overflows its container in ways that are unattractive.
- *
- * 2014.03.01
- *  Styles that attempted to equalize the default font of user interface
- *  elements have been removed.
- *
- *  -   Setting the font style on a `button` element removes the default OS
- *      specific formatting and you can never get it back. The OS formatting
- *      for administrative purposes works very well if another more established
- *      button style is not available.
- *
- *  -   Setting the font on a `select` element doesn't even work in Safari so
- *      the various elements become mismatched, not equalized.
- *
- *  -   It is often not desirable for the font of `input` elements to be
- *      inherited. One undesirable style is not better than another undesirable
- *      style, but having less styles is more desirable than more styles.
- *
- *  Attempts to equalize form elements without committing to a full suite of
- *  styles is futile. It makes the elements look worse and de-equalizes them
- *  within each browser.
- */
-
-button,
-input,
-select,
-textarea
-{
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
+button, input, select, textarea {
+    box-sizing: border-box; /* 1 */
 }
 
-/**
- * 2014.02.22
- *  This property is almost universally set on tables. The `normalize.css` file
- *  also has this style.
- */
-
-table
-{
-    border-spacing: 0px;
+table {
+    border-spacing: 0px; /* 1 */
 }
 
-/**
- * 2014.02.22
- *  Added `padding: 0px;` because the general padding rule was removed but
- *  we still want to remove padding here.
- *
- *  The rule `vertical-align: baseline;` is confirmed to be correct here. It
- *  places the text at the top of the cell except when there are situations
- *  that affect the baseline (mixed text sizes, form fields) and then it places
- *  the baseline as close to the top as possible.
- */
-
-td,
-th
-{
-    padding:        0px;
+td, th {
+    padding:        0;          /* 1 */
     text-align:     left;
-    vertical-align: baseline;
+    vertical-align: baseline;   /* 2 */
 }
 
-/**
- * Horizontal lists are used on almost every website and the elements and
- * styles used are always the same so it makes sense to have them here.
- *
- * 2013.01.14
- *  Switched from a left margin of 1.5em on `ul.horizontal > li + li` to
- *  0.75em left _and_ right margins on `ul.horizontal > li`. This will make
- *  horizontal list items will look pleasantly spaced inside an element that
- *  doesn't have padding of its own. Previously it had been assumed the
- *  containing element would have the padding required to make the horizontal
- *  list look good, but that was a bad assumption.
- *
- *  This also means that the list will not be aligned to the left edge of the
- *  containing element which has never been a requirement of any previous
- *  scenario.
- */
-
-ul.horizontal
-{
-    padding-left: 0px;
+ul.horizontal {
+    padding-left:   0px;    /* 1 */
 }
 
-ul.horizontal > li
-{
+ul.horizontal > li {
     display:        inline;
-    margin-left:    0.75em;
-    margin-right:   0.75em;
+    margin-left:    0.75em; /* 2 */
+    margin-right:   0.75em; /* 2 */
 }
+
+
+/*
+
+Footnotes
+---------
+
+*:
+
+1.  The default margins are not generally helpful, especially on the `body` element. In the past the padding has also been removed but it turns out that much of the default padding is useful.
+
+
+html:
+
+1.  The value `16px` matches the default size used by most, if not all, browsers but it can be changed by the user in browser preferences. This guarantees that it is the value because most layouts can't really handle a root change of a font size. With the high quality zoom support that browsers have today, accessibility is not as much of a concern with regard to font size.
+
+2.  This rule makes the height of the `html` element always equal to the height of the viewport. Having this explicit height is important because it allows the `body` to have a `min-height` property of `100%`. This will not work if the `html` element specifies it's height using `min-height`.
+
+3.  This forces a scrollbar to appear at all times on browsers that have scrollbars so that the layout does not shift between shorter and longer pages that may otherwise toggle the scrollbar's presence.
+
+4.  Setting the `text-rendering` property to "optimizeLegibility" allows basic font ligatures to be used. This behavior might eventually be on by default.
+
+5.  These rules prevent phone browsers from resizing text to a minimum size based on phone heuristics. This generally breaks the layout and degrades the experience rather then helping the user.
+
+
+body:
+
+1.  This makes the body a vertical flexbox which behaves the same as if it wasn't except it allows flexible box behaviors such as placing the footer at the bottom of the viewport for short pages.
+
+2.  This makes the body at least as tall as the viewport which enables the footer to be placed at the bottom of the viewport when the content is small.
+
+3.  By default absolutely positioned elements are positioned relative to the `body` element.
+
+4.  This makes children of the body non-flexible by default, which basically makes them behave exactly as if they were not in a flexible box container.
+
+5.  Use this class on a child that is allowed to grow to take up extra space between other elements. This should be used on an empty element right above the page footer.
+
+
+main:
+
+1.  The `main` element is supported in newer browsers but is not yet a `block` element by default. Remove this rule as soon as new browsers define it as a `block` element in the default stylesheet. (2013.05.20)
+
+
+button, input, select, textarea:
+
+1.  This rule allows form elements to be set to `100%` wide and properly fill that width. Without it, the element border widths make it slightly larger.
+    Note: Any other attempts to equalize the form elements is most likely counterproductive. Most browsers degrade the appearance of these elements as soon as any visible property is applied. Views involving form elements should be designed to withstand slight appearance differences between browsers.
+
+
+table:
+
+1.  This property is almost universally set on tables. The `normalize.css` file also has this style.
+
+
+td, th:
+
+1.  The default padding on table cells is not generally helpful.
+
+2.  The rule `vertical-align: baseline;` is confirmed to be correct here. It places the text at the top of the cell except when there are situations that affect the baseline (mixed text sizes, form fields) and then it places the baseline as close to the top as possible.
+
+
+ul:
+
+1.  Horizontal lists are used on almost every website and the elements and styles used are always the same so it makes sense to have them here.
+
+2.  This will make horizontal list items will look pleasantly spaced inside an element that doesn't have padding of its own. Experience has shown that this is the best default. There are certainly theoretical cases where this is not the best and thoses cases should not use this style.
+
+
+File History
+------------
+
+2014.02.22
+    This file was changed because moving to a "sectioned page" model means that each of those sections should have no default styles applied but these. So I spent some time making sure these are good common defaults. In the future, when making changes keep an eye on the `normalize.css` file available on the internet. It's a good resource that I'm not yet comfortable using because it keeps the default margins, but it's very helpful.
+
+2015.05.23
+    The nature of the `html` and `body` element layout changed to support using flexible boxes to place the footer at the bottom of the viewport for short pages. The `body` now becomes the lowest level element relative to which child elements can be can be placed absolutely. This negatively affects sites using layout methods that added padding to the `body`. Sites that use those methods should be migrated to the flexible box method because it's the correct way to do it and is now available on all supported browsers.
+    I also removed some historical comments that were not entirely pertinent anymore. If you have a question about the reasoning or history behind a particular style look at previous versions of this file.
+
+*/
