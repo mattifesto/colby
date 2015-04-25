@@ -36,7 +36,7 @@ include Colby::findFile('sections/public-page-settings.php');
             // put spaces around the following three characters: / ? &
             // to allow for nice line break behavior
 
-            echo COLBY_SITE_URL,
+            echo CBSiteURL,
                 htmlspecialchars(
                     preg_replace('/([\/\?&])/',
                                  ' $1 ',
