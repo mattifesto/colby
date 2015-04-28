@@ -6,9 +6,6 @@ final class CBImageView {
      * @return void
      */
     public static function includeEditorDependencies() {
-        CBView::includeEditorDependencies();
-        CBTextView::includeEditorDependencies();
-
         CBHTMLOutput::addCSSURL(self::URL('CBImageViewEditor.css'));
         CBHTMLOutput::addJavaScriptURL(self::URL('CBImageViewEditorFactory.js'));
     }

@@ -65,6 +65,20 @@ include CBSystemDirectory . '/sections/admin-page-settings.php';
  */
 
 foreach (CBViewPageViews::availableViewClassNames() as $className) {
+    $function = "{$className}::editorURLsForCSS";
+
+    if (is_callable($function)) {
+        $URLs = call_user_func($function);
+        array_walk($URLs, 'CBHTMLOutput::addCSSURL');
+    }
+
+    $function = "{$className}::editorURLsForJavaScript";
+
+    if (is_callable($function)) {
+        $URLs = call_user_func($function);
+        array_walk($URLs, 'CBHTMLOutput::addJavaScriptURL');
+    }
+
     $function = "{$className}::includeEditorDependencies";
 
     if (is_callable($function)) {

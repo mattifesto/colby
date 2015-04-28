@@ -1,6 +1,23 @@
 <?php
 
-class CBMarkaround {
+final class CBMarkaround {
+
+    /**
+    @return string
+    */
+    private static function expressionForSpan($openExpression, $closeExpression) {
+        return "/
+
+            {$openExpression}
+            (
+                (?=\S)      # content must start with a non-whitspace character
+                .+?         # content always has at least one character
+                (?<=\S)     # content must end with a non-whitespace character
+            )
+            {$closeExpression}
+
+            /x";
+    }
 
     /**
      * @note functional programming
@@ -54,19 +71,20 @@ class CBMarkaround {
     }
 
     /**
-     * @return string
-     */
-    private static function expressionForSpan($openExpression, $closeExpression) {
-        return "/
+    @param {string} format
+        This specifies what kind of formatting the text uses. The only supported value currently is the default value `inline` which specifies to only format the inline markaround and not markaround for block level element, such as lists or block quotes.
 
-            {$openExpression}
-            (
-                (?=\S)      # content must start with a non-whitspace character
-                .+?         # content always has at least one character
-                (?<=\S)     # content must end with a non-whitespace character
-            )
-            {$closeExpression}
+    @return string
+    */
+    public static function textToHTML($args) {
+        $format = 'inline'; $text = '';
+        extract($args);
 
-            /x";
+        $lines          = ColbyConvert::textToLines((string)$text);
+        $paragraphs     = ColbyConvert::linesToParagraphs($lines);
+        $paragraphs     = array_map('CBMarkaround::paragraphToHTML', $paragraphs);
+        $paragraphs     = array_map(function($p) { return "<p>{$p}"; }, $paragraphs);
+
+        return implode("\n\n", $paragraphs);
     }
 }

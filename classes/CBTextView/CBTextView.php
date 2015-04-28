@@ -3,24 +3,24 @@
 final class CBTextView {
 
     /**
-     * @return void
-     */
-    public static function includeEditorDependencies() {
-        CBView::includeEditorDependencies();
+    @return array
+    */
+    public static function editorURLsForCSS() {
+        return [self::URL('CBTextViewEditor.css')];
+    }
 
-        CBHTMLOutput::addCSSURL(self::URL('CBTextViewEditor.css'));
-        CBHTMLOutput::addJavaScriptURL(self::URL('CBTextViewEditorFactory.js'));
+    /**
+    @return array
+    */
+    public static function editorURLsForJavaScript() {
+        return [self::URL('CBTextViewEditorFactory.js')];
     }
 
     /**
      * @return string
      */
     public static function modelToSearchText(stdClass $model = null) {
-        if (isset($model->text)) {
-            return $model->text;
-        }
-
-        return '';
+        return $model->text;
     }
 
     /**
