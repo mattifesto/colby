@@ -267,6 +267,8 @@ EOT;
 
                 if ($row) {
                     if ($row->className) {
+                        self::canonicalizeRequestURI();
+
                         $className = $row->className;
 
                         if (is_callable($function = "{$className}::renderAsHTMLForID")) {
