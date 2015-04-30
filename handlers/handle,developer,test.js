@@ -6,22 +6,17 @@ var CBTestPage = {
     @return {Element}
     */
     createTestUI : function() {
+        var element         = document.createElement("div");
+        element.className   = "CBTestUI";
+        var button          = document.createElement("button");
+        button.textContent  = "Run Tests";
+        var status          = document.createElement("textarea");
 
-        var element                 = document.createElement("div");
-        element.className           = "CBTestUI";
-        var buttonForPHP            = document.createElement("button");
-        buttonForPHP.textContent    = "Run PHP Tests";
-        var buttonForJS             = document.createElement("button");
-        buttonForJS.textContent     = "Run JavaScript Tests";
-        var status                  = document.createElement("textarea");
-
-        buttonForPHP.addEventListener("click", CBTestPage.handleRunPHPTestsRequested.bind(undefined, {
-            buttonElement   : buttonForPHP,
+        button.addEventListener("click", CBTestPage.handleRunTestsRequested.bind(undefined, {
+            buttonElement   : button,
             statusElement   : status }));
-        buttonForJS.addEventListener("click", CBTestPage.runJavaScriptTests);
 
-        element.appendChild(buttonForPHP);
-        element.appendChild(buttonForJS);
+        element.appendChild(button);
         element.appendChild(status);
 
         return element;
@@ -44,7 +39,8 @@ var CBTestPage = {
 
     @return {undefined}
     */
-    handleRunPHPTestsRequested : function(args) {
+    handleRunTestsRequested : function(args) {
+        var date                    = new Date();
         args.buttonElement.disabled = true;
         var xhr                     = new XMLHttpRequest();
         xhr.onload                  = CBTestPage.runPHPTestsDidComplete.bind(undefined, {
@@ -52,15 +48,19 @@ var CBTestPage = {
             statusElement           : args.statusElement,
             xhr                     : xhr });
 
-        xhr.open('POST', '/api/?class=CBUnitTests&function=runAll', true);
-        xhr.send();
-
-        var date                    = new Date();
-        args.statusElement.value    = "CBUnitTests::runAll - " +
+        args.statusElement.value    = "Tests Started - " +
                                       date.toLocaleDateString() +
                                       " " +
                                       date.toLocaleTimeString() +
                                       "\n";
+
+        CBTestPage.runJavaScriptTests({
+            statusElement : args.statusElement });
+
+        xhr.open('POST', '/api/?class=CBUnitTests&function=runAll', true);
+        xhr.send();
+
+        args.statusElement.value += "CBUnitTests::runAll\n";
     },
 
     /**
@@ -75,6 +75,19 @@ var CBTestPage = {
         var response                = Colby.responseFromXMLHttpRequest(args.xhr);
 
         args.statusElement.value += response.message + "\n";
+    },
+
+    /**
+    @param {Element} statusElement
+
+    @return void
+    */
+    runJavaScriptTests : function(args) {
+        args.statusElement.value += "Starting JavaScript tests.\n";
+
+        var message = ColbyUnitTests.runJavaScriptTests();
+
+        args.statusElement.value += message + "\n";
     }
 };
 
@@ -128,20 +141,6 @@ CBTestPage.newPanel = function()
     inner.appendChild(button);
 
     return panel;
-};
-
-/**
- * @return void
- */
-CBTestPage.runJavaScriptTests = function()
-{
-    CBTestPage.setPanelText("Running tests...");
-
-    document.body.appendChild(CBTestPage.panel);
-
-    var message = ColbyUnitTests.runJavaScriptTests();
-
-    CBTestPage.setPanelText(message);
 };
 
 /**
