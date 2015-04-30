@@ -57,10 +57,10 @@ var CBTestPage = {
         CBTestPage.runJavaScriptTests({
             statusElement : args.statusElement });
 
-        xhr.open('POST', '/api/?class=CBUnitTests&function=runAll', true);
+        xhr.open('POST', '/test/?class=CBUnitTests', true);
         xhr.send();
 
-        args.statusElement.value += "CBUnitTests::runAll\n";
+        args.statusElement.value += "CBUnitTests\n";
     },
 
     /**

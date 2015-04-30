@@ -3,9 +3,9 @@
 class CBUnitTests {
 
     /**
-     * @return void
-     */
-    public static function runAll() {
+    @return void
+    */
+    public static function test() {
 
         // Deprecated style
 
@@ -22,29 +22,8 @@ class CBUnitTests {
         CBUnitTestsForCBView::runAll();
         CBUnitTestsForColbyConvert::runAll();
         CBUnitTestsForColbyMarkaroundParser::runAll();
-    }
 
-    /**
-     * @return void
-     */
-    public static function runAllForAjax() {
-        $response           = new CBAjaxResponse();
-
-        self::runAll();
-
-        $response->wasSuccessful = true;
-        $response->message = 'The unit tests ran successfully.';
-        $response->send();
-    }
-
-    /**
-     * @return stdClass
-     */
-    public static function runAllForAjaxPermissions() {
-        $permissions        = new stdClass();
-        $permissions->group = 'Developers';
-
-        return $permissions;
+        return 'The unit tests ran successfully.';
     }
 }
 
