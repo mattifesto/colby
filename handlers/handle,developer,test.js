@@ -1,7 +1,32 @@
 "use strict";
 
+var CBTestPage = {
 
-var CBTestPage = {};
+    /*
+    @return {undefined}
+    */
+    DOMContentDidLoad : function() {
+        var mainElement         = document.getElementsByTagName("main")[0];
+
+        var button              = document.createElement("button");
+        var buttonText          = document.createTextNode("Run PHP Tests");
+        button.style.display    = "block";
+        button.style.margin     = "50px auto";
+        button.addEventListener("click", CBTestPage.runPHPTests);
+        button.appendChild(buttonText);
+        mainElement.appendChild(button);
+
+        button                  = document.createElement("button");
+        buttonText              = document.createTextNode("Run JavaScript Tests");
+        button.style.display    = "block";
+        button.style.margin     = "50px auto";
+        button.addEventListener("click", CBTestPage.runJavaScriptTests);
+        button.appendChild(buttonText);
+        mainElement.appendChild(button);
+
+        CBTestPage.panel = CBTestPage.newPanel();
+    }
+};
 
 
 /**
@@ -13,32 +38,6 @@ CBTestPage.dismissPanelCallback = function(panel)
     {
         document.body.removeChild(panel);
     };
-};
-
-/**
- * @return void
- */
-CBTestPage.DOMContentDidLoad = function()
-{
-    var mainElement         = document.getElementsByTagName("main")[0];
-
-    var button              = document.createElement("button");
-    var buttonText          = document.createTextNode("Run PHP Tests");
-    button.style.display    = "block";
-    button.style.margin     = "50px auto";
-    button.addEventListener("click", CBTestPage.runPHPTests);
-    button.appendChild(buttonText);
-    mainElement.appendChild(button);
-
-    button                  = document.createElement("button");
-    buttonText              = document.createTextNode("Run JavaScript Tests");
-    button.style.display    = "block";
-    button.style.margin     = "50px auto";
-    button.addEventListener("click", CBTestPage.runJavaScriptTests);
-    button.appendChild(buttonText);
-    mainElement.appendChild(button);
-
-    CBTestPage.panel = CBTestPage.newPanel();
 };
 
 /**
