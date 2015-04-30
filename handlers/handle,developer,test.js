@@ -2,7 +2,7 @@
 
 var CBTestPage = {
 
-    /*
+    /**
     @return {Element}
     */
     createTestUI : function() {
@@ -25,7 +25,7 @@ var CBTestPage = {
         return element;
     },
 
-    /*
+    /**
     @return {undefined}
     */
     DOMContentDidLoad : function() {
@@ -34,6 +34,29 @@ var CBTestPage = {
         main.appendChild(CBTestPage.createTestUI());
 
         CBTestPage.panel = CBTestPage.newPanel();
+    },
+
+    /**
+    @return {undefined}
+    */
+    runPHPTests : function() {
+        var xhr     = new XMLHttpRequest();
+        xhr.onload  = CBTestPage.runPHPTestsDidComplete;
+        xhr.open('POST', '/api/?class=CBUnitTests&function=runAllForAjax', true);
+        xhr.send();
+
+        CBTestPage.setPanelText("Waiting for response...");
+        document.body.appendChild(CBTestPage.panel);
+    },
+
+    /**
+    @return {undefined}
+    */
+    runPHPTestsDidComplete : function() {
+        var xhr         = this;
+        var response    = Colby.responseFromXMLHttpRequest(xhr);
+
+        CBTestPage.setPanelText(response.message);
     }
 };
 
@@ -101,31 +124,6 @@ CBTestPage.runJavaScriptTests = function()
     var message = ColbyUnitTests.runJavaScriptTests();
 
     CBTestPage.setPanelText(message);
-};
-
-/**
- * @return void
- */
-CBTestPage.runPHPTests = function()
-{
-    var xhr     = new XMLHttpRequest();
-    xhr.onload  = CBTestPage.runPHPTestsDidComplete;
-    xhr.open('POST', '/api/?class=CBUnitTests&function=runAllForAjax', true);
-    xhr.send();
-
-    CBTestPage.setPanelText("Waiting for response...");
-    document.body.appendChild(CBTestPage.panel);
-};
-
-/**
- * @return void
- */
-CBTestPage.runPHPTestsDidComplete = function()
-{
-    var xhr         = this;
-    var response    = Colby.responseFromXMLHttpRequest(xhr);
-
-    CBTestPage.setPanelText(response.message);
 };
 
 /**
