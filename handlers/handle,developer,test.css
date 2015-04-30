@@ -1,0 +1,15 @@
+.CBTestUI {
+    margin:     0 auto;
+    text-align: center;
+    width:      720px;
+}
+
+.CBTestUI button {
+    margin:     0 5px;
+}
+
+.CBTestUI textarea {
+    height:     400px;
+    margin:     10px 0 0;
+    width:      100%;
+}

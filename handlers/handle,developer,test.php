@@ -16,6 +16,7 @@ CBHTMLOutput::setDescriptionHTML('Developer tests to make sure there are no regr
 include CBSystemDirectory . '/sections/equalize.php';
 
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,developer,test.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,developer,test.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Tests.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');

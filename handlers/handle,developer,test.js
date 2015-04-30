@@ -7,22 +7,20 @@ var CBTestPage = {
     */
     createTestUI : function() {
 
-        var element             = document.createElement("div");
-        element.className       = "CBTestUI";
+        var element                 = document.createElement("div");
+        element.className           = "CBTestUI";
+        var buttonForPHP            = document.createElement("button");
+        buttonForPHP.textContent    = "Run PHP Tests";
+        var buttonForJS             = document.createElement("button");
+        buttonForJS.textContent     = "Run JavaScript Tests";
+        var status                  = document.createElement("textarea");
 
-        var button              = document.createElement("button");
-        button.style.display    = "block";
-        button.style.margin     = "50px auto";
-        button.textContent      = "Run PHP Tests";
-        button.addEventListener("click", CBTestPage.runPHPTests);
-        element.appendChild(button);
+        buttonForPHP.addEventListener("click", CBTestPage.runPHPTests);
+        buttonForJS.addEventListener("click", CBTestPage.runJavaScriptTests);
 
-        button                  = document.createElement("button");
-        button.style.display    = "block";
-        button.style.margin     = "50px auto";
-        button.textContent      = "Run JavaScript Tests";
-        button.addEventListener("click", CBTestPage.runJavaScriptTests);
-        element.appendChild(button);
+        element.appendChild(buttonForPHP);
+        element.appendChild(buttonForJS);
+        element.appendChild(status);
 
         return element;
     },
