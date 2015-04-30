@@ -15,7 +15,8 @@ var CBTestPage = {
         buttonForJS.textContent     = "Run JavaScript Tests";
         var status                  = document.createElement("textarea");
 
-        buttonForPHP.addEventListener("click", CBTestPage.runPHPTests.bind(undefined, {
+        buttonForPHP.addEventListener("click", CBTestPage.handleRunPHPTestsRequested.bind(undefined, {
+            buttonElement   : buttonForPHP,
             statusElement   : status }));
         buttonForJS.addEventListener("click", CBTestPage.runJavaScriptTests);
 
@@ -38,15 +39,18 @@ var CBTestPage = {
     },
 
     /**
-    @param  {Element}   statusElement
+    @param {Element}    buttonElement
+    @param {Element}    statusElement
 
     @return {undefined}
     */
-    runPHPTests : function(args) {
-        var xhr             = new XMLHttpRequest();
-        xhr.onload          = CBTestPage.runPHPTestsDidComplete.bind(undefined, {
-            statusElement   : args.statusElement,
-            xhr             : xhr });
+    handleRunPHPTestsRequested : function(args) {
+        args.buttonElement.disabled = true;
+        var xhr                     = new XMLHttpRequest();
+        xhr.onload                  = CBTestPage.runPHPTestsDidComplete.bind(undefined, {
+            buttonElement           : args.buttonElement,
+            statusElement           : args.statusElement,
+            xhr                     : xhr });
 
         xhr.open('POST', '/api/?class=CBUnitTests&function=runAllForAjax', true);
         xhr.send();
@@ -60,13 +64,15 @@ var CBTestPage = {
     },
 
     /**
+    @param {Element}        buttonElement
     @param {Element}        statusElement
     @param {XMLHttpRequest} xhr
 
     @return {undefined}
     */
     runPHPTestsDidComplete : function(args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
+        args.buttonElement.disabled = false;
+        var response                = Colby.responseFromXMLHttpRequest(args.xhr);
 
         args.statusElement.value += response.message + "\n";
     }
