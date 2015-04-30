@@ -15,7 +15,8 @@ var CBTestPage = {
         buttonForJS.textContent     = "Run JavaScript Tests";
         var status                  = document.createElement("textarea");
 
-        buttonForPHP.addEventListener("click", CBTestPage.runPHPTests);
+        buttonForPHP.addEventListener("click", CBTestPage.runPHPTests.bind(undefined, {
+            statusElement   : status }));
         buttonForJS.addEventListener("click", CBTestPage.runJavaScriptTests);
 
         element.appendChild(buttonForPHP);
@@ -37,26 +38,37 @@ var CBTestPage = {
     },
 
     /**
+    @param  {Element}   statusElement
+
     @return {undefined}
     */
-    runPHPTests : function() {
-        var xhr     = new XMLHttpRequest();
-        xhr.onload  = CBTestPage.runPHPTestsDidComplete;
+    runPHPTests : function(args) {
+        var xhr             = new XMLHttpRequest();
+        xhr.onload          = CBTestPage.runPHPTestsDidComplete.bind(undefined, {
+            statusElement   : args.statusElement,
+            xhr             : xhr });
+
         xhr.open('POST', '/api/?class=CBUnitTests&function=runAllForAjax', true);
         xhr.send();
 
-        CBTestPage.setPanelText("Waiting for response...");
-        document.body.appendChild(CBTestPage.panel);
+        var date                    = new Date();
+        args.statusElement.value    = "CBUnitTests::runAllForAjax - " +
+                                      date.toLocaleDateString() +
+                                      " " +
+                                      date.toLocaleTimeString() +
+                                      "\n";
     },
 
     /**
+    @param {Element}        statusElement
+    @param {XMLHttpRequest} xhr
+
     @return {undefined}
     */
-    runPHPTestsDidComplete : function() {
-        var xhr         = this;
-        var response    = Colby.responseFromXMLHttpRequest(xhr);
+    runPHPTestsDidComplete : function(args) {
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
-        CBTestPage.setPanelText(response.message);
+        args.statusElement.value += response.message + "\n";
     }
 };
 
