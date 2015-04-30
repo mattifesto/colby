@@ -32,6 +32,24 @@ var CBTestPage = {
     },
 
     /**
+    @return {undefined}
+    */
+    handleListOfTestsReceived : function(args) {
+        var response    = Colby.responseFromXMLHttpRequest(args.xhr);
+
+        if (response.wasSuccessful) {
+            CBTestPage.runTest({
+                buttonElement   : args.buttonElement,
+                index           : 0,
+                statusElement   : args.statusElement,
+                tests           : response.tests });
+        } else {
+            args.statusElement.value += response.message + "\n";
+            args.buttonElement.disabled = false;
+        }
+    },
+
+    /**
     @param {Element}    buttonElement
     @param {Element}    statusElement
 
@@ -40,20 +58,23 @@ var CBTestPage = {
     handleRunTests : function(args) {
         var date                    = new Date();
         args.buttonElement.disabled = true;
+        var xhr                     = new XMLHttpRequest();
+        xhr.onload                  = CBTestPage.handleListOfTestsReceived.bind(undefined, {
+            buttonElement           : args.buttonElement,
+            statusElement           : args.statusElement,
+            xhr                     : xhr });
 
         args.statusElement.value    = "Tests Started - " +
                                       date.toLocaleDateString() +
                                       " " +
                                       date.toLocaleTimeString() +
                                       "\n";
+
         CBTestPage.runJavaScriptTests({
             statusElement   : args.statusElement });
 
-        CBTestPage.runTest({
-            buttonElement   : args.buttonElement,
-            index           : 0,
-            statusElement   : args.statusElement,
-            tests           : [["CBUnitTests"]] });
+        xhr.open('POST', '/api/?class=CBUnitTests&function=getListOfTests', true);
+        xhr.send();
     },
 
     /**
@@ -68,6 +89,10 @@ var CBTestPage = {
     handleTestCompleted : function(args) {
         var response    = Colby.responseFromXMLHttpRequest(args.xhr);
         args.index      = args.index + 1;
+
+        if (response.wasSuccessful && !response.message) {
+            response.message = "Succeeded";
+        }
 
         args.statusElement.value += response.message + "\n";
 
@@ -121,6 +146,8 @@ var CBTestPage = {
 
         xhr.open('POST', URI, true);
         xhr.send();
+
+        args.statusElement.value += "Test: " + className + (functionName ? " - " + functionName : '') + "\n";
     }
 };
 

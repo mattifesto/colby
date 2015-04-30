@@ -2,6 +2,22 @@
 
 class CBUnitTests {
 
+    public static function getListOfTestsForAjax() {
+        $response           = new CBAjaxResponse();
+        $response->tests    = [['CBUnitTests']];
+
+        if (is_callable($function = 'CBTests::tests')) {
+            $response->tests = array_merge($response->tests, call_user_func($function));
+        }
+
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    public static function getListOfTestsForAjaxPermissions() {
+        return (object)['group' => 'Testers'];
+    }
+
     /**
     @return void
     */
