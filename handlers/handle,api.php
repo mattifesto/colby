@@ -8,6 +8,10 @@ $args       = isset($_POST['args']) ? json_decode($_POST['args']) : new stdClass
 
 if ($function) {
 
+    if (!preg_match('/ForAjax$/', $function)) {
+        $function = "{$function}ForAjax";
+    }
+
     if ($class) {
         $function = "{$class}::{$function}";
     }

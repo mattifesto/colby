@@ -52,11 +52,11 @@ var CBTestPage = {
             statusElement           : args.statusElement,
             xhr                     : xhr });
 
-        xhr.open('POST', '/api/?class=CBUnitTests&function=runAllForAjax', true);
+        xhr.open('POST', '/api/?class=CBUnitTests&function=runAll', true);
         xhr.send();
 
         var date                    = new Date();
-        args.statusElement.value    = "CBUnitTests::runAllForAjax - " +
+        args.statusElement.value    = "CBUnitTests::runAll - " +
                                       date.toLocaleDateString() +
                                       " " +
                                       date.toLocaleTimeString() +
