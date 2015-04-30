@@ -9,19 +9,17 @@ var CBTestPage = {
         var mainElement         = document.getElementsByTagName("main")[0];
 
         var button              = document.createElement("button");
-        var buttonText          = document.createTextNode("Run PHP Tests");
         button.style.display    = "block";
         button.style.margin     = "50px auto";
+        button.textContent      = "Run PHP Tests";
         button.addEventListener("click", CBTestPage.runPHPTests);
-        button.appendChild(buttonText);
         mainElement.appendChild(button);
 
         button                  = document.createElement("button");
-        buttonText              = document.createTextNode("Run JavaScript Tests");
         button.style.display    = "block";
         button.style.margin     = "50px auto";
+        button.textContent      = "Run JavaScript Tests";
         button.addEventListener("click", CBTestPage.runJavaScriptTests);
-        button.appendChild(buttonText);
         mainElement.appendChild(button);
 
         CBTestPage.panel = CBTestPage.newPanel();
