@@ -12,7 +12,7 @@ var CBTestPage = {
         button.textContent  = "Run Tests";
         var status          = document.createElement("textarea");
 
-        button.addEventListener("click", CBTestPage.handleRunTestsRequested.bind(undefined, {
+        button.addEventListener("click", CBTestPage.handleRunTests.bind(undefined, {
             buttonElement   : button,
             statusElement   : status }));
 
@@ -29,8 +29,6 @@ var CBTestPage = {
         var main = document.getElementsByTagName("main")[0];
 
         main.appendChild(CBTestPage.createTestUI());
-
-        CBTestPage.panel = CBTestPage.newPanel();
     },
 
     /**
@@ -39,42 +37,49 @@ var CBTestPage = {
 
     @return {undefined}
     */
-    handleRunTestsRequested : function(args) {
+    handleRunTests : function(args) {
         var date                    = new Date();
         args.buttonElement.disabled = true;
-        var xhr                     = new XMLHttpRequest();
-        xhr.onload                  = CBTestPage.runPHPTestsDidComplete.bind(undefined, {
-            buttonElement           : args.buttonElement,
-            statusElement           : args.statusElement,
-            xhr                     : xhr });
 
         args.statusElement.value    = "Tests Started - " +
                                       date.toLocaleDateString() +
                                       " " +
                                       date.toLocaleTimeString() +
                                       "\n";
-
         CBTestPage.runJavaScriptTests({
-            statusElement : args.statusElement });
+            statusElement   : args.statusElement });
 
-        xhr.open('POST', '/test/?class=CBUnitTests', true);
-        xhr.send();
-
-        args.statusElement.value += "CBUnitTests\n";
+        CBTestPage.runTest({
+            buttonElement   : args.buttonElement,
+            index           : 0,
+            statusElement   : args.statusElement,
+            tests           : [["CBUnitTests"]] });
     },
 
     /**
     @param {Element}        buttonElement
+    @param {int}            index
     @param {Element}        statusElement
+    @param {array}          tests
     @param {XMLHttpRequest} xhr
 
     @return {undefined}
     */
-    runPHPTestsDidComplete : function(args) {
-        args.buttonElement.disabled = false;
-        var response                = Colby.responseFromXMLHttpRequest(args.xhr);
+    handleTestCompleted : function(args) {
+        var response    = Colby.responseFromXMLHttpRequest(args.xhr);
+        args.index      = args.index + 1;
 
         args.statusElement.value += response.message + "\n";
+
+        if (args.index < args.tests.length) {
+            CBTestPage.runTest({
+                buttonElement   : args.buttonElement,
+                index           : args.index,
+                statusElement   : args.statusElement,
+                tests           : args.tests });
+        } else {
+            args.buttonElement.disabled = false;
+        }
     },
 
     /**
@@ -88,75 +93,35 @@ var CBTestPage = {
         var message = ColbyUnitTests.runJavaScriptTests();
 
         args.statusElement.value += message + "\n";
+    },
+
+    /**
+    @param {Element}    buttonElement
+    @param {int}        index
+    @param {Element}    statusElement
+    @param {array}      tests
+
+    @return {undefined}
+    */
+    runTest : function(args) {
+        var className       = args.tests[args.index][0];
+        var functionName    = args.tests[args.index][1];
+        var xhr             = new XMLHttpRequest();
+        xhr.onload          = CBTestPage.handleTestCompleted.bind(undefined, {
+            buttonElement   : args.buttonElement,
+            index           : args.index,
+            statusElement   : args.statusElement,
+            tests           : args.tests,
+            xhr             : xhr });
+        var URI             = "/test/?class=" + className;
+
+        if (functionName !== undefined) {
+            URI += "&function=" + functionName;
+        }
+
+        xhr.open('POST', URI, true);
+        xhr.send();
     }
 };
 
-
-/**
- * @return function
- */
-CBTestPage.dismissPanelCallback = function(panel)
-{
-    return function()
-    {
-        document.body.removeChild(panel);
-    };
-};
-
-/**
- * @return HTMLElement
- */
-CBTestPage.newPanel = function()
-{
-    var panel                   = document.createElement("div");
-    panel.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-    panel.style.bottom          = 0;
-    panel.style.left            = 0;
-    panel.style.position        = "fixed";
-    panel.style.right           = 0;
-    panel.style.top             = 0;
-
-    var inner                   = document.createElement("div");
-    inner.style.backgroundColor = "white";
-    inner.style.width           = "640px";
-    inner.style.height          = "320px";
-    inner.style.margin          = "0px auto";
-    inner.style.position        = "relative";
-    inner.style.top             = "100px";
-    panel.appendChild(inner);
-
-    var pre                     = document.createElement("pre");
-    pre.style.overflow          = "scroll";
-    pre.style.padding           = "20px 20px 30px";
-    panel.pre                   = pre;
-    inner.appendChild(pre);
-
-    var button                  = document.createElement("button");
-    var buttonText              = document.createTextNode("Dismiss");
-    button.style.bottom         = "10px";
-    button.style.position       = "absolute";
-    button.style.right          = "10px";
-    button.addEventListener("click", CBTestPage.dismissPanelCallback(panel));
-    button.appendChild(buttonText);
-    inner.appendChild(button);
-
-    return panel;
-};
-
-/**
- * @return void
- */
-CBTestPage.setPanelText = function(text)
-{
-    var pre         = CBTestPage.panel.pre;
-    var textNode    = document.createTextNode(text);
-
-    while (pre.lastChild)
-    {
-        pre.removeChild(pre.lastChild);
-    }
-
-    pre.appendChild(textNode);
-};
-
-document.addEventListener("DOMContentLoaded", CBTestPage.DOMContentDidLoad, false);
+document.addEventListener("DOMContentLoaded", CBTestPage.DOMContentDidLoad);
