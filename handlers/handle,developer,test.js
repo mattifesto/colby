@@ -3,24 +3,37 @@
 var CBTestPage = {
 
     /*
-    @return {undefined}
+    @return {Element}
     */
-    DOMContentDidLoad : function() {
-        var mainElement         = document.getElementsByTagName("main")[0];
+    createTestUI : function() {
+
+        var element             = document.createElement("div");
+        element.className       = "CBTestUI";
 
         var button              = document.createElement("button");
         button.style.display    = "block";
         button.style.margin     = "50px auto";
         button.textContent      = "Run PHP Tests";
         button.addEventListener("click", CBTestPage.runPHPTests);
-        mainElement.appendChild(button);
+        element.appendChild(button);
 
         button                  = document.createElement("button");
         button.style.display    = "block";
         button.style.margin     = "50px auto";
         button.textContent      = "Run JavaScript Tests";
         button.addEventListener("click", CBTestPage.runJavaScriptTests);
-        mainElement.appendChild(button);
+        element.appendChild(button);
+
+        return element;
+    },
+
+    /*
+    @return {undefined}
+    */
+    DOMContentDidLoad : function() {
+        var main = document.getElementsByTagName("main")[0];
+
+        main.appendChild(CBTestPage.createTestUI());
 
         CBTestPage.panel = CBTestPage.newPanel();
     }
