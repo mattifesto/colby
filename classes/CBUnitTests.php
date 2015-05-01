@@ -6,7 +6,7 @@ class CBUnitTests {
         $response           = new CBAjaxResponse();
         $response->tests    = [
             ['CBUnitTests'],
-            ['CBViewPage', 'save']];
+            ['CBViewPageTests', 'save']];
 
         if (is_callable($function = 'CBTests::tests')) {
             $response->tests = array_merge($response->tests, call_user_func($function));
