@@ -35,26 +35,32 @@ class CBDataStore
      *
      * @return void
      */
-    public function delete()
-    {
-        $directoryIterator  = new RecursiveDirectoryIterator($this->directory(),
+    public function delete() {
+        CBDataStore::deleteForID($this->dataStoreID);
+    }
+
+    /**
+    @return null
+    */
+    public static function deleteForID($args) {
+        $ID = null;
+        extract($args, EXTR_IF_EXISTS);
+
+        $directory          = CBDataStore::directoryForID($ID);
+        $directoryIterator  = new RecursiveDirectoryIterator($directory,
                                                              RecursiveDirectoryIterator::SKIP_DOTS);
         $iteratorIterator   = new RecursiveIteratorIterator($directoryIterator,
                                                             RecursiveIteratorIterator::CHILD_FIRST);
 
-        foreach ($iteratorIterator as $fileInfo)
-        {
-            if ($fileInfo->isFile())
-            {
+        foreach ($iteratorIterator as $fileInfo) {
+            if ($fileInfo->isFile()) {
                 unlink($fileInfo->getPathname());
-            }
-            else
-            {
+            } else {
                 rmdir($fileInfo->getPathname());
             }
         }
 
-        rmdir($this->directory());
+        rmdir($directory);
     }
 
     /**
