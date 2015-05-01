@@ -137,6 +137,52 @@ EOT;
     }
 
     /**
+    @return int | false
+    */
+    public static function iterationForID($args) {
+        $ID = null;
+        extract($args, EXTR_IF_EXISTS);
+
+        $IDAsSQL    = ColbyConvert::textToSQL($ID);
+        $SQL        = "SELECT `iteration` FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$IDAsSQL}')";
+        $result     = Colby::query($SQL);
+
+        if ($row = $result->fetch_object()) {
+            $iteration = $row->iteration;
+        } else {
+            $iteration = false;
+        }
+
+        $result->free();
+
+        return $iteration;
+    }
+
+    /**
+    Returns either the lastest spec for an ID or creates a new spec for an ID.
+
+    TODO: Consider adding a "clobber" argument to specify that the function should return a spec with only the minimal necessary data to allow it to save. This would be used by callers that want to drop all of the current spec data and restart fresh. It would save the time of a file load and also prevent old data from accumulating over time for pages that have a longer life and are frequently modified.
+
+    @return {stdClass}
+    */
+    public static function makeSpecForID($args) {
+        $ID = null;
+        extract($args, EXTR_IF_EXISTS);
+
+        $iteration  = CBViewPage::iterationForID(['ID' => $ID]);
+        $spec       = CBViewPage::specWithID($ID, $iteration);
+
+        if (!$spec) {
+            $spec               = CBView::modelWithClassName(__CLASS__);
+            $spec->dataStoreID  = $ID;
+            $spec->created      = time();
+            $spec->updated      = $spec->created;
+        }
+
+        return $spec;
+    }
+
+    /**
      * @return string
      */
     private static function modelToSearchText($model) {
@@ -291,7 +337,7 @@ EOT;
             $iteration  = $spec->iteration;
             $model      = self::specToModel($spec);
 
-            if ($data->URI != $spec->URI && CBPages::updateURI($ID, $spec->URI)) {
+            if (isset($spec->URI) && $data->URI != $spec->URI && CBPages::updateURI($ID, $spec->URI)) {
                 $model->URI = $spec->URI;
             } else {
                 $model->URI = $data->URI;
@@ -346,6 +392,16 @@ EOT;
     }
 
     /**
+    @return null
+    */
+    public static function saveTest() {
+        $spec                   = CBViewPage::makeSpecForID(['ID' => '697f4e4cb46436f5c204e495caff5957d4d62a31']);
+        $spec->classNameForKind = 'CBViewPageTestPages';
+
+        CBViewPage::save(['spec' => $spec]);
+    }
+
+    /**
      * @return void
      */
     public static function saveEditedPageForAjax() {
@@ -375,20 +431,16 @@ EOT;
      * @return stdClass
      */
     public static function specToModel($spec) {
-
-        /**
-         * Required values
-         */
-
-        $model              = new stdClass();
+        $model              = CBView::modelWithClassName(__CLASS__);
         $model->dataStoreID = $spec->dataStoreID;
-        $model->created     = $spec->created;
-        $model->updated     = $spec->updated;
 
         /**
          * Optional values
          */
 
+        $model->classNameForKind        = isset($spec->classNameForKind) ? $spec->classNameForKind : null;
+        $model->created                 = isset($spec->created) ? $spec->created : time();
+        $model->updated                 = isset($spec->updated) ? $spec->updated : $model->created;
         $model->description             = isset($spec->description) ? $spec->description : '';
         $model->isPublished             = isset($spec->isPublished) ? $spec->isPublished : false;
         $model->iteration               = $spec->iteration;
@@ -471,17 +523,18 @@ EOT;
         $model = $updatePageLists = false;
         extract($args, EXTR_IF_EXISTS);
 
-        $summaryViewModel       = self::compileSpecificationModelToSummaryViewModel($model);
-        $rowData                = new stdClass();
-        $rowData->className     = 'CBViewPage';
-        $rowData->keyValueData  = json_encode($summaryViewModel);
-        $rowData->rowID         = $model->rowID;
-        $rowData->typeID        = null;
-        $rowData->groupID       = null;
-        $rowData->iteration     = $model->iteration;
-        $rowData->titleHTML     = $model->titleHTML;
-        $rowData->searchText    = self::modelToSearchText($model);
-        $rowData->subtitleHTML  = $model->descriptionHTML;
+        $summaryViewModel           = self::compileSpecificationModelToSummaryViewModel($model);
+        $rowData                    = new stdClass();
+        $rowData->className         = 'CBViewPage';
+        $rowData->classNameForKind  = $model->classNameForKind;
+        $rowData->keyValueData      = json_encode($summaryViewModel);
+        $rowData->rowID             = $model->rowID;
+        $rowData->typeID            = null;
+        $rowData->groupID           = null;
+        $rowData->iteration         = $model->iteration;
+        $rowData->titleHTML         = $model->titleHTML;
+        $rowData->searchText        = self::modelToSearchText($model);
+        $rowData->subtitleHTML      = $model->descriptionHTML;
 
         if ($model->isPublished) {
             $rowData->published         = $model->publicationTimeStamp;
