@@ -6,6 +6,7 @@ class CBUnitTests {
         $response           = new CBAjaxResponse();
         $response->tests    = [
             ['CBDB',        'SQLToArray'],
+            ['CBDB',        'SQLToValue'],
             ['CBUnit'],
             ['CBViewPage',  'save']];
 
