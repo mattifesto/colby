@@ -5,8 +5,9 @@ class CBUnitTests {
     public static function getListOfTestsForAjax() {
         $response           = new CBAjaxResponse();
         $response->tests    = [
+            ['CBDB',        'SQLToArray'],
             ['CBUnit'],
-            ['CBViewPage', 'save']];
+            ['CBViewPage',  'save']];
 
         if (is_callable($function = 'CBTests::tests')) {
             $response->tests = array_merge($response->tests, call_user_func($function));
