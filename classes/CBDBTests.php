@@ -33,8 +33,7 @@ EOT;
 
         Colby::query("INSERT INTO `SQLToArrayTest` VALUES {$originalAsSQL}");
 
-        $retrieved      = LEHex160::SQLToHex160Array([
-            'SQL'       => 'SELECT LOWER(HEX(`ID`)) FROM `SQLToArrayTest`']);
+        $retrieved      = CBDB::SQLToArray('SELECT LOWER(HEX(`ID`)) FROM `SQLToArrayTest`');
         $originalOnly   = implode(',', array_diff($original, $retrieved));
         $retrievedOnly  = implode(',', array_diff($retrieved, $original));
 
