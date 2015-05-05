@@ -1,19 +1,9 @@
 <?php
 
 /**
- * The CBPages class is a limited functionality class that provides methods to
- * work with the rows of the `ColbyPages` table. The class exists to encourage
- * good coding practices, help with rapid development, and provide the highest
- * performance when working with the `ColbyPages` table.
- */
-class CBPages
-{
-    /**
-     * Disallow creating instances.
-     */
-    private function __construct()
-    {
-    }
+The CBPages class is a limited functionality class that provides methods to work with the rows of the `ColbyPages` table. The class exists to encourage good coding practices, help with rapid development, and provide the highest performance when working with the `ColbyPages` table.
+*/
+class CBPages {
 
     /**
      * @return void
