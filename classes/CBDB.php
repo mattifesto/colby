@@ -9,6 +9,7 @@ final class CBDB {
     */
     public static function SQLToArray($SQL) {
         $result = Colby::query($SQL);
+        $values = [];
 
         while ($row = $result->fetch_array(MYSQLI_NUM)) {
             $values[] = $row[0];
