@@ -317,6 +317,10 @@ EOT;
 
         $ID = $spec->dataStoreID;
 
+        if (!preg_match('/^[0-9a-f]{40}$/', $ID)) {
+            throw new InvalidArgumentException("The `spec` argument contains an invalid ID: {$ID}");
+        }
+
         try {
             Colby::query('START TRANSACTION');
 
