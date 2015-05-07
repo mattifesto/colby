@@ -4,7 +4,6 @@ final class CBDB {
 
     /**
     Takes a SQL statement and places the values from the first column in the result into an array.
-
     @return {array}
     */
     public static function SQLToArray($SQL) {
@@ -20,8 +19,7 @@ final class CBDB {
 
     /**
     Takes a SQL statement and returns the value of the first column of the first row.
-
-    @return {string|false}
+    @return {string}|false
     */
     public static function SQLToValue($SQL) {
         $result = Colby::query($SQL);
@@ -35,5 +33,22 @@ final class CBDB {
         $result->free();
 
         return $value;
+    }
+
+    /**
+    Takes a SQL statment and returns an object for the first row.
+    @return {stdClass}|false
+    */
+    public static function SQLToObject($SQL) {
+        $result = Colby::query($SQL);
+        $row    = $result->fetch_object();
+
+        $result->free();
+
+        if ($row) {
+            return $row;
+        } else {
+            return false;
+        }
     }
 }
