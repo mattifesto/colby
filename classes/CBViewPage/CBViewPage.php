@@ -137,8 +137,8 @@ EOT;
     }
 
     /**
-    @return int | false
-    */
+     * @return {int} | false
+     */
     public static function iterationForID($args) {
         $ID = null;
         extract($args, EXTR_IF_EXISTS);
@@ -159,12 +159,17 @@ EOT;
     }
 
     /**
-    Returns either the lastest spec for an ID or creates a new spec for an ID.
-
-    TODO: Consider adding a "clobber" argument to specify that the function should return a spec with only the minimal necessary data to allow it to save. This would be used by callers that want to drop all of the current spec data and restart fresh. It would save the time of a file load and also prevent old data from accumulating over time for pages that have a longer life and are frequently modified.
-
-    @return {stdClass}
-    */
+     * Returns either the lastest spec or a new spec for a page ID.
+     *
+     * TODO: Consider adding a "clobber" argument to specify that the function
+     * should return a spec with only the minimal necessary data to allow it to
+     * save. This would be used by callers that want to drop all of the current
+     * spec data and restart fresh. It would save the time of a file load
+     * and also prevent old data from accumulating over time for pages that have
+     * a longer life and are frequently modified.
+     *
+     * @return {stdClass}
+     */
     public static function makeSpecForID($args) {
         $ID = null;
         extract($args, EXTR_IF_EXISTS);
@@ -422,7 +427,7 @@ EOT;
     }
 
     /**
-     * @return stdClass
+     * @return {stdClass}
      */
     public static function specToModel($spec) {
         $model              = CBView::modelWithClassName(__CLASS__);
@@ -434,7 +439,6 @@ EOT;
 
         $model->classNameForKind        = isset($spec->classNameForKind) ? $spec->classNameForKind : null;
         $model->created                 = isset($spec->created) ? $spec->created : time();
-        $model->updated                 = isset($spec->updated) ? $spec->updated : $model->created;
         $model->description             = isset($spec->description) ? $spec->description : '';
         $model->isPublished             = isset($spec->isPublished) ? $spec->isPublished : false;
         $model->iteration               = $spec->iteration;
@@ -445,6 +449,7 @@ EOT;
         $model->schemaVersion           = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
         $model->thumbnailURL            = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null;
         $model->title                   = isset($spec->title) ? $spec->title : '';
+        $model->updated                 = isset($spec->updated) ? $spec->updated : $model->created;
 
         /**
          * Views
