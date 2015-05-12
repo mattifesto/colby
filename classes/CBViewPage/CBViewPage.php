@@ -188,6 +188,13 @@ EOT;
     }
 
     /**
+     * @return {stdClass} | null
+     */
+    public static function modelContext() {
+        return self::$modelContext;
+    }
+
+    /**
      * @return string
      */
     private static function modelToSearchText($model) {
@@ -304,6 +311,7 @@ EOT;
     }
 
     /**
+     * @deprecated since version 147. Use `modelContext` instead.
      * @return stdClass
      */
     public static function renderModelContext() {
