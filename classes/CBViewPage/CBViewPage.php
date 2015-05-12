@@ -22,7 +22,7 @@
  */
 final class CBViewPage {
 
-    private static $renderModelContext;
+    private static $modelContext;
 
     /**
      * @return void
@@ -280,7 +280,7 @@ EOT;
     public static function renderModelAsHTML($model) {
         $model = self::upgradeRenderModel($model);
 
-        self::$renderModelContext = $model;
+        self::$modelContext = $model;
 
         CBHTMLOutput::begin();
 
@@ -300,14 +300,14 @@ EOT;
 
         CBHTMLOutput::render();
 
-        self::$renderModelContext = null;
+        self::$modelContext = null;
     }
 
     /**
      * @return stdClass
      */
     public static function renderModelContext() {
-        return self::$renderModelContext;
+        return self::$modelContext;
     }
 
     /**
