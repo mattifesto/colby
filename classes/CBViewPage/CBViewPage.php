@@ -198,13 +198,16 @@ EOT;
      * @return string
      */
     private static function modelToSearchText($model) {
-        $searchText     = array();
-        $searchText[]   = $model->title;
-        $searchText[]   = $model->description;
+        $searchText         = array();
+        $searchText[]       = $model->title;
+        $searchText[]       = $model->description;
+        self::$modelContext = $model;
 
         foreach ($model->sections as $modelForView) {
             $searchText[] = CBView::modelToSearchText($modelForView);
         }
+
+        self::$modelContext = null;
 
         return implode(' ', $searchText);
     }
