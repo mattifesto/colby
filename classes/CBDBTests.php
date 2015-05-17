@@ -2,9 +2,46 @@
 
 final class CBDBTests {
 
-    /*
-    @return null
-    */
+    /**
+     * @return null
+     */
+    public static function hex160ToSQLTest() {
+        $hex160     = '88ae5c11bcb70f15a3ec446cc9144ada7e6e2838';
+        $expected   = "UNHEX('{$hex160}')";
+        $actual     = CBDB::hex160ToSQL($hex160);
+
+        if ($actual != $expected) {
+            throw new Exception("The actual result `{$actual}` does not match the expected result `$expected`.");
+        }
+
+        $passed = false;
+
+        try {
+            CBDB::hex160ToSQL('a');
+        } catch (Exception $exception) {
+            $passed = true;
+        }
+
+        if (!$passed) {
+            throw new Exception('A non 160-bit hexadecimal number was allowed.');
+        }
+
+        $passed = false;
+
+        try {
+            CBDB::hex160ToSQL('z8ae5c11bcb70f15a3ec446cc9144ada7e6e2838');
+        } catch (Exception $exception) {
+            $passed = true;
+        }
+
+        if (!$passed) {
+            throw new Exception('A non hexadecimal character was allowed.');
+        }
+    }
+
+    /**
+     * @return null
+     */
     public static function SQLToArrayTest() {
         $SQL = <<<EOT
 
@@ -44,9 +81,9 @@ EOT;
         }
     }
 
-    /*
-    @return null
-    */
+    /**
+     * @return null
+     */
     public static function SQLToValueTest() {
         $SQL = <<<EOT
 

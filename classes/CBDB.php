@@ -3,6 +3,27 @@
 final class CBDB {
 
     /**
+     * @param {hex160} | [{hex160}] A single value or an array of 160-bit
+     *                              hexadecimal strings
+     * @return {string}
+     */
+    public static function hex160ToSQL($values) {
+        if (!is_array($values)) {
+            $values = [$values];
+        }
+
+        $values = array_map(function($value) {
+            if (!preg_match('/[a-fA-F0-9]{40}/', $value)) {
+                throw new RuntimeException("The value '{$value}' is not hexadecimal.");
+            }
+            $value = ColbyConvert::textToSQL($value);
+            return "UNHEX('{$value}')";
+        }, $values);
+
+        return implode(',', $values);
+    }
+
+    /**
      * Takes a SQL statement and places the values from the first column in the
      * result into an array.
      * @return {array}

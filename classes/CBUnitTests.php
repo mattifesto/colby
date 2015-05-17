@@ -2,9 +2,13 @@
 
 class CBUnitTests {
 
+    /**
+     * @return null;
+     */
     public static function getListOfTestsForAjax() {
         $response           = new CBAjaxResponse();
         $response->tests    = [
+            ['CBDB',        'hex160ToSQL'],
             ['CBDB',        'SQLToArray'],
             ['CBDB',        'SQLToValue'],
             ['CBUnit'],
@@ -18,13 +22,16 @@ class CBUnitTests {
         $response->send();
     }
 
+    /**
+     * @return {stdClass}
+     */
     public static function getListOfTestsForAjaxPermissions() {
         return (object)['group' => 'Testers'];
     }
 
     /**
-    @return void
-    */
+     * @return void
+     */
     public static function test() {
 
         // Deprecated style
