@@ -27,7 +27,7 @@ final class CBDB {
      * Takes a SQL statement and places the values from the first column in the
      * result into an array.
      * @return {array}
-    */
+     */
     public static function SQLToArray($SQL) {
         $result = Colby::query($SQL);
         $values = [];
@@ -43,7 +43,7 @@ final class CBDB {
      * Takes a SQL statement and returns the value of the first column of the
      * first row.
      * @return {string}|false
-    */
+     */
     public static function SQLToValue($SQL) {
         $result = Colby::query($SQL);
 
@@ -59,9 +59,9 @@ final class CBDB {
     }
 
     /**
-     * Takes a SQL statment and returns an object for the first row.
+     * Takes a SQL statement and returns an object for the first row.
      * @return {stdClass}|false
-    */
+     */
     public static function SQLToObject($SQL) {
         $result = Colby::query($SQL);
         $row    = $result->fetch_object();
@@ -73,5 +73,22 @@ final class CBDB {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Takes a SQL statement and returns an array of objects representing each
+     * row.
+     * @return [{stdClass}]
+     */
+    public static function SQLToObjects($SQL) {
+        $result     = Colby::query($SQL);
+        $objects    = [];
+
+        while ($object = $result->fetch_object()) {
+            $objects[] = $object;
+        }
+
+        $result->free();
+        return $objects;
     }
 }
