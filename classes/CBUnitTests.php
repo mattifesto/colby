@@ -10,6 +10,7 @@ class CBUnitTests {
         $response->tests    = [
             ['CBDB',        'hex160ToSQL'],
             ['CBDB',        'SQLToArray'],
+            ['CBDB',        'SQLToAssociativeArray'],
             ['CBDB',        'SQLToValue'],
             ['CBUnit'],
             ['CBViewPage',  'save']];
@@ -49,8 +50,6 @@ class CBUnitTests {
         CBUnitTestsForCBView::runAll();
         CBUnitTestsForColbyConvert::runAll();
         CBUnitTestsForColbyMarkaroundParser::runAll();
-
-        return 'The unit tests ran successfully.';
     }
 }
 

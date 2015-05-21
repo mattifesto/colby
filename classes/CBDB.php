@@ -24,8 +24,16 @@ final class CBDB {
     }
 
     /**
-     * Takes a SQL statement and places the values from the first column in the
-     * result into an array.
+     * If the query returns one column the values for that column whill be
+     * place in an array.
+     *
+     * If the query returns two or more columns the value from the first column
+     * will be used as the associative array key and the value from the second
+     * column will be used as the associative array value.
+     *
+     * If the first column of a multicolumn query is not unique, some data will
+     * not be returned.
+     *
      * @return {array}
      */
     public static function SQLToArray($SQL) {
@@ -33,7 +41,11 @@ final class CBDB {
         $values = [];
 
         while ($row = $result->fetch_array(MYSQLI_NUM)) {
-            $values[] = $row[0];
+            if (count($row) > 1) {
+                $values[$row[0]] = $row[1];
+            } else {
+                $values[] = $row[0];
+            }
         }
 
         return $values;

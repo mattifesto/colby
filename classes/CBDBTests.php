@@ -84,6 +84,52 @@ EOT;
     /**
      * @return null
      */
+    public static function SQLToAssociativeArrayTest() {
+        $SQL = <<<EOT
+
+            CREATE TEMPORARY TABLE `SQLToAssociativeArrayTest`
+            (
+                `ID`    BINARY(20) NOT NULL,
+                `value` BIGINT,
+                PRIMARY KEY (`ID`)
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8
+            COLLATE=utf8_unicode_ci
+
+EOT;
+
+        Colby::query($SQL);
+
+        for ($i = 0; $i < 10; $i++) {
+            $original[Colby::random160()] = rand();
+        }
+
+        $originalAsSQL = array_map(function($key) use ($original) {
+            $value = $original[$key];
+            return "(UNHEX('{$key}'), {$value})";
+        }, array_keys($original));
+
+        $originalAsSQL = implode(',', $originalAsSQL);
+
+        Colby::query("INSERT INTO `SQLToAssociativeArrayTest` VALUES {$originalAsSQL}");
+
+        $retrieved      = CBDB::SQLToArray('SELECT LOWER(HEX(`ID`)), `value` FROM `SQLToAssociativeArrayTest`');
+        $originalOnly   = array_diff_assoc($original, $retrieved);
+        $retrievedOnly  = array_diff_assoc($retrieved, $original);
+
+        if ($originalOnly || $retrievedOnly) {
+            $originalOnly   = json_encode($originalOnly);
+            $retrievedOnly  = json_encode($retrievedOnly);
+            throw new Exception(
+                "The original array and the retrieve array don't match. " .
+                "Items only in original: {$originalOnly} Items only in retrieved: {$retrievedOnly}");
+        }
+    }
+
+    /**
+     * @return null
+     */
     public static function SQLToValueTest() {
         $SQL = <<<EOT
 
