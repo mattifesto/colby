@@ -21,7 +21,7 @@ class CBDataStore
      */
     public function __construct($dataStoreID)
     {
-        $this->dataStoreID  = $dataStoreID;
+        $this->dataStoreID  = strtolower($dataStoreID);
         $this->path         = preg_replace('/^(..)(..)/', '$1/$2/', $this->dataStoreID);
     }
 
@@ -40,8 +40,8 @@ class CBDataStore
     }
 
     /**
-    @return null
-    */
+     * @return null
+     */
     public static function deleteForID($args) {
         $ID = null;
         extract($args, EXTR_IF_EXISTS);
@@ -90,7 +90,8 @@ class CBDataStore
      *      example: "data/1a/b9/879ccb12eaaeda7b81b08fa433fde8bc86e3"
      */
     public static function directoryNameFromDocumentRoot($ID) {
-        $directoryName = preg_replace('/^(..)(..)/', '$1/$2/', $ID);
+        $ID             = strtolower($ID);
+        $directoryName  = preg_replace('/^(..)(..)/', '$1/$2/', $ID);
 
         return "data/{$directoryName}";
     }

@@ -8,6 +8,7 @@ class CBUnitTests {
     public static function getListOfTestsForAjax() {
         $response           = new CBAjaxResponse();
         $response->tests    = [
+            ['CBDataStore', 'directoryNameFromDocumentRoot'],
             ['CBDB',        'hex160ToSQL'],
             ['CBDB',        'SQLToArray'],
             ['CBDB',        'SQLToAssociativeArray'],
