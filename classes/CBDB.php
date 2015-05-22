@@ -36,13 +36,16 @@ final class CBDB {
      *
      * @return {array}
      */
-    public static function SQLToArray($SQL) {
+    public static function SQLToArray($SQL, $args = []) {
+        $valueIsJSON = false;
+        extract($args, EXTR_IF_EXISTS);
+
         $result = Colby::query($SQL);
         $values = [];
 
         while ($row = $result->fetch_array(MYSQLI_NUM)) {
             if (count($row) > 1) {
-                $values[$row[0]] = $row[1];
+                $values[$row[0]] = $valueIsJSON ? json_decode($row[1]) : $row[1];
             } else {
                 $values[] = $row[0];
             }
