@@ -27,9 +27,7 @@ final class CBViewPage {
     /**
      * @return void
      */
-    private static function addToPageLists($model) {
-        $pageRowID = (int)$model->rowID;
-
+    private static function addToPageLists($model, $pageRowID) {
         if ($model->isPublished) {
             $publishedAsSQL = (int)$model->publicationTimeStamp;
             $yearMonthAsSQL = ColbyConvert::timestampToYearMonth($model->publicationTimeStamp);
@@ -62,8 +60,7 @@ EOT;
     /**
      * @return void
      */
-    public static function addToRecentlyEditedPagesList($model) {
-        $pageRowID  = (int)$model->rowID;
+    public static function addToRecentlyEditedPagesList($model, $pageRowID) {
         $updated    = (int)$model->updated;
         $SQL        = <<<EOT
 
@@ -122,7 +119,6 @@ EOT;
         $model->listClassNames          = array();
         $model->publicationTimeStamp    = null;
         $model->publishedBy             = null;
-        $model->rowID                   = null;
         $model->schema                  = 'CBPage';
         $model->schemaVersion           = 3;
         $model->sections                = array();
@@ -228,7 +224,7 @@ EOT;
      *
      * @return void
      */
-    private static function removeFromEditablePageLists($model) {
+    private static function removeFromEditablePageLists($model, $pageRowID) {
         $availableListNames     = CBViewPageLists::availableListNames();
         $listClassNames         = isset($model->listClassNames) ? $model->listClassNames : array();
         $listClassNames         = array_merge($availableListNames,
@@ -246,14 +242,11 @@ EOT;
         }
 
         $listClassNamesForSQL   = implode(',', $listClassNamesForSQL);
-        $pageRowID              = (int)$model->rowID;
         $SQL                    = <<<EOT
 
-            DELETE FROM
-                `CBPageLists`
-            WHERE
-                `pageRowID` = {$pageRowID} AND
-                `listClassName` IN ({$listClassNamesForSQL})
+            DELETE FROM `CBPageLists`
+            WHERE       `pageRowID` = {$pageRowID} AND
+                        `listClassName` IN ({$listClassNamesForSQL})
 
 EOT;
 
@@ -359,7 +352,6 @@ EOT;
             } else {
                 $data               = CBPages::insertRow($ID);
                 $spec->iteration    = $data->iteration;
-                $spec->rowID        = $data->rowID;
             }
 
             $iteration  = $spec->iteration;
@@ -430,7 +422,6 @@ EOT;
             'spec'              => $spec,
             'updatePageLists'   => true]);
 
-        $response->rowID            = $spec->rowID;
         $response->wasSuccessful    = true;
         $response->send();
     }
@@ -465,7 +456,6 @@ EOT;
         $model->listClassNames          = isset($spec->listClassNames) ? $spec->listClassNames : array();
         $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
         $model->publishedBy             = isset($spec->publishedBy) ? $spec->publishedBy : null;
-        $model->rowID                   = isset($spec->rowID) ? $spec->rowID : null; /* Deprecated */
         $model->schemaVersion           = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
         $model->thumbnailURL            = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null;
         $model->title                   = isset($spec->title) ? $spec->title : '';
@@ -568,13 +558,16 @@ EOT;
         CBPages::updateRow($rowData);
 
         if ($updatePageLists === true) {
-            self::removeFromEditablePageLists($model);
+            $IDAsSQL    = CBHex160::toSQL($model->dataStoreID);
+            $pageRowID  = CBDB::SQLToValue("SELECT `ID` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
+
+            self::removeFromEditablePageLists($model, $pageRowID);
 
             if ($model->isPublished) {
-                self::addToPageLists($model);
+                self::addToPageLists($model, $pageRowID);
             }
 
-            self::addToRecentlyEditedPagesList($model);
+            self::addToRecentlyEditedPagesList($model, $pageRowID);
         }
     }
 

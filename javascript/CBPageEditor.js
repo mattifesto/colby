@@ -266,7 +266,6 @@ CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr)
             this.model.iteration++;
         } else {
             this.model.iteration    = 1;
-            this.model.rowID        = response.rowID;
         }
     } else {
         Colby.displayResponse(response);
