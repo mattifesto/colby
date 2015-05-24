@@ -182,6 +182,14 @@ EOT;
             $spec->dataStoreID  = $ID;
             $spec->created      = time();
             $spec->updated      = $spec->created;
+
+            /**
+             * This is for the case where a page exists but is not currently
+             * a view page.
+             */
+            if ($iteration) {
+                $spec->iteration = (int)$iteration;
+            }
         }
 
         return $spec;
@@ -333,7 +341,7 @@ EOT;
 
         $ID = $spec->dataStoreID;
 
-        if (!preg_match('/^[0-9a-f]{40}$/', $ID)) {
+        if (!CBHex160::is($ID)) {
             throw new InvalidArgumentException("The `spec` argument contains an invalid ID: {$ID}");
         }
 
@@ -443,18 +451,19 @@ EOT;
     public static function specToModel($spec) {
         $model              = CBView::modelWithClassName(__CLASS__);
         $model->dataStoreID = $spec->dataStoreID;
+        $time               = time();
 
         /**
          * Optional values
          */
 
         $model->classNameForKind        = isset($spec->classNameForKind) ? $spec->classNameForKind : null;
-        $model->created                 = isset($spec->created) ? $spec->created : time();
+        $model->created                 = isset($spec->created) ? $spec->created : $time;
         $model->description             = isset($spec->description) ? $spec->description : '';
-        $model->isPublished             = isset($spec->isPublished) ? $spec->isPublished : false;
+        $model->isPublished             = isset($spec->isPublished) ? !!$spec->isPublished : false;
         $model->iteration               = $spec->iteration;
         $model->listClassNames          = isset($spec->listClassNames) ? $spec->listClassNames : array();
-        $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? $spec->publicationTimeStamp : null;
+        $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
         $model->publishedBy             = isset($spec->publishedBy) ? $spec->publishedBy : null;
         $model->rowID                   = isset($spec->rowID) ? $spec->rowID : null; /* Deprecated */
         $model->schemaVersion           = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
@@ -537,8 +546,8 @@ EOT;
         $rowData                    = new stdClass();
         $rowData->className         = 'CBViewPage';
         $rowData->classNameForKind  = $model->classNameForKind;
+        $rowData->ID                = $model->dataStoreID;
         $rowData->keyValueData      = json_encode($summaryViewModel);
-        $rowData->rowID             = $model->rowID;
         $rowData->typeID            = null;
         $rowData->groupID           = null;
         $rowData->iteration         = $model->iteration;

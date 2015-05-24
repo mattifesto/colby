@@ -239,18 +239,14 @@ EOT;
      */
     private static function sqlToUpdateRow($rowData)
     {
-        $rowID = (int)$rowData->rowID;
-
         $sql = array();
 
         $sql[] = 'UPDATE `ColbyPages` SET';
 
         $setters = array();
 
-        foreach ($rowData as $columnName => $value)
-        {
-            if ('rowID' == $columnName)
-            {
+        foreach ($rowData as $columnName => $value) {
+            if ('ID' == $columnName || 'rowID' == $columnName) {
                 continue;
             }
             else if ('descriptionHTML' == $columnName)
@@ -291,7 +287,13 @@ EOT;
 
         $sql[] = implode(',', $setters);
 
-        $sql[] = "WHERE `ID` = {$rowID}";
+        if (isset($rowData->ID)) {
+            $IDAsSQL    = CBHex160::toSQL($rowData->ID);
+            $sql[]      = "WHERE `archiveID` = {$IDAsSQL}";
+        } else {
+            $rowID  = (int)$rowData->rowID;
+            $sql[]  = "WHERE `ID` = {$rowID}";
+        }
 
         $sql = implode(' ', $sql);
 
