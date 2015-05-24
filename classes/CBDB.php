@@ -3,28 +3,14 @@
 final class CBDB {
 
     /**
-     * @param {hex160} | [{hex160}] A single value or an array of 160-bit
-     *                              hexadecimal strings
-     * @return {string}
+     * @deprecated use `CBHex160::toSQL`
      */
     public static function hex160ToSQL($values) {
-        if (!is_array($values)) {
-            $values = [$values];
-        }
-
-        $values = array_map(function($value) {
-            if (!preg_match('/[a-fA-F0-9]{40}/', $value)) {
-                throw new RuntimeException("The value '{$value}' is not hexadecimal.");
-            }
-            $value = ColbyConvert::textToSQL($value);
-            return "UNHEX('{$value}')";
-        }, $values);
-
-        return implode(',', $values);
+        return CBHex160::toSQL($values);
     }
 
     /**
-     * If the query returns one column the values for that column whill be
+     * If the query returns one column the values for that column will be
      * place in an array.
      *
      * If the query returns two or more columns the value from the first column
@@ -59,11 +45,14 @@ final class CBDB {
      * first row.
      * @return {string}|false
      */
-    public static function SQLToValue($SQL) {
+    public static function SQLToValue($SQL, $args = []) {
+        $valueIsJSON = false;
+        extract($args, EXTR_IF_EXISTS);
+
         $result = Colby::query($SQL);
 
         if ($row = $result->fetch_array(MYSQLI_NUM)) {
-            $value = $row[0];
+            $value = $valueIsJSON ? json_decode($row[0]) : $row[0];
         } else {
             $value = false;
         }
