@@ -236,54 +236,52 @@ class PagesSummaryView {
             <style>
 
                 #overview {
+                    background-color: hsl(30, 30%, 95%);
+                    border: 1px solid hsl(30, 30%, 80%);
                     margin: 20px auto;
                 }
 
-                #overview td {
+                #overview td, #overview th {
                     padding: 2px 5px;
                 }
 
-                #overview td + td {
+                #overview td:last-child, #overview th:last-child {
                     text-align: right;
                 }
 
             </style>
+            <thead>
+                <tr><th>className</th><th>classNameForKind</th><th>count</th><tr>
+            </thead>
 
         <?php
 
         $SQL = <<<EOT
 
-            SELECT
-                `className`,
-                count(*) AS `count`
-            FROM
-                `ColbyPages`
-            WHERE
-                `className` IS NOT NULL
-            GROUP BY
-                `className`
+            SELECT      `className`,
+                        `classNameForKind`,
+                        count(*) AS `count`
+            FROM        `ColbyPages`
+            WHERE       `className` IS NOT NULL OR `classNameForKind` IS NOT NULL
+            GROUP BY    `className`, `classNameForKind`
 
 EOT;
 
         $result = Colby::query($SQL);
 
         while ($row = $result->fetch_object()) {
-            echo "<tr><td>className: {$row->className}</td><td>{$row->count}</td></tr>";
+            echo "<tr><td>{$row->className}</td><td>{$row->classNameForKind}</td><td>{$row->count}</td></tr>";
         }
 
         $result->free();
 
         $SQL = <<<EOT
 
-            SELECT
-                HEX(`typeID`) as `typeID`,
-                count(*) as `count`
-            FROM
-                `ColbyPages`
-            WHERE
-                `className` IS NULL
-            GROUP BY
-                `typeID`
+            SELECT      LOWER(HEX(`typeID`)) as `typeID`,
+                        count(*) as `count`
+            FROM        `ColbyPages`
+            WHERE       `className` IS NULL AND `classNameForKind` IS NULL
+            GROUP BY    `typeID`
 
 EOT;
 
@@ -291,7 +289,7 @@ EOT;
 
         while ($row = $result->fetch_object()) {
             $typeID = ($row->typeID === null) ? 'NULL' : $row->typeID;
-            echo "<tr><td>typeID: {$typeID}</td><td>{$row->count}</td></tr>";
+            echo "<tr><td colspan=\"2\">typeID: {$typeID}</td><td>{$row->count}</td></tr>";
         }
 
         $result->free();
