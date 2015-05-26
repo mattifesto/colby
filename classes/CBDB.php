@@ -33,7 +33,7 @@ final class CBDB {
             if (count($row) > 1) {
                 $values[$row[0]] = $valueIsJSON ? json_decode($row[1]) : $row[1];
             } else {
-                $values[] = $row[0];
+                $values[] = $valueIsJSON ? json_decode($row[0]) : $row[0];
             }
         }
 
