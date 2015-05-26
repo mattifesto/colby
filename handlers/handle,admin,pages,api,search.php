@@ -79,7 +79,7 @@ function CBSearchForPages($queryText)
             {$likesForSQL}
         ORDER BY
             `published` IS NULL DESC,
-            `published` DESC
+            `titleHTML` ASC
 
 EOT;
 
