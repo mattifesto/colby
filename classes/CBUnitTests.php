@@ -10,6 +10,7 @@ class CBUnitTests {
         $response->tests    = [
             ['CBDataStore', 'directoryNameFromDocumentRoot'],
             ['CBDB',        'hex160ToSQL'],
+            ['CBDB',        'optional'],
             ['CBDB',        'SQLToArray'],
             ['CBDB',        'SQLToAssociativeArray'],
             ['CBDB',        'SQLToValue'],

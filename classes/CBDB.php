@@ -10,6 +10,27 @@ final class CBDB {
     }
 
     /**
+     * This function returns a new function that takes a single value as a
+     * parameter. If that value is `null` the returned function will return
+     * 'NULL'; otherwise it will pass the value to the inner function and
+     * return the result.
+     *
+     *      $optionalStringToSQL    = CBDB::optional('CBDB::stringToSQL');
+     *      $value                  = $optionalStringToSQL(null); // 'NULL'
+     *
+     * @return {function}
+     */
+    public static function optional(callable $func) {
+        return function($value) use ($func) {
+            if ($value === null) {
+                return 'NULL';
+            } else {
+                return call_user_func($func, $value);
+            }
+        };
+    }
+
+    /**
      * If the query returns one column the values for that column will be
      * place in an array.
      *
@@ -94,5 +115,21 @@ final class CBDB {
 
         $result->free();
         return $objects;
+    }
+
+    /**
+     * Converts a string to a SQL string in single quotes ready to be used as a
+     * value in a query without any alteration.
+     *
+     * echo CBDB::stringToSQL("The 'amazing' race.")
+     *
+     *      'The \'amazing\' race.'
+     *
+     * @return {string}
+     */
+    public static function stringToSQL($value) {
+        $value = (string)$value;
+        $value = Colby::mysqli()->escape_string($value);
+        return "'{$value}'";
     }
 }

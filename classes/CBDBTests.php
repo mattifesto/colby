@@ -40,6 +40,25 @@ final class CBDBTests {
     }
 
     /**
+     * This also tests `CBDB::stringToSQL`.
+     *
+     * @return null
+     */
+    public static function optionalTest() {
+        $func       = CBDB::optional('CBDB::stringToSQL');
+        $input      = ['Fred', '"Hello"', null];
+        $expected   = ["'Fred'", "'\\\"Hello\\\"'", 'NULL'];
+        $actual     = array_map($func, $input);
+
+        if ($actual !== $expected) {
+            $actual     = json_encode($actual);
+            $expected   = json_encode($expected);
+
+            throw new Exception("The actual results: {$actual} do no match the expected results: {$expected}");
+        }
+    }
+
+    /**
      * @return null
      */
     public static function SQLToArrayTest() {
