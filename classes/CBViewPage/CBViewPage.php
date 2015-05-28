@@ -342,28 +342,30 @@ EOT;
             Colby::query('START TRANSACTION');
 
             if (isset($spec->iteration)) {
-                $data = CBPages::selectIterationAndURIForUpdate($ID);
+                $iteration = CBPages::fetchIterationForUpdate($ID);
 
-                if ($data->iteration != $spec->iteration) {
+                if ($iteration != $spec->iteration) {
                     throw new RuntimeException('This page has been updated by another user.');
                 }
 
                 $spec->iteration++;
             } else {
-                $data               = CBPages::insertRow($ID);
-                $spec->iteration    = $data->iteration;
+                CBPages::insertRow($ID);
+                $spec->iteration = 1;
             }
 
             $iteration  = $spec->iteration;
             $model      = self::specToModel($spec);
 
-            if (isset($spec->URI) && $data->URI != $spec->URI && CBPages::updateURI($ID, $spec->URI)) {
-                $model->URI = $spec->URI;
+            if ($model->isPublished) {
+                $preferredURI = isset($spec->URI) ? $spec->URI : $ID;
             } else {
-                $model->URI = $data->URI;
+                $preferredURI = null;
             }
 
-            $model->URIAsHTML = ColbyConvert::textToHTML($model->URI);
+            $actualURIs         = CBPages::updateURIs(['preferredURIs' => [$ID => $preferredURI]]);
+            $model->URI         = $actualURIs[$ID];
+            $model->URIAsHTML   = $model->URI === null ? null : ColbyConvert::textToHTML($model->URI);
 
             self::updateDatabase([
                 'model'             => $model,

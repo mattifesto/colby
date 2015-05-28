@@ -1,8 +1,11 @@
 <?php
 
 /**
-The CBPages class is a limited functionality class that provides methods to work with the rows of the `ColbyPages` table. The class exists to encourage good coding practices, help with rapid development, and provide the highest performance when working with the `ColbyPages` table.
-*/
+ * The CBPages class is a limited functionality class that provides methods to
+ * work with the rows of the `ColbyPages` table. The class exists to encourage
+ * good coding practices, help with rapid development, and provide the highest
+ * performance when working with the `ColbyPages` table.
+ */
 class CBPages {
 
     /**
@@ -48,39 +51,23 @@ class CBPages {
     }
 
     /**
-     * @param string $dataStoreID
-     *
-     * @return stdClass
-     *
-     *  Returns an object with its `rowID` property set to the row ID of the
-     *  new row. This object can be populated with values for other columns
-     *  and passed into the `updateRow` method.
+     * @param {hex160} $ID
      */
     public static function insertRow($ID) {
-        $ID         = (string)$ID;
-        $IDAsSQL    = ColbyConvert::textToSQL($ID);
+        $IDAsSQL    = CBHex160::toSQL($ID);
         $SQL        = <<<EOT
 
-            INSERT INTO
-                `ColbyPages`
-            SET
-                `archiveID`             = UNHEX('{$IDAsSQL}'),
-                `keyValueData`          = '',
-                `titleHTML`             = '',
-                `subtitleHTML`          = '',
-                `searchText`            = '',
-                `URI`                   = '{$IDAsSQL}'
+            INSERT INTO `ColbyPages`
+            SET         `archiveID`     = {$IDAsSQL},
+                        `keyValueData`  = '',
+                        `titleHTML`     = '',
+                        `subtitleHTML`  = '',
+                        `searchText`    = '',
+                        `URI`           = NULL
 
 EOT;
 
         Colby::query($SQL);
-
-        $rowData            = new stdClass();
-        $rowData->iteration = 1;
-        $rowData->rowID     = Colby::mysqli()->insert_id;
-        $rowData->URI       = $ID;
-
-        return $rowData;
     }
 
     /**
@@ -172,28 +159,18 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function selectIterationAndURIForUpdate($ID) {
-        $IDAsSQL    = ColbyConvert::textToSQL($ID);
-        $IDAsSQL    = "UNHEX('{$IDAsSQL}')";
+    public static function fetchIterationForUpdate($ID) {
+        $IDAsSQL    = CBHex160::toSQL($ID);
         $SQL        = <<<EOT
 
-            SELECT
-                `iteration`,
-                `URI`
-            FROM
-                `ColbyPages`
-            WHERE
-                `archiveID` = {$IDAsSQL}
+            SELECT  `iteration`
+            FROM    `ColbyPages`
+            WHERE   `archiveID` = {$IDAsSQL}
             FOR UPDATE
 
 EOT;
 
-        $result = Colby::query($SQL);
-        $data   = $result->fetch_object();
-
-        $result->free();
-
-        return $data;
+        return CBDB::SQLToValue($SQL);
     }
 
     /**
@@ -301,44 +278,153 @@ EOT;
     }
 
     /**
-     * @return bool
+     * @param [{hex160} : {string} | null] preferredURIs
      *
-     *  Returns true if the row's URI was updated and false of the URI is
-     *  already used by another page.
+     * @return [{hex160} => {string} | null]
+     *  Actual URIs
      */
-    public static function updateURI($ID, $URI)
-    {
-        $IDAsSQL    = ColbyConvert::textToSQL($ID);
-        $IDAsSQL    = "UNHEX('{$IDAsSQL}')";
-        $URIAsSQL   = ColbyConvert::textToSQL($URI);
+    public static function updateURIs($args) {
+        $preferredURIs = [];
+        extract($args, EXTR_IF_EXISTS);
+
+        if (empty($preferredURIs)) {
+            return [];
+        }
+
+        // Set all of the URIs for unpublished pages to NULL. This frees up the
+        // URIs they had been using for published pages.
+
+        $unpublishedURIs = array_filter($preferredURIs, function($URI) {
+            return $URI === null;
+        });
+
+        self::updateURIsForUnpublishedPages(array_keys($unpublishedURIs));
+
+        $publishedURIs = array_filter($preferredURIs, function($URI) {
+            return $URI !== null;
+        });
+
+        if (empty($publishedURIs)) {
+            goto done;
+        }
+
+        // Replace duplicate URIs (first in array wins)
+
+        $publishedURIs = cb_array_map_assoc(function($ID, $URI) use ($publishedURIs) {
+            if ($ID == array_search($URI, $publishedURIs)) {
+                return $URI;
+            } else {
+                return $ID;
+            }
+        }, $publishedURIs);
+
+        // Replace URIs already in use
+
+        $URIsAsSQL  = implode(',', array_map('CBDB::stringToSQL', array_values($publishedURIs)));
         $SQL        = <<<EOT
 
-            UPDATE
-                `ColbyPages`
-            SET
-                `URI` = '{$URIAsSQL}'
-            WHERE
-                `archiveID` = {$IDAsSQL}
+            SELECT  LOWER(HEX(`archiveID`)), `URI`
+            FROM    `ColbyPages`
+            WHERE   `URI` IN ($URIsAsSQL)
 
 EOT;
 
-        try
-        {
-            Colby::query($SQL);
-        }
-        catch (Exception $exception)
-        {
-            if (1062 == Colby::mysqli()->errno)
-            {
-                return false;
+        $existingURIs   = CBDB::SQLToArray($SQL);
+        $publishedURIs  = cb_array_map_assoc(function($ID, $URI) use ($existingURIs) {
+            $existingID = array_search($URI, $existingURIs);
+
+            if ($ID === $existingID || false === $existingID) {
+                return $URI;
+            } else {
+                return $ID;
             }
-            else
-            {
-                throw $exception;
-            }
+        }, $publishedURIs);
+
+        self::updateURIsForPublishedPages($publishedURIs);
+
+        done:
+
+        return array_merge($unpublishedURIs, $publishedURIs);
+    }
+
+    /**
+     * @return null
+     */
+    private static function updateURIsForPublishedPages($URIs) {
+        if (empty($URIs)) {
+            return;
         }
 
-        return true;
+        /**
+         * Shortcut for a single URI update
+         */
+
+        if (count($URIs) == 1) {
+            reset($URIs);
+            $IDAsSQL    = CBHex160::toSQL(key($URIs));
+            $URIAsSQL   = CBDB::stringToSQL(current($URIs));
+            Colby::query("UPDATE `ColbyPages` SET `URI` = {$URIAsSQL} WHERE `archiveID` = {$IDAsSQL}");
+            return;
+        }
+
+        /**
+         * Multiple URI updates
+         */
+
+        $SQL = <<<EOT
+
+            CREATE TEMPORARY TABLE `CBPagesURIUpdates`
+            (
+                `ID`    BINARY(20),
+                `URI`   VARCHAR(100)
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8
+            COLLATE=utf8_unicode_ci
+
+EOT;
+
+        Colby::query($SQL);
+
+        $values = cb_array_map_assoc(function($ID, $URI) {
+            $IDAsSQL    = CBHex160::toSQL($ID);
+            $URIAsSQL   = CBDB::stringToSQL($URI);
+            return "({$IDAsSQL},{$URIAsSQL})";
+        }, $URIs);
+        $values = implode(',', $values);
+
+        Colby::query("INSERT INTO `CBPagesURIUpdates` VALUES {$values}");
+
+        $SQL = <<<EOT
+
+            UPDATE  `ColbyPages` AS `p`
+            JOIN    `CBPagesURIUpdates` AS `u` ON `p`.`archiveID` = `u`.`ID`
+            SET     `p`.`URI` = `u`.`URI`
+EOT;
+
+        Colby::query($SQL);
+
+        Colby::query('DROP TEMPORARY TABLE `CBPagesURIUpdates`');
+    }
+
+    /**
+     * @return null
+     */
+    private static function updateURIsForUnpublishedPages($IDs) {
+        if (empty($IDs)) {
+            return;
+        }
+
+        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $SQL        = <<<EOT
+
+            UPDATE  `ColbyPages`
+            SET     `URI` = NULL
+            WHERE   `archiveID` IN ($IDsAsSQL)
+
+EOT;
+
+        Colby::query($SQL);
     }
 
     /**
