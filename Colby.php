@@ -894,3 +894,19 @@ class Colby
         error_log('Colby::useImage() is deprecated. Any classes required can be automatically loaded.');
     }
 }
+
+/**
+ * This behaves almost exactly like `array_map` except that it passes the key
+ * as well as the value to the callback function.
+ *
+ * @return {array}
+ */
+function cb_array_map_assoc(callable $callback, $array) {
+    $result = [];
+
+    foreach ($array as $key => $value) {
+        $result[$key] = call_user_func($callback, $key, $value);
+    }
+
+    return $result;
+}
