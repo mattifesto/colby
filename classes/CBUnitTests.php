@@ -9,6 +9,7 @@ class CBUnitTests {
         $response           = new CBAjaxResponse();
         $response->tests    = [
             ['CBDataStore', 'directoryNameFromDocumentRoot'],
+            ['CBDataStore', 'toURL'],
             ['CBDB',        'hex160ToSQL'],
             ['CBDB',        'optional'],
             ['CBDB',        'SQLToArray'],
