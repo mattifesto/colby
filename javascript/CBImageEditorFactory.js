@@ -73,6 +73,34 @@ var CBImageEditorFactory = {
     },
 
     /**
+     * @param   {function}  handleImageUploaded
+     * @param   {string}    textContent
+     *
+     * @return  {Element}
+     */
+    createEditorUploadButton : function(args) {
+        var element         = document.createElement("span");
+        element.className   = "CBImageEditorUploadButton";
+        var button          = document.createElement("button");
+        button.textContent  = args.textContent || "Upload Image";
+        var input           = document.createElement("input");
+        input.type          = "file";
+        input.style.display = "none";
+
+        element.appendChild(button);
+        element.appendChild(input);
+
+        button.addEventListener("click", input.click.bind(input));
+        input.addEventListener("change", CBImageEditorFactory.handleImageFileChosenForButton.bind(undefined, {
+            fileInputElement    : input,
+            handleImageUploaded : args.handleImageUploaded,
+            uploadButtonElement : button
+        }));
+
+        return element;
+    },
+
+    /**
      * @param {Element} element
      *
      * @return {undefined}
@@ -82,6 +110,38 @@ var CBImageEditorFactory = {
     },
 
     /**
+     * @param   {Element}   fileInputElement
+     * @param   {function}  handleImageUploaded
+     * @param   {Array}     imageSizes
+     * @param   {Element}   uploadButtonElement
+     *
+     * @return  undefined
+     */
+    handleImageFileChosenForButton : function(args) {
+        args.uploadButtonElement.disabled   = true;
+        var formData                        = new FormData();
+
+        formData.append("image", args.fileInputElement.files[0]);
+
+        args.fileInputElement.value = null;
+
+        if (args.imageSizes) {
+            formData.append("imageSizesAsJSON", JSON.stringify(args.imageSizes));
+        }
+
+        var xhr                 = new XMLHttpRequest();
+        xhr.onload              = CBImageEditorFactory.handleImageUploadedForButton.bind(undefined, {
+            handleImageUploaded : args.handleImageUploaded,
+            uploadButtonElement : args.uploadButtonElement,
+            xhr                 : xhr
+        });
+        xhr.open("POST", "/api/?class=CBImages&function=upload");
+        xhr.send(formData);
+    },
+
+    /**
+     * @deprecated use createEditorUploadButton
+     *
      * @param {number}      cropToHeight
      * @param {number}      cropToWidth
      * @param {function}    handleSpecChanged
@@ -128,6 +188,8 @@ var CBImageEditorFactory = {
     },
 
     /**
+     * @deprecated use createEditorUploadButton
+     *
      * @param {function}        handleSpecChanged
      * @param {Element}         imageElement
      * @param {Object}          spec
@@ -149,6 +211,26 @@ var CBImageEditorFactory = {
             args.imageElement.src   = args.spec.URL;
 
             args.handleSpecChanged.call();
+        }
+    },
+
+    /**
+     * @deprecated use createEditorUploadButton
+     *
+     * @param {function}        handleImageUploaded
+     * @param {Element}         uploadButtonElement
+     * @param {XMLHttpRequest}  xhr
+     *
+     * @return {undefined}
+     */
+    handleImageUploadedForButton : function(args) {
+        args.uploadButtonElement.disabled   = false;
+        var response                        = Colby.responseFromXMLHttpRequest(args.xhr);
+
+        if (!response.wasSuccessful) {
+            Colby.displayResponse(response);
+        } else {
+            args.handleImageUploaded.call(undefined, response);
         }
     },
 
