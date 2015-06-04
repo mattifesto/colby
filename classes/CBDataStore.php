@@ -141,8 +141,27 @@ class CBDataStore
     /**
      * @return string
      */
-    public function URL()
-    {
+    public function URL() {
         return CBSiteURL . "/data/{$this->path}";
+    }
+
+    /**
+     * @param   {hex160}        ID (required)
+     * @param   {string}|null   filename
+     *
+     * @return  {string}
+     */
+    public static function toURL($args) {
+        $ID = $filename = null;
+        extract($args, EXTR_IF_EXISTS);
+
+        $directoryName  = self::directoryNameFromDocumentRoot($ID);
+        $URL            = CBSiteURL . "/{$directoryName}";
+
+        if ($filename) {
+            return "{$URL}/{$filename}";
+        } else {
+            return $URL;
+        }
     }
 }
