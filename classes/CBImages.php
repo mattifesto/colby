@@ -97,6 +97,8 @@ EOT;
     }
 
     /**
+     * @deprecated use uploadForAjax
+     *
      * This function was initially created to replace a class named
      * CBAPIUploadImage. The API is not ideal, but it matches what that class
      * had. Eventually this function should be replace with a better API.
@@ -170,6 +172,41 @@ EOT;
     }
 
     /**
+     * 2015.06.04 This is intended to be the primary Ajax function used to
+     * upload and resize an image.
+     */
+    public static function uploadForAjax() {
+        $response               = new CBAjaxResponse();
+        $args                   = isset($_POST['args']) ? json_decode($_POST['args']) : new stdClass();
+        $info                   = self::uploadImageWithName('image');
+
+        $sizes = [
+            'original' => (object)[
+                'height'        => $info->size[1],
+                'width'         => $info->size[0],
+                'URL'           => CBDataStore::toURL([
+                    'ID'        => $info->ID,
+                    'filename'  => $info->filenameFromDataStore
+                ])
+            ]
+        ];
+
+        $response->sizes            = $sizes;
+        $response->wasSuccessful    = true;
+        $response->send();
+    }
+
+    /**
+     * @return void
+     */
+    public static function uploadForAjaxPermissions() {
+        $permissions        = new stdClass();
+        $permissions->group = 'Administrators';
+
+        return $permissions;
+    }
+
+    /**
      * @return stdClass
      */
     public static function uploadImageWithName($name) {
@@ -182,8 +219,7 @@ EOT;
             $temporaryFilepath  = $_FILES[$name]['tmp_name'];
 
             $size               = getimagesize($temporaryFilepath);
-            $type               = $size[2];
-            $extension          = image_type_to_extension($type, /* include dot: */ false);
+            $extension          = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
             $ID                 = sha1_file($temporaryFilepath);
             $dataStore          = new CBDataStore($ID);
             $filename           = "original.{$extension}";
@@ -199,10 +235,13 @@ EOT;
 
         Colby::query('COMMIT');
 
-        $info               = new stdClass();
-        $info->size         = $size;
-        $info->ID           = $ID;
-        $info->extension    = $extension;
+        $info                           = new stdClass();
+        $info->extension                = $extension;
+        $info->filenameFromDataStore    = $filename;
+        $info->height                   = $size[1];
+        $info->ID                       = $ID;
+        $info->size                     = $size; // @deprecated use width and height
+        $info->width                    = $size[0];
 
         return $info;
     }
