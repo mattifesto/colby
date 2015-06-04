@@ -27,7 +27,7 @@ class CPAdminImageListView {
         $thumbnailFilename  = "rs200clc200.{$extension}";
         $thumbnailFilepath  = $dataStore->directory() . "/{$thumbnailFilename}";
 
-        if (!is_file($thumbnailFilename)) {
+        if (!is_file($thumbnailFilepath)) {
             $originalFilepath   = $dataStore->directory() . "/original.{$extension}";
             $size               = getimagesize($originalFilepath);
             $projection         = CBProjection::withSize($size[0], $size[1]);
