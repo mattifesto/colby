@@ -170,24 +170,6 @@ EOT;
     }
 
     /**
-     * @return void
-     */
-    public static function uploadImageForAjax() {
-        $response = new CBAjaxResponse();
-
-        $info       = self::uploadImageWithName('image');
-        $dataStore  = new CBDataStore($info->ID);
-
-        $response->imageFilename    = "original.{$info->extension}";
-        $response->imageURL         = $dataStore->URL() . "/{$response->imageFilename}";
-        $response->imageSizeX       = $info->size[0];
-        $response->imageSizeY       = $info->size[1];
-        $response->wasSuccessful    = true;
-
-        $response->send();
-    }
-
-    /**
      * @return stdClass
      */
     public static function uploadImageWithName($name) {
