@@ -74,6 +74,7 @@ var CBImageEditorFactory = {
 
     /**
      * @param   {function}  handleImageUploaded
+     * @param   {Array}     imageSizes
      * @param   {string}    textContent
      *
      * @return  {Element}
@@ -94,6 +95,7 @@ var CBImageEditorFactory = {
         input.addEventListener("change", CBImageEditorFactory.handleImageFileChosenForButton.bind(undefined, {
             fileInputElement    : input,
             handleImageUploaded : args.handleImageUploaded,
+            imageSizes          : args.imageSizes,
             uploadButtonElement : button
         }));
 
