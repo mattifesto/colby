@@ -8,6 +8,43 @@
 class CBProjection {
 
     /**
+     * TODO: 2015.06.04 All op codes need to be added
+     *
+     * @return {stdClass} (projection)
+     */
+    public static function applyOpString($projection, $opString) {
+        preg_match_all("/([a-z]+)([0-9]+)/", $opString, $matches, PREG_SET_ORDER);
+
+        foreach($matches as $op) {
+            $code   = $op[1];
+            $value  = $op[2];
+
+            switch ($code) {
+                case 'clc':
+                    $projection = CBProjection::cropLongEdgeFromCenter($projection, $value);
+                    break;
+
+                case 'rh':
+                    $projection = CBProjection::reduceHeight($projection, $value);
+                    break;
+
+                case 'rs':
+                    $projection = CBProjection::reduceShortEdge($projection, $value);
+                    break;
+
+                case 'rw':
+                    $projection = CBProjection::reduceWidth($projection, $value);
+                    break;
+
+                default:
+                    throw new InvalidArgumentException("The code \"{$code}\" is unknown.");
+            }
+        }
+
+        return $projection;
+    }
+
+    /**
      * @return stdClass (projection)
      */
     public static function copyProjection($projection) {
