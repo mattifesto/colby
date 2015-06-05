@@ -176,20 +176,34 @@ EOT;
      * upload and resize an image.
      */
     public static function uploadForAjax() {
-        $response               = new CBAjaxResponse();
-        $args                   = isset($_POST['args']) ? json_decode($_POST['args']) : new stdClass();
-        $info                   = self::uploadImageWithName('image');
-
-        $sizes = [
-            'original' => (object)[
-                'height'        => $info->size[1],
-                'width'         => $info->size[0],
-                'URL'           => CBDataStore::toURL([
-                    'ID'        => $info->ID,
-                    'filename'  => $info->filenameFromDataStore
-                ])
-            ]
+        $response           = new CBAjaxResponse();
+        $info               = self::uploadImageWithName('image');
+        $originalFilepath   = CBDataStore::filepath([
+            'ID'            => $info->ID,
+            'filename'      => $info->filenameFromDataStore ]);
+        $requestedSizes     = isset($_POST['imageSizesAsJSON']) ? json_decode($_POST['imageSizesAsJSON']) : [];
+        $sizes['original']  = (object)[
+            'height'        => $info->height,
+            'width'         => $info->width,
+            'URL'           => CBDataStore::toURL([
+                'ID'        => $info->ID,
+                'filename'  => $info->filenameFromDataStore ])
         ];
+
+        foreach ($requestedSizes as $size) {
+            $filename   = "{$size}.{$info->extension}";
+            $filepath   = CBDataStore::filepath(['ID' => $info->ID, 'filename' => $filename]);
+            $projection = CBProjection::withSize($info->width, $info->height);
+            $projection = CBProjection::applyOpString($projection, $size);
+
+            CBImages::reduceImageFile($originalFilepath, $filepath, $projection);
+
+            $sizes[$size]       = (object)[
+                'height'        => $projection->destination->height,
+                'width'         => $projection->destination->width,
+                'URL'           => CBDataStore::toURL([ 'ID' => $info->ID, 'filename' => $filename ])
+            ];
+        }
 
         $response->sizes            = $sizes;
         $response->wasSuccessful    = true;
