@@ -15,8 +15,6 @@ var CBBackgroundViewEditorFactory = {
         element.className       = "CBBackgroundViewEditor";
         var properties          = document.createElement("div");
         properties.className    = "properties";
-        var options             = document.createElement("div");
-        options.className       = "options";
         var imageSpec           = {
             URL                 : args.spec.imageURL };
         var handleImageChanged  = CBBackgroundViewEditorFactory.handleImageChanged.bind(undefined, {
@@ -24,41 +22,45 @@ var CBBackgroundViewEditorFactory = {
             imageSpec           : imageSpec,
             spec                : args.spec });
 
-        options.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
+
+        var options1            = document.createElement("div");
+        options1.className      = "options options1";
+
+        options1.appendChild(CBImageEditorFactory.createEditor({
+            handleSpecChanged   : handleImageChanged,
+            spec                : imageSpec }));
+
+        properties.appendChild(options1);
+
+        var options2            = document.createElement("div");
+        options2.className      = "options options2";
+
+        options2.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Repeat Horizontally",
             propertyName        : "imageShouldRepeatHorizontally",
             spec                : args.spec }));
 
-        options.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
+        options2.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Repeat Vertically",
             propertyName        : "imageShouldRepeatVertically",
             spec                : args.spec }));
 
-        options.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
+        options2.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Minimum view height is image height",
             propertyName        : "minimumViewHeightIsImageHeight",
             spec                : args.spec }));
 
-        properties.appendChild(CBImageEditorFactory.createEditor({
-            handleSpecChanged   : handleImageChanged,
-            spec                : imageSpec }));
 
-        properties.appendChild(options);
-
-        properties.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        options2.appendChild(CBStringEditorFactory.createSingleLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
-            labelText           : "Background color",
+            labelText           : "Background color ",
             propertyName        : "color",
             spec                : args.spec }));
 
-        properties.appendChild(CBStringEditorFactory.createSingleLineEditor({
-            handleSpecChanged   : args.handleSpecChanged,
-            labelText           : "Link URL",
-            propertyName        : "linkURL",
-            spec                : args.spec }));
+        properties.appendChild(options2);
 
         element.appendChild(properties);
 
