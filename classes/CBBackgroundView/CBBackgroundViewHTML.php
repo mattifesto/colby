@@ -1,7 +1,7 @@
 <?php
 
-$styles = array();
-$styles[] = "position: relative;";
+$styles     = array();
+$styles[]   = "position: relative;";
 
 if ($model->imageURL)
 {
@@ -48,19 +48,6 @@ $styles = implode(' ', $styles);
 <div class="CBBackgroundView" style="<?php echo $styles; ?>">
 
     <?php
-
-    if ($model->linkURL)
-    {
-        $anchorStyles   = array();
-        $anchorStyles[] = "bottom: 0px;";
-        $anchorStyles[] = "left: 0px;";
-        $anchorStyles[] = "position: absolute;";
-        $anchorStyles[] = "right: 0px;";
-        $anchorStyles[] = "top: 0px;";
-        $anchorStyles   = implode(' ', $anchorStyles);
-
-        echo "<a href=\"{$model->linkURLHTML}\" style=\"{$anchorStyles}\"></a>";
-    }
 
     array_walk($model->children, 'CBView::renderModelAsHTML');
 

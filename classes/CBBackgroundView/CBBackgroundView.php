@@ -51,8 +51,6 @@ final class CBBackgroundView {
         $model->imageURL                        = isset($spec->imageURL) ? $spec->imageURL : null;
         $model->imageURLHTML                    = ColbyConvert::textToHTML($model->imageURL);
         $model->imageWidth                      = isset($spec->imageWidth) ? $spec->imageWidth : null;
-        $model->linkURL                         = isset($spec->linkURL) ? $spec->linkURL : null;
-        $model->linkURLHTML                     = ColbyConvert::textToHTML($model->linkURL);
         $model->minimumViewHeightIsImageHeight  = isset($spec->minimumViewHeightIsImageHeight) ?
                                                     $spec->minimumViewHeightIsImageHeight : true;
 
