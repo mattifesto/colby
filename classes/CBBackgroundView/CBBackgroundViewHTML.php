@@ -1,7 +1,8 @@
 <?php
 
 $styles     = array();
-$styles[]   = "position: relative;";
+$styles[]   = "display: flex; display: -ms-flexbox; display: -webkit-flex;";
+$styles[]   = "justify-content: center; -ms-flex-pack: center; -webkit-justify-content: center;";
 
 if ($model->imageURL) {
     $styles[] = "background-image: url({$model->imageURLHTML});";

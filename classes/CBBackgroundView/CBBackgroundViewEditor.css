@@ -18,8 +18,8 @@
 .CBBackgroundViewEditor > .properties {
     background-color:           hsl(30, 50%, 85%);
     display:                    flex;
-    display:                    -ms-flexbox;
     display:                    -webkit-flex;
+    justify-content:            center;
     -webkit-justify-content:    center;
     padding-bottom:             10px;
 }
@@ -44,7 +44,6 @@
 
 .CBBackgroundViewEditor > .properties > .options > .CBStringEditor {
     display:    flex;
-    display:    -ms-flexbox;
     display:    -webkit-flex;
     margin:     5px auto 0;
 }
