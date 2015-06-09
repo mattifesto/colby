@@ -73,6 +73,37 @@ var CBImageEditorFactory = {
     },
 
     /**
+     *     Creates a CBImageEditorPreview element which is 440px by 240px and
+     * has a clickable background that will change color to improve viewing of
+     * translucent images.
+     *     The element has a `editorPreviewSetSrc` function on it which will
+     * set the `src` property of its image.
+     *     You must load `CBImageEditorFactory.css` if you want to use the
+     * default styles for this element.
+     *
+     * @param   {string}    className   Replaces the defaul class name
+     *
+     * @return  {Element}
+     */
+    createEditorPreview : function(args) {
+        args                            = args || {};
+        var preview                     = document.createElement("div");
+        preview.className               = args.className || "CBImageEditorPreview";
+        var img                         = document.createElement("img");
+        preview.editorPreviewSetSrc     = function(URL) {
+            img.src = URL;
+        }
+
+        preview.appendChild(img);
+
+        preview.addEventListener("click", function() {
+            preview.classList.toggle("dark")
+        })
+
+        return preview;
+    },
+
+    /**
      * @param   {function}  handleImageUploaded
      * @param   {Array}     imageSizes
      * @param   {string}    textContent
@@ -217,8 +248,6 @@ var CBImageEditorFactory = {
     },
 
     /**
-     * @deprecated use createEditorUploadButton
-     *
      * @param {function}        handleImageUploaded
      * @param {Element}         uploadButtonElement
      * @param {XMLHttpRequest}  xhr

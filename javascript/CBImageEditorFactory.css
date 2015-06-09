@@ -28,3 +28,23 @@
     font-size:  13px;
     text-align: center;
 }
+
+.CBImageEditorPreview {
+    background-color:   white;
+    display:            flex;
+    display:            -webkit-flex;
+    height:             200px;
+    margin:             0 auto;
+    padding:            20px;
+    width:              400px;
+}
+
+.CBImageEditorPreview.dark {
+    background-color: hsl(0, 0%, 20%);
+}
+
+.CBImageEditorPreview > img {
+    margin:     auto;
+    max-height: 200px;
+    max-width:  400px;
+}
