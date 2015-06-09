@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @deprecated 2015.06.09
+ *      This class has been around since very early on in the process of
+ *  creating views. Because of this, the theory behind views was not fully
+ *  formed and it is not elegantly implemented.
+ *      It is currently used by the MCLinkView and the LEMiniLinkView. These
+ *  views should be deprecated also and replaced by views that behave better.
+ *  When there is system wide view upgrade functionality all of the models can
+ *  be upgraded and these views deleted.
+ */
 final class CBImageView {
 
     /**
