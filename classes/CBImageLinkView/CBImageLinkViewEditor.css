@@ -1,0 +1,36 @@
+.CBImageLinkViewEditorWidget {
+    background-color:   hsl(120, 50%, 90%);
+    border-color:       hsl(120, 50%, 90%);
+    border-radius:      5px;
+    border-style:       solid;
+    border-width:       5px 10px 10px;
+    margin:             0 auto;
+    width:              480px;
+}
+
+.CBImageLinkViewEditorWidget > header {
+    padding:            0 10px 10px;
+    text-align:         center;
+}
+
+.CBImageLinkViewEditor .dimensions {
+    color:      hsl(0, 0%, 50%);
+    font-size:  13px;
+    text-align: center;
+}
+
+.CBImageLinkViewEditor .CBStringEditor {
+    margin-top: 10px;
+}
+
+.CBImageLinkViewEditor .CBStringEditor input[type=text] {
+    border:     1px solid hsl(120, 50%, 80%);
+    padding:    5px;
+    width:      100%;
+}
+
+.CBImageLinkViewEditor .CBImageEditorUploadButton {
+    display:    block;
+    margin:     10px 0 0;
+    text-align: center;
+}
