@@ -237,8 +237,9 @@ CBPageEditor.saveModel = function() {
 
     var xhr     = new XMLHttpRequest();
     xhr.onload  = this.saveModelAjaxRequestDidComplete.bind(this, xhr);
+    xhr.onerror = this.saveModelAjaxRequestDidFail.bind(this, xhr);
 
-    xhr.open("POST", "/api/?class=CBViewPage&function=saveEditedPageForAjax");
+    xhr.open("POST", "/api/?class=CBViewPage&function=saveEditedPage");
     xhr.send(formData);
 
     /**
@@ -249,14 +250,9 @@ CBPageEditor.saveModel = function() {
 };
 
 /**
- * @return void
+ * @return undefined
  */
-CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr)
-{
-    /**
-     * Resume callbacks.
-     */
-
+CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr) {
     this.saveModelTimer.resume();
 
     var response = Colby.responseFromXMLHttpRequest(xhr);
@@ -272,6 +268,23 @@ CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr)
     }
 };
 
+/**
+ * Sometimes the server will reject a request. Without this handler, that
+ * rejection will silently stop all future attempts to save even though they
+ * would most likely complete successfully. This handler could do more, but
+ * what it does do is allow future save requests to go through.
+ *
+ * It also restarts the timer since there is still data to be saved.
+ *
+ * TODO: Keep a fail count or something an eventually report to the user that
+ * communication with the server is not working.
+ *
+ * @return undefined
+ */
+CBPageEditor.saveModelAjaxRequestDidFail = function(xhr) {
+    this.saveModelTimer.resume();
+    this.saveModelTimer.restart();
+};
 
 (function()
 {
