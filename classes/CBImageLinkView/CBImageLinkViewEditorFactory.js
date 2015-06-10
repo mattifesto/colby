@@ -24,7 +24,18 @@ var CBImageLinkViewEditorFactory = {
         var button              = CBImageEditorFactory.createEditorUploadButton({
             handleImageUploaded : handler
         });
-
+        var alt                 = CBStringEditorFactory.createSingleLineEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Alternative Text",
+            propertyName        : "alt",
+            spec                : args.spec
+        });
+        var HREF                = CBStringEditorFactory.createSingleLineEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Link HREF",
+            propertyName        : "HREF",
+            spec                : args.spec
+        });
         if (args.spec.URL) {
             preview.editorPreviewSetSrc(args.spec.URL);
         }
@@ -32,6 +43,8 @@ var CBImageLinkViewEditorFactory = {
         element.appendChild(preview);
         element.appendChild(dimensions);
         element.appendChild(button);
+        element.appendChild(alt);
+        element.appendChild(HREF);
 
         return element;
     },

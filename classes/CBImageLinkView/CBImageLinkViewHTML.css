@@ -1,0 +1,9 @@
+.CBImageLinkView {
+    flex:           none;
+    -ms-flex:       none;
+    -webkit-flex:   none;
+}
+
+.CBImageLinkView img {
+    display: block;
+}

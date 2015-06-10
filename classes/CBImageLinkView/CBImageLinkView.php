@@ -34,6 +34,10 @@ final class CBImageLinkView {
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
+        CBHTMLOutput::addCSSURL(self::URL('CBImageLinkViewHTML.css'));
+
+        echo '<div class="CBImageLinkView">';
+
         if ($model->HREF) {
             echo "<a href=\"{$model->HREF}\">";
         }
@@ -50,13 +54,15 @@ final class CBImageLinkView {
                 break;
         }
 
-        $CSS = "width: {$width}px; height: {$height}px; flex: none; -ms-flex: none; -webkit-flex: none;";
+        $CSS = "width: {$width}px; height: {$height}px;";
 
         echo "<img src=\"{$model->URLAsHTML}\" alt=\"{$model->altAsHTML}\" style=\"{$CSS}\">";
 
         if ($model->HREF) {
             echo '</a>';
         }
+
+        echo '</div>';
     }
 
     /**
