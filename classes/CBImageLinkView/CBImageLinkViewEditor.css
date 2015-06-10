@@ -19,6 +19,15 @@
     text-align: center;
 }
 
+.CBImageLinkViewEditor .CBImageLinkViewBooleanEditor {
+    margin:     10px 0;
+    text-align: center;
+}
+
+.CBImageLinkViewEditor .CBImageLinkViewBooleanEditor input {
+    margin-right: 5px;
+}
+
 .CBImageLinkViewEditor .CBStringEditor {
     margin-top: 10px;
 }
