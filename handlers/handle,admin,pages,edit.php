@@ -86,8 +86,19 @@ foreach (CBViewPageViews::availableViewClassNames() as $className) {
     }
 }
 
-CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames',
-                             CBViewPageViews::availableViewClassNames());
+/**
+ * Because of historical reasons it's not entirely clear that the exported
+ * variable below holds the list of classes to be placed in the menu which is
+ * a subset of the views that are supported.
+ */
+
+if (is_callable($function = 'CBViewPageViews::selectableViewClassNames')) {
+    $selectableViewClassNames = call_user_func($function);
+} else {
+    $selectableViewClassNames = CBViewPageViews::availableViewClassNames();
+}
+
+CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $selectableViewClassNames);
 
 /**
  * Export page lists
