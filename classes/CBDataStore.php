@@ -26,6 +26,15 @@ class CBDataStore
     }
 
     /**
+     * @deprecated use `CBDataStore::deleteForID`
+     *
+     * @return void
+     */
+    public function delete() {
+        CBDataStore::deleteForID(['ID' => $this->dataStoreID]);
+    }
+
+    /**
      * This method does not attempt to remove any intermediate and potentially
      * shared directories that may exist in its path.
      *
@@ -33,13 +42,6 @@ class CBDataStore
      * data store directory does not exist. If in doubt, call `is_dir` with the
      * value returned by the `directory` function as the parameter.
      *
-     * @return void
-     */
-    public function delete() {
-        CBDataStore::deleteForID($this->dataStoreID);
-    }
-
-    /**
      * @return null
      */
     public static function deleteForID($args) {
