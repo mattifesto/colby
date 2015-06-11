@@ -18,11 +18,9 @@ if (file_exists($frontPageFilename)) {
     }
 }
 
-Colby::mysqli()->autocommit(false);
+Colby::query('START TRANSACTION');
 
 CBPages::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
-
-$dataStore = new CBDataStore($dataStoreID);
 
 /**
  * In most cases the data store directory can be assumed to exists but there
@@ -30,14 +28,11 @@ $dataStore = new CBDataStore($dataStoreID);
  * scenarios.
  */
 
-if (is_dir($dataStore->directory()))
-{
-    $dataStore->delete();
+if (is_dir(CBDataStore::directoryForID($dataStoreID))) {
+    CBDataStore::deleteForID(['ID' =>$dataStoreID]);
 }
 
-Colby::mysqli()->commit();
-Colby::mysqli()->autocommit(true);
-
+Colby::query('COMMIT');
 
 /**
  * Send the response
