@@ -245,6 +245,7 @@ $sqls[] = <<<EOT
 
 EOT;
 
+CBModels::install();
 
 /**
  * 2014.08.25
