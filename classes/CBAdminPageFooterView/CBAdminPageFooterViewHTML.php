@@ -1,10 +1,4 @@
-<?php
-
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBAdminPageFooterView/CBAdminPageFooterViewHTML.css');
-
-?>
-
+<div class="flex-fill"></div>
 <section class="CBAdminPageFooterView">
     <ul>
         <li>Copyright &copy; 2012-<?php echo gmdate('Y'); ?> Mattifesto Design</li>
