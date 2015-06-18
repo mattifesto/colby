@@ -33,16 +33,69 @@ final class CBModelsTests {
      */
     public static function fetchModelByIDTest() {
         Colby::query('START TRANSACTION');
-
         CBModelsTests::createTestEnvironment();
+
+        /* 1 */
 
         $ID     = CBModelsTests::testModelIDs[2];
         $model  = CBModels::fetchModelByID($ID);
 
         CBModelTest::checkModelWithID($model, $ID, 1);
 
+        /* 2 */
+
+        $ID     = CBHex160::random();
+        $model  = CBModels::fetchModelByID($ID);
+
+        if ($model !== false) {
+            throw new Exception(__METHOD__ . ' Calling `CBModel::fetchModelByID` with and ID with no model should return false.');
+        }
+
         Colby::query('ROLLBACK');
     }
+
+    /**
+     * @return null
+     */
+    public static function fetchModelsByIDTest() {
+        Colby::query('START TRANSACTION');
+        CBModelsTests::createTestEnvironment();
+
+        /* 1 */
+
+        $models = CBModels::fetchModelsByID(CBModelsTests::testModelIDs);
+
+        if (count($models) !== 3) {
+            throw new Exception(__METHOD__ . ' Test 1: Array should contain 3 models.');
+        }
+
+        for ($i = 0; $i < 3; $i++) {
+            $ID = CBModelsTests::testModelIDs[$i];
+            CBModelTest::checkModelWithID($models[$ID], $ID, 1);
+        }
+
+        /* 2 */
+
+        $IDs    = [CBHex160::random(), CBHex160::random(), CBHex160::random()];
+        $models = CBModels::fetchModelsByID($IDs);
+
+        if ($models !== []) {
+            throw new Exception(__METHOD__ . ' Test 2: Array should be empty.');
+        }
+
+        /* 3 */
+
+        $IDs    = [CBHex160::random(), CBHex160::random(), CBHex160::random()];
+        $IDs    = array_merge(CBModelsTests::testModelIDs, $IDs);
+        $models = CBModels::fetchModelsByID($IDs);
+
+        if (count($models) !== 3) {
+            throw new Exception(__METHOD__ . ' Test 3: Array should contain 3 models.');
+        }
+
+        Colby::query('ROLLBACK');
+    }
+
     /**
      * Tests the behavior of making a version for a new model
      */
