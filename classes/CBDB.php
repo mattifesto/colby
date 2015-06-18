@@ -105,12 +105,20 @@ final class CBDB {
      * row.
      * @return [{stdClass}]
      */
-    public static function SQLToObjects($SQL) {
+    public static function SQLToObjects($SQL, $args = []) {
+        $keyField = null;
+        extract($args, EXTR_IF_EXISTS);
+
         $result     = Colby::query($SQL);
         $objects    = [];
 
         while ($object = $result->fetch_object()) {
-            $objects[] = $object;
+            if ($keyField) {
+                $key            = $object[$keyField];
+                $objects[$key]  = $object;
+            } else {
+                $objects[]      = $object;
+            }
         }
 
         $result->free();
