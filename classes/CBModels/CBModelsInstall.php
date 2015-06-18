@@ -5,8 +5,14 @@ $SQL = <<<EOT
     CREATE TABLE IF NOT EXISTS `CBModels`
     (
         `ID`        BINARY(20) NOT NULL,
+        `className` VARCHAR(80) NOT NULL,
+        `created`   BIGINT NOT NULL,
+        `modified`  BIGINT NOT NULL,
+        `title`     TEXT NOT NULL,
         `version`   BIGINT NOT NULL,
-        PRIMARY KEY (`ID`)
+        PRIMARY KEY                 (`ID`),
+        KEY `className_created`     (`className`, `created`),
+        KEY `className_modified`    (`className`, `modified`)
     )
     ENGINE=InnoDB
     DEFAULT CHARSET=utf8
