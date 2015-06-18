@@ -14,15 +14,19 @@ final class CBModels {
     private static $versionsByID = null;
 
     /**
-     * Clears the cache of model versions and allows `makeVersionsForUpdate`
-     * and `makeSpecsForUpdate` to be called again
-     *
-     * This function should be called if something happens after a call to
-     * `makeVersionsForUpdate` or `makeSpecsForUpdate` that means the update
-     * cannot be completed.
+     * @return [<int>]
      */
-    public static function cancelUpdate() {
-        self::$versionsByID = null;
+    private static function fetchCreatedTimestampsForIDs(array $IDs) {
+        $IDsAsSQL   = CBHex160::toSQL($IDs);
+        $SQL        = <<<EOT
+
+            SELECT  LOWER(HEX(`ID`)), `timestamp`
+            FROM    `CBModelVersions`
+            WHERE   `ID` in ({$IDsAsSQL}) AND `version` = 0
+
+EOT;
+
+        return CBDB::SQLtoArray($SQL);
     }
 
     /**
@@ -33,8 +37,8 @@ final class CBModels {
      *
      * @return {stdClass} | false
      */
-    public static function fetchModel($ID) {
-        $models = self::fetchModels([$ID]);
+    public static function fetchModelForID($ID) {
+        $models = self::fetchModelsForIDs([$ID]);
 
         if (empty($models)) {
             return false;
@@ -51,7 +55,7 @@ final class CBModels {
      *
      * @return [<hex160> => {stdClass}, ...]
      */
-    public static function fetchModels(array $IDs) {
+    public static function fetchModelsForIDs(array $IDs) {
         $IDsAsSQL   = CBHex160::toSQL($IDs);
         $SQL        = <<<EOT
 
@@ -98,8 +102,8 @@ EOT;
      *
      * @return {stdClass} | false
      */
-    public static function fetchSpec($ID) {
-        $specs = self::fetchSpecs([$ID]);
+    public static function fetchSpecForID($ID, $args) {
+        $specs = CBModels::fetchSpecsForIDs([$ID], $args);
 
         if (empty($specs)) {
             return false;
@@ -116,7 +120,10 @@ EOT;
      *
      * @return [<hex160> => {stdClass}, ...]
      */
-    public static function fetchSpecs(array $IDs) {
+    public static function fetchSpecsForIDs(array $IDs, $args) {
+        $createSpecForIDCallback = null;
+        extract($args, EXTR_IF_EXISTS);
+
         $IDsAsSQL   = CBHex160::toSQL($IDs);
         $SQL        = <<<EOT
 
@@ -126,8 +133,16 @@ EOT;
             WHERE   `m`.`ID` IN ($IDsAsSQL)
 
 EOT;
+        $specs      = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
 
-        return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        if (is_callable($createSpecForIDCallback)) {
+            $existingIDs    = array_map(function($spec) { return $spec->ID; }, $specs);
+            $newIDs         = array_diff($IDs, $existingIDs);
+            $newSpecs       = array_map($createSpecForIDCallback, $newIDs);
+            $specs          = array_merge($specs, $newSpecs);
+        }
+
+        return $specs;
     }
 
     /**
@@ -152,6 +167,8 @@ EOT;
     }
 
     /**
+     * @deprecated use fetchSpecsForIDs
+     *
      * Fetches or creates specs for a set of IDs in preparation for an update
      *
      * This function will cache the versions of the specs it returns and will
@@ -249,38 +266,105 @@ EOT;
     }
 
     /**
+     * Creates a new model with a class name and optionally an ID.
+     */
+    public static function modelWithClassName($className, $args = []) {
+        $ID = null;
+        extract($args, EXTR_IF_EXISTS);
+
+        $model              = new stdClass();
+        $model->className   = (string)$className;
+
+        if ($ID) {
+            $model->ID      = (string)$ID;
+        }
+
+        return $model;
+    }
+
+    /**
+     * Saves a new versions of models. This function should almost always be
+     * called inside of a transaction.
+     *
+     * @param [{stdClass}]  $specs
+     *  All of the specs must have the same class name. For specs of different
+     *  classes make multiple calls.
+     *
+     * @return null
+     */
+    public static function save(array $specs) {
+        $className          = $specs[0]->className;
+
+        array_walk($specs, function($spec) use ($className) {
+            if ($spec->className !== $className) {
+                throw new InvalidArgumentException('specs: All specs must have the same className.');
+            }
+        });
+
+        $IDs            = array_map(function ($spec) { return $spec->ID; }, $specs);
+        $tableVersions  = CBModels::makeVersionsForUpdate($IDs);
+
+        array_walk($specs, function($spec) use ($tableVersions) {
+            $specVersion    = isset($spec->version) ? $specVersion : null;
+            $tableVersion   = $tableVersions[$spec->ID];
+
+            if ($specVersion !== $tableVersion) {
+                throw new RuntimeException('CBModelVersionMismatch');
+            }
+        });
+
+        $specToModel    = "{$className}::specToModel";
+        $specToTuple    = function($spec) use ($specToModel) {
+            $tuple          = new stdClass();
+            $tuple->spec    = $spec;
+            $tuple->model   = call_user_func($specToModel, $spec);
+            return $tuple;
+        };
+        $tuples         = array_map($specToTuple, $specs);
+
+        if (is_callable($function = "{$className}::modelsWillSave")) {
+            call_user_func($function, $tuples);
+        }
+
+        $createdTimestamps  = CBModels::fetchCreatedTimestampsForIDs($IDs);
+        $modified           = time();
+
+        array_walk($tuples, function($tuple) use ($createdTimestamps, $modified) {
+            $ID                     = $tuple->spec->ID;
+            $created                = isset($createdTimestamps[$ID]) ? $createdTimestamps[$ID] : $modified;
+            $tuple->model->ID       = $ID;
+            $tuple->spec->created   = $tuple->model->created    = $created;
+            $tuple->spec->modified  = $tuple->model->modified   = $modified;
+            $tuple->spec->version   = $tuple->model->version    = self::$versionsByID[$ID] + 1;
+        });
+
+        CBModels::saveToDatabase($tuples);
+    }
+
+    /**
      * @return {stdClass}
      */
     public static function saveForAjax() {
         $response   = new CBAjaxResponse();
         $spec       = json_decode($_POST['specAsJSON']);
 
-        Colby::query("START TRANSACTION");
+        Colby::query('START TRANSACTION');
 
-        $version    = self::makeVersionsForUpdate([$spec->ID]);
-        $version    = $version[$spec->ID];
-
-        if ($version != (isset($spec->version) ? $spec->version : null)) {
-            $response->wasSuccessful    = false;
-            $response->message          = 'This model has been updated since it was fetched.';
-            $response->code             = 'version mismatch';
-            $response->send();
-
-            return;
+        try {
+            CBModels::save([$spec]);
+        } catch (Exception $exception) {
+            if ($excption->message === 'CBModelVersionMismatch') {
+                $response->wasSuccessful    = false;
+                $response->message          = 'This model has been updated since it was fetched.';
+                $response->code             = 'version mismatch';
+                $response->send();
+                return;
+            } else {
+                throw $exception;
+            }
         }
 
-        if (isset($spec->className) && is_callable($function = "{$spec->className}::specToModel")) {
-            $model = call_user_func($function, $spec);
-        } else {
-            $model = $spec;
-        }
-
-        self::updateModels([(object)[
-            'spec'  => $spec,
-            'model' => $model
-            ]]);
-
-        Colby::query("COMMIT");
+        Colby::query('COMMIT');
 
         $response->wasSuccessful = true;
         $response->send();
@@ -302,34 +386,23 @@ EOT;
      *
      * This function is meant to be called during a database transaction.
      *
-     * @param [{'spec' : {stdClass}, 'model' : {stdClass}}]
-     *      The model does not need to have its `ID` property set. It will be
-     *  set to the `ID` of the spec. Both objects will have their `version`
-     *  property set.
-     *      This API trusts that the model is a model of the spec. There are no
-     *  attempts made to validate that.
+     * @param [{'spec' : {stdClass}, 'model' : {stdClass}}] $tuples
      */
-    public static function updateModels(array $data) {
-        $timestamp      = time();
+    private static function saveToDatabase(array $tuples) {
         $versionsByID   = self::$versionsByID;
-        $updatedIDs     = array_map(function ($datum) { return $datum->spec->ID; }, $data);
+        $updatedIDs     = array_map(function ($tuple) { return $tuple->spec->ID; }, $tuples);
 
         if (array_keys($versionsByID) != $updatedIDs) {
             throw new LogicException('The set of updated IDs does not match the list of IDs for update.');
         }
 
-        $values = array_map(function($datum) use ($timestamp, $versionsByID) {
-            $ID                     = $datum->spec->ID;
-            $IDAsSQL                = CBHex160::toSQL($ID);
-            $version                = $versionsByID[$ID] + 1;
-            $datum->model->ID       = $ID;
-            $datum->model->version  = $version;
-            $modelAsJSONAsSQL       = CBDB::stringToSQL(json_encode($datum->model));
-            $datum->spec->version   = $version;
-            $specAsJSONAsSQL        = CBDB::stringToSQL(json_encode($datum->spec));
+        $values = array_map(function($tuple) use ($versionsByID) {
+            $IDAsSQL                = CBHex160::toSQL($tuple->spec->ID);
+            $modelAsJSONAsSQL       = CBDB::stringToSQL(json_encode($tuple->model));
+            $specAsJSONAsSQL        = CBDB::stringToSQL(json_encode($tuple->spec));
 
-            return "({$IDAsSQL}, {$version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$timestamp})";
-        }, $data);
+            return "({$IDAsSQL}, {$tuple->spec->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->spec->modified})";
+        }, $tuples);
 
         $values = implode(',', $values);
 

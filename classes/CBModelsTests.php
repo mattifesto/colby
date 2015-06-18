@@ -2,6 +2,47 @@
 
 final class CBModelsTests {
 
+    const testModelIDs = [
+        'dbc96d7b92337a3c6b9274c89473ee547ee518d7',
+        '728038c2af4e49fb265c82971ac441f96d591056',
+        '95397735c2fd6d7e75a2d059fededae693665f50'
+    ];
+
+    /**
+     * This function assumes that the CBModels functionality is working. The
+     * functions that call it will be testing to see if that is actually true.
+     *
+     * A transaction should be started before this function is called.
+     *
+     * @return null
+     */
+    private static function createTestEnvironment() {
+        $specs = CBModels::fetchSpecsForIDs(CBModelsTests::testModelIDs, [
+            'createSpecForIDCallback' => function($ID) {
+                $spec           = CBModels::modelWithClassName('CBModelTest', ['ID' => $ID]);
+                $spec->title    = "Title {$ID}";
+                return $spec;
+            }
+        ]);
+
+        CBModels::save($specs);
+    }
+
+    /**
+     * @return null
+     */
+    public static function fetchModelForIDTest() {
+        Colby::query('START TRANSACTION');
+
+        CBModelsTests::createTestEnvironment();
+
+        $ID     = CBModelsTests::testModelIDs[2];
+        $model  = CBModels::fetchModelForID($ID);
+
+        CBModelTest::checkModelWithID($model, $ID, 1);
+
+        Colby::query('ROLLBACK');
+    }
     /**
      * Tests the behavior of making a version for a new model
      */
@@ -97,18 +138,6 @@ final class CBModelsTests {
     }
 
     /**
-     * @return {stdClass}
-     */
-    public static function specToModel(stdClass $spec) {
-        $model              = CBView::modelWithClassName(__CLASS__);
-        $model->ID          = $spec->ID;
-        $model->title       = isset($spec->title) ? (string)$spec->title : '';
-        $model->titleHTML   = ColbyConvert::textToHTML($model->title);
-
-        return $model;
-    }
-
-    /**
      * @return null
      */
     public static function updateAndFetchTest() {
@@ -186,5 +215,43 @@ final class CBModelsTests {
         }
 
         Colby::query('ROLLBACK');
+    }
+}
+
+
+final class CBModelTest {
+
+    /**
+     * @return null
+     */
+    public static function checkModelWithID(stdClass $model, $ID, $version = false) {
+        if ($model->ID !== $ID) {
+            throw new Exception('Incorrect model ID');
+        }
+
+        if ($model->title !== "Title {$ID}") {
+            throw new Exception('Incorrect title');
+        }
+
+        if ($model->titleAsHTML !== "Title {$ID}") {
+            throw new Exception('Incorrect titleAsHTML');
+        }
+
+        if ($version !== false && $model->version !== $version) {
+            $actual     = json_encode($model->version);
+            $expected   = json_encode($version);
+            throw new Exception("Model version: {$actual}, Expected version: {$expected}");
+        }
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function specToModel(stdClass $spec) {
+        $model              = CBModels::modelWithClassName(__CLASS__);
+        $model->title       = isset($spec->title) ? (string)$spec->title : '';
+        $model->titleAsHTML = ColbyConvert::textToHTML($model->title);
+
+        return $model;
     }
 }
