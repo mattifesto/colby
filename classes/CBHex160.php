@@ -7,11 +7,19 @@ final class CBHex160 {
      * 40 hexadecimal characters). They are required to be lowercase so that
      * they can be compared for equality.
      *
-     * @return boolean
+     * @return {boolean}
      *  Returns true if the value is a hex160; otherwise false.
      */
     public static function is($value) {
         return preg_match('/[a-f0-9]{40}/', $value);
+    }
+
+    /**
+     * @return {hex160}
+     */
+    public static function random() {
+        $bytes = openssl_random_pseudo_bytes(20);
+        return bin2hex($bytes);
     }
 
     /**
