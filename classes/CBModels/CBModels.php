@@ -144,12 +144,17 @@ EOT;
     }
 
     /**
+     * This function inserts new rows in the CBModels table for new models that
+     * are being saved for the first time. This is the only function that
+     * inserts rows into the table. The rows will be updated before the save
+     * process is completed.
+     *
      * @return null
      */
-    private static function insertModels($IDs) {
-        $values = array_map(function($ID) {
+    private static function insertNewModels($IDs, $created) {
+        $values = array_map(function($ID) use ($created) {
             $IDAsSQL = CBHex160::toSQL($ID);
-            return "($IDAsSQL, 0)";
+            return "({$IDAsSQL}, 'new model', {$created}, {$created}, '', 0)";
         }, $IDs);
 
         $values = implode(',', $values);
@@ -165,39 +170,34 @@ EOT;
     }
 
     /**
-     * Fetches or creates versions for a set of IDs in preparation for an
-     * update
-     *
-     * This function will cache the versions of the specs it returns and will
-     * expect all of those specs to be updated with the next `updateModels`
-     * call. No other `ForUpdate` calls are allowed until either `updateModels`
-     * or `cancelUpdate` are called.
-     *
-     * This function is meant to be called during a database transaction. It
-     * will insert rows assuming that this action can be rolled back if there
-     * is an error.
+     * Locks the rows for and fetches the version and created timestamp for a
+     * set of IDs in preparation for an update. This will also insert rows for
+     * IDs that don't exist.
      */
-    private static function makeVersionsForUpdate(array $IDs) {
+    private static function selectInitialDataForUpdateByID(array $IDs, $modified) {
         $IDsAsSQL   = CBHex160::toSQL($IDs);
         $SQL        = <<<EOT
 
-            SELECT  LOWER(HEX(`ID`)), `version`
+            SELECT  LOWER(HEX(`ID`)), `created`, `version`
             FROM    `CBModels`
             WHERE   `ID` IN ({$IDsAsSQL})
+            FOR UPDATE
 
 EOT;
 
-        $versionsByID = CBDB::SQLToArray($SQL);
+        $initialDataByID = CBDB::SQLToArray($SQL);
 
-        if (count($versionsByID) != count($IDs)) {
-            $newIDs         = array_diff($IDs, array_keys($versionsByID));
-            $new            = array_fill_keys(/* keys: */ $newIDs, /* value: */ null);
-            $versionsByID   = array_merge($versionsByID, $new);
+        if (count($initialDataByID) != count($IDs)) {
+            $newIDs = array_diff($IDs, array_keys($initialDataByID));
 
-            self::insertModels($newIDs);
+            foreach ($newIDs as $ID) {
+                $initialDataByID[$ID] = (object)['created' => $modified, 'version' => 0];
+            }
+
+            self::insertNewModels($newIDs, /* created: */ $modified);
         }
 
-        return $versionsByID;
+        return $initialDataByID;
     }
 
     /**
@@ -236,12 +236,13 @@ EOT;
             }
         });
 
-        $IDs            = array_map(function ($spec) { return $spec->ID; }, $specs);
-        $versionsByID   = CBModels::makeVersionsForUpdate($IDs);
+        $IDs                = array_map(function ($spec) { return $spec->ID; }, $specs);
+        $modified           = time();
+        $initialDataByID    = CBModels::selectInitialDataForUpdateByID($IDs, $modified);
 
-        array_walk($specs, function($spec) use ($versionsByID) {
-            $specVersion    = isset($spec->version) ? $specVersion : null;
-            $tableVersion   = $versionsByID[$spec->ID];
+        array_walk($specs, function($spec) use ($initialDataByID) {
+            $specVersion    = isset($spec->version) ? $specVersion : 0;
+            $tableVersion   = $initialDataByID[$spec->ID]->version;
 
             if ($specVersion !== $tableVersion) {
                 throw new RuntimeException('CBModelVersionMismatch');
@@ -261,19 +262,15 @@ EOT;
             call_user_func($function, $tuples);
         }
 
-        $createdTimestamps  = CBModels::fetchCreatedTimestampsForIDs($IDs);
-        $modified           = time();
-
-        array_walk($tuples, function($tuple) use ($createdTimestamps, $modified, $versionsByID) {
-            $ID                     = $tuple->spec->ID;
-            $created                = isset($createdTimestamps[$ID]) ? $createdTimestamps[$ID] : $modified;
-            $tuple->model->ID       = $ID;
-            $tuple->spec->created   = $tuple->model->created    = $created;
+        array_walk($tuples, function($tuple) use ($initialDataByID, $modified) {
+            $ID                                                 = $tuple->spec->ID;
+            $tuple->model->ID                                   = $ID;
+            $tuple->spec->created   = $tuple->model->created    = $initialDataByID[$ID]->created;
             $tuple->spec->modified  = $tuple->model->modified   = $modified;
-            $tuple->spec->version   = $tuple->model->version    = $versionsByID[$ID] + 1;
+            $tuple->spec->version   = $tuple->model->version    = $initialDataByID[$ID]->version + 1;
         });
 
-        CBModels::saveToDatabase($tuples, $versionsByID);
+        CBModels::saveToDatabase($tuples);
     }
 
     /**
