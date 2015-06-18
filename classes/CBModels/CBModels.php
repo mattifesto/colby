@@ -11,8 +11,6 @@
  */
 final class CBModels {
 
-    private static $versionsByID = null;
-
     /**
      * @return [<int>]
      */
@@ -179,11 +177,7 @@ EOT;
      * will insert rows assuming that this action can be rolled back if there
      * is an error.
      */
-    public static function makeVersionsForUpdate(array $IDs) {
-        if (self::$versionsByID) {
-            throw new LogicException('Update in progress');
-        }
-
+    private static function makeVersionsForUpdate(array $IDs) {
         $IDsAsSQL   = CBHex160::toSQL($IDs);
         $SQL        = <<<EOT
 
@@ -202,8 +196,6 @@ EOT;
 
             self::insertModels($newIDs);
         }
-
-        self::$versionsByID = $versionsByID;
 
         return $versionsByID;
     }
@@ -245,11 +237,11 @@ EOT;
         });
 
         $IDs            = array_map(function ($spec) { return $spec->ID; }, $specs);
-        $tableVersions  = CBModels::makeVersionsForUpdate($IDs);
+        $versionsByID   = CBModels::makeVersionsForUpdate($IDs);
 
-        array_walk($specs, function($spec) use ($tableVersions) {
+        array_walk($specs, function($spec) use ($versionsByID) {
             $specVersion    = isset($spec->version) ? $specVersion : null;
-            $tableVersion   = $tableVersions[$spec->ID];
+            $tableVersion   = $versionsByID[$spec->ID];
 
             if ($specVersion !== $tableVersion) {
                 throw new RuntimeException('CBModelVersionMismatch');
@@ -272,16 +264,16 @@ EOT;
         $createdTimestamps  = CBModels::fetchCreatedTimestampsForIDs($IDs);
         $modified           = time();
 
-        array_walk($tuples, function($tuple) use ($createdTimestamps, $modified) {
+        array_walk($tuples, function($tuple) use ($createdTimestamps, $modified, $versionsByID) {
             $ID                     = $tuple->spec->ID;
             $created                = isset($createdTimestamps[$ID]) ? $createdTimestamps[$ID] : $modified;
             $tuple->model->ID       = $ID;
             $tuple->spec->created   = $tuple->model->created    = $created;
             $tuple->spec->modified  = $tuple->model->modified   = $modified;
-            $tuple->spec->version   = $tuple->model->version    = self::$versionsByID[$ID] + 1;
+            $tuple->spec->version   = $tuple->model->version    = $versionsByID[$ID] + 1;
         });
 
-        CBModels::saveToDatabase($tuples);
+        CBModels::saveToDatabase($tuples, $versionsByID);
     }
 
     /**
@@ -332,14 +324,7 @@ EOT;
      * @param [{'spec' : {stdClass}, 'model' : {stdClass}}] $tuples
      */
     private static function saveToDatabase(array $tuples) {
-        $versionsByID   = self::$versionsByID;
-        $updatedIDs     = array_map(function ($tuple) { return $tuple->spec->ID; }, $tuples);
-
-        if (array_keys($versionsByID) != $updatedIDs) {
-            throw new LogicException('The set of updated IDs does not match the list of IDs for update.');
-        }
-
-        $values = array_map(function($tuple) use ($versionsByID) {
+        $values     = array_map(function($tuple) {
             $IDAsSQL                = CBHex160::toSQL($tuple->spec->ID);
             $modelAsJSONAsSQL       = CBDB::stringToSQL(json_encode($tuple->model));
             $specAsJSONAsSQL        = CBDB::stringToSQL(json_encode($tuple->spec));
@@ -347,14 +332,13 @@ EOT;
             return "({$IDAsSQL}, {$tuple->spec->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->spec->modified})";
         }, $tuples);
 
-        $values = implode(',', $values);
+        $values     = implode(',', $values);
 
         Colby::query("INSERT INTO `CBModelVersions` VALUES {$values}");
 
-        $IDsAsSQL = CBHex160::toSQL(array_keys($versionsByID));
+        $IDs        = array_map(function ($tuple) { return $tuple->spec->ID; }, $tuples);
+        $IDsAsSQL   = CBHex160::toSQL($IDs);
 
         Colby::query("UPDATE `CBModels` SET `version` = `version` + 1 WHERE `ID` IN ($IDsAsSQL)");
-
-        self::$versionsByID = null;
     }
 }
