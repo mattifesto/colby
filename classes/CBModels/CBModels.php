@@ -167,63 +167,6 @@ EOT;
     }
 
     /**
-     * @deprecated use fetchSpecsForIDs
-     *
-     * Fetches or creates specs for a set of IDs in preparation for an update
-     *
-     * This function will cache the versions of the specs it returns and will
-     * expect all of those specs to be updated with the next `updateModels`
-     * call. No other `ForUpdate` calls are allowed until either `updateModels`
-     * or `cancelUpdate` are called.
-     *
-     * This function is meant to be called during a database transaction.
-     *
-     * @param {callable} $callback
-     *  This callback will be called for each ID that doesn't yet exist in the
-     *  database and should return a new spec for that ID.
-     */
-    public static function makeSpecsForUpdate(array $IDs, callable $callback = null) {
-        if (self::$versionsByID) {
-            throw new LogicException('Update in progress');
-        }
-
-        $IDsAsSQL   = CBHex160::toSQL($IDs);
-        $SQL        = <<<EOT
-
-            SELECT  LOWER(HEX(`m`.`ID`)), `v`.`specAsJSON`
-            FROM    `CBModels` AS `m`
-            JOIN    `CBModelVersions` AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
-            WHERE   `m`.`ID` IN ({$IDsAsSQL})
-
-EOT;
-
-        $specsByID      = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-        $versionsByID   = array_map(function($spec) {
-            return $spec->version;
-        }, $specsByID);
-
-        if (count($versionsByID) != count($IDs)) {
-            $newIDs             = array_diff($IDs, array_keys($versionsByID));
-            $newVersionsByID    = array_fill_keys(/* keys: */ $newIDs, /* value: */ null);
-            $versionsByID       = array_merge($versionsByID, $newVersionsByID);
-
-            foreach ($newIDs as $ID) {
-                if ($callback) {
-                    $specsByID[$ID] = call_user_func($callback, $ID);
-                } else {
-                    $specsByID[$ID] = (object)['ID' => $ID];
-                }
-            }
-
-            self::insertModels($newIDs);
-        }
-
-        self::$versionsByID = $versionsByID;
-
-        return $specsByID;
-    }
-
-    /**
      * Fetches or creates versions for a set of IDs in preparation for an
      * update
      *
