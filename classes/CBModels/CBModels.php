@@ -35,8 +35,8 @@ EOT;
      *
      * @return {stdClass} | false
      */
-    public static function fetchModelForID($ID) {
-        $models = self::fetchModelsForIDs([$ID]);
+    public static function fetchModelByID($ID) {
+        $models = self::fetchModelsByID([$ID]);
 
         if (empty($models)) {
             return false;
@@ -53,7 +53,7 @@ EOT;
      *
      * @return [<hex160> => {stdClass}, ...]
      */
-    public static function fetchModelsForIDs(array $IDs) {
+    public static function fetchModelsByID(array $IDs) {
         $IDsAsSQL   = CBHex160::toSQL($IDs);
         $SQL        = <<<EOT
 
@@ -77,7 +77,7 @@ EOT;
      *                  version.
      * Usage Frequency: Occasionally
      */
-    public static function fetchModelWithVersion($ID, $version) {
+    public static function fetchModelByIDWithVersion($ID, $version) {
         $IDAsSQL        = CBHex160::toSQL($ID);
         $versionAsSQL   = (int)$version;
         $SQL            = <<<EOT
@@ -100,8 +100,8 @@ EOT;
      *
      * @return {stdClass} | false
      */
-    public static function fetchSpecForID($ID, $args) {
-        $specs = CBModels::fetchSpecsForIDs([$ID], $args);
+    public static function fetchSpecByID($ID, $args) {
+        $specs = CBModels::fetchSpecsByID([$ID], $args);
 
         if (empty($specs)) {
             return false;
@@ -118,7 +118,7 @@ EOT;
      *
      * @return [<hex160> => {stdClass}, ...]
      */
-    public static function fetchSpecsForIDs(array $IDs, $args) {
+    public static function fetchSpecsByID(array $IDs, $args) {
         $createSpecForIDCallback = null;
         extract($args, EXTR_IF_EXISTS);
 

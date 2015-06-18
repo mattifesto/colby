@@ -17,7 +17,7 @@ final class CBModelsTests {
      * @return null
      */
     private static function createTestEnvironment() {
-        $specs = CBModels::fetchSpecsForIDs(CBModelsTests::testModelIDs, [
+        $specs = CBModels::fetchSpecsByID(CBModelsTests::testModelIDs, [
             'createSpecForIDCallback' => function($ID) {
                 $spec           = CBModels::modelWithClassName('CBModelTest', ['ID' => $ID]);
                 $spec->title    = "Title {$ID}";
@@ -31,13 +31,13 @@ final class CBModelsTests {
     /**
      * @return null
      */
-    public static function fetchModelForIDTest() {
+    public static function fetchModelByIDTest() {
         Colby::query('START TRANSACTION');
 
         CBModelsTests::createTestEnvironment();
 
         $ID     = CBModelsTests::testModelIDs[2];
-        $model  = CBModels::fetchModelForID($ID);
+        $model  = CBModels::fetchModelByID($ID);
 
         CBModelTest::checkModelWithID($model, $ID, 1);
 

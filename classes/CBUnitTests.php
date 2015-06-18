@@ -15,7 +15,7 @@ class CBUnitTests {
             ['CBDB',        'SQLToArray'],
             ['CBDB',        'SQLToAssociativeArray'],
             ['CBDB',        'SQLToValue'],
-            ['CBModels',    'fetchModelForID'],
+            ['CBModels',    'fetchModelByID'],
             ['CBPages',     'updateURIs'],
             ['CBUnit'],
             ['CBViewPage',  'save']];
