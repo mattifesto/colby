@@ -767,16 +767,12 @@ class Colby
     }
 
     /**
-     * @return string
-     *  Returns the hexadecimal representation of a random 160-bit number. This
-     *  is the same length as a SHA-1 hash and is appropriate for use as a
-     *  unique ID, such as a data store ID.
+     * @deprecated use CBHex160::random()
+     *
+     * @return {hex160}
      */
-    public static function random160()
-    {
-        $bytes = openssl_random_pseudo_bytes(20);
-
-        return bin2hex($bytes);
+    public static function random160() {
+        return CBHex160::random();
     }
 
     /**
