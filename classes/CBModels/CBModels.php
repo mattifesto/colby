@@ -12,6 +12,39 @@
 final class CBModels {
 
     /**
+     * Creates either the permanent or a temporary CBModels table.
+     *
+     * @return null
+     */
+    public static function createModelsTable($temporary = false) {
+        $name           = $temporary ? 'CBModelsTemp' : 'CBModels';
+        $options        = $temporary ? 'TEMPORARY' : '';
+        $existsColumn   = $temporary ? '`exists` BOOLEAN NOT NULL DEFAULT FALSE,' : '';
+        $SQL            = <<<EOT
+
+            CREATE {$options} TABLE IF NOT EXISTS `{$name}`
+            (
+                `ID`        BINARY(20) NOT NULL,
+                `className` VARCHAR(80) NOT NULL,
+                `created`   BIGINT NOT NULL,
+                `modified`  BIGINT NOT NULL,
+                `title`     TEXT NOT NULL,
+                `version`   BIGINT UNSIGNED NOT NULL,
+                {$existsColumn}
+                PRIMARY KEY                 (`ID`),
+                KEY `className_created`     (`className`, `created`),
+                KEY `className_modified`    (`className`, `modified`)
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8
+            COLLATE=utf8_unicode_ci
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
      * @return [<int>]
      */
     private static function fetchCreatedTimestampsForIDs(array $IDs) {

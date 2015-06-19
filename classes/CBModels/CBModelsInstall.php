@@ -1,33 +1,13 @@
 <?php
 
-$SQL = <<<EOT
-
-    CREATE TABLE IF NOT EXISTS `CBModels`
-    (
-        `ID`        BINARY(20) NOT NULL,
-        `className` VARCHAR(80) NOT NULL,
-        `created`   BIGINT NOT NULL,
-        `modified`  BIGINT NOT NULL,
-        `title`     TEXT NOT NULL,
-        `version`   BIGINT NOT NULL,
-        PRIMARY KEY                 (`ID`),
-        KEY `className_created`     (`className`, `created`),
-        KEY `className_modified`    (`className`, `modified`)
-    )
-    ENGINE=InnoDB
-    DEFAULT CHARSET=utf8
-    COLLATE=utf8_unicode_ci
-
-EOT;
-
-Colby::query($SQL);
+CBModels::createModelsTable();
 
 $SQL = <<<EOT
 
     CREATE TABLE IF NOT EXISTS `CBModelVersions`
     (
         `ID`            BINARY(20) NOT NULL,
-        `version`       BIGINT NOT NULL,
+        `version`       BIGINT UNSIGNED NOT NULL,
         `modelAsJSON`   LONGTEXT NOT NULL,
         `specAsJSON`    LONGTEXT NOT NULL,
         `timestamp`     BIGINT NOT NULL,
