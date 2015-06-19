@@ -16,11 +16,22 @@ final class CBAdminPageForModels {
 
         include CBSystemDirectory . '/sections/admin-page-settings.php';
 
+        CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForModels.js'));
+
         $spec                           = new stdClass();
         $spec->selectedMenuItemName     = 'edit';
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
+        echo '<main></main>';
+
         CBAdminPageFooterView::renderModelAsHTML();
         CBHTMLOutput::render();
+    }
+
+    /**
+     * @return {string}
+     */
+    public static function URL($filename) {
+        return CBSystemURL . "/classes/CBAdminPageForModels/{$filename}";
     }
 }
