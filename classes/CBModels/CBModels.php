@@ -273,10 +273,12 @@ EOT;
         }
 
         array_walk($tuples, function($tuple) use ($initialDataByID, $modified) {
-            $ID                                                 = $tuple->spec->ID;
-            $tuple->model->ID                                   = $ID;
+            $ID                     = $tuple->spec->ID;
+            $tuple->model->ID       = $ID;
+            $title                  = isset($tuple->spec->title) ? $tuple->spec->title : '';
             $tuple->spec->created   = $tuple->model->created    = $initialDataByID[$ID]->created;
             $tuple->spec->modified  = $tuple->model->modified   = $modified;
+            $tuple->spec->title     = $tuple->model->title      = $title;
             $tuple->spec->version   = $tuple->model->version    = $initialDataByID[$ID]->version + 1;
         });
 

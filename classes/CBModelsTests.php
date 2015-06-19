@@ -20,7 +20,7 @@ final class CBModelsTests {
         $specs = CBModels::fetchSpecsByID(CBModelsTests::testModelIDs, [
             'createSpecForIDCallback' => function($ID) {
                 $spec           = CBModels::modelWithClassName('CBModelTest', ['ID' => $ID]);
-                $spec->title    = "Title {$ID}";
+                $spec->name     = "Name {$ID}";
                 return $spec;
             }
         ]);
@@ -279,21 +279,37 @@ final class CBModelTest {
      */
     public static function checkModelWithID(stdClass $model, $ID, $version = false) {
         if ($model->ID !== $ID) {
-            throw new Exception('Incorrect model ID');
+            throw new Exception(__METHOD__ . ' Incorrect model ID');
         }
 
-        if ($model->title !== "Title {$ID}") {
-            throw new Exception('Incorrect title');
+        if ($model->className !== __CLASS__) {
+            throw new Exception(__METHOD__ . ' Incorrect `className` property');
         }
 
-        if ($model->titleAsHTML !== "Title {$ID}") {
-            throw new Exception('Incorrect titleAsHTML');
+        if (!isset($model->created) || !is_int($model->created)) {
+            throw new Exception(__METHOD__ . ' Incorrect `created` property');
+        }
+
+        if (!isset($model->modified) || !is_int($model->modified)) {
+            throw new Exception(__METHOD__ . ' Incorrect `modified` property');
+        }
+
+        if ($model->name !== "Name {$ID}") {
+            throw new Exception(__METHOD__ . ' Incorrect `name` property');
+        }
+
+        if ($model->nameAsHTML !== "Name {$ID}") {
+            throw new Exception(__METHOD__ . ' Incorrect `nameAsHTML` property');
+        }
+
+        if (!isset($model->title)) {
+            throw new Exception(__METHOD__ . ' Incorrect `title` property');
         }
 
         if ($version !== false && $model->version !== $version) {
             $actual     = json_encode($model->version);
             $expected   = json_encode($version);
-            throw new Exception("Model version: {$actual}, Expected version: {$expected}");
+            throw new Exception(__METHOD__ . " Model version: {$actual}, Expected version: {$expected}");
         }
     }
 
@@ -302,8 +318,8 @@ final class CBModelTest {
      */
     public static function specToModel(stdClass $spec) {
         $model              = CBModels::modelWithClassName(__CLASS__);
-        $model->title       = isset($spec->title) ? (string)$spec->title : '';
-        $model->titleAsHTML = ColbyConvert::textToHTML($model->title);
+        $model->name        = isset($spec->name) ? (string)$spec->name : '';
+        $model->nameAsHTML  = ColbyConvert::textToHTML($model->name);
 
         return $model;
     }
