@@ -10,6 +10,17 @@ final class CBAdminPageForModels {
      * @return null
      */
     public static function renderModelAsHTML() {
-        echo 'Hello, world!';
+        CBHTMLOutput::setTitleHTML('Edit');
+        CBHTMLOutput::setDescriptionHTML('Edit models');
+        CBHTMLOutput::begin();
+
+        include CBSystemDirectory . '/sections/admin-page-settings.php';
+
+        $spec                           = new stdClass();
+        $spec->selectedMenuItemName     = 'edit';
+        CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
+
+        CBAdminPageFooterView::renderModelAsHTML();
+        CBHTMLOutput::render();
     }
 }
