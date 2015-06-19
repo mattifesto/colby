@@ -19,7 +19,6 @@ final class CBModels {
     public static function createModelsTable($temporary = false) {
         $name           = $temporary ? 'CBModelsTemp' : 'CBModels';
         $options        = $temporary ? 'TEMPORARY' : '';
-        $existsColumn   = $temporary ? '`exists` BOOLEAN NOT NULL DEFAULT FALSE,' : '';
         $SQL            = <<<EOT
 
             CREATE {$options} TABLE IF NOT EXISTS `{$name}`
@@ -30,7 +29,6 @@ final class CBModels {
                 `modified`  BIGINT NOT NULL,
                 `title`     TEXT NOT NULL,
                 `version`   BIGINT UNSIGNED NOT NULL,
-                {$existsColumn}
                 PRIMARY KEY                 (`ID`),
                 KEY `className_created`     (`className`, `created`),
                 KEY `className_modified`    (`className`, `modified`)
@@ -177,25 +175,6 @@ EOT;
     }
 
     /**
-     * This function inserts new rows in the CBModels table for new models that
-     * are being saved for the first time. This is the only function that
-     * inserts rows into the table. The rows will be updated before the save
-     * process is completed.
-     *
-     * @return null
-     */
-    private static function insertNewModels($IDs, $created) {
-        $values = array_map(function($ID) use ($created) {
-            $IDAsSQL = CBHex160::toSQL($ID);
-            return "({$IDAsSQL}, 'new model', {$created}, {$created}, '', 0)";
-        }, $IDs);
-
-        $values = implode(',', $values);
-
-        Colby::query("INSERT INTO `CBModels` VALUES {$values}");
-    }
-
-    /**
      * @return null
      */
     public static function install() {
@@ -218,7 +197,7 @@ EOT;
 
 EOT;
 
-        $initialDataByID = CBDB::SQLToArray($SQL);
+        $initialDataByID = CBDB::SQLToObjects($SQL, ['keyField' => 'ID']);
 
         if (count($initialDataByID) != count($IDs)) {
             $newIDs = array_diff($IDs, array_keys($initialDataByID));
@@ -226,8 +205,6 @@ EOT;
             foreach ($newIDs as $ID) {
                 $initialDataByID[$ID] = (object)['created' => $modified, 'version' => 0];
             }
-
-            self::insertNewModels($newIDs, /* created: */ $modified);
         }
 
         return $initialDataByID;
@@ -354,6 +331,8 @@ EOT;
      * @param [{'spec' : {stdClass}, 'model' : {stdClass}}] $tuples
      */
     private static function saveToDatabase(array $tuples) {
+        /* 1: CBModelVersions */
+
         $values     = array_map(function($tuple) {
             $IDAsSQL                = CBHex160::toSQL($tuple->spec->ID);
             $modelAsJSONAsSQL       = CBDB::stringToSQL(json_encode($tuple->model));
@@ -361,14 +340,46 @@ EOT;
 
             return "({$IDAsSQL}, {$tuple->spec->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->spec->modified})";
         }, $tuples);
-
         $values     = implode(',', $values);
 
         Colby::query("INSERT INTO `CBModelVersions` VALUES {$values}");
 
-        $IDs        = array_map(function ($tuple) { return $tuple->spec->ID; }, $tuples);
-        $IDsAsSQL   = CBHex160::toSQL($IDs);
+        /* 2: CBModels */
 
-        Colby::query("UPDATE `CBModels` SET `version` = `version` + 1 WHERE `ID` IN ($IDsAsSQL)");
+        $values     = array_map(function($tuple) {
+            $IDAsSQL                = CBHex160::toSQL($tuple->spec->ID);
+            $classNameAsSQL         = CBDB::stringToSQL($tuple->spec->className);
+            $titleAsSQL             = CBDB::stringToSQL($tuple->spec->title);
+
+            return "({$IDAsSQL}, {$classNameAsSQL}, {$tuple->spec->created}, {$tuple->spec->modified}, {$titleAsSQL}, {$tuple->spec->version})";
+        }, $tuples);
+        $values     = implode(',', $values);
+
+        CBModels::createModelsTable(/* temporary: */ true);
+        Colby::query("INSERT INTO `CBModelsTemp` VALUES {$values}");
+
+        $SQL = <<<EOT
+
+            UPDATE  `CBModels`      AS `m`
+            JOIN    `CBModelsTemp`  AS `t` ON `m`.`ID` = `t`.`ID`
+            SET     `m`.`className` = `t`.`className`,
+                    `m`.`modified`  = `t`.`modified`,
+                    `m`.`title`     = `t`.`title`,
+                    `m`.`version`   = `t`.`version`
+
+EOT;
+
+        Colby::query($SQL);
+
+        $SQL = <<<EOT
+
+            INSERT INTO `CBModels`
+            SELECT      `ID`, `className`, `created`, `modified`, `title`, `version`
+            FROM        `CBModelsTemp`
+            WHERE       `version` = 1
+
+EOT;
+
+        Colby::query($SQL);
     }
 }
