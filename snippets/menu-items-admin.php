@@ -24,7 +24,7 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
 }
 
 $CBAdminMenu->pages             = newMenuItem('Pages', '/admin/pages/unpublished/', $pagesMenu);
-
+$CBAdminMenu->edit              = newMenuItem('Edit', '/admin/models/');
 
 $helpMenu                   = new stdClass();
 $menuItemID                 = 'markaround-syntax';
