@@ -1,6 +1,9 @@
-.CBAdminPageForModelsUI select {
-    display:    block;
-    margin:     0 auto;
+.CBAdminPageForModelsUI .menu {
+    text-align: center;
+}
+
+.CBAdminPageForModelsUI .menu > * {
+    margin: 0 5px;
 }
 
 .CBAdminPageForModelsUI h1 {
