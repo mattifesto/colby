@@ -13,7 +13,8 @@ final class CBAdminPageForModels {
      */
     private static function editableClasses() {
         return [
-            ['title' => 'Menus', 'className' => 'CBMenu']
+            ['className' => 'CBMenu',       'title' => 'Menus'],
+            ['className' => 'CBViewPage',   'title' => 'Pages']
         ];
     }
 
