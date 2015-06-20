@@ -5,9 +5,7 @@ class CBAdminPageForEditingModels {
     /**
      * @return null
      */
-    private static function loadEditingResourcesForSpec($spec) {
-        $className = $spec->className;
-
+    private static function loadEditingResourcesForClassName($className) {
         if (is_callable($function = "{$className}::editorURLsForCSS")) {
             $URLs = call_user_func($function);
             array_walk($URLs, 'CBHTMLOutput::addCSSURL');
@@ -22,27 +20,27 @@ class CBAdminPageForEditingModels {
     /**
      * @return {stdClass} | exit
      */
-    private static function makeSpec() {
+    private static function fetchClassName() {
         $className  = isset($_GET['className']) ? $_GET['className'] : null;
         $ID         = isset($_GET['ID']) ? $_GET['ID'] : null;
 
         if ($ID === null && $className === null) {
             throw new InvalidArgumentException('Either `ID` or `className` must be specified.');
         } else if ($ID === null) {
-            $ID = Colby::random160();
+            $ID = CBHex160::random();
             header("Location: /admin/models/edit/?ID={$ID}&className={$className}");
             exit();
         } else {
             $spec = CBModels::fetchSpecByID($ID);
 
-            if ($spec === false && $className === null) {
+            if ($spec) {
+                return $spec->className;
+            } else if ($className) {
+                return $className;
+            } else {
                 throw new InvalidArgumentException('A `className` must be specified for a new model.');
-            } else if ($spec === false) {
-                $spec = CBModels::modelWithClassName($className, ['ID' => $ID]);
             }
         }
-
-        return $spec;
     }
 
     /**
@@ -53,9 +51,15 @@ class CBAdminPageForEditingModels {
             return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
         }
 
-        $spec = CBAdminPageForEditingModels::makeSpec();
+        $className = CBAdminPageForEditingModels::fetchClassName();
 
-        // TODO: if (!CBAdminPageForEditingModels::useCanEditSpec($spec)) { ... }
+        if (is_callable($function = "{$className}::editorGroup")) {
+            $group = call_user_func($function);
+
+            if (!ColbyUser::current()->isOneOfThe($group)) {
+                return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
+            }
+        }
 
         CBHTMLOutput::setTitleHTML('Edit Model');
         CBHTMLOutput::setDescriptionHTML('Edit a model');
@@ -63,11 +67,13 @@ class CBAdminPageForEditingModels {
 
         include CBSystemDirectory . '/sections/admin-page-settings.php';
 
+        $spec                           = new stdClass();
+        $spec->selectedMenuItemName     = 'edit';
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel(new stdClass()));
 
         CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForEditingModels.js'));
 
-        CBAdminPageForEditingModels::loadEditingResourcesForSpec($spec);
+        CBAdminPageForEditingModels::loadEditingResourcesForClassName($className);
 
         echo '<main>Hello, world!</main>';
 
@@ -79,6 +85,6 @@ class CBAdminPageForEditingModels {
      * @return {string}
      */
     public static function URL($filename) {
-        return CBSystemURL . "classes/CBAdminPageForEditingModels/{$filename}";
+        return CBSystemURL . "/classes/CBAdminPageForEditingModels/{$filename}";
     }
 }
