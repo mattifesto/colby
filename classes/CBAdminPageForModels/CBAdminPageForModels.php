@@ -31,6 +31,7 @@ final class CBAdminPageForModels {
         CBHTMLOutput::addCSSURL(self::URL('CBAdminPageForModels.css'));
         CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForModels.js'));
         CBHTMLOutput::exportVariable('CBEditableClasses', self::editableClasses());
+
         $spec                           = new stdClass();
         $spec->selectedMenuItemName     = 'edit';
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
