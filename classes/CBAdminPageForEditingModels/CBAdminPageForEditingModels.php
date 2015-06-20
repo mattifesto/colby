@@ -30,15 +30,15 @@ class CBAdminPageForEditingModels {
             throw new InvalidArgumentException('Either `ID` or `className` must be specified.');
         } else if ($ID === null) {
             $ID = Colby::random160();
-            header("Location: /admin/edit?ID={$ID}&className={$className}");
+            header("Location: /admin/models/edit/?ID={$ID}&className={$className}");
             exit();
         } else {
-            $spec = CBModels::fetchSpec($ID);
+            $spec = CBModels::fetchSpecByID($ID);
 
             if ($spec === false && $className === null) {
                 throw new InvalidArgumentException('A `className` must be specified for a new model.');
             } else if ($spec === false) {
-                $spec = CBView::modelWithClassName($className);
+                $spec = CBModels::modelWithClassName($className, ['ID' => $ID]);
             }
         }
 
