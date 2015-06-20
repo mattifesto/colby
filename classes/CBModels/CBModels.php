@@ -131,7 +131,7 @@ EOT;
      *
      * @return {stdClass} | false
      */
-    public static function fetchSpecByID($ID, $args) {
+    public static function fetchSpecByID($ID, $args = []) {
         $specs = CBModels::fetchSpecsByID([$ID], $args);
 
         if (empty($specs)) {
@@ -149,7 +149,7 @@ EOT;
      *
      * @return [<hex160> => {stdClass}, ...]
      */
-    public static function fetchSpecsByID(array $IDs, $args) {
+    public static function fetchSpecsByID(array $IDs, $args = []) {
         $createSpecForIDCallback = null;
         extract($args, EXTR_IF_EXISTS);
 
