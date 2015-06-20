@@ -7,6 +7,17 @@
 final class CBAdminPageForModels {
 
     /**
+     * @deprecated This should be replaced with an editable model or something.
+     *
+     * @return {array}
+     */
+    private static function editableClasses() {
+        return [
+            ['title' => 'Menus', 'className' => 'CBMenu']
+        ];
+    }
+
+    /**
      * @return null
      */
     public static function renderModelAsHTML() {
@@ -16,8 +27,9 @@ final class CBAdminPageForModels {
 
         include CBSystemDirectory . '/sections/admin-page-settings.php';
 
+        CBHTMLOutput::addCSSURL(self::URL('CBAdminPageForModels.css'));
         CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForModels.js'));
-
+        CBHTMLOutput::exportVariable('CBEditableClasses', self::editableClasses());
         $spec                           = new stdClass();
         $spec->selectedMenuItemName     = 'edit';
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
