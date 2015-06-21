@@ -175,6 +175,23 @@ EOT;
     }
 
     /**
+     * @return {stdClass}
+     */
+    public static function fetchSpecForAjax() {
+        $response                   = new CBAjaxResponse();
+        $response->spec             = CBModels::fetchSpecByID($_POST['ID']);
+        $response->wasSuccessful    = true;
+        $response->send();
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function fetchSpecForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * @return null
      */
     public static function install() {
