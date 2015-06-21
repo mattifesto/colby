@@ -20,7 +20,8 @@ class CBAdminPageForEditingModels {
     /**
      * @return {stdClass} | exit
      */
-    private static function fetchClassName() {
+    private static function fetchArguments() {
+        $args       = new stdClass();
         $className  = isset($_GET['className']) ? $_GET['className'] : null;
         $ID         = isset($_GET['ID']) ? $_GET['ID'] : null;
 
@@ -31,15 +32,18 @@ class CBAdminPageForEditingModels {
             header("Location: /admin/models/edit/?ID={$ID}&className={$className}");
             exit();
         } else {
-            $spec = CBModels::fetchSpecByID($ID);
+            $args->ID   = $ID;
+            $spec       = CBModels::fetchSpecByID($ID);
 
             if ($spec) {
-                return $spec->className;
+                $args->className = $spec->className;
             } else if ($className) {
-                return $className;
+                $args->className = $className;
             } else {
                 throw new InvalidArgumentException('A `className` must be specified for a new model.');
             }
+
+            return $args;
         }
     }
 
@@ -51,9 +55,9 @@ class CBAdminPageForEditingModels {
             return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
         }
 
-        $className = CBAdminPageForEditingModels::fetchClassName();
+        $args = CBAdminPageForEditingModels::fetchArguments();
 
-        if (is_callable($function = "{$className}::editorGroup")) {
+        if (is_callable($function = "{$args->className}::editorGroup")) {
             $group = call_user_func($function);
 
             if (!ColbyUser::current()->isOneOfThe($group)) {
@@ -67,15 +71,18 @@ class CBAdminPageForEditingModels {
 
         include CBSystemDirectory . '/sections/admin-page-settings.php';
 
+        CBHTMLOutput::exportVariable('CBModelID',           $args->ID);
+        CBHTMLOutput::exportVariable('CBModelClassName',    $args->className);
+
         $spec                           = new stdClass();
         $spec->selectedMenuItemName     = 'edit';
-        CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel(new stdClass()));
+        CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
         CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForEditingModels.js'));
 
-        CBAdminPageForEditingModels::loadEditingResourcesForClassName($className);
+        CBAdminPageForEditingModels::loadEditingResourcesForClassName($args->className);
 
-        echo '<main>Hello, world!</main>';
+        echo '<main></main>';
 
         CBAdminPageFooterView::renderModelAsHTML();
         CBHTMLOutput::render();
