@@ -114,7 +114,7 @@ final class CBDB {
 
         while ($object = $result->fetch_object()) {
             if ($keyField) {
-                $key            = $object[$keyField];
+                $key            = $object->{$keyField};
                 $objects[$key]  = $object;
             } else {
                 $objects[]      = $object;
