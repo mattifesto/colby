@@ -8,12 +8,12 @@ class CBAdminPageForEditingModels {
     private static function loadEditingResourcesForClassName($className) {
         if (is_callable($function = "{$className}::editorURLsForCSS")) {
             $URLs = call_user_func($function);
-            array_walk($URLs, 'CBHTMLOutput::addCSSURL');
+            array_walk($URLs, function($URL) { CBHTMLOutput::addCSSURL($URL); });
         }
 
         if (is_callable($function = "{$className}::editorURLsForJavaScript")) {
             $URLs = call_user_func($function);
-            array_walk($URLs, 'CBHTMLOutput::addJavaScriptURL');
+            array_walk($URLs, function($URL) { CBHTMLOutput::addJavaScriptURL($URL); });
         }
     }
 
@@ -73,14 +73,12 @@ class CBAdminPageForEditingModels {
 
         CBHTMLOutput::exportVariable('CBModelID',           $args->ID);
         CBHTMLOutput::exportVariable('CBModelClassName',    $args->className);
+        CBAdminPageForEditingModels::loadEditingResourcesForClassName($args->className);
+        CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForEditingModels.js'));
 
         $spec                           = new stdClass();
         $spec->selectedMenuItemName     = 'edit';
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
-
-        CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForEditingModels.js'));
-
-        CBAdminPageForEditingModels::loadEditingResourcesForClassName($args->className);
 
         echo '<main></main>';
 
