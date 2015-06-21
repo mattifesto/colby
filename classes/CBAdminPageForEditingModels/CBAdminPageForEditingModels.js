@@ -60,12 +60,34 @@ var CBAdminPageForEditingModels = {
      *
      * @return  undefined
      */
-    renderEditor : function(args) {
-        var main = document.getElementsByTagName("main")[0];
+    handleSpecChanged : function(args) {
+        console.log("Spec changed");
+    },
 
-        main.appendChild(CBAdminPageForEditingModels.createEditor({
-            spec : args.spec
-        }));
+    /**
+     * @param   {Object} spec
+     *
+     * @return  undefined
+     */
+    renderEditor : function(args) {
+        var main            = document.getElementsByTagName("main")[0];
+        var editorFactory   = window[args.spec.className + "EditorFactory"];
+        var editor          = undefined;
+
+        if (editorFactory && editorFactory.createEditor) {
+            editor = editorFactory.createEditor({
+                handleSpecChanged   : CBAdminPageForEditingModels.handleSpecChanged.bind(undefined, {
+                    spec            : args.spec
+                }),
+                spec                : args.spec
+            });
+        } else {
+            editor = CBAdminPageForEditingModels.createEditor({
+                spec : args.spec
+            });
+        }
+
+        main.appendChild(editor);
     }
 }
 
