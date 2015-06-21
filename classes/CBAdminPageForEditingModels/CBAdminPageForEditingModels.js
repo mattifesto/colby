@@ -89,6 +89,6 @@ var CBAdminPageForEditingModels = {
 
         main.appendChild(editor);
     }
-}
+};
 
 document.addEventListener("DOMContentLoaded", CBAdminPageForEditingModels.handleDOMContentLoaded);
