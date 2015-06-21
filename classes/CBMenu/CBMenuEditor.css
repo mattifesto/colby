@@ -1,0 +1,9 @@
+.CBMenuEditor > .CBStringEditor {
+    margin: 0 auto;
+    width:  480px;
+}
+
+.CBMenuEditor > .CBStringEditor input {
+    padding:    5px;
+    width:      100%;
+}
