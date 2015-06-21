@@ -207,7 +207,7 @@ EOT;
         $IDsAsSQL   = CBHex160::toSQL($IDs);
         $SQL        = <<<EOT
 
-            SELECT  LOWER(HEX(`ID`)), `created`, `version`
+            SELECT  LOWER(HEX(`ID`)) AS `ID`, `created`, `version`
             FROM    `CBModels`
             WHERE   `ID` IN ({$IDsAsSQL})
             FOR UPDATE
@@ -268,8 +268,8 @@ EOT;
         $initialDataByID    = CBModels::selectInitialDataForUpdateByID($IDs, $modified);
 
         array_walk($specs, function($spec) use ($initialDataByID) {
-            $specVersion    = isset($spec->version) ? $specVersion : 0;
-            $tableVersion   = $initialDataByID[$spec->ID]->version;
+            $specVersion    = isset($spec->version) ? $spec->version : 0;
+            $tableVersion   = (int)$initialDataByID[$spec->ID]->version;
 
             if ($specVersion !== $tableVersion) {
                 throw new RuntimeException('CBModelVersionMismatch');
@@ -314,7 +314,7 @@ EOT;
         try {
             CBModels::save([$spec]);
         } catch (Exception $exception) {
-            if ($excption->message === 'CBModelVersionMismatch') {
+            if ($exception->getMessage() === 'CBModelVersionMismatch') {
                 $response->wasSuccessful    = false;
                 $response->message          = 'This model has been updated since it was fetched.';
                 $response->code             = 'version mismatch';
