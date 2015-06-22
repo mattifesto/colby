@@ -19,6 +19,36 @@ final class CBAdminPageForModels {
     }
 
     /**
+     * @return {stdClass}
+     */
+    public static function fetchModelListForAjax() {
+        $response                   = new CBAjaxResponse();
+        $className                  = $_POST['className'];
+        $classNameAsSQL             = CBDB::stringToSQL($className);
+        $pageNumber                 = (int)$_POST['pageNumber'];
+        $SQL                        = <<<EOT
+
+            SELECT      LOWER(HEX(`ID`)) AS `ID`, `created`, `modified`, `title`
+            FROM        `CBModels`
+            WHERE       `className` = {$classNameAsSQL}
+            ORDER BY    `className`, `modified` DESC
+            LIMIT       20
+
+EOT;
+
+        $response->models           = CBDB::SQLToObjects($SQL);
+        $response->wasSuccessful    = true;
+        $response->send();
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function fetchModelListForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * @return null
      */
     public static function renderModelAsHTML() {
