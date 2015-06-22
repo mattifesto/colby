@@ -52,6 +52,10 @@ EOT;
      * @return null
      */
     public static function renderModelAsHTML() {
+        if (!ColbyUser::current()->isOneOfThe('Administrators')) {
+            return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
+        }
+
         CBHTMLOutput::setTitleHTML('Edit');
         CBHTMLOutput::setDescriptionHTML('Edit models');
         CBHTMLOutput::begin();
