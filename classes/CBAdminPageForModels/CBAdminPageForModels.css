@@ -10,3 +10,8 @@
     padding:    20px 0;
     text-align: center;
 }
+
+.CBAdminPageForModelsUI table {
+    margin:     0 auto;
+    width:      960px;
+}
