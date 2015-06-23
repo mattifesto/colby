@@ -1,0 +1,44 @@
+<?php
+
+final class CBMenuItem {
+
+    /**
+     * @return [{string}]
+     */
+    public static function editorURLsForCSS() {
+        return [
+            CBMenu::URL('CBMenuItemEditor.css')
+        ];
+    }
+
+    /**
+     * @return [{string}]
+     */
+    public static function editorURLsForJavaScript() {
+        return [
+            CBSystemURL . '/javascript/CBStringEditorFactory.js',
+            CBMenu::URL('CBMenuItemEditorFactory.js')
+        ];
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function specToModel(stdClass $spec) {
+        $model              = CBModels::modelWithClassName(__CLASS__);
+        $model->name        = isset($spec->name) ? (string)$spec->name : '';
+        $model->text        = isset($spec->text) ? (string)$spec->text : '';
+        $model->textAsHTML  = ColbyConvert::textToHTML($model->text);
+        $model->URL         = isset($spec->URL) ? (string)$spec->URL : '';
+        $model->URLAsHTML   = ColbyConvert::textAsHTML($model->URL);
+
+        return $model;
+    }
+
+    /**
+     * @return {string}
+     */
+    public static function URL($filename) {
+        return CBSystemURL . "/classes/CBMenuItem/{$filename}";
+    }
+}
