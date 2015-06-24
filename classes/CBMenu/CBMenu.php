@@ -6,19 +6,26 @@ final class CBMenu {
      * @return [{string}]
      */
     public static function editorURLsForCSS() {
-        return [
-            CBMenu::URL('CBMenuEditor.css')
-        ];
+        return array_merge(
+            [
+                CBMenu::URL('CBMenuEditor.css')
+            ],
+            CBMenuItem::editorURLsForCSS()
+        );
     }
 
     /**
      * @return [{string}]
      */
     public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBMenu::URL('CBMenuEditorFactory.js')
-        ];
+        return array_merge(
+            [
+                CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
+                CBSystemURL . '/javascript/CBStringEditorFactory.js',
+                CBMenu::URL('CBMenuEditorFactory.js')
+            ],
+            CBMenuItem::editorURLsForJavaScript()
+        );
     }
 
     /**
