@@ -4,6 +4,7 @@ var CBSpecArrayEditorFactory = {
 
     /**
      * @param   {Array}     array
+     * @param   {Array}     classNames
      * @param   {function}  handleChanged
      *
      * @return  {Element}
@@ -11,18 +12,66 @@ var CBSpecArrayEditorFactory = {
     createEditor : function(args) {
         var element         = document.createElement("div");
         element.className   = "CBArrayEditor";
+        var container       = document.createElement("div");
 
         args.array.forEach(function(spec) {
             var widgetElement = CBSpecArrayEditorFactory.createWidgetForSpec({
                 array           : args.array,
                 handleChanged   : args.handleChanged,
-                parentElement   : element,
+                parentElement   : container,
                 spec            : spec
             })
-            element.appendChild(widgetElement);
+            container.appendChild(widgetElement);
         });
 
+        var footer          = document.createElement("div");
+        var menu            = document.createElement("select");
+        var button          = document.createElement("button");
+        button.textContent  = "Insert";
+
+        button.addEventListener("click", CBSpecArrayEditorFactory.handleAppend.bind(undefined, {
+            array               : args.array,
+            handleArrayChanged  : args.handleChanged,
+            parentElement       : container,
+            selectElement       : menu
+        }));
+
+        args.classNames.forEach(function(className) {
+            var option          = document.createElement("option");
+            option.textContent  = className;
+            option.value        = className;
+            menu.appendChild(option);
+        });
+
+        footer.appendChild(menu);
+        footer.appendChild(button);
+        element.appendChild(container);
+        element.appendChild(footer);
+
         return element;
+    },
+
+    /**
+     * @param   {Array}     array
+     * @param   {function}  handleArrayChanged
+     * @param   {Element}   parentElement
+     * @param   {Element}   selectElement
+     *
+     * @return  undefined
+     */
+    handleAppend : function(args) {
+        var spec            = {
+            className       : args.selectElement.value
+        };
+        var widgetElement   = CBSpecArrayEditorFactory.createWidgetForSpec({
+            array           : args.array,
+            handleChanged   : args.handleArrayChanged,
+            parentElement   : args.parentElement,
+            spec            : spec
+        });
+
+        args.array.push(spec);
+        args.parentElement.appendChild(widgetElement);
     },
 
     /**
