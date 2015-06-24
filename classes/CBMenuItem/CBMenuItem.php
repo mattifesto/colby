@@ -7,7 +7,7 @@ final class CBMenuItem {
      */
     public static function editorURLsForCSS() {
         return [
-            CBMenu::URL('CBMenuItemEditor.css')
+            CBMenuItem::URL('CBMenuItemEditor.css')
         ];
     }
 
@@ -17,7 +17,7 @@ final class CBMenuItem {
     public static function editorURLsForJavaScript() {
         return [
             CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBMenu::URL('CBMenuItemEditorFactory.js')
+            CBMenuItem::URL('CBMenuItemEditorFactory.js')
         ];
     }
 
