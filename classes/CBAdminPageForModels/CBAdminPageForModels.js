@@ -21,7 +21,7 @@ var CBAdminPageForModels = {
             selectElement : select
         }));
 
-        CBEditableClasses.forEach(function(element, index) {
+        CBClassMenuItems.forEach(function(element, index) {
             var option          = document.createElement("option");
             option.textContent  = element.title;
             option.value        = index;
@@ -55,9 +55,9 @@ var CBAdminPageForModels = {
      * @return  undefined
      */
     handleClassChanged : function(args) {
-        args.titleElement.textContent = CBEditableClasses[args.selectElement.value].title;
+        args.titleElement.textContent = CBClassMenuItems[args.selectElement.value].title;
 
-        var className   = CBEditableClasses[args.selectElement.value].className;
+        var className   = CBClassMenuItems[args.selectElement.value].itemClassName;
         var formData    = new FormData();
         var xhr         = new XMLHttpRequest();
         xhr.onload      = CBAdminPageForModels.handleFetchListCompleted.bind(undefined, {
@@ -130,7 +130,7 @@ var CBAdminPageForModels = {
      * @return  undefined
      */
     handleNewClicked : function(args) {
-        var className           = CBEditableClasses[args.selectElement.value].className;
+        var className           = CBClassMenuItems[args.selectElement.value].itemClassName;
         window.location.href    = "/admin/models/edit/?className=" + className;
     }
 };

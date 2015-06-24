@@ -196,6 +196,7 @@ EOT;
      */
     public static function install() {
         include __DIR__ . '/CBModelsInstall.php';
+        CBModelsPreferences::install();
     }
 
     /**

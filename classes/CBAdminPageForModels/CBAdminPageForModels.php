@@ -11,11 +11,17 @@ final class CBAdminPageForModels {
      *
      * @return {array}
      */
-    private static function editableClasses() {
-        return [
-            ['className' => 'CBMenu',       'title' => 'Menus'],
-            ['className' => 'CBViewPage',   'title' => 'Pages']
-        ];
+    private static function classMenuItems() {
+        $model      = CBModels::fetchModelByID(CBModelsPreferences::ID);
+        $menuItems  = array_filter($model->classMenuItems, function($menuItem) {
+            if (empty($menuItem->group) || ColbyUser::current()->isOneOfThe($menuItem->group)) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        return $menuItems;
     }
 
     /**
@@ -64,7 +70,7 @@ EOT;
 
         CBHTMLOutput::addCSSURL(self::URL('CBAdminPageForModels.css'));
         CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForModels.js'));
-        CBHTMLOutput::exportVariable('CBEditableClasses', self::editableClasses());
+        CBHTMLOutput::exportVariable('CBClassMenuItems', self::classMenuItems());
 
         $spec                           = new stdClass();
         $spec->selectedMenuItemName     = 'edit';
