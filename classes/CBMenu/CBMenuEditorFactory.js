@@ -19,6 +19,16 @@ var CBMenuEditorFactory = {
             spec                : args.spec
         }));
 
+        if (!args.spec.items) {
+            args.spec.items = [];
+        }
+
+        element.appendChild(CBSpecArrayEditorFactory.createEditor({
+            array           : args.spec.items,
+            classNames      : ["CBMenuItem"],
+            handleChanged   : args.handleSpecChanged
+        }));
+
         return element;
     }
 };
