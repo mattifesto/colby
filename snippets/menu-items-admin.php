@@ -54,6 +54,7 @@ if (ColbyUser::current()->isOneOfThe('Developers'))
     $developMenu->groups            = newMenuItem('Groups', '/developer/groups/');
     $developMenu->model             = newMenuItem('Types', '/developer/models/');
     $developMenu->mysql             = newMenuItem('MySQL', '/developer/mysql/');
+    $developMenu->preferences       = newMenuItem('Preferences', '/developer/preferences/');
 
     $CBAdminMenu->develop = newMenuItem('Develop', '/admin/develop/php/', $developMenu);
 
