@@ -17,6 +17,7 @@ var CBSpecArrayEditorFactory = {
         args.array.forEach(function(spec) {
             var widgetElement = CBSpecArrayEditorFactory.createWidgetForSpec({
                 array           : args.array,
+                classNames      : args.classNames,
                 handleChanged   : args.handleChanged,
                 parentElement   : container,
                 spec            : spec
@@ -31,6 +32,7 @@ var CBSpecArrayEditorFactory = {
 
         button.addEventListener("click", CBSpecArrayEditorFactory.handleAppend.bind(undefined, {
             array               : args.array,
+            classNames          : args.classNames,
             handleArrayChanged  : args.handleChanged,
             parentElement       : container,
             selectElement       : menu
@@ -53,6 +55,7 @@ var CBSpecArrayEditorFactory = {
 
     /**
      * @param   {Array}     array
+     * @param   {Array}     classNames
      * @param   {function}  handleArrayChanged
      * @param   {Element}   parentElement
      * @param   {Element}   selectElement
@@ -65,6 +68,7 @@ var CBSpecArrayEditorFactory = {
         };
         var widgetElement   = CBSpecArrayEditorFactory.createWidgetForSpec({
             array           : args.array,
+            classNames      : args.classNames,
             handleChanged   : args.handleArrayChanged,
             parentElement   : args.parentElement,
             spec            : spec
@@ -76,8 +80,10 @@ var CBSpecArrayEditorFactory = {
 
     /**
      * @param   {Array}     array
+     * @param   {Array}     classNames
      * @param   {function}  handleArrayChanged
      * @param   {Element}   parentElement
+     * @param   {Element}   selectElement
      * @param   {Object}    spec
      *
      * @return  undefined
@@ -86,10 +92,11 @@ var CBSpecArrayEditorFactory = {
         var index           = args.array.indexOf(args.spec);
         var beforeElement   = args.parentElement.children.item(index);
         var spec            = {
-            className : "CBFabric"
+            className       : args.selectElement.value
         };
         var widgetElement   = CBSpecArrayEditorFactory.createWidgetForSpec({
             array           : args.array,
+            classNames      : args.classNames,
             handleChanged   : args.handleArrayChanged,
             parentElement   : args.parentElement,
             spec            : spec
@@ -207,6 +214,7 @@ var CBSpecArrayEditorFactory = {
 
     /**
      * @param   {Array}     array
+     * @param   {Array}     classNames
      * @param   {function}  handleChanged
      * @param   {Element}   parentElement
      * @param   {Object}    spec
@@ -214,12 +222,6 @@ var CBSpecArrayEditorFactory = {
      * @return  undefined
      */
     createWidgetForSpec : function(args) {
-        var handleInsert        = CBSpecArrayEditorFactory.handleInsert.bind(undefined, {
-            array               : args.array,
-            handleArrayChanged  : args.handleChanged,
-            parentElement       : args.parentElement,
-            spec                : args.spec
-        });
         var handleMoveDown      = CBSpecArrayEditorFactory.handleMoveDown.bind(undefined, {
             array               : args.array,
             handleArrayChanged  : args.handleChanged,
@@ -244,14 +246,35 @@ var CBSpecArrayEditorFactory = {
             spec                : args.spec
         });
 
+        var menu = document.createElement("select");
+
+        args.classNames.forEach(function(className) {
+            var option          = document.createElement("option");
+            option.textContent  = className;
+            option.value        = className;
+            menu.appendChild(option);
+        });
+
+        var insert          = document.createElement("button");
+        insert.textContent  = "Insert";
+
+        insert.addEventListener("click", CBSpecArrayEditorFactory.handleInsert.bind(undefined, {
+            array               : args.array,
+            classNames          : args.classNames,
+            handleArrayChanged  : args.handleChanged,
+            parentElement       : args.parentElement,
+            selectElement       : menu,
+            spec                : args.spec
+        }));
+
         return CBEditorWidgetFactory.createWidget({
-            handleInsert        : handleInsert,
             handleMoveDown      : handleMoveDown,
             handleMoveUp        : handleMoveUp,
             handleRemove        : handleRemove,
             handleSelect        : handleSelect,
             handleSpecChanged   : args.handleChanged,
-            spec                : args.spec
+            spec                : args.spec,
+            toolbarElements     : [menu, insert]
         });
     }
 };
