@@ -58,17 +58,22 @@ var CBEditorWidgetFactory = {
      * @param   {function}  handleSpecChanged
      * @param   {Object}    spec
      *
-     * @return  {Object}
+     * @return  {Element}
      */
     createEditor : function(args) {
         var editorFactory;
 
         if (args.spec.className !== undefined && (editorFactory = window[args.spec.className + "EditorFactory"])) {
-            editorFactory;
+            return editorFactory.createEditor(args);
         } else {
-            return undefined; // TODO: should be CBEditorFactory, the generic editor factory
-        }
+            var element         = document.createElement("div");
+            element.className   = "CBDefaultEditor";
+            var pre             = document.createElement("pre");
+            pre.textContent     = JSON.stringify(args.spec, null, 2);
 
-        return editorFactory.createEditor(args);
+            element.appendChild(pre);
+
+            return element;
+        }
     }
 };
