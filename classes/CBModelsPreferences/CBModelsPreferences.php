@@ -18,6 +18,7 @@ final class CBModelsPreferences {
      */
     public static function editorURLsForJavaScript() {
         return [
+            CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
             CBSystemURL . '/javascript/CBStringEditorFactory.js',
             CBModelsPreferences::URL('CBModelsPreferencesEditorFactory.js')
         ];
