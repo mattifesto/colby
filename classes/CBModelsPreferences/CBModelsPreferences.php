@@ -8,20 +8,24 @@ final class CBModelsPreferences {
      * @return [{string}]
      */
     public static function editorURLsForCSS() {
-        return [
-            CBModelsPreferences::URL('CBModelsPreferencesEditor.css')
-        ];
+        return array_merge([
+                CBModelsPreferences::URL('CBModelsPreferencesEditor.css')
+            ],
+            CBClassMenuItem::editorURLsForCSS()
+        );
     }
 
     /**
      * @return [{string}]
      */
     public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBModelsPreferences::URL('CBModelsPreferencesEditorFactory.js')
-        ];
+        return array_merge([
+                CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
+                CBSystemURL . '/javascript/CBStringEditorFactory.js',
+                CBModelsPreferences::URL('CBModelsPreferencesEditorFactory.js')
+            ],
+            CBClassMenuItem::editorURLsForJavaScript()
+        );
     }
 
     /**
