@@ -76,6 +76,8 @@ var CBSpecArrayEditorFactory = {
 
         args.array.push(spec);
         args.parentElement.appendChild(widgetElement);
+
+        args.handleArrayChanged.call();
     },
 
     /**
