@@ -1,5 +1,8 @@
 .CBEditorWidget {
     border:     2px solid hsl(0, 0%, 90%);
-    margin:     10px;
+    margin:     10px auto;
+    max-width:  -moz-max-content;
+    max-width:  -webkit-max-content;
+    max-width:  max-content;
     padding:    5px;
 }
