@@ -74,7 +74,8 @@ class CBAdminPageForEditingModels {
         CBHTMLOutput::exportVariable('CBModelID',           $args->ID);
         CBHTMLOutput::exportVariable('CBModelClassName',    $args->className);
         CBAdminPageForEditingModels::loadEditingResourcesForClassName($args->className);
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditorWidgetFactory.js');
+        CBHTMLOutput::addJavaScriptURL(CBSystemURL  . '/javascript/CBEditorWidgetFactory.js');
+        CBHTMLOutput::addCSSURL(CBSystemURL         . '/javascript/CBEditorWidget.css');
         CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForEditingModels.js'));
 
         $spec                           = new stdClass();
