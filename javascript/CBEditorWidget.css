@@ -1,8 +1,48 @@
 .CBEditorWidget {
-    border:     2px solid hsl(0, 0%, 90%);
-    margin:     10px auto;
-    max-width:  -moz-max-content;
-    max-width:  -webkit-max-content;
-    max-width:  max-content;
-    padding:    5px;
+    background-color:   hsl(0, 0%, 90%);
+    border:             1px solid hsl(0, 0%, 80%);
+    border-radius:      5px;
+    box-shadow:         3px 3px 10px rgba(0, 0, 0, 0.1);
+    margin:             30px auto;
+    max-width:          -moz-max-content;
+    max-width:          -webkit-max-content;
+    max-width:          max-content;
+    overflow:           hidden;
+}
+
+.CBEditorWidget.CBEditorWidgetSelected {
+    box-shadow:         3px 3px 10px rgba(0, 0, 0, 0.1),
+                        0 0 0 2px white,
+                        0 0 0 6px hsl(215, 100%, 90%);
+}
+
+.CBEditorWidget > h1,
+.CBEditorWidget > .toolbar {
+    background-color:   hsl(0, 0%, 95%);
+
+}
+
+.CBEditorWidget.CBEditorWidgetSelected > h1,
+.CBEditorWidget.CBEditorWidgetSelected > .toolbar {
+    background-color:   hsl(0, 0%, 85%);
+}
+
+.CBEditorWidget > h1 {
+    color:              hsl(0, 0%, 60%);
+    font-size:          14px;
+    font-weight:        400;
+    text-align:         center;
+}
+
+.CBEditorWidget.CBEditorWidgetSelected > h1 {
+    color:              hsl(0, 0%, 40%);
+}
+
+.CBEditorWidget > .toolbar {
+    border-bottom:      1px solid hsl(0, 0%, 80%);
+    padding:            3px 5px 5px;
+}
+
+.CBEditorWidget > .toolbar > * {
+    margin:             0 5px;
 }

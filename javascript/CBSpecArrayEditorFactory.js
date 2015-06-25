@@ -183,39 +183,6 @@ var CBSpecArrayEditorFactory = {
 
     /**
      * @param   {Array}     array
-     * @param   {Element}   parentElement
-     * @param   {Object}    spec
-     *
-     * @return  undefined
-     */
-    handleSelect : function(args) {
-        var element;
-        var elements    = args.parentElement.getElementsByClassName("CBEditorWidgetSelected");
-        var count       = elements.length;
-
-        for (var i = 0; i < count; i++) {
-            element = elements.item(i);
-            element.style.backgroundColor = "transparent";
-            element.classList.remove("CBEditorWidgetSelected");
-        }
-
-        var index = args.array.indexOf(args.spec);
-
-        /**
-         * If the user clicked on the remove button the remove handler will
-         * be executed first followed by this handler because of the click. In
-         * that case, the element will no longer be in the DOM when this code
-         * executes.
-         */
-        if (index > -1) {
-            element     = args.parentElement.children.item(index);
-            element.classList.add("CBEditorWidgetSelected");
-            element.style.backgroundColor = "hsl(210, 100%, 97%)";
-        }
-    },
-
-    /**
-     * @param   {Array}     array
      * @param   {Array}     classNames
      * @param   {function}  handleChanged
      * @param   {Element}   parentElement
@@ -239,11 +206,6 @@ var CBSpecArrayEditorFactory = {
         var handleRemove        = CBSpecArrayEditorFactory.handleRemove.bind(undefined, {
             array               : args.array,
             handleArrayChanged  : args.handleChanged,
-            parentElement       : args.parentElement,
-            spec                : args.spec
-        });
-        var handleSelect        = CBSpecArrayEditorFactory.handleSelect.bind(undefined, {
-            array               : args.array,
             parentElement       : args.parentElement,
             spec                : args.spec
         });
@@ -273,7 +235,6 @@ var CBSpecArrayEditorFactory = {
             handleMoveDown      : handleMoveDown,
             handleMoveUp        : handleMoveUp,
             handleRemove        : handleRemove,
-            handleSelect        : handleSelect,
             handleSpecChanged   : args.handleChanged,
             spec                : args.spec,
             toolbarElements     : [menu, insert]

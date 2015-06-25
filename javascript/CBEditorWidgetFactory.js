@@ -13,11 +13,10 @@ var CBEditorWidgetFactory = {
      * @return  {Element}
      */
     createWidget : function(args) {
-        var widgetElement       = document.createElement("div");
+        var widgetElement       = document.createElement("section");
         widgetElement.className = "CBEditorWidget";
-
-        // Create toolbar
-
+        var title               = document.createElement("h1");
+        title.textContent       = args.spec.className;
         var toolbar             = document.createElement("div");
         toolbar.className       = "toolbar";
 
@@ -46,14 +45,18 @@ var CBEditorWidgetFactory = {
             toolbar.appendChild(toolbarElement);
         });
 
-        if (args.handleSelect) {
-            widgetElement.addEventListener("click", args.handleSelect);
-            widgetElement.addEventListener("focusin", args.handleSelect);
-        }
+        var handleSelect     = CBEditorWidgetFactory.handleSelect.bind(undefined, {
+            handleSelect    : args.handleSelect,
+            widgetElement   : widgetElement
+        });
+
+        widgetElement.addEventListener("click", handleSelect);
+        widgetElement.addEventListener("focusin", handleSelect);
 
         var editorFactory   = window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
         var editor          = editorFactory.createEditor(args);
 
+        widgetElement.appendChild(title);
         widgetElement.appendChild(toolbar);
         widgetElement.appendChild(editor);
 
@@ -78,5 +81,26 @@ var CBEditorWidgetFactory = {
         element.appendChild(pre);
 
         return element;
+    },
+
+    /**
+     * @param   {function}  handleSelect
+     * @param   {Element}   widgetElement
+     *
+     * @return  undefined
+     */
+    handleSelect : function(args) {
+        var elements    = document.getElementsByClassName("CBEditorWidgetSelected");
+        var count       = elements.length;
+
+        for (var i = 0; i < count; i++) {
+            elements.item(i).classList.remove("CBEditorWidgetSelected");
+        }
+
+        args.widgetElement.classList.add("CBEditorWidgetSelected");
+
+        if (args.handleSelect) {
+            args.handleSelect.call();
+        }
     }
 };
