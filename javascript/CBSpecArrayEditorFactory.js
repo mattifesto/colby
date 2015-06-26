@@ -11,7 +11,7 @@ var CBSpecArrayEditorFactory = {
      */
     createEditor : function(args) {
         var element         = document.createElement("div");
-        element.className   = "CBArrayEditor";
+        element.className   = "CBSpecArrayEditor";
         var container       = document.createElement("div");
 
         args.array.forEach(function(spec) {
@@ -26,9 +26,10 @@ var CBSpecArrayEditorFactory = {
         });
 
         var footer          = document.createElement("div");
+        footer.className    = "footer";
         var menu            = document.createElement("select");
         var button          = document.createElement("button");
-        button.textContent  = "Insert";
+        button.textContent  = "Append";
 
         button.addEventListener("click", CBSpecArrayEditorFactory.handleAppend.bind(undefined, {
             array               : args.array,

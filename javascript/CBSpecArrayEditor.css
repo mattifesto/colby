@@ -1,0 +1,8 @@
+.CBSpecArrayEditor > .footer {
+    padding:    0 0 20px;
+    text-align: center;
+}
+
+.CBSpecArrayEditor > .footer > * {
+    margin: 0 5px;
+}
