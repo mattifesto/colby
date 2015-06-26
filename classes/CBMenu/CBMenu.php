@@ -8,6 +8,7 @@ final class CBMenu {
     public static function editorURLsForCSS() {
         return array_merge(
             [
+                CBSystemURL . '/javascript/CBSpecArrayEditor.css',
                 CBMenu::URL('CBMenuEditor.css')
             ],
             CBMenuItem::editorURLsForCSS()
