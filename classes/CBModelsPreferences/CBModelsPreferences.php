@@ -9,6 +9,7 @@ final class CBModelsPreferences {
      */
     public static function editorURLsForCSS() {
         return array_merge([
+                CBSystemURL . '/javascript/CBSpecArrayEditor.css',
                 CBModelsPreferences::URL('CBModelsPreferencesEditor.css')
             ],
             CBClassMenuItem::editorURLsForCSS()
