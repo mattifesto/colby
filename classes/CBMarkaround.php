@@ -3,8 +3,8 @@
 final class CBMarkaround {
 
     /**
-    @return string
-    */
+     * @return string
+     */
     private static function expressionForSpan($openExpression, $closeExpression) {
         return "/
 
@@ -71,11 +71,14 @@ final class CBMarkaround {
     }
 
     /**
-    @param {string} format
-        This specifies what kind of formatting the text uses. The only supported value currently is the default value `inline` which specifies to only format the inline markaround and not markaround for block level element, such as lists or block quotes.
-
-    @return string
-    */
+     * @param {string} format
+     *  This specifies what kind of formatting the text uses. The only supported
+     *  value currently is the default value `inline` which specifies to only
+     *  format the inline markaround and not markaround for block level element,
+     *  such as lists or block quotes.
+     *
+     * @return string
+     */
     public static function textToHTML($args) {
         $format = 'inline'; $text = '';
         extract($args);
