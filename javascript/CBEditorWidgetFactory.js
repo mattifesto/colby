@@ -15,6 +15,7 @@ var CBEditorWidgetFactory = {
     createWidget : function(args) {
         var widgetElement       = document.createElement("section");
         widgetElement.className = "CBEditorWidget";
+        var container           = document.createElement("div");
         var title               = document.createElement("h1");
         title.textContent       = args.spec.className;
         var toolbar             = document.createElement("div");
@@ -56,9 +57,10 @@ var CBEditorWidgetFactory = {
         var editorFactory   = window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
         var editor          = editorFactory.createEditor(args);
 
-        widgetElement.appendChild(title);
-        widgetElement.appendChild(toolbar);
-        widgetElement.appendChild(editor);
+        container.appendChild(title);
+        container.appendChild(toolbar);
+        container.appendChild(editor);
+        widgetElement.appendChild(container);
 
         return widgetElement;
     },
