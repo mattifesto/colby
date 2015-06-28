@@ -82,7 +82,17 @@ class CBAdminPageForEditingModels {
         $spec->selectedMenuItemName     = 'edit';
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
-        echo '<main></main>';
+        ?>
+
+        <style>
+            main > * {
+                margin-left:    auto;
+                margin-right:   auto;
+            }
+        </style>
+        <main></main>
+
+        <?php
 
         CBAdminPageFooterView::renderModelAsHTML();
         CBHTMLOutput::render();
