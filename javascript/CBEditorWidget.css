@@ -22,7 +22,7 @@
 .CBEditorWidget > div > h1,
 .CBEditorWidget > div > .toolbar {
     background-color:   hsl(0, 0%, 95%);
-
+    text-align:         center;
 }
 
 .CBEditorWidget.CBEditorWidgetSelected > div > h1,
@@ -34,7 +34,6 @@
     color:              hsl(0, 0%, 60%);
     font-size:          14px;
     font-weight:        400;
-    text-align:         center;
 }
 
 .CBEditorWidget.CBEditorWidgetSelected > div > h1 {
