@@ -1,3 +1,15 @@
+.CBSpecArrayEditor > .container {
+    align-items:            center;
+    -moz-align-items:       center;
+    -webkit-align-items:    center;
+    display:                flex;
+    display:                -moz-flex;
+    display:                -webkit-flex;
+    flex-direction:         column;
+    -moz-flex-direction:    column;
+    -webkit-flex-direction: column;
+}
+
 .CBSpecArrayEditor > .footer {
     padding:    20px 40px;
     text-align: center;

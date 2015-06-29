@@ -13,6 +13,7 @@ var CBSpecArrayEditorFactory = {
         var element         = document.createElement("div");
         element.className   = "CBSpecArrayEditor";
         var container       = document.createElement("div");
+        container.className = "container";
 
         args.array.forEach(function(spec) {
             var widgetElement = CBSpecArrayEditorFactory.createWidgetForSpec({
