@@ -40,6 +40,8 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBBooleanEditorFactory
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBContinuousAjaxRequest.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBCheckboxControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
+CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBEditorWidget.css');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditorWidgetFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBFileLinkControl.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBImageEditorFactory.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBImageEditorFactory.js');
@@ -76,7 +78,9 @@ foreach (CBViewPageViews::availableViewClassNames() as $className) {
 
     if (is_callable($function)) {
         $URLs = call_user_func($function);
-        array_walk($URLs, 'CBHTMLOutput::addJavaScriptURL');
+        array_walk($URLs, function($URL) {
+            CBHTMLOutput::addJavaScriptURL($URL);
+        });
     }
 
     $function = "{$className}::includeEditorDependencies";
