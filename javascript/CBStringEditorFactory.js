@@ -51,6 +51,30 @@ var CBStringEditorFactory = {
      *
      * @return {Element}
      */
+    createSelectEditor : function(args) {
+        var ID              = Colby.random160();
+        var element         = document.createElement("div");
+        element.className   = "CBStringEditor";
+        var label           = document.createElement("label");
+        label.htmlFor       = ID;
+        label.textContent   = args.labelText || "";
+        var select          = document.createElement("select");
+        select.id           = ID;
+
+        element.appendChild(label);
+        element.appendChild(select);
+
+        return element;
+    },
+
+    /**
+     * @param {function}    handleSpecChanged
+     * @param {string{      labelText
+     * @param {string}      propertyName
+     * @param {Object}      spec
+     *
+     * @return {Element}
+     */
     createSingleLineEditor : function(args) {
         var ID              = Colby.random160();
         var element         = document.createElement("div");
