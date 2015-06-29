@@ -1,0 +1,25 @@
+.CBTextBoxViewEditor {
+    border-top: 4px solid hsl(230, 50%, 80%);
+    box-sizing: border-box;
+    padding: 10px;
+    width: 480px;
+}
+
+.CBTextBoxViewEditor .CBStringEditor {
+    font-size: 14px;
+}
+
+.CBTextBoxViewEditor .CBStringEditor + .CBStringEditor {
+    margin-top: 10px;
+}
+
+.CBTextBoxViewEditor .CBStringEditor input,
+.CBTextBoxViewEditor .CBStringEditor textarea {
+    border: 1px solid hsl(0, 0%, 80%);
+    padding: 4px;
+    width: 100%;
+}
+
+.CBTextBoxViewEditor .CBStringEditor textarea {
+    height: 200px;
+}
