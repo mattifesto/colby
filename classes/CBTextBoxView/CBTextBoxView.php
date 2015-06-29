@@ -20,14 +20,34 @@ final class CBTextBoxView {
     }
 
     /**
+     * If the property value exists and is a number the property  value is
+     * returned; otherwise false is returned.
+     *
+     * @return {int} | {float} | {string} | false
+     */
+    public static function propertyToNumber($object, $property) {
+        if (isset($object->{$property})) {
+            $value = $object->{$property};
+
+            if (is_int($value) || is_float($value) || is_numeric(trim($value))) {
+                return $value;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
         $model                      = CBModels::modelWithClassName(__CLASS__);
-        $model->title               = isset($spec->title) ? $spec->title : '';
-        $model->titleAsHTML         = ColbyConvert::textToHTML($model->title);
         $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? $spec->contentAsMarkaround : '';
         $model->contentAsHTML       = CBMarkaround::textToHTML(['text' => $model->contentAsMarkaround]);
+        $model->height              = CBTextBoxView::propertyToNumber($spec, 'height');
+        $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? $spec->titleAsMarkaround : '';
+        $model->titleAsHTML         = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
+        $model->width               = CBTextBoxView::propertyToNumber($spec, 'width');
 
         return $model;
     }
@@ -36,9 +56,21 @@ final class CBTextBoxView {
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
+        $ID     = 'ID' . CBHex160::random();
+        $styles = [];
+
+        if ($model->height !== false) {
+            $styles[] = "#$ID { height: {$model->height}px; }";
+        }
+
+        if ($model->width !== false) {
+            $styles[] = "#$ID { width: {$model->width}px; }";
+        }
+
         ?>
 
-        <section>
+        <section id="<?= $ID ?>">
+            <style><?= implode(' ', $styles) ?></style>
             <h1><?= $model->titleAsHTML ?></h1>
             <div><?= $model->contentAsHTML ?></div>
         </section>
