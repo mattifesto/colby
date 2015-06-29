@@ -49,3 +49,8 @@
 .CBEditorWidget > div > .toolbar > * {
     margin:             0 5px;
 }
+
+.CBDefaultEditor {
+    font-size:  12px;
+    padding:    10px;
+}
