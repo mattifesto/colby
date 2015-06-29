@@ -8,8 +8,10 @@ final class CBBackgroundView {
     public static function includeEditorDependencies() {
         CBView::includeEditorDependencies();
 
-        CBHTMLOutput::addCSSURL(self::URL('CBBackgroundViewEditor.css'));
-        CBHTMLOutput::addJavaScriptURL(self::URL('CBBackgroundViewEditorFactory.js'));
+        CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBSpecArrayEditor.css');
+        CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js');
+        CBHTMLOutput::addCSSURL(        self::URL('CBBackgroundViewEditor.css'));
+        CBHTMLOutput::addJavaScriptURL( self::URL('CBBackgroundViewEditorFactory.js'));
     }
 
     /**

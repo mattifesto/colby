@@ -11,10 +11,6 @@
     text-align:         center;
 }
 
-.CBBackgroundViewEditor > .CBModelArrayEditor {
-    padding: 20px;
-}
-
 .CBBackgroundViewEditor > .properties {
     background-color:           hsl(30, 50%, 85%);
     display:                    flex;
