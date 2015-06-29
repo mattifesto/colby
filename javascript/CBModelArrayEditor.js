@@ -1,6 +1,12 @@
 "use strict";
 
-
+/**
+ * @deprecated use CBSpecArrayEditor instead
+ *
+ * 2015.06.28 This class is easily replaced by CBSpecArrayEditor with better
+ * results so the replacements should happen soon and this class should be
+ * deleted.
+ */
 var CBModelArrayEditor = {
 
     /**
