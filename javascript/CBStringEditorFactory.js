@@ -145,6 +145,8 @@ var CBStringEditorFactory = {
      */
     handleSelectDataUpdated : function(args) {
         var childElement;
+        var selectedValue   = args.spec[args.propertyName];
+        var valueWasFound   = false;
 
         while (childElement = args.selectElement.firstChild) {
             args.selectElement.removeChild(childElement);
@@ -156,8 +158,27 @@ var CBStringEditorFactory = {
             option.value        = item.value;
 
             args.selectElement.appendChild(option);
+
+            if (item.value == selectedValue) {
+                valueWasFound = true;
+            }
         });
 
-        args.selectElement.value = args.spec[args.propertyName];
+        /**
+         * If the selected value wasn't found in the list of options and the
+         * value isn't empty, created a deprecated option to potentially
+         * preserve the value if the list of options is incorrect for some
+         * reason.
+         */
+
+        if (!valueWasFound && selectedValue) {
+            var option          = document.createElement("option");
+            option.textContent  = "(Deprecated Theme)";
+            option.value        = selectedValue;
+
+            args.selectElement.appendChild(option);
+        }
+
+        args.selectElement.value = selectedValue;
     }
 };
