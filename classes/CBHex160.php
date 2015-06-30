@@ -34,7 +34,7 @@ final class CBHex160 {
 
         $values = array_map(function($value) {
             if (!CBHex160::is($value)) {
-                throw new RuntimeException("The value '{$value}' is not hexadecimal.");
+                throw new RuntimeException("The value '{$value}' is not a 160-bit hexadecimal value.");
             }
             $value = ColbyConvert::textToSQL($value);
             return "UNHEX('{$value}')";
