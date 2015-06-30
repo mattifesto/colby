@@ -2,7 +2,8 @@
 
 var CBTextBoxViewEditorFactory = {
 
-    themes : [],
+    themes          : [],
+    themesUpdated   : "CBTextBoxViewEditorThemesUpdated",
 
     /**
      * @param   {function}  handleSpecChanged
@@ -18,7 +19,7 @@ var CBTextBoxViewEditorFactory = {
 
         settings.appendChild(CBStringEditorFactory.createSelectEditor({
             data                : CBTextBoxViewEditorFactory.themes,
-            dataUpdatedEvent    : 'CBTextBoxViewThemesUpdate',
+            dataUpdatedEvent    : CBTextBoxViewEditorFactory.themesUpdated,
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Theme",
             propertyName        : "themeID",
@@ -56,18 +57,47 @@ var CBTextBoxViewEditorFactory = {
         }));
 
         return element;
+    },
+
+    /**
+     * @return undefined
+     */
+    fetchThemes : function() {
+        var xhr     = new XMLHttpRequest();
+        xhr.onload  = CBTextBoxViewEditorFactory.fetchThemesCompleted.bind(undefined, {
+            xhr : xhr
+        });
+        xhr.onerror = function() {
+            alert("The CBTextBoxView themes failed to load.");
+        };
+
+        xhr.open("POST", "/api/?class=CBTextBoxView&function=fetchThemes");
+        xhr.send();
+    },
+
+    /**
+     * @param   {XMLHttpRequest}    xhr
+     *
+     * @return  undefined
+     */
+    fetchThemesCompleted : function(args) {
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
+
+        if (response.wasSuccessful) {
+            var themes      = CBTextBoxViewEditorFactory.themes;
+            themes.length   = 0;
+
+            response.themes.forEach(function(theme) {
+                themes.push(theme);
+            });
+
+            document.dispatchEvent(new Event(CBTextBoxViewEditorFactory.themesUpdated));
+        } else {
+            Colby.displayResponse(response);
+        }
     }
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-    setTimeout(function() {
-        var event       = new Event('CBTextBoxViewThemesUpdate');
-        var themes      = CBTextBoxViewEditorFactory.themes;
-        themes.length   = 0;
-
-        themes.push({ textContent : "hello", value : "abc" });
-        themes.push({ textContent : "byebye", value : "def" });
-
-        document.dispatchEvent(event);
-    }, 5000);
+    CBTextBoxViewEditorFactory.fetchThemes();
 });
