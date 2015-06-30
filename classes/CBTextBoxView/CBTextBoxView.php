@@ -76,9 +76,19 @@ EOT;
         $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? $spec->contentAsMarkaround : '';
         $model->contentAsHTML       = CBMarkaround::textToHTML(['text' => $model->contentAsMarkaround]);
         $model->height              = CBTextBoxView::propertyToNumber($spec, 'height');
+        $model->styles              = [];
         $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? $spec->titleAsMarkaround : '';
         $model->titleAsHTML         = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
         $model->width               = CBTextBoxView::propertyToNumber($spec, 'width');
+
+
+        if (isset($spec->themeID)) {
+            $theme = CBModels::fetchModelByID($spec->themeID);
+
+            if ($theme) {
+                $model->styles = $theme->styles;
+            }
+        }
 
         return $model;
     }
@@ -88,13 +98,16 @@ EOT;
      */
     public static function renderModelAsHTML(stdClass $model) {
         $ID     = 'ID' . CBHex160::random();
+        $styles = array_map(function($style) use ($ID) {
+            return "#{$ID} {$style}";
+        }, $model->styles);
 
         if ($model->height !== false) {
-            $styles[] = "#$ID { height: {$model->height}px; }";
+            $styles[] = "#{$ID} { height: {$model->height}px; }";
         }
 
         if ($model->width !== false) {
-            $styles[] = "#$ID { width: {$model->width}px; }";
+            $styles[] = "#{$ID} { width: {$model->width}px; }";
         }
 
         ?>
