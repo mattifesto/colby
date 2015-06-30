@@ -30,6 +30,9 @@ final class CBTextBoxViewTheme {
     public static function specToModel(stdClass $spec) {
         $model                  = CBModels::modelWithClassName(__CLASS__);
         $model->styles          = isset($spec->styles) ? ColbyConvert::textToLines($spec->styles) : [];
+        $model->styles          = array_filter($model->styles, function($style) {
+            return preg_match('/^[^{}]*{[^{}]+}\s*$/', $style);
+        });
 
         return $model;
     }
