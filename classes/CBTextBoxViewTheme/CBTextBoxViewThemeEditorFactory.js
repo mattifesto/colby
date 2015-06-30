@@ -18,7 +18,14 @@ var CBTextBoxViewThemeEditorFactory = {
             propertyName        : "title",
             spec                : args.spec
         }));
-        
+
+        element.appendChild(CBStringEditorFactory.createMultiLineEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "URLs For CSS",
+            propertyName        : "URLsForCSS",
+            spec                : args.spec
+        }));
+
         element.appendChild(CBStringEditorFactory.createMultiLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Styles (one per line)",

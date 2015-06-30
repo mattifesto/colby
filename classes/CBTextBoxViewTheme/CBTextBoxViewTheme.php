@@ -28,11 +28,18 @@ final class CBTextBoxViewTheme {
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
-        $model                  = CBModels::modelWithClassName(__CLASS__);
-        $model->styles          = isset($spec->styles) ? ColbyConvert::textToLines($spec->styles) : [];
-        $model->styles          = array_filter($model->styles, function($style) {
+        $model                      = CBModels::modelWithClassName(__CLASS__);
+        $model->styles              = isset($spec->styles) ? ColbyConvert::textToLines($spec->styles) : [];
+        $model->styles              = array_filter($model->styles, function($style) {
             return preg_match('/^[^{}]*{[^{}]+}\s*$/', $style);
         });
+        $model->URLsForCSS          = isset($spec->URLsForCSS) ? ColbyConvert::textToLines($spec->URLsForCSS) : [];
+        $model->URLsForCSS          = array_filter($model->URLsForCSS, function($URL) {
+            return !empty(trim($URL));
+        });
+        $model->URLsForCSSAsHTML    = array_map(function($URL) {
+            return ColbyConvert::textToHTML($URL);
+        }, $model->URLsForCSS);
 
         return $model;
     }
