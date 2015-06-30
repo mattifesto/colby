@@ -2,6 +2,8 @@
 
 var CBTextBoxViewEditorFactory = {
 
+    themes : [],
+
     /**
      * @param   {function}  handleSpecChanged
      * @param   {Object}    spec
@@ -15,6 +17,8 @@ var CBTextBoxViewEditorFactory = {
         settings.className  = "settings";
 
         settings.appendChild(CBStringEditorFactory.createSelectEditor({
+            data                : CBTextBoxViewEditorFactory.themes,
+            dataUpdatedEvent    : 'CBTextBoxViewThemesUpdate',
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Theme",
             propertyName        : "themeID",
@@ -54,3 +58,16 @@ var CBTextBoxViewEditorFactory = {
         return element;
     }
 };
+
+document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(function() {
+        var event       = new Event('CBTextBoxViewThemesUpdate');
+        var themes      = CBTextBoxViewEditorFactory.themes;
+        themes.length   = 0;
+
+        themes.push({ textContent : "hello", value : "abc" });
+        themes.push({ textContent : "byebye", value : "def" });
+
+        document.dispatchEvent(event);
+    }, 5000);
+});
