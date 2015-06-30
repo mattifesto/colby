@@ -20,6 +20,37 @@ final class CBTextBoxView {
     }
 
     /**
+     * @return {stdClass}
+     */
+    public static function fetchThemesForAjax() {
+        $response   = new CBAjaxResponse();
+        $SQL        = <<<EOT
+
+            SELECT      `v`.`modelAsJSON`
+            FROM        `CBModels` AS `m`
+            JOIN        `CBModelVersions` AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
+            WHERE       `m`.`className` = 'CBTextBoxViewTheme'
+            ORDER BY    `m`.`created`
+
+EOT;
+
+        $models                     = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $themes                     = array_map(function($model) {
+            return (object)['value' => $model->ID, 'textContent' => $model->title];
+        }, $models);
+        $response->themes           = $themes;
+        $response->wasSuccessful    = true;
+        $response->send();
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function fetchThemesForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * If the property value exists and is a number the property  value is
      * returned; otherwise false is returned.
      *
@@ -57,7 +88,6 @@ final class CBTextBoxView {
      */
     public static function renderModelAsHTML(stdClass $model) {
         $ID     = 'ID' . CBHex160::random();
-        $styles = [];
 
         if ($model->height !== false) {
             $styles[] = "#$ID { height: {$model->height}px; }";
@@ -69,7 +99,7 @@ final class CBTextBoxView {
 
         ?>
 
-        <section id="<?= $ID ?>">
+        <section class="CBTextBoxView" id="<?= $ID ?>">
             <style><?= implode(' ', $styles) ?></style>
             <h1><?= $model->titleAsHTML ?></h1>
             <div><?= $model->contentAsHTML ?></div>
