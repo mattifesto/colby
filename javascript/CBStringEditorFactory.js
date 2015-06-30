@@ -173,7 +173,7 @@ var CBStringEditorFactory = {
 
         if (!valueWasFound && selectedValue) {
             var option          = document.createElement("option");
-            option.textContent  = "(Deprecated Theme)";
+            option.textContent  = "(Original Value)";
             option.value        = selectedValue;
 
             args.selectElement.appendChild(option);
