@@ -79,6 +79,7 @@ EOT;
         $model->styles              = [];
         $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? $spec->titleAsMarkaround : '';
         $model->titleAsHTML         = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
+        $model->URLsForCSSAsHTML    = [];
         $model->width               = CBTextBoxView::propertyToNumber($spec, 'width');
 
 
@@ -86,7 +87,8 @@ EOT;
             $theme = CBModels::fetchModelByID($spec->themeID);
 
             if ($theme) {
-                $model->styles = $theme->styles;
+                $model->styles              = $theme->styles;
+                $model->URLsForCSSAsHTML    = $theme->URLsForCSSAsHTML;
             }
         }
 
@@ -109,6 +111,10 @@ EOT;
         if ($model->width !== false) {
             $styles[] = "#{$ID} { width: {$model->width}px; }";
         }
+
+        array_walk($model->URLsForCSSAsHTML, function($URL) {
+            CBHTMLOutput::addCSSURL($URL);
+        });
 
         ?>
 
