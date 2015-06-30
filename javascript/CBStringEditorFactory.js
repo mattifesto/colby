@@ -44,6 +44,8 @@ var CBStringEditorFactory = {
     },
 
     /**
+     * @param {Array}       data
+     * @param {string}      dataUpdatedEvent
      * @param {function}    handleSpecChanged
      * @param {string{      labelText
      * @param {string}      propertyName
@@ -60,6 +62,26 @@ var CBStringEditorFactory = {
         label.textContent   = args.labelText || "";
         var select          = document.createElement("select");
         select.id           = ID;
+
+        select.addEventListener("change", CBStringEditorFactory.handleInput.bind(undefined, {
+            element             : select,
+            handleSpecChanged   : args.handleSpecChanged,
+            propertyName        : args.propertyName,
+            spec                : args.spec
+        }));
+
+        var handler = CBStringEditorFactory.handleSelectDataUpdated.bind(undefined, {
+            data            : args.data,
+            propertyName    : args.propertyName,
+            selectElement   : select,
+            spec            : args.spec,
+        });
+
+        handler.call();
+
+        if (args.dataUpdatedEvent) {
+            document.addEventListener(args.dataUpdatedEvent, handler);
+        }
 
         element.appendChild(label);
         element.appendChild(select);
@@ -100,16 +122,42 @@ var CBStringEditorFactory = {
     },
 
     /**
-     * @param {Element}     element
-     * @param {function}    handleSpecChanged
-     * @param {string}      propertyName
-     * @param {Object}      spec
+     * @param   {Element}   element
+     * @param   {function}  handleSpecChanged
+     * @param   {string}    propertyName
+     * @param   {Object}    spec
      *
-     * @return {undefined}
+     * @return  undefined
      */
     handleInput : function(args) {
         args.spec[args.propertyName] = args.element.value;
 
         args.handleSpecChanged.call();
+    },
+
+    /**
+     * @param   {Array}     data
+     * @param   {string}    propertyName
+     * @param   {Element}   selectElement
+     * @param   {Object}    spec
+     *
+     * @return  undefined
+     */
+    handleSelectDataUpdated : function(args) {
+        var childElement;
+
+        while (childElement = args.selectElement.firstChild) {
+            args.selectElement.removeChild(childElement);
+        }
+
+        args.data.forEach(function(item) {
+            var option          = document.createElement("option");
+            option.textContent  = item.textContent;
+            option.value        = item.value;
+
+            args.selectElement.appendChild(option);
+        });
+
+        args.selectElement.value = args.spec[args.propertyName];
     }
 };
