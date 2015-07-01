@@ -79,6 +79,8 @@ EOT;
         $model->styles              = [];
         $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? $spec->titleAsMarkaround : '';
         $model->titleAsHTML         = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
+        $model->URL                 = isset($spec->URL) ? trim($spec->URL) : '';
+        $model->URLAsHTML           = ColbyConvert::textToHTML($model->URL);
         $model->URLsForCSSAsHTML    = [];
         $model->width               = CBTextBoxView::propertyToNumber($spec, 'width');
 
@@ -105,24 +107,35 @@ EOT;
         }, $model->styles);
 
         if ($model->height !== false) {
-            $styles[] = "#{$ID} { height: {$model->height}px; }";
+            $styles[] = "#{$ID} section { height: {$model->height}px; }";
         }
 
         if ($model->width !== false) {
-            $styles[] = "#{$ID} { width: {$model->width}px; }";
+            $styles[] = "#{$ID} section { width: {$model->width}px; }";
         }
 
         array_walk($model->URLsForCSSAsHTML, function($URL) {
             CBHTMLOutput::addCSSURL($URL);
         });
 
+        if ($model->URLAsHTML) {
+            $openAnchor     = "<a href=\"{$model->URLAsHTML}\">";
+            $closeAnchor    = '</a>';
+        } else {
+            $openAnchor = $closeAnchor = '';
+        }
+
         ?>
 
-        <section class="CBTextBoxView" id="<?= $ID ?>">
-            <style><?= implode(' ', $styles) ?></style>
-            <h1><?= $model->titleAsHTML ?></h1>
-            <div><?= $model->contentAsHTML ?></div>
-        </section>
+        <div class="CBTextBoxView" id="<?= $ID ?>">
+            <style scoped><?= implode("\n", $styles) ?></style>
+            <?= $openAnchor ?>
+                <section>
+                    <h1><?= $model->titleAsHTML ?></h1>
+                    <div><?= $model->contentAsHTML ?></div>
+                </section>
+            <?= $closeAnchor ?>
+        </div>
 
         <?php
     }

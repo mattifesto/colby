@@ -12,12 +12,18 @@ var CBTextBoxViewEditorFactory = {
      * @return  {Element}
      */
     createEditor : function(args) {
-        var element         = document.createElement("div");
-        element.className   = "CBTextBoxViewEditor";
-        var settings        = document.createElement("div");
-        settings.className  = "settings";
+        var element                     = document.createElement("div");
+        element.className               = "CBTextBoxViewEditor";
+        var containerForSettings        = document.createElement("div");
+        containerForSettings.className  = "container settings";
+        var containerForURL             = document.createElement("div");
+        containerForURL.className       = "container URL";
+        var containerForTitle           = document.createElement("div");
+        containerForTitle.className     = "container title";
+        var containerForContent         = document.createElement("div");
+        containerForContent.className   = "container content";
 
-        settings.appendChild(CBStringEditorFactory.createSelectEditor({
+        containerForSettings.appendChild(CBStringEditorFactory.createSelectEditor({
             data                : CBTextBoxViewEditorFactory.themes,
             dataUpdatedEvent    : CBTextBoxViewEditorFactory.themesUpdated,
             handleSpecChanged   : args.handleSpecChanged,
@@ -26,35 +32,45 @@ var CBTextBoxViewEditorFactory = {
             spec                : args.spec
         }));
 
-        settings.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        containerForSettings.appendChild(CBStringEditorFactory.createSingleLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Width",
             propertyName        : "width",
             spec                : args.spec
         }));
 
-        settings.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        containerForSettings.appendChild(CBStringEditorFactory.createSingleLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Height",
             propertyName        : "height",
             spec                : args.spec
         }));
 
-        element.appendChild(settings);
+        containerForURL.appendChild(CBStringEditorFactory.createSingleLineEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "URL",
+            propertyName        : "URL",
+            spec                : args.spec
+        }));
 
-        element.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        containerForTitle.appendChild(CBStringEditorFactory.createSingleLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Title",
             propertyName        : "titleAsMarkaround",
             spec                : args.spec
         }));
 
-        element.appendChild(CBStringEditorFactory.createMultiLineEditor({
+        containerForContent.appendChild(CBStringEditorFactory.createMultiLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Content",
             propertyName        : "contentAsMarkaround",
             spec                : args.spec
         }));
+
+        element.appendChild(containerForSettings);
+        element.appendChild(containerForURL);
+        element.appendChild(containerForTitle);
+        element.appendChild(containerForContent);
 
         return element;
     },
