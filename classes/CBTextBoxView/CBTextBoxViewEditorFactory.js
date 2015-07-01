@@ -94,6 +94,19 @@ var CBTextBoxViewEditorFactory = {
             spec                : args.spec
         }));
 
+        containerForContent.appendChild(CBStringEditorFactory.createSelectEditor({
+            data                : [
+                { textContent : "Left",     value : "left" },
+                { textContent : "Center",   value : "center" },
+                { textContent : "Right",    value : "right" },
+                { textContent : "Justify",  value : "justify" }
+            ],
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Alignment",
+            propertyName        : "contentAlignment",
+            spec                : args.spec
+        }));
+
         element.appendChild(containerForSettings);
         element.appendChild(containerForURL);
         element.appendChild(containerForTitle);
