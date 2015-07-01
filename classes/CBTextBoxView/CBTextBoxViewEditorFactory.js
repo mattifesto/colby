@@ -15,11 +15,11 @@ var CBTextBoxViewEditorFactory = {
         var element                     = document.createElement("div");
         element.className               = "CBTextBoxViewEditor";
         var containerForSettings        = document.createElement("div");
-        containerForSettings.className  = "container settings";
+        containerForSettings.className  = "container flex settings";
         var containerForURL             = document.createElement("div");
-        containerForURL.className       = "container URL";
+        containerForURL.className       = "container flex URL";
         var containerForTitle           = document.createElement("div");
-        containerForTitle.className     = "container title";
+        containerForTitle.className     = "container flex title";
         var containerForContent         = document.createElement("div");
         containerForContent.className   = "container content";
 
@@ -43,6 +43,18 @@ var CBTextBoxViewEditorFactory = {
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Height",
             propertyName        : "height",
+            spec                : args.spec
+        }));
+
+        containerForSettings.appendChild(CBStringEditorFactory.createSelectEditor({
+            data                : [
+                { textContent : "Top",      value : "top" },
+                { textContent : "Center",   value : "center" },
+                { textContent : "Bottom",   value : "bottom" }
+            ],
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Vertical Alignment",
+            propertyName        : "verticalAlignment",
             spec                : args.spec
         }));
 

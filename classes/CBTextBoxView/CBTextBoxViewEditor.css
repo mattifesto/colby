@@ -16,44 +16,50 @@
     padding-top:    10px;
 }
 
-.CBTextBoxViewEditor .settings {
+.CBTextBoxViewEditor .container.flex {
     align-items:                baseline;
     -webkit-align-items:        baseline;
     display:                    flex;
     display:                    -webkit-flex;
+    flex-wrap:                  wrap;
+    -webkit-flex-wrap:          wrap;
     justify-content:            space-around;
     -webkit-justify-content:    space-around;
+    line-height:                2.5;
 }
 
-.CBTextBoxViewEditor .settings .CBStringEditor {
-    display: inline;
+.CBTextBoxViewEditor .CBStringEditor > input,
+.CBTextBoxViewEditor .CBStringEditor > select {
+    margin-left: 5px;
 }
 
-.CBTextBoxViewEditor .settings .CBStringEditor > label {
-    margin-right: 5px;
+.CBTextBoxViewEditor .CBStringEditor > input,
+.CBTextBoxViewEditor .CBStringEditor > textarea {
+    padding:        4px;
 }
 
 .CBTextBoxViewEditor .settings .CBStringEditor > input {
-    padding:    4px;
     width:      50px;
 }
 
 .CBTextBoxViewEditor > .URL > .CBStringEditor,
 .CBTextBoxViewEditor > .title > .CBStringEditor {
-    display:    flex;
-    display:    -webkit-flex;
+    align-items:            baseline;
+    -webkit-align-items:    baseline;
+    display:                flex;
+    display:                -webkit-flex;
+    line-height:            normal;
+    width:                  100%;
 }
 
 .CBTextBoxViewEditor > .URL > .CBStringEditor input,
 .CBTextBoxViewEditor > .title > .CBStringEditor input {
     flex:           1 0 auto;
     -webkit-flex:   1 0 auto;
-    margin-left:    5px;
 }
 
 .CBTextBoxViewEditor > .content > .CBStringEditor textarea {
     border:     1px solid hsl(0, 0%, 80%);
-    height: 200px;
-    padding:    4px;
+    height:     200px;
     width:      100%;
 }
