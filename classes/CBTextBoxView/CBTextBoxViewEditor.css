@@ -38,14 +38,22 @@
     width:      50px;
 }
 
+.CBTextBoxViewEditor > .URL > .CBStringEditor,
+.CBTextBoxViewEditor > .title > .CBStringEditor {
+    display:    flex;
+    display:    -webkit-flex;
+}
+
 .CBTextBoxViewEditor > .URL > .CBStringEditor input,
-.CBTextBoxViewEditor > .title > .CBStringEditor input,
-.CBTextBoxViewEditor > .content > .CBStringEditor textarea {
-    border:     1px solid hsl(0, 0%, 80%);
-    padding:    4px;
-    width:      100%;
+.CBTextBoxViewEditor > .title > .CBStringEditor input {
+    flex:           1 0 auto;
+    -webkit-flex:   1 0 auto;
+    margin-left:    5px;
 }
 
 .CBTextBoxViewEditor > .content > .CBStringEditor textarea {
+    border:     1px solid hsl(0, 0%, 80%);
     height: 200px;
+    padding:    4px;
+    width:      100%;
 }
