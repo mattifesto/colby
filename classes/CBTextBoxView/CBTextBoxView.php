@@ -77,7 +77,6 @@ EOT;
             return "#{$ID} {$style}";
         }, $model->styles);
 
-        $styles[] = "#{$ID} section { display: flex; display: -webkit-flex; flex-direction: column; -webkit-flex-direction: column; }";
         $styles[] = "#{$ID} h1 { text-align: {$model->titleAlignment}; }";
         $styles[] = "#{$ID} div { text-align: {$model->contentAlignment}; }";
 
@@ -105,6 +104,8 @@ EOT;
         } else {
             $openAnchor = $closeAnchor = '';
         }
+
+        CBHTMLOutput::addCSSURL(CBTextBoxView::URL("CBTextBoxView.css"));
 
         ?>
 
