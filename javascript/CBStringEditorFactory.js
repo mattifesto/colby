@@ -90,17 +90,18 @@ var CBStringEditorFactory = {
     },
 
     /**
-     * @param {function}    handleSpecChanged
-     * @param {string{      labelText
-     * @param {string}      propertyName
-     * @param {Object}      spec
+     * @param   {string}    className
+     * @param   {function}  handleSpecChanged
+     * @param   {string{    labelText
+     * @param   {string}    propertyName
+     * @param   {Object}    spec
      *
-     * @return {Element}
+     * @return  {Element}
      */
     createSingleLineEditor : function(args) {
         var ID              = Colby.random160();
         var element         = document.createElement("div");
-        element.className   = "CBStringEditor";
+        element.className   = "CBStringEditor" + (args.className ? " " + args.className : "");
         var label           = document.createElement("label");
         label.htmlFor       = ID;
         label.textContent   = args.labelText || "";
