@@ -79,6 +79,7 @@ EOT;
 
         $styles[] = "#{$ID} section { display: flex; display: -webkit-flex; flex-direction: column; -webkit-flex-direction: column; }";
         $styles[] = "#{$ID} h1 { text-align: {$model->titleAlignment}; }";
+        $styles[] = "#{$ID} div { text-align: {$model->contentAlignment}; }";
 
         if ($model->height !== false) {
             $styles[] = "#{$ID} section { height: {$model->height}px; }";
@@ -125,6 +126,7 @@ EOT;
      */
     public static function specToModel(stdClass $spec) {
         $model                      = CBModels::modelWithClassName(__CLASS__);
+        $model->contentAlignment    = "left";
         $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? $spec->contentAsMarkaround : '';
         $model->contentAsHTML       = CBMarkaround::textToHTML(['text' => $model->contentAsMarkaround]);
         $model->height              = CBTextBoxView::propertyToNumber($spec, 'height');
@@ -165,6 +167,18 @@ EOT;
                 case "right":
                 case "justify":
                     $model->titleAlignment = $spec->titleAlignment;
+                default:
+                    // default value is set above
+                    break;
+            }
+        }
+
+        if (isset($spec->contentAlignment)) {
+            switch ($spec->contentAlignment) {
+                case "center":
+                case "right":
+                case "justify":
+                    $model->contentAlignment = $spec->contentAlignment;
                 default:
                     // default value is set above
                     break;
