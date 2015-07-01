@@ -96,9 +96,11 @@ CBPageEditor.displayEditor = function()
      *
      */
 
-    editorContainer.appendChild(CBModelArrayEditor.createEditor({
-        handleSpecChanged   : CBPageEditor.requestSave.bind(CBPageEditor),
-        specArray           : CBPageEditor.model.sections }));
+    editorContainer.appendChild(CBSpecArrayEditorFactory.createEditor({
+        array           : CBPageEditor.model.sections,
+        classNames      : CBPageEditorAvailableViewClassNames,
+        handleChanged   : CBPageEditor.requestSave.bind(CBPageEditor)
+    }));
 };
 
 /**
