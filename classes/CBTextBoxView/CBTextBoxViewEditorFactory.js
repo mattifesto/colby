@@ -59,6 +59,7 @@ var CBTextBoxViewEditorFactory = {
         }));
 
         containerForURL.appendChild(CBStringEditorFactory.createSingleLineEditor({
+            className           : "wide",
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "URL",
             propertyName        : "URL",
@@ -66,9 +67,23 @@ var CBTextBoxViewEditorFactory = {
         }));
 
         containerForTitle.appendChild(CBStringEditorFactory.createSingleLineEditor({
+            className           : "wide",
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Title",
             propertyName        : "titleAsMarkaround",
+            spec                : args.spec
+        }));
+
+        containerForTitle.appendChild(CBStringEditorFactory.createSelectEditor({
+            data                : [
+                { textContent : "Left",     value : "left" },
+                { textContent : "Center",   value : "center" },
+                { textContent : "Right",    value : "right" },
+                { textContent : "Justify",  value : "justify" }
+            ],
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Alignment",
+            propertyName        : "titleAlignment",
             spec                : args.spec
         }));
 

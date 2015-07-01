@@ -28,6 +28,19 @@
     line-height:                2.5;
 }
 
+.CBTextBoxViewEditor .CBStringEditor.wide {
+    align-items:            baseline;
+    -webkit-align-items:    baseline;
+    display:                flex;
+    display:                -webkit-flex;
+    width:                  100%;
+}
+
+.CBTextBoxViewEditor .CBStringEditor.wide input {
+    flex:           1 0 auto;
+    -webkit-flex:   1 0 auto;
+}
+
 .CBTextBoxViewEditor .CBStringEditor > input,
 .CBTextBoxViewEditor .CBStringEditor > select {
     margin-left: 5px;
@@ -40,22 +53,6 @@
 
 .CBTextBoxViewEditor .settings .CBStringEditor > input {
     width:      50px;
-}
-
-.CBTextBoxViewEditor > .URL > .CBStringEditor,
-.CBTextBoxViewEditor > .title > .CBStringEditor {
-    align-items:            baseline;
-    -webkit-align-items:    baseline;
-    display:                flex;
-    display:                -webkit-flex;
-    line-height:            normal;
-    width:                  100%;
-}
-
-.CBTextBoxViewEditor > .URL > .CBStringEditor input,
-.CBTextBoxViewEditor > .title > .CBStringEditor input {
-    flex:           1 0 auto;
-    -webkit-flex:   1 0 auto;
 }
 
 .CBTextBoxViewEditor > .content > .CBStringEditor textarea {
