@@ -82,8 +82,8 @@ EOT;
         $model->URL                 = isset($spec->URL) ? trim($spec->URL) : '';
         $model->URLAsHTML           = ColbyConvert::textToHTML($model->URL);
         $model->URLsForCSSAsHTML    = [];
+        $model->verticalAlignment   = "top";
         $model->width               = CBTextBoxView::propertyToNumber($spec, 'width');
-
 
         if (isset($spec->themeID)) {
             $theme = CBModels::fetchModelByID($spec->themeID);
@@ -91,6 +91,20 @@ EOT;
             if ($theme) {
                 $model->styles              = $theme->styles;
                 $model->URLsForCSSAsHTML    = $theme->URLsForCSSAsHTML;
+            }
+        }
+
+        if (isset($spec->verticalAlignment)) {
+            switch ($spec->verticalAlignment) {
+                case "center":
+                    $model->verticalAlignment = "center";
+                    break;
+                case "bottom":
+                    $model->verticalAlignment = "bottom";
+                    break;
+                default:
+                    // default value is set above
+                    break;
             }
         }
 
@@ -106,12 +120,20 @@ EOT;
             return "#{$ID} {$style}";
         }, $model->styles);
 
+        $styles[] = "#{$ID} section { display: flex; display: -webkit-flex; flex-direction: column; -webkit-flex-direction: column; }";
+
         if ($model->height !== false) {
             $styles[] = "#{$ID} section { height: {$model->height}px; }";
         }
 
         if ($model->width !== false) {
             $styles[] = "#{$ID} section { width: {$model->width}px; }";
+        }
+
+        if ($model->verticalAlignment === 'center') {
+            $styles[] = "#{$ID} section { justify-content: center; -webkit-justify-content: center; }";
+        } else if ($model->verticalAlignment === 'bottom') {
+            $styles[] = "#{$ID} section { justify-content: flex-end; -webkit-justify-content: flex-end; }";
         }
 
         array_walk($model->URLsForCSSAsHTML, function($URL) {
