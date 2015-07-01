@@ -69,49 +69,6 @@ EOT;
     }
 
     /**
-     * @return {stdClass}
-     */
-    public static function specToModel(stdClass $spec) {
-        $model                      = CBModels::modelWithClassName(__CLASS__);
-        $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? $spec->contentAsMarkaround : '';
-        $model->contentAsHTML       = CBMarkaround::textToHTML(['text' => $model->contentAsMarkaround]);
-        $model->height              = CBTextBoxView::propertyToNumber($spec, 'height');
-        $model->styles              = [];
-        $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? $spec->titleAsMarkaround : '';
-        $model->titleAsHTML         = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
-        $model->URL                 = isset($spec->URL) ? trim($spec->URL) : '';
-        $model->URLAsHTML           = ColbyConvert::textToHTML($model->URL);
-        $model->URLsForCSSAsHTML    = [];
-        $model->verticalAlignment   = "top";
-        $model->width               = CBTextBoxView::propertyToNumber($spec, 'width');
-
-        if (isset($spec->themeID)) {
-            $theme = CBModels::fetchModelByID($spec->themeID);
-
-            if ($theme) {
-                $model->styles              = $theme->styles;
-                $model->URLsForCSSAsHTML    = $theme->URLsForCSSAsHTML;
-            }
-        }
-
-        if (isset($spec->verticalAlignment)) {
-            switch ($spec->verticalAlignment) {
-                case "center":
-                    $model->verticalAlignment = "center";
-                    break;
-                case "bottom":
-                    $model->verticalAlignment = "bottom";
-                    break;
-                default:
-                    // default value is set above
-                    break;
-            }
-        }
-
-        return $model;
-    }
-
-    /**
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
@@ -160,6 +117,49 @@ EOT;
         </div>
 
         <?php
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function specToModel(stdClass $spec) {
+        $model                      = CBModels::modelWithClassName(__CLASS__);
+        $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? $spec->contentAsMarkaround : '';
+        $model->contentAsHTML       = CBMarkaround::textToHTML(['text' => $model->contentAsMarkaround]);
+        $model->height              = CBTextBoxView::propertyToNumber($spec, 'height');
+        $model->styles              = [];
+        $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? $spec->titleAsMarkaround : '';
+        $model->titleAsHTML         = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
+        $model->URL                 = isset($spec->URL) ? trim($spec->URL) : '';
+        $model->URLAsHTML           = ColbyConvert::textToHTML($model->URL);
+        $model->URLsForCSSAsHTML    = [];
+        $model->verticalAlignment   = "top";
+        $model->width               = CBTextBoxView::propertyToNumber($spec, 'width');
+
+        if (isset($spec->themeID)) {
+            $theme = CBModels::fetchModelByID($spec->themeID);
+
+            if ($theme) {
+                $model->styles              = $theme->styles;
+                $model->URLsForCSSAsHTML    = $theme->URLsForCSSAsHTML;
+            }
+        }
+
+        if (isset($spec->verticalAlignment)) {
+            switch ($spec->verticalAlignment) {
+                case "center":
+                    $model->verticalAlignment = "center";
+                    break;
+                case "bottom":
+                    $model->verticalAlignment = "bottom";
+                    break;
+                default:
+                    // default value is set above
+                    break;
+            }
+        }
+
+        return $model;
     }
 
     /**
