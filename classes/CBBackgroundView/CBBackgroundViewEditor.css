@@ -1,5 +1,6 @@
 .CBBackgroundViewEditor {
-    padding:             10px;
+    border-top: 4px solid hsl(30, 20%, 60%);
+    padding:    10px;
 }
 
 .CBBackgroundViewEditor > .properties {
