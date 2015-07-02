@@ -72,52 +72,52 @@ EOT;
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
-        $ID     = 'ID' . CBHex160::random();
-        $styles = array_map(function($style) use ($ID) {
-            return "#{$ID} {$style}";
-        }, $model->styles);
-
-        $styles[] = "#{$ID} h1 { text-align: {$model->titleAlignment}; }";
-        $styles[] = "#{$ID} div { text-align: {$model->contentAlignment}; }";
+        $ID         = 'ID' . CBHex160::random();
+        $styles     = [];
+        $styles[]   = "#{$ID} h1 { text-align: {$model->titleAlignment}; }";
+        $styles[]   = "#{$ID} div { text-align: {$model->contentAlignment}; }";
 
         if ($model->height !== false) {
-            $styles[] = "#{$ID} section { height: {$model->height}px; }";
+            $styles[] = "#{$ID} { height: {$model->height}px; }";
         }
 
         if ($model->width !== false) {
-            $styles[] = "#{$ID} section { width: {$model->width}px; }";
+            $styles[] = "#{$ID} { width: {$model->width}px; }";
         }
 
         if ($model->verticalAlignment === 'center') {
-            $styles[] = "#{$ID} section { justify-content: center; -webkit-justify-content: center; }";
+            $styles[] = "#{$ID} { justify-content: center; -webkit-justify-content: center; }";
         } else if ($model->verticalAlignment === 'bottom') {
-            $styles[] = "#{$ID} section { justify-content: flex-end; -webkit-justify-content: flex-end; }";
+            $styles[] = "#{$ID} { justify-content: flex-end; -webkit-justify-content: flex-end; }";
         }
 
         array_walk($model->URLsForCSSAsHTML, function($URL) {
             CBHTMLOutput::addCSSURL($URL);
         });
 
+        $properties = "class=\"CBTextBoxView T{$model->themeID}\" id=\"{$ID}\"";
+
         if ($model->URLAsHTML) {
-            $openAnchor     = "<a href=\"{$model->URLAsHTML}\">";
-            $closeAnchor    = '</a>';
+            $open   = "<a href=\"{$model->URLAsHTML}\" {$properties}>";
+            $close  = '</a>';
         } else {
-            $openAnchor = $closeAnchor = '';
+            $open   = "<div {$properties}>";
+            $close  = '</div>';
         }
 
         CBHTMLOutput::addCSSURL(CBTextBoxView::URL("CBTextBoxView.css"));
+        CBHTMLOutput::addCSSURL(CBDataStore::toURL([
+            'ID'        => $model->themeID,
+            'filename'  => 'theme.css'
+        ]));
 
         ?>
 
-        <div class="CBTextBoxView" id="<?= $ID ?>">
+        <?= $open ?>
             <style scoped><?= implode("\n", $styles) ?></style>
-            <?= $openAnchor ?>
-                <section>
-                    <h1><?= $model->titleAsHTML ?></h1>
-                    <div><?= $model->contentAsHTML ?></div>
-                </section>
-            <?= $closeAnchor ?>
-        </div>
+            <h1><?= $model->titleAsHTML ?></h1>
+            <div><?= $model->contentAsHTML ?></div>
+        <?= $close ?>
 
         <?php
     }
@@ -131,7 +131,7 @@ EOT;
         $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? $spec->contentAsMarkaround : '';
         $model->contentAsHTML       = CBMarkaround::textToHTML(['text' => $model->contentAsMarkaround]);
         $model->height              = CBTextBoxView::propertyToNumber($spec, 'height');
-        $model->styles              = [];
+        $model->themeID             = isset($spec->themeID) ? $spec->themeID : false;
         $model->titleAlignment      = "left";
         $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? $spec->titleAsMarkaround : '';
         $model->titleAsHTML         = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
@@ -141,11 +141,10 @@ EOT;
         $model->verticalAlignment   = "top";
         $model->width               = CBTextBoxView::propertyToNumber($spec, 'width');
 
-        if (isset($spec->themeID)) {
-            $theme = CBModels::fetchModelByID($spec->themeID);
+        if ($model->themeID) {
+            $theme = CBModels::fetchModelByID($model->themeID);
 
             if ($theme) {
-                $model->styles              = $theme->styles;
                 $model->URLsForCSSAsHTML    = $theme->URLsForCSSAsHTML;
             }
         }

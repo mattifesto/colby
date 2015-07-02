@@ -1,4 +1,4 @@
-.CBTextBoxView section {
+.CBTextBoxView {
     display:                flex;
     display:                -ms-flexbox;
     display:                -webkit-flex;
@@ -7,7 +7,7 @@
     -webkit-flex-direction: column;
 }
 
-.CBTextBoxView section > * {
+.CBTextBoxView > * {
     flex:           none;
     -ms-flex:       none;
     -webkit-flex:   none;
