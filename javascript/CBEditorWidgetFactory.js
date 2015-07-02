@@ -86,12 +86,15 @@ var CBEditorWidgetFactory = {
     },
 
     /**
+     * When the user has clicked within or otherwise selected this element this
+     * method is called to perform the selection.
+     *
      * @param   {function}  handleSelect
      * @param   {Element}   widgetElement
      *
      * @return  undefined
      */
-    handleSelect : function(args) {
+    handleSelect : function(args, event) {
         var elements    = document.getElementsByClassName("CBEditorWidgetSelected");
         var count       = elements.length;
 
@@ -104,5 +107,7 @@ var CBEditorWidgetFactory = {
         if (args.handleSelect) {
             args.handleSelect.call();
         }
+
+        event.stopPropagation();
     }
 };
