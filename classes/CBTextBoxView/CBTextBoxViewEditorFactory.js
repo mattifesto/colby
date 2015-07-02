@@ -87,6 +87,13 @@ var CBTextBoxViewEditorFactory = {
             spec                : args.spec
         }));
 
+        containerForTitle.appendChild(CBStringEditorFactory.createSingleLineEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Color",
+            propertyName        : "titleColor",
+            spec                : args.spec
+        }));
+
         containerForContent.appendChild(CBStringEditorFactory.createMultiLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Content",
@@ -104,6 +111,13 @@ var CBTextBoxViewEditorFactory = {
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Alignment",
             propertyName        : "contentAlignment",
+            spec                : args.spec
+        }));
+
+        containerForContent.appendChild(CBStringEditorFactory.createSingleLineEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Color",
+            propertyName        : "contentColor",
             spec                : args.spec
         }));
 

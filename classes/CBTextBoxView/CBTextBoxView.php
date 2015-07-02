@@ -77,18 +77,26 @@ EOT;
         $styles[]   = "#{$ID} h1 { text-align: {$model->titleAlignment}; }";
         $styles[]   = "#{$ID} div { text-align: {$model->contentAlignment}; }";
 
+        if ($model->contentColor) {
+            $styles[] = "#{$ID} div { color: {$model->contentColor}; }";
+        }
+
         if ($model->height !== false) {
             $styles[] = "#{$ID} { height: {$model->height}px; }";
         }
 
-        if ($model->width !== false) {
-            $styles[] = "#{$ID} { width: {$model->width}px; }";
+        if ($model->titleColor) {
+            $styles[] = "#{$ID} h1 { color: {$model->titleColor}; }";
         }
 
         if ($model->verticalAlignment === 'center') {
             $styles[] = "#{$ID} { justify-content: center; -webkit-justify-content: center; }";
         } else if ($model->verticalAlignment === 'bottom') {
             $styles[] = "#{$ID} { justify-content: flex-end; -webkit-justify-content: flex-end; }";
+        }
+
+        if ($model->width !== false) {
+            $styles[] = "#{$ID} { width: {$model->width}px; }";
         }
 
         array_walk($model->URLsForCSSAsHTML, function($URL) {
@@ -142,11 +150,13 @@ EOT;
         $model->contentAlignment    = "left";
         $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? trim($spec->contentAsMarkaround) : '';
         $model->contentAsHTML       = CBMarkaround::textToHTML(['text' => $model->contentAsMarkaround]);
+        $model->contentColor        = isset($spec->contentColor) ? trim($spec->contentColor) : '';
         $model->height              = CBTextBoxView::propertyToNumber($spec, 'height');
         $model->themeID             = isset($spec->themeID) ? $spec->themeID : false;
         $model->titleAlignment      = "left";
         $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? trim($spec->titleAsMarkaround) : '';
         $model->titleAsHTML         = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
+        $model->titleColor          = isset($spec->titleColor) ? trim($spec->titleColor) : '';
         $model->URL                 = isset($spec->URL) ? trim($spec->URL) : '';
         $model->URLAsHTML           = ColbyConvert::textToHTML($model->URL);
         $model->URLsForCSSAsHTML    = [];
