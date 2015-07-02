@@ -103,7 +103,8 @@ EOT;
             CBHTMLOutput::addCSSURL($URL);
         });
 
-        $properties = "class=\"CBTextBoxView T{$model->themeID}\" id=\"{$ID}\"";
+        $themeClass = $model->themeID ? "T{$model->themeID}" : 'NoTheme';
+        $properties = "class=\"CBTextBoxView {$themeClass}\" id=\"{$ID}\"";
 
         if ($model->URLAsHTML) {
             $open   = "<a href=\"{$model->URLAsHTML}\" {$properties}>";
@@ -126,10 +127,13 @@ EOT;
         }
 
         CBHTMLOutput::addCSSURL(CBTextBoxView::URL("CBTextBoxView.css"));
-        CBHTMLOutput::addCSSURL(CBDataStore::toURL([
-            'ID'        => $model->themeID,
-            'filename'  => 'theme.css'
-        ]));
+
+        if ($model->themeID) {
+            CBHTMLOutput::addCSSURL(CBDataStore::toURL([
+                'ID'        => $model->themeID,
+                'filename'  => 'theme.css'
+            ]));
+        }
 
         ?>
 

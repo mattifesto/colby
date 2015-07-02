@@ -12,3 +12,43 @@
     -ms-flex:       none;
     -webkit-flex:   none;
 }
+
+.CBTextBoxView.NoTheme {
+    padding:            20px 40px;
+}
+
+a.CBTextBoxView.NoTheme {
+    color:              inherit;
+    text-decoration:    inherit;
+}
+
+.CBTextBoxView.NoTheme h1 {
+    font-size: 2.0em; /* 1 */
+}
+
+.CBTextBoxView.NoTheme h1 b,
+.CBTextBoxView.NoTheme h1 cite,
+.CBTextBoxView.NoTheme h1 i {
+    font: inherit;
+}
+
+.CBTextBoxView.NoTheme h1 cite {
+    border-bottom: 1px solid hsl(0, 0%, 80%);
+}
+
+.CBTextBoxView.NoTheme h1 + div {
+    margin-top: 20px;
+}
+
+.CBTextBoxView.NoTheme p {
+    line-height: 1.5;
+}
+
+.CBTextBoxView.NoTheme p + p {
+    margin-top: 1em;
+}
+
+/* 1
+ * Browser defaults make h1 elements inside of sections smaller than those
+ * inside of anchors. This setting normalizes that.
+ */

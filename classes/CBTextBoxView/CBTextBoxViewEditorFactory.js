@@ -157,6 +157,8 @@ var CBTextBoxViewEditorFactory = {
             var themes      = CBTextBoxViewEditorFactory.themes;
             themes.length   = 0;
 
+            themes.push({ textContent : "None", value : ""});
+
             response.themes.forEach(function(theme) {
                 themes.push(theme);
             });
