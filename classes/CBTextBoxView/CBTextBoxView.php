@@ -101,8 +101,20 @@ EOT;
             $open   = "<a href=\"{$model->URLAsHTML}\" {$properties}>";
             $close  = '</a>';
         } else {
-            $open   = "<div {$properties}>";
-            $close  = '</div>';
+            $open   = "<section {$properties}>";
+            $close  = '</section>';
+        }
+
+        if (empty($model->titleAsHTML)) {
+            $title = '';
+        } else {
+            $title = "<h1>{$model->titleAsHTML}</h1>";
+        }
+
+        if (empty($model->contentAsHTML)) {
+            $content = '';
+        } else {
+            $content = "<div>{$model->contentAsHTML}</div>";
         }
 
         CBHTMLOutput::addCSSURL(CBTextBoxView::URL("CBTextBoxView.css"));
@@ -115,8 +127,8 @@ EOT;
 
         <?= $open ?>
             <style scoped><?= implode("\n", $styles) ?></style>
-            <h1><?= $model->titleAsHTML ?></h1>
-            <div><?= $model->contentAsHTML ?></div>
+            <?= $title ?>
+            <?= $content ?>
         <?= $close ?>
 
         <?php
@@ -128,12 +140,12 @@ EOT;
     public static function specToModel(stdClass $spec) {
         $model                      = CBModels::modelWithClassName(__CLASS__);
         $model->contentAlignment    = "left";
-        $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? $spec->contentAsMarkaround : '';
+        $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? trim($spec->contentAsMarkaround) : '';
         $model->contentAsHTML       = CBMarkaround::textToHTML(['text' => $model->contentAsMarkaround]);
         $model->height              = CBTextBoxView::propertyToNumber($spec, 'height');
         $model->themeID             = isset($spec->themeID) ? $spec->themeID : false;
         $model->titleAlignment      = "left";
-        $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? $spec->titleAsMarkaround : '';
+        $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? trim($spec->titleAsMarkaround) : '';
         $model->titleAsHTML         = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
         $model->URL                 = isset($spec->URL) ? trim($spec->URL) : '';
         $model->URLAsHTML           = ColbyConvert::textToHTML($model->URL);
