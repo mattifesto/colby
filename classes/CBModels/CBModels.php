@@ -286,10 +286,6 @@ EOT;
         };
         $tuples         = array_map($specToTuple, $specs);
 
-        if (is_callable($function = "{$className}::modelsWillSave")) {
-            call_user_func($function, $tuples);
-        }
-
         array_walk($tuples, function($tuple) use ($initialDataByID, $modified) {
             $ID                     = $tuple->spec->ID;
             $tuple->model->ID       = $ID;
@@ -299,6 +295,10 @@ EOT;
             $tuple->spec->title     = $tuple->model->title      = $title;
             $tuple->spec->version   = $tuple->model->version    = $initialDataByID[$ID]->version + 1;
         });
+
+        if (is_callable($function = "{$className}::modelsWillSave")) {
+            call_user_func($function, $tuples);
+        }
 
         CBModels::saveToDatabase($tuples);
     }
