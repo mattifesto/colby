@@ -64,11 +64,16 @@ var CBBackgroundViewEditorFactory = {
 
         element.appendChild(properties);
 
-        element.appendChild(CBSpecArrayEditorFactory.createEditor({
+        var children        = document.createElement("div");
+        children.className  = "children";
+
+        children.appendChild(CBSpecArrayEditorFactory.createEditor({
             array           : args.spec.children,
             classNames      : CBPageEditorAvailableViewClassNames,
             handleChanged   : args.handleSpecChanged
         }));
+
+        element.appendChild(children);
 
         return element;
     },
