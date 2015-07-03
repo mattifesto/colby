@@ -21,25 +21,25 @@ var CBEditorWidgetFactory = {
         var toolbar             = document.createElement("div");
         toolbar.className       = "toolbar";
 
+        if (args.handleRemove) {
+            var removeButton            = document.createElement("button");
+            removeButton.textContent    = "✕";
+            removeButton.addEventListener("click", args.handleRemove);
+            toolbar.appendChild(removeButton);
+        }
+
         if (args.handleMoveDown) {
             var moveDownButton          = document.createElement("button");
-            moveDownButton.textContent  = "Move Down";
+            moveDownButton.textContent  = "↓";
             moveDownButton.addEventListener("click", args.handleMoveDown);
             toolbar.appendChild(moveDownButton);
         }
 
         if (args.handleMoveUp) {
             var moveUpButton            = document.createElement("button");
-            moveUpButton.textContent    = "Move Up";
+            moveUpButton.textContent    = "↑";
             moveUpButton.addEventListener("click", args.handleMoveUp);
             toolbar.appendChild(moveUpButton);
-        }
-
-        if (args.handleRemove) {
-            var removeButton            = document.createElement("button");
-            removeButton.textContent    = "Remove";
-            removeButton.addEventListener("click", args.handleRemove);
-            toolbar.appendChild(removeButton);
         }
 
         args.toolbarElements.forEach(function(toolbarElement) {
