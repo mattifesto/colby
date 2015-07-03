@@ -2,6 +2,11 @@
 
 final class CBAdminPageForPreferences {
 
+    const areas = [
+        'Models'    => 'CBModelsPreferences',
+        'Pages'     => 'CBPagesPreferences'
+    ];
+
     /**
      * @return null
      */
@@ -23,7 +28,14 @@ final class CBAdminPageForPreferences {
         $spec->selectedSubmenuItemName  = 'preferences';
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
-        echo '<main><a href="/admin/models/edit/?ID=69b3958b95e87cca628fc2b9cd70f420faf33a0a">Models</a></main>';
+        $areaLinks = cb_array_map_assoc(function($name, $class) {
+            $ID = $class::ID;
+            return "<div><a href=\"/admin/models/edit?ID={$ID}\">{$name}</a></div>";
+        }, CBAdminPageForPreferences::areas);
+
+        echo '<main>';
+        echo implode("\n", $areaLinks);
+        echo '</main>';
 
         CBAdminPageFooterView::renderModelAsHTML();
         CBHTMLOutput::render();
