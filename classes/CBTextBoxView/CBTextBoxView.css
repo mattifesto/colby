@@ -9,6 +9,10 @@
     overflow:               hidden;
 }
 
+body > .CBTextBoxView {
+    margin: 0 auto; /* 1 */
+}
+
 .CBTextBoxView > * {
     flex:           none;
     -ms-flex:       none;
@@ -25,7 +29,7 @@ a.CBTextBoxView.NoTheme {
 }
 
 .CBTextBoxView.NoTheme h1 {
-    font-size: 2.0em; /* 1 */
+    font-size: 2.0em; /* 2 */
 }
 
 .CBTextBoxView.NoTheme h1 b,
@@ -51,6 +55,12 @@ a.CBTextBoxView.NoTheme {
 }
 
 /* 1
+ * If a CBTextBoxView is a direct child of the body it only makes sense to
+ * center it. If it's a child of another view the auto margins will cause
+ * problems. The parent view should arrange its children.
+ */
+
+/* 2
  * Browser defaults make h1 elements inside of sections smaller than those
  * inside of anchors. This setting normalizes that.
  */
