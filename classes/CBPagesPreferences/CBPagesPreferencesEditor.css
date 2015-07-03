@@ -1,0 +1,19 @@
+.CBPagesPreferencesEditor {
+    font-size:  14px;
+    margin:     0 auto;
+    width:      480px;
+}
+
+.CBPagesPreferencesEditor h1 {
+    text-align: center;
+}
+
+.CBPagesPreferencesEditor .CBStringEditor {
+    margin-top: 10px;
+}
+
+.CBPagesPreferencesEditor textarea {
+    height:     100px;
+    padding:    4px;
+    width:      100%;
+}
