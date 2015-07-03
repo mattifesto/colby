@@ -71,6 +71,13 @@ EOT;
     }
 
     /**
+     * @return null
+     */
+    public static function install() {
+        CBPagesPreferences::install();
+    }
+
+    /**
      * @return void
      */
     public static function moveRowWithDataStoreIDToTheTrash($dataStoreID)
