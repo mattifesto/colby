@@ -62,11 +62,24 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSelectionControl.js'
 
 include CBSystemDirectory . '/sections/admin-page-settings.php';
 
+$pagesPreferences           = CBModels::fetchModelByID(CBPagesPreferences::ID);
+
 /**
- * Export views available to the editor
+ * Include all of the supported views.
  */
 
-foreach (CBViewPageViews::availableViewClassNames() as $className) {
+$supportedViewClassNames = $pagesPreferences->supportedViewClassNames;
+
+/**
+ * @deprecated use preferences instead of CBViewPageViews
+ */
+if (class_exists('CBViewPageViews')) {
+    $supportedViewClassNames = array_values(array_unique(array_merge(
+        $supportedViewClassNames, CBViewPageViews::availableViewClassNames()
+    )));
+}
+
+foreach ($supportedViewClassNames as $className) {
     $function = "{$className}::editorURLsForCSS";
 
     if (is_callable($function)) {
@@ -91,15 +104,22 @@ foreach (CBViewPageViews::availableViewClassNames() as $className) {
 }
 
 /**
- * Because of historical reasons it's not entirely clear that the exported
- * variable below holds the list of classes to be placed in the menu which is
- * a subset of the views that are supported.
+ * Create the list of selectable views available to be added to the page.
  */
 
-if (is_callable($function = 'CBViewPageViews::selectableViewClassNames')) {
-    $selectableViewClassNames = call_user_func($function);
-} else {
-    $selectableViewClassNames = CBViewPageViews::availableViewClassNames();
+$selectableViewClassNames = $pagesPreferences->selectableViewClassNames;
+
+/**
+ * @deprecated use preferences instead of CBViewPageViews
+ */
+if (class_exists('CBViewPageViews')) {
+    if (!is_callable($function = 'CBViewPageViews::selectableViewClassNames')) {
+        $function = 'CBViewPageViews::availableViewClassNames';
+    }
+
+    $selectableViewClassNames = array_values(array_unique(array_merge(
+        $selectableViewClassNames, call_user_func($function)
+    )));
 }
 
 CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $selectableViewClassNames);
