@@ -43,7 +43,8 @@ final class CBPagesPreferences {
         $model->selectableViewClassNames    = [];
 
         if (isset($spec->supportedViewClassNames)) {
-            $model->supportedViewClassNames = preg_split('/[\s]+/', $spec->supportedViewClassNames);
+            $model->supportedViewClassNames = preg_split(
+                '/[\s]+/', $spec->supportedViewClassNames, null, PREG_SPLIT_NO_EMPTY);
 
             array_walk($model->supportedViewClassNames, function($className) {
                 if (!class_exists($className)) {
@@ -53,7 +54,8 @@ final class CBPagesPreferences {
         }
 
         if (isset($spec->deprecatedViewClassNames)) {
-            $deprecatedViewClassNames           = preg_split('/[\s]+/', $spec->deprecatedViewClassNames);
+            $deprecatedViewClassNames           = preg_split(
+                '/[\s]+/', $spec->deprecatedViewClassNames, null, PREG_SPLIT_NO_EMPTY);
             $model->selectableViewClassNames    = array_diff($model->supportedViewClassNames, $deprecatedViewClassNames);
         } else {
             $model->selectableViewClassNames    = $model->supportedViewClassNames;
