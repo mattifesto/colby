@@ -58,6 +58,10 @@ button, input, select, textarea {
     box-sizing: border-box; /* 1 */
 }
 
+input, textarea {
+    border: 1px solid hsl(0, 0%, 80%); /* 1 */
+}
+
 table {
     border-spacing: 0px; /* 1 */
 }
@@ -124,6 +128,11 @@ button, input, select, textarea:
 
 1.  This rule allows form elements to be set to `100%` wide and properly fill that width. Without it, the element border widths make it slightly larger.
     Note: Any other attempts to equalize the form elements is most likely counterproductive. Most browsers degrade the appearance of these elements as soon as any visible property is applied. Views involving form elements should be designed to withstand slight appearance differences between browsers.
+
+
+input, textarea:
+
+1.  In apparently all browsers the the default colors for the input and textarea elements are different. This color closely resembles the default color for the input element.
 
 
 table:
