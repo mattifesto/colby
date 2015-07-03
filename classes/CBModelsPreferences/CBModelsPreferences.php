@@ -40,9 +40,15 @@ final class CBModelsPreferences {
 
             $menuItem                   = CBModels::modelWithClassName('CBClassMenuItem');
             $menuItem->itemClassName    = 'CBMenu';
-            $menuItem->group            = 'Administrators';
+            $menuItem->group            = 'Developers';
             $menuItem->title            = 'Menus';
-            $spec->classMenuItems       = [$menuItem];
+            $spec->classMenuItems[]     = $menuItem;
+
+            $menuItem                   = CBModels::modelWithClassName('CBClassMenuItem');
+            $menuItem->itemClassName    = 'CBTextBoxTheme';
+            $menuItem->group            = 'Developers';
+            $menuItem->title            = 'Text Box Themes';
+            $spec->classMenuItems[]     = $menuItem;
 
             CBModels::save([$spec]);
         }
