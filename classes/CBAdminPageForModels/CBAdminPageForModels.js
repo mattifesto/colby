@@ -42,7 +42,9 @@ var CBAdminPageForModels = {
         element.appendChild(title);
         element.appendChild(models);
 
-        handleClassChanged.call();
+        if (CBClassMenuItems.length > 0) {
+            handleClassChanged.call();
+        }
 
         return element;
     },
