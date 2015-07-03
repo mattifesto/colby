@@ -36,9 +36,7 @@ final class CBModelsPreferences {
         $spec = CBModels::fetchSpecByID(CBModelsPreferences::ID);
 
         if ($spec === false) {
-            $spec               = CBModels::modelWithClassName(__CLASS__, [
-                'ID'            => CBModelsPreferences::ID
-            ]);
+            $spec = CBModels::modelWithClassName(__CLASS__, [ 'ID' => CBModelsPreferences::ID ]);
 
             $menuItem                   = CBModels::modelWithClassName('CBClassMenuItem');
             $menuItem->itemClassName    = 'CBMenu';
