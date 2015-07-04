@@ -19,13 +19,6 @@ var CBTextBoxViewThemeEditorFactory = {
             spec                : args.spec
         }));
 
-        element.appendChild(CBStringEditorFactory.createMultiLineEditor({
-            handleSpecChanged   : args.handleSpecChanged,
-            labelText           : "URLs For CSS",
-            propertyName        : "URLsForCSS",
-            spec                : args.spec
-        }));
-
         var CSSClass                = "T" + args.spec.ID;
         var classIndicator          = document.createElement("div");
         classIndicator.textContent  = "Theme CSS Class: " + CSSClass;

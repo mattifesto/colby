@@ -99,10 +99,6 @@ EOT;
             $styles[] = "#{$ID} { width: {$model->width}px; }";
         }
 
-        array_walk($model->URLsForCSSAsHTML, function($URL) {
-            CBHTMLOutput::addCSSURL($URL);
-        });
-
         $themeClass = $model->themeID ? "T{$model->themeID}" : 'NoTheme';
         $properties = "class=\"CBTextBoxView {$themeClass}\" id=\"{$ID}\"";
 
@@ -163,17 +159,8 @@ EOT;
         $model->titleColor          = isset($spec->titleColor) ? trim($spec->titleColor) : '';
         $model->URL                 = isset($spec->URL) ? trim($spec->URL) : '';
         $model->URLAsHTML           = ColbyConvert::textToHTML($model->URL);
-        $model->URLsForCSSAsHTML    = [];
         $model->verticalAlignment   = "top";
         $model->width               = CBTextBoxView::propertyToNumber($spec, 'width');
-
-        if ($model->themeID) {
-            $theme = CBModels::fetchModelByID($model->themeID);
-
-            if ($theme) {
-                $model->URLsForCSSAsHTML    = $theme->URLsForCSSAsHTML;
-            }
-        }
 
         if (isset($spec->verticalAlignment)) {
             switch ($spec->verticalAlignment) {
