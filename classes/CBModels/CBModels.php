@@ -401,5 +401,7 @@ EOT;
 EOT;
 
         Colby::query($SQL);
+
+        Colby::query('DROP TEMPORARY TABLE `CBModelsTemp`');
     }
 }
