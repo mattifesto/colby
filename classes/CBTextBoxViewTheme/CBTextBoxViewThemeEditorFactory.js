@@ -44,7 +44,9 @@ var CBTextBoxViewThemeEditorFactory = {
      * @return  undefined
      */
     handleAddStyle : function(args) {
-        args.spec.styles = args.spec.styles.replace(/[\s]+$/, "\n\n.T" + args.spec.ID + " {\n\n}\n");
+        var styles          = args.spec.styles ? args.spec.styles.trim() : "";
+        var pre             = (styles !== "") ? "\n\n" : "";
+        args.spec.styles    = styles.replace(/[\s]*$/, pre + ".T" + args.spec.ID + " {\n\n}\n");
         document.dispatchEvent(new Event(args.spec.ID));
     }
 };
