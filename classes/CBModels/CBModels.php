@@ -192,6 +192,52 @@ EOT;
     }
 
     /**
+     * This function imports a model using a spec. This is one of the few
+     * situations in which the spec will be forced to the correct version to be
+     * saved.
+     *
+     * @return {stdClass}
+     */
+    public static function importModelForAjax() {
+        $response   = new CBAjaxResponse();
+        $filepath   = $_FILES['file']['tmp_name'];
+        $spec       = json_decode(file_get_contents($filepath));
+        $IDAsSQL    = CBHex160::toSQL($spec->ID);
+        $SQL        = <<<EOT
+
+            SELECT  `version`
+            FROM    `CBModels`
+            WHERE   `ID` = {$IDAsSQL}
+            FOR UPDATE
+
+EOT;
+
+        Colby::query('START TRANSACTION');
+
+        $version = CBDB::SQLToValue($SQL, ['valueIsJSON' => true]);
+
+        if ($version === false) {
+            unset($spec->version);
+        } else {
+            $spec->version = $version;
+        }
+
+        CBModels::save([$spec]);
+
+        Colby::query('COMMIT');
+
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function importModelForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * @return null
      */
     public static function install() {

@@ -6,19 +6,30 @@ var CBAdminPageForModels = {
      * @return {Element}
      */
     createUI : function() {
-        var element         = document.createElement("div");
-        element.className   = "CBAdminPageForModelsUI"
-        var menu            = document.createElement("div");
-        menu.className      = "menu";
-        var button          = document.createElement("button");
-        button.textContent  = "New";
-        var select          = document.createElement("select");
-        var title           = document.createElement("h1");
-        var models          = document.createElement("div");
-        models.className    = "models";
+        var element                 = document.createElement("div");
+        element.className           = "CBAdminPageForModelsUI"
+        var menu                    = document.createElement("div");
+        menu.className              = "menu";
+        var button                  = document.createElement("button");
+        button.textContent          = "New";
+        var importInput             = document.createElement("input");
+        importInput.type            = "file";
+        importInput.style.display   = "none";
+        var importButton            = document.createElement("button");
+        importButton.textContent    = "Import";
+        var select                  = document.createElement("select");
+        var title                   = document.createElement("h1");
+        var models                  = document.createElement("div");
+        models.className            = "models";
 
         button.addEventListener("click", CBAdminPageForModels.handleNewClicked.bind(undefined, {
             selectElement : select
+        }));
+
+        importButton.addEventListener("click", importInput.click.bind(importInput));
+        importInput.addEventListener("change", CBAdminPageForModels.handleImportFileSelected.bind(undefined, {
+            importButton    : importButton,
+            inputElement    : importInput
         }));
 
         CBClassMenuItems.forEach(function(element, index) {
@@ -38,6 +49,8 @@ var CBAdminPageForModels = {
 
         menu.appendChild(select);
         menu.appendChild(button);
+        menu.appendChild(importInput);
+        menu.appendChild(importButton);
         element.appendChild(menu);
         element.appendChild(title);
         element.appendChild(models);
@@ -129,6 +142,46 @@ var CBAdminPageForModels = {
     handleFetchListFailed : function(args) {
         // TODO: implement
         alert('An error occurred while trying to retreive the model list.');
+    },
+
+    /**
+     * @param   {Element}           importButton
+     * @param   {XMLHttpRequest}    xhr
+     *
+     * @return  undefined
+     */
+    handleImportFileImported : function(args) {
+        args.importButton.disabled  = false;
+        var response                = Colby.responseFromXMLHttpRequest(args.xhr);
+
+        if (response.wasSuccessful) {
+            document.location.reload(true);
+        } else {
+            Colby.displayResponse(response);
+        }
+    },
+
+    /**
+     * @param   {Element}   importButton
+     * @param   {Element}   inputElement
+     *
+     * @return  undefined
+     */
+    handleImportFileSelected : function(args) {
+        args.importButton.disabled  = true;
+        var formData                = new FormData();
+
+        formData.append("file", args.inputElement.files[0]);
+
+        args.inputElement.value     = null;
+        var xhr                     = new XMLHttpRequest();
+        xhr.onload                  = CBAdminPageForModels.handleImportFileImported.bind(undefined, {
+            importButton            : args.importButton,
+            xhr                     : xhr
+        });
+        xhr.onerror                 = xhr.onload;
+        xhr.open("POST", "/api/?class=CBModels&function=importModel");
+        xhr.send(formData);
     },
 
     /**
