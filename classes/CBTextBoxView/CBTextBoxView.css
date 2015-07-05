@@ -10,11 +10,28 @@
 }
 
 body > .CBTextBoxView {
-    margin: 0 auto; /* 1 */
+    margin: 0 auto;             /* 1 */
+}
+
+.CBTextBoxView b,
+.CBTextBoxView cite,
+.CBTextBoxView code,
+.CBTextBoxView i,
+.CBTextBoxView h1,
+.CBTextBoxView h2,
+.CBTextBoxView h3,
+.CBTextBoxView pre {
+    font: inherit;              /* 2 */
+}
+
+.CBTextBoxView ol,
+.CBTextBoxView ul {
+    list-style-type:    none;   /* 2 */
+    padding:            0;
 }
 
 .CBTextBoxView > * {
-    flex:           none;
+    flex:           none;       /* 3 */
     -ms-flex:       none;
     -webkit-flex:   none;
 }
@@ -28,29 +45,19 @@ a.CBTextBoxView.NoTheme {
     text-decoration:    inherit;
 }
 
-.CBTextBoxView.NoTheme h1 {
-    font-size: 2.0em; /* 2 */
+.CBTextBoxView.NoTheme > h1 {
+    font-size: 2.0em;           /* 4 */
 }
 
-.CBTextBoxView.NoTheme h1 b,
-.CBTextBoxView.NoTheme h1 cite,
-.CBTextBoxView.NoTheme h1 i {
-    font: inherit;
-}
-
-.CBTextBoxView.NoTheme h1 cite {
-    border-bottom: 1px solid hsl(0, 0%, 80%);
-}
-
-.CBTextBoxView.NoTheme h1 + div {
+.CBTextBoxView.NoTheme > h1 + div {
     margin-top: 20px;
 }
 
-.CBTextBoxView.NoTheme p {
+.CBTextBoxView.NoTheme div {
     line-height: 1.5;
 }
 
-.CBTextBoxView.NoTheme p + p {
+.CBTextBoxView.NoTheme div > p + p {
     margin-top: 1em;
 }
 
@@ -61,6 +68,22 @@ a.CBTextBoxView.NoTheme {
  */
 
 /* 2
+ * These rules remove the browser default styles for these views. When dealing
+ * with custom fonts they can result in synthesized fonts. Also, elements like
+ * h1, h2, h3 and even lists should not have default styles because they will
+ * certainly be wrong and I don't want to be obligated to rewrite every possible
+ * style for every new theme. This styles allow these to work by default and
+ * each styles is additive.
+ */
+
+/* 3
+ * Allowing the h1 and the div child to flex will result in odd behavior when
+ * the the children overflow the height of the view. The margin between the h1
+ * and div will collapse among other things. This rule keeps things predictable
+ * in the event of an overflow.
+ */
+
+/* 4
  * Browser defaults make h1 elements inside of sections smaller than those
  * inside of anchors. This setting normalizes that.
  */
