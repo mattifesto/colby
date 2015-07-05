@@ -29,10 +29,10 @@ var CBSpecArrayEditorFactory = {
         var footer          = document.createElement("div");
         footer.className    = "footer";
         var menu            = document.createElement("select");
-        var button          = document.createElement("button");
-        button.textContent  = "Append";
+        var append          = document.createElement("button");
+        append.textContent  = "Append";
 
-        button.addEventListener("click", CBSpecArrayEditorFactory.handleAppend.bind(undefined, {
+        append.addEventListener("click", CBSpecArrayEditorFactory.handleAppend.bind(undefined, {
             array               : args.array,
             classNames          : args.classNames,
             handleArrayChanged  : args.handleChanged,
@@ -47,8 +47,20 @@ var CBSpecArrayEditorFactory = {
             menu.appendChild(option);
         });
 
+        var paste           = document.createElement("button");
+        paste.textContent   = "Paste";
+
+        paste.addEventListener("click", CBSpecArrayEditorFactory.handlePaste.bind(undefined, {
+            array                   : args.array,
+            beforeSpec              : null,
+            selectableClassNames    : args.classNames,
+            handleArrayChanged      : args.handleChanged,
+            parentElement           : container
+        }));
+
         footer.appendChild(menu);
-        footer.appendChild(button);
+        footer.appendChild(append);
+        footer.appendChild(paste);
         element.appendChild(container);
         element.appendChild(footer);
 
@@ -84,6 +96,24 @@ var CBSpecArrayEditorFactory = {
             spec                : args.spec
         });
 
+        var copy            = document.createElement("button");
+        copy.textContent    = "C";
+
+        copy.addEventListener("click", CBSpecArrayEditorFactory.handleCopy.bind(undefined, {
+            spec : args.spec
+        }));
+
+        var paste           = document.createElement("button");
+        paste.textContent   = "P";
+
+        paste.addEventListener("click", CBSpecArrayEditorFactory.handlePaste.bind(undefined, {
+            array                   : args.array,
+            beforeSpec              : args.spec,
+            selectableClassNames    : args.classNames,
+            handleArrayChanged      : args.handleChanged,
+            parentElement           : args.parentElement
+        }));
+
         var menu = document.createElement("select");
 
         args.classNames.forEach(function(className) {
@@ -111,7 +141,7 @@ var CBSpecArrayEditorFactory = {
             handleRemove        : handleRemove,
             handleSpecChanged   : args.handleChanged,
             spec                : args.spec,
-            toolbarElements     : [menu, insert]
+            toolbarElements     : [copy, paste, menu, insert]
         });
     },
 
@@ -140,6 +170,16 @@ var CBSpecArrayEditorFactory = {
         args.parentElement.appendChild(widgetElement);
 
         args.handleArrayChanged.call();
+    },
+
+    /**
+     * @param   {Object}    spec
+     *
+     * @return  undefined
+     */
+    handleCopy : function(args) {
+        var spec = JSON.stringify(args.spec);
+        localStorage.setItem("specClipboard", spec);
     },
 
     /**
@@ -220,6 +260,44 @@ var CBSpecArrayEditorFactory = {
 
             args.handleArrayChanged.call();
         }
+    },
+
+    /**
+     * @param   {Array}     array
+     * @param   {Object}    beforeSpec
+     * @param   {function}  handleArrayChanged
+     * @param   {Element}   parentElement
+     * @param   {Array}     selectableClassNames
+     *
+     * @return  undefined
+     */
+    handlePaste : function(args) {
+        var spec            = localStorage.getItem("specClipboard");
+
+        if (spec === null) {
+            return;
+        }
+
+        spec                = JSON.parse(spec);
+        var widgetElement   = CBSpecArrayEditorFactory.createWidgetForSpec({
+            array           : args.array,
+            classNames      : args.selectableClassNames,
+            handleChanged   : args.handleArrayChanged,
+            parentElement   : args.parentElement,
+            spec            : spec
+        });
+
+        if (args.beforeSpec) {
+            var index           = args.array.indexOf(args.beforeSpec);
+            var beforeElement   = args.parentElement.children.item(index);
+            args.array.splice(index, 0, spec); // insert before spec at index
+            args.parentElement.insertBefore(widgetElement, beforeElement);
+        } else {
+            args.array.push(spec);
+            args.parentElement.appendChild(widgetElement);
+        }
+
+        args.handleArrayChanged.call();
     },
 
     /**
