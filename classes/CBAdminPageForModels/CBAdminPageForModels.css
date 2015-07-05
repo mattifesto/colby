@@ -15,3 +15,7 @@
     margin:     0 auto;
     width:      960px;
 }
+
+.CBAdminPageForModelsUI td a + a {
+    margin-left: 5px;
+}
