@@ -19,3 +19,8 @@
 .CBTextBoxViewThemeEditor .CBStringEditor + .CBStringEditor {
     margin-top: 10px;
 }
+
+.CBTextBoxViewThemeEditor button {
+    display: block;
+    margin: 5px auto 0;
+}
