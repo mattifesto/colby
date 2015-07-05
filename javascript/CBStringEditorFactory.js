@@ -16,6 +16,11 @@ var CBStringEditorFactory = {
      * @param {function}    handleSpecChanged
      * @param {string{      labelText
      * @param {string}      propertyName
+     * @param {string}      propertyUpdatedEvent
+     *      If the creator of this editor needs to update the property outside
+     *      the editor it passes in an event which it will use to let the
+     *      editor know the property has been updated. Will be replaced with
+     *      Object.observe()
      * @param {Object}      spec
      *
      * @return {Element}
@@ -39,6 +44,15 @@ var CBStringEditorFactory = {
 
         element.appendChild(label);
         element.appendChild(textarea);
+
+        if (args.propertyUpdatedEvent) {
+            document.addEventListener(args.propertyUpdatedEvent, CBStringEditorFactory.handlePropertyUpdated.bind(undefined, {
+                element             : textarea,
+                handleSpecChanged   : args.handleSpecChanged,
+                propertyName        : args.propertyName,
+                spec                : args.spec
+            }));
+        }
 
         return element;
     },
@@ -181,5 +195,16 @@ var CBStringEditorFactory = {
         }
 
         args.selectElement.value = selectedValue;
+    },
+
+    /**
+     * @param   {Element}   element
+     * @param   {function}  handleSpecChanged
+     * @param   {string}    propertyName
+     * @param   {Object}    spec
+     */
+    handlePropertyUpdated : function(args) {
+        args.element.value = args.spec[args.propertyName];
+        args.handleSpecChanged.call();
     }
 };
