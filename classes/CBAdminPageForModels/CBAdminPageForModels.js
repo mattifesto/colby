@@ -96,16 +96,20 @@ var CBAdminPageForModels = {
             var table = document.createElement("table");
 
             response.models.forEach(function(model) {
-                var tr              = document.createElement("tr");
-                var edit            = document.createElement("td");
-                var a               = document.createElement("a");
-                a.href              = "/admin/models/edit/?ID=" + model.ID;
-                a.textContent       = "edit";
-                var title           = document.createElement("td");
-                title.textContent   = model.title;
+                var tr                  = document.createElement("tr");
+                var menu                = document.createElement("td");
+                var a                   = document.createElement("a");
+                a.href                  = "/admin/models/edit/?ID=" + model.ID;
+                a.textContent           = "edit";
+                var exportLink          = document.createElement("a");
+                exportLink.href         = "/admin/models/export/?ID=" + model.ID;
+                exportLink.textContent  = "export";
+                var title               = document.createElement("td");
+                title.textContent       = model.title;
 
-                edit.appendChild(a);
-                tr.appendChild(edit);
+                menu.appendChild(a);
+                menu.appendChild(exportLink);
+                tr.appendChild(menu);
                 tr.appendChild(title);
                 table.appendChild(tr);
             });
