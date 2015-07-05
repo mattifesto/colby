@@ -58,6 +58,66 @@ var CBSpecArrayEditorFactory = {
     /**
      * @param   {Array}     array
      * @param   {Array}     classNames
+     * @param   {function}  handleChanged
+     * @param   {Element}   parentElement
+     * @param   {Object}    spec
+     *
+     * @return  undefined
+     */
+    createWidgetForSpec : function(args) {
+        var handleMoveDown      = CBSpecArrayEditorFactory.handleMoveDown.bind(undefined, {
+            array               : args.array,
+            handleArrayChanged  : args.handleChanged,
+            parentElement       : args.parentElement,
+            spec                : args.spec
+        });
+        var handleMoveUp        = CBSpecArrayEditorFactory.handleMoveUp.bind(undefined, {
+            array               : args.array,
+            handleArrayChanged  : args.handleChanged,
+            parentElement       : args.parentElement,
+            spec                : args.spec
+        });
+        var handleRemove        = CBSpecArrayEditorFactory.handleRemove.bind(undefined, {
+            array               : args.array,
+            handleArrayChanged  : args.handleChanged,
+            parentElement       : args.parentElement,
+            spec                : args.spec
+        });
+
+        var menu = document.createElement("select");
+
+        args.classNames.forEach(function(className) {
+            var option          = document.createElement("option");
+            option.textContent  = className;
+            option.value        = className;
+            menu.appendChild(option);
+        });
+
+        var insert          = document.createElement("button");
+        insert.textContent  = "Insert";
+
+        insert.addEventListener("click", CBSpecArrayEditorFactory.handleInsert.bind(undefined, {
+            array               : args.array,
+            classNames          : args.classNames,
+            handleArrayChanged  : args.handleChanged,
+            parentElement       : args.parentElement,
+            selectElement       : menu,
+            spec                : args.spec
+        }));
+
+        return CBEditorWidgetFactory.createWidget({
+            handleMoveDown      : handleMoveDown,
+            handleMoveUp        : handleMoveUp,
+            handleRemove        : handleRemove,
+            handleSpecChanged   : args.handleChanged,
+            spec                : args.spec,
+            toolbarElements     : [menu, insert]
+        });
+    },
+
+    /**
+     * @param   {Array}     array
+     * @param   {Array}     classNames
      * @param   {function}  handleArrayChanged
      * @param   {Element}   parentElement
      * @param   {Element}   selectElement
@@ -181,65 +241,5 @@ var CBSpecArrayEditorFactory = {
 
             args.handleArrayChanged.call();
         }
-    },
-
-    /**
-     * @param   {Array}     array
-     * @param   {Array}     classNames
-     * @param   {function}  handleChanged
-     * @param   {Element}   parentElement
-     * @param   {Object}    spec
-     *
-     * @return  undefined
-     */
-    createWidgetForSpec : function(args) {
-        var handleMoveDown      = CBSpecArrayEditorFactory.handleMoveDown.bind(undefined, {
-            array               : args.array,
-            handleArrayChanged  : args.handleChanged,
-            parentElement       : args.parentElement,
-            spec                : args.spec
-        });
-        var handleMoveUp        = CBSpecArrayEditorFactory.handleMoveUp.bind(undefined, {
-            array               : args.array,
-            handleArrayChanged  : args.handleChanged,
-            parentElement       : args.parentElement,
-            spec                : args.spec
-        });
-        var handleRemove        = CBSpecArrayEditorFactory.handleRemove.bind(undefined, {
-            array               : args.array,
-            handleArrayChanged  : args.handleChanged,
-            parentElement       : args.parentElement,
-            spec                : args.spec
-        });
-
-        var menu = document.createElement("select");
-
-        args.classNames.forEach(function(className) {
-            var option          = document.createElement("option");
-            option.textContent  = className;
-            option.value        = className;
-            menu.appendChild(option);
-        });
-
-        var insert          = document.createElement("button");
-        insert.textContent  = "Insert";
-
-        insert.addEventListener("click", CBSpecArrayEditorFactory.handleInsert.bind(undefined, {
-            array               : args.array,
-            classNames          : args.classNames,
-            handleArrayChanged  : args.handleChanged,
-            parentElement       : args.parentElement,
-            selectElement       : menu,
-            spec                : args.spec
-        }));
-
-        return CBEditorWidgetFactory.createWidget({
-            handleMoveDown      : handleMoveDown,
-            handleMoveUp        : handleMoveUp,
-            handleRemove        : handleRemove,
-            handleSpecChanged   : args.handleChanged,
-            spec                : args.spec,
-            toolbarElements     : [menu, insert]
-        });
     }
 };
