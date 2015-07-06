@@ -10,7 +10,12 @@
 }
 
 body > .CBTextBoxView {
-    margin: 0 auto;             /* 1 */
+    margin: 0 auto;                 /* 1 */
+}
+
+a.CBTextBoxView {
+    color:              inherit;    /* 2 */
+    text-decoration:    inherit;
 }
 
 .CBTextBoxView b,
@@ -21,17 +26,17 @@ body > .CBTextBoxView {
 .CBTextBoxView h2,
 .CBTextBoxView h3,
 .CBTextBoxView pre {
-    font: inherit;              /* 2 */
+    font: inherit;                  /* 2 */
 }
 
 .CBTextBoxView ol,
 .CBTextBoxView ul {
-    list-style-type:    none;   /* 2 */
+    list-style-type:    none;       /* 2 */
     padding:            0;
 }
 
 .CBTextBoxView > * {
-    flex:           none;       /* 3 */
+    flex:           none;           /* 3 */
     -ms-flex:       none;
     -webkit-flex:   none;
 }
@@ -40,13 +45,8 @@ body > .CBTextBoxView {
     padding:            20px 40px;
 }
 
-a.CBTextBoxView.NoTheme {
-    color:              inherit;
-    text-decoration:    inherit;
-}
-
 .CBTextBoxView.NoTheme > h1 {
-    font-size: 2.0em;           /* 4 */
+    font-size: 2.0em;               /* 4 */
 }
 
 .CBTextBoxView.NoTheme > h1 + div {
