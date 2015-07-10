@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is included by CBMainMenu::update()
+ * This file is included by CBMainMenu::install()
  */
 
 $model = CBModels::fetchModelByID(CBMainMenu::ID);
