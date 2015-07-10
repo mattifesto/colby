@@ -247,6 +247,7 @@ EOT;
 
 CBModels::install();
 CBPages::install();
+CBMainMenu::install();
 
 /**
  * 2014.08.25
