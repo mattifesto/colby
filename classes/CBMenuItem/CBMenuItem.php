@@ -30,7 +30,7 @@ final class CBMenuItem {
         $model->text        = isset($spec->text) ? (string)$spec->text : '';
         $model->textAsHTML  = ColbyConvert::textToHTML($model->text);
         $model->URL         = isset($spec->URL) ? (string)$spec->URL : '';
-        $model->URLAsHTML   = ColbyConvert::textAsHTML($model->URL);
+        $model->URLAsHTML   = ColbyConvert::textToHTML($model->URL);
 
         return $model;
     }
