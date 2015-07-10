@@ -35,6 +35,7 @@ final class CBMenu {
     public static function specToModel(stdClass $spec) {
         $model          = CBModels::modelWithClassName(__CLASS__);
         $model->title   = isset($spec->title) ? (string)$spec->title : '';
+        $model->items   = isset($spec->items) ? array_map('CBMenuItem::specToModel', $spec->items) : [];
 
         return $model;
     }
