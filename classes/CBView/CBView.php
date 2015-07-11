@@ -15,6 +15,17 @@ final class CBView {
     }
 
     /**
+     * @return {array}
+     */
+    public static function modelToModelDependencies(stdClass $model) {
+        if (is_callable($function = "{$model->className}::modelToModelDependencies")) {
+            return call_user_func($function, $model);
+        } else {
+            return [];
+        }
+    }
+
+    /**
      * @note functional programming
      *
      * @return stdClass
