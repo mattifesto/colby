@@ -40,7 +40,8 @@ final class CBMarkaround {
             '\\\\\{'    => '{',     //  \{  -->  {
             '\\\\\}'    => '}',     //  \}  -->  }
             '\\\\_'     => '_',     //  \_  -->  _
-            '\\\\`'     => '`');    //  \`  -->  `
+            '\\\\`'     => '`',     //  \`  -->  `
+            '\\\\^'     => '^');    //  \^  -->  ^
 
         $paragraph = ColbyConvert::textToHTML($paragraph);
 
@@ -57,6 +58,8 @@ final class CBMarkaround {
         $replacements[] = '<cite>$1</cite>';
         $patterns[]     = self::expressionForSpan('`', '`');
         $replacements[] = '<code>$1</code>';
+        $patterns[]     = self::expressionForSpan('\^', '\^');
+        $replacements[] = '<span class="special">$1</span>';
         $patterns[]     = '/ (?<=^|\s) \/ (?=\s|$) /x';
         $replacements[] = '<br>';
 
