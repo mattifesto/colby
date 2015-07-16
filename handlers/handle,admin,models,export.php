@@ -6,8 +6,9 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
 
 $spec       = CBModels::fetchSpecByID($_GET['ID']);
 $specAsJSON = json_encode($spec);
+$server     = $_SERVER['SERVER_NAME'];
 $title      = empty(trim($spec->title)) ? 'Untitled Model' : $spec->title;
-$filename   = rawurlencode("{$title} ({$spec->className}).json");
+$filename   = rawurlencode("{$title} ({$spec->className}, {$server}).json");
 
 header('Pragma: public');
 header('Expires: 0');
