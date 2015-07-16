@@ -73,6 +73,8 @@ var CBImageEditorFactory = {
     },
 
     /**
+     * @deprecated use CBImageEditorFactory.createImagePreviewElement
+     *
      *     Creates a CBImageEditorPreview element which is 440px by 240px and
      * has a clickable background that will change color to improve viewing of
      * translucent images.
@@ -81,7 +83,7 @@ var CBImageEditorFactory = {
      *     You must load `CBImageEditorFactory.css` if you want to use the
      * default styles for this element.
      *
-     * @param   {string}    className   Replaces the defaul class name
+     * @param   {string}    className   Replaces the default class name
      *
      * @return  {Element}
      */
@@ -92,13 +94,13 @@ var CBImageEditorFactory = {
         var img                         = document.createElement("img");
         preview.editorPreviewSetSrc     = function(URL) {
             img.src = URL;
-        }
+        };
 
         preview.appendChild(img);
 
         preview.addEventListener("click", function() {
-            preview.classList.toggle("dark")
-        })
+            preview.classList.toggle("dark");
+        });
 
         return preview;
     },
@@ -131,6 +133,41 @@ var CBImageEditorFactory = {
         }));
 
         return element;
+    },
+
+    /**
+     * This function returns an object containing references to its most
+     * important elements. This is the most flexible way to implement this such
+     * that the caller can hold onto what they need and release what they don't.
+     * This should deprecate all other code that builds this same type of
+     * preview element. Other code should call this function then customize the
+     * behavior to meet its needs.
+     *
+     * You must load `CBImageEditorFactory.css` if you want to use the default
+     * styles for this element.
+     *
+     * @return  {Object}
+     *
+     *      {
+     *          element : {div},
+     *          img     : {img}
+     *      }
+     */
+    createImagePreviewElement : function() {
+        var element         = document.createElement("div");
+        element.className   = "CBImageEditorPreview";
+        var img             = document.createElement("img");
+
+        element.appendChild(img);
+
+        element.addEventListener("click", function() {
+            element.classList.toggle("dark");
+        });
+
+        return {
+            element : element,
+            img     : img
+        };
     },
 
     /**
