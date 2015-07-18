@@ -13,22 +13,23 @@
 var CBStringEditorFactory = {
 
     /**
-     * @param {function}    handleSpecChanged
-     * @param {string{      labelText
-     * @param {string}      propertyName
-     * @param {string}      propertyUpdatedEvent
+     * @param   {string}    className
+     * @param   {function}  handleSpecChanged
+     * @param   {string}    labelText
+     * @param   {string}    propertyName
+     * @param   {string}    propertyUpdatedEvent
      *      If the creator of this editor needs to update the property outside
      *      the editor it passes in an event which it will use to let the
      *      editor know the property has been updated. Will be replaced with
      *      Object.observe()
-     * @param {Object}      spec
+     * @param   {Object}    spec
      *
      * @return {Element}
      */
     createMultiLineEditor : function(args) {
         var ID              = Colby.random160();
         var element         = document.createElement("div");
-        element.className   = "CBStringEditor";
+        element.className   = "CBStringEditor multiLine" + (args.className ? " " + args.className : "");
         var label           = document.createElement("label");
         label.htmlFor       = ID;
         label.textContent   = args.labelText || "";
@@ -58,19 +59,20 @@ var CBStringEditorFactory = {
     },
 
     /**
-     * @param {Array}       data
-     * @param {string}      dataUpdatedEvent
-     * @param {function}    handleSpecChanged
-     * @param {string{      labelText
-     * @param {string}      propertyName
-     * @param {Object}      spec
+     * @param   {string}    className
+     * @param   {Array}     data
+     * @param   {string}    dataUpdatedEvent
+     * @param   {function}  handleSpecChanged
+     * @param   {string{    labelText
+     * @param   {string}    propertyName
+     * @param   {Object}    spec
      *
-     * @return {Element}
+     * @return  {Element}
      */
     createSelectEditor : function(args) {
         var ID              = Colby.random160();
         var element         = document.createElement("div");
-        element.className   = "CBStringEditor";
+        element.className   = "CBStringEditor select" + (args.className ? " " + args.className : "");
         var label           = document.createElement("label");
         label.htmlFor       = ID;
         label.textContent   = args.labelText || "";
@@ -115,7 +117,7 @@ var CBStringEditorFactory = {
     createSingleLineEditor : function(args) {
         var ID              = Colby.random160();
         var element         = document.createElement("div");
-        element.className   = "CBStringEditor" + (args.className ? " " + args.className : "");
+        element.className   = "CBStringEditor singleLine" + (args.className ? " " + args.className : "");
         var label           = document.createElement("label");
         label.htmlFor       = ID;
         label.textContent   = args.labelText || "";
@@ -151,6 +153,12 @@ var CBStringEditorFactory = {
     },
 
     /**
+     * 1. If the property on the spec is `undefined`, then selected value should
+     *    be "" because every select element (in this context) should have a
+     *    default option with a value of "" and undefined and "" both mean "use
+     *    the default option". The select element's value property does not
+     *    automatically normalize `undefined` to "".
+     *
      * @param   {Array}     data
      * @param   {string}    propertyName
      * @param   {Element}   selectElement
@@ -160,7 +168,7 @@ var CBStringEditorFactory = {
      */
     handleSelectDataUpdated : function(args) {
         var childElement;
-        var selectedValue   = args.spec[args.propertyName];
+        var selectedValue   = args.spec[args.propertyName] || ""; // 1
         var valueWasFound   = false;
 
         while (childElement = args.selectElement.firstChild) {
