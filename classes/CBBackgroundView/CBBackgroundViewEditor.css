@@ -42,5 +42,5 @@
 
 .CBBackgroundViewEditor > .children {
     background-color:   white;
-    border:             1px solid hsl(0, 0%, 80%);;
+    border:             1px solid hsl(0, 0%, 80%);
 }
