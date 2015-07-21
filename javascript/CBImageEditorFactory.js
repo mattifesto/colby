@@ -157,8 +157,11 @@ var CBImageEditorFactory = {
         var element         = document.createElement("div");
         element.className   = "CBImageEditorPreview";
         var img             = document.createElement("img");
+        var size            = document.createElement("div");
+        size.className      = "size";
 
         element.appendChild(img);
+        element.appendChild(size);
 
         element.addEventListener("click", function() {
             element.classList.toggle("dark");
@@ -166,7 +169,8 @@ var CBImageEditorFactory = {
 
         return {
             element : element,
-            img     : img
+            img     : img,
+            size    : size
         };
     },
 

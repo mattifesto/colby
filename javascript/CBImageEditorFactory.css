@@ -30,12 +30,17 @@
 }
 
 .CBImageEditorPreview {
-    background-color:   white;
-    display:            flex;
-    display:            -webkit-flex;
-    height:             200px;
-    padding:            20px;
-    width:              400px;
+    align-items:                center;
+    -webkit-align-items:        center;
+    background-color:           white;
+    display:                    flex;
+    display:                    -webkit-flex;
+    height:                     200px;
+    justify-content:            center;
+    -webkit-justify-content:    center;
+    padding:                    20px;
+    position:                   relative;
+    width:                      400px;
 }
 
 .CBImageEditorPreview.dark {
@@ -43,7 +48,16 @@
 }
 
 .CBImageEditorPreview > img {
-    margin:     auto;
     max-height: 200px;
     max-width:  400px;
+}
+
+.CBImageEditorPreview > .size {
+    bottom:     1px;
+    color:      hsl(0, 0%, 50%);
+    font-size:  13px;
+    left:       0;
+    position:   absolute;
+    text-align: center;
+    width:      100%;
 }
