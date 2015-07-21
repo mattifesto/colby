@@ -90,9 +90,9 @@ EOT;
         }
 
         if ($model->verticalAlignment === 'center') {
-            $styles[] = "#{$ID} { justify-content: center; -webkit-justify-content: center; }";
+            $styles[] = "#{$ID} { justify-content: center; -ms-flex-pack: center; -webkit-justify-content: center; }";
         } else if ($model->verticalAlignment === 'bottom') {
-            $styles[] = "#{$ID} { justify-content: flex-end; -webkit-justify-content: flex-end; }";
+            $styles[] = "#{$ID} { justify-content: flex-end; -ms-flex-pack: end; -webkit-justify-content: flex-end; }";
         }
 
         if ($model->width !== false) {
