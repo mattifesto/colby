@@ -21,8 +21,10 @@ html {
 
 body {
     display:                flex;           /* 1 */
+    display:                -ms-flexbox;
     display:                -webkit-flex;
     flex-direction:         column;         /* 1 */
+    -ms-flex-direction:     column;
     -webkit-flex-direction: column;
     min-height:             100%;           /* 2 */
     position:               relative;       /* 3 */
@@ -30,12 +32,14 @@ body {
 
 body > * {
     flex:                   none;           /* 4 */
-    -webkit-flex:           none;           /* 4 */
+    -ms-flex:               none;
+    -webkit-flex:           none;
 }
 
 body > .flex-fill {
     flex:                   1 0 auto;       /* 5 */
-    -webkit-flex:           1 0 auto;       /* 5 */
+    -ms-flex:               1 0 auto;
+    -webkit-flex:           1 0 auto;
 }
 
 main {
