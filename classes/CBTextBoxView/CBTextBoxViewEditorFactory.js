@@ -58,6 +58,21 @@ var CBTextBoxViewEditorFactory = {
             spec                : args.spec
         }));
 
+        containerForSettings.appendChild(CBStringEditorFactory.createSelectEditor({
+            data                : [
+                { textContent : "Auto",     value : "" },
+                { textContent : "Start",    value : "flex-start" },
+                { textContent : "End",      value : "flex-end" },
+                { textContent : "Center",   value : "center" },
+                { textContent : "Baseline", value : "baseline" },
+                { textContent : "Stretch",  value : "stretch" }
+            ],
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Align Self",
+            propertyName        : "flexAlignSelf",
+            spec                : args.spec
+        }));
+
         containerForURL.appendChild(CBStringEditorFactory.createSingleLineEditor({
             className           : "wide",
             handleSpecChanged   : args.handleSpecChanged,

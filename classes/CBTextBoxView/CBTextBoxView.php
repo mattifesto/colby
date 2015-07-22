@@ -174,6 +174,20 @@ EOT;
         $model->verticalAlignment   = "top";
         $model->width               = CBTextBoxView::propertyToNumber($spec, 'width');
 
+        $flexAlignSelf = isset($spec->flexAlignSelf) ? $spec->flexAlignSelf : '';
+
+        switch ($flexAlignSelf) {
+            case 'flex-start':
+            case 'flex-end':
+            case 'center':
+            case 'baseline':
+            case 'stretch':
+                $model->flexAlignSelf = $flexAlignSelf;
+                break;
+            default:
+                $model->flexAlignSelf = 'auto';
+        }
+
         if (isset($spec->verticalAlignment)) {
             switch ($spec->verticalAlignment) {
                 case "center":
