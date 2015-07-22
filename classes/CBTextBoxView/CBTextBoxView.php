@@ -69,6 +69,11 @@ EOT;
     }
 
     /**
+     * 1. Support for `align-self` was added after this view was in use. Default
+     * centering for views that were direct children of the body was removed.
+     * For views that haven't been updated, though, the centering behavior will
+     * be preserved until the page is edited again.
+     *
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
@@ -76,6 +81,13 @@ EOT;
         $styles     = [];
         $styles[]   = "#{$ID} h1 { text-align: {$model->titleAlignment}; }";
         $styles[]   = "#{$ID} div { text-align: {$model->contentAlignment}; }";
+
+        if (!isset($model->flexAlignSelf)) {
+            $model->flexAlignSelf = 'center'; /* 1 */
+        }
+
+        $flexItemAlign  = CBIE10Flexbox::alignSelfToFlexItemAlign($model->flexAlignSelf);
+        $styles[]       = "#{$ID} { align-self: {$model->flexAlignSelf}; -ms-flex-item-align: {$flexItemAlign}; -webkit-align-self: {$model->flexAlignSelf}; }";
 
         if ($model->contentColor) {
             $styles[] = "#{$ID} div { color: {$model->contentColor}; }";

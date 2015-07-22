@@ -9,12 +9,8 @@
     overflow:               hidden;
 }
 
-body > .CBTextBoxView {
-    margin: 0 auto;                 /* 1 */
-}
-
 a.CBTextBoxView {
-    color:              inherit;    /* 2 */
+    color:              inherit;    /* 1 */
     text-decoration:    inherit;
 }
 
@@ -26,17 +22,17 @@ a.CBTextBoxView {
 .CBTextBoxView h2,
 .CBTextBoxView h3,
 .CBTextBoxView pre {
-    font: inherit;                  /* 2 */
+    font: inherit;                  /* 1 */
 }
 
 .CBTextBoxView ol,
 .CBTextBoxView ul {
-    list-style-type:    none;       /* 2 */
+    list-style-type:    none;       /* 1 */
     padding:            0;
 }
 
 .CBTextBoxView > * {
-    flex:           none;           /* 3 */
+    flex:           none;           /* 2 */
     -ms-flex:       none;
     -webkit-flex:   none;
 }
@@ -46,7 +42,7 @@ a.CBTextBoxView {
 }
 
 .CBTextBoxView.NoTheme > h1 {
-    font-size: 2.0em;               /* 4 */
+    font-size: 2.0em;               /* 3 */
 }
 
 .CBTextBoxView.NoTheme > h1 + div {
@@ -62,12 +58,6 @@ a.CBTextBoxView {
 }
 
 /* 1
- * If a CBTextBoxView is a direct child of the body it only makes sense to
- * center it. If it's a child of another view the auto margins will cause
- * problems. The parent view should arrange its children.
- */
-
-/* 2
  * These rules remove the browser default styles for these views. When dealing
  * with custom fonts they can result in synthesized fonts. Also, elements like
  * h1, h2, h3 and even lists should not have default styles because they will
@@ -76,14 +66,14 @@ a.CBTextBoxView {
  * each styles is additive.
  */
 
-/* 3
+/* 2
  * Allowing the h1 and the div child to flex will result in odd behavior when
  * the the children overflow the height of the view. The margin between the h1
  * and div will collapse among other things. This rule keeps things predictable
  * in the event of an overflow.
  */
 
-/* 4
+/* 3
  * Browser defaults make h1 elements inside of sections smaller than those
  * inside of anchors. This setting normalizes that.
  */
