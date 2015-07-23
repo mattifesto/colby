@@ -66,8 +66,6 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.j
  * should be removed from this file.
  */
 
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewMenu.js');
-CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBViewMenu.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSelectionControl.js');
 
 include CBSystemDirectory . '/sections/admin-page-settings.php';
