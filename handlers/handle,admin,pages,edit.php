@@ -49,23 +49,11 @@ CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBPageInformationEdito
 CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBSpecArrayEditor.css');
 CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js');
 
-/* CBPageInformationEditorView.js uses these two files and their code should
+/* CBPageInformationEditorView.js uses these files and their code should
    be integrated into that file. When we move to using the model editor this
    code will all be integrated into a single CBViewPage editor. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
-
-
-/**
- * 2014.05.03 These files were originally included here because there was no way
- * to include JavaScript or CSS dependencies for editors. Now the correct way
- * to do this is to specify and editor initializer for an editor which can
- * include JavaScript and CSS dependencies.
- *
- * As the various editors take advantage of editor initializers, these includes
- * should be removed from this file.
- */
-
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSelectionControl.js');
 
 include CBSystemDirectory . '/sections/admin-page-settings.php';
