@@ -66,8 +66,6 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.j
  * should be removed from this file.
  */
 
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSectionEditorView.js');
-CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBSectionEditorView.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewEditorChromeFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewEditorWidgetFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewMenu.js');
