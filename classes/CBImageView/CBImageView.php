@@ -13,11 +13,24 @@
 final class CBImageView {
 
     /**
-     * @return void
+     * @return [{string}]
      */
-    public static function includeEditorDependencies() {
-        CBHTMLOutput::addCSSURL(self::URL('CBImageViewEditor.css'));
-        CBHTMLOutput::addJavaScriptURL(self::URL('CBImageViewEditorFactory.js'));
+    public static function editorURLsForCSS() {
+        return [
+            CBSystemURL . '/javascript/CBImageEditorFactory.css',
+            CBImageView::URL('CBImageViewEditor.css')
+        ];
+    }
+
+    /**
+     * @return [{string}]
+     */
+    public static function editorURLsForJavaScript() {
+        return [
+            CBSystemURL . '/javascript/CBImageEditorFactory.js',
+            CBSystemURL . '/javascript/CBStringEditorFactory.js',
+            CBImageView::URL('CBImageViewEditorFactory.js')
+        ];
     }
 
     /**
