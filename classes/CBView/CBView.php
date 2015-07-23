@@ -3,18 +3,6 @@
 final class CBView {
 
     /**
-     * This method is implemented to provide working but not useful
-     * functionality for new views to make creating new views simple. It should
-     * eventually be overridden by the subclass.
-     *
-     * @return void
-     */
-    public static function includeEditorDependencies() {
-        CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBView/CBViewEditor.css');
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/classes/CBView/CBViewEditor.js');
-    }
-
-    /**
      * @return {array}
      */
     public static function modelToModelDependencies(stdClass $model) {
