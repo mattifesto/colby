@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * @deprecated This class is used only by the "old style" page editor and should
+ * be removed along with it.
+ */
 var ColbyPageEditor =
 {
     'formManager'           : null,
