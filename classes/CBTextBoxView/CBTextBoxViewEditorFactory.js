@@ -12,18 +12,16 @@ var CBTextBoxViewEditorFactory = {
      * @return  {Element}
      */
     createEditor : function(args) {
+        var section, flexarea;
         var element                     = document.createElement("div");
         element.className               = "CBTextBoxViewEditor";
-        var containerForSettings        = document.createElement("div");
-        containerForSettings.className  = "container flex settings";
-        var containerForURL             = document.createElement("div");
-        containerForURL.className       = "container flex URL";
-        var containerForTitle           = document.createElement("div");
-        containerForTitle.className     = "container flex title";
-        var containerForContent         = document.createElement("div");
-        containerForContent.className   = "container content";
 
-        containerForSettings.appendChild(CBStringEditorFactory.createSelectEditor({
+        section             = document.createElement("div");
+        section.className   = "section";
+        flexarea            = document.createElement("div");
+        flexarea.className  = "flexarea";
+
+        flexarea.appendChild(CBStringEditorFactory.createSelectEditor({
             data                : CBTextBoxViewEditorFactory.themes,
             dataUpdatedEvent    : CBTextBoxViewEditorFactory.themesUpdated,
             handleSpecChanged   : args.handleSpecChanged,
@@ -32,21 +30,23 @@ var CBTextBoxViewEditorFactory = {
             spec                : args.spec
         }));
 
-        containerForSettings.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
+            className           : "extent",
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Width",
             propertyName        : "width",
             spec                : args.spec
         }));
 
-        containerForSettings.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
+            className           : "extent",
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Height",
             propertyName        : "height",
             spec                : args.spec
         }));
 
-        containerForSettings.appendChild(CBStringEditorFactory.createSelectEditor({
+        flexarea.appendChild(CBStringEditorFactory.createSelectEditor({
             data                : [
                 { textContent : "Top",      value : "top" },
                 { textContent : "Center",   value : "center" },
@@ -58,7 +58,7 @@ var CBTextBoxViewEditorFactory = {
             spec                : args.spec
         }));
 
-        containerForSettings.appendChild(CBStringEditorFactory.createSelectEditor({
+        flexarea.appendChild(CBStringEditorFactory.createSelectEditor({
             data                : [
                 { textContent : "Auto",     value : "" },
                 { textContent : "Start",    value : "flex-start" },
@@ -73,7 +73,15 @@ var CBTextBoxViewEditorFactory = {
             spec                : args.spec
         }));
 
-        containerForURL.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        section.appendChild(flexarea);
+        element.appendChild(section);
+
+        section             = document.createElement("div");
+        section.className   = "section";
+        flexarea            = document.createElement("div");
+        flexarea.className  = "flexarea";
+
+        flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
             className           : "wide",
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "URL",
@@ -81,7 +89,15 @@ var CBTextBoxViewEditorFactory = {
             spec                : args.spec
         }));
 
-        containerForTitle.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        section.appendChild(flexarea);
+        element.appendChild(section);
+
+        section             = document.createElement("div");
+        section.className   = "section";
+        flexarea            = document.createElement("div");
+        flexarea.className  = "flexarea";
+
+        flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
             className           : "wide",
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Title",
@@ -89,7 +105,7 @@ var CBTextBoxViewEditorFactory = {
             spec                : args.spec
         }));
 
-        containerForTitle.appendChild(CBStringEditorFactory.createSelectEditor({
+        flexarea.appendChild(CBStringEditorFactory.createSelectEditor({
             data                : [
                 { textContent : "Left",     value : "left" },
                 { textContent : "Center",   value : "center" },
@@ -97,26 +113,33 @@ var CBTextBoxViewEditorFactory = {
                 { textContent : "Justify",  value : "justify" }
             ],
             handleSpecChanged   : args.handleSpecChanged,
-            labelText           : "Alignment",
+            labelText           : "Title Text Alignment",
             propertyName        : "titleAlignment",
             spec                : args.spec
         }));
 
-        containerForTitle.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Color",
             propertyName        : "titleColor",
             spec                : args.spec
         }));
 
-        containerForContent.appendChild(CBStringEditorFactory.createMultiLineEditor({
+        section.appendChild(flexarea);
+        element.appendChild(section);
+
+        section             = document.createElement("div");
+        section.className   = "section";
+        flexarea            = document.createElement("div");
+        flexarea.className  = "flexarea";
+
+        section.appendChild(CBStringEditorFactory.createMultiLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
-            labelText           : "Content",
             propertyName        : "contentAsMarkaround",
             spec                : args.spec
         }));
 
-        containerForContent.appendChild(CBStringEditorFactory.createSelectEditor({
+        flexarea.appendChild(CBStringEditorFactory.createSelectEditor({
             data                : [
                 { textContent : "Left",     value : "left" },
                 { textContent : "Center",   value : "center" },
@@ -124,22 +147,20 @@ var CBTextBoxViewEditorFactory = {
                 { textContent : "Justify",  value : "justify" }
             ],
             handleSpecChanged   : args.handleSpecChanged,
-            labelText           : "Alignment",
+            labelText           : "Content Text Alignment",
             propertyName        : "contentAlignment",
             spec                : args.spec
         }));
 
-        containerForContent.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Color",
             propertyName        : "contentColor",
             spec                : args.spec
         }));
 
-        element.appendChild(containerForSettings);
-        element.appendChild(containerForURL);
-        element.appendChild(containerForTitle);
-        element.appendChild(containerForContent);
+        section.appendChild(flexarea);
+        element.appendChild(section);
 
         return element;
     },
