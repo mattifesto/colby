@@ -31,16 +31,29 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
  * should include a brief description of why it is needed.
  */
 
-/* The editor page uses this as the root spec list editor. */
-CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBSpecArrayEditor.css');
-CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js');
-
 /* This is still used by CBPageEditor.js, but it is deprecated. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
 
-/* This is used by CBSpecArrayEditorFactory.js */
+/* This is used by CBSpecArrayEditorFactory.js. */
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBEditorWidget.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditorWidgetFactory.js');
+
+/* This renders the page editor. */
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
+
+/* CBPageEditor.js uses this to render the general page info editor. */
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageInformationEditorView.js');
+CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBPageInformationEditorView.css');
+
+/* CBPageEditor.js uses this as the root spec list editor. */
+CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBSpecArrayEditor.css');
+CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js');
+
+/* CBPageInformationEditorView.js uses these two files and their code should
+   be integrated into that file. When we move to using the model editor this
+   code will all be integrated into a single CBViewPage editor. */
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
 
 
 /**
@@ -53,11 +66,6 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditorWidgetFactory.
  * should be removed from this file.
  */
 
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageInformationEditorView.js');
-CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBPageInformationEditorView.css');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSectionEditorView.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBSectionEditorView.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewEditorChromeFactory.js');
