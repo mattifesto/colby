@@ -36,15 +36,12 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
  */
 
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Colby.js');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBBooleanEditorFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBContinuousAjaxRequest.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBCheckboxControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBEditorWidget.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditorWidgetFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBFileLinkControl.js');
-CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBImageEditorFactory.css');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBImageEditorFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageInformationEditorView.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBPageInformationEditorView.css');
@@ -52,7 +49,6 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBSectionEditorView.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBSectionEditorView.css');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBStringEditorFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewEditorChromeFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewEditorWidgetFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBViewMenu.js');
