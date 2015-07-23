@@ -1,7 +1,8 @@
 "use strict";
 
 /**
- *
+ * @deprecated This file is used only by the "old style" page editor and should
+ * be removed as soon as that can be removed.
  */
 function ColbyFormManager(ajaxURL)
 {
