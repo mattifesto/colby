@@ -38,6 +38,10 @@ CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFact
 /* This is still used by CBPageEditor.js, but it is deprecated. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
 
+/* This is used by CBSpecArrayEditorFactory.js */
+CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBEditorWidget.css');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditorWidgetFactory.js');
+
 
 /**
  * 2014.05.03 These files were originally included here because there was no way
@@ -49,8 +53,6 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
  * should be removed from this file.
  */
 
-CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBEditorWidget.css');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditorWidgetFactory.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBFileLinkControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageInformationEditorView.js');
