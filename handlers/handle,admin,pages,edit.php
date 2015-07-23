@@ -26,6 +26,17 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard.css');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
 
 /**
+ * 2015.07.23 This section is created as a place to include known necessary
+ * JavaScript files for the editor itself (not view editors). Every file added
+ * should include a brief description of why it is needed.
+ */
+
+/* The editor page uses this as the root spec list editor. */
+CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBSpecArrayEditor.css');
+CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js');
+
+
+/**
  * 2014.05.03 These files were originally included here because there was no way
  * to include JavaScript or CSS dependencies for editors. Now the correct way
  * to do this is to specify and editor initializer for an editor which can
