@@ -46,7 +46,6 @@ CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFact
  * should be removed from this file.
  */
 
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBContinuousAjaxRequest.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBCheckboxControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBEditorWidget.css');
