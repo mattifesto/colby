@@ -3,15 +3,27 @@
 final class CBBackgroundView {
 
     /**
-     * @return void
+     * @return [{string}]
      */
-    public static function includeEditorDependencies() {
-        CBView::includeEditorDependencies();
+    public static function editorURLsForCSS() {
+        return [
+            CBSystemURL . '/javascript/CBImageEditorFactory.css',
+            CBSystemURL . '/javascript/CBSpecArrayEditor.css',
+            CBBackgroundView::URL('CBBackgroundViewEditor.css')
+        ];
+    }
 
-        CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBSpecArrayEditor.css');
-        CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js');
-        CBHTMLOutput::addCSSURL(        self::URL('CBBackgroundViewEditor.css'));
-        CBHTMLOutput::addJavaScriptURL( self::URL('CBBackgroundViewEditorFactory.js'));
+    /**
+     * @return [{string}]
+     */
+    public static function editorURLsForJavaScript() {
+        return [
+            CBSystemURL . '/javascript/CBBooleanEditorFactory.js',
+            CBSystemURL . '/javascript/CBImageEditorFactory.js',
+            CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
+            CBSystemURL . '/javascript/CBStringEditorFactory.js',
+            CBBackgroundView::URL('CBBackgroundViewEditorFactory.js')
+        ];
     }
 
     /**
