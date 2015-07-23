@@ -101,12 +101,6 @@ foreach ($supportedViewClassNames as $className) {
             CBHTMLOutput::addJavaScriptURL($URL);
         });
     }
-
-    $function = "{$className}::includeEditorDependencies";
-
-    if (is_callable($function)) {
-        call_user_func($function);
-    }
 }
 
 /**
