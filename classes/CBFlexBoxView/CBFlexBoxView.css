@@ -1,0 +1,5 @@
+.CBFlexBoxView {
+    display: flex;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+}
