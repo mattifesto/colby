@@ -60,6 +60,10 @@ final class CBFlexBoxView {
         $styles[]   = "-ms-flex-align: {$flexAlign};";
         $styles[]   = "-webkit-align-items: {$model->flexAlignItems};";
 
+        $styles[]   = "flex: {$model->flexFlex};";
+        $styles[]   = "-webkit-flex: {$model->flexFlex};";
+        $styles[]   = "-ms-flex: {$model->flexFlex};";
+
         $styles[]   = "flex-direction: {$model->flexDirection};";
         $styles[]   = "-ms-flex-direction: {$model->flexDirection};";
         $styles[]   = "-webkit-flex-direction: {$model->flexDirection};";
@@ -81,12 +85,28 @@ final class CBFlexBoxView {
     }
 
     /**
+     * Returns a CSS safe string for the flex property. The string is guaranteed
+     * to be safe, but not guaranteed to be valid.
+     *
+     * @return {string}
+     */
+    private static function specToFlexFlex($spec) {
+        $safeValue = '/^[ \\t0-9a-zA-Z.]*$/';
+
+        if (isset($spec->flexFlex) && preg_match($safeValue, $spec->flexFlex)) {
+            return trim($spec->flexFlex);
+        } else {
+            return '0 1 auto';
+        }
+    }
+    /**
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
         $model                  = CBModels::modelWithClassName(__CLASS__);
         $model->backgroundColor = isset($spec->backgroundColor) ?
                                   CBFlexBoxView::textToCSSValue($spec->backgroundColor) : null;
+        $model->flexFlex        = CBFlexBoxView::specToFlexFlex($spec);
         $model->height          = isset($spec->height) ? CBFlexBoxView::valueToPixelExtent($spec->height) : null;
         $model->imageURL        = isset($spec->imageURL) ? CBFlexBoxView::URLToCSS($spec->imageURL) : '';
         $model->subviews        = isset($spec->subviews) ? array_map('CBView::specToModel', $spec->subviews) : [];

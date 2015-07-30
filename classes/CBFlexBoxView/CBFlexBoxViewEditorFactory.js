@@ -217,8 +217,16 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "Stretch",  value : "stretch" }
             ],
             handleSpecChanged   : args.handleSpecChanged,
-            labelText           : "Align Self",
+            labelText           : "Align",
             propertyName        : "flexAlignSelf",
+            spec                : args.spec
+        }));
+
+        row.appendChild(CBStringEditorFactory.createSingleLineEditor({
+            className           : "flex",
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Flex",
+            propertyName        : "flexFlex",
             spec                : args.spec
         }));
 

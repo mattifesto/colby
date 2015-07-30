@@ -47,6 +47,10 @@
     padding: 4px;
 }
 
+.CBFlexBoxViewEditor > .container > .options .CBStringEditor.flex input {
+    width: 75px;
+}
+
 .CBFlexBoxViewEditor > .container > .options .CBStringEditor.pixels input {
     width: 50px;
 }
