@@ -64,28 +64,13 @@ $pagesPreferences           = CBModels::fetchModelByID(CBPagesPreferences::ID);
  * Include all of the supported views.
  */
 
-$supportedViewClassNames = $pagesPreferences->supportedViewClassNames;
-
-/**
- * @deprecated use preferences instead of CBViewPageViews
- */
-if (class_exists('CBViewPageViews')) {
-    $supportedViewClassNames = array_values(array_unique(array_merge(
-        $supportedViewClassNames, CBViewPageViews::availableViewClassNames()
-    )));
-}
-
-foreach ($supportedViewClassNames as $className) {
-    $function = "{$className}::editorURLsForCSS";
-
-    if (is_callable($function)) {
+foreach ($pagesPreferences->supportedViewClassNames as $className) {
+    if (is_callable($function = "{$className}::editorURLsForCSS")) {
         $URLs = call_user_func($function);
         array_walk($URLs, 'CBHTMLOutput::addCSSURL');
     }
 
-    $function = "{$className}::editorURLsForJavaScript";
-
-    if (is_callable($function)) {
+    if (is_callable($function = "{$className}::editorURLsForJavaScript")) {
         $URLs = call_user_func($function);
         array_walk($URLs, function($URL) {
             CBHTMLOutput::addJavaScriptURL($URL);
@@ -97,22 +82,7 @@ foreach ($supportedViewClassNames as $className) {
  * Create the list of selectable views available to be added to the page.
  */
 
-$selectableViewClassNames = $pagesPreferences->selectableViewClassNames;
-
-/**
- * @deprecated use preferences instead of CBViewPageViews
- */
-if (class_exists('CBViewPageViews')) {
-    if (!is_callable($function = 'CBViewPageViews::selectableViewClassNames')) {
-        $function = 'CBViewPageViews::availableViewClassNames';
-    }
-
-    $selectableViewClassNames = array_values(array_unique(array_merge(
-        $selectableViewClassNames, call_user_func($function)
-    )));
-}
-
-CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $selectableViewClassNames);
+CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $pagesPreferences->selectableViewClassNames);
 
 /**
  * Export page lists
