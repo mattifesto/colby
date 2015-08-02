@@ -2,8 +2,8 @@
 
 Colby::initialize();
 
-class Colby
-{
+final class Colby {
+
     /**
      * These constants are used as parameters to the `find` methods.
      */
@@ -167,82 +167,6 @@ class Colby
             '/colby/snippets/exception-stack-trace.php');
 
         return ob_get_clean();
-    }
-
-    /**
-     * @return array
-     *  An array of objects containing properties for each available document
-     *  group.
-     */
-    public static function findDocumentGroups()
-    {
-        $documentGroups = array();
-
-        foreach (self::$libraryDirectories as $libraryDirectory)
-        {
-            $metadataFilenames = glob(
-                COLBY_SITE_DIRECTORY .
-                "/{$libraryDirectory}/document-groups/*/document-group.data"
-            );
-
-            foreach ($metadataFilenames as $metadataFilename)
-            {
-                $documentGroups[] = unserialize(file_get_contents($metadataFilename));
-            }
-        }
-
-        return $documentGroups;
-    }
-
-    /**
-     * @return string | null
-     */
-    public static function findFileForDocumentGroup($intraGroupFilename, $documentGroupId,
-                                                    $returnFormat = Colby::returnAbsoluteFilename)
-    {
-        $intraLibraryFilename = "document-groups/{$documentGroupId}/{$intraGroupFilename}";
-
-        return self::findFile($intraLibraryFilename, $returnFormat);
-    }
-
-    /**
-     * @return array
-     *  An array of objects containing properties for each available document
-     *  type.
-     */
-    public static function findDocumentTypes($documentGroupId)
-    {
-        $documentTypes = array();
-
-        foreach (self::$libraryDirectories as $libraryDirectory)
-        {
-            $metadataFilenames = glob(
-                COLBY_SITE_DIRECTORY .
-                "/{$libraryDirectory}" .
-                "/document-groups/{$documentGroupId}" .
-                '/document-types/*/' .
-                'document-type.data');
-
-            foreach ($metadataFilenames as $metadataFilename)
-            {
-                $documentTypes[] = unserialize(file_get_contents($metadataFilename));
-            }
-        }
-
-        return $documentTypes;
-    }
-
-    /**
-     * @return string | null
-     */
-    public static function findFileForDocumentType($intraTypeFilename, $documentGroupId, $documentTypeId,
-                                                   $returnFormat = Colby::returnAbsoluteFilename)
-    {
-        $intraLibraryFilename = "document-groups/{$documentGroupId}/" .
-                           "document-types/{$documentTypeId}/" .
-                           "{$intraTypeFilename}";
-
-        return self::findFile($intraLibraryFilename, $returnFormat);
     }
 
     /**
