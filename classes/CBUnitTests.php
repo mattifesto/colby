@@ -47,7 +47,6 @@ class CBUnitTests {
 
         include "{$testDirectory}/Test,Colby,decrypt,encrypt.php";
         include "{$testDirectory}/Test,ColbyArchive.php";
-        include "{$testDirectory}/Test,ColbyDocument.php";
 
         // New style
 

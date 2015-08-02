@@ -1,7 +1,6 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
-{
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
@@ -79,30 +78,15 @@ $ID = $_GET['archive-id'];
 
     ?>
 
-    <div style="margin-top: 80px; text-align: center;">
-
-        <input type="hidden" id="archive-id" value="<?= $ID ?>">
-
-        <div>
-            <input type="text"
-                   id="archive-id-for-confirmation"
-                   placeholder="Enter the document's archive id to enable deletion"
-                   class="big-field"
-                   style="width: 400px; text-align: center;">
-        </div>
-
-        <div style="margin-top: 20px;">
-            <a class="big-button"
-               onclick="ColbyDocumentDeleter.deleteDocument();">
-
-               Delete this document
-            <a>
-        </div>
+    <div style="margin: 80px auto; text-align: center; width: 480px;">
+        2015.08.02 This page used to have the ability to delete the page and its
+        data store but it was removed for two reasons. First it is dangerous to
+        remove data stores and the process should be thought out before enabling
+        it again. Second, it used the ColbyDocument class which is being
+        removed.
     </div>
 
 </main>
-
-<script src="<?= CBSystemURL ?>/handlers/handle,admin,documents,view.js"></script>
 
 <?php
 
