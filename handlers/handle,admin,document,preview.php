@@ -31,24 +31,12 @@ if (!$row) {
     return 1;
 }
 
-if ($row->className) {
-    $className = $row->className;
+$className = $row->className;
 
-    if (is_callable($function = "{$className}::renderAsHTMLForID")) {
-        call_user_func($function, $dataStoreID, $iteration);
-    } else {
-        /* Deprecated */
-        $page = $className::initWithID($dataStoreID);
-        $page->renderHTML();
-    }
+if (is_callable($function = "{$className}::renderAsHTMLForID")) {
+    call_user_func($function, $dataStoreID, $iteration);
 } else {
     /* Deprecated */
-    $archive = ColbyArchive::open($_GET['archive-id']);
-
-    ColbyRequest::$archive = $archive;
-
-    $documentGroupId = $archive->valueForKey('documentGroupId');
-    $documentTypeId = $archive->valueForKey('documentTypeId');
-
-    include Colby::findFileForDocumentType('view.php', $documentGroupId, $documentTypeId);
+    $page = $className::initWithID($dataStoreID);
+    $page->renderHTML();
 }
