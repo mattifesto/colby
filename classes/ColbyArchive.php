@@ -15,7 +15,7 @@ class ColbyArchive
      * The `$data` property will be set to the object holding the archive data
      * read from and saved to the archive data file.
      */
-    protected $data = null;
+    public $data = null;
 
     /**
      * The `$lockResource` will be set to the file resource that is locked
