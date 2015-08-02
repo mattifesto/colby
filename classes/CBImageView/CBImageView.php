@@ -56,33 +56,29 @@ final class CBImageView {
         $styles = array();
 
         if ($model->displayHeight || $model->displayWidth) {
-
             if ($model->displayHeight) {
-
                 $styles[] = "height: {$model->displayHeight}px;";
             }
 
             if ($model->displayWidth) {
-
                 $styles[] = "width: {$model->displayWidth}px;";
             }
-
         } else if ($model->maxHeight || $model->maxWidth) {
-
             if ($model->maxHeight) {
-
                 $styles[] = "max-height: {$model->maxHeight}px;";
             }
 
             if ($model->maxWidth) {
-
                 $styles[] = "max-width: {$model->maxWidth}px;";
             }
-
         } else {
+            if ($model->actualHeight) {
+                $styles[] = "height: {$model->actualHeight}px;";
+            }
 
-            $styles[] = "height: {$model->actualHeight}px;";
-            $styles[] = "width: {$model->actualWidth}px;";
+            if ($model->actualWidth) {
+                $styles[] = "width: {$model->actualWidth}px;";
+            }
         }
 
         $styles = implode(' ', $styles);
