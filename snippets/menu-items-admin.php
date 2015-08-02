@@ -55,7 +55,6 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
 
     $testMenu                           = new stdClass();
     $testMenu->test                     = newMenuItem('Unit Tests', '/developer/test/');
-    $testMenu->{'performance-tests'}    = newMenuItem('MySQL vs. ColbyArchive', '/developer/performance-tests/mysql-vs-colbyarchive/');
 
     $CBAdminMenu->test = newMenuItem('Test', '/developer/test/', $testMenu);
 }
