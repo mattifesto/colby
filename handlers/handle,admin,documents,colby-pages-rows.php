@@ -65,19 +65,7 @@ while ($row = $result->fetch_object())
         }
         else if (!isset($documentGroupNamesForHTML[$row->groupId]))
         {
-            $filename = Colby::findFileForDocumentGroup('document-group.data', $row->groupId);
-
-            if ($filename)
-            {
-                $groupData = unserialize(file_get_contents($filename));
-
-                $section->groupNameHTML = $groupData->nameHTML;
-            }
-            else
-            {
-                $section->groupNameHTML = 'Unknown';
-            }
-
+            $section->groupNameHTML = 'Unknown';
             $documentGroupNamesForHTML[$row->groupId] = $section->groupNameHTML;
         }
         else
@@ -95,19 +83,7 @@ while ($row = $result->fetch_object())
         }
         else if (!isset($documentTypeNamesForHTML[$row->typeId]))
         {
-            $filename = Colby::findFileForDocumentType('document-type.data', $row->groupId, $row->typeId);
-
-            if ($filename)
-            {
-                $groupData = unserialize(file_get_contents($filename));
-
-                $section->typeNameHTML = $groupData->nameHTML;
-            }
-            else
-            {
-                $section->typeNameHTML = 'Unknown';
-            }
-
+            $section->typeNameHTML = 'Unknown';
             $documentTypeNamesForHTML[$row->typeId] = $section->typeNameHTML;
         }
         else
