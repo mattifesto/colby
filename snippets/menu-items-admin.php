@@ -41,8 +41,7 @@ $menuItemURI                = '/admin/help/caption-alternative-text';
 $helpMenu->{$menuItemID}    = newMenuItem($menuItemHTML, $menuItemURI);
 $CBAdminMenu->help          = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
 
-if (ColbyUser::current()->isOneOfThe('Developers'))
-{
+if (ColbyUser::current()->isOneOfThe('Developers')) {
     $generalMenu->permissions       = newMenuItem('Permissions', '/admin/users/');
 
     $developMenu                    = new stdClass();
@@ -51,8 +50,6 @@ if (ColbyUser::current()->isOneOfThe('Developers'))
     $developMenu->php               = newMenuItem('PHP', '/admin/develop/php/');
     $developMenu->update            = newMenuItem('Update', '/developer/update/');
     $developMenu->documents         = newMenuItem('Pages', '/admin/documents/');
-    $developMenu->groups            = newMenuItem('Groups', '/developer/groups/');
-    $developMenu->model             = newMenuItem('Types', '/developer/models/');
     $developMenu->mysql             = newMenuItem('MySQL', '/developer/mysql/');
     $developMenu->preferences       = newMenuItem('Preferences', '/developer/preferences/');
 
