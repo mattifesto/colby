@@ -551,6 +551,7 @@ EOT;
         $rowData->titleHTML         = $model->titleHTML;
         $rowData->searchText        = self::modelToSearchText($model);
         $rowData->subtitleHTML      = $model->descriptionHTML;
+        $rowData->thumbnailURL      = $model->thumbnailURLAsHTML;
 
         if ($model->isPublished) {
             $rowData->published         = $model->publicationTimeStamp;
