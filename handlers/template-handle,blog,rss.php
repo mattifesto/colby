@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * 2015.08.02
+ * @deprecated This file uses deprecated technology that won't work but it is
+ * a good example for how to create an RSS feed and the techniques should be
+ * transferred to a new working example.
+ */
+
 header('Content-type: application/rss+xml');
 
 $blogPostsGroupId = '37151457af40ee706cc23de4a11e7ebacafd0c10';
