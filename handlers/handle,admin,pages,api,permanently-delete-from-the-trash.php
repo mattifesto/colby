@@ -23,14 +23,12 @@ Colby::query('START TRANSACTION');
 CBPages::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
 
 /**
- * In most cases the data store directory can be assumed to exists but there
- * are rare scenarios where it won't and deleting a page shouldn't fail in those
- * scenarios.
+ * @NOTE
+ * We used to delete the data store here, but the problem is that on some older
+ * websites the data stores would contain images that we should not delete. Now
+ * nothing is deleted but in the future it's possible that it may be wise to
+ * delete some specific files.
  */
-
-if (is_dir(CBDataStore::directoryForID($dataStoreID))) {
-    CBDataStore::deleteForID(['ID' =>$dataStoreID]);
-}
 
 Colby::query('COMMIT');
 
