@@ -109,6 +109,7 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
             <tr>
                 <td><a href="<?php echo $editURL; ?>">edit</a></td>
+                <td><a href="/admin/document/convert/?ID=<?= $row->archiveId ?>">convert</a></td>
                 <td><?php echo $row->titleHTML; ?></td>
                 <td><span class="time"
                           data-timestamp="<?php echo $row->published ? $row->published * 1000 : ''; ?>">
@@ -189,4 +190,3 @@ EOT;
         return Colby::query($sql);
     }
 }
-
