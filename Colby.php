@@ -181,7 +181,6 @@ final class Colby {
      *
      *  "handlers/handle,view-cart.php"
      *  "setup/update-database.php"
-     *  "document-groups/a3...22/document-types/01...96/view.php"
      *
      * @return string | null
      */
