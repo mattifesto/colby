@@ -3,14 +3,7 @@
 // TODO: Document official handler file naming a search policy in comments
 //       in this file
 
-class ColbyRequest
-{
-    /**
-     * If handling the request involves displaying a document then `$archive`
-     * will be set to the document's archive before the document type's view is
-     * included.
-     */
-    public static $archive = null;
+final class ColbyRequest {
 
     private static $decodedRequestURI;
     // type: stríng
@@ -163,11 +156,9 @@ EOT;
      *
      * @return void
      */
-    public static function handleRequest()
-    {
-        $archiveId = null;
-        $countOfStubs = count(self::$decodedStubs);
-        $handlerFilename = null;
+    public static function handleRequest() {
+        $countOfStubs       = count(self::$decodedStubs);
+        $handlerFilename    = null;
 
         // handle front page request
 
@@ -266,34 +257,19 @@ EOT;
                 $row        = self::CBPagesRowForURI($URI);
 
                 if ($row) {
-                    if ($row->className) {
-                        self::canonicalizeRequestURI();
+                    self::canonicalizeRequestURI();
 
-                        $className = $row->className;
+                    $className = $row->className;
 
-                        if (is_callable($function = "{$className}::renderAsHTMLForID")) {
-                            call_user_func($function, $row->dataStoreID, $row->iteration);
-                        } else {
-                            /* Deprecated */
-                            $page = $className::initWithID($row->dataStoreID);
-                            $page->renderHTML();
-                        }
-
-                        return;
+                    if (is_callable($function = "{$className}::renderAsHTMLForID")) {
+                        call_user_func($function, $row->dataStoreID, $row->iteration);
                     } else {
                         /* Deprecated */
-                        self::$archive = ColbyArchive::open($row->dataStoreID);
-
-                        if (self::$archive)
-                        {
-                            $documentGroupId    = self::$archive->valueForKey('documentGroupId');
-                            $documentTypeId     = self::$archive->valueForKey('documentTypeId');
-
-                            $handlerFilename    = Colby::findFileForDocumentType('view.php',
-                                                                                 $documentGroupId,
-                                                                                 $documentTypeId);
-                        }
+                        $page = $className::initWithID($row->dataStoreID);
+                        $page->renderHTML();
                     }
+
+                    return;
                 }
             }
         }
