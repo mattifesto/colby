@@ -42,9 +42,12 @@ var CBEditorWidgetFactory = {
             toolbar.appendChild(moveUpButton);
         }
 
-        args.toolbarElements.forEach(function(toolbarElement) {
-            toolbar.appendChild(toolbarElement);
-        });
+        if (args.toolbarElements) {
+            args.toolbarElements.forEach(function(toolbarElement) {
+                toolbar.appendChild(toolbarElement);
+            });
+        }
+
 
         var handleSelect     = CBEditorWidgetFactory.handleSelect.bind(undefined, {
             handleSelect    : args.handleSelect,
