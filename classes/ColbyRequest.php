@@ -251,23 +251,14 @@ EOT;
 
             // 3. Check whether page is displayable without a stub related handler.
 
-            if (!$handlerFilename && COLBY_MYSQL_DATABASE)
-            {
+            if (!$handlerFilename && COLBY_MYSQL_DATABASE) {
                 $URI        = implode('/', self::$decodedStubs);
                 $row        = self::CBPagesRowForURI($URI);
 
                 if ($row) {
                     self::canonicalizeRequestURI();
 
-                    $className = $row->className;
-
-                    if (is_callable($function = "{$className}::renderAsHTMLForID")) {
-                        call_user_func($function, $row->dataStoreID, $row->iteration);
-                    } else {
-                        /* Deprecated */
-                        $page = $className::initWithID($row->dataStoreID);
-                        $page->renderHTML();
-                    }
+                    call_user_func("{$row->className}::renderAsHTMLForID", $row->dataStoreID, $row->iteration);
 
                     return;
                 }

@@ -31,12 +31,4 @@ if (!$row) {
     return 1;
 }
 
-$className = $row->className;
-
-if (is_callable($function = "{$className}::renderAsHTMLForID")) {
-    call_user_func($function, $dataStoreID, $iteration);
-} else {
-    /* Deprecated */
-    $page = $className::initWithID($dataStoreID);
-    $page->renderHTML();
-}
+call_user_func("{$row->className}::renderAsHTMLForID", $dataStoreID, $iteration);
