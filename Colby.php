@@ -769,14 +769,12 @@ final class Colby {
     }
 
     /**
-     * This function should be called instead of directly using the
-     * `CBSiteIsBeingDebugged` constant. The method by which this function
-     * decides to return true may change over time.
+     * @deprecated use `CBSitePreferences::debug()` instead
      *
-     * @return bool
+     * @return {bool}
      */
     public static function siteIsBeingDebugged() {
-        return defined('CBSiteIsBeingDebugged') && CBSiteIsBeingDebugged;
+        return CBSitePreferences::debug();
     }
 
     /**
