@@ -10,7 +10,7 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 
 if (!isset($_GET['data-store-id']))
 {
-    $dataStoreID = Colby::random160();
+    $dataStoreID = CBHex160::random();
 
     header("Location: /admin/pages/edit/?data-store-id={$dataStoreID}");
 

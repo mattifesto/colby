@@ -17,7 +17,7 @@ class CBAPIImportPageArchive extends CBAPI {
      */
     protected function init() {
 
-        $this->pageArchiveFilename = CBSiteDirectory . '/tmp/' . Colby::random160() . '.cbpage';
+        $this->pageArchiveFilename = CBSiteDirectory . '/tmp/' . CBHex160::random() . '.cbpage';
 
         $this->verifyUploadedFile();
 

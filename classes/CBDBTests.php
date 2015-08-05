@@ -78,7 +78,7 @@ EOT;
         Colby::query($SQL);
 
         for ($i = 0; $i < 10; $i++) {
-            $original[] = Colby::random160();
+            $original[] = CBHex160::random();
         }
 
         $originalAsSQL = array_map(function($value) {
@@ -121,7 +121,7 @@ EOT;
         Colby::query($SQL);
 
         for ($i = 0; $i < 10; $i++) {
-            $original[Colby::random160()] = rand();
+            $original[CBHex160::random()] = rand();
         }
 
         $originalAsSQL = array_map(function($key) use ($original) {
