@@ -3,6 +3,7 @@
 final class CBAdminPageForPreferences {
 
     const areas = [
+        'Site'      => 'CBSitePreferences',
         'Models'    => 'CBModelsPreferences',
         'Pages'     => 'CBPagesPreferences'
     ];
