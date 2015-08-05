@@ -6,13 +6,6 @@ final class CBModelCache {
     private static $neededModelIDs = [];
 
     /**
-     * @return null
-     */
-    public static function addToNeededModelsByID($ID) {
-        $neededModelIDs[] = $ID;
-    }
-
-    /**
      * This is the only function in this class that will query the database
      * directly.
      *
@@ -52,6 +45,13 @@ final class CBModelCache {
     public static function fetchModelByID($ID) {
         CBModelCache::cacheModelsByID([$ID]);
         return CBModelCache::modelByID($ID);
+    }
+
+    /**
+     * @return null
+     */
+    public static function fetchModelLazilyByID($ID) {
+        self::$neededModelIDs[] = $ID;
     }
 
     /**
