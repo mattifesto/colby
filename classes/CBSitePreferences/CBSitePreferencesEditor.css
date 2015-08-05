@@ -1,0 +1,11 @@
+.CBSitePreferencesEditor {
+    border-top: 4px solid hsl(321, 50%, 60%);
+    box-sizing: border-box;
+    font-size:  14px;
+    padding:    10px;
+    width:      480px;
+}
+
+.CBSitePreferencesEditor .CBBooleanEditor label {
+    margin-left: 5px;
+}

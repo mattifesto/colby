@@ -247,6 +247,7 @@ EOT;
 
 CBModels::install();
 CBPages::install();
+CBSitePreferences::install();
 CBMainMenu::install();
 
 /**
