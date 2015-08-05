@@ -49,7 +49,7 @@ final class CBView {
             }
         }
 
-        if (Colby::siteIsBeingDebugged()) {
+        if (CBSitePreferences::debug()) {
             $modelAsJSONAsHTML = ': ' . str_replace('--', ' - - ', json_encode($model));
         } else {
             $modelAsJSONAsHTML = '';

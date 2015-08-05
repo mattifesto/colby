@@ -23,7 +23,7 @@
          * displayed if the site is being debugged.
          */
 
-        if (Colby::siteIsBeingDebugged()) {
+        if (CBSitePreferences::debug()) {
 
             echo '<pre>';
 

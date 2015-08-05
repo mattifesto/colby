@@ -6,7 +6,6 @@ define('CBSiteNameHTML',                    '');
 
 define('CBSiteAdministratorEmail',          '');
 define('CBSiteDoesSendEmailErrorReports',   false);
-define('CBSiteIsBeingDebugged',             false);
 
 define('CBFacebookAppID',                   '');
 define('CBFacebookAppSecret',               '');
@@ -25,7 +24,7 @@ define('CBEncryptionPassword',              'Replace this password.');
 define('COLBY_EMAIL_LIBRARY_DIRECTORY',     COLBY_SITE_DIRECTORY . '/swiftmailer');
 define('COLBY_EMAIL_SENDER',                'mail@example.com');
 define('COLBY_EMAIL_SENDER_NAME',           'Example Mailer');
-                                            
+
 define('COLBY_EMAIL_SMTP_SERVER',           'smtp.gmail.com');
 define('COLBY_EMAIL_SMTP_PORT',             465);
 define('COLBY_EMAIL_SMTP_SECURITY',         'ssl');
@@ -53,7 +52,6 @@ define('COLBY_SITE_URL',                        CBSiteURL);
 define('COLBY_SITE_NAME',                       CBSiteName);
 define('COLBY_SITE_ADMINISTRATOR',              CBSiteAdministratorEmail);
 define('COLBY_SITE_ERRORS_SEND_EMAILS',         CBSiteDoesSendEmailErrorReports);
-define('COLBY_SITE_IS_BEING_DEBUGGED',          CBSiteIsBeingDebugged);
 define('COLBY_FACEBOOK_APP_ID',                 CBFacebookAppID);
 define('COLBY_FACEBOOK_APP_SECRET',             CBFacebookAppSecret);
 define('COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID', CBFacebookFirstVerifiedUserID);
