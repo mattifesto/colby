@@ -194,25 +194,16 @@ var CBAdminPageForEditingModels = {
      * @return  undefined
      */
     renderEditor : function(args) {
-        var main            = document.getElementsByTagName("main")[0];
-        var editorFactory   = window[args.spec.className + "EditorFactory"];
-        var editor          = undefined;
+        var main                = document.getElementsByTagName("main")[0];
+        var handleSpecChanged   = CBAdminPageForEditingModels.handleSpecChanged.bind(undefined, {
+            info    : {},
+            spec    : args.spec
+        });
 
-        if (editorFactory && editorFactory.createEditor) {
-            editor = editorFactory.createEditor({
-                handleSpecChanged   : CBAdminPageForEditingModels.handleSpecChanged.bind(undefined, {
-                    info            : {},
-                    spec            : args.spec
-                }),
-                spec                : args.spec
-            });
-        } else {
-            editor = CBAdminPageForEditingModels.createEditor({
-                spec : args.spec
-            });
-        }
-
-        main.appendChild(editor);
+        main.appendChild(CBEditorWidgetFactory.createWidget({
+            handleSpecChanged   : handleSpecChanged,
+            spec                : args.spec
+        }));
     },
 
     /**

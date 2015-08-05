@@ -74,25 +74,16 @@ class CBAdminPageForEditingModels {
         CBHTMLOutput::exportVariable('CBModelID',           $args->ID);
         CBHTMLOutput::exportVariable('CBModelClassName',    $args->className);
         CBAdminPageForEditingModels::loadEditingResourcesForClassName($args->className);
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL  . '/javascript/CBEditorWidgetFactory.js');
-        CBHTMLOutput::addCSSURL(CBSystemURL         . '/javascript/CBEditorWidget.css');
-        CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForEditingModels.js'));
+        CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBEditorWidget.css');
+        CBHTMLOutput::addJavaScriptURL( CBSystemURL  . '/javascript/CBEditorWidgetFactory.js');
+        CBHTMLOutput::addCSSURL(        CBAdminPageForEditingModels::URL('CBAdminPageForEditingModels.css'));
+        CBHTMLOutput::addJavaScriptURL( CBAdminPageForEditingModels::URL('CBAdminPageForEditingModels.js'));
 
         $spec                           = new stdClass();
         $spec->selectedMenuItemName     = 'edit';
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
-        ?>
-
-        <style>
-            main > * {
-                margin-left:    auto;
-                margin-right:   auto;
-            }
-        </style>
-        <main></main>
-
-        <?php
+        echo '<main class="CBAdminPageForEditingModels"></main>';
 
         CBAdminPageFooterView::renderModelAsHTML();
         CBHTMLOutput::render();
