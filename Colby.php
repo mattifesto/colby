@@ -776,40 +776,6 @@ final class Colby {
     public static function siteIsBeingDebugged() {
         return CBSitePreferences::debug();
     }
-
-    /**
-     * 2014.03.09
-     *  This function is deprecated in favor of `Colby::random160`.
-     *
-     * @return string
-     *  A unique SHA-1 hash in hexadecimal.
-     *  Example: '90027a5ca28cb5301febdc1f31db512dc663c944'
-     */
-    public static function uniqueSHA1Hash()
-    {
-        return Colby::random160();
-    }
-
-    /**
-     * 2014.07.04
-     *
-     * This function has been deprecated. Just call `class_exists` on one of the
-     * SwiftMailer classes to see if email functionality is available.
-     */
-    public static function useEmail()
-    {
-        error_log('Colby::useEmail() is deprecated. Any classes required can be automatically loaded.');
-    }
-
-    /**
-     * 2014.08.13
-     * This function has been deprecated. Any image processing classes that are
-     * needed will be auto loaded.
-     */
-    public static function useImage()
-    {
-        error_log('Colby::useImage() is deprecated. Any classes required can be automatically loaded.');
-    }
 }
 
 /**
