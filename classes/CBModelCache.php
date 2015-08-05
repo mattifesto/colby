@@ -3,26 +3,34 @@
 final class CBModelCache {
 
     private static $cache = [];
+    private static $neededModelIDs = [];
 
     /**
+     * @return null
+     */
+    public static function addToNeededModelsByID($ID) {
+        $neededModelIDs[] = $ID;
+    }
+
+    /**
+     * This is the only function in this class that will query the database
+     * directly.
+     *
      * @param   [{hex160}]  $IDs
-     * @param   {boolean}   $clobber
-     *  If true, any requested models that already exist in the cache will be
-     *  replaced by the version in the database.
      *
      * @return  null
      */
-    public static function cacheModelsByID(array $IDs, array $args = []) {
-        $clobber = false;
-        extract($args, EXTR_IF_EXISTS);
+    public static function cacheModelsByID(array $IDs) {
+        $IDsToFetch = array_unique(array_merge($IDs, self::$neededModelIDs));
+        $IDsToFetch = array_filter($IDsToFetch, function($ID) {
+            return CBModelCache::modelByID($ID) === false;
+        });
 
-        if (!$clobber) {
-            $IDs = array_filter($IDs, function($ID) { return CBModelCache::modelByID($ID) === false; });
+        if (!empty($IDsToFetch)) {
+            CBModelCache::$cache = array_merge(CBModelCache::$cache, CBModels::fetchModelsByID($IDsToFetch));
         }
 
-        if (!empty($IDs)) {
-            CBModelCache::$cache = array_merge(CBModelCache::$cache, CBModels::fetchModelsByID($IDs));
-        }
+        self::$neededModelIDs = [];
     }
 
     /**
@@ -54,5 +62,14 @@ final class CBModelCache {
      */
     public static function modelByID($ID) {
         return isset(CBModelCache::$cache[$ID]) ? CBModelCache::$cache[$ID] : false;
+    }
+
+    /**
+     * @return null
+     */
+    public static function uncacheModelsByID(array $IDs) {
+        CBModelCache::$cache = array_filter(CBModelCache::$cache, function($key) use ($IDs) {
+            return isset($IDs[$key]);
+        }, ARRAY_FILTER_USE_KEY);
     }
 }
