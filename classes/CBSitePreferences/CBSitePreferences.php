@@ -11,7 +11,27 @@
  */
 final class CBSitePreferences {
 
-    const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
+    const ID                = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
+    private static $model   = false;
+
+    /**
+     * Returns true if the site is in "debug" mode. Development and test sites
+     * should generally have this property set to true and production sites
+     * should not unless they are actively being investigated.
+     *
+     * A site should not be less secure because this property returns true. For
+     * instance, a site shouldn't send passwords to debug log or reveal user
+     * data to public pages in debug mode.
+     *
+     * This function returns true if the site preferences have not be properly
+     * set up in an effort to both expose that fact and help find out why.
+     *
+     * @return {bool}
+     */
+    public static function debug() {
+        $model = CBSitePreferences::model();
+        return $model->debug;
+    }
 
     /**
      * @return [{string}]
@@ -47,22 +67,44 @@ final class CBSitePreferences {
     }
 
     /**
-     * Returns true if the site is in "debug" mode. Development and test sites
-     * should generally have this property set to true and production sites
-     * should not unless they are actively being investigated.
-     *
-     * A site should not be less secure because this property returns true. For
-     * instance, a site shouldn't send passwords to debug log or reveal user
-     * data to public pages in debug mode.
-     *
-     * This function returns true if the site preferences have not be properly
-     * set up in an effort to both expose that fact and help find out why.
-     *
-     * @return {bool}
+     * @return null
      */
-    public static function debug() {
-        $model = CBModelCache::fetchModelByID(CBSitePreferences::ID);
-        return isset($model->debug) ? $model->debug : true;
+    private static function model() {
+        if (CBSitePreferences::$model === false) {
+            $filepath = CBDataStore::filepath([
+                'ID'        => CBSitePreferences::ID,
+                'filename'  => 'site-preferences.json'
+            ]);
+
+            if (is_file($filepath)) {
+                CBSitePreferences::$model = json_encode(file_get_contents($filepath));
+            } else {
+                CBSitePreferences::$model = CBSitePreferences::specToModel(new stdClass());
+            }
+        }
+
+        return CBSitePreferences::$model;
+    }
+
+    /**
+     * This function saves the model to disk so that the database doesn't have
+     * to be involved to use the information. Since this data is such core
+     * system data this also avoids race conditions. For instance, if the
+     * database is down we can still get the information needed to send an
+     * alert email.
+     *
+     * @return null
+     */
+    public static function modelsWillSave(array $tuples) {
+        array_map(function($tuple) {
+            $filepath   = CBDataStore::filepath([
+                'ID'        => $tuple->spec->ID,
+                'filename'  => 'site-preferences.json'
+            ]);
+
+            CBDataStore::makeDirectoryForID($tuple->spec->ID);
+            file_put_contents($filepath, json_encode($tuple->model));
+        }, $tuples);
     }
 
     /**
@@ -70,7 +112,7 @@ final class CBSitePreferences {
      */
     public static function specToModel(stdClass $spec) {
         $model          = CBModels::modelWithClassName(__CLASS__);
-        $model->debug   = isset($spec->debug) ? !!$spec->debug : false;
+        $model->debug   = isset($spec->debug) ? !!$spec->debug : true;
 
         return $model;
     }
