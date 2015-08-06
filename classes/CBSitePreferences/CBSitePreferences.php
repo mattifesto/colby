@@ -77,7 +77,7 @@ final class CBSitePreferences {
             ]);
 
             if (is_file($filepath)) {
-                CBSitePreferences::$model = json_encode(file_get_contents($filepath));
+                CBSitePreferences::$model = json_decode(file_get_contents($filepath));
             } else {
                 CBSitePreferences::$model = CBSitePreferences::specToModel(new stdClass());
             }
