@@ -230,6 +230,18 @@ var CBFlexBoxViewEditorFactory = {
             spec                : args.spec
         }));
 
+        row.appendChild(CBStringEditorFactory.createSelectEditor({
+            data                : [
+                { textContent : "No Wrap",          value : "" },
+                { textContent : "Wrap",             value : "wrap" },
+                { textContent : "Wrap (Reverse)",   value : "wrap-reverse" }
+            ],
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Wrap",
+            propertyName        : "flexWrap",
+            spec                : args.spec
+        }));
+
         options.appendChild(row);
         container.appendChild(options);
 

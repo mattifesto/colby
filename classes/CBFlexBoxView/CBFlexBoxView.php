@@ -73,6 +73,10 @@ final class CBFlexBoxView {
         $styles[]   = "-ms-flex-pack: {$flexPack};";
         $styles[]   = "-webkit-justify-content: {$model->flexJustifyContent};";
 
+        $styles[]   = "flex-wrap: {$model->flexWrap};";
+        $styles[]   = "-ms-flex-wrap: {$model->flexWrap};";
+        $styles[]   = "-webkit-flex-wrap: {$model->flexWrap};";
+
         $styles     = implode(' ', $styles);
 
         CBHTMLOutput::addCSSURL(CBFlexBoxView::URL('CBFlexBoxView.css'));
@@ -216,6 +220,17 @@ final class CBFlexBoxView {
                 break;
             default:
                 $model->flexJustifyContent = 'flex-start';
+        }
+
+        $flexWrap               = isset($spec->flexWrap) ? trim($spec->flexWrap) : '';
+
+        switch ($flexWrap) {
+            case 'wrap':
+            case 'wrap-reverse':
+                $model->flexWrap = $flexWrap;
+                break;
+            default:
+                $model->flexWrap = 'none';
         }
 
         return $model;
