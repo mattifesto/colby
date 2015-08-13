@@ -175,9 +175,29 @@ var CBImageEditorFactory = {
     },
 
     /**
+     * This method may be called to properly set the URL for the thumbnail
+     * image element. It ensures that the broken image icon won't show if there
+     * is no image set.
+     *
+     * @param   {Element}   img
+     * @param   {string}    URL
+     *
+     * @return  undefined
+     */
+    displayThumbnail : function(args) {
+        if (args.URL === undefined) {
+            args.img.style.src          = "";
+            args.img.style.visibility   = "hidden";
+        } else {
+            args.img.src                = args.URL;
+            args.img.style.visibility   = "visible";
+        }
+    },
+
+    /**
      * @param {Element} element
      *
-     * @return {undefined}
+     * @return undefined
      */
     handleBackgroundClicked : function(args) {
         args.element.classList.toggle("dark");
