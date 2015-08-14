@@ -150,27 +150,24 @@ CBPageEditor.loadModel = function()
 };
 
 /**
- * @return void
+ * @return undefined
  */
-CBPageEditor.loadModelDidComplete = function()
-{
+CBPageEditor.loadModelDidComplete = function() {
     var response = Colby.responseFromXMLHttpRequest(this);
 
-    if (response.wasSuccessful)
-    {
-        if ("modelJSON" in response)
-        {
+    if (response.wasSuccessful) {
+        if ("modelJSON" in response) {
             CBPageEditor.model = JSON.parse(response.modelJSON);
 
+            if (CBPageEditor.model.sections === undefined) {
+                CBPageEditor.model.sections = [];
+            }
+
             CBPageEditor.displayEditor();
-        }
-        else
-        {
+        } else {
             CBPageEditor.displayPageTemplateChooser();
         }
-    }
-    else
-    {
+    } else {
         Colby.displayResponse(response);
     }
 };
