@@ -27,7 +27,7 @@ final class CBAdminPageForModels {
     /**
      * @return {stdClass}
      */
-    public static function fetchModelListForAjax() {
+    public static function fetchMetadataForModelsForAjax() {
         $response                   = new CBAjaxResponse();
         $className                  = $_POST['className'];
         $classNameAsSQL             = CBDB::stringToSQL($className);
@@ -42,15 +42,15 @@ final class CBAdminPageForModels {
 
 EOT;
 
-        $response->models           = CBDB::SQLToObjects($SQL);
-        $response->wasSuccessful    = true;
+        $response->metadataForModels    = CBDB::SQLToObjects($SQL);
+        $response->wasSuccessful        = true;
         $response->send();
     }
 
     /**
      * @return {stdClass}
      */
-    public static function fetchModelListForAjaxPermissions() {
+    public static function fetchMetadataForModelsForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 

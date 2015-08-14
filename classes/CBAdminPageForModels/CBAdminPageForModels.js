@@ -3,6 +3,31 @@
 var CBAdminPageForModels = {
 
     /**
+     * @param   {Object}    metadataForModel
+     *
+     * @return  <tr>
+     */
+    createModelTableRow : function(args) {
+        var tr                  = document.createElement("tr");
+        var menu                = document.createElement("td");
+        var a                   = document.createElement("a");
+        a.href                  = "/admin/models/edit/?ID=" + args.metadataForModel.ID;
+        a.textContent           = "edit";
+        var exportLink          = document.createElement("a");
+        exportLink.href         = "/admin/models/export/?ID=" + args.metadataForModel.ID;
+        exportLink.textContent  = "export";
+        var title               = document.createElement("td");
+        title.textContent       = args.metadataForModel.title;
+
+        menu.appendChild(a);
+        menu.appendChild(exportLink);
+        tr.appendChild(menu);
+        tr.appendChild(title);
+
+        return tr;
+    },
+
+    /**
      * @return {Element}
      */
     createUI : function() {
@@ -75,18 +100,18 @@ var CBAdminPageForModels = {
         var className   = CBClassMenuItems[args.selectElement.value].itemClassName;
         var formData    = new FormData();
         var xhr         = new XMLHttpRequest();
-        xhr.onload      = CBAdminPageForModels.handleFetchListCompleted.bind(undefined, {
+        xhr.onload      = CBAdminPageForModels.handleFetchMetadataForModelsCompleted.bind(undefined, {
             modelsElement   : args.modelsElement,
             xhr             : xhr
         });
-        xhr.onerror     = CBAdminPageForModels.handleFetchListFailed.bind(undefined, {
+        xhr.onerror     = CBAdminPageForModels.handleFetchMetadataForModelsFailed.bind(undefined, {
             modelsElement   : args.modelsElement,
             xhr             : xhr
         });
 
         formData.append("className",    className);
         formData.append("pageNumber",   1);
-        xhr.open("POST", "/api/?class=CBAdminPageForModels&function=fetchModelList");
+        xhr.open("POST", "/api/?class=CBAdminPageForModels&function=fetchMetadataForModels");
         xhr.send(formData);
     },
 
@@ -96,7 +121,7 @@ var CBAdminPageForModels = {
      *
      * @return  undefined
      */
-    handleFetchListCompleted : function(args) {
+    handleFetchMetadataForModelsCompleted : function(args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
@@ -108,23 +133,10 @@ var CBAdminPageForModels = {
 
             var table = document.createElement("table");
 
-            response.models.forEach(function(model) {
-                var tr                  = document.createElement("tr");
-                var menu                = document.createElement("td");
-                var a                   = document.createElement("a");
-                a.href                  = "/admin/models/edit/?ID=" + model.ID;
-                a.textContent           = "edit";
-                var exportLink          = document.createElement("a");
-                exportLink.href         = "/admin/models/export/?ID=" + model.ID;
-                exportLink.textContent  = "export";
-                var title               = document.createElement("td");
-                title.textContent       = model.title;
-
-                menu.appendChild(a);
-                menu.appendChild(exportLink);
-                tr.appendChild(menu);
-                tr.appendChild(title);
-                table.appendChild(tr);
+            response.metadataForModels.forEach(function(metadataForModel) {
+                table.appendChild(CBAdminPageForModels.createModelTableRow({
+                    metadataForModel : metadataForModel
+                }));
             });
 
             args.modelsElement.appendChild(table);
@@ -139,7 +151,7 @@ var CBAdminPageForModels = {
      *
      * @return  undefined
      */
-    handleFetchListFailed : function(args) {
+    handleFetchMetadataForModelsFailed : function(args) {
         // TODO: implement
         alert('An error occurred while trying to retreive the model list.');
     },
