@@ -7,21 +7,20 @@ var CBAdminPageForModels = {
      *
      * @return  <tr>
      */
-    createModelTableRow : function(args) {
+    createModelRow : function(args) {
         var tr                  = document.createElement("tr");
-        var menu                = document.createElement("td");
-        var a                   = document.createElement("a");
-        a.href                  = "/admin/models/edit/?ID=" + args.metadataForModel.ID;
-        a.textContent           = "edit";
-        var exportLink          = document.createElement("a");
-        exportLink.href         = "/admin/models/export/?ID=" + args.metadataForModel.ID;
-        exportLink.textContent  = "export";
+        tr.className            = "CBModelRow";
         var title               = document.createElement("td");
         title.textContent       = args.metadataForModel.title;
 
-        menu.appendChild(a);
-        menu.appendChild(exportLink);
-        tr.appendChild(menu);
+        var handleSelect        = CBAdminPageForModels.handleSelect.bind(undefined, {
+            ID          : args.metadataForModel.ID,
+            trElement   : tr
+        });
+
+        tr.addEventListener("click",    handleSelect);
+        tr.addEventListener("focusin",  handleSelect);
+
         tr.appendChild(title);
 
         return tr;
@@ -37,6 +36,10 @@ var CBAdminPageForModels = {
         menu.className              = "menu";
         var button                  = document.createElement("button");
         button.textContent          = "New";
+        var editButton              = document.createElement("button");
+        editButton.textContent      = "Edit";
+        var exportButton            = document.createElement("button");
+        exportButton.textContent    = "Export";
         var importInput             = document.createElement("input");
         importInput.type            = "file";
         importInput.style.display   = "none";
@@ -50,6 +53,10 @@ var CBAdminPageForModels = {
         button.addEventListener("click", CBAdminPageForModels.handleNewClicked.bind(undefined, {
             selectElement : select
         }));
+
+        editButton.addEventListener("click", CBAdminPageForModels.handleEditClicked);
+
+        exportButton.addEventListener("click", CBAdminPageForModels.handleExportClicked);
 
         importButton.addEventListener("click", importInput.click.bind(importInput));
         importInput.addEventListener("change", CBAdminPageForModels.handleImportFileSelected.bind(undefined, {
@@ -74,6 +81,8 @@ var CBAdminPageForModels = {
 
         menu.appendChild(select);
         menu.appendChild(button);
+        menu.appendChild(editButton);
+        menu.appendChild(exportButton);
         menu.appendChild(importInput);
         menu.appendChild(importButton);
         element.appendChild(menu);
@@ -116,6 +125,36 @@ var CBAdminPageForModels = {
     },
 
     /**
+     * @return undefined
+     */
+    handleEditClicked : function() {
+        var ID = localStorage.getItem("CBSelectedModelID");
+
+        if (ID === null) {
+            return;
+        }
+
+        var URL = "/admin/models/edit/?ID=" + ID;
+
+        window.location.href = URL;
+    },
+
+    /**
+     * @return undefined
+     */
+    handleExportClicked : function() {
+        var ID = localStorage.getItem("CBSelectedModelID");
+
+        if (ID === null) {
+            return;
+        }
+
+        var URL = "/admin/models/export/?ID=" + ID;
+
+        window.location.href = URL;
+    },
+
+    /**
      * @param   {Element}           modelsElement
      * @param   {XMLHttpRequest}    xhr
      *
@@ -134,7 +173,7 @@ var CBAdminPageForModels = {
             var table = document.createElement("table");
 
             response.metadataForModels.forEach(function(metadataForModel) {
-                table.appendChild(CBAdminPageForModels.createModelTableRow({
+                table.appendChild(CBAdminPageForModels.createModelRow({
                     metadataForModel : metadataForModel
                 }));
             });
@@ -198,11 +237,32 @@ var CBAdminPageForModels = {
 
     /**
      * @param   {Element}   selectElement
+     *
      * @return  undefined
      */
     handleNewClicked : function(args) {
         var className           = CBClassMenuItems[args.selectElement.value].itemClassName;
         window.location.href    = "/admin/models/edit/?className=" + className;
+    },
+
+    /**
+     * @param   {hex160}    ID
+     * @param   {Element}   trElement
+     *
+     * @return  undefined
+     */
+    handleSelect : function(args) {
+        var elements    = document.getElementsByClassName("CBModelRowSelected");
+        var count       = elements.length;
+
+        for (var i = 0; i < count; i++) {
+            elements.item(i).classList.remove("CBModelRowSelected");
+        }
+
+        localStorage.setItem('CBSelectedModelID', args.ID);
+        args.trElement.classList.add("CBModelRowSelected");
+
+        event.stopPropagation();
     }
 };
 
