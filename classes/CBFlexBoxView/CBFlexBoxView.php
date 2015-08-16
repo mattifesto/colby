@@ -73,6 +73,8 @@ final class CBFlexBoxView {
         $styles[]   = "-ms-flex-pack: {$flexPack};";
         $styles[]   = "-webkit-justify-content: {$model->flexJustifyContent};";
 
+        /* flex wrap support was added after models exist in the wild */
+        if (!isset($model->flexWrap)) { $model->flexWrap = 'none'; }
         $styles[]   = "flex-wrap: {$model->flexWrap};";
         $styles[]   = "-ms-flex-wrap: {$model->flexWrap};";
         $styles[]   = "-webkit-flex-wrap: {$model->flexWrap};";
