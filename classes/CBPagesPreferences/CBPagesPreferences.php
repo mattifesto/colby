@@ -61,6 +61,13 @@ final class CBPagesPreferences {
             $model->selectableViewClassNames    = $model->supportedViewClassNames;
         }
 
+        if (isset($spec->classNamesForKinds)) {
+            $model->classNamesForKinds = preg_split(
+                '/[\s]+/', $spec->classNamesForKinds, null, PREG_SPLIT_NO_EMPTY);
+        } else {
+            $model->classNamesForKinds = [];
+        }
+
         return $model;
     }
 
