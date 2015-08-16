@@ -451,11 +451,17 @@ EOT;
         $model->dataStoreID = $spec->dataStoreID;
         $time               = time();
 
-        /**
-         * Optional values
-         */
+        /* Optional values */
 
-        $model->classNameForKind        = isset($spec->classNameForKind) ? $spec->classNameForKind : null;
+        if (isset($spec->classNameForKind) &&
+            is_string($spec->classNameForKind) &&
+            strlen($value = trim($spec->classNameForKind)) > 0)
+        {
+            $model->classNameForKind = $value;
+        } else {
+            $model->classNameForKind = null;
+        }
+
         $model->created                 = isset($spec->created) ? $spec->created : $time;
         $model->description             = isset($spec->description) ? $spec->description : '';
         $model->isPublished             = isset($spec->isPublished) ? !!$spec->isPublished : false;
