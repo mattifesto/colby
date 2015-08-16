@@ -11,7 +11,8 @@ var CBPageInformationEditorFactory = {
      * @return {Element}
      */
     createEditor : function(args) {
-        var pageModel       = args.model;
+        var pageModel       = args.model; /* deprecated, use spec */
+        var spec            = pageModel;
         pageModel.URI       = pageModel.URI ? pageModel.URI : CBPageInformationEditorFactory.titleToURI({
             ID              : pageModel.dataStoreID,
             title           : pageModel.title });
@@ -61,39 +62,29 @@ var CBPageInformationEditorFactory = {
                 spec                : pageModel,
                 propertyName        : 'description' }));
 
-        /**
-         *
-         */
-
         propertiesContainer.appendChild(URIControl.rootElement());
-
-        /**
-         *
-         */
 
         propertiesContainer.appendChild(createPublicationControlElement());
 
-
-        /**
-         *
-         */
 
         var publishedByContainer = document.createElement("div");
         publishedByContainer.classList.add("container");
 
         propertiesContainer.appendChild(publishedByContainer);
 
+        var users = CBUsersWhoAreAdministrators.map(function(user) {
+            return { textContent: user.name, value: user.ID };
+        });
 
-        /**
-         *
-         */
+        publishedByContainer.appendChild(CBStringEditorFactory.createSelectEditor({
+            data                : users,
+            handleSpecChanged   : args.handlePropertyChanged,
+            labelText           : "Published By",
+            propertyName        : "publishedBy",
+            spec                : spec
+        }));
 
-        publishedByContainer.appendChild(createPublishedByControlElement());
-
-        /**
-         * No need for args in the closure after this function has run.
-         */
-
+        /* No need for args in the closure after this function has run. */
         args = undefined;
 
         return editor;
@@ -201,38 +192,6 @@ var CBPageInformationEditorFactory = {
             control.rootElement().classList.add("standard");
 
             return control.rootElement();
-        }
-
-        /**
-         * @return {Element}
-         */
-        function createPublishedByControlElement() {
-            var control = new CBSelectionControl("Published By");
-
-            control.rootElement().classList.add("standard");
-            control.rootElement().classList.add("published-by");
-
-            for (var i = 0; i < CBUsersWhoAreAdministrators.length; i++) {
-                var user = CBUsersWhoAreAdministrators[i];
-
-                control.appendOption(user.ID, user.name);
-            }
-
-            control.setValue(pageModel.publishedBy);
-            control.setAction(undefined, valueForPublishedByHasChanged);
-
-            return control.rootElement();
-        }
-
-        /**
-         * @param {CBSelectionControl} sender
-         *
-         * @return {undefined}
-         */
-        function valueForPublishedByHasChanged(sender) {
-            pageModel.publishedBy = parseInt(sender.value(), 10);
-
-            CBPageEditor.requestSave();
         }
 
         /**
