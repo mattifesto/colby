@@ -1,12 +1,6 @@
 <?php
 
-class CBRect
-{
-    /**
-     * deprecated
-     */
-    private $origin;
-    private $size;
+class CBRect {
 
     /**
      * @return stdClass (rect)
@@ -94,30 +88,5 @@ class CBRect
         }
 
         return $r;
-    }
-
-    /**
-     * deprecated
-     */
-    public function __construct($x, $y, $width, $height)
-    {
-        $this->origin = new CBPoint($x, $y);
-        $this->size = new CBSize($width, $height);
-    }
-
-    /**
-     * deprecated
-     */
-    public function origin()
-    {
-        return $this->origin;
-    }
-
-    /**
-     * deprecated
-     */
-    public function size()
-    {
-        return $this->size;
     }
 }
