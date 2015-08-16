@@ -25,7 +25,8 @@ var CBPageInformationEditorFactory = {
         editor.appendChild(header);
         editor.appendChild(content);
 
-        var propertiesContainer = createPropertiesContainerElement();
+        var propertiesContainer         = document.createElement("div");
+        propertiesContainer.className   = "properties";
 
         content.appendChild(propertiesContainer);
         content.appendChild(createPageListsEditorElement());
@@ -66,23 +67,38 @@ var CBPageInformationEditorFactory = {
 
         propertiesContainer.appendChild(createPublicationControlElement());
 
-
-        var publishedByContainer = document.createElement("div");
-        publishedByContainer.classList.add("container");
-
-        propertiesContainer.appendChild(publishedByContainer);
+        var flexContainer       = document.createElement("div");
+        flexContainer.className = "flexContainer";
 
         var users = CBUsersWhoAreAdministrators.map(function(user) {
-            return { textContent: user.name, value: user.ID };
+            return { textContent : user.name, value : user.ID };
         });
 
-        publishedByContainer.appendChild(CBStringEditorFactory.createSelectEditor({
+        flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
             data                : users,
             handleSpecChanged   : args.handlePropertyChanged,
             labelText           : "Published By",
             propertyName        : "publishedBy",
             spec                : spec
         }));
+
+        if (CBClassNamesForKinds.length > 0) {
+            var classNames = CBClassNamesForKinds.map(function(className) {
+                return { textContent : className.replace(/PageKind$/, ""), value : className };
+            });
+
+            classNames.unshift({ textContent : "None", value : "" });
+
+            flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
+                data                : classNames,
+                handleSpecChanged   : args.handlePropertyChanged,
+                labelText           : "Kind",
+                propertyName        : "classNameForKind",
+                spec                : spec
+            }));
+        }
+
+        propertiesContainer.appendChild(flexContainer);
 
         /* No need for args in the closure after this function has run. */
         args = undefined;
@@ -168,16 +184,6 @@ var CBPageInformationEditorFactory = {
             }
 
             return element;
-        }
-
-        /**
-         * @return {Element}
-         */
-        function createPropertiesContainerElement() {
-            var container       = document.createElement("div");
-            container.className = "CBPageInformationProperties";
-
-            return container;
         }
 
         /**

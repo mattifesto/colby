@@ -84,12 +84,20 @@ foreach ($pagesPreferences->supportedViewClassNames as $className) {
 CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $pagesPreferences->selectableViewClassNames);
 
 /**
+ * @deprecated use kinds
  * Export page lists
  */
 
 $listNames = CBViewPageLists::availableListNames();
 
 CBHTMLOutput::exportVariable('CBPageEditorAvailablePageListClassNames', $listNames);
+
+/* kinds */
+if (isset($pagesPreferences->classNamesForKinds)) {
+    CBHTMLOutput::exportVariable('CBClassNamesForKinds', $pagesPreferences->classNamesForKinds);
+} else {
+    CBHTMLOutput::exportVariable('CBClassNamesForKinds', []);
+}
 
 /**
  * Export page templates

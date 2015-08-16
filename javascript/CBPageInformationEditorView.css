@@ -13,12 +13,8 @@
     text-align:         center;
 }
 
-.CBPageInformationEditor > div {
-    xpadding:            10px 20px;
-}
-
-.CBPageInformationEditor .CBStringEditor + .CBStringEditor {
-    margin-top: 10px;
+.CBPageInformationEditor .CBStringEditor > select {
+    margin-left: 5px;
 }
 
 .CBPageInformationEditor input[type=text] {
@@ -27,10 +23,21 @@
     width:      100%;
 }
 
-.CBPageInformationProperties {
+.CBPageInformationEditor .flexContainer {
+    display:                    flex;
+    display:                    -webkit-flex;
+    justify-content:            space-around;
+    -webkit-justify-content:    space-around;
+}
+
+.CBPageInformationEditor .properties {
     display:    inline-block;
     padding:    10px;
     width:      460px;
+}
+
+.CBPageInformationEditor .properties > .CBStringEditor + .CBStringEditor {
+    margin-top: 10px;
 }
 
 .CBPageInformationPageListsEditor {
@@ -45,4 +52,8 @@
 
 .CBPageInformationPageListsEditor input[type=checkbox] {
     margin-right: 0.5em;
+}
+
+.CBPageInformationEditor .CBStringEditor > select {
+    margin-left: 5px;
 }
