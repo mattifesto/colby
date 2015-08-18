@@ -32,7 +32,7 @@ final class CBDB {
 
     /**
      * If the query returns one column the values for that column will be
-     * place in an array.
+     * placed in an array.
      *
      * If the query returns two or more columns the value from the first column
      * will be used as the associative array key and the value from the second
