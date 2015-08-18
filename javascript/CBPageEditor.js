@@ -98,11 +98,11 @@ CBPageEditor.displayEditor = function()
      */
 
     var element = CBPageInformationEditorFactory.createEditor({
-        handlePropertyChanged   : function() { CBPageEditor.requestSave(); },
+        handleSpecChanged       : function() { CBPageEditor.requestSave(); },
         handleTitleChanged      : CBPageEditor.handleTitleChanged.bind(undefined, {
             spec                : CBPageEditor.model
         }),
-        model                   : CBPageEditor.model });
+        spec                    : CBPageEditor.model });
 
     editorContainer.appendChild(element);
 

@@ -3,18 +3,46 @@
 var CBPageInformationEditorFactory = {
 
     /**
-     * @param   {Object}    model
-     * @param   {function}  handlePropertyChanged
+     * @param {Element} checkbox
+     * @param {string} listClassName
+     *
+     * @return {undefined}
+     */
+    checkboxDidChangeForListClassName : function(args) {
+        var checkbox        = args.checkbox;
+        var listClassName   = args.listClassName;
+
+        if (!args.spec.listClassNames)
+        {
+            args.spec.listClassNames = [];
+        }
+
+        var index = args.spec.listClassNames.indexOf(listClassName);
+
+        if (checkbox.checked) {
+            if (index < 0) {
+                args.spec.listClassNames.push(listClassName);
+            }
+        } else {
+            if (index >= 0) {
+                args.spec.listClassNames.splice(index, 1);
+            }
+        }
+
+        CBPageEditor.requestSave();
+    },
+
+    /**
+     * @param   {Object}    spec
+     * @param   {function}  handleSpecChanged
      * @param   {function}  handleTitleChanged
      *
      * @return  {Element}
      */
     createEditor : function(args) {
-        var pageModel       = args.model; /* deprecated, use spec */
-        var spec            = pageModel;
-        pageModel.URI       = pageModel.URI ? pageModel.URI : CBPageInformationEditorFactory.titleToURI({
-            ID              : pageModel.dataStoreID,
-            title           : pageModel.title });
+        args.spec.URI       = args.spec.URI ? args.spec.URI : CBPageInformationEditorFactory.titleToURI({
+            ID              : args.spec.dataStoreID,
+            title           : args.spec.title });
         var editor          = document.createElement("section");
         editor.className    = "CBPageInformationEditor";
         var header          = document.createElement("header");
@@ -28,7 +56,9 @@ var CBPageInformationEditorFactory = {
         propertiesContainer.className   = "properties";
 
         content.appendChild(propertiesContainer);
-        content.appendChild(createPageListsEditorElement());
+        content.appendChild(CBPageInformationEditorFactory.createPageListsEditorElement({
+            spec : args.spec
+        }));
 
         /**
          *
@@ -36,10 +66,13 @@ var CBPageInformationEditorFactory = {
 
         var URIControl  = new CBPageURIControl("URI");
 
-        URIControl.setURI(pageModel.URI);
-        URIControl.setIsStatic(pageModel.URIIsStatic);
-        URIControl.setIsDisabled(pageModel.isPublished);
-        URIControl.setAction(undefined, valuesForURIHaveChanged);
+        URIControl.setURI(args.spec.URI);
+        URIControl.setIsStatic(args.spec.URIIsStatic);
+        URIControl.setIsDisabled(args.spec.isPublished);
+        URIControl.setAction(undefined, CBPageInformationEditorFactory.valuesForURIHaveChanged.bind(undefined, {
+            handleSpecChanged   : args.handleSpecChanged,
+            spec                : args.spec
+        }));
 
         URIControl.rootElement().classList.add("standard");
 
@@ -49,23 +82,27 @@ var CBPageInformationEditorFactory = {
 
         propertiesContainer.appendChild(CBStringEditorFactory.createSingleLineEditor({
                 handleSpecChanged   : CBPageInformationEditorFactory.handleTitleChanged.bind(undefined, {
-                    handleSpecChanged   : args.handlePropertyChanged,
+                    handleSpecChanged   : args.handleSpecChanged,
                     handleTitleChanged  : args.handleTitleChanged,
-                    spec                : pageModel,
+                    spec                : args.spec,
                     URIControl          : URIControl }),
                 labelText           : "Title",
-                spec                : pageModel,
+                spec                : args.spec,
                 propertyName        : 'title' }));
 
         propertiesContainer.appendChild(CBStringEditorFactory.createSingleLineEditor({
-                handleSpecChanged   : args.handlePropertyChanged,
+                handleSpecChanged   : args.handleSpecChanged,
                 labelText           : "Description",
-                spec                : pageModel,
+                spec                : args.spec,
                 propertyName        : 'description' }));
 
         propertiesContainer.appendChild(URIControl.rootElement());
 
-        propertiesContainer.appendChild(createPublicationControlElement());
+        propertiesContainer.appendChild(CBPageInformationEditorFactory.createPublicationControlElement({
+            handleSpecChanged   : args.handleSpecChanged,
+            spec                : args.spec,
+            URIControl          : URIControl
+        }));
 
         var flexContainer       = document.createElement("div");
         flexContainer.className = "flexContainer";
@@ -76,10 +113,10 @@ var CBPageInformationEditorFactory = {
 
         flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
             data                : users,
-            handleSpecChanged   : args.handlePropertyChanged,
+            handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Published By",
             propertyName        : "publishedBy",
-            spec                : spec
+            spec                : args.spec
         }));
 
         if (CBClassNamesForKinds.length > 0) {
@@ -91,147 +128,95 @@ var CBPageInformationEditorFactory = {
 
             flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
                 data                : classNames,
-                handleSpecChanged   : args.handlePropertyChanged,
+                handleSpecChanged   : args.handleSpecChanged,
                 labelText           : "Kind",
                 propertyName        : "classNameForKind",
-                spec                : spec
+                spec                : args.spec
             }));
         }
 
         propertiesContainer.appendChild(flexContainer);
 
-        /* No need for args in the closure after this function has run. */
-        args = undefined;
-
         return editor;
+    },
 
+    /**
+     * @param   {string}    listClassName
+     * @param   {Object}    spec
+     *
+     * @return  {Element}
+     */
+    createPageListOptionElement : function(args) {
+        var listClassName   = args.listClassName;
 
-        /**
-         * @param {Element} checkbox
-         * @param {string} listClassName
-         *
-         * @return {undefined}
-         */
-        function checkboxDidChangeForListClassName(args) {
-            var checkbox        = args.checkbox;
-            var listClassName   = args.listClassName;
+        var container       = document.createElement("div");
+        var checkbox        = document.createElement("input");
+        checkbox.type       = "checkbox";
+        var label           = document.createElement("label");
+        label.textContent   = listClassName;
 
-            if (!pageModel.listClassNames)
-            {
-                pageModel.listClassNames = [];
+        container.appendChild(checkbox);
+        container.appendChild(label);
+
+        if (args.spec.listClassNames) {
+            var index = args.spec.listClassNames.indexOf(listClassName);
+
+            if (index >= 0) {
+                checkbox.checked = true;
             }
-
-            var index = pageModel.listClassNames.indexOf(listClassName);
-
-            if (checkbox.checked) {
-                if (index < 0) {
-                    pageModel.listClassNames.push(listClassName);
-                }
-            } else {
-                if (index >= 0) {
-                    pageModel.listClassNames.splice(index, 1);
-                }
-            }
-
-            CBPageEditor.requestSave();
         }
 
-        /**
-         * @param {string} listClassName
-         *
-         * @return {Element}
-         */
-        function createPageListOptionElement(args) {
-            var listClassName   = args.listClassName;
+        checkbox.addEventListener("change", CBPageInformationEditorFactory.checkboxDidChangeForListClassName.bind(undefined, {
+            checkbox        : checkbox,
+            listClassName   : listClassName,
+            spec            : args.spec
+        }));
 
-            var container       = document.createElement("div");
-            var checkbox        = document.createElement("input");
-            checkbox.type       = "checkbox";
-            var label           = document.createElement("label");
-            label.textContent   = listClassName;
+        return container;
+    },
 
-            container.appendChild(checkbox);
-            container.appendChild(label);
+    /**
+     * @param   {Object}    spec
+     *
+     * @return  {Element}
+     */
+    createPageListsEditorElement : function(args) {
+        var count           = CBPageEditorAvailablePageListClassNames.length;
+        var element         = document.createElement("div");
+        element.className   = "CBPageInformationPageListsEditor";
 
-            if (pageModel.listClassNames) {
-                var index = pageModel.listClassNames.indexOf(listClassName);
+        for (var i = 0; i < count; i++) {
+            var optionElement   = CBPageInformationEditorFactory.createPageListOptionElement({
+                listClassName   : CBPageEditorAvailablePageListClassNames[i],
+                spec            : args.spec
+            });
 
-                if (index >= 0) {
-                    checkbox.checked = true;
-                }
-            }
-
-            checkbox.addEventListener("change", checkboxDidChangeForListClassName.bind(undefined, {
-                checkbox        : checkbox,
-                listClassName   : listClassName }));
-
-            return container;
+            element.appendChild(optionElement);
         }
 
-        /**
-         * @return {Element}
-         */
-        function createPageListsEditorElement() {
-            var count           = CBPageEditorAvailablePageListClassNames.length;
-            var element         = document.createElement("div");
-            element.className   = "CBPageInformationPageListsEditor";
+        return element;
+    },
 
-            for (var i = 0; i < count; i++) {
-                var args            = {listClassName: CBPageEditorAvailablePageListClassNames[i]};
-                var optionElement   = createPageListOptionElement(args);
+    /**
+     * @param   {function}      handleSpecChanged
+     * @param   {Object}        spec
+     * @param   {URIControl}    URIControl
+     *
+     * @return  {Element}
+     */
+    createPublicationControlElement : function(args) {
+        var control = new CBPublicationControl();
 
-                element.appendChild(optionElement);
-            }
+        control.setPublicationTimeStamp(args.spec.publicationTimeStamp);
+        control.setIsPublished(args.spec.isPublished);
+        control.setAction(undefined, CBPageInformationEditorFactory.valuesForPublicationHaveChanged.bind(undefined, {
+            handleSpecChanged   : args.handleSpecChanged,
+            spec                : args.spec,
+            URIControl          : args.URIControl
+        }));
+        control.rootElement().classList.add("standard");
 
-            return element;
-        }
-
-        /**
-         * @return {Element}
-         */
-        function createPublicationControlElement() {
-            var control = new CBPublicationControl();
-
-            control.setPublicationTimeStamp(pageModel.publicationTimeStamp);
-            control.setIsPublished(pageModel.isPublished);
-            control.setAction(undefined, valuesForPublicationHaveChanged);
-            control.rootElement().classList.add("standard");
-
-            return control.rootElement();
-        }
-
-        /**
-         * @param {CBPublicationControl} sender
-         *
-         * @return {undefined}
-         */
-        function valuesForPublicationHaveChanged(sender) {
-            pageModel.isPublished = sender.isPublished();
-            pageModel.publicationTimeStamp = sender.publicationTimeStamp();
-
-            if (pageModel.isPublished)
-            {
-                pageModel.URIIsStatic = true;
-
-                URIControl.setIsStatic(true);
-            }
-
-            URIControl.setIsDisabled(pageModel.isPublished);
-
-            CBPageEditor.requestSave();
-        }
-
-        /**
-         * @param {URIControl} sender
-         *
-         * @return {undefined}
-         */
-        function valuesForURIHaveChanged(sender) {
-            pageModel.URI           = sender.URI();
-            pageModel.URIIsStatic   = sender.isStatic();
-
-            CBPageEditor.requestSave();
-        }
+        return control.rootElement();
     },
 
     /**
@@ -267,5 +252,43 @@ var CBPageInformationEditorFactory = {
         } else {
             return Colby.textToURI(args.ID);
         }
+    },
+
+    /**
+     * @param   {Object}        args.spec
+     * @param   {function}      args.handleSpecChanged
+     * @param   {URIControl}    args.URIControl
+     * @param   {CBPublicationControl}  sender
+     *
+     * @return  {undefined}
+     */
+    valuesForPublicationHaveChanged : function(args, sender) {
+        args.spec.isPublished = sender.isPublished();
+        args.spec.publicationTimeStamp = sender.publicationTimeStamp();
+
+        if (args.spec.isPublished)
+        {
+            args.spec.URIIsStatic = true;
+
+            args.URIControl.setIsStatic(true);
+        }
+
+        args.URIControl.setIsDisabled(args.spec.isPublished);
+
+        CBPageEditor.requestSave();
+    },
+
+    /**
+     * @param   {Object}        args.spec
+     * @param   {function}      args.handleSpecChanged
+     * @param   {URIControl}    sender
+     *
+     * @return  {undefined}
+     */
+    valuesForURIHaveChanged : function(args, sender) {
+        args.spec.URI           = sender.URI();
+        args.spec.URIIsStatic   = sender.isStatic();
+
+        args.handleSpecChanged.call();
     }
 };
