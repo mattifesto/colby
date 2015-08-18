@@ -1,8 +1,20 @@
 "use strict";
 
 var CBPageEditor = {
-    sectionEditors  : {},
-    model           : null,
+    sectionEditors      : {}, /* deprecated, 2015.08.17 remove soon */
+    model               : null,
+
+    /**
+     * @param   {Object}    spec
+     *
+     * @return  undefined
+     */
+    handleTitleChanged  : function(args) {
+        var title       = args.spec.title || "";
+        title           = title.trim();
+        title           = (title.length > 0) ? ": " + title : "";
+        document.title  = "Page Editor" + title;
+    }
 };
 
 /**
@@ -88,6 +100,9 @@ CBPageEditor.displayEditor = function()
 
     var element = CBPageInformationEditorFactory.createEditor({
         handlePropertyChanged   : function() { CBPageEditor.requestSave(); },
+        handleTitleChanged      : CBPageEditor.handleTitleChanged.bind(undefined, {
+            spec                : CBPageEditor.model
+        }),
         model                   : CBPageEditor.model });
 
     editorContainer.appendChild(element);
@@ -101,6 +116,8 @@ CBPageEditor.displayEditor = function()
         classNames      : CBPageEditorAvailableViewClassNames,
         handleChanged   : CBPageEditor.requestSave.bind(CBPageEditor)
     }));
+
+    CBPageEditor.handleTitleChanged({spec : CBPageEditor.model});
 };
 
 /**

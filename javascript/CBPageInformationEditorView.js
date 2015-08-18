@@ -3,12 +3,11 @@
 var CBPageInformationEditorFactory = {
 
     /**
-     * @param model
-     *  The page model
-     * @param handlePropertyChanged
-     *  The function to call when any model property value changes.
+     * @param   {Object}    model
+     * @param   {function}  handlePropertyChanged
+     * @param   {function}  handleTitleChanged
      *
-     * @return {Element}
+     * @return  {Element}
      */
     createEditor : function(args) {
         var pageModel       = args.model; /* deprecated, use spec */
@@ -51,6 +50,7 @@ var CBPageInformationEditorFactory = {
         propertiesContainer.appendChild(CBStringEditorFactory.createSingleLineEditor({
                 handleSpecChanged   : CBPageInformationEditorFactory.handleTitleChanged.bind(undefined, {
                     handleSpecChanged   : args.handlePropertyChanged,
+                    handleTitleChanged  : args.handleTitleChanged,
                     spec                : pageModel,
                     URIControl          : URIControl }),
                 labelText           : "Title",
@@ -235,7 +235,8 @@ var CBPageInformationEditorFactory = {
     },
 
     /**
-     * @param {function}    handlesSpecChanged
+     * @param {function}    handleSpecChanged
+     * @param {function}    handleTitleChanged
      * @param {Object}      spec
      * @param {Object}      URIControl
      *
@@ -250,6 +251,7 @@ var CBPageInformationEditorFactory = {
             args.spec.URI = args.URIControl.URI();
         }
 
+        args.handleTitleChanged.call();
         args.handleSpecChanged.call();
     },
 
