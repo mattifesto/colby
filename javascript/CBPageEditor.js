@@ -1,7 +1,6 @@
 "use strict";
 
 var CBPageEditor = {
-    sectionEditors      : {}, /* deprecated, 2015.08.17 remove soon */
     model               : null,
 
     /**
@@ -213,15 +212,6 @@ CBPageEditor.makeFrontPageDidComplete = function()
     var response    = Colby.responseFromXMLHttpRequest(xhr);
 
     Colby.displayResponse(response);
-};
-
-
-/**
- * @return void
- */
-CBPageEditor.registerSectionEditor = function(sectionTypeID, sectionEditor)
-{
-    CBPageEditor.sectionEditors[sectionTypeID] = sectionEditor;
 };
 
 /**
