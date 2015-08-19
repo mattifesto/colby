@@ -1,8 +1,9 @@
 <?php
 
-// TODO: Document official handler file naming a search policy in comments
-//       in this file
-
+/**
+ * @deprecated use CBRequest
+ *  Move the functionality of this file into the CBRequest class.
+ */
 final class ColbyRequest {
 
     private static $decodedRequestURI;
