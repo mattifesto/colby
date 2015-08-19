@@ -23,9 +23,12 @@ final class CBHex160 {
     }
 
     /**
-     * @param {hex160} | [{hex160}] A single value or an array of 160-bit
-     *                              hexadecimal strings
-     * @return {string}
+     * @param   {hex160} | [{hex160}] A single value or an array of 160-bit
+     *                                hexadecimal strings
+     *
+     * @return  {string}
+     *
+     *  UNHEX('<hex160') | UNHEX('<hex160'),UNHEX('<hex160'),...
      */
     public static function toSQL($values) {
         if (!is_array($values)) {
