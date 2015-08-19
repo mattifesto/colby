@@ -81,7 +81,7 @@ CBPageEditor.displayEditor = function()
     var preview         = document.createElement("a");
     var makeFrontPage   = document.createElement("button");
 
-    preview.href = "/admin/document/preview/?archive-id=" + CBURLQueryVariables["data-store-id"];
+    preview.href = "/admin/pages/preview/?ID=" + CBURLQueryVariables["data-store-id"];
     makeFrontPage.style.marginLeft = "20px";
     preview.classList.add("standard-link-button");
 

@@ -4,19 +4,18 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-$dataStoreID        = $_GET['archive-id'];
-$iteration          = isset($_GET['iteration']) ? $_GET['iteration'] : null;
-$dataStoreIDForSQL  = ColbyConvert::textToSQL($dataStoreID);
-$SQL                = <<<EOT
+$ID         = $_GET['ID'];
+$iteration  = isset($_GET['iteration']) ? $_GET['iteration'] : null;
+$IDForSQL   = CBHex160::toSQL($ID);
+$SQL        = <<<EOT
 
     SELECT
         `className`,
-        `iteration`,
-        LOWER(HEX(`typeID`)) as `typeID`
+        `iteration`
     FROM
         `ColbyPages`
     WHERE
-        `archiveID` = UNHEX('{$dataStoreIDForSQL}')
+        `archiveID` = {$IDForSQL}
 
 EOT;
 
@@ -31,4 +30,4 @@ if (!$row) {
     return 1;
 }
 
-call_user_func("{$row->className}::renderAsHTMLForID", $dataStoreID, $iteration);
+call_user_func("{$row->className}::renderAsHTMLForID", $ID, $iteration);
