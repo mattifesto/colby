@@ -1,0 +1,27 @@
+.CBPageKindView.recent.NoTheme > h1 {
+    text-align: center;
+}
+
+.CBPageKindView.recent.NoTheme article {
+    display:    flex;
+    display:    -ms-flexbox;
+    display:    -webkit-flex;
+    margin:     0 auto;
+    padding:    20px 0;
+    width:      480px;
+}
+
+.CBPageKindView.recent.NoTheme article .thumbnail {
+    align-self:         flex-start;
+    -webkit-align-self: flex-start;
+    flex:               none;
+    -webkit-flex:       none;
+    height:             100px;
+    margin-right:       10px;
+    width:              100px;
+}
+
+.CBPageKindView.recent.NoTheme article img {
+    max-height:         100px;
+    max-width:          100px;
+}
