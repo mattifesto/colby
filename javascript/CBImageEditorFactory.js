@@ -150,7 +150,8 @@ var CBImageEditorFactory = {
      *
      *      {
      *          element : {div},
-     *          img     : {img}
+     *          img     : {img},
+     *          size    : {div}
      *      }
      */
     createImagePreviewElement : function() {
@@ -171,6 +172,31 @@ var CBImageEditorFactory = {
             element : element,
             img     : img,
             size    : size
+        };
+    },
+
+    /**
+     * @return {Object}
+     *
+     *      {
+     *          element : {div},
+     *          img     : {img}
+     *      }
+     */
+    createThumbnailPreviewElement : function() {
+        var element         = document.createElement("div");
+        element.className   = "CBImageEditorThumbnailPreview";
+        var img             = document.createElement("img");
+
+        element.appendChild(img);
+
+        element.addEventListener("click", function() {
+            element.classList.toggle("dark");
+        });
+
+        return {
+            element : element,
+            img     : img,
         };
     },
 
