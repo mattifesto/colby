@@ -3,10 +3,10 @@
 var CBPageInformationEditorFactory = {
 
     /**
-     * @param {Element} checkbox
-     * @param {string} listClassName
+     * @param   {Element}   checkbox
+     * @param   {string}    listClassName
      *
-     * @return {undefined}
+     * @return  {undefined}
      */
     checkboxDidChangeForListClassName : function(args) {
         var checkbox        = args.checkbox;
@@ -56,9 +56,33 @@ var CBPageInformationEditorFactory = {
         propertiesContainer.className   = "properties";
 
         content.appendChild(propertiesContainer);
-        content.appendChild(CBPageInformationEditorFactory.createPageListsEditorElement({
+
+        var sidebar         = document.createElement("div");
+        sidebar.className   = "sidebar";
+
+        var preview = CBImageEditorFactory.createThumbnailPreviewElement();
+        var upload  = CBImageEditorFactory.createEditorUploadButton({
+            handleImageUploaded : CBPageInformationEditorFactory.handleThumbnailUploaded.bind(undefined, {
+                handleSpecChanged   : args.handleSpecChanged,
+                previewImageElement : preview.img,
+                spec                : args.spec
+            }),
+            imageSizes              : ["rs200clc200"]
+        });
+
+        sidebar.appendChild(preview.element);
+        sidebar.appendChild(upload);
+
+        CBImageEditorFactory.displayThumbnail({
+            img : preview.img,
+            URL : args.spec.thumbnailURL
+        });
+
+        sidebar.appendChild(CBPageInformationEditorFactory.createPageListsEditorElement({
             spec : args.spec
         }));
+
+        content.appendChild(sidebar);
 
         /**
          *
@@ -217,6 +241,17 @@ var CBPageInformationEditorFactory = {
         control.rootElement().classList.add("standard");
 
         return control.rootElement();
+    },
+
+    handleThumbnailUploaded : function(args, response) {
+        args.spec.thumbnailURL  = response.sizes.rs200clc200.URL;
+
+        CBImageEditorFactory.displayThumbnail({
+            img : args.previewImageElement,
+            URL : args.spec.thumbnailURL
+        });
+
+        args.handleSpecChanged.call();
     },
 
     /**
