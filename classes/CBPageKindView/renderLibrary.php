@@ -1,6 +1,5 @@
-<section class="CBPageKindView catalog <?= $themeClass ?>">
-    <h1>Catalog</h1>
-    <pre><?= ColbyConvert::textToHTML(json_encode($dataByYear)) ?></pre>
+<section class="CBPageKindView library <?= $themeClass ?>">
+    <h1>Library</h1>
 
     <?php
 
@@ -9,7 +8,7 @@
 
         array_walk($dataByMonth, function($data, $month) {
             $queryString        = CBRequest::canonicalQueryString([
-                ['CBPageKindViewType',  'catalogformonth'],
+                ['CBPageKindViewType',  'month'],
                 ['CBPageKindViewMonth', $data->publishedMonth]
             ]);
             $queryStringAsHTML  = ColbyConvert::textToHTML($queryString);

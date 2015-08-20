@@ -20,6 +20,6 @@
     <?php }); ?>
 
     <nav>
-        <a href="<?= ColbyConvert::textToHTML(CBRequest::canonicalQueryString([['CBPageKindViewType','catalog']])); ?>">Catalog</a>
+        <a href="<?= ColbyConvert::textToHTML(CBRequest::canonicalQueryString([['CBPageKindViewType','library']])); ?>">Library</a>
     </nav>
 </section>

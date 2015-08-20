@@ -93,18 +93,18 @@ EOT;
         CBHTMLOutput::addCSSURL(CBPageKindView::URL('CBPageKindView.css'));
 
         switch ($type) {
-            case 'catalog':
+            case 'library':
                 $dataByYear = CBPageKindView::fetchCatalogDataByYearForPageKind($model->classNameForKind);
-                include __DIR__ . '/renderCatalog.php';
+                include __DIR__ . '/renderLibrary.php';
                 break;
 
-            case 'catalogformonth':
-                include __DIR__ . '/renderCatalogForMonth.php';
+            case 'month':
+                include __DIR__ . '/renderMonth.php';
                 break;
 
             default:
                 $summaries = CBPageKindView::fetchRecentlyPublishedSummariesForPageKind($model->classNameForKind);
-                include __DIR__ . '/renderAsMostRecentlyPublishedPages.php';
+                include __DIR__ . '/renderRecent.php';
         }
     }
 
