@@ -102,6 +102,27 @@ EOT;
     }
 
     /**
+     * @return  {stdClass} | false
+     */
+    private static function parseMonth($month) {
+        if (preg_match('/[0-9]{6}/', $month)) {
+            $monthNumber = substr($month, 4, 2);
+
+            if ($monthNumber > 0 && $monthNumber < 13) {
+                $dateTime               = DateTime::createFromFormat('!m', $monthNumber);
+                $data                   = new stdClass();
+                $data->monthName        = $dateTime->format('F');
+                $data->monthNameAsHTML  = ColbyConvert::textToHTML($data->monthName);
+                $data->year             = substr($month, 0, 4);
+
+                return $data;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
@@ -122,7 +143,16 @@ EOT;
                 break;
 
             case 'month':
-                $summaries = CBPageKindView::fetchSummariesForMonth($_GET['CBPageKindViewMonth'], $model->classNameForKind);
+                $month      = isset($_GET['CBPageKindViewMonth']) ? $_GET['CBPageKindViewMonth'] : '';
+
+                if ($monthData = CBPageKindView::parseMonth($month)) {
+                    $summaries      = CBPageKindView::fetchSummariesForMonth($month, $model->classNameForKind);
+                    $titleAsHTML    = "{$monthData->monthNameAsHTML} {$monthData->year}";
+                } else {
+                    $titleAsHTML    = 'Invalid Month';
+                    $summaries      = 'invalid month';
+                }
+
                 include __DIR__ . '/renderMonth.php';
                 break;
 
