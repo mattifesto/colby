@@ -1,10 +1,16 @@
 <section class="CBPageKindView library <?= $themeClass ?>">
-    <h1>Library</h1>
+    <header>
+        <h1>Library</h1>
+        <nav>
+            <a href="<?= ColbyConvert::textToHTML(CBRequest::canonicalQueryString()); ?>">Most Recent</a>
+        </nav>
+    </header>
+
 
     <?php
 
     array_walk($dataByYear, function($dataByMonth, $year) {
-        echo "<section><h1>{$year}</h1>";
+        echo "<section class=\"year\"><h1>{$year}</h1><div>";
 
         array_walk($dataByMonth, function($data, $month) {
             $queryString        = CBRequest::canonicalQueryString([
@@ -16,7 +22,7 @@
             echo "<div><a href=\"{$queryStringAsHTML}\">{$month} ({$data->count})</a></div>";
         });
 
-        echo '</section>';
+        echo '</div></section>';
     });
 
     ?>

@@ -1,5 +1,10 @@
-.CBPageKindView.recent.NoTheme > h1 {
+.CBPageKindView.NoTheme > header {
+    padding:    40px;
     text-align: center;
+}
+
+.CBPageKindView.NoTheme > header h1 {
+    font-size:  24px;
 }
 
 .CBPageKindView.recent.NoTheme article {
@@ -24,4 +29,16 @@
 .CBPageKindView.recent.NoTheme article img {
     max-height:         100px;
     max-width:          100px;
+}
+
+.CBPageKindView.NoTheme section.year > h1 {
+    text-align: center;
+}
+
+.CBPageKindView.NoTheme section.year > div {
+    column-count:           4;
+    -moz-column-count:      4;
+    -webkit-column-count:   4;
+    margin:                 0 auto;
+    width:                  960px;
 }
