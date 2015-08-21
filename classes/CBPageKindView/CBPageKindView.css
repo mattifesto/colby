@@ -7,7 +7,7 @@
     font-size:  24px;
 }
 
-.CBPageKindView.recent.NoTheme article {
+.CBPageKindView.NoTheme article {
     display:    flex;
     display:    -ms-flexbox;
     display:    -webkit-flex;
@@ -16,7 +16,7 @@
     width:      480px;
 }
 
-.CBPageKindView.recent.NoTheme article .thumbnail {
+.CBPageKindView.NoTheme article .thumbnail {
     align-self:         flex-start;
     -webkit-align-self: flex-start;
     flex:               none;
@@ -26,7 +26,7 @@
     width:              100px;
 }
 
-.CBPageKindView.recent.NoTheme article img {
+.CBPageKindView.NoTheme article img {
     max-height:         100px;
     max-width:          100px;
 }

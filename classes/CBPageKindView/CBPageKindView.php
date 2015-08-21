@@ -60,6 +60,29 @@ EOT;
     }
 
     /**
+     * @param   {string}    $month
+     *  Ex: "201508"
+     * @param   {string}    $classNameForKind
+     *
+     * @return  [{stdClass}]
+     */
+    private static function fetchSummariesForMonth($month, $classNameForKind) {
+        $monthAsSQL             = ColbyConvert::textToSQL($month);
+        $classNameForKindAsSQL  = ColbyConvert::textToSQL($classNameForKind);
+        $SQL                    = <<<EOT
+
+            SELECT      `keyValueData`
+            FROM        `ColbyPages`
+            WHERE       `classNameForKind`  = '{$classNameForKindAsSQL}' AND
+                        `publishedMonth`    = '{$monthAsSQL}'
+            ORDER BY    `published` DESC
+
+EOT;
+
+        return CBDB::SQLToArray($SQL, [ 'valueIsJSON' => true ]);
+    }
+
+    /**
      * @return [{string}]
      */
     public static function editorURLsForCSS() {
@@ -99,6 +122,7 @@ EOT;
                 break;
 
             case 'month':
+                $summaries = CBPageKindView::fetchSummariesForMonth($_GET['CBPageKindViewMonth'], $model->classNameForKind);
                 include __DIR__ . '/renderMonth.php';
                 break;
 
@@ -106,6 +130,28 @@ EOT;
                 $summaries = CBPageKindView::fetchRecentlyPublishedSummariesForPageKind($model->classNameForKind);
                 include __DIR__ . '/renderRecent.php';
         }
+    }
+
+    /**
+     * @return null
+     */
+    private static function renderPageSummaryModelAsHTML(stdClass $model) {
+        ?>
+
+        <article class="summary">
+                <div class="thumbnail">
+                    <img src="<?= $model->thumbnailURL ?>" alt="">
+                </div>
+                <div class="content">
+                    <h1><a href="<?= CBSiteURL . "/{$model->URI}" ?>">
+                        <?= $model->titleHTML ?>
+                    </a></h1>
+
+                    <p><?= $model->descriptionHTML ?>
+                </div>
+        </article>
+
+        <?php
     }
 
     /**

@@ -7,21 +7,6 @@
         </nav>
     </header>
 
-    <?php array_walk($summaries, function($summary) { ?>
-
-        <article>
-                <div class="thumbnail">
-                    <img src="<?= $summary->thumbnailURL ?>" alt="">
-                </div>
-                <div class="content">
-                    <h1><a href="<?= CBSiteURL . "/{$summary->URI}" ?>">
-                        <?= $summary->titleHTML ?>
-                    </a></h1>
-
-                    <p><?= $summary->descriptionHTML ?>
-                </div>
-        </article>
-
-    <?php }); ?>
+    <?php array_walk($summaries, 'CBPageKindView::renderPageSummaryModelAsHTML'); ?>
 
 </section>
