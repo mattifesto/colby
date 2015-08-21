@@ -31,11 +31,16 @@
     max-width:          100px;
 }
 
-.CBPageKindView.NoTheme section.year > h1 {
+.CBPageKindView.NoTheme .year {
+    padding: 20px 0;
+}
+
+.CBPageKindView.NoTheme .year > h1 {
+    padding:    0 0 20px;
     text-align: center;
 }
 
-.CBPageKindView.NoTheme section.year > div {
+.CBPageKindView.NoTheme .year > div {
     column-count:           4;
     -moz-column-count:      4;
     -webkit-column-count:   4;

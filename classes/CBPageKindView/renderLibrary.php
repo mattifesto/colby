@@ -18,8 +18,9 @@
                 ['CBPageKindViewMonth', $data->publishedMonth]
             ]);
             $queryStringAsHTML  = ColbyConvert::textToHTML($queryString);
-
-            echo "<div><a href=\"{$queryStringAsHTML}\">{$month} ({$data->count})</a></div>";
+            $dateTime           = DateTime::createFromFormat('!m', $month);
+            $monthNameAsHTML    = $dateTime->format('F');
+            echo "<div><a href=\"{$queryStringAsHTML}\">{$monthNameAsHTML}</a> <span>({$data->count})</span></div>";
         });
 
         echo '</div></section>';
