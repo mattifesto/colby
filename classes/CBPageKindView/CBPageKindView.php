@@ -133,6 +133,7 @@ EOT;
 
         $themeClass = $model->themeID ? "T{$model->themeID}" : 'NoTheme';
         $type       = isset($_GET['CBPageKindViewType']) ? $_GET['CBPageKindViewType'] : null;
+        $URLAsHTML  = ColbyConvert::textToHTML(CBSiteURL . strtok($_SERVER['REQUEST_URI'], '?'));
 
         CBHTMLOutput::addCSSURL(CBPageKindView::URL('CBPageKindView.css'));
 
