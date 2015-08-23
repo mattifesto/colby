@@ -158,7 +158,8 @@ EOT;
                         <?= $model->titleHTML ?>
                     </a></h1>
 
-                    <p><?= $model->descriptionHTML ?>
+                    <div><?= $model->descriptionHTML ?></div>
+                    <?= ColbyConvert::timestampToHTML($model->publicationTimeStamp) ?>
                 </div>
         </article>
 
