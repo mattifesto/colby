@@ -35,7 +35,7 @@ final class CBPageKindLibraryPageKind {
      * @return  {stdClass} | false
      */
     private static function parseMonth($month) {
-        if (preg_match('/[0-9]{6}/', $month)) {
+        if (preg_match('/^[0-9]{6}$/', $month)) {
             $monthNumber = substr($month, 4, 2);
 
             if ($monthNumber > 0 && $monthNumber < 13) {
