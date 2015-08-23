@@ -289,7 +289,14 @@ EOT;
      * @return void
      */
     public static function renderModelAsHTML($model) {
-        $model = self::upgradeRenderModel($model);
+        $model = CBViewPage::upgradeRenderModel($model);
+
+        // The model will be `false` when the query string has values that
+        // are unrecognized and indicate that this page does not exist.
+        if ($model === false) {
+            include Colby::findHandler('handle-default.php');
+            return;
+        }
 
         self::$modelContext = $model;
 
@@ -586,34 +593,61 @@ EOT;
     }
 
     /**
-     * @return void
+     * This function performs a render time transform on a page model. This may
+     * mean upgrading old models, but more likely it means transforming model
+     * properties in response to query variables. This is how a single page can
+     * become multiple pages using the query string and the page kind.
+     *
+     * @return {stdClass} | false
+     *  Returns the modified model. A false value is returned when the query
+     *  variables lead to a page that does not exist and a 404 page should be
+     *  rendered.
      */
     private static function upgradeRenderModel($model) {
 
-        /**
-         * Version 2
-         */
+         // Version 2
 
         if (!isset($model->updated)) {
-
             $model->updated = time();
         }
 
         if (!isset($model->created)) {
-
             $model->created = $model->updated;
         }
 
-        /**
-         * Version 3
-         */
+        // Version 3
 
         if (!isset($model->listClassNames)) {
-
             $model->listClassNames = array();
         }
 
         $model->schemaVersion = 3;
+
+        // classNameForKind
+
+        if (isset($model->classNameForKind) && class_exists($classNameForKind = $model->classNameForKind)) {
+            if (is_callable($function = "{$classNameForKind}::createModelForKind")) {
+                $modelForKind = call_user_func($function);
+
+                if ($modelForKind === false) {
+                    return false;
+                } else {
+                    $model->modelForKind = $modelForKind;
+                }
+            } else {
+                $model->modelForKind = null;
+            }
+
+            if (is_callable($function = "{$classNameForKind}::transformTitle")) {
+                $model->title       = call_user_func($function, $model->title, ['modelForKind' => $modelForKind]);
+                $model->titleHTML   = ColbyConvert::textToHTML($model->title);
+            }
+
+            if (is_callable($function = "{$classNameForKind}::transformDescription")) {
+                $model->description     = call_user_func($function, $model->description, ['modelForKind' => $modelForKind]);
+                $model->descriptionHTML = ColbyConvert::textToHTML($model->title);
+            }
+        }
 
         return $model;
     }
