@@ -19,6 +19,27 @@ var CBPageKindViewEditorFactory = {
             spec                : args.spec
         }));
 
+        editor.appendChild(CBTextBoxViewEditorFactory.createThemeIDEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Header Theme",
+            propertyName        : "headerThemeID",
+            spec                : args.spec
+        }));
+
+        editor.appendChild(CBTextBoxViewEditorFactory.createThemeIDEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Summary Theme",
+            propertyName        : "summaryThemeID",
+            spec                : args.spec
+        }));
+
+        editor.appendChild(CBTextBoxViewEditorFactory.createThemeIDEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Year Theme",
+            propertyName        : "yearThemeID",
+            spec                : args.spec
+        }));
+
         return editor;
     }
 };

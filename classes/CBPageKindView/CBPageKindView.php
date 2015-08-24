@@ -126,6 +126,16 @@ EOT;
         CBHTMLOutput::addCSSURL(CBTextBoxView::URL('CBTextBoxView.css'));
         CBHTMLOutput::addCSSURL(CBPageKindView::URL('CBPageKindView.css'));
 
+        $themeIDs = [$model->headerThemeID, $model->summaryThemeID, $model->yearThemeID];
+        array_walk($themeIDs, function($themeID) {
+            if ($themeID) {
+                CBHTMLOutput::addCSSURL(CBDataStore::toURL([
+                    'ID'        => $themeID,
+                    'filename'  => 'theme.css'
+                ]));
+            }
+        });
+
         switch ($type) {
             case 'library':
                 $dataByYear = CBPageKindView::fetchCatalogDataByYearForPageKind($model->classNameForKind);
@@ -176,9 +186,9 @@ EOT;
     public static function specToModel(stdClass $spec) {
         $model                      = CBModels::modelWithClassName(__CLASS__);
         $model->classNameForKind    = isset($spec->classNameForKind) ? $spec->classNameForKind : null;
-        $model->headerThemeID       = false;
-        $model->summaryThemeID      = false;
-        $model->yearThemeID         = false;
+        $model->headerThemeID       = isset($spec->headerThemeID) ? $spec->headerThemeID : '';
+        $model->summaryThemeID      = isset($spec->summaryThemeID) ? $spec->summaryThemeID : '';
+        $model->yearThemeID         = isset($spec->yearThemeID) ? $spec->yearThemeID : '';
 
         return $model;
     }
