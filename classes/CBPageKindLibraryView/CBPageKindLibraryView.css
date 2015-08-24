@@ -1,22 +1,22 @@
 /* view header */
 
-.CBPageKindView > header.CBTextBoxView > h1,
-.CBPageKindView > header.CBTextBoxView > div {
+.CBPageKindLibraryView > header.CBTextBoxView > h1,
+.CBPageKindLibraryView > header.CBTextBoxView > div {
     text-align: center;
 }
 
-.CBPageKindView > header.CBTextBoxView.DefaultTheme {
+.CBPageKindLibraryView > header.CBTextBoxView.DefaultTheme {
     padding:    40px;
 }
 
-.CBPageKindView > header.CBTextBoxView.DefaultTheme > h1 {
+.CBPageKindLibraryView > header.CBTextBoxView.DefaultTheme > h1 {
     font-size:      24px;
     font-weight:    bold;
 }
 
 /* page summary */
 
-.CBPageKindView article.summary {
+.CBPageKindLibraryView article.summary {
     display:    flex;
     display:    -ms-flexbox;
     display:    -webkit-flex;
@@ -25,7 +25,7 @@
     width:      480px;
 }
 
-.CBPageKindView article.summary .thumbnail {
+.CBPageKindLibraryView article.summary .thumbnail {
     align-self:         flex-start;
     -webkit-align-self: flex-start;
     flex:               none;
@@ -35,17 +35,17 @@
     width:              100px;
 }
 
-.CBPageKindView article.summary .thumbnail img {
+.CBPageKindLibraryView article.summary .thumbnail img {
     max-height:         100px;
     max-width:          100px;
 }
 
-.CBPageKindView article.summary div.CBTextBoxView.DefaultTheme > h1 {
+.CBPageKindLibraryView article.summary div.CBTextBoxView.DefaultTheme > h1 {
     font-size:      20px;
     font-weight:    bold;
 }
 
-.CBPageKindView article.summary div.CBTextBoxView.DefaultTheme > div time {
+.CBPageKindLibraryView article.summary div.CBTextBoxView.DefaultTheme > div time {
     color:      hsl(0, 0%, 50%);
     display:    block;
     font-size:  13px;
@@ -54,12 +54,12 @@
 
 /* year */
 
-.CBPageKindView section.year.CBTextBoxView > h1 {
+.CBPageKindLibraryView section.year.CBTextBoxView > h1 {
     padding:    0 0 20px;
     text-align: center;
 }
 
-.CBPageKindView section.year.CBTextBoxView > div {
+.CBPageKindLibraryView section.year.CBTextBoxView > div {
     column-count:           4;
     -moz-column-count:      4;
     -webkit-column-count:   4;
@@ -67,11 +67,11 @@
     width:                  960px;
 }
 
-.CBPageKindView section.year.CBTextBoxView.DefaultTheme {
+.CBPageKindLibraryView section.year.CBTextBoxView.DefaultTheme {
     padding: 20px 0;
 }
 
-.CBPageKindView section.year.CBTextBoxView.DefaultTheme > h1 {
+.CBPageKindLibraryView section.year.CBTextBoxView.DefaultTheme > h1 {
     font-size:      20px;
     font-weight:    bold;
 }

@@ -1,13 +1,13 @@
-.CBPageKindViewEditor {
+.CBPageKindLibraryViewEditor {
     font-size:  14px;
     padding:    10px;
 }
 
-.CBPageKindViewEditor .CBStringEditor {
+.CBPageKindLibraryViewEditor .CBStringEditor {
     text-align: center;
 }
 
-.CBPageKindViewEditor .CBStringEditor input {
+.CBPageKindLibraryViewEditor .CBStringEditor input {
     margin-left:    5px;
     padding:        4px;
 }

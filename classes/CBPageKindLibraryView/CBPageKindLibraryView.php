@@ -1,6 +1,6 @@
 <?php
 
-final class CBPageKindView {
+final class CBPageKindLibraryView {
 
     /**
      * @return {stdClass}
@@ -87,7 +87,7 @@ EOT;
      */
     public static function editorURLsForCSS() {
         return array_merge(CBTextBoxView::editorURLsForCSS(), [
-            CBPageKindView::URL('CBPageKindViewEditor.css')
+            CBPageKindLibraryView::URL('CBPageKindLibraryViewEditor.css')
         ]);
     }
 
@@ -97,7 +97,7 @@ EOT;
     public static function editorURLsForJavaScript() {
         return array_merge(CBTextBoxView::editorURLsForJavaScript(), [
             CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBPageKindView::URL('CBPageKindViewEditorFactory.js')
+            CBPageKindLibraryView::URL('CBPageKindLibraryViewEditorFactory.js')
         ]);
     }
 
@@ -106,25 +106,25 @@ EOT;
      */
     public static function renderModelAsHTML(stdClass $model) {
         if ($model->classNameForKind === null) {
-            echo '<!-- CBPageKindView: You must specify a class name for kind property value for this view to work properly. -->';
+            echo '<!-- CBPageKindLibraryView: You must specify a class name for kind property value for this view to work properly. -->';
             return;
         }
 
         $pageModel = CBViewPage::modelContext();
 
         if ($pageModel->classNameForKind !== 'CBPageKindLibraryPageKind') {
-            echo '<!-- CBPageKindView: The page kind for this page must be "CBPageKindLibraryPageKind" for this view to work properly. -->';
+            echo '<!-- CBPageKindLibraryView: The page kind for this page must be "CBPageKindLibraryPageKind" for this view to work properly. -->';
             return;
         }
 
         $headerThemeClass   = $model->headerThemeID ? "T{$model->headerThemeID}" : 'DefaultTheme';
         $summaryThemeClass  = $model->summaryThemeID ? "T{$model->summaryThemeID}" : 'DefaultTheme';
         $yearThemeClass     = $model->yearThemeID ? "T{$model->yearThemeID}" : 'DefaultTheme';
-        $type               = isset($_GET['CBPageKindViewType']) ? $_GET['CBPageKindViewType'] : null;
+        $type               = isset($_GET['CBPageKindLibraryViewType']) ? $_GET['CBPageKindLibraryViewType'] : null;
         $URLAsHTML          = ColbyConvert::textToHTML(CBSiteURL . strtok($_SERVER['REQUEST_URI'], '?'));
 
         CBHTMLOutput::addCSSURL(CBTextBoxView::URL('CBTextBoxView.css'));
-        CBHTMLOutput::addCSSURL(CBPageKindView::URL('CBPageKindView.css'));
+        CBHTMLOutput::addCSSURL(CBPageKindLibraryView::URL('CBPageKindLibraryView.css'));
 
         $themeIDs = [$model->headerThemeID, $model->summaryThemeID, $model->yearThemeID];
         array_walk($themeIDs, function($themeID) {
@@ -138,20 +138,20 @@ EOT;
 
         switch ($type) {
             case 'library':
-                $dataByYear = CBPageKindView::fetchCatalogDataByYearForPageKind($model->classNameForKind);
+                $dataByYear = CBPageKindLibraryView::fetchCatalogDataByYearForPageKind($model->classNameForKind);
                 include __DIR__ . '/renderLibrary.php';
                 break;
 
             case 'month':
                 $monthData      = $pageModel->modelForKind->monthData;
-                $summaries      = CBPageKindView::fetchSummariesForMonth($monthData->month, $model->classNameForKind);
+                $summaries      = CBPageKindLibraryView::fetchSummariesForMonth($monthData->month, $model->classNameForKind);
                 $titleAsHTML    = "{$monthData->monthNameAsHTML} {$monthData->year}";
 
                 include __DIR__ . '/renderMonth.php';
                 break;
 
             default:
-                $summaries = CBPageKindView::fetchRecentlyPublishedSummariesForPageKind($model->classNameForKind);
+                $summaries = CBPageKindLibraryView::fetchRecentlyPublishedSummariesForPageKind($model->classNameForKind);
                 include __DIR__ . '/renderRecent.php';
         }
     }
@@ -197,6 +197,6 @@ EOT;
      * @return {string}
      */
     public static function URL($filename) {
-        return CBSystemURL . "/classes/CBPageKindView/{$filename}";
+        return CBSystemURL . "/classes/CBPageKindLibraryView/{$filename}";
     }
 }

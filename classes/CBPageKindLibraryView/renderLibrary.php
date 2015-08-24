@@ -1,4 +1,4 @@
-<section class="CBPageKindView library">
+<section class="CBPageKindLibraryView library">
 
     <header class="CBTextBoxView <?= $headerThemeClass ?>  ">
         <h1>Library</h1>
@@ -19,8 +19,8 @@
 
                 array_walk($dataByMonth, function($data, $month) use ($URLAsHTML) {
                     $queryString        = CBRequest::canonicalQueryString([
-                        ['CBPageKindViewType',  'month'],
-                        ['CBPageKindViewMonth', $data->publishedMonth]
+                        ['CBPageKindLibraryViewType',  'month'],
+                        ['CBPageKindLibraryViewMonth', $data->publishedMonth]
                     ]);
                     $queryStringAsHTML  = ColbyConvert::textToHTML($queryString);
                     $dateTime           = DateTime::createFromFormat('!m', $month);

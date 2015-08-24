@@ -7,7 +7,7 @@ final class CBPageKindLibraryPageKind {
      */
     public static function createModelForKind() {
         $model          = CBModels::modelWithClassName(__CLASS__);
-        $model->type    = isset($_GET['CBPageKindViewType']) ? $_GET['CBPageKindViewType'] : 'recent';
+        $model->type    = isset($_GET['CBPageKindLibraryViewType']) ? $_GET['CBPageKindLibraryViewType'] : 'recent';
 
         switch ($model->type) {
             case 'library':
@@ -15,7 +15,7 @@ final class CBPageKindLibraryPageKind {
                 break;
 
             case 'month':
-                $month              = isset($_GET['CBPageKindViewMonth']) ? $_GET['CBPageKindViewMonth'] : '';
+                $month              = isset($_GET['CBPageKindLibraryViewMonth']) ? $_GET['CBPageKindLibraryViewMonth'] : '';
                 $model->monthData   = CBPageKindLibraryPageKind::parseMonth($month);
 
                 if ($model->monthData === false) {

@@ -1,6 +1,6 @@
 "use strict";
 
-var CBPageKindViewEditorFactory = {
+var CBPageKindLibraryViewEditorFactory = {
 
     /**
      * @param {function}    handleSpecChanged
@@ -10,7 +10,7 @@ var CBPageKindViewEditorFactory = {
      */
     createEditor : function(args) {
         var editor          = document.createElement("div");
-        editor.className    = "CBPageKindViewEditor";
+        editor.className    = "CBPageKindLibraryViewEditor";
 
         editor.appendChild(CBStringEditorFactory.createSingleLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
