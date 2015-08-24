@@ -117,9 +117,11 @@ EOT;
             return;
         }
 
-        $themeClass = $model->themeID ? "T{$model->themeID}" : 'NoTheme';
-        $type       = isset($_GET['CBPageKindViewType']) ? $_GET['CBPageKindViewType'] : null;
-        $URLAsHTML  = ColbyConvert::textToHTML(CBSiteURL . strtok($_SERVER['REQUEST_URI'], '?'));
+        $headerThemeClass   = $model->headerThemeID ? "T{$model->headerThemeID}" : 'DefaultTheme';
+        $summaryThemeClass  = $model->summaryThemeID ? "T{$model->summaryThemeID}" : 'DefaultTheme';
+        $yearThemeClass     = $model->yearThemeID ? "T{$model->yearThemeID}" : 'DefaultTheme';
+        $type               = isset($_GET['CBPageKindViewType']) ? $_GET['CBPageKindViewType'] : null;
+        $URLAsHTML          = ColbyConvert::textToHTML(CBSiteURL . strtok($_SERVER['REQUEST_URI'], '?'));
 
         CBHTMLOutput::addCSSURL(CBPageKindView::URL('CBPageKindView.css'));
 
@@ -146,20 +148,21 @@ EOT;
     /**
      * @return null
      */
-    private static function renderPageSummaryModelAsHTML(stdClass $model) {
+    private static function renderPageSummaryModelAsHTML(stdClass $model, $themeClass) {
         ?>
 
         <article class="summary">
                 <div class="thumbnail">
                     <img src="<?= $model->thumbnailURL ?>" alt="">
                 </div>
-                <div class="content">
-                    <h1><a href="<?= CBSiteURL . "/{$model->URI}" ?>">
-                        <?= $model->titleHTML ?>
-                    </a></h1>
-
-                    <div><?= $model->descriptionHTML ?></div>
-                    <?= ColbyConvert::timestampToHTML($model->publicationTimeStamp) ?>
+                <div class="CBTextBoxView  <?= $themeClass ?>">
+                    <h1>
+                        <a href="<?= CBSiteURL . "/{$model->URI}" ?>"><?= $model->titleHTML ?></a>
+                    </h1>
+                    <div>
+                        <?= $model->descriptionHTML ?>
+                        <p><?= ColbyConvert::timestampToHTML($model->publicationTimeStamp) ?>
+                    </div>
                 </div>
         </article>
 
@@ -172,7 +175,9 @@ EOT;
     public static function specToModel(stdClass $spec) {
         $model                      = CBModels::modelWithClassName(__CLASS__);
         $model->classNameForKind    = isset($spec->classNameForKind) ? $spec->classNameForKind : null;
-        $model->themeID             = false;
+        $model->headerThemeID       = false;
+        $model->summaryThemeID      = false;
+        $model->yearThemeID         = false;
 
         return $model;
     }

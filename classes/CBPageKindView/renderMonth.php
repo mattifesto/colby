@@ -1,11 +1,13 @@
-<section class="CBPageKindView month <?= $themeClass ?>">
+<section class="CBPageKindView month">
 
-    <header>
+    <header class="CBTextBoxView <?= $headerThemeClass ?>">
         <h1><?= $titleAsHTML ?></h1>
-        <nav>
-            <a href="<?= $URLAsHTML, ColbyConvert::textToHTML(CBRequest::canonicalQueryString()); ?>">Most Recent</a> |
-            <a href="<?= $URLAsHTML, ColbyConvert::textToHTML(CBRequest::canonicalQueryString([['CBPageKindViewType','library']])); ?>">Library</a>
-        </nav>
+        <div>
+            <nav>
+                <a href="<?= $URLAsHTML, ColbyConvert::textToHTML(CBRequest::canonicalQueryString()); ?>">Most Recent</a> |
+                <a href="<?= $URLAsHTML, ColbyConvert::textToHTML(CBRequest::canonicalQueryString([['CBPageKindViewType','library']])); ?>">Library</a>
+            </nav>
+        </div>
     </header>
 
     <?php
@@ -15,7 +17,9 @@
     } else if (empty($summaries)) {
         echo '<p>There were no pages published during this month.';
     } else {
-        array_walk($summaries, 'CBPageKindView::renderPageSummaryModelAsHTML');
+        array_walk($summaries, function($summaryModel) use ($summaryThemeClass) {
+            CBPageKindView::renderPageSummaryModelAsHTML($summaryModel, $summaryThemeClass);
+        });
     }
 
     ?>

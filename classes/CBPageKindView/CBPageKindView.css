@@ -1,13 +1,23 @@
-.CBPageKindView.NoTheme > header {
+/* view header */
+
+.CBPageKindView > header.CBTextBoxView > h1
+.CBPageKindView > header.CBTextBoxView > div {
+    text-align: center;
+}
+
+.CBPageKindView > header.CBTextBoxView.DefaultTheme {
     padding:    40px;
     text-align: center;
 }
 
-.CBPageKindView.NoTheme > header h1 {
-    font-size:  24px;
+.CBPageKindView > header.CBTextBoxView.DefaultTheme > h1 {
+    font-size:      24px;
+    font-weight:    bold;
 }
 
-.CBPageKindView.NoTheme article {
+/* page summary */
+
+.CBPageKindView article.summary {
     display:    flex;
     display:    -ms-flexbox;
     display:    -webkit-flex;
@@ -16,7 +26,7 @@
     width:      480px;
 }
 
-.CBPageKindView.NoTheme article .thumbnail {
+.CBPageKindView article.summary .thumbnail {
     align-self:         flex-start;
     -webkit-align-self: flex-start;
     flex:               none;
@@ -26,31 +36,43 @@
     width:              100px;
 }
 
-.CBPageKindView.NoTheme article img {
+.CBPageKindView article.summary .thumbnail img {
     max-height:         100px;
     max-width:          100px;
 }
 
-.CBPageKindView.NoTheme article time {
+.CBPageKindView article.summary div.CBTextBoxView.DefaultTheme > h1 {
+    font-size:      20px;
+    font-weight:    bold;
+}
+
+.CBPageKindView article.summary div.CBTextBoxView.DefaultTheme > div time {
     color:      hsl(0, 0%, 50%);
     display:    block;
     font-size:  13px;
     padding:    5px 0 0;
 }
 
-.CBPageKindView.NoTheme .year {
-    padding: 20px 0;
-}
+/* year */
 
-.CBPageKindView.NoTheme .year > h1 {
+.CBPageKindView .year > h1 {
     padding:    0 0 20px;
     text-align: center;
 }
 
-.CBPageKindView.NoTheme .year > div {
+.CBPageKindView .year > div {
     column-count:           4;
     -moz-column-count:      4;
     -webkit-column-count:   4;
     margin:                 0 auto;
     width:                  960px;
+}
+
+.CBPageKindView section.year.DefaultTheme {
+    padding: 20px 0;
+}
+
+.CBPageKindView section.year.DefaultTheme > h1 {
+    font-size:      20px;
+    font-weight:    bold;
 }
