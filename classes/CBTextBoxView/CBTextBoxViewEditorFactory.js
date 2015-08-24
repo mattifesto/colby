@@ -21,9 +21,7 @@ var CBTextBoxViewEditorFactory = {
         flexarea            = document.createElement("div");
         flexarea.className  = "flexarea";
 
-        flexarea.appendChild(CBStringEditorFactory.createSelectEditor({
-            data                : CBTextBoxViewEditorFactory.themes,
-            dataUpdatedEvent    : CBTextBoxViewEditorFactory.themesUpdated,
+        flexarea.appendChild(CBTextBoxViewEditorFactory.createThemeIDEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Theme",
             propertyName        : "themeID",
@@ -163,6 +161,24 @@ var CBTextBoxViewEditorFactory = {
         element.appendChild(section);
 
         return element;
+    },
+
+    /**
+     * @param   {function}  handleSpecChanged
+     * @param   {string}    labelText
+     * @param   {string}    propertyName
+     * @param   {Object}    spec
+     * @return  {Element}
+     */
+    createThemeIDEditor : function(args) {
+        return CBStringEditorFactory.createSelectEditor({
+            data                : CBTextBoxViewEditorFactory.themes,
+            dataUpdatedEvent    : CBTextBoxViewEditorFactory.themesUpdated,
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : args.labelText,
+            propertyName        : args.propertyName,
+            spec                : args.spec
+        });
     },
 
     /**
