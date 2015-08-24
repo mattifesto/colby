@@ -1,13 +1,12 @@
 /* view header */
 
-.CBPageKindView > header.CBTextBoxView > h1
+.CBPageKindView > header.CBTextBoxView > h1,
 .CBPageKindView > header.CBTextBoxView > div {
     text-align: center;
 }
 
 .CBPageKindView > header.CBTextBoxView.DefaultTheme {
     padding:    40px;
-    text-align: center;
 }
 
 .CBPageKindView > header.CBTextBoxView.DefaultTheme > h1 {
@@ -55,12 +54,12 @@
 
 /* year */
 
-.CBPageKindView .year > h1 {
+.CBPageKindView section.year.CBTextBoxView > h1 {
     padding:    0 0 20px;
     text-align: center;
 }
 
-.CBPageKindView .year > div {
+.CBPageKindView section.year.CBTextBoxView > div {
     column-count:           4;
     -moz-column-count:      4;
     -webkit-column-count:   4;
@@ -68,11 +67,11 @@
     width:                  960px;
 }
 
-.CBPageKindView section.year.DefaultTheme {
+.CBPageKindView section.year.CBTextBoxView.DefaultTheme {
     padding: 20px 0;
 }
 
-.CBPageKindView section.year.DefaultTheme > h1 {
+.CBPageKindView section.year.CBTextBoxView.DefaultTheme > h1 {
     font-size:      20px;
     font-weight:    bold;
 }
