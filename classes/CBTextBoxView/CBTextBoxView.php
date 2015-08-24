@@ -134,7 +134,7 @@ EOT;
             $content = "<div>{$model->contentAsHTML}</div>";
         }
 
-        CBHTMLOutput::addCSSURL(CBTextBoxView::URL("CBTextBoxView.css"));
+        CBHTMLOutput::addCSSURL(CBTextBoxView::URL('CBTextBoxView.css'));
 
         if ($model->themeID) {
             CBHTMLOutput::addCSSURL(CBDataStore::toURL([

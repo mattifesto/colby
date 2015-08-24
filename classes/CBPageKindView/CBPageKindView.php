@@ -86,19 +86,19 @@ EOT;
      * @return [{string}]
      */
     public static function editorURLsForCSS() {
-        return [
+        return array_merge(CBTextBoxView::editorURLsForCSS(), [
             CBPageKindView::URL('CBPageKindViewEditor.css')
-        ];
+        ]);
     }
 
     /**
      * @return [{string}]
      */
     public static function editorURLsForJavaScript() {
-        return [
+        return array_merge(CBTextBoxView::editorURLsForJavaScript(), [
             CBSystemURL . '/javascript/CBStringEditorFactory.js',
             CBPageKindView::URL('CBPageKindViewEditorFactory.js')
-        ];
+        ]);
     }
 
     /**
@@ -123,6 +123,7 @@ EOT;
         $type               = isset($_GET['CBPageKindViewType']) ? $_GET['CBPageKindViewType'] : null;
         $URLAsHTML          = ColbyConvert::textToHTML(CBSiteURL . strtok($_SERVER['REQUEST_URI'], '?'));
 
+        CBHTMLOutput::addCSSURL(CBTextBoxView::URL('CBTextBoxView.css'));
         CBHTMLOutput::addCSSURL(CBPageKindView::URL('CBPageKindView.css'));
 
         switch ($type) {
