@@ -2,7 +2,7 @@
     box-sizing: border-box;
     font-size:  14px;
     padding:    10px;
-    width:      480px;
+    width:      640px;
 }
 
 .CBTextBoxViewThemeEditor .CBStringEditor input,
@@ -13,6 +13,7 @@
 }
 
 .CBTextBoxViewThemeEditor .CBStringEditor textarea {
+    font:   400 12px/1.4 Menlo, monospace;
     height: 200px;
 }
 
