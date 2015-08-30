@@ -4,8 +4,10 @@ $attributes = array();
 $hashes     = array();
 
 if (isset($_POST['message'])) {
+    $message                    = $_POST['message'];
+
     $key                        = 'Message';
-    $value                      = $_POST['message'];
+    $value                      = $message;
     $attributes[$key]           = $value;
     $hash                       = sha1("{$key}: {$value}");
     $hashes[$key]               = $hash;
@@ -34,6 +36,7 @@ if (isset($_POST['message'])) {
     $hash                       = sha1("{$key}: {$value}");
     $hashes[$key]               = $hash;
 } else {
+    $message                    = 'Unspecified';
     $key                        = 'Message';
     $value                      = 'Colby: The standard error parameters were not specified.';
     $attributes[$key]           = $value;
@@ -105,7 +108,7 @@ EOT;
 
     $mailer = Swift_Mailer::newInstance($transport);
 
-    $messageSubject = COLBY_SITE_NAME . ' JavaScript Error (' . time() . ')';
+    $messageSubject = COLBY_SITE_NAME . " JS Error: {$message}";
     $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
     $messageTo = array(COLBY_SITE_ADMINISTRATOR);
 
