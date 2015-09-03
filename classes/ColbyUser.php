@@ -213,28 +213,21 @@ EOT;
         $sqlFacebookId = "'{$facebookProperties->id}'";
 
         $sql = <<<EOT
-SELECT
-    `id`
-FROM
-    `ColbyUsers`
-WHERE
-    `facebookId` = {$sqlFacebookId}
+
+            SELECT  `id`
+            FROM    `ColbyUsers`
+            WHERE   `facebookId` = {$sqlFacebookId}
+
 EOT;
 
-        $result = Colby::query($sql);
+        $id = CBDB::SQLToValue($sql);
 
-        if ($row = $result->fetch_object())
-        {
-            $id = $row->id;
+        if ($id !== false) {
             $sqlId = "'{$id}'";
-        }
-        else
-        {
-            $id = null;
+        } else {
             $sqlId = null;
         }
 
-        $result->free();
 
         $sqlFacebookAccessToken = $mysqli->escape_string($facebookAccessToken);
         $sqlFacebookAccessToken = "'{$sqlFacebookAccessToken}'";
@@ -266,20 +259,21 @@ EOT;
             $sqlFacebookTimeZone = '0';
         }
 
-        if ($sqlId)
-        {
+        if ($sqlId) {
             $sql = <<<EOT
-UPDATE
-    `ColbyUsers`
-SET
-    `facebookAccessToken` = {$sqlFacebookAccessToken},
-    `facebookAccessExpirationTime` = {$sqlFacebookAccessExpirationTime},
-    `facebookName` = {$sqlFacebookName},
-    `facebookFirstName` = {$sqlFacebookFirstName},
-    `facebookLastName` = {$sqlFacebookLastName},
-    `facebookTimeZone` = {$sqlFacebookTimeZone}
-WHERE
-    `id` = {$sqlId}
+
+                UPDATE
+                    `ColbyUsers`
+                SET
+                    `facebookAccessToken` = {$sqlFacebookAccessToken},
+                    `facebookAccessExpirationTime` = {$sqlFacebookAccessExpirationTime},
+                    `facebookName` = {$sqlFacebookName},
+                    `facebookFirstName` = {$sqlFacebookFirstName},
+                    `facebookLastName` = {$sqlFacebookLastName},
+                    `facebookTimeZone` = {$sqlFacebookTimeZone}
+                WHERE
+                    `id` = {$sqlId}
+
 EOT;
 
             Colby::query($sql);
@@ -290,34 +284,45 @@ EOT;
             $sqlHash = "'{$sqlHash}'";
 
         $sql = <<<EOT
-INSERT INTO
-    `ColbyUsers`
-(
-    `hash`,
-    `facebookId`,
-    `facebookAccessToken`,
-    `facebookAccessExpirationTime`,
-    `facebookName`,
-    `facebookFirstName`,
-    `facebookLastName`,
-    `facebookTimeZone`
-)
-VALUES
-(
-    UNHEX({$sqlHash}),
-    {$sqlFacebookId},
-    {$sqlFacebookAccessToken},
-    {$sqlFacebookAccessExpirationTime},
-    {$sqlFacebookName},
-    {$sqlFacebookFirstName},
-    {$sqlFacebookLastName},
-    {$sqlFacebookTimeZone}
-)
+
+            INSERT INTO
+                `ColbyUsers`
+            (
+                `hash`,
+                `facebookId`,
+                `facebookAccessToken`,
+                `facebookAccessExpirationTime`,
+                `facebookName`,
+                `facebookFirstName`,
+                `facebookLastName`,
+                `facebookTimeZone`
+            )
+            VALUES
+            (
+                UNHEX({$sqlHash}),
+                {$sqlFacebookId},
+                {$sqlFacebookAccessToken},
+                {$sqlFacebookAccessExpirationTime},
+                {$sqlFacebookName},
+                {$sqlFacebookFirstName},
+                {$sqlFacebookLastName},
+                {$sqlFacebookTimeZone}
+            )
+
 EOT;
 
             Colby::query($sql);
 
-            $id = $mysqli->insert_id;
+            $id = (int)$mysqli->insert_id;
+
+            /* Detect first user */
+
+            $count = CBDB::SQLToValue('SELECT COUNT(*) FROM `ColbyUsers`');
+
+            if ($count === '1') {
+                Colby::query("INSERT INTO `ColbyUsersWhoAreAdministrators` VALUES ({$id}, NOW())");
+                Colby::query("INSERT INTO `ColbyUsersWhoAreDevelopers` VALUES ({$id}, NOW())");
+            }
         }
 
         /**
