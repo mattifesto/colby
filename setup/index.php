@@ -68,7 +68,7 @@ class ColbyInstaller {
             copy(__DIR__ . '/colby-configuration.template.data', self::$colbyConfigurationFilename);
         }
 
-        if (!is_file(self::$colbyConfigurationFilename)) {
+        if (!is_file(self::$gitignoreFilename)) {
 
             copy(__DIR__ . '/gitignore.template.data', self::$gitignoreFilename);
 
