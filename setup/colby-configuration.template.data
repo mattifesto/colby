@@ -21,7 +21,7 @@ define('CBEncryptionPassword',              'Replace this password.');
 
 /**
 
-define('COLBY_EMAIL_LIBRARY_DIRECTORY',     COLBY_SITE_DIRECTORY . '/swiftmailer');
+define('COLBY_EMAIL_LIBRARY_DIRECTORY',     CBSiteDirectory . '/swiftmailer');
 define('COLBY_EMAIL_SENDER',                'mail@example.com');
 define('COLBY_EMAIL_SENDER_NAME',           'Example Mailer');
 
