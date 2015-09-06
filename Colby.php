@@ -718,6 +718,8 @@ final class Colby {
     {
         try
         {
+            $exceptionMessage = $exception->getMessage();
+
             /**
              * Report the exception to the error log
              */
@@ -726,8 +728,7 @@ final class Colby {
                 $exception->getFile() .
                 ', line: ' .
                 $exception->getLine() .
-                ', message: ' .
-                $exception->getMessage());
+                ", message: {$exceptionMessage}");
 
             /**
              * Report the exception via email to the administrator
@@ -746,11 +747,11 @@ final class Colby {
 
                 $mailer = Swift_Mailer::newInstance($transport);
 
-                $messageSubject = COLBY_SITE_NAME . ' Error (' . time() . ')';
-                $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
-                $messageTo = array(COLBY_SITE_ADMINISTRATOR);
-                $messageBody = Colby::exceptionStackTrace($exception);
-                $messageBodyHTML = '<pre>' . ColbyConvert::textToHTML($messageBody) . '</pre>';
+                $messageSubject     = COLBY_SITE_NAME . " Error ({$exceptionMessage})";
+                $messageFrom        = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
+                $messageTo          = array(COLBY_SITE_ADMINISTRATOR);
+                $messageBody        = Colby::exceptionStackTrace($exception);
+                $messageBodyHTML    = '<pre>' . ColbyConvert::textToHTML($messageBody) . '</pre>';
 
                 $message = Swift_Message::newInstance();
                 $message->setSubject($messageSubject);
