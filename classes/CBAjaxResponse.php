@@ -34,19 +34,13 @@ class CBAjaxResponse
     /**
      * @return void
      */
-    public function handleException($exception)
-    {
-        try
-        {
+    public function handleException($exception) {
+        try {
             Colby::reportException($exception);
 
-            $class              = get_class($exception);
-            $message            = $exception->getMessage();
-            $this->message      = "{$class}: {$message}";
+            $this->message      = $exception->getMessage();
             $this->stackTrace   = Colby::exceptionStackTrace($exception);
-        }
-        catch (Exception $innerException)
-        {
+        } catch (Exception $innerException) {
             $class              = get_class($innerException);
             $message            = $innerException->getMessage();
             $this->message      = "CBAjaxResponse Inner {$class}: {$message}";
