@@ -2,9 +2,9 @@
 
 header('Content-type: application/json');
 
-$response = new stdClass();
-$response->wasSuccessful = false;
-$response->message = get_class($exception) . ': ' . $exception->getMessage();
+$response                   = new stdClass();
+$response->wasSuccessful    = false;
+$response->message          = $exception->getMessage();
 
 if (CBSitePreferences::debug()) {
     $response->stackTrace = Colby::exceptionStackTrace($exception);
