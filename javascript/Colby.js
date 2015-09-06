@@ -1,11 +1,35 @@
 "use strict";
 
-var Colby =
-{
+var Colby = {
     'intervalId' : null,
     'intervalCount' : 0,
     'monthNames' : ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December']
+                    'July', 'August', 'September', 'October', 'November', 'December'],
+
+    /**
+     * @return void
+     */
+    displayResponse : function(response) {
+        if ('stackTrace' in response) {
+            var element                 = document.createElement("div");
+            var message                 = document.createElement("p");
+            message.style.textAlign     = "center";
+            message.style.marginBottom  = "100px";
+            message.textContent         = response.message;
+            var stack                   = document.createElement("pre");
+            stack.style.fontSize        = "13px";
+            stack.textContent           = response.stackTrace;
+
+            element.appendChild(message);
+            element.appendChild(stack);
+
+            Colby.setPanelElement(element);
+        } else {
+            Colby.setPanelText(response.message);
+        }
+
+        Colby.showPanel();
+    }
 };
 
 /**
@@ -271,27 +295,6 @@ Colby.dateToRelativeLocaleString = function(date, now)
     }
 
     return string;
-};
-
-/**
- * @return void
- */
-Colby.displayResponse = function(response)
-{
-    if ('stackTrace' in response)
-    {
-        var element     = document.createElement("pre");
-        var textNode    = document.createTextNode(response.stackTrace);
-        element.appendChild(textNode);
-
-        Colby.setPanelElement(element);
-    }
-    else
-    {
-        Colby.setPanelText(response.message);
-    }
-
-    Colby.showPanel();
 };
 
 /**
