@@ -357,7 +357,7 @@ EOT;
                 $iteration = CBPages::fetchIterationForUpdate($ID);
 
                 if ($iteration != $spec->iteration) {
-                    throw new RuntimeException('This page has been updated by another user.');
+                    throw new RuntimeException('Further changes to this page cannot currently be saved because the page has been updated by another user or in another window. Reload this page to fetch those updates and then continue editing.');
                 }
 
                 $spec->iteration++;
