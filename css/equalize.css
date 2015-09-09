@@ -20,24 +20,25 @@ html {
 }
 
 body {
-    display:                flex;           /* 1 */
+ /* align-items:            stretch (default) */    /* 1 */
+    display:                flex;                   /* 2 */
     display:                -ms-flexbox;
     display:                -webkit-flex;
-    flex-direction:         column;         /* 1 */
+    flex-direction:         column;                 /* 2 */
     -ms-flex-direction:     column;
     -webkit-flex-direction: column;
-    min-height:             100%;           /* 2 */
-    position:               relative;       /* 3 */
+    min-height:             100%;                   /* 3 */
+    position:               relative;               /* 4 */
 }
 
 body > * {
-    flex:                   none;           /* 4 */
+    flex:                   none;                   /* 5 */
     -ms-flex:               none;
     -webkit-flex:           none;
 }
 
 body > .flex-fill {
-    flex:                   1 0 auto;       /* 5 */
+    flex:                   1 0 auto;               /* 6 */
     -ms-flex:               1 0 auto;
     -webkit-flex:           1 0 auto;
 }
@@ -112,15 +113,29 @@ html:
 
 body:
 
-1.  This makes the body a vertical flexbox which behaves the same as if it wasn't except it allows flexible box behaviors such as placing the footer at the bottom of the viewport for short pages.
+1.  The default value for `align-items` is stretch which closely resembles the
+default behavior of an element outside of a flexbox. Specifying something like
+`center` as the value may be tempting but it will inadvertently horizontally
+collapse some elements causing backgrounds to not fill the full width of the
+viewport. This is much harder to explain to an end user than the fact that
+centering is not the default behavior which they are generally used to.
 
-2.  This makes the body at least as tall as the viewport which enables the footer to be placed at the bottom of the viewport when the content is small.
+2.  This makes the body a vertical flexbox which behaves the same as if it
+wasn't except it allows flexible box behaviors such as placing the footer at the
+bottom of the viewport for short pages.
 
-3.  By default absolutely positioned elements are positioned relative to the `body` element.
+3.  This makes the body at least as tall as the viewport which enables the
+footer to be placed at the bottom of the viewport when the content is small.
 
-4.  This makes children of the body non-flexible by default, which basically makes them behave exactly as if they were not in a flexible box container.
+4.  By default absolutely positioned elements are positioned relative to the
+`body` element.
 
-5.  Use this class on a child that is allowed to grow to take up extra space between other elements. This should be used on an empty element right above the page footer.
+5.  This makes children of the body non-flexible by default, which basically
+makes them behave exactly as if they were not in a flexible box container.
+
+6.  Use this class on a child that is allowed to grow to take up extra space
+between other elements. This should be used on an empty element right above the
+page footer.
 
 
 main:
