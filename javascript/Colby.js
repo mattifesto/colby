@@ -24,6 +24,22 @@ var Colby = {
             element.appendChild(stack);
 
             Colby.setPanelElement(element);
+        } else if (response.userMustLogIn) {
+            var element                 = document.createElement("div");
+            var message                 = document.createElement("p");
+            message.style.textAlign     = "center";
+            message.textContent         = response.message;
+            var button                  = document.createElement("button");
+            button.textContent          = "Reload";
+            button.style.display        = "block";
+            button.style.margin         = "20px auto";
+
+            button.addEventListener("click", function() { location.reload(); });
+
+            element.appendChild(message);
+            element.appendChild(button);
+
+            Colby.setPanelElement(element);
         } else {
             Colby.setPanelText(response.message);
         }

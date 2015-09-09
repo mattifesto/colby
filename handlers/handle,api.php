@@ -49,7 +49,15 @@ if ($className) { /* deprecated */
             call_user_func($function, $args);
         } else {
             $response           = new CBAjaxResponse();
-            $response->message  = "You do not have permission to call `$function`.";
+
+            if (ColbyUser::current()->isLoggedIn()) {
+                $response->message          = "You do not have permission to call `$function`.";
+                $response->userMustLogIn    = false;
+            } else {
+                $response->message          = "The operation you requested cannot be performed because you are not currently logged in, possibly because your session has timed out. Reloading the current page will usually remedy this.";
+                $response->userMustLogIn    = true;
+            }
+
             $response->send();
         }
     } else {
