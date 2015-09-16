@@ -33,8 +33,18 @@ final class Colby {
     /**
      * @return void
      */
-    public static function autoload($className)
-    {
+    public static function autoload($className) {
+
+        /**
+         * 2105.09.15 BUGBUG:
+         * There is a long standing bug here. The search order should be to
+         * check each library, one after the other, for the file. But what
+         * actually happens is that each library is checked for the file
+         * directly inside the classes directory and then each library is
+         * checked for the file inside the class name directory. It's not a case
+         * that has ever come up, but it's a bug all the same.
+         */
+
         $filename = Colby::findFile("classes/{$className}.php");
 
         if (!$filename)
