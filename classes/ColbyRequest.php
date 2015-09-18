@@ -209,8 +209,7 @@ EOT;
          * implementations are provided which can be overridden by placing
          * replacements in the main website's `setup` directory.
          */
-        else if (self::$decodedRequestURI === '/robots.txt')
-        {
+        else if (self::$decodedRequestURI === '/robots.txt') {
             if (defined('CBShouldDisallowRobots') &&
                 CBShouldDisallowRobots)
             {
@@ -224,6 +223,11 @@ EOT;
             exit;
         }
 
+        else if (self::$decodedRequestURI === '/sitemap.xml') {
+            include CBSystemDirectory . '/handlers/handle-sitemap.php';
+            exit;
+        }
+
         // search for handler files
         // handler filenames use encoded stubs
         // (no spaces or special characters)
@@ -232,8 +236,7 @@ EOT;
         // 2. check for "first stub" multi-URL handler
         // 3. Check whether page is displayable without a stub related handler.
 
-        else
-        {
+        else {
             // 1. check for "every stub" URL handler
 
             $stubsPart = implode(',', self::$encodedStubs);
