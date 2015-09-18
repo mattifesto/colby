@@ -209,8 +209,7 @@ EOT;
          * implementations are provided which can be overridden by placing
          * replacements in the main website's `setup` directory.
          */
-        else if (1 === $countOfStubs &&
-                 'robots.txt' === self::$decodedStubs[0])
+        else if (self::$decodedRequestURI === '/robots.txt')
         {
             if (defined('CBShouldDisallowRobots') &&
                 CBShouldDisallowRobots)
