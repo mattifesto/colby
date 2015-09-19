@@ -12,5 +12,5 @@
 
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/equalize.css');
 
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/html5shiv.js');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbyEqualize.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/html5shiv.js', CBHTMLOutput::JSInHeadElement);
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/ColbyEqualize.js', CBHTMLOutput::JSInHeadElement);
