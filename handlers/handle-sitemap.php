@@ -2,7 +2,8 @@
 
 header('Content-type: text/xml');
 
-$URLs = [CBSiteURL . '/'];
+$URLs   = [CBSiteURL . '/'];
+$URLs   = array_merge($URLs, CBPages::pageURLs());
 
 if (defined('CBSiteConfiguration::pageProviderClassNames')) {
     foreach (CBSiteConfiguration::pageProviderClassNames as $className) {
