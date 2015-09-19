@@ -291,8 +291,9 @@ EOT;
     public static function renderModelAsHTML($model) {
         $model = CBViewPage::upgradeRenderModel($model);
 
-        // The model will be `false` when the query string has values that
-        // are unrecognized and indicate that this page does not exist.
+        // The `upgradeRenderModel` function will return `false` when the query
+        // string has values that are unrecognized and indicate that this page
+        // does not exist.
         if ($model === false) {
             include Colby::findHandler('handle-default.php');
             return;
