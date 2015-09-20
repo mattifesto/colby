@@ -19,6 +19,13 @@ var CBSitePreferencesEditorFactory = {
             spec                : args.spec
         }));
 
+        element.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Disallow Robots",
+            propertyName        : "disallowRobots",
+            spec                : args.spec
+        }));
+
         element.appendChild(CBStringEditorFactory.createSingleLineEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Google Tag Manager ID",

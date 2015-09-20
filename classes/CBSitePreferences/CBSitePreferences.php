@@ -34,6 +34,23 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return {bool}
+     */
+    public static function disallowRobots() {
+
+        /**
+         * @TODO 2015.09.20
+         * Remove CBShouldDisallowRobots from all sites and remove this code.
+         */
+        if (defined('CBShouldDisallowRobots')) {
+            return !!CBShouldDisallowRobots;
+        }
+
+        $model = CBSitePreferences::model();
+        return $model->disallowRobots;
+    }
+
+    /**
      * @return [{string}]
      */
     public static function editorURLsForCSS() {
@@ -87,15 +104,22 @@ final class CBSitePreferences {
             ]);
 
             if (is_file($filepath)) {
-                CBSitePreferences::$model = json_decode(file_get_contents($filepath));
+                $model = json_decode(file_get_contents($filepath));
             } else {
-                CBSitePreferences::$model = CBSitePreferences::specToModel(new stdClass());
+                $model = CBSitePreferences::specToModel(new stdClass());
             }
 
             // 2015.09.19 googleAnalyticsTrackingID
-            if (!isset(CBSitePreferences::$model->googleTagManagerID)) {
-                CBSitePreferences::$model->googleTagManagerID = '';
+            if (!isset($model->googleTagManagerID)) {
+                $model->googleTagManagerID = '';
             }
+
+            // 2015.09.20 disallowRobots
+            if (!isset($model->disallowRobots)) {
+                $model->disallowRobots = false;
+            }
+
+            CBSitePreferences::$model = $model;
         }
 
         return CBSitePreferences::$model;
@@ -128,6 +152,7 @@ final class CBSitePreferences {
     public static function specToModel(stdClass $spec) {
         $model                      = CBModels::modelWithClassName(__CLASS__);
         $model->debug               = isset($spec->debug) ? !!$spec->debug : false;
+        $model->disallowRobots      = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
         $model->googleTagManagerID  = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
 
         return $model;
