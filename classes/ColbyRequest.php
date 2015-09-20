@@ -203,26 +203,18 @@ EOT;
         }
 
         /**
-         * 2014.07.25
-         * If a `robots.txt` file actually exists in the web root directory
-         * this code path will never be taken. Otherwise, default `robots.txt`
-         * implementations are provided which can be overridden by placing
-         * replacements in the main website's `setup` directory.
+         * robots.txt
+         *  If a `robots.txt` file actually exists in the web root directory
+         *  this code path will never be taken.
          */
         else if (self::$decodedRequestURI === '/robots.txt') {
-            if (defined('CBShouldDisallowRobots') &&
-                CBShouldDisallowRobots)
-            {
-                readfile(Colby::findFile('setup/robots_disallow.txt'));
-            }
-            else
-            {
-                readfile(Colby::findFile('setup/robots_allow.txt'));
-            }
-
+            include CBSystemDirectory . '/handlers/handle-robots.php';
             exit;
         }
 
+        /**
+         * sitemap.xml
+         */
         else if (self::$decodedRequestURI === '/sitemap.xml') {
             include CBSystemDirectory . '/handlers/handle-sitemap.php';
             exit;
