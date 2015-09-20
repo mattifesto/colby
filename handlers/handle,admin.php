@@ -7,11 +7,9 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
 }
 
 CBHTMLOutput::begin();
-CBHTMLOutput::setTitleHTML('Status');
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
+CBHTMLOutput::setTitleHTML('Website Status');
 CBHTMLOutput::setDescriptionHTML('The status of the website');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
-
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 
 $spec                           = new stdClass();
