@@ -29,34 +29,29 @@ section.widget > div {
 }
 
 
-section.widget .version-numbers
-{
+section.widget .version-numbers {
     text-align: center;
 }
 
-section.widget .version-number
-{
+section.widget .version-number {
     display: inline-block;
     padding: 5px;
 }
 
-section.widget .version-number h1
-{
+section.widget .version-number h1 {
     color: gray;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
 }
 
-section.widget .version-number .number
-{
+section.widget .version-number .number {
     margin-top: -10px;
     font-size: 40px;
     font-weight: 700;
 }
 
-section.widget .version-number + .version-number
-{
+section.widget .version-number + .version-number {
     border-left: 1px solid #dddddd;
 }
 
