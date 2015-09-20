@@ -12,7 +12,6 @@ CBHTMLOutput::setDescriptionHTML('The status of the website');
 
 include CBSystemDirectory . '/sections/admin-page-settings.php';
 
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:600');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 
 $spec                           = new stdClass();
@@ -22,8 +21,7 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>
 
-<main>
-
+<div class="CBLibraryListView">
     <?php
 
     $adminWidgetFilenames = Colby::globSnippets('admin-widget-*.php');
@@ -34,10 +32,11 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
     }
 
     ?>
-
-</main>
+</div>
 
 <?php
+
+CBAdminPageForGeneral::renderSiteConfigurationIssuesView();
 
 CBAdminPageFooterView::renderModelAsHTML();
 

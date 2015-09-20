@@ -1,6 +1,5 @@
-main
-{
-    font-family: "Source Sans Pro";
+.CBLibraryListView {
+    padding: 20px;
     text-align: center;
 }
 
@@ -19,14 +18,12 @@ section.widget > div
     padding: 5px;
 }
 
-section.widget > header
-{
-    padding-top: 5px;
-    padding-bottom: 7px;
+section.widget > header > h1 {
     background-color: #333333;
     color: #bbbbbb;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: normal;
+    padding: 10px 0;
     text-align: center;
 }
 
@@ -59,4 +56,24 @@ section.widget .version-number .number
 section.widget .version-number + .version-number
 {
     border-left: 1px solid #dddddd;
+}
+
+.CBSiteConfigurationIssuesView {
+    align-self: center;
+    -webkit-align-self: center;
+    max-width: 480px;
+    padding: 20px;
+}
+
+.CBSiteConfigurationIssuesView h1 {
+    text-align: center;
+}
+
+.CBSiteConfigurationIssuesView ul {
+    padding: 0;
+}
+
+.CBSiteConfigurationIssuesView  li {
+    list-style: none;
+    padding:    10px;
 }
