@@ -23,11 +23,13 @@ class CBHTMLOutput
     const JSAsync           = 1; // 1 << 0
     const JSInHeadElement   = 2; // 1 << 1
 
+    public static $classNameForSettings = '';
+
     private static $CSSURLs;
     private static $descriptionHTML;
     private static $exportedLists;
     private static $exportedVariables;
-    private static $isActive;
+    private static $isActive = false;
     private static $javaScriptSnippetFilenames;
     private static $javaScriptSnippetStrings;
     private static $javaScriptURLs;
@@ -154,7 +156,32 @@ class CBHTMLOutput
      */
     public static function render()
     {
-        $bodyContent = ob_get_clean();
+        $bodyContent                = ob_get_clean();
+        $settingsHeadContent        = '';
+        $settingsStartOfBodyContent = '';
+        $settingsEndOfBodyContent   = '';
+        $classNameForSettings       = self::$classNameForSettings;
+
+        if (is_callable($function = "{$classNameForSettings}::renderHeadContent")) {
+            ob_start();
+            call_user_func($function);
+
+            $settingsHeadContent = ob_get_clean();
+        }
+
+        if (is_callable($function = "{$classNameForSettings}::renderStartOfBodyContent")) {
+            ob_start();
+            call_user_func($function);
+
+            $settingsStartOfBodyContent = ob_get_clean();
+        }
+
+        if (is_callable($function = "{$classNameForSettings}::renderEndOfBodyContent")) {
+            ob_start();
+            call_user_func($function);
+
+            $settingsEndOfBodyContent = ob_get_clean();
+        }
 
         ob_start();
 
@@ -166,11 +193,14 @@ class CBHTMLOutput
                 <meta charset="UTF-8">
                 <title><?php echo self::$titleHTML; ?></title>
                 <meta name="description" content="<?php echo self::$descriptionHTML; ?>">
+                <?= $settingsHeadContent ?>
                 <?php self::renderJavaScriptInHead(); ?>
                 <?php self::renderCSSLinks(); ?>
             </head>
             <body>
-                <?php echo $bodyContent; $bodyContent = null;?>
+                <?= $settingsStartOfBodyContent ?>
+                <?php echo $bodyContent; $bodyContent = null; ?>
+                <?= $settingsEndOfBodyContent ?>
                 <?php self::renderJavaScript(); ?>
             </body>
         </html>
@@ -260,6 +290,7 @@ class CBHTMLOutput
             ob_end_clean();
         }
 
+        self::$classNameForSettings     = null;
         self::$CSSURLs                      = array();
         self::$descriptionHTML              = '';
         self::$exportedLists                = array();
