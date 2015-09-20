@@ -48,8 +48,19 @@ final class CBSitePreferences {
     public static function editorURLsForJavaScript() {
         return [
             CBSystemURL . '/javascript/CBBooleanEditorFactory.js',
+            CBSystemURL . '/javascript/CBStringEditorFactory.js',
             CBSitePreferences::URL('CBSitePreferencesEditorFactory.js')
         ];
+    }
+
+    /**
+     * @return  {string}
+     *  Returns a Google Tag Manager ID or an empty string.
+     */
+    public static function googleTagManagerID() {
+        $model = CBSitePreferences::model();
+
+        return $model->googleTagManagerID;
     }
 
     /**
@@ -60,7 +71,6 @@ final class CBSitePreferences {
 
         if ($spec === false) {
             $spec           = CBModels::modelWithClassName(__CLASS__, ['ID' => CBSitePreferences::ID]);
-            $spec->debug    = false;
 
             CBModels::save([$spec]);
         }
@@ -80,6 +90,11 @@ final class CBSitePreferences {
                 CBSitePreferences::$model = json_decode(file_get_contents($filepath));
             } else {
                 CBSitePreferences::$model = CBSitePreferences::specToModel(new stdClass());
+            }
+
+            // 2015.09.19 googleAnalyticsTrackingID
+            if (!isset(CBSitePreferences::$model->googleTagManagerID)) {
+                CBSitePreferences::$model->googleTagManagerID = '';
             }
         }
 
@@ -111,8 +126,9 @@ final class CBSitePreferences {
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
-        $model          = CBModels::modelWithClassName(__CLASS__);
-        $model->debug   = isset($spec->debug) ? !!$spec->debug : true;
+        $model                      = CBModels::modelWithClassName(__CLASS__);
+        $model->debug               = isset($spec->debug) ? !!$spec->debug : false;
+        $model->googleTagManagerID  = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
 
         return $model;
     }

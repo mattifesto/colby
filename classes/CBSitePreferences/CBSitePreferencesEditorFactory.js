@@ -19,6 +19,13 @@ var CBSitePreferencesEditorFactory = {
             spec                : args.spec
         }));
 
+        element.appendChild(CBStringEditorFactory.createSingleLineEditor({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Google Tag Manager ID",
+            propertyName        : "googleTagManagerID",
+            spec                : args.spec
+        }));
+
         return element;
     }
 };
