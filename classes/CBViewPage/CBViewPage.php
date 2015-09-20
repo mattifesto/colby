@@ -302,8 +302,18 @@ EOT;
         self::$modelContext = $model;
 
         CBHTMLOutput::begin();
+        CBHTMLOutput::$classNameForSettings = $model->classNameForSettings;
 
-        include Colby::findFile('sections/public-page-settings.php');
+        /**
+         * @TODO 2015.09.19
+         * Replace this with a default classNameForSettings. Note that the
+         * default now should be standard pages settings but eventually the
+         * default will be responsive page settings. This may be a site
+         * configuration thing.
+         */
+        if ($model->classNameForSettings === '') {
+            include Colby::findFile('sections/public-page-settings.php');
+        }
 
         if (ColbyRequest::isForFrontPage()) {
             CBHTMLOutput::setTitleHTML(CBSiteNameHTML);
@@ -470,6 +480,7 @@ EOT;
             $model->classNameForKind = null;
         }
 
+        $model->classNameForSettings    = isset($spec->classNameForSettings) ? trim($spec->classNameForSettings) : '';
         $model->created                 = isset($spec->created) ? $spec->created : $time;
         $model->description             = isset($spec->description) ? $spec->description : '';
         $model->isPublished             = isset($spec->isPublished) ? !!$spec->isPublished : false;
@@ -648,6 +659,11 @@ EOT;
                 $model->description     = call_user_func($function, $model->description, ['modelForKind' => $modelForKind]);
                 $model->descriptionHTML = ColbyConvert::textToHTML($model->title);
             }
+        }
+
+        // 2015.09.19 classNameForSettings
+        if (!isset($model->classNameForSettings)) {
+            $model->classNameForSettings = '';
         }
 
         return $model;
