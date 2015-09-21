@@ -13,6 +13,7 @@
 }
 
 .CBAdminPageFooterView ul li {
-    display:    inline;
-    margin:     0 20px;
+    display:        inline;
+    margin:         0 20px;
+    white-space:    nowrap;
 }
