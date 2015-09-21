@@ -302,17 +302,13 @@ EOT;
         self::$modelContext = $model;
 
         CBHTMLOutput::begin();
-        CBHTMLOutput::$classNameForSettings = $model->classNameForSettings;
 
-        /**
-         * @TODO 2015.09.19
-         * Replace this with a default classNameForSettings. Note that the
-         * default now should be standard pages settings but eventually the
-         * default will be responsive page settings. This may be a site
-         * configuration thing.
-         */
-        if ($model->classNameForSettings === '') {
-            include Colby::findFile('sections/public-page-settings.php');
+        if ($model->classNameForSettings) {
+            CBHTMLOutput::$classNameForSettings = $model->classNameForSettings;
+        } else if (defined('CBSiteConfiguration::defaultClassNameForPageSettings')) {
+            CBHTMLOutput::$classNameForSettings = CBSiteConfiguration::defaultClassNameForPageSettings;
+        } else {
+            include Colby::findFile('sections/public-page-settings.php'); // @deprecated
         }
 
         if (ColbyRequest::isForFrontPage()) {
