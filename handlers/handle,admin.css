@@ -71,7 +71,7 @@ section.widget .version-number + .version-number {
     word-wrap:          break-word; /* 1 */
 }
 
-@media (max-width: 480px) {
+@media (max-width: 479px) {
     .CBSiteConfigurationIssuesView {
         max-width: 100vw; /* 1 */
     }
