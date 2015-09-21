@@ -1,30 +1,27 @@
-.CBAdminPageMenuView nav
-{
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400);
+
+.CBAdminPageMenuView nav {
     font-family:    "Source Sans Pro", sans-serif;
     margin-bottom:  30px;
     text-align:     center;
 }
 
-.CBAdminPageMenuView nav a
-{
+.CBAdminPageMenuView nav a {
     text-decoration: none;
 }
 
 .CBAdminPageMenuView nav ul,
-.CBAdminPageMenuView nav li
-{
+.CBAdminPageMenuView nav li {
     display:    inline-block;
     padding:    0px;
 }
 
-.CBAdminPageMenuView nav.CBMenu
-{
+.CBAdminPageMenuView nav.CBMenu {
     margin-top: 20px;
     font-size:  14px;
 }
 
-.CBAdminPageMenuView nav.CBMenu a
-{
+.CBAdminPageMenuView nav.CBMenu a {
     color:          white;
     display:        inline-block;
     padding:        5px 0px 6px;
@@ -32,44 +29,37 @@
     width:          100%;
 }
 
-.CBAdminPageMenuView nav.CBMenu ul
-{
+.CBAdminPageMenuView nav.CBMenu ul {
     background-color:   #7f7f7f;
     border-radius:      7px;
     overflow:           hidden;
 }
 
-.CBAdminPageMenuView nav.CBMenu li
-{
+.CBAdminPageMenuView nav.CBMenu li {
     background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
     transition: background-color 0.5s;
     width:      125px;
 }
 
-.CBAdminPageMenuView nav.CBMenu li:hover
-{
+.CBAdminPageMenuView nav.CBMenu li:hover {
     background-color: #5f5f5f;
 }
 
-.CBAdminPageMenuView nav.CBMenu li.selected
-{
+.CBAdminPageMenuView nav.CBMenu li.selected {
     background-color: #3f3f3f;
 }
 
 
-.CBAdminPageMenuView nav.CBSubmenu a
-{
+.CBAdminPageMenuView nav.CBSubmenu a {
     color:      #9f9f9f;
     transition: color 0.5s;
 }
 
-.CBAdminPageMenuView nav.CBSubmenu ul
-{
+.CBAdminPageMenuView nav.CBSubmenu ul {
     border-top: 1px solid #dfdfdf;
 }
 
-.CBAdminPageMenuView nav.CBSubmenu li
-{
+.CBAdminPageMenuView nav.CBSubmenu li {
     border-top: 1px solid transparent;
     font-size:  14px;
     margin:     -1px 25px 0px;
@@ -77,13 +67,11 @@
 }
 
 
-.CBAdminPageMenuView nav.CBSubmenu li.selected
-{
+.CBAdminPageMenuView nav.CBSubmenu li.selected {
     border-top: 1px solid #1f1f1f;
 }
 
 .CBAdminPageMenuView nav.CBSubmenu a:hover,
-.CBAdminPageMenuView nav.CBSubmenu li.selected a
-{
+.CBAdminPageMenuView nav.CBSubmenu li.selected a {
     color:      #1f1f1f;
 }

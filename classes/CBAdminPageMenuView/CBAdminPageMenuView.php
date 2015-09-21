@@ -36,7 +36,6 @@ final class CBAdminPageMenuView {
      * @return void
      */
     public static function renderModelAsHTML(stdClass $model = null) {
-        CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
         CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBAdminPageMenuView/CBAdminPageMenuViewHTML.css');
 
         /**
