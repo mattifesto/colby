@@ -1,77 +1,62 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400);
 
-.CBAdminPageMenuView nav {
+.CBAdminPageMenuView {
     font-family:    "Source Sans Pro", sans-serif;
-    margin-bottom:  30px;
-    text-align:     center;
+    font-size:      14px;
+    margin-bottom:  50px;
 }
 
 .CBAdminPageMenuView nav a {
-    text-decoration: none;
+    display:            inline-block;
+    padding:            15px 10px;
+    text-decoration:    none;
+    transition:         color 0.5s;
 }
 
-.CBAdminPageMenuView nav ul,
-.CBAdminPageMenuView nav li {
-    display:    inline-block;
-    padding:    0px;
+.CBAdminPageMenuView nav ul {
+    box-sizing:                 border-box;
+    display:                    flex;
+    display:                    -webkit-flex;
+    justify-content:            space-between;
+    -webkit-justify-content:    space-between;
+    list-style: none;
+    margin:                     0 auto;
+    max-width:                  960px;
+    padding:                    0 10px;
+    width:                      100%;
 }
+
+/* CBMenu */
 
 .CBAdminPageMenuView nav.CBMenu {
-    margin-top: 20px;
-    font-size:  14px;
+    background-color:   hsla(0, 0%, 0%, 0.8);
 }
 
 .CBAdminPageMenuView nav.CBMenu a {
-    color:          white;
-    display:        inline-block;
-    padding:        5px 0px 6px;
-    text-shadow:    0px -1px 0px rgba(0, 0, 0, 0.5);
-    width:          100%;
+    color:      white;
 }
 
-.CBAdminPageMenuView nav.CBMenu ul {
-    background-color:   #7f7f7f;
-    border-radius:      7px;
-    overflow:           hidden;
+.CBAdminPageMenuView nav.CBMenu li:hover a,
+.CBAdminPageMenuView nav.CBMenu li.selected a {
+    color: hsla(0, 0%, 100%, 0.5);
 }
 
-.CBAdminPageMenuView nav.CBMenu li {
-    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
-    transition: background-color 0.5s;
-    width:      125px;
-}
+/* CBSubmenu */
 
-.CBAdminPageMenuView nav.CBMenu li:hover {
-    background-color: #5f5f5f;
+.CBAdminPageMenuView nav.CBSubmenu {
+    border-bottom:  1px solid hsl(0, 0%, 80%);
 }
-
-.CBAdminPageMenuView nav.CBMenu li.selected {
-    background-color: #3f3f3f;
-}
-
 
 .CBAdminPageMenuView nav.CBSubmenu a {
-    color:      #9f9f9f;
-    transition: color 0.5s;
+    color:      hsl(0, 0%, 70%);
 }
 
 .CBAdminPageMenuView nav.CBSubmenu ul {
-    border-top: 1px solid #dfdfdf;
+    justify-content:            center;
+    -webkit-justify-content:    center;
 }
 
-.CBAdminPageMenuView nav.CBSubmenu li {
-    border-top: 1px solid transparent;
-    font-size:  14px;
-    margin:     -1px 25px 0px;
-    padding:    5px 0px;
-}
-
-
-.CBAdminPageMenuView nav.CBSubmenu li.selected {
-    border-top: 1px solid #1f1f1f;
-}
-
-.CBAdminPageMenuView nav.CBSubmenu a:hover,
+.CBAdminPageMenuView nav.CBSubmenu li:hover a,
 .CBAdminPageMenuView nav.CBSubmenu li.selected a {
-    color:      #1f1f1f;
+    color: hsl(0, 0%, 20%);
 }
