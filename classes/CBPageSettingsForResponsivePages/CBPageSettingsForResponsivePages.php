@@ -17,6 +17,7 @@ final class CBPageSettingsForResponsivePages {
         <script src="<?= CBSystemURL ?>/javascript/html5shiv.js"></script>
         <script src="<?= CBSystemURL ?>/javascript/ColbyEqualize.js"></script>
         <link rel="stylesheet" href="<?= CBSystemURL ?>/css/equalize.css">
+        <style>html { color: hsl(0, 0%, 20%); }</style>
     <?php }
 
     /**
