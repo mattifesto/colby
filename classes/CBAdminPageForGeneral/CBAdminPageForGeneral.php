@@ -27,7 +27,7 @@ EOT;
         if (defined('CBGoogleAnalyticsID')) {
             $messagesAsHTML[] = <<<EOT
 
-                The CBGoogleAnalyticsID constant has been set for this site.
+                The <code>CBGoogleAnalyticsID</code> constant has been set for this site.
                 This constant is deprecated and has been replaced by the Google
                 Tag Manager ID setting in site preferences. Create a Google Tag
                 Manager account for this site and then remove this constant.
@@ -38,11 +38,22 @@ EOT;
         if (defined('GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID')) {
             $messagesAsHTML[] = <<<EOT
 
-                The GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID constant has been set
+                The <code>GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID</code> constant has been set
                 for this site. This constant is deprecated and has been replaced
                 by the Google Tag Manager ID setting in site preferences. Create
                 a Google Tag Manager account for this site and then remove this
                 constant.
+
+EOT;
+        }
+
+        if (!defined('CBSiteConfiguration::defaultClassNameForPageSettings')) {
+            $messagesAsHTML[] = <<<EOT
+
+                The <code>CBSiteConfiguration::defaultClassNameForPageSettings</code>
+                constant has not been set for this site. This constant is should
+                be set to the name of the default page settings class in the
+                “site-configuration.php” file.
 
 EOT;
         }
