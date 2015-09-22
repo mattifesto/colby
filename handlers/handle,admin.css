@@ -15,8 +15,9 @@ section.widget {
 section.widget > header > h1 {
     background-color:   hsl(0, 0%, 20%);
     color:              white;
-    font-size:          20px;
+    font-size:          18px;
     font-weight:        normal;
+    letter-spacing:     1px;
     padding:            10px 0;
     text-align:         center;
 }
