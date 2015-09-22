@@ -17,8 +17,9 @@ final class CBPageSettingsForAdminPages {
         <script src="<?= CBSystemURL ?>/javascript/html5shiv.js"></script>
         <script src="<?= CBSystemURL ?>/javascript/ColbyEqualize.js"></script>
         <link rel="stylesheet" href="<?= CBSystemURL ?>/css/equalize.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:700">
-        <style>html { color: hsl(0, 0%, 20%); font-family: "Source Sans Pro"; }</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:700">
+        <style>html { color: hsl(0, 0%, 20%); } .CBSystemFont { font-family: "Open Sans"; }</style>
     <?php }
 }
