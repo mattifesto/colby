@@ -1,13 +1,11 @@
 <div class="flex-fill"></div>
-<section class="CBAdminPageFooterView">
+<section class="CBAdminPageFooterView CBSystemFont">
     <ul>
         <li>Copyright &copy; 2012-<?php echo gmdate('Y'); ?> Mattifesto Design</li>
 
         <?php
 
-        if (ColbyUser::current()->isLoggedIn())
-        {
-
+        if (ColbyUser::current()->isLoggedIn()) {
             $logoutURLForHTML   = ColbyConvert::textToHTML(ColbyUser::logoutURL());
             $userName           = ColbyUser::userRow()->facebookName;
             $userNameHTML       = ColbyConvert::textToHTML($userName);
