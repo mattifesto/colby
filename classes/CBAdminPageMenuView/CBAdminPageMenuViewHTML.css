@@ -5,15 +5,18 @@
 
 .CBAdminPageMenuView nav a {
     display:            inline-block;
-    padding:            15px 10px;
+    padding:            0 10px;
     text-decoration:    none;
     transition:         color 0.5s;
 }
 
 .CBAdminPageMenuView nav ul {
+    align-items:                center;
+    -webkit-align-items:        center;
     box-sizing:                 border-box;
     display:                    flex;
     display:                    -webkit-flex;
+    height:                     50px;
     justify-content:            space-between;
     -webkit-justify-content:    space-between;
     list-style: none;
