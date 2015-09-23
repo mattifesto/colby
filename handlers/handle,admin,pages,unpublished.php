@@ -1,16 +1,14 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
-{
+if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 
 CBHTMLOutput::begin();
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Unpublished Pages');
 CBHTMLOutput::setDescriptionHTML('Pages that haven\'t been published.');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
@@ -22,7 +20,7 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 ?>
 
-<main>
+<main class="CBSystemFont">
 
     <table class="list-of-pages">
         <thead><tr>

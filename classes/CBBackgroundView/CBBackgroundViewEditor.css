@@ -1,5 +1,6 @@
 .CBBackgroundViewEditor {
     border-top: 4px solid hsl(30, 20%, 60%);
+    font-size:  14px;
     padding:    10px;
 }
 
@@ -36,8 +37,9 @@
 }
 
 .CBBackgroundViewEditor > .properties > .options > .CBStringEditor input {
-    padding:    5px; margin-left: 5px;
-    -webkit-flex: 1;
+    margin-left:    5px;
+    padding:        4px;
+    -webkit-flex:   1;
 }
 
 .CBBackgroundViewEditor > .children {

@@ -1,5 +1,5 @@
-.CBPageEditor > nav
-{
+.CBPageEditor > nav {
+    font-size:      14px;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -7,84 +7,69 @@
 /**
  * Container view borders should be 10px away from the edge of the page.
  */
-.CBPageEditor > .CBModelArrayEditor
-{
+.CBPageEditor > .CBModelArrayEditor {
     padding: 0 10px;
 }
 
-.CBTextAreaControl.standard
-{
+.CBTextAreaControl.standard {
     display:    block;
     margin:     10px 0px;
 }
 
-.CBTextAreaControl.standard label
-{
+.CBTextAreaControl.standard label {
     font-size: 80%;
 }
 
-.CBTextAreaControl.standard textarea
-{
+.CBTextAreaControl.standard textarea {
     height: 300px;
     width: 100%;
 }
 
-.CBPageURIControl.standard
-{
+.CBPageURIControl.standard {
     margin: 10px 0px;
 }
 
-.CBPageURIControl.standard input[type=checkbox]
-{
+.CBPageURIControl.standard input[type=checkbox] {
     margin: 0px 5px 0px 30px;
 }
 
-.CBPageURIControl.standard input[type=text]
-{
+.CBPageURIControl.standard input[type=text] {
     font-family: "Source Code Pro", monospace;
     font-size: 80%;
     padding: 5px 6px;
     width: 100%;
 }
 
-.CBPublicationControl.standard
-{
+.CBPublicationControl.standard {
     margin: 10px 0px;
 }
 
-.CBPublicationControl.standard label
-{
+.CBPublicationControl.standard label {
     font-size: 80%;
 }
 
-.CBPublicationControl.standard input[type=checkbox]
-{
+.CBPublicationControl.standard input[type=checkbox] {
     margin-right: 5px;
 }
 
-.CBPublicationControl.standard input[type=text]
-{
+.CBPublicationControl.standard input[type=text] {
     width: 100%;
 }
 
-.CBSelectionControl.standard select
-{
+.CBSelectionControl.standard select {
     margin-left: 5px;
 }
 
-.CBSelectionControl.standard.page-group
-{
+.CBSelectionControl.standard.page-group {
     margin-left: 50px;
 }
 
-.CBTextControl.standard
-{
+.CBTextControl.standard {
     display:    block;
     margin:     10px 0px;
 }
 
-.CBTextControl.standard > input
-{
+.CBTextControl.standard > input {
     width: 100%;
 }
 
@@ -92,13 +77,11 @@
  *
  */
 
-section.CBPageTemplates
-{
+section.CBPageTemplates {
     text-align: center;
 }
 
-div.CBPageTemplateOption
-{
+div.CBPageTemplateOption {
     background-color:   #efefef;
     display:            inline-table;
     height:             200px;
@@ -107,8 +90,7 @@ div.CBPageTemplateOption
     width:              150px;
 }
 
-div.CBPageTemplateOption > div
-{
+div.CBPageTemplateOption > div {
     display:        table-cell;
     font-size:      24px;
     font-weight:    bold;
@@ -117,8 +99,7 @@ div.CBPageTemplateOption > div
     vertical-align: middle;
 }
 
-div.CBPageTemplateOption:hover
-{
+div.CBPageTemplateOption:hover {
     background-color:   #dfdfdf;
     cursor:             pointer;
 }

@@ -1,15 +1,10 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
-
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
-{
+if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-if (!isset($_GET['data-store-id']))
-{
+if (!isset($_GET['data-store-id'])) {
     $dataStoreID = CBHex160::random();
 
     header("Location: /admin/pages/edit/?data-store-id={$dataStoreID}");
@@ -19,10 +14,9 @@ if (!isset($_GET['data-store-id']))
 
 
 CBHTMLOutput::begin();
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Page Editor');
 CBHTMLOutput::setDescriptionHTML('This is an app for editing pages.');
-
-CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard.css');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
 
 /**
@@ -54,8 +48,6 @@ CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFact
    code will all be integrated into a single CBViewPage editor. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 $pagesPreferences           = CBModels::fetchModelByID(CBPagesPreferences::ID);
 
@@ -127,14 +119,13 @@ if ($CBPageEditorAvailablePageTemplateClassNames || class_exists('CBPageTemplate
 
 CBHTMLOutput::exportVariable('CBURLQueryVariables', $_GET);
 
-
 $selectedMenuItemID     = 'pages';
 
 include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 ?>
 
-<main>
+<main class="CBSystemFont">
 </main>
 
 <?php

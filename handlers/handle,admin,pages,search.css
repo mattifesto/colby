@@ -1,15 +1,13 @@
-#CBPagesSearchFormView
-{
+#CBPagesSearchFormView {
     text-align: center;
 }
 
-#CBPagesSearchFormView button
-{
+#CBPagesSearchFormView button {
     display:    block;
     margin:     30px auto;
 }
 
-#CBPagesSearchFormView input
-{
-    width: 600px;
+#CBPagesSearchFormView input {
+    padding:    4px;
+    width:      600px;
 }
