@@ -35,7 +35,7 @@ class CBUnitTests {
      * @return {stdClass}
      */
     public static function getListOfTestsForAjaxPermissions() {
-        return (object)['group' => 'Testers'];
+        return (object)['group' => 'Developers'];
     }
 
     /**

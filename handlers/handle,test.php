@@ -2,7 +2,7 @@
 
 $response = new CBAjaxResponse();
 
-if (!ColbyUser::current()->isOneOfThe('Testers')) {
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     $response->message  = "You do not have permission to run tests.";
 } else {
     $class                      = $_GET['class'] . 'Tests';
