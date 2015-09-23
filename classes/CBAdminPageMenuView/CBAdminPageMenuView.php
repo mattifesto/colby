@@ -9,9 +9,15 @@ final class CBAdminPageMenuView {
     /**
      * @return void
      */
-    public static function renderMenu($menu, $selectedMenuItemName, $class)
-    {
-        echo "\n\n<nav class=\"{$class}\"><ul>";
+    public static function renderMenu($menu, $selectedMenuItemName, $class) {
+
+        ?>
+
+        <nav class="<?= $class ?>">
+            <div class="toggle"><a onclick="this.parentElement.parentElement.classList.toggle('expanded');">Menu</a></div>
+            <ul>
+
+        <?php
 
         foreach ($menu as $menuItemName => $menuItem)
         {
