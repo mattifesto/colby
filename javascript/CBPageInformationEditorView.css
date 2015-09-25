@@ -1,11 +1,9 @@
 .CBPageInformationEditor {
-    background-color:   hsl(30, 10%, 90%);
     border:             1px solid hsl(30, 10%, 80%);
     border-radius:      10px;
-    font-size:          14px;
     margin:             10px auto;
     overflow:           hidden; /* clip to rounded corners */
-    width:              720px;
+    max-width:          720px;
 }
 
 .CBPageInformationEditor header {
@@ -17,8 +15,15 @@
 .CBPageInformationEditor > div {
     display:            flex;
     display:            -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
 }
 
+.CBPageInformationEditor .CBStringEditorWithTextArea {
+    border-bottom: 1px solid hsl(0, 0%, 90%);
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
 .CBPageInformationEditor .CBStringEditor > select {
     margin-left: 5px;
 }

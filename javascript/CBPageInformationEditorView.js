@@ -104,7 +104,7 @@ var CBPageInformationEditorFactory = {
          *
          */
 
-        propertiesContainer.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        propertiesContainer.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
                 handleSpecChanged   : CBPageInformationEditorFactory.handleTitleChanged.bind(undefined, {
                     handleSpecChanged   : args.handleSpecChanged,
                     handleTitleChanged  : args.handleTitleChanged,
@@ -114,7 +114,7 @@ var CBPageInformationEditorFactory = {
                 spec                : args.spec,
                 propertyName        : 'title' }));
 
-        propertiesContainer.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        propertiesContainer.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
                 handleSpecChanged   : args.handleSpecChanged,
                 labelText           : "Description",
                 spec                : args.spec,

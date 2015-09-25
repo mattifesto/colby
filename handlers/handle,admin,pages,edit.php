@@ -35,6 +35,9 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditorWidgetFactory.
 /* This renders the page editor. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
 
+/* Used by CBPageInformationEditorView */
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBResponsiveEditorFactory.js');
+
 /* CBPageEditor.js uses this to render the general page info editor. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageInformationEditorView.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBPageInformationEditorView.css');
@@ -48,6 +51,7 @@ CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFact
    code will all be integrated into a single CBViewPage editor. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
+
 
 $pagesPreferences           = CBModels::fetchModelByID(CBPagesPreferences::ID);
 
