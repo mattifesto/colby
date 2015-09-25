@@ -1,0 +1,21 @@
+.CBStringEditorWithTextArea {
+    display: flex;
+    display: -webkit-flex;
+    -webkit-align-items: top;
+}
+
+.CBStringEditorWithTextArea label {
+    color: hsl(0, 0%, 50%);
+    margin-right: 5px;
+}
+
+.CBStringEditorWithTextArea textarea {
+    background-color: transparent;
+    border: none;
+    flex: 1 1 auto;
+    -webkit-flex: 1 1 auto;
+    font: inherit;
+    outline: none;
+    padding: 0;
+    resize: none;
+}
