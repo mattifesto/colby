@@ -1,7 +1,9 @@
 .CBStringEditorWithTextArea {
+    align-items: top;
+    -webkit-align-items: top;
     display: flex;
     display: -webkit-flex;
-    -webkit-align-items: top;
+    padding: 10px;
 }
 
 .CBStringEditorWithTextArea label {

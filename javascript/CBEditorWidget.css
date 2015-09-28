@@ -1,22 +1,13 @@
-.CBEditorWidget {
-    padding: 20px 40px;
-}
 
-.CBEditorWidget > div {
-    background-color:   hsl(0, 0%, 90%);
-    border:             1px solid hsl(0, 0%, 80%);
-    border-radius:      5px;
-    box-shadow:         3px 3px 10px rgba(0, 0, 0, 0.1);
-    max-width:          -moz-max-content;
-    max-width:          -webkit-max-content;
-    max-width:          max-content;
-    overflow:           hidden;
-}
+@media all and (max-width: 640px) {
+    .CBEditorWidget {
+        padding: 20px 0;
+    }
 
-.CBEditorWidget.CBEditorWidgetSelected > div {
-    box-shadow:         3px 3px 10px rgba(0, 0, 0, 0.1),
-                        0 0 0 2px white,
-                        0 0 0 6px hsl(215, 100%, 90%);
+    .CBEditorWidget > div {
+        border-bottom: 1px solid hsl(0, 0%, 80%);
+        border-top: 1px solid hsl(0, 0%, 80%);
+    }
 }
 
 .CBEditorWidget > div > h1,
@@ -52,4 +43,27 @@
 .CBDefaultEditor {
     font-size:  12px;
     padding:    10px;
+}
+
+@media not all and (max-width: 640px) {
+    .CBEditorWidget {
+        padding: 20px 40px;
+    }
+
+    .CBEditorWidget > div {
+        background-color:   hsl(0, 0%, 90%);
+        border:             1px solid hsl(0, 0%, 80%);
+        border-radius:      5px;
+        box-shadow:         3px 3px 10px rgba(0, 0, 0, 0.1);
+        max-width:          -moz-max-content;
+        max-width:          -webkit-max-content;
+        max-width:          max-content;
+        overflow:           hidden;
+    }
+
+    .CBEditorWidget.CBEditorWidgetSelected > div {
+        box-shadow:         3px 3px 10px rgba(0, 0, 0, 0.1),
+                            0 0 0 2px white,
+                            0 0 0 6px hsl(215, 100%, 90%);
+    }
 }
