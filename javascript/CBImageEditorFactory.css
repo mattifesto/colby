@@ -84,3 +84,31 @@
     max-height: 100px;
     max-width:  100px;
 }
+
+.CBImageEditor320 {
+    padding: 10px 0;
+}
+
+.CBImageIDEditorPreview {
+    align-items: center;
+    -webkit-align-items: center;
+    background-color: white;
+    box-sizing: border-box;
+    display: flex;
+    display: -webkit-flex;
+    height: 320px;
+    justify-content: center;
+    -webkit-justify-content: center;
+    margin: 0 auto;
+    padding: 10px;
+    width: 320px;
+}
+
+.CBImageIDEditorPreview.dark {
+    background-color: hsl(0, 0%, 20%);
+}
+
+.CBImageIDEditorPreview > img {
+    max-height: 310px;
+    max-width: 310px;
+}

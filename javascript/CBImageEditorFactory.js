@@ -3,6 +3,43 @@
 var CBImageEditorFactory = {
 
     /**
+     * This editor edits an image ID property as opposed to an image URL
+     * property. An ID property is desirable when multiple versions of an image
+     * are used by a view.
+     *
+     * @param {function} handleSpecChanged
+     * @param {string} propertyName
+     * @param {Object} spec
+     *
+     * @return {Element}
+     */
+    createImageIDEditor : function(args) {
+        var element = document.createElement("div");
+        element.className = "CBImageEditor320";
+        var preview = CBImageEditorFactory.createImagePreviewElement();
+        preview.element.className = "CBImageIDEditorPreview";
+
+        element.appendChild(preview.element);
+        element.appendChild(CBImageEditorFactory.createEditorUploadButton({
+            handleImageUploaded : CBImageEditorFactory.handleImageUploadedForIDEditor.bind(undefined, {
+                handleSpecChanged : args.handleSpecChanged,
+                img : preview.img,
+                propertyName : args.propertyName,
+                spec : args.spec
+            })
+        }));
+
+        if (args.spec[args.propertyName] !== undefined) {
+            CBImageEditorFactory.displayThumbnail({
+                img : preview.img,
+                URL : Colby.dataStoreIDToURI(args.spec[args.propertyName].ID) + "/original." + args.spec[args.propertyName].extension
+            });
+        }
+
+        return element;
+    },
+
+    /**
      * This creates an image editor that will modify a spec with the schema:
      *
      *      height  {int}
@@ -272,7 +309,7 @@ var CBImageEditorFactory = {
      * @param {Object}      spec
      * @param {Element}     uploadButtonElement
      *
-     * @return {undefined}
+     * @return undefined
      */
     handleImageSelected : function(args) {
         args.uploadButtonElement.disabled   = true;
@@ -316,7 +353,7 @@ var CBImageEditorFactory = {
      * @param {Element}         uploadButtonElement
      * @param {XMLHttpRequest}  xhr
      *
-     * @return {undefined}
+     * @return undefined
      */
     handleImageUploaded : function(args) {
         args.uploadButtonElement.disabled   = false;
@@ -339,7 +376,7 @@ var CBImageEditorFactory = {
      * @param {Element}         uploadButtonElement
      * @param {XMLHttpRequest}  xhr
      *
-     * @return {undefined}
+     * @return undefined
      */
     handleImageUploadedForButton : function(args) {
         args.uploadButtonElement.disabled   = false;
@@ -353,10 +390,31 @@ var CBImageEditorFactory = {
     },
 
     /**
+     * @param {function} handleSpecChanged
+     * @param {Element} img
+     * @param {string} propertyName
+     * @param {Object} spec
+     *
+     * @return undefined
+     */
+    handleImageUploadedForIDEditor : function(args, response) {
+        args.spec[args.propertyName] = {
+            extension : response.extension,
+            ID : response.ID
+        };
+
+        args.handleSpecChanged.call();
+        CBImageEditorFactory.displayThumbnail({
+            img : args.img,
+            URL : response.sizes.original.URL
+        });
+    },
+
+    /**
      * @param {Element} dimensionsElement
      * @param {Element} imageElement
      *
-     * @return {undefined}
+     * @return undefined
      */
     handleThumbnailLoaded : function(args) {
         args.dimensionsElement.textContent = args.imageElement.naturalWidth + " × " + args.imageElement.naturalHeight;
