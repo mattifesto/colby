@@ -205,6 +205,8 @@ EOT;
             ];
         }
 
+        $response->extension        = $info->extension;
+        $response->ID               = $info->ID;
         $response->sizes            = $sizes;
         $response->wasSuccessful    = true;
         $response->send();
