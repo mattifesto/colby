@@ -16,7 +16,6 @@ Disallow: /
 
 User-agent: *
 Disallow: /admin/
-Disallow: /colby/
 Disallow: /developer/
 
 <?php }
