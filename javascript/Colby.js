@@ -7,7 +7,7 @@ var Colby = {
                     'July', 'August', 'September', 'October', 'November', 'December'],
 
     /**
-     * @return void
+     * @return undefined
      */
     displayResponse : function(response) {
         if ('stackTrace' in response) {
@@ -45,6 +45,34 @@ var Colby = {
         }
 
         Colby.showPanel();
+    },
+
+    /**
+     * @return {Object}
+     */
+    responseFromXMLHttpRequest : function(xhr) {
+        var response;
+
+        switch (xhr.status) {
+            case 0:
+                response = {
+                    message : "An Ajax request was aborted. This may be because of a network error making the server unavailable or because the Ajax request URL is incorrect.",
+                    wasSuccessful : false
+                };
+                break;
+
+            case 200:
+                response = JSON.parse(xhr.responseText);
+                break;
+            default:
+                response = {
+                    message         : xhr.status + ': ' + xhr.statusText,
+                    wasSuccessful   : false
+                };
+                break;
+        }
+
+        return response;
     }
 };
 
@@ -376,29 +404,6 @@ Colby.random160 = function()
     }
 
     return random160;
-};
-
-/**
- * @return Object
- */
-Colby.responseFromXMLHttpRequest = function(xhr)
-{
-    var response;
-
-    if (xhr.status == 200)
-    {
-        response = JSON.parse(xhr.responseText);
-    }
-    else
-    {
-        response =
-        {
-            message         : xhr.status + ': ' + xhr.statusText,
-            wasSuccessful   : false
-        };
-    }
-
-    return response;
 };
 
 /**
