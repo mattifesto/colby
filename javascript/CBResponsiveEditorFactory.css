@@ -1,21 +1,15 @@
 .CBStringEditorWithTextArea {
-    align-items: top;
-    -webkit-align-items: top;
     display: flex;
-    display: -webkit-flex;
-    padding: 10px;
+    flex-direction: column;
 }
 
 .CBStringEditorWithTextArea label {
     color: hsl(0, 0%, 50%);
-    margin-right: 5px;
 }
 
 .CBStringEditorWithTextArea textarea {
     background-color: transparent;
     border: none;
-    flex: 1 1 auto;
-    -webkit-flex: 1 1 auto;
     font: inherit;
     outline: none;
     padding: 0;
