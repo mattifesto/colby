@@ -21,7 +21,7 @@ var CBResponsiveEditorFactory = {
         textArea.id         = ID;
         textArea.value      = args.spec[args.propertyName] || "";
 
-        textArea.addEventListener("input", CBStringEditorFactory.handleInput.bind(undefined, {
+        textArea.addEventListener("input", CBResponsiveEditorFactory.handleInput.bind(undefined, {
             element             : textArea,
             handleSpecChanged   : args.handleSpecChanged,
             propertyName        : args.propertyName,
@@ -50,6 +50,20 @@ var CBResponsiveEditorFactory = {
         }), 1000);
 
         return element;
+    },
+
+    /**
+     * @param   {Element}   element
+     * @param   {function}  handleSpecChanged
+     * @param   {string}    propertyName
+     * @param   {Object}    spec
+     *
+     * @return  undefined
+     */
+    handleInput : function(args) {
+        args.spec[args.propertyName] = args.element.value;
+
+        args.handleSpecChanged.call();
     },
 
     /**
