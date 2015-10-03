@@ -20,6 +20,14 @@ final class CBPageSettingsForAdminPages {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:700">
-        <style>html { color: hsl(0, 0%, 20%); } .CBSystemFont { font-family: "Open Sans"; }</style>
+        <style>
+            html {
+                color: hsl(0, 0%, 20%);
+                font-family: "Open Sans";
+            }
+            .CBSystemFont {
+                font-family: "Open Sans";
+            }
+        </style>
     <?php }
 }
