@@ -34,6 +34,17 @@ final class CBSitePreferences {
     }
 
     /**
+     * Returns the default page settings class name or an empty string of one
+     * hasn't been set. This class will be used by the CBHTMLOutput class.
+     *
+     * @return {string}
+     */
+    public static function defaultClassNameForPageSettings() {
+        $model = CBSitePreferences::model();
+        return $model->defaultClassNameForPageSettings;
+    }
+
+    /**
      * @return {bool}
      */
     public static function disallowRobots() {
@@ -119,6 +130,11 @@ final class CBSitePreferences {
                 $model->disallowRobots = false;
             }
 
+            // 2015.10.04 defaultClassNameForPageSettings
+            if (!isset($model->defaultClassNameForPageSettings)) {
+                $model->defaultClassNameForPageSettings = '';
+            }
+
             CBSitePreferences::$model = $model;
         }
 
@@ -150,10 +166,11 @@ final class CBSitePreferences {
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
-        $model                      = CBModels::modelWithClassName(__CLASS__);
-        $model->debug               = isset($spec->debug) ? !!$spec->debug : false;
-        $model->disallowRobots      = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
-        $model->googleTagManagerID  = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
+        $model = CBModels::modelWithClassName(__CLASS__);
+        $model->debug = isset($spec->debug) ? !!$spec->debug : false;
+        $model->defaultClassNameForPageSettings = isset($spec->defaultClassNameForPageSettings) ? trim($spec->defaultClassNameForPageSettings) : '';
+        $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
+        $model->googleTagManagerID = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
 
         return $model;
     }
