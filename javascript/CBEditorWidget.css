@@ -67,3 +67,15 @@
                             0 0 0 6px hsl(215, 100%, 90%);
     }
 }
+
+.CBModelEditorHeader {
+    align-items: center;
+    background-color: hsl(240, 50%, 80%);
+    display: flex;
+    height: 48px;
+    padding: 0 20px;
+}
+
+.CBModelEditorHeader > h1 {
+    font-size: 1em;
+}

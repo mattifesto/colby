@@ -3,6 +3,25 @@
 var CBEditorWidgetFactory = {
 
     /**
+     * @param {Object} spec
+     *
+     * @return {Object}
+     */
+    createHeader : function(args) {
+        var element = document.createElement("header");
+        element.className = "CBModelEditorHeader";
+        var title = document.createElement("h1");
+        title.textContent = args.title || args.spec.className;
+
+        element.appendChild(title);
+
+        return {
+            element : element,
+            elementForTitle : title
+        };
+    },
+
+    /**
      * @param   {function}  handleMoveDown
      * @param   {function}  handleMoveUp
      * @param   {function}  handleRemove
