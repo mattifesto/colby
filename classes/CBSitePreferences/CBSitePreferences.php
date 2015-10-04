@@ -65,7 +65,7 @@ final class CBSitePreferences {
     public static function editorURLsForJavaScript() {
         return [
             CBSystemURL . '/javascript/CBBooleanEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
+            CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
             CBSitePreferences::URL('CBSitePreferencesEditorFactory.js')
         ];
     }
@@ -87,7 +87,7 @@ final class CBSitePreferences {
         $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
 
         if ($spec === false) {
-            $spec           = CBModels::modelWithClassName(__CLASS__, ['ID' => CBSitePreferences::ID]);
+            $spec = CBModels::modelWithClassName(__CLASS__, ['ID' => CBSitePreferences::ID]);
 
             CBModels::save([$spec]);
         }

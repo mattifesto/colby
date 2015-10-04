@@ -11,6 +11,12 @@ var CBSitePreferencesEditorFactory = {
     createEditor : function(args) {
         var element         = document.createElement("div");
         element.className   = "CBSitePreferencesEditor";
+        var header = CBEditorWidgetFactory.createHeader({
+            spec : args.spec,
+            title : "Site Preferences"
+        });
+
+        element.appendChild(header.element);
 
         element.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
             handleSpecChanged   : args.handleSpecChanged,
@@ -26,10 +32,17 @@ var CBSitePreferencesEditorFactory = {
             spec                : args.spec
         }));
 
-        element.appendChild(CBStringEditorFactory.createSingleLineEditor({
+        element.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Google Tag Manager ID",
             propertyName        : "googleTagManagerID",
+            spec                : args.spec
+        }));
+
+        element.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Default Class Name for Page Settings",
+            propertyName        : "defaultClassNameForPageSettings",
             spec                : args.spec
         }));
 
