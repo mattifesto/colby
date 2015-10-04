@@ -154,13 +154,12 @@ class CBHTMLOutput
     /**
      * @return void
      */
-    public static function render()
-    {
+    public static function render() {
         $bodyContent                = ob_get_clean();
         $settingsHeadContent        = '';
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent   = '';
-        $classNameForSettings       = self::$classNameForSettings;
+        $classNameForSettings       = (self::$classNameForSettings === '') ? CBSitePreferences::defaultClassNameForPageSettings() : self::$classNameForSettings;
 
         if (is_callable($function = "{$classNameForSettings}::renderHeadContent")) {
             ob_start();
@@ -290,7 +289,7 @@ class CBHTMLOutput
             ob_end_clean();
         }
 
-        self::$classNameForSettings     = null;
+        self::$classNameForSettings         = '';
         self::$CSSURLs                      = array();
         self::$descriptionHTML              = '';
         self::$exportedLists                = array();
