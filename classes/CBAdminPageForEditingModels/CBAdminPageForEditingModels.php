@@ -65,11 +65,10 @@ class CBAdminPageForEditingModels {
             }
         }
 
+        CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
         CBHTMLOutput::setTitleHTML('Edit Model');
         CBHTMLOutput::setDescriptionHTML('Edit a model');
         CBHTMLOutput::begin();
-
-        include CBSystemDirectory . '/sections/admin-page-settings.php';
 
         CBHTMLOutput::exportVariable('CBModelID',           $args->ID);
         CBHTMLOutput::exportVariable('CBModelClassName',    $args->className);
