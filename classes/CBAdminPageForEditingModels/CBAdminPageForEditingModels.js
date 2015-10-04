@@ -189,20 +189,21 @@ var CBAdminPageForEditingModels = {
     },
 
     /**
-     * @param   {Object} spec
+     * @param {Object} spec
      *
-     * @return  undefined
+     * @return undefined
      */
     renderEditor : function(args) {
-        var main                = document.getElementsByTagName("main")[0];
-        var handleSpecChanged   = CBAdminPageForEditingModels.handleSpecChanged.bind(undefined, {
-            info    : {},
-            spec    : args.spec
+        var editorFactory = window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
+        var main = document.getElementsByTagName("main")[0];
+        var handleSpecChanged = CBAdminPageForEditingModels.handleSpecChanged.bind(undefined, {
+            info : {},
+            spec : args.spec
         });
 
-        main.appendChild(CBEditorWidgetFactory.createWidget({
-            handleSpecChanged   : handleSpecChanged,
-            spec                : args.spec
+        main.appendChild(editorFactory.createEditor({
+            handleSpecChanged : handleSpecChanged,
+            spec : args.spec
         }));
     },
 
