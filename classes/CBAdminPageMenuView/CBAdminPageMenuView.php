@@ -14,7 +14,7 @@ final class CBAdminPageMenuView {
         ?>
 
         <nav class="<?= $class ?>">
-            <div class="toggle"><a onclick="this.parentElement.parentElement.classList.toggle('expanded');">Menu</a></div>
+            <div class="toggle"><a onclick="this.parentElement.parentElement.classList.toggle('expanded');">menu</a></div>
             <ul>
 
         <?php

@@ -1,8 +1,3 @@
-.CBAdminPageMenuView {
-    font-size:      14px;
-    margin-bottom:  50px;
-}
-
 .CBAdminPageMenuView nav a {
     display:            inline-block;
     padding:            5px 10px;
@@ -27,7 +22,7 @@
         box-sizing:                 border-box;
         display:                    flex;
         display:                    -webkit-flex;
-        height:                     50px;
+        height:                     48px;
         justify-content:            space-between;
         -webkit-justify-content:    space-between;
         margin:                     0 auto;
@@ -41,13 +36,26 @@
         display:                -webkit-flex;
         align-items:            center;
         -webkit-align-items:    center;
-        height:                 50px;
+        height:                 48px;
         padding:                0 10px;
     }
 
+    .CBAdminPageMenuView nav li a {
+        padding: 10px 0;
+    }
+
+    .CBAdminPageMenuView nav.CBMenu.expanded {
+        background-color: hsl(0, 0%, 0%);
+    }
+
+    .CBAdminPageMenuView nav.CBMenu.expanded li {
+        border-bottom: 1px solid hsl(0, 0%, 20%);
+    }
+
     .CBAdminPageMenuView nav ul {
-        display:    none;
-        font-size:  18px;
+        display: none;
+        font-size: 20px;
+        padding: 20px 40px;
     }
 
     .CBAdminPageMenuView nav.expanded {
@@ -58,10 +66,12 @@
         display: block;
     }
 }
+
 /* CBMenu */
 
 .CBAdminPageMenuView nav.CBMenu {
-    background-color:   hsl(0, 0%, 20%);
+    background-color: hsl(0, 0%, 20%);
+    transition: background-color 0.5s;
 }
 
 .CBAdminPageMenuView nav.CBMenu a {
