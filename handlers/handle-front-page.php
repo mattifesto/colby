@@ -4,15 +4,12 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Front Page');
 CBHTMLOutput::setDescriptionHTML('This is the default front page.');
 
-include CBSystemDirectory . '/sections/public-page-settings.php';
-
 ?>
 
 <main>
     <style scoped>
 
-        main > p
-        {
+        main > p {
             line-height:    1.5;
             margin:         100px auto;
             text-align:     center;
