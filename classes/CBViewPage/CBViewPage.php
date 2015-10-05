@@ -305,10 +305,6 @@ EOT;
 
         if ($model->classNameForSettings) {
             CBHTMLOutput::$classNameForSettings = $model->classNameForSettings;
-        } else if (defined('CBSiteConfiguration::defaultClassNameForPageSettings')) {
-            CBHTMLOutput::$classNameForSettings = CBSiteConfiguration::defaultClassNameForPageSettings;
-        } else {
-            include Colby::findFile('sections/public-page-settings.php'); // @deprecated
         }
 
         if (ColbyRequest::isForFrontPage()) {
