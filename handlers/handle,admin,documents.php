@@ -1,18 +1,15 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
-{
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
 
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Documents');
 CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
-
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,documents.js');
 
 $spec                           = new stdClass();

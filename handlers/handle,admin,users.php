@@ -1,18 +1,14 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
-{
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Permissions');
 CBHTMLOutput::setDescriptionHTML('Manage user permissions.');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
-
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,users.js');
-
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
 CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
 

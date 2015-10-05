@@ -35,11 +35,10 @@ EOT;
     }
 }
 
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Installation');
 CBHTMLOutput::setDescriptionHTML('This page performs the initial installation of a Colby website.');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 ?>
 

@@ -1,18 +1,15 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
-{
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
 
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('MySQL Backup');
 CBHTMLOutput::setDescriptionHTML('Backup the MySQL database.');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
-
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,developer,mysql.js');
 
 $spec                           = new stdClass();
