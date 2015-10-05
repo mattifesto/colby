@@ -63,7 +63,7 @@ button, input, select, textarea {
     box-sizing: border-box; /* 1 */
 }
 
-input, textarea {
+input[type=email], input[type=text], input[type=url], textarea {
     border: 1px solid hsl(0, 0%, 80%); /* 1 */
 }
 
