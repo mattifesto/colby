@@ -1,17 +1,15 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
-{
+if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
 include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
 
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('ColbyPages Table Rows');
 CBHTMLOutput::setDescriptionHTML('Pages that are in the ColbyPages table.');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 $spec                           = new stdClass();
 $spec->selectedMenuItemName     = 'develop';

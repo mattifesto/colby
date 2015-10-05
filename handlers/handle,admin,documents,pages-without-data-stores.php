@@ -8,11 +8,10 @@ include_once CBSystemDirectory . '/snippets/shared/documents-administration.php'
 
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,documents.js');
 
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Stray Documents');
 CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 $spec                           = new stdClass();
 $spec->selectedMenuItemName     = 'develop';

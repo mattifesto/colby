@@ -8,12 +8,11 @@ if (!ColbyUser::current()->isOneOfThe('Developers'))
 
 include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
 
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Menus');
 CBHTMLOutput::setDescriptionHTML('Create and edit menus.');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,develop,menus.js');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 $selectedMenuItemID     = 'develop';
 $selectedSubmenuItemID  = 'menus';

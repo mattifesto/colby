@@ -1,18 +1,13 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
-{
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('PHP Information');
 CBHTMLOutput::setDescriptionHTML('Information about the version and setup of PHP running for this website.');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 $selectedMenuItemID     = 'develop';
 $selectedSubmenuItemID  = 'php';

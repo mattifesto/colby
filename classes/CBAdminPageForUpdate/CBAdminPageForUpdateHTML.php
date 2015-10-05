@@ -7,11 +7,10 @@ if (!ColbyUser::current()->isOneOfThe('Administrators'))
 
 $classURL = CBSystemURL . '/classes/CBAdminPageForUpdate';
 
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
+CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Update');
 CBHTMLOutput::setDescriptionHTML('Tools to perform site version updates.');
-CBHTMLOutput::begin();
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 CBHTMLOutput::addJavaScriptURL("{$classURL}/CBAdminPageForUpdate.js");
 

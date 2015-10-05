@@ -62,11 +62,10 @@ EOT;
             return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
         }
 
+        CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
+        CBHTMLOutput::begin();
         CBHTMLOutput::setTitleHTML('Edit');
         CBHTMLOutput::setDescriptionHTML('Edit models');
-        CBHTMLOutput::begin();
-
-        include CBSystemDirectory . '/sections/admin-page-settings.php';
 
         CBHTMLOutput::addCSSURL(self::URL('CBAdminPageForModels.css'));
         CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForModels.js'));

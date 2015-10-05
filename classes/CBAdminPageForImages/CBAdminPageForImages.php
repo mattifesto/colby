@@ -10,11 +10,11 @@ class CBAdminPageForImages {
             return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
         }
 
+        CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
+        CBHTMLOutput::begin();
         CBHTMLOutput::setTitleHTML('Images Administration');
         CBHTMLOutput::setDescriptionHTML('Tools to administer website images.');
-        CBHTMLOutput::begin();
 
-        include CBSystemDirectory . '/sections/admin-page-settings.php';
         include __DIR__ . '/CBAdminPageForImagesHTML.php';
 
         CBHTMLOutput::render();

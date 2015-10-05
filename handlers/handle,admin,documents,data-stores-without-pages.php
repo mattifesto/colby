@@ -6,11 +6,10 @@ if (!ColbyUser::current()->isOneOfThe('Developers')) {
 
 include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
 
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Stray Archives');
 CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
-
-include CBSystemDirectory . '/sections/admin-page-settings.php';
 
 $spec                           = new stdClass();
 $spec->selectedMenuItemName     = 'develop';
