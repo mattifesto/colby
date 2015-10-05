@@ -17,8 +17,7 @@ $searchQueryHTML    = ColbyConvert::textToHTML($searchQuery);
 $formClass          = empty($searchQuery) ? 'class="search-page no-query"' : 'class="search-page has-query"';
 $titleHTML          = 'Search';
 
-if ($searchQueryHTML)
-{
+if ($searchQueryHTML) {
     $titleHTML = "{$titleHTML}: {$searchQueryHTML}";
 }
 
@@ -26,7 +25,6 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML($titleHTML);
 CBHTMLOutput::setDescriptionHTML('Search for site content.');
 
-include Colby::findFile('sections/public-page-settings.php');
 include Colby::findFile('sections/standard-page-header.php');
 
 ?>
@@ -34,46 +32,39 @@ include Colby::findFile('sections/standard-page-header.php');
 <form action="<?php echo COLBY_SITE_URL; ?>/search/" <?php echo $formClass; ?>>
     <style scoped>
 
-        form.search-page input
-        {
+        form.search-page input[type=text] {
             padding: 5px;
         }
 
-        form.search-page.has-query > div
-        {
+        form.search-page.has-query > div {
             padding: 20px 50px;
             background-color: #f7f7f7;
             border-bottom: 1px solid #dddddd;
         }
 
-        form.search-page.has-query input[type=text]
-        {
+        form.search-page.has-query input[type=text] {
             width: 500px;
             margin-right: 30px;
         }
 
-        form.search-page.has-query input[type=submit]
-        {
+        form.search-page.has-query input[type=submit] {
             position: relative;
             top: -3px;
-            background-color: #5555ff;
-            color: white;
+            xbackground-color: #5555ff;
+            xcolor: white;
         }
 
-        form.search-page.has-query input[type=submit]:hover
-        {
-            border: 1px solid #5555aa;
+        form.search-page.has-query input[type=submit]:hover {
+            xborder: 1px solid #5555aa;
         }
 
-        form.search-page.no-query
-        {
+        form.search-page.no-query {
             width: 500px;
             margin: 100px auto;
             text-align: center;
         }
 
-        form.search-page.no-query input[type=text]
-        {
+        form.search-page.no-query input[type=text] {
             width: 100%;
             margin-bottom: 30px;
         }
@@ -87,8 +78,7 @@ include Colby::findFile('sections/standard-page-header.php');
 
 <?php
 
-if (empty($searchQuery))
-{
+if (empty($searchQuery)) {
     goto done;
 }
 
@@ -97,25 +87,17 @@ if (empty($searchQuery))
 <section style="width: 800px; margin: 50px auto 0px;">
     <style scoped>
 
-        article.result
-        {
+        article.result {
             padding: 10px;
             overflow: hidden; /* contains floated thumbnail */
             clear: both;
         }
 
-        article.result > h1
-        {
+        article.result > h1 {
             font-size: 1.5em;
         }
 
-        article.result > h2
-        {
-            font-size: 1.0em;
-        }
-
-        div.img
-        {
+        div.img {
             width: 100px;
             height: 100px;
             margin-right: 10px;
@@ -123,8 +105,7 @@ if (empty($searchQuery))
             text-align: center;
         }
 
-        img.thumbnail
-        {
+        img.thumbnail {
             max-width: 100px;
             max-height: 100px;
             box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
@@ -158,8 +139,7 @@ END;
 
     $result = Colby::query($sql);
 
-    if ($result->num_rows > 0)
-    {
+    if ($result->num_rows > 0) {
         while ($row = $result->fetch_object())
         {
             $url = COLBY_SITE_URL . "/{$row->URI}/";
@@ -171,8 +151,7 @@ END;
 
                     <?php
 
-                    if ($row->thumbnailURL)
-                    {
+                    if ($row->thumbnailURL) {
                         ?>
 
                         <img class="thumbnail"
@@ -186,7 +165,7 @@ END;
 
                 </div>
                 <h1><a href="<?php echo $url; ?>"><?php echo $row->titleHTML; ?></a></h1>
-                <h2><?php echo $row->subtitleHTML; ?></h2>
+                <div><p><?php echo $row->subtitleHTML; ?></div>
             </article>
 
             <?php
