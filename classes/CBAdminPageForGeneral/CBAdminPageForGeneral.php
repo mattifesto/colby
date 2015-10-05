@@ -47,13 +47,12 @@ EOT;
 EOT;
         }
 
-        if (!defined('CBSiteConfiguration::defaultClassNameForPageSettings')) {
+        if (defined('CBSiteConfiguration::defaultClassNameForPageSettings')) {
             $messagesAsHTML[] = <<<EOT
 
                 The <code>CBSiteConfiguration::defaultClassNameForPageSettings</code>
-                constant has not been set for this site. This constant is should
-                be set to the name of the default page settings class in the
-                “site-configuration.php” file.
+                constant has been deprecated. Set the class in site settings
+                instead.
 
 EOT;
         }
