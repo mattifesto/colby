@@ -4,12 +4,13 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
+include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
 
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('ColbyPages Table Rows');
 CBHTMLOutput::setDescriptionHTML('Pages that are in the ColbyPages table.');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,documents,colby-pages-rows.css');
 
 $spec                           = new stdClass();
 $spec->selectedMenuItemName     = 'develop';
@@ -108,50 +109,18 @@ $result->free();
 </nav>
 
 <main>
-    <style scoped>
+    <div class="summaryLists">
 
-        section.group-type a
-        {
-            margin: 5px 15px;
-        }
+        <?php
 
-        section.group-type .hash
-        {
-            font-size: 0.55em;
-        }
+        CBPagesTableSummaryView::renderModelAsHTML((object)['type' => 'published']);
+        CBPagesTableSummaryView::renderModelAsHTML((object)['type' => 'unpublished']);
 
-        section.group-type header
-        {
-            margin-bottom: 10px;
-        }
+        ?>
 
-        section.group-type header h1
-        {
-            margin-top: 5px;
-            font-size: 1em;
-        }
+    </div>
 
-        section.group-type header h2
-        {
-            margin-top: 5px;
-            color: #3f3f3f;
-            font-size: 0.8em;
-        }
-
-        section.group-type header .hash
-        {
-            margin-top: 2px;
-            color: #7f7f7f;
-        }
-
-        section.group-type + section.group-type
-        {
-            margin-top: 30px;
-        }
-
-    </style>
-
-    <?php PagesSummaryView::renderAsHTML(); UnpublishedPagesWithURIsView::renderModelAsHTML(); ?>
+    <?php UnpublishedPagesWithURIsView::renderModelAsHTML(); ?>
 
     <h1>ColbyPages Rows with a NULL `className`</h1>
 
@@ -195,83 +164,8 @@ CBAdminPageFooterView::renderModelAsHTML();
 CBHTMLOutput::render();
 
 /**
- * @return void
+ *
  */
-class PagesSummaryView {
-
-    /**
-     * @return void
-     */
-    public static function renderAsHTML($renderModel = null) {
-
-        ?>
-
-        <table id="overview">
-            <style>
-
-                #overview {
-                    background-color: hsl(30, 30%, 95%);
-                    border: 1px solid hsl(30, 30%, 80%);
-                    margin: 20px auto;
-                }
-
-                #overview td, #overview th {
-                    padding: 2px 5px;
-                }
-
-                #overview td:last-child, #overview th:last-child {
-                    text-align: right;
-                }
-
-            </style>
-            <thead>
-                <tr><th>className</th><th>classNameForKind</th><th>count</th><tr>
-            </thead>
-
-        <?php
-
-        $SQL = <<<EOT
-
-            SELECT      `className`,
-                        `classNameForKind`,
-                        count(*) AS `count`
-            FROM        `ColbyPages`
-            WHERE       `className` IS NOT NULL OR `classNameForKind` IS NOT NULL
-            GROUP BY    `className`, `classNameForKind`
-
-EOT;
-
-        $result = Colby::query($SQL);
-
-        while ($row = $result->fetch_object()) {
-            echo "<tr><td>{$row->className}</td><td>{$row->classNameForKind}</td><td>{$row->count}</td></tr>";
-        }
-
-        $result->free();
-
-        $SQL = <<<EOT
-
-            SELECT      LOWER(HEX(`typeID`)) as `typeID`,
-                        count(*) as `count`
-            FROM        `ColbyPages`
-            WHERE       `className` IS NULL AND `classNameForKind` IS NULL
-            GROUP BY    `typeID`
-
-EOT;
-
-        $result = Colby::query($SQL);
-
-        while ($row = $result->fetch_object()) {
-            $typeID = ($row->typeID === null) ? 'NULL' : $row->typeID;
-            echo "<tr><td colspan=\"2\">typeID: {$typeID}</td><td>{$row->count}</td></tr>";
-        }
-
-        $result->free();
-
-        echo '</table>';
-    }
-}
-
 final class UnpublishedPagesWithURIsView {
 
     public static function renderModelAsHTML(stdClass $model = null) {
