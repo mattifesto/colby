@@ -205,7 +205,7 @@ EOT;
         </script>
         <div style="text-align: center; margin: 10px 0 5px;">Unpublished Pages with URIs</div>
         <div style="text-align: center; margin: 5px 0;">
-            <button onclick="cleanUnpublishedPages();">Clean Unpublished Pages</button>
+            <button onclick="cleanUnpublishedPages();">Remove URIs from Unpublished Pages</button>
         </div>
         <table id="unpublished">
             <style>
