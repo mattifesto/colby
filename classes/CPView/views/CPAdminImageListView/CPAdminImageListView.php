@@ -35,12 +35,18 @@ class CPAdminImageListView {
             $projection = CBProjection::reduceShortEdge($projection, 200);
             $projection = CBProjection::cropLongEdgeFromCenter($projection, 200);
 
-            CBImages::reduceImageFile($originalFilepath, $thumbnailFilepath, $projection);
+            try {
+                CBImages::reduceImageFile($originalFilepath, $thumbnailFilepath, $projection);
+            } catch (Exception $exception) {
+                $alt = 'Unable to create image thumbnail.';
+            }
+        } else {
+            $alt = '';
         }
 
         $thumbnailURL = $dataStore->URL() . "/{$thumbnailFilename}";
 
-        return "<img src=\"{$thumbnailURL}\" style=\"max-height: 50px; max-width: 50px;\">";
+        return "<img src=\"{$thumbnailURL}\" alt=\"{$alt}\" style=\"max-height: 50px; max-width: 50px;\">";
     }
 
     public static function queryForRecentlyModifiedImages() {
