@@ -1,3 +1,9 @@
+/**
+ * @deprecated 2015.10.08 This stylesheet has been deprecated. It was originally
+ * intended to be a shared stylesheet for pages administration but the
+ * CBPageList JavaScript class takes care of that now.
+ */
+
 table.list-of-pages
 {
     margin:         0px auto;

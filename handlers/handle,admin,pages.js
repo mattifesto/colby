@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * @deprecated 2015.10.08 This class has been replaced by the CBPageList
+ * JavaScript class.
+ */
 var CBPagesAdmin = {};
 
 
