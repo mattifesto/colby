@@ -4,14 +4,13 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-
 CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Unpublished Pages');
 CBHTMLOutput::setDescriptionHTML('Pages that haven\'t been published.');
-
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages.js');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages,unpublished.js');
 
 $selectedMenuItemID     = 'pages';
 $selectedSubmenuItemID  = 'unpublished';
