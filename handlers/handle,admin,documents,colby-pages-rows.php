@@ -38,8 +38,8 @@ $result = Colby::query($sql);
  * Aggregate data to simplify report generation.
  */
 
-$documentGroupNamesForHTML = array();
-$docuemntTypeNamesForHTML = array();
+$documentGroupNamesForHTML = [];
+$documentTypeNamesForHTML = [];
 
 while ($row = $result->fetch_object())
 {
@@ -47,9 +47,8 @@ while ($row = $result->fetch_object())
         $row->groupId != $section->groupId ||
         $row->typeId != $section->typeId)
     {
-        if (!isset($sections))
-        {
-            $sections = array();
+        if (!isset($sections)) {
+            $sections = [];
         }
 
         $section = new stdClass();
@@ -120,37 +119,42 @@ $result->free();
 
     </div>
 
-    <?php UnpublishedPagesWithURIsView::renderModelAsHTML(); ?>
-
-    <h1>ColbyPages Rows with a NULL `className`</h1>
-
     <?php
 
-    foreach ($sections as $section)
-    {
-        ?>
+    UnpublishedPagesWithURIsView::renderModelAsHTML();
 
-        <section class="group-type">
-            <header>
-                <h1>Group: <?php echo $section->groupNameHTML; ?></h1>
-                <div class="hash"><?php echo $section->groupId; ?></div>
-                <h1>Type: <?php echo $section->typeNameHTML; ?></h1>
-                <div class="hash"><?php echo $section->typeId; ?></div>
-                <h2>Count: <?php echo $section->archiveIds->count(); ?></h2>
-            </header>
+    if (isset($sections)) {
 
-            <?php
+        echo '<section><h1>ColbyPages Rows with a NULL `className`</h1>';
 
-            foreach ($section->archiveIds as $archiveId)
-            {
-                echo linkForArchiveId($archiveId), "\n";
-            }
-
+        foreach ($sections as $section)
+        {
             ?>
 
-        </section>
+            <section class="group-type">
+                <header>
+                    <h1>Group: <?php echo $section->groupNameHTML; ?></h1>
+                    <div class="hash"><?php echo $section->groupId; ?></div>
+                    <h1>Type: <?php echo $section->typeNameHTML; ?></h1>
+                    <div class="hash"><?php echo $section->typeId; ?></div>
+                    <h2>Count: <?php echo $section->archiveIds->count(); ?></h2>
+                </header>
 
-        <?php
+                <?php
+
+                foreach ($section->archiveIds as $archiveId)
+                {
+                    echo linkForArchiveId($archiveId), "\n";
+                }
+
+                ?>
+
+            </section>
+
+            <?php
+        }
+
+        echo '</section>';
     }
 
     ?>
