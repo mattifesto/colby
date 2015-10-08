@@ -133,6 +133,35 @@ EOT;
     }
 
     /**
+     * @return null
+     */
+    public static function fetchUnpublishedPagesListForAjax() {
+        $response = new CBAjaxResponse();
+        $SQL = <<<EOT
+
+            SELECT  `keyValueData`
+            FROM    `ColbyPages`
+            WHERE   `className` = 'CBViewPage' AND
+                    `published` IS NULL
+
+EOT;
+
+        $response->pages = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function fetchUnpublishedPagesListForAjaxPermissions() {
+        $permissions        = new stdClass();
+        $permissions->group = 'Administrators';
+
+        return $permissions;
+    }
+
+    /**
      * @return {int} | false
      */
     public static function iterationForID($args) {
@@ -429,7 +458,7 @@ EOT;
     }
 
     /**
-     * @return void
+     * @return null
      */
     public static function saveEditedPageForAjax() {
         $response           = new CBAjaxResponse();
