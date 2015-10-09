@@ -217,6 +217,50 @@ EOT;
     /**
      * @return null
      */
+    public static function fetchSearchResultsForAjax() {
+        $response = new CBAjaxResponse();
+        $queryText = $_POST['query-text'];
+        $words = preg_split('/[\s,]+/', $queryText, null, PREG_SPLIT_NO_EMPTY);
+        $searchClausesForSQL = [];
+
+        foreach ($words as $word) {
+            if (strlen($word) > 2) {
+                $wordForSQL = ColbyConvert::textToSQl($word);
+                $searchClausesForSQL[] = "`searchText` LIKE '%{$wordForSQL}%'";
+            }
+        }
+
+        if (empty($searchClausesForSQL)) {
+            $response->pages = [];
+        } else {
+            $searchClausesForSQL = implode(' AND ', $searchClausesForSQL);
+            $SQL = <<<EOT
+
+                SELECT      `keyValueData`
+                FROM        `ColbyPages`
+                WHERE       `className` = 'CBViewPage' AND
+                            {$searchClausesForSQL}
+                ORDER BY    `published` IS NULL DESC,
+                            `titleHTML` ASC
+
+EOT;
+            $response->pages = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        }
+
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function fetchSearchResultsForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
+     * @return null
+     */
     public static function fetchUnpublishedPagesListForAjax() {
         $response = new CBAjaxResponse();
         $SQL = <<<EOT
@@ -237,10 +281,7 @@ EOT;
      * @return {stdClass}
      */
     public static function fetchUnpublishedPagesListForAjaxPermissions() {
-        $permissions        = new stdClass();
-        $permissions->group = 'Administrators';
-
-        return $permissions;
+        return (object)['group' => 'Administrators'];
     }
 
     /**
