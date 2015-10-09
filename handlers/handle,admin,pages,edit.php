@@ -5,9 +5,16 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
 }
 
 if (!isset($_GET['data-store-id'])) {
-    $dataStoreID = CBHex160::random();
+    if (isset($_GET['id-to-copy'])) {
+        $IDToCopy = $_GET['id-to-copy'];
+        $IDToCopy = "&id-to-copy={$IDToCopy}";
+    } else {
+        $IDToCopy = '';
+    }
 
-    header("Location: /admin/pages/edit/?data-store-id={$dataStoreID}");
+    $ID = CBHex160::random();
+
+    header("Location: /admin/pages/edit/?data-store-id={$ID}{$IDToCopy}");
 
     exit;
 }

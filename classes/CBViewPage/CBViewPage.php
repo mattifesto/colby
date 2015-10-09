@@ -135,6 +135,57 @@ EOT;
     /**
      * @return null
      */
+    public static function fetchSpecForAjax() {
+        $response = new CBAjaxResponse();
+        $ID = $_POST['id'];
+        $iteration = CBViewPage::iterationForID(['ID' => $ID]);
+
+        if ($iteration !== false) {
+            $spec = CBViewPage::specWithID($ID, $iteration);
+
+            if (!$spec) {
+                throw new RuntimeException("No spec was found for the page ID: {$ID}");
+            }
+
+            $response->modelJSON = json_encode($spec);
+        } else if (isset($_POST['id-to-copy'])) {
+            $IDToCopy = $_POST['id-to-copy'];
+            $iteration = CBViewPage::iterationForID(['ID' => $IDToCopy]);
+            $spec = CBViewPage::specWithID($IDToCopy, $iteration);
+
+            if (!$spec) {
+                throw new RuntimeException("No spec was found for the page ID: {$IDToCopy}");
+            }
+
+            // Perform the copy
+            $spec->dataStoreID = $ID;
+            $spec->created = time();
+            $spec->updated = $spec->created;
+            $spec->title = isset($spec->title) ? "{$spec->title} Copy" : 'Copied Page';
+            unset($spec->isPublished);
+            unset($spec->iteration);
+            unset($spec->publicationTimeStamp);
+            unset($spec->pubishedBy);
+            unset($spec->URI);
+            unset($spec->URIIsStatic);
+
+            $response->modelJSON = json_encode($spec);
+        }
+
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function fetchSpecForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
+     * @return null
+     */
     public static function fetchUnpublishedPagesListForAjax() {
         $response = new CBAjaxResponse();
         $SQL = <<<EOT
@@ -170,17 +221,8 @@ EOT;
 
         $IDAsSQL    = ColbyConvert::textToSQL($ID);
         $SQL        = "SELECT `iteration` FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$IDAsSQL}')";
-        $result     = Colby::query($SQL);
 
-        if ($row = $result->fetch_object()) {
-            $iteration = $row->iteration;
-        } else {
-            $iteration = false;
-        }
-
-        $result->free();
-
-        return $iteration;
+        return CBDB::SQLToValue($SQL);
     }
 
     /**

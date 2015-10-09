@@ -52,6 +52,10 @@
     flex: none;
 }
 
+.CBPageListPage > .copy {
+    background-color: hsl(60, 100%, 80%);
+}
+
 .CBPageListPage > .edit {
     background-color: hsl(120, 100%, 80%);
 }

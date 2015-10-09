@@ -37,12 +37,16 @@ var CBPageList = {
             var edit = document.createElement("div");
             edit.className = "button edit";
             edit.textContent = "edit";
+            var copy = document.createElement("div");
+            copy.className = "button copy";
+            copy.textContent = "copy";
             var trash = document.createElement("div");
             trash.className = "button trash";
             trash.textContent = "trash";
 
             element.appendChild(description);
             element.appendChild(edit);
+            element.appendChild(copy);
             element.appendChild(trash);
 
             element.addEventListener("click", CBPageList.handlePageElementWasClicked.bind(undefined, {
@@ -54,12 +58,28 @@ var CBPageList = {
                 ID : args.page.dataStoreID
             }));
 
+            copy.addEventListener("click", CBPageList.handlePageElementCopyWasClicked.bind(undefined, {
+                IDToCopy : args.page.dataStoreID
+            }));
+
             trash.addEventListener("click", CBPageList.handlePageElementTrashWasClicked.bind(undefined, {
                 element : element,
                 ID : args.page.dataStoreID
             }));
 
             return element;
+        },
+
+        /**
+         * @param {hex160} IDToCopy
+         *
+         * @return undefined
+         */
+        handlePageElementCopyWasClicked : function(args) {
+            location.href = '/admin/pages/edit/?data-store-id=' +
+                            Colby.random160() +
+                            '&id-to-copy=' +
+                            args.IDToCopy;
         },
 
         /**

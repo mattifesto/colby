@@ -148,28 +148,33 @@ CBPageEditor.DOMContentDidLoad = function()
 
     document.dispatchEvent(new Event("CBPageEditorDidLoad"));
 
-    CBPageEditor.loadModel();
+    CBPageEditor.fetchModel();
 };
 
 /**
  * @return void
  */
-CBPageEditor.loadModel = function()
-{
+CBPageEditor.fetchModel = function() {
     var formData = new FormData();
-    formData.append("data-store-id", CBURLQueryVariables["data-store-id"]);
+    formData.append("id", CBURLQueryVariables["data-store-id"]);
+
+    if (CBURLQueryVariables["id-to-copy"] !== undefined) {
+        formData.append("id-to-copy", CBURLQueryVariables["id-to-copy"]);
+    }
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/admin/pages/api/get-model/", true);
-    xhr.onload = CBPageEditor.loadModelDidComplete;
+    xhr.onload = CBPageEditor.fetchModelDidLoad.bind(undefined, {
+        xhr : xhr
+    });
+    xhr.open("POST", "/api/?class=CBViewPage&function=fetchSpec");
     xhr.send(formData);
 };
 
 /**
  * @return undefined
  */
-CBPageEditor.loadModelDidComplete = function() {
-    var response = Colby.responseFromXMLHttpRequest(this);
+CBPageEditor.fetchModelDidLoad = function(args) {
+    var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
     if (response.wasSuccessful) {
         if ("modelJSON" in response) {
