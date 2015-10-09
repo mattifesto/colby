@@ -135,6 +135,37 @@ EOT;
     /**
      * @return null
      */
+    public static function fetchRecentlyEditedPagesListForAjax() {
+        $response = new CBAjaxResponse();
+        $SQL = <<<EOT
+
+            SELECT      `page`.`keyValueData`
+            FROM        `CBPageLists` AS `list`
+            LEFT JOIN   `ColbyPages` AS `page`
+            ON          `page`.`ID` = `list`.`pageRowID`
+            WHERE       `list`.`listClassName`  = 'CBRecentlyEditedPages'
+            ORDER BY    `sort1` DESC
+
+EOT;
+
+        $response->pages = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function fetchRecentlyEditedPagesListForAjaxPermissions() {
+        $permissions        = new stdClass();
+        $permissions->group = 'Administrators';
+
+        return $permissions;
+    }
+
+    /**
+     * @return null
+     */
     public static function fetchSpecForAjax() {
         $response = new CBAjaxResponse();
         $ID = $_POST['id'];

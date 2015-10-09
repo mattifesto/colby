@@ -8,21 +8,16 @@ CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Recently Edited Pages');
 CBHTMLOutput::setDescriptionHTML('A list of the most recently edited pages.');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages,recently-edited.js');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/javascript/CBPageList.css');
+CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageList.js');
 
 $selectedMenuItemID     = 'pages';
 $selectedSubmenuItemID  = 'recently-edited';
 
 include CBSystemDirectory . '/sections/admin-page-menu.php';
 
-?>
-
-<main class="CBSystemFont">
-
-    <?php CBRecentlyEditedPagesView::renderModelAsHTML(); ?>
-
-</main>
-
-<?php
+echo '<main></main>';
 
 CBAdminPageFooterView::renderModelAsHTML();
 
