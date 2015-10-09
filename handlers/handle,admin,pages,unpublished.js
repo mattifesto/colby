@@ -39,7 +39,7 @@ var CBUnpublishedPagesAdmin = {
      * @return undefined
      */
     fetchPagesDidError : function(args) {
-
+        alert('An error occurred when attempting to fetch the list of unpublished pages.');
     },
 
     /**
@@ -49,21 +49,26 @@ var CBUnpublishedPagesAdmin = {
      */
     fetchPagesDidLoad : function(args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
-        var pages = response.pages.sort(function(left, right) {
-            if (left.created > right.created) {
-                return -1;
-            } else if (left.created < right.created) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-        var list = CBPageList.createElement({
-            pages : pages
-        });
 
-        args.element.textContent = null;
-        args.element.appendChild(list);
+        if (response.wasSuccessful) {
+            var pages = response.pages.sort(function(left, right) {
+                if (left.created > right.created) {
+                    return -1;
+                } else if (left.created < right.created) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+            var list = CBPageList.createElement({
+                pages : pages
+            });
+
+            args.element.textContent = null;
+            args.element.appendChild(list);
+        } else {
+            Colby.displayResponse(response);
+        }
     },
 };
 

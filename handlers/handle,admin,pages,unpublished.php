@@ -8,7 +8,6 @@ CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Unpublished Pages');
 CBHTMLOutput::setDescriptionHTML('Pages that haven\'t been published.');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages,unpublished.js');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/javascript/CBPageList.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageList.js');
@@ -20,6 +19,6 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 echo '<main></main>';
 
-include CBSystemDirectory . '/sections/admin-page-footer-2.php';
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();
