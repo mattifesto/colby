@@ -1,0 +1,21 @@
+.CBAdminImageThumbnail > * {
+    height: 160px;
+    width: 160px;
+}
+
+.CBAdminImageThumbnail > img {
+    background-color: #eee;
+    background-image: linear-gradient(45deg, gray 25%, transparent 25%, transparent 75%, gray 75%, gray),
+    linear-gradient(45deg, gray 25%, transparent 25%, transparent 75%, gray 75%, gray);
+    background-size:20px 20px;
+    background-position:0 0, 30px 30px;
+    display: block;
+}
+
+.CBAdminImageThumbnail > div {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    padding: 10px;
+    text-align: center;
+}
