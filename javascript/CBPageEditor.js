@@ -153,13 +153,12 @@ CBPageEditor.displayPageTemplateChooser = function()
 };
 
 /**
- * @return void
+ * @return undefined
  */
-CBPageEditor.DOMContentDidLoad = function()
-{
-    this.saveModelTimer                     = Object.create(CBDelayTimer).init();
-    this.saveModelTimer.callback            = this.saveModel.bind(this);
-    this.saveModelTimer.delayInMilliseconds = 2000;
+CBPageEditor.DOMContentDidLoad = function() {
+    CBPageEditor.saveModelTimer = Object.create(CBDelayTimer).init();
+    CBPageEditor.saveModelTimer.callback = CBPageEditor.saveModel.bind(CBPageEditor);
+    CBPageEditor.saveModelTimer.delayInMilliseconds = 2000;
 
     document.dispatchEvent(new Event("CBPageEditorDidLoad"));
 
@@ -312,9 +311,4 @@ CBPageEditor.saveModelAjaxRequestDidFail = function(xhr) {
     this.saveModelTimer.restart();
 };
 
-(function()
-{
-    var listener = CBPageEditor.DOMContentDidLoad.bind(CBPageEditor);
-
-    document.addEventListener("DOMContentLoaded", listener, false);
-})();
+document.addEventListener("DOMContentLoaded", CBPageEditor.DOMContentDidLoad);
