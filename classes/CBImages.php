@@ -99,11 +99,7 @@ EOT;
     /**
      * @deprecated use uploadForAjax
      *
-     * This function was initially created to replace a class named
-     * CBAPIUploadImage. The API is not ideal, but it matches what that class
-     * had. Eventually this function should be replace with a better API.
-     *
-     * @return void
+     * @return null
      */
     public static function uploadAndReduceForAjax() {
         $response = new CBAjaxResponse();
