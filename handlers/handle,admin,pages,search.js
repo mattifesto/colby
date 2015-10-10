@@ -40,6 +40,7 @@ var CBSearchForPagesAdmin = {
      * @return undefined
      */
     fetchPages : function(args, event) {
+        args.inputElement.blur();
         event.preventDefault();
 
         var formData = new FormData();
