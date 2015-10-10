@@ -4,6 +4,26 @@ var CBPageEditor = {
     model               : null,
 
     /**
+     * @param {Object} spec
+     *
+     * @return undefined
+     */
+    displayEditor : function(args) {
+        var main = document.getElementsByTagName("main")[0];
+        main.textContent = null;
+
+        main.appendChild(CBPageEditor.createEditor({
+            spec : args.spec
+        }));
+
+        if (window.CBPageEditor2 !== undefined) {
+            main.appendChild(CBPageEditor2.createEditor({
+                spec : args.spec
+            }));
+        }
+    },
+
+    /**
      * @param   {Object}    spec
      *
      * @return  undefined
@@ -58,20 +78,13 @@ CBPageEditor.appendPageTemplateOption = function(template)
 };
 
 /**
- * @return void
+ * @param {Object} spec
+ *
+ * @return undefined
  */
-CBPageEditor.displayEditor = function()
-{
-    var mainElement = document.getElementsByTagName("main")[0];
-
-    while (mainElement.firstChild)
-    {
-        mainElement.removeChild(mainElement.firstChild);
-    }
-
+CBPageEditor.createEditor = function(args) {
     var editorContainer = document.createElement("div");
     editorContainer.classList.add("CBPageEditor");
-    mainElement.appendChild(editorContainer);
 
     /**
      * Menu
@@ -100,9 +113,9 @@ CBPageEditor.displayEditor = function()
     var element = CBPageInformationEditorFactory.createEditor({
         handleSpecChanged       : function() { CBPageEditor.requestSave(); },
         handleTitleChanged      : CBPageEditor.handleTitleChanged.bind(undefined, {
-            spec                : CBPageEditor.model
+            spec                : args.spec
         }),
-        spec                    : CBPageEditor.model });
+        spec                    : args.spec });
 
     editorContainer.appendChild(element);
 
@@ -111,12 +124,14 @@ CBPageEditor.displayEditor = function()
      */
 
     editorContainer.appendChild(CBSpecArrayEditorFactory.createEditor({
-        array           : CBPageEditor.model.sections,
+        array           : args.spec.sections,
         classNames      : CBPageEditorAvailableViewClassNames,
         handleChanged   : CBPageEditor.requestSave.bind(CBPageEditor)
     }));
 
-    CBPageEditor.handleTitleChanged({spec : CBPageEditor.model});
+    CBPageEditor.handleTitleChanged({spec : args.spec});
+
+    return editorContainer;
 };
 
 /**
@@ -184,7 +199,7 @@ CBPageEditor.fetchModelDidLoad = function(args) {
                 CBPageEditor.model.sections = [];
             }
 
-            CBPageEditor.displayEditor();
+            CBPageEditor.displayEditor({ spec : CBPageEditor.model });
         } else {
             CBPageEditor.displayPageTemplateChooser();
         }
@@ -229,7 +244,7 @@ CBPageEditor.requestSave = function()
 
 /**
  * Do not call this function directly. It should only be called by the save
- * model timer.
+ * timer.
  *
  * @return void
  */

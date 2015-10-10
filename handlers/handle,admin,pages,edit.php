@@ -59,6 +59,10 @@ CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFact
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
 
+/* New editor in development */
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
+    CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor2.js');
+}
 
 $pagesPreferences           = CBModels::fetchModelByID(CBPagesPreferences::ID);
 
