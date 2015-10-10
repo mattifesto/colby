@@ -2,9 +2,9 @@
 
 } Title
 
-] The title will be shown in the larger characters than the subtitle.
+] The title will be shown in the larger characters than the description.
 
-] The title will always be placed before the subtitle.
+] The title will always be placed before the description.
 
 ] The title is the main lure to read a document, so making it compelling is very important.
 
@@ -19,28 +19,28 @@
 ] A title is limited to 100 characters, but titles should usually be much shorter than that.
 
 
-} Subtitle
+} Description
 
-] The subtitle is generally longer than the title, but that is not a rule. This is because the subtitle often clarifies exactly what the shorter title means and what the document may actually contain.
+] The description is generally longer than the title, but that is not a rule. This is because the description often clarifies exactly what the shorter title means and what the document may actually contain.
 
-] A subtitle will be the description used by Google when the document is found in Google searches. Keep in mind often only the first part of the description is shown depending on the layout, so if you have an important word or words its best to place them first.
+] A description will be the description used by Google when the document is found in Google searches. Keep in mind often only the first part of the description is shown depending on the layout, so if you have an important word or words its best to place them first.
 
-] A subtitle is also limited to 100 characters, but it's fine if it often approaches that length.
+] A description is also limited to 100 characters, but it's fine if it often approaches that length.
 
-] If a title makes the reader ask, "What do you mean?", then the subtitle should make the reader say, "Oh _that's_ what you mean. I see what this article is going to be about."
+] If a title makes the reader ask, "What do you mean?", then the description should make the reader say, "Oh _that's_ what you mean. I see what this article is going to be about."
 
-] Regardless of how you decide to capitalize your titles, subtitles should always be capitalized as regular sentences. Anything else looks very bizarre to the reader and stands out in a bad way.
+] Regardless of how you decide to capitalize your titles, descriptions should always be capitalized as regular sentences. Anything else looks very bizarre to the reader and stands out in a bad way.
 
 
 # Goals
 
-The goal of writing good titles and subtitles is to attract readers on Google, Twitter, and Facebook but also on your own site. People won't read blog posts just because you write them, you have to make them attractive. So you want to make things interesting and possibly even funny. However, you shouldn't be too obscure as to what you'll be talking about, communicate clearly.
+The goal of writing good titles and descriptions is to attract readers on Google, Twitter, and Facebook but also on your own site. People won't read blog posts just because you write them, you have to make them attractive. So you want to make things interesting and possibly even funny. However, you shouldn't be too obscure as to what you'll be talking about, communicate clearly.
 
 } Fine title
 
 ] Using cross stitch to make gifts for your friends
 
-} Fine subtitle
+} Fine description
 
 ] Everyone appreciates a homemade gift made with love.
 
@@ -48,9 +48,9 @@ The goal of writing good titles and subtitles is to attract readers on Google, T
 
 ] Use the black magic of cross stitch to make gifts for your friends and capture their souls
 
-} Better subtitle
+} Better description
 
-] Okay, you may not capture their soul, but you may capture their heart.
+] Okay, you may not capture their souls, but you may capture their hearts.
 
 
 # Examples
@@ -61,7 +61,7 @@ The goal of writing good titles and subtitles is to attract readers on Google, T
 
 ] My favorite day
 
-} Subtitle
+} Description
 
 ] At my 21st birthday somebody special showed up.
 
@@ -71,7 +71,7 @@ The goal of writing good titles and subtitles is to attract readers on Google, T
 
 ] Kody discovers squirrels
 
-} Subtitle
+} Description
 
 ] The neighborhood will never be quiet again.
 
@@ -81,7 +81,7 @@ The goal of writing good titles and subtitles is to attract readers on Google, T
 
 ] Is Mars larger than the Earth?
 
-} Subtitle
+} Description
 
 ] No, it's not, but life could have still existed on its surface at some point.
 
@@ -93,7 +93,7 @@ The goal of writing good titles and subtitles is to attract readers on Google, T
 
 > Note: No punctuation after "Fine".
 
-} Subtitle
+} Description
 
 ] The big day for the big man. Can he make it? Hopefully.
 
@@ -105,7 +105,7 @@ The goal of writing good titles and subtitles is to attract readers on Google, T
 
 ] 5 secrets to bodybuilding you probably don't know yet
 
-} Subtitle
+} Description
 
 ] I have relied on these rules and they have proven effective time and time again.
 
@@ -115,6 +115,6 @@ The goal of writing good titles and subtitles is to attract readers on Google, T
 
 ] Black holes and string theory, part 2
 
-} Subtitle
+} Description
 
 ] A discussion of whether black holes funnel matter from our universe into other universes.

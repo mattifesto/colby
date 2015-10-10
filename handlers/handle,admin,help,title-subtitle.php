@@ -1,24 +1,14 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
-
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
-{
+if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-
+CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Titles and Descriptions Help');
 CBHTMLOutput::setDescriptionHTML('Help for creating effective titles and descriptions.');
-
-include CBSystemDirectory . '/sections/equalize.php';
-
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard-formatted-content.css');
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400');
-CBHTMLOutput::addCSSURL('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700');
-
 
 $selectedMenuItemID     = 'help';
 $selectedSubmenuItemID  = 'title-subtitle';
@@ -29,18 +19,7 @@ $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/help/tit
 
 ?>
 
-<main>
-    <style scoped>
-
-        main
-        {
-            font-family:    "Source Sans Pro";
-            margin:         0px auto;
-            width:          640px;
-        }
-
-    </style>
-
+<main style="margin: 0 auto; max-width: 640px; padding: 40px 10px;">
     <div class="formatted-content standard-formatted-content">
         <?php echo ColbyConvert::markaroundToHTML($markaround); ?>
     </div>
@@ -48,6 +27,6 @@ $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/help/tit
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer-2.php';
+CBAdminPageFooterView::renderModelAsHTML();
 
 CBHTMLOutput::render();
