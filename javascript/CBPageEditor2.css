@@ -22,22 +22,44 @@
 
 .CBPageEditor2 .SpecLink {
     align-items: center;
-    border-color: hsl(0, 0%, 80%);
-    border-style: solid;
-    border-width: 1px 0;
+    background-color: white;
     display: flex;
     height: 44px;
     padding: 0 10px;
 }
 
 .CBPageEditor2 .SpecLink + .SpecLink {
-    border-width: 0 0 1px;
+    border-color: hsl(0, 0%, 80%);
+    border-style: solid;
+    border-width: 1px 0 0;
+}
+
+.CBPageEditorSubviewNavigation {
+    background-color: hsl(0, 0%, 90%);
+    padding: 22px 0;
+}
+
+.CBPageEditorSubviewNavigation .list {
+    border-color: hsl(0, 0%, 80%);
+    border-style: solid;
+    border-width: 1px 0;
+}
+
+.CBPageEditorSubviewNavigation > div {
+    margin: 0 auto;
+    max-width: 640px;
 }
 
 .CBPageEditorDescription {
-    align-items: center;
-    background-color: hsl(0, 0%, 90%);
     color: hsl(0, 0%, 50%);
     font-size: 80%;
-    padding: 39px 10px 5px;
+    padding: 5px 10px;
+}
+
+@media all and (min-width: 641px) {
+    .CBPageEditorSubviewNavigation .list {
+        border-radius: 10px;
+        border-width: 1px;
+        overflow: hidden;
+    }
 }

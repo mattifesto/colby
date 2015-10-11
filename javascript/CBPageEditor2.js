@@ -85,11 +85,6 @@ var CBPageEditor2 = {
             }));
         }
 
-        var description = document.createElement("div")
-        description.className = "CBPageEditorDescription";
-
-        element.appendChild(description);
-
         return element;
     },
 
@@ -103,21 +98,30 @@ var CBPageEditor2 = {
      */
     createSubviewsNavigation : function(args) {
         var element = document.createElement("div");
-        element.className = "CBPageEditorSubviewsNavigation";
+        element.className = "CBPageEditorSubviewNavigation";
+
+        var container = document.createElement("div");
+
         var description = document.createElement("div")
         description.className = "CBPageEditorDescription";
         description.textContent = "SUBVIEWS";
 
-        element.appendChild(description);
+        container.appendChild(description);
+
+        var list = document.createElement("div");
+        list.className = "list";
 
         for (var i = 0; i < args.subviews.length; i++) {
-            element.appendChild(CBPageEditor2.createLinkElement({
+            list.appendChild(CBPageEditor2.createLinkElement({
                 containerElement : args.containerElement,
                 parentEditorElement : args.parentEditorElement,
                 parentSpec : args.parentSpec,
                 spec : args.subviews[i],
             }));
         }
+
+        container.appendChild(list);
+        element.appendChild(container);
 
         return element;
     },
