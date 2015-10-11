@@ -1,2 +1,20 @@
-.CBPageEditor2 {
+.CBPageEditor2 .SpecEditor {
+    min-height: 50vh; /* just for testing */
+}
+
+.CBPageEditor2 .SpecEditor > header {
+    align-items: center;
+    border-color: hsl(0, 0%, 80%);
+    border-style: solid;
+    border-width: 1px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.CBPageEditor2 .SpecEditor > header > h1 {
+    font-size: inherit;
+}
+
+.CBPageEditor2 .SpecEditor > header > nav {
+    padding: 0 10px;
 }
