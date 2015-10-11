@@ -71,26 +71,52 @@ var CBPageEditor2 = {
             }));
         }
 
-        var links = [];
-
-        if (Array.isArray(args.spec.sections)) {
-            links = args.spec.sections.map(function(spec) {
-                return CBPageEditor2.createLinkElement({
-                    containerElement : args.containerElement,
-                    parentEditorElement : element,
-                    parentSpec : args.spec,
-                    spec : spec
-                });
-            });
-        }
-
         header.appendChild(leftnav);
         header.appendChild(h1);
         header.appendChild(rightnav);
         element.appendChild(header);
 
-        for (var i = 0; i < links.length; i++) {
-            element.appendChild(links[i]);
+        if (Array.isArray(args.spec.sections)) {
+            element.appendChild(CBPageEditor2.createSubviewsNavigation({
+                containerElement : args.containerElement,
+                parentEditorElement : element,
+                parentSpec : args.spec,
+                subviews : args.spec.sections
+            }));
+        }
+
+        var description = document.createElement("div")
+        description.className = "CBPageEditorDescription";
+
+        element.appendChild(description);
+
+        return element;
+    },
+
+    /**
+     * @param {Element} containerElement
+     * @param {Element} parentEditorElement
+     * @param {Object} parentSpec
+     * @param {Array} subviews
+     *
+     * @return {Element}
+     */
+    createSubviewsNavigation : function(args) {
+        var element = document.createElement("div");
+        element.className = "CBPageEditorSubviewsNavigation";
+        var description = document.createElement("div")
+        description.className = "CBPageEditorDescription";
+        description.textContent = "SUBVIEWS";
+
+        element.appendChild(description);
+
+        for (var i = 0; i < args.subviews.length; i++) {
+            element.appendChild(CBPageEditor2.createLinkElement({
+                containerElement : args.containerElement,
+                parentEditorElement : args.parentEditorElement,
+                parentSpec : args.parentSpec,
+                spec : args.subviews[i],
+            }));
         }
 
         return element;
