@@ -85,6 +85,16 @@ var CBPageEditor2 = {
             }));
         }
 
+        if (args.parentSpec) {
+            var editorFactory   = window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
+            var editor          = editorFactory.createEditor({
+                handleSpecChanged : CBPageEditor.requestSave.bind(CBPageEditor),
+                spec : args.spec,
+            });
+
+            element.appendChild(editor);
+        }
+
         return element;
     },
 
