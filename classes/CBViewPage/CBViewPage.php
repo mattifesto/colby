@@ -139,7 +139,7 @@ EOT;
         $response = new CBAjaxResponse();
         $SQL = <<<EOT
 
-            SELECT      `page`.`keyValueData`
+            SELECT      HEX(`page`.`archiveID`), `page`.`keyValueData`
             FROM        `CBPageLists` AS `list`
             LEFT JOIN   `ColbyPages` AS `page`
             ON          `page`.`ID` = `list`.`pageRowID`
@@ -149,6 +149,7 @@ EOT;
 EOT;
 
         $response->pages = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $response->pages = CBViewPage::fixKeyValueDataArray($response->pages);
         $response->wasSuccessful = true;
         $response->send();
     }
@@ -236,7 +237,7 @@ EOT;
             $searchClausesForSQL = implode(' AND ', $searchClausesForSQL);
             $SQL = <<<EOT
 
-                SELECT      `keyValueData`
+                SELECT      HEX(`archiveID`), `keyValueData`
                 FROM        `ColbyPages`
                 WHERE       `className` = 'CBViewPage' AND
                             {$searchClausesForSQL}
@@ -245,6 +246,7 @@ EOT;
 
 EOT;
             $response->pages = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+            $response->pages = CBViewPage::fixKeyValueDataArray($response->pages);
         }
 
         $response->wasSuccessful = true;
@@ -265,7 +267,7 @@ EOT;
         $response = new CBAjaxResponse();
         $SQL = <<<EOT
 
-            SELECT  `keyValueData`
+            SELECT  HEX(`archiveID`), `keyValueData`
             FROM    `ColbyPages`
             WHERE   `className` = 'CBViewPage' AND
                     `published` IS NULL
@@ -273,6 +275,7 @@ EOT;
 EOT;
 
         $response->pages = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $response->pages = CBViewPage::fixKeyValueDataArray($response->pages);
         $response->wasSuccessful = true;
         $response->send();
     }
@@ -282,6 +285,30 @@ EOT;
      */
     public static function fetchUnpublishedPagesListForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
+    }
+
+    /**
+     * @deprecated This function should be removed when we make sure every
+     * row in `ColbyPages` has a `keyValueData` value. This may require writing
+     * an update all pages type of process.
+     *
+     * @param [{hex160} => null|{stdClass}]
+     *
+     * @return [{stdClass}]
+     */
+    private static function fixKeyValueDataArray(array $pages) {
+        $pages = cb_array_map_assoc(function($ID, $page) {
+            if ($page === null) {
+                return (object) [
+                    'dataStoreID' => $ID,
+                    'title' => 'Page Needs to be Updated'
+                ];
+            } else {
+                return $page;
+            }
+        }, $pages);
+
+        return array_values($pages);
     }
 
     /**
