@@ -76,23 +76,28 @@ var CBPageEditor2 = {
         header.appendChild(rightnav);
         element.appendChild(header);
 
-        if (Array.isArray(args.spec.sections)) {
+        if (args.parentSpec) {
+            var editorFactory   = window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
+
+            element.appendChild(editorFactory.createEditor({
+                handleSpecChanged : CBPageEditor.requestSave.bind(CBPageEditor),
+                spec : args.spec,
+            }));
+        } else {
+            element.appendChild(CBPageInformationEditorFactory.createEditor({
+                handleSpecChanged       : CBPageEditor.requestSave.bind(CBPageEditor),
+                handleTitleChanged      : CBPageEditor.handleTitleChanged.bind(undefined, {
+                    spec                : args.spec
+                }),
+                spec                    : args.spec
+            }));
+
             element.appendChild(CBPageEditor2.createSubviewsNavigation({
                 containerElement : args.containerElement,
                 parentEditorElement : element,
                 parentSpec : args.spec,
                 subviews : args.spec.sections
             }));
-        }
-
-        if (args.parentSpec) {
-            var editorFactory   = window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
-            var editor          = editorFactory.createEditor({
-                handleSpecChanged : CBPageEditor.requestSave.bind(CBPageEditor),
-                spec : args.spec,
-            });
-
-            element.appendChild(editor);
         }
 
         return element;

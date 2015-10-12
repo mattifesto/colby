@@ -1,76 +1,86 @@
 .CBPageInformationEditor {
-    border:             1px solid hsl(30, 10%, 80%);
-    border-radius:      10px;
-    margin:             10px auto;
-    overflow:           hidden; /* clip to rounded corners */
-    max-width:          720px;
+    background-color: hsl(0, 0%, 90%);
+    padding: 22px 0;
 }
 
-.CBPageInformationEditor header {
-    background-color:   hsl(30, 10%, 80%);
-    padding:            7px 10px 10px;
-    text-align:         center;
+.CBPageInformationEditor .CBStringEditorWithTextArea,
+.CBPageInformationEditor .CBPublicationControl,
+.CBPageInformationEditor .CBPageURIControl {
+    border-bottom: 1px solid hsl(0, 0%, 80%);
 }
 
-.CBPageInformationEditor > div {
-    display:            flex;
-    display:            -webkit-flex;
-    flex-wrap: wrap;
-    -webkit-flex-wrap: wrap;
-}
-
-.CBPageInformationEditor .CBStringEditorWithTextArea {
-    border-bottom: 1px solid hsl(0, 0%, 90%);
-    margin-bottom: 5px;
-    padding-bottom: 5px;
-}
 .CBPageInformationEditor .CBStringEditor > select {
     margin-left: 5px;
-}
-
-.CBPageInformationEditor input[type=text] {
-    display:    block;
-    padding:    4px;
-    width:      100%;
 }
 
 .CBPageInformationEditor .flexContainer {
-    display:                    flex;
-    display:                    -webkit-flex;
-    justify-content:            space-around;
-    -webkit-justify-content:    space-around;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
-.CBPageInformationEditor .properties {
-    flex:           1 1 auto;
-    -webkit-flex:   1 1 auto;
-    padding:        10px;
+.CBPageInformationEditor .panel {
+    background-color: white;
+    border-color: hsl(0, 0%, 80%);
+    border-style: solid;
+    border-width: 1px 0;
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 100%;
+    width: 640px;
 }
 
-.CBPageInformationEditor .properties > .CBStringEditor + .CBStringEditor {
-    margin-top: 10px;
+.CBPageInformationEditor .panel + .panel {
+    margin-top: 44px;
 }
 
-.CBPageInformationEditor .sidebar {
-    flex:           none;
-    -webkit-flex:   none;
-    padding:        10px;
-    width:          200px;
+@media all and (min-width: 640px) {
+    .CBPageInformationEditor .panel {
+        border-radius: 10px;
+        border-width: 1px;
+    }
 }
 
-.CBPageInformationEditor .CBImageEditorUploadButton {
-    display:    block;
-    margin:     0 0 10px;
-    text-align: center;
+.CBPageInformationEditor .panel.thumbnail {
+    align-items: center;
+    display: flex;
+    padding: 5px 10px;
+}
+
+.CBPageInformationEditor .CBImageEditorUploadButton button {
+    background-color: transparent;
+    border: none;
+    color: hsl(210, 100%, 50%);
+    font: inherit;
+    padding: 0 10px;
+}
+
+.CBPageInformationEditor .panel.actions {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+}
+
+.CBPageInformationEditor .panel.actions > * {
+    align-items: center;
+    color: hsl(210, 100%, 50%);
+    cursor: pointer;
+    display: flex;
+    height: 44px;
+    padding: 0 10px;
+    text-decoration: none;
+}
+
+.CBPageInformationEditor .CBStringEditor {
+    align-items: center;
+    display: flex;
+    height: 44px;
 }
 
 .CBPageInformationEditor .CBStringEditor > select {
     margin-left: 5px;
 }
 
-.CBPageInformationEditor .CBImageEditorThumbnailPreview {
-    margin: 0 auto;
-}
 
 .CBPageInformationPageListsEditor input[type=checkbox] {
     margin-right: 0.5em;

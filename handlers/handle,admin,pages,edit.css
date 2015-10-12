@@ -11,65 +11,43 @@
     padding: 0 10px;
 }
 
-.CBTextAreaControl.standard {
-    display:    block;
-    margin:     10px 0px;
+.CBPageURIControl {
+    padding: 5px 10px;
 }
 
-.CBTextAreaControl.standard label {
-    font-size: 80%;
+.CBPageURIControl label {
+    color: hsl(0, 0%, 50%);
 }
 
-.CBTextAreaControl.standard textarea {
-    height: 300px;
-    width: 100%;
-}
-
-.CBPageURIControl.standard {
-    margin: 10px 0px;
-}
-
-.CBPageURIControl.standard input[type=checkbox] {
+.CBPageURIControl input[type=checkbox] {
     margin: 0px 5px 0px 30px;
 }
 
-.CBPageURIControl.standard input[type=text] {
-    font-family: "Source Code Pro", monospace;
-    font-size: 80%;
-    padding: 5px 6px;
+.CBPageURIControl input[type=text] {
+    border: none;
+    font: inherit;
+    outline: none;
+    padding: 0;
     width: 100%;
 }
 
-.CBPublicationControl.standard {
-    margin: 10px 0px;
+.CBPublicationControl {
+    padding: 5px 10px;
 }
 
-.CBPublicationControl.standard label {
-    font-size: 80%;
+.CBPublicationControl label {
+    color: hsl(0, 0%, 50%);
 }
 
-.CBPublicationControl.standard input[type=checkbox] {
+.CBPublicationControl input[type=checkbox] {
     margin-right: 5px;
 }
 
-.CBPublicationControl.standard input[type=text] {
-    width: 100%;
-}
-
-.CBSelectionControl.standard select {
-    margin-left: 5px;
-}
-
-.CBSelectionControl.standard.page-group {
-    margin-left: 50px;
-}
-
-.CBTextControl.standard {
-    display:    block;
-    margin:     10px 0px;
-}
-
-.CBTextControl.standard > input {
+.CBPublicationControl input[type=text] {
+    border: none;
+    font: inherit;
+    outline: none;
+    padding: 0;
     width: 100%;
 }
 

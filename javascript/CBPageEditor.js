@@ -87,26 +87,6 @@ CBPageEditor.createEditor = function(args) {
     editorContainer.classList.add("CBPageEditor");
 
     /**
-     * Menu
-     */
-
-    var nav             = document.createElement("nav");
-    var preview         = document.createElement("a");
-    var makeFrontPage   = document.createElement("button");
-
-    preview.href = "/admin/pages/preview/?ID=" + CBURLQueryVariables["data-store-id"];
-    makeFrontPage.style.marginLeft = "20px";
-    preview.classList.add("standard-link-button");
-
-    preview.appendChild(document.createTextNode("preview"));
-    makeFrontPage.appendChild(document.createTextNode("Make This Page the Front Page"));
-    makeFrontPage.addEventListener('click', CBPageEditor.makeFrontPage, false);
-
-    nav.appendChild(preview);
-    nav.appendChild(makeFrontPage);
-    editorContainer.appendChild(nav);
-
-    /**
      * Page information
      */
 
@@ -209,27 +189,26 @@ CBPageEditor.fetchModelDidLoad = function(args) {
 
 
 /**
- * @return void
+ * @param {hex160} ID
+ * @return undefined
  */
-CBPageEditor.makeFrontPage = function()
-{
+CBPageEditor.makeFrontPage = function(args) {
     var formData = new FormData();
-    formData.append("dataStoreID", CBURLQueryVariables["data-store-id"]);
+    formData.append("dataStoreID", args.ID);
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/admin/pages/api/make-front-page/", true);
-    xhr.onload = CBPageEditor.makeFrontPageDidComplete;
+    xhr.onload = CBPageEditor.makeFrontPageDidComplete.bind(undefined, { xhr : xhr });
     xhr.send(formData);
 };
 
 /**
- * @return void
+ * @param {XMLHttpRequest} xhr
+ *
+ * @return undefined
  */
-CBPageEditor.makeFrontPageDidComplete = function()
-{
-    var xhr         = this;
-    var response    = Colby.responseFromXMLHttpRequest(xhr);
-
+CBPageEditor.makeFrontPageDidComplete = function(args) {
+    var response    = Colby.responseFromXMLHttpRequest(args.xhr);
     Colby.displayResponse(response);
 };
 

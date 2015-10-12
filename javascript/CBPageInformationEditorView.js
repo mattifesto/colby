@@ -45,20 +45,17 @@ var CBPageInformationEditorFactory = {
             title           : args.spec.title });
         var editor          = document.createElement("section");
         editor.className    = "CBPageInformationEditor";
-        var header          = document.createElement("header");
-        header.textContent  = "Page Information";
         var content         = document.createElement("div");
 
-        editor.appendChild(header);
         editor.appendChild(content);
 
         var propertiesContainer         = document.createElement("div");
-        propertiesContainer.className   = "properties";
+        propertiesContainer.className   = "panel properties";
 
         content.appendChild(propertiesContainer);
 
-        var sidebar         = document.createElement("div");
-        sidebar.className   = "sidebar";
+        var thumbnail         = document.createElement("div");
+        thumbnail.className   = "panel thumbnail";
 
         var preview = CBImageEditorFactory.createThumbnailPreviewElement();
         var upload  = CBImageEditorFactory.createEditorUploadButton({
@@ -67,22 +64,44 @@ var CBPageInformationEditorFactory = {
                 previewImageElement : preview.img,
                 spec                : args.spec
             }),
-            imageSizes              : ["rs200clc200"]
+            imageSizes              : ["rs200clc200"],
+            textContent             : "Upload Page Thumbnail...",
         });
 
-        sidebar.appendChild(preview.element);
-        sidebar.appendChild(upload);
+        thumbnail.appendChild(preview.element);
+        thumbnail.appendChild(upload);
 
         CBImageEditorFactory.displayThumbnail({
             img : preview.img,
             URL : args.spec.thumbnailURL
         });
 
-        sidebar.appendChild(CBPageInformationEditorFactory.createPageListsEditorElement({
+        thumbnail.appendChild(CBPageInformationEditorFactory.createPageListsEditorElement({
             spec : args.spec
         }));
 
-        content.appendChild(sidebar);
+        content.appendChild(thumbnail);
+
+        /**
+         * actions panel
+         */
+
+        var actions = document.createElement("div");
+        actions.className = "panel actions";
+        var preview = document.createElement("a");
+        preview.href = "/admin/pages/preview/?ID=" + args.spec.dataStoreID;
+        preview.textContent = "Preview";
+        var useAsFrontPage = document.createElement("div");
+        useAsFrontPage.textContent = "Use as Front Page";
+
+        useAsFrontPage.addEventListener('click', CBPageEditor.makeFrontPage.bind(undefined, {
+            ID : args.spec.dataStoreID
+        }));
+
+        actions.appendChild(preview);
+        actions.appendChild(useAsFrontPage);
+
+        content.appendChild(actions);
 
         /**
          *
