@@ -11,14 +11,17 @@ var CBPageList = {
          */
         createElement : function(args) {
             var element = document.createElement("div");
-            element.className = "CBPageList";
-            var i;
+            element.className = "CBPageListView";
+            var list = document.createElement("div");
+            list.className = "CBPageList";
 
-            for (i = 0; i < args.pages.length; i++) {
-                element.appendChild(CBPageList.createPageElement({
+            for (var i = 0; i < args.pages.length; i++) {
+                list.appendChild(CBPageList.createPageElement({
                     page : args.pages[i]
                 }));
             }
+
+            element.appendChild(list);
 
             return element;
         },
