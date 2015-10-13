@@ -8,6 +8,7 @@ CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Recently Edited Pages');
 CBHTMLOutput::setDescriptionHTML('A list of the most recently edited pages.');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,recently-edited.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages,recently-edited.js');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/javascript/CBPageList.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageList.js');
