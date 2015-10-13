@@ -83,14 +83,16 @@ var CBPageInformationEditorFactory = {
          * page lists
          */
 
-        var pagelists = document.createElement("div");
-        pagelists.className = "panel pagelists";
+        if (CBPageEditorAvailablePageListClassNames.length > 0) {
+            var pagelists = document.createElement("div");
+            pagelists.className = "panel pagelists";
 
-        pagelists.appendChild(CBPageInformationEditorFactory.createPageListsEditorElement({
-            spec : args.spec
-        }));
+            pagelists.appendChild(CBPageInformationEditorFactory.createPageListsEditorElement({
+                spec : args.spec
+            }));
 
-        content.appendChild(pagelists);
+            content.appendChild(pagelists);
+        }
 
         /**
          * actions panel
