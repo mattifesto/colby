@@ -76,11 +76,21 @@ var CBPageInformationEditorFactory = {
             URL : args.spec.thumbnailURL
         });
 
-        thumbnail.appendChild(CBPageInformationEditorFactory.createPageListsEditorElement({
+        content.appendChild(thumbnail);
+
+        /**
+         * @deprecated use kinds
+         * page lists
+         */
+
+        var pagelists = document.createElement("div");
+        pagelists.className = "panel pagelists";
+
+        pagelists.appendChild(CBPageInformationEditorFactory.createPageListsEditorElement({
             spec : args.spec
         }));
 
-        content.appendChild(thumbnail);
+        content.appendChild(pagelists);
 
         /**
          * actions panel

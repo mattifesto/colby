@@ -71,7 +71,7 @@ CBPageEditor.appendPageTemplateOption = function(template)
         CBPageEditor.model              = JSON.parse(template.modelJSON);
         CBPageEditor.model.dataStoreID  = CBURLQueryVariables["data-store-id"];
 
-        CBPageEditor.displayEditor();
+        CBPageEditor.displayEditor({ spec : CBPageEditor.model });
     };
 
     pageTemplateOption.addEventListener("click", handler, false);

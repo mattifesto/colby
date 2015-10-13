@@ -81,6 +81,19 @@
     margin-left: 5px;
 }
 
+.CBPageInformationPageListsEditor {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.CBPageInformationPageListsEditor > div {
+    align-items: center;
+    display: flex;
+    height: 44px;
+    padding: 0 10px;
+}
 
 .CBPageInformationPageListsEditor input[type=checkbox] {
     margin-right: 0.5em;
