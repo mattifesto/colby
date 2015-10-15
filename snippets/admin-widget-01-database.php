@@ -1,5 +1,5 @@
 <section class="widget">
-    <header><h1>Colby System</h1></header>
+    <header><h1>System</h1></header>
     <div class="version-numbers">
 
         <?php
