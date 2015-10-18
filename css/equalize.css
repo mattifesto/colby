@@ -38,7 +38,7 @@ body > * {
 }
 
 body > .flex-fill {
-    flex:                   1 0 auto;               /* 6 */
+    flex:                   1 0 auto;               /* 6 (IE10 = no)*/
     -ms-flex:               1 0 auto;
     -webkit-flex:           1 0 auto;
 }
@@ -135,7 +135,10 @@ makes them behave exactly as if they were not in a flexible box container.
 
 6.  Use this class on a child that is allowed to grow to take up extra space
 between other elements. This should be used on an empty element right above the
-page footer.
+page footer. IE10: I think this used to work on IE10, but I know that it's very
+particular about the way the height is specified on the html and body elements.
+At some point I must have changed this and now it doesn't work on IE10. Don't
+bother trying to fix it. IE10 started being deprecated as of this issue.
 
 
 main:
