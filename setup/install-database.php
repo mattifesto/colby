@@ -19,8 +19,6 @@ DROP TABLE `ColbyPages`;
 DROP TABLE `ColbyUsersWhoAreAdministrators`;
 DROP TABLE `ColbyUsersWhoAreDevelopers`;
 DROP TABLE `ColbyUsers`;
-DROP FUNCTION IF EXISTS `ColbySchemaVersionNumber`;
-DROP FUNCTION IF EXISTS `ColbySiteSchemaVersionNumber`;
 
  */
 
@@ -251,38 +249,10 @@ CBSitePreferences::install();
 CBMainMenu::install();
 
 /**
- * 2014.08.25
- *  There is an issue with MySQL stored functions that makes some web hosting
- *  companies disallow their use. The function `ColbySchemaVersionNumber` has
- *  been replaced by the `CBSystemVersionNumber` value in the `CBDictionary`
- *  table. This SQL statement can be removed after all sites have been updated.
- */
-
-$sqls[] = <<<EOT
-
-    DROP FUNCTION IF EXISTS `ColbySchemaVersionNumber`;
-
-EOT;
-
-
-/**
- * `ColbySiteSchemaVersionNumber` has been replaced by the `CBSiteVersionNumber`
- * value in the `CBDictionary` table.
- */
-
-$sqls[] = <<<EOT
-
-    DROP FUNCTION IF EXISTS `ColbySiteSchemaVersionNumber`;
-
-EOT;
-
-
-/**
  *
  */
 
-foreach ($sqls as $sql)
-{
+foreach ($sqls as $sql) {
     Colby::query($sql);
 }
 
