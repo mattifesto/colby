@@ -30,9 +30,12 @@ final class CBMarkaround {
      * the caller thinks of the string argument as a "paragraph", this function
      * does think of it that way.
      *
-     * @return string
+     * @return {string}
      */
-    public static function paragraphToHTML($paragraph) {
+    private static function paragraphTo($paragraph, $args = []) {
+        $format = 'HTML';
+        extract($args, EXTR_IF_EXISTS);
+
         $escapes = array(
             '\\\\\\\\'  => '\\',    //  \\  -->  \
             '\\\\\/'    => '/',     //  \/  -->  /
@@ -50,18 +53,41 @@ final class CBMarkaround {
             $paragraph  = preg_replace("/{$pattern}/", $hash, $paragraph);
         }
 
-        $patterns[]     = self::expressionForSpan('\*', '\*');
-        $replacements[] = '<b>$1</b>';
-        $patterns[]     = self::expressionForSpan('_', '_');
-        $replacements[] = '<i>$1</i>';
-        $patterns[]     = self::expressionForSpan('{', '}');
-        $replacements[] = '<cite>$1</cite>';
-        $patterns[]     = self::expressionForSpan('`', '`');
-        $replacements[] = '<code>$1</code>';
-        $patterns[]     = self::expressionForSpan('\^', '\^');
-        $replacements[] = '<span class="special">$1</span>';
-        $patterns[]     = '/ (?<=^|\s) \/ (?=\s|$) /x';
-        $replacements[] = '<br>';
+        switch ($format) {
+            case 'HTML':
+                $patterns[]     = self::expressionForSpan('\*', '\*');
+                $replacements[] = '<b>$1</b>';
+                $patterns[]     = self::expressionForSpan('_', '_');
+                $replacements[] = '<i>$1</i>';
+                $patterns[]     = self::expressionForSpan('{', '}');
+                $replacements[] = '<cite>$1</cite>';
+                $patterns[]     = self::expressionForSpan('`', '`');
+                $replacements[] = '<code>$1</code>';
+                $patterns[]     = self::expressionForSpan('\^', '\^');
+                $replacements[] = '<span class="special">$1</span>';
+                $patterns[]     = '/ (?<=^|\s) \/ (?=\s|$) /x';
+                $replacements[] = '<br>';
+                break;
+
+            case 'text':
+                $patterns[]     = self::expressionForSpan('\*', '\*');
+                $replacements[] = '$1';
+                $patterns[]     = self::expressionForSpan('_', '_');
+                $replacements[] = '$1';
+                $patterns[]     = self::expressionForSpan('{', '}');
+                $replacements[] = '$1';
+                $patterns[]     = self::expressionForSpan('`', '`');
+                $replacements[] = '$1';
+                $patterns[]     = self::expressionForSpan('\^', '\^');
+                $replacements[] = '$1';
+                $patterns[]     = '/ (?<=^|\s) \/ (?=\s|$) /x';
+                $replacements[] = '';
+                break;
+
+            default:
+                throw RuntimeException('Unrecognized format.');
+                break;
+        }
 
         $paragraph = preg_replace($patterns, $replacements, $paragraph);
 
@@ -71,6 +97,20 @@ final class CBMarkaround {
         }
 
         return $paragraph;
+    }
+
+    /**
+     * @return {string}
+     */
+    public static function paragraphToHTML($paragraph) {
+        return CBMarkaround::paragraphTo($paragraph, ['format' => 'HTML']);
+    }
+
+    /**
+     * @return {string}
+     */
+    public static function paragraphToText($paragraph) {
+        return CBMarkaround::paragraphTo($paragraph, ['format' => 'text']);
     }
 
     /**
