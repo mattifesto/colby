@@ -231,6 +231,7 @@ EOT;
      * @return {string}
      */
     public static function URL($filename) {
-        return CBSystemURL . "/classes/CBTextBoxView/{$filename}";
+        $className = __CLASS__;
+        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
