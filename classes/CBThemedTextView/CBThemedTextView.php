@@ -2,6 +2,8 @@
 
 final class CBThemedTextView {
 
+    const standardPageHeaderThemeID = '2a5eb6c836914ef8f33b15f0853ac61df554505e';
+
     /**
      * @return [{string}]
      */
@@ -49,6 +51,49 @@ EOT;
      */
     public static function fetchThemesForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
+    }
+
+    /**
+     * @return null
+     */
+    public static function install() {
+
+        // Ensure that CBThemedTextViewThemes are editable.
+
+        call_user_func(function() {
+            $spec = CBModels::fetchSpecByID(CBModelsPreferences::ID);
+
+            if ($spec === false) {
+                return;
+            }
+
+            foreach ($spec->classMenuItems as $item) {
+                if ($item->itemClassName === 'CBThemedTextViewTheme') {
+                    return;
+                }
+            }
+
+            $menuItem = CBModels::modelWithClassName('CBClassMenuItem');
+            $menuItem->itemClassName = 'CBThemedTextViewTheme';
+            $menuItem->group = 'Developers';
+            $menuItem->title = 'Themed Text View Themes';
+            $spec->classMenuItems[] = $menuItem;
+
+            CBModels::save([$spec]);
+        });
+
+        // Ensure the standard page header theme exists.
+
+        $spec = CBModels::fetchSpecByID(CBThemedTextView::standardPageHeaderThemeID);
+
+        if ($spec === false) {
+            $spec = CBModels::modelWithClassName('CBThemedTextViewTheme', [
+                'ID' => CBThemedTextView::standardPageHeaderThemeID
+            ]);
+            $spec->title = 'Standard Page Header';
+
+            CBModels::save([$spec]);
+        }
     }
 
     /**

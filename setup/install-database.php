@@ -247,6 +247,7 @@ CBModels::install();
 CBPages::install();
 CBSitePreferences::install();
 CBMainMenu::install();
+CBThemedTextView::install();
 
 /**
  *
