@@ -6,6 +6,11 @@ var CBResponsiveEditorFactory = {
      * @param   {function}  handleSpecChanged
      * @param   {string}    labelText
      * @param   {string}    propertyName
+     * @param   {string}    propertyUpdatedEvent
+     *      If the creator of this editor needs to update the property outside
+     *      the editor it passes in an event which it will use to let the
+     *      editor know the property has been updated. Will be replaced with
+     *      Object.observe()
      * @param   {Object}    spec
      *
      * @return {Element}
@@ -28,14 +33,23 @@ var CBResponsiveEditorFactory = {
             spec                : args.spec }));
 
         textArea.addEventListener("input", CBResponsiveEditorFactory.resizeTextArea.bind(undefined, {
-            textArea : textArea
+            textAreaElement : textArea
         }));
 
         element.appendChild(label);
         element.appendChild(textArea);
 
+        if (args.propertyUpdatedEvent) {
+            document.addEventListener(args.propertyUpdatedEvent, CBResponsiveEditorFactory.handleStringPropertyUpdated.bind(undefined, {
+                textAreaElement : textArea,
+                handleSpecChanged : args.handleSpecChanged,
+                propertyName : args.propertyName,
+                spec : args.spec
+            }));
+        }
+
         window.setTimeout(CBResponsiveEditorFactory.resizeTextArea.bind(undefined, {
-            textArea : textArea
+            textAreaElement : textArea
         }), 0);
 
         /**
@@ -46,7 +60,7 @@ var CBResponsiveEditorFactory = {
          * have both, until the bug is fixed.
          */
         window.setTimeout(CBResponsiveEditorFactory.resizeTextArea.bind(undefined, {
-            textArea : textArea
+            textAreaElement : textArea
         }), 1000);
 
         return element;
@@ -67,16 +81,30 @@ var CBResponsiveEditorFactory = {
     },
 
     /**
-     * @param   {Element}   textArea
+     * @param   {Element}   textAreaElement
+     * @param   {function}  handleSpecChanged
+     * @param   {string}    propertyName
+     * @param   {Object}    spec
+     */
+    handleStringPropertyUpdated : function(args) {
+        args.textAreaElement.value = args.spec[args.propertyName];
+        args.handleSpecChanged.call();
+        CBResponsiveEditorFactory.resizeTextArea({
+            textAreaElement : args.textAreaElement
+        });
+    },
+
+    /**
+     * @param {Element} textAreaElement
      *
-     * @return  undefined
+     * @return undefined
      */
     resizeTextArea : function(args) {
-        args.textArea.style.height = "0";
-        args.textArea.style.height = args.textArea.scrollHeight + "px";
+        args.textAreaElement.style.height = "0";
+        args.textAreaElement.style.height = args.textAreaElement.scrollHeight + "px";
 
         //alert(args.textArea.style.height);
-    }
+    },
 };
 
 (function() {
