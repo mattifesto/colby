@@ -313,7 +313,7 @@ var CBPageInformationEditorFactory = {
      * @return {string}
      */
     titleToURI : function(args) {
-        if (args.title.length > 0) {
+        if (args.title !== undefined && args.title.length > 0) {
             return Colby.textToURI(args.title);
         } else {
             return Colby.textToURI(args.ID);
