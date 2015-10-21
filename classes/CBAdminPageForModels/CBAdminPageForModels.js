@@ -3,30 +3,6 @@
 var CBAdminPageForModels = {
 
     /**
-     * @param   {Object}    metadataForModel
-     *
-     * @return  <tr>
-     */
-    createModelRow : function(args) {
-        var tr                  = document.createElement("tr");
-        tr.className            = "CBModelRow";
-        var title               = document.createElement("td");
-        title.textContent       = args.metadataForModel.title;
-
-        var handleSelect        = CBAdminPageForModels.handleSelect.bind(undefined, {
-            ID          : args.metadataForModel.ID,
-            trElement   : tr
-        });
-
-        tr.addEventListener("click",    handleSelect);
-        tr.addEventListener("focusin",  handleSelect);
-
-        tr.appendChild(title);
-
-        return tr;
-    },
-
-    /**
      * @return {Element}
      */
     createUI : function() {
@@ -44,9 +20,6 @@ var CBAdminPageForModels = {
         var importButton            = document.createElement("button");
         importButton.textContent    = "Import";
         var select                  = document.createElement("select");
-        var title                   = document.createElement("h1");
-        var models                  = document.createElement("div");
-        models.className            = "models";
 
         // New UI
 
@@ -82,56 +55,14 @@ var CBAdminPageForModels = {
             select.appendChild(option);
         });
 
-        var handleClassChanged = CBAdminPageForModels.handleClassChanged.bind(undefined, {
-            modelsElement   : models,
-            selectElement   : select,
-            titleElement    : title
-        });
-
-        select.addEventListener("change", handleClassChanged);
-
         menu.appendChild(select);
         menu.appendChild(button);
         menu.appendChild(exportButton);
         menu.appendChild(importInput);
         menu.appendChild(importButton);
         element.appendChild(menu);
-        element.appendChild(title);
-        element.appendChild(models);
-
-        if (CBClassMenuItems.length > 0) {
-            handleClassChanged.call();
-        }
 
         return element;
-    },
-
-    /**
-     * @param   {Element}   modelsElement
-     * @param   {Element}   selectElement
-     * @param   {Element}   titleElement
-     *
-     * @return  undefined
-     */
-    handleClassChanged : function(args) {
-        args.titleElement.textContent = CBClassMenuItems[args.selectElement.value].title;
-
-        var className   = CBClassMenuItems[args.selectElement.value].itemClassName;
-        var formData    = new FormData();
-        var xhr         = new XMLHttpRequest();
-        xhr.onload      = CBAdminPageForModels.handleFetchMetadataForModelsCompleted.bind(undefined, {
-            modelsElement   : args.modelsElement,
-            xhr             : xhr
-        });
-        xhr.onerror     = CBAdminPageForModels.handleFetchMetadataForModelsFailed.bind(undefined, {
-            modelsElement   : args.modelsElement,
-            xhr             : xhr
-        });
-
-        formData.append("className",    className);
-        formData.append("pageNumber",   1);
-        xhr.open("POST", "/api/?class=CBAdminPageForModels&function=fetchModelSummaryListForClassName");
-        xhr.send(formData);
     },
 
     /**
@@ -147,47 +78,6 @@ var CBAdminPageForModels = {
         var URL = "/admin/models/export/?ID=" + ID;
 
         window.location.href = URL;
-    },
-
-    /**
-     * @param   {Element}           modelsElement
-     * @param   {XMLHttpRequest}    xhr
-     *
-     * @return  undefined
-     */
-    handleFetchMetadataForModelsCompleted : function(args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            var child;
-
-            if (child = args.modelsElement.firstChild) {
-                args.modelsElement.removeChild(child);
-            }
-
-            var table = document.createElement("table");
-
-            response.modelSummaryList.forEach(function(metadataForModel) {
-                table.appendChild(CBAdminPageForModels.createModelRow({
-                    metadataForModel : metadataForModel
-                }));
-            });
-
-            args.modelsElement.appendChild(table);
-        } else {
-            Colby.displayResponse(response);
-        }
-    },
-
-    /**
-     * @param   {Element}           modelsElement
-     * @param   {XMLHttpRequest}    xhr
-     *
-     * @return  undefined
-     */
-    handleFetchMetadataForModelsFailed : function(args) {
-        // TODO: implement
-        alert('An error occurred while trying to retreive the model list.');
     },
 
     /**

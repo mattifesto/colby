@@ -5,25 +5,3 @@
 .CBAdminPageForModelsUI .menu > * {
     margin: 0 5px;
 }
-
-.CBAdminPageForModelsUI h1 {
-    padding:    20px 0;
-    text-align: center;
-}
-
-.CBAdminPageForModelsUI table {
-    margin:     0 auto;
-    width:      960px;
-}
-
-.CBAdminPageForModelsUI td a + a {
-    margin-left: 5px;
-}
-
-.CBModelRow > td {
-    padding: 3px 5px;
-}
-
-.CBModelRowSelected {
-    background-color: hsl(60, 100%, 90%);
-}
