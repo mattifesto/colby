@@ -36,8 +36,6 @@ var CBAdminPageForModels = {
         menu.className              = "menu";
         var button                  = document.createElement("button");
         button.textContent          = "New";
-        var editButton              = document.createElement("button");
-        editButton.textContent      = "Edit";
         var exportButton            = document.createElement("button");
         exportButton.textContent    = "Export";
         var importInput             = document.createElement("input");
@@ -69,8 +67,6 @@ var CBAdminPageForModels = {
             selectElement : select
         }));
 
-        editButton.addEventListener("click", CBAdminPageForModels.handleEditClicked);
-
         exportButton.addEventListener("click", CBAdminPageForModels.handleExportClicked);
 
         importButton.addEventListener("click", importInput.click.bind(importInput));
@@ -96,7 +92,6 @@ var CBAdminPageForModels = {
 
         menu.appendChild(select);
         menu.appendChild(button);
-        menu.appendChild(editButton);
         menu.appendChild(exportButton);
         menu.appendChild(importInput);
         menu.appendChild(importButton);
@@ -137,21 +132,6 @@ var CBAdminPageForModels = {
         formData.append("pageNumber",   1);
         xhr.open("POST", "/api/?class=CBAdminPageForModels&function=fetchModelSummaryListForClassName");
         xhr.send(formData);
-    },
-
-    /**
-     * @return undefined
-     */
-    handleEditClicked : function() {
-        var ID = localStorage.getItem("CBSelectedModelID");
-
-        if (ID === null) {
-            return;
-        }
-
-        var URL = "/admin/models/edit/?ID=" + ID;
-
-        window.location.href = URL;
     },
 
     /**
