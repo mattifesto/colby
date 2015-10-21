@@ -1,0 +1,10 @@
+.CBNavigationView {
+
+}
+
+.CBNavigationView nav {
+    background-color: hsl(0, 0%, 95%);
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+}
