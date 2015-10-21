@@ -31,7 +31,7 @@ var CBAdminPageForModels = {
      */
     createUI : function() {
         var element                 = document.createElement("div");
-        element.className           = "CBAdminPageForModelsUI"
+        element.className           = "CBAdminPageForModelsUI";
         var menu                    = document.createElement("div");
         menu.className              = "menu";
         var button                  = document.createElement("button");
@@ -49,6 +49,19 @@ var CBAdminPageForModels = {
         var title                   = document.createElement("h1");
         var models                  = document.createElement("div");
         models.className            = "models";
+
+        // New UI
+
+        var navigationView = CBNavigationViewFactory.createView();
+
+        element.appendChild(navigationView.element);
+
+        navigationView.navigate({
+            element : CBEditableModelClassesViewFactory.createElement({}, navigationView),
+            title : "Editable Model Classes",
+        });
+
+        // Old UI
 
         button.addEventListener("click", CBAdminPageForModels.handleNewClicked.bind(undefined, {
             selectElement : select

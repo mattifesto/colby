@@ -66,7 +66,9 @@ EOT;
         CBHTMLOutput::begin();
         CBHTMLOutput::setTitleHTML('Edit');
         CBHTMLOutput::setDescriptionHTML('Edit models');
-
+        CBHTMLOutput::addCSSURL(CBSystemURL . '/javascript/CBNavigationViewFactory.css');
+        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBNavigationViewFactory.js');
+        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditableModelClassesViewFactory.js');
         CBHTMLOutput::addCSSURL(self::URL('CBAdminPageForModels.css'));
         CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForModels.js'));
         CBHTMLOutput::exportVariable('CBClassMenuItems', self::classMenuItems());
