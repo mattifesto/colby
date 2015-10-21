@@ -27,7 +27,7 @@ final class CBAdminPageForModels {
     /**
      * @return {stdClass}
      */
-    public static function fetchMetadataForModelsForAjax() {
+    public static function fetchModelSummaryListForClassNameForAjax() {
         $response                   = new CBAjaxResponse();
         $className                  = $_POST['className'];
         $classNameAsSQL             = CBDB::stringToSQL($className);
@@ -42,7 +42,7 @@ final class CBAdminPageForModels {
 
 EOT;
 
-        $response->metadataForModels    = CBDB::SQLToObjects($SQL);
+        $response->modelSummaryList     = CBDB::SQLToObjects($SQL);
         $response->wasSuccessful        = true;
         $response->send();
     }
@@ -50,7 +50,7 @@ EOT;
     /**
      * @return {stdClass}
      */
-    public static function fetchMetadataForModelsForAjaxPermissions() {
+    public static function fetchModelSummaryListForClassNameForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
@@ -68,7 +68,10 @@ EOT;
         CBHTMLOutput::setDescriptionHTML('Edit models');
         CBHTMLOutput::addCSSURL(CBSystemURL . '/javascript/CBNavigationViewFactory.css');
         CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBNavigationViewFactory.js');
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditableModelClassesViewFactory.js');
+        CBHTMLOutput::addCSSURL(CBSystemURL . '/javascript/CBModelListViewFactory.css');
+        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBModelListViewFactory.js');
+        CBHTMLOutput::addCSSURL(CBSystemURL . '/javascript/CBModelClassListViewFactory.css');
+        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBModelClassListViewFactory.js');
         CBHTMLOutput::addCSSURL(self::URL('CBAdminPageForModels.css'));
         CBHTMLOutput::addJavaScriptURL(self::URL('CBAdminPageForModels.js'));
         CBHTMLOutput::exportVariable('CBClassMenuItems', self::classMenuItems());

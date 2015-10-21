@@ -57,7 +57,9 @@ var CBAdminPageForModels = {
         element.appendChild(navigationView.element);
 
         navigationView.navigate({
-            element : CBEditableModelClassesViewFactory.createElement({}, navigationView),
+            element : CBModelClassListViewFactory.createElement({
+                navigate : navigationView.navigate,
+            }),
             title : "Editable Model Classes",
         });
 
@@ -133,7 +135,7 @@ var CBAdminPageForModels = {
 
         formData.append("className",    className);
         formData.append("pageNumber",   1);
-        xhr.open("POST", "/api/?class=CBAdminPageForModels&function=fetchMetadataForModels");
+        xhr.open("POST", "/api/?class=CBAdminPageForModels&function=fetchModelSummaryListForClassName");
         xhr.send(formData);
     },
 
@@ -185,7 +187,7 @@ var CBAdminPageForModels = {
 
             var table = document.createElement("table");
 
-            response.metadataForModels.forEach(function(metadataForModel) {
+            response.modelSummaryList.forEach(function(metadataForModel) {
                 table.appendChild(CBAdminPageForModels.createModelRow({
                     metadataForModel : metadataForModel
                 }));
