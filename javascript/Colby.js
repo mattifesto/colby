@@ -7,6 +7,16 @@ var Colby = {
                     'July', 'August', 'September', 'October', 'November', 'December'],
 
     /**
+     * @param {string} text
+     *
+     * @return undefined
+     */
+    alert : function(text) {
+        Colby.setPanelText(text);
+        Colby.showPanel();
+    },
+
+    /**
      * @return undefined
      */
     displayResponse : function(response) {
