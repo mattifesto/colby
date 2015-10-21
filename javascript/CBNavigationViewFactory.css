@@ -3,8 +3,10 @@
 }
 
 .CBNavigationView nav {
+    align-items: center;
     background-color: hsl(0, 0%, 95%);
+    border-bottom: 1px solid hsl(0, 0%, 80%);
     display: flex;
     justify-content: space-between;
-    padding: 5px;
+    min-height: 44px;
 }
