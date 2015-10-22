@@ -52,7 +52,7 @@ var CBModelClassListViewFactory = {
             classNameForModels : state.classNameForModels,
             xhr : xhr,
         });
-        xhr.open("POST", "/api/?class=CBAdminPageForModels&function=fetchModelSummaryListForClassName");
+        xhr.open("POST", "/api/?class=CBAdminPageForModels&function=fetchInfoForModels");
         xhr.send(formData);
     },
 
@@ -78,7 +78,7 @@ var CBModelClassListViewFactory = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            args.fetchInfoForModelsDidLoad(response.modelSummaryList);
+            args.fetchInfoForModelsDidLoad(response.infoForModels);
         } else {
             Colby.displayResponse(response);
         }

@@ -27,14 +27,14 @@ final class CBAdminPageForModels {
     /**
      * @return {stdClass}
      */
-    public static function fetchModelSummaryListForClassNameForAjax() {
+    public static function fetchInfoForModelsForAjax() {
         $response                   = new CBAjaxResponse();
         $className                  = $_POST['className'];
         $classNameAsSQL             = CBDB::stringToSQL($className);
         $pageNumber                 = (int)$_POST['pageNumber'];
         $SQL                        = <<<EOT
 
-            SELECT      LOWER(HEX(`ID`)) AS `ID`, `created`, `modified`, `title`
+            SELECT      LOWER(HEX(`ID`)) AS `ID`, `className`, `created`, `modified`, `title`
             FROM        `CBModels`
             WHERE       `className` = {$classNameAsSQL}
             ORDER BY    `className`, `modified` DESC
@@ -42,15 +42,15 @@ final class CBAdminPageForModels {
 
 EOT;
 
-        $response->modelSummaryList     = CBDB::SQLToObjects($SQL);
-        $response->wasSuccessful        = true;
+        $response->infoForModels = CBDB::SQLToObjects($SQL);
+        $response->wasSuccessful = true;
         $response->send();
     }
 
     /**
      * @return {stdClass}
      */
-    public static function fetchModelSummaryListForClassNameForAjaxPermissions() {
+    public static function fetchInfoForModelsForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
