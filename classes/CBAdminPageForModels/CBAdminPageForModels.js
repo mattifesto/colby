@@ -156,5 +156,5 @@ var CBAdminPageForModels = {
         var main    = document.getElementsByTagName("main")[0];
         var editor  = CBAdminPageForModels.createUI();
         main.appendChild(editor);
-    })
+    });
 })();
