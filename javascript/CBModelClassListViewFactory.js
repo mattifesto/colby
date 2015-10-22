@@ -48,24 +48,12 @@ var CBModelClassListViewFactory = {
             fetchInfoForModelsDidLoad : args.fetchInfoForModelsDidLoad,
             xhr : xhr,
         });
-        xhr.onerror = CBModelClassListViewFactory.fetchInfoForModelsDidFail.bind(undefined, {
+        xhr.onerror = CBModelClassListViewFactory.fetchInfoForModelsDidNotLoad.bind(undefined, {
             classNameForModels : state.classNameForModels,
             xhr : xhr,
         });
         xhr.open("POST", "/api/?class=CBAdminPageForModels&function=fetchInfoForModels");
         xhr.send(formData);
-    },
-
-    /**
-     * @param {string} args.classNameForModels
-     * @param {XMLHttpRequest} args.xhr
-     *
-     * @return undefined
-     */
-    fetchInfoForModelsDidFail : function(args) {
-        Colby.alert("The model list for models with the class name \"" +
-            args.classNameForModels +
-            "\" failed to load.");
     },
 
     /**
@@ -82,6 +70,18 @@ var CBModelClassListViewFactory = {
         } else {
             Colby.displayResponse(response);
         }
+    },
+
+    /**
+     * @param {string} args.classNameForModels
+     * @param {XMLHttpRequest} args.xhr
+     *
+     * @return undefined
+     */
+    fetchInfoForModelsDidNotLoad : function(args) {
+        Colby.alert("The model list for models with the class name \"" +
+            args.classNameForModels +
+            "\" failed to load.");
     },
 
     /**
