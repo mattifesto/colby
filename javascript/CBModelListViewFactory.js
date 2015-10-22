@@ -59,13 +59,13 @@ var CBModelListViewFactory = {
      * @return undefined
      */
     fetchInfoForModels : function(args) {
-        var fetchInfoForModelsDidLoad = CBModelListViewFactory.fetchInfoForModelsDidLoad.bind(undefined, {
+        var fetchInfoForModelsDidLoadCallback = CBModelListViewFactory.fetchInfoForModelsDidLoad.bind(undefined, {
             listElement : args.listElement,
             fetchInfoForModelsCallback : args.fetchInfoForModelsCallback,
         });
 
         args.fetchInfoForModelsCallback({
-            fetchInfoForModelsDidLoad : fetchInfoForModelsDidLoad
+            fetchInfoForModelsDidLoadCallback : fetchInfoForModelsDidLoadCallback
         });
     },
 

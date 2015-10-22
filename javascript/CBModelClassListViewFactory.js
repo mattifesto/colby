@@ -34,7 +34,7 @@ var CBModelClassListViewFactory = {
 
     /**
      * @param {string} state.classNameForModels
-     * @param {function} args.fetchInfoForModelsDidLoad
+     * @param {function} args.fetchInfoForModelsDidLoadCallback
      *
      * @return undefined
      */
@@ -45,7 +45,7 @@ var CBModelClassListViewFactory = {
 
         var xhr = new XMLHttpRequest();
         xhr.onload = CBModelClassListViewFactory.fetchInfoForModelsDidLoad.bind(undefined, {
-            fetchInfoForModelsDidLoad : args.fetchInfoForModelsDidLoad,
+            fetchInfoForModelsDidLoadCallback : args.fetchInfoForModelsDidLoadCallback,
             xhr : xhr,
         });
         xhr.onerror = CBModelClassListViewFactory.fetchInfoForModelsDidNotLoad.bind(undefined, {
@@ -57,7 +57,7 @@ var CBModelClassListViewFactory = {
     },
 
     /**
-     * @param {function} args.fetchInfoForModelsDidLoad
+     * @param {function} args.fetchInfoForModelsDidLoadCallback
      * @param {XMLHttpRequest} args.xhr
      *
      * @return undefined
@@ -66,7 +66,7 @@ var CBModelClassListViewFactory = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            args.fetchInfoForModelsDidLoad(response.infoForModels);
+            args.fetchInfoForModelsDidLoadCallback(response.infoForModels);
         } else {
             Colby.displayResponse(response);
         }
