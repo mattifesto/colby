@@ -192,42 +192,27 @@ Colby.centsToDollars = function(cents)
 /**
  * @return null
  */
-Colby.createPanel = function()
-{
-    var panel                   = document.createElement("div");
-    panel.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-    panel.style.bottom          = "0px";
-    panel.style.left            = "0px";
-    panel.style.position        = "fixed";
-    panel.style.right           = "0px";
-    panel.style.top             = "0px";
-    panel.style.zIndex          = 1000;
+Colby.createPanel = function() {
+    var panel = document.createElement("div");
+    panel.className = "CBPanelView"
+    var container = document.createElement("div");
+    container.className = "CBPanelContainer";
+    var content = document.createElement("div");
+    content.className = "CBPanelContent";
+    var buttonView = document.createElement("div");
+    buttonView.className = "CBPanelButtonView";
+    var button = document.createElement("button");
+    button.textContent = "Dismiss";
 
-    var content                     = document.createElement("div");
-    content.style.backgroundColor   = "white";
-    content.style.color             = "black";
-    content.style.margin            = "50px auto 0px";
-    content.style.overflow          = "scroll";
-    content.style.maxHeight         = "50%";
-    content.style.padding           = "20px";
-    content.style.width             = "720px";
-    panel.appendChild(content);
+    buttonView.appendChild(button);
+    container.appendChild(content);
+    container.appendChild(buttonView);
+    panel.appendChild(container);
 
-    var buttonContainer                     = document.createElement("div");
-    var button                              = document.createElement("button");
-    var buttonText                          = document.createTextNode("Dismiss");
-    buttonContainer.style.backgroundColor   = "white";
-    buttonContainer.style.textAlign         = "center";
-    buttonContainer.style.margin            = "0px auto";
-    buttonContainer.style.padding           = "20px";
-    buttonContainer.style.width             = "720px";
-    buttonContainer.appendChild(button);
     button.addEventListener("click", Colby.hidePanel);
-    button.appendChild(buttonText);
-    panel.appendChild(buttonContainer);
 
-    Colby.panel                 = panel;
-    Colby.panelContent          = content;
+    Colby.panel = panel;
+    Colby.panelContent = content;
 };
 
 /**
@@ -434,43 +419,33 @@ Colby.setPanelContent = function(text)
 };
 
 /**
- * @return void
+ * @return undefined
  */
-Colby.setPanelElement = function(element)
-{
-    if (!Colby.panel)
-    {
+Colby.setPanelElement = function(element) {
+    if (Colby.panel === undefined) {
         Colby.createPanel();
     }
 
-    while (Colby.panelContent.lastChild)
-    {
-        Colby.panelContent.removeChild(Colby.panelContent.lastChild);
-    }
-
+    Colby.panelContent.textContent = null;
     Colby.panelContent.appendChild(element);
 };
 
 /**
- * @return void
+ * @return undefined
  */
-Colby.setPanelText = function(text)
-{
+Colby.setPanelText = function(text) {
     Colby.setPanelElement(document.createTextNode(text));
 };
 
 /**
- * @return void
+ * @return undefined
  */
-Colby.showPanel = function()
-{
-    if (!Colby.panel)
-    {
+Colby.showPanel = function() {
+    if (Colby.panel === undefined) {
         Colby.createPanel();
     }
 
-    if (!Colby.panel.parentNode)
-    {
+    if (!Colby.panel.parentNode) {
         document.body.appendChild(Colby.panel);
     }
 };
@@ -594,7 +569,11 @@ Colby.updateTimestampForElementWithId = function(timestamp, id)
     Colby.beginUpdatingTimes();
 };
 
-if (document.addEventListener) // disable for IE8 and earlier
-{
+(function() {
+    var link    = document.createElement("link");
+    link.rel    = "stylesheet";
+    link.href   = "/colby/javascript/Colby.css";
+
+    document.head.appendChild(link);
     document.addEventListener('DOMContentLoaded', Colby.handleContentLoaded, false);
-}
+})();
