@@ -110,7 +110,7 @@ var CBResponsiveEditorFactory = {
 (function() {
     var link    = document.createElement("link");
     link.rel    = "stylesheet";
-    link.href   = "/colby/javascript/CBResponsiveEditorFactory.css"
+    link.href   = "/colby/javascript/CBResponsiveEditorFactory.css";
 
     document.head.appendChild(link);
 })();
