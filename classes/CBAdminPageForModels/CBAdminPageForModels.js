@@ -31,7 +31,7 @@ var CBAdminPageForModels = {
             element : CBModelClassListViewFactory.createElement({
                 navigate : navigationView.navigate,
             }),
-            title : "Editable Model Classes",
+            title : "Classes of Models",
         });
 
         // Old UI

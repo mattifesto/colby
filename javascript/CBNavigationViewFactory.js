@@ -28,7 +28,6 @@ var CBNavigationViewFactory = {
 
         nav.appendChild(back);
         nav.appendChild(title);
-        nav.appendChild(document.createElement("div"));
         element.appendChild(nav);
         element.appendChild(content);
 
@@ -64,7 +63,7 @@ var CBNavigationViewFactory = {
             });
         }
 
-        state.backElement.textContent = state.titleElement.textContent;
+        state.backElement.textContent = (state.titleElement.textContent.length) > 0 ? "< " + state.titleElement.textContent : '';
         state.contentElement.textContent = null;
         state.contentElement.appendChild(args.element);
         state.titleElement.textContent = args.title;
@@ -82,7 +81,7 @@ var CBNavigationViewFactory = {
                 var index = state.stack.length - 1;
                 state.backElement.textContent = state.stack[index].title;
             } else {
-                state.backElement.textContent = null;
+                state.backElement.textContent = "";
             }
         }
     },
