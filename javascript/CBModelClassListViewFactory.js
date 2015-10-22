@@ -38,17 +38,17 @@ var CBModelClassListViewFactory = {
      *
      * @return undefined
      */
-    fetchModelSummaryList : function(state, args) {
+    fetchInfoForModels : function(state, args) {
         var formData = new FormData();
         formData.append("className", state.classNameForModels);
         formData.append("pageNumber", 1);
 
         var xhr = new XMLHttpRequest();
-        xhr.onload = CBModelClassListViewFactory.fetchModelSummaryListDidLoad.bind(undefined, {
+        xhr.onload = CBModelClassListViewFactory.fetchInfoForModelsDidLoad.bind(undefined, {
             fetchInfoForModelsDidLoad : args.fetchInfoForModelsDidLoad,
             xhr : xhr,
         });
-        xhr.onerror = CBModelClassListViewFactory.fetchModelSummaryListDidError.bind(undefined, {
+        xhr.onerror = CBModelClassListViewFactory.fetchInfoForModelsDidFail.bind(undefined, {
             classNameForModels : state.classNameForModels,
             xhr : xhr,
         });
@@ -62,7 +62,7 @@ var CBModelClassListViewFactory = {
      *
      * @return undefined
      */
-    fetchModelSummaryListDidError : function(args) {
+    fetchInfoForModelsDidFail : function(args) {
         Colby.alert("The model list for models with the class name \"" +
             args.classNameForModels +
             "\" failed to load.");
@@ -74,7 +74,7 @@ var CBModelClassListViewFactory = {
      *
      * @return undefined
      */
-    fetchModelSummaryListDidLoad : function(args) {
+    fetchInfoForModelsDidLoad : function(args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
@@ -93,7 +93,7 @@ var CBModelClassListViewFactory = {
      */
     navigateToModelListView : function(args) {
         var modelListViewElement = CBModelListViewFactory.createElement({
-            fetchInfoForModelsCallback : CBModelClassListViewFactory.fetchModelSummaryList.bind(undefined, {
+            fetchInfoForModelsCallback : CBModelClassListViewFactory.fetchInfoForModels.bind(undefined, {
                 classNameForModels : args.listClassName,
             }),
         });
