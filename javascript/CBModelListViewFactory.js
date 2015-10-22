@@ -3,7 +3,7 @@
 var CBModelListViewFactory = {
 
     /**
-     * @param {function} fetchListItems
+     * @param {function} fetchListItemsCallback
      *
      * @return {Element}
      */
@@ -15,7 +15,7 @@ var CBModelListViewFactory = {
 
         CBModelListViewFactory.fetchListItems({
             listElement : container,
-            fetchListItems : args.fetchListItems,
+            fetchListItemsCallback : args.fetchListItemsCallback,
         });
 
         element.appendChild(container);
@@ -54,24 +54,24 @@ var CBModelListViewFactory = {
 
     /**
      * @param {Element} args.listElement
-     * @param {function} args.fetchListItems
+     * @param {function} args.fetchListItemsCallback
      *
      * @return undefined
      */
     fetchListItems : function(args) {
         var fetchListItemsDidLoad = CBModelListViewFactory.fetchListItemsDidLoad.bind(undefined, {
             listElement : args.listElement,
-            fetchListItems : args.fetchListItems,
+            fetchListItemsCallback : args.fetchListItemsCallback,
         });
 
-        args.fetchListItems({
+        args.fetchListItemsCallback({
             fetchListItemsDidLoad : fetchListItemsDidLoad
         });
     },
 
     /**
      * @param {Element} args.listElement
-     * @param {function} args.fetchListItems
+     * @param {function} args.fetchListItemsCallback
      *
      * @return undefined
      */

@@ -93,7 +93,7 @@ var CBModelClassListViewFactory = {
      */
     navigateToModelListView : function(args) {
         var modelListViewElement = CBModelListViewFactory.createElement({
-            fetchListItems : CBModelClassListViewFactory.fetchModelSummaryList.bind(undefined, {
+            fetchListItemsCallback : CBModelClassListViewFactory.fetchModelSummaryList.bind(undefined, {
                 classNameForModels : args.listClassName,
             }),
         });
