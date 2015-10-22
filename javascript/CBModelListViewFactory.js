@@ -3,7 +3,7 @@
 var CBModelListViewFactory = {
 
     /**
-     * @param {function} fetchListItemsCallback
+     * @param {function} fetchInfoForModelsCallback
      *
      * @return {Element}
      */
@@ -13,9 +13,9 @@ var CBModelListViewFactory = {
         var container = document.createElement("div");
         container.className = "container";
 
-        CBModelListViewFactory.fetchListItems({
+        CBModelListViewFactory.fetchInfoForModels({
             listElement : container,
-            fetchListItemsCallback : args.fetchListItemsCallback,
+            fetchInfoForModelsCallback : args.fetchInfoForModelsCallback,
         });
 
         element.appendChild(container);
@@ -54,28 +54,28 @@ var CBModelListViewFactory = {
 
     /**
      * @param {Element} args.listElement
-     * @param {function} args.fetchListItemsCallback
+     * @param {function} args.fetchInfoForModelsCallback
      *
      * @return undefined
      */
-    fetchListItems : function(args) {
-        var fetchListItemsDidLoad = CBModelListViewFactory.fetchListItemsDidLoad.bind(undefined, {
+    fetchInfoForModels : function(args) {
+        var fetchInfoForModelsDidLoad = CBModelListViewFactory.fetchInfoForModelsDidLoad.bind(undefined, {
             listElement : args.listElement,
-            fetchListItemsCallback : args.fetchListItemsCallback,
+            fetchInfoForModelsCallback : args.fetchInfoForModelsCallback,
         });
 
-        args.fetchListItemsCallback({
-            fetchListItemsDidLoad : fetchListItemsDidLoad
+        args.fetchInfoForModelsCallback({
+            fetchInfoForModelsDidLoad : fetchInfoForModelsDidLoad
         });
     },
 
     /**
      * @param {Element} args.listElement
-     * @param {function} args.fetchListItemsCallback
+     * @param {function} args.fetchInfoForModelsCallback
      *
      * @return undefined
      */
-    fetchListItemsDidLoad : function(args, listItems) {
+    fetchInfoForModelsDidLoad : function(args, listItems) {
         args.listElement.textContent = null;
 
         listItems.forEach(function(listItem) {
@@ -85,7 +85,7 @@ var CBModelListViewFactory = {
             }));
         });
 
-        var callback = CBModelListViewFactory.fetchListItems.bind(undefined, args);
+        var callback = CBModelListViewFactory.fetchInfoForModels.bind(undefined, args);
 
         window.setTimeout(callback, 30000);
     },
