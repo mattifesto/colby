@@ -18,7 +18,7 @@ $pagesMenu->search              = newMenuItem('Search', '/admin/pages/search/');
 $pagesMenu->trash               = newMenuItem('Trash', '/admin/pages/trash/');
 
 $CBAdminMenu->pages             = newMenuItem('Pages', '/admin/pages/unpublished/', $pagesMenu);
-$CBAdminMenu->edit              = newMenuItem('Edit', '/admin/models/');
+$CBAdminMenu->edit              = newMenuItem('Edit', '/admin/models/directory/');
 
 $helpMenu                   = new stdClass();
 $menuItemID                 = 'markaround-syntax';

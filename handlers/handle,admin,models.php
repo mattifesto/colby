@@ -1,3 +1,0 @@
-<?php
-
-CBAdminPageForModels::renderModelAsHTML();
