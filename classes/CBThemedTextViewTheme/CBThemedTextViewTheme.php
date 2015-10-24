@@ -46,6 +46,18 @@ final class CBThemedTextViewTheme {
     }
 
     /**
+     * @return {string}
+     */
+    public static function info() {
+        return (object)[
+            'pluralTitle' => 'Themed Text View Themes',
+            'pluralTitleAsHTML' => 'Themed Text View Themes',
+            'singularTitle' => 'Themed Text View Theme',
+            'singularTitleAsHTML' => 'Themed Text View Theme'
+        ];
+    }
+
+    /**
      * This function replaces the strings "view" or ".view" with the CSS
      * class name for the CBThemedTextViewTheme. The string "\view" will not be
      * replaced.
