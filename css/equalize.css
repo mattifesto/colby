@@ -12,11 +12,10 @@
 
 html {
     font-size:                  16px;               /* 1 */
-    height:                     100%;               /* 2 */
-    overflow-y:                 scroll;             /* 3 */
-    text-rendering:             optimizeLegibility; /* 4 */
-    -ms-text-size-adjust:       100%;               /* 5 */
-    -webkit-text-size-adjust:   100%;               /* 5 */
+    overflow-y:                 scroll;             /* 2 */
+    text-rendering:             optimizeLegibility; /* 3 */
+    -ms-text-size-adjust:       100%;               /* 4 */
+    -webkit-text-size-adjust:   100%;               /* 4 */
 }
 
 body {
@@ -27,7 +26,7 @@ body {
     flex-direction:         column;                 /* 2 */
     -ms-flex-direction:     column;
     -webkit-flex-direction: column;
-    min-height:             100%;                   /* 3 */
+    min-height:             100vh;                  /* 3 */
     position:               relative;               /* 4 */
 }
 
@@ -38,7 +37,7 @@ body > * {
 }
 
 body > .flex-fill {
-    flex:                   1 0 auto;               /* 6 (IE10 = no)*/
+    flex:                   1 0 auto;               /* 6 (IE10 = no) */
     -ms-flex:               1 0 auto;
     -webkit-flex:           1 0 auto;
 }
@@ -100,15 +99,22 @@ Footnotes
 
 html:
 
-1.  The value `16px` matches the default size used by most, if not all, browsers but it can be changed by the user in browser preferences. This guarantees that it is the value because most layouts can't really handle a root change of a font size. With the high quality zoom support that browsers have today, accessibility is not as much of a concern with regard to font size.
+1.  The value `16px` matches the default size used by most, if not all, browsers
+but it can be changed by the user in browser preferences. This guarantees that
+it is the value because most layouts can't really handle a root change of a font
+size. With the high quality zoom support that browsers have today, accessibility
+is not as much of a concern with regard to font size.
 
-2.  This rule makes the height of the `html` element always equal to the height of the viewport. Having this explicit height is important because it allows the `body` to have a `min-height` property of `100%`. This will not work if the `html` element specifies it's height using `min-height`.
+2.  This forces a scrollbar to appear at all times on browsers that have
+scrollbars so that the layout does not shift between shorter and longer pages
+that may otherwise toggle the scrollbar's presence.
 
-3.  This forces a scrollbar to appear at all times on browsers that have scrollbars so that the layout does not shift between shorter and longer pages that may otherwise toggle the scrollbar's presence.
+3.  Setting the `text-rendering` property to "optimizeLegibility" allows basic
+font ligatures to be used. This behavior might eventually be on by default.
 
-4.  Setting the `text-rendering` property to "optimizeLegibility" allows basic font ligatures to be used. This behavior might eventually be on by default.
-
-5.  These rules prevent phone browsers from resizing text to a minimum size based on phone heuristics. This generally breaks the layout and degrades the experience rather then helping the user.
+4.  These rules prevent phone browsers from resizing text to a minimum size
+based on phone heuristics. This generally breaks the layout and degrades the
+experience rather then helping the user.
 
 
 body:
