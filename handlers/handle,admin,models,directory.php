@@ -6,12 +6,12 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
 
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
-CBHTMLOutput::setTitleHTML('Edit');
-CBHTMLOutput::setDescriptionHTML('Edit models');
+CBHTMLOutput::setTitleHTML('Model Directory');
+CBHTMLOutput::setDescriptionHTML('A list of model classes');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/CBUI.css');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,models,directory.css');
 
-$spec = (object)['selectedMenuItemName' => 'edit'];
+$spec = (object)['selectedMenuItemName' => 'models'];
 CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>
