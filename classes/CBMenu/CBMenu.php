@@ -30,6 +30,18 @@ final class CBMenu {
     }
 
     /**
+     * @return {string}
+     */
+    public static function info() {
+        return (object)[
+            'pluralTitle' => 'Menus',
+            'pluralTitleAsHTML' => 'Menus',
+            'singularTitle' => 'Menu',
+            'singularTitleAsHTML' => 'Menu'
+        ];
+    }
+
+    /**
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
