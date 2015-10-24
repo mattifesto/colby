@@ -8,8 +8,31 @@ var CBAdminPageForEditingModels = {
      * @return  {Element}
      */
     createEditor : function(args) {
-        var element         = document.createElement("pre");
+        var element = document.createElement("pre");
         element.textContent = JSON.stringify(args.spec, null, 4);
+
+        return element;
+    },
+
+    /**
+     * @param {Object} args.spec
+     *
+     * @return {Element}
+     */
+    createHeader : function(args) {
+        var element = document.createElement("div");
+        element.className = "CBUIHeader";
+        var left = document.createElement("div");
+        left.className = "left";
+        var center = document.createElement("div");
+        center.className = "center";
+        center.textContent = (window.CBModelClassInfo ? CBModelClassInfo.singularTitle : args.spec.className) + " Editor";
+        var right = document.createElement("div");
+        right.className = "right";
+
+        element.appendChild(left);
+        element.appendChild(center);
+        element.appendChild(right);
 
         return element;
     },
@@ -189,7 +212,7 @@ var CBAdminPageForEditingModels = {
     },
 
     /**
-     * @param {Object} spec
+     * @param {Object} args.spec
      *
      * @return undefined
      */
@@ -200,6 +223,10 @@ var CBAdminPageForEditingModels = {
             info : {},
             spec : args.spec
         });
+
+        main.appendChild(CBAdminPageForEditingModels.createHeader({
+            spec: args.spec
+        }));
 
         main.appendChild(editorFactory.createEditor({
             handleSpecChanged : handleSpecChanged,

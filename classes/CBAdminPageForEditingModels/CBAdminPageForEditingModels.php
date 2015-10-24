@@ -69,9 +69,15 @@ class CBAdminPageForEditingModels {
         CBHTMLOutput::setTitleHTML('Edit Model');
         CBHTMLOutput::setDescriptionHTML('Edit a model');
         CBHTMLOutput::begin();
+        CBHTMLOutput::addCSSURL(CBSystemURL . '/css/CBUI.css');
 
         CBHTMLOutput::exportVariable('CBModelID',           $args->ID);
         CBHTMLOutput::exportVariable('CBModelClassName',    $args->className);
+
+        if (is_callable($function = "{$args->className}::info")) {
+            CBHTMLOutput::exportVariable('CBModelClassInfo', call_user_func($function));
+        }
+
         CBAdminPageForEditingModels::loadEditingResourcesForClassName($args->className);
         CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBEditorWidget.css');
         CBHTMLOutput::addJavaScriptURL( CBSystemURL  . '/javascript/CBEditorWidgetFactory.js');
@@ -79,10 +85,10 @@ class CBAdminPageForEditingModels {
         CBHTMLOutput::addJavaScriptURL( CBAdminPageForEditingModels::URL('CBAdminPageForEditingModels.js'));
 
         $spec                           = new stdClass();
-        $spec->selectedMenuItemName     = 'edit';
+        $spec->selectedMenuItemName     = 'models';
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
-        echo '<main class="CBAdminPageForEditingModels"></main>';
+        echo '<main class="CBAdminPageForEditingModels CBUIRoot"></main>';
 
         CBAdminPageFooterView::renderModelAsHTML();
         CBHTMLOutput::render();
