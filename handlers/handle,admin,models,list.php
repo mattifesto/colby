@@ -9,23 +9,42 @@ if (!isset($_GET['class'])) {
     exit;
 }
 
+$classNameForModels = $_GET['class'];
+
+if (is_callable($function = "{$classNameForModels}::info")) {
+    $info = call_user_func($function);
+    $title = $info->pluralTitle;
+    $titleAsHTML = $info->pluralTitleAsHTML;
+} else {
+    $title = $classNameForModels;
+    $titleAsHTML = ColbyConvert::textToHTML($title);
+}
+
+
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
-CBHTMLOutput::setTitleHTML('Edit');
-CBHTMLOutput::setDescriptionHTML('Edit models');
+CBHTMLOutput::setTitleHTML("{$titleAsHTML}");
+CBHTMLOutput::setDescriptionHTML("A list of {$titleAsHTML}");
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/CBUI.css');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,models,directory.css');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,models,list.css');
 
-$spec = (object)['selectedMenuItemName' => 'edit'];
+$spec = (object)['selectedMenuItemName' => 'models'];
 CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>
 
 <div class="CBUIRoot">
+    <div class="CBUIHeader">
+        <div class="left"></a></div>
+        <div class="center"><?= $titleAsHTML ?></div>
+        <div class="right">
+            <div class="CBUIHeaderAction" onclick="CBHandleAdminModelsList.handleNewClicked();">New</div>
+        </div>
+    </div>
     <div class="CBUIHalfSpace"></div>
     <div class="CBUISection">
         <?php foreach (CBHandleAdminModelsList::infoForModels() as $infoForModel) { ?>
-            <div class="CBUISectionItem CBModelClassSectionItem"
+            <div class="CBUISectionItem"
                  onclick="window.location = '/admin/models/edit/?ID=<?= $infoForModel->ID ?>';">
                 <?= ColbyConvert::textToHTML($infoForModel->title); ?>
             </div>
@@ -37,6 +56,26 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 <?php
 
 CBAdminPageFooterView::renderModelAsHTML();
+
+?>
+
+<script>
+"use strict";
+
+var CBHandleAdminModelsList = {
+
+    /**
+     * @return  undefined
+     */
+    handleNewClicked : function(args) {
+        window.location.href = "/admin/models/edit/?className=" + <?= json_encode($classNameForModels) ?>;
+    },
+};
+
+</script>
+
+<?php
+
 CBHTMLOutput::render();
 
 /**
