@@ -11,6 +11,46 @@
     height: 22px;
 }
 
+.CBUIHeader {
+    background-color: hsl(0, 0%, 95%);
+    border-bottom: 1px solid hsl(0, 0%, 80%);
+    display: flex;
+    justify-content: space-between;
+    min-height: 44px;
+}
+
+.CBUIHeader > * {
+    box-sizing: border-box;
+    display: flex;
+}
+
+.CBUIHeader > :matches(.left, .right) {
+    flex: 1 1 1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.CBUIHeader :matches(.left, .right) .CBUIHeaderAction {
+    align-items: center;
+    display: flex;
+    color: hsl(210, 100%, 50%);
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.CBUIHeader > .right {
+    justify-content: flex-end;
+}
+
+.CBUIHeader > .center {
+    align-self: center;
+    flex: 0 1 auto;
+    font-weight: bold;
+    padding: 5px 0;
+    text-align: center;
+}
+
 .CBUISection {
     border-color: hsl(0, 0%, 80%);
     border-style: solid;
