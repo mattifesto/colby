@@ -106,8 +106,6 @@ function renderColbyPagesRowForID($ID)
         SELECT
             `id`,
             LOWER(HEX(`archiveID`)) as `archiveID`,
-            LOWER(HEX(`groupID`)) as `groupID`,
-            LOWER(HEX(`typeID`)) as `typeID`,
             `URI`,
             `titleHTML`,
             `subtitleHTML`,

@@ -17,90 +17,6 @@ $spec->selectedMenuItemName     = 'develop';
 $spec->selectedSubmenuItemName  = 'documents';
 CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
-$sql = <<<EOT
-
-    SELECT
-        LOWER(HEX(`groupID`)) as `groupId`,
-        LOWER(HEX(`typeID`)) as `typeId`,
-        LOWER(HEX(`archiveID`)) as `archiveId`
-    FROM
-        `ColbyPages`
-    WHERE
-        `className` IS NULL
-    ORDER BY
-        `groupID`, `typeID`
-
-EOT;
-
-$result = Colby::query($sql);
-
-/**
- * Aggregate data to simplify report generation.
- */
-
-$documentGroupNamesForHTML = [];
-$documentTypeNamesForHTML = [];
-
-while ($row = $result->fetch_object())
-{
-    if (!isset($sections) ||
-        $row->groupId != $section->groupId ||
-        $row->typeId != $section->typeId)
-    {
-        if (!isset($sections)) {
-            $sections = [];
-        }
-
-        $section = new stdClass();
-
-        /**
-         * Get the group name.
-         */
-
-        if (!$row->groupId)
-        {
-            $section->groupNameHTML = 'No Group';
-        }
-        else if (!isset($documentGroupNamesForHTML[$row->groupId]))
-        {
-            $section->groupNameHTML = 'Unknown';
-            $documentGroupNamesForHTML[$row->groupId] = $section->groupNameHTML;
-        }
-        else
-        {
-            $section->groupNameHTML = $documentGroupNamesForHTML[$row->groupId];
-        }
-
-        /**
-         * Get the type name.
-         */
-
-        if (!$row->typeId)
-        {
-            $section->typeNameHTML = 'No Type';
-        }
-        else if (!isset($documentTypeNamesForHTML[$row->typeId]))
-        {
-            $section->typeNameHTML = 'Unknown';
-            $documentTypeNamesForHTML[$row->typeId] = $section->typeNameHTML;
-        }
-        else
-        {
-            $section->typeNameHTML = $documentTypeNamesForHTML[$row->typeId];
-        }
-
-        $section->groupId = $row->groupId;
-        $section->typeId = $row->typeId;
-        $section->archiveIds = new ArrayObject();
-
-        $sections[] = $section;
-    }
-
-    $section->archiveIds->append($row->archiveId);
-}
-
-$result->free();
-
 ?>
 
 <nav style="text-align: center; margin-bottom: 20px;">
@@ -123,38 +39,25 @@ $result->free();
 
     UnpublishedPagesWithURIsView::renderModelAsHTML();
 
-    if (isset($sections)) {
+    $SQL = <<< EOT
 
-        echo '<section><h1>ColbyPages Rows with a NULL `className`</h1>';
+        SELECT  HEX(`archiveID`) as `ID`
+        FROM    `ColbyPages`
+        WHERE   `className` IS NULL
 
-        foreach ($sections as $section)
-        {
-            ?>
+EOT;
 
-            <section class="group-type">
-                <header>
-                    <h1>Group: <?php echo $section->groupNameHTML; ?></h1>
-                    <div class="hash"><?php echo $section->groupId; ?></div>
-                    <h1>Type: <?php echo $section->typeNameHTML; ?></h1>
-                    <div class="hash"><?php echo $section->typeId; ?></div>
-                    <h2>Count: <?php echo $section->archiveIds->count(); ?></h2>
-                </header>
+    $IDs = CBDB::SQLToArray($SQL);
 
-                <?php
+    if (count($IDs) > 0) {
 
-                foreach ($section->archiveIds as $archiveId)
-                {
-                    echo linkForArchiveId($archiveId), "\n";
-                }
+        echo '<section><h1>ColbyPages Rows with a NULL `className`</h1><div>';
 
-                ?>
-
-            </section>
-
-            <?php
+        foreach ($IDs as $ID) {
+            echo linkForArchiveId($ID), "\n";
         }
 
-        echo '</section>';
+        echo '</div></section>';
     }
 
     ?>

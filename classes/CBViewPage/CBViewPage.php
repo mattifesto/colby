@@ -78,9 +78,9 @@ EOT;
     }
 
     /**
-     * @return stdClass
+     * @return {stdClass}
      */
-    private static function compileSpecificationModelToSummaryViewModel($model) {
+    private static function modelToSummaryViewModel($model) {
         $summaryViewModel                       = CBPageSummaryView::specToModel();
         $summaryViewModel->created              = $model->created;
         $summaryViewModel->dataStoreID          = $model->dataStoreID;
@@ -540,17 +540,7 @@ EOT;
             }
 
             $iteration  = $spec->iteration;
-            $model      = self::specToModel($spec);
-
-            if ($model->isPublished) {
-                $preferredURI = isset($spec->URI) ? $spec->URI : $ID;
-            } else {
-                $preferredURI = null;
-            }
-
-            $actualURIs         = CBPages::updateURIs(['preferredURIs' => [$ID => $preferredURI]]);
-            $model->URI         = $actualURIs[$ID];
-            $model->URIAsHTML   = $model->URI === null ? null : ColbyConvert::textToHTML($model->URI);
+            $model      = CBViewPage::specToModel($spec);
 
             self::updateDatabase([
                 'model'             => $model,
@@ -654,6 +644,8 @@ EOT;
         $model->thumbnailURL            = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null;
         $model->title                   = isset($spec->title) ? $spec->title : '';
         $model->updated                 = isset($spec->updated) ? $spec->updated : $model->created;
+        $model->URI                     = isset($spec->URI) ? trim($spec->URI) : '';
+        $model->URI                     = $model->URI !== '' ? $model->URI : $model->dataStoreID;
 
         /**
          * Views
@@ -672,12 +664,7 @@ EOT;
         $model->descriptionHTML         = ColbyConvert::textToHTML($model->description);
         $model->thumbnailURLAsHTML      = ColbyConvert::textToHTML($model->thumbnailURL);
         $model->titleHTML               = ColbyConvert::textToHTML($model->title);
-
-        /**
-         * The URI and URIAsHTML values will be set in the save function
-         * because the values are dependent on whether the URI is available or
-         * not.
-         */
+        $model->URIAsHTML               = ColbyConvert::textToHTML($model->URI);
 
         return $model;
     }
@@ -726,19 +713,18 @@ EOT;
         $model = $updatePageLists = false;
         extract($args, EXTR_IF_EXISTS);
 
-        $summaryViewModel           = self::compileSpecificationModelToSummaryViewModel($model);
+        $summaryViewModel           = CBViewPage::modelToSummaryViewModel($model);
         $rowData                    = new stdClass();
         $rowData->className         = 'CBViewPage';
         $rowData->classNameForKind  = $model->classNameForKind;
         $rowData->ID                = $model->dataStoreID;
         $rowData->keyValueData      = json_encode($summaryViewModel);
-        $rowData->typeID            = null;
-        $rowData->groupID           = null;
         $rowData->iteration         = $model->iteration;
         $rowData->titleHTML         = $model->titleHTML;
-        $rowData->searchText        = self::modelToSearchText($model);
+        $rowData->searchText        = CBViewPage::modelToSearchText($model);
         $rowData->subtitleHTML      = $model->descriptionHTML;
         $rowData->thumbnailURL      = $model->thumbnailURLAsHTML;
+        $rowData->URI               = $model->URI;
 
         if ($model->isPublished) {
             $rowData->published         = $model->publicationTimeStamp;

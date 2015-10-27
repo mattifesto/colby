@@ -138,8 +138,6 @@ $sqls[] = <<<EOT
         `keyValueData`          LONGTEXT NOT NULL,
         `className`             VARCHAR(80),
         `classNameForKind`      VARCHAR(80),
-        `typeID`                BINARY(20),
-        `groupID`               BINARY(20),
         `iteration`             BIGINT UNSIGNED NOT NULL DEFAULT 1,
         `URI`                   VARCHAR(100),
         `titleHTML`             TEXT NOT NULL,
@@ -151,7 +149,7 @@ $sqls[] = <<<EOT
         `publishedMonth`        MEDIUMINT,
         PRIMARY KEY (`ID`),
         UNIQUE KEY `archiveID` (`archiveID`),
-        UNIQUE KEY `stub` (`URI`),
+        KEY `URI_published` (`URI`, `published`),
         KEY `classNameForKind_publishedMonth_published` (`classNameForKind`, `publishedMonth`, `published`),
         CONSTRAINT `ColbyPages_publishedBy`
             FOREIGN KEY (`publishedBy`)
@@ -177,8 +175,6 @@ $sqls[] = <<<EOT
         `keyValueData`          LONGTEXT NOT NULL,
         `className`             VARCHAR(80),
         `classNameForKind`      VARCHAR(80),
-        `typeID`                BINARY(20),
-        `groupID`               BINARY(20),
         `iteration`             BIGINT UNSIGNED NOT NULL DEFAULT 1,
         `URI`                   VARCHAR(100),
         `titleHTML`             TEXT NOT NULL,
@@ -270,6 +266,9 @@ CBUpgradesForVersion134::run();
 
 // 2015.04.04
 CBUpgradesForVersion136::run();
+
+// 2015.10.26
+CBUpgradesForVersion172::run();
 
 /**
  *

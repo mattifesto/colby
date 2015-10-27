@@ -18,7 +18,6 @@ class CBUnitTests {
             ['CBModelCache'],
             ['CBModels',    'fetchModelByID'],
             ['CBModels',    'fetchModelsByID'],
-            ['CBPages',     'updateURIs'],
             ['CBSitePreferences'],
             ['CBUnit'],
             ['CBViewPage',  'save']];

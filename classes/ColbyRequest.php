@@ -110,33 +110,24 @@ EOT;
     }
 
     /**
-     * @return stdClass
+     * @return {stdClass} | false
      */
-    public static function CBPagesRowForURI($URI)
-    {
-        $URIAsSQL   = ColbyConvert::textToSQL($URI);
+    public static function CBPagesRowForURI($URI) {
+        $URIAsSQL   = CBDB::stringToSQL($URI);
         $SQL        = <<<EOT
 
-            SELECT
-                LOWER(HEX(`archiveID`)) as `dataStoreID`,
-                `className`,
-                `iteration`,
-                LOWER(HEX(`typeID`)) as `typeID`,
-                LOWER(HEX(`groupID`)) as `groupID`
-            FROM
-                `ColbyPages`
-            WHERE
-                `URI` = '{$URIAsSQL}' AND
-                `published` IS NOT NULL
+            SELECT      LOWER(HEX(`archiveID`)) as `ID`,
+                        `className`,
+                        `iteration`
+            FROM        `ColbyPages`
+            WHERE       `URI` = {$URIAsSQL} AND
+                        `published` IS NOT NULL
+            ORDER BY    `published` ASC
+            LIMIT       1
 
 EOT;
 
-        $result = Colby::query($SQL);
-        $row    = $result->fetch_object();
-
-        $result->free();
-
-        return $row;
+        return CBDB::SQLToObject($SQL);
     }
 
     ///
@@ -248,12 +239,12 @@ EOT;
 
             if (!$handlerFilename && COLBY_MYSQL_DATABASE) {
                 $URI        = implode('/', self::$decodedStubs);
-                $row        = self::CBPagesRowForURI($URI);
+                $row        = ColbyRequest::CBPagesRowForURI($URI);
 
                 if ($row) {
                     self::canonicalizeRequestURI();
 
-                    call_user_func("{$row->className}::renderAsHTMLForID", $row->dataStoreID, $row->iteration);
+                    call_user_func("{$row->className}::renderAsHTMLForID", $row->ID, $row->iteration);
 
                     return;
                 }
