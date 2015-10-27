@@ -55,9 +55,21 @@
     border-color: hsl(0, 0%, 80%);
     border-style: solid;
     border-width: 1px 0;
+    box-sizing: border-box;
     margin: 0 auto;
     max-width: 640px;
     overflow: hidden;
+}
+
+.CBUISectionHeader {
+    box-sizing: border-box;
+    color: hsl(0, 0%, 40%);
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0 auto;
+    max-width: 640px;
+    padding: 5px 10px;
+    text-transform: uppercase;
 }
 
 @media all and (min-width: 641px) {

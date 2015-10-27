@@ -5,6 +5,72 @@ final class CBAdminPageForGeneral {
     /**
      * @return null
      */
+    public static function renderDuplicatePublishedURIWarnings() {
+        $SQL = <<<EOT
+
+            SELECT      `URI`
+            FROM        `ColbyPages`
+            WHERE       `published` IS NOT NULL
+            GROUP BY    `URI`
+            HAVING      COUNT(*) > 1
+
+EOT;
+
+        $URIs = CBDB::SQLToArray($SQL);
+
+        if (!empty($URIs)) {
+            ?>
+
+            <div class="CBUIHalfSpace"></div>
+            <h1 class="CBUISectionHeader">Duplicate URI Warnings</h1>
+            <div class="CBUISection">
+
+                <?php
+
+                foreach ($URIs as $URI) {
+                    CBAdminPageForGeneral::renderDuplicatePublishedURIWarningForURI($URI);
+                }
+
+                ?>
+
+            </div>
+            <div class="CBUIHalfSpace"></div>
+
+            <?php
+        }
+    }
+
+    /**
+     * @return null
+     */
+    public static function renderDuplicatePublishedURIWarningForURI($URI) {
+        $URIAsSQL = CBDB::stringToSQL($URI);
+        $SQL = <<<EOT
+
+            SELECT      `keyValueData`
+            FROM        `ColbyPages`
+            WHERE       `URI` = {$URIAsSQL} AND
+                        `published` IS NOT NULL
+            ORDER BY    `published` ASC
+
+EOT;
+
+        $data = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+
+        echo '<div class="CBUISectionItem CBURIItem">';
+        echo '<div class="URI">URI: ', ColbyConvert::textToHTML($data[0]->URI), '</div>';
+
+        foreach ($data as $datum) {
+            $editURL = CBSiteURL . "/admin/pages/edit/?data-store-id={$datum->dataStoreID}";
+            echo "<div>{$datum->titleHTML} <a href=\"{$editURL}\">edit</a></div>";
+        }
+
+        echo '</div>';
+    }
+
+    /**
+     * @return null
+     */
     public static function renderSiteConfigurationIssuesView() {
         if (!ColbyUser::current()->isOneOfThe('Developers')) {
             echo '<!-- CBSiteConfigurationIssuesView -->';

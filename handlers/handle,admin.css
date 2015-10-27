@@ -31,6 +31,7 @@ section.widget > div {
 
 
 section.widget .version-numbers {
+    background-color: white;
     text-align: center;
 }
 
@@ -54,6 +55,14 @@ section.widget .version-number .number {
 
 section.widget .version-number + .version-number {
     border-left: 1px solid #dddddd;
+}
+
+/**
+ * CBAdminPageDuplicateURIsView
+ */
+
+.CBURIItem {
+    padding: 10px;
 }
 
 /**

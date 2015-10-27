@@ -10,6 +10,7 @@ CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Website Status');
 CBHTMLOutput::setDescriptionHTML('The status of the website');
+CBHTMLOutput::addCSSURL(CBSystemURL . '/css/CBUI.css');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 
 $spec                           = new stdClass();
@@ -19,22 +20,31 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 ?>
 
-<div class="CBLibraryListView CBSystemFont">
+<main class="CBUIRoot">
+    <div class="CBLibraryListView CBSystemFont">
+        <?php
+
+        $adminWidgetFilenames = Colby::globSnippets('admin-widget-*.php');
+
+        foreach ($adminWidgetFilenames as $adminWidgetFilename)
+        {
+            include $adminWidgetFilename;
+        }
+
+        ?>
+    </div>
+
     <?php
 
-    $adminWidgetFilenames = Colby::globSnippets('admin-widget-*.php');
+    CBAdminPageForGeneral::renderDuplicatePublishedURIWarnings();
 
-    foreach ($adminWidgetFilenames as $adminWidgetFilename)
-    {
-        include $adminWidgetFilename;
-    }
+    CBAdminPageForGeneral::renderSiteConfigurationIssuesView();
 
     ?>
-</div>
+
+</main>
 
 <?php
-
-CBAdminPageForGeneral::renderSiteConfigurationIssuesView();
 
 CBAdminPageFooterView::renderModelAsHTML();
 
