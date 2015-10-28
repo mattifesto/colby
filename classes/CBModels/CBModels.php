@@ -335,7 +335,7 @@ EOT;
         array_walk($tuples, function($tuple) use ($initialDataByID, $modified) {
             $ID                     = $tuple->spec->ID;
             $tuple->model->ID       = $ID;
-            $title                  = isset($tuple->spec->title) ? $tuple->spec->title : '';
+            $title                  = CBModels::specToTitle($tuple->spec);
             $tuple->spec->created   = $tuple->model->created    = $initialDataByID[$ID]->created;
             $tuple->spec->modified  = $tuple->model->modified   = $modified;
             $tuple->spec->title     = $tuple->model->title      = $title;
@@ -449,5 +449,15 @@ EOT;
         Colby::query($SQL);
 
         Colby::query('DROP TEMPORARY TABLE `CBModelsTemp`');
+    }
+
+    /**
+     * If it becomes necessary in the future a function `stringToTitle` can be
+     * added and then called by this function. At this time that is not useful.
+     *
+     * @return {string}
+     */
+    public static function specToTitle(stdClass $spec) {
+        return isset($spec->title) ? trim($spec->title) : '';
     }
 }
