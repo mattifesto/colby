@@ -24,6 +24,9 @@ class CBDataStoreTests {
         }
     }
 
+    /**
+     * @return null
+     */
     public static function toURLTest() {
         $ID         = '25c4a69a256a778ff892c60779a31ee1025b1e68';
         $URL        = CBDataStore::toURL(['ID' => $ID]);
