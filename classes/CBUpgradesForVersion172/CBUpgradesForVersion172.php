@@ -35,5 +35,6 @@ EOT;
 
         Colby::query('ALTER TABLE `CBPagesInTheTrash` DROP COLUMN `typeID`');
         Colby::query('ALTER TABLE `CBPagesInTheTrash` DROP COLUMN `groupID`');
+        Colby::query('ALTER TABLE `CBPagesInTheTrash` CHANGE COLUMN `dataStoreID` `archiveID` BINARY(20) NOT NULL');
     }
 }

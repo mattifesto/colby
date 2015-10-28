@@ -116,84 +116,6 @@ $sqls[] = <<<EOT
 
 EOT;
 
-
-/**
- * The `ColbyPages` table contains one row for each page for most of the pages
- * on a website. Pages implemented entirely with PHP handlers do not need to
- * have a row in `ColbyPages` to display, but they will need to have a row to
- * be found via search or to be included in various lists of pages generated
- * using the table, including the site map.
- *
- * This table is meant to be as generically useful and unchanging as possible.
- * Changes to this table will only be made to fix bugs, simplify it, or extend
- * it where there is universal and obvious need.
- */
-
-$sqls[] = <<<EOT
-
-    CREATE TABLE IF NOT EXISTS `ColbyPages`
-    (
-        `ID`                    BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-        `archiveID`             BINARY(20) NOT NULL,
-        `keyValueData`          LONGTEXT NOT NULL,
-        `className`             VARCHAR(80),
-        `classNameForKind`      VARCHAR(80),
-        `iteration`             BIGINT UNSIGNED NOT NULL DEFAULT 1,
-        `URI`                   VARCHAR(100),
-        `titleHTML`             TEXT NOT NULL,
-        `subtitleHTML`          TEXT NOT NULL,
-        `thumbnailURL`          VARCHAR(200),
-        `searchText`            LONGTEXT,
-        `published`             BIGINT,
-        `publishedBy`           BIGINT UNSIGNED,
-        `publishedMonth`        MEDIUMINT,
-        PRIMARY KEY (`ID`),
-        UNIQUE KEY `archiveID` (`archiveID`),
-        KEY `URI_published` (`URI`, `published`),
-        KEY `classNameForKind_publishedMonth_published` (`classNameForKind`, `publishedMonth`, `published`),
-        CONSTRAINT `ColbyPages_publishedBy`
-            FOREIGN KEY (`publishedBy`)
-            REFERENCES `ColbyUsers` (`id`)
-    )
-    ENGINE=InnoDB
-    DEFAULT CHARSET=utf8
-    COLLATE=utf8_unicode_ci
-
-EOT;
-
-
-/**
- *
- */
-
-$sqls[] = <<<EOT
-
-    CREATE TABLE IF NOT EXISTS `CBPagesInTheTrash`
-    (
-        `ID`                    BIGINT UNSIGNED NOT NULL,
-        `dataStoreID`           BINARY(20) NOT NULL,
-        `keyValueData`          LONGTEXT NOT NULL,
-        `className`             VARCHAR(80),
-        `classNameForKind`      VARCHAR(80),
-        `iteration`             BIGINT UNSIGNED NOT NULL DEFAULT 1,
-        `URI`                   VARCHAR(100),
-        `titleHTML`             TEXT NOT NULL,
-        `subtitleHTML`          TEXT NOT NULL,
-        `thumbnailURL`          VARCHAR(200),
-        `searchText`            LONGTEXT,
-        `published`             BIGINT,
-        `publishedBy`           BIGINT UNSIGNED,
-        `publishedMonth`        MEDIUMINT,
-        PRIMARY KEY (`ID`),
-        UNIQUE KEY `dataStoreID` (`dataStoreID`)
-    )
-    ENGINE=InnoDB
-    DEFAULT CHARSET=utf8
-    COLLATE=utf8_unicode_ci
-
-EOT;
-
-
 /**
  *
  */
@@ -254,18 +176,6 @@ foreach ($sqls as $sql) {
 }
 
 CBImages::update();
-
-// 2015.02.11
-CBUpgradesForVersion119::run();
-
-// 2015.02.21
-CBUpgradesForVersion123::run();
-
-// 2015.03.31
-CBUpgradesForVersion134::run();
-
-// 2015.04.04
-CBUpgradesForVersion136::run();
 
 // 2015.10.26
 CBUpgradesForVersion172::run();

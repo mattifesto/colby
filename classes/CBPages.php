@@ -9,6 +9,52 @@
 class CBPages {
 
     /**
+     * @return null
+     */
+    public static function createPagesTable($args = []) {
+        $name = 'ColbyPages'; $temporary = false;
+        extract($args, EXTR_IF_EXISTS);
+
+        if (preg_match('/[^a-zA-Z0-9]/', $name)) {
+            throw new InvalidArgumentException('name');
+        }
+
+        $options = $temporary ? 'TEMPORARY' : '';
+        $SQL = <<<EOT
+
+            CREATE {$options} TABLE IF NOT EXISTS `{$name}` (
+                `ID`                    BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+                `archiveID`             BINARY(20) NOT NULL,
+                `keyValueData`          LONGTEXT NOT NULL,
+                `className`             VARCHAR(80),
+                `classNameForKind`      VARCHAR(80),
+                `iteration`             BIGINT UNSIGNED NOT NULL DEFAULT 1,
+                `URI`                   VARCHAR(100),
+                `titleHTML`             TEXT NOT NULL,
+                `subtitleHTML`          TEXT NOT NULL,
+                `thumbnailURL`          VARCHAR(200),
+                `searchText`            LONGTEXT,
+                `published`             BIGINT,
+                `publishedBy`           BIGINT UNSIGNED,
+                `publishedMonth`        MEDIUMINT,
+                PRIMARY KEY     (`ID`),
+                UNIQUE KEY      `archiveID` (`archiveID`),
+                KEY             `URI_published` (`URI`, `published`),
+                KEY             `classNameForKind_publishedMonth_published` (`classNameForKind`, `publishedMonth`, `published`),
+                CONSTRAINT      `ColbyPages_publishedBy`
+                    FOREIGN KEY (`publishedBy`)
+                    REFERENCES  `ColbyUsers` (`id`)
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8
+            COLLATE=utf8_unicode_ci
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
      * @return void
      */
     public static function deleteRowWithDataStoreID($dataStoreID)
@@ -74,6 +120,8 @@ EOT;
      * @return null
      */
     public static function install() {
+        CBPages::createPagesTable();
+        CBPages::createPagesTable(['name' => 'CBPagesInTheTrash']);
         CBPagesPreferences::install();
     }
 
@@ -286,6 +334,18 @@ EOT;
         $sql = implode(' ', $sql);
 
         return $sql;
+    }
+
+    /**
+     * @return {string}
+     *
+     * "////Piñata///Örtega Smith//" --> "pinata/ortega-smith"
+     */
+    public static function stringToDencodedURIPath($string) {
+        $stubs = CBRequest::decodedPathToDecodedStubs($string);
+        $stubs = array_map('ColbyConvert::textToStub', $stubs);
+        $stubs = array_filter($stubs, function($stub) { return !empty($stub); });
+        return implode('/', $stubs);
     }
 
     /**
