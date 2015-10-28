@@ -63,14 +63,22 @@ final class CBRequest {
     /**
      * @return {string}
      */
-    public static function requestURIToDecodedPath($requestURI = null) {
+    public static function decodedPathToCanonicalEncodedPath($decodedPath) {
+        $stubs = CBRequest::decodedPathToDecodedStubs($decodedPath);
+        $stubs = array_map('rawurlencode', $stubs);
+        $path = implode('/', $stubs);
+        return "/{$path}/";
+    }
+
+    /**
+     * @return {string}
+     */
+    public static function requestURIToOriginalEncodedPath($requestURI = null) {
         $requestURI = ($requestURI !== null) ? $requestURI : $_SERVER['REQUEST_URI'];
 
         preg_match('/^(.*?)(\?.*)?$/', $requestURI, $matches);
 
-        $originalEncodedPath = $matches[1];
-
-        return urldecode($originalEncodedPath);
+        return $matches[1];
     }
 
     /**

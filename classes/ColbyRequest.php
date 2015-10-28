@@ -11,68 +11,20 @@ final class ColbyRequest {
     // example:
     // /foo bar/piñata/post/
 
-    private static $encodedStubs;
-    // type: array
-    // example:
-    // foo+bar, pi%C3%B1ata, post
-
     private static $decodedStubs;
     // type: array
     // example:
     // foo bar, piñata, post
 
-    ///
-    /// construct a canonical URI using decoded stubs
-    /// compare this agains a decoded request URI
-    /// if the don't  match then
-    /// 1) construct a canonical URI using encoded data
-    /// 2) append the original query string
-    /// 3) and finally redirect the browser to the canonical URL
-    ///
-    public static function canonicalizeRequestURI()
-    {
-        $countOfDecodedStubs = count(self::$decodedStubs);
-        $canonicalDecodedURI = '/';
+    private static $encodedStubs;
+    // type: array
+    // example:
+    // foo%20bar, pi%C3%B1ata, post
 
-        // construct cononical URI using decoded stubs
-
-        if (   1 === $countOfDecodedStubs
-            && 'index.php' === self::$decodedStubs[0])
-        {
-            // canonical URI is still '/'
-        }
-        else if ($countOfDecodedStubs > 0)
-        {
-            $canonicalDecodedURI = '/' .
-                implode('/', self::$decodedStubs) .
-                '/';
-        }
-
-        if (self::$decodedPath !== $canonicalDecodedURI)
-        {
-            // 1) construct a canonical URI using encoded data
-
-            if ('/' === $canonicalDecodedURI)
-            {
-                $canonicalEncodedURI = '/';
-            }
-            else
-            {
-                $canonicalEncodedURI = '/' .
-                    implode('/', self::$encodedStubs) .
-                    '/';
-            }
-
-            // 2) append the original query string
-
-            $redirectURI = $canonicalEncodedURI . CBRequest::requestURIToOriginalEncodedQueryString();
-
-            // 3) and finally redirect the browser to the canonical URL
-
-            header('Location: ' . $redirectURI, true, 301);
-            exit;
-        }
-    }
+    private static $originalEncodedPath;
+    // type: stríng
+    // example:
+    // /foo+bar/pi%C3%B1ata/post/
 
     /**
      * This function only returns the current iteration because it's needed
@@ -112,7 +64,8 @@ EOT;
 
             SELECT      LOWER(HEX(`archiveID`)) as `ID`,
                         `className`,
-                        `iteration`
+                        `iteration`,
+                        `URI`
             FROM        `ColbyPages`
             WHERE       `URI` = {$URIAsSQL} AND
                         `published` IS NOT NULL
@@ -143,134 +96,83 @@ EOT;
      * @return void
      */
     public static function handleRequest() {
-        $countOfStubs       = count(self::$decodedStubs);
-        $handlerFilename    = null;
+        $canonicalEncodedPath = '';
+        $countOfStubs = count(self::$decodedStubs);
+        $function = null;
 
-        // handle front page request
-
-        if (0 === $countOfStubs)
+        if ((0 === $countOfStubs) ||
+            (1 === $countOfStubs && 'index.php' === self::$decodedStubs[0]))
         {
-            $dataStore          = new CBDataStore(CBPageTypeID);
-            $frontPageFilename  = $dataStore->directory() . '/front-page.json';
+            $canonicalEncodedPath = '/';
+            $function = function() {
+                $filepath = CBDataStore::filepath([
+                    'ID' => CBPageTypeID,
+                    'filename' => 'front-page.json'
+                ]);
 
-            if (file_exists($frontPageFilename)) {
-                $frontPage  = json_decode(file_get_contents($frontPageFilename));
-                $row        = self::CBPagesRowForID($frontPage->dataStoreID);
+                if (file_exists($filepath)) {
+                    $frontPage  = json_decode(file_get_contents($filepath));
+                    $row        = ColbyRequest::CBPagesRowForID($frontPage->dataStoreID);
 
-                CBViewPage::renderAsHTMLForID($frontPage->dataStoreID, $row->iteration);
+                    CBViewPage::renderAsHTMLForID($frontPage->dataStoreID, $row->iteration);
+                    return 1;
+                } else {
+                    return include Colby::findHandler('handle-front-page.php');
+                }
+            };
+        } else if (1 === $countOfStubs && 'robots.txt' === self::$decodedStubs[0]) {
+            $canonicalEncodedPath = '/robots.txt';
+            $function = function() {
+                return include CBSystemDirectory . '/handlers/handle-robots.php';
+            };
+        } else if (1 === $countOfStubs && 'sitemap.xml' === self::$decodedStubs[0]) {
+            $canonicalEncodedPath = '/sitemap.xml';
+            $function = function() {
+                return include CBSystemDirectory . '/handlers/handle-sitemap.php';
+            };
+        } else {
+            $canonicalEncodedPath = implode('/', self::$encodedStubs);
+            $canonicalEncodedPath = "/{$canonicalEncodedPath}/";
+            $allStubs = implode(',', self::$encodedStubs);
+            $firstStub = self::$encodedStubs[0];
 
-                return;
+            if ($allStubsHandlerFilepath = Colby::findHandler("handle,{$allStubs}.php")) {
+                $function = function() use ($allStubsHandlerFilepath) {
+                    return include $allStubsHandlerFilepath;
+                };
+            } else if ($firstStubHandlerFilepath = Colby::findHandler("handle,{$firstStub},.php")) {
+                $function = function() use ($firstStubHandlerFilepath) {
+                    return include $firstStubHandlerFilepath;
+                };
             } else {
-                /**
-                 * This code is mostly deprecated. Not sure about first run scenarios.
-                 */
+                $URIForSearch = implode('/', self::$decodedStubs);
+                $row = ColbyRequest::CBPagesRowForURI($URIForSearch);
 
-                $handlerFilename = Colby::findHandler('handle-front-page.php');
+                if ($row && is_callable("{$row->className}::renderAsHTMLForID")) {
+                    $canonicalEncodedPath = CBRequest::decodedPathToCanonicalEncodedPath($row->URI);
+                    $function = function() use ($row) {
+                        call_user_func("{$row->className}::renderAsHTMLForID", $row->ID, $row->iteration);
+                        return 1;
+                    };
+                }
             }
         }
 
-        // redirect requests for
-        //   http://example.com/index.php
-        // to
-        //   http://example.com/
-
-        else if (   1 === $countOfStubs
-                 && 'index.php' === self::$decodedStubs[0])
-        {
-            self::canonicalizeRequestURI();
-
-            // canonicalizeRequestURI() will exit for us
-            // because the URL definitely needs to change in this case
-            // the exit here should never be reached
-            // but it's place here to make intentions clear
-
-            exit;
-        }
-
-        /**
-         * robots.txt
-         *  If a `robots.txt` file actually exists in the web root directory
-         *  this code path will never be taken.
-         */
-        else if (self::$decodedPath === '/robots.txt') {
-            include CBSystemDirectory . '/handlers/handle-robots.php';
-            exit;
-        }
-
-        /**
-         * sitemap.xml
-         */
-        else if (self::$decodedPath === '/sitemap.xml') {
-            include CBSystemDirectory . '/handlers/handle-sitemap.php';
-            exit;
-        }
-
-        // search for handler files
-        // handler filenames use encoded stubs
-        // (no spaces or special characters)
-        //
-        // 1. check for "every stub" URL handler
-        // 2. check for "first stub" multi-URL handler
-        // 3. Check whether page is displayable without a stub related handler.
-
-        else {
-            // 1. check for "every stub" URL handler
-
-            $stubsPart = implode(',', self::$encodedStubs);
-
-            $handlerFilename = Colby::findHandler("handle,{$stubsPart}.php");
-
-            // 2. check for "first stub" multi-URL handler
-
-            if (!$handlerFilename)
-            {
-                $firstStub = self::$encodedStubs[0];
-
-                $handlerFilename = Colby::findHandler("handle,{$firstStub},.php");
-            }
-
-            // 3. Check whether page is displayable without a stub related handler.
-
-            if (!$handlerFilename && COLBY_MYSQL_DATABASE) {
-                $URI        = implode('/', self::$decodedStubs);
-                $row        = ColbyRequest::CBPagesRowForURI($URI);
-
-                if ($row) {
-                    self::canonicalizeRequestURI();
-
-                    call_user_func("{$row->className}::renderAsHTMLForID", $row->ID, $row->iteration);
-
+        if ($function) {
+            if (self::$originalEncodedPath !== $canonicalEncodedPath) {
+                $redirectURI = $canonicalEncodedPath . CBRequest::requestURIToOriginalEncodedQueryString();
+                header('Location: ' . $redirectURI, true, 301);
+                exit;
+            } else {
+                if (call_user_func($function) === 1) {
                     return;
                 }
             }
         }
 
-        if ($handlerFilename) {
-
-            /**
-             * At this point we know that this is a valid set of stubs but the
-             * URL may not be canonical. Calling `canonicalizeRequestURI` will
-             * return if the URI is canonical or it will redirect and end the
-             * process if the URI isn't canonical.
-             */
-
-            self::canonicalizeRequestURI();
-
-            $result = include($handlerFilename);
-
-            if (1 === $result) {
-
-                /**
-                 * The handler file was included successfully so we're done.
-                 */
-
-                return;
-            }
-        }
-
         /**
-         * Either no valid handler was found or the handler returned a value
-         * indicating that the page wasn't found.
+         * Either no page was found or the function returned a value other than
+         * 1 which indicates that the page doesn't exist.
          */
 
         include Colby::findHandler('handle-default.php');
@@ -280,7 +182,8 @@ EOT;
      * @return null
      */
     public static function initialize() {
-        self::$decodedPath = CBRequest::requestURIToDecodedPath();
+        self::$originalEncodedPath = CBRequest::requestURIToOriginalEncodedPath();
+        self::$decodedPath = urldecode(self::$originalEncodedPath);
         self::$decodedStubs = CBRequest::decodedPathToDecodedStubs(self::$decodedPath);
         self::$encodedStubs = array_map('urlencode', self::$decodedStubs);
     }
