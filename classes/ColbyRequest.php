@@ -6,15 +6,10 @@
  */
 final class ColbyRequest {
 
-    private static $decodedRequestURI;
+    private static $decodedPath;
     // type: stríng
     // example:
     // /foo bar/piñata/post/
-
-    private static $requestQueryString;
-    // type: string
-    // example:
-    // ?user=bob+jones
 
     private static $encodedStubs;
     // type: array
@@ -53,7 +48,7 @@ final class ColbyRequest {
                 '/';
         }
 
-        if (self::$decodedRequestURI !== $canonicalDecodedURI)
+        if (self::$decodedPath !== $canonicalDecodedURI)
         {
             // 1) construct a canonical URI using encoded data
 
@@ -70,8 +65,7 @@ final class ColbyRequest {
 
             // 2) append the original query string
 
-            $redirectURI = $canonicalEncodedURI .
-                self::$requestQueryString;
+            $redirectURI = $canonicalEncodedURI . CBRequest::requestURIToOriginalEncodedQueryString();
 
             // 3) and finally redirect the browser to the canonical URL
 
@@ -198,7 +192,7 @@ EOT;
          *  If a `robots.txt` file actually exists in the web root directory
          *  this code path will never be taken.
          */
-        else if (self::$decodedRequestURI === '/robots.txt') {
+        else if (self::$decodedPath === '/robots.txt') {
             include CBSystemDirectory . '/handlers/handle-robots.php';
             exit;
         }
@@ -206,7 +200,7 @@ EOT;
         /**
          * sitemap.xml
          */
-        else if (self::$decodedRequestURI === '/sitemap.xml') {
+        else if (self::$decodedPath === '/sitemap.xml') {
             include CBSystemDirectory . '/handlers/handle-sitemap.php';
             exit;
         }
@@ -282,65 +276,13 @@ EOT;
         include Colby::findHandler('handle-default.php');
     }
 
-    ///
-    /// this function should be run only once
-    /// it is run automatically when ColbyRequest is first included
-    ///
-    public static function initialize()
-    {
-        // step 1: separate url from query string
-        //
-        // $matches[1]: encoded request URI
-        // $matches[2]: query string (may or may not be present)
-
-        preg_match('/^(.*?)(\?.*)?$/',
-            $_SERVER['REQUEST_URI'],
-            $matches);
-
-        // step 2: decode request URI
-
-        self::$decodedRequestURI = urldecode($matches[1]);
-
-        if (isset($matches[2]))
-        {
-            self::$requestQueryString = $matches[2];
-        }
-        else
-        {
-            self::$requestQueryString = '';
-        }
-
-        // step 3: get decoded stubs
-        //
-        // note: PREG_SPLIT_NO_EMPTY
-        //       this will prevent preg_split from returning empty stubs
-        //       from before the first and after the last slash
-        //
-        // note: repeated slashes are treated as one: '[\/]+'
-        //       if there are repeated slashes the URL is not canonical
-        //       and will be rewritten
-        //
-        // preg_split will return an empty array if there aren't any stubs
-
-        self::$decodedStubs = preg_split('/[\/]+/',
-            self::$decodedRequestURI,
-            null,
-            PREG_SPLIT_NO_EMPTY);
-
-        // step 4: re-encode stubs
-        //
-        // This is necessary because while the URI comes to us encoded
-        // it is not always fully encoded. For instance, often commas will not
-        // be encoded. Re-encoding the stubs canonicalizes the encoding so
-        // that our stubs are fully encoded the same way every time
-        // regardless of how we receive them.
-
-        self::$encodedStubs = array();
-
-        foreach (self::$decodedStubs as $decodedStub)
-        {
-            self::$encodedStubs[] = urlencode($decodedStub);
-        }
+    /**
+     * @return null
+     */
+    public static function initialize() {
+        self::$decodedPath = CBRequest::requestURIToDecodedPath();
+        self::$decodedStubs = CBRequest::decodedPathToDecodedStubs(self::$decodedPath);
+        self::$encodedStubs = array_map('urlencode', self::$decodedStubs);
     }
 
     /**

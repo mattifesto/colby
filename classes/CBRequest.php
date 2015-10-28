@@ -44,4 +44,43 @@ final class CBRequest {
             return '?' . implode('&', $pairs);
         }
     }
+
+    /**
+     * PREG_SPLIT_NO_EMPTY
+     * This will prevent preg_split from returning empty stubs from before the
+     * first and after the last slash.
+     *
+     * Repeated slashes are treated as one because of the '+' in '[\/]+'. If
+     * there are repeated slashes the URL is not canonical and will be
+     * rewritten.
+     *
+     * @return [{string}]
+     */
+    public static function decodedPathToDecodedStubs($decodedPath) {
+        return preg_split('/[\/]+/', $decodedPath, null, PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
+     * @return {string}
+     */
+    public static function requestURIToDecodedPath($requestURI = null) {
+        $requestURI = ($requestURI !== null) ? $requestURI : $_SERVER['REQUEST_URI'];
+
+        preg_match('/^(.*?)(\?.*)?$/', $requestURI, $matches);
+
+        $originalEncodedPath = $matches[1];
+
+        return urldecode($originalEncodedPath);
+    }
+
+    /**
+     * @return {string}
+     */
+    public static function requestURIToOriginalEncodedQueryString($requestURI = null) {
+        $requestURI = ($requestURI !== null) ? $requestURI : $_SERVER['REQUEST_URI'];
+
+        preg_match('/^(.*?)(\?.*)?$/', $requestURI, $matches);
+
+        return isset($matches[2]) ? $matches[2] : '';
+    }
 }
