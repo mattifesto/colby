@@ -20,6 +20,7 @@ class CBPages {
         }
 
         $options = $temporary ? 'TEMPORARY' : '';
+        $constraint = $temporary ? '' : ",CONSTRAINT `{$name}_publishedBy` FOREIGN KEY (`publishedBy`) REFERENCES `ColbyUsers` (`id`)";
         $SQL = <<<EOT
 
             CREATE {$options} TABLE IF NOT EXISTS `{$name}` (
@@ -40,10 +41,8 @@ class CBPages {
                 PRIMARY KEY     (`ID`),
                 UNIQUE KEY      `archiveID` (`archiveID`),
                 KEY             `URI_published` (`URI`, `published`),
-                KEY             `classNameForKind_publishedMonth_published` (`classNameForKind`, `publishedMonth`, `published`),
-                CONSTRAINT      `ColbyPages_publishedBy`
-                    FOREIGN KEY (`publishedBy`)
-                    REFERENCES  `ColbyUsers` (`id`)
+                KEY             `classNameForKind_publishedMonth_published` (`classNameForKind`, `publishedMonth`, `published`)
+                {$constraint}
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8
@@ -55,35 +54,35 @@ EOT;
     }
 
     /**
-     * @return void
+     * Deletes rows from the ColbyPages table. This function doesn't do any
+     * additional work, such as deleting a data store directory.
+     *
+     * @return null
      */
-    public static function deleteRowWithDataStoreID($dataStoreID)
-    {
-        $sql = self::sqlToDeleteRowWithDataStoreID($dataStoreID);
+    public static function deletePagesByID(array $IDs) {
+        if (empty($IDs)) { return; }
 
-        Colby::query($sql);
+        $IDsAsSQL = CBHex160::toSQL($IDs);
+
+        Colby::query("DELETE FROM `ColbyPages` WHERE `archiveID` IN ({$IDsAsSQL})");
     }
 
     /**
-     * @return void
+     * @deprecated use deletePagesByID
+     *
+     * @return null
      */
-    public static function deleteRowsWithDataStoreIDs($dataStoreIDs)
-    {
-        if (empty($dataStoreIDs))
-        {
-            return;
-        }
+    public static function deleteRowWithDataStoreID($dataStoreID) {
+        CBPages::deletePagesByID([$dataStoreID]);
+    }
 
-        $sqls = array();
-
-        foreach ($dataStoreIDs as $dataStoreID)
-        {
-            $sqls[] = self::sqlToDeleteRowWithDataStoreID($dataStoreID);
-        }
-
-        $sqls = implode(';', $sqls);
-
-        Colby::queries($sqls);
+    /**
+     * @deprecated use deletePagesByID
+     *
+     * @return null
+     */
+    public static function deleteRowsWithDataStoreIDs($dataStoreIDs) {
+        CBPages::deletePagesByID($dataStoreIDs);
     }
 
     /**
@@ -123,6 +122,35 @@ EOT;
         CBPages::createPagesTable();
         CBPages::createPagesTable(['name' => 'CBPagesInTheTrash']);
         CBPagesPreferences::install();
+    }
+
+    /**
+     * To avoid duplicating parameter validation that has almost certainly
+     * already occurred, this function mostly assumes its parameter values are
+     * valid for their use. This means it is a the responsibility of the caller
+     * to make sure this is true.
+     *
+     * For instance, the $model->titleAsHTML value is assumed to have already
+     * been escaped for use in HTML.
+     *
+     * @return {string}
+     */
+    public static function modelToRowValues(stdClass $model) {
+        $archiveID = CBHex160::toSQL($model->ID);
+        $keyValueData = "''"; // TODO
+        $className = CBDB::stringToSQL($model->className);
+        $classNameForKind = "''"; // Not sure if this will be used in the future
+        $iteration = 1;
+        $URI = isset($model->dencodedURIPath) ? CBDB::stringToSQL($model->dencodedURIPath) : CBDB::stringToSQL($model->ID);
+        $titleHTML = isset($model->titleAsHTML) ? CBDB::stringToSQL($model->titleAsHTML) : "''";
+        $subtitleHTML = isset($model->descriptionAsHTML) ? CBDB::stringToSQL($model->descriptionAsHTML) : "''";
+        $thumbnailURL = isset($model->encodedURLForThumbnail) ? CBDB::stringToSQL($model->encodedURLForThumbnail) : "''";
+        $searchText = "''"; // TODO
+        $published = isset($model->published) ? (int)$model->published : 'NULL';
+        $publishedBy = 'NULL'; // Not sure if this will be used in the future
+        $publishedMonth = isset($model->published) ? ColbyConvert::timestampToYearMonth($model->published) : 'NULL';
+
+        return "($archiveID, $keyValueData, $className, $classNameForKind, $iteration, $URI, $titleHTML, $subtitleHTML, $thumbnailURL, $searchText, $published, $publishedBy, $publishedMonth)";
     }
 
     /**
@@ -230,18 +258,106 @@ EOT;
     }
 
     /**
-     * @return void
+     * @param [{stdClass}] $models
+     *
+     * @return null
      */
-    public static function sqlToDeleteRowWithDataStoreID($dataStoreID) {
-        $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
-        $SQL = <<<EOT
+    public static function save(array $models) {
+        $values = array_map('CBPages::modelToRowValues', $models);
+        $values = implode(',', $values);
 
-            DELETE FROM `ColbyPages`
-            WHERE       `archiveID` = {$archiveIDForSQL}
+        CBPages::createPagesTable([
+            'name' => 'CBPagesTemporary',
+            'temporary' => true
+        ]);
+
+
+        try {
+            $SQL = <<<EOT
+
+                INSERT INTO `CBPagesTemporary` (
+                    `archiveID`,
+                    `keyValueData`,
+                    `className`,
+                    `classNameForKind`,
+                    `iteration`,
+                    `URI`,
+                    `titleHTML`,
+                    `subtitleHTML`,
+                    `thumbnailURL`,
+                    `searchText`,
+                    `published`,
+                    `publishedBy`,
+                    `publishedMonth`
+                )
+                VALUES {$values}
 
 EOT;
 
-        return $SQL;
+            Colby::query($SQL);
+
+            $SQL = <<<EOT
+
+                UPDATE  `ColbyPages`            AS `p`
+                JOIN    `CBPagesTemporary`      AS `t` ON `p`.`archiveID` = `t`.`archiveID`
+                SET     `p`.`keyValueData`      = `t`.`keyValueData`,
+                        `p`.`className`         = `t`.`className`,
+                        `p`.`classNameForKind`  = `t`.`classNameForKind`,
+                        `p`.`iteration`         = `t`.`iteration`,
+                        `p`.`URI`               = `t`.`URI`,
+                        `p`.`titleHTML`         = `t`.`titleHTML`,
+                        `p`.`subtitleHTML`      = `t`.`subtitleHTML`,
+                        `p`.`thumbnailURL`      = `t`.`thumbnailURL`,
+                        `p`.`searchText`        = `t`.`searchText`,
+                        `p`.`published`         = `t`.`published`,
+                        `p`.`publishedBy`       = `t`.`publishedBy`,
+                        `p`.`publishedMonth`    = `t`.`publishedMonth`
+
+EOT;
+
+            Colby::query($SQL);
+
+            $SQL = <<<EOT
+
+            INSERT INTO `ColbyPages` (
+                `archiveID`,
+                `keyValueData`,
+                `className`,
+                `classNameForKind`,
+                `iteration`,
+                `URI`,
+                `titleHTML`,
+                `subtitleHTML`,
+                `thumbnailURL`,
+                `searchText`,
+                `published`,
+                `publishedBy`,
+                `publishedMonth`
+            )
+            SELECT
+                `t`.`archiveID`,
+                `t`.`keyValueData`,
+                `t`.`className`,
+                `t`.`classNameForKind`,
+                `t`.`iteration`,
+                `t`.`URI`,
+                `t`.`titleHTML`,
+                `t`.`subtitleHTML`,
+                `t`.`thumbnailURL`,
+                `t`.`searchText`,
+                `t`.`published`,
+                `t`.`publishedBy`,
+                `t`.`publishedMonth`
+            FROM        `CBPagesTemporary`  AS `t`
+            LEFT JOIN   `ColbyPages`        AS `p` ON `t`.`archiveID` = `p`.`archiveID`
+            WHERE       `p`.`archiveID` IS NULL
+
+EOT;
+
+            Colby::query($SQL);
+        } finally {
+            Colby::query("DROP TEMPORARY TABLE `CBPagesTemporary`");
+        }
     }
 
     /**
