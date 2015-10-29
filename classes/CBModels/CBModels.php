@@ -21,8 +21,7 @@ final class CBModels {
         $options        = $temporary ? 'TEMPORARY' : '';
         $SQL            = <<<EOT
 
-            CREATE {$options} TABLE IF NOT EXISTS `{$name}`
-            (
+            CREATE {$options} TABLE IF NOT EXISTS `{$name}` (
                 `ID`        BINARY(20) NOT NULL,
                 `className` VARCHAR(80) NOT NULL,
                 `created`   BIGINT NOT NULL,
@@ -36,6 +35,54 @@ final class CBModels {
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8
             COLLATE=utf8_unicode_ci
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
+     * Delete models. This function should almost always be called inside of a
+     * transaction.
+     *
+     * @param [{hex160}]
+     *  All of the referenced models must have the same class name. Make
+     *  separate calls for each class name.
+     *
+     * @return null
+     */
+    public static function deleteModelsByID(array $IDs) {
+        if (empty($IDs)) { return; }
+
+        $IDsForSQL = CBHex160::toSQL($IDs);
+        $SQL = <<<EOT
+
+            SELECT DISTINCT `className`
+            FROM            `CBModels`
+            WHERE           `ID` IN ({$IDsForSQL})
+
+EOT;
+
+        $classNames = CBDB::SQLtoArray($SQL);
+
+        if (empty($classNames)) { return; }
+
+        if (count($classNames) > 1) {
+            $classNames = implode(', ', $classNames);
+            $method = __METHOD__;
+            throw new RuntimeException("The IDs provided to {$method} have multiple class names: {$classNames}.");
+        }
+
+        if (is_callable($function = "{$classNames[0]}::modelsWillDelete")) {
+            call_user_func($function, $IDs);
+        }
+
+        $SQL = <<<EOT
+
+            DELETE  `CBModels`, `CBModelVersions`
+            FROM    `CBModels`
+            JOIN    `CBModelVersions` ON `CBModelVersions`.`ID` = `CBModels`.`ID`
+            WHERE   `CBModels`.`ID` IN ($IDsForSQL)
 
 EOT;
 
