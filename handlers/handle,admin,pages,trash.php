@@ -36,10 +36,10 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
         while ($row = $result->fetch_object())
         {
-            $elementID = "id-{$row->dataStoreID}";
+            $elementID = "id-{$row->archiveID}";
 
-            $recoverAction  = "CBPagesInTheTrash.recoverPageWithDataStoreID('{$row->dataStoreID}');";
-            $deleteAction   = "CBPagesInTheTrash.deletePageWithDataStoreID('{$row->dataStoreID}');";
+            $recoverAction  = "CBPagesInTheTrash.recoverPageWithDataStoreID('{$row->archiveID}');";
+            $deleteAction   = "CBPagesInTheTrash.deletePageWithDataStoreID('{$row->archiveID}');";
 
             ?>
 
@@ -78,21 +78,17 @@ class CBPagesAdmin
     /**
      * @return mysqli_result
      */
-    public static function queryForPagesInTheTrash()
-    {
-        $sql = <<<EOT
+    public static function queryForPagesInTheTrash() {
+        $SQL = <<<EOT
 
-        SELECT
-            LOWER(HEX(`dataStoreID`)) AS `dataStoreID`,
-            `titleHTML`,
-            `published`
-        FROM
-            `CBPagesInTheTrash`
-        ORDER BY
-            `ID` DESC
+            SELECT  LOWER(HEX(`archiveID`)) AS `archiveID`,
+                    `titleHTML`,
+                    `published`
+            FROM    `CBPagesInTheTrash`
+            ORDER BY `ID` DESC
 
 EOT;
 
-        return Colby::query($sql);
+        return Colby::query($SQL);
     }
 }

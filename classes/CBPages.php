@@ -128,56 +128,11 @@ EOT;
     /**
      * @return void
      */
-    public static function moveRowWithDataStoreIDToTheTrash($dataStoreID)
-    {
-        $dataStoreIDForSQL = ColbyConvert::textToSQL($dataStoreID);
-
+    public static function moveRowWithDataStoreIDToTheTrash($dataStoreID) {
+        $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
         $sql = <<<EOT
 
-            INSERT INTO
-                `CBPagesInTheTrash`
-            (
-                `ID`,
-                `dataStoreID`,
-                `keyValueData`,
-                `className`,
-                `classNameForKind`,
-                `iteration`,
-                `URI`,
-                `titleHTML`,
-                `subtitleHTML`,
-                `thumbnailURL`,
-                `searchText`,
-                `published`,
-                `publishedBy`,
-                `publishedMonth`
-            )
-            SELECT
-                *
-            FROM
-                `ColbyPages`
-            WHERE
-                `archiveID` = UNHEX('{$dataStoreIDForSQL}')
-
-EOT;
-
-        Colby::query($sql);
-
-        self::deleteRowWithDataStoreID($dataStoreID);
-    }
-
-    /**
-     * @return void
-     */
-    public static function recoverRowWithDataStoreIDFromTheTrash($dataStoreID)
-    {
-        $dataStoreIDForSQL = ColbyConvert::textToSQL($dataStoreID);
-
-        $sql = <<<EOT
-
-            INSERT INTO
-                `ColbyPages`
-            (
+            INSERT INTO `CBPagesInTheTrash` (
                 `ID`,
                 `archiveID`,
                 `keyValueData`,
@@ -193,16 +148,47 @@ EOT;
                 `publishedBy`,
                 `publishedMonth`
             )
-            SELECT
-                *
-            FROM
-                `CBPagesInTheTrash`
-            WHERE
-                `dataStoreID` = UNHEX('{$dataStoreIDForSQL}')
+            SELECT  *
+            FROM    `ColbyPages`
+            WHERE   `archiveID` = {$archiveIDForSQL}
 
 EOT;
 
         Colby::query($sql);
+
+        self::deleteRowWithDataStoreID($dataStoreID);
+    }
+
+    /**
+     * @return void
+     */
+    public static function recoverRowWithDataStoreIDFromTheTrash($dataStoreID) {
+        $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
+        $SQL = <<<EOT
+
+            INSERT INTO `ColbyPages` (
+                `ID`,
+                `archiveID`,
+                `keyValueData`,
+                `className`,
+                `classNameForKind`,
+                `iteration`,
+                `URI`,
+                `titleHTML`,
+                `subtitleHTML`,
+                `thumbnailURL`,
+                `searchText`,
+                `published`,
+                `publishedBy`,
+                `publishedMonth`
+            )
+            SELECT  *
+            FROM    `CBPagesInTheTrash`
+            WHERE   `archiveID` = {$archiveIDForSQL}
+
+EOT;
+
+        Colby::query($SQL);
 
         self::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
     }
@@ -246,39 +232,31 @@ EOT;
     /**
      * @return void
      */
-    public static function sqlToDeleteRowWithDataStoreID($dataStoreID)
-    {
-        $dataStoreIDForSQL = ColbyConvert::textToSQL($dataStoreID);
+    public static function sqlToDeleteRowWithDataStoreID($dataStoreID) {
+        $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
+        $SQL = <<<EOT
 
-        $sql = <<<EOT
-
-            DELETE FROM
-                `ColbyPages`
-            WHERE
-                `archiveID` = UNHEX('{$dataStoreIDForSQL}')
+            DELETE FROM `ColbyPages`
+            WHERE       `archiveID` = {$archiveIDForSQL}
 
 EOT;
 
-        return $sql;
+        return $SQL;
     }
 
     /**
      * @return void
      */
-    public static function sqlToDeleteRowWithDataStoreIDFromTheTrash($dataStoreID)
-    {
-        $dataStoreIDForSQL = ColbyConvert::textToSQL($dataStoreID);
+    public static function sqlToDeleteRowWithDataStoreIDFromTheTrash($dataStoreID) {
+        $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
+        $SQL = <<<EOT
 
-        $sql = <<<EOT
-
-            DELETE FROM
-                `CBPagesInTheTrash`
-            WHERE
-                `dataStoreID` = UNHEX('{$dataStoreIDForSQL}')
+            DELETE FROM `CBPagesInTheTrash`
+            WHERE       `archiveID` = {$archiveIDForSQL}
 
 EOT;
 
-        return $sql;
+        return $SQL;
     }
 
     /**

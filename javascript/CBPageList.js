@@ -106,7 +106,8 @@ var CBPageList = {
 
             var xhr = new XMLHttpRequest();
             xhr.onload = CBPageList.handlePageElementTrashRequestDidLoad.bind(undefined, {
-                element : args.element
+                element : args.element,
+                xhr : xhr,
             });
 
             xhr.open("POST", "/admin/pages/api/move-to-the-trash/", true);
@@ -114,12 +115,19 @@ var CBPageList = {
         },
 
         /**
-         * @param {Element} element
+         * @param {Element} args.element
+         * @param {XMLHttpRequest} args.xhr
          *
          * @return undefined
          */
         handlePageElementTrashRequestDidLoad : function(args) {
-            args.element.parentElement.removeChild(args.element);
+            var response = Colby.responseFromXMLHttpRequest(args.xhr);
+
+            if (response.wasSuccessful) {
+                args.element.parentElement.removeChild(args.element);
+            } else {
+                Colby.displayResponse(response);
+            }
         },
 
         /**
