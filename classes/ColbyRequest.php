@@ -56,32 +56,9 @@ EOT;
     }
 
     /**
-     * @return {stdClass} | false
+     * @return [{string}]
      */
-    public static function CBPagesRowForURI($URI) {
-        $URIAsSQL   = CBDB::stringToSQL($URI);
-        $SQL        = <<<EOT
-
-            SELECT      LOWER(HEX(`archiveID`)) as `ID`,
-                        `className`,
-                        `iteration`,
-                        `URI`
-            FROM        `ColbyPages`
-            WHERE       `URI` = {$URIAsSQL} AND
-                        `published` IS NOT NULL
-            ORDER BY    `published` ASC
-            LIMIT       1
-
-EOT;
-
-        return CBDB::SQLToObject($SQL);
-    }
-
-    ///
-    ///
-    ///
-    public static function decodedStubs()
-    {
+    public static function decodedStubs() {
         return self::$decodedStubs;
     }
 
@@ -146,14 +123,22 @@ EOT;
                 };
             } else {
                 $URIForSearch = implode('/', self::$decodedStubs);
-                $row = ColbyRequest::CBPagesRowForURI($URIForSearch);
+                $row = ColbyRequest::pageRenderingDataForURI($URIForSearch);
 
-                if ($row && is_callable("{$row->className}::renderAsHTMLForID")) {
+                if ($row) {
                     $canonicalEncodedPath = CBRequest::decodedPathToCanonicalEncodedPath($row->URI);
-                    $function = function() use ($row) {
-                        call_user_func("{$row->className}::renderAsHTMLForID", $row->ID, $row->iteration);
-                        return 1;
-                    };
+
+                    if ($row->model && is_callable("{$row->className}::renderModelAsHTML")) {
+                        $function = function() use ($row) {
+                            call_user_func("{$row->className}::renderModelAsHTML", $row->model);
+                            return 1;
+                        };
+                    } else if (is_callable("{$row->className}::renderAsHTMLForID")) {
+                        $function = function() use ($row) {
+                            call_user_func("{$row->className}::renderAsHTMLForID", $row->ID, $row->iteration);
+                            return 1;
+                        };
+                    }
                 }
             }
         }
@@ -195,6 +180,37 @@ EOT;
     public static function isForFrontPage()
     {
         return !(count(self::$decodedStubs));
+    }
+
+    /**
+     * @return {stdClass} | false
+     */
+    private static function pageRenderingDataForURI($URI) {
+        $URIAsSQL   = CBDB::stringToSQL($URI);
+        $SQL        = <<<EOT
+
+            SELECT      LOWER(HEX(`p`.`archiveID`)) as `ID`,
+                        `p`.`className`,
+                        `p`.`iteration`,
+                        `v`.`modelAsJSON` as `model`,
+                        `p`.`URI`
+            FROM        `ColbyPages`        AS `p`
+            LEFT JOIN   `CBModels`          AS `m` ON `p`.`archiveID` = `m`.`ID`
+            LEFT JOIN   `CBModelVersions`   AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
+            WHERE       `p`.`URI` = {$URIAsSQL} AND
+                        `p`.`published` IS NOT NULL
+            ORDER BY    `p`.`published` ASC
+            LIMIT       1
+
+EOT;
+
+        $data = CBDB::SQLToObject($SQL);
+
+        if ($data !== false) {
+            $data->model = json_decode($data->model);
+        }
+
+        return $data;
     }
 }
 
