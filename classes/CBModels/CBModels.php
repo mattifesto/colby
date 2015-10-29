@@ -45,7 +45,7 @@ EOT;
      * Delete models. This function should almost always be called inside of a
      * transaction.
      *
-     * @param [{hex160}]
+     * @param [{hex160}] $IDs
      *  All of the referenced models must have the same class name. Make
      *  separate calls for each class name.
      *
