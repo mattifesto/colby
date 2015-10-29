@@ -8,6 +8,7 @@ class CBUnitTests {
     public static function getListOfTestsForAjax() {
         $response           = new CBAjaxResponse();
         $response->tests    = [
+            ['CBConvert',   'textToStub'],
             ['CBDataStore', 'directoryNameFromDocumentRoot'],
             ['CBDataStore', 'toURL'],
             ['CBDB',        'hex160ToSQL'],
@@ -18,7 +19,9 @@ class CBUnitTests {
             ['CBModelCache'],
             ['CBModels',    'fetchModelByID'],
             ['CBModels',    'fetchModelsByID'],
+            ['CBPages',     'stringToDencodedURIPath'],
             ['CBSitePreferences'],
+            ['CBTestPage'],
             ['CBUnit'],
             ['CBViewPage',  'save']];
 
