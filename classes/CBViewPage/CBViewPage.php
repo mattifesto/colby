@@ -78,27 +78,8 @@ EOT;
     }
 
     /**
-     * @return {stdClass}
-     */
-    private static function modelToSummaryViewModel($model) {
-        $summaryViewModel                       = CBPageSummaryView::specToModel();
-        $summaryViewModel->created              = $model->created;
-        $summaryViewModel->dataStoreID          = $model->dataStoreID;
-        $summaryViewModel->description          = $model->description;
-        $summaryViewModel->descriptionHTML      = $model->descriptionHTML;
-        $summaryViewModel->isPublished          = $model->isPublished;
-        $summaryViewModel->publicationTimeStamp = $model->publicationTimeStamp;
-        $summaryViewModel->publishedBy          = $model->publishedBy;
-        $summaryViewModel->thumbnailURL         = $model->thumbnailURL;
-        $summaryViewModel->title                = $model->title;
-        $summaryViewModel->titleHTML            = $model->titleHTML;
-        $summaryViewModel->updated              = $model->updated;
-        $summaryViewModel->URI                  = $model->URI;
-
-        return $summaryViewModel;
-    }
-
-    /**
+     * @deprecated
+     *
      * 2015.02.20
      * This function is being created as deprecated. The reason is that this
      * class is moving to a paradigm where the default model object is just an
@@ -713,7 +694,7 @@ EOT;
         $model = $updatePageLists = false;
         extract($args, EXTR_IF_EXISTS);
 
-        $summaryViewModel           = CBViewPage::modelToSummaryViewModel($model);
+        $summaryViewModel           = CBPageSummaryView::viewPageModelToModel($model);
         $rowData                    = new stdClass();
         $rowData->className         = 'CBViewPage';
         $rowData->classNameForKind  = $model->classNameForKind;
