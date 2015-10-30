@@ -122,7 +122,6 @@ if (empty($searchQuery)) {
     $sql =<<<END
 SELECT
     LOWER(HEX(`archiveId`)) AS `archiveId`,
-    LOWER(HEX(`groupId`)) AS `groupId`,
     `URI`,
     `titleHTML`,
     `subtitleHTML`,
@@ -133,7 +132,8 @@ WHERE
     `published` IS NOT NULL AND
     `searchText` LIKE {$sqlQuery}
 ORDER BY
-    `groupId`,
+    `className`,
+    `classNameForKind`,
     `published`
 END;
 
