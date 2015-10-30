@@ -51,6 +51,15 @@ EOT;
     }
 
     /**
+     * @param {stdClass} $model
+     *
+     * @return {string}
+     */
+    public static function modelToSearchText(stdClass $model) {
+        return "{$model->title} {$model->contentAsMarkaround}";
+    }
+
+    /**
      * If the property value exists and is a number the property  value is
      * returned; otherwise false is returned.
      *
@@ -167,6 +176,7 @@ EOT;
         $model->themeID             = isset($spec->themeID) ? $spec->themeID : false;
         $model->titleAlignment      = "left";
         $model->titleAsMarkaround   = isset($spec->titleAsMarkaround) ? trim($spec->titleAsMarkaround) : '';
+        $model->title               = CBMarkaround::paragraphToText($model->titleAsMarkaround);
         $model->titleAsHTML         = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
         $model->titleColor          = isset($spec->titleColor) ? trim($spec->titleColor) : '';
         $model->URL                 = isset($spec->URL) ? trim($spec->URL) : '';
