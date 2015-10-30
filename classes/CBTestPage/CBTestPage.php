@@ -24,9 +24,16 @@ final class CBTestPage {
     }
 
     /**
+     * @return {string}
+     */
+    public static function modelToSearchText(stdClass $model) {
+        return "{$model->title} {$model->description}";
+    }
+
+    /**
      * @return null
      */
-    public static function renderModelAsHTML($model) {
+    public static function renderModelAsHTML(stdClass $model) {
         CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForResponsivePages';
         CBHTMLOutput::begin();
         CBHTMLOutput::setTitleHTML('Test');

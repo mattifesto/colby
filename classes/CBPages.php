@@ -145,7 +145,8 @@ EOT;
         $titleHTML = isset($model->titleAsHTML) ? CBDB::stringToSQL($model->titleAsHTML) : "''";
         $subtitleHTML = isset($model->descriptionAsHTML) ? CBDB::stringToSQL($model->descriptionAsHTML) : "''";
         $thumbnailURL = isset($model->encodedURLForThumbnail) ? CBDB::stringToSQL($model->encodedURLForThumbnail) : "''";
-        $searchText = "''"; // TODO
+        $function = "{$model->className}::modelToSearchText";
+        $searchText = is_callable($function) ? CBDB::stringToSQL(call_user_func($function, $model)) : "''";
         $published = isset($model->published) ? (int)$model->published : 'NULL';
         $publishedBy = 'NULL'; // Not sure if this will be used in the future
         $publishedMonth = isset($model->published) ? ColbyConvert::timestampToYearMonth($model->published) : 'NULL';
