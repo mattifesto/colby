@@ -200,8 +200,8 @@ EOT;
         $createSpecForIDCallback = null;
         extract($args, EXTR_IF_EXISTS);
 
-        $IDsAsSQL   = CBHex160::toSQL($IDs);
-        $SQL        = <<<EOT
+        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`m`.`ID`)), `v`.`specAsJSON`
             FROM    `CBModels` AS `m`
@@ -209,13 +209,13 @@ EOT;
             WHERE   `m`.`ID` IN ($IDsAsSQL)
 
 EOT;
-        $specs      = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $specs = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
 
         if (is_callable($createSpecForIDCallback)) {
-            $existingIDs    = array_map(function($spec) { return $spec->ID; }, $specs);
-            $newIDs         = array_diff($IDs, $existingIDs);
-            $newSpecs       = array_map($createSpecForIDCallback, $newIDs);
-            $specs          = array_merge($specs, $newSpecs);
+            $existingIDs = array_keys($specs);
+            $newIDs = array_diff($IDs, $existingIDs);
+            $newSpecs = array_map($createSpecForIDCallback, $newIDs);
+            foreach($newSpecs as $newSpec) { $specs[$newSpec->ID] = $newSpec; }
         }
 
         return $specs;
@@ -349,7 +349,7 @@ EOT;
      * @return null
      */
     public static function save(array $specs) {
-        $className          = $specs[0]->className;
+        $className = reset($specs)->className;
 
         array_walk($specs, function($spec) use ($className) {
             if ($spec->className !== $className) {
