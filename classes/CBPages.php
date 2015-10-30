@@ -125,10 +125,11 @@ EOT;
     }
 
     /**
-     * To avoid duplicating parameter validation that has almost certainly
-     * already occurred, this function mostly assumes its parameter values are
-     * valid for their use. This means it is a the responsibility of the caller
-     * to make sure this is true.
+     * To avoid duplicating property validation this function assumes the model
+     * parameter has been generated with the `CBPages::specToModel` function or
+     * another function that properly validates and sets the reserved page model
+     * properties. It is a the responsibility of the caller to make sure this is
+     * true.
      *
      * For instance, the $model->titleAsHTML value is assumed to have already
      * been escaped for use in HTML.
@@ -137,14 +138,14 @@ EOT;
      */
     public static function modelToRowValues(stdClass $model) {
         $archiveID = CBHex160::toSQL($model->ID);
-        $keyValueData = "''"; // TODO
+        $keyValueData = CBDB::stringToSQL(json_encode(CBPageSummaryView::pageModelToModel($model)));
         $className = CBDB::stringToSQL($model->className);
-        $classNameForKind = "''"; // Not sure if this will be used in the future
+        $classNameForKind = CBDB::stringToSQL($model->classNameForKind);
         $iteration = 1;
-        $URI = isset($model->dencodedURIPath) ? CBDB::stringToSQL($model->dencodedURIPath) : CBDB::stringToSQL($model->ID);
-        $titleHTML = isset($model->titleAsHTML) ? CBDB::stringToSQL($model->titleAsHTML) : "''";
-        $subtitleHTML = isset($model->descriptionAsHTML) ? CBDB::stringToSQL($model->descriptionAsHTML) : "''";
-        $thumbnailURL = isset($model->encodedURLForThumbnail) ? CBDB::stringToSQL($model->encodedURLForThumbnail) : "''";
+        $URI = CBDB::stringToSQL($model->dencodedURIPath);
+        $titleHTML = CBDB::stringToSQL($model->titleAsHTML);
+        $subtitleHTML = CBDB::stringToSQL($model->descriptionAsHTML);
+        $thumbnailURL = CBDB::stringToSQL($model->encodedURLForThumbnail);
         $function = "{$model->className}::modelToSearchText";
         $searchText = is_callable($function) ? CBDB::stringToSQL(call_user_func($function, $model)) : "''";
         $published = isset($model->published) ? (int)$model->published : 'NULL';
@@ -359,6 +360,37 @@ EOT;
         } finally {
             Colby::query("DROP TEMPORARY TABLE `CBPagesTemporary`");
         }
+    }
+
+    /**
+     * Page classes should call this function first from their own `specToModel`
+     * function to process all of the page class reserved properties and ensure
+     * that the model is properly set up to be saved.
+     *
+     * After that, the page class should continue processing its own custom
+     * properties.
+     *
+     * This function defines the official properties of a page class spec and
+     * model.
+     *
+     * @param {stdClass} $spec
+     *
+     * @return {stdClass}
+     */
+    public static function specToModel(stdClass $spec) {
+        $model = CBModels::modelWithClassName($spec->className, ['ID' => $spec->ID]);
+        $model->classNameForKind = ''; // Not sure if this will be used in the future
+        $model->dencodedURIPath = isset($spec->URIPath) ? CBPages::stringToDencodedURIPath($spec->URIPath) : '';
+        $model->dencodedURIPath = ($model->dencodedURIPath === '') ? $spec->ID : $model->dencodedURIPath;
+        $model->description = isset($spec->description) ? trim($spec->description) : '';
+        $model->descriptionAsHTML = ColbyConvert::textToHTML($model->description);
+        $model->encodedURLForThumbnail = isset($spec->encodedURLForThumbnail) ? trim($spec->encodedURLForThumbnail) : '';
+        $model->encodedURLForThumbnailAsHTML = ColbyConvert::textToHTML($model->encodedURLForThumbnail);
+        $model->published = isset($spec->published) ? (int)$spec->published : null;
+        $model->title = CBModels::specToTitle($spec);
+        $model->titleAsHTML = ColbyConvert::textToHTML($model->title);
+
+        return $model;
     }
 
     /**

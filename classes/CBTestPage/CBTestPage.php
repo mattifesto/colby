@@ -7,7 +7,7 @@
 final class CBTestPage {
 
     /**
-     * @param [{stdclass}] $tuples
+     * @param [{stdClass}] $tuples
      *
      * @return null
      */
@@ -47,16 +47,7 @@ final class CBTestPage {
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
-        $model = CBModels::modelWithClassName(__CLASS__, ['ID' => $spec->ID]);
-        $model->dencodedURIPath = isset($spec->URIPath) ? CBPages::stringToDencodedURIPath($spec->URIPath) : '';
-        $model->dencodedURIPath = ($model->dencodedURIPath === '') ? $spec->ID : $model->dencodedURIPath;
-        $model->description = isset($spec->description) ? trim($spec->description) : '';
-        $model->descriptionAsHTML = ColbyConvert::textToHTML($model->description);
-        $model->encodedURLForThumbnail = isset($spec->encodedURLForThumbnail) ? trim($spec->encodedURLForThumbnail) : '';
-        $model->encodedURLForThumbnailAsHTML = ColbyConvert::textToHTML($model->encodedURLForThumbnail);
-        $model->published = isset($spec->published) ? (int)$spec->published : null;
-        $model->title = CBModels::specToTitle($spec);
-        $model->titleAsHTML = ColbyConvert::textToHTML($model->title);
+        $model = CBPages::specToModel($spec);
 
         return $model;
     }

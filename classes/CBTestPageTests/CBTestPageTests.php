@@ -28,6 +28,9 @@ final class CBTestPageTests {
             throw new Exception('The test page does not exist in the `ColbyPages` table.');
         }
 
+        // Comment out the remaining lines of this function to leave the test
+        // page in so that it can be viewed and searched for.
+
         CBModels::deleteModelsByID([$ID]);
 
         if (CBDB::SQLToValue($countSQL) !== '0') {
