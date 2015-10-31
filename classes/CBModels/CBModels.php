@@ -93,6 +93,8 @@ EOT;
      * @return [<int>]
      */
     private static function fetchCreatedTimestampsForIDs(array $IDs) {
+        if (empty($IDs)) { return []; }
+
         $IDsAsSQL   = CBHex160::toSQL($IDs);
         $SQL        = <<<EOT
 
@@ -132,6 +134,8 @@ EOT;
      * @return [<hex160> => {stdClass}, ...]
      */
     public static function fetchModelsByID(array $IDs) {
+        if (empty($IDs)) { return []; }
+
         $IDsAsSQL   = CBHex160::toSQL($IDs);
         $SQL        = <<<EOT
 
@@ -197,6 +201,8 @@ EOT;
      * @return [<hex160> => {stdClass}, ...]
      */
     public static function fetchSpecsByID(array $IDs, $args = []) {
+        if (empty($IDs)) { return []; }
+
         $createSpecForIDCallback = null;
         extract($args, EXTR_IF_EXISTS);
 
@@ -349,6 +355,8 @@ EOT;
      * @return null
      */
     public static function save(array $specs) {
+        if (empty($specs)) { return; }
+
         $className = reset($specs)->className;
 
         array_walk($specs, function($spec) use ($className) {
