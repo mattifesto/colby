@@ -84,32 +84,41 @@ if (empty($searchQuery)) {
 
 ?>
 
-<section style="width: 800px; margin: 50px auto 0px;">
+<section class="CBPageSearchResultsView">
     <style scoped>
-
-        article.result {
-            padding: 10px;
-            overflow: hidden; /* contains floated thumbnail */
-            clear: both;
+        .CBPageSearchResultsView {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        article.result > h1 {
+        .CBPageSearchResultsView .result {
+            box-sizing: border-box;
+            display: flex;
+            padding: 20px;
+            width: 480px;
+        }
+
+        .CBPageSearchResultsView .result > div {
+            flex: 1 1 auto;
+        }
+
+        .CBPageSearchResultsView .result h1 {
             font-size: 1.5em;
         }
 
-        div.img {
-            width: 100px;
+        .CBPageSearchResultsView .result > figure {
+            background-color: hsl(30, 30%, 95%);
+            flex: none;
             height: 100px;
             margin-right: 10px;
-            float: left;
-            text-align: center;
+            width: 100px;
         }
 
-        img.thumbnail {
+        .CBPageSearchResultsView .result > figure img {
             max-width: 100px;
             max-height: 100px;
             box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
-            vertical-align: top;
         }
 
     </style>
@@ -147,25 +156,25 @@ END;
             ?>
 
             <article class="result">
-                <div class="img">
+                <figure>
 
                     <?php
 
                     if ($row->thumbnailURL) {
                         ?>
 
-                        <img class="thumbnail"
-                             src="<?php echo $row->thumbnailURL; ?>"
-                             alt="<?php $row->titleHTML; ?>">
+                        <img src="<?php echo $row->thumbnailURL; ?>" alt="<?php $row->titleHTML; ?>">
 
                         <?php
                     }
 
                     ?>
 
+                </figure>
+                <div>
+                    <h1><a href="<?php echo $url; ?>"><?php echo $row->titleHTML; ?></a></h1>
+                    <div><p><?php echo $row->subtitleHTML; ?></div>
                 </div>
-                <h1><a href="<?php echo $url; ?>"><?php echo $row->titleHTML; ?></a></h1>
-                <div><p><?php echo $row->subtitleHTML; ?></div>
             </article>
 
             <?php
