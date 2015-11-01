@@ -74,6 +74,21 @@ final class CBView {
     }
 
     /**
+     * This function makes it easy to create a view spec and render it from PHP
+     * code. The code could easily call these lines itself or most of the time
+     * even call the view's functions directly, but allowing rendering a spec
+     * with a single function call saves many lines of code over an entire site.
+     *
+     * @param {stdClass} $spec
+     *
+     * return null
+     */
+    public static function renderSpecAsHTML(stdClass $spec) {
+        $model = CBView::specToModel($spec);
+        CBView::renderModelAsHTML($model);
+    }
+
+    /**
      * This function transforms a view specification into a model. This
      * function always succeeds. If the view class has no `specToModel`
      * function the model will be a copy of the specification. If the
