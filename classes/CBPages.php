@@ -96,6 +96,20 @@ EOT;
     }
 
     /**
+     * @param [{hex160}] $IDs
+     *
+     * @return [{stdClass}]
+     */
+    public static function fetchPageSummaryModelsByID($IDs) {
+        if (empty($IDs)) { return []; }
+
+        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $SQL = "SELECT `keyValueData` FROM `ColbyPages` WHERE `archiveID` IN ($IDsAsSQL)";
+
+        return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+    }
+
+    /**
      * @param {hex160} $ID
      */
     public static function insertRow($ID) {
