@@ -108,7 +108,6 @@ if (empty($searchQuery)) {
         }
 
         .CBPageSearchResultsView .result > figure {
-            background-color: hsl(30, 30%, 95%);
             flex: none;
             height: 100px;
             margin-right: 10px;
@@ -119,6 +118,12 @@ if (empty($searchQuery)) {
             max-width: 100px;
             max-height: 100px;
             box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .CBPageSearchResultsView .result > figure div {
+            background-color: hsl(30, 30%, 95%);
+            height: 100px;
+            width: 100px;
         }
 
     </style>
@@ -149,30 +154,27 @@ END;
     $result = Colby::query($sql);
 
     if ($result->num_rows > 0) {
-        while ($row = $result->fetch_object())
-        {
-            $url = COLBY_SITE_URL . "/{$row->URI}/";
+        while ($row = $result->fetch_object()) {
+            $URL = CBSiteURL . "/{$row->URI}/";
 
             ?>
 
             <article class="result">
                 <figure>
 
-                    <?php
-
-                    if ($row->thumbnailURL) {
-                        ?>
+                    <?php if ($row->thumbnailURL) { ?>
 
                         <img src="<?php echo $row->thumbnailURL; ?>" alt="<?php $row->titleHTML; ?>">
 
-                        <?php
-                    }
+                    <?php } else { ?>
 
-                    ?>
+                        <div></div>
+
+                    <?php } ?>
 
                 </figure>
                 <div>
-                    <h1><a href="<?php echo $url; ?>"><?php echo $row->titleHTML; ?></a></h1>
+                    <h1><a href="<?php echo $URL; ?>"><?php echo $row->titleHTML; ?></a></h1>
                     <div><p><?php echo $row->subtitleHTML; ?></div>
                 </div>
             </article>
