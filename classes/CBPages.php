@@ -152,7 +152,6 @@ EOT;
      */
     public static function modelToRowValues(stdClass $model) {
         $archiveID = CBHex160::toSQL($model->ID);
-        $keyValueData = CBDB::stringToSQL(json_encode(CBPageSummaryView::pageModelToModel($model)));
         $className = CBDB::stringToSQL($model->className);
         $classNameForKind = CBDB::stringToSQL($model->classNameForKind);
         $iteration = 1;
@@ -166,7 +165,15 @@ EOT;
         $publishedBy = 'NULL'; // Not sure if this will be used in the future
         $publishedMonth = isset($model->published) ? ColbyConvert::timestampToYearMonth($model->published) : 'NULL';
 
-        return "($archiveID, $keyValueData, $className, $classNameForKind, $iteration, $URI, $titleHTML, $subtitleHTML, $thumbnailURL, $searchText, $published, $publishedBy, $publishedMonth)";
+        if (is_callable($function = "{$model->className}::modelToPageSummaryModel")) {
+            $pageSummaryModel = call_user_func($function, $model);
+        } else {
+            $pageSummaryModel = CBPageSummaryView::pageModelToModel($model);
+        }
+
+        $keyValueDataAsSQL = CBDB::stringToSQL(json_encode($pageSummaryModel));
+
+        return "($archiveID, $keyValueDataAsSQL, $className, $classNameForKind, $iteration, $URI, $titleHTML, $subtitleHTML, $thumbnailURL, $searchText, $published, $publishedBy, $publishedMonth)";
     }
 
     /**
