@@ -28,6 +28,10 @@ class CBProjection {
                     $projection = CBProjection::reduceHeight($projection, $value);
                     break;
 
+                case 'rl':
+                    $projection = CBProjection::reduceLongEdge($projection, $value);
+                    break;
+
                 case 'rs':
                     $projection = CBProjection::reduceShortEdge($projection, $value);
                     break;
