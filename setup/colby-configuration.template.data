@@ -35,16 +35,6 @@ define('COLBY_EMAIL_SMTP_PASSWORD',         'password');
 
 
 /**
- * This is a real tracking ID that's used just to have a working default for
- * all newly installed websites. Change it to a tracking ID specific to this
- * website.
- */
-
-define('CBGoogleAnalyticsID',               'UA-11518627-14');
-define('GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID', CBGoogleAnalyticsID);
-
-
-/**
  * Deprecated constants
  */
 
