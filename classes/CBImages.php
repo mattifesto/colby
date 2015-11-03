@@ -51,12 +51,10 @@ class CBImages {
     /**
      * @return void
      */
-    public static function update() {
-
+    public static function install() {
         $SQL = <<<EOT
 
-            CREATE TABLE IF NOT EXISTS `CBImages`
-            (
+            CREATE TABLE IF NOT EXISTS `CBImages` (
                 `ID`        BINARY(20) NOT NULL,
                 `created`   BIGINT NOT NULL,
                 `extension` VARCHAR(10) NOT NULL,
