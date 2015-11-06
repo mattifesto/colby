@@ -31,6 +31,14 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,models,list.css');
 $spec = (object)['selectedMenuItemName' => 'models'];
 CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
+$models = CBHandleAdminModelsList::fetchModelsByClassName($classNameForModels);
+
+if (is_callable($function = "{$classNameForModels}::compareModels")) {
+    if (!uasort($models, $function)) {
+        throw new RuntimeException('Sorting the models failed.');
+    }
+}
+
 ?>
 
 <div class="CBUIRoot">
@@ -43,12 +51,12 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
     </div>
     <div class="CBUIHalfSpace"></div>
     <div class="CBUISection">
-        <?php foreach (CBHandleAdminModelsList::fetchModelsByClassName($className = $_GET['class']) as $model) { ?>
+        <?php foreach ($models as $model) { ?>
             <div class="CBUISectionItem"
                  onclick="window.location = '/admin/models/edit/?ID=<?= $model->ID ?>';">
                 <?= ColbyConvert::textToHTML($model->title); ?>
                 <div class="information"><?php
-                    if (is_callable($function = "{$className}::modelToSummaryText")) {
+                    if (is_callable($function = "{$classNameForModels}::modelToSummaryText")) {
                         echo cbhtml(call_user_func($function, $model));
                     }
                 ?></div>
