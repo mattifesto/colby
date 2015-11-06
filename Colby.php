@@ -804,3 +804,10 @@ function cb_array_map_assoc(callable $callback, $array) {
 
     return $result;
 }
+
+/**
+ * Compact function for ColbyConvert::textToHTML()
+ */
+function cbhtml($text) {
+    return ColbyConvert::textToHTML($text);
+}
