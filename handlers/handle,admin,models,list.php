@@ -43,10 +43,15 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
     </div>
     <div class="CBUIHalfSpace"></div>
     <div class="CBUISection">
-        <?php foreach (CBHandleAdminModelsList::infoForModels() as $infoForModel) { ?>
+        <?php foreach (CBHandleAdminModelsList::fetchModelsByClassName($className = $_GET['class']) as $model) { ?>
             <div class="CBUISectionItem"
-                 onclick="window.location = '/admin/models/edit/?ID=<?= $infoForModel->ID ?>';">
-                <?= ColbyConvert::textToHTML($infoForModel->title); ?>
+                 onclick="window.location = '/admin/models/edit/?ID=<?= $model->ID ?>';">
+                <?= ColbyConvert::textToHTML($model->title); ?>
+                <div class="information"><?php
+                    if (is_callable($function = "{$className}::modelToSummaryText")) {
+                        echo cbhtml(call_user_func($function, $model));
+                    }
+                ?></div>
             </div>
         <?php } ?>
     </div>
@@ -84,20 +89,24 @@ CBHTMLOutput::render();
 final class CBHandleAdminModelsList {
 
     /**
-     * @return [{CBClassMenuItem}]
+     * This function can be moved into CBModels if it proves to be useful in
+     * other contexts.
+     *
+     * @param {string} $className
+     *
+     * @return [{hex160} => {stdClass}]
      */
-    public static function infoForModels() {
-        $className = $_GET['class'];
+    public static function fetchModelsByClassName($className) {
         $classNameAsSQL = CBDB::stringToSQL($className);
         $SQL = <<<EOT
 
-            SELECT      LOWER(HEX(`ID`)) AS `ID`, `className`, `created`, `modified`, `title`
-            FROM        `CBModels`
-            WHERE       `className` = {$classNameAsSQL}
-            ORDER BY    `className`, `modified` DESC
+            SELECT  LOWER(HEX(`m`.`ID`)), `v`.`modelAsJSON`
+            FROM    `CBModels` AS `m`
+            JOIN    `CBModelVersions` AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
+            WHERE   `m`.`className` = {$classNameAsSQL}
 
 EOT;
 
-        return CBDB::SQLToObjects($SQL);
+        return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
     }
 }
