@@ -43,7 +43,7 @@ if (is_callable($function = "{$classNameForModels}::compareModels")) {
 
 <div class="CBUIRoot">
     <div class="CBUIHeader">
-        <div class="left"></a></div>
+        <div class="left"></div>
         <div class="center"><?= $titleAsHTML ?></div>
         <div class="right">
             <?php if (!defined("{$classNameForModels}::ID")) { ?>
