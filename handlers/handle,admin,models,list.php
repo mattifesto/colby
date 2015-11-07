@@ -46,7 +46,9 @@ if (is_callable($function = "{$classNameForModels}::compareModels")) {
         <div class="left"></a></div>
         <div class="center"><?= $titleAsHTML ?></div>
         <div class="right">
+            <?php if (!defined("{$classNameForModels}::ID")) { ?>
             <div class="CBUIHeaderAction" onclick="CBHandleAdminModelsList.handleNewClicked();">New</div>
+            <?php } ?>
         </div>
     </div>
     <div class="CBUIHalfSpace"></div>
