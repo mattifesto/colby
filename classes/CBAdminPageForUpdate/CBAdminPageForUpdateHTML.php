@@ -1,7 +1,6 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
-{
+if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
@@ -20,14 +19,9 @@ $spec->selectedSubmenuItemName  = 'update';
 
 CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
-$head = CPView::specForClassName('CPAdminSectionHeaderView');
-$head->title = 'Update';
-
 ?>
 
 <main>
-    <?php CPView::renderAsHTML(CPView::compile($head)) ?>
-
     <div style="margin: 50px 0px; text-align: center;">
         <progress id="progress"
                   value="0"
