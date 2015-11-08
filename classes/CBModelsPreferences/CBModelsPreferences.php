@@ -22,26 +22,19 @@ final class CBModelsPreferences {
      * @return [{string}]
      */
     public static function editorURLsForCSS() {
-        return array_merge([
-                CBSystemURL . '/javascript/CBSpecArrayEditor.css',
-                CBModelsPreferences::URL('CBModelsPreferencesEditor.css')
-            ],
-            CBClassMenuItem::editorURLsForCSS()
-        );
+        return [
+            CBModelsPreferences::URL('CBModelsPreferencesEditor.css')
+        ];
     }
 
     /**
      * @return [{string}]
      */
     public static function editorURLsForJavaScript() {
-        return array_merge([
-                CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
-                CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
-                CBSystemURL . '/javascript/CBStringEditorFactory.js',
-                CBModelsPreferences::URL('CBModelsPreferencesEditorFactory.js')
-            ],
-            CBClassMenuItem::editorURLsForJavaScript()
-        );
+        return [
+            CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
+            CBModelsPreferences::URL('CBModelsPreferencesEditorFactory.js')
+        ];
     }
 
     /**
@@ -55,36 +48,10 @@ final class CBModelsPreferences {
     }
 
     /**
-     * @return null
-     */
-    public static function install() {
-        $spec = CBModels::fetchSpecByID(CBModelsPreferences::ID);
-
-        if ($spec === false) {
-            $spec = CBModels::modelWithClassName(__CLASS__, [ 'ID' => CBModelsPreferences::ID ]);
-
-            $menuItem                   = CBModels::modelWithClassName('CBClassMenuItem');
-            $menuItem->itemClassName    = 'CBMenu';
-            $menuItem->group            = 'Developers';
-            $menuItem->title            = 'Menus';
-            $spec->classMenuItems[]     = $menuItem;
-
-            $menuItem                   = CBModels::modelWithClassName('CBClassMenuItem');
-            $menuItem->itemClassName    = 'CBTextBoxViewTheme';
-            $menuItem->group            = 'Developers';
-            $menuItem->title            = 'Text Box View Themes';
-            $spec->classMenuItems[]     = $menuItem;
-
-            CBModels::save([$spec]);
-        }
-    }
-
-    /**
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
-        $model                  = CBModels::modelWithClassName(__CLASS__);
-        $model->classMenuItems  = array_map('CBClassMenuItem::specToModel', $spec->classMenuItems);
+        $model = CBModels::modelWithClassName(__CLASS__);
 
         if (isset($spec->classNamesOfEditableModels)) {
             $classes = preg_split('/[,\s]+/', $spec->classNamesOfEditableModels);

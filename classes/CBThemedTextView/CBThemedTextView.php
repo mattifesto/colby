@@ -58,30 +58,6 @@ EOT;
      */
     public static function install() {
 
-        // Ensure that CBThemedTextViewThemes are editable.
-
-        call_user_func(function() {
-            $spec = CBModels::fetchSpecByID(CBModelsPreferences::ID);
-
-            if ($spec === false) {
-                return;
-            }
-
-            foreach ($spec->classMenuItems as $item) {
-                if ($item->itemClassName === 'CBThemedTextViewTheme') {
-                    return;
-                }
-            }
-
-            $menuItem = CBModels::modelWithClassName('CBClassMenuItem');
-            $menuItem->itemClassName = 'CBThemedTextViewTheme';
-            $menuItem->group = 'Developers';
-            $menuItem->title = 'Themed Text View Themes';
-            $spec->classMenuItems[] = $menuItem;
-
-            CBModels::save([$spec]);
-        });
-
         // Ensure the standard page header theme exists.
 
         $spec = CBModels::fetchSpecByID(CBThemedTextView::standardPageHeaderThemeID);
