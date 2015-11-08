@@ -3,6 +3,20 @@
 final class CBModelsPreferences {
 
     const ID = '69b3958b95e87cca628fc2b9cd70f420faf33a0a';
+    const defaultClassNamesOfEditableModels = [
+        'CBMenu',
+        'CBTextBoxViewTheme',
+        'CBThemedTextViewTheme',
+        'CBModelsPreferences'
+    ];
+
+    /**
+     * @return [{string}]
+     */
+    public static function classNamesOfEditableModels() {
+        $model = CBModelCache::fetchModelByID(CBModelsPreferences::ID);
+        return array_merge(CBModelsPreferences::defaultClassNamesOfEditableModels, $model->classNamesOfEditableModels);
+    }
 
     /**
      * @return [{string}]
@@ -72,11 +86,11 @@ final class CBModelsPreferences {
         $model                  = CBModels::modelWithClassName(__CLASS__);
         $model->classMenuItems  = array_map('CBClassMenuItem::specToModel', $spec->classMenuItems);
 
-        if (isset($spec->editableModelClasses)) {
-            $classes = preg_split('/[,\s]+/', $spec->editableModelClasses);
-            $model->editableModelClasses = array_unique($classes);
+        if (isset($spec->classNamesOfEditableModels)) {
+            $classes = preg_split('/[,\s]+/', $spec->classNamesOfEditableModels);
+            $model->classNamesOfEditableModels = array_unique($classes);
         } else {
-            $model->editableModelClasses = [];
+            $model->classNamesOfEditableModels = [];
         }
 
         return $model;

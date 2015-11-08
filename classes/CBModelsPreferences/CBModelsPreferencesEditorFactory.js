@@ -22,8 +22,8 @@ var CBModelsPreferencesEditorFactory = {
 
         item.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
             handleSpecChanged   : args.handleSpecChanged,
-            labelText           : "Editable Model Classes",
-            propertyName        : "editableModelClasses",
+            labelText           : "Class Names of Editable Models",
+            propertyName        : "classNamesOfEditableModels",
             spec                : args.spec
         }));
 
@@ -52,6 +52,9 @@ var CBModelsPreferencesEditorFactory = {
         return element;
     },
 
+    /**
+     * @return {Element}
+     */
     createHalfSpaceElement : function() {
         var element = document.createElement("div");
         element.className = "CBUIHalfSpace";
