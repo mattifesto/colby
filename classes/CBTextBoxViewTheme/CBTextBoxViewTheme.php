@@ -20,6 +20,16 @@ final class CBTextBoxViewTheme {
     }
 
     /**
+     * @return {stdClass}
+     */
+    public static function info() {
+        return CBModelClassInfo::specToModel((object)[
+            'pluralTitle' => 'Text Box View Themes',
+            'singularTitle' => 'Text Box View Theme'
+        ]);
+    }
+
+    /**
      * @return null
      */
     public static function modelsWillSave(array $tuples) {

@@ -30,6 +30,16 @@ final class CBModelsPreferences {
     }
 
     /**
+     * @return {stdClass}
+     */
+    public static function info() {
+        return CBModelClassInfo::specToModel((object)[
+            'pluralTitle' => 'Models Preferences',
+            'singularTitle' => 'Models Preferences'
+        ]);
+    }
+
+    /**
      * @return null
      */
     public static function install() {

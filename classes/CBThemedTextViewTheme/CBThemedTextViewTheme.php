@@ -46,15 +46,13 @@ final class CBThemedTextViewTheme {
     }
 
     /**
-     * @return {string}
+     * @return {stdClass}
      */
     public static function info() {
-        return (object)[
+        return CBModelClassInfo::specToModel((object)[
             'pluralTitle' => 'Themed Text View Themes',
-            'pluralTitleAsHTML' => 'Themed Text View Themes',
-            'singularTitle' => 'Themed Text View Theme',
-            'singularTitleAsHTML' => 'Themed Text View Theme'
-        ];
+            'singularTitle' => 'Themed Text View Theme'
+        ]);
     }
 
     /**

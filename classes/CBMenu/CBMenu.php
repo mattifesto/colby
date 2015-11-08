@@ -33,12 +33,10 @@ final class CBMenu {
      * @return {string}
      */
     public static function info() {
-        return (object)[
+        return CBModelClassInfo::specToModel((object)[
             'pluralTitle' => 'Menus',
-            'pluralTitleAsHTML' => 'Menus',
-            'singularTitle' => 'Menu',
-            'singularTitleAsHTML' => 'Menu'
-        ];
+            'singularTitle' => 'Menu'
+        ]);
     }
 
     /**
