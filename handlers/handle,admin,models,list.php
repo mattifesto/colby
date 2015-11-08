@@ -56,7 +56,7 @@ if (is_callable($function = "{$classNameForModels}::compareModels")) {
         <?php foreach ($models as $model) { ?>
             <div class="CBUISectionItem"
                  onclick="window.location = '/admin/models/edit/?ID=<?= $model->ID ?>';">
-                <?= ColbyConvert::textToHTML($model->title); ?>
+                <?= empty($model->title) ? 'Untitled' : cbhtml($model->title) ?>
                 <div class="information"><?php
                     if (is_callable($function = "{$classNameForModels}::modelToSummaryText")) {
                         echo cbhtml(call_user_func($function, $model));
