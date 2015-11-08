@@ -231,9 +231,18 @@ EOT;
      * @return {stdClass}
      */
     public static function fetchSpecForAjax() {
-        $response                   = new CBAjaxResponse();
-        $response->spec             = CBModels::fetchSpecByID($_POST['ID']);
-        $response->wasSuccessful    = true;
+        $response = new CBAjaxResponse();
+        $spec = CBModels::fetchSpecByID($_POST['ID']);
+        $info = CBModelClassInfo::classNameToInfo($spec->className);
+
+        if (!ColbyUser::current()->isOneOfThe($info->userGroup)) {
+            $response->message = "You do not have permission to edit this model.";
+            $response->wasSuccessful = false;
+        } else {
+            $response->spec = $spec;
+            $response->wasSuccessful = true;
+        }
+
         $response->send();
     }
 
