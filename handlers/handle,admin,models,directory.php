@@ -17,6 +17,12 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 $items = [];
 
 foreach (CBHandleAdminModelsDirectory::classMenuItems() as $menuItem) {
+    $info = CBModelClassInfo::classNameToInfo($menuItem->itemClassName);
+
+    if (!ColbyUser::current()->isOneOfThe($info->userGroup)) {
+        continue;
+    }
+
     $item = new stdClass();
 
     if (defined("{$menuItem->itemClassName}::ID")) {
