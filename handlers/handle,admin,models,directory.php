@@ -32,8 +32,7 @@ foreach (CBHandleAdminModelsDirectory::classMenuItems() as $menuItem) {
         $item->href = "/admin/models/list/?class={$menuItem->itemClassName}";
     }
 
-    if (is_callable($function = "{$menuItem->itemClassName}::info")) {
-        $info = call_user_func($function);
+    if (!empty($info->pluralTitleAsHTML)) {
         $item->titleAsHTML = $info->pluralTitleAsHTML;
     } else {
         $item->titleAsHTML = $menuItem->itemClassName;
