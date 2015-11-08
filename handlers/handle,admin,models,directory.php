@@ -39,7 +39,7 @@ foreach (CBModelsPreferences::classNamesOfEditableModels() as $className) {
     if (!empty($info->pluralTitleAsHTML)) {
         $item->titleAsHTML = $info->pluralTitleAsHTML;
     } else {
-        $item->titleAsHTML = $menuItem->itemClassName;
+        $item->titleAsHTML = $className;
     }
 
     $items[$className] = $item;
