@@ -14,15 +14,31 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,models,directory.c
 $spec = (object)['selectedMenuItemName' => 'models'];
 CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
+$items = [];
+
+foreach (CBHandleAdminModelsDirectory::classMenuItems() as $menuItem) {
+    $item = new stdClass();
+    $item->href = "/admin/models/list/?class={$menuItem->itemClassName}";
+
+    if (is_callable($function = "{$menuItem->itemClassName}::info")) {
+        $info = call_user_func($function);
+        $item->titleAsHTML = $info->pluralTitleAsHTML;
+    } else {
+        $item->titleAsHTML = $menuItem->itemClassName;
+    }
+
+    $items[$menuItem->itemClassName] = $item;
+}
+
 ?>
 
 <div class="CBUIRoot">
     <div class="CBUIHalfSpace"></div>
     <div class="CBUISection">
-        <?php foreach (CBHandleAdminModelsDirectory::classMenuItems() as $menuItem) { ?>
+        <?php foreach ($items as $className => $item) { ?>
             <div class="CBUISectionItem CBModelClassSectionItem"
-                 onclick="window.location = '/admin/models/list/?class=<?= $menuItem->itemClassName ?>';">
-                <?= ColbyConvert::textToHTML($menuItem->title); ?>
+                 onclick="window.location = '/admin/models/list/?class=<?= $className ?>';">
+                <?= $item->titleAsHTML ?>
             </div>
         <?php } ?>
     </div>
