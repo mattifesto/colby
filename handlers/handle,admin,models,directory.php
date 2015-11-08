@@ -16,8 +16,12 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
 $items = [];
 
-foreach (CBHandleAdminModelsDirectory::classMenuItems() as $menuItem) {
-    $info = CBModelClassInfo::classNameToInfo($menuItem->itemClassName);
+foreach (CBModelsPreferences::classNamesOfEditableModels() as $className) {
+    if (!class_exists($className)) {
+        continue;
+    }
+
+    $info = CBModelClassInfo::classNameToInfo($className);
 
     if (!ColbyUser::current()->isOneOfThe($info->userGroup)) {
         continue;
@@ -25,11 +29,11 @@ foreach (CBHandleAdminModelsDirectory::classMenuItems() as $menuItem) {
 
     $item = new stdClass();
 
-    if (defined("{$menuItem->itemClassName}::ID")) {
-        $ID = constant("{$menuItem->itemClassName}::ID");
+    if (defined("{$className}::ID")) {
+        $ID = constant("{$className}::ID");
         $item->href = "/admin/models/edit/?ID={$ID}";
     } else {
-        $item->href = "/admin/models/list/?class={$menuItem->itemClassName}";
+        $item->href = "/admin/models/list/?class={$className}";
     }
 
     if (!empty($info->pluralTitleAsHTML)) {
@@ -38,7 +42,7 @@ foreach (CBHandleAdminModelsDirectory::classMenuItems() as $menuItem) {
         $item->titleAsHTML = $menuItem->itemClassName;
     }
 
-    $items[$menuItem->itemClassName] = $item;
+    $items[$className] = $item;
 }
 
 ?>
@@ -60,25 +64,3 @@ foreach (CBHandleAdminModelsDirectory::classMenuItems() as $menuItem) {
 
 CBAdminPageFooterView::renderModelAsHTML();
 CBHTMLOutput::render();
-
-/**
- *
- */
-final class CBHandleAdminModelsDirectory {
-
-    /**
-     * @return [{CBClassMenuItem}]
-     */
-    public static function classMenuItems() {
-        $model      = CBModels::fetchModelByID(CBModelsPreferences::ID);
-        $menuItems  = array_filter($model->classMenuItems, function($menuItem) {
-            if (empty($menuItem->group) || ColbyUser::current()->isOneOfThe($menuItem->group)) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-        return $menuItems;
-    }
-}
