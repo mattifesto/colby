@@ -21,6 +21,7 @@ final class CBModelsPreferences {
      */
     public static function editorURLsForJavaScript() {
         return array_merge([
+                CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
                 CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
                 CBSystemURL . '/javascript/CBStringEditorFactory.js',
                 CBModelsPreferences::URL('CBModelsPreferencesEditorFactory.js')
@@ -70,6 +71,13 @@ final class CBModelsPreferences {
     public static function specToModel(stdClass $spec) {
         $model                  = CBModels::modelWithClassName(__CLASS__);
         $model->classMenuItems  = array_map('CBClassMenuItem::specToModel', $spec->classMenuItems);
+
+        if (isset($spec->editableModelClasses)) {
+            $classes = preg_split('/[,\s]+/', $spec->editableModelClasses);
+            $model->editableModelClasses = array_unique($classes);
+        } else {
+            $model->editableModelClasses = [];
+        }
 
         return $model;
     }

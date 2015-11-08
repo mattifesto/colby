@@ -1,19 +1,2 @@
 .CBModelsPreferencesEditor {
-    max-width:  -moz-max-content;
-    max-width:  -webkit-max-content;
-    max-width:  max-content;
-    padding:    20px;
-}
-
-.CBModelsPreferencesEditor > h1 {
-    padding:    20px 0;
-    text-align: center;
-}
-
-.CBModelsPreferencesEditor > section {
-    border: 1px solid hsl(0, 0%, 90%);
-}
-
-.CBModelsPreferencesEditor > section > h1 {
-    text-align: center;
 }

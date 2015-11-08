@@ -9,13 +9,30 @@ var CBModelsPreferencesEditorFactory = {
      * @return Element
      */
     createEditor : function(args) {
-        var element         = document.createElement("div");
+        var element         = document.createElement("section");
         element.className   = "CBModelsPreferencesEditor";
-        var h1              = document.createElement("h1");
-        h1.textContent      = "Models Preferences";
-        var container       = document.createElement("div");
 
-        element.appendChild(h1);
+        element.appendChild(CBModelsPreferencesEditorFactory.createHalfSpaceElement());
+
+        var section = document.createElement("div");
+        section.className = "CBUISection";
+
+        var item = document.createElement("div");
+        item.className = "CBUISectionItem";
+
+        item.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
+            handleSpecChanged   : args.handleSpecChanged,
+            labelText           : "Editable Model Classes",
+            propertyName        : "editableModelClasses",
+            spec                : args.spec
+        }));
+
+        section.appendChild(item);
+        element.appendChild(section);
+
+        element.appendChild(CBModelsPreferencesEditorFactory.createHalfSpaceElement());
+
+        var container       = document.createElement("div");
 
         if (!args.spec.classMenuItems) {
             args.spec.classMenuItems = [];
@@ -31,6 +48,13 @@ var CBModelsPreferencesEditorFactory = {
             contentElement  : classMenuItemsEditor,
             title           : 'Class Menu Items'
         }));
+
+        return element;
+    },
+
+    createHalfSpaceElement : function() {
+        var element = document.createElement("div");
+        element.className = "CBUIHalfSpace";
 
         return element;
     },
