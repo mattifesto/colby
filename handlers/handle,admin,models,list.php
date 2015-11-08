@@ -11,8 +11,13 @@ if (!isset($_GET['class'])) {
 
 $classNameForModels = $_GET['class'];
 
-if (is_callable($function = "{$classNameForModels}::info")) {
-    $info = call_user_func($function);
+$info = CBModelClassInfo::classNameToInfo($classNameForModels);
+
+if (!ColbyUser::current()->isOneOfThe($info->userGroup)) {
+    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
+}
+
+if (!empty($info->pluralTitle)) {
     $title = $info->pluralTitle;
     $titleAsHTML = $info->pluralTitleAsHTML;
 } else {
