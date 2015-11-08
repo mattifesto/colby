@@ -18,7 +18,13 @@ $items = [];
 
 foreach (CBHandleAdminModelsDirectory::classMenuItems() as $menuItem) {
     $item = new stdClass();
-    $item->href = "/admin/models/list/?class={$menuItem->itemClassName}";
+
+    if (defined("{$menuItem->itemClassName}::ID")) {
+        $ID = constant("{$menuItem->itemClassName}::ID");
+        $item->href = "/admin/models/edit/?ID={$ID}";
+    } else {
+        $item->href = "/admin/models/list/?class={$menuItem->itemClassName}";
+    }
 
     if (is_callable($function = "{$menuItem->itemClassName}::info")) {
         $info = call_user_func($function);
@@ -35,9 +41,9 @@ foreach (CBHandleAdminModelsDirectory::classMenuItems() as $menuItem) {
 <div class="CBUIRoot">
     <div class="CBUIHalfSpace"></div>
     <div class="CBUISection">
-        <?php foreach ($items as $className => $item) { ?>
+        <?php foreach ($items as $item) { ?>
             <div class="CBUISectionItem CBModelClassSectionItem"
-                 onclick="window.location = '/admin/models/list/?class=<?= $className ?>';">
+                 onclick="window.location = '<?= $item->href ?>';">
                 <?= $item->titleAsHTML ?>
             </div>
         <?php } ?>
