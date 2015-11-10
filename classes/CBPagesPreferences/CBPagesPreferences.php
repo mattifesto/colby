@@ -22,6 +22,16 @@ final class CBPagesPreferences {
     }
 
     /**
+     * @return {stdClass}
+     */
+    public static function info() {
+        return CBModelClassInfo::specToModel((object)[
+            'pluralTitle' => 'Pages Preferences',
+            'singularTitle' => 'Pages Preferences'
+        ]);
+    }
+
+    /**
      * @return null
      */
     public static function install() {

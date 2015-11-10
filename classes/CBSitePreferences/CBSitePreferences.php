@@ -82,6 +82,16 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return {stdClass}
+     */
+    public static function info() {
+        return CBModelClassInfo::specToModel((object)[
+            'pluralTitle' => 'Site Preferences',
+            'singularTitle' => 'Site Preferences'
+        ]);
+    }
+
+    /**
      * @return  {string}
      *  Returns a Google Tag Manager ID or an empty string.
      */
