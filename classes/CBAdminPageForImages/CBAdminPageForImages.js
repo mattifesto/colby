@@ -17,7 +17,7 @@ var CBAdminPageForImages = {
     },
 
     /**
-     * @param {Element} element
+     * @param {Element} args.element
      *
      * @return undefined
      */
@@ -37,17 +37,32 @@ var CBAdminPageForImages = {
         xhr.send();
     },
 
+    /**
+     * @param {XMLHttpRequest} args.xhr
+     *
+     * @return undefined
+     */
     fetchImagesDidError : function(args) {
-
+        Colby.alert('The list of images failed to load.')
     },
 
+    /**
+     * @param {Element} args.element
+     * @param {XMLHttpRequest} args.xhr
+     *
+     * @return undefined
+     */
     fetchImagesDidLoad : function(args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
-        args.element.textContent = null;
+        if (response.wasSuccessful) {
+            args.element.textContent = null;
 
-        for (var i = 0; i < response.images.length; i++) {
-            args.element.appendChild(CBAdminImageThumbnailFactory.createElement(response.images[i]));
+            for (var i = 0; i < response.images.length; i++) {
+                args.element.appendChild(CBAdminImageThumbnailFactory.createElement(response.images[i]));
+            }
+        } else {
+            Colby.displayResponse(response);
         }
     }
 };
