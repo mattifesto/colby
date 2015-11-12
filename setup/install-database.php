@@ -43,6 +43,7 @@ Colby::query($SQL);
 
 CBUsers::install();
 CBModels::install();
+CBModelsPreferences::install();
 CBPages::install();
 CBSitePreferences::install();
 CBMainMenu::install();
