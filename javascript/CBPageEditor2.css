@@ -1,3 +1,8 @@
+.CBPageEditor2 {
+    /* move down during development */
+    padding-top: 500px;
+}
+
 .CBPageEditor2 .SpecEditor {
     min-height: 50vh; /* just for testing */
 }
