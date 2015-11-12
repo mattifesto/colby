@@ -3,6 +3,65 @@
 class CBImages {
 
     /**
+     * @param {hex160} $ID
+     *
+     * @return {string} | false
+     *  The original image filepath or false if the image doesn't exist
+     */
+    public static function IDToOriginalFilepath($ID) {
+        $filepaths = glob($s = CBDataStore::filepath([
+            'ID' => $ID,
+            'filename' => 'original.*'
+        ]));
+
+        if (empty($filepaths)) {
+            return false;
+        } else {
+            return $filepaths[0];
+        }
+    }
+
+    /**
+     * @param {hex160} $ID
+     * @param {string} $operation
+     *  An operation string describing the desired image. Images will only be
+     *  reduced, not enlarged and the result image may be smaller than the
+     *  maximum possible image size for the operation string.
+     *
+     *  Ex: "rs200clc200" - Reduce the short edge to 200 pixels and crop the
+     *  long edge to the center 200 pixels.
+     *
+     *  If null is specified as the operation string then the original image
+     *  filepath will be returned.
+     *
+     * @return {string} | false
+     *  The image filepath for false if an image with this ID doesn't exist
+     */
+    public static function makeImage($ID, $operation = null) {
+        $originalImageFilepath = CBImages::IDToOriginalFilepath($ID);
+
+        if ($operation === null || $originalImageFilepath === false) {
+            return $originalImageFilepath;
+        }
+
+        $extension = pathinfo($originalImageFilepath, PATHINFO_EXTENSION);
+        $imageFilepath = CBDataStore::filepath([
+            'ID' => $ID,
+            'filename' => "{$operation}.{$extension}"
+        ]);
+
+        if (!is_file($imageFilepath)) {
+            $size = getimagesize($originalImageFilepath);
+            $projection = CBProjection::withSize($size[0], $size[1]);
+            $projection = CBProjection::applyOpString($projection, $operation);
+
+            CBImages::reduceImageFile($originalImageFilepath, $imageFilepath, $projection);
+        }
+
+        return $imageFilepath;
+    }
+
+    /**
      * @return void
      */
     public static function reduceImageFile($sourceFilepath, $destinationFilepath, $projection) {
