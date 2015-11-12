@@ -82,16 +82,6 @@ final class CBSitePreferences {
     }
 
     /**
-     * @return {stdClass}
-     */
-    public static function info() {
-        return CBModelClassInfo::specToModel((object)[
-            'pluralTitle' => 'Site Preferences',
-            'singularTitle' => 'Site Preferences'
-        ]);
-    }
-
-    /**
      * @return  {string}
      *  Returns a Google Tag Manager ID or an empty string.
      */
@@ -102,6 +92,20 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return {stdClass}
+     */
+    public static function info() {
+        return CBModelClassInfo::specToModel((object)[
+            'pluralTitle' => 'Site Preferences',
+            'singularTitle' => 'Site Preferences'
+        ]);
+    }
+
+    /**
+     * Re-saving these preferences each update ensures that the model always has
+     * valid values for all properties without having to add a new update script
+     * each time the properties change.
+     *
      * @return null
      */
     public static function install() {
@@ -109,9 +113,9 @@ final class CBSitePreferences {
 
         if ($spec === false) {
             $spec = CBModels::modelWithClassName(__CLASS__, ['ID' => CBSitePreferences::ID]);
-
-            CBModels::save([$spec]);
         }
+
+        CBModels::save([$spec]);
     }
 
     /**
