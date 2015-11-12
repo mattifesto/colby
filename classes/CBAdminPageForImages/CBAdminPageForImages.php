@@ -19,9 +19,11 @@ EOT;
         $images = CBDB::SQLToObjects($SQL);
 
         foreach ($images as $image) {
-            $image->thumbnailURL = CBAdminPageForImages::IDToThumbnailURL([
+            $filepath = CBImages::makeImage($image->ID, 'rs200clc200');
+            $filename = pathinfo($filepath, PATHINFO_BASENAME);
+            $image->thumbnailURL = CBDataStore::toURL([
                 'ID' => $image->ID,
-                'extension' => $image->extension
+                'filename' => $filename
             ]);
         }
 
@@ -35,32 +37,6 @@ EOT;
      */
     public static function fetchImagesForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
-    }
-
-    /**
-     * @return {string}
-     */
-    public static function IDToThumbnailURL($args) {
-        $ID = $extension = '';
-        extract($args, EXTR_IF_EXISTS);
-
-        $thumbnailFilepath = CBDataStore::filepath([
-            'ID' => $ID,
-            'filename' => "rs200clc200.{$extension}"
-        ]);
-
-        if (!is_file($thumbnailFilepath)) {
-            // create
-        }
-
-        if (is_file($thumbnailFilepath)) {
-            return CBDataStore::toURL([
-                'ID' => $ID,
-                'filename' => "rs200clc200.{$extension}"
-            ]);
-        } else {
-            return '';
-        }
     }
 
     /**
