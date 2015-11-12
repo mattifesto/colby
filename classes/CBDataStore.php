@@ -35,24 +35,33 @@ class CBDataStore
     }
 
     /**
+     * Deletes a data store with "delete if exists" semantics.
+     *
      * This method does not attempt to remove any intermediate and potentially
      * shared directories that may exist in its path.
      *
-     * This method behaves similarly to `rmdir` in that it will fail if the
-     * data store directory does not exist. If in doubt, call `is_dir` with the
-     * value returned by the `directory` function as the parameter.
+     * @param {hex160} $ID
+     *  Because of the "delete if exists" semantics, this function will throw
+     *  an exception if the ID is not a hex160 value to avoid situations where
+     *  incorrect code believes something has been deleted when it hasn't.
      *
      * @return null
      */
-    public static function deleteForID($args) {
-        $ID = null;
-        extract($args, EXTR_IF_EXISTS);
+    public static function deleteByID($ID) {
+        if (!CBHex160::is($ID)) {
+            throw new InvalidArgumentException("'{$ID}' is not a valid data store ID.");
+        }
 
-        $directory          = CBDataStore::directoryForID($ID);
-        $directoryIterator  = new RecursiveDirectoryIterator($directory,
-                                                             RecursiveDirectoryIterator::SKIP_DOTS);
-        $iteratorIterator   = new RecursiveIteratorIterator($directoryIterator,
-                                                            RecursiveIteratorIterator::CHILD_FIRST);
+        $directory = CBDataStore::directoryForID($ID);
+
+        if (!is_dir($directory)) {
+            return;
+        }
+
+        $directoryIterator = new RecursiveDirectoryIterator($directory,
+            RecursiveDirectoryIterator::SKIP_DOTS);
+        $iteratorIterator = new RecursiveIteratorIterator($directoryIterator,
+            RecursiveIteratorIterator::CHILD_FIRST);
 
         foreach ($iteratorIterator as $fileInfo) {
             if ($fileInfo->isFile()) {
@@ -63,6 +72,15 @@ class CBDataStore
         }
 
         rmdir($directory);
+    }
+
+    /**
+     * @deprecated use deleteByID
+     */
+    public static function deleteForID($args) {
+        $ID = null;
+        extract($args, EXTR_IF_EXISTS);
+        CBDataStore::deleteByID($ID);
     }
 
     /**
