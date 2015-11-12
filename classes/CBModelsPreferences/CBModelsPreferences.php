@@ -50,6 +50,24 @@ final class CBModelsPreferences {
     }
 
     /**
+     * Re-saving these preferences each update ensures that the model always has
+     * valid values for all properties without having to add a new update script
+     * each time the properties change.
+     *
+     * @return null
+     */
+    public static function install() {
+        $spec = CBModels::fetchSpecByID(CBModelsPreferences::ID);
+
+        if ($spec === false) {
+            $spec = CBModels::modelWithClassName(__CLASS__, ['ID' => CBSitePreferences::ID]);
+        }
+
+        CBModels::save([$spec]);
+    }
+
+
+    /**
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
