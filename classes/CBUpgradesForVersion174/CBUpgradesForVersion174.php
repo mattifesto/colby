@@ -23,6 +23,6 @@ EOT;
 
         $IDs = CBDB::SQLToArray($SQL);
 
-        array_walk($IDs, 'CBImages::deleteImageByID');
+        array_walk($IDs, 'CBImages::deleteByID');
     }
 }

@@ -3,6 +3,23 @@
 class CBImages {
 
     /**
+     * Deletes an image from the database and deletes all versions of the image
+     * from disk. This function should rarely be used as images are generally
+     * considered to be permanent resources because it's impossible to track
+     * dependencies especially since external sites and Google can link to them.
+     * Only delete when necessary or in specific situations where dependencies
+     * are understood.
+     *
+     * @return null
+     */
+    public static function deleteByID($ID) {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $SQL = "DELETE FROM `CBImages` WHERE `ID` = {$IDAsSQL}";
+        Colby::query($SQL);
+        CBDataStore::deleteByID($ID);
+    }
+
+    /**
      * @param {hex160} $ID
      *
      * @return {string} | false
