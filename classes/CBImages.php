@@ -298,13 +298,17 @@ EOT;
     public static function uploadImageWithName($name) {
         ColbyImageUploader::verifyUploadedFile($name);
 
+        $temporaryFilepath = $_FILES[$name]['tmp_name'];
+        $size = getimagesize($temporaryFilepath);
+
+        if ($size === false || !in_array($size[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
+            throw new Exception('The file specified is either not a an image or has a file format that is not supported.');
+        }
+
         Colby::query('START TRANSACTION');
 
         try {
             $timestamp          = isset($_POST['timestamp']) ? $_POST['timestamp'] : time();
-            $temporaryFilepath  = $_FILES[$name]['tmp_name'];
-
-            $size               = getimagesize($temporaryFilepath);
             $extension          = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
             $ID                 = sha1_file($temporaryFilepath);
             $dataStore          = new CBDataStore($ID);
