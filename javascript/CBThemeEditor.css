@@ -1,9 +1,9 @@
-.CBThemedTextViewThemeEditor {
+.CBThemeEditor {
     background-color: hsl(0, 0%, 90%);
     padding: 20px 0;
 }
 
-.CBThemedTextViewThemeEditor > .container {
+.CBThemeEditor > .container {
     background-color: white;
     border-color: hsl(0, 0%, 80%);
     border-style: solid;
@@ -13,17 +13,17 @@
 }
 
 @media all and (min-width: 641px) {
-    .CBThemedTextViewThemeEditor > .container {
+    .CBThemeEditor > .container {
         border-radius: 10px;
         border-width: 1px;
     }
 }
 
-.CBThemedTextViewThemeEditor > .container > * + * {
+.CBThemeEditor > .container > * + * {
     border-top: 1px solid hsl(0, 0%, 80%);
 }
 
-.CBThemedTextViewThemeEditor .buttondiv {
+.CBThemeEditor .buttondiv {
     align-items: center;
     display: flex;
     height: 44px;

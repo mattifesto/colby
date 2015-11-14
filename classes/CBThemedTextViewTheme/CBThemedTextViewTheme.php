@@ -5,16 +5,10 @@ final class CBThemedTextViewTheme {
     /**
      * @return [{string}]
      */
-    public static function editorURLsForCSS() {
-        return [ CBThemedTextViewTheme::URL('CBThemedTextViewThemeEditor.css') ];
-    }
-
-    /**
-     * @return [{string}]
-     */
     public static function editorURLsForJavaScript() {
         return [
             CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
+            CBSystemURL . '/javascript/CBThemeEditorFactory.js',
             CBThemedTextViewTheme::URL('CBThemedTextViewThemeEditorFactory.js')
         ];
     }
