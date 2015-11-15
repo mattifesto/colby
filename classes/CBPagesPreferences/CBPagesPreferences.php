@@ -11,11 +11,12 @@ final class CBPagesPreferences {
      */
     public static function classNamesForAddableViews() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        $classNames = array_values(array_diff($model->supportedViewClassNames, $model->deprecatedViewClassNames));
-
-        return array_filter($classNames, function ($className) {
+        $classNames = array_diff($model->supportedViewClassNames, $model->deprecatedViewClassNames);
+        $classNames = array_filter($classNames, function ($className) {
             return class_exists($className);
         });
+
+        return array_values($classNames);
     }
 
     /**
@@ -25,10 +26,11 @@ final class CBPagesPreferences {
      */
     public static function classNamesForEditableViews() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-
-        return array_filter($model->supportedViewClassNames, function ($className) {
+        $classNames = array_filter($model->supportedViewClassNames, function ($className) {
             return class_exists($className);
         });
+
+        return array_values($classNames);
     }
 
     /**
