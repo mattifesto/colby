@@ -42,6 +42,7 @@ var CBAdminPageForEditingModels = {
      */
     handleDOMContentLoaded : function() {
         var formData = new FormData();
+        formData.append("className", CBModelClassName);
         formData.append("ID", CBModelID);
 
         var xhr     = new XMLHttpRequest();
