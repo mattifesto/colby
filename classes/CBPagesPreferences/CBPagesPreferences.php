@@ -5,6 +5,44 @@ final class CBPagesPreferences {
     const ID = '3ff6fabd8a0da44f1b2d5f5faee6961af8e5a9df';
 
     /**
+     * Returns an array of view class names that can be added to a page.
+     *
+     * @return [{string}]
+     */
+    public static function classNamesForAddableViews() {
+        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
+        $classNames = array_values(array_diff($model->supportedViewClassNames, $model->deprecatedViewClassNames));
+
+        return array_filter($classNames, function ($className) {
+            return class_exists($className);
+        });
+    }
+
+    /**
+     * Returns an array of view class names that can be edited for a page.
+     *
+     * @return [{string}]
+     */
+    public static function classNamesForEditableViews() {
+        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
+
+        return array_filter($model->supportedViewClassNames, function ($className) {
+            return class_exists($className);
+        });
+    }
+
+    /**
+     * Returns an array of class names for page kinds.
+     *
+     * @return [{string}]
+     */
+    public static function classNamesForKinds() {
+        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
+
+        return $model->classNamesForKinds;
+    }
+
+    /**
      * @return [{string}]
      */
     public static function editorURLsForCSS() {
@@ -39,9 +77,10 @@ final class CBPagesPreferences {
 
         if ($spec === false) {
             $spec = CBModels::modelWithClassName(__CLASS__, [ 'ID' => CBPagesPreferences::ID ]);
-            $spec->supportedViewClassNames = 'CBBackgroundView CBImageLinkView CBTextBoxView';
-            CBModels::save([$spec]);
+            $spec->supportedViewClassNames = 'CBBackgroundView CBImageLinkView CBThemedTextView';
         }
+
+        CBModels::save([$spec]);
     }
 
     /**
@@ -49,33 +88,23 @@ final class CBPagesPreferences {
      */
     public static function specToModel(stdClass $spec) {
         $model                              = CBModels::modelWithClassName(__CLASS__);
+        $model->classNamesForKinds          = [];
+        $model->deprecatedViewClassNames    = [];
         $model->supportedViewClassNames     = [];
-        $model->selectableViewClassNames    = [];
 
         if (isset($spec->supportedViewClassNames)) {
-            $model->supportedViewClassNames = preg_split(
-                '/[\s]+/', $spec->supportedViewClassNames, null, PREG_SPLIT_NO_EMPTY);
-
-            array_walk($model->supportedViewClassNames, function($className) {
-                if (!class_exists($className)) {
-                    throw new Exception("The view class \"{$className}\" is not installed.");
-                }
-            });
+            $model->supportedViewClassNames = array_unique(preg_split(
+                '/[\s,]+/', $spec->supportedViewClassNames, null, PREG_SPLIT_NO_EMPTY));
         }
 
         if (isset($spec->deprecatedViewClassNames)) {
-            $deprecatedViewClassNames           = preg_split(
-                '/[\s]+/', $spec->deprecatedViewClassNames, null, PREG_SPLIT_NO_EMPTY);
-            $model->selectableViewClassNames    = array_diff($model->supportedViewClassNames, $deprecatedViewClassNames);
-        } else {
-            $model->selectableViewClassNames    = $model->supportedViewClassNames;
+            $model->deprecatedViewClassNames = array_unique(preg_split(
+                '/[\s,]+/', $spec->deprecatedViewClassNames, null, PREG_SPLIT_NO_EMPTY));
         }
 
         if (isset($spec->classNamesForKinds)) {
-            $model->classNamesForKinds = preg_split(
-                '/[\s]+/', $spec->classNamesForKinds, null, PREG_SPLIT_NO_EMPTY);
-        } else {
-            $model->classNamesForKinds = [];
+            $model->classNamesForKinds = array_unique(preg_split(
+                '/[\s,]+/', $spec->classNamesForKinds, null, PREG_SPLIT_NO_EMPTY));
         }
 
         return $model;

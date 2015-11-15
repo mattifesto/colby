@@ -65,13 +65,11 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
     CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor2.js');
 }
 
-$pagesPreferences           = CBModels::fetchModelByID(CBPagesPreferences::ID);
-
 /**
  * Include all of the supported views.
  */
 
-foreach ($pagesPreferences->supportedViewClassNames as $className) {
+foreach (CBPagesPreferences::classNamesForEditableViews() as $className) {
     if (is_callable($function = "{$className}::editorURLsForCSS")) {
         $URLs = call_user_func($function);
         array_walk($URLs, 'CBHTMLOutput::addCSSURL');
@@ -89,7 +87,7 @@ foreach ($pagesPreferences->supportedViewClassNames as $className) {
  * Create the list of selectable views available to be added to the page.
  */
 
-CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', $pagesPreferences->selectableViewClassNames);
+CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', CBPagesPreferences::classNamesForAddableViews());
 
 /**
  * @deprecated use kinds
@@ -101,11 +99,7 @@ $listNames = CBViewPageLists::availableListNames();
 CBHTMLOutput::exportVariable('CBPageEditorAvailablePageListClassNames', $listNames);
 
 /* kinds */
-if (isset($pagesPreferences->classNamesForKinds)) {
-    CBHTMLOutput::exportVariable('CBClassNamesForKinds', $pagesPreferences->classNamesForKinds);
-} else {
-    CBHTMLOutput::exportVariable('CBClassNamesForKinds', []);
-}
+CBHTMLOutput::exportVariable('CBClassNamesForKinds', CBPagesPreferences::classNamesForKinds());
 
 /**
  * Export page templates
