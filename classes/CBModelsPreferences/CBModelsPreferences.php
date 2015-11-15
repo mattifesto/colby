@@ -6,6 +6,7 @@ final class CBModelsPreferences {
     const defaultClassNamesOfEditableModels = [
         'CBMenu',
         'CBTextBoxViewTheme',
+        'CBThemedMenuViewTheme',
         'CBThemedTextViewTheme',
         'CBSitePreferences',
         'CBModelsPreferences',
