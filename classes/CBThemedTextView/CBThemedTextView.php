@@ -97,6 +97,7 @@ EOT;
         } else {
             $class = "CBThemedTextView";
         }
+
         if ($model->URLAsHTML) {
             $open   = "<a href=\"{$model->URLAsHTML}\" class=\"{$class}\">";
             $close  = '</a>';
@@ -121,10 +122,12 @@ EOT;
     }
 
     /**
+     * @param {stdClass} $spec
+     *
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
-        $model = CBView::modelWithClassName(__CLASS__);
+        $model = CBModels::modelWithClassName(__CLASS__);
         $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? trim($spec->contentAsMarkaround) : '';
         $model->contentAsHTML = ColbyConvert::markaroundToHTML($model->contentAsMarkaround);
         $model->themeID = isset($spec->themeID) ? $spec->themeID : false;
@@ -138,6 +141,8 @@ EOT;
     }
 
     /**
+     * @param {string} $filename
+     *
      * @return {string}
      */
     public static function URL($filename) {
