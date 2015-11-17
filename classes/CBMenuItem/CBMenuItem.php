@@ -26,10 +26,10 @@ final class CBMenuItem {
      */
     public static function specToModel(stdClass $spec) {
         $model              = CBModels::modelWithClassName(__CLASS__);
-        $model->name        = isset($spec->name) ? (string)$spec->name : '';
+        $model->name        = isset($spec->name) ? ColbyConvert::textToStub($spec->name) : '';
         $model->text        = isset($spec->text) ? (string)$spec->text : '';
         $model->textAsHTML  = ColbyConvert::textToHTML($model->text);
-        $model->URL         = isset($spec->URL) ? (string)$spec->URL : '';
+        $model->URL         = isset($spec->URL) ? trim($spec->URL) : '';
         $model->URLAsHTML   = ColbyConvert::textToHTML($model->URL);
 
         return $model;
