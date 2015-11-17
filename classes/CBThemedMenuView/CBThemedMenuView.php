@@ -107,7 +107,7 @@ EOT;
      */
     public static function renderMenuItem(stdClass $menuItem) { ?>
         <li>
-            <a href="<?= $menuItem->URLAsHTML ?>"><?= $menuItem->textAsHTML ?></a>
+            <a href="<?= $menuItem->URLAsHTML ?>"><span><?= $menuItem->textAsHTML ?></span></a>
         </li>
     <?php }
 
@@ -131,6 +131,11 @@ EOT;
             $class = "CBThemedMenuView";
         } else {
             $class = "CBThemedMenuView T{$model->themeID}";
+
+            CBHTMLOutput::addCSSURL(CBDataStore::toURL([
+                'ID' => $model->themeID,
+                'filename' => 'CBThemedMenuViewTheme.css'
+            ]));
         }
 
         ?>
