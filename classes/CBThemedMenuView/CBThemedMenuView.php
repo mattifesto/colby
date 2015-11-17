@@ -105,11 +105,30 @@ EOT;
      *
      * @return null
      */
-    public static function renderMenuItem(stdClass $menuItem) { ?>
-        <li>
+    public static function renderMenuItem(stdClass $menuItem, array $args = []) {
+        $selected = false;
+        extract($args, EXTR_IF_EXISTS);
+
+        $classes = [];
+
+        if (!empty($menuItem->name)) {
+            $classes[] = $menuItem->name;
+        }
+
+        if ($selected) {
+            $classes[] = "selected";
+        }
+
+        $classes = implode(' ', $classes);
+
+        ?>
+
+        <li class="<?= $classes ?>">
             <a href="<?= $menuItem->URLAsHTML ?>"><span><?= $menuItem->textAsHTML ?></span></a>
         </li>
-    <?php }
+
+        <?php
+    }
 
     /**
      * @param {stdClass} $model
@@ -140,9 +159,14 @@ EOT;
 
         ?>
 
-        <div class="<?= $class ?>"><ul>
-            <?php array_walk($menu->items, 'CBThemedMenuView::renderMenuItem'); ?>
-        </ul></div>
+        <div class="<?= $class ?>"><ul> <?php
+
+            foreach($menu->items as $item) {
+                $selected = (!empty($model->selectedItemName) && $model->selectedItemName === $item->name);
+                CBThemedMenuView::renderMenuItem($item, ['selected' => $selected]);
+            }
+
+        ?> </ul></div>
 
         <?php
     }
