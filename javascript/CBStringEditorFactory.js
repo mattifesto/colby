@@ -59,6 +59,8 @@ var CBStringEditorFactory = {
     },
 
     /**
+     * @deprecated use createSelectEditor2
+     *
      * @param   {string}    className
      * @param   {Array}     data
      * @param   {string}    dataUpdatedEvent
@@ -103,6 +105,50 @@ var CBStringEditorFactory = {
         element.appendChild(select);
 
         return element;
+    },
+
+    /**
+     * @param function args.handleSpecChanged
+     * @param string args.labelTextContent
+     * @param [{ "value" : string, "textContent" : string }] args.optionData
+     * @param string args.propertyName
+     * @param Object args.spec
+     *
+     * @return { "element" : Element, "updateSelectEditorOptionsCallback" : function }
+     */
+    createSelectEditor2 : function(args) {
+        var ID              = Colby.random160();
+        var element         = document.createElement("div");
+        element.className   = "CBStringEditor select";
+        var label           = document.createElement("label");
+        label.htmlFor       = ID;
+        label.textContent   = args.labelTextContent || "";
+        var select          = document.createElement("select");
+        select.id           = ID;
+
+        select.addEventListener("change", CBStringEditorFactory.handleInput.bind(undefined, {
+            element             : select,
+            handleSpecChanged   : args.handleSpecChanged,
+            propertyName        : args.propertyName,
+            spec                : args.spec
+        }));
+
+        var updateSelectEditorOptionsCallback = CBStringEditorFactory.updateSelectEditorOptions.bind(undefined, {
+            propertyName    : args.propertyName,
+            selectElement   : select,
+            spec            : args.spec,
+        });
+
+        updateSelectEditorOptionsCallback.call(args.options);
+
+        element.appendChild(label);
+        element.appendChild(select);
+
+        return {
+            element : element,
+            selectElement : select,
+            updateSelectEditorOptionsCallback : updateSelectEditorOptionsCallback,
+        };
     },
 
     /**
@@ -214,5 +260,57 @@ var CBStringEditorFactory = {
     handlePropertyUpdated : function(args) {
         args.element.value = args.spec[args.propertyName];
         args.handleSpecChanged.call();
-    }
+    },
+
+    /**
+     * 1. If the property on the spec is `undefined`, then selected value should
+     *    be "" because every select element (in this context) should have a
+     *    default option with a value of "" and undefined and "" both mean "use
+     *    the default option". The select element's value property does not
+     *    automatically normalize `undefined` to "".
+     *
+     * @param string args.propertyName
+     * @param Element args.selectElement
+     * @param Object args.spec
+     * @param [{ "value" : string, "textContent" : string }] optionData
+     *
+     * @return undefined
+     */
+    updateSelectEditorOptions : function(args, optionData) {
+        var childElement;
+        var selectedValue   = args.spec[args.propertyName] || ""; // 1
+        var valueWasFound   = false;
+        args.selectElement.textContent = null;
+
+        if (optionData !== undefined) {
+            optionData.forEach(function(optionDatum) {
+                var option          = document.createElement("option");
+                option.textContent  = optionDatum.textContent;
+                option.value        = optionDatum.value;
+
+                args.selectElement.appendChild(option);
+
+                if (optionDatum.value == selectedValue) {
+                    valueWasFound = true;
+                }
+            });
+        }
+
+        /**
+         * If the selected value wasn't found in the list of options and the
+         * value isn't empty, created a deprecated option to potentially
+         * preserve the value if the list of options is incorrect for some
+         * reason.
+         */
+
+        if (!valueWasFound && selectedValue) {
+            var option          = document.createElement("option");
+            option.textContent  = "(Original Value)";
+            option.value        = selectedValue;
+
+            args.selectElement.appendChild(option);
+        }
+
+        args.selectElement.value = selectedValue;
+    },
 };
