@@ -11,7 +11,7 @@ final class CBPagesTests {
             ['///////',                             ''],
             ['///bob// //sam///',                   'bob/sam'],
             ['bob/sam',                             'bob/sam'],
-            ['///Piñata // Örtega Smith /// //',    'pinata/ortega-smith']
+            ['///Piñata // Örtega Smith /// //',    'piata/rtega-smith']
         ];
 
         foreach ($tests as $test) {

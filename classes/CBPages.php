@@ -487,7 +487,7 @@ EOT;
     /**
      * @return {string}
      *
-     * "////Piñata///Örtega Smith//" --> "pinata/ortega-smith"
+     * "////Piñata///Örtega Smith//" --> "piata/rtega-smith"
      */
     public static function stringToDencodedURIPath($string) {
         $stubs = CBRequest::decodedPathToDecodedStubs($string);

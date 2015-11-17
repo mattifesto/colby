@@ -218,57 +218,44 @@ class ColbyConvert
         return Colby::mysqli()->escape_string($text);
     }
 
-    ///
-    /// converts plain text to a very clean URL stub
-    ///
-    /// I debated a long time before including this function in Colby. I was
-    /// starting to work on an image uploader where having friendly URL stubs
-    /// would be nice.
-    ///
-    /// the facts made me finally decide to include this code:
-    ///
-    ///  - it's commonly useful
-    ///  - the implementation turned out to be very simple
-    ///  - friendly stubs can improve SEO
-    ///  - regular users like this kind behavior from web applications
-    ///    it makes them happy
-    ///
-    /// WordPress and other people have implemented this with a long list
-    /// of character replacements, but the iconv() function makes it much
-    /// easier.
-    ///
-    /// caution:
-    ///
-    ///   This function should not be assumed to behave a certain way. It's
-    ///   intended to change its behavior as implementation opportunities
-    ///   arise and as the nature of URLs changes. It will always return a URL
-    ///   that's clean and meant to be forward compatible, but the exact nature
-    ///   ot the returned URLs may change over time.
-    ///
-    /// current algorithm:
-    ///
-    /// 1. iconv() converts UTF-8 to ASCII
-    ///    since ASCII is a subset of UTF-8 the string is still also UTF-8
-    ///    iconv will do some handy coversions, like '£' becomes 'lb'
-    ///
-    /// 2. replace sequences of white space and hyphens with one hyphen
-    ///
-    /// 3. remove all characters except: a-z, A-Z, 0-9, and hyphen
-    ///
-    /// 4. remove leading hyphens
-    ///
-    /// 5. remove trailing hyphens
-    ///
-    /// 6. replace two or more adjacent hyphens with one hypen
-    ///    step 3 can result in characters being removed which causes this
-    ///
-    /// 7. make all characters lowercase
-    ///
-    /// common example: 'Piñata Örtega' --> 'pinata-ortega'
-    ///
-    public static function textToStub($text)
-    {
-        $stub = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
+    /**
+     * Converts plain text to a simple "stub".
+     *
+     * A stub is a string that contains only the characters [0-9a-z-]. It
+     * replaces spaces with a hyphens and trims the string.
+     *
+     * Useful for:
+     *
+     *  - URL stubs
+     *  - HTML classes and IDs
+     *
+     * History: This function used to use iconv() to convert international
+     * characters to their ASCII base characters, but this is unreliable on
+     * different hosts. Future options include maintaining a list of character
+     * replacements which is a method used by many systems.
+     *
+     * current algorithm:
+     *
+     * 1. trim the input string, which also converts the input to a string if
+     *    it isn't already one
+     *
+     * 2. replace sequences of white space and hyphens with one hyphen
+     *
+     * 3. remove all characters except: a-z, A-Z, 0-9, and hyphen
+     *
+     * 4. remove leading hyphens
+     *
+     * 5. remove trailing hyphens
+     *
+     * 6. replace two or more adjacent hyphens with one hypen
+     *    step 3 can result in characters being removed which causes this
+     *
+     * 7. make all characters lowercase
+     *
+     * common example: 'Piñata Örtega' --> 'piata-rtega'
+     */
+    public static function textToStub($text) {
+        $stub = trim($text);
 
         $patterns =     array('/[\s-]+/', '/[^a-zA-Z0-9-]/', '/^-+/', '/-+$/', '/--+/');
         $replacements = array('-'       , ''               , ''     , ''     , '-'    );
