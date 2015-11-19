@@ -69,7 +69,7 @@ final class CBModelsPreferences {
 
 
     /**
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
         $model = CBModels::modelWithClassName(__CLASS__);
@@ -85,9 +85,10 @@ final class CBModelsPreferences {
     }
 
     /**
-     * @return {string}
+     * @return string
      */
     public static function URL($filename) {
-        return CBSystemURL . "/classes/CBModelsPreferences/{$filename}";
+        $class = __CLASS__;
+        return CBSystemURL . "/classes/{$class}/{$filename}";
     }
 }
