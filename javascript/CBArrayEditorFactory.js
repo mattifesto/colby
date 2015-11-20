@@ -51,21 +51,76 @@ var CBArrayEditorFactory = {
             section.appendChild(element);
         });
 
-        var item = document.createElement("div");
-        item.className = "CBUISectionItem";
-        item.textContent = "Add";
+        section.appendChild(CBArrayEditorFactory.createMenu({
+            array : args.array,
+            arrayChangedCallback : args.arrayChangedCallback,
+            classNames : args.classNames,
+            navigateCallback : args.navigateCallback,
+            sectionElement : section,
+        }));
+
+        element.appendChild(section);
+
+        return element;
+    },
+
+    /**
+     * @param [Object] args.array
+     * @param function args.arrayChangedCallback
+     * @param [string] args.classNames
+     * @param function args.navigateCallback
+     * @param Element args.sectionElement
+     *
+     * @return Element
+     */
+    createMenu : function (args) {
+        var item;
+        var element = document.createElement("div");
+        element.className = "CBUISectionItem menu";
+
+        item = document.createElement("div");
+        item.textContent = "append";
 
         item.addEventListener("click", CBArrayEditorFactory.append.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
             navigateCallback : args.navigateCallback,
-            sectionElement : section,
+            sectionElement : args.sectionElement,
             spec : { className : "CBMenuItem" },
         }));
 
-        section.appendChild(item);
-        element.appendChild(section);
+        element.appendChild(item);
+
+        item = document.createElement("div");
+        item.textContent = "arrange";
+
+        item.addEventListener("click", CBArrayEditorFactory.setEditorMode.bind(undefined, {
+            mode : "arrange",
+            sectionElement : args.sectionElement,
+        }));
+
+        element.appendChild(item);
+
+        item = document.createElement("div");
+        item.textContent = "edit";
+
+        item.addEventListener("click", CBArrayEditorFactory.setEditorMode.bind(undefined, {
+            mode : "edit",
+            sectionElement : args.sectionElement,
+        }));
+
+        element.appendChild(item);
+
+        item = document.createElement("div");
+        item.textContent = "insert";
+
+        item.addEventListener("click", CBArrayEditorFactory.setEditorMode.bind(undefined, {
+            mode : "insert",
+            sectionElement : args.sectionElement,
+        }));
+
+        element.appendChild(item);
 
         return element;
     },
@@ -83,29 +138,34 @@ var CBArrayEditorFactory = {
         var element = document.createElement("div");
         element.className = "CBUISectionItem";
 
-        element.addEventListener("click", CBArrayEditorFactory.handleItemWasClicked.bind(undefined, {
-            element : element,
-            sectionElement : args.sectionElement,
-        }));
-
         var content = document.createElement("div");
         content.className = "content";
         content.textContent = args.spec.className;
 
-        element.appendChild(content);
-
-        action = document.createElement("div");
-        action.className = "action edit";
-        action.textContent = "edit";
-
-        action.addEventListener("click", args.navigateCallback.bind(undefined, {
+        content.addEventListener("click", args.navigateCallback.bind(undefined, {
             spec : args.spec,
         }));
+
+        element.appendChild(content);
+
+        // arrange
+
+        action = document.createElement("div");
+        action.className = "action arrange up";
+        action.textContent = "up";
 
         element.appendChild(action);
 
         action = document.createElement("div");
-        action.className = "action delete";
+        action.className = "action arrange down";
+        action.textContent = "down";
+
+        element.appendChild(action);
+
+        // edit
+
+        action = document.createElement("div");
+        action.className = "action edit cut";
         action.textContent = "x";
 
         action.addEventListener("click", CBArrayEditorFactory.handleDeleteWasClicked.bind(undefined, {
@@ -117,7 +177,43 @@ var CBArrayEditorFactory = {
 
         element.appendChild(action);
 
+        action = document.createElement("div");
+        action.className = "action edit copy";
+        action.textContent = "c";
+
+        element.appendChild(action);
+
+        action = document.createElement("div");
+        action.className = "action edit paste";
+        action.textContent = "p";
+
+        element.appendChild(action);
+
+        // insert
+
+        action = document.createElement("div");
+        action.className = "action insert";
+        action.textContent = "+";
+
+        element.appendChild(action);
+
         return element;
+    },
+
+    /**
+     * @param Element args.element
+     * @param Element args.sectionElement
+     *
+     * @return undefined
+     */
+    handleContentWasClicked : function (args) {
+        var elements = args.sectionElement.querySelectorAll(".CBUISectionItem.selected");
+
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.remove("selected");
+        }
+
+        args.element.classList.add("selected");
     },
 
     /**
@@ -141,19 +237,13 @@ var CBArrayEditorFactory = {
     },
 
     /**
-     * @param Element args.element
-     * @param Element args.sectionElement
+     * @param string mode
+     * @param Element sectionElement
      *
      * @return undefined
      */
-    handleItemWasClicked : function (args) {
-        var elements = args.sectionElement.querySelectorAll(".CBUISectionItem.selected");
-
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].classList.remove("selected");
-        }
-
-        args.element.classList.add("selected");
+    setEditorMode : function (args) {
+        args.sectionElement.className = "CBUISection " + args.mode;
     },
 };
 

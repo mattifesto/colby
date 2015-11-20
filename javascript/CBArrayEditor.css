@@ -5,32 +5,56 @@
     display: flex;
 }
 
-.CBArrayEditor .CBUISectionItem.selected {
-    background-color: hsl(60, 100%, 95%);
+.CBArrayEditor .CBUISectionItem.menu {
+    align-items: center;
+    justify-content: space-around;
+}
+
+.CBArrayEditor .CBUISectionItem.menu > div {
+    color: hsl(210, 100%, 50%);
+    cursor: pointer;
 }
 
 .CBArrayEditor .CBUISectionItem .content {
     flex: 1 1 auto;
+    padding: 5px 10px;
 }
 
 .CBArrayEditor .CBUISectionItem .action {
+    align-items: center;
     cursor: pointer;
     display: none;
+    justify-content: center;
     width: 50px;
     flex: none;
 }
 
-.CBArrayEditor .CBUISectionItem.selected .action,
-.CBArrayEditor .CBUISectionItem:hover .action {
-    align-items: center;
+.CBArrayEditor .CBUISection.arrange .action.arrange,
+.CBArrayEditor .CBUISection.edit .action.edit,
+.CBArrayEditor .CBUISection.insert .action.insert {
     display: flex;
-    justify-content: center;
 }
 
-.CBArrayEditor .CBUISectionItem .action.delete {
+.CBArrayEditor .CBUISectionItem .action.up {
+    background-color: hsl(30, 100%, 70%);
+}
+
+.CBArrayEditor .CBUISectionItem .action.down {
+    background-color: hsl(210, 100%, 70%);
+}
+
+.CBArrayEditor .CBUISectionItem .action.cut {
     background-color: hsl(0, 100%, 70%);
 }
 
-.CBArrayEditor .CBUISectionItem .action.edit {
+.CBArrayEditor .CBUISectionItem .action.copy {
+    background-color: hsl(60, 100%, 70%);
+}
+
+.CBArrayEditor .CBUISectionItem .action.paste {
     background-color: hsl(120, 100%, 70%);
+}
+
+.CBArrayEditor .CBUISectionItem .action.insert {
+    background-color: hsl(330, 100%, 70%);
 }
