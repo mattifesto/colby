@@ -25,10 +25,10 @@ var CBArrayEditorFactory = {
     },
 
     /**
-     * @param [Object] array
-     * @param function arrayChangedCallback
-     * @param [string] classNames
-     * @param function navigateCallback
+     * @param [Object] args.array
+     * @param function args.arrayChangedCallback
+     * @param [string] args.classNames
+     * @param function args.navigateCallback
      *
      * @return Element
      */
@@ -41,7 +41,10 @@ var CBArrayEditorFactory = {
 
         args.array.forEach(function (spec) {
             var element = CBArrayEditorFactory.createSectionItemElement({
+                array : args.array,
+                arrayChangedCallback : args.arrayChangedCallback,
                 navigateCallback : args.navigateCallback,
+                sectionElement : section,
                 spec : spec,
             });
 
@@ -68,7 +71,10 @@ var CBArrayEditorFactory = {
     },
 
     /**
-     * @param Object spec
+     * @param [Object] args.array
+     * @param function args.arrayChangedCallback
+     * @param Element args.sectionElement
+     * @param Object args.spec
      *
      * @return Element
      */
@@ -80,15 +86,45 @@ var CBArrayEditorFactory = {
         var edit = document.createElement("div");
         edit.textContent = "edit";
 
-        var editorFactory   = window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
-        var editor          = editorFactory.createEditor(args);
-
         edit.addEventListener("click", args.navigateCallback.bind(undefined, {
             spec : args.spec,
         }));
 
         element.appendChild(edit);
+
+        var action = document.createElement("div");
+        action.textContent = "delete";
+
+        action.addEventListener("click", CBArrayEditorFactory.handleDelete.bind(undefined, {
+            array : args.array,
+            arrayChangedCallback : args.arrayChangedCallback,
+            sectionElement : args.sectionElement,
+            spec : args.spec,
+        }));
+
+        element.appendChild(action);
+
         return element;
+    },
+
+    /**
+     * @param [Object] args.array
+     * @param function args.arrayChangedCallback
+     * @param Element args.sectionElement
+     * @param Object args.spec
+     *
+     * @return undefined
+     */
+    handleDelete : function (args) {
+        if (confirm("Are you sure you want to remove this item?")) {
+            var index = args.array.indexOf(args.spec);
+            var itemElement = args.sectionElement.children.item(index);
+
+            args.array.splice(index, 1); // remove at index
+            args.sectionElement.removeChild(itemElement);
+
+            args.arrayChangedCallback.call();
+        }
     },
 };
 
