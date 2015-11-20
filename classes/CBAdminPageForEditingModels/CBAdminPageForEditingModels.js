@@ -66,17 +66,30 @@ var CBAdminPageForEditingModels = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            var spec = response.spec || {
-                ID          : CBModelID,
-                className   : CBModelClassName
-            };
+            var spec = response.spec || { ID : CBModelID, className : CBModelClassName };
+            var navigationState = { stack : [spec] }
 
             CBAdminPageForEditingModels.renderEditor({
-                spec : spec
+                navigationState : navigationState,
             });
+
+            window.addEventListener("popstate", CBAdminPageForEditingModels.handlePopState.bind(undefined, {
+                navigationState : navigationState,
+            }));
         } else {
             Colby.displayResponse(response);
         }
+    },
+
+    /**
+     * @param Object args.navigationState
+     *
+     * @return undefined
+     */
+    handlePopState : function (args, event) {
+        CBAdminPageForEditingModels.renderEditor({
+            navigationState : args.navigationState,
+        });
     },
 
     /**
@@ -213,25 +226,46 @@ var CBAdminPageForEditingModels = {
     },
 
     /**
-     * @param {Object} args.spec
+     * @param Object args.navigationState
+     *
+     * @return undefined
+     */
+    navigate : function (args, spec) {
+        var index = (history.state) ? history.state.index : 0;
+
+        index++;
+        args.navigationState.stack.splice(index, Number.MAX_VALUE, spec);
+        history.pushState({ index : index });
+
+        CBAdminPageForEditingModels.renderEditor({
+            navigationState : args.navigationState,
+        });
+    },
+
+    /**
+     * @param Object args.navigationState
      *
      * @return undefined
      */
     renderEditor : function(args) {
-        var editorFactory = window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
+        var index = (history.state) ? history.state.index : 0;
+        var spec = args.navigationState.stack[index];
+        var editorFactory = window[spec.className + "EditorFactory"] || CBEditorWidgetFactory;
         var main = document.getElementsByTagName("main")[0];
+        main.textContent = null;
         var handleSpecChanged = CBAdminPageForEditingModels.handleSpecChanged.bind(undefined, {
             info : {},
-            spec : args.spec
+            spec : args.navigationState.stack[0],
         });
 
         main.appendChild(CBAdminPageForEditingModels.createHeader({
-            spec: args.spec
+            spec : spec
         }));
 
         main.appendChild(editorFactory.createEditor({
             handleSpecChanged : handleSpecChanged,
-            spec : args.spec
+            navigateCallback : CBAdminPageForEditingModels.navigate.bind(undefined, { navigationState : args.navigationState, }),
+            spec : spec
         }));
     },
 

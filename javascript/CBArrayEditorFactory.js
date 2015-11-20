@@ -6,6 +6,7 @@ var CBArrayEditorFactory = {
      * @param [Object] array
      * @param function arrayChangedCallback
      * @param [string] classNames
+     * @param function navigateCallback
      * @param Element sectionElement
      * @param Object spec
      *
@@ -13,6 +14,7 @@ var CBArrayEditorFactory = {
      */
     append : function (args) {
         var element = CBArrayEditorFactory.createSectionItemElement({
+            navigateCallback : args.navigateCallback,
             spec : args.spec,
         });
 
@@ -26,7 +28,7 @@ var CBArrayEditorFactory = {
      * @param [Object] array
      * @param function arrayChangedCallback
      * @param [string] classNames
-     * @param Element navigationContainer
+     * @param function navigateCallback
      *
      * @return Element
      */
@@ -39,7 +41,7 @@ var CBArrayEditorFactory = {
 
         args.array.forEach(function (spec) {
             var element = CBArrayEditorFactory.createSectionItemElement({
-                navigationContainer : args.navigationContainer,
+                navigateCallback : args.navigateCallback,
                 spec : spec,
             });
 
@@ -54,6 +56,7 @@ var CBArrayEditorFactory = {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
+            navigateCallback : args.navigateCallback,
             sectionElement : section,
             spec : { className : "CBMenuItem" },
         }));
@@ -80,22 +83,12 @@ var CBArrayEditorFactory = {
         var editorFactory   = window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
         var editor          = editorFactory.createEditor(args);
 
-        edit.addEventListener("click", CBArrayEditorFactory.navigate.bind(undefined, {
-            element : editor,
+        edit.addEventListener("click", args.navigateCallback.bind(undefined, {
+            spec : args.spec,
         }));
 
         element.appendChild(edit);
         return element;
-    },
-
-    /**
-     * @param Element element
-     *
-     * @return undefined
-     */
-    navigate : function (args) {
-        document.body.textContent = null
-        document.body.appendChild(args.element);
     },
 };
 
