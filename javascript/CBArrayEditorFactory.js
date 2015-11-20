@@ -3,25 +3,59 @@
 var CBArrayEditorFactory = {
 
     /**
-     * @param [Object] array
-     * @param function arrayChangedCallback
-     * @param [string] classNames
-     * @param function navigateCallback
-     * @param Element sectionElement
+     * @param [Object] args.array
+     * @param function args.arrayChangedCallback
+     * @param function args.navigateCallback
+     * @param Element args.sectionElement
      * @param Object spec
      *
      * @return  undefined
      */
-    append : function (args) {
+    append : function (args, spec) {
         var element = CBArrayEditorFactory.createSectionItemElement({
             navigateCallback : args.navigateCallback,
-            spec : args.spec,
+            spec : spec,
         });
 
-        args.array.push(args.spec);
+        args.array.push(spec);
         args.sectionElement.insertBefore(element, args.sectionElement.lastElementChild);
 
         args.arrayChangedCallback.call();
+    },
+
+    /**
+     * @param [Object] args.array
+     * @param function args.arrayChangedCallback
+     * @param [string] args.classNames
+     * @param function args.navigateCallback
+     * @param Element args.sectionElement
+     *
+     * @return  undefined
+     */
+    appendSelectedModel : function (args) {
+        var requestModelClassName = CBArrayEditorFactory.requestModelClassName;
+        var requestArgs = { classNames : args.classNames, };
+        var classNameToModel = CBArrayEditorFactory.classNameToModel;
+        var appendModel = CBArrayEditorFactory.append.bind(undefined, {
+            array : args.array,
+            arrayChangedCallback : args.arrayChangedCallback,
+            classNames : args.classNames,
+            navigateCallback : args.navigateCallback,
+            sectionElement : args.sectionElement,
+        });
+
+        requestModelClassName(requestArgs).then(classNameToModel).then(appendModel);
+    },
+
+    /**
+     * @param string className
+     *
+     * @return Object
+     */
+    classNameToModel : function(className) {
+        return {
+            className : className,
+        };
     },
 
     /**
@@ -81,13 +115,12 @@ var CBArrayEditorFactory = {
         item = document.createElement("div");
         item.textContent = "append";
 
-        item.addEventListener("click", CBArrayEditorFactory.append.bind(undefined, {
+        item.addEventListener("click", CBArrayEditorFactory.appendSelectedModel.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
             navigateCallback : args.navigateCallback,
             sectionElement : args.sectionElement,
-            spec : { className : "CBMenuItem" },
         }));
 
         element.appendChild(item);
@@ -234,6 +267,36 @@ var CBArrayEditorFactory = {
 
             args.arrayChangedCallback.call();
         }
+    },
+
+    /*
+     * @param [string] args.classNames
+     *
+     * @return Promise -> string
+     */
+    requestModelClassName : function(args) {
+        return new Promise(function (resolve, reject) {
+            if (args.classNames.length === 1) {
+                resolve(args.classNames[0]);
+            }
+
+            var element = document.createElement("div");
+            element.className = "CBArrayEditorModelSelector CBUIRoot";
+
+            args.classNames.forEach(function (className) {
+                var item = document.createElement("div");
+                item.textContent = className;
+
+                item.addEventListener("click", function () {
+                    document.body.removeChild(element);
+                    resolve(className);
+                });
+
+                element.appendChild(item);
+            });
+
+            document.body.appendChild(element);
+        });
     },
 
     /**

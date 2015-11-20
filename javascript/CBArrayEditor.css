@@ -58,3 +58,11 @@
 .CBArrayEditor .CBUISectionItem .action.insert {
     background-color: hsl(330, 100%, 70%);
 }
+
+.CBArrayEditorModelSelector {
+    height: 100vh;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+}
