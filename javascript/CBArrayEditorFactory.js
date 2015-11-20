@@ -79,23 +79,36 @@ var CBArrayEditorFactory = {
      * @return Element
      */
     createSectionItemElement : function (args) {
+        var action;
         var element = document.createElement("div");
         element.className = "CBUISectionItem";
-        element.textContent = args.spec.className;
 
-        var edit = document.createElement("div");
-        edit.textContent = "edit";
+        element.addEventListener("click", CBArrayEditorFactory.handleItemWasClicked.bind(undefined, {
+            element : element,
+            sectionElement : args.sectionElement,
+        }));
 
-        edit.addEventListener("click", args.navigateCallback.bind(undefined, {
+        var content = document.createElement("div");
+        content.className = "content";
+        content.textContent = args.spec.className;
+
+        element.appendChild(content);
+
+        action = document.createElement("div");
+        action.className = "action edit";
+        action.textContent = "edit";
+
+        action.addEventListener("click", args.navigateCallback.bind(undefined, {
             spec : args.spec,
         }));
 
-        element.appendChild(edit);
+        element.appendChild(action);
 
-        var action = document.createElement("div");
-        action.textContent = "delete";
+        action = document.createElement("div");
+        action.className = "action delete";
+        action.textContent = "x";
 
-        action.addEventListener("click", CBArrayEditorFactory.handleDelete.bind(undefined, {
+        action.addEventListener("click", CBArrayEditorFactory.handleDeleteWasClicked.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             sectionElement : args.sectionElement,
@@ -115,7 +128,7 @@ var CBArrayEditorFactory = {
      *
      * @return undefined
      */
-    handleDelete : function (args) {
+    handleDeleteWasClicked : function (args) {
         if (confirm("Are you sure you want to remove this item?")) {
             var index = args.array.indexOf(args.spec);
             var itemElement = args.sectionElement.children.item(index);
@@ -125,6 +138,22 @@ var CBArrayEditorFactory = {
 
             args.arrayChangedCallback.call();
         }
+    },
+
+    /**
+     * @param Element args.element
+     * @param Element args.sectionElement
+     *
+     * @return undefined
+     */
+    handleItemWasClicked : function (args) {
+        var elements = args.sectionElement.querySelectorAll(".CBUISectionItem.selected");
+
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.remove("selected");
+        }
+
+        args.element.classList.add("selected");
     },
 };
 

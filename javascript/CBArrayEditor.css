@@ -1,4 +1,36 @@
 .CBArrayEditor {
-    border: 1px solid red;
-    min-height: 100px;
+}
+
+.CBArrayEditor .CBUISectionItem {
+    display: flex;
+}
+
+.CBArrayEditor .CBUISectionItem.selected {
+    background-color: hsl(60, 100%, 95%);
+}
+
+.CBArrayEditor .CBUISectionItem .content {
+    flex: 1 1 auto;
+}
+
+.CBArrayEditor .CBUISectionItem .action {
+    cursor: pointer;
+    display: none;
+    width: 50px;
+    flex: none;
+}
+
+.CBArrayEditor .CBUISectionItem.selected .action,
+.CBArrayEditor .CBUISectionItem:hover .action {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.CBArrayEditor .CBUISectionItem .action.delete {
+    background-color: hsl(0, 100%, 70%);
+}
+
+.CBArrayEditor .CBUISectionItem .action.edit {
+    background-color: hsl(120, 100%, 70%);
 }
