@@ -334,7 +334,13 @@ var CBArrayEditorFactory = {
      * @return undefined
      */
     setEditorMode : function (args) {
-        args.sectionElement.className = "CBUISection " + args.mode;
+        var e = args.sectionElement;
+
+        if (e.classList.contains(args.mode)) {
+            e.classList.toggle(args.mode);
+        } else {
+            e.className = "CBUISection " + args.mode;
+        }
     },
 };
 
