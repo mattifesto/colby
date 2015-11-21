@@ -13,7 +13,10 @@ var CBArrayEditorFactory = {
      */
     append : function (args, spec) {
         var element = CBArrayEditorFactory.createSectionItemElement({
+            array : args.array,
+            arrayChangedCallback : args.arrayChangedCallback,
             navigateCallback : args.navigateCallback,
+            sectionElement : args.sectionElement,
             spec : spec,
         });
 
@@ -161,6 +164,7 @@ var CBArrayEditorFactory = {
     /**
      * @param [Object] args.array
      * @param function args.arrayChangedCallback
+     * @param function args.navigateCallback
      * @param Element args.sectionElement
      * @param Object args.spec
      *
@@ -283,8 +287,29 @@ var CBArrayEditorFactory = {
             var element = document.createElement("div");
             element.className = "CBArrayEditorModelSelector CBUIRoot";
 
+            var title = document.createElement("div");
+            title.textContent = "Select a Model Class";
+
+            var cancel = document.createElement("div");
+            cancel.className = "CBUIHeaderAction";
+            cancel.textContent = "Cancel";
+
+            cancel.addEventListener("click", function () {
+                document.body.removeChild(element);
+            });
+
+            element.appendChild(CBUI.createHeader({
+                centerElement : title,
+                rightElement : cancel,
+            }));
+
+            element.appendChild(CBUI.createHalfSpace());
+
+            var section = CBUI.createSection();
+
             args.classNames.forEach(function (className) {
-                var item = document.createElement("div");
+                var item = CBUI.createSectionItem();
+                item.classList.add("item");
                 item.textContent = className;
 
                 item.addEventListener("click", function () {
@@ -292,8 +317,11 @@ var CBArrayEditorFactory = {
                     resolve(className);
                 });
 
-                element.appendChild(item);
+                section.appendChild(item);
             });
+
+            element.appendChild(section);
+            element.appendChild(CBUI.createHalfSpace());
 
             document.body.appendChild(element);
         });
