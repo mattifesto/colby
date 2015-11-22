@@ -181,12 +181,19 @@ var CBArrayEditorFactory = {
 
         var content = document.createElement("div");
         content.className = "content";
-        content.textContent = args.spec.className;
 
-        content.addEventListener("click", args.navigateCallback.bind(undefined, {
-            spec : args.spec,
-        }));
+        content.addEventListener("click", args.navigateCallback.bind(undefined, args.spec));
 
+        var title = document.createElement("div");
+        title.className = "title";
+        title.textContent = args.spec.className;
+
+        var description = document.createElement("div");
+        description.className = "description";
+        description.textContent = args.spec.title || "";
+
+        content.appendChild(title);
+        content.appendChild(description);
         element.appendChild(content);
 
         // arrange

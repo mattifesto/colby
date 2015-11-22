@@ -20,6 +20,11 @@
     padding: 5px 10px;
 }
 
+.CBArrayEditor .CBUISectionItem .content .description {
+    color: hsl(0, 0%, 50%);
+    font-size: 80%;
+}
+
 .CBArrayEditor .CBUISectionItem .action {
     align-items: center;
     cursor: pointer;
