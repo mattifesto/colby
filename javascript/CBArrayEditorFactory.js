@@ -5,6 +5,7 @@ var CBArrayEditorFactory = {
     /**
      * @param [Object] args.array
      * @param function args.arrayChangedCallback
+     * @param [string] args.classNames
      * @param function args.navigateCallback
      * @param Element args.sectionElement
      * @param Object spec
@@ -15,6 +16,7 @@ var CBArrayEditorFactory = {
         var element = CBArrayEditorFactory.createSectionItemElement({
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
+            classNames : args.classNames,
             navigateCallback : args.navigateCallback,
             sectionElement : args.sectionElement,
             spec : spec,
@@ -80,6 +82,7 @@ var CBArrayEditorFactory = {
             var element = CBArrayEditorFactory.createSectionItemElement({
                 array : args.array,
                 arrayChangedCallback : args.arrayChangedCallback,
+                classNames : args.classNames,
                 navigateCallback : args.navigateCallback,
                 sectionElement : section,
                 spec : spec,
@@ -164,6 +167,7 @@ var CBArrayEditorFactory = {
     /**
      * @param [Object] args.array
      * @param function args.arrayChangedCallback
+     * @param [string] args.classNames
      * @param function args.navigateCallback
      * @param Element args.sectionElement
      * @param Object args.spec
@@ -232,6 +236,15 @@ var CBArrayEditorFactory = {
         action.className = "action insert";
         action.textContent = "+";
 
+        action.addEventListener("click", CBArrayEditorFactory.insertSelectedModel.bind(undefined, {
+            array : args.array,
+            arrayChangedCallback : args.arrayChangedCallback,
+            classNames : args.classNames,
+            navigateCallback : args.navigateCallback,
+            sectionElement : args.sectionElement,
+            specToInsertBefore : args.spec,
+        }));
+
         element.appendChild(action);
 
         return element;
@@ -271,6 +284,61 @@ var CBArrayEditorFactory = {
 
             args.arrayChangedCallback.call();
         }
+    },
+
+    /**
+     * @param [Object] args.array
+     * @param function args.arrayChangedCallback
+     * @param function args.classNames
+     * @param function args.navigateCallback
+     * @param Element args.sectionElement
+     * @param Object args.specToInsertBefore
+     * @param Object spec
+     *
+     * @return  undefined
+     */
+    insert : function (args, spec) {
+        var indexToInsertBefore = args.array.indexOf(args.specToInsertBefore);
+        var elementToInsertBefore = args.sectionElement.children.item(indexToInsertBefore);
+        var sectionItemElement = CBArrayEditorFactory.createSectionItemElement({
+            array : args.array,
+            arrayChangedCallback : args.arrayChangedCallback,
+            classNames : args.classNames,
+            navigateCallback : args.navigateCallback,
+            sectionElement : args.sectionElement,
+            spec : spec,
+        });
+
+        args.array.splice(indexToInsertBefore, 0, spec);
+        args.sectionElement.insertBefore(sectionItemElement, elementToInsertBefore);
+
+        args.arrayChangedCallback.call();
+    },
+
+    /**
+     * @param [Object] args.array
+     * @param function args.arrayChangedCallback
+     * @param [string] args.classNames
+     * @param function args.navigateCallback
+     * @param Element args.sectionElement
+     * @param Object args.specToInsertBefore
+     *
+     * @return  undefined
+     */
+    insertSelectedModel : function (args) {
+        var requestModelClassName = CBArrayEditorFactory.requestModelClassName;
+        var requestArgs = { classNames : args.classNames, };
+        var classNameToModel = CBArrayEditorFactory.classNameToModel;
+        var insertModel = CBArrayEditorFactory.insert.bind(undefined, {
+            array : args.array,
+            arrayChangedCallback : args.arrayChangedCallback,
+            classNames : args.classNames,
+            navigateCallback : args.navigateCallback,
+            sectionElement : args.sectionElement,
+            specToInsertBefore : args.specToInsertBefore,
+        });
+
+        requestModelClassName(requestArgs).then(classNameToModel).then(insertModel);
     },
 
     /*
