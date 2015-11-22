@@ -3,7 +3,7 @@
 var CBUI = {
 
     /**
-     * @return {Element}
+     * @return Element
      */
     createHalfSpace : function() {
         var element = document.createElement("div");
@@ -49,6 +49,9 @@ var CBUI = {
         return element;
     },
 
+    /**
+     * @return Element
+     */
     createSection : function () {
         var element = document.createElement("div");
         element.className = "CBUISection";
@@ -56,6 +59,9 @@ var CBUI = {
         return element;
     },
 
+    /**
+     * @return Element
+     */
     createSectionItem : function () {
         var element = document.createElement("div");
         element.className = "CBUISectionItem";
