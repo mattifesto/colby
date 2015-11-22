@@ -6,6 +6,11 @@ class CBAdminPageForEditingModels {
      * @return null
      */
     private static function loadEditingResourcesForClassName($className) {
+        if (is_callable($function = "{$className}::classNamesForEditorDependencies")) {
+            $classNames = call_user_func($function);
+            array_walk($classNames, 'CBAdminPageForEditingModels::loadEditingResourcesForClassName');
+        }
+
         if (is_callable($function = "{$className}::editorURLsForCSS")) {
             $URLs = call_user_func($function);
             array_walk($URLs, function($URL) { CBHTMLOutput::addCSSURL($URL); });
