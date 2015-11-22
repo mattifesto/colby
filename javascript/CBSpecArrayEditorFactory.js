@@ -3,11 +3,11 @@
 var CBSpecArrayEditorFactory = {
 
     /**
-     * @param   {Array}     array
-     * @param   {Array}     classNames
-     * @param   {function}  handleChanged
+     * @param   [Object] array
+     * @param   [string] classNames
+     * @param   function handleChanged
      *
-     * @return  {Element}
+     * @return  Element
      */
     createEditor : function(args) {
         var element         = document.createElement("div");
