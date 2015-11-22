@@ -3,8 +3,8 @@
 var CBModelsPreferencesEditorFactory = {
 
     /**
-     * @param {function}    handleSpecChanged
-     * @param {Object}      spec
+     * @param function handleSpecChanged
+     * @param Object spec
      *
      * @return Element
      */
@@ -36,7 +36,7 @@ var CBModelsPreferencesEditorFactory = {
     },
 
     /**
-     * @return {Element}
+     * @return Element
      */
     createHalfSpaceElement : function() {
         var element = document.createElement("div");

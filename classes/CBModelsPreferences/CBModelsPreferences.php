@@ -14,7 +14,7 @@ final class CBModelsPreferences {
     ];
 
     /**
-     * @return [{string}]
+     * @return [string]
      */
     public static function classNamesOfEditableModels() {
         $model = CBModelCache::fetchModelByID(CBModelsPreferences::ID);
@@ -22,7 +22,7 @@ final class CBModelsPreferences {
     }
 
     /**
-     * @return [{string}]
+     * @return [string]
      */
     public static function editorURLsForCSS() {
         return [
@@ -31,22 +31,22 @@ final class CBModelsPreferences {
     }
 
     /**
-     * @return [{string}]
+     * @return [string]
      */
     public static function editorURLsForJavaScript() {
         return [
             CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
-            CBModelsPreferences::URL('CBModelsPreferencesEditorFactory.js')
+            CBModelsPreferences::URL('CBModelsPreferencesEditorFactory.js'),
         ];
     }
 
     /**
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function info() {
         return CBModelClassInfo::specToModel((object)[
             'pluralTitle' => 'Models Preferences',
-            'singularTitle' => 'Models Preferences'
+            'singularTitle' => 'Models Preferences',
         ]);
     }
 
@@ -66,7 +66,6 @@ final class CBModelsPreferences {
 
         CBModels::save([$spec]);
     }
-
 
     /**
      * @return stdClass
