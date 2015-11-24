@@ -95,7 +95,7 @@ EOT;
         if ($model->themeID) {
             $class = "CBThemedTextView T{$model->themeID}";
         } else {
-            $class = "CBThemedTextView";
+            $class = "CBThemedTextView NoTheme";
         }
 
         if ($model->URLAsHTML) {
