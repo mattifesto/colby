@@ -10,7 +10,8 @@ final class CBAdminPageForGeneral {
 
             SELECT      `URI`
             FROM        `ColbyPages`
-            WHERE       `published` IS NOT NULL
+            WHERE       `published` IS NOT NULL AND
+                        `URI` IS NOT NULL
             GROUP BY    `URI`
             HAVING      COUNT(*) > 1
 
