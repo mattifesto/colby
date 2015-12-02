@@ -60,6 +60,19 @@ var CBUI = {
     },
 
     /**
+     * @param string args.text
+     *
+     * @return Element
+     */
+    createSectionHeader : function (args) {
+        var element = document.createElement("div");
+        element.className = "CBUISectionHeader";
+        element.textContent = args.text;
+
+        return element;
+    },
+
+    /**
      * @return Element
      */
     createSectionItem : function () {
