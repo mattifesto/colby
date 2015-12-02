@@ -41,12 +41,18 @@ var CBAdminPageForEditingModels = {
      * @return  undefined
      */
     handleDOMContentLoaded : function() {
+        // If the user has been navigating and reloads the page then the model
+        // will have been removed from memory. If some sort of state has been
+        // pushed it will refer to parts of that non-existent model. We need to
+        // reset the editor and calling replaceState will do that.
+        history.replaceState();
+
         var formData = new FormData();
         formData.append("className", CBModelClassName);
         formData.append("ID", CBModelID);
 
-        var xhr     = new XMLHttpRequest();
-        xhr.onload  = CBAdminPageForEditingModels.handleModelLoaded.bind(undefined, {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = CBAdminPageForEditingModels.handleModelLoaded.bind(undefined, {
             xhr : xhr
         });
         xhr.onerror = function() {
