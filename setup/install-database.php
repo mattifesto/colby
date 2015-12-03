@@ -49,7 +49,7 @@ CBSitePreferences::install();
 CBMainMenu::install();
 CBThemedTextView::install();
 CBImages::install();
-
+CBRequestTracker::install();
 
 $SQL = <<<EOT
 
