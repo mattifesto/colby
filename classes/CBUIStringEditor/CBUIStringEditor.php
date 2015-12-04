@@ -35,9 +35,9 @@ final class CBUIStringEditor {
     }
 
     /**
-     * @param {string} $filename
+     * @param string $filename
      *
-     * @return {string}
+     * @return string
      */
     public static function URL($filename) {
         $className = __CLASS__;
