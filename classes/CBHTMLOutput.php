@@ -34,6 +34,7 @@ class CBHTMLOutput
     private static $javaScriptSnippetStrings;
     private static $javaScriptURLs;
     private static $javaScriptURLsInHead;
+    private static $requiredClassNames;
     private static $titleHTML;
 
     /**
@@ -152,6 +153,25 @@ class CBHTMLOutput
     }
 
     /**
+     * @return null
+     */
+    private static function processRequiredClassNames() {
+        $resolvedClassNames = CBRequiredClassNamesResolver::resolveRequiredClassNames(self::$requiredClassNames);
+
+        foreach ($resolvedClassNames as $className) {
+            if (is_callable($function = "{$className}::requiredCSSURLs")) {
+                $URLs = call_user_func($function);
+                array_walk($URLs, 'CBHTMLOutput::addCSSURL');
+            }
+
+            if (is_callable($function = "{$className}::requiredJavaScriptURLs")) {
+                $URLs = call_user_func($function);
+                array_walk($URLs, 'CBHTMLOutput::addJavaScriptURL');
+            }
+        }
+    }
+
+    /**
      * @return void
      */
     public static function render() {
@@ -160,6 +180,8 @@ class CBHTMLOutput
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent   = '';
         $classNameForSettings       = (self::$classNameForSettings === '') ? CBSitePreferences::defaultClassNameForPageSettings() : self::$classNameForSettings;
+
+        CBHTMLOutput::processRequiredClassNames();
 
         if (is_callable($function = "{$classNameForSettings}::renderHeadContent")) {
             ob_start();
@@ -278,14 +300,18 @@ class CBHTMLOutput
     }
 
     /**
-     * @return void
+     * @return null
      */
-    public static function reset()
-    {
-        if (self::$isActive)
-        {
-            restore_exception_handler();
+    public static function requireClassName($className) {
+        self::$requiredClassNames[] = $className;
+    }
 
+    /**
+     * @return null
+     */
+    public static function reset() {
+        if (self::$isActive) {
+            restore_exception_handler();
             ob_end_clean();
         }
 
@@ -299,6 +325,7 @@ class CBHTMLOutput
         self::$javaScriptSnippetStrings     = array();
         self::$javaScriptURLs               = array();
         self::$javaScriptURLsInHead         = array();
+        self::$requiredClassNames           = [];
         self::$titleHTML                    = '';
     }
 
