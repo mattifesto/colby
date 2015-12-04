@@ -1,3 +1,18 @@
 .CBUIStringEditor {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10px;
+}
 
+.CBUIStringEditor label {
+    color: hsl(0, 0%, 50%);
+}
+
+.CBUIStringEditor textarea {
+    background-color: transparent;
+    border: none;
+    font: inherit;
+    outline: none;
+    padding: 0;
+    resize: none;
 }

@@ -29,7 +29,7 @@ var CBUIStringEditor = {
             textAreaElement : textArea,
         });
 
-        var inputCallback = CBStringEditor.handleInput.bind(undefined, {
+        var inputCallback = CBUIStringEditor.handleInput.bind(undefined, {
             propertyName : args.propertyName,
             resizeTextAreaCallback : resizeTextAreaCallback,
             textAreaElement : textArea,
@@ -37,11 +37,11 @@ var CBUIStringEditor = {
             specChangedCallback : args.specChangedCallback,
         });
 
-        var updateLabelCallback = CBUIStringEditor.updateLabelCallback.bind(undefined, {
+        var updateLabelCallback = CBUIStringEditor.updateLabel.bind(undefined, {
             labelElement : label,
         });
 
-        var updateValueCallback = CBUIStringEditor.updateValueCallback.bind(undefined, {
+        var updateValueCallback = CBUIStringEditor.updateValue.bind(undefined, {
             propertyName : args.propertyName,
             resizeTextAreaCallback : resizeTextAreaCallback,
             spec : args.spec,
@@ -50,6 +50,9 @@ var CBUIStringEditor = {
         });
 
         textArea.addEventListener("input", inputCallback);
+
+        element.appendChild(label);
+        element.appendChild(textArea);
 
         /**
          * @NOTE 2015.09.24
@@ -78,7 +81,7 @@ var CBUIStringEditor = {
      * @return  undefined
      */
     handleInput : function(args) {
-        args.spec[args.propertyName] = args.element.value;
+        args.spec[args.propertyName] = args.textAreaElement.value;
 
         args.resizeTextAreaCallback.call();
         args.specChangedCallback.call();
