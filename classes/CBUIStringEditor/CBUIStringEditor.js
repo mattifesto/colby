@@ -22,13 +22,18 @@ var CBUIStringEditor = {
         var label = document.createElement("label");
         label.htmlFor = ID;
         label.textContent = args.labelText || "";
-        var input = document.createElement("textarea");
+        var input = CBUIStringEditor.createInputElement({ type : args.type });
         input.id = ID;
         input.value = args.spec[args.propertyName] || "";
+        var resizeTextAreaCallback;
 
-        var resizeTextAreaCallback = CBUIStringEditor.resizeTextArea.bind(undefined, {
-            inputElement : input,
-        });
+        if (input.tagName === "TEXTAREA") {
+            resizeTextAreaCallback = CBUIStringEditor.resizeTextArea.bind(undefined, {
+                inputElement : input,
+            });
+        } else {
+            resizeTextAreaCallback = CBUIStringEditor.noop;
+        }
 
         var inputCallback = CBUIStringEditor.handleInput.bind(undefined, {
             propertyName : args.propertyName,
@@ -73,6 +78,33 @@ var CBUIStringEditor = {
     },
 
     /**
+     * @param string args.type
+     *
+     * @return Element
+     */
+    createInputElement : function (args) {
+        var element;
+
+        switch (args.type) {
+            case "email":
+                element = document.createElement("input");
+                element.type = "email";
+                break;
+
+            case "tel":
+                element = document.createElement("input");
+                element.type = "tel";
+                break;
+
+            default:
+                element = document.createElement("textarea");
+                break;
+        }
+
+        return element;
+    },
+
+    /**
     * @param Element args.inputElement
      * @param string args.propertyName
      * @param function args.resizeTextAreaCallback
@@ -81,7 +113,7 @@ var CBUIStringEditor = {
      *
      * @return  undefined
      */
-    handleInput : function(args) {
+    handleInput : function (args) {
         args.spec[args.propertyName] = args.inputElement.value;
 
         args.resizeTextAreaCallback.call();
@@ -89,11 +121,16 @@ var CBUIStringEditor = {
     },
 
     /**
+     * @return undefined
+     */
+    noop : function () { },
+
+    /**
      * @param Element args.inputElement
      *
      * @return undefined
      */
-    resizeTextArea : function(args) {
+    resizeTextArea : function (args) {
         args.inputElement.style.height = "0";
         args.inputElement.style.height = args.inputElement.scrollHeight + "px";
     },

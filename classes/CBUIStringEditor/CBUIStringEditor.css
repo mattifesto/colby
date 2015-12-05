@@ -8,6 +8,7 @@
     color: hsl(0, 0%, 50%);
 }
 
+.CBUIStringEditor input,
 .CBUIStringEditor textarea {
     background-color: transparent;
     border: none;
