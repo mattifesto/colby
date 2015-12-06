@@ -10,9 +10,9 @@ var CBUIStringEditor = {
      * @param string args.type
      *
      * @return {
-     *  Element element
-     *  function updateLabelCallback
-     *  function updateValueCallback
+     *  Element element,
+     *  function updateLabelCallback,
+     *  function updateValueCallback,
      * }
      */
     createEditor : function(args) {
