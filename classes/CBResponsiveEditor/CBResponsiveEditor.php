@@ -5,14 +5,14 @@ final class CBResponsiveEditor {
     /**
      * @return [string]
      */
-    public static function editorURLsForCSS() {
+    public static function requiredCSSURLs() {
         return [CBSystemURL . '/javascript/CBResponsiveEditorFactory.css'];
     }
 
     /**
      * @return [string]
      */
-    public static function editorURLsForJavaScript() {
+    public static function requiredJavaScriptURLs() {
         return [CBSystemURL . '/javascript/CBResponsiveEditorFactory.js'];
     }
 }

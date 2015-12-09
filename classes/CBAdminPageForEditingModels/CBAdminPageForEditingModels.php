@@ -3,6 +3,8 @@
 class CBAdminPageForEditingModels {
 
     /**
+     * @deprecated create a "{$className}Editor" class instead
+     *
      * @return null
      */
     private static function loadEditingResourcesForClassName($className) {
@@ -83,7 +85,12 @@ class CBAdminPageForEditingModels {
             CBHTMLOutput::exportVariable('CBModelClassInfo', call_user_func($function));
         }
 
-        CBAdminPageForEditingModels::loadEditingResourcesForClassName($args->className);
+        if (class_exists($editorClassName = "{$args->className}Editor")) {
+            CBHTMLOutput::requireClassName($editorClassName);
+        } else {
+            CBAdminPageForEditingModels::loadEditingResourcesForClassName($args->className);
+        }
+
         CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBEditorWidget.css');
         CBHTMLOutput::addJavaScriptURL( CBSystemURL  . '/javascript/CBEditorWidgetFactory.js');
         CBHTMLOutput::addCSSURL(        CBAdminPageForEditingModels::URL('CBAdminPageForEditingModels.css'));
