@@ -7,87 +7,77 @@ var CBUIRadioMenu = {
      * @param object args.spec
      * @param function args.specChangedCallback
      *
-     * @return object
+     * @return {
+     *  function createOptionCallback,
+     *  function setValueCallback
+     * }
      */
     createMenu : function (args) {
-        var changeValueCallback = CBUIRadioMenu.handleValueChanged.bind(undefined, {
+        var menuData = {
+            options : [],
             propertyName : args.propertyName,
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
-        });
+        };
+
+        var setValueCallback = CBUIRadioMenu.setValue.bind(undefined, menuData);
+
+        var createOptionCallback = CBUIRadioMenu.createOption.bind(undefined, menuData, setValueCallback);
 
         return {
-            changeValueCallback : changeValueCallback,
-            currentMenuOptionUnselectedCallback : undefined,
-        }
+            createOptionCallback : createOptionCallback,
+            setValueCallback : setValueCallback,
+        };
     },
 
     /**
-     * @param object args.menu
+     * @param object menuData
+     * @param function setValueCallback
      * @param var args.value
      *
      * @return {
      *  Element element
      * }
      */
-    createMenuOption : function (args) {
+    createOption : function(menuData, setValueCallback, args) {
         var element = document.createElement("div");
         element.className = "CBUIRadioMenuOption";
 
-        var menuOptionUnselectedCallback = CBUIRadioMenu.handleMenuOptionUnselected.bind(undefined, {
-            element : element,
-        });
-
-        element.addEventListener("click", CBUIRadioMenu.handleMenuOptionSelected.bind(undefined, {
-            element : element,
-            menu : args.menu,
-            menuOptionUnselectedCallback : menuOptionUnselectedCallback,
-            value : args.value,
-        }));
-
-        return {
-            element : element
-        };
-    },
-
-    /**
-     * @param Element args.element
-     * @param object args.menu
-     * @param function args.menuOptionUnselectedCallback
-     * @param var args.value
-     *
-     * @return undefined
-     */
-    handleMenuOptionSelected : function (args) {
-        if (args.menu.currentMenuOptionUnselectedCallback !== undefined) {
-            args.menu.currentMenuOptionUnselectedCallback.call();
+        if (menuData.spec[menuData.propertyName] === args.value) {
+            element.classList.add("selected");
         }
 
-        args.menu.changeValueCallback.call(args.value);
-        args.element.classList.add("selected");
+        element.addEventListener("click", setValueCallback.bind(undefined, args.value));
 
-        args.menu.currentMenuOptionUnselectedCallback = args.menuOptionUnselectedCallback;
+        var optionData = {
+            element : element,
+            value : args.value,
+        };
+
+        menuData.options.push(optionData);
+
+        return {
+            element : element,
+        }
     },
 
     /**
-     * @param Element args.element
+     * @param menuData menuData
+     * @param var value
      *
      * @return undefined
      */
-    handleMenuOptionUnselected : function (args) {
-        args.element.classList.remove("selected");
-    },
+    setValue : function(menuData, value) {
+        menuData.spec[menuData.propertyName] = value;
 
-    /**
-     * @param string args.propertyName
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     *
-     * @return undefined
-     */
-    handleValueChanged : function (args, value) {
-        args.spec[args.propertyName] = value;
+        menuData.options.forEach(function (option) {
+            if (option.value === value) {
+                option.element.classList.add("selected");
+            } else {
+                option.element.classList.remove("selected");
+            }
+        });
 
-        args.specChangedCallback.call();
+        menuData.specChangedCallback.call();
     },
 };
