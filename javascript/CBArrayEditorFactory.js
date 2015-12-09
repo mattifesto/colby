@@ -357,6 +357,7 @@ var CBArrayEditorFactory = {
         return new Promise(function (resolve, reject) {
             if (args.classNames.length === 1) {
                 resolve(args.classNames[0]);
+                return;
             }
 
             var element = document.createElement("div");
