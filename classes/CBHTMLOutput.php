@@ -168,6 +168,13 @@ class CBHTMLOutput
                 $URLs = call_user_func($function);
                 array_walk($URLs, 'CBHTMLOutput::addJavaScriptURL');
             }
+
+            if (is_callable($function = "{$className}::requiredJavaScriptVariables")) {
+                $variables = call_user_func($function);
+                array_walk($variables, function ($variable) {
+                    CBHTMLOutput::exportVariable($variable[0], $variable[1]);
+                });
+            }
         }
     }
 
