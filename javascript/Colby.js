@@ -58,7 +58,26 @@ var Colby = {
     },
 
     /**
-     * @return {Object}
+     * @return bool
+     */
+    localStorageIsSupported : function () {
+        if (Colby.localStorageIsSupported === undefined) {
+            var value = "value";
+
+            try {
+                localStorage.setItem(mod, mod);
+                localStorage.removeItem(mod);
+                Colby.localStorageIsSupported = true;
+            } catch(e) {
+                Colby.localStorageIsSupported = false;
+            }
+        }
+
+        return Colby.localStorageIsSupported;
+    },
+
+    /**
+     * @return object
      */
     responseFromXMLHttpRequest : function(xhr) {
         var response;
@@ -83,46 +102,6 @@ var Colby = {
         }
 
         return response;
-    },
-
-    /**
-     * @param hex160 args.requestID
-     *
-     * @return undefined
-     */
-    track : function(args) {
-        var data = new FormData();
-        data.append("clientID", localStorage.getItem("clientID"));
-        data.append("requestID", args.requestID);
-        data.append("location", JSON.stringify(window.location));
-        data.append("navigator", JSON.stringify(window.navigator));
-
-        var xhr = new XMLHttpRequest();
-        xhr.onerror = Colby.trackDidError.bind(undefined, { requestID : args.requestID, xhr : xhr });
-        xhr.onload = Colby.trackDidLoad.bind(undefined, { requestID : args.requestID, xhr : xhr });
-        xhr.open("POST", "/api/?class=CBRequestTracker&function=track");
-        xhr.send(data);
-    },
-
-    /**
-     * @param hex160 args.requestID
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    trackDidError : function(args) {
-        // nothing to do here for now
-    },
-
-    /**
-     * @param hex160 args.requestID
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    trackDidLoad : function(args) {
-        // in the future set a timer to track again with the same ID
-        // to perform another task
     },
 };
 
@@ -610,18 +589,10 @@ Colby.updateTimestampForElementWithId = function(timestamp, id)
 };
 
 (function() {
-    if (localStorage.getItem("clientID") === null) {
-        localStorage.setItem("clientID", Colby.random160());
-    }
-
-    Colby.requestID = Colby.random160();
-
     var link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = "/colby/javascript/Colby.css";
 
     document.head.appendChild(link);
     document.addEventListener('DOMContentLoaded', Colby.handleContentLoaded, false);
-
-    Colby.track({ requestID : Colby.requestID });
 })();
