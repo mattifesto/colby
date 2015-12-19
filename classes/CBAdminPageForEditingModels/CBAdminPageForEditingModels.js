@@ -45,7 +45,7 @@ var CBAdminPageForEditingModels = {
         // will have been removed from memory. If some sort of state has been
         // pushed it will refer to parts of that non-existent model. We need to
         // reset the editor and calling replaceState will do that.
-        history.replaceState();
+        history.replaceState(undefined, undefined);
 
         var formData = new FormData();
         formData.append("className", CBModelClassName);
@@ -241,7 +241,7 @@ var CBAdminPageForEditingModels = {
 
         index++;
         args.navigationState.stack.splice(index, Number.MAX_VALUE, spec);
-        history.pushState({ index : index });
+        history.pushState({ index : index }, undefined);
 
         CBAdminPageForEditingModels.renderEditor({
             navigationState : args.navigationState,
