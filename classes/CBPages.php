@@ -407,7 +407,8 @@ EOT;
         $model->descriptionAsHTML = ColbyConvert::textToHTML($model->description);
         $model->encodedURLForThumbnail = isset($spec->encodedURLForThumbnail) ? trim($spec->encodedURLForThumbnail) : '';
         $model->encodedURLForThumbnailAsHTML = ColbyConvert::textToHTML($model->encodedURLForThumbnail);
-        $model->published = isset($spec->published) ? (int)$spec->published : null;
+        $model->hidden = isset($spec->hidden) && ($spec->hidden === true);
+        $model->published = (isset($spec->published) && $model->hidden === false) ? (int)$spec->published : null;
         $model->title = CBModels::specToTitle($spec);
         $model->titleAsHTML = ColbyConvert::textToHTML($model->title);
 
