@@ -16,6 +16,10 @@ var Colby = {
         Colby.showPanel();
     },
 
+    dateToLocaleString : function (date) {
+        return Colby.dateToLocaleDateString(date) + " " + Colby.dateToLocaleTimeString(date);
+    },
+
     /**
      * @return undefined
      */
