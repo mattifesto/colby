@@ -400,7 +400,7 @@ EOT;
      */
     public static function specToModel(stdClass $spec) {
         $model = CBModels::modelWithClassName($spec->className, ['ID' => $spec->ID]);
-        $model->classNameForKind = ''; // Not sure if this will be used in the future
+        $model->classNameForKind = CBModel::value($spec, 'classNameForKind', null);
         $model->dencodedURIPath = isset($spec->URIPath) ? CBPages::stringToDencodedURIPath($spec->URIPath) : '';
         $model->dencodedURIPath = ($model->dencodedURIPath === '') ? $spec->ID : $model->dencodedURIPath;
         $model->description = isset($spec->description) ? trim($spec->description) : '';
