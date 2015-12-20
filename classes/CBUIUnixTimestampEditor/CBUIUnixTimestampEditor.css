@@ -1,0 +1,26 @@
+.CBUIUnixTimestampEditor {
+    display: flex;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction: column;
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    padding: 5px 10px;
+    position: relative;
+}
+
+.CBUIUnixTimestampEditor .label {
+    color: hsl(0, 0%, 50%);
+}
+
+.CBUIUnixTimestampEditor .arrow {
+    align-items: center;
+    color: hsl(0, 0%, 50%);
+    display: flex;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    height: 100%;
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
