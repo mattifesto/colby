@@ -107,6 +107,26 @@ var Colby = {
 
         return response;
     },
+
+    /**
+     * This function converts a unix timestamp to a string that can be parsed
+     * properly by Date.parse().
+     *
+     * @param int unixTimestamp
+     *
+     * @return string
+     */
+    unixTimestampToUniversalDateString : function (unixTimestamp) {
+        if (unixTimestamp === undefined) {
+            return "";
+        }
+
+        var date = new Date(unixTimestamp * 1000);
+
+        return (date.getMonth() + 1) + "/" +
+               date.getDate() + "/" +
+               date.getFullYear();
+    },
 };
 
 /**
