@@ -24,3 +24,7 @@
     right: 10px;
     top: 0;
 }
+
+.CBUIStringValueEditor .container {
+    text-align: center;
+}
