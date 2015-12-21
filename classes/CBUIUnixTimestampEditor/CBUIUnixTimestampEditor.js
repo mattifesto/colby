@@ -31,7 +31,7 @@ var CBUIUnixTimestampEditor = {
         arrow.textContent = ">";
 
         element.addEventListener("click", args.navigateCallback.bind(undefined, {
-            className : "CBUIUnixTimestampEditorInterface",
+            className : "CBUIUnixTimestampValue",
             propertyName : args.propertyName,
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
@@ -47,7 +47,7 @@ var CBUIUnixTimestampEditor = {
     },
 };
 
-var CBUIUnixTimestampEditorInterfaceEditorFactory = {
+var CBUIUnixTimestampValueEditorFactory = {
 
     /**
      * @param string args.propertyName
@@ -81,48 +81,85 @@ var CBUIUnixTimestampEditorInterfaceEditorFactory = {
         var targetSpec = args.spec.spec;
         var targetSpecChangedCallback = args.spec.specChangedCallback;
         var element = document.createElement("div");
+        element.className = "CBUIUnixTimestampValueEditor";
         var display = document.createElement("div");
         var format = document.createElement("div");
         format.textContent = "mm/dd/yyyy hh:mm pm";
         var input = document.createElement("input");
         input.type = "text";
-        input.value = Colby.unixTimestampToUniversalDateString(targetSpec[targetPropertyName]);
+        input.value = Colby.unixTimestampToParseableString(targetSpec[targetPropertyName]);
         var state = {};
 
-        input.addEventListener("input", CBUIUnixTimestampEditorInterfaceEditorFactory.handleInput.bind(undefined, {
+        input.addEventListener("input", CBUIUnixTimestampValueEditorFactory.handleInput.bind(undefined, {
             displayElement : display,
             inputElement : input,
             state : state,
         }));
 
-        element.appendChild(format);
-        element.appendChild(input);
-        element.appendChild(display);
-
         var acceptButton = document.createElement("div");
         acceptButton.className = "button";
         acceptButton.textContent = "Accept";
 
-        acceptButton.addEventListener("click", CBUIUnixTimestampEditorInterfaceEditorFactory.acceptValue.bind(undefined, {
+        acceptButton.addEventListener("click", CBUIUnixTimestampValueEditorFactory.acceptValue.bind(undefined, {
             propertyName : targetPropertyName,
             spec : targetSpec,
             specChangedCallback : targetSpecChangedCallback,
             state : state,
         }));
 
+        var cancelButton = document.createElement("div");
+        cancelButton.className = "button";
+        cancelButton.textContent = "Cancel";
+
+        cancelButton.addEventListener("click", history.back.bind(history));
+
         var clearButton = document.createElement("div");
         clearButton.className = "button";
         clearButton.textContent = "Clear";
 
-        clearButton.addEventListener("click", CBUIUnixTimestampEditorInterfaceEditorFactory.acceptValue.bind(undefined, {
+        clearButton.addEventListener("click", CBUIUnixTimestampValueEditorFactory.acceptValue.bind(undefined, {
             propertyName : targetPropertyName,
             spec : targetSpec,
             specChangedCallback : targetSpecChangedCallback,
             state : { date : undefined },
         }));
 
-        element.appendChild(acceptButton);
-        element.appendChild(clearButton);
+        var nowButton = document.createElement("div");
+        nowButton.className = "button";
+        nowButton.textContent = "Use Now";
+
+        nowButton.addEventListener("click", CBUIUnixTimestampValueEditorFactory.acceptValue.bind(undefined, {
+            propertyName : targetPropertyName,
+            spec : targetSpec,
+            specChangedCallback : targetSpecChangedCallback,
+            state : { date : new Date() },
+        }));
+
+        var buttonContainer = document.createElement("div");
+        buttonContainer.className = "buttonContainer";
+        buttonContainer.appendChild(nowButton);
+        buttonContainer.appendChild(clearButton);
+        buttonContainer.appendChild(cancelButton);
+        buttonContainer.appendChild(acceptButton);
+
+        element.appendChild(CBUI.createHalfSpace());
+
+        var item;
+        var section = CBUI.createSection();
+
+        item = CBUI.createSectionItem();
+        item.appendChild(format);
+        item.appendChild(input);
+        item.appendChild(display);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(buttonContainer);
+        section.appendChild(item);
+
+        element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },

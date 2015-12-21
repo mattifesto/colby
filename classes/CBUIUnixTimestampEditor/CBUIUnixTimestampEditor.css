@@ -24,3 +24,16 @@
     right: 10px;
     top: 0;
 }
+
+.CBUIUnixTimestampValueEditor .buttonContainer {
+    text-align: center;
+}
+
+.CBUIUnixTimestampValueEditor .button {
+    background-color: hsl(240, 50%, 70%);
+    border: 2px solid hsl(240, 50%, 60%);
+    border-radius: 5px;
+    display: inline-block;
+    margin: 5px;
+    padding: 3px 5px;
+}
