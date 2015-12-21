@@ -256,10 +256,10 @@ var CBAdminPageForEditingModels = {
     renderEditor : function(args) {
         var index = (history.state) ? history.state.index : 0;
         var spec = args.navigationState.stack[index];
-        var editorFactory = window[spec.className + "EditorFactory"] || CBEditorWidgetFactory;
+        var editorFactory = window[spec.className + "Editor"] || window[spec.className + "EditorFactory"] || CBEditorWidgetFactory;
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
-        var handleSpecChanged = CBAdminPageForEditingModels.handleSpecChanged.bind(undefined, {
+        var specChangedCallback = CBAdminPageForEditingModels.handleSpecChanged.bind(undefined, {
             info : {},
             spec : args.navigationState.stack[0],
         });
@@ -269,9 +269,10 @@ var CBAdminPageForEditingModels = {
         }));
 
         main.appendChild(editorFactory.createEditor({
-            handleSpecChanged : handleSpecChanged,
+            handleSpecChanged : specChangedCallback, /* deprecated: use specChangedCallback */
             navigateCallback : CBAdminPageForEditingModels.navigate.bind(undefined, { navigationState : args.navigationState, }),
-            spec : spec
+            spec : spec,
+            specChangedCallback : specChangedCallback,
         }));
     },
 
