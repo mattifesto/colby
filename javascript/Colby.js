@@ -24,9 +24,10 @@ var Colby = {
      * @return undefined
      */
     displayResponse : function(response) {
+        var element, message;
         if ('stackTrace' in response) {
-            var element                 = document.createElement("div");
-            var message                 = document.createElement("p");
+            element                     = document.createElement("div");
+            message                     = document.createElement("p");
             message.style.textAlign     = "center";
             message.style.marginBottom  = "100px";
             message.textContent         = response.message;
@@ -39,8 +40,8 @@ var Colby = {
 
             Colby.setPanelElement(element);
         } else if (response.userMustLogIn) {
-            var element                 = document.createElement("div");
-            var message                 = document.createElement("p");
+            element                     = document.createElement("div");
+            message                     = document.createElement("p");
             message.style.textAlign     = "center";
             message.textContent         = response.message;
             var button                  = document.createElement("button");
@@ -69,8 +70,8 @@ var Colby = {
             var value = "value";
 
             try {
-                localStorage.setItem(mod, mod);
-                localStorage.removeItem(mod);
+                localStorage.setItem(value, value);
+                localStorage.removeItem(value);
                 Colby.localStorageIsSupported = true;
             } catch(e) {
                 Colby.localStorageIsSupported = false;
@@ -116,16 +117,31 @@ var Colby = {
      *
      * @return string
      */
-    unixTimestampToUniversalDateString : function (unixTimestamp) {
-        if (unixTimestamp === undefined) {
-            return "";
-        }
-
+    unixTimestampToParseableDateString : function (unixTimestamp) {
         var date = new Date(unixTimestamp * 1000);
 
-        return (date.getMonth() + 1) + "/" +
-               date.getDate() + "/" +
-               date.getFullYear();
+        return (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+    },
+
+    unixTimestampToParseableString : function (unixTimestamp) {
+        return Colby.unixTimestampToParseableDateString(unixTimestamp) +
+               " " +
+               Colby.unixTimestampToParseableTimeString(unixTimestamp);
+    },
+
+    unixTimestampToParseableTimeString : function (unixTimestamp) {
+        var date = new Date(unixTimestamp * 1000);
+        var hour = date.getHours() % 12;
+        hour = hour ? hour : 12;
+        var minutes = date.getMinutes().toString();
+
+        if (minutes.length < 2) {
+            minutes = '0'.concat(minutes);
+        }
+
+        var AMPM = (date.getHours() > 11) ? 'pm' : 'am';
+
+        return hour + ':' + minutes + ' ' + AMPM;
     },
 };
 
@@ -237,7 +253,7 @@ Colby.centsToDollars = function(cents)
  */
 Colby.createPanel = function() {
     var panel = document.createElement("div");
-    panel.className = "CBPanelView"
+    panel.className = "CBPanelView";
     var container = document.createElement("div");
     container.className = "CBPanelContainer";
     var content = document.createElement("div");
@@ -416,7 +432,7 @@ Colby.random160 = function()
     {
         randomNumbers = new Uint16Array(10);
 
-        crypto.getRandomValues(randomNumbers);
+        window.crypto.getRandomValues(randomNumbers);
     }
     else
     {
