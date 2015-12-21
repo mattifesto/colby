@@ -3,6 +3,30 @@
 var CBUI = {
 
     /**
+     * @param function args.buttonClickedCallback
+     * @param string args.text
+     *
+     * @return {
+     *  Element element,
+     *  function updateTextCallback
+     * }
+     */
+    createButton : function (args) {
+        var element = document.createElement("div");
+        element.className = "CBUIButton";
+        var updateTextCallback = CBUI.updateTextContent.bind(undefined, element);
+
+        updateTextCallback.call(undefined, args.text);
+
+        element.addEventListener("click", args.buttonClickedCallback);
+
+        return {
+            element : element,
+            updateTextCallback : updateTextCallback,
+        };
+    },
+
+    /**
      * @return Element
      */
     createHalfSpace : function() {
@@ -80,6 +104,16 @@ var CBUI = {
         element.className = "CBUISectionItem";
 
         return element;
+    },
+
+    /**
+     * @param Element element
+     * @param string text
+     *
+     * @return undefined
+     */
+    updateTextContent : function (element, text) {
+        element.textContent = text;
     },
 };
 

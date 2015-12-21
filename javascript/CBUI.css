@@ -7,6 +7,16 @@
     display: none;
 }
 
+.CBUIButton {
+    background-color: hsl(210, 100%, 70%);
+    border: 2px solid hsl(210, 100%, 60%);
+    border-radius: 5px;
+    color: hsl(210, 100%, 40%);
+    display: inline-block;
+    margin: 5px;
+    padding: 3px 5px;
+}
+
 .CBUIHalfSpace {
     height: 22px;
 }
