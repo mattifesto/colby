@@ -82,28 +82,31 @@ EOT;
     }
 
     /**
+     * @param string? $model->contentAsHTML
+     * @param hex160? $model->themeID
+     * @param string? $model->titleAsHTML
+     * @param string? $model->URLAsHTML
+     *
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
-        if ($model->themeID) {
+        if (empty($model->themeID)) {
+            $class = "CBThemedTextView NoTheme";
+        } else {
             CBHTMLOutput::addCSSURL(CBDataStore::toURL([
                 'ID'        => $model->themeID,
                 'filename'  => 'CBThemedTextViewTheme.css'
             ]));
-        }
 
-        if ($model->themeID) {
             $class = "CBThemedTextView T{$model->themeID}";
-        } else {
-            $class = "CBThemedTextView NoTheme";
         }
 
-        if ($model->URLAsHTML) {
-            $open   = "<a href=\"{$model->URLAsHTML}\" class=\"{$class}\">";
-            $close  = '</a>';
-        } else {
+        if (empty($model->URLAsHTML)) {
             $open   = "<section class=\"{$class}\">";
             $close  = '</section>';
+        } else {
+            $open   = "<a href=\"{$model->URLAsHTML}\" class=\"{$class}\">";
+            $close  = '</a>';
         }
 
         if (empty($model->titleAsHTML)) {
