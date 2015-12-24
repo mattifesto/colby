@@ -131,7 +131,8 @@ EOT;
     }
 
     /**
-     * @param {stdClass} $model
+     * @param hex160? $model->menuID
+     * @param hex160? $model->themeID
      *
      * @return null
      */
@@ -147,7 +148,7 @@ EOT;
         }
 
         if (empty($model->themeID)) {
-            $class = "CBThemedMenuView";
+            $class = "CBThemedMenuView NoTheme";
         } else {
             $class = "CBThemedMenuView T{$model->themeID}";
 
