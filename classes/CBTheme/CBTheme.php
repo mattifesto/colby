@@ -28,6 +28,32 @@ final class CBTheme {
     }
 
     /**
+     * @param hex160 $ID
+     *
+     * @return string
+     */
+    public static function IDToCSSClass($ID) {
+        if (empty($ID)) {
+            return "NoTheme";
+        } else {
+            return "T{$ID}";
+        }
+    }
+
+    /**
+     * @param hex160 $ID
+     *
+     * @return string
+     */
+    public static function IDToCSSURL($ID) {
+        if (empty($ID)) {
+            return null;
+        } else {
+            return CBDataStore::toURL(['ID' => $ID, 'filename' => 'CBTheme.css']);
+        }
+    }
+
+    /**
      * @return stdClass
      */
     public static function info() {
@@ -73,6 +99,7 @@ final class CBTheme {
     public static function specToModel(stdClass $spec) {
         $model = CBTheme::specToModelWithClassName($spec, __CLASS__);
         $model->classNameForKind = isset($spec->classNameForKind) ? $spec->classNameForKind : null;
+        $model->description = isset($spec->description) ? $spec->description : null;
 
         return $model;
     }
