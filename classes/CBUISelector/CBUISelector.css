@@ -1,0 +1,28 @@
+.CBUISelector {
+    padding: 5px 10px;
+    position: relative;
+}
+
+.CBUISelector .label {
+    color: hsl(0, 0%, 50%);
+}
+
+.CBUISelector .arrow {
+    align-items: center;
+    color: hsl(0, 0%, 50%);
+    display: flex;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    height: 100%;
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
+
+.CBUISelectorValueEditor .CBUISectionItem {
+    padding: 5px 10px;
+}
+
+.CBUISelectorValueEditor .description {
+    color: hsl(0, 0%, 50%);
+}
