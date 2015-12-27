@@ -6,7 +6,7 @@ final class CBThemedTextViewTheme {
      * @return [{string}]
      */
     public static function editorURLsForJavaScript() {
-        return CBTheme::editorURLsForJavaScript([
+        return CBTheme::editorURLsForJavaScript2([
             CBThemedTextViewTheme::URL('CBThemedTextViewThemeEditorFactory.js')
         ]);
     }

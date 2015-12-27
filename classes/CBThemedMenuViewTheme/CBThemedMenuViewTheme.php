@@ -6,7 +6,7 @@ final class CBThemedMenuViewTheme {
      * @return [{string}]
      */
     public static function editorURLsForJavaScript() {
-        return CBTheme::editorURLsForJavaScript([
+        return CBTheme::editorURLsForJavaScript2([
             CBThemedMenuViewTheme::URL('CBThemedMenuViewThemeEditorFactory.js')
         ]);
     }
