@@ -146,7 +146,7 @@ var CBUIStringEditor = {
     },
 
     /**
-    * @param Element args.inputElement
+     * @param Element args.inputElement
      * @param string args.propertyName
      * @param function args.resizeTextAreaCallback
      * @param object args.spec
@@ -164,6 +164,7 @@ var CBUIStringEditor = {
             args.inputElement.value = value;
         }
 
+        args.specChangedCallback.call();
         args.resizeTextAreaCallback.call();
     },
 };
