@@ -8,7 +8,7 @@ var CBUISelector = {
      * @param string args.propertyName
      * @param object args.spec
      * @param function args.specChangedCallback
-     * @param [{string title, string description, var value}] args.options
+     * @param [{string title, string description, mixed value}] args.options
      *
      * @return {
      *  Element element,
@@ -49,8 +49,8 @@ var CBUISelector = {
     },
 
     /**
-     * @param [{string title, string description, var value}] args.options
-     * @param var args.value
+     * @param [{string title, string description, mixed value}] args.options
+     * @param mixed args.value
      */
     optionValueToTitle : function (args) {
         var options = args.options.filter(function (option) {
@@ -71,7 +71,7 @@ var CBUISelectorValueEditor = {
      * @param string args.propertyName
      * @param object args.spec
      * @param function args.specChangedCallback
-     * @param var value
+     * @param mixed value
      *
      * @return undefined
      */
