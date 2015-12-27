@@ -38,12 +38,12 @@ class CBHTMLOutput
     private static $titleHTML;
 
     /**
+     * @param string|empty $CSSURL
+     *
      * @return void
      */
-    public static function addCSSURL($CSSURL)
-    {
-        if (!in_array($CSSURL, self::$CSSURLs))
-        {
+    public static function addCSSURL($CSSURL) {
+        if (!empty($CSSURL) && !in_array($CSSURL, self::$CSSURLs)) {
             self::$CSSURLs[] = $CSSURL;
         }
     }
