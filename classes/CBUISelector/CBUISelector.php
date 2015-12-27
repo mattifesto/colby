@@ -5,6 +5,13 @@ final class CBUISelector {
     /**
      * @return [string]
      */
+    public static function requiredClassNames() {
+        return ['CBUI'];
+    }
+
+    /**
+     * @return [string]
+     */
     public static function requiredCSSURLs() {
         return [CBUISelector::URL('CBUISelector.css')];
     }
