@@ -8,6 +8,7 @@ final class CBModelsPreferences {
         'CBTextBoxViewTheme',
         'CBThemedMenuViewTheme',
         'CBThemedTextViewTheme',
+        'CBTheme',
         'CBSitePreferences',
         'CBModelsPreferences',
         'CBPagesPreferences'
