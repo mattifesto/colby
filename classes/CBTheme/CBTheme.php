@@ -5,14 +5,52 @@
  */
 final class CBTheme {
 
+    public static function compareModels($model1, $model2) {
+        $result = strcmp($model1->classNameForKind, $model2->classNameForKind);
+
+        if ($result === 0) {
+            return strcmp($model1->title, $model2->title);
+        } else {
+            return $result;
+        }
+    }
+
     /**
-     * @return [{string}]
+     * @deprecated Transition from custom theme to CBTheme
+     *
+     * @return [string]
      */
-    public static function editorURLsForJavaScript(array $URLs = []) {
+    public static function editorURLsForJavaScript2(array $URLs = []) {
         return array_merge([
             CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
             CBSystemURL . '/javascript/CBThemeEditorFactory.js',
         ], $URLs);
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function info() {
+        return CBModelClassInfo::specToModel((object)[
+            'pluralTitle' => 'Themes',
+            'singularTitle' => 'Theme'
+        ]);
+    }
+
+    /**
+     * @param string $model->classNameForKind
+     *
+     * @return string
+     */
+    public static function modelToSummaryText(stdClass $model) {
+        return $model->classNameForKind;
+    }
+
+    /**
+     * @return null
+     */
+    public static function modelsWillSave(array $tuples) {
+        CBTheme::modelsWillSaveWithClassName($tuples, __CLASS__);
     }
 
     /**
@@ -30,7 +68,17 @@ final class CBTheme {
     }
 
     /**
-     * @return {stdClass}
+     * @return stdClass
+     */
+    public static function specToModel(stdClass $spec) {
+        $model = CBTheme::specToModelWithClassName($spec, __CLASS__);
+        $model->classNameForKind = isset($spec->classNameForKind) ? $spec->classNameForKind : null;
+
+        return $model;
+    }
+
+    /**
+     * @return stdClass
      */
     public static function specToModelWithClassName(stdClass $spec, $className) {
         $model = CBModels::modelWithClassName($className);
@@ -45,7 +93,7 @@ final class CBTheme {
      * This function replaces the strings "view" or ".view" with the CSS
      * class name for the theme. The string "\view" will not be replaced.
      *
-     * @return {string}
+     * @return string
      */
     private static function templateToStyles($template, $ID, $title, $className) {
         $keyword = 'view';
