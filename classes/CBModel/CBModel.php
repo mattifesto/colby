@@ -9,7 +9,7 @@ final class CBModel {
      *
      * @return mixed
      */
-    public static function value(stdClass $model, $propertyName, $default) {
+    public static function value(stdClass $model, $propertyName, $default = null) {
         if (isset($model->{$propertyName})) {
             return $model->{$propertyName};
         } else {
