@@ -148,11 +148,15 @@ EOT;
             return;
         }
 
-        if (empty($model->themeID)) {
-            $class = "CBThemedMenuView NoTheme";
-        } else {
-            $class = "CBThemedMenuView T{$model->themeID}";
+        $themeID = CBModel::value($model, 'themeID');
+        $class = CBTheme::IDToCSSClass($themeID);
+        $class = "CBThemedMenuView {$class}";
+        CBHTMLOutput::addCSSURL($CSSURL = CBTheme::IDToCSSURL($model->themeID));
 
+        /**
+         * @deprecated Move all themes to CBTheme
+         */
+        if (empty($CSSURL) && !empty($themeID)) {
             CBHTMLOutput::addCSSURL(CBDataStore::toURL([
                 'ID' => $model->themeID,
                 'filename' => 'CBThemedMenuViewTheme.css'
