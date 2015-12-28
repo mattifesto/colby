@@ -90,15 +90,16 @@ EOT;
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
-        if (empty($model->themeID)) {
-            $class = "CBThemedTextView NoTheme";
-        } else {
+        $themeID = CBModel::value($model, 'themeID');
+        $class = CBTheme::IDToCSSClass($themeID);
+        $class = "CBThemedTextView {$class}";
+        CBHTMLOutput::addCSSURL($CSSURL = CBTheme::IDToCSSURL($themeID));
+
+        if (empty($CSSURL) && !empty($themeID)) {
             CBHTMLOutput::addCSSURL(CBDataStore::toURL([
                 'ID'        => $model->themeID,
                 'filename'  => 'CBThemedTextViewTheme.css'
             ]));
-
-            $class = "CBThemedTextView T{$model->themeID}";
         }
 
         if (empty($model->URLAsHTML)) {
