@@ -6,23 +6,26 @@ final class CBThemedTextViewEditor {
      * @return stdClass
      */
     public static function fetchThemesForAjax() {
-        $response   = new CBAjaxResponse();
-        $SQL        = <<<EOT
+        $response = new CBAjaxResponse();
+        $SQL = <<<EOT
 
             SELECT      `v`.`modelAsJSON`
             FROM        `CBModels` AS `m`
             JOIN        `CBModelVersions` AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
-            WHERE       `m`.`className` = 'CBThemedTextViewTheme'
+            WHERE       `m`.`className` = 'CBTheme'
             ORDER BY    `m`.`created`
 
 EOT;
 
-        $models                     = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-        $themes                     = array_map(function($model) {
+        $models = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $models = array_values(array_filter($models, function ($model) {
+            return $model->classNameForKind === "CBTextView";
+        }));
+        $themes = array_map(function($model) {
             return (object)['value' => $model->ID, 'textContent' => $model->title];
         }, $models);
-        $response->themes           = $themes;
-        $response->wasSuccessful    = true;
+        $response->themes = $themes;
+        $response->wasSuccessful = true;
         $response->send();
     }
 
