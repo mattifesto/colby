@@ -14,10 +14,12 @@ final class CBThemedTextView {
         $spec = CBModels::fetchSpecByID(CBThemedTextView::standardPageHeaderThemeID);
 
         if ($spec === false) {
-            $spec = CBModels::modelWithClassName('CBThemedTextViewTheme', [
-                'ID' => CBThemedTextView::standardPageHeaderThemeID
-            ]);
-            $spec->title = 'Standard Page Header';
+            $spec = (object)[
+                'ID' => CBThemedTextView::standardPageHeaderThemeID,
+                'className' => 'CBTheme',
+                'classNameForKind' => 'CBTextView',
+                'title' => 'Standard Page Header',
+            ];
 
             CBModels::save([$spec]);
         }
