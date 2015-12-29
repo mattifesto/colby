@@ -5,55 +5,6 @@ final class CBThemedTextView {
     const standardPageHeaderThemeID = '2a5eb6c836914ef8f33b15f0853ac61df554505e';
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForCSS() {
-        return [ CBThemedTextView::URL('CBThemedTextViewEditor.css') ];
-    }
-
-    /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBThemedTextView::URL('CBThemedTextViewEditorFactory.js')
-        ];
-    }
-
-    /**
-     * @return {stdClass}
-     */
-    public static function fetchThemesForAjax() {
-        $response   = new CBAjaxResponse();
-        $SQL        = <<<EOT
-
-            SELECT      `v`.`modelAsJSON`
-            FROM        `CBModels` AS `m`
-            JOIN        `CBModelVersions` AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
-            WHERE       `m`.`className` = 'CBThemedTextViewTheme'
-            ORDER BY    `m`.`created`
-
-EOT;
-
-        $models                     = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-        $themes                     = array_map(function($model) {
-            return (object)['value' => $model->ID, 'textContent' => $model->title];
-        }, $models);
-        $response->themes           = $themes;
-        $response->wasSuccessful    = true;
-        $response->send();
-    }
-
-    /**
-     * @return {stdClass}
-     */
-    public static function fetchThemesForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
-    }
-
-    /**
      * @return null
      */
     public static function install() {
@@ -93,9 +44,12 @@ EOT;
         $themeID = CBModel::value($model, 'themeID');
         $class = CBTheme::IDToCSSClass($themeID);
         $class = "CBThemedTextView {$class}";
-        CBHTMLOutput::addCSSURL($CSSURL = CBTheme::IDToCSSURL($themeID));
+        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
 
-        if (empty($CSSURL) && !empty($themeID)) {
+        /**
+         * @deprecated Move all themes to CBTheme
+         */
+        if (!empty($themeID)) {
             CBHTMLOutput::addCSSURL(CBDataStore::toURL([
                 'ID'        => $model->themeID,
                 'filename'  => 'CBThemedTextViewTheme.css'

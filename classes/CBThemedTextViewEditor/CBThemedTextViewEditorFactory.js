@@ -81,7 +81,7 @@ var CBThemedTextViewEditorFactory = {
             alert("The CBThemedTextView themes failed to load.");
         };
 
-        xhr.open("POST", "/api/?class=CBThemedTextView&function=fetchThemes");
+        xhr.open("POST", "/api/?class=CBThemedTextViewEditor&function=fetchThemes");
         xhr.send();
     },
 

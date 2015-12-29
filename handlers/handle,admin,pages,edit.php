@@ -70,16 +70,20 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
  */
 
 foreach (CBPagesPreferences::classNamesForEditableViews() as $className) {
-    if (is_callable($function = "{$className}::editorURLsForCSS")) {
-        $URLs = call_user_func($function);
-        array_walk($URLs, 'CBHTMLOutput::addCSSURL');
-    }
+    if (class_exists($editorClassName = "{$className}Editor")) {
+        CBHTMLOutput::requireClassName($editorClassName);
+    } else {
+        if (is_callable($function = "{$className}::editorURLsForCSS")) {
+            $URLs = call_user_func($function);
+            array_walk($URLs, 'CBHTMLOutput::addCSSURL');
+        }
 
-    if (is_callable($function = "{$className}::editorURLsForJavaScript")) {
-        $URLs = call_user_func($function);
-        array_walk($URLs, function($URL) {
-            CBHTMLOutput::addJavaScriptURL($URL);
-        });
+        if (is_callable($function = "{$className}::editorURLsForJavaScript")) {
+            $URLs = call_user_func($function);
+            array_walk($URLs, function($URL) {
+                CBHTMLOutput::addJavaScriptURL($URL);
+            });
+        }
     }
 }
 

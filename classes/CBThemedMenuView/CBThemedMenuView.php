@@ -151,12 +151,12 @@ EOT;
         $themeID = CBModel::value($model, 'themeID');
         $class = CBTheme::IDToCSSClass($themeID);
         $class = "CBThemedMenuView {$class}";
-        CBHTMLOutput::addCSSURL($CSSURL = CBTheme::IDToCSSURL($model->themeID));
+        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
 
         /**
          * @deprecated Move all themes to CBTheme
          */
-        if (empty($CSSURL) && !empty($themeID)) {
+        if (!empty($themeID)) {
             CBHTMLOutput::addCSSURL(CBDataStore::toURL([
                 'ID' => $model->themeID,
                 'filename' => 'CBThemedMenuViewTheme.css'
