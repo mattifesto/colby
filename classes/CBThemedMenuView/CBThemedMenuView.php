@@ -3,17 +3,6 @@
 final class CBThemedMenuView {
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBThemedMenuView::URL('CBThemedMenuViewEditorFactory.js')
-        ];
-    }
-
-    /**
      * @return {stdClass}
      */
     public static function fetchMenuItemOptionsForAjax() {
