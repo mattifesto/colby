@@ -21,26 +21,6 @@ final class CBThemedTextView {
 
             CBModels::save([$spec]);
         }
-
-        // CBThemedTextViewTheme --> CBTheme
-
-        $SQL = <<<EOT
-
-            SELECT      `v`.`specAsJSON`
-            FROM        `CBModels` AS `m`
-            JOIN        `CBModelVersions` AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
-            WHERE       `m`.`className` = 'CBThemedTextViewTheme'
-
-EOT;
-
-        $specs = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-
-        array_walk($specs, function ($spec) {
-            $spec->className = 'CBTheme';
-            $spec->classNameForKind = 'CBTextView';
-        });
-
-        CBModels::save($specs);
     }
 
     /**

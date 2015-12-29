@@ -67,17 +67,24 @@ EOT;
      */
     public static function fetchThemesForAjax() {
         $response   = new CBAjaxResponse();
-        $SQL        = <<<EOT
+        $SQL = <<<EOT
 
-            SELECT      LOWER(HEX(`ID`)) AS `value`, `title` AS `textContent`
-            FROM        `CBModels`
-            WHERE       `className` = 'CBThemedMenuViewTheme'
-            ORDER BY    `title`
+            SELECT      `v`.`modelAsJSON`
+            FROM        `CBModels` AS `m`
+            JOIN        `CBModelVersions` AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
+            WHERE       `m`.`className` = 'CBTheme'
+            ORDER BY    `m`.`created`
 
 EOT;
 
-        $themes = CBDB::SQLToObjects($SQL);
-        $response->themes = ($themes !== false) ? $themes : [];
+        $models = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $models = array_values(array_filter($models, function ($model) {
+            return $model->classNameForKind === "CBMenuView";
+        }));
+        $themes = array_map(function($model) {
+            return (object)['value' => $model->ID, 'textContent' => $model->title];
+        }, $models);
+        $response->themes = $themes;
         $response->wasSuccessful = true;
         $response->send();
     }
@@ -141,16 +148,6 @@ EOT;
         $class = CBTheme::IDToCSSClass($themeID);
         $class = "CBThemedMenuView {$class}";
         CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
-
-        /**
-         * @deprecated Move all themes to CBTheme
-         */
-        if (!empty($themeID)) {
-            CBHTMLOutput::addCSSURL(CBDataStore::toURL([
-                'ID' => $model->themeID,
-                'filename' => 'CBThemedMenuViewTheme.css'
-            ]));
-        }
 
         ?>
 
