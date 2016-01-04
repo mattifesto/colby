@@ -62,7 +62,7 @@ final class CBModelsPreferences {
         $spec = CBModels::fetchSpecByID(CBModelsPreferences::ID);
 
         if ($spec === false) {
-            $spec = CBModels::modelWithClassName(__CLASS__, ['ID' => CBSitePreferences::ID]);
+            $spec = CBModels::modelWithClassName(__CLASS__, ['ID' => CBModelsPreferences::ID]);
         }
 
         CBModels::save([$spec]);
