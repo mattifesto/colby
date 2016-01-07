@@ -130,25 +130,23 @@ class ColbyConvert
     }
 
     /**
-     * @return string
-     */
-    public static function markaroundToHTML($markaround) {
-        $parser = ColbyMarkaroundParser::parserWithMarkaround($markaround);
-
-        return $parser->html();
-    }
-
-    /**
-     * Deprecated
-     *  2013.01.14
+     * @deprecated use CBMarkaround::markaroundToHTML() (2016.01.07)
      *
      * @return string
      */
-    public static function textToFormattedContent($text)
-    {
-        Colby::debugLog('`ColbyConvert::textToFormattedContent` has been deprecated in favor of `ColbyConvert::markaroundToHTML`');
+    public static function markaroundToHTML($markaround) {
+        Colby::debugLog('ColbyConvert::markaroundToHTML() has been deprecated.');
+        return CBMarkaround::markaroundToHTML($markaround);
+    }
 
-        return self::markaroundToHTML($text);
+    /**
+     * @deprecated use CBMarkaround::markaroundToHTML() (2013.01.14)
+     *
+     * @return string
+     */
+    public static function textToFormattedContent($text) {
+        Colby::debugLog('ColbyConvert::textToFormattedContent() has been deprecated.');
+        return CBMarkaround::markaroundToHTML($markaround);
     }
 
     /**

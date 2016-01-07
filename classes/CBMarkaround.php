@@ -20,6 +20,27 @@ final class CBMarkaround {
     }
 
     /**
+     * @param string $markaround
+     *
+     * @return string
+     */
+    public static function markaroundToHTML($markaround) {
+        $parser = ColbyMarkaroundParser::parserWithMarkaround($markaround);
+        return $parser->html();
+    }
+
+    /**
+     * TODO: 2016.01.07 This function still needs to be properly implemented.
+     *
+     * @param string $markaround
+     *
+     * @return string
+     */
+    public static function markaroundToText($markaround) {
+        return $markaround;
+    }
+
+    /**
      * @note functional programming
      *
      * Applies inline formatting rules to a paragraph of text.
