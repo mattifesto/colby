@@ -94,6 +94,15 @@
     min-height: 44px;
 }
 
+.CBUISectionItem a {
+    color: hsl(210, 100%, 50%);
+    text-decoration: none;
+}
+
+.CBUISectionItem a:hover {
+    text-decoration: underline;
+}
+
 .CBUISection > .CBUISectionItem + .CBUISectionItem {
     border-top: 1px solid hsl(0, 0%, 80%);
 }
