@@ -1,6 +1,11 @@
 "use strict";
 
-var CBArrayEditorFactory = {
+/**
+ * @deprecated use CBArrayEditor
+ */
+var CBArrayEditorFactory;
+
+var CBArrayEditor = CBArrayEditorFactory = {
 
     /**
      * @param [Object] args.array
@@ -13,7 +18,7 @@ var CBArrayEditorFactory = {
      * @return  undefined
      */
     append : function (args, spec) {
-        var element = CBArrayEditorFactory.createSectionItemElement({
+        var element = CBArrayEditor.createSectionItemElement({
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -38,10 +43,10 @@ var CBArrayEditorFactory = {
      * @return  undefined
      */
     appendSelectedModel : function (args) {
-        var requestModelClassName = CBArrayEditorFactory.requestModelClassName;
+        var requestModelClassName = CBArrayEditor.requestModelClassName;
         var requestArgs = { classNames : args.classNames, };
-        var classNameToModel = CBArrayEditorFactory.classNameToModel;
-        var appendModel = CBArrayEditorFactory.append.bind(undefined, {
+        var classNameToModel = CBArrayEditor.classNameToModel;
+        var appendModel = CBArrayEditor.append.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -79,7 +84,7 @@ var CBArrayEditorFactory = {
         section.className = "CBUISection";
 
         args.array.forEach(function (spec) {
-            var element = CBArrayEditorFactory.createSectionItemElement({
+            var element = CBArrayEditor.createSectionItemElement({
                 array : args.array,
                 arrayChangedCallback : args.arrayChangedCallback,
                 classNames : args.classNames,
@@ -91,7 +96,7 @@ var CBArrayEditorFactory = {
             section.appendChild(element);
         });
 
-        section.appendChild(CBArrayEditorFactory.createMenu({
+        section.appendChild(CBArrayEditor.createMenu({
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -121,7 +126,7 @@ var CBArrayEditorFactory = {
         item = document.createElement("div");
         item.textContent = "append";
 
-        item.addEventListener("click", CBArrayEditorFactory.appendSelectedModel.bind(undefined, {
+        item.addEventListener("click", CBArrayEditor.appendSelectedModel.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -134,7 +139,7 @@ var CBArrayEditorFactory = {
         item = document.createElement("div");
         item.textContent = "arrange";
 
-        item.addEventListener("click", CBArrayEditorFactory.setEditorMode.bind(undefined, {
+        item.addEventListener("click", CBArrayEditor.setEditorMode.bind(undefined, {
             mode : "arrange",
             sectionElement : args.sectionElement,
         }));
@@ -144,7 +149,7 @@ var CBArrayEditorFactory = {
         item = document.createElement("div");
         item.textContent = "edit";
 
-        item.addEventListener("click", CBArrayEditorFactory.setEditorMode.bind(undefined, {
+        item.addEventListener("click", CBArrayEditor.setEditorMode.bind(undefined, {
             mode : "edit",
             sectionElement : args.sectionElement,
         }));
@@ -154,7 +159,7 @@ var CBArrayEditorFactory = {
         item = document.createElement("div");
         item.textContent = "insert";
 
-        item.addEventListener("click", CBArrayEditorFactory.setEditorMode.bind(undefined, {
+        item.addEventListener("click", CBArrayEditor.setEditorMode.bind(undefined, {
             mode : "insert",
             sectionElement : args.sectionElement,
         }));
@@ -190,7 +195,7 @@ var CBArrayEditorFactory = {
 
         var description = document.createElement("div");
         description.className = "description";
-        description.textContent = args.spec.title || "";
+        description.textContent = CBArrayEditor.specToDescription({spec : args.spec});
 
         content.appendChild(title);
         content.appendChild(description);
@@ -216,7 +221,7 @@ var CBArrayEditorFactory = {
         action.className = "action edit cut";
         action.textContent = "x";
 
-        action.addEventListener("click", CBArrayEditorFactory.handleDeleteWasClicked.bind(undefined, {
+        action.addEventListener("click", CBArrayEditor.handleDeleteWasClicked.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             sectionElement : args.sectionElement,
@@ -243,7 +248,7 @@ var CBArrayEditorFactory = {
         action.className = "action insert";
         action.textContent = "+";
 
-        action.addEventListener("click", CBArrayEditorFactory.insertSelectedModel.bind(undefined, {
+        action.addEventListener("click", CBArrayEditor.insertSelectedModel.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -307,7 +312,7 @@ var CBArrayEditorFactory = {
     insert : function (args, spec) {
         var indexToInsertBefore = args.array.indexOf(args.specToInsertBefore);
         var elementToInsertBefore = args.sectionElement.children.item(indexToInsertBefore);
-        var sectionItemElement = CBArrayEditorFactory.createSectionItemElement({
+        var sectionItemElement = CBArrayEditor.createSectionItemElement({
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -333,10 +338,10 @@ var CBArrayEditorFactory = {
      * @return  undefined
      */
     insertSelectedModel : function (args) {
-        var requestModelClassName = CBArrayEditorFactory.requestModelClassName;
+        var requestModelClassName = CBArrayEditor.requestModelClassName;
         var requestArgs = { classNames : args.classNames, };
-        var classNameToModel = CBArrayEditorFactory.classNameToModel;
-        var insertModel = CBArrayEditorFactory.insert.bind(undefined, {
+        var classNameToModel = CBArrayEditor.classNameToModel;
+        var insertModel = CBArrayEditor.insert.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -416,6 +421,21 @@ var CBArrayEditorFactory = {
             e.classList.toggle(args.mode);
         } else {
             e.className = "CBUISection " + args.mode;
+        }
+    },
+
+    /**
+     * @param Object args.spec
+     *
+     * @return string
+     */
+    specToDescription : function (args) {
+        var editor = window[args.spec.className + "Editor"];
+
+        if (editor !== undefined && typeof editor.specToDescription === "function") {
+            return editor.specToDescription.call(undefined, {spec : args.spec});
+        } else {
+            return args.spec.title || "";
         }
     },
 };
