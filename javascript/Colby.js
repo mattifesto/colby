@@ -134,12 +134,18 @@ var Colby = {
         return (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
     },
 
+    /**
+     * @return string
+     */
     unixTimestampToParseableString : function (unixTimestamp) {
         return Colby.unixTimestampToParseableDateString(unixTimestamp) +
                " " +
                Colby.unixTimestampToParseableTimeString(unixTimestamp);
     },
 
+    /**
+     * @return string
+     */
     unixTimestampToParseableTimeString : function (unixTimestamp) {
         var date = new Date(unixTimestamp * 1000);
         var hour = date.getHours() % 12;
@@ -153,6 +159,45 @@ var Colby = {
         var AMPM = (date.getHours() > 11) ? 'pm' : 'am';
 
         return hour + ':' + minutes + ' ' + AMPM;
+    },
+
+    /**
+     * @return undefined
+     */
+    updateTimes : function () {
+        if (Colby.intervalId && Colby.intervalCount > 90) {
+            // We only do updates every second for the first 90 seconds. It's 90 instead of 60 in case the server clock and the client clock are way off.
+
+            clearInterval(Colby.intervalId);
+            Colby.intervalId = null;
+
+            // In the future only update the times every 15 seconds. We don't need to hold onto the interval id because we're never going to cancel it.
+
+            setInterval(Colby.updateTimes, 15000);
+        }
+
+        Colby.intervalCount++;
+
+        var date, element, timestamp;
+        var elements = document.getElementsByClassName('time');
+        var countOfElements = elements.length;
+        var now = new Date();
+
+        for (var i = 0; i < countOfElements; i++) {
+            element = elements.item(i);
+            timestamp = Colby.elementToTimestamp(element);
+
+            if (timestamp === null) {
+                if (element.hasAttribute("data-nulltextcontent")) {
+                    element.textContent = element.getAttribute("data-nulltextcontent");
+                }
+
+                continue;
+            }
+
+            date = new Date(timestamp);
+            element.textContent = Colby.dateToRelativeLocaleString(date, now);
+        }
     },
 };
 
@@ -589,45 +634,6 @@ Colby.textToURI = function(text)
     uri = uri.replace(/[\-\ ]+/g, '-');
 
     return uri;
-};
-
-/**
- * @return undefined
- */
-Colby.updateTimes = function () {
-    if (Colby.intervalId && Colby.intervalCount > 90) {
-        // We only do updates every second for the first 90 seconds. It's 90 instead of 60 in case the server clock and the client clock are way off.
-
-        clearInterval(Colby.intervalId);
-        Colby.intervalId = null;
-
-        // In the future only update the times every 15 seconds. We don't need to hold onto the interval id because we're never going to cancel it.
-
-        setInterval(Colby.updateTimes, 15000);
-    }
-
-    Colby.intervalCount++;
-
-    var date, element, timestamp;
-    var elements = document.getElementsByClassName('time');
-    var countOfElements = elements.length;
-    var now = new Date();
-
-    for (var i = 0; i < countOfElements; i++) {
-        element = elements.item(i);
-        timestamp = Colby.elementToTimestamp(element);
-
-        if (timestamp === null) {
-            if (element.hasAttribute("data-nulltextcontent")) {
-                element.textContent = element.getAttribute("data-nulltextcontent");
-            }
-
-            continue;
-        }
-
-        date = new Date(timestamp);
-        element.textContent = Colby.dateToRelativeLocaleString(date, now);
-    }
 };
 
 Colby.updateTimestampForElementWithId = function(timestamp, id)
