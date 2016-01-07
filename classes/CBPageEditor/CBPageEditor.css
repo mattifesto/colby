@@ -1,0 +1,10 @@
+.CBPagePropertiesEditor .CBUISectionItem.preview {
+    display: flex;
+}
+
+.CBPagePropertiesEditor .CBUISectionItem.preview > a {
+    align-items: center;
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+}
