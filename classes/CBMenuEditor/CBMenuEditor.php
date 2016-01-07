@@ -6,28 +6,14 @@ final class CBMenuEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor', 'CBMenuItemEditor'];
-    }
-
-    /**
-     * @return [string]
-     */
-    public static function requiredCSSURLs() {
-        return [
-            CBSystemURL . '/javascript/CBSpecArrayEditor.css',
-            CBMenuEditor::URL('CBMenuEditor.css')
-        ];
+        return ['CBArrayEditor', 'CBMenuItemEditor', 'CBUI', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [
-            CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBMenuEditor::URL('CBMenuEditor.js')
-        ];
+        return [CBMenuEditor::URL('CBMenuEditor.js')];
     }
 
     /**
