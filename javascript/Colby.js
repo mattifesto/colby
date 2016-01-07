@@ -63,6 +63,17 @@ var Colby = {
     },
 
     /**
+     * @param Element element
+     *
+     * @return int|null
+     */
+    elementToTimestamp : function (element) {
+        var timestamp = parseInt(element.getAttribute("data-timestamp"), 10);
+
+        return isNaN(timestamp) ? null : timestamp;
+    },
+
+    /**
      * @return bool
      */
     localStorageIsSupported : function () {
@@ -581,12 +592,10 @@ Colby.textToURI = function(text)
 };
 
 /**
- * @return void
+ * @return undefined
  */
-Colby.updateTimes = function()
-{
-    if (Colby.intervalId && Colby.intervalCount > 90)
-    {
+Colby.updateTimes = function () {
+    if (Colby.intervalId && Colby.intervalCount > 90) {
         // We only do updates every second for the first 90 seconds. It's 90 instead of 60 in case the server clock and the client clock are way off.
 
         clearInterval(Colby.intervalId);
@@ -599,22 +608,24 @@ Colby.updateTimes = function()
 
     Colby.intervalCount++;
 
+    var date, element, timestamp;
     var elements = document.getElementsByClassName('time');
     var countOfElements = elements.length;
     var now = new Date();
 
-    for (var i = 0; i < countOfElements; i++)
-    {
-        var element = elements.item(i);
-        var timestamp = +element.getAttribute('data-timestamp'); // Use + to convert to integer.
+    for (var i = 0; i < countOfElements; i++) {
+        element = elements.item(i);
+        timestamp = Colby.elementToTimestamp(element);
 
-        if (!timestamp)
-        {
+        if (timestamp === null) {
+            if (element.hasAttribute("data-nulltextcontent")) {
+                element.textContent = element.getAttribute("data-nulltextcontent");
+            }
+
             continue;
         }
 
-        var date = new Date(timestamp);
-
+        date = new Date(timestamp);
         element.textContent = Colby.dateToRelativeLocaleString(date, now);
     }
 };

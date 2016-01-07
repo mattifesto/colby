@@ -367,10 +367,19 @@ class ColbyConvert
     /**
      * @return string
      */
-    public static function timestampToHTML($timestamp) {
-        $timestampForJavaScript = $timestamp * 1000;
+    public static function timestampToHTML($timestamp = null, $nullTextContent = null) {
+        $attributes[] = 'class="time"';
 
-        return "<time class=\"time\" data-timestamp=\"{$timestampForJavaScript}\"></time>";
+        if ($timestamp !== null) {
+            $timestampForJavaScript = $timestamp * 1000;
+            $attributes[] = "data-timestamp=\"{$timestampForJavaScript}\"";
+        } else if ($nullTextContent !== null) {
+            $attributes[] = 'data-nulltextcontent="' . cbhtml($nullTextContent). '"';
+        }
+
+        $attributes = implode(' ', $attributes);
+
+        return "<time {$attributes}></time>";
     }
 
     /**
