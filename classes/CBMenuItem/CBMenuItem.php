@@ -3,26 +3,21 @@
 final class CBMenuItem {
 
     /**
-     * @return [{string}]
+     * @return stdClass
      */
-    public static function editorURLsForCSS() {
-        return [
-            CBMenuItem::URL('CBMenuItemEditor.css')
-        ];
+    public static function info() {
+        return CBModelClassInfo::specToModel((object)[
+            'pluralTitle' => 'Menu Items',
+            'singularTitle' => 'Menu Item',
+        ]);
     }
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBMenuItem::URL('CBMenuItemEditorFactory.js')
-        ];
-    }
-
-    /**
-     * @return {stdClass}
+     * @param string? $spec->name
+     * @param string? $spec->text
+     * @param string? $spec->URL
+     *
+     * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
         $model              = CBModels::modelWithClassName(__CLASS__);
@@ -36,7 +31,9 @@ final class CBMenuItem {
     }
 
     /**
-     * @return {string}
+     * @param string $filename
+     *
+     * @return string
      */
     public static function URL($filename) {
         return CBSystemURL . "/classes/CBMenuItem/{$filename}";

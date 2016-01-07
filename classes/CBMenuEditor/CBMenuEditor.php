@@ -1,26 +1,33 @@
 <?php
 
-final class CBThemeEditor {
+final class CBMenuEditor {
 
     /**
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor'];
+        return ['CBUI', 'CBUIStringEditor', 'CBMenuItemEditor'];
     }
 
     /**
      * @return [string]
      */
     public static function requiredCSSURLs() {
-        return [CBThemeEditor::URL('CBThemeEditor.css')];
+        return [
+            CBSystemURL . '/javascript/CBSpecArrayEditor.css',
+            CBMenuEditor::URL('CBMenuEditor.css')
+        ];
     }
 
     /**
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [CBThemeEditor::URL('CBThemeEditor.js')];
+        return [
+            CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
+            CBSystemURL . '/javascript/CBStringEditorFactory.js',
+            CBMenuEditor::URL('CBMenuEditor.js')
+        ];
     }
 
     /**

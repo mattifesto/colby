@@ -1,6 +1,6 @@
 <?php
 
-final class CBThemeEditor {
+final class CBMenuItemEditor {
 
     /**
      * @return [string]
@@ -13,14 +13,14 @@ final class CBThemeEditor {
      * @return [string]
      */
     public static function requiredCSSURLs() {
-        return [CBThemeEditor::URL('CBThemeEditor.css')];
+        return [CBMenuItemEditor::URL('CBMenuItemEditor.css')];
     }
 
     /**
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [CBThemeEditor::URL('CBThemeEditor.js')];
+        return [CBMenuItemEditor::URL('CBMenuItemEditor.js')];
     }
 
     /**
