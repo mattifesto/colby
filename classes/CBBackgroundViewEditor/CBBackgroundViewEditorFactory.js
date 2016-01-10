@@ -69,7 +69,7 @@ var CBBackgroundViewEditorFactory = {
 
         children.appendChild(CBSpecArrayEditorFactory.createEditor({
             array           : args.spec.children,
-            classNames      : CBPageEditorAvailableViewClassNames,
+            classNames      : CBBackgroundViewAddableViews,
             handleChanged   : args.handleSpecChanged
         }));
 

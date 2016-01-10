@@ -3,30 +3,6 @@
 final class CBBackgroundView {
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForCSS() {
-        return [
-            CBSystemURL . '/javascript/CBImageEditorFactory.css',
-            CBSystemURL . '/javascript/CBSpecArrayEditor.css',
-            CBBackgroundView::URL('CBBackgroundViewEditor.css')
-        ];
-    }
-
-    /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBBooleanEditorFactory.js',
-            CBSystemURL . '/javascript/CBImageEditorFactory.js',
-            CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBBackgroundView::URL('CBBackgroundViewEditorFactory.js')
-        ];
-    }
-
-    /**
      * @return string
      */
     public static function modelToSearchText(stdClass $model = null) {
