@@ -51,6 +51,9 @@ EOT;
         ];
     }
 
+    /**
+     * @return [[string, mixed]]
+     */
     public static function requiredJavaScriptVariables() {
         return [
             ['CBThemedTextViewThemes', CBThemedTextViewEditor::fetchThemes()]
