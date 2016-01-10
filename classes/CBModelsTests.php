@@ -20,6 +20,7 @@ final class CBModelsTests {
         $specs = CBModels::fetchSpecsByID(CBModelsTests::testModelIDs, [
             'createSpecForIDCallback' => function($ID) {
                 $spec           = CBModels::modelWithClassName('CBModelTest', ['ID' => $ID]);
+                $spec->title    = "Title for {$ID}";
                 $spec->name     = "Name {$ID}";
                 return $spec;
             }
@@ -302,7 +303,7 @@ final class CBModelTest {
             throw new Exception(__METHOD__ . ' Incorrect `nameAsHTML` property');
         }
 
-        if (!isset($model->title)) {
+        if ($model->title !== "Title for {$ID}") {
             throw new Exception(__METHOD__ . ' Incorrect `title` property');
         }
 
