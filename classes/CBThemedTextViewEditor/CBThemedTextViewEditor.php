@@ -47,7 +47,7 @@ EOT;
     public static function requiredJavaScriptURLs() {
         return [
             CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBThemedTextViewEditor::URL('CBThemedTextViewEditorFactory.js'),
+            CBThemedTextViewEditor::URL('CBThemedTextViewEditor.js'),
         ];
     }
 
