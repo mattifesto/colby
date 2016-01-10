@@ -89,6 +89,8 @@ final class CBView {
     }
 
     /**
+     * @deprecated use CBModel::specToOptionalModel
+     *
      * This function transforms a view specification into a model. This
      * function always succeeds. If the view class has no `specToModel`
      * function the model will be a copy of the specification. If the
