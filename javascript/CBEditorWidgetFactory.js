@@ -25,13 +25,15 @@ var CBEditorWidgetFactory = {
      * @param   {function}  handleMoveDown
      * @param   {function}  handleMoveUp
      * @param   {function}  handleRemove
-     * @param   {function}  handleSpecChanged
+     * @param   {function}  handleSpecChanged @deprecated
      * @param   {Object}    spec
+     * @param function args.specChangedCallback
      * @param   {Array}     toolbarElements
      *
      * @return  {Element}
      */
     createWidget : function(args) {
+        args.specChangedCallback = args.specChangedCallback || args.handleSpecChanged;
         var widgetElement       = document.createElement("section");
         widgetElement.className = "CBEditorWidget";
         var container           = document.createElement("div");
