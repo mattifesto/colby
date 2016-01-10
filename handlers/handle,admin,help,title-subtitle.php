@@ -21,7 +21,7 @@ $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/help/tit
 
 <main style="margin: 0 auto; max-width: 640px; padding: 40px 10px;">
     <div class="formatted-content standard-formatted-content">
-        <?php echo ColbyConvert::markaroundToHTML($markaround); ?>
+        <?php echo CBMarkaround::markaroundToHTML($markaround); ?>
     </div>
 </main>
 

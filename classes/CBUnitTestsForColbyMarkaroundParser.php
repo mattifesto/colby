@@ -18,13 +18,13 @@ class CBUnitTestsForColbyMarkaroundParser {
     {
         $markaround = "17.5\" by 21.5\"";
         $expected   = "<p>17.5&quot; by 21.5&quot;\n";
-        $actual     = ColbyConvert::markaroundToHTML($markaround);
+        $actual     = CBMarkaround::markaroundToHTML($markaround);
 
         self::verifyActualStringIsExpected($actual, $expected);
 
         $markaround = "17. 5\" by 21.5\"";
         $expected   = "<ol>\n<li><p>5&quot; by 21.5&quot;\n</ol>\n";
-        $actual     = ColbyConvert::markaroundToHTML($markaround);
+        $actual     = CBMarkaround::markaroundToHTML($markaround);
 
         self::verifyActualStringIsExpected($actual, $expected);
     }
@@ -36,7 +36,7 @@ class CBUnitTestsForColbyMarkaroundParser {
     {
         $markaround = "Hello *world!*";
         $expected   = "<p>Hello <b>world!</b>\n";
-        $actual     = ColbyConvert::markaroundToHTML($markaround);
+        $actual     = CBMarkaround::markaroundToHTML($markaround);
 
         self::verifyActualStringIsExpected($actual, $expected);
     }
@@ -48,7 +48,7 @@ class CBUnitTestsForColbyMarkaroundParser {
     {
         $markaround = "-Hello";
         $expected   = "<ul>\n<li><p>Hello\n</ul>\n";
-        $actual     = ColbyConvert::markaroundToHTML($markaround);
+        $actual     = CBMarkaround::markaroundToHTML($markaround);
 
         self::verifyActualStringIsExpected($actual, $expected);
     }

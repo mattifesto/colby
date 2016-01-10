@@ -12,7 +12,7 @@ $response = new CBAjaxResponse();
  */
 
 $response->contentMarkaround    = $_POST['contentMarkaround'];
-$response->contentHTML          = ColbyConvert::markaroundToHTML($response->contentMarkaround);
+$response->contentHTML          = CBMarkaround::markaroundToHTML($response->contentMarkaround);
 
 
 /**

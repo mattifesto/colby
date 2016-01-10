@@ -170,7 +170,7 @@ EOT;
         $model                      = CBModels::modelWithClassName(__CLASS__);
         $model->contentAlignment    = "left";
         $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? trim($spec->contentAsMarkaround) : '';
-        $model->contentAsHTML       = ColbyConvert::markaroundToHTML($model->contentAsMarkaround);
+        $model->contentAsHTML       = CBMarkaround::markaroundToHTML($model->contentAsMarkaround);
         $model->contentColor        = isset($spec->contentColor) ? trim($spec->contentColor) : '';
         $model->height              = CBTextBoxView::propertyToNumber($spec, 'height');
         $model->themeID             = isset($spec->themeID) ? $spec->themeID : false;
