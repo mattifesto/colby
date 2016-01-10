@@ -401,7 +401,7 @@ EOT;
         array_walk($tuples, function($tuple) use ($initialDataByID, $modified) {
             $ID                     = $tuple->spec->ID;
             $tuple->model->ID       = $ID;
-            $title                  = CBModels::specToTitle($tuple->spec);
+            $title                  = CBModel::value($tuple->spec, 'title', null, 'trim');
             $tuple->spec->created   = $tuple->model->created    = $initialDataByID[$ID]->created;
             $tuple->spec->modified  = $tuple->model->modified   = $modified;
             $tuple->spec->title     = $tuple->model->title      = $title;
@@ -518,12 +518,11 @@ EOT;
     }
 
     /**
-     * If it becomes necessary in the future a function `stringToTitle` can be
-     * added and then called by this function. At this time that is not useful.
+     * @deprecated use CBModel::value()
      *
-     * @return {string}
+     * @return string
      */
     public static function specToTitle(stdClass $spec) {
-        return isset($spec->title) ? trim($spec->title) : '';
+        return CBModel::value($spec, 'title', null, 'trim');
     }
 }
