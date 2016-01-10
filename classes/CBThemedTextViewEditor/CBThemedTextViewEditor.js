@@ -1,6 +1,6 @@
 "use strict";
 
-var CBThemedTextViewEditorFactory = {
+var CBThemedTextViewEditor = {
 
     /**
      * @param   {function}  handleSpecChanged
@@ -14,7 +14,7 @@ var CBThemedTextViewEditorFactory = {
         var container = document.createElement("div");
         container.className = "container";
 
-        container.appendChild(CBThemedTextViewEditorFactory.createThemeIDEditor({
+        container.appendChild(CBThemedTextViewEditor.createThemeIDEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Theme",
             propertyName        : "themeID",
@@ -64,4 +64,13 @@ var CBThemedTextViewEditorFactory = {
             spec                : args.spec
         });
     },
+
+    /**
+     * @param string? args.spec.titleAsMarkaround
+     *
+     * @return string
+     */
+    specToDescription : function (args) {
+        return args.spec.titleAsMarkaround || "";
+    }
 };
