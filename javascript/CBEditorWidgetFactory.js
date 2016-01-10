@@ -76,7 +76,7 @@ var CBEditorWidgetFactory = {
         widgetElement.addEventListener("click", handleSelect);
         widgetElement.addEventListener("focusin", handleSelect);
 
-        var editorFactory   = window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
+        var editorFactory   = window[args.spec.className + "Editor"] || window[args.spec.className + "EditorFactory"] || CBEditorWidgetFactory;
         var editor          = editorFactory.createEditor(args);
 
         container.appendChild(title);
