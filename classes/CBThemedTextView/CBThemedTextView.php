@@ -79,7 +79,7 @@ final class CBThemedTextView {
     public static function specToModel(stdClass $spec) {
         $model = CBModels::modelWithClassName(__CLASS__);
         $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? trim($spec->contentAsMarkaround) : '';
-        $model->contentAsHTML = ColbyConvert::markaroundToHTML($model->contentAsMarkaround);
+        $model->contentAsHTML = CBMarkaround::markaroundToHTML($model->contentAsMarkaround);
         $model->themeID = isset($spec->themeID) ? $spec->themeID : false;
         $model->titleAsMarkaround = isset($spec->titleAsMarkaround) ? trim($spec->titleAsMarkaround) : '';
         $model->title = CBMarkaround::paragraphToText($model->titleAsMarkaround);
