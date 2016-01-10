@@ -5,8 +5,7 @@ final class CBThemedTextViewEditor {
     /**
      * @return stdClass
      */
-    public static function fetchThemesForAjax() {
-        $response = new CBAjaxResponse();
+    public static function fetchThemes() {
         $SQL = <<<EOT
 
             SELECT      `v`.`modelAsJSON`
@@ -24,16 +23,8 @@ EOT;
         $themes = array_map(function($model) {
             return (object)['value' => $model->ID, 'textContent' => $model->title];
         }, $models);
-        $response->themes = $themes;
-        $response->wasSuccessful = true;
-        $response->send();
-    }
 
-    /**
-     * @return stdClass
-     */
-    public static function fetchThemesForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+        return $themes;
     }
 
     /**
@@ -54,7 +45,16 @@ EOT;
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [CBThemedTextViewEditor::URL('CBThemedTextViewEditorFactory.js')];
+        return [
+            CBSystemURL . '/javascript/CBStringEditorFactory.js',
+            CBThemedTextViewEditor::URL('CBThemedTextViewEditorFactory.js'),
+        ];
+    }
+
+    public static function requiredJavaScriptVariables() {
+        return [
+            ['CBThemedTextViewThemes', CBThemedTextViewEditor::fetchThemes()]
+        ];
     }
 
     /**
