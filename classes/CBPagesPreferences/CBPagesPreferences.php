@@ -45,6 +45,21 @@ final class CBPagesPreferences {
     }
 
     /**
+     * Returns an array of class names for page kinds.
+     *
+     * @return [{string}]
+     */
+    public static function classNamesForSettings() {
+        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
+
+        if (isset($model->classNamesForSettings) && is_array($model->classNamesForSettings)) {
+            return $model->classNamesForSettings;
+        } else {
+            return [];
+        }
+    }
+
+    /**
      * @return [{string}]
      */
     public static function editorURLsForCSS() {
@@ -107,6 +122,11 @@ final class CBPagesPreferences {
         if (isset($spec->classNamesForKinds)) {
             $model->classNamesForKinds = array_unique(preg_split(
                 '/[\s,]+/', $spec->classNamesForKinds, null, PREG_SPLIT_NO_EMPTY));
+        }
+
+        if (isset($spec->classNamesForSettings)) {
+            $model->classNamesForSettings = array_unique(preg_split(
+                '/[\s,]+/', $spec->classNamesForSettings, null, PREG_SPLIT_NO_EMPTY));
         }
 
         return $model;
