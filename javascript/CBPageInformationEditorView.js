@@ -190,6 +190,22 @@ var CBPageInformationEditorFactory = {
             }));
         }
 
+        if (CBClassNamesForSettings.length > 0) {
+            var classNames = CBClassNamesForSettings.map(function(className) {
+                return { textContent : className.replace(/PageKind$/, ""), value : className };
+            });
+
+            classNames.unshift({ textContent : "Default", value : "" });
+
+            flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
+                data                : classNames,
+                handleSpecChanged   : args.handleSpecChanged,
+                labelText           : "Page Settings",
+                propertyName        : "classNameForSettings",
+                spec                : args.spec
+            }));
+        }
+
         propertiesContainer.appendChild(flexContainer);
 
         return editor;
