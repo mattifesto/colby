@@ -43,6 +43,8 @@ final class CBBackgroundViewEditor {
     }
 
     /**
+     * @param string $filename
+     *
      * @return string
      */
     public static function URL($filename) {

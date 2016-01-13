@@ -51,9 +51,12 @@ final class CBBackgroundView {
     }
 
     /**
+     * @param string $filename
+     *
      * @return string
      */
     public static function URL($filename) {
-        return CBSystemURL . "/classes/CBBackgroundView/{$filename}";
+        $className = __CLASS__;
+        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
