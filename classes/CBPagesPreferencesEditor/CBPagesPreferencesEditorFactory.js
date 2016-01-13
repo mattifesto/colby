@@ -16,6 +16,7 @@ var CBPagesPreferencesEditorFactory = {
             { name : "supportedViewClassNames", labelText : "Supported View Class Names"},
             { name : "deprecatedViewClassNames", labelText : "Deprecated View Class Name"},
             { name : "classNamesForKinds", labelText : "Class Names for Kinds"},
+            { name : "classNamesForSettings", labelText : "Class Names for Page Settings"},
         ];
 
         element.appendChild(CBUI.createHalfSpace());
