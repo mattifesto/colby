@@ -147,7 +147,7 @@ EOT;
         $themeID = CBModel::value($model, 'themeID');
         $class = CBTheme::IDToCSSClass($themeID);
         $class = "CBThemedMenuView {$class}";
-        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
+        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
 
         ?>
 
