@@ -195,7 +195,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
 
         var description = document.createElement("div");
         description.className = "description";
-        description.textContent = CBArrayEditor.specToDescription({spec : args.spec});
+        description.textContent = CBArrayEditor.specToDescription(args.spec) || "";
 
         content.appendChild(title);
         content.appendChild(description);
@@ -425,17 +425,19 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param Object args.spec
+     * @param object? spec
      *
-     * @return string
+     * @return string|undefined
      */
-    specToDescription : function (args) {
-        var editor = window[args.spec.className + "Editor"];
+    specToDescription : function (spec) {
+        if (spec === undefined) { return undefined; }
+
+        var editor = window[spec.className + "Editor"];
 
         if (editor !== undefined && typeof editor.specToDescription === "function") {
-            return editor.specToDescription.call(undefined, {spec : args.spec});
+            return editor.specToDescription.call(undefined, spec);
         } else {
-            return args.spec.title || "";
+            return spec.title;
         }
     },
 };
