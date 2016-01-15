@@ -1,6 +1,6 @@
 "use strict";
 
-var CBBackgroundViewEditorFactory = {
+var CBBackgroundViewEditor = {
 
     /**
      * @param function args.navigateCallback
@@ -10,7 +10,7 @@ var CBBackgroundViewEditorFactory = {
      * @return Element
      */
     createEditor : function(args) {
-        CBBackgroundViewEditorFactory.prepareSpec(args.spec);
+        CBBackgroundViewEditor.prepareSpec(args.spec);
 
         var element             = document.createElement("div");
         element.className       = "CBBackgroundViewEditor";
@@ -18,7 +18,7 @@ var CBBackgroundViewEditorFactory = {
         properties.className    = "properties";
         var imageSpec           = {
             URL                 : args.spec.imageURL };
-        var handleImageChanged  = CBBackgroundViewEditorFactory.handleImageChanged.bind(undefined, {
+        var handleImageChanged  = CBBackgroundViewEditor.handleImageChanged.bind(undefined, {
             handleSpecChanged   : args.specChangedCallback,
             imageSpec           : imageSpec,
             spec                : args.spec });
@@ -108,7 +108,7 @@ var CBBackgroundViewEditorFactory = {
     },
 
     /**
-     * @return {undefined}
+     * @return undefined
      */
     prepareSpec : function(spec) {
         if (!spec.children) {
@@ -118,6 +118,25 @@ var CBBackgroundViewEditorFactory = {
         if (spec.minimumViewHeightIsImageHeight === undefined) {
             spec.minimumViewHeightIsImageHeight = true;
         }
+    },
+
+    /**
+     * @param object spec
+     * @param array? spec.children
+     *
+     * @return string|undefined
+     */
+    specToDescription : function (spec) {
+        var specForChild, description;
+        var children = spec.children;
+
+        if (Array.isArray(children)) {
+            for (var i = 0; i < children.length && description === undefined; i++) {
+                description = CBArrayEditor.specToDescription(children[i]);
+            }
+        }
+
+        return description;
     },
 
     /**
