@@ -144,5 +144,5 @@ var CBBackgroundViewEditor = {
      */
     widgetClassName : function() {
         return "CBBackgroundViewEditorWidget";
-    }
+    },
 };
