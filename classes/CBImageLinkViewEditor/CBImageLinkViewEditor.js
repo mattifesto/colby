@@ -132,6 +132,16 @@ var CBImageLinkViewEditor = {
     },
 
     /**
+     * @param object spec
+     * @param string? spec.alt
+     *
+     * @return string|undefined
+     */
+    specToDescription : function (spec) {
+        return spec.alt;
+    },
+
+    /**
      * @param   {Object}    spec
      *
      * @return  {string}
