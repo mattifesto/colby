@@ -81,7 +81,10 @@ class CBImages {
     /**
      * @return void
      */
-    public static function reduceImageFile($sourceFilepath, $destinationFilepath, $projection) {
+    public static function reduceImageFile($sourceFilepath, $destinationFilepath, $projection, $args = []) {
+        $quality = null;
+        extract($args, EXTR_IF_EXISTS);
+
         $src    = $projection->source;
         $dst    = $projection->destination;
         $size   = getimagesize($sourceFilepath);
@@ -116,7 +119,11 @@ class CBImages {
                 imagegif($output, $destinationFilepath);
                 break;
             case IMAGETYPE_JPEG:
-                imagejpeg($output, $destinationFilepath, /* quality: */ 90);
+                if ($quality === null) {
+                    imagejpeg($output, $destinationFilepath);
+                } else {
+                    imagejpeg($output, $destinationFilepath, $quality);
+                }
                 break;
             case IMAGETYPE_PNG:
                 imagepng($output, $destinationFilepath);
