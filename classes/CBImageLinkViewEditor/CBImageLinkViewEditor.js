@@ -1,6 +1,6 @@
 "use strict";
 
-var CBImageLinkViewEditorFactory = {
+var CBImageLinkViewEditor = {
 
     /**
      * @param   {function}  args.handleValueChanged
@@ -17,7 +17,7 @@ var CBImageLinkViewEditorFactory = {
         checkbox.checked    = !!args.initialValue;
         var label           = document.createElement("label");
 
-        checkbox.addEventListener("change", CBImageLinkViewEditorFactory.handleCheckboxChanged.bind(undefined, {
+        checkbox.addEventListener("change", CBImageLinkViewEditor.handleCheckboxChanged.bind(undefined, {
             checkboxElement     : checkbox,
             handleValueChanged  : args.handleValueChanged
         }));
@@ -41,18 +41,18 @@ var CBImageLinkViewEditorFactory = {
         var preview             = CBImageEditorFactory.createEditorPreview();
         var dimensions          = document.createElement("div");
         dimensions.className    = "dimensions";
-        dimensions.textContent  = CBImageLinkViewEditorFactory.specToDimensionsText(args.spec);
-        var handler             = CBImageLinkViewEditorFactory.handleRetinaChanged.bind(undefined, {
+        dimensions.textContent  = CBImageLinkViewEditor.specToDimensionsText(args.spec);
+        var handler             = CBImageLinkViewEditor.handleRetinaChanged.bind(undefined, {
             dimensionsElement   : dimensions,
             handleSpecChanged   : args.handleSpecChanged,
             spec                : args.spec
         });
-        var retina              = CBImageLinkViewEditorFactory.createBooleanEditor({
+        var retina              = CBImageLinkViewEditor.createBooleanEditor({
             handleValueChanged  : handler,
             initialValue        : (args.spec.density === "2x"),
             labelText           : "Retina"
         });
-        handler                 = CBImageLinkViewEditorFactory.handleImageUploaded.bind(undefined, {
+        handler                 = CBImageLinkViewEditor.handleImageUploaded.bind(undefined, {
             dimensionsElement   : dimensions,
             handleSpecChanged   : args.handleSpecChanged,
             previewElement      : preview,
@@ -109,7 +109,7 @@ var CBImageLinkViewEditorFactory = {
         args.spec.height                    = response.sizes.original.height;
         args.spec.URL                       = response.sizes.original.URL;
         args.spec.width                     = response.sizes.original.width;
-        args.dimensionsElement.textContent  = CBImageLinkViewEditorFactory.specToDimensionsText(args.spec);
+        args.dimensionsElement.textContent  = CBImageLinkViewEditor.specToDimensionsText(args.spec);
 
         args.previewElement.editorPreviewSetSrc(args.spec.URL);
         args.handleSpecChanged.call();
@@ -126,7 +126,7 @@ var CBImageLinkViewEditorFactory = {
      */
     handleRetinaChanged : function(args, retina) {
         args.spec.density                   = retina ? "2x" : "1x";
-        args.dimensionsElement.textContent  = CBImageLinkViewEditorFactory.specToDimensionsText(args.spec);
+        args.dimensionsElement.textContent  = CBImageLinkViewEditor.specToDimensionsText(args.spec);
 
         args.handleSpecChanged.call();
     },

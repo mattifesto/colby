@@ -16,27 +16,6 @@
 final class CBImageLinkView {
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForCSS() {
-        return [
-            CBSystemURL . '/javascript/CBImageEditorFactory.css',
-            CBImageLinkView::URL('CBImageLinkViewEditor.css')
-        ];
-    }
-
-    /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBImageEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBImageLinkView::URL('CBImageLinkViewEditorFactory.js')
-        ];
-    }
-
-    /**
      * @return {string}|null
      */
     public static function modelToSearchText(stdClass $model) {
