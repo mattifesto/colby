@@ -20,6 +20,7 @@ class CBUnitTests {
             ['CBModels',    'fetchModelByID'],
             ['CBModels',    'fetchModelsByID'],
             ['CBPages',     'stringToDencodedURIPath'],
+            ['CBProjection'],
             ['CBSitePreferences'],
             ['CBTestPage'],
             ['CBUnit'],

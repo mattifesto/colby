@@ -13,7 +13,7 @@ class CBProjection {
      * @return {stdClass} (projection)
      */
     public static function applyOpString($projection, $opString) {
-        preg_match_all("/([a-z]+)([0-9]+)/", $opString, $matches, PREG_SET_ORDER);
+        preg_match_all("/([a-z]+)([0-9]+(\.[0-9]+)?)/", $opString, $matches, PREG_SET_ORDER);
 
         foreach($matches as $op) {
             $code   = $op[1];
@@ -38,6 +38,10 @@ class CBProjection {
 
                 case 'rw':
                     $projection = CBProjection::reduceWidth($projection, $value);
+                    break;
+
+                case 's':
+                    $projection = CBProjection::scale($projection, $value);
                     break;
 
                 default:
@@ -174,6 +178,19 @@ class CBProjection {
         $p              = new stdClass();
         $p->source      = CBRect::copyRect($projection->source);
         $p->destination = CBRect::reduceWidth($projection->destination, $width);
+
+        return $p;
+    }
+
+    /**
+     * @return stdClass (projection)
+     */
+    public static function scale($projection, $factor) {
+        $p = new stdClass();
+        $p->source = CBRect::copyRect($projection->source);
+        $p->destination = CBRect::copyRect($projection->destination);
+        $p->destination->height *= $factor;
+        $p->destination->width *= $factor;
 
         return $p;
     }
