@@ -83,7 +83,13 @@ final class CBImageLinkView {
         return $model;
     }
 
+    /**
+     * @param string $filename
+     *
+     * @return string
+     */
     public static function URL($filename) {
-        return CBSystemURL . "/classes/CBImageLinkView/{$filename}";
+        $className = __CLASS__;
+        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
