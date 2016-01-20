@@ -16,7 +16,9 @@ final class CBBackgroundView {
     }
 
     /**
-     * @return void
+     * @param stdClass? $model
+     *
+     * @return null
      */
     public static function renderModelAsHTML(stdClass $model = null) {
         if (!$model) {
