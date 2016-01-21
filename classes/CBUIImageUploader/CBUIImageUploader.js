@@ -9,7 +9,7 @@ var CBUIImageUploader = {
      *
      * @return object
      */
-    createUploader : function(args) {
+    create : function(args) {
         var element = document.createElement("div");
         element.className = "CBUIImageUploader";
         var button = document.createElement("button");
