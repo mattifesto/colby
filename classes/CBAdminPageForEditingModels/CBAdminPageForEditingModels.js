@@ -268,12 +268,16 @@ var CBAdminPageForEditingModels = {
             spec : spec
         }));
 
+        main.appendChild(CBUI.createHalfSpace());
+
         main.appendChild(editorFactory.createEditor({
             handleSpecChanged : specChangedCallback, /* deprecated: use specChangedCallback */
             navigateCallback : CBAdminPageForEditingModels.navigate.bind(undefined, { navigationState : args.navigationState, }),
             spec : spec,
             specChangedCallback : specChangedCallback,
         }));
+
+        main.appendChild(CBUI.createHalfSpace());
     },
 
     /**
