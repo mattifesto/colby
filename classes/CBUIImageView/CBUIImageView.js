@@ -8,7 +8,7 @@ var CBUIImageView = {
      *
      * @return object
      */
-    createElement : function (args) {
+    create : function (args) {
         var element = document.createElement("div");
         element.className = "CBUIImageView";
         var img = document.createElement("img");
