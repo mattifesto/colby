@@ -63,6 +63,17 @@ var Colby = {
     },
 
     /**
+     * This function can be used as a handler for XHR.onerror
+     *
+     * @param XMLHttpRequest args.xhr
+     *
+     * @return undefined
+     */
+    displayXHRError : function (args) {
+        Colby.displayResponse(Colby.responseFromXMLHttpRequest(xhr));
+    },
+
+    /**
      * @param Element element
      *
      * @return int|null
