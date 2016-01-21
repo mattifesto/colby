@@ -249,7 +249,7 @@ var CBAdminPageForEditingModels = {
     },
 
     /**
-     * @param Object args.navigationState
+     * @param object args.navigationState
      *
      * @return undefined
      */
