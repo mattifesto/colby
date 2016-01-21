@@ -282,10 +282,17 @@ EOT;
             ];
         }
 
-        $response->extension        = $info->extension;
-        $response->ID               = $info->ID;
-        $response->sizes            = $sizes;
-        $response->wasSuccessful    = true;
+        $response->extension = $info->extension;
+        $response->ID = $info->ID;
+        $response->image = (object)[
+            'base' => 'original',
+            'extension' => $info->extension,
+            'height' => $info->height,
+            'ID' => $info->ID,
+            'width' => $info->width,
+        ];
+        $response->sizes = $sizes;
+        $response->wasSuccessful = true;
         $response->send();
     }
 
