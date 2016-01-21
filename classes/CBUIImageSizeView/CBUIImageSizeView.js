@@ -8,7 +8,7 @@ var CBUIImageSizeView = {
      *
      * @return object
      */
-    createElement : function (args) {
+    create : function (args) {
         var element = document.createElement("div");
         element.className = "CBUIImageSizeView";
 
@@ -34,9 +34,9 @@ var CBUIImageSizeView = {
         if (image === undefined) {
             args.element.textContent = "no image";
         } else {
-            var px = image.width + "px × " + image.height + "px";
-            var pt = "(" + (image.width/2) + "pt × " + (image.height/2) + "pt)";
-            args.element.textContent = px + " " + pt;
+            var width = (image.width/2) + "pt (" + image.width + "px)";
+            var height = (image.height/2) + "pt (" + image.height + "px)";
+            args.element.textContent = width + " × " + height;
         }
     },
 };
