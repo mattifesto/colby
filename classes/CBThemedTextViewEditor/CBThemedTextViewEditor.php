@@ -31,7 +31,7 @@ EOT;
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBResponsiveEditor'];
+        return ['CBUI', 'CBUIStringEditor'];
     }
 
     /**
