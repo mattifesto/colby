@@ -32,6 +32,9 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
  * should include a brief description of why it is needed.
  */
 
+/* Include this as long as we have hard coded includes in this file. */
+CBHTMLOutput::requireClassName('CBUI');
+
 /* This is still used by CBPageEditor.js, but it is deprecated. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
 
@@ -48,10 +51,6 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBResponsiveEditorFact
 /* CBPageEditor.js uses this to render the general page info editor. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageInformationEditorView.js');
 CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBPageInformationEditorView.css');
-
-/* CBPageEditor.js uses this as the root spec list editor. */
-CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBSpecArrayEditor.css');
-CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js');
 
 /* CBPageInformationEditorView.js uses these files and their code should
    be integrated into that file. When we move to using the model editor this

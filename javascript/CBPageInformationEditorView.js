@@ -76,6 +76,7 @@ var CBPageInformationEditorFactory = {
             URL : args.spec.thumbnailURL
         });
 
+        content.appendChild(CBUI.createHalfSpace());
         content.appendChild(thumbnail);
 
         /**
@@ -91,6 +92,7 @@ var CBPageInformationEditorFactory = {
                 spec : args.spec
             }));
 
+            content.appendChild(CBUI.createHalfSpace());
             content.appendChild(pagelists);
         }
 
@@ -113,6 +115,7 @@ var CBPageInformationEditorFactory = {
         actions.appendChild(preview);
         actions.appendChild(useAsFrontPage);
 
+        content.appendChild(CBUI.createHalfSpace());
         content.appendChild(actions);
 
         /**

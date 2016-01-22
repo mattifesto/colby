@@ -134,7 +134,8 @@ CBPageEditor.createEditor = function(args) {
     });
 
     editorContainer.appendChild(element);
-
+    editorContainer.appendChild(CBUI.createHalfSpace());
+    editorContainer.appendChild(CBUI.createSectionHeader({ text : "Views" }));
     editorContainer.appendChild(CBArrayEditor.createEditor({
         array : args.spec.sections,
         arrayChangedCallback : args.specChangedCallback,
