@@ -62,26 +62,6 @@ final class CBSitePreferences {
     }
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForCSS() {
-        return [
-            CBSitePreferences::URL('CBSitePreferencesEditor.css')
-        ];
-    }
-
-    /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBBooleanEditorFactory.js',
-            CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
-            CBSitePreferences::URL('CBSitePreferencesEditorFactory.js')
-        ];
-    }
-
-    /**
      * @return  {string}
      *  Returns a Google Tag Manager ID or an empty string.
      */

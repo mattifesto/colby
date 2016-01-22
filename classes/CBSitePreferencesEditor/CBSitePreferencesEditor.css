@@ -1,11 +1,9 @@
-.CBSitePreferencesEditor {
-    box-sizing: border-box;
-    max-width: 100%;
-    width: 640px;
-}
-
 .CBSitePreferencesEditor .CBBooleanEditor {
-    padding: 10px;
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    min-height: 44px;
+    padding: 0 20px;
 }
 
 .CBSitePreferencesEditor .CBBooleanEditor label {
