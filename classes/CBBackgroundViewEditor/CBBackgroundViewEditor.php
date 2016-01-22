@@ -6,7 +6,7 @@ final class CBBackgroundViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBArrayEditor', 'CBUI'];
+        return ['CBArrayEditor', 'CBUI', 'CBUIStringEditor'];
     }
 
     /**
@@ -26,7 +26,6 @@ final class CBBackgroundViewEditor {
         return [
             CBSystemURL . '/javascript/CBBooleanEditorFactory.js',
             CBSystemURL . '/javascript/CBImageEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
             CBBackgroundViewEditor::URL('CBBackgroundViewEditor.js')
         ];
     }

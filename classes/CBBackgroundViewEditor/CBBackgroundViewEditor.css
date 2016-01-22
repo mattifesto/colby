@@ -1,48 +1,11 @@
-.CBBackgroundViewEditor {
-    border-top: 4px solid hsl(30, 20%, 60%);
-    font-size:  14px;
-    padding:    10px;
+.CBBackgroundViewEditor .CBBooleanEditor {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    min-height: 44px;
+    padding: 0 20px;
 }
 
-.CBBackgroundViewEditor > .properties {
-    display:                    flex;
-    display:                    -webkit-flex;
-    justify-content:            center;
-    -webkit-justify-content:    center;
-    padding-bottom:             10px;
-}
-
-.CBBackgroundViewEditor > .properties > .options {
-    border:     1px solid hsl(0, 0%, 80%);
-    padding:    5px 10px;
-}
-
-.CBBackgroundViewEditor > .properties > .options.options2 {
-    margin-left:    20px;
-    width:          440px;
-}
-
-.CBBackgroundViewEditor > .properties > .options > * {
-    padding: 5px 0;
-}
-
-.CBBackgroundViewEditor > .properties > .options > .CBBooleanEditor label {
+.CBBackgroundViewEditor .CBBooleanEditor label {
     margin-left: 5px;
-}
-
-.CBBackgroundViewEditor > .properties > .options > .CBStringEditor {
-    display:    flex;
-    display:    -webkit-flex;
-    margin:     5px auto 0;
-}
-
-.CBBackgroundViewEditor > .properties > .options > .CBStringEditor input {
-    margin-left:    5px;
-    padding:        4px;
-    -webkit-flex:   1;
-}
-
-.CBBackgroundViewEditor > .children {
-    background-color:   white;
-    border:             1px solid hsl(0, 0%, 80%);
 }

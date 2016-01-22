@@ -12,6 +12,7 @@ var CBBackgroundViewEditor = {
     createEditor : function(args) {
         CBBackgroundViewEditor.prepareSpec(args.spec);
 
+        var section, item;
         var element             = document.createElement("div");
         element.className       = "CBBackgroundViewEditor";
         var properties          = document.createElement("div");
@@ -32,41 +33,50 @@ var CBBackgroundViewEditor = {
             spec                : imageSpec }));
 
         properties.appendChild(options1);
+        element.appendChild(properties);
 
-        var options2            = document.createElement("div");
-        options2.className      = "options options2";
+        section = CBUI.createSection();
 
-        options2.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
+        item = CBUI.createSectionItem();
+        item.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
             handleSpecChanged   : args.specChangedCallback,
             labelText           : "Repeat Horizontally",
             propertyName        : "imageShouldRepeatHorizontally",
-            spec                : args.spec }));
+            spec                : args.spec,
+        }));
+        section.appendChild(item);
 
-        options2.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
+        item = CBUI.createSectionItem();
+        item.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
             handleSpecChanged   : args.specChangedCallback,
             labelText           : "Repeat Vertically",
             propertyName        : "imageShouldRepeatVertically",
-            spec                : args.spec }));
+            spec                : args.spec,
+        }));
+        section.appendChild(item);
 
-        options2.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
+        item = CBUI.createSectionItem();
+        item.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
             handleSpecChanged   : args.specChangedCallback,
             labelText           : "Minimum view height is image height",
             propertyName        : "minimumViewHeightIsImageHeight",
-            spec                : args.spec }));
+            spec                : args.spec,
+        }));
+        section.appendChild(item);
 
-
-        options2.appendChild(CBStringEditorFactory.createSingleLineEditor({
-            handleSpecChanged   : args.specChangedCallback,
-            labelText           : "Background color ",
-            propertyName        : "color",
-            spec                : args.spec }));
-
-        properties.appendChild(options2);
-
-        element.appendChild(properties);
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Background color",
+            propertyName : "color",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
 
         element.appendChild(CBUI.createHalfSpace());
-
+        element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({ text : "Subviews" }));
         element.appendChild(CBArrayEditor.createEditor({
             array : args.spec.children,
             arrayChangedCallback : args.specChangedCallback,
@@ -112,7 +122,7 @@ var CBBackgroundViewEditor = {
      * @return string|undefined
      */
     specToDescription : function (spec) {
-        var specForChild, description;
+        var description;
         var children = spec.children;
 
         if (Array.isArray(children)) {
