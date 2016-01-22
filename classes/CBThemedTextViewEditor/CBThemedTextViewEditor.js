@@ -3,10 +3,10 @@
 var CBThemedTextViewEditor = {
 
     /**
-     * @param   {function}  handleSpecChanged
-     * @param   {Object}    spec
+     * @param object spec
+     * @param function specChangedCallback
      *
-     * @return  {Element}
+     * @return Element
      */
     createEditor : function(args) {
         var element = document.createElement("div");
@@ -15,7 +15,7 @@ var CBThemedTextViewEditor = {
         container.className = "container";
 
         container.appendChild(CBThemedTextViewEditor.createThemeIDEditor({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Theme",
             propertyName        : "themeID",
             spec                : args.spec
@@ -23,21 +23,21 @@ var CBThemedTextViewEditor = {
 
 
         container.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "URL",
             propertyName        : "URL",
             spec                : args.spec
         }));
 
         container.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Title",
             propertyName        : "titleAsMarkaround",
             spec                : args.spec
         }));
 
         container.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Content",
             propertyName        : "contentAsMarkaround",
             spec                : args.spec
