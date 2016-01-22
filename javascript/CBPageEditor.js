@@ -1,7 +1,7 @@
 "use strict";
 
 var CBPageEditor = {
-    model               : null,
+    model : null,
 
     /**
      * @param object args.navigationState
@@ -128,22 +128,17 @@ CBPageEditor.createEditor = function(args) {
      */
 
     var element = CBPageInformationEditorFactory.createEditor({
-        handleSpecChanged       : args.specChangedCallback,
-        handleTitleChanged      : CBPageEditor.handleTitleChanged.bind(undefined, {
-            spec                : args.spec
-        }),
-        spec                    : args.spec });
+        handleSpecChanged : args.specChangedCallback,
+        handleTitleChanged : CBPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
+        spec : args.spec
+    });
 
     editorContainer.appendChild(element);
 
-    /**
-     *
-     */
-
-    editorContainer.appendChild(CBSpecArrayEditorFactory.createEditor({
-        array           : args.spec.sections,
-        classNames      : CBPageEditorAvailableViewClassNames,
-        handleChanged   : args.specChangedCallback,
+    editorContainer.appendChild(CBArrayEditor.createEditor({
+        array : args.spec.sections,
+        arrayChangedCallback : args.specChangedCallback,
+        classNames : CBPageEditorAvailableViewClassNames,
         navigateCallback : args.navigateCallback,
     }));
 

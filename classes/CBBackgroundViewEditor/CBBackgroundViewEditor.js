@@ -65,29 +65,14 @@ var CBBackgroundViewEditor = {
 
         element.appendChild(properties);
 
-        if (args.navigateCallback === undefined) {
-            var children        = document.createElement("div");
-            children.className  = "children";
+        element.appendChild(CBUI.createHalfSpace());
 
-            children.appendChild(CBSpecArrayEditorFactory.createEditor({
-                array           : args.spec.children,
-                classNames      : CBBackgroundViewAddableViews,
-                handleChanged   : args.specChangedCallback
-            }));
-
-            element.appendChild(children);
-        } else {
-            element.appendChild(CBUI.createHalfSpace());
-
-            element.appendChild(CBArrayEditor.createEditor({
-                array : args.spec.children,
-                arrayChangedCallback : args.specChangedCallback,
-                classNames : CBBackgroundViewAddableViews,
-                navigateCallback : args.navigateCallback,
-            }));
-
-            element.appendChild(CBUI.createHalfSpace());
-        }
+        element.appendChild(CBArrayEditor.createEditor({
+            array : args.spec.children,
+            arrayChangedCallback : args.specChangedCallback,
+            classNames : CBBackgroundViewAddableViews,
+            navigateCallback : args.navigateCallback,
+        }));
 
         return element;
     },

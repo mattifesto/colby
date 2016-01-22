@@ -15,7 +15,6 @@ final class CBBackgroundViewEditor {
     public static function requiredCSSURLs() {
         return [
             CBSystemURL . '/javascript/CBImageEditorFactory.css',
-            CBSystemURL . '/javascript/CBSpecArrayEditor.css',
             CBBackgroundViewEditor::URL('CBBackgroundViewEditor.css')
         ];
     }
@@ -27,7 +26,6 @@ final class CBBackgroundViewEditor {
         return [
             CBSystemURL . '/javascript/CBBooleanEditorFactory.js',
             CBSystemURL . '/javascript/CBImageEditorFactory.js',
-            CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
             CBSystemURL . '/javascript/CBStringEditorFactory.js',
             CBBackgroundViewEditor::URL('CBBackgroundViewEditor.js')
         ];
