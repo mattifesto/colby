@@ -11,12 +11,6 @@ var CBSitePreferencesEditorFactory = {
     createEditor : function(args) {
         var element         = document.createElement("div");
         element.className   = "CBSitePreferencesEditor";
-        var header = CBEditorWidgetFactory.createHeader({
-            spec : args.spec,
-            title : "Site Preferences"
-        });
-
-        element.appendChild(header.element);
 
         element.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
             handleSpecChanged   : args.handleSpecChanged,

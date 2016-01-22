@@ -92,8 +92,6 @@ class CBAdminPageForEditingModels {
             CBAdminPageForEditingModels::loadEditingResourcesForClassName($args->className);
         }
 
-        CBHTMLOutput::addCSSURL(        CBSystemURL . '/javascript/CBEditorWidget.css');
-        CBHTMLOutput::addJavaScriptURL( CBSystemURL  . '/javascript/CBEditorWidgetFactory.js');
         CBHTMLOutput::addCSSURL(        CBAdminPageForEditingModels::URL('CBAdminPageForEditingModels.css'));
         CBHTMLOutput::addJavaScriptURL( CBAdminPageForEditingModels::URL('CBAdminPageForEditingModels.js'));
 

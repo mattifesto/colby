@@ -39,10 +39,6 @@ CBHTMLOutput::requireClassName('CBUI');
 /* This is still used by CBPageEditor.js, but it is deprecated. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
 
-/* This is used by CBSpecArrayEditorFactory.js. */
-CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBEditorWidget.css');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBEditorWidgetFactory.js');
-
 /* This renders the page editor. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
 
