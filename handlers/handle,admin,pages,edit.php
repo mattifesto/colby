@@ -59,12 +59,6 @@ CBHTMLOutput::addJavaScriptURL( CBSystemURL . '/javascript/CBSpecArrayEditorFact
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
 
-/* New editor in development */
-if (ColbyUser::current()->isOneOfThe('Developers')) {
-    CBHTMLOutput::addCSSURL(CBSystemURL . '/javascript/CBPageEditor2.css');
-    CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor2.js');
-}
-
 /**
  * Include all of the supported views.
  */
