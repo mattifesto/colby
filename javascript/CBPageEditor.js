@@ -19,7 +19,8 @@ var CBPageEditor = CBViewPageEditor = {
         var index = (history.state) ? history.state.index : 0;
         var spec = args.navigationState.stack[index];
         var editorFactory = window[spec.className + "Editor"] ||
-                            window[spec.className + "EditorFactory"];
+                            window[spec.className + "EditorFactory"] ||
+                            CBDefaultEditor;
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
         var specChangedCallback = CBPageEditor.requestSave.bind(CBPageEditor);

@@ -76,7 +76,8 @@ class CBAdminPageForEditingModels {
         CBHTMLOutput::setTitleHTML('Edit Model');
         CBHTMLOutput::setDescriptionHTML('Edit a model');
         CBHTMLOutput::begin();
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBUI.js');
+        CBHTMLOutput::requireClassName('CBUI');
+        CBHTMLOutput::requireClassName('CBDefaultEditor');
 
         CBHTMLOutput::exportVariable('CBModelID',           $args->ID);
         CBHTMLOutput::exportVariable('CBModelClassName',    $args->className);

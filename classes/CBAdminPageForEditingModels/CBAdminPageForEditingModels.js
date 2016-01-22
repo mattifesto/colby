@@ -256,7 +256,9 @@ var CBAdminPageForEditingModels = {
     renderEditor : function(args) {
         var index = (history.state) ? history.state.index : 0;
         var spec = args.navigationState.stack[index];
-        var editorFactory = window[spec.className + "Editor"] || window[spec.className + "EditorFactory"] || CBEditorWidgetFactory;
+        var editorFactory = window[spec.className + "Editor"] ||
+                            window[spec.className + "EditorFactory"] ||
+                            CBDefaultEditor;
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
         var specChangedCallback = CBAdminPageForEditingModels.handleSpecChanged.bind(undefined, {
