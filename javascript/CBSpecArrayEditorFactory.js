@@ -3,59 +3,63 @@
 var CBSpecArrayEditorFactory = {
 
     /**
-     * @param   [Object] array
-     * @param   [string] classNames
-     * @param   function handleChanged
+     * @param [object] array
+     * @param [string] classNames
+     * @param function handleChanged
+     * @param function navigateCallback
      *
-     * @return  Element
+     * @return Element
      */
     createEditor : function(args) {
-        var element         = document.createElement("div");
+        var element   = document.createElement("div");
         element.className   = "CBSpecArrayEditor";
-        var container       = document.createElement("div");
+        var container   = document.createElement("div");
         container.className = "container";
 
         args.array.forEach(function(spec) {
             var widgetElement = CBSpecArrayEditorFactory.createWidgetForSpec({
-                array           : args.array,
-                classNames      : args.classNames,
-                handleChanged   : args.handleChanged,
-                parentElement   : container,
-                spec            : spec
-            })
+                array : args.array,
+                classNames : args.classNames,
+                handleChanged : args.handleChanged,
+                navigateCallback : args.navigateCallback,
+                parentElement : container,
+                spec : spec
+            });
             container.appendChild(widgetElement);
         });
 
-        var footer          = document.createElement("div");
-        footer.className    = "footer";
-        var menu            = document.createElement("select");
-        var append          = document.createElement("button");
-        append.textContent  = "Append";
+        var footer = document.createElement("div");
+        footer.className = "footer";
+        var menu = document.createElement("select");
+        var append = document.createElement("button");
+        append.textContent = "Append";
 
         append.addEventListener("click", CBSpecArrayEditorFactory.handleAppend.bind(undefined, {
-            array               : args.array,
-            classNames          : args.classNames,
-            handleArrayChanged  : args.handleChanged,
-            parentElement       : container,
-            selectElement       : menu
+            array : args.array,
+            classNames : args.classNames,
+            handleArrayChanged : args.handleChanged,
+            navigateCallback : args.navigateCallback,
+            parentElement : container,
+            selectElement : menu,
         }));
 
         args.classNames.forEach(function(className) {
-            var option          = document.createElement("option");
-            option.textContent  = className;
-            option.value        = className;
+            var option = document.createElement("option");
+            option.textContent = className;
+            option.value = className;
             menu.appendChild(option);
         });
 
-        var paste           = document.createElement("button");
-        paste.textContent   = "Paste";
+        var paste = document.createElement("button");
+        paste.textContent = "Paste";
 
         paste.addEventListener("click", CBSpecArrayEditorFactory.handlePaste.bind(undefined, {
-            array                   : args.array,
-            beforeSpec              : null,
-            selectableClassNames    : args.classNames,
-            handleArrayChanged      : args.handleChanged,
-            parentElement           : container
+            array : args.array,
+            beforeSpec : null,
+            selectableClassNames : args.classNames,
+            handleArrayChanged : args.handleChanged,
+            navigateCallback : args.navigateCallback,
+            parentElement : container,
         }));
 
         footer.appendChild(menu);
@@ -71,77 +75,81 @@ var CBSpecArrayEditorFactory = {
      * @param   {Array}     array
      * @param   {Array}     classNames
      * @param   {function}  handleChanged
+     * @param function args.navigateCallback
      * @param   {Element}   parentElement
      * @param   {Object}    spec
      *
      * @return  undefined
      */
     createWidgetForSpec : function(args) {
-        var handleMoveDown      = CBSpecArrayEditorFactory.handleMoveDown.bind(undefined, {
-            array               : args.array,
-            handleArrayChanged  : args.handleChanged,
-            parentElement       : args.parentElement,
-            spec                : args.spec
+        var handleMoveDown = CBSpecArrayEditorFactory.handleMoveDown.bind(undefined, {
+            array : args.array,
+            handleArrayChanged : args.handleChanged,
+            parentElement : args.parentElement,
+            spec : args.spec
         });
-        var handleMoveUp        = CBSpecArrayEditorFactory.handleMoveUp.bind(undefined, {
-            array               : args.array,
-            handleArrayChanged  : args.handleChanged,
-            parentElement       : args.parentElement,
-            spec                : args.spec
+        var handleMoveUp = CBSpecArrayEditorFactory.handleMoveUp.bind(undefined, {
+            array : args.array,
+            handleArrayChanged : args.handleChanged,
+            parentElement : args.parentElement,
+            spec : args.spec
         });
-        var handleRemove        = CBSpecArrayEditorFactory.handleRemove.bind(undefined, {
-            array               : args.array,
-            handleArrayChanged  : args.handleChanged,
-            parentElement       : args.parentElement,
-            spec                : args.spec
+        var handleRemove = CBSpecArrayEditorFactory.handleRemove.bind(undefined, {
+            array : args.array,
+            handleArrayChanged : args.handleChanged,
+            parentElement : args.parentElement,
+            spec : args.spec
         });
 
-        var copy            = document.createElement("button");
-        copy.textContent    = "C";
+        var copy = document.createElement("button");
+        copy.textContent = "C";
 
         copy.addEventListener("click", CBSpecArrayEditorFactory.handleCopy.bind(undefined, {
             spec : args.spec
         }));
 
-        var paste           = document.createElement("button");
-        paste.textContent   = "P";
+        var paste = document.createElement("button");
+        paste.textContent = "P";
 
         paste.addEventListener("click", CBSpecArrayEditorFactory.handlePaste.bind(undefined, {
-            array                   : args.array,
-            beforeSpec              : args.spec,
-            selectableClassNames    : args.classNames,
-            handleArrayChanged      : args.handleChanged,
-            parentElement           : args.parentElement
+            array : args.array,
+            beforeSpec : args.spec,
+            selectableClassNames : args.classNames,
+            handleArrayChanged : args.handleChanged,
+            navigateCallback : args.navigateCallback,
+            parentElement : args.parentElement,
         }));
 
         var menu = document.createElement("select");
 
         args.classNames.forEach(function(className) {
-            var option          = document.createElement("option");
-            option.textContent  = className;
-            option.value        = className;
+            var option = document.createElement("option");
+            option.textContent = className;
+            option.value = className;
             menu.appendChild(option);
         });
 
-        var insert          = document.createElement("button");
-        insert.textContent  = "Insert";
+        var insert = document.createElement("button");
+        insert.textContent = "Insert";
 
         insert.addEventListener("click", CBSpecArrayEditorFactory.handleInsert.bind(undefined, {
-            array               : args.array,
-            classNames          : args.classNames,
-            handleArrayChanged  : args.handleChanged,
-            parentElement       : args.parentElement,
-            selectElement       : menu,
-            spec                : args.spec
+            array : args.array,
+            classNames : args.classNames,
+            handleArrayChanged : args.handleChanged,
+            navigateCallback : args.navigateCallback,
+            parentElement : args.parentElement,
+            selectElement : menu,
+            spec : args.spec,
         }));
 
         return CBEditorWidgetFactory.createWidget({
-            handleMoveDown      : handleMoveDown,
-            handleMoveUp        : handleMoveUp,
-            handleRemove        : handleRemove,
-            handleSpecChanged   : args.handleChanged,
-            spec                : args.spec,
-            toolbarElements     : [copy, paste, menu, insert]
+            handleMoveDown : handleMoveDown,
+            handleMoveUp : handleMoveUp,
+            handleRemove : handleRemove,
+            handleSpecChanged : args.handleChanged,
+            navigateCallback : args.navigateCallback,
+            spec : args.spec,
+            toolbarElements : [copy, paste, menu, insert],
         });
     },
 
@@ -149,21 +157,23 @@ var CBSpecArrayEditorFactory = {
      * @param   {Array}     array
      * @param   {Array}     classNames
      * @param   {function}  handleArrayChanged
+     * @param function args.navigateCallback
      * @param   {Element}   parentElement
      * @param   {Element}   selectElement
      *
      * @return  undefined
      */
     handleAppend : function(args) {
-        var spec            = {
-            className       : args.selectElement.value
+        var spec = {
+            className : args.selectElement.value
         };
-        var widgetElement   = CBSpecArrayEditorFactory.createWidgetForSpec({
-            array           : args.array,
-            classNames      : args.classNames,
-            handleChanged   : args.handleArrayChanged,
-            parentElement   : args.parentElement,
-            spec            : spec
+        var widgetElement = CBSpecArrayEditorFactory.createWidgetForSpec({
+            array : args.array,
+            classNames : args.classNames,
+            handleChanged : args.handleArrayChanged,
+            navigateCallback : args.navigateCallback,
+            parentElement : args.parentElement,
+            spec : spec
         });
 
         args.array.push(spec);
@@ -186,6 +196,7 @@ var CBSpecArrayEditorFactory = {
      * @param   {Array}     array
      * @param   {Array}     classNames
      * @param   {function}  handleArrayChanged
+     * @param function args.navigateCallback
      * @param   {Element}   parentElement
      * @param   {Element}   selectElement
      * @param   {Object}    spec
@@ -193,17 +204,18 @@ var CBSpecArrayEditorFactory = {
      * @return  undefined
      */
     handleInsert : function(args) {
-        var index           = args.array.indexOf(args.spec);
-        var beforeElement   = args.parentElement.children.item(index);
-        var spec            = {
-            className       : args.selectElement.value
+        var index = args.array.indexOf(args.spec);
+        var beforeElement = args.parentElement.children.item(index);
+        var spec = {
+            className : args.selectElement.value
         };
-        var widgetElement   = CBSpecArrayEditorFactory.createWidgetForSpec({
-            array           : args.array,
-            classNames      : args.classNames,
-            handleChanged   : args.handleArrayChanged,
-            parentElement   : args.parentElement,
-            spec            : spec
+        var widgetElement = CBSpecArrayEditorFactory.createWidgetForSpec({
+            array : args.array,
+            classNames : args.classNames,
+            handleChanged : args.handleArrayChanged,
+            navigateCallback : args.navigateCallback,
+            parentElement : args.parentElement,
+            spec : spec
         });
 
         args.array.splice(index, 0, spec); // insert before spec at index
@@ -266,30 +278,32 @@ var CBSpecArrayEditorFactory = {
      * @param   {Array}     array
      * @param   {Object}    beforeSpec
      * @param   {function}  handleArrayChanged
+     * @param function args.navigateCallback
      * @param   {Element}   parentElement
      * @param   {Array}     selectableClassNames
      *
      * @return  undefined
      */
     handlePaste : function(args) {
-        var spec            = localStorage.getItem("specClipboard");
+        var spec = localStorage.getItem("specClipboard");
 
         if (spec === null) {
             return;
         }
 
-        spec                = JSON.parse(spec);
-        var widgetElement   = CBSpecArrayEditorFactory.createWidgetForSpec({
-            array           : args.array,
-            classNames      : args.selectableClassNames,
-            handleChanged   : args.handleArrayChanged,
-            parentElement   : args.parentElement,
-            spec            : spec
+        spec = JSON.parse(spec);
+        var widgetElement  = CBSpecArrayEditorFactory.createWidgetForSpec({
+            array : args.array,
+            classNames : args.selectableClassNames,
+            handleChanged : args.handleArrayChanged,
+            navigateCallback : args.navigateCallback,
+            parentElement : args.parentElement,
+            spec : spec
         });
 
         if (args.beforeSpec) {
-            var index           = args.array.indexOf(args.beforeSpec);
-            var beforeElement   = args.parentElement.children.item(index);
+            var index = args.array.indexOf(args.beforeSpec);
+            var beforeElement = args.parentElement.children.item(index);
             args.array.splice(index, 0, spec); // insert before spec at index
             args.parentElement.insertBefore(widgetElement, beforeElement);
         } else {
