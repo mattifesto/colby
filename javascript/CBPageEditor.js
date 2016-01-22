@@ -1,6 +1,13 @@
 "use strict";
 
-var CBPageEditor = {
+/**
+ * The CBViewPageEditor variable allows this class to be the editor factory for
+ * a CBViewPage without havng to special case it. It probably should be the name
+ * of this class but we're moving toward making this a model so it's not worth
+ * too much effort.
+ */
+var CBViewPageEditor;
+var CBPageEditor = CBViewPageEditor = {
     model : null,
 
     /**
@@ -12,8 +19,7 @@ var CBPageEditor = {
         var index = (history.state) ? history.state.index : 0;
         var spec = args.navigationState.stack[index];
         var editorFactory = window[spec.className + "Editor"] ||
-                            window[spec.className + "EditorFactory"] ||
-                            CBPageEditor;
+                            window[spec.className + "EditorFactory"];
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
         var specChangedCallback = CBPageEditor.requestSave.bind(CBPageEditor);
@@ -127,13 +133,11 @@ CBPageEditor.createEditor = function(args) {
      * Page information
      */
 
-    var element = CBPageInformationEditorFactory.createEditor({
+    editorContainer.appendChild(CBPageInformationEditorFactory.createEditor({
         handleSpecChanged : args.specChangedCallback,
         handleTitleChanged : CBPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
         spec : args.spec
-    });
-
-    editorContainer.appendChild(element);
+    }));
     editorContainer.appendChild(CBUI.createHalfSpace());
     editorContainer.appendChild(CBUI.createSectionHeader({ text : "Views" }));
     editorContainer.appendChild(CBArrayEditor.createEditor({
@@ -212,13 +216,17 @@ CBPageEditor.fetchModelDidLoad = function(args) {
 
     if (response.wasSuccessful) {
         if ("modelJSON" in response) {
-            CBPageEditor.model = JSON.parse(response.modelJSON);
+            var spec = JSON.parse(response.modelJSON);
 
-            var navigationState = { stack : [CBPageEditor.model] };
-
-            if (CBPageEditor.model.sections === undefined) {
-                CBPageEditor.model.sections = [];
+            /* Before 2016.01.21 specs did not have their className property
+               set. Now the className property must be set for the page to be
+               edited properly. */
+            if (spec.className === undefined) {
+                spec.className = "CBViewPage";
             }
+
+            var navigationState = { stack : [spec] };
+            CBPageEditor.model = spec;
 
             CBPageEditor.displayEditor({ navigationState : navigationState });
 
