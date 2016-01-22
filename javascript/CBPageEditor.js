@@ -4,23 +4,30 @@ var CBPageEditor = {
     model               : null,
 
     /**
-     * @param {Object} spec
+     * @param object args.navigationState
      *
      * @return undefined
      */
     displayEditor : function(args) {
+        var index = (history.state) ? history.state.index : 0;
+        var spec = args.navigationState.stack[index];
+        var editorFactory = window[spec.className + "Editor"] ||
+                            window[spec.className + "EditorFactory"] ||
+                            CBPageEditor;
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
+        var specChangedCallback = CBPageEditor.requestSave.bind(CBPageEditor);
+        var navigateCallback = CBPageEditor.navigate.bind(undefined, { navigationState : args.navigationState });
 
-        main.appendChild(CBPageEditor.createEditor({
-            spec : args.spec
+        main.appendChild(CBUI.createHalfSpace());
+
+        main.appendChild(editorFactory.createEditor({
+            navigateCallback : navigateCallback,
+            spec : spec,
+            specChangedCallback : specChangedCallback,
         }));
 
-        if (window.CBPageEditor2 !== undefined) {
-            main.appendChild(CBPageEditor2.createEditor({
-                spec : args.spec
-            }));
-        }
+        main.appendChild(CBUI.createHalfSpace());
     },
 
     /**
@@ -33,7 +40,35 @@ var CBPageEditor = {
         title           = title.trim();
         title           = (title.length > 0) ? ": " + title : "";
         document.title  = "Page Editor" + title;
-    }
+    },
+
+   /**
+    * @param Object args.navigationState
+    *
+    * @return undefined
+    */
+   handlePopState : function (args, event) {
+       CBPageEditor.displayEditor({
+           navigationState : args.navigationState,
+       });
+   },
+
+    /**
+     * @param Object args.navigationState
+     *
+     * @return undefined
+     */
+    navigate : function (args, spec) {
+        var index = (history.state) ? history.state.index : 0;
+
+        index++;
+        args.navigationState.stack.splice(index, Number.MAX_VALUE, spec);
+        history.pushState({ index : index }, undefined);
+
+        CBPageEditor.displayEditor({
+            navigationState : args.navigationState,
+        });
+    },
 };
 
 /**
@@ -58,9 +93,7 @@ CBPageEditor.appendPageTemplateOption = function(template)
     pageTemplateOption.appendChild(pageTemplateOptionCell);
     CBPageEditor.pageTemplatesSection.appendChild(pageTemplateOption);
 
-
-    var handler = function()
-    {
+    var handler = function() {
         /**
          * The template model will have a unique data store ID but it is
          * replaced here because the editor page has been assigned a data store
@@ -71,14 +104,18 @@ CBPageEditor.appendPageTemplateOption = function(template)
         CBPageEditor.model              = JSON.parse(template.modelJSON);
         CBPageEditor.model.dataStoreID  = CBURLQueryVariables["data-store-id"];
 
-        CBPageEditor.displayEditor({ spec : CBPageEditor.model });
+        var navigationState = { stack : [CBPageEditor.model] };
+
+        CBPageEditor.displayEditor({ navigationState : navigationState });
     };
 
     pageTemplateOption.addEventListener("click", handler, false);
 };
 
 /**
- * @param {Object} spec
+ * @param function navigateCallback
+ * @param object spec
+ * @param function specChangedCallback
  *
  * @return undefined
  */
@@ -91,7 +128,7 @@ CBPageEditor.createEditor = function(args) {
      */
 
     var element = CBPageInformationEditorFactory.createEditor({
-        handleSpecChanged       : function() { CBPageEditor.requestSave(); },
+        handleSpecChanged       : args.specChangedCallback,
         handleTitleChanged      : CBPageEditor.handleTitleChanged.bind(undefined, {
             spec                : args.spec
         }),
@@ -106,7 +143,8 @@ CBPageEditor.createEditor = function(args) {
     editorContainer.appendChild(CBSpecArrayEditorFactory.createEditor({
         array           : args.spec.sections,
         classNames      : CBPageEditorAvailableViewClassNames,
-        handleChanged   : CBPageEditor.requestSave.bind(CBPageEditor)
+        handleChanged   : args.specChangedCallback,
+        navigateCallback : args.navigateCallback,
     }));
 
     CBPageEditor.handleTitleChanged({spec : args.spec});
@@ -136,6 +174,12 @@ CBPageEditor.displayPageTemplateChooser = function()
  * @return undefined
  */
 CBPageEditor.DOMContentDidLoad = function() {
+    // If the user has been navigating and reloads the page then the model
+    // will have been removed from memory. If some sort of state has been
+    // pushed it will refer to parts of that non-existent model. We need to
+    // reset the editor and calling replaceState will do that.
+    history.replaceState(undefined, undefined);
+
     CBPageEditor.saveModelTimer = Object.create(CBDelayTimer).init();
     CBPageEditor.saveModelTimer.callback = CBPageEditor.saveModel.bind(CBPageEditor);
     CBPageEditor.saveModelTimer.delayInMilliseconds = 2000;
@@ -174,11 +218,17 @@ CBPageEditor.fetchModelDidLoad = function(args) {
         if ("modelJSON" in response) {
             CBPageEditor.model = JSON.parse(response.modelJSON);
 
+            var navigationState = { stack : [CBPageEditor.model] };
+
             if (CBPageEditor.model.sections === undefined) {
                 CBPageEditor.model.sections = [];
             }
 
-            CBPageEditor.displayEditor({ spec : CBPageEditor.model });
+            CBPageEditor.displayEditor({ navigationState : navigationState });
+
+            window.addEventListener("popstate", CBPageEditor.handlePopState.bind(undefined, {
+                navigationState : navigationState,
+            }));
         } else {
             CBPageEditor.displayPageTemplateChooser();
         }
