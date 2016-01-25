@@ -64,7 +64,13 @@ var CBResponsiveImageViewEditor = {
         item.appendChild(CBUIImageUploader.create({
             propertyName : "largeImage",
             spec : args.spec,
-            specChangedCallback : styleChangedCallback,
+            specChangedCallback : CBResponsiveImageViewEditor.handleImageChanged.bind(undefined, {
+                callbacks : [
+                    imageView.imageChangedCallback,
+                    imageSizeView.imageChangedCallback,
+                    styleChangedCallback,
+                ],
+            }),
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -97,7 +103,13 @@ var CBResponsiveImageViewEditor = {
         item.appendChild(CBUIImageUploader.create({
             propertyName : "mediumImage",
             spec : args.spec,
-            specChangedCallback : styleChangedCallback,
+            specChangedCallback : CBResponsiveImageViewEditor.handleImageChanged.bind(undefined, {
+                callbacks : [
+                    imageView.imageChangedCallback,
+                    imageSizeView.imageChangedCallback,
+                    styleChangedCallback,
+                ],
+            }),
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -130,12 +142,27 @@ var CBResponsiveImageViewEditor = {
         item.appendChild(CBUIImageUploader.create({
             propertyName : "smallImage",
             spec : args.spec,
-            specChangedCallback : styleChangedCallback,
+            specChangedCallback : CBResponsiveImageViewEditor.handleImageChanged.bind(undefined, {
+                callbacks : [
+                    imageView.imageChangedCallback,
+                    imageSizeView.imageChangedCallback,
+                    styleChangedCallback,
+                ],
+            }),
         }).element);
         section.appendChild(item);
         element.appendChild(section);
 
         return element;
+    },
+
+    /**
+     * @param [function] args.callbacks
+     *
+     * @return undefined
+     */
+    handleImageChanged : function (args) {
+        args.callbacks.forEach(function (callback) { callback(); });
     },
 
     /**
