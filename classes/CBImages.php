@@ -79,7 +79,7 @@ class CBImages {
     }
 
     /**
-     * @return void
+     * @return null
      */
     public static function reduceImageFile($sourceFilepath, $destinationFilepath, $projection, $args = []) {
         $quality = null;
@@ -132,7 +132,7 @@ class CBImages {
     }
 
     /**
-     * @return void
+     * @return null
      */
     public static function install() {
         $SQL = <<<EOT
@@ -155,7 +155,7 @@ EOT;
     }
 
     /**
-     * @return void
+     * @return null
      */
     private static function updateRow($ID, $timestamp, $extension) {
         $extensionAsSQL = ColbyConvert::textToSQL($extension);
@@ -239,13 +239,10 @@ EOT;
     }
 
     /**
-     * @return void
+     * @return null
      */
     public static function uploadAndReduceForAjaxPermissions() {
-        $permissions        = new stdClass();
-        $permissions->group = 'Administrators';
-
-        return $permissions;
+        return (object)['group' => 'Administrators'];
     }
 
     /**
@@ -297,13 +294,10 @@ EOT;
     }
 
     /**
-     * @return void
+     * @return null
      */
     public static function uploadForAjaxPermissions() {
-        $permissions        = new stdClass();
-        $permissions->group = 'Administrators';
-
-        return $permissions;
+        return (object)['group' => 'Administrators'];
     }
 
     /**
