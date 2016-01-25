@@ -15,15 +15,17 @@ var CBUIImageView = {
 
         element.appendChild(img);
 
-        var updateImageCallback = CBUIImageView.updateImage.bind(undefined, {
+        var imageChangedCallback = CBUIImageView.handleImageChanged.bind(undefined, {
             img : img,
+            propertyName : args.propertyName,
+            spec : args.spec,
         });
 
-        updateImageCallback(args.spec[args.propertyName]);
+        imageChangedCallback();
 
         return {
             element : element,
-            updateImageCallback : updateImageCallback,
+            imageChangedCallback : imageChangedCallback,
         };
     },
 
@@ -37,12 +39,15 @@ var CBUIImageView = {
     },
 
     /**
-     * @param Element args.img
-     * @param object image
+    * @param Element args.img
+    * @param string args.propertyName
+    * @param object args.spec
      *
      * @return undefined
      */
-    updateImage : function (args, image) {
+    handleImageChanged : function (args) {
+        var image = args.spec[args.propertyName];
+
         if (image === undefined) {
             args.img.src = undefined;
             args.img.style.display = "none";
