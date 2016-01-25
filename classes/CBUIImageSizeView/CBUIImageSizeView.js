@@ -12,25 +12,30 @@ var CBUIImageSizeView = {
         var element = document.createElement("div");
         element.className = "CBUIImageSizeView";
 
-        var updateImageSizeCallback = CBUIImageSizeView.updateImageSize.bind(undefined, {
+        var imageChangedCallback = CBUIImageSizeView.handleImageChanged.bind(undefined, {
             element : element,
+            propertyName : args.propertyName,
+            spec : args.spec,
         });
 
-        updateImageSizeCallback(args.spec[args.propertyName]);
+        imageChangedCallback();
 
         return {
             element : element,
-            updateImageSizeCallback : updateImageSizeCallback,
+            imageChangedCallback : imageChangedCallback,
         };
     },
 
     /**
      * @param Element args.element
-     * @param object image
+     * @param string args.propertyName
+     * @param object args.spec
      *
      * @return undefined
      */
-    updateImageSize : function (args, image) {
+    handleImageChanged : function (args) {
+        var image = args.spec[args.propertyName];
+
         if (image === undefined) {
             args.element.textContent = "no image";
         } else {
