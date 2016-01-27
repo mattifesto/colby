@@ -32,6 +32,18 @@ var CBResponsiveImageViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
+
+        /* theme */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIThemeSelector.create({
+            classNameForKind : "CBContainerViewTheme",
+            labelText : "Theme",
+            navigateCallback : args.navigateCallback,
+            propertyName : "themeID",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
         element.appendChild(section);
 
         element.appendChild(CBUI.createHalfSpace());
@@ -210,7 +222,7 @@ var CBResponsiveImageViewEditor = {
         args.status.xhr = undefined;
 
         if (response.wasSuccessful) {
-            args.spec.themeID = response.themeID;
+            args.spec.imageThemeID = response.imageThemeID;
         } else {
             Colby.displayResponse(response);
         }

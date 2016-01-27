@@ -6,7 +6,7 @@ final class CBResponsiveImageViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIImageSizeView', 'CBUIImageUploader', 'CBUIImageView', 'CBUISelector', 'CBUIStringEditor'];
+        return ['CBUI', 'CBUIImageSizeView', 'CBUIImageUploader', 'CBUIImageView', 'CBUIStringEditor', 'CBUIThemeSelector'];
     }
 
     /**

@@ -3,6 +3,30 @@
 final class CBResponsiveImageView {
 
     /**
+     * @param hex160 $imageThemeID
+     *
+     * @return string
+     */
+    public static function imageThemeIDToStyleSheetFilepath($imageThemeID) {
+        return CBDataStore::filepath([
+            'ID' => $imageThemeID,
+            'filename' => 'CBResponsiveImageView.css',
+        ]);
+    }
+
+    /**
+     * @param hex160 $imageThemeID
+     *
+     * @return string
+     */
+    public static function imageThemeIDToStyleSheetURL($imageThemeID) {
+        return CBDataStore::toURL([
+            'ID' => $imageThemeID,
+            'filename' => 'CBResponsiveImageView.css',
+        ]);
+    }
+
+    /**
      * @param stdClass $image
      * @param string? $args->base
      *
@@ -54,11 +78,11 @@ final class CBResponsiveImageView {
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
-        if (empty($model->themeID)) {
+        if (empty($model->imageThemeID)) {
             $class = "";
         } else {
-            CBHTMLOutput::addCSSURL(CBResponsiveImageView::themeIDToStyleSheetURL($model->themeID));
-            $class = "T{$model->themeID}";
+            CBHTMLOutput::addCSSURL(CBResponsiveImageView::imageThemeIDToStyleSheetURL($model->imageThemeID));
+            $class = "T{$model->imageThemeID}";
         }
 
         ?><figure class="CBResponsiveImageView <?= $class ?> image">CBResponsiveImageView</figure><?php
@@ -71,7 +95,7 @@ final class CBResponsiveImageView {
      */
     public static function specToModel(stdClass $spec) {
         $model = (object)['className' => __CLASS__];
-        $model->themeID = CBModel::value($spec, 'themeID');
+        $model->imageThemeID = CBModel::value($spec, 'imageThemeID');
 
         return $model;
     }
@@ -79,11 +103,11 @@ final class CBResponsiveImageView {
     /**
      * @return string?
      */
-    public static function specToThemeCSS(stdClass $spec, array $args) {
-        $themeID = null;
+    public static function specToImageThemeCSS(stdClass $spec, array $args) {
+        $imageThemeID = null;
         extract($args, EXTR_IF_EXISTS);
 
-        $class = "T{$themeID}";
+        $class = "T{$imageThemeID}";
         $URLForSmallImage2x = self::imageToURL($spec->smallImage);
         $URLForMediumImage2x = self::imageToURL($spec->mediumImage);
         $URLFor1920Image2x = self::imageToURL($spec->largeImage, ['base' => 'cwc3840']);
@@ -190,36 +214,12 @@ EOT;
     /**
      * return hex160?
      */
-    public static function specToThemeID(stdClass $spec) {
+    public static function specToImageThemeID(stdClass $spec) {
         if (!empty($spec->largeImage->ID) && !empty($spec->mediumImage->ID) && !empty($spec->smallImage->ID)) {
             return sha1("{$spec->largeImage->ID}{$spec->mediumImage->ID}{$spec->smallImage->ID}");
         } else {
             return null;
         }
-    }
-
-    /**
-     * @param hex160 $themeID
-     *
-     * @return string
-     */
-    public static function themeIDToStyleSheetFilepath($themeID) {
-        return CBDataStore::filepath([
-            'ID' => $themeID,
-            'filename' => 'CBResponsiveImageView.css',
-        ]);
-    }
-
-    /**
-     * @param hex160 $themeID
-     *
-     * @return string
-     */
-    public static function themeIDToStyleSheetURL($themeID) {
-        return CBDataStore::toURL([
-            'ID' => $themeID,
-            'filename' => 'CBResponsiveImageView.css',
-        ]);
     }
 
     /**
@@ -233,16 +233,16 @@ EOT;
         self::makeImagesForSpec($spec);
 
         if (!empty($spec->largeImage->ID) && !empty($spec->mediumImage->ID) && !empty($spec->smallImage->ID)) {
-            $themeID = sha1("{$spec->largeImage->ID}{$spec->mediumImage->ID}{$spec->smallImage->ID}");
-            $filepath = CBResponsiveImageView::themeIDToStyleSheetFilepath($themeID);
+            $imageThemeID = sha1("{$spec->largeImage->ID}{$spec->mediumImage->ID}{$spec->smallImage->ID}");
+            $filepath = CBResponsiveImageView::imageThemeIDToStyleSheetFilepath($imageThemeID);
 
-            CBDataStore::makeDirectoryForID($themeID);
+            CBDataStore::makeDirectoryForID($imageThemeID);
 
-            file_put_contents($filepath, CBResponsiveImageView::specToThemeCSS($spec, [
-                'themeID' => $themeID,
+            file_put_contents($filepath, CBResponsiveImageView::specToImageThemeCSS($spec, [
+                'imageThemeID' => $imageThemeID,
             ]));
 
-            $response->themeID = $themeID;
+            $response->imageThemeID = $imageThemeID;
         }
 
         $response->wasSuccessful = true;
