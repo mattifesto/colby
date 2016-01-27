@@ -1,6 +1,6 @@
 "use strict";
 
-var CBResponsiveImageViewEditor = {
+var CBContainerViewEditor = {
 
     /**
      * @param function args.navigateCallback
@@ -12,9 +12,9 @@ var CBResponsiveImageViewEditor = {
     createEditor : function(args) {
         var section, item, imageView, imageSizeView;
         var element = document.createElement("div");
-        element.className = "CBResponsiveImageViewEditor";
+        element.className = "CBContainerViewEditor";
 
-        var styleChangedCallback = CBResponsiveImageViewEditor.handleStylesChanged.bind(undefined, {
+        var styleChangedCallback = CBContainerViewEditor.handleStylesChanged.bind(undefined, {
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
             status : {},
@@ -76,7 +76,7 @@ var CBResponsiveImageViewEditor = {
         item.appendChild(CBUIImageUploader.create({
             propertyName : "largeImage",
             spec : args.spec,
-            specChangedCallback : CBResponsiveImageViewEditor.handleImageChanged.bind(undefined, {
+            specChangedCallback : CBContainerViewEditor.handleImageChanged.bind(undefined, {
                 callbacks : [
                     imageView.imageChangedCallback,
                     imageSizeView.imageChangedCallback,
@@ -117,7 +117,7 @@ var CBResponsiveImageViewEditor = {
         item.appendChild(CBUIImageUploader.create({
             propertyName : "mediumImage",
             spec : args.spec,
-            specChangedCallback : CBResponsiveImageViewEditor.handleImageChanged.bind(undefined, {
+            specChangedCallback : CBContainerViewEditor.handleImageChanged.bind(undefined, {
                 callbacks : [
                     imageView.imageChangedCallback,
                     imageSizeView.imageChangedCallback,
@@ -158,7 +158,7 @@ var CBResponsiveImageViewEditor = {
         item.appendChild(CBUIImageUploader.create({
             propertyName : "smallImage",
             spec : args.spec,
-            specChangedCallback : CBResponsiveImageViewEditor.handleImageChanged.bind(undefined, {
+            specChangedCallback : CBContainerViewEditor.handleImageChanged.bind(undefined, {
                 callbacks : [
                     imageView.imageChangedCallback,
                     imageSizeView.imageChangedCallback,
@@ -201,8 +201,8 @@ var CBResponsiveImageViewEditor = {
 
         var xhr = new XMLHttpRequest();
         xhr.onerror = Colby.displayXHRError.bind(undefined, { xhr : xhr });
-        xhr.onload = CBResponsiveImageViewEditor.handleUpdateStylesDidLoad.bind(undefined, args);
-        xhr.open("POST", "/api/?class=CBResponsiveImageView&function=updateStyles");
+        xhr.onload = CBContainerViewEditor.handleUpdateStylesDidLoad.bind(undefined, args);
+        xhr.open("POST", "/api/?class=CBContainerView&function=updateStyles");
         xhr.send(data);
 
         args.status.waiting = true;
@@ -228,7 +228,7 @@ var CBResponsiveImageViewEditor = {
         }
 
         if (args.status.pending) {
-            CBResponsiveImageViewEditor.handleStylesChanged(args);
+            CBContainerViewEditor.handleStylesChanged(args);
         } else {
             args.specChangedCallback();
         }

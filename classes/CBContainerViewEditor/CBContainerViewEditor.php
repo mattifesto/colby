@@ -1,6 +1,6 @@
 <?php
 
-final class CBResponsiveImageViewEditor {
+final class CBContainerViewEditor {
 
     /**
      * @return [string]
@@ -13,7 +13,7 @@ final class CBResponsiveImageViewEditor {
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [CBResponsiveImageViewEditor::URL('CBResponsiveImageViewEditor.js')];
+        return [CBContainerViewEditor::URL('CBContainerViewEditor.js')];
     }
 
     /**

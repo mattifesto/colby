@@ -1,6 +1,6 @@
 <?php
 
-final class CBResponsiveImageView {
+final class CBContainerView {
 
     /**
      * @param hex160 $imageThemeID
@@ -10,7 +10,7 @@ final class CBResponsiveImageView {
     public static function imageThemeIDToStyleSheetFilepath($imageThemeID) {
         return CBDataStore::filepath([
             'ID' => $imageThemeID,
-            'filename' => 'CBResponsiveImageView.css',
+            'filename' => 'CBContainerView.css',
         ]);
     }
 
@@ -22,7 +22,7 @@ final class CBResponsiveImageView {
     public static function imageThemeIDToStyleSheetURL($imageThemeID) {
         return CBDataStore::toURL([
             'ID' => $imageThemeID,
-            'filename' => 'CBResponsiveImageView.css',
+            'filename' => 'CBContainerView.css',
         ]);
     }
 
@@ -81,11 +81,11 @@ final class CBResponsiveImageView {
         if (empty($model->imageThemeID)) {
             $class = "";
         } else {
-            CBHTMLOutput::addCSSURL(CBResponsiveImageView::imageThemeIDToStyleSheetURL($model->imageThemeID));
+            CBHTMLOutput::addCSSURL(CBContainerView::imageThemeIDToStyleSheetURL($model->imageThemeID));
             $class = "T{$model->imageThemeID}";
         }
 
-        ?><figure class="CBResponsiveImageView <?= $class ?> image">CBResponsiveImageView</figure><?php
+        ?><figure class="CBContainerView <?= $class ?> image">CBContainerView</figure><?php
     }
 
     /**
@@ -234,11 +234,11 @@ EOT;
 
         if (!empty($spec->largeImage->ID) && !empty($spec->mediumImage->ID) && !empty($spec->smallImage->ID)) {
             $imageThemeID = sha1("{$spec->largeImage->ID}{$spec->mediumImage->ID}{$spec->smallImage->ID}");
-            $filepath = CBResponsiveImageView::imageThemeIDToStyleSheetFilepath($imageThemeID);
+            $filepath = CBContainerView::imageThemeIDToStyleSheetFilepath($imageThemeID);
 
             CBDataStore::makeDirectoryForID($imageThemeID);
 
-            file_put_contents($filepath, CBResponsiveImageView::specToImageThemeCSS($spec, [
+            file_put_contents($filepath, CBContainerView::specToImageThemeCSS($spec, [
                 'imageThemeID' => $imageThemeID,
             ]));
 
