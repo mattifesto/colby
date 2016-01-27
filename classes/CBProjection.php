@@ -20,8 +20,16 @@ class CBProjection {
             $value  = $op[2];
 
             switch ($code) {
+                case 'chc':
+                    $projection = CBProjection::cropHeightFromCenter($projection, $value);
+                    break;
+
                 case 'clc':
                     $projection = CBProjection::cropLongEdgeFromCenter($projection, $value);
+                    break;
+
+                case 'cwc':
+                    $projection = CBProjection::cropWidthFromCenter($projection, $value);
                     break;
 
                 case 'rh':
