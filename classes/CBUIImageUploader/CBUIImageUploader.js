@@ -70,6 +70,8 @@ var CBUIImageUploader = {
         var formData = new FormData();
         formData.append("image", args.input.files[0]);
 
+        args.input.value = null;
+
         var xhr = new XMLHttpRequest();
         xhr.onload = CBUIImageUploader.handleImageDidLoad.bind(undefined, {
             button : args.button,
