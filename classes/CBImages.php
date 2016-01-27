@@ -85,6 +85,8 @@ class CBImages {
         $quality = null;
         extract($args, EXTR_IF_EXISTS);
 
+        ini_set('memory_limit', '256M');
+
         $src    = $projection->source;
         $dst    = $projection->destination;
         $size   = getimagesize($sourceFilepath);
