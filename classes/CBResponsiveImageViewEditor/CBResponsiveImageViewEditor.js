@@ -75,6 +75,8 @@ var CBResponsiveImageViewEditor = {
         section.appendChild(item);
         element.appendChild(section);
 
+        element.appendChild(CBUI.createHalfSpace());
+
         /* medium image section */
         element.appendChild(CBUI.createSectionHeader({ text : "Medium Image" }));
 
@@ -113,6 +115,8 @@ var CBResponsiveImageViewEditor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         /* small image section */
         element.appendChild(CBUI.createSectionHeader({ text : "Small Image" }));
