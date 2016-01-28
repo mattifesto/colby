@@ -35,6 +35,8 @@ var CBPageEditor = CBViewPageEditor = {
         }));
 
         main.appendChild(CBUI.createHalfSpace());
+
+        window.scroll(0, 0);
     },
 
     /**
