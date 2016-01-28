@@ -33,8 +33,9 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
  * should include a brief description of why it is needed.
  */
 
-/* Include this as long as we have hard coded includes in this file. */
+/* Include these as long as we have hard coded includes in this file. */
 CBHTMLOutput::requireClassName('CBUI');
+CBHTMLOutput::requireClassName('CBArrayEditor');
 
 /* This is still used by CBPageEditor.js, but it is deprecated. */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
