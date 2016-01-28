@@ -78,14 +78,19 @@ final class CBContainerView {
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
-        if (empty($model->imageThemeID)) {
-            $class = "";
-        } else {
+        $classes = ['CBContainerView'];
+
+        if (!empty($model->imageThemeID)) {
             CBHTMLOutput::addCSSURL(CBContainerView::imageThemeIDToStyleSheetURL($model->imageThemeID));
-            $class = "T{$model->imageThemeID}";
+            $classes[] = "T{$model->imageThemeID}";
         }
 
-        ?><figure class="CBContainerView <?= $class ?> image">CBContainerView</figure><?php
+        if ($model->useImageHeight) {
+            $classes[] = "useImageHeight";
+        }
+
+        $classes = implode(' ', $classes)
+        ?><section class="<?= $classes ?>">CBContainerView</section><?php
     }
 
     /**
@@ -96,6 +101,7 @@ final class CBContainerView {
     public static function specToModel(stdClass $spec) {
         $model = (object)['className' => __CLASS__];
         $model->imageThemeID = CBModel::value($spec, 'imageThemeID');
+        $model->useImageHeight = CBModel::value($spec, 'useImageHeight', false, 'boolval');
 
         return $model;
     }
@@ -134,7 +140,7 @@ final class CBContainerView {
         background-size: 1920px {$heightForLarge}px;
     }
 
-    .{$class}.image {
+    .{$class}.useImageHeight {
         min-height: {$heightForLarge}px;
     }
 }
@@ -158,7 +164,7 @@ EOT;
     background-size: {$widthForLarge}px {$heightForLarge}px;
 }
 
-.{$class}.image {
+.{$class}.useImageHeight {
     background-position: center top; /* move these properties to shared stylesheet */
     background-repeat: no-repeat;
     min-height: {$heightForLarge}px;
@@ -178,7 +184,7 @@ EOT;
         background-size: {$widthForMedium}px {$heightForMedium}px;
     }
 
-    .{$class}.image {
+    .{$class}.useImageHeight {
         min-height: {$heightForMedium}px;
     }
 }
@@ -196,7 +202,7 @@ EOT;
         background-size: {$widthForSmall}px {$heightForSmall}px;
     }
 
-    .{$class}.image {
+    .{$class}.useImageHeight {
         min-height: {$heightForSmall}px;
     }
 }

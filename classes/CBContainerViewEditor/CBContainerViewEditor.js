@@ -33,6 +33,16 @@ var CBContainerViewEditor = {
         }).element);
         section.appendChild(item);
 
+        /* image height */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Use Image Height",
+            propertyName : "useImageHeight",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
         /* theme */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIThemeSelector.create({
