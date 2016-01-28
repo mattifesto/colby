@@ -17,6 +17,15 @@ final class CBContainerViewEditor {
     }
 
     /**
+     * @return [[string, mixed]]
+     */
+    public static function requiredJavaScriptVariables() {
+        return [
+            ['CBContainerViewAddableViews', CBPagesPreferences::classNamesForAddableViews()]
+        ];
+    }
+
+    /**
      * @param string $filename
      *
      * @return string

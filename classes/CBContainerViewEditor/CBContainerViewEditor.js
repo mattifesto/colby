@@ -33,16 +33,6 @@ var CBContainerViewEditor = {
         }).element);
         section.appendChild(item);
 
-        /* image height */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Use Image Height",
-            propertyName : "useImageHeight",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
         /* theme */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIThemeSelector.create({
@@ -54,7 +44,31 @@ var CBContainerViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
+
+        /* use image height */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Use Image Height",
+            propertyName : "useImageHeight",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
+
+        /* subviews */
+        element.appendChild(CBUI.createSectionHeader({ text : "Subviews" }));
+
+        if (args.spec.subviews === undefined) { args.spec.subviews = []; }
+
+        element.appendChild(CBArrayEditor.createEditor({
+            array : args.spec.subviews,
+            arrayChangedCallback : args.specChangedCallback,
+            classNames : CBContainerViewAddableViews,
+            navigateCallback : args.navigateCallback,
+        }));
 
         element.appendChild(CBUI.createHalfSpace());
 

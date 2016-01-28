@@ -78,6 +78,8 @@ final class CBContainerView {
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
+        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
+
         $classes = ['CBContainerView'];
 
         if (!empty($model->imageThemeID)) {
@@ -89,8 +91,15 @@ final class CBContainerView {
             $classes[] = "useImageHeight";
         }
 
-        $classes = implode(' ', $classes)
-        ?><section class="<?= $classes ?>">CBContainerView</section><?php
+        if (($class = CBTheme::IDToCSSClass($model->themeID)) !== null) {
+            $classes[] = $class;
+        }
+
+        $classes = implode(' ', $classes);
+
+        ?><section class="<?= $classes ?>"><?php
+            array_walk($model->subviews, 'CBView::renderModelAsHTML');
+        ?></section><?php
     }
 
     /**
@@ -101,6 +110,8 @@ final class CBContainerView {
     public static function specToModel(stdClass $spec) {
         $model = (object)['className' => __CLASS__];
         $model->imageThemeID = CBModel::value($spec, 'imageThemeID');
+        $model->subviews = array_map('CBView::specToModel', isset($spec->subviews) ? $spec->subviews : []);
+        $model->themeID = CBModel::value($spec, 'themeID');
         $model->useImageHeight = CBModel::value($spec, 'useImageHeight', false, 'boolval');
 
         return $model;
