@@ -8,12 +8,12 @@ var CBArrayEditorFactory;
 var CBArrayEditor = CBArrayEditorFactory = {
 
     /**
-     * @param [Object] args.array
+     * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
      * @param Element args.sectionElement
-     * @param Object spec
+     * @param object spec
      *
      * @return  undefined
      */
@@ -34,7 +34,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param [Object] args.array
+     * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
@@ -60,7 +60,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
     /**
      * @param string className
      *
-     * @return Object
+     * @return object
      */
     classNameToModel : function(className) {
         return {
@@ -69,7 +69,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param [Object] args.array
+     * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
@@ -110,7 +110,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param [Object] args.array
+     * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
@@ -170,12 +170,12 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param [Object] args.array
+     * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
      * @param Element args.sectionElement
-     * @param Object args.spec
+     * @param object args.spec
      *
      * @return Element
      */
@@ -241,7 +241,9 @@ var CBArrayEditor = CBArrayEditorFactory = {
         action = document.createElement("div");
         action.className = "action edit copy";
         action.textContent = "copy";
-
+        action.addEventListener("click", CBArrayEditor.handleCopyWasClicked.bind(undefined, {
+            spec : args.spec,
+        }));
         element.appendChild(action);
 
         action = document.createElement("div");
@@ -287,10 +289,20 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param [Object] args.array
+     * @param object args.spec
+     *
+     * @return undefined
+     */
+    handleCopyWasClicked : function (args) {
+        var specAsJSON = JSON.stringify(args.spec);
+        localStorage.setItem("specClipboard", specAsJSON);
+    },
+
+    /**
+     * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param Element args.sectionElement
-     * @param Object args.spec
+     * @param object args.spec
      *
      * @return undefined
      */
@@ -310,10 +322,10 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param [Object] args.array
+     * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param Element args.sectionElement
-     * @param Object args.spec
+     * @param object args.spec
      *
      * @return undefined
      */
@@ -335,10 +347,10 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param [Object] args.array
+     * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param Element args.sectionElement
-     * @param Object args.spec
+     * @param object args.spec
      *
      * @return undefined
      */
@@ -360,13 +372,13 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param [Object] args.array
+     * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param function args.classNames
      * @param function args.navigateCallback
      * @param Element args.sectionElement
-     * @param Object args.specToInsertBefore
-     * @param Object spec
+     * @param object args.specToInsertBefore
+     * @param object spec
      *
      * @return  undefined
      */
@@ -389,12 +401,12 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param [Object] args.array
+     * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
      * @param Element args.sectionElement
-     * @param Object args.specToInsertBefore
+     * @param object args.specToInsertBefore
      *
      * @return  undefined
      */
