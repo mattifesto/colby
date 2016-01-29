@@ -229,26 +229,24 @@ var CBArrayEditor = CBArrayEditorFactory = {
 
         action = document.createElement("div");
         action.className = "action edit cut";
-        action.textContent = "x";
-
-        action.addEventListener("click", CBArrayEditor.handleDeleteWasClicked.bind(undefined, {
+        action.textContent = "cut";
+        action.addEventListener("click", CBArrayEditor.handleCutWasClicked.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             sectionElement : args.sectionElement,
             spec : args.spec,
         }));
-
         element.appendChild(action);
 
         action = document.createElement("div");
         action.className = "action edit copy";
-        action.textContent = "c";
+        action.textContent = "copy";
 
         element.appendChild(action);
 
         action = document.createElement("div");
         action.className = "action edit paste";
-        action.textContent = "p";
+        action.textContent = "paste";
 
         element.appendChild(action);
 
@@ -296,7 +294,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      *
      * @return undefined
      */
-    handleDeleteWasClicked : function (args) {
+    handleCutWasClicked : function (args) {
         if (confirm("Are you sure you want to remove this item?")) {
             var index = args.array.indexOf(args.spec);
             var itemElement = args.sectionElement.children.item(index);
@@ -304,7 +302,10 @@ var CBArrayEditor = CBArrayEditorFactory = {
             args.array.splice(index, 1); // remove at index
             args.sectionElement.removeChild(itemElement);
 
-            args.arrayChangedCallback.call();
+            var specAsJSON = JSON.stringify(args.spec);
+            localStorage.setItem("specClipboard", specAsJSON);
+
+            args.arrayChangedCallback();
         }
     },
 
