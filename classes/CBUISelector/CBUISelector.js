@@ -169,7 +169,7 @@ var CBUISelectorValueEditor = {
             title.textContent = option.title;
             var description = document.createElement("div");
             description.className = "description";
-            description.textContent = option.description;
+            description.textContent = option.description || "";
 
             item.appendChild(title);
             item.appendChild(description);
