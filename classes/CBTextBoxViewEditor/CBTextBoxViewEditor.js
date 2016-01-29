@@ -1,6 +1,6 @@
 "use strict";
 
-var CBTextBoxViewEditorFactory = {
+var CBTextBoxViewEditor = {
 
     themes          : [],
     themesUpdated   : "CBTextBoxViewEditorThemesUpdated",
@@ -21,7 +21,7 @@ var CBTextBoxViewEditorFactory = {
         flexarea            = document.createElement("div");
         flexarea.className  = "flexarea";
 
-        flexarea.appendChild(CBTextBoxViewEditorFactory.createThemeIDEditor({
+        flexarea.appendChild(CBTextBoxViewEditor.createThemeIDEditor({
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : "Theme",
             propertyName        : "themeID",
@@ -172,8 +172,8 @@ var CBTextBoxViewEditorFactory = {
      */
     createThemeIDEditor : function(args) {
         return CBStringEditorFactory.createSelectEditor({
-            data                : CBTextBoxViewEditorFactory.themes,
-            dataUpdatedEvent    : CBTextBoxViewEditorFactory.themesUpdated,
+            data                : CBTextBoxViewEditor.themes,
+            dataUpdatedEvent    : CBTextBoxViewEditor.themesUpdated,
             handleSpecChanged   : args.handleSpecChanged,
             labelText           : args.labelText,
             propertyName        : args.propertyName,
@@ -186,7 +186,7 @@ var CBTextBoxViewEditorFactory = {
      */
     fetchThemes : function() {
         var xhr     = new XMLHttpRequest();
-        xhr.onload  = CBTextBoxViewEditorFactory.fetchThemesCompleted.bind(undefined, {
+        xhr.onload  = CBTextBoxViewEditor.fetchThemesCompleted.bind(undefined, {
             xhr : xhr
         });
         xhr.onerror = function() {
@@ -206,7 +206,7 @@ var CBTextBoxViewEditorFactory = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            var themes      = CBTextBoxViewEditorFactory.themes;
+            var themes      = CBTextBoxViewEditor.themes;
             themes.length   = 0;
 
             themes.push({ textContent : "None", value : ""});
@@ -215,7 +215,7 @@ var CBTextBoxViewEditorFactory = {
                 themes.push(theme);
             });
 
-            document.dispatchEvent(new Event(CBTextBoxViewEditorFactory.themesUpdated));
+            document.dispatchEvent(new Event(CBTextBoxViewEditor.themesUpdated));
         } else {
             Colby.displayResponse(response);
         }
@@ -223,5 +223,5 @@ var CBTextBoxViewEditorFactory = {
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-    CBTextBoxViewEditorFactory.fetchThemes();
+    CBTextBoxViewEditor.fetchThemes();
 });
