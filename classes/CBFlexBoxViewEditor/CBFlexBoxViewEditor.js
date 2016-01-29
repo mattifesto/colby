@@ -1,6 +1,6 @@
 "use strict";
 
-var CBFlexBoxViewEditorFactory = {
+var CBFlexBoxViewEditor = {
 
     /**
      * @param function args.navigateCallback
@@ -76,7 +76,7 @@ var CBFlexBoxViewEditorFactory = {
             spec                : args.spec
         });
         var upload          = CBImageEditorFactory.createEditorUploadButton({
-            handleImageUploaded     : CBFlexBoxViewEditorFactory.handleImageUploaded.bind(undefined, {
+            handleImageUploaded     : CBFlexBoxViewEditor.handleImageUploaded.bind(undefined, {
                 handleSpecChanged   : args.specChangedCallback,
                 previewImageElement : preview.img,
                 sizeElement         : size,
@@ -84,19 +84,19 @@ var CBFlexBoxViewEditorFactory = {
             })
         });
 
-        clear.addEventListener("click", CBFlexBoxViewEditorFactory.handleClearImage.bind(undefined, {
+        clear.addEventListener("click", CBFlexBoxViewEditor.handleClearImage.bind(undefined, {
             handleSpecChanged   : args.specChangedCallback,
             previewImageElement : preview.img,
             sizeElement         : size,
             spec                : args.spec
         }));
 
-        CBFlexBoxViewEditorFactory.displaySize({
+        CBFlexBoxViewEditor.displaySize({
             sizeElement : size,
             spec        : args.spec
         });
 
-        CBFlexBoxViewEditorFactory.displayThumbnail({
+        CBFlexBoxViewEditor.displayThumbnail({
             previewImageElement : preview.img,
             spec                : args.spec
         });
@@ -303,12 +303,12 @@ var CBFlexBoxViewEditorFactory = {
         args.spec.imageURL              = undefined;
         args.spec.imageWidth            = undefined;
 
-        CBFlexBoxViewEditorFactory.displaySize({
+        CBFlexBoxViewEditor.displaySize({
             sizeElement : args.sizeElement,
             spec        : args.spec
         });
 
-        CBFlexBoxViewEditorFactory.displayThumbnail({
+        CBFlexBoxViewEditor.displayThumbnail({
             previewImageElement : args.previewImageElement,
             spec                : args.spec
         });
@@ -327,16 +327,35 @@ var CBFlexBoxViewEditorFactory = {
         args.spec.imageURL              = response.sizes.original.URL;
         args.spec.imageWidth            = response.sizes.original.width;
 
-        CBFlexBoxViewEditorFactory.displaySize({
+        CBFlexBoxViewEditor.displaySize({
             sizeElement : args.sizeElement,
             spec        : args.spec
         });
 
-        CBFlexBoxViewEditorFactory.displayThumbnail({
+        CBFlexBoxViewEditor.displayThumbnail({
             previewImageElement : args.previewImageElement,
             spec                : args.spec
         });
 
         args.specChangedCallback.call();
-    }
+    },
+
+    /**
+     * @param object spec
+     * @param array? spec.children
+     *
+     * @return string|undefined
+     */
+    specToDescription : function (spec) {
+        var description;
+        var subviews = spec.subviews;
+
+        if (Array.isArray(subviews)) {
+            for (var i = 0; i < subviews.length && description === undefined; i++) {
+                description = CBArrayEditor.specToDescription(subviews[i]);
+            }
+        }
+
+        return description;
+    },
 };

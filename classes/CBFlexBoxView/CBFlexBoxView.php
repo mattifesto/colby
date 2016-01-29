@@ -3,27 +3,6 @@
 final class CBFlexBoxView {
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForCSS() {
-        return [
-            CBSystemURL . '/javascript/CBImageEditorFactory.css',
-            CBFlexBoxView::URL('CBFlexBoxViewEditor.css')
-        ];
-    }
-
-    /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBImageEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBFlexBoxView::URL('CBFlexBoxViewEditorFactory.js')
-        ];
-    }
-
-    /**
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
