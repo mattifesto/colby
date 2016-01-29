@@ -133,11 +133,4 @@ var CBBackgroundViewEditor = {
 
         return description;
     },
-
-    /**
-     * @return {string}
-     */
-    widgetClassName : function() {
-        return "CBBackgroundViewEditorWidget";
-    },
 };
