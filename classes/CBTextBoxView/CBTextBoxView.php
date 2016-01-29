@@ -3,23 +3,6 @@
 final class CBTextBoxView {
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForCSS() {
-        return [ CBTextBoxView::URL('CBTextBoxViewEditor.css') ];
-    }
-
-    /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBTextBoxView::URL('CBTextBoxViewEditorFactory.js')
-        ];
-    }
-
-    /**
      * @return {stdClass}
      */
     public static function fetchThemesForAjax() {
