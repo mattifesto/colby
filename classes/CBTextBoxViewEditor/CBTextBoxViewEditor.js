@@ -6,8 +6,8 @@ var CBTextBoxViewEditor = {
     themesUpdated   : "CBTextBoxViewEditorThemesUpdated",
 
     /**
-     * @param   {function}  handleSpecChanged
      * @param   {Object}    spec
+     * @param   {function}  specChangedCallback
      *
      * @return  {Element}
      */
@@ -22,7 +22,7 @@ var CBTextBoxViewEditor = {
         flexarea.className  = "flexarea";
 
         flexarea.appendChild(CBTextBoxViewEditor.createThemeIDEditor({
-            handleSpecChanged   : args.handleSpecChanged,
+            specChangedCallback : args.specChangedCallback,
             labelText           : "Theme",
             propertyName        : "themeID",
             spec                : args.spec
@@ -30,7 +30,7 @@ var CBTextBoxViewEditor = {
 
         flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
             className           : "extent",
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Width",
             propertyName        : "width",
             spec                : args.spec
@@ -38,7 +38,7 @@ var CBTextBoxViewEditor = {
 
         flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
             className           : "extent",
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Height",
             propertyName        : "height",
             spec                : args.spec
@@ -50,7 +50,7 @@ var CBTextBoxViewEditor = {
                 { textContent : "Center",   value : "center" },
                 { textContent : "Bottom",   value : "bottom" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Vertical Alignment",
             propertyName        : "verticalAlignment",
             spec                : args.spec
@@ -65,7 +65,7 @@ var CBTextBoxViewEditor = {
                 { textContent : "Baseline", value : "baseline" },
                 { textContent : "Stretch",  value : "stretch" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Align Self",
             propertyName        : "flexAlignSelf",
             spec                : args.spec
@@ -81,7 +81,7 @@ var CBTextBoxViewEditor = {
 
         flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
             className           : "wide",
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "URL",
             propertyName        : "URL",
             spec                : args.spec
@@ -97,7 +97,7 @@ var CBTextBoxViewEditor = {
 
         flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
             className           : "wide",
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Title",
             propertyName        : "titleAsMarkaround",
             spec                : args.spec
@@ -110,14 +110,14 @@ var CBTextBoxViewEditor = {
                 { textContent : "Right",    value : "right" },
                 { textContent : "Justify",  value : "justify" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Title Text Alignment",
             propertyName        : "titleAlignment",
             spec                : args.spec
         }));
 
         flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Color",
             propertyName        : "titleColor",
             spec                : args.spec
@@ -132,7 +132,7 @@ var CBTextBoxViewEditor = {
         flexarea.className  = "flexarea";
 
         section.appendChild(CBStringEditorFactory.createMultiLineEditor({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             propertyName        : "contentAsMarkaround",
             spec                : args.spec
         }));
@@ -144,14 +144,14 @@ var CBTextBoxViewEditor = {
                 { textContent : "Right",    value : "right" },
                 { textContent : "Justify",  value : "justify" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Content Text Alignment",
             propertyName        : "contentAlignment",
             spec                : args.spec
         }));
 
         flexarea.appendChild(CBStringEditorFactory.createSingleLineEditor({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Color",
             propertyName        : "contentColor",
             spec                : args.spec
@@ -164,7 +164,7 @@ var CBTextBoxViewEditor = {
     },
 
     /**
-     * @param   {function}  handleSpecChanged
+     * @param   {function}  specChangedCallback
      * @param   {string}    labelText
      * @param   {string}    propertyName
      * @param   {Object}    spec
@@ -174,7 +174,7 @@ var CBTextBoxViewEditor = {
         return CBStringEditorFactory.createSelectEditor({
             data                : CBTextBoxViewEditor.themes,
             dataUpdatedEvent    : CBTextBoxViewEditor.themesUpdated,
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : args.labelText,
             propertyName        : args.propertyName,
             spec                : args.spec
@@ -219,7 +219,16 @@ var CBTextBoxViewEditor = {
         } else {
             Colby.displayResponse(response);
         }
-    }
+    },
+
+    /**
+     * @param string? spec.titleAsMarkaround
+     *
+     * @return string
+     */
+    specToDescription : function (spec) {
+        return spec.titleAsMarkaround;
+    },
 };
 
 document.addEventListener("DOMContentLoaded", function() {
