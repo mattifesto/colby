@@ -3,9 +3,9 @@
 var CBTextViewEditorFactory = {
 
     /**
-     * @param {function}    handleSpecChanged
      * @param {string}      labelText
      * @param {Object}      spec
+     * @param {function}    specChangedCallback
      *
      * @return Element
      */
@@ -14,18 +14,11 @@ var CBTextViewEditorFactory = {
         element.className   = "CBTextViewEditor";
 
         element.appendChild(CBStringEditorFactory.createSingleLineEditor({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : args.labelText || "Text",
             propertyName        : "text",
             spec                : args.spec }));
 
         return element;
     },
-
-    /**
-     * @return {string}
-     */
-    widgetClassName : function() {
-        return "CBTextViewEditorWidget";
-    }
 };
