@@ -206,13 +206,23 @@ var CBArrayEditor = CBArrayEditorFactory = {
         action = document.createElement("div");
         action.className = "action arrange up";
         action.textContent = "up";
-
+        action.addEventListener("click", CBArrayEditor.handleMoveUpWasClicked.bind(undefined, {
+            array : args.array,
+            arrayChangedCallback : args.arrayChangedCallback,
+            sectionElement : args.sectionElement,
+            spec : args.spec,
+        }));
         element.appendChild(action);
 
         action = document.createElement("div");
         action.className = "action arrange down";
         action.textContent = "down";
-
+        action.addEventListener("click", CBArrayEditor.handleMoveDownWasClicked.bind(undefined, {
+            array : args.array,
+            arrayChangedCallback : args.arrayChangedCallback,
+            sectionElement : args.sectionElement,
+            spec : args.spec,
+        }));
         element.appendChild(action);
 
         // edit
@@ -295,6 +305,56 @@ var CBArrayEditor = CBArrayEditorFactory = {
             args.sectionElement.removeChild(itemElement);
 
             args.arrayChangedCallback.call();
+        }
+    },
+
+    /**
+     * @param [Object] args.array
+     * @param function args.arrayChangedCallback
+     * @param Element args.sectionElement
+     * @param Object args.spec
+     *
+     * @return undefined
+     */
+    handleMoveDownWasClicked : function (args) {
+        var index = args.array.indexOf(args.spec);
+
+        if (index < (args.array.length - 1)) {
+            var itemElement = args.sectionElement.children.item(index);
+            var nextItemElement = itemElement.nextSibling;
+
+            args.array.splice(index, 1); // remove at index
+            args.array.splice(index + 1, 0, args.spec); // insert after next spec
+
+            args.sectionElement.removeChild(itemElement);
+            args.sectionElement.insertBefore(itemElement, nextItemElement.nextSibling);
+
+            args.arrayChangedCallback();
+        }
+    },
+
+    /**
+     * @param [Object] args.array
+     * @param function args.arrayChangedCallback
+     * @param Element args.sectionElement
+     * @param Object args.spec
+     *
+     * @return undefined
+     */
+    handleMoveUpWasClicked : function (args) {
+        var index = args.array.indexOf(args.spec);
+
+        if (index > 0) {
+            var itemElement = args.sectionElement.children.item(index);
+            var previousItemElement = itemElement.previousSibling;
+
+            args.array.splice(index, 1); // remove at index
+            args.array.splice(index - 1, 0, args.spec); // insert before previous spec
+
+            args.sectionElement.removeChild(itemElement);
+            args.sectionElement.insertBefore(itemElement, previousItemElement);
+
+            args.arrayChangedCallback();
         }
     },
 
