@@ -81,5 +81,5 @@ var CBThemedTextViewEditor = {
      */
     specToDescription : function (spec) {
         return spec.titleAsMarkaround;
-    }
+    },
 };
