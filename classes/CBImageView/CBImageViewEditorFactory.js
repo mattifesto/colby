@@ -5,16 +5,14 @@ var CBImageViewEditorFactory = {
     /**
      * @param {number}      cropToHeight
      * @param {number}      cropToWidth
-     * @param {function}    handleSpecChanged
      * @param {number}      reduceToHeight
      * @param {number}      reduceToWidth
      * @param {Object}      spec
+     * @param {function}    specChangedCallback
      *
      * @return {Element}
      */
     createEditor : function(args) {
-        CBImageViewEditorFactory.prepareSpec(args.spec);
-
         var element             = document.createElement("div");
         element.className       = "CBImageViewEditor";
         var background          = document.createElement("div");
@@ -28,6 +26,10 @@ var CBImageViewEditorFactory = {
         input.type              = "file";
         input.style.display     = "none";
 
+        if (!args.spec.alternativeTextViewModel) {
+            args.spec.alternativeTextViewModel = { className : "CBTextView" };
+        }
+
         background.addEventListener("click", CBImageViewEditorFactory.handleBackgroundClicked.bind(undefined, {
             element : background }));
 
@@ -40,7 +42,7 @@ var CBImageViewEditorFactory = {
         input.addEventListener("change", CBImageViewEditorFactory.handleImageSelected.bind(undefined, {
             cropToHeight        : args.cropToHeight,
             cropToWidth         : args.cropToWidth,
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             imageElement        : thumbnail,
             inputElement        : input,
             reduceToHeight      : args.reduceToHeight,
@@ -55,7 +57,7 @@ var CBImageViewEditorFactory = {
         element.appendChild(input);
 
         element.appendChild(CBStringEditorFactory.createSingleLineEditor({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Alternative Text",
             propertyName        : "text",
             spec                : args.spec.alternativeTextViewModel }));
@@ -157,22 +159,4 @@ var CBImageViewEditorFactory = {
     handleThumbnailLoaded : function(args) {
         args.dimensionsElement.textContent = args.imageElement.naturalWidth + " × " + args.imageElement.naturalHeight;
     },
-
-    /**
-     * Ensures that the spec has some necessary properties.
-     *
-     * @return {undefined}
-     */
-    prepareSpec : function(spec) {
-        if (!spec.alternativeTextViewModel) {
-            spec.alternativeTextViewModel = { className : "CBTextView" };
-        }
-    },
-
-    /**
-     * @return {string}
-     */
-    widgetClassName : function() {
-        return "CBImageViewEditorWidget";
-    }
 };
