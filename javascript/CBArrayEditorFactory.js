@@ -249,7 +249,14 @@ var CBArrayEditor = CBArrayEditorFactory = {
         action = document.createElement("div");
         action.className = "action edit paste";
         action.textContent = "paste";
-
+        action.addEventListener("click", CBArrayEditor.handlePasteWasClicked.bind(undefined, {
+            array : args.array,
+            arrayChangedCallback : args.arrayChangedCallback,
+            classNames : args.classNames,
+            navigateCallback : args.navigateCallback,
+            sectionElement : args.sectionElement,
+            specToInsertBefore : args.spec,
+        }));
         element.appendChild(action);
 
         // insert
@@ -257,7 +264,6 @@ var CBArrayEditor = CBArrayEditorFactory = {
         action = document.createElement("div");
         action.className = "action insert";
         action.textContent = "+";
-
         action.addEventListener("click", CBArrayEditor.insertSelectedModel.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
@@ -266,7 +272,6 @@ var CBArrayEditor = CBArrayEditorFactory = {
             sectionElement : args.sectionElement,
             specToInsertBefore : args.spec,
         }));
-
         element.appendChild(action);
 
         return element;
@@ -374,6 +379,26 @@ var CBArrayEditor = CBArrayEditorFactory = {
     /**
      * @param [object] args.array
      * @param function args.arrayChangedCallback
+     * @param [string] args.classNames
+     * @param function args.navigateCallback
+     * @param Element args.sectionElement
+     * @param object args.specToInsertBefore
+     *
+     * @return  undefined
+     */
+    handlePasteWasClicked : function (args) {
+        var specAsJSON = localStorage.getItem("specClipboard");
+
+        if (specAsJSON === null) { return; }
+
+        var spec = JSON.parse(specAsJSON);
+
+        CBArrayEditor.insert(args, spec);
+    },
+
+    /**
+     * @param [object] args.array
+     * @param function args.arrayChangedCallback
      * @param function args.classNames
      * @param function args.navigateCallback
      * @param Element args.sectionElement
@@ -397,7 +422,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
         args.array.splice(indexToInsertBefore, 0, spec);
         args.sectionElement.insertBefore(sectionItemElement, elementToInsertBefore);
 
-        args.arrayChangedCallback.call();
+        args.arrayChangedCallback();
     },
 
     /**
