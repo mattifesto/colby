@@ -8,7 +8,6 @@ final class CBFlexBoxView {
     public static function editorURLsForCSS() {
         return [
             CBSystemURL . '/javascript/CBImageEditorFactory.css',
-            CBSystemURL . '/javascript/CBSpecArrayEditor.css',
             CBFlexBoxView::URL('CBFlexBoxViewEditor.css')
         ];
     }
@@ -19,7 +18,6 @@ final class CBFlexBoxView {
     public static function editorURLsForJavaScript() {
         return [
             CBSystemURL . '/javascript/CBImageEditorFactory.js',
-            CBSystemURL . '/javascript/CBSpecArrayEditorFactory.js',
             CBSystemURL . '/javascript/CBStringEditorFactory.js',
             CBFlexBoxView::URL('CBFlexBoxViewEditorFactory.js')
         ];

@@ -3,8 +3,9 @@
 var CBFlexBoxViewEditorFactory = {
 
     /**
-     * @param   {function}  handleSpecChanged
+     * @param function args.navigateCallback
      * @param   {Object}    spec
+     * @param   {function}  specChangedCallback
      *
      * @return  {Element}
      */
@@ -20,8 +21,6 @@ var CBFlexBoxViewEditorFactory = {
         options.className       = "options";
         var flexbox             = document.createElement("h2");
         flexbox.textContent     = "Flexbox";
-        var subviews            = document.createElement("div");
-        subviews.className      = "subviews";
 
         container.appendChild(preview.element);
 
@@ -34,7 +33,7 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "Article",  value : "article" },
                 { textContent : "Main",     value : "main" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Type",
             propertyName        : "type",
             spec                : args.spec
@@ -42,7 +41,7 @@ var CBFlexBoxViewEditorFactory = {
 
         row.appendChild(CBStringEditorFactory.createSingleLineEditor({
             className           : "pixels",
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Width",
             propertyName        : "width",
             spec                : args.spec
@@ -50,7 +49,7 @@ var CBFlexBoxViewEditorFactory = {
 
         row.appendChild(CBStringEditorFactory.createSingleLineEditor({
             className           : "pixels",
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Height",
             propertyName        : "height",
             spec                : args.spec
@@ -71,14 +70,14 @@ var CBFlexBoxViewEditorFactory = {
         clear.textContent   = "Clear Image";
         var size            = preview.size;
         var color           = CBStringEditorFactory.createSingleLineEditor({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Color",
             propertyName        : "backgroundColor",
             spec                : args.spec
         });
         var upload          = CBImageEditorFactory.createEditorUploadButton({
             handleImageUploaded     : CBFlexBoxViewEditorFactory.handleImageUploaded.bind(undefined, {
-                handleSpecChanged   : args.handleSpecChanged,
+                handleSpecChanged   : args.specChangedCallback,
                 previewImageElement : preview.img,
                 sizeElement         : size,
                 spec                : args.spec
@@ -86,7 +85,7 @@ var CBFlexBoxViewEditorFactory = {
         });
 
         clear.addEventListener("click", CBFlexBoxViewEditorFactory.handleClearImage.bind(undefined, {
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             previewImageElement : preview.img,
             sizeElement         : size,
             spec                : args.spec
@@ -112,7 +111,7 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "Center",   value : "" },
                 { textContent : "Right",    value : "right" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Position X",
             propertyName        : "backgroundPositionX",
             spec                : args.spec
@@ -124,7 +123,7 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "Center",   value : "center" },
                 { textContent : "Bottom",   value : "bottom" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Position Y",
             propertyName        : "backgroundPositionY",
             spec                : args.spec
@@ -140,7 +139,7 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "No",   value : "" },
                 { textContent : "Yes",  value : "repeat" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Repeat X",
             propertyName        : "backgroundRepeatX",
             spec                : args.spec
@@ -151,7 +150,7 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "No",   value : "" },
                 { textContent : "Yes",  value : "repeat" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Repeat Y",
             propertyName        : "backgroundRepeatY",
             spec                : args.spec
@@ -173,7 +172,7 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "Column",  value : "column" },
                 { textContent : "Column (Reverse)",     value : "column-reverse" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Direction",
             propertyName        : "flexDirection",
             spec                : args.spec
@@ -187,7 +186,7 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "Space Between",    value : "space-between" },
                 { textContent : "Space Around",     value : "space-around" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Justify Content",
             propertyName        : "flexJustifyContent",
             spec                : args.spec
@@ -201,7 +200,7 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "Baseline",         value : "baseline" },
                 { textContent : "Stretch",          value : "" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Align Items",
             propertyName        : "flexAlignItems",
             spec                : args.spec
@@ -216,7 +215,7 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "Baseline", value : "baseline" },
                 { textContent : "Stretch",  value : "stretch" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Align",
             propertyName        : "flexAlignSelf",
             spec                : args.spec
@@ -224,7 +223,7 @@ var CBFlexBoxViewEditorFactory = {
 
         row.appendChild(CBStringEditorFactory.createSingleLineEditor({
             className           : "flex",
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Flex",
             propertyName        : "flexFlex",
             spec                : args.spec
@@ -236,7 +235,7 @@ var CBFlexBoxViewEditorFactory = {
                 { textContent : "Wrap",             value : "wrap" },
                 { textContent : "Wrap (Reverse)",   value : "wrap-reverse" }
             ],
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Wrap",
             propertyName        : "flexWrap",
             spec                : args.spec
@@ -244,6 +243,9 @@ var CBFlexBoxViewEditorFactory = {
 
         options.appendChild(row);
         container.appendChild(options);
+        element.appendChild(container);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         /* subviews */
 
@@ -251,14 +253,12 @@ var CBFlexBoxViewEditorFactory = {
             args.spec.subviews = [];
         }
 
-        subviews.appendChild(CBSpecArrayEditorFactory.createEditor({
-            array           : args.spec.subviews,
-            classNames      : CBPageEditorAvailableViewClassNames,
-            handleChanged   : args.handleSpecChanged
+        element.appendChild(CBArrayEditor.createEditor({
+            array : args.spec.subviews,
+            arrayChangedCallback : args.specChangedCallback,
+            classNames : CBPageEditorAvailableViewClassNames,
+            navigateCallback : args.navigateCallback,
         }));
-
-        element.appendChild(container);
-        element.appendChild(subviews);
 
         return element;
     },
@@ -313,7 +313,7 @@ var CBFlexBoxViewEditorFactory = {
             spec                : args.spec
         });
 
-        args.handleSpecChanged.call();
+        args.specChangedCallback.call();
     },
 
     /**
@@ -337,6 +337,6 @@ var CBFlexBoxViewEditorFactory = {
             spec                : args.spec
         });
 
-        args.handleSpecChanged.call();
+        args.specChangedCallback.call();
     }
 };
