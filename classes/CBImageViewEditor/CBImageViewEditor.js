@@ -21,11 +21,13 @@ var CBImageViewEditor = {
         var thumbnail           = document.createElement("img");
         var dimensions          = document.createElement("div");
         dimensions.textContent  = "no image";
-        var button              = document.createElement("button");
-        button.textContent      = "Upload Image";
         var input               = document.createElement("input");
         input.type              = "file";
         input.style.display     = "none";
+        var actionLink = CBUIActionLink.create({
+            callback : input.click.bind(input),
+            labelText : "Upload Image...",
+        });
 
         if (!args.spec.alternativeTextViewModel) {
             args.spec.alternativeTextViewModel = { className : "CBTextView" };
@@ -38,28 +40,34 @@ var CBImageViewEditor = {
             dimensionsElement   : dimensions,
             imageElement        : thumbnail }));
 
-        button.addEventListener("click", input.click.bind(input));
-
         input.addEventListener("change", CBImageViewEditor.handleImageSelected.bind(undefined, {
             cropToHeight        : args.cropToHeight,
             cropToWidth         : args.cropToWidth,
+            disableCallback : actionLink.disableCallback,
+            enableCallback : actionLink.enableCallback,
             handleSpecChanged   : args.specChangedCallback,
             imageElement        : thumbnail,
             inputElement        : input,
             reduceToHeight      : args.reduceToHeight,
             reduceToWidth       : args.reduceToWidth,
             spec                : args.spec,
-            uploadButtonElement : button }));
+        }));
 
         background.appendChild(thumbnail);
         element.appendChild(background);
         element.appendChild(dimensions);
-        element.appendChild(button);
         element.appendChild(input);
 
         element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
+
+        /* upload action */
+        item = CBUI.createSectionItem();
+        item.appendChild(actionLink.element);
+        section.appendChild(item);
+
+        /* alternative text */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
             labelText : "Alternative Text",
@@ -90,18 +98,20 @@ var CBImageViewEditor = {
     /**
      * @param {number}      cropToHeight
      * @param {number}      cropToWidth
+     * @param function args.disableCallback
+     * @param function args.enableCallback
      * @param {function}    handleSpecChanged
      * @param {Element}     imageElement
      * @param {Element}     inputElement
      * @param {number}      reduceToHeight
      * @param {number}      reduceToWidth
      * @param {Object}      spec
-     * @param {Element}     uploadButtonElement
      *
      * @return {undefined}
      */
     handleImageSelected : function(args) {
-        args.uploadButtonElement.disabled   = true;
+        args.disableCallback.call();
+
         var formData                        = new FormData();
 
         formData.append("image", args.inputElement.files[0]);
@@ -124,27 +134,28 @@ var CBImageViewEditor = {
 
         var xhr     = new XMLHttpRequest();
         xhr.onload  = CBImageViewEditor.handleImageUploaded.bind(undefined, {
+            enableCallback : args.enableCallback,
             handleSpecChanged   : args.handleSpecChanged,
             imageElement        : args.imageElement,
             spec                : args.spec,
-            uploadButtonElement : args.uploadButtonElement,
             xhr                 : xhr });
         xhr.open("POST", "/api/?class=CBImages&function=uploadAndReduceForAjax");
         xhr.send(formData);
     },
 
     /**
+     * @param function args.enableCallback
      * @param {function}        handleSpecChanged
      * @param {Element}         imageElement
      * @param {Object}          spec
-     * @param {Element}         uploadButtonElement
      * @param {XMLHttpRequest}  xhr
      *
      * @return {undefined}
      */
     handleImageUploaded : function(args) {
-        args.uploadButtonElement.disabled   = false;
-        var response                        = Colby.responseFromXMLHttpRequest(args.xhr);
+        args.enableCallback.call();
+
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (!response.wasSuccessful) {
             Colby.displayResponse(response);

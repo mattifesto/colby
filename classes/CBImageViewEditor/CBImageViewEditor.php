@@ -6,7 +6,7 @@ final class CBImageViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor'];
+        return ['CBUI', 'CBUIActionLink', 'CBUIStringEditor'];
     }
 
     /**
