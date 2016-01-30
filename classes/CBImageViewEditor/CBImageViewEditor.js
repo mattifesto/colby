@@ -1,6 +1,6 @@
 "use strict";
 
-var CBImageViewEditorFactory = {
+var CBImageViewEditor = {
 
     /**
      * @param {number}      cropToHeight
@@ -13,6 +13,7 @@ var CBImageViewEditorFactory = {
      * @return {Element}
      */
     createEditor : function(args) {
+        var section, item;
         var element             = document.createElement("div");
         element.className       = "CBImageViewEditor";
         var background          = document.createElement("div");
@@ -30,16 +31,16 @@ var CBImageViewEditorFactory = {
             args.spec.alternativeTextViewModel = { className : "CBTextView" };
         }
 
-        background.addEventListener("click", CBImageViewEditorFactory.handleBackgroundClicked.bind(undefined, {
+        background.addEventListener("click", CBImageViewEditor.handleBackgroundClicked.bind(undefined, {
             element : background }));
 
-        thumbnail.addEventListener("load", CBImageViewEditorFactory.handleThumbnailLoaded.bind(undefined, {
+        thumbnail.addEventListener("load", CBImageViewEditor.handleThumbnailLoaded.bind(undefined, {
             dimensionsElement   : dimensions,
             imageElement        : thumbnail }));
 
         button.addEventListener("click", input.click.bind(input));
 
-        input.addEventListener("change", CBImageViewEditorFactory.handleImageSelected.bind(undefined, {
+        input.addEventListener("change", CBImageViewEditor.handleImageSelected.bind(undefined, {
             cropToHeight        : args.cropToHeight,
             cropToWidth         : args.cropToWidth,
             handleSpecChanged   : args.specChangedCallback,
@@ -56,11 +57,19 @@ var CBImageViewEditorFactory = {
         element.appendChild(button);
         element.appendChild(input);
 
-        element.appendChild(CBStringEditorFactory.createSingleLineEditor({
-            handleSpecChanged   : args.specChangedCallback,
-            labelText           : "Alternative Text",
-            propertyName        : "text",
-            spec                : args.spec.alternativeTextViewModel }));
+        element.appendChild(CBUI.createHalfSpace());
+
+        section = CBUI.createSection();
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Alternative Text",
+            propertyName : "text",
+            spec : args.spec.alternativeTextViewModel,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
 
         if (args.spec.URL) {
             thumbnail.src = args.spec.URL;
@@ -114,7 +123,7 @@ var CBImageViewEditorFactory = {
         }
 
         var xhr     = new XMLHttpRequest();
-        xhr.onload  = CBImageViewEditorFactory.handleImageUploaded.bind(undefined, {
+        xhr.onload  = CBImageViewEditor.handleImageUploaded.bind(undefined, {
             handleSpecChanged   : args.handleSpecChanged,
             imageElement        : args.imageElement,
             spec                : args.spec,

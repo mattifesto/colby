@@ -13,27 +13,6 @@
 final class CBImageView {
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForCSS() {
-        return [
-            CBSystemURL . '/javascript/CBImageEditorFactory.css',
-            CBImageView::URL('CBImageViewEditor.css')
-        ];
-    }
-
-    /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBImageEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBImageView::URL('CBImageViewEditorFactory.js')
-        ];
-    }
-
-    /**
      * @return bool
      */
     public static function modelHasImage(stdClass $model = null) {
@@ -114,9 +93,12 @@ final class CBImageView {
     }
 
     /**
+     * @param string $filename
+     *
      * @return string
      */
     public static function URL($filename) {
-        return CBSystemURL . "/classes/CBImageView/{$filename}";
+        $className = __CLASS__;
+        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
