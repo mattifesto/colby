@@ -1,60 +1,18 @@
-.CBImageViewEditorWidget {
-    background-color:   hsl(120, 50%, 90%);
-    border-color:       hsl(120, 50%, 90%);
-    border-radius:      5px;
-    border-style:       solid;
-    border-width:       5px 10px 10px;
-    margin:             0 auto;
-    width:              480px;
-}
-
-.CBImageViewEditorWidget > header {
-    padding:            0 10px 10px;
-    text-align:         center;
-}
-
-.CBImageViewEditorWidget .CBStringEditor {
-    margin-top: 10px;
-}
-
-.CBImageViewEditorWidget .CBStringEditor input[type=text] {
-    border:     1px solid hsl(120, 50%, 80%);
-    padding:    5px;
-    width:      100%;
-}
-
-/**
- * 2015.04.16
- * These are shared styles since other editors use this editor to edit their
- * image. This is not a great idea, but it's based on saving time. The concepts
- * behind shared styles like this need to be cleaned up.
- */
-
-.CBImageViewEditor > button {
-    display:    block;
-    margin:     10px auto 0;
-}
-
-.CBImageViewEditor > .background {
-    background-color:   white;
-    display:            flex;
-    display:            -webkit-flex;
-    height:             200px;
-    padding:            10px;
-}
-
-.CBImageViewEditor > .background.dark {
+.CBImageViewEditor .background.dark {
     background-color: hsl(0, 0%, 20%);
 }
 
-.CBImageViewEditor > .background img {
-    margin:     auto;
+.CBImageViewEditor .background img {
+    display: block;
+    margin: 0 auto;
     max-height: 200px;
-    max-width:  400px;
+    max-width: 100%;
 }
 
-.CBImageViewEditor > .background + div {
-    color:      #808080;
-    font-size:  13px;
-    text-align: center;
+.CBImageViewEditor .dimensions {
+    align-items: center;
+    color: #808080;
+    display: flex;
+    justify-content: center;
+    min-height: 44px;
 }

@@ -20,6 +20,7 @@ var CBImageViewEditor = {
         background.className    = "background";
         var thumbnail           = document.createElement("img");
         var dimensions          = document.createElement("div");
+        dimensions.className    = "dimensions";
         dimensions.textContent  = "no image";
         var input               = document.createElement("input");
         input.type              = "file";
@@ -53,14 +54,20 @@ var CBImageViewEditor = {
             spec                : args.spec,
         }));
 
-        background.appendChild(thumbnail);
-        element.appendChild(background);
-        element.appendChild(dimensions);
         element.appendChild(input);
 
-        element.appendChild(CBUI.createHalfSpace());
-
         section = CBUI.createSection();
+
+        /* thumbnail */
+        item = CBUI.createSectionItem();
+        background.appendChild(thumbnail);
+        item.appendChild(background);
+        section.appendChild(item);
+
+        /* dimensions */
+        item = CBUI.createSectionItem();
+        item.appendChild(dimensions);
+        section.appendChild(item);
 
         /* upload action */
         item = CBUI.createSectionItem();
