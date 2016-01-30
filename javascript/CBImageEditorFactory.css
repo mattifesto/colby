@@ -1,32 +1,20 @@
-.CBImageEditor > button {
-    display:    block;
-    margin:     10px auto 0px;
-}
-
-.CBImageEditor > .background {
-    background-color:   white;
-    display:            flex;
-    display:            -webkit-flex;
-    height:             200px;
-    margin:             0 auto;
-    padding:            20px;
-    width:              400px;
-}
-
-.CBImageEditor > .background.dark {
+.CBImageEditor .background.dark {
     background-color: hsl(0, 0%, 20%);
 }
 
-.CBImageEditor > .background img {
-    margin:     auto;
+.CBImageEditor .background img {
+    display: block;
+    margin: 0 auto;
     max-height: 200px;
-    max-width:  400px;
+    max-width: 100%;
 }
 
-.CBImageEditor > .background + div {
-    color:      #808080;
-    font-size:  13px;
-    text-align: center;
+.CBImageEditor .dimensions {
+    align-items: center;
+    color: #808080;
+    display: flex;
+    justify-content: center;
+    min-height: 44px;
 }
 
 .CBImageEditorPreview {

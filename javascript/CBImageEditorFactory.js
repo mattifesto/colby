@@ -63,44 +63,66 @@ var CBImageEditorFactory = {
      * @return {Element}
      */
     createEditor : function(args) {
+        var section, item;
         var element             = document.createElement("div");
         element.className       = args.className || "CBImageEditor";
         var background          = document.createElement("div");
         background.className    = "background";
         var thumbnail           = document.createElement("img");
         var dimensions          = document.createElement("div");
+        dimensions.className = "dimensions";
         dimensions.textContent  = "no image";
-        var button              = document.createElement("button");
-        button.textContent      = "Upload Image";
         var input               = document.createElement("input");
         input.type              = "file";
         input.style.display     = "none";
+        var actionLink = CBUIActionLink.create({
+            callback : input.click.bind(input),
+            labelText : "Upload Image...",
+        });
 
         background.addEventListener("click", CBImageEditorFactory.handleBackgroundClicked.bind(undefined, {
-            element : background }));
+            element : background,
+        }));
 
         thumbnail.addEventListener("load", CBImageEditorFactory.handleThumbnailLoaded.bind(undefined, {
             dimensionsElement   : dimensions,
-            imageElement        : thumbnail }));
-
-        button.addEventListener("click", input.click.bind(input));
+            imageElement        : thumbnail,
+        }));
 
         input.addEventListener("change", CBImageEditorFactory.handleImageSelected.bind(undefined, {
             cropToHeight        : args.cropToHeight,
             cropToWidth         : args.cropToWidth,
+            disableCallback : actionLink.disableCallback,
+            enableCallback : actionLink.enableCallback,
             handleSpecChanged   : args.handleSpecChanged,
             imageElement        : thumbnail,
             inputElement        : input,
             reduceToHeight      : args.reduceToHeight,
             reduceToWidth       : args.reduceToWidth,
             spec                : args.spec,
-            uploadButtonElement : button }));
+        }));
 
-        background.appendChild(thumbnail);
-        element.appendChild(background);
-        element.appendChild(dimensions);
-        element.appendChild(button);
         element.appendChild(input);
+
+        section = CBUI.createSection();
+
+        /* thumbnail */
+        item = CBUI.createSectionItem();
+        background.appendChild(thumbnail);
+        item.appendChild(background);
+        section.appendChild(item);
+
+        /* dimensions */
+        item = CBUI.createSectionItem();
+        item.appendChild(dimensions);
+        section.appendChild(item);
+
+        /* upload action */
+        item = CBUI.createSectionItem();
+        item.appendChild(actionLink.element);
+        section.appendChild(item);
+
+        element.appendChild(section);
 
         if (args.spec.URL) {
             thumbnail.src = args.spec.URL;
@@ -301,20 +323,21 @@ var CBImageEditorFactory = {
      *
      * @param {number}      cropToHeight
      * @param {number}      cropToWidth
+     * @param function args.disableCallback
+     * @param function args.enableCallback
      * @param {function}    handleSpecChanged
      * @param {Element}     imageElement
      * @param {Element}     inputElement
      * @param {number}      reduceToHeight
      * @param {number}      reduceToWidth
      * @param {Object}      spec
-     * @param {Element}     uploadButtonElement
      *
      * @return undefined
      */
     handleImageSelected : function(args) {
-        args.uploadButtonElement.disabled   = true;
-        var formData                        = new FormData();
+        args.disableCallback.call();
 
+        var formData                        = new FormData();
         formData.append("image", args.inputElement.files[0]);
 
         if (args.cropToHeight) {
@@ -335,11 +358,12 @@ var CBImageEditorFactory = {
 
         var xhr     = new XMLHttpRequest();
         xhr.onload  = CBImageEditorFactory.handleImageUploaded.bind(undefined, {
+            enableCallback : args.enableCallback,
             handleSpecChanged   : args.handleSpecChanged,
             imageElement        : args.imageElement,
             spec                : args.spec,
-            uploadButtonElement : args.uploadButtonElement,
-            xhr                 : xhr });
+            xhr                 : xhr
+        });
         xhr.open("POST", "/api/?class=CBImages&function=uploadAndReduceForAjax");
         xhr.send(formData);
     },
@@ -356,8 +380,9 @@ var CBImageEditorFactory = {
      * @return undefined
      */
     handleImageUploaded : function(args) {
-        args.uploadButtonElement.disabled   = false;
-        var response                        = Colby.responseFromXMLHttpRequest(args.xhr);
+        args.enableCallback.call();
+
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (!response.wasSuccessful) {
             Colby.displayResponse(response);
