@@ -186,4 +186,17 @@ var CBImageViewEditor = {
     handleThumbnailLoaded : function(args) {
         args.dimensionsElement.textContent = args.imageElement.naturalWidth + " × " + args.imageElement.naturalHeight;
     },
+
+    /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    specToDescription : function (spec) {
+        if (spec.alternativeTextViewModel) {
+            return spec.alternativeTextViewModel.text;
+        } else {
+            return undefined;
+        }
+    },
 };
