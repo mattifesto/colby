@@ -1,0 +1,12 @@
+.CBUIActionLink {
+    align-items: center;
+    color: hsl(210, 100%, 50%);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    min-height: 44px;
+}
+
+.CBUIActionLink.disabled {
+    color: hsl(0, 0%, 90%);
+}
