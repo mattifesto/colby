@@ -11,20 +11,21 @@
 
 .CBUIBooleanEditor .slider {
     align-items: center;
-    xbackground-color: red;
-    border: 1px solid hsl(0, 0%, 85%);
+    border: 1px solid hsl(0, 0%, 90%);
     border-radius: 14px;
-    box-sizing: border-box;;
+    box-sizing: border-box;
     display: flex;
     flex: none;
     height: 28px;
-    padding: 0 2px;
+    padding: 0 1px;
     width: 46px;
 }
 
 .CBUIBooleanEditor .slider.true {
-    flex-direction: row-reverse;
     background-color: hsl(120, 50%, 50%);
+    border: none;
+    flex-direction: row-reverse;
+    padding: 0 2px;
 }
 
 .CBUIBooleanEditor .button {
