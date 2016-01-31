@@ -23,6 +23,10 @@ var CBUIImageView = {
 
         imageChangedCallback();
 
+        element.addEventListener("click", CBUIImageView.rotateClass.bind(undefined, {
+            element : element,
+        }));
+
         return {
             element : element,
             imageChangedCallback : imageChangedCallback,
@@ -54,6 +58,24 @@ var CBUIImageView = {
         } else {
             args.img.src = CBUIImageView.imageToURL(image);
             args.img.style.display = "block";
+        }
+    },
+
+    /**
+     * @param args.element
+     *
+     * @return undefined
+     */
+    rotateClass : function (args) {
+        var classList = args.element.classList;
+
+        if (classList.contains("medium")) {
+            classList.remove("medium");
+            classList.add("dark");
+        } else if (classList.contains("dark")) {
+            classList.remove("dark");
+        } else {
+            classList.add("medium");
         }
     },
 };

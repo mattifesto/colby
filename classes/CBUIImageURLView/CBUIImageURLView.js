@@ -26,6 +26,10 @@ var CBUIImageURLView = {
 
         imageChangedCallback();
 
+        element.addEventListener("click", CBUIImageURLView.rotateClass.bind(undefined, {
+            element : element,
+        }));
+
         return {
             element : element,
             imageChangedCallback : imageChangedCallback,
@@ -48,6 +52,24 @@ var CBUIImageURLView = {
         } else {
             args.img.src = URL;
             args.img.style.display = "block";
+        }
+    },
+
+    /**
+     * @param args.element
+     *
+     * @return undefined
+     */
+    rotateClass : function (args) {
+        var classList = args.element.classList;
+
+        if (classList.contains("medium")) {
+            classList.remove("medium");
+            classList.add("dark");
+        } else if (classList.contains("dark")) {
+            classList.remove("dark");
+        } else {
+            classList.add("medium");
         }
     },
 };

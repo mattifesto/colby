@@ -2,6 +2,14 @@
     min-height: 44px;
 }
 
+.CBUIImageURLView.dark {
+    background-color: hsl(30, 50%, 10%);
+}
+
+.CBUIImageURLView.medium {
+    background-color: hsl(30, 50%, 70%);
+}
+
 .CBUIImageURLView img {
     display: block;
     margin: 0 auto;
