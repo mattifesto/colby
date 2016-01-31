@@ -1,36 +1,7 @@
-.CBImageLinkViewEditor {
-    border-top: 4px solid hsl(120, 50%, 60%);
-    box-sizing: border-box;
-    font-size:  14px;
-    padding:    10px;
-}
-
 .CBImageLinkViewEditor .dimensions {
-    color:      hsl(0, 0%, 50%);
-    font-size:  13px;
-    text-align: center;
-}
-
-.CBImageLinkViewEditor .CBImageLinkViewBooleanEditor {
-    margin:     10px 0;
-    text-align: center;
-}
-
-.CBImageLinkViewEditor .CBImageLinkViewBooleanEditor input {
-    margin-right: 5px;
-}
-
-.CBImageLinkViewEditor .CBStringEditor {
-    margin-top: 10px;
-}
-
-.CBImageLinkViewEditor .CBStringEditor input[type=text] {
-    padding:    4px;
-    width:      100%;
-}
-
-.CBImageLinkViewEditor .CBImageEditorUploadButton {
-    display:    block;
-    margin:     10px 0 0;
-    text-align: center;
+    align-items: center;
+    color: hsl(0, 0%, 50%);
+    display: flex;
+    justify-content: center;
+    min-height: 44px;
 }

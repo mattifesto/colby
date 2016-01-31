@@ -72,7 +72,8 @@ final class CBImageLinkView {
         $model              = CBView::modelWithClassName(__CLASS__);
         $model->alt         = isset($spec->alt) ? (string)$spec->alt : null;
         $model->altAsHTML   = ColbyConvert::textToHTML($model->alt);
-        $model->density     = isset($spec->density) ? (string)$spec->density : '1x';
+        $retina = CBModel::value($spec, 'retina', false);
+        $model->density = $retina ? '2x' : '1x';
         $model->height      = isset($spec->height) ? (int)$spec->height : null;
         $model->HREF        = isset($spec->HREF) ? (string)$spec->HREF : null;
         $model->HREFAsHTML  = ColbyConvert::textToHTML($model->HREF);

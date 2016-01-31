@@ -3,132 +3,113 @@
 var CBImageLinkViewEditor = {
 
     /**
-     * @param   {function}  args.handleValueChanged
-     * @param   {boolean}   args.initialValue
-     * @param   {string}    args.labelText
-     *
-     * @return  {Element}
-     */
-    createBooleanEditor : function(args) {
-        var element         = document.createElement("div");
-        element.className   = "CBImageLinkViewBooleanEditor";
-        var checkbox        = document.createElement("input");
-        checkbox.type       = "checkbox";
-        checkbox.checked    = !!args.initialValue;
-        var label           = document.createElement("label");
-
-        checkbox.addEventListener("change", CBImageLinkViewEditor.handleCheckboxChanged.bind(undefined, {
-            checkboxElement     : checkbox,
-            handleValueChanged  : args.handleValueChanged
-        }));
-
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(args.labelText));
-        element.appendChild(label);
-
-        return element;
-    },
-
-    /**
-     * @param   {function}  handleSpecChanged
      * @param   {Object}    spec
+     * @param   {function}  specChangedCallback
      *
      * @return  {Element}
      */
     createEditor : function(args) {
+        var section, item;
         var element             = document.createElement("div");
         element.className       = "CBImageLinkViewEditor";
-        var preview             = CBImageEditorFactory.createEditorPreview();
         var dimensions          = document.createElement("div");
         dimensions.className    = "dimensions";
-        dimensions.textContent  = CBImageLinkViewEditor.specToDimensionsText(args.spec);
-        var handler             = CBImageLinkViewEditor.handleRetinaChanged.bind(undefined, {
-            dimensionsElement   : dimensions,
-            handleSpecChanged   : args.handleSpecChanged,
-            spec                : args.spec
-        });
-        var retina              = CBImageLinkViewEditor.createBooleanEditor({
-            handleValueChanged  : handler,
-            initialValue        : (args.spec.density === "2x"),
-            labelText           : "Retina"
-        });
-        handler                 = CBImageLinkViewEditor.handleImageUploaded.bind(undefined, {
-            dimensionsElement   : dimensions,
-            handleSpecChanged   : args.handleSpecChanged,
-            previewElement      : preview,
-            spec                : args.spec
-        });
-        var button              = CBImageEditorFactory.createEditorUploadButton({
-            handleImageUploaded : handler
-        });
-        var alt                 = CBStringEditorFactory.createSingleLineEditor({
-            handleSpecChanged   : args.handleSpecChanged,
-            labelText           : "Alternative Text",
-            propertyName        : "alt",
-            spec                : args.spec
-        });
-        var HREF                = CBStringEditorFactory.createSingleLineEditor({
-            handleSpecChanged   : args.handleSpecChanged,
-            labelText           : "Link HREF",
-            propertyName        : "HREF",
-            spec                : args.spec
-        });
-        if (args.spec.URL) {
-            preview.editorPreviewSetSrc(args.spec.URL);
+
+        /* upgrade spec */
+        if (args.spec.density !== undefined) {
+            args.spec.retina = (args.spec.density === "2x");
+            args.spec.density = undefined;
         }
 
-        element.appendChild(preview);
-        element.appendChild(dimensions);
-        element.appendChild(button);
-        element.appendChild(retina);
-        element.appendChild(alt);
-        element.appendChild(HREF);
+        section = CBUI.createSection();
+
+        /* image view */
+        item = CBUI.createSectionItem();
+        var imageView = CBUIImageURLView.create({
+            propertyName : "URL",
+            spec : args.spec,
+        });
+        item.appendChild(imageView.element);
+        section.appendChild(item);
+
+        /* dimensions */
+        item = CBUI.createSectionItem();
+        item.appendChild(dimensions);
+        section.appendChild(item);
+
+        /* image uploader */
+
+        var specWithImage = {};
+
+        var transferImagePropertiesCallback = CBImageLinkViewEditor.transferImageProperties.bind(undefined, {
+            spec : args.spec,
+            specWithImage : specWithImage,
+        });
+
+        var updateDimensionsCallback = CBImageLinkViewEditor.updateDimensions.bind(undefined, {
+            dimensionsElement : dimensions,
+            spec : args.spec,
+        });
+
+        updateDimensionsCallback();
+
+        var handleImageUploadedCallback = CBImageLinkViewEditor.handleImageUploaded.bind(undefined, {
+            callbacks : [
+                transferImagePropertiesCallback,
+                imageView.imageChangedCallback,
+                updateDimensionsCallback,
+                args.specChangedCallback,
+            ],
+        });
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIImageUploader.create({
+            propertyName : "image",
+            spec : specWithImage,
+            specChangedCallback : handleImageUploadedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* retina */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Retina",
+            propertyName : "retina",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* alternative text */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Alternative Text",
+            propertyName : "alt",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* link href */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Link HREF",
+            propertyName : "HREF",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
 
         return element;
     },
 
     /**
-     * @param   {Element}   checkboxElement
-     * @param   {function}  handleValueChanged
-     *
-     * @return  undefined
+     * @param [function] callbacks
      */
-    handleCheckboxChanged : function(args) {
-        args.handleValueChanged.call(undefined, args.checkboxElement.checked);
-    },
-
-    /**
-     * @param   {Element}   dimensionsElement
-     * @param   {function}  handleSpecChanged
-     * @param   {Element}   previewElement
-     * @param   {Object}    spec
-     *
-     * @return  undefined
-     */
-    handleImageUploaded : function(args, response) {
-        args.spec.height                    = response.sizes.original.height;
-        args.spec.URL                       = response.sizes.original.URL;
-        args.spec.width                     = response.sizes.original.width;
-        args.dimensionsElement.textContent  = CBImageLinkViewEditor.specToDimensionsText(args.spec);
-
-        args.previewElement.editorPreviewSetSrc(args.spec.URL);
-        args.handleSpecChanged.call();
-    },
-
-    /**
-     * @param   {Element}   args.dimensionsElement
-     * @param   {function}  args.handleSpecChanged
-     * @param   {Object}    args.spec
-     *
-     * @param   {boolean}   retina
-     *
-     * @return  undefined
-     */
-    handleRetinaChanged : function(args, retina) {
-        args.spec.density                   = retina ? "2x" : "1x";
-        args.dimensionsElement.textContent  = CBImageLinkViewEditor.specToDimensionsText(args.spec);
-
-        args.handleSpecChanged.call();
+    handleImageUploaded : function (args) {
+        args.callbacks.forEach(function (callback) { callback(); });
     },
 
     /**
@@ -142,32 +123,41 @@ var CBImageLinkViewEditor = {
     },
 
     /**
-     * @param   {Object}    spec
+     * @param object spec
      *
-     * @return  {string}
+     * @return string
      */
-    specToDimensionsText : function(spec) {
-        if (spec.URL && spec.height && spec.width) {
-            var originalDimensions = spec.width + ' × ' + spec.height;
-            var retinaDimensions;
-
-            if (spec.density === '2x') {
-                retinaDimensions = Math.ceil(spec.width / 2) + ' × ' + Math.ceil(spec.height / 2);
-                return retinaDimensions + ' (' + originalDimensions + ')';
-            } else {
-                return originalDimensions;
-            }
-        } else if (spec.URL) {
-            return 'unknown';
+    specToDimensionsText : function (spec) {
+        if (spec.URL === undefined) {
+            return "no image";
         } else {
-            return 'no image';
+            var width = (spec.width/2) + "pt (" + spec.width + "px)";
+            var height = (spec.height/2) + "pt (" + spec.height + "px)";
+            return width + " × " + height;
         }
     },
 
     /**
-     * @return {string}
+     * @param object args.spec
+     * @param object args.specWithImage
+     *
+     * @return undefined
      */
-    widgetClassName : function() {
-        return "CBImageLinkViewEditorWidget";
-    }
-}
+    transferImageProperties : function (args) {
+        var spec = args.spec;
+        var image = args.specWithImage.image;
+        spec.height = image.height;
+        spec.URL = Colby.dataStoreIDToURI(image.ID) + "/" + image.base + "." + image.extension;
+        spec.width = image.width;
+    },
+
+    /**
+     * @param Element args.dimensionsElement
+     * @param object args.spec
+     *
+     * @return undefined
+     */
+    updateDimensions : function (args) {
+        args.dimensionsElement.textContent = CBImageLinkViewEditor.specToDimensionsText(args.spec);
+    },
+};

@@ -6,28 +6,21 @@ final class CBImageLinkViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI'];
+        return ['CBUI', 'CBUIBooleanEditor', 'CBUIImageUploader', 'CBUIImageURLView', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
     public static function requiredCSSURLs() {
-        return [
-            CBSystemURL . '/javascript/CBImageEditorFactory.css',
-            CBImageLinkViewEditor::URL('CBImageLinkViewEditor.css')
-        ];
+        return [CBImageLinkViewEditor::URL('CBImageLinkViewEditor.css')];
     }
 
     /**
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [
-            CBSystemURL . '/javascript/CBImageEditorFactory.js',
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBImageLinkViewEditor::URL('CBImageLinkViewEditor.js')
-        ];
+        return [CBImageLinkViewEditor::URL('CBImageLinkViewEditor.js')];
     }
 
     /**
