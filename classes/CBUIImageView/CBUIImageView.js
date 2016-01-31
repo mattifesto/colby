@@ -39,9 +39,9 @@ var CBUIImageView = {
     },
 
     /**
-    * @param Element args.img
-    * @param string args.propertyName
-    * @param object args.spec
+     * @param Element args.img
+     * @param string args.propertyName
+     * @param object args.spec
      *
      * @return undefined
      */
