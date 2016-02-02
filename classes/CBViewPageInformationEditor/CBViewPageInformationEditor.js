@@ -189,15 +189,15 @@ var CBViewPageInformationEditor = {
          */
 
         if (CBPageEditorAvailablePageListClassNames.length > 0) {
-            var pagelists = document.createElement("div");
-            pagelists.className = "panel pagelists";
+            element.appendChild(CBUI.createHalfSpace());
 
-            pagelists.appendChild(CBViewPageInformationEditor.createPageListsEditorElement({
+            section = CBUI.createSection();
+            item = CBUI.createSectionItem();
+            item.appendChild(CBViewPageInformationEditor.createPageListsEditorElement({
                 spec : args.spec
             }));
-
-            element.appendChild(CBUI.createHalfSpace());
-            element.appendChild(pagelists);
+            section.appendChild(item);
+            element.appendChild(section);
         }
 
         /**
@@ -268,7 +268,7 @@ var CBViewPageInformationEditor = {
     createPageListsEditorElement : function(args) {
         var count           = CBPageEditorAvailablePageListClassNames.length;
         var element         = document.createElement("div");
-        element.className   = "CBPageInformationPageListsEditor";
+        element.className   = "pagelists";
 
         for (var i = 0; i < count; i++) {
             var optionElement   = CBViewPageInformationEditor.createPageListOptionElement({
