@@ -41,20 +41,14 @@ var CBViewPageInformationEditor = {
      */
     createEditor : function(args) {
         var section, item, preview, classNames;
-        args.spec.URI       = args.spec.URI ? args.spec.URI : CBViewPageInformationEditor.titleToURI({
-            ID              : args.spec.dataStoreID,
-            title           : args.spec.title });
-        var editor          = document.createElement("section");
-        editor.className    = "CBViewPageInformationEditor";
-        var content         = document.createElement("div");
-
-        editor.appendChild(content);
+        var element = document.createElement("section");
+        element.className = "CBViewPageInformationEditor";
+        args.spec.URI = args.spec.URI ? args.spec.URI : CBViewPageInformationEditor.titleToURI({
+            ID : args.spec.dataStoreID,
+            title : args.spec.title,
+        });
 
         section = CBUI.createSection();
-
-        /**
-         *
-         */
 
         var URIControl  = new CBPageURIControl("URI");
 
@@ -67,10 +61,6 @@ var CBViewPageInformationEditor = {
         }));
 
         URIControl.rootElement().classList.add("standard");
-
-        /**
-         *
-         */
 
         /* title */
         item = CBUI.createSectionItem();
@@ -162,7 +152,7 @@ var CBViewPageInformationEditor = {
         item.appendChild(flexContainer);
         section.appendChild(item);
 
-        content.appendChild(section);
+        element.appendChild(section);
 
         /* thumbnail  uploader */
 
@@ -188,8 +178,8 @@ var CBViewPageInformationEditor = {
             URL : args.spec.thumbnailURL
         });
 
-        content.appendChild(CBUI.createHalfSpace());
-        content.appendChild(thumbnail);
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(thumbnail);
 
         /**
          * @deprecated use kinds
@@ -204,8 +194,8 @@ var CBViewPageInformationEditor = {
                 spec : args.spec
             }));
 
-            content.appendChild(CBUI.createHalfSpace());
-            content.appendChild(pagelists);
+            element.appendChild(CBUI.createHalfSpace());
+            element.appendChild(pagelists);
         }
 
         /**
@@ -227,10 +217,10 @@ var CBViewPageInformationEditor = {
         actions.appendChild(preview);
         actions.appendChild(useAsFrontPage);
 
-        content.appendChild(CBUI.createHalfSpace());
-        content.appendChild(actions);
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(actions);
 
-        return editor;
+        return element;
     },
 
     /**
