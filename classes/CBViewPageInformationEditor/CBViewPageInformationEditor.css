@@ -56,3 +56,43 @@
 .CBViewPageInformationEditor .pagelists input[type=checkbox] {
     margin-right: 0.5em;
 }
+
+.CBViewPageInformationEditor .CBPageURIControl {
+    padding: 5px 10px;
+}
+
+.CBViewPageInformationEditor .CBPageURIControl label {
+    color: hsl(0, 0%, 50%);
+}
+
+.CBViewPageInformationEditor .CBPageURIControl input[type=checkbox] {
+    margin: 0px 5px 0px 30px;
+}
+
+.CBViewPageInformationEditor .CBPageURIControl input[type=text] {
+    border: none;
+    font: inherit;
+    outline: none;
+    padding: 0;
+    width: 100%;
+}
+
+.CBViewPageInformationEditor .CBPublicationControl {
+    padding: 5px 10px;
+}
+
+.CBViewPageInformationEditor .CBPublicationControl label {
+    color: hsl(0, 0%, 50%);
+}
+
+.CBViewPageInformationEditor .CBPublicationControl input[type=checkbox] {
+    margin-right: 5px;
+}
+
+.CBViewPageInformationEditor .CBPublicationControl input[type=text] {
+    border: none;
+    font: inherit;
+    outline: none;
+    padding: 0;
+    width: 100%;
+}
