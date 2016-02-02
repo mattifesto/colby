@@ -107,7 +107,7 @@ CBPublicationControl.prototype.setIsPublished = function(isPublished)
  */
 CBPublicationControl.prototype.isPublishedChanged = function()
 {
-    if (this._checkbox.checked && this._textField.value == "")
+    if (this._checkbox.checked && this._textField.value === "")
     {
         this.setPublicationTimeStamp(Date.now() / 1000);
     }
