@@ -25,27 +25,7 @@ CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Page Editor');
 CBHTMLOutput::setDescriptionHTML('This is an app for editing pages.');
 CBHTMLOutput::requireClassName('CBDefaultEditor');
-CBHTMLOutput::requireClassName('CBViewPageInformationEditor');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
-
-/**
- * 2015.07.23 This section is created as a place to include known necessary
- * JavaScript files for the editor itself (not view editors). Every file added
- * should include a brief description of why it is needed.
- */
-
-/* Include these as long as we have hard coded includes in this file. */
-CBHTMLOutput::requireClassName('CBUI');
-CBHTMLOutput::requireClassName('CBArrayEditor');
-
-/* This is still used by CBPageEditor.js, but it is deprecated. */
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBDelayTimer.js');
-
-/* This renders the page editor. */
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
-
-/* Used by CBPageInformationEditorView */
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBResponsiveEditorFactory.js');
+CBHTMLOutput::requireClassName('CBViewPageEditor');
 
 /**
  * Include all of the supported views.
