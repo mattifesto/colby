@@ -154,11 +154,14 @@ var CBViewPageInformationEditor = {
 
         element.appendChild(section);
 
+        element.appendChild(CBUI.createHalfSpace());
+
+        section = CBUI.createSection();
+
         /* thumbnail  uploader */
-
-        var thumbnail         = document.createElement("div");
-        thumbnail.className   = "panel thumbnail";
-
+        item = CBUI.createSectionItem();
+        var thumbnail = document.createElement("div");
+        thumbnail.className = "thumbnail";
         preview = CBImageEditorFactory.createThumbnailPreviewElement();
         var upload  = CBImageEditorFactory.createEditorUploadButton({
             handleImageUploaded : CBViewPageInformationEditor.handleThumbnailUploaded.bind(undefined, {
@@ -169,17 +172,16 @@ var CBViewPageInformationEditor = {
             imageSizes              : ["rs200clc200"],
             textContent             : "Upload Page Thumbnail...",
         });
-
         thumbnail.appendChild(preview.element);
         thumbnail.appendChild(upload);
-
         CBImageEditorFactory.displayThumbnail({
             img : preview.img,
             URL : args.spec.thumbnailURL
         });
+        item.appendChild(thumbnail);
+        section.appendChild(item);
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(thumbnail);
+        element.appendChild(section);
 
         /**
          * @deprecated use kinds
