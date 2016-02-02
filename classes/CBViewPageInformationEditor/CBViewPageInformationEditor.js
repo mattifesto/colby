@@ -52,72 +52,6 @@ var CBViewPageInformationEditor = {
 
         section = CBUI.createSection();
 
-        content.appendChild(section);
-
-        var thumbnail         = document.createElement("div");
-        thumbnail.className   = "panel thumbnail";
-
-        preview = CBImageEditorFactory.createThumbnailPreviewElement();
-        var upload  = CBImageEditorFactory.createEditorUploadButton({
-            handleImageUploaded : CBViewPageInformationEditor.handleThumbnailUploaded.bind(undefined, {
-                handleSpecChanged   : args.handleSpecChanged,
-                previewImageElement : preview.img,
-                spec                : args.spec
-            }),
-            imageSizes              : ["rs200clc200"],
-            textContent             : "Upload Page Thumbnail...",
-        });
-
-        thumbnail.appendChild(preview.element);
-        thumbnail.appendChild(upload);
-
-        CBImageEditorFactory.displayThumbnail({
-            img : preview.img,
-            URL : args.spec.thumbnailURL
-        });
-
-        content.appendChild(CBUI.createHalfSpace());
-        content.appendChild(thumbnail);
-
-        /**
-         * @deprecated use kinds
-         * page lists
-         */
-
-        if (CBPageEditorAvailablePageListClassNames.length > 0) {
-            var pagelists = document.createElement("div");
-            pagelists.className = "panel pagelists";
-
-            pagelists.appendChild(CBViewPageInformationEditor.createPageListsEditorElement({
-                spec : args.spec
-            }));
-
-            content.appendChild(CBUI.createHalfSpace());
-            content.appendChild(pagelists);
-        }
-
-        /**
-         * actions panel
-         */
-
-        var actions = document.createElement("div");
-        actions.className = "panel actions";
-        preview = document.createElement("a");
-        preview.href = "/admin/pages/preview/?ID=" + args.spec.dataStoreID;
-        preview.textContent = "Preview";
-        var useAsFrontPage = document.createElement("div");
-        useAsFrontPage.textContent = "Use as Front Page";
-
-        useAsFrontPage.addEventListener('click', CBPageEditor.makeFrontPage.bind(undefined, {
-            ID : args.spec.dataStoreID
-        }));
-
-        actions.appendChild(preview);
-        actions.appendChild(useAsFrontPage);
-
-        content.appendChild(CBUI.createHalfSpace());
-        content.appendChild(actions);
-
         /**
          *
          */
@@ -160,7 +94,7 @@ var CBViewPageInformationEditor = {
             propertyName : 'description',
             spec : args.spec,
             specChangedCallback : args.handleSpecChanged,
-        }));
+        }).element);
         section.appendChild(item);
 
         /* uri */
@@ -227,6 +161,74 @@ var CBViewPageInformationEditor = {
         item = CBUI.createSectionItem();
         item.appendChild(flexContainer);
         section.appendChild(item);
+
+        content.appendChild(section);
+
+        /* thumbnail  uploader */
+
+        var thumbnail         = document.createElement("div");
+        thumbnail.className   = "panel thumbnail";
+
+        preview = CBImageEditorFactory.createThumbnailPreviewElement();
+        var upload  = CBImageEditorFactory.createEditorUploadButton({
+            handleImageUploaded : CBViewPageInformationEditor.handleThumbnailUploaded.bind(undefined, {
+                handleSpecChanged   : args.handleSpecChanged,
+                previewImageElement : preview.img,
+                spec                : args.spec
+            }),
+            imageSizes              : ["rs200clc200"],
+            textContent             : "Upload Page Thumbnail...",
+        });
+
+        thumbnail.appendChild(preview.element);
+        thumbnail.appendChild(upload);
+
+        CBImageEditorFactory.displayThumbnail({
+            img : preview.img,
+            URL : args.spec.thumbnailURL
+        });
+
+        content.appendChild(CBUI.createHalfSpace());
+        content.appendChild(thumbnail);
+
+        /**
+         * @deprecated use kinds
+         * page lists
+         */
+
+        if (CBPageEditorAvailablePageListClassNames.length > 0) {
+            var pagelists = document.createElement("div");
+            pagelists.className = "panel pagelists";
+
+            pagelists.appendChild(CBViewPageInformationEditor.createPageListsEditorElement({
+                spec : args.spec
+            }));
+
+            content.appendChild(CBUI.createHalfSpace());
+            content.appendChild(pagelists);
+        }
+
+        /**
+         * actions panel
+         */
+
+        var actions = document.createElement("div");
+        actions.className = "panel actions";
+        preview = document.createElement("a");
+        preview.href = "/admin/pages/preview/?ID=" + args.spec.dataStoreID;
+        preview.textContent = "Preview";
+        var useAsFrontPage = document.createElement("div");
+        useAsFrontPage.textContent = "Use as Front Page";
+
+        useAsFrontPage.addEventListener('click', CBPageEditor.makeFrontPage.bind(undefined, {
+            ID : args.spec.dataStoreID
+        }));
+
+        actions.appendChild(preview);
+        actions.appendChild(useAsFrontPage);
+
+        content.appendChild(CBUI.createHalfSpace());
+        content.appendChild(actions);
 
         return editor;
     },
