@@ -49,6 +49,43 @@ var CBViewPageEditor = {
     },
 
     /**
+     * @param function navigateCallback
+     * @param object spec
+     * @param function specChangedCallback
+     *
+     * @return undefined
+     */
+    createEditor : function (args) {
+        var editorContainer = document.createElement("div");
+        editorContainer.classList.add("CBViewPageEditor");
+
+        /**
+         * Page information
+         */
+
+        editorContainer.appendChild(CBViewPageInformationEditor.createEditor({
+            handleSpecChanged : args.specChangedCallback,
+            handleTitleChanged : CBViewPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
+            spec : args.spec
+        }));
+        editorContainer.appendChild(CBUI.createHalfSpace());
+        editorContainer.appendChild(CBUI.createSectionHeader({ text : "Views" }));
+
+        if (args.spec.sections === undefined) { args.spec.sections = []; }
+
+        editorContainer.appendChild(CBArrayEditor.createEditor({
+            array : args.spec.sections,
+            arrayChangedCallback : args.specChangedCallback,
+            classNames : CBPageEditorAvailableViewClassNames,
+            navigateCallback : args.navigateCallback,
+        }));
+
+        CBViewPageEditor.handleTitleChanged({spec : args.spec});
+
+        return editorContainer;
+    },
+
+    /**
      * @param object args.navigationState
      *
      * @return undefined
@@ -116,43 +153,6 @@ var CBViewPageEditor = {
             navigationState : args.navigationState,
         });
     },
-};
-
-/**
- * @param function navigateCallback
- * @param object spec
- * @param function specChangedCallback
- *
- * @return undefined
- */
-CBViewPageEditor.createEditor = function(args) {
-    var editorContainer = document.createElement("div");
-    editorContainer.classList.add("CBViewPageEditor");
-
-    /**
-     * Page information
-     */
-
-    editorContainer.appendChild(CBViewPageInformationEditor.createEditor({
-        handleSpecChanged : args.specChangedCallback,
-        handleTitleChanged : CBViewPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
-        spec : args.spec
-    }));
-    editorContainer.appendChild(CBUI.createHalfSpace());
-    editorContainer.appendChild(CBUI.createSectionHeader({ text : "Views" }));
-
-    if (args.spec.sections === undefined) { args.spec.sections = []; }
-
-    editorContainer.appendChild(CBArrayEditor.createEditor({
-        array : args.spec.sections,
-        arrayChangedCallback : args.specChangedCallback,
-        classNames : CBPageEditorAvailableViewClassNames,
-        navigateCallback : args.navigateCallback,
-    }));
-
-    CBViewPageEditor.handleTitleChanged({spec : args.spec});
-
-    return editorContainer;
 };
 
 /**
