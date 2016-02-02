@@ -6,8 +6,7 @@
  * of this class but we're moving toward making this a model so it's not worth
  * too much effort.
  */
-var CBViewPageEditor;
-var CBPageEditor = CBViewPageEditor = {
+var CBViewPageEditor = {
     model : null,
 
     /**
@@ -23,8 +22,8 @@ var CBPageEditor = CBViewPageEditor = {
                             CBDefaultEditor;
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
-        var specChangedCallback = CBPageEditor.requestSave.bind(CBPageEditor);
-        var navigateCallback = CBPageEditor.navigate.bind(undefined, { navigationState : args.navigationState });
+        var specChangedCallback = CBViewPageEditor.requestSave.bind(CBViewPageEditor);
+        var navigateCallback = CBViewPageEditor.navigate.bind(undefined, { navigationState : args.navigationState });
 
         main.appendChild(CBUI.createHalfSpace());
 
@@ -57,7 +56,7 @@ var CBPageEditor = CBViewPageEditor = {
     * @return undefined
     */
    handlePopState : function (args, event) {
-       CBPageEditor.displayEditor({
+       CBViewPageEditor.displayEditor({
            navigationState : args.navigationState,
        });
    },
@@ -74,7 +73,7 @@ var CBPageEditor = CBViewPageEditor = {
         args.navigationState.stack.splice(index, Number.MAX_VALUE, spec);
         history.pushState({ index : index }, undefined);
 
-        CBPageEditor.displayEditor({
+        CBViewPageEditor.displayEditor({
             navigationState : args.navigationState,
         });
     },
@@ -83,16 +82,16 @@ var CBPageEditor = CBViewPageEditor = {
 /**
  * @return void
  */
-CBPageEditor.appendPageTemplateOption = function(template)
+CBViewPageEditor.appendPageTemplateOption = function(template)
 {
-    if (!CBPageEditor.pageTemplatesSection)
+    if (!CBViewPageEditor.pageTemplatesSection)
     {
         var mainElement             = document.getElementsByTagName("main")[0];
         var pageTemplatesSection    = document.createElement("section");
         pageTemplatesSection.classList.add("CBPageTemplates");
         mainElement.appendChild(pageTemplatesSection);
 
-        CBPageEditor.pageTemplatesSection = pageTemplatesSection;
+        CBViewPageEditor.pageTemplatesSection = pageTemplatesSection;
     }
 
     var pageTemplateOption              = document.createElement("div");
@@ -100,7 +99,7 @@ CBPageEditor.appendPageTemplateOption = function(template)
     pageTemplateOptionCell.textContent  = template.title;
     pageTemplateOption.classList.add("CBPageTemplateOption");
     pageTemplateOption.appendChild(pageTemplateOptionCell);
-    CBPageEditor.pageTemplatesSection.appendChild(pageTemplateOption);
+    CBViewPageEditor.pageTemplatesSection.appendChild(pageTemplateOption);
 
     var handler = function() {
         /**
@@ -110,12 +109,12 @@ CBPageEditor.appendPageTemplateOption = function(template)
          * be opportunity to improve clarity of this process.
          */
 
-        CBPageEditor.model              = JSON.parse(template.modelJSON);
-        CBPageEditor.model.dataStoreID  = CBURLQueryVariables["data-store-id"];
+        CBViewPageEditor.model              = JSON.parse(template.modelJSON);
+        CBViewPageEditor.model.dataStoreID  = CBURLQueryVariables["data-store-id"];
 
-        var navigationState = { stack : [CBPageEditor.model] };
+        var navigationState = { stack : [CBViewPageEditor.model] };
 
-        CBPageEditor.displayEditor({ navigationState : navigationState });
+        CBViewPageEditor.displayEditor({ navigationState : navigationState });
     };
 
     pageTemplateOption.addEventListener("click", handler, false);
@@ -128,9 +127,9 @@ CBPageEditor.appendPageTemplateOption = function(template)
  *
  * @return undefined
  */
-CBPageEditor.createEditor = function(args) {
+CBViewPageEditor.createEditor = function(args) {
     var editorContainer = document.createElement("div");
-    editorContainer.classList.add("CBPageEditor");
+    editorContainer.classList.add("CBViewPageEditor");
 
     /**
      * Page information
@@ -138,7 +137,7 @@ CBPageEditor.createEditor = function(args) {
 
     editorContainer.appendChild(CBViewPageInformationEditor.createEditor({
         handleSpecChanged : args.specChangedCallback,
-        handleTitleChanged : CBPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
+        handleTitleChanged : CBViewPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
         spec : args.spec
     }));
     editorContainer.appendChild(CBUI.createHalfSpace());
@@ -153,7 +152,7 @@ CBPageEditor.createEditor = function(args) {
         navigateCallback : args.navigateCallback,
     }));
 
-    CBPageEditor.handleTitleChanged({spec : args.spec});
+    CBViewPageEditor.handleTitleChanged({spec : args.spec});
 
     return editorContainer;
 };
@@ -161,7 +160,7 @@ CBPageEditor.createEditor = function(args) {
 /**
  * @return void
  */
-CBPageEditor.displayPageTemplateChooser = function()
+CBViewPageEditor.displayPageTemplateChooser = function()
 {
     var mainElement = document.getElementsByTagName("main")[0];
 
@@ -172,33 +171,33 @@ CBPageEditor.displayPageTemplateChooser = function()
 
     for (var ID in CBPageTemplateDescriptors)
     {
-        CBPageEditor.appendPageTemplateOption(CBPageTemplateDescriptors[ID]);
+        CBViewPageEditor.appendPageTemplateOption(CBPageTemplateDescriptors[ID]);
     }
 };
 
 /**
  * @return undefined
  */
-CBPageEditor.DOMContentDidLoad = function() {
+CBViewPageEditor.DOMContentDidLoad = function() {
     // If the user has been navigating and reloads the page then the model
     // will have been removed from memory. If some sort of state has been
     // pushed it will refer to parts of that non-existent model. We need to
     // reset the editor and calling replaceState will do that.
     history.replaceState(undefined, undefined);
 
-    CBPageEditor.saveModelTimer = Object.create(CBDelayTimer).init();
-    CBPageEditor.saveModelTimer.callback = CBPageEditor.saveModel.bind(CBPageEditor);
-    CBPageEditor.saveModelTimer.delayInMilliseconds = 2000;
+    CBViewPageEditor.saveModelTimer = Object.create(CBDelayTimer).init();
+    CBViewPageEditor.saveModelTimer.callback = CBViewPageEditor.saveModel.bind(CBViewPageEditor);
+    CBViewPageEditor.saveModelTimer.delayInMilliseconds = 2000;
 
     document.dispatchEvent(new Event("CBPageEditorDidLoad"));
 
-    CBPageEditor.fetchModel();
+    CBViewPageEditor.fetchModel();
 };
 
 /**
  * @return void
  */
-CBPageEditor.fetchModel = function() {
+CBViewPageEditor.fetchModel = function() {
     var formData = new FormData();
     formData.append("id", CBURLQueryVariables["data-store-id"]);
 
@@ -207,7 +206,7 @@ CBPageEditor.fetchModel = function() {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.onload = CBPageEditor.fetchModelDidLoad.bind(undefined, {
+    xhr.onload = CBViewPageEditor.fetchModelDidLoad.bind(undefined, {
         xhr : xhr
     });
     xhr.open("POST", "/api/?class=CBViewPage&function=fetchSpec");
@@ -217,7 +216,7 @@ CBPageEditor.fetchModel = function() {
 /**
  * @return undefined
  */
-CBPageEditor.fetchModelDidLoad = function(args) {
+CBViewPageEditor.fetchModelDidLoad = function(args) {
     var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
     if (response.wasSuccessful) {
@@ -232,15 +231,15 @@ CBPageEditor.fetchModelDidLoad = function(args) {
             }
 
             var navigationState = { stack : [spec] };
-            CBPageEditor.model = spec;
+            CBViewPageEditor.model = spec;
 
-            CBPageEditor.displayEditor({ navigationState : navigationState });
+            CBViewPageEditor.displayEditor({ navigationState : navigationState });
 
-            window.addEventListener("popstate", CBPageEditor.handlePopState.bind(undefined, {
+            window.addEventListener("popstate", CBViewPageEditor.handlePopState.bind(undefined, {
                 navigationState : navigationState,
             }));
         } else {
-            CBPageEditor.displayPageTemplateChooser();
+            CBViewPageEditor.displayPageTemplateChooser();
         }
     } else {
         Colby.displayResponse(response);
@@ -252,13 +251,13 @@ CBPageEditor.fetchModelDidLoad = function(args) {
  * @param {hex160} ID
  * @return undefined
  */
-CBPageEditor.makeFrontPage = function(args) {
+CBViewPageEditor.makeFrontPage = function(args) {
     var formData = new FormData();
     formData.append("dataStoreID", args.ID);
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/admin/pages/api/make-front-page/", true);
-    xhr.onload = CBPageEditor.makeFrontPageDidComplete.bind(undefined, { xhr : xhr });
+    xhr.onload = CBViewPageEditor.makeFrontPageDidComplete.bind(undefined, { xhr : xhr });
     xhr.send(formData);
 };
 
@@ -267,7 +266,7 @@ CBPageEditor.makeFrontPage = function(args) {
  *
  * @return undefined
  */
-CBPageEditor.makeFrontPageDidComplete = function(args) {
+CBViewPageEditor.makeFrontPageDidComplete = function(args) {
     var response    = Colby.responseFromXMLHttpRequest(args.xhr);
     Colby.displayResponse(response);
 };
@@ -275,7 +274,7 @@ CBPageEditor.makeFrontPageDidComplete = function(args) {
 /**
  * @return void
  */
-CBPageEditor.requestSave = function()
+CBViewPageEditor.requestSave = function()
 {
     this.saveModelTimer.restart();
 };
@@ -286,7 +285,7 @@ CBPageEditor.requestSave = function()
  *
  * @return void
  */
-CBPageEditor.saveModel = function() {
+CBViewPageEditor.saveModel = function() {
 
     var timeStampInSeconds  = Math.floor(Date.now() / 1000);
     this.model.updated      = timeStampInSeconds;
@@ -316,7 +315,7 @@ CBPageEditor.saveModel = function() {
 /**
  * @return undefined
  */
-CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr) {
+CBViewPageEditor.saveModelAjaxRequestDidComplete = function(xhr) {
     this.saveModelTimer.resume();
 
     var response = Colby.responseFromXMLHttpRequest(xhr);
@@ -325,7 +324,7 @@ CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr) {
         if ('iteration' in this.model) {
             this.model.iteration++;
         } else {
-            this.model.iteration    = 1;
+            this.model.iteration = 1;
         }
     } else {
         Colby.displayResponse(response);
@@ -345,9 +344,11 @@ CBPageEditor.saveModelAjaxRequestDidComplete = function(xhr) {
  *
  * @return undefined
  */
-CBPageEditor.saveModelAjaxRequestDidFail = function(xhr) {
+CBViewPageEditor.saveModelAjaxRequestDidFail = function(xhr) {
     this.saveModelTimer.resume();
     this.saveModelTimer.restart();
 };
 
-document.addEventListener("DOMContentLoaded", CBPageEditor.DOMContentDidLoad);
+var CBPageEditor = CBViewPageEditor; /* deprecated */
+
+document.addEventListener("DOMContentLoaded", CBViewPageEditor.DOMContentDidLoad);
