@@ -200,27 +200,28 @@ var CBViewPageInformationEditor = {
             element.appendChild(section);
         }
 
-        /**
-         * actions panel
-         */
+        element.appendChild(CBUI.createHalfSpace());
 
+        section = CBUI.createSection();
+
+        /* actions */
+        item = CBUI.createSectionItem();
         var actions = document.createElement("div");
-        actions.className = "panel actions";
+        actions.className = "actions";
         preview = document.createElement("a");
         preview.href = "/admin/pages/preview/?ID=" + args.spec.dataStoreID;
         preview.textContent = "Preview";
         var useAsFrontPage = document.createElement("div");
         useAsFrontPage.textContent = "Use as Front Page";
-
         useAsFrontPage.addEventListener('click', CBPageEditor.makeFrontPage.bind(undefined, {
             ID : args.spec.dataStoreID
         }));
-
         actions.appendChild(preview);
         actions.appendChild(useAsFrontPage);
+        item.appendChild(actions);
+        section.appendChild(item);
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(actions);
+        element.appendChild(section);
 
         return element;
     },

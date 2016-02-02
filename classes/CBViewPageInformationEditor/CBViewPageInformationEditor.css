@@ -8,24 +8,6 @@
     justify-content: space-around;
 }
 
-.CBViewPageInformationEditor .panel {
-    background-color: white;
-    border-color: hsl(0, 0%, 80%);
-    border-style: solid;
-    border-width: 1px 0;
-    box-sizing: border-box;
-    margin: 0 auto;
-    max-width: 100%;
-    width: 640px;
-}
-
-@media all and (min-width: 640px) {
-    .CBViewPageInformationEditor .panel {
-        border-radius: 10px;
-        border-width: 1px;
-    }
-}
-
 .CBViewPageInformationEditor .thumbnail {
     align-items: center;
     display: flex;
@@ -40,19 +22,24 @@
     padding: 0 10px;
 }
 
-.CBViewPageInformationEditor .panel.actions {
-    align-items: center;
+.CBViewPageInformationEditor .actions,
+.CBViewPageInformationEditor .pagelists {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
 }
 
-.CBViewPageInformationEditor .panel.actions > * {
+.CBViewPageInformationEditor .actions > *,
+.CBViewPageInformationEditor .pagelists > * {
     align-items: center;
-    color: hsl(210, 100%, 50%);
-    cursor: pointer;
     display: flex;
     height: 44px;
     padding: 0 10px;
+}
+
+.CBViewPageInformationEditor .actions > * {
+    color: hsl(210, 100%, 50%);
+    cursor: pointer;
     text-decoration: none;
 }
 
@@ -64,19 +51,6 @@
 
 .CBViewPageInformationEditor .CBStringEditor > select {
     margin-left: 5px;
-}
-
-.CBViewPageInformationEditor .pagelists {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-.CBViewPageInformationEditor .pagelists > div {
-    align-items: center;
-    display: flex;
-    height: 44px;
-    padding: 0 10px;
 }
 
 .CBViewPageInformationEditor .pagelists input[type=checkbox] {
