@@ -10,6 +10,45 @@ var CBViewPageEditor = {
     model : null,
 
     /**
+     * @return void
+     */
+    appendPageTemplateOption : function (template) {
+        if (!CBViewPageEditor.pageTemplatesSection) {
+            var mainElement = document.getElementsByTagName("main")[0];
+            var pageTemplatesSection = document.createElement("section");
+            pageTemplatesSection.classList.add("CBPageTemplates");
+            mainElement.appendChild(pageTemplatesSection);
+
+            CBViewPageEditor.pageTemplatesSection = pageTemplatesSection;
+        }
+
+        var pageTemplateOption = document.createElement("div");
+        var pageTemplateOptionCell = document.createElement("div");
+        pageTemplateOptionCell.textContent = template.title;
+        pageTemplateOption.classList.add("CBPageTemplateOption");
+        pageTemplateOption.appendChild(pageTemplateOptionCell);
+        CBViewPageEditor.pageTemplatesSection.appendChild(pageTemplateOption);
+
+        var handler = function () {
+            /**
+             * The template model will have a unique data store ID but it is
+             * replaced here because the editor page has been assigned a data store
+             * ID so that a reload will reload the same page instance. There may
+             * be opportunity to improve clarity of this process.
+             */
+
+            CBViewPageEditor.model = JSON.parse(template.modelJSON);
+            CBViewPageEditor.model.dataStoreID = CBURLQueryVariables["data-store-id"];
+
+            var navigationState = { stack : [CBViewPageEditor.model] };
+
+            CBViewPageEditor.displayEditor({ navigationState : navigationState });
+        };
+
+        pageTemplateOption.addEventListener("click", handler, false);
+    },
+
+    /**
      * @param object args.navigationState
      *
      * @return undefined
@@ -77,47 +116,6 @@ var CBViewPageEditor = {
             navigationState : args.navigationState,
         });
     },
-};
-
-/**
- * @return void
- */
-CBViewPageEditor.appendPageTemplateOption = function(template)
-{
-    if (!CBViewPageEditor.pageTemplatesSection)
-    {
-        var mainElement             = document.getElementsByTagName("main")[0];
-        var pageTemplatesSection    = document.createElement("section");
-        pageTemplatesSection.classList.add("CBPageTemplates");
-        mainElement.appendChild(pageTemplatesSection);
-
-        CBViewPageEditor.pageTemplatesSection = pageTemplatesSection;
-    }
-
-    var pageTemplateOption              = document.createElement("div");
-    var pageTemplateOptionCell          = document.createElement("div");
-    pageTemplateOptionCell.textContent  = template.title;
-    pageTemplateOption.classList.add("CBPageTemplateOption");
-    pageTemplateOption.appendChild(pageTemplateOptionCell);
-    CBViewPageEditor.pageTemplatesSection.appendChild(pageTemplateOption);
-
-    var handler = function() {
-        /**
-         * The template model will have a unique data store ID but it is
-         * replaced here because the editor page has been assigned a data store
-         * ID so that a reload will reload the same page instance. There may
-         * be opportunity to improve clarity of this process.
-         */
-
-        CBViewPageEditor.model              = JSON.parse(template.modelJSON);
-        CBViewPageEditor.model.dataStoreID  = CBURLQueryVariables["data-store-id"];
-
-        var navigationState = { stack : [CBViewPageEditor.model] };
-
-        CBViewPageEditor.displayEditor({ navigationState : navigationState });
-    };
-
-    pageTemplateOption.addEventListener("click", handler, false);
 };
 
 /**
