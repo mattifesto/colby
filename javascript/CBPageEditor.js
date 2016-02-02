@@ -136,7 +136,7 @@ CBPageEditor.createEditor = function(args) {
      * Page information
      */
 
-    editorContainer.appendChild(CBPageInformationEditorFactory.createEditor({
+    editorContainer.appendChild(CBViewPageInformationEditor.createEditor({
         handleSpecChanged : args.specChangedCallback,
         handleTitleChanged : CBPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
         spec : args.spec

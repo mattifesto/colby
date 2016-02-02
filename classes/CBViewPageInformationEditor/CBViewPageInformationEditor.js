@@ -1,6 +1,6 @@
 "use strict";
 
-var CBPageInformationEditorFactory = {
+var CBViewPageInformationEditor = {
 
     /**
      * @param   {Element}   checkbox
@@ -40,11 +40,12 @@ var CBPageInformationEditorFactory = {
      * @return  {Element}
      */
     createEditor : function(args) {
-        args.spec.URI       = args.spec.URI ? args.spec.URI : CBPageInformationEditorFactory.titleToURI({
+        var preview, classNames;
+        args.spec.URI       = args.spec.URI ? args.spec.URI : CBViewPageInformationEditor.titleToURI({
             ID              : args.spec.dataStoreID,
             title           : args.spec.title });
         var editor          = document.createElement("section");
-        editor.className    = "CBPageInformationEditor";
+        editor.className    = "CBViewPageInformationEditor";
         var content         = document.createElement("div");
 
         editor.appendChild(content);
@@ -57,9 +58,9 @@ var CBPageInformationEditorFactory = {
         var thumbnail         = document.createElement("div");
         thumbnail.className   = "panel thumbnail";
 
-        var preview = CBImageEditorFactory.createThumbnailPreviewElement();
+        preview = CBImageEditorFactory.createThumbnailPreviewElement();
         var upload  = CBImageEditorFactory.createEditorUploadButton({
-            handleImageUploaded : CBPageInformationEditorFactory.handleThumbnailUploaded.bind(undefined, {
+            handleImageUploaded : CBViewPageInformationEditor.handleThumbnailUploaded.bind(undefined, {
                 handleSpecChanged   : args.handleSpecChanged,
                 previewImageElement : preview.img,
                 spec                : args.spec
@@ -88,7 +89,7 @@ var CBPageInformationEditorFactory = {
             var pagelists = document.createElement("div");
             pagelists.className = "panel pagelists";
 
-            pagelists.appendChild(CBPageInformationEditorFactory.createPageListsEditorElement({
+            pagelists.appendChild(CBViewPageInformationEditor.createPageListsEditorElement({
                 spec : args.spec
             }));
 
@@ -102,7 +103,7 @@ var CBPageInformationEditorFactory = {
 
         var actions = document.createElement("div");
         actions.className = "panel actions";
-        var preview = document.createElement("a");
+        preview = document.createElement("a");
         preview.href = "/admin/pages/preview/?ID=" + args.spec.dataStoreID;
         preview.textContent = "Preview";
         var useAsFrontPage = document.createElement("div");
@@ -127,7 +128,7 @@ var CBPageInformationEditorFactory = {
         URIControl.setURI(args.spec.URI);
         URIControl.setIsStatic(args.spec.URIIsStatic);
         URIControl.setIsDisabled(args.spec.isPublished);
-        URIControl.setAction(undefined, CBPageInformationEditorFactory.valuesForURIHaveChanged.bind(undefined, {
+        URIControl.setAction(undefined, CBViewPageInformationEditor.valuesForURIHaveChanged.bind(undefined, {
             handleSpecChanged   : args.handleSpecChanged,
             spec                : args.spec
         }));
@@ -139,7 +140,7 @@ var CBPageInformationEditorFactory = {
          */
 
         propertiesContainer.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
-                handleSpecChanged   : CBPageInformationEditorFactory.handleTitleChanged.bind(undefined, {
+                handleSpecChanged   : CBViewPageInformationEditor.handleTitleChanged.bind(undefined, {
                     handleSpecChanged   : args.handleSpecChanged,
                     handleTitleChanged  : args.handleTitleChanged,
                     spec                : args.spec,
@@ -156,7 +157,7 @@ var CBPageInformationEditorFactory = {
 
         propertiesContainer.appendChild(URIControl.rootElement());
 
-        propertiesContainer.appendChild(CBPageInformationEditorFactory.createPublicationControlElement({
+        propertiesContainer.appendChild(CBViewPageInformationEditor.createPublicationControlElement({
             handleSpecChanged   : args.handleSpecChanged,
             spec                : args.spec,
             URIControl          : URIControl
@@ -178,7 +179,7 @@ var CBPageInformationEditorFactory = {
         }));
 
         if (CBClassNamesForKinds.length > 0) {
-            var classNames = CBClassNamesForKinds.map(function(className) {
+            classNames = CBClassNamesForKinds.map(function(className) {
                 return { textContent : className.replace(/PageKind$/, ""), value : className };
             });
 
@@ -194,7 +195,7 @@ var CBPageInformationEditorFactory = {
         }
 
         if (CBClassNamesForSettings.length > 0) {
-            var classNames = CBClassNamesForSettings.map(function(className) {
+            classNames = CBClassNamesForSettings.map(function(className) {
                 return { textContent : className.replace(/PageKind$/, ""), value : className };
             });
 
@@ -240,7 +241,7 @@ var CBPageInformationEditorFactory = {
             }
         }
 
-        checkbox.addEventListener("change", CBPageInformationEditorFactory.checkboxDidChangeForListClassName.bind(undefined, {
+        checkbox.addEventListener("change", CBViewPageInformationEditor.checkboxDidChangeForListClassName.bind(undefined, {
             checkbox        : checkbox,
             listClassName   : listClassName,
             spec            : args.spec
@@ -260,7 +261,7 @@ var CBPageInformationEditorFactory = {
         element.className   = "CBPageInformationPageListsEditor";
 
         for (var i = 0; i < count; i++) {
-            var optionElement   = CBPageInformationEditorFactory.createPageListOptionElement({
+            var optionElement   = CBViewPageInformationEditor.createPageListOptionElement({
                 listClassName   : CBPageEditorAvailablePageListClassNames[i],
                 spec            : args.spec
             });
@@ -283,7 +284,7 @@ var CBPageInformationEditorFactory = {
 
         control.setPublicationTimeStamp(args.spec.publicationTimeStamp);
         control.setIsPublished(args.spec.isPublished);
-        control.setAction(undefined, CBPageInformationEditorFactory.valuesForPublicationHaveChanged.bind(undefined, {
+        control.setAction(undefined, CBViewPageInformationEditor.valuesForPublicationHaveChanged.bind(undefined, {
             handleSpecChanged   : args.handleSpecChanged,
             spec                : args.spec,
             URIControl          : args.URIControl
@@ -314,7 +315,7 @@ var CBPageInformationEditorFactory = {
      */
     handleTitleChanged : function(args) {
         if (!args.spec.URIIsStatic) {
-            args.URIControl.setURI(CBPageInformationEditorFactory.titleToURI({
+            args.URIControl.setURI(CBViewPageInformationEditor.titleToURI({
                 ID      : args.spec.dataStoreID,
                 title   : args.spec.title }));
 

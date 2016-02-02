@@ -25,6 +25,7 @@ CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Page Editor');
 CBHTMLOutput::setDescriptionHTML('This is an app for editing pages.');
 CBHTMLOutput::requireClassName('CBDefaultEditor');
+CBHTMLOutput::requireClassName('CBViewPageInformationEditor');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,edit.css');
 
 /**
@@ -45,16 +46,6 @@ CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageEditor.js');
 
 /* Used by CBPageInformationEditorView */
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBResponsiveEditorFactory.js');
-
-/* CBPageEditor.js uses this to render the general page info editor. */
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageInformationEditorView.js');
-CBHTMLOutput::addCSSURL(       CBSystemURL . '/javascript/CBPageInformationEditorView.css');
-
-/* CBPageInformationEditorView.js uses these files and their code should
-   be integrated into that file. When we move to using the model editor this
-   code will all be integrated into a single CBViewPage editor. */
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageURIControl.js');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPublicationControl.js');
 
 /**
  * Include all of the supported views.

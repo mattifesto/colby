@@ -1,20 +1,20 @@
-.CBPageInformationEditor .CBStringEditorWithTextArea,
-.CBPageInformationEditor .CBPublicationControl,
-.CBPageInformationEditor .CBPageURIControl {
+.CBViewPageInformationEditor .CBStringEditorWithTextArea,
+.CBViewPageInformationEditor .CBPublicationControl,
+.CBViewPageInformationEditor .CBPageURIControl {
     border-bottom: 1px solid hsl(0, 0%, 80%);
 }
 
-.CBPageInformationEditor .CBStringEditor > select {
+.CBViewPageInformationEditor .CBStringEditor > select {
     margin-left: 5px;
 }
 
-.CBPageInformationEditor .flexContainer {
+.CBViewPageInformationEditor .flexContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
 }
 
-.CBPageInformationEditor .panel {
+.CBViewPageInformationEditor .panel {
     background-color: white;
     border-color: hsl(0, 0%, 80%);
     border-style: solid;
@@ -26,19 +26,19 @@
 }
 
 @media all and (min-width: 640px) {
-    .CBPageInformationEditor .panel {
+    .CBViewPageInformationEditor .panel {
         border-radius: 10px;
         border-width: 1px;
     }
 }
 
-.CBPageInformationEditor .panel.thumbnail {
+.CBViewPageInformationEditor .panel.thumbnail {
     align-items: center;
     display: flex;
     padding: 5px 10px;
 }
 
-.CBPageInformationEditor .CBImageEditorUploadButton button {
+.CBViewPageInformationEditor .CBImageEditorUploadButton button {
     background-color: transparent;
     border: none;
     color: hsl(210, 100%, 50%);
@@ -46,13 +46,13 @@
     padding: 0 10px;
 }
 
-.CBPageInformationEditor .panel.actions {
+.CBViewPageInformationEditor .panel.actions {
     align-items: center;
     display: flex;
     justify-content: space-around;
 }
 
-.CBPageInformationEditor .panel.actions > * {
+.CBViewPageInformationEditor .panel.actions > * {
     align-items: center;
     color: hsl(210, 100%, 50%);
     cursor: pointer;
@@ -62,13 +62,13 @@
     text-decoration: none;
 }
 
-.CBPageInformationEditor .CBStringEditor {
+.CBViewPageInformationEditor .CBStringEditor {
     align-items: center;
     display: flex;
     height: 44px;
 }
 
-.CBPageInformationEditor .CBStringEditor > select {
+.CBViewPageInformationEditor .CBStringEditor > select {
     margin-left: 5px;
 }
 
