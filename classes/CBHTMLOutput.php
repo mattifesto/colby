@@ -161,12 +161,12 @@ class CBHTMLOutput
         foreach ($resolvedClassNames as $className) {
             if (is_callable($function = "{$className}::requiredCSSURLs")) {
                 $URLs = call_user_func($function);
-                array_walk($URLs, 'CBHTMLOutput::addCSSURL');
+                array_walk($URLs, function ($URL) { CBHTMLOutput::addCSSURL($URL); });
             }
 
             if (is_callable($function = "{$className}::requiredJavaScriptURLs")) {
                 $URLs = call_user_func($function);
-                array_walk($URLs, 'CBHTMLOutput::addJavaScriptURL');
+                array_walk($URLs, function ($URL) { CBHTMLOutput::addJavaScriptURL($URL); });
             }
 
             if (is_callable($function = "{$className}::requiredJavaScriptVariables")) {
