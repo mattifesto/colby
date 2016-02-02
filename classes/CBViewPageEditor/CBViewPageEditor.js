@@ -64,9 +64,9 @@ var CBViewPageEditor = {
          */
 
         editorContainer.appendChild(CBViewPageInformationEditor.createEditor({
-            handleSpecChanged : args.specChangedCallback,
             handleTitleChanged : CBViewPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
-            spec : args.spec
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
         }));
         editorContainer.appendChild(CBUI.createHalfSpace());
         editorContainer.appendChild(CBUI.createSectionHeader({ text : "Views" }));

@@ -33,9 +33,9 @@ var CBViewPageInformationEditor = {
     },
 
     /**
-     * @param   {Object}    spec
-     * @param   {function}  handleSpecChanged
-     * @param   {function}  handleTitleChanged
+     * @param function args.handleTitleChanged
+     * @param object args.spec
+     * @param function args.specChangedCallback
      *
      * @return  {Element}
      */
@@ -56,7 +56,7 @@ var CBViewPageInformationEditor = {
         URIControl.setIsStatic(args.spec.URIIsStatic);
         URIControl.setIsDisabled(args.spec.isPublished);
         URIControl.setAction(undefined, CBViewPageInformationEditor.valuesForURIHaveChanged.bind(undefined, {
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             spec                : args.spec
         }));
 
@@ -69,7 +69,7 @@ var CBViewPageInformationEditor = {
                 propertyName : 'title',
                 spec : args.spec,
                 specChangedCallback : CBViewPageInformationEditor.handleTitleChanged.bind(undefined, {
-                    handleSpecChanged : args.handleSpecChanged,
+                    handleSpecChanged : args.specChangedCallback,
                     handleTitleChanged : args.handleTitleChanged,
                     spec : args.spec,
                     URIControl : URIControl,
@@ -83,7 +83,7 @@ var CBViewPageInformationEditor = {
             labelText : "Description",
             propertyName : 'description',
             spec : args.spec,
-            specChangedCallback : args.handleSpecChanged,
+            specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
@@ -95,7 +95,7 @@ var CBViewPageInformationEditor = {
         /* publication */
         item = CBUI.createSectionItem();
         item.appendChild(CBViewPageInformationEditor.createPublicationControlElement({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             spec                : args.spec,
             URIControl          : URIControl
         }));
@@ -110,7 +110,7 @@ var CBViewPageInformationEditor = {
 
         flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
             data                : users,
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Published By",
             propertyName        : "publishedBy",
             spec                : args.spec
@@ -125,7 +125,7 @@ var CBViewPageInformationEditor = {
 
             flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
                 data                : classNames,
-                handleSpecChanged   : args.handleSpecChanged,
+                handleSpecChanged   : args.specChangedCallback,
                 labelText           : "Kind",
                 propertyName        : "classNameForKind",
                 spec                : args.spec
@@ -141,7 +141,7 @@ var CBViewPageInformationEditor = {
 
             flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
                 data                : classNames,
-                handleSpecChanged   : args.handleSpecChanged,
+                handleSpecChanged   : args.specChangedCallback,
                 labelText           : "Page Settings",
                 propertyName        : "classNameForSettings",
                 spec                : args.spec
@@ -165,7 +165,7 @@ var CBViewPageInformationEditor = {
         preview = CBImageEditorFactory.createThumbnailPreviewElement();
         var upload  = CBImageEditorFactory.createEditorUploadButton({
             handleImageUploaded : CBViewPageInformationEditor.handleThumbnailUploaded.bind(undefined, {
-                handleSpecChanged   : args.handleSpecChanged,
+                handleSpecChanged   : args.specChangedCallback,
                 previewImageElement : preview.img,
                 spec                : args.spec
             }),
