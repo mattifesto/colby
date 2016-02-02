@@ -115,15 +115,27 @@ var CBViewPageEditor = {
     },
 
     /**
+     * @return undefined
+     */
+    displayPageTemplateChooser : function () {
+        var mainElement = document.getElementsByTagName("main")[0];
+        mainElement.textContent = null;
+
+        Object.keys(CBPageTemplateDescriptors).forEach(function (key) {
+            CBViewPageEditor.appendPageTemplateOption(CBPageTemplateDescriptors[key]);
+        });
+    },
+
+    /**
      * @param   {Object}    spec
      *
      * @return  undefined
      */
-    handleTitleChanged  : function(args) {
-        var title       = args.spec.title || "";
-        title           = title.trim();
-        title           = (title.length > 0) ? ": " + title : "";
-        document.title  = "Page Editor" + title;
+    handleTitleChanged : function(args) {
+        var title = args.spec.title || "";
+        title = title.trim();
+        title = (title.length > 0) ? ": " + title : "";
+        document.title = "Page Editor" + title;
     },
 
    /**
@@ -153,24 +165,6 @@ var CBViewPageEditor = {
             navigationState : args.navigationState,
         });
     },
-};
-
-/**
- * @return void
- */
-CBViewPageEditor.displayPageTemplateChooser = function()
-{
-    var mainElement = document.getElementsByTagName("main")[0];
-
-    while (mainElement.firstChild)
-    {
-        mainElement.removeChild(mainElement.firstChild);
-    }
-
-    for (var ID in CBPageTemplateDescriptors)
-    {
-        CBViewPageEditor.appendPageTemplateOption(CBPageTemplateDescriptors[ID]);
-    }
 };
 
 /**
