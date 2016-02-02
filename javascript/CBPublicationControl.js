@@ -166,25 +166,19 @@ CBPublicationControl.prototype.sendAction = function()
 /**
  * @return void
  */
-CBPublicationControl.prototype.textFieldChanged = function()
-{
+CBPublicationControl.prototype.textFieldChanged = function() {
     var value = this._textField.value;
 
-    if (value.match(/^\s*$/))
-    {
+    if (value.match(/^\s*$/)) {
         this.setPublicationTimeStamp(null);
         this.sendAction();
-    }
-    else
-    {
+    } else {
         var date = new Date(value);
 
-        if (isNaN(date))
-        {
-            // The date entered is not parseable. We don't change the date internally but display a red background to indicate that the time entered is bad. TODO: show red background
-        }
-        else
-        {
+        if (isNaN(date)) {
+            this._textField.style.backgroundColor = "hsl(0, 100%, 90%)";
+        } else {
+            this._textField.style.backgroundColor = "";
             this.setPublicationTimeStamp(date.getTime() / 1000);
             this.sendAction();
         }
