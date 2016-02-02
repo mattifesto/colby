@@ -1,9 +1,3 @@
-.CBViewPageInformationEditor .CBStringEditorWithTextArea,
-.CBViewPageInformationEditor .CBPublicationControl,
-.CBViewPageInformationEditor .CBPageURIControl {
-    border-bottom: 1px solid hsl(0, 0%, 80%);
-}
-
 .CBViewPageInformationEditor .CBStringEditor > select {
     margin-left: 5px;
 }

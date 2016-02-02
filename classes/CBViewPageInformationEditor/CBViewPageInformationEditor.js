@@ -40,7 +40,7 @@ var CBViewPageInformationEditor = {
      * @return  {Element}
      */
     createEditor : function(args) {
-        var preview, classNames;
+        var section, item, preview, classNames;
         args.spec.URI       = args.spec.URI ? args.spec.URI : CBViewPageInformationEditor.titleToURI({
             ID              : args.spec.dataStoreID,
             title           : args.spec.title });
@@ -50,10 +50,9 @@ var CBViewPageInformationEditor = {
 
         editor.appendChild(content);
 
-        var propertiesContainer         = document.createElement("div");
-        propertiesContainer.className   = "panel properties";
+        section = CBUI.createSection();
 
-        content.appendChild(propertiesContainer);
+        content.appendChild(section);
 
         var thumbnail         = document.createElement("div");
         thumbnail.className   = "panel thumbnail";
@@ -139,29 +138,44 @@ var CBViewPageInformationEditor = {
          *
          */
 
-        propertiesContainer.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
-                handleSpecChanged   : CBViewPageInformationEditor.handleTitleChanged.bind(undefined, {
-                    handleSpecChanged   : args.handleSpecChanged,
-                    handleTitleChanged  : args.handleTitleChanged,
-                    spec                : args.spec,
-                    URIControl          : URIControl }),
-                labelText           : "Title",
-                spec                : args.spec,
-                propertyName        : 'title' }));
+        /* title */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+                labelText : "Title",
+                propertyName : 'title',
+                spec : args.spec,
+                specChangedCallback : CBViewPageInformationEditor.handleTitleChanged.bind(undefined, {
+                    handleSpecChanged : args.handleSpecChanged,
+                    handleTitleChanged : args.handleTitleChanged,
+                    spec : args.spec,
+                    URIControl : URIControl,
+                }),
+            }).element);
+        section.appendChild(item);
 
-        propertiesContainer.appendChild(CBResponsiveEditorFactory.createStringEditorWithTextArea({
-                handleSpecChanged   : args.handleSpecChanged,
-                labelText           : "Description",
-                spec                : args.spec,
-                propertyName        : 'description' }));
+        /* description */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Description",
+            propertyName : 'description',
+            spec : args.spec,
+            specChangedCallback : args.handleSpecChanged,
+        }));
+        section.appendChild(item);
 
-        propertiesContainer.appendChild(URIControl.rootElement());
+        /* uri */
+        item = CBUI.createSectionItem();
+        item.appendChild(URIControl.rootElement());
+        section.appendChild(item);
 
-        propertiesContainer.appendChild(CBViewPageInformationEditor.createPublicationControlElement({
+        /* publication */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBViewPageInformationEditor.createPublicationControlElement({
             handleSpecChanged   : args.handleSpecChanged,
             spec                : args.spec,
             URIControl          : URIControl
         }));
+        section.appendChild(item);
 
         var flexContainer       = document.createElement("div");
         flexContainer.className = "flexContainer";
@@ -210,7 +224,9 @@ var CBViewPageInformationEditor = {
             }));
         }
 
-        propertiesContainer.appendChild(flexContainer);
+        item = CBUI.createSectionItem();
+        item.appendChild(flexContainer);
+        section.appendChild(item);
 
         return editor;
     },
