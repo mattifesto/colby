@@ -72,6 +72,46 @@ final class CBContainerView {
         }
     }
 
+    private static function mediaRule(array $args) {
+        $class = $maxWidth = $imageURL1x = $imageURL2x = $width = $height = null;
+        extract($args, EXTR_IF_EXISTS);
+
+        $rule = <<<EOT
+    .{$class} {
+        background-image: url({$imageURL1x});
+        background-size: {$width}px {$height}px;
+    }
+
+    .{$class}.useImageHeight {
+        min-height: {$height}px;
+    }
+EOT;
+
+        $rule2x = <<<EOT
+    .{$class} {
+        background-image: url({$imageURL2x});
+    }
+EOT;
+
+        $comment = '/* rule for unlimited width */';
+        $mediaRuleForPixelRatio = '(-webkit-min-device-pixel-ratio: 1.5)';
+        $mediaRuleForResolution = '(min-resolution: 144dpi)';
+
+        if (isset($maxWidth)) {
+            $comment = "/* rule for max-width: {$maxWidth}px */";
+            $mediaRuleForWidth = "(max-width: {$maxWidth}px)";
+            $mediaRuleForPixelRatio = "{$mediaRuleForWidth} and {$mediaRuleForPixelRatio}";
+            $mediaRuleForResolution = "{$mediaRuleForWidth} and {$mediaRuleForResolution}";
+
+            $rule = "@media {$mediaRuleForWidth} {\n{$rule}\n}";
+        }
+
+        $mediaRuleFor2x = "{$mediaRuleForPixelRatio}, {$mediaRuleForResolution}";
+        $rule2x = "@media {$mediaRuleFor2x} {\n{$rule2x}\n}";
+
+        return "{$comment}\n{$rule}\n\n{$rule2x}";
+    }
+
     /**
      * @param stdClass $model
      *
@@ -144,27 +184,14 @@ final class CBContainerView {
         $heightForLarge = intval($spec->largeImage->height / 2);
 
         if ($spec->largeImage->width > 3380) {
-            $media1920 = <<<EOT
-
-@media (max-width: 1920px) {
-    .{$class} {
-        background-image: url({$URLFor1920Image});
-        background-size: 1920px {$heightForLarge}px;
-    }
-
-    .{$class}.useImageHeight {
-        min-height: {$heightForLarge}px;
-    }
-}
-
-@media (max-width: 1920px) and (-webkit-min-device-pixel-ratio: 1.5), (max-width: 1920px) and (min-resolution: 144dpi)
-{
-    .{$class} {
-        background-image: url({$URLFor1920Image2x});
-    }
-}
-
-EOT;
+            $media1920 = self::mediaRule([
+                'class' => $class,
+                'maxWidth' => 1920,
+                'imageURL1x' => $URLFor1920Image,
+                'imageURL2x' => $URLFor1920Image2x,
+                'width' => 1920,
+                'height' => $heightForLarge,
+            ]);
         } else {
             $media1920 = null;
         }
