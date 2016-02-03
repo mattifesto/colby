@@ -379,7 +379,7 @@ var CBViewPageInformationEditor = {
 
         args.URIControl.setIsDisabled(args.spec.isPublished);
 
-        CBPageEditor.requestSave();
+        args.handleSpecChanged.call();
     },
 
     /**
