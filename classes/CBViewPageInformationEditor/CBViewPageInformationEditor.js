@@ -5,6 +5,8 @@ var CBViewPageInformationEditor = {
     /**
      * @param   {Element}   checkbox
      * @param   {string}    listClassName
+     * @param object args.spec
+     * @param function args.specChangedCallback
      *
      * @return  {undefined}
      */
@@ -29,7 +31,7 @@ var CBViewPageInformationEditor = {
             }
         }
 
-        CBPageEditor.requestSave();
+        args.specChangedCallback.call();
     },
 
     /**
@@ -194,7 +196,8 @@ var CBViewPageInformationEditor = {
             section = CBUI.createSection();
             item = CBUI.createSectionItem();
             item.appendChild(CBViewPageInformationEditor.createPageListsEditorElement({
-                spec : args.spec
+                spec : args.spec,
+                specChangedCallback : args.specChangedCallback,
             }));
             section.appendChild(item);
             element.appendChild(section);
@@ -229,6 +232,7 @@ var CBViewPageInformationEditor = {
     /**
      * @param   {string}    listClassName
      * @param   {Object}    spec
+     * @param function args.specChangedCallback
      *
      * @return  {Element}
      */
@@ -253,18 +257,20 @@ var CBViewPageInformationEditor = {
         }
 
         checkbox.addEventListener("change", CBViewPageInformationEditor.checkboxDidChangeForListClassName.bind(undefined, {
-            checkbox        : checkbox,
-            listClassName   : listClassName,
-            spec            : args.spec
+            checkbox : checkbox,
+            listClassName : listClassName,
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
         }));
 
         return container;
     },
 
     /**
-     * @param   {Object}    spec
+     * @param object args.spec
+     * @param function args.specChangedCallback
      *
-     * @return  {Element}
+     * @return Element
      */
     createPageListsEditorElement : function(args) {
         var count           = CBPageEditorAvailablePageListClassNames.length;
@@ -272,9 +278,10 @@ var CBViewPageInformationEditor = {
         element.className   = "pagelists";
 
         for (var i = 0; i < count; i++) {
-            var optionElement   = CBViewPageInformationEditor.createPageListOptionElement({
-                listClassName   : CBPageEditorAvailablePageListClassNames[i],
-                spec            : args.spec
+            var optionElement = CBViewPageInformationEditor.createPageListOptionElement({
+                listClassName : CBPageEditorAvailablePageListClassNames[i],
+                spec : args.spec,
+                specChangedCallback : args.specChangedCallback,
             });
 
             element.appendChild(optionElement);
