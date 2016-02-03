@@ -139,16 +139,43 @@ var CBViewPageEditor = {
         document.title = "Page Editor" + title;
     },
 
-   /**
-    * @param Object args.navigationState
-    *
-    * @return undefined
-    */
-   handlePopState : function (args, event) {
-       CBViewPageEditor.displayEditor({
-           navigationState : args.navigationState,
-       });
-   },
+    /**
+     * @param Object args.navigationState
+     *
+     * @return undefined
+     */
+    handlePopState : function (args, event) {
+        CBViewPageEditor.displayEditor({
+            navigationState : args.navigationState,
+        });
+    },
+
+    /**
+     * @param hex160 args.ID
+     *
+     * @return undefined
+     */
+    makeFrontPage : function (args) {
+        if (window.confirm("Are you sure you want to use this page as the front page?")) {
+            var data = new FormData();
+            data.append("dataStoreID", args.ID);
+
+            var xhr = new XMLHttpRequest();
+            xhr.onerror = Colby.displayXHRError.bind(undefined, { xhr : xhr });
+            xhr.onload = CBViewPageEditor.makeFrontPageDidLoad.bind(undefined, { xhr : xhr });
+            xhr.open("POST", "/admin/pages/api/make-front-page/", true);
+            xhr.send(data);
+        }
+    },
+
+    /**
+     * @param XMLHttpRequest args.xhr
+     *
+     * @return undefined
+     */
+    makeFrontPageDidLoad : function (args) {
+        Colby.displayResponse(Colby.responseFromXMLHttpRequest(args.xhr));
+    },
 
     /**
      * @param Object args.navigationState
@@ -237,34 +264,6 @@ CBViewPageEditor.fetchModelDidLoad = function(args) {
     }
 };
 
-
-/**
- * @param hex160 args.ID
- *
- * @return undefined
- */
-CBViewPageEditor.makeFrontPage = function(args) {
-    if (window.confirm("Are you sure you want to use this page as the front page?")) {
-        var formData = new FormData();
-        formData.append("dataStoreID", args.ID);
-
-        var xhr = new XMLHttpRequest();
-        xhr.onerror = Colby.displayXHRError.bind(undefined, { xhr : xhr });
-        xhr.onload = CBViewPageEditor.makeFrontPageDidComplete.bind(undefined, { xhr : xhr });
-        xhr.open("POST", "/admin/pages/api/make-front-page/", true);
-        xhr.send(formData);
-    }
-};
-
-/**
- * @param XMLHttpRequest args.xhr
- *
- * @return undefined
- */
-CBViewPageEditor.makeFrontPageDidComplete = function(args) {
-    var response = Colby.responseFromXMLHttpRequest(args.xhr);
-    Colby.displayResponse(response);
-};
 
 /**
  * @return void
