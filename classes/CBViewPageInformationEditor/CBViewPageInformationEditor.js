@@ -36,6 +36,7 @@ var CBViewPageInformationEditor = {
 
     /**
      * @param function args.handleTitleChanged
+     * @param function args.makeFrontPageCallback
      * @param object args.spec
      * @param function args.specChangedCallback
      *
@@ -216,9 +217,7 @@ var CBViewPageInformationEditor = {
         preview.textContent = "Preview";
         var useAsFrontPage = document.createElement("div");
         useAsFrontPage.textContent = "Use as Front Page";
-        useAsFrontPage.addEventListener('click', CBPageEditor.makeFrontPage.bind(undefined, {
-            ID : args.spec.dataStoreID
-        }));
+        useAsFrontPage.addEventListener("click", args.makeFrontPageCallback);
         actions.appendChild(preview);
         actions.appendChild(useAsFrontPage);
         item.appendChild(actions);
