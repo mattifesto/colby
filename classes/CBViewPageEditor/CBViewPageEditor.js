@@ -182,8 +182,6 @@ CBViewPageEditor.DOMContentDidLoad = function() {
     CBViewPageEditor.saveModelTimer.callback = CBViewPageEditor.saveModel.bind(CBViewPageEditor);
     CBViewPageEditor.saveModelTimer.delayInMilliseconds = 2000;
 
-    document.dispatchEvent(new Event("CBPageEditorDidLoad"));
-
     CBViewPageEditor.fetchModel();
 };
 
