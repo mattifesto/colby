@@ -10,7 +10,7 @@ final class CBContainerView {
     public static function imageThemeIDToStyleSheetFilepath($imageThemeID) {
         return CBDataStore::filepath([
             'ID' => $imageThemeID,
-            'filename' => 'CBContainerView.css',
+            'filename' => 'CBContainerViewImageSetTheme.css',
         ]);
     }
 
@@ -22,7 +22,7 @@ final class CBContainerView {
     public static function imageThemeIDToStyleSheetURL($imageThemeID) {
         return CBDataStore::toURL([
             'ID' => $imageThemeID,
-            'filename' => 'CBContainerView.css',
+            'filename' => 'CBContainerViewImageSetTheme.css',
         ]);
     }
 
@@ -78,6 +78,7 @@ final class CBContainerView {
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
+        CBHTMLOutput::addCSSURL(CBContainerView::URL('CBContainerView.css'));
         CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
 
         $classes = ['CBContainerView'];
@@ -156,7 +157,7 @@ final class CBContainerView {
     }
 }
 
-@media (max-width: 1920px) and (-webkit-min-device-pixel-ratio: 1.5), (max-width: 1068px) and (min-resolution: 144dpi)
+@media (max-width: 1920px) and (-webkit-min-device-pixel-ratio: 1.5), (max-width: 1920px) and (min-resolution: 144dpi)
 {
     .{$class} {
         background-image: url({$URLFor1920Image2x});
@@ -176,8 +177,6 @@ EOT;
 }
 
 .{$class}.useImageHeight {
-    background-position: center top; /* move these properties to shared stylesheet */
-    background-repeat: no-repeat;
     min-height: {$heightForLarge}px;
 }
 
