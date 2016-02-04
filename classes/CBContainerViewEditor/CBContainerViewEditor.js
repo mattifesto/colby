@@ -257,4 +257,25 @@ var CBContainerViewEditor = {
             args.specChangedCallback();
         }
     },
+
+    /**
+     * @param object spec
+     * @param array? spec.children
+     *
+     * @return string|undefined
+     */
+    specToDescription : function (spec) {
+        if (spec.title) { return spec.title; }
+
+        var description;
+        var subviews = spec.subviews;
+
+        if (Array.isArray(subviews)) {
+            for (var i = 0; i < subviews.length && description === undefined; i++) {
+                description = CBArrayEditor.specToDescription(subviews[i]);
+            }
+        }
+
+        return description;
+    },
 };
