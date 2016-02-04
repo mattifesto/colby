@@ -27,30 +27,30 @@ var CBBackgroundViewEditor = {
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
-            handleSpecChanged   : args.specChangedCallback,
-            labelText           : "Repeat Horizontally",
-            propertyName        : "imageShouldRepeatHorizontally",
-            spec                : args.spec,
-        }));
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Repeat Horizontally",
+            propertyName : "imageShouldRepeatHorizontally",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
-            handleSpecChanged   : args.specChangedCallback,
-            labelText           : "Repeat Vertically",
-            propertyName        : "imageShouldRepeatVertically",
-            spec                : args.spec,
-        }));
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Repeat Vertically",
+            propertyName : "imageShouldRepeatVertically",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
-            handleSpecChanged   : args.specChangedCallback,
-            labelText           : "Minimum view height is image height",
-            propertyName        : "minimumViewHeightIsImageHeight",
-            spec                : args.spec,
-        }));
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Minimum View Height is Image Height",
+            propertyName : "minimumViewHeightIsImageHeight",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();

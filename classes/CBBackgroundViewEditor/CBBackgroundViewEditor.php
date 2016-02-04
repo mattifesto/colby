@@ -6,28 +6,21 @@ final class CBBackgroundViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBArrayEditor', 'CBUI', 'CBUIActionLink', 'CBUIStringEditor'];
+        return ['CBArrayEditor', 'CBImageEditor', 'CBUI', 'CBUIActionLink', 'CBUIBooleanEditor', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
     public static function requiredCSSURLs() {
-        return [
-            CBSystemURL . '/javascript/CBImageEditorFactory.css',
-            CBBackgroundViewEditor::URL('CBBackgroundViewEditor.css')
-        ];
+        return [CBBackgroundViewEditor::URL('CBBackgroundViewEditor.css')];
     }
 
     /**
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [
-            CBSystemURL . '/javascript/CBBooleanEditorFactory.js',
-            CBSystemURL . '/javascript/CBImageEditorFactory.js',
-            CBBackgroundViewEditor::URL('CBBackgroundViewEditor.js')
-        ];
+        return [CBBackgroundViewEditor::URL('CBBackgroundViewEditor.js')];
     }
 
     /**
