@@ -36,6 +36,15 @@ var CBBackgroundViewEditor = {
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Background color",
+            propertyName : "color",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
         item.appendChild(CBUIBooleanEditor.create({
             labelText : "Repeat Horizontally",
             propertyName : "imageShouldRepeatHorizontally",
@@ -57,15 +66,6 @@ var CBBackgroundViewEditor = {
         item.appendChild(CBUIBooleanEditor.create({
             labelText : "Minimum View Height is Image Height",
             propertyName : "minimumViewHeightIsImageHeight",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Background color",
-            propertyName : "color",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         }).element);
