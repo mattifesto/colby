@@ -7,6 +7,10 @@ var CBUIBooleanEditor = {
      * @param string args.propertyName
      * @param object args.spec
      * @param function args.specChangedCallback
+     *
+     * @return {
+     *  Element element,
+     * }
      */
     create : function (args) {
         var element = document.createElement("div");
