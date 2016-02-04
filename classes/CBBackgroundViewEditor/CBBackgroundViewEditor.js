@@ -27,6 +27,15 @@ var CBBackgroundViewEditor = {
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Title",
+            propertyName : "title",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
         item.appendChild(CBUIBooleanEditor.create({
             labelText : "Repeat Horizontally",
             propertyName : "imageShouldRepeatHorizontally",
@@ -120,6 +129,8 @@ var CBBackgroundViewEditor = {
      * @return string|undefined
      */
     specToDescription : function (spec) {
+        if (spec.title) { return spec.title; }
+
         var description;
         var children = spec.children;
 
