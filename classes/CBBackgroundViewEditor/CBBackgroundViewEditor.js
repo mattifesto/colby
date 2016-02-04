@@ -135,7 +135,7 @@ var CBBackgroundViewEditor = {
         var children = spec.children;
 
         if (Array.isArray(children)) {
-            for (var i = 0; i < children.length && description === undefined; i++) {
+            for (var i = 0; i < children.length && !description; i++) {
                 description = CBArrayEditor.specToDescription(children[i]);
             }
         }
