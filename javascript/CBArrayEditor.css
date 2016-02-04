@@ -23,6 +23,9 @@
 .CBArrayEditor .CBUISectionItem .content .description {
     color: hsl(0, 0%, 50%);
     font-size: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .CBArrayEditor .CBUISectionItem .action {
