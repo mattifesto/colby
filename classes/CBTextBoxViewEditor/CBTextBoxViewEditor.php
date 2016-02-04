@@ -27,15 +27,6 @@ final class CBTextBoxViewEditor {
     }
 
     /**
-     * @return [[string, mixed]]
-     */
-    public static function requiredJavaScriptVariables() {
-        return [
-            ['CBThemedTextViewThemes', CBThemedTextViewEditor::fetchThemes()]
-        ];
-    }
-
-    /**
      * @return string
      */
     public static function URL($filename) {
