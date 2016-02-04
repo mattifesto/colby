@@ -13,17 +13,18 @@ var CBBackgroundViewEditor = {
         CBBackgroundViewEditor.prepareSpec(args.spec);
 
         var section, item;
-        var element             = document.createElement("div");
-        element.className       = "CBBackgroundViewEditor";
-        var properties          = document.createElement("div");
-        properties.className    = "properties";
-        var imageSpec           = {
-            URL                 : args.spec.imageURL };
-        var handleImageChanged  = CBBackgroundViewEditor.handleImageChanged.bind(undefined, {
-            handleSpecChanged   : args.specChangedCallback,
-            imageSpec           : imageSpec,
-            spec                : args.spec });
-
+        var element = document.createElement("div");
+        element.className = "CBBackgroundViewEditor";
+        var properties = document.createElement("div");
+        properties.className = "properties";
+        var imageSpec = {
+            URL : args.spec.imageURL,
+        };
+        var handleImageChanged = CBBackgroundViewEditor.handleImageChanged.bind(undefined, {
+            handleSpecChanged : args.specChangedCallback,
+            imageSpec : imageSpec,
+            spec : args.spec,
+        });
 
         var options1            = document.createElement("div");
         options1.className      = "options options1";

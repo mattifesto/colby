@@ -6,7 +6,7 @@ final class CBBackgroundViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBArrayEditor', 'CBUI', 'CBUIStringEditor'];
+        return ['CBArrayEditor', 'CBUI', 'CBUIActionLink', 'CBUIStringEditor'];
     }
 
     /**
