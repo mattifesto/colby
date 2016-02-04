@@ -15,8 +15,6 @@ var CBBackgroundViewEditor = {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBBackgroundViewEditor";
-        var properties = document.createElement("div");
-        properties.className = "properties";
         var imageSpec = {
             URL : args.spec.imageURL,
         };
@@ -26,15 +24,9 @@ var CBBackgroundViewEditor = {
             spec : args.spec,
         });
 
-        var options1            = document.createElement("div");
-        options1.className      = "options options1";
-
-        options1.appendChild(CBImageEditorFactory.createEditor({
+        element.appendChild(CBImageEditorFactory.createEditor({
             handleSpecChanged   : handleImageChanged,
             spec                : imageSpec }));
-
-        properties.appendChild(options1);
-        element.appendChild(properties);
 
         section = CBUI.createSection();
 
