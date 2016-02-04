@@ -102,6 +102,13 @@ var CBViewPageEditor = {
         var specChangedCallback = CBViewPageEditor.requestSave.bind(CBViewPageEditor);
         var navigateCallback = CBViewPageEditor.navigate.bind(undefined, { navigationState : args.navigationState });
 
+        var title = document.createElement("div");
+        title.textContent = spec.className;
+
+        main.appendChild(CBUI.createHeader({
+            centerElement : title,
+        }));
+
         main.appendChild(CBUI.createHalfSpace());
 
         main.appendChild(editorFactory.createEditor({
