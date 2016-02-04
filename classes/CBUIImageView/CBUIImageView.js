@@ -53,7 +53,7 @@ var CBUIImageView = {
         var image = args.spec[args.propertyName];
 
         if (image === undefined) {
-            args.img.src = undefined;
+            args.img.src = null;
             args.img.style.display = "none";
         } else {
             args.img.src = CBUIImageView.imageToURL(image);
