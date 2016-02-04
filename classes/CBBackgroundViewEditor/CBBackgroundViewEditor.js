@@ -24,10 +24,6 @@ var CBBackgroundViewEditor = {
             spec : args.spec,
         });
 
-        element.appendChild(CBImageEditorFactory.createEditor({
-            handleSpecChanged   : handleImageChanged,
-            spec                : imageSpec }));
-
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
@@ -66,15 +62,24 @@ var CBBackgroundViewEditor = {
         }).element);
         section.appendChild(item);
 
-        element.appendChild(CBUI.createHalfSpace());
         element.appendChild(section);
+
         element.appendChild(CBUI.createHalfSpace());
+
         element.appendChild(CBUI.createSectionHeader({ text : "Subviews" }));
         element.appendChild(CBArrayEditor.createEditor({
             array : args.spec.children,
             arrayChangedCallback : args.specChangedCallback,
             classNames : CBBackgroundViewAddableViews,
             navigateCallback : args.navigateCallback,
+        }));
+
+        element.appendChild(CBUI.createHalfSpace());
+
+        element.appendChild(CBUI.createSectionHeader({ text : "Background Image" }));
+        element.appendChild(CBImageEditorFactory.createEditor({
+            handleSpecChanged : handleImageChanged,
+            spec : imageSpec,
         }));
 
         return element;
