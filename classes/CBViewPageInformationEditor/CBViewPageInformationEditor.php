@@ -23,6 +23,7 @@ final class CBViewPageInformationEditor {
         return [
             CBSystemURL . '/javascript/CBPageURIControl.js',
             CBSystemURL . '/javascript/CBPublicationControl.js',
+            CBSystemURL . '/javascript/CBStringEditorFactory.js',
             CBViewPageInformationEditor::URL('CBViewPageInformationEditor.js'),
         ];
     }
