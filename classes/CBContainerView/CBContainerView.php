@@ -166,100 +166,87 @@ EOT;
         extract($args, EXTR_IF_EXISTS);
 
         $class = "T{$imageThemeID}";
-        $URLForSmallImage2x = self::imageToURL($spec->smallImage);
-        $URLForMediumImage2x = self::imageToURL($spec->mediumImage);
-        $URLFor1920Image2x = self::imageToURL($spec->largeImage, ['base' => 'cwc3840']);
-        $URLForLargeImage2x = self::imageToURL($spec->largeImage);
-        $URLForSmallImage = self::imageToURL($spec->smallImage, ['base' => 's0.5']);
-        $URLForMediumImage = self::imageToURL($spec->mediumImage, ['base' => 's0.5']);
-        $URLFor1920Image = self::imageToURL($spec->largeImage, ['base' => 'cwc3840s0.5']);
-        $URLForLargeImage = self::imageToURL($spec->largeImage, ['base' => 's0.5']);
+        $rules = [];
 
-        $widthForSmall = intval($spec->smallImage->width / 2);
-        $widthForMedium = intval($spec->mediumImage->width / 2);
-        $widthForLarge = intval($spec->largeImage->width / 2);
+        if (isset($spec->largeImage)) {
+            $imageURL2x = self::imageToURL($spec->largeImage);
+            $imageURL1x = self::imageToURL($spec->largeImage, ['base' => 's0.5']);
+            $width = intval($spec->largeImage->width / 2);
+            $height = intval($spec->largeImage->height / 2);
 
-        $heightForSmall = intval($spec->smallImage->height / 2);
-        $heightForMedium = intval($spec->mediumImage->height / 2);
-        $heightForLarge = intval($spec->largeImage->height / 2);
-
-        if ($spec->largeImage->width > 3380) {
-            $media1920 = self::mediaRule([
+            $rules[] = [
                 'class' => $class,
-                'maxWidth' => 1920,
-                'imageURL1x' => $URLFor1920Image,
-                'imageURL2x' => $URLFor1920Image2x,
-                'width' => 1920,
-                'height' => $heightForLarge,
-            ]);
-        } else {
-            $media1920 = null;
+                'maxWidth' => 2560,
+                'imageURL1x' => $imageURL1x,
+                'imageURL2x' => $imageURL2x,
+                'width' => $width,
+                'height' => $height,
+            ];
+
+            if ($spec->largeImage->width > 3380) {
+                $imageURL2x = self::imageToURL($spec->largeImage, ['base' => 'cwc3840']);
+                $imageURL1x = self::imageToURL($spec->largeImage, ['base' => 'cwc3840s0.5']);
+                $width = 1920;
+
+                $rules[] = [
+                    'class' => $class,
+                    'maxWidth' => 1920,
+                    'imageURL1x' => $imageURL1x,
+                    'imageURL2x' => $imageURL2x,
+                    'width' => $width,
+                    'height' => $height,
+                ];
+            }
         }
 
-        return <<<EOT
+        if (isset($spec->mediumImage)) {
+            $imageURL2x = self::imageToURL($spec->mediumImage);
+            $imageURL1x = self::imageToURL($spec->mediumImage, ['base' => 's0.5']);
+            $width = intval($spec->mediumImage->width / 2);
+            $height = intval($spec->mediumImage->height / 2);
 
-.{$class} {
-    background-image: url({$URLForLargeImage});
-    background-size: {$widthForLarge}px {$heightForLarge}px;
-}
+            $rules[] = [
+                'class' => $class,
+                'maxWidth' => 1068,
+                'imageURL1x' => $imageURL1x,
+                'imageURL2x' => $imageURL2x,
+                'width' => $width,
+                'height' => $height,
+            ];
+        }
 
-.{$class}.useImageHeight {
-    min-height: {$heightForLarge}px;
-}
+        if (isset($spec->smallImage)) {
+            $imageURL2x = self::imageToURL($spec->smallImage);
+            $imageURL1x = self::imageToURL($spec->smallImage, ['base' => 's0.5']);
+            $width = intval($spec->smallImage->width / 2);
+            $height = intval($spec->smallImage->height / 2);
 
-@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
-    .{$class} {
-        background-image: url({$URLForLargeImage2x});
-    }
-}
+            $rules[] = [
+                'class' => $class,
+                'maxWidth' => 735,
+                'imageURL1x' => $imageURL1x,
+                'imageURL2x' => $imageURL2x,
+                'width' => $width,
+                'height' => $height,
+            ];
+        }
 
-{$media1920}
+        $rules[0]['maxWidth'] = null;
+        $rules = array_map('CBContainerView::mediaRule', $rules);
 
-@media (max-width: 1068px) {
-    .{$class} {
-        background-image: url({$URLForMediumImage});
-        background-size: {$widthForMedium}px {$heightForMedium}px;
-    }
-
-    .{$class}.useImageHeight {
-        min-height: {$heightForMedium}px;
-    }
-}
-
-@media (max-width: 1068px) and (-webkit-min-device-pixel-ratio: 1.5), (max-width: 1068px) and (min-resolution: 144dpi)
-{
-    .{$class} {
-        background-image: url({$URLForMediumImage2x});
-    }
-}
-
-@media (max-width: 735px) {
-    .{$class} {
-        background-image: url({$URLForSmallImage});
-        background-size: {$widthForSmall}px {$heightForSmall}px;
-    }
-
-    .{$class}.useImageHeight {
-        min-height: {$heightForSmall}px;
-    }
-}
-
-@media (max-width: 735px) and (-webkit-min-device-pixel-ratio: 1.5), (max-width: 735px) and (min-resolution: 144dpi)
-{
-    .{$class} {
-        background-image: url({$URLForSmallImage2x});
-    }
-}
-
-EOT;
+        return implode("\n\n", $rules);
     }
 
     /**
      * return hex160?
      */
     public static function specToImageThemeID(stdClass $spec) {
-        if (!empty($spec->largeImage->ID) && !empty($spec->mediumImage->ID) && !empty($spec->smallImage->ID)) {
-            return sha1("{$spec->largeImage->ID}{$spec->mediumImage->ID}{$spec->smallImage->ID}");
+        $largeImageID = isset($spec->largeImage->ID) ? $spec->largeImage->ID : null;
+        $mediumImageID = isset($spec->mediumImage->ID) ? $spec->mediumImage->ID : null;
+        $smallImageID = isset($spec->smallImage->ID) ? $spec->smallImage->ID : null;
+
+        if (isset($largeImageID) || isset($mediumImageID) || isset($smallImageID)) {
+            return sha1("CBContainerView Large: {$largeImageID} Medium: {$mediumImageID} Small: {$smallImageID}");
         } else {
             return null;
         }
@@ -275,8 +262,7 @@ EOT;
 
         self::makeImagesForSpec($spec);
 
-        if (!empty($spec->largeImage->ID) && !empty($spec->mediumImage->ID) && !empty($spec->smallImage->ID)) {
-            $imageThemeID = sha1("{$spec->largeImage->ID}{$spec->mediumImage->ID}{$spec->smallImage->ID}");
+        if ($imageThemeID = CBContainerView::specToImageThemeID($spec)) {
             $filepath = CBContainerView::imageThemeIDToStyleSheetFilepath($imageThemeID);
 
             CBDataStore::makeDirectoryForID($imageThemeID);
@@ -284,10 +270,9 @@ EOT;
             file_put_contents($filepath, CBContainerView::specToImageThemeCSS($spec, [
                 'imageThemeID' => $imageThemeID,
             ]));
-
-            $response->imageThemeID = $imageThemeID;
         }
 
+        $response->imageThemeID = $imageThemeID;
         $response->wasSuccessful = true;
         $response->send();
     }
