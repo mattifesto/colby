@@ -56,11 +56,11 @@ var CBMenuItemEditor = {
     },
 
     /**
-     * @param Object args.spec
+     * @param object spec
      *
      * @return string
      */
-    specToDescription : function (args) {
-        return args.spec.text || "";
+    specToDescription : function (spec) {
+        return spec.text;
     },
 };
