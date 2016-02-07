@@ -57,37 +57,20 @@ var CBThemedMenuViewEditorFactory = {
 
         // themeID
         item = CBUI.createSectionItem();
-        item.appendChild(CBThemedMenuViewEditorFactory.createThemeIDEditor({
-            handleSpecChanged   : args.specChangedCallback,
-            labelText           : "Theme",
-            propertyName        : "themeID",
-            spec                : args.spec
-        }));
+        item.appendChild(CBUIThemeSelector.create({
+            classNameForKind : "CBMenuView",
+            labelText : "Theme",
+            navigateCallback : args.navigateCallback,
+            propertyName : "themeID",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
         section.appendChild(item);
 
         element.appendChild(section);
 
         return element;
     },
-
-    /**
-     * @param   {function}  handleSpecChanged
-     * @param   {string}    labelText
-     * @param   {string}    propertyName
-     * @param   {Object}    spec
-     * @return  {Element}
-     */
-    createThemeIDEditor : function(args) {
-        return CBStringEditorFactory.createSelectEditor({
-            data                : CBThemedMenuViewEditorFactory.themes,
-            dataUpdatedEvent    : CBThemedMenuViewEditorFactory.themesUpdated,
-            handleSpecChanged   : args.handleSpecChanged,
-            labelText           : args.labelText,
-            propertyName        : args.propertyName,
-            spec                : args.spec
-        });
-    },
-
 
     /**
      * @param Element args.menuIDEditorSelectElement
