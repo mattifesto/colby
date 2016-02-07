@@ -12,13 +12,14 @@ var CBThemedMenuViewEditorFactory = {
      * @return Element
      */
     createEditor : function (args) {
+        var section, item;
         var element = document.createElement("div");
         element.className = "CBThemedMenuViewEditor";
-        var container = document.createElement("div");
-        container.className = "container";
+
+        section = CBUI.createSection();
 
         // menuID
-
+        item = CBUI.createSectionItem();
         var menuIDEditor = CBStringEditorFactory.createSelectEditor2({
             handleSpecChanged : args.specChangedCallback,
             labelTextContent : "Menu",
@@ -30,10 +31,11 @@ var CBThemedMenuViewEditorFactory = {
             updateMenuIDOptionsCallback : menuIDEditor.updateSelectEditorOptionsCallback,
         });
 
-        container.appendChild(menuIDEditor.element);
+        item.appendChild(menuIDEditor.element);
+        section.appendChild(item);
 
         // selectedItemName
-
+        item = CBUI.createSectionItem();
         var selectedItemNameEditor = CBStringEditorFactory.createSelectEditor2({
             handleSpecChanged : args.specChangedCallback,
             labelTextContent : "Selected Item",
@@ -49,19 +51,21 @@ var CBThemedMenuViewEditorFactory = {
         menuIDEditor.selectElement.addEventListener("change", handleMenuIDChangedCallback);
 
         handleMenuIDChangedCallback.call();
+        item.appendChild(selectedItemNameEditor.element);
+        section.appendChild(item);
 
-        container.appendChild(selectedItemNameEditor.element);
 
         // themeID
-
-        container.appendChild(CBThemedMenuViewEditorFactory.createThemeIDEditor({
+        item = CBUI.createSectionItem();
+        item.appendChild(CBThemedMenuViewEditorFactory.createThemeIDEditor({
             handleSpecChanged   : args.specChangedCallback,
             labelText           : "Theme",
             propertyName        : "themeID",
             spec                : args.spec
         }));
+        section.appendChild(item);
 
-        element.appendChild(container);
+        element.appendChild(section);
 
         return element;
     },
