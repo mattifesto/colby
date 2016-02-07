@@ -2,9 +2,6 @@
 
 var CBThemedMenuViewEditorFactory = {
 
-    themes : [],
-    themesUpdated : "CBThemedMenuViewEditorThemesUpdated",
-
     /**
      * @param function args.navigateCallback
      * @param object args.spec
@@ -159,48 +156,4 @@ var CBThemedMenuViewEditorFactory = {
             Colby.displayResponse(response);
         }
     },
-
-    /**
-     * @return undefined
-     */
-    fetchThemes : function() {
-        var xhr = new XMLHttpRequest();
-        xhr.onload = CBThemedMenuViewEditorFactory.fetchThemesDidLoad.bind(undefined, {
-            xhr : xhr
-        });
-        xhr.onerror = function() {
-            alert("The CBThemedMenuView themes failed to load.");
-        };
-
-        xhr.open("POST", "/api/?class=CBThemedMenuView&function=fetchThemes");
-        xhr.send();
-    },
-
-    /**
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    fetchThemesDidLoad : function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            var themes = CBThemedMenuViewEditorFactory.themes;
-            themes.length = 0;
-
-            themes.push({ textContent : "None", value : ""});
-
-            response.themes.forEach(function(theme) {
-                themes.push(theme);
-            });
-
-            document.dispatchEvent(new Event(CBThemedMenuViewEditorFactory.themesUpdated));
-        } else {
-            Colby.displayResponse(response);
-        }
-    },
 };
-
-document.addEventListener("DOMContentLoaded", function() {
-    CBThemedMenuViewEditorFactory.fetchThemes();
-});
