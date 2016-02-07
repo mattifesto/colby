@@ -42,7 +42,7 @@ final class CBThemedMenuView {
         $response   = new CBAjaxResponse();
         $SQL        = <<<EOT
 
-            SELECT      LOWER(HEX(`ID`)) AS `value`, `title` AS `textContent`
+            SELECT      LOWER(HEX(`ID`)) AS `value`, `title`
             FROM        `CBModels`
             WHERE       `className` = 'CBMenu'
             ORDER BY    `title`
@@ -82,7 +82,7 @@ EOT;
             return $model->classNameForKind === "CBMenuView";
         }));
         $themes = array_map(function($model) {
-            return (object)['value' => $model->ID, 'textContent' => $model->title];
+            return (object)['value' => $model->ID, 'title' => $model->title];
         }, $models);
         $response->themes = $themes;
         $response->wasSuccessful = true;

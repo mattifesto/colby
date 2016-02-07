@@ -6,8 +6,9 @@ var CBThemedMenuViewEditorFactory = {
     themesUpdated : "CBThemedMenuViewEditorThemesUpdated",
 
     /**
-     * @param object spec
-     * @param function specChangedCallback
+     * @param function args.navigateCallback
+     * @param object args.spec
+     * @param function args.specChangedCallback
      *
      * @return Element
      */
@@ -20,15 +21,16 @@ var CBThemedMenuViewEditorFactory = {
 
         // menuID
         item = CBUI.createSectionItem();
-        var menuIDEditor = CBStringEditorFactory.createSelectEditor2({
-            handleSpecChanged : args.specChangedCallback,
-            labelTextContent : "Menu",
+        var menuIDEditor = CBUISelector.create({
+            labelText : "Menu",
+            navigateCallback : args.navigateCallback,
             propertyName : "menuID",
             spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
         });
 
         CBThemedMenuViewEditorFactory.fetchMenus({
-            updateMenuIDOptionsCallback : menuIDEditor.updateSelectEditorOptionsCallback,
+            updateMenuIDOptionsCallback : menuIDEditor.updateOptionsCallback,
         });
 
         item.appendChild(menuIDEditor.element);
@@ -44,11 +46,12 @@ var CBThemedMenuViewEditorFactory = {
         });
 
         var handleMenuIDChangedCallback = CBThemedMenuViewEditorFactory.fetchMenuItemOptions.bind(undefined, {
-            menuIDEditorSelectElement : menuIDEditor.selectElement,
+            propertyName : "menuID",
+            spec : args.spec,
             updateMenuItemOptionsCallback : selectedItemNameEditor.updateSelectEditorOptionsCallback
         });
 
-        menuIDEditor.selectElement.addEventListener("change", handleMenuIDChangedCallback);
+        menuIDEditor.element.addEventListener("change", handleMenuIDChangedCallback);
 
         handleMenuIDChangedCallback.call();
         item.appendChild(selectedItemNameEditor.element);
@@ -73,16 +76,21 @@ var CBThemedMenuViewEditorFactory = {
     },
 
     /**
-     * @param Element args.menuIDEditorSelectElement
+     * @param string args.propertyName
+     * @param object args.spec
      * @param function args.updateMenuItemOptionsCallback
      *
      * @return undefined
      */
     fetchMenuItemOptions : function (args) {
-        args.menuIDEditorSelectElement.disabled = true;
+        var menuID = args.spec[args.propertyName];
+
+        if (!menuID) { return; }
+
+        //args.menuIDEditorSelectElement.disabled = true;
         var formData = new FormData();
 
-        formData.append("menuID", args.menuIDEditorSelectElement.value);
+        formData.append("menuID", menuID);
 
         var xhr = new XMLHttpRequest();
         xhr.onerror = function () {
@@ -104,7 +112,7 @@ var CBThemedMenuViewEditorFactory = {
      * @return undefined
      */
     fetchMenuItemOptionsDidLoad : function (args) {
-        args.menuIDEditorSelectElement.disabled = false;
+        //args.menuIDEditorSelectElement.disabled = false;
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
@@ -145,7 +153,7 @@ var CBThemedMenuViewEditorFactory = {
         if (response.wasSuccessful) {
             var menus = response.menus;
 
-            menus.push({ textContent : "None", value : ""});
+            menus.push({ title : "None", value : undefined});
             args.updateMenuIDOptionsCallback(menus);
         } else {
             Colby.displayResponse(response);
