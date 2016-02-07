@@ -1,6 +1,6 @@
 "use strict";
 
-var CBThemedMenuViewEditorFactory = {
+var CBThemedMenuViewEditor = {
 
     /**
      * @param function args.navigateCallback
@@ -14,46 +14,45 @@ var CBThemedMenuViewEditorFactory = {
         var element = document.createElement("div");
         element.className = "CBThemedMenuViewEditor";
 
-        section = CBUI.createSection();
-
-        // menuID
-        item = CBUI.createSectionItem();
-        var menuIDEditor = CBUISelector.create({
-            labelText : "Menu",
+        var menuItemSelector = CBUISelector.create({
+            labelText : "Selected Item",
             navigateCallback : args.navigateCallback,
-            propertyName : "menuID",
+            propertyName : "selectedItemName",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         });
 
-        CBThemedMenuViewEditorFactory.fetchMenus({
-            updateMenuIDOptionsCallback : menuIDEditor.updateOptionsCallback,
+        var updateMenuItemsCallback = CBThemedMenuViewEditor.fetchMenuItems.bind(undefined, {
+            spec : args.spec,
+            updateOptionsCallback : menuItemSelector.updateOptionsCallback
         });
 
-        item.appendChild(menuIDEditor.element);
+        var menuChangedCallback = CBThemedMenuViewEditor.handleMenuChanged.bind(undefined, {
+            specChangedCallback : args.specChangedCallback,
+            updateMenuItemsCallback : updateMenuItemsCallback,
+        });
+
+        section = CBUI.createSection();
+
+        // menuID
+        item = CBUI.createSectionItem();
+        var menuSelector = CBUISelector.create({
+            labelText : "Menu",
+            navigateCallback : args.navigateCallback,
+            propertyName : "menuID",
+            spec : args.spec,
+            specChangedCallback : menuChangedCallback,
+        });
+        CBThemedMenuViewEditor.fetchMenus({
+            updateOptionsCallback : menuSelector.updateOptionsCallback,
+        });
+        item.appendChild(menuSelector.element);
         section.appendChild(item);
 
         // selectedItemName
         item = CBUI.createSectionItem();
-        var selectedItemNameEditor = CBStringEditorFactory.createSelectEditor2({
-            handleSpecChanged : args.specChangedCallback,
-            labelTextContent : "Selected Item",
-            propertyName : "selectedItemName",
-            spec : args.spec,
-        });
-
-        var handleMenuIDChangedCallback = CBThemedMenuViewEditorFactory.fetchMenuItemOptions.bind(undefined, {
-            propertyName : "menuID",
-            spec : args.spec,
-            updateMenuItemOptionsCallback : selectedItemNameEditor.updateSelectEditorOptionsCallback
-        });
-
-        menuIDEditor.element.addEventListener("change", handleMenuIDChangedCallback);
-
-        handleMenuIDChangedCallback.call();
-        item.appendChild(selectedItemNameEditor.element);
+        item.appendChild(menuItemSelector.element);
         section.appendChild(item);
-
 
         // themeID
         item = CBUI.createSectionItem();
@@ -69,33 +68,35 @@ var CBThemedMenuViewEditorFactory = {
 
         element.appendChild(section);
 
+        updateMenuItemsCallback();
+
         return element;
     },
 
     /**
-     * @param string args.propertyName
      * @param object args.spec
-     * @param function args.updateMenuItemOptionsCallback
+     * @param function args.updateOptionsCallback
      *
      * @return undefined
      */
-    fetchMenuItemOptions : function (args) {
-        var menuID = args.spec[args.propertyName];
+    fetchMenuItems : function (args) {
+        var menuID = args.spec.menuID;
 
-        if (!menuID) { return; }
+        if (!menuID) {
+            args.updateOptionsCallback([{ title : "None", value : undefined }]);
+            return;
+        }
 
         //args.menuIDEditorSelectElement.disabled = true;
         var formData = new FormData();
-
         formData.append("menuID", menuID);
 
         var xhr = new XMLHttpRequest();
         xhr.onerror = function () {
             Colby.alert("The menu item options failed to load.");
         };
-        xhr.onload = CBThemedMenuViewEditorFactory.fetchMenuItemOptionsDidLoad.bind(undefined, {
-            menuIDEditorSelectElement : args.menuIDEditorSelectElement,
-            updateMenuItemOptionsCallback : args.updateMenuItemOptionsCallback,
+        xhr.onload = CBThemedMenuViewEditor.fetchMenuItemsDidLoad.bind(undefined, {
+            updateOptionsCallback : args.updateOptionsCallback,
             xhr : xhr,
         });
         xhr.open("POST", "/api/?class=CBThemedMenuView&function=fetchMenuItemOptions");
@@ -103,31 +104,33 @@ var CBThemedMenuViewEditorFactory = {
     },
 
     /**
-     * @param Element args.menuIDEditorSelectElement
-     * @param function args.updateMenuItemOptionsCallback
+     * @param function args.updateOptionsCallback
      * @param XMLHttpRequest args.xhr
+     *
      * @return undefined
      */
-    fetchMenuItemOptionsDidLoad : function (args) {
+    fetchMenuItemsDidLoad : function (args) {
         //args.menuIDEditorSelectElement.disabled = false;
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            args.updateMenuItemOptionsCallback(response.menuItemOptions);
+            var menuItems = response.menuItemOptions;
+            menuItems.unshift({ title : "None", value : undefined });
+            args.updateOptionsCallback(menuItems);
         } else {
             Colby.displayResponse(response);
         }
     },
 
     /**
-     * @param function args.updateMenuIDOptionsCallback
+     * @param function args.updateOptionsCallback
      *
      * @return undefined
      */
     fetchMenus : function (args) {
         var xhr = new XMLHttpRequest();
-        xhr.onload = CBThemedMenuViewEditorFactory.fetchMenusDidLoad.bind(undefined, {
-            updateMenuIDOptionsCallback : args.updateMenuIDOptionsCallback,
+        xhr.onload = CBThemedMenuViewEditor.fetchMenusDidLoad.bind(undefined, {
+            updateOptionsCallback : args.updateOptionsCallback,
             xhr : xhr,
         });
         xhr.onerror = function () {
@@ -139,21 +142,31 @@ var CBThemedMenuViewEditorFactory = {
     },
 
     /**
-     * @param function args.updateMenuIDOptionsCallback
+     * @param function args.updateOptionsCallback
      * @param XMLHttpRequest xhr
      *
      * @return undefined
      */
-    fetchMenusDidLoad : function(args) {
+    fetchMenusDidLoad : function (args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
             var menus = response.menus;
-
-            menus.push({ title : "None", value : undefined});
-            args.updateMenuIDOptionsCallback(menus);
+            menus.unshift({ title : "None", value : undefined});
+            args.updateOptionsCallback(menus);
         } else {
             Colby.displayResponse(response);
         }
+    },
+
+    /**
+     * @param function args.specChangedCallback
+     * @param function args.updateMenuItemsCallback
+     *
+     * @return undefined
+     */
+    handleMenuChanged : function (args) {
+        args.specChangedCallback.call();
+        args.updateMenuItemsCallback.call();
     },
 };

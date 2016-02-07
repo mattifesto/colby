@@ -19,7 +19,7 @@ final class CBThemedMenuView {
             $options = [];
         } else {
             $options = array_map(function ($menuItem) {
-                return (object)['value' => $menuItem->name, 'textContent' => $menuItem->text];
+                return (object)['value' => $menuItem->name, 'title' => $menuItem->text];
             }, $menu->items);
         }
 
