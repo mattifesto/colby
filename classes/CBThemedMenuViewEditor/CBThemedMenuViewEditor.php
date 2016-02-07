@@ -20,7 +20,7 @@ final class CBThemedMenuViewEditor {
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [CBThemedMenuViewEditor::URL('CBThemedMenuViewEditorFactory.js')];
+        return [CBThemedMenuViewEditor::URL('CBThemedMenuViewEditor.js')];
     }
 
     /**

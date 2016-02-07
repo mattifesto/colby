@@ -6,10 +6,10 @@ var CBThemedMenuViewEditorFactory = {
     themesUpdated : "CBThemedMenuViewEditorThemesUpdated",
 
     /**
-     * @param {function} handleSpecChanged
-     * @param {Object} spec
+     * @param object spec
+     * @param function specChangedCallback
      *
-     * @return {Element}
+     * @return Element
      */
     createEditor : function (args) {
         var element = document.createElement("div");
@@ -20,7 +20,7 @@ var CBThemedMenuViewEditorFactory = {
         // menuID
 
         var menuIDEditor = CBStringEditorFactory.createSelectEditor2({
-            handleSpecChanged : args.handleSpecChanged,
+            handleSpecChanged : args.specChangedCallback,
             labelTextContent : "Menu",
             propertyName : "menuID",
             spec : args.spec,
@@ -35,7 +35,7 @@ var CBThemedMenuViewEditorFactory = {
         // selectedItemName
 
         var selectedItemNameEditor = CBStringEditorFactory.createSelectEditor2({
-            handleSpecChanged : args.handleSpecChanged,
+            handleSpecChanged : args.specChangedCallback,
             labelTextContent : "Selected Item",
             propertyName : "selectedItemName",
             spec : args.spec,
@@ -55,7 +55,7 @@ var CBThemedMenuViewEditorFactory = {
         // themeID
 
         container.appendChild(CBThemedMenuViewEditorFactory.createThemeIDEditor({
-            handleSpecChanged   : args.handleSpecChanged,
+            handleSpecChanged   : args.specChangedCallback,
             labelText           : "Theme",
             propertyName        : "themeID",
             spec                : args.spec
