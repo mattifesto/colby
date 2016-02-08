@@ -7,16 +7,6 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
 $response               = new CBAjaxResponse();
 $dataStoreID            = $_POST['dataStoreID'];
 $response->dataStoreID  = $dataStoreID;
-$frontPageFilename      = CBDataStore::filepath(['ID' => CBPageTypeID, 'filename' => 'front-page.json']);
-
-if (file_exists($frontPageFilename)) {
-    $frontPage = json_decode(file_get_contents($frontPageFilename));
-
-    if ($dataStoreID == $frontPage->dataStoreID) {
-        $response->message = 'This page is currently the front page and can\'t be deleted.';
-        goto done;
-    }
-}
 
 Colby::query('START TRANSACTION');
 
@@ -37,7 +27,4 @@ Colby::query('COMMIT');
  */
 
 $response->wasSuccessful = true;
-
-done:
-
 $response->send();
