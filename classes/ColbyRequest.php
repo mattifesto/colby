@@ -27,32 +27,21 @@ final class ColbyRequest {
     // /foo+bar/pi%C3%B1ata/post/
 
     /**
-     * This function only returns the current iteration because it's needed
-     * when the front page is being rendered. In the future, this process will
-     * probably change.
+     * @param hex160 $ID
      *
-     * @return stdClass
+     * @return int
      */
-    public static function CBPagesRowForID($ID)
-    {
-        $IDAsSQL    = ColbyConvert::textToSQL($ID);
-        $SQL        = <<<EOT
+    public static function currentIterationForPageID($ID) {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $SQL = <<<EOT
 
-            SELECT
-                `iteration`
-            FROM
-                `ColbyPages`
-            WHERE
-                `archiveID` = UNHEX('{$IDAsSQL}')
+            SELECT  `iteration`
+            FROM    `ColbyPages`
+            WHERE   `archiveID` = {$IDAsSQL}
 
 EOT;
 
-        $result = Colby::query($SQL);
-        $row    = $result->fetch_object();
-
-        $result->free();
-
-        return $row;
+        return CBDB::SQLToValue($SQL);
     }
 
     /**
@@ -82,16 +71,11 @@ EOT;
         {
             $canonicalEncodedPath = '/';
             $function = function() {
-                $filepath = CBDataStore::filepath([
-                    'ID' => CBPageTypeID,
-                    'filename' => 'front-page.json'
-                ]);
+                $frontPageID = CBSitePreferences::frontPageID();
 
-                if (file_exists($filepath)) {
-                    $frontPage  = json_decode(file_get_contents($filepath));
-                    $row        = ColbyRequest::CBPagesRowForID($frontPage->dataStoreID);
-
-                    CBViewPage::renderAsHTMLForID($frontPage->dataStoreID, $row->iteration);
+                if (isset($frontPageID)) {
+                    $iteration = ColbyRequest::currentIterationForPageID($frontPageID);
+                    CBViewPage::renderAsHTMLForID($frontPageID, $iteration);
                     return 1;
                 } else {
                     return include Colby::findHandler('handle-front-page.php');

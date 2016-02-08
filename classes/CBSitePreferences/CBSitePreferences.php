@@ -62,6 +62,29 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return hex160?
+     */
+    public static function frontPageID() {
+        $model = CBSitePreferences::model();
+
+        if (isset($model->frontPageID)) {
+            return $model->frontPageID;
+        } else {
+            $filepath = CBDataStore::filepath([
+                'ID' => CBPageTypeID,
+                'filename' => 'front-page.json'
+            ]);
+
+            if (file_exists($filepath)) {
+                $frontPage = json_decode(file_get_contents($filepath));
+                return $frontPage->dataStoreID;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
      * @return  {string}
      *  Returns a Google Tag Manager ID or an empty string.
      */
