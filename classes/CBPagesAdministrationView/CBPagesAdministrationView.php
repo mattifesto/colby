@@ -15,7 +15,6 @@ final class CBPagesAdministrationView {
     public static function requiredCSSURLs() {
         return [
             CBSystemURL . '/javascript/CBPageList.css',
-            CBPagesAdministrationView::URL('CBPagesAdministrationView.css'),
         ];
     }
 

@@ -15,7 +15,7 @@ $selectedSubmenuItemID  = 'unpublished';
 
 include CBSystemDirectory . '/sections/admin-page-menu.php';
 
-echo '<main></main>';
+echo '<main class="CBUIRoot"></main>';
 
 CBAdminPageFooterView::renderModelAsHTML();
 

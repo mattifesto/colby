@@ -1,15 +1,15 @@
 "use strict";
 
-var CBUnpublishedPagesAdmin = {
+var CBPagesAdministrationView = {
 
     /**
      * @return {Element}
      */
     createElement : function() {
         var element = document.createElement("div");
-        element.className = "CBUnpublishedPagesAdmin";
+        element.className = "CBPagesAdministrationView";
 
-        CBUnpublishedPagesAdmin.fetchPages({
+        CBPagesAdministrationView.fetchPages({
             element : element
         });
 
@@ -23,11 +23,11 @@ var CBUnpublishedPagesAdmin = {
      */
     fetchPages : function(args) {
         var xhr = new XMLHttpRequest();
-        xhr.onload = CBUnpublishedPagesAdmin.fetchPagesDidLoad.bind(undefined, {
+        xhr.onload = CBPagesAdministrationView.fetchPagesDidLoad.bind(undefined, {
             element: args.element,
             xhr : xhr
         });
-        xhr.onerror = CBUnpublishedPagesAdmin.fetchPagesDidError.bind(undefined, {
+        xhr.onerror = CBPagesAdministrationView.fetchPagesDidError.bind(undefined, {
             xhr : xhr
         });
 
@@ -75,5 +75,5 @@ var CBUnpublishedPagesAdmin = {
 document.addEventListener("DOMContentLoaded", function() {
     var main = document.getElementsByTagName("main")[0];
 
-    main.appendChild(CBUnpublishedPagesAdmin.createElement());
+    main.appendChild(CBPagesAdministrationView.createElement());
 });
