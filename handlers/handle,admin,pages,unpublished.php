@@ -8,10 +8,7 @@ CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Unpublished Pages');
 CBHTMLOutput::setDescriptionHTML('Pages that haven\'t been published.');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages,unpublished.css');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages,unpublished.js');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/javascript/CBPageList.css');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBPageList.js');
+CBHTMLOutput::requireClassName('CBPagesAdministrationView');
 
 $selectedMenuItemID     = 'pages';
 $selectedSubmenuItemID  = 'unpublished';
