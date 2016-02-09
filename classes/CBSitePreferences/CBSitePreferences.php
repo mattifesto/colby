@@ -70,7 +70,7 @@ final class CBSitePreferences {
         if (isset($model->frontPageID)) {
             return $model->frontPageID;
         } else {
-            $filepath = CBDataStore::filepath([
+            $filepath = CBDataStore::filepath([ /* deprecated */
                 'ID' => CBPageTypeID,
                 'filename' => 'front-page.json'
             ]);
@@ -180,6 +180,48 @@ final class CBSitePreferences {
     }
 
     /**
+     * @param hex160 $ID
+     *
+     * @return null
+     */
+    public static function setFrontPageID($ID) {
+        if (!CBHex160::is($ID)) {
+            throw new Exception("'{$ID}' is not a 160-bit hexadecimal value.");
+        }
+
+        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
+        $spec->frontPageID = $ID;
+        CBModels::save([$spec]);
+
+        /* clear cache */
+        CBSitePreferences::$model = false;
+
+        /* remove deprecated data store */
+        CBDataSTore::deleteByID(CBPageTypeID);
+    }
+
+    /**
+     * @return null
+     */
+    public static function setFrontPageIDForAjax() {
+        $response = new CBAjaxResponse();
+        $ID = $_POST['ID'];
+
+        CBSitePreferences::setFrontPageID($ID);
+
+        $response->message = "The front page was changed successfully.";
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function setFrontPageIDForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
@@ -187,6 +229,7 @@ final class CBSitePreferences {
         $model->debug = isset($spec->debug) ? !!$spec->debug : false;
         $model->defaultClassNameForPageSettings = isset($spec->defaultClassNameForPageSettings) ? trim($spec->defaultClassNameForPageSettings) : '';
         $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
+        $model->frontPageID = CBModel::value($spec, 'frontPageID');
         $model->googleTagManagerID = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
 
         return $model;

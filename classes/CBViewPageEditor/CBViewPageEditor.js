@@ -165,12 +165,12 @@ var CBViewPageEditor = {
     makeFrontPage : function (args) {
         if (window.confirm("Are you sure you want to use this page as the front page?")) {
             var data = new FormData();
-            data.append("dataStoreID", args.ID);
+            data.append("ID", args.ID);
 
             var xhr = new XMLHttpRequest();
             xhr.onerror = Colby.displayXHRError.bind(undefined, { xhr : xhr });
             xhr.onload = CBViewPageEditor.makeFrontPageDidLoad.bind(undefined, { xhr : xhr });
-            xhr.open("POST", "/admin/pages/api/make-front-page/", true);
+            xhr.open("POST", "/api/?class=CBSitePreferences&function=setFrontPageID", true);
             xhr.send(data);
         }
     },
