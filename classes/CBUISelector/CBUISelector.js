@@ -158,8 +158,6 @@ var CBUISelectorValueEditor = {
         var element = document.createElement("div");
         element.className = "CBUISelectorValueEditor";
 
-        element.appendChild(CBUI.createHalfSpace());
-
         section = CBUI.createSection();
 
         targetOptions.forEach(function (option) {
@@ -183,7 +181,6 @@ var CBUISelectorValueEditor = {
         });
 
         element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
