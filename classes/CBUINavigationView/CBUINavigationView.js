@@ -6,9 +6,32 @@ var CBUINavigationView = {
      * @return Element
      */
     containerFromItem : function (item) {
+        var leftElements, rightElements, titleElement;
         var container = document.createElement("div");
         container.className = "container";
+
+        if (typeof item.title === "string") {
+            titleElement = CBUI.createHeaderTitle({
+                text : item.title,
+            });
+        }
+
+        if (typeof item.left === "string") {
+            leftElements = [CBUI.createHeaderButtonItem({
+                callback : window.history.back.bind(window.history),
+                text : "< " + item.left,
+            })];
+        }
+
+        var header = CBUI.createHeader({
+            centerElement : titleElement,
+            leftElements : leftElements,
+            rightElements : rightElements,
+        });
+
+        container.appendChild(header);
         container.appendChild(item.element);
+
         return container;
     },
 
@@ -18,7 +41,7 @@ var CBUINavigationView = {
      *
      * @return {
      *  Element element,
-     *  function navigateToElementCallback,
+     *  function navigateToItemCallback,
      *  function navigateToSpecCallback, (deprecated)
      * }
      */
@@ -31,10 +54,8 @@ var CBUINavigationView = {
         };
 
         var navigateToItemCallback = CBUINavigationView.navigateToItem.bind(undefined, state);
-        var navigateToSpecCallback = CBUINavigationView.navigateToSpec.bind(undefined, {
-            defaultSpecChangedCallback : args.defaultSpecChangedCallback,
-            navigateToItemCallback : navigateToItemCallback,
-        });
+        var navigateToSpecCallback = CBUINavigationView.navigateToSpec.bind(undefined,
+            args.defaultSpecChangedCallback, navigateToItemCallback);
 
         window.addEventListener("popstate", CBUINavigationView.handlePopState.bind(undefined, state));
 
@@ -56,7 +77,7 @@ var CBUINavigationView = {
         if (state.items.length < 2) { return; }
 
         /* var from = */ state.items.pop();
-        var newContainerElement = state.items[state.items.length - 1].element;
+        var newContainerElement = state.items[state.items.length - 1].container;
 
         state.element.textContent = null;
         state.element.appendChild(newContainerElement);
@@ -70,22 +91,33 @@ var CBUINavigationView = {
      * @return undefined
      */
     navigateToItem : function (state, item) {
-        item = {
+        var fromItem;
+        var toItem = {
             element : item.element,
+            left : item.left,
+            right : item.right,
             title : item.title,
         };
 
-        /* var from = state.elements[state.elements.length - 1]; */
-        item.container = CBUINavigationView.containerFromItem(item);
+        if (state.items.length > 0) {
+            fromItem = state.items[state.items.length - 1];
 
-        state.items.push(item);
+            if (toItem.left === undefined) {
+                toItem.left = fromItem.title;
+            }
+        }
+
+        /* var from = state.elements[state.elements.length - 1]; */
+        toItem.container = CBUINavigationView.containerFromItem(toItem);
+
+        state.items.push(toItem);
 
         state.element.textContent = null;
-        state.element.appendChild(item.container);
+        state.element.appendChild(toItem.container);
     },
 
     /**
-     * @deprecated use CBUINavigationView.navigateToElement
+     * @deprecated use CBUINavigationView.navigateToItem
      *
      * @param function args.defaultSpecChangedCallback
      * @param function args.navigateToItemCallback
@@ -93,26 +125,24 @@ var CBUINavigationView = {
      *
      * @return undefined
      */
-    navigateToSpec : function (args, spec) {
+    navigateToSpec : function (defaultSpecChangedCallback, navigateToItemCallback, spec) {
         var element = document.createElement("div");
-        var navigateToSpecCallback = CBUINavigationView.navigateToSpec.bind(undefined, {
-            defaultSpecChangedCallback : args.defaultSpecChangedCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-        });
+        var navigateToSpecCallback = CBUINavigationView.navigateToSpec.bind(undefined,
+            defaultSpecChangedCallback, navigateToItemCallback);
         var editor = CBUISpecEditor.create({
             navigateCallback : navigateToSpecCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
+            navigateToItemCallback : navigateToItemCallback,
             spec : spec,
-            specChangedCallback : args.defaultSpecChangedCallback,
+            specChangedCallback : defaultSpecChangedCallback,
         });
 
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(editor.element);
         element.appendChild(CBUI.createHalfSpace());
 
-        args.navigateToItemCallback.call(undefined, {
+        navigateToItemCallback({
             element : element,
-            title : "thang",
+            title : spec.title || spec.className || "Unknown",
         });
 
         history.pushState(undefined, undefined);

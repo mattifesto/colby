@@ -6,7 +6,7 @@ final class CBUINavigationView {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUISpecEditor'];
+        return ['CBUI', 'CBUISpecEditor'];
     }
 
     /**
