@@ -5,6 +5,7 @@ var CBUISelector = {
     /**
      * @param string args.labelText
      * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param string args.propertyName
      * @param object args.spec
      * @param function args.specChangedCallback
@@ -58,6 +59,7 @@ var CBUISelector = {
             propertyName : args.propertyName,
             spec : args.spec,
             state : state,
+            title : args.labelText || "",
             updateValueCallback : updateValueCallback,
         }));
 
@@ -152,8 +154,6 @@ var CBUISelectorValueEditor = {
     createEditor : function (args) {
         var section, item;
         var targetOptions = args.spec.state.options || [];
-        var targetPropertyName = args.spec.propertyName;
-        var targetSpec = args.spec.spec;
         var targetUpdateValueCallback = args.spec.updateValueCallback;
         var element = document.createElement("div");
         element.className = "CBUISelectorValueEditor";
