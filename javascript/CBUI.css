@@ -36,17 +36,14 @@
 
 .CBUIHeader > :matches(.left, .right) {
     flex: 1 1 1px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
+/* @deprecated use .CBUIHeaderButtonItem */
 .CBUIHeader :matches(.left, .right) .CBUIHeaderAction {
     align-items: center;
     display: flex;
     color: hsl(210, 100%, 50%);
     cursor: pointer;
-    padding: 5px 10px;
 }
 
 .CBUIHeader > .right {
@@ -54,10 +51,26 @@
 }
 
 .CBUIHeader > .center {
-    align-self: center;
     flex: 0 1 auto;
+    max-width: 60%;
+}
+
+.CBUIHeaderButtonItem {
+    align-items: center;
+    display: flex;
+    color: hsl(210, 100%, 50%);
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.CBUIHeader > .center > *, /* @deprecated transitional until CBUIHeaderTitle is used everywhere */
+.CBUIHeaderTitle {
+    align-items: center;
+    display: flex;
     font-weight: bold;
-    padding: 5px 0;
     text-align: center;
 }
 
