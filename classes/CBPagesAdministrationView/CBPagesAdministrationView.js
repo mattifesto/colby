@@ -6,18 +6,58 @@ var CBPagesAdministrationView = {
      * @return {Element}
      */
     createElement : function() {
+        var section, item;
         var element = document.createElement("div");
         element.className = "CBPagesAdministrationView";
+        var pageListContainer = document.createElement("div");
 
-        CBPagesAdministrationView.fetchPages({
-            element : element
+        var parameters = {};
+        var pages = [];
+
+        var fetchPagesCallback = CBPagesAdministrationView.fetchPages.bind(undefined, {
+            element : pageListContainer,
+            pages : pages,
+            parameters : parameters,
         });
 
-        return element;
+        var navigationView = CBUINavigationView.create({
+            defaultSpecChangedCallback : fetchPagesCallback,
+            rootItem : {
+                element : element,
+                title : "Pages",
+            },
+        });
+
+        section = CBUI.createSection();
+
+        /* published */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUISelector.create({
+            labelText : "Published",
+            navigateCallback : navigationView.navigateToSpecCallback,
+            navigateToItemCallback : navigationView.navigateToItemCallback,
+            propertyName : "published",
+            spec : parameters,
+            specChangedCallback : fetchPagesCallback,
+            options : [
+                { title : "All", value : undefined },
+                { title : "Published", value : true },
+                { title : "Unpublished", value : false },
+            ],
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
+        element.appendChild(pageListContainer);
+
+        fetchPagesCallback();
+
+        return navigationView.element;
     },
 
     /**
-     * @param {Element} element
+     * @param Element args.element
+     * @param object args.parameters
      *
      * @return undefined
      */
