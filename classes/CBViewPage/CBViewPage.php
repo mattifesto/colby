@@ -58,26 +58,6 @@ EOT;
     }
 
     /**
-     * @return void
-     */
-    public static function addToRecentlyEditedPagesList($model, $pageRowID) {
-        $modified = (int)$model->modified;
-        $SQL = <<<EOT
-
-            INSERT INTO
-                `CBPageLists`
-            SET
-                `pageRowID`     = {$pageRowID},
-                `listClassName` = 'CBRecentlyEditedPages',
-                `sort1`         = {$modified},
-                `sort2`         = NULL
-
-EOT;
-
-        Colby::query($SQL);
-    }
-
-    /**
      * @deprecated
      *
      * 2015.02.20
@@ -111,38 +91,6 @@ EOT;
         $model->URIIsStatic = false;
 
         return $model;
-    }
-
-    /**
-     * @return null
-     */
-    public static function fetchRecentlyEditedPagesListForAjax() {
-        $response = new CBAjaxResponse();
-        $SQL = <<<EOT
-
-            SELECT      HEX(`page`.`archiveID`), `page`.`keyValueData`
-            FROM        `CBPageLists` AS `list`
-            LEFT JOIN   `ColbyPages` AS `page`
-            ON          `page`.`ID` = `list`.`pageRowID`
-            WHERE       `list`.`listClassName`  = 'CBRecentlyEditedPages'
-            ORDER BY    `sort1` DESC
-
-EOT;
-
-        $response->pages = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-        $response->pages = CBViewPage::fixKeyValueDataArray($response->pages);
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return {stdClass}
-     */
-    public static function fetchRecentlyEditedPagesListForAjaxPermissions() {
-        $permissions        = new stdClass();
-        $permissions->group = 'Administrators';
-
-        return $permissions;
     }
 
     /**
@@ -366,8 +314,7 @@ EOT;
         $availableListNames     = CBViewPageLists::availableListNames();
         $listClassNames         = isset($model->listClassNames) ? $model->listClassNames : array();
         $listClassNames         = array_merge($availableListNames,
-                                              $listClassNames,
-                                              array('CBRecentlyEditedPages'));
+                                              $listClassNames);
 
         $listClassNames         = array_unique($listClassNames);
         $listClassNamesForSQL   = array();
@@ -680,8 +627,6 @@ EOT;
             if ($model->isPublished) {
                 self::addToPageLists($model, $pageRowID);
             }
-
-            self::addToRecentlyEditedPagesList($model, $pageRowID);
         }
     }
 
