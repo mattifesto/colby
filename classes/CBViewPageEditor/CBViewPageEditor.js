@@ -38,7 +38,7 @@ var CBViewPageEditor = {
              */
 
             CBViewPageEditor.model = JSON.parse(template.modelJSON);
-            CBViewPageEditor.model.dataStoreID = CBURLQueryVariables["data-store-id"];
+            CBViewPageEditor.model.ID = CBURLQueryVariables["data-store-id"];
 
             var navigationState = { stack : [CBViewPageEditor.model] };
 
@@ -65,7 +65,7 @@ var CBViewPageEditor = {
 
         editorContainer.appendChild(CBViewPageInformationEditor.createEditor({
             handleTitleChanged : CBViewPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
-            makeFrontPageCallback : CBViewPageEditor.makeFrontPage.bind(undefined, { ID : args.spec.dataStoreID }),
+            makeFrontPageCallback : CBViewPageEditor.makeFrontPage.bind(undefined, { ID : args.spec.ID }),
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         }));
@@ -322,10 +322,10 @@ CBViewPageEditor.saveModelAjaxRequestDidComplete = function(xhr) {
     var response = Colby.responseFromXMLHttpRequest(xhr);
 
     if (response.wasSuccessful) {
-        if ('iteration' in this.model) {
-            this.model.iteration++;
+        if ('version' in this.model) {
+            this.model.version++;
         } else {
-            this.model.iteration = 1;
+            this.model.version = 1;
         }
     } else {
         Colby.displayResponse(response);
