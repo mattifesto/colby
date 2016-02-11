@@ -24,7 +24,7 @@ var CBPagesAdministrationView = {
             defaultSpecChangedCallback : fetchPagesCallback,
             rootItem : {
                 element : element,
-                title : "Pages",
+                title : "Find Pages",
             },
         });
 

@@ -6,8 +6,8 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
 
 CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
-CBHTMLOutput::setTitleHTML('Unpublished Pages');
-CBHTMLOutput::setDescriptionHTML('Pages that haven\'t been published.');
+CBHTMLOutput::setTitleHTML('Find Pages');
+CBHTMLOutput::setDescriptionHTML('Find pages to edit, copy, or delete.');
 CBHTMLOutput::requireClassName('CBPagesAdministrationView');
 
 $selectedMenuItemID     = 'pages';
