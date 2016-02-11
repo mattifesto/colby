@@ -61,15 +61,15 @@ EOT;
      * @return void
      */
     public static function addToRecentlyEditedPagesList($model, $pageRowID) {
-        $updated    = (int)$model->updated;
-        $SQL        = <<<EOT
+        $modified = (int)$model->modified;
+        $SQL = <<<EOT
 
             INSERT INTO
                 `CBPageLists`
             SET
                 `pageRowID`     = {$pageRowID},
                 `listClassName` = 'CBRecentlyEditedPages',
-                `sort1`         = {$updated},
+                `sort1`         = {$modified},
                 `sort2`         = NULL
 
 EOT;
@@ -93,8 +93,7 @@ EOT;
         $model = (object)[
             'className' => 'CBViewPage',
         ];
-        $model->created = null;
-        $model->dataStoreID = null;
+        $model->ID = null;
         $model->description = '';
         $model->descriptionHTML = '';
         $model->groupID = null;
@@ -108,7 +107,6 @@ EOT;
         $model->thumbnailURL = null;
         $model->title = '';
         $model->titleHTML = '';
-        $model->updated = null;
         $model->URI = null;
         $model->URIIsStatic = false;
 
@@ -148,42 +146,65 @@ EOT;
     }
 
     /**
+     * @param hex160 $ID
+     *
+     * @return stdClass|false
+     */
+    public static function fetchSpecByID($ID) {
+        $spec = CBModels::fetchSpecByID($ID);
+
+        if ($spec === false) {
+            $iteration = CBViewPage::iterationForID(['ID' => $ID]);
+
+            if ($iteration !== false) {
+                $spec = CBViewPage::specWithID($ID, $iteration);
+
+                if (empty($spec)) {
+                    throw new RuntimeException("The spec is missing for the following ID: {$ID}");
+                }
+            }
+        } else if ($spec->className !== 'CBViewPage') {
+            throw new RuntimeException("The spec with the following ID is not a CBViewPage: {$ID}");
+        }
+
+        return $spec;
+    }
+
+    /**
+     * The current behavior of this function is to set the modelJSON response
+     * if the spec exists and to not set it if it doesn't.
+     *
      * @return null
      */
     public static function fetchSpecForAjax() {
         $response = new CBAjaxResponse();
         $ID = $_POST['id'];
-        $iteration = CBViewPage::iterationForID(['ID' => $ID]);
+        $spec = CBViewPage::fetchSpecByID($ID);
 
-        if ($iteration !== false) {
-            $spec = CBViewPage::specWithID($ID, $iteration);
+        if ($spec === false) {
+            if (isset($_POST['id-to-copy'])) {
+                $IDToCopy = $_POST['id-to-copy'];
+                $spec = CBViewPage::fetchSpecByID($IDToCopy);
 
-            if (!$spec) {
-                throw new RuntimeException("No spec was found for the page ID: {$ID}");
+                if ($spec === false) {
+                    throw new RuntimeException("No spec was found for the page ID: {$IDToCopy}");
+                }
+
+                // Perform the copy
+                $spec->ID = $ID;
+                $spec->title = isset($spec->title) ? "{$spec->title} Copy" : 'Copied Page';
+                unset($spec->dataStoreID);
+                unset($spec->isPublished);
+                unset($spec->iteration);
+                unset($spec->publicationTimeStamp);
+                unset($spec->pubishedBy);
+                unset($spec->URI);
+                unset($spec->URIIsStatic);
+                unset($spec->version);
             }
+        }
 
-            $response->modelJSON = json_encode($spec);
-        } else if (isset($_POST['id-to-copy'])) {
-            $IDToCopy = $_POST['id-to-copy'];
-            $iteration = CBViewPage::iterationForID(['ID' => $IDToCopy]);
-            $spec = CBViewPage::specWithID($IDToCopy, $iteration);
-
-            if (!$spec) {
-                throw new RuntimeException("No spec was found for the page ID: {$IDToCopy}");
-            }
-
-            // Perform the copy
-            $spec->dataStoreID = $ID;
-            $spec->created = time();
-            $spec->updated = $spec->created;
-            $spec->title = isset($spec->title) ? "{$spec->title} Copy" : 'Copied Page';
-            unset($spec->isPublished);
-            unset($spec->iteration);
-            unset($spec->publicationTimeStamp);
-            unset($spec->pubishedBy);
-            unset($spec->URI);
-            unset($spec->URIIsStatic);
-
+        if ($spec) {
             $response->modelJSON = json_encode($spec);
         }
 
@@ -192,7 +213,7 @@ EOT;
     }
 
     /**
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function fetchSpecForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
@@ -244,33 +265,6 @@ EOT;
     }
 
     /**
-     * @return null
-     */
-    public static function fetchUnpublishedPagesListForAjax() {
-        $response = new CBAjaxResponse();
-        $SQL = <<<EOT
-
-            SELECT  HEX(`archiveID`), `keyValueData`
-            FROM    `ColbyPages`
-            WHERE   `className` = 'CBViewPage' AND
-                    `published` IS NULL
-
-EOT;
-
-        $response->pages = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-        $response->pages = CBViewPage::fixKeyValueDataArray($response->pages);
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return {stdClass}
-     */
-    public static function fetchUnpublishedPagesListForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
-    }
-
-    /**
      * @deprecated This function should be removed when we make sure every
      * row in `ColbyPages` has a `keyValueData` value. This may require writing
      * an update all pages type of process.
@@ -283,7 +277,7 @@ EOT;
         $pages = cb_array_map_assoc(function($ID, $page) {
             if ($page === null) {
                 return (object) [
-                    'dataStoreID' => $ID,
+                    'dataStoreID' => $ID, /* kevValueData uses dataStoreID */
                     'title' => 'Page Needs to be Updated'
                 ];
             } else {
@@ -323,22 +317,13 @@ EOT;
         $ID = null;
         extract($args, EXTR_IF_EXISTS);
 
-        $iteration  = CBViewPage::iterationForID(['ID' => $ID]);
-        $spec       = CBViewPage::specWithID($ID, $iteration);
+        $spec = CBViewPage::fetchSpecByID($ID);
 
         if (!$spec) {
-            $spec               = CBView::modelWithClassName(__CLASS__);
-            $spec->dataStoreID  = $ID;
-            $spec->created      = time();
-            $spec->updated      = $spec->created;
-
-            /**
-             * This is for the case where a page exists but is not currently
-             * a view page.
-             */
-            if ($iteration) {
-                $spec->iteration = (int)$iteration;
-            }
+            $spec = (object)[
+                'ID' => $ID,
+                'className' => __CLASS__,
+            ];
         }
 
         return $spec;
@@ -500,89 +485,39 @@ EOT;
         $spec = $updatePageLists = false;
         extract($args, EXTR_IF_EXISTS);
 
-        $ID = $spec->dataStoreID;
-
-        if (!CBHex160::is($ID)) {
-            throw new InvalidArgumentException("The `spec` argument contains an invalid ID: {$ID}");
+        if (empty($spec->ID)) {
+            $spec->ID = $spec->dataStoreID;
         }
 
-        try {
-            Colby::query('START TRANSACTION');
+        $ID = $spec->ID;
 
-            if (isset($spec->iteration)) {
-                $iteration = CBPages::fetchIterationForUpdate($ID);
+        CBModels::save([$spec]);
 
-                if ($iteration != $spec->iteration) {
-                    throw new RuntimeException('Further changes to this page cannot currently be saved because the page has been updated by another user or in another window. Reload this page to fetch those updates and then continue editing.');
-                }
+        /**
+         * @deprecated The following code should move to modelsWillSave
+         */
 
-                $spec->iteration++;
-            } else {
-                CBPages::insertRow($ID);
-                $spec->iteration = 1;
-            }
+        $model = CBModels::fetchModelByID($ID);
 
-            $iteration  = $spec->iteration;
-            $model      = CBViewPage::specToModel($spec);
-
-            self::updateDatabase([
-                'model'             => $model,
-                'updatePageLists'   => $updatePageLists]);
-
-            $directory  = CBDataStore::directoryForID($ID);
-            $specJSON   = json_encode($spec);
-            $modelJSON  = json_encode($model);
-
-            CBDataStore::makeDirectoryForID($ID);
-            file_put_contents("{$directory}/spec-{$iteration}.json", $specJSON, LOCK_EX);
-            file_put_contents("{$directory}/model-{$iteration}.json", $modelJSON, LOCK_EX);
-
-            /**
-             * If the spec and model for the last iteration were saved less
-             * than 30 seconds ago, remove them. We don't need every iteration
-             * archived, just the ones before a long pause in editing.
-             */
-
-            $previous = $iteration - 1;
-
-            if (is_file($filepath = "{$directory}/spec-{$previous}.json") &&
-                    time() - filemtime($filepath) < /* 2 minutes: */ (2 * 60)) {
-                unlink($filepath);
-                unlink("{$directory}/model-{$previous}.json");
-            }
-
-            /**
-             * Remove deprecated files.
-             */
-
-            if (is_file($filepath = "{$directory}/render-model.json")) {
-                unlink($filepath);
-            }
-
-            if (is_file($filepath = "{$directory}/model.json")) {
-                unlink($filepath);
-            }
-        } catch (Exception $exception) {
-            Colby::query('ROLLBACK');
-
-            throw $exception;
-        }
-
-        Colby::query('COMMIT');
+        CBViewPage::updateDatabase([
+            'model'             => $model,
+            'updatePageLists'   => $updatePageLists,
+        ]);
     }
 
     /**
      * @return null
      */
     public static function saveEditedPageForAjax() {
-        $response           = new CBAjaxResponse();
+        $response = new CBAjaxResponse();
         $spec = json_decode($_POST['model-json']);
 
         self::save([
-            'spec'              => $spec,
-            'updatePageLists'   => true]);
+            'spec' => $spec,
+            'updatePageLists' => true,
+        ]);
 
-        $response->wasSuccessful    = true;
+        $response->wasSuccessful = true;
         $response->send();
     }
 
@@ -600,9 +535,11 @@ EOT;
      * @return {stdClass}
      */
     public static function specToModel($spec) {
-        $model              = CBView::modelWithClassName(__CLASS__);
-        $model->dataStoreID = $spec->dataStoreID;
-        $time               = time();
+        $model = (object)[
+            'ID' => $spec->ID,
+            'className' => __CLASS__,
+        ];
+        $time = time();
 
         /* Optional values */
 
@@ -616,19 +553,17 @@ EOT;
         }
 
         $model->classNameForSettings    = isset($spec->classNameForSettings) ? trim($spec->classNameForSettings) : '';
-        $model->created                 = isset($spec->created) ? $spec->created : $time;
         $model->description             = isset($spec->description) ? $spec->description : '';
         $model->isPublished             = isset($spec->isPublished) ? !!$spec->isPublished : false;
-        $model->iteration               = $spec->iteration;
+        $model->iteration               = 0;
         $model->listClassNames          = isset($spec->listClassNames) ? $spec->listClassNames : array();
         $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
         $model->publishedBy             = isset($spec->publishedBy) ? $spec->publishedBy : null;
         $model->schemaVersion           = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
         $model->thumbnailURL            = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null;
         $model->title                   = isset($spec->title) ? $spec->title : '';
-        $model->updated                 = isset($spec->updated) ? $spec->updated : $model->created;
         $model->URI                     = isset($spec->URI) ? trim($spec->URI) : '';
-        $model->URI                     = $model->URI !== '' ? $model->URI : $model->dataStoreID;
+        $model->URI                     = $model->URI !== '' ? $model->URI : $model->ID;
 
         /**
          * Views
@@ -682,6 +617,10 @@ EOT;
 
         $spec = json_decode(file_get_contents($filepath));
 
+        if (empty($spec->ID)) {
+            $spec->ID = $spec->dataStoreID;
+        }
+
         if (!isset($spec->iteration)) {
             $spec->iteration = 1;
         }
@@ -700,9 +639,11 @@ EOT;
         $rowData                    = new stdClass();
         $rowData->className         = 'CBViewPage';
         $rowData->classNameForKind  = $model->classNameForKind;
-        $rowData->ID                = $model->dataStoreID;
+        $rowData->created           = $model->created;
+        $rowData->ID                = $model->ID;
+        $rowData->iteration         = 0;
         $rowData->keyValueData      = json_encode($summaryViewModel);
-        $rowData->iteration         = $model->iteration;
+        $rowData->modified          = $model->modified;
         $rowData->titleHTML         = $model->titleHTML;
         $rowData->searchText        = CBViewPage::modelToSearchText($model);
         $rowData->subtitleHTML      = $model->descriptionHTML;
@@ -719,10 +660,19 @@ EOT;
             $rowData->publishedMonth    = null;
         }
 
+        $IDAsSQL = CBHex160::toSQL($model->ID);
+
+        if ($model->version < 2) {
+            $count = CBDB::SQLToValue("SELECT COUNT(*) FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
+
+            if ($count < 1) {
+                CBPages::insertRow($model->ID);
+            }
+        }
+
         CBPages::updateRow($rowData);
 
         if ($updatePageLists === true) {
-            $IDAsSQL    = CBHex160::toSQL($model->dataStoreID);
             $pageRowID  = CBDB::SQLToValue("SELECT `ID` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
 
             self::removeFromEditablePageLists($model, $pageRowID);
