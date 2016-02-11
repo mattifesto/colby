@@ -29,7 +29,9 @@ class CBPages {
                 `keyValueData`          LONGTEXT NOT NULL,
                 `className`             VARCHAR(80),
                 `classNameForKind`      VARCHAR(80),
+                `created`               BIGINT NOT NULL,
                 `iteration`             BIGINT UNSIGNED NOT NULL DEFAULT 1,
+                `modified`              BIGINT NOT NULL,
                 `URI`                   VARCHAR(100),
                 `titleHTML`             TEXT NOT NULL,
                 `subtitleHTML`          TEXT NOT NULL,
@@ -41,7 +43,14 @@ class CBPages {
                 PRIMARY KEY     (`ID`),
                 UNIQUE KEY      `archiveID` (`archiveID`),
                 KEY             `URI_published` (`URI`, `published`),
-                KEY             `classNameForKind_publishedMonth_published` (`classNameForKind`, `publishedMonth`, `published`)
+                KEY             `classNameForKind_publishedMonth_published` (`classNameForKind`, `publishedMonth`, `published`),
+
+                /* indexes used by the admin interface */
+                KEY             `created` (`created`),
+                KEY             `modified` (`modified`),
+                KEY             `classNameForKind_created` (`classNameForKind`, `created`),
+                KEY             `classNameForKind_modified` (`classNameForKind`, `modified`)
+
                 {$constraint}
             )
             ENGINE=InnoDB
@@ -96,6 +105,59 @@ EOT;
     }
 
     /**
+     * @return null
+     */
+    public static function fetchPageListForAjax() {
+        $response = new CBAjaxResponse();
+        $parameters = json_decode($_POST['parametersAsJSON']);
+        $conditions = [];
+
+        /* published */
+        if (isset($parameters->published)) {
+            if ($parameters->published === true) {
+                $conditions[] = '`published` IS NOT NULL';
+            } else if ($parameters->published === false) {
+                $conditions[] = '`published` IS NULL';
+            }
+        }
+
+        $conditions = implode(' AND ', $conditions);
+        if ($conditions) { $conditions = "WHERE {$conditions}"; }
+
+        $SQL = <<<EOT
+
+            SELECT LOWER(HEX(`archiveID`)) AS `ID`, `className`, `keyValueData`
+            FROM `ColbyPages`
+            {$conditions}
+            ORDER BY `modified` DESC
+            LIMIT 20
+
+EOT;
+
+        $response->pages = CBDB::SQLToObjects($SQL);
+        $response->pages = array_map(function ($item) {
+            if ($item->keyValueData === null) {
+                $item->keyValueData = (object)[
+                    'ID' => $ID,
+                    'title' => 'Page Needs to be Updated',
+                ];
+            } else {
+                $item->keyValueData = json_decode($item->keyValueData);
+            }
+            return $item;
+        }, $response->pages);
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return {stdClass}
+     */
+    public static function fetchPageListForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * @param [{hex160}] $IDs
      *
      * @return [{stdClass}]
@@ -118,7 +180,9 @@ EOT;
 
             INSERT INTO `ColbyPages`
             SET         `archiveID`     = {$IDAsSQL},
+                        `created`       = 0,
                         `keyValueData`  = '',
+                        `modified`      = 0,
                         `titleHTML`     = '',
                         `subtitleHTML`  = '',
                         `searchText`    = '',
@@ -154,7 +218,9 @@ EOT;
         $archiveID = CBHex160::toSQL($model->ID);
         $className = CBDB::stringToSQL($model->className);
         $classNameForKind = CBDB::stringToSQL($model->classNameForKind);
+        $created = (int)$model->created;
         $iteration = 1;
+        $modified = (int)$model->modified;
         $URI = CBDB::stringToSQL($model->dencodedURIPath);
         $titleHTML = CBDB::stringToSQL($model->titleAsHTML);
         $subtitleHTML = CBDB::stringToSQL($model->descriptionAsHTML);
@@ -173,7 +239,7 @@ EOT;
 
         $keyValueDataAsSQL = CBDB::stringToSQL(json_encode($pageSummaryModel));
 
-        return "($archiveID, $keyValueDataAsSQL, $className, $classNameForKind, $iteration, $URI, $titleHTML, $subtitleHTML, $thumbnailURL, $searchText, $published, $publishedBy, $publishedMonth)";
+        return "($archiveID, $keyValueDataAsSQL, $className, $classNameForKind, $created, $iteration, $modified, $URI, $titleHTML, $subtitleHTML, $thumbnailURL, $searchText, $published, $publishedBy, $publishedMonth)";
     }
 
     /**
@@ -189,7 +255,9 @@ EOT;
                 `keyValueData`,
                 `className`,
                 `classNameForKind`,
+                `created`,
                 `iteration`,
+                `modified`,
                 `URI`,
                 `titleHTML`,
                 `subtitleHTML`,
@@ -223,7 +291,9 @@ EOT;
                 `keyValueData`,
                 `className`,
                 `classNameForKind`,
+                `created`,
                 `iteration`,
+                `modified`,
                 `URI`,
                 `titleHTML`,
                 `subtitleHTML`,
@@ -303,7 +373,9 @@ EOT;
                     `keyValueData`,
                     `className`,
                     `classNameForKind`,
+                    `created`,
                     `iteration`,
+                    `modified`,
                     `URI`,
                     `titleHTML`,
                     `subtitleHTML`,
@@ -326,7 +398,9 @@ EOT;
                 SET     `p`.`keyValueData`      = `t`.`keyValueData`,
                         `p`.`className`         = `t`.`className`,
                         `p`.`classNameForKind`  = `t`.`classNameForKind`,
+                        `p`.`created`           = `t`.`created`,
                         `p`.`iteration`         = `t`.`iteration`,
+                        `p`.`modified`          = `t`.`modified`,
                         `p`.`URI`               = `t`.`URI`,
                         `p`.`titleHTML`         = `t`.`titleHTML`,
                         `p`.`subtitleHTML`      = `t`.`subtitleHTML`,
@@ -347,7 +421,9 @@ EOT;
                 `keyValueData`,
                 `className`,
                 `classNameForKind`,
+                `created`,
                 `iteration`,
+                `modified`,
                 `URI`,
                 `titleHTML`,
                 `subtitleHTML`,
@@ -362,7 +438,9 @@ EOT;
                 `t`.`keyValueData`,
                 `t`.`className`,
                 `t`.`classNameForKind`,
+                `t`.`created`,
                 `t`.`iteration`,
+                `t`.`modified`,
                 `t`.`URI`,
                 `t`.`titleHTML`,
                 `t`.`subtitleHTML`,
