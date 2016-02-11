@@ -140,7 +140,9 @@ EOT;
 
         /* search */
         $search = CBModel::value($parameters, 'search', '', 'trim');
-        $conditions[] = CBPages::searchClauseFromString($search);
+        if ($clause = CBPages::searchClauseFromString($search)) {
+            $conditions[] = $clause;
+        };
 
         $conditions = implode(' AND ', $conditions);
         if ($conditions) { $conditions = "WHERE {$conditions}"; }
