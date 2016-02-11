@@ -59,10 +59,10 @@ var CBPagesAdministrationView = {
             spec : parameters,
             specChangedCallback : fetchPagesCallback,
             options : [
-                { title : "Modified (Most recent first)", value : undefined },
-                { title : "Modified (Most recent last)", value : "modifiedAscending" },
-                { title : "Created (Most recent first)", value : "createdDescending" },
-                { title : "Created (Most recent last)", value : "createdAscending" },
+                { title : "Modified (most recent first)", value : undefined },
+                { title : "Modified (most recent last)", value : "modifiedAscending" },
+                { title : "Created (most recent first)", value : "createdDescending" },
+                { title : "Created (most recent last)", value : "createdAscending" },
             ],
         }).element);
         section.appendChild(item);
