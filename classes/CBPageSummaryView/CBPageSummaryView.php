@@ -33,7 +33,10 @@ final class CBPageSummaryView {
      * @return {stdClass}
      */
     public static function pageModelToModel(stdClass $pageModel) {
-        $model = CBModels::modelWithClassName(__CLASS__);
+        $model = (object)[
+            'ID' => $pageModel->ID,
+            'className' => __CLASS__,
+        ];
         $model->created = $pageModel->created;
         $model->dataStoreID = $pageModel->ID;
         $model->description = $pageModel->description;
@@ -65,9 +68,12 @@ final class CBPageSummaryView {
      * @return {stdClass}
      */
     public static function viewPageModelToModel(stdClass $pageModel) {
-        $model = CBModels::modelWithClassName(__CLASS__);
+        $model = (object)[
+            'ID' => $pageModel->ID,
+            'className' => __CLASS__,
+        ];
         $model->created = $pageModel->created;
-        $model->dataStoreID = $pageModel->dataStoreID;
+        $model->dataStoreID = $pageModel->ID;
         $model->description = $pageModel->description;
         $model->descriptionHTML = $pageModel->descriptionHTML;
         $model->isPublished = $pageModel->isPublished;
@@ -76,7 +82,7 @@ final class CBPageSummaryView {
         $model->thumbnailURL = $pageModel->thumbnailURL;
         $model->title = $pageModel->title;
         $model->titleHTML = $pageModel->titleHTML;
-        $model->updated = $pageModel->updated;
+        $model->updated = $pageModel->modified;
         $model->URI = $pageModel->URI;
 
         return $model;
