@@ -28,6 +28,8 @@ var CBPagesAdministrationView = {
             },
         });
 
+        element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
 
         /* published */
@@ -62,6 +64,9 @@ var CBPagesAdministrationView = {
      * @return undefined
      */
     fetchPages : function(args) {
+        var data = new FormData();
+        data.append("parametersAsJSON", JSON.stringify(args.parameters));
+
         var xhr = new XMLHttpRequest();
         xhr.onload = CBPagesAdministrationView.fetchPagesDidLoad.bind(undefined, {
             element: args.element,
@@ -71,8 +76,8 @@ var CBPagesAdministrationView = {
             xhr : xhr
         });
 
-        xhr.open("POST", "/api/?class=CBViewPage&function=fetchUnpublishedPagesList");
-        xhr.send();
+        xhr.open("POST", "/api/?class=CBPages&function=fetchPageList");
+        xhr.send(data);
     },
 
     /**
@@ -91,18 +96,8 @@ var CBPagesAdministrationView = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            var pages = response.pages.sort(function(left, right) {
-                if (left.created > right.created) {
-                    return -1;
-                } else if (left.created < right.created) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            });
-            var list = CBPageList.createElement({
-                pages : pages
-            });
+            var pages = response.pages;
+            var list = CBPageList.createElement(pages);
 
             args.element.textContent = null;
             args.element.appendChild(list);
