@@ -47,7 +47,7 @@ var CBViewPageInformationEditor = {
         var element = document.createElement("section");
         element.className = "CBViewPageInformationEditor";
         args.spec.URI = args.spec.URI ? args.spec.URI : CBViewPageInformationEditor.titleToURI({
-            ID : args.spec.dataStoreID,
+            ID : args.spec.ID,
             title : args.spec.title,
         });
 
@@ -213,7 +213,7 @@ var CBViewPageInformationEditor = {
         var actions = document.createElement("div");
         actions.className = "actions";
         preview = document.createElement("a");
-        preview.href = "/admin/pages/preview/?ID=" + args.spec.dataStoreID;
+        preview.href = "/admin/pages/preview/?ID=" + args.spec.ID;
         preview.textContent = "Preview";
         var useAsFrontPage = document.createElement("div");
         useAsFrontPage.textContent = "Use as Front Page";
@@ -333,7 +333,7 @@ var CBViewPageInformationEditor = {
     handleTitleChanged : function(args) {
         if (!args.spec.URIIsStatic) {
             args.URIControl.setURI(CBViewPageInformationEditor.titleToURI({
-                ID      : args.spec.dataStoreID,
+                ID      : args.spec.ID,
                 title   : args.spec.title }));
 
             args.spec.URI = args.URIControl.URI();
