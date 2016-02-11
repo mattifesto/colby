@@ -11,7 +11,7 @@ CBHTMLOutput::setDescriptionHTML('Pages that haven\'t been published.');
 CBHTMLOutput::requireClassName('CBPagesAdministrationView');
 
 $selectedMenuItemID     = 'pages';
-$selectedSubmenuItemID  = 'unpublished';
+$selectedSubmenuItemID  = 'find';
 
 include CBSystemDirectory . '/sections/admin-page-menu.php';
 

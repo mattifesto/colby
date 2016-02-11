@@ -10,13 +10,13 @@ $generalMenu->status    = newMenuItem('Status', '/admin/');
 $CBAdminMenu->general   = newMenuItem('General', '/admin/', $generalMenu);
 
 
-$pagesMenu                      = new stdClass();
-$pagesMenu->edit                = newMenuItem('New Page', '/admin/pages/edit/');
-$pagesMenu->unpublished         = newMenuItem('Unpublished', '/admin/pages/unpublished/');
-$pagesMenu->trash               = newMenuItem('Trash', '/admin/pages/trash/');
+$pagesMenu = new stdClass();
+$pagesMenu->create = newMenuItem('Create', '/admin/pages/edit/');
+$pagesMenu->find = newMenuItem('Find', '/admin/pages/find/');
+$pagesMenu->trash = newMenuItem('Trash', '/admin/pages/trash/');
 
-$CBAdminMenu->pages             = newMenuItem('Pages', '/admin/pages/unpublished/', $pagesMenu);
-$CBAdminMenu->models              = newMenuItem('Models', '/admin/models/directory/');
+$CBAdminMenu->pages = newMenuItem('Pages', '/admin/pages/find/', $pagesMenu);
+$CBAdminMenu->models = newMenuItem('Models', '/admin/models/directory/');
 
 $helpMenu                   = new stdClass();
 $menuItemID                 = 'markaround-syntax';
