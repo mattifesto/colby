@@ -38,7 +38,7 @@
     background-color: hsl(210, 100%, 80%);
 }
 
-.CBPageListPage > .description {
+.CBPageListPage > .title {
     flex: 1 1 auto;
     overflow: hidden;
     padding: 5px 10px;

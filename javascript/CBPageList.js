@@ -5,21 +5,19 @@ var CBPageList = {
         selectedPageID : undefined,
 
         /**
-         * @param {Array} pages
+         * @param [object] pages
          *
-         * @return {Element}
+         * @return Element
          */
-        createElement : function(args) {
+        createElement : function(pages) {
             var element = document.createElement("div");
             element.className = "CBPageListView";
             var list = document.createElement("div");
             list.className = "CBPageList";
 
-            for (var i = 0; i < args.pages.length; i++) {
-                list.appendChild(CBPageList.createPageElement({
-                    page : args.pages[i]
-                }));
-            }
+            pages.forEach(function (page) {
+                list.appendChild(CBPageList.createPageElement(page));
+            });
 
             element.appendChild(list);
 
@@ -27,16 +25,18 @@ var CBPageList = {
         },
 
         /**
-         * @param {Object} page
+         * @param string page.className
+         * @param hex160 page.ID
+         * @param object page.keyValueData
          *
          * @return {Element}
          */
-        createPageElement : function(args) {
+        createPageElement : function (page) {
             var element = document.createElement("div");
             element.className = "CBPageListPage";
-            var description = document.createElement("div");
-            description.className = "description";
-            description.textContent = args.page.title;
+            var title = document.createElement("div");
+            title.className = "title";
+            title.textContent = page.keyValueData.title;
             var edit = document.createElement("div");
             edit.className = "button edit";
             edit.textContent = "edit";
@@ -47,27 +47,28 @@ var CBPageList = {
             trash.className = "button trash";
             trash.textContent = "trash";
 
-            element.appendChild(description);
+            element.appendChild(title);
             element.appendChild(edit);
             element.appendChild(copy);
             element.appendChild(trash);
 
             element.addEventListener("click", CBPageList.handlePageElementWasClicked.bind(undefined, {
                 element : element,
-                ID : args.page.dataStoreID
+                ID : page.ID,
             }));
 
             edit.addEventListener("click", CBPageList.handlePageElementEditWasClicked.bind(undefined, {
-                ID : args.page.dataStoreID
+                className : page.className,
+                ID : page.ID,
             }));
 
             copy.addEventListener("click", CBPageList.handlePageElementCopyWasClicked.bind(undefined, {
-                IDToCopy : args.page.dataStoreID
+                IDToCopy : page.ID,
             }));
 
             trash.addEventListener("click", CBPageList.handlePageElementTrashWasClicked.bind(undefined, {
                 element : element,
-                ID : args.page.dataStoreID
+                ID : page.ID,
             }));
 
             return element;
@@ -86,12 +87,17 @@ var CBPageList = {
         },
 
         /**
-         * @param {hex160} ID
+         * @param string args.className
+         * @param hex160 args.ID
          *
          * @return undefined
          */
-        handlePageElementEditWasClicked : function(args) {
-            location.href = '/admin/pages/edit/?data-store-id=' + args.ID;
+        handlePageElementEditWasClicked : function (args) {
+            if (args.className === "CBViewPage") {
+                location.href = "/admin/pages/edit/?data-store-id=" + args.ID;
+            } else {
+                location.href = "/admin/models/edit/?ID=" + args.ID;
+            }
         },
 
         /**
