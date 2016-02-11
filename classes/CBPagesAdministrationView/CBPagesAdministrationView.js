@@ -49,6 +49,34 @@ var CBPagesAdministrationView = {
         }).element);
         section.appendChild(item);
 
+        /* sorting */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUISelector.create({
+            labelText : "Sorting",
+            navigateCallback : navigationView.navigateToSpecCallback,
+            navigateToItemCallback : navigationView.navigateToItemCallback,
+            propertyName : "sorting",
+            spec : parameters,
+            specChangedCallback : fetchPagesCallback,
+            options : [
+                { title : "Modified (Most recent first)", value : undefined },
+                { title : "Modified (Most recent last)", value : "modifiedAscending" },
+                { title : "Created (Most recent first)", value : "createdDescending" },
+                { title : "Created (Most recent last)", value : "createdAscending" },
+            ],
+        }).element);
+        section.appendChild(item);
+
+        /* search */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Search",
+            propertyName : "search",
+            spec : parameters,
+            specChangedCallback : fetchPagesCallback,
+        }).element);
+        section.appendChild(item);
+
         element.appendChild(section);
         element.appendChild(pageListContainer);
 

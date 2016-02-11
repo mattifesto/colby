@@ -6,7 +6,7 @@ final class CBPagesAdministrationView {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUINavigationView', 'CBUISelector'];
+        return ['CBUI', 'CBUINavigationView', 'CBUISelector', 'CBUIStringEditor'];
     }
 
     /**

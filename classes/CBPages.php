@@ -121,6 +121,27 @@ EOT;
             }
         }
 
+        /* sorting */
+        $sorting = CBModel::value($parameters, 'sorting');
+        switch ($sorting) {
+            case 'modifiedAscending':
+                $order = '`modified` ASC';
+                break;
+            case 'createdDescending':
+                $order = '`created` DESC';
+                break;
+            case 'createdAscending':
+                $order = '`created` ASC';
+                break;
+            default:
+                $order = '`modified` DESC';
+                break;
+        }
+
+        /* search */
+        $search = CBModel::value($parameters, 'search', '', 'trim');
+        $conditions[] = CBPages::searchClauseFromString($search);
+
         $conditions = implode(' AND ', $conditions);
         if ($conditions) { $conditions = "WHERE {$conditions}"; }
 
@@ -129,7 +150,7 @@ EOT;
             SELECT LOWER(HEX(`archiveID`)) AS `ID`, `className`, `keyValueData`
             FROM `ColbyPages`
             {$conditions}
-            ORDER BY `modified` DESC
+            ORDER BY {$order}
             LIMIT 20
 
 EOT;
@@ -458,6 +479,30 @@ EOT;
             Colby::query($SQL);
         } finally {
             Colby::query("DROP TEMPORARY TABLE `CBPagesTemporary`");
+        }
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string|null
+     */
+    private static function searchClauseFromString($string) {
+        $words = preg_split('/[\s,]+/', $string, null, PREG_SPLIT_NO_EMPTY);
+        $clauses = [];
+
+        foreach ($words as $word) {
+            if (strlen($word) > 2) {
+                $wordForSQL = ColbyConvert::textToSQl($word);
+                $clauses[] = "`searchText` LIKE '%{$wordForSQL}%'";
+            }
+        }
+
+        if (empty($clauses)) {
+            return null;
+        } else {
+            $clauses = implode(' AND ', $clauses);
+            return "({$clauses})";
         }
     }
 
