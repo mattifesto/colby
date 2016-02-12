@@ -145,13 +145,16 @@ EOT;
 
         $response->pages = CBDB::SQLToObjects($SQL);
         $response->pages = array_map(function ($item) {
-            if ($item->keyValueData === null) {
+            if (empty($item->keyValueData)) {
                 $item->keyValueData = (object)[
-                    'ID' => $ID,
+                    'ID' => $item->ID,
                     'title' => 'Page Needs to be Updated',
                 ];
             } else {
                 $item->keyValueData = json_decode($item->keyValueData);
+            }
+            if (empty($item->className)) {
+                $item->className = 'CBViewPage';
             }
             return $item;
         }, $response->pages);
