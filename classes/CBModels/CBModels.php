@@ -45,7 +45,7 @@ EOT;
      * Delete models. This function should almost always be called inside of a
      * transaction.
      *
-     * @param [{hex160}] $IDs
+     * @param [hex160] $IDs
      *  All of the referenced models must have the same class name. Make
      *  separate calls for each class name.
      *
@@ -90,7 +90,9 @@ EOT;
     }
 
     /**
-     * @return [<int>]
+     * @param [hex160] $IDs
+     *
+     * @return [int]
      */
     private static function fetchCreatedTimestampsForIDs(array $IDs) {
         if (empty($IDs)) { return []; }
@@ -113,7 +115,7 @@ EOT;
      * Scenarios:       Fetch the model for a web page
      * Usage Frequency: Often
      *
-     * @return {stdClass} | false
+     * @return stdClass|false
      */
     public static function fetchModelByID($ID) {
         $models = self::fetchModelsByID([$ID]);
