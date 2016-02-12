@@ -77,31 +77,17 @@ EOT;
     }
 
     /**
-     * @deprecated use deletePagesByID
+     * Deletes rows from the ColbyPagesIntheTrash table. This function doesn't
+     * do any additional work, such as deleting a data store directory.
      *
      * @return null
      */
-    public static function deleteRowWithDataStoreID($dataStoreID) {
-        CBPages::deletePagesByID([$dataStoreID]);
-    }
+    public static function deletePagesFromTrashByID(array $IDs) {
+        if (empty($IDs)) { return; }
 
-    /**
-     * @deprecated use deletePagesByID
-     *
-     * @return null
-     */
-    public static function deleteRowsWithDataStoreIDs($dataStoreIDs) {
-        CBPages::deletePagesByID($dataStoreIDs);
-    }
+        $IDsAsSQL = CBHex160::toSQL($IDs);
 
-    /**
-     * @return void
-     */
-    public static function deleteRowWithDataStoreIDFromTheTrash($dataStoreID)
-    {
-        $sql = self::sqlToDeleteRowWithDataStoreIDFromTheTrash($dataStoreID);
-
-        Colby::query($sql);
+        Colby::query("DELETE FROM `CBPagesInTheTrash` WHERE `archiveID` IN ({$IDsAsSQL})");
     }
 
     /**
@@ -295,7 +281,7 @@ EOT;
 
         Colby::query($sql);
 
-        self::deleteRowWithDataStoreID($dataStoreID);
+        CBPages::deletePagesByID([$dataStoreID]);
     }
 
     /**
@@ -331,7 +317,7 @@ EOT;
 
         Colby::query($SQL);
 
-        self::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
+        CBPages::deletePagesFromTrashByID([$dataStoreID]);
     }
 
     /**
@@ -518,21 +504,6 @@ EOT;
         $model->titleAsHTML = ColbyConvert::textToHTML($model->title);
 
         return $model;
-    }
-
-    /**
-     * @return void
-     */
-    public static function sqlToDeleteRowWithDataStoreIDFromTheTrash($dataStoreID) {
-        $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
-        $SQL = <<<EOT
-
-            DELETE FROM `CBPagesInTheTrash`
-            WHERE       `archiveID` = {$archiveIDForSQL}
-
-EOT;
-
-        return $SQL;
     }
 
     /**

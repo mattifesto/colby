@@ -4,23 +4,28 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
 
-$response               = new CBAjaxResponse();
-$dataStoreID            = $_POST['dataStoreID'];
-$response->dataStoreID  = $dataStoreID;
+$response = new CBAjaxResponse();
+$ID = $_POST['dataStoreID'];
+$response->dataStoreID = $ID;
+$IDAsSQL = CBHex160::toSQL($ID);
+$count = CBDB::SQLToValue("SELECT COUNT(*) FROM `CBPagesInTheTrash` WHERE `archiveID` = {$IDAsSQL}");
 
-Colby::query('START TRANSACTION');
+if ($count === '1') {
+    CBModels::deleteModelsByID([$ID]);
 
-CBPages::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
+    /* The following line is unnecessary once all pages are stored as models. */
+    CBPages::deletePagesFromTrashByID([$ID]);
 
-/**
- * @NOTE
- * We used to delete the data store here, but the problem is that on some older
- * websites the data stores would contain images that we should not delete. Now
- * nothing is deleted but in the future it's possible that it may be wise to
- * delete some specific files.
- */
-
-Colby::query('COMMIT');
+    /**
+     * @NOTE
+     * We used to delete the data store here, but the problem is that on some older
+     * websites the data stores would contain images that we should not delete. Now
+     * nothing is deleted but in the future it's possible that it may be wise to
+     * delete some specific files.
+     */
+} else {
+    throw new RuntimeException('Pages must be in the trash to be deleted using this interface.');
+}
 
 /**
  * Send the response

@@ -285,6 +285,16 @@ EOT;
     }
 
     /**
+     * @param [hex160] $IDs
+     *
+     * @return null
+     */
+    public static function modelsWillDelete(array $IDs) {
+        CBPages::deletePagesByID($IDs);
+        CBPages::deletePagesFromTrashByID($IDs);
+    }
+
+    /**
      * @param [stdClass] $tuples
      *
      * @return null
