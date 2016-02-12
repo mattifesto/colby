@@ -115,6 +115,21 @@ EOT;
     /**
      * @param stdClass $model
      *
+     * @return string
+     */
+    public static function modelToSearchText(stdClass $model) {
+        if (isset($model->subviews)) {
+            $text = array_map('CBView::modelToSearchText', $model->subviews);
+
+            return implode(' ', $text);
+        }
+
+        return '';
+    }
+
+    /**
+     * @param stdClass $model
+     *
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
