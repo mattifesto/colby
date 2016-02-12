@@ -12,7 +12,7 @@ var CBTextBoxViewEditor = {
      * @return  {Element}
      */
     createEditor : function(args) {
-        var section, flexarea;
+        var section, item, flexarea;
         var element                     = document.createElement("div");
         element.className               = "CBTextBoxViewEditor";
 
@@ -160,7 +160,38 @@ var CBTextBoxViewEditor = {
         section.appendChild(flexarea);
         element.appendChild(section);
 
+        element.appendChild(CBUI.createHalfSpace());
+
+        section = CBUI.createSection();
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIActionLink.create({
+            callback : CBTextBoxViewEditor.copyContentsToCBThemedTextView.bind(undefined, {
+                spec : args.spec,
+            }),
+            labelText : "Copy Contents Into a CBThemedTextView"
+        }).element);
+        section.appendChild(item);
+        element.appendChild(section);
+
         return element;
+    },
+
+    /**
+     * Copies the subviews of this view into a new CBContainerView to facilitate
+     * deprecating this view.
+     *
+     * @param [object] args.array
+     *
+     * @return null
+     */
+    copyContentsToCBThemedTextView : function (args) {
+        var spec = {
+            className : "CBThemedTextView",
+            contentAsMarkaround : args.spec.contentAsMarkaround,
+            titleAsMarkaround : args.spec.titleAsMarkaround,
+        };
+
+        localStorage.setItem("specClipboard", JSON.stringify(spec));
     },
 
     /**
