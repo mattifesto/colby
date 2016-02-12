@@ -74,12 +74,20 @@ EOT;
                 $frontPageID = CBSitePreferences::frontPageID();
 
                 if (isset($frontPageID)) {
-                    $iteration = ColbyRequest::currentIterationForPageID($frontPageID);
-                    CBViewPage::renderAsHTMLForID($frontPageID, $iteration);
-                    return 1;
-                } else {
-                    return include Colby::findHandler('handle-front-page.php');
+                    $model = CBModels::fetchModelByID($frontPageID);
+
+                    if ($model === false) {
+                        /* deprecated */
+                        $iteration = ColbyRequest::currentIterationForPageID($frontPageID);
+                        CBViewPage::renderAsHTMLForID($frontPageID, $iteration);
+                        return 1;
+                    } else if (is_callable($function = "{$model->className}::renderModelAsHTML")) {
+                        call_user_func($function, $model);
+                        return 1;
+                    }
                 }
+
+                return include Colby::findHandler('handle-front-page.php');
             };
         } else if (1 === $countOfStubs && 'robots.txt' === self::$decodedStubs[0]) {
             $canonicalEncodedPath = '/robots.txt';
