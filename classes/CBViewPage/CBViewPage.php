@@ -25,7 +25,7 @@ final class CBViewPage {
     private static $modelContext;
 
     /**
-     * @return void
+     * @return null
      */
     private static function addToPageLists($model, $pageRowID) {
         if ($model->isPublished) {
@@ -168,76 +168,9 @@ EOT;
     }
 
     /**
-     * @return null
-     */
-    public static function fetchSearchResultsForAjax() {
-        $response = new CBAjaxResponse();
-        $queryText = $_POST['query-text'];
-        $words = preg_split('/[\s,]+/', $queryText, null, PREG_SPLIT_NO_EMPTY);
-        $searchClausesForSQL = [];
-
-        foreach ($words as $word) {
-            if (strlen($word) > 2) {
-                $wordForSQL = ColbyConvert::textToSQl($word);
-                $searchClausesForSQL[] = "`searchText` LIKE '%{$wordForSQL}%'";
-            }
-        }
-
-        if (empty($searchClausesForSQL)) {
-            $response->pages = [];
-        } else {
-            $searchClausesForSQL = implode(' AND ', $searchClausesForSQL);
-            $SQL = <<<EOT
-
-                SELECT      HEX(`archiveID`), `keyValueData`
-                FROM        `ColbyPages`
-                WHERE       `className` = 'CBViewPage' AND
-                            {$searchClausesForSQL}
-                ORDER BY    `published` IS NULL DESC,
-                            `titleHTML` ASC
-
-EOT;
-            $response->pages = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-            $response->pages = CBViewPage::fixKeyValueDataArray($response->pages);
-        }
-
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return {stdClass}
-     */
-    public static function fetchSearchResultsForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
-    }
-
-    /**
-     * @deprecated This function should be removed when we make sure every
-     * row in `ColbyPages` has a `keyValueData` value. This may require writing
-     * an update all pages type of process.
+     * @deprecated This will not be necessary when all pages are saved as models.
      *
-     * @param [{hex160} => null|{stdClass}]
-     *
-     * @return [{stdClass}]
-     */
-    private static function fixKeyValueDataArray(array $pages) {
-        $pages = cb_array_map_assoc(function($ID, $page) {
-            if ($page === null) {
-                return (object) [
-                    'dataStoreID' => $ID, /* kevValueData uses dataStoreID */
-                    'title' => 'Page Needs to be Updated'
-                ];
-            } else {
-                return $page;
-            }
-        }, $pages);
-
-        return array_values($pages);
-    }
-
-    /**
-     * @return {int} | false
+     * @return int|false
      */
     public static function iterationForID($args) {
         $ID = null;
@@ -259,7 +192,7 @@ EOT;
      * and also prevent old data from accumulating over time for pages that have
      * a longer life and are frequently modified.
      *
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function makeSpecForID($args) {
         $ID = null;
@@ -278,7 +211,7 @@ EOT;
     }
 
     /**
-     * @return {stdClass} | null
+     * @return stdClass|null
      */
     public static function modelContext() {
         return self::$modelContext;
@@ -328,7 +261,7 @@ EOT;
      * This page may be in other page lists but those are managed by other
      * processes.
      *
-     * @return void
+     * @return null
      */
     private static function removeFromEditablePageLists($model, $pageRowID) {
         $availableListNames     = CBViewPageLists::availableListNames();
@@ -359,7 +292,7 @@ EOT;
     }
 
     /**
-     * @return void
+     * @return null
      */
     public static function renderAsHTMLForID($ID, $iteration) {
         $directory  = CBDataStore::directoryForID($ID);
@@ -387,11 +320,11 @@ EOT;
             $filepath = "{$directory}/model.json";
         }
 
-        self::renderModelAsHTML(json_decode(file_get_contents($filepath)));
+        CBViewPage::renderModelAsHTML(json_decode(file_get_contents($filepath)));
     }
 
     /**
-     * @return void
+     * @return null
      */
     public static function renderModelAsHTML($model) {
         $model = CBViewPage::upgradeRenderModel($model);
@@ -404,7 +337,7 @@ EOT;
             return;
         }
 
-        self::$modelContext = $model;
+        CBViewPage::$modelContext = $model;
 
         CBHTMLOutput::begin();
 
@@ -431,22 +364,23 @@ EOT;
 
         CBHTMLOutput::render();
 
-        self::$modelContext = null;
+        CBViewPage::$modelContext = null;
     }
 
     /**
      * @deprecated since version 147. Use `modelContext` instead.
+     *
      * @return stdClass
      */
     public static function renderModelContext() {
-        return self::$modelContext;
+        return CBViewPage::$modelContext;
     }
 
     /**
      * This function updates the page data in the database and saves the page
      * model files.
      *
-     * @return void
+     * @return null
      */
     public static function save($args) {
         $spec = $updatePageLists = false;
@@ -492,14 +426,13 @@ EOT;
      * @return stdClass
      */
     public static function saveEditedPageForAjaxPermissions() {
-        $permissions        = new stdClass();
-        $permissions->group = 'Administrators';
-
-        return $permissions;
+        return (object)['group' => 'Administrators'];
     }
 
     /**
-     * @return {stdClass}
+     * @param stdClass $spec
+     *
+     * @return stdClass
      */
     public static function specToModel($spec) {
         $model = (object)[
@@ -555,7 +488,7 @@ EOT;
     }
 
     /**
-     * @return stdClass | false
+     * @return stdClass|false
      */
     public static function specWithID($ID, $iteration) {
         $directory  = CBDataStore::directoryForID($ID);
@@ -621,7 +554,7 @@ EOT;
      * properties in response to query variables. This is how a single page can
      * become multiple pages using the query string and the page kind.
      *
-     * @return {stdClass} | false
+     * @return stdClass|false
      *  Returns the modified model. A false value is returned when the query
      *  variables lead to a page that does not exist and a 404 page should be
      *  rendered.
