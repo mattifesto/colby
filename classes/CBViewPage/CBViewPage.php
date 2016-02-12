@@ -145,7 +145,7 @@ EOT;
                 unset($spec->isPublished);
                 unset($spec->iteration);
                 unset($spec->publicationTimeStamp);
-                unset($spec->pubishedBy);
+                unset($spec->publishedBy);
                 unset($spec->URI);
                 unset($spec->URIIsStatic);
                 unset($spec->version);
@@ -285,9 +285,19 @@ EOT;
     }
 
     /**
+     * @param [stdClass] $tuples
+     *
+     * @return null
+     */
+    public static function modelsWillSave(array $tuples) {
+        $models = array_map(function($tuple) { return $tuple->model; }, $tuples);
+        CBPages::save($models);
+    }
+
+    /**
      * @return string
      */
-    private static function modelToSearchText($model) {
+    public static function modelToSearchText($model) {
         $searchText         = array();
         $searchText[]       = $model->title;
         $searchText[]       = $model->description;
@@ -576,48 +586,13 @@ EOT;
     }
 
     /**
-     * @return void
+     * @return null
      */
     private static function updateDatabase($args) {
         $model = $updatePageLists = false;
         extract($args, EXTR_IF_EXISTS);
 
-        $summaryViewModel           = CBPageSummaryView::viewPageModelToModel($model);
-        $rowData                    = new stdClass();
-        $rowData->className         = 'CBViewPage';
-        $rowData->classNameForKind  = $model->classNameForKind;
-        $rowData->created           = $model->created;
-        $rowData->ID                = $model->ID;
-        $rowData->iteration         = 0;
-        $rowData->keyValueData      = json_encode($summaryViewModel);
-        $rowData->modified          = $model->modified;
-        $rowData->titleHTML         = $model->titleHTML;
-        $rowData->searchText        = CBViewPage::modelToSearchText($model);
-        $rowData->subtitleHTML      = $model->descriptionHTML;
-        $rowData->thumbnailURL      = $model->thumbnailURLAsHTML;
-        $rowData->URI               = $model->URI;
-
-        if ($model->isPublished) {
-            $rowData->published         = $model->publicationTimeStamp;
-            $rowData->publishedBy       = $model->publishedBy;
-            $rowData->publishedMonth    = (int)ColbyConvert::timestampToYearMonth($rowData->published);
-        } else {
-            $rowData->published         = null;
-            $rowData->publishedBy       = null;
-            $rowData->publishedMonth    = null;
-        }
-
         $IDAsSQL = CBHex160::toSQL($model->ID);
-
-        if ($model->version < 2) {
-            $count = CBDB::SQLToValue("SELECT COUNT(*) FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
-
-            if ($count < 1) {
-                CBPages::insertRow($model->ID);
-            }
-        }
-
-        CBPages::updateRow($rowData);
 
         if ($updatePageLists === true) {
             $pageRowID  = CBDB::SQLToValue("SELECT `ID` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");

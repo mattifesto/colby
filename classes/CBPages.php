@@ -195,28 +195,6 @@ EOT;
     }
 
     /**
-     * @param {hex160} $ID
-     */
-    public static function insertRow($ID) {
-        $IDAsSQL    = CBHex160::toSQL($ID);
-        $SQL        = <<<EOT
-
-            INSERT INTO `ColbyPages`
-            SET         `archiveID`     = {$IDAsSQL},
-                        `created`       = 0,
-                        `keyValueData`  = '',
-                        `modified`      = 0,
-                        `titleHTML`     = '',
-                        `subtitleHTML`  = '',
-                        `searchText`    = '',
-                        `URI`           = NULL
-
-EOT;
-
-        Colby::query($SQL);
-    }
-
-    /**
      * @return null
      */
     public static function install() {
@@ -235,32 +213,51 @@ EOT;
      * For instance, the $model->titleAsHTML value is assumed to have already
      * been escaped for use in HTML.
      *
-     * @return {string}
+     * 2016.02.11 CBViewPages are now saved as models, but their model is still
+     * non-standard so there are some special cases in this function that should
+     * eventually be removed once CBViewPage is changed to follow the standard
+     * page model conventions.
+     *
+     * @return string
      */
     public static function modelToRowValues(stdClass $model) {
         $archiveID = CBHex160::toSQL($model->ID);
         $className = CBDB::stringToSQL($model->className);
         $classNameForKind = CBDB::stringToSQL($model->classNameForKind);
         $created = (int)$model->created;
-        $iteration = 1;
+        $iteration = 0;
         $modified = (int)$model->modified;
-        $URI = CBDB::stringToSQL($model->dencodedURIPath);
-        $titleHTML = CBDB::stringToSQL($model->titleAsHTML);
-        $subtitleHTML = CBDB::stringToSQL($model->descriptionAsHTML);
-        $thumbnailURL = CBDB::stringToSQL($model->encodedURLForThumbnail);
-        $function = "{$model->className}::modelToSearchText";
-        $searchText = is_callable($function) ? CBDB::stringToSQL(call_user_func($function, $model)) : "''";
-        $published = isset($model->published) ? (int)$model->published : 'NULL';
-        $publishedBy = 'NULL'; // Not sure if this will be used in the future
-        $publishedMonth = isset($model->published) ? ColbyConvert::timestampToYearMonth($model->published) : 'NULL';
 
-        if (is_callable($function = "{$model->className}::modelToPageSummaryModel")) {
-            $pageSummaryModel = call_user_func($function, $model);
+        if ($model->className === 'CBViewPage') {
+            $published = $model->isPublished ? $model->publicationTimeStamp : 'NULL';
+            $publishedBy = ($model->isPublished && isset($model->publishedBy)) ? (int)$model->publishedBy : 'NULL';
+            $publishedMonth = $model->isPublished ? ColbyConvert::timestampToYearMonth($model->publicationTimeStamp) : 'NULL';
+            $subtitleHTML = CBDB::stringToSQL($model->descriptionHTML);
+            $thumbnailURL = CBDB::stringToSQL($model->thumbnailURLAsHTML);
+            $titleHTML = CBDB::stringToSQL($model->titleHTML);
+            $URI = CBDB::stringToSQL($model->URI);
+
+            $pageSummaryModel = CBPageSummaryView::viewPageModelToModel($model);
         } else {
-            $pageSummaryModel = CBPageSummaryView::pageModelToModel($model);
+            $published = isset($model->published) ? (int)$model->published : 'NULL';
+            $publishedBy = 'NULL'; // Not sure if this will be used in the future
+            $publishedMonth = isset($model->published) ? ColbyConvert::timestampToYearMonth($model->published) : 'NULL';
+            $subtitleHTML = CBDB::stringToSQL($model->descriptionAsHTML);
+            $thumbnailURL = CBDB::stringToSQL($model->encodedURLForThumbnail);
+            $titleHTML = CBDB::stringToSQL($model->titleAsHTML);
+            $URI = CBDB::stringToSQL($model->dencodedURIPath);
+
+            if (is_callable($function = "{$model->className}::modelToPageSummaryModel")) {
+                $pageSummaryModel = call_user_func($function, $model);
+            } else {
+                $pageSummaryModel = CBPageSummaryView::pageModelToModel($model);
+            }
         }
 
         $keyValueDataAsSQL = CBDB::stringToSQL(json_encode($pageSummaryModel));
+
+        $function = "{$model->className}::modelToSearchText";
+        $searchText = is_callable($function) ? CBDB::stringToSQL(call_user_func($function, $model)) : "''";
 
         return "($archiveID, $keyValueDataAsSQL, $className, $classNameForKind, $created, $iteration, $modified, $URI, $titleHTML, $subtitleHTML, $thumbnailURL, $searchText, $published, $publishedBy, $publishedMonth)";
     }
@@ -335,23 +332,6 @@ EOT;
         Colby::query($SQL);
 
         self::deleteRowWithDataStoreIDFromTheTrash($dataStoreID);
-    }
-
-    /**
-     * @return stdClass
-     */
-    public static function fetchIterationForUpdate($ID) {
-        $IDAsSQL    = CBHex160::toSQL($ID);
-        $SQL        = <<<EOT
-
-            SELECT  `iteration`
-            FROM    `ColbyPages`
-            WHERE   `archiveID` = {$IDAsSQL}
-            FOR UPDATE
-
-EOT;
-
-        return CBDB::SQLToValue($SQL);
     }
 
     /**
@@ -556,61 +536,6 @@ EOT;
     }
 
     /**
-     * @return string
-     */
-    private static function sqlToUpdateRow($rowData)
-    {
-        $sql = array();
-
-        $sql[] = 'UPDATE `ColbyPages` SET';
-
-        $setters = array();
-
-        foreach ($rowData as $columnName => $value) {
-            if ('ID' == $columnName || 'rowID' == $columnName) {
-                continue;
-            }
-            else if ('descriptionHTML' == $columnName)
-            {
-                /**
-                 * This `subtitleHTML` column will be renamed to
-                 * `descriptionHTML` in the future so `descriptionHTML` is
-                 * allowed so that new code can use the non-deprecated column
-                 * name.
-                 */
-
-                 $columnName = 'subtitleHTML';
-            }
-
-            $columnNameForSQL = ColbyConvert::textToSQL($columnName);
-
-            if (null === $value) {
-                $valueForSQL = 'NULL';
-            } else if (is_int($value)) {
-                $valueForSQL = $value;
-            } else {
-                $valueForSQL = CBDB::stringToSQL($value);
-            }
-
-            $setters[] = "`{$columnNameForSQL}` = {$valueForSQL}";
-        }
-
-        $sql[] = implode(',', $setters);
-
-        if (isset($rowData->ID)) {
-            $IDAsSQL    = CBHex160::toSQL($rowData->ID);
-            $sql[]      = "WHERE `archiveID` = {$IDAsSQL}";
-        } else {
-            $rowID  = (int)$rowData->rowID;
-            $sql[]  = "WHERE `ID` = {$rowID}";
-        }
-
-        $sql = implode(' ', $sql);
-
-        return $sql;
-    }
-
-    /**
      * @return {string}
      *
      * "////Piñata///Örtega Smith//" --> "piata/rtega-smith"
@@ -620,35 +545,5 @@ EOT;
         $stubs = array_map('ColbyConvert::textToStub', $stubs);
         $stubs = array_filter($stubs, function($stub) { return !empty($stub); });
         return implode('/', $stubs);
-    }
-
-    /**
-     * @param stdClass $rowData
-     *
-     *  The `$rowData` object must have the `rowID` property set and any other
-     *  column values that need to be updated.
-     *
-     *  The `$rowData` object should use `null` property values to mean NULL in
-     *  the SQL and strictly typed integer values for integers. Any other value
-     *  type will be converted to a string and escaped for SQL.
-     *
-     * @return void
-     */
-    public static function updateRow($rowData)
-    {
-        $sql = self::sqlToUpdateRow($rowData);
-
-        Colby::query($sql);
-    }
-
-    /**
-     * @param array<stdClass> $rowData
-     *
-     *  See the `updateRow` method for details.
-     *
-     * @return void
-     */
-    public static function updateRows($rowData)
-    {
     }
 }
