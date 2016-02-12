@@ -265,15 +265,14 @@ EOT;
      */
     private static function removeFromEditablePageLists($model, $pageRowID) {
         $availableListNames     = CBViewPageLists::availableListNames();
-        $listClassNames         = isset($model->listClassNames) ? $model->listClassNames : array();
-        $listClassNames         = array_merge($availableListNames,
-                                              $listClassNames);
-
+        $listClassNames         = isset($model->listClassNames) ? $model->listClassNames : [];
+        $listClassNames         = array_merge($availableListNames, $listClassNames);
         $listClassNames         = array_unique($listClassNames);
-        $listClassNamesForSQL   = array();
+        $listClassNamesForSQL   = [];
+
+        if (empty($listClassNames)) { return; }
 
         foreach ($listClassNames as $listClassName) {
-
             $classNameForSQL        = ColbyConvert::textToSQL($listClassName);
             $classNameForSQL        = "'{$classNameForSQL}'";
             $listClassNamesForSQL[] = $classNameForSQL;
