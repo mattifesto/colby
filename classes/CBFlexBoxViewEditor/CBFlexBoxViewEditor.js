@@ -260,7 +260,37 @@ var CBFlexBoxViewEditor = {
             navigateCallback : args.navigateCallback,
         }));
 
+        element.appendChild(CBUI.createHalfSpace());
+
+        var section = CBUI.createSection();
+        var item = CBUI.createSectionItem();
+        item.appendChild(CBUIActionLink.create({
+            callback : CBFlexBoxViewEditor.copyContentsToCBContainerView.bind(undefined, {
+                array : args.spec.subviews,
+            }),
+            labelText : "Copy Contents Into a CBContainerView"
+        }).element);
+        section.appendChild(item);
+        element.appendChild(section);
+
         return element;
+    },
+
+    /**
+     * Copies the subviews of this view into a new CBContainerView to facilitate
+     * deprecating this view.
+     *
+     * @param [object] args.array
+     *
+     * @return null
+     */
+    copyContentsToCBContainerView : function (args) {
+        var spec = {
+            className : "CBContainerView",
+            subviews : args.array,
+        };
+
+        localStorage.setItem("specClipboard", JSON.stringify(spec));
     },
 
     /**

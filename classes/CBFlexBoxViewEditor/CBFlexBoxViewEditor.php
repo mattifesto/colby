@@ -6,7 +6,7 @@ final class CBFlexBoxViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI'];
+        return ['CBUI', 'CBUIActionLink'];
     }
 
     /**
