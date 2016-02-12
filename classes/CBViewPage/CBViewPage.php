@@ -380,30 +380,18 @@ EOT;
      * This function updates the page data in the database and saves the page
      * model files.
      *
+     * @param stdClass $args['spec']
+     *
      * @return null
      */
     public static function save($args) {
-        $spec = $updatePageLists = false;
-        extract($args, EXTR_IF_EXISTS);
+        $spec = $args['spec'];
 
         if (empty($spec->ID)) {
             $spec->ID = $spec->dataStoreID;
         }
 
-        $ID = $spec->ID;
-
         CBModels::save([$spec]);
-
-        /**
-         * @deprecated The following code should move to modelsWillSave
-         */
-
-        $model = CBModels::fetchModelByID($ID);
-
-        CBViewPage::updateDatabase([
-            'model'             => $model,
-            'updatePageLists'   => $updatePageLists,
-        ]);
     }
 
     /**
@@ -413,10 +401,12 @@ EOT;
         $response = new CBAjaxResponse();
         $spec = json_decode($_POST['model-json']);
 
-        self::save([
-            'spec' => $spec,
-            'updatePageLists' => true,
-        ]);
+        CBViewPage::save(['spec' => $spec]);
+
+        /**
+         * @deprecated The following line should go away with page lists
+         */
+        CBViewPage::updatePageLists(CBModels::fetchModelByID($spec->ID));
 
         $response->wasSuccessful = true;
         $response->send();
@@ -531,20 +521,14 @@ EOT;
     /**
      * @return null
      */
-    private static function updateDatabase($args) {
-        $model = $updatePageLists = false;
-        extract($args, EXTR_IF_EXISTS);
-
+    private static function updatePageLists($model) {
         $IDAsSQL = CBHex160::toSQL($model->ID);
+        $pageRowID = CBDB::SQLToValue("SELECT `ID` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
 
-        if ($updatePageLists === true) {
-            $pageRowID  = CBDB::SQLToValue("SELECT `ID` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
+        CBViewPage::removeFromEditablePageLists($model, $pageRowID);
 
-            self::removeFromEditablePageLists($model, $pageRowID);
-
-            if ($model->isPublished) {
-                self::addToPageLists($model, $pageRowID);
-            }
+        if ($model->isPublished) {
+            CBViewPage::addToPageLists($model, $pageRowID);
         }
     }
 
