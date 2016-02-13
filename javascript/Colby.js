@@ -70,7 +70,7 @@ var Colby = {
      * @return undefined
      */
     displayXHRError : function (args) {
-        Colby.displayResponse(Colby.responseFromXMLHttpRequest(xhr));
+        Colby.displayResponse(Colby.responseFromXMLHttpRequest(args.xhr));
     },
 
     /**
