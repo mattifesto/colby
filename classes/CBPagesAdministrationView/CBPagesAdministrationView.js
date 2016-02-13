@@ -12,12 +12,11 @@ var CBPagesAdministrationView = {
         var pageListContainer = document.createElement("div");
 
         var parameters = {};
-        var pages = [];
 
         var fetchPagesCallback = CBPagesAdministrationView.fetchPages.bind(undefined, {
             element : pageListContainer,
-            pages : pages,
             parameters : parameters,
+            state : {},
         });
 
         var navigationView = CBUINavigationView.create({
@@ -88,20 +87,28 @@ var CBPagesAdministrationView = {
     /**
      * @param Element args.element
      * @param object args.parameters
+     * @param object args.state
      *
      * @return undefined
      */
-    fetchPages : function(args) {
+    fetchPages : function (args) {
+        if (args.state.waiting === true) {
+            args.state.argsForNextRequest = args;
+            return;
+        }
+
+        args.state.waiting = true;
         var data = new FormData();
         data.append("parametersAsJSON", JSON.stringify(args.parameters));
 
         var xhr = new XMLHttpRequest();
         xhr.onload = CBPagesAdministrationView.fetchPagesDidLoad.bind(undefined, {
-            element: args.element,
+            element : args.element,
+            state : args.state,
             xhr : xhr
         });
         xhr.onerror = CBPagesAdministrationView.fetchPagesDidError.bind(undefined, {
-            xhr : xhr
+            state : args.state,
         });
 
         xhr.open("POST", "/api/?class=CBPages&function=fetchPageList");
@@ -109,10 +116,21 @@ var CBPagesAdministrationView = {
     },
 
     /**
+     * @param object args.state
+     *
      * @return undefined
      */
-    fetchPagesDidError : function(args) {
-        alert('An error occurred when attempting to fetch the list of unpublished pages.');
+    fetchPagesDidError : function (args) {
+        Colby.alert("An error occurred when attempting to fetch the list of pages.");
+
+        args.state.waiting = undefined;
+
+        if (args.state.argsForNextRequest) {
+            var argsForNextRequest = args.state.argsForNextRequest;
+            args.state.argsForNextRequest = undefined;
+
+            CBPagesAdministrationView.fetchPages.call(undefined, argsForNextRequest);
+        }
     },
 
     /**
@@ -120,7 +138,7 @@ var CBPagesAdministrationView = {
      *
      * @return undefined
      */
-    fetchPagesDidLoad : function(args) {
+    fetchPagesDidLoad : function (args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
@@ -131,6 +149,15 @@ var CBPagesAdministrationView = {
             args.element.appendChild(list);
         } else {
             Colby.displayResponse(response);
+        }
+
+        args.state.waiting = undefined;
+
+        if (args.state.argsForNextRequest) {
+            var argsForNextRequest = args.state.argsForNextRequest;
+            args.state.argsForNextRequest = undefined;
+
+            CBPagesAdministrationView.fetchPages.call(undefined, argsForNextRequest);
         }
     },
 };
