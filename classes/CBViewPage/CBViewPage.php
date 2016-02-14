@@ -367,15 +367,6 @@ EOT;
     }
 
     /**
-     * @deprecated since version 147. Use `modelContext` instead.
-     *
-     * @return stdClass
-     */
-    public static function renderModelContext() {
-        return CBViewPage::$modelContext;
-    }
-
-    /**
      * This function updates the page data in the database and saves the page
      * model files.
      *
