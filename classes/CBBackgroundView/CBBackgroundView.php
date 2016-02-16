@@ -29,6 +29,8 @@ final class CBBackgroundView {
     }
 
     /**
+     * @param stdClass $spec
+     *
      * @return stdClass
      */
     public static function specToModel(stdClass $spec = null) {
