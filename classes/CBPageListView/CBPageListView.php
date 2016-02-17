@@ -17,7 +17,44 @@ final class CBPageListView {
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
-        echo "<p>{$model->classNameForKind}";
+        $classNameForKindForSQL = CBDB::stringToSQL($model->classNameForKind);
+        $SQL = <<<EOT
+
+            SELECT  `published`, `subtitleHTML`, `thumbnailURL`, `titleHTML`, `URI`
+            FROM `ColbyPages`
+            WHERE `classNameForKind` = {$classNameForKindForSQL} AND
+                  `published` IS NOT NULL
+            ORDER BY `published` DESC
+            LIMIT 10
+
+EOT;
+
+        $pages = CBDB::SQLToObjects($SQL);
+
+        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
+
+        ?>
+
+        <div class="CBPageListView <?= CBTheme::IDToCSSClass($model->themeID) ?>"><?php
+
+            foreach ($pages as $page) { ?>
+                <a href="<?= CBSiteURL . "/{$page->URI}/" ?>" class="link"><?php
+                    if (!empty($page->thumbnailURL)) { ?>
+                        <div class="thumbnail">
+                            <figure style="background-image: url(<?= $page->thumbnailURL ?>);"></figure>
+                        </div>
+                    <?php } ?>
+                    <div>
+                        <h1><?= $page->titleHTML ?></h1>
+                        <div class="description"><?= $page->subtitleHTML ?></div>
+                        <div><?= ColbyConvert::timestampToHTML($page->published) ?></div>
+                    </div>
+                </a>
+            <?php } ?>
+
+        </div>
+
+        <?php
     }
 
     /**
