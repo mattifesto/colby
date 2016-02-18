@@ -336,7 +336,14 @@ EOT;
             return;
         }
 
-        CBViewPage::$modelContext = $model;
+        CBViewPage::$modelContext = $model; /* deprecated */
+
+        CBPageContext::push([
+            'descriptionAsHTML' => $model->descriptionHTML,
+            'ID' => $model->ID,
+            'publishedTimestamp' => $model->publicationTimeStamp,
+            'titleAsHTML' => $model->titleHTML,
+        ]);
 
         CBHTMLOutput::begin();
 
@@ -363,7 +370,9 @@ EOT;
 
         CBHTMLOutput::render();
 
-        CBViewPage::$modelContext = null;
+        CBPageContext::pop();
+
+        CBViewPage::$modelContext = null; /* deprecated */
     }
 
     /**
