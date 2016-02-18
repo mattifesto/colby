@@ -137,6 +137,13 @@ EOT;
         CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
 
         $classes = ['CBContainerView'];
+        $tagName = empty($model->tagName) ? 'div' : $model->tagName;
+
+        if ($tagName === 'a' && !empty($model->HREFAsHTML)) {
+            $HREF = " href=\"{$model->HREFAsHTML}\"";
+        } else {
+            $HREF = null;
+        }
 
         if (!empty($model->imageThemeID)) {
             CBHTMLOutput::addCSSURL(CBContainerView::imageThemeIDToStyleSheetURL($model->imageThemeID));
@@ -153,9 +160,9 @@ EOT;
 
         $classes = implode(' ', $classes);
 
-        ?><section class="<?= $classes ?>"><?php
+        ?><<?= $tagName, $HREF ?> class="<?= $classes ?>"><?php
             array_walk($model->subviews, 'CBView::renderModelAsHTML');
-        ?></section><?php
+        ?></<?= $tagName ?>><?php
     }
 
     /**
@@ -166,9 +173,22 @@ EOT;
     public static function specToModel(stdClass $spec) {
         $model = (object)['className' => __CLASS__];
         $model->imageThemeID = CBModel::value($spec, 'imageThemeID');
+        $model->HREF = CBModel::value($spec, 'HREF');
+        $model->HREFAsHTML = cbhtml($model->HREF);
         $model->subviews = array_map('CBView::specToModel', isset($spec->subviews) ? $spec->subviews : []);
+        $model->tagName = CBModel::value($spec, 'tagName');
         $model->themeID = CBModel::value($spec, 'themeID');
         $model->useImageHeight = CBModel::value($spec, 'useImageHeight', false, 'boolval');
+
+        switch ($model->tagName) {
+            case 'article':
+            case 'section':
+            case 'a':
+                break;
+            default:
+                unset($model->tagName);
+                break;
+        }
 
         return $model;
     }

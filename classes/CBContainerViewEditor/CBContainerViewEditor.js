@@ -20,6 +20,16 @@ var CBContainerViewEditor = {
             status : {},
         });
 
+        var HREFSectionItem = CBUI.createSectionItem();
+
+        var tagNameChangedCallback = CBContainerViewEditor.handleTagNameChanged.bind(undefined, {
+            HREFSectionItem : HREFSectionItem,
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        });
+
+        tagNameChangedCallback();
+
         /* section */
         section = CBUI.createSection();
 
@@ -40,6 +50,35 @@ var CBContainerViewEditor = {
             labelText : "Theme",
             navigateCallback : args.navigateCallback,
             propertyName : "themeID",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* tagName */
+        item = CBUI.createSectionItem();
+        var options = [
+            { title : "Default", description: "The contents of this container have no specific purpose outside of being additional content.", value : undefined },
+            { title : "Article", description: "The contents of this container represent a blog post or a syndicated article. This setting is not appropriate for regular pages such as the \"About\" page.", value : "article" },
+            { title : "Section", description: "The contents of this container represent a section in a document.", value : "section" },
+            { title : "Link", description : "This setting should only be used when this container's images must link to another page. Text links communicate much more clearly to the user and are highly preferred over image links and should be used whenever feasible. Adding subviews with links inside a container using this setting will cause severe layout issues by design and by all browsers.", value : "a" },
+        ];
+        item.appendChild(CBUISelector.create({
+            labelText : "Type",
+            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
+            options : options,
+            propertyName : "tagName",
+            spec : args.spec,
+            specChangedCallback : tagNameChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* HREF */
+        item = HREFSectionItem;
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "HREF",
+            propertyName : "HREF",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         }).element);
@@ -203,6 +242,23 @@ var CBContainerViewEditor = {
      */
     handleImageChanged : function (args) {
         args.callbacks.forEach(function (callback) { callback(); });
+    },
+
+    /**
+     * @param Element args.HREFSectionItem
+     * @param object args.spec
+     * @param function args.specChangedCallback
+     *
+     * @return undefined
+     */
+    handleTagNameChanged : function (args) {
+        if (args.spec.tagName === "a") {
+            args.HREFSectionItem.style.display = "block";
+        } else {
+            args.HREFSectionItem.style.display = "none";
+        }
+
+        args.specChangedCallback.call();
     },
 
     /**
