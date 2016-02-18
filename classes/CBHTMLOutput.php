@@ -109,6 +109,13 @@ class CBHTMLOutput
     }
 
     /**
+     * @return string|null
+     */
+    public static function descriptionAsHTML() {
+        return self::$descriptionHTML;
+    }
+
+    /**
      * @return void
      */
     public static function exportConstant($name)
@@ -350,6 +357,13 @@ class CBHTMLOutput
     public static function setDescriptionHTML($descriptionHTML)
     {
         self::$descriptionHTML = $descriptionHTML;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function titleAsHTML() {
+        return self::$titleHTML;
     }
 }
 
