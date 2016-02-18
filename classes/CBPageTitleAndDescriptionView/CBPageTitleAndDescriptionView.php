@@ -15,14 +15,22 @@ final class CBPageTitleAndDescriptionView {
             CBTheme::IDToCSSClass($model->themeID),
         ];
 
-        ?>
+        $context = CBPageContext::current();
 
-        <header class="<?= implode(' ', $classes) ?>">
-            <h1><?= CBHTMLOutput::titleAsHTML() ?></h1>
-            <div class="description"><?= CBHTMLOutput::descriptionAsHTML() ?></div>
-        </header>
+        ?><header class="<?= implode(' ', $classes) ?>"><?php
+            if (!empty($context->titleAsHTML)) {
+                echo "<h1>{$context->titleAsHTML}</h1>";
+            }
 
-        <?php
+            if (!empty($context->descriptionAsHTML)) {
+                echo "<div class='description'>{$context->descriptionAsHTML}</div>";
+            }
+
+            if ($model->showPublicationDate) {
+                $publishedAsHTML = ColbyConvert::timestampToHTML($context->publishedTimestamp);
+                echo "<div class='published'>{$publishedAsHTML}</div>";
+            }
+        ?></header><?php
     }
 
     /**
@@ -33,6 +41,7 @@ final class CBPageTitleAndDescriptionView {
     public static function specToModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
+            'showPublicationDate' => CBModel::value($spec, 'showPublicationDate', false, 'boolval'),
             'themeID' => CBModel::value($spec, 'themeID'),
         ];
     }

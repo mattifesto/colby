@@ -6,7 +6,7 @@ final class CBPageTitleAndDescriptionViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIThemeSelector'];
+        return ['CBUI', 'CBUIBooleanEditor', 'CBUIThemeSelector'];
     }
 
     /**

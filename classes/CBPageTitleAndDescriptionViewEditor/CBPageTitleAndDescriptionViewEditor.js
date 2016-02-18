@@ -15,12 +15,23 @@ var CBPageTitleAndDescriptionViewEditor = {
 
         section = CBUI.createSection();
 
+        /* themeID */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIThemeSelector.create({
             classNameForKind : "CBPageTitleAndDescriptionView",
             labelText : "Theme",
             navigateCallback : args.navigateCallback,
             propertyName : "themeID",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* showPublicationDate */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Show Publication Date",
+            propertyName : "showPublicationDate",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         }).element);
