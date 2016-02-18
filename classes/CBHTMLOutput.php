@@ -109,13 +109,6 @@ class CBHTMLOutput
     }
 
     /**
-     * @return string|null
-     */
-    public static function descriptionAsHTML() {
-        return self::$descriptionHTML;
-    }
-
-    /**
      * @return void
      */
     public static function exportConstant($name)
@@ -329,41 +322,32 @@ class CBHTMLOutput
             ob_end_clean();
         }
 
-        self::$classNameForSettings         = '';
-        self::$CSSURLs                      = array();
-        self::$descriptionHTML              = '';
-        self::$exportedLists                = array();
-        self::$exportedVariables            = array();
-        self::$isActive                     = false;
-        self::$javaScriptSnippetFilenames   = array();
-        self::$javaScriptSnippetStrings     = array();
-        self::$javaScriptURLs               = array();
-        self::$javaScriptURLsInHead         = array();
-        self::$requiredClassNames           = [];
-        self::$titleHTML                    = '';
+        self::$classNameForSettings = '';
+        self::$CSSURLs = array();
+        self::$descriptionHTML = '';
+        self::$exportedLists = array();
+        self::$exportedVariables = array();
+        self::$isActive = false;
+        self::$javaScriptSnippetFilenames = array();
+        self::$javaScriptSnippetStrings = array();
+        self::$javaScriptURLs = array();
+        self::$javaScriptURLsInHead = array();
+        self::$requiredClassNames = [];
+        self::$titleHTML = '';
     }
 
     /**
-     * @return void
+     * @return null
      */
-    public static function setTitleHTML($titleHTML)
-    {
+    public static function setTitleHTML($titleHTML) {
         self::$titleHTML = $titleHTML;
     }
 
     /**
-     * @return void
+     * @return null
      */
-    public static function setDescriptionHTML($descriptionHTML)
-    {
+    public static function setDescriptionHTML($descriptionHTML) {
         self::$descriptionHTML = $descriptionHTML;
-    }
-
-    /**
-     * @return string|null
-     */
-    public static function titleAsHTML() {
-        return self::$titleHTML;
     }
 }
 
