@@ -27,7 +27,7 @@ final class CBPageTitleAndDescriptionView {
             }
 
             if ($model->showPublicationDate) {
-                $publishedAsHTML = ColbyConvert::timestampToHTML($context->publishedTimestamp);
+                $publishedAsHTML = ColbyConvert::timestampToHTML($context->publishedTimestamp, 'Unpublished');
                 echo "<div class='published'>{$publishedAsHTML}</div>";
             }
         ?></header><?php
