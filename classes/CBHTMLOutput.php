@@ -241,6 +241,28 @@ class CBHTMLOutput
     }
 
     /**
+     * This function can be called at almost any time, even by a view in the
+     * middle of a rendering pass to render a 404 page and exit the process.
+     *
+     * An example would be a view that uses a query variable to help render its
+     * content. If the query variable holds an invalid value, the view would
+     * call this method to force a 404 response.
+     *
+     * One time when it's not appropriate to call this function is when handling
+     * an Ajax request.
+     *
+     * @TODO There should be better error handling than this during a rendering
+     * pass, so in the future this will change.
+     *
+     * @return null
+     */
+    public static function render404() {
+        self::reset();
+        include Colby::findFile('handlers/handle-default.php');
+        exit;
+    }
+
+    /**
      * @return void
      */
     private static function renderCSSLinks()
