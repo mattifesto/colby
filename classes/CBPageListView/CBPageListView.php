@@ -19,22 +19,33 @@ final class CBPageListView {
     public static function renderModelAsHTML(stdClass $model) {
         $classNameForKindForSQL = CBDB::stringToSQL($model->classNameForKind);
         $year = isset($_GET['year']) ? $_GET['year'] : null;
+        $wheres = [];
+        $wheres[] = "`classNameForKind` = {$classNameForKindForSQL}";
+        if (preg_match('/^[0-9]{4}$/', $year)) {
+            $limit = '';
+            $title = $year;
+            $wheres[] = CBPageListView::whereClauseForYear($year);
+        } else if ($year !== null) {
+            CBHTMLOutput::render404();
+        } else {
+            $limit = 'LIMIT 10';
+            $title = 'Recent';
+        }
+        $wheres[] = '`published` IS NOT NULL';
+        $wheres = implode(' AND ', $wheres);
         $SQL = <<<EOT
 
             SELECT  `published`, `subtitleHTML`, `thumbnailURL`, `titleHTML`, `URI`
             FROM `ColbyPages`
-            WHERE `classNameForKind` = {$classNameForKindForSQL} AND
-                  `published` IS NOT NULL
+            WHERE {$wheres}
             ORDER BY `publishedMonth` DESC, `published` DESC
-            LIMIT 10
+            {$limit}
 
 EOT;
 
         $pages = CBDB::SQLToObjects($SQL);
 
         CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
-
-        $title = $year ? $year : 'Recent';
 
         ?>
 
@@ -104,5 +115,18 @@ EOT;
             'classNameForKind' => CBModel::value($spec, 'classNameForKind', null, 'trim'),
             'themeID' => CBModel::value($spec, 'themeID'),
         ];
+    }
+
+    /**
+     * @param int $year
+     *
+     * @return string
+     */
+    private static function whereClauseForYear($year) {
+        $year = (int)$year;
+        $low = "{$year}00";
+        $high = "{$year}99";
+
+        return "(`publishedMonth` >= {$low} AND `publishedMonth` <= {$high})";
     }
 }
