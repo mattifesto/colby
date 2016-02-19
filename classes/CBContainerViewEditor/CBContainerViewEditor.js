@@ -46,7 +46,7 @@ var CBContainerViewEditor = {
         /* theme */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIThemeSelector.create({
-            classNameForKind : "CBContainerViewTheme",
+            classNameForKind : "CBContainerView",
             labelText : "Theme",
             navigateCallback : args.navigateCallback,
             propertyName : "themeID",
