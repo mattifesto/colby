@@ -59,11 +59,12 @@ var CBThemedTextViewEditor = {
     },
 
     /**
+     * @param string? spec.contentAsMarkaround
      * @param string? spec.titleAsMarkaround
      *
      * @return string
      */
     specToDescription : function (spec) {
-        return spec.titleAsMarkaround;
+        return spec.titleAsMarkaround || spec.contentAsMarkaround;
     },
 };
