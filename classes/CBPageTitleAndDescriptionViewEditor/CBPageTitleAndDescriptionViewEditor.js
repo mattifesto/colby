@@ -27,6 +27,16 @@ var CBPageTitleAndDescriptionViewEditor = {
         }).element);
         section.appendChild(item);
 
+        /* hideDescription */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Hide Description",
+            propertyName : "hideDescription",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
         /* showPublicationDate */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIBooleanEditor.create({

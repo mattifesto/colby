@@ -22,11 +22,11 @@ final class CBPageTitleAndDescriptionView {
                 echo "<h1>{$context->titleAsHTML}</h1>";
             }
 
-            if (!empty($context->descriptionAsHTML)) {
+            if (!empty($context->descriptionAsHTML) && empty($model->hideDescription)) {
                 echo "<div class='description'>{$context->descriptionAsHTML}</div>";
             }
 
-            if ($model->showPublicationDate) {
+            if (!empty($model->showPublicationDate)) {
                 $publishedAsHTML = ColbyConvert::timestampToHTML($context->publishedTimestamp, 'Unpublished');
                 echo "<div class='published'>{$publishedAsHTML}</div>";
             }
@@ -41,6 +41,7 @@ final class CBPageTitleAndDescriptionView {
     public static function specToModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
+            'hideDescription' => CBModel::value($spec, 'hideDescription', false, 'boolval'),
             'showPublicationDate' => CBModel::value($spec, 'showPublicationDate', false, 'boolval'),
             'themeID' => CBModel::value($spec, 'themeID'),
         ];
