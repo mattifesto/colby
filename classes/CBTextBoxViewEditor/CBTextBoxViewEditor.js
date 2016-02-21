@@ -189,6 +189,7 @@ var CBTextBoxViewEditor = {
             className : "CBThemedTextView",
             contentAsMarkaround : args.spec.contentAsMarkaround,
             titleAsMarkaround : args.spec.titleAsMarkaround,
+            URL : args.spec.URL,
         };
 
         localStorage.setItem("specClipboard", JSON.stringify(spec));
