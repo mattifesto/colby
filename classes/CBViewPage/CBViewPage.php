@@ -292,6 +292,8 @@ EOT;
 
     /**
      * @deprecated use renderModelAsHTML
+     *  Once all pages are saved to the CBModels table, this function will no
+     *  longer be called.
      *
      * @return null
      */
