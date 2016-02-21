@@ -291,6 +291,8 @@ EOT;
     }
 
     /**
+     * @deprecated use renderModelAsHTML
+     *
      * @return null
      */
     public static function renderAsHTMLForID($ID, $iteration) {
@@ -319,7 +321,13 @@ EOT;
             $filepath = "{$directory}/model.json";
         }
 
-        CBViewPage::renderModelAsHTML(json_decode(file_get_contents($filepath)));
+        $model = json_decode(file_get_contents($filepath));
+
+        if (empty($model->ID)) {
+            $model->ID = $model->dataStoreID;
+        }
+
+        CBViewPage::renderModelAsHTML($model);
     }
 
     /**
