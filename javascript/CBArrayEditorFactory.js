@@ -142,7 +142,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
 
         var description = document.createElement("div");
         description.className = "description";
-        description.textContent = CBArrayEditor.specToDescription(args.spec) || "";
+        description.textContent = CBArrayEditor.specToDescription(args.spec) || "\u00A0";
 
         content.appendChild(title);
         content.appendChild(description);
