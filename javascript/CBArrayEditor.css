@@ -28,19 +28,35 @@
     white-space: nowrap;
 }
 
-.CBArrayEditor .CBUISectionItem .action {
+.CBArrayEditor .CBUISectionItem .action,
+.CBArrayEditor .CBUISectionItem .toggle {
     align-items: center;
+    box-sizing: border-box;
     cursor: pointer;
-    display: none;
     justify-content: center;
-    width: 50px;
+    padding: 0 10px;
+    min-width: 50px;
     flex: none;
 }
 
-.CBArrayEditor .CBUISection.arrange .action.arrange,
-.CBArrayEditor .CBUISection.edit .action.edit,
-.CBArrayEditor .CBUISection.insert .action.insert {
+.CBArrayEditor .CBUISectionItem .toggle {
     display: flex;
+    border-left: 1px solid hsl(0, 0%, 90%);
+}
+
+.CBArrayEditor .CBUISectionItem .action {
+    display: none;
+}
+
+.CBArrayEditor .CBUISectionItem.show-actions > .action {
+    display: flex;
+}
+
+/* remove non-vital actions for narrow widths */
+@media (max-width: 479px) {
+    .CBArrayEditor .CBUISectionItem.show-actions > .action.optional {
+        display: none;
+    }
 }
 
 .CBArrayEditor .CBUISectionItem .action.up {

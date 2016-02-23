@@ -136,36 +136,6 @@ var CBArrayEditor = CBArrayEditorFactory = {
 
         element.appendChild(item);
 
-        item = document.createElement("div");
-        item.textContent = "arrange";
-
-        item.addEventListener("click", CBArrayEditor.setEditorMode.bind(undefined, {
-            mode : "arrange",
-            sectionElement : args.sectionElement,
-        }));
-
-        element.appendChild(item);
-
-        item = document.createElement("div");
-        item.textContent = "edit";
-
-        item.addEventListener("click", CBArrayEditor.setEditorMode.bind(undefined, {
-            mode : "edit",
-            sectionElement : args.sectionElement,
-        }));
-
-        element.appendChild(item);
-
-        item = document.createElement("div");
-        item.textContent = "insert";
-
-        item.addEventListener("click", CBArrayEditor.setEditorMode.bind(undefined, {
-            mode : "insert",
-            sectionElement : args.sectionElement,
-        }));
-
-        element.appendChild(item);
-
         return element;
     },
 
@@ -215,7 +185,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
         element.appendChild(action);
 
         action = document.createElement("div");
-        action.className = "action arrange down";
+        action.className = "action arrange down optional";
         action.textContent = "down";
         action.addEventListener("click", CBArrayEditor.handleMoveDownWasClicked.bind(undefined, {
             array : args.array,
@@ -239,7 +209,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
         element.appendChild(action);
 
         action = document.createElement("div");
-        action.className = "action edit copy";
+        action.className = "action edit copy optional";
         action.textContent = "copy";
         action.addEventListener("click", CBArrayEditor.handleCopyWasClicked.bind(undefined, {
             spec : args.spec,
@@ -263,7 +233,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
 
         action = document.createElement("div");
         action.className = "action insert";
-        action.textContent = "+";
+        action.textContent = "insert";
         action.addEventListener("click", CBArrayEditor.insertSelectedModel.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
@@ -271,6 +241,16 @@ var CBArrayEditor = CBArrayEditorFactory = {
             navigateCallback : args.navigateCallback,
             sectionElement : args.sectionElement,
             specToInsertBefore : args.spec,
+        }));
+        element.appendChild(action);
+
+        /* toggle */
+        action = document.createElement("div");
+        action.className = "toggle";
+        action.textContent = "<";
+        action.addEventListener("click", CBArrayEditor.toggleActions.bind(undefined, {
+            toggleButtonElement : action,
+            sectionItemElement : element,
         }));
         element.appendChild(action);
 
@@ -507,22 +487,6 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param string mode
-     * @param Element sectionElement
-     *
-     * @return undefined
-     */
-    setEditorMode : function (args) {
-        var e = args.sectionElement;
-
-        if (e.classList.contains(args.mode)) {
-            e.classList.toggle(args.mode);
-        } else {
-            e.className = "CBUISection " + args.mode;
-        }
-    },
-
-    /**
      * @param object? spec
      *
      * @return string|undefined
@@ -536,6 +500,22 @@ var CBArrayEditor = CBArrayEditorFactory = {
             return editor.specToDescription.call(undefined, spec);
         } else {
             return spec.title;
+        }
+    },
+
+    /**
+     * @param Element args.sectionItemElement
+     * @param Element args.toggleButtonElement
+     *
+     * @return undefined
+     */
+    toggleActions : function (args) {
+        if (args.sectionItemElement.classList.contains("show-actions")) {
+            args.sectionItemElement.classList.remove("show-actions");
+            args.toggleButtonElement.textContent = "<";
+        } else {
+            args.sectionItemElement.classList.add("show-actions");
+            args.toggleButtonElement.textContent = ">";
         }
     },
 };
