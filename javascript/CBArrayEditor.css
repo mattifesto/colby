@@ -1,18 +1,5 @@
-.CBArrayEditor {
-}
-
-.CBArrayEditor .CBUISectionItem {
+.CBArrayEditor .CBUISectionItem.item {
     display: flex;
-}
-
-.CBArrayEditor .CBUISectionItem.menu {
-    align-items: center;
-    justify-content: space-around;
-}
-
-.CBArrayEditor .CBUISectionItem.menu > div {
-    color: hsl(210, 100%, 50%);
-    cursor: pointer;
 }
 
 .CBArrayEditor .CBUISectionItem .content {

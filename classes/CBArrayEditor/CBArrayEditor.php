@@ -6,7 +6,7 @@ final class CBArrayEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI'];
+        return ['CBUI', 'CBUIActionLink'];
     }
 
     /**

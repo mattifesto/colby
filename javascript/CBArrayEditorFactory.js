@@ -77,10 +77,11 @@ var CBArrayEditor = CBArrayEditorFactory = {
      * @return Element
      */
     createEditor : function (args) {
+        var section, item;
         var element = document.createElement("div");
         element.className = "CBArrayEditor";
 
-        var section = document.createElement("div");
+        section = document.createElement("div");
         section.className = "CBUISection";
 
         args.array.forEach(function (spec) {
@@ -96,45 +97,21 @@ var CBArrayEditor = CBArrayEditorFactory = {
             section.appendChild(element);
         });
 
-        section.appendChild(CBArrayEditor.createMenu({
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            classNames : args.classNames,
-            navigateCallback : args.navigateCallback,
-            sectionElement : section,
-        }));
+        /* append */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIActionLink.create({
+            callback : CBArrayEditor.appendSelectedModel.bind(undefined, {
+                array : args.array,
+                arrayChangedCallback : args.arrayChangedCallback,
+                classNames : args.classNames,
+                navigateCallback : args.navigateCallback,
+                sectionElement : section,
+            }),
+            labelText : "Append...",
+        }).element);
+        section.appendChild(item);
 
         element.appendChild(section);
-
-        return element;
-    },
-
-    /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param [string] args.classNames
-     * @param function args.navigateCallback
-     * @param Element args.sectionElement
-     *
-     * @return Element
-     */
-    createMenu : function (args) {
-        var item;
-        var element = document.createElement("div");
-        element.className = "CBUISectionItem menu";
-
-        item = document.createElement("div");
-        item.textContent = "append";
-
-        item.addEventListener("click", CBArrayEditor.appendSelectedModel.bind(undefined, {
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            classNames : args.classNames,
-            navigateCallback : args.navigateCallback,
-            sectionElement : args.sectionElement,
-        }));
-
-        element.appendChild(item);
 
         return element;
     },
@@ -151,8 +128,8 @@ var CBArrayEditor = CBArrayEditorFactory = {
      */
     createSectionItemElement : function (args) {
         var action;
-        var element = document.createElement("div");
-        element.className = "CBUISectionItem";
+        var element = CBUI.createSectionItem();
+        element.classList.add("item");
 
         var content = document.createElement("div");
         content.className = "content";
