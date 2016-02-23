@@ -22,8 +22,9 @@
     cursor: pointer;
     flex: none;
     justify-content: center;
-    padding: 0 10px;
     min-width: 50px;
+    padding: 0 10px;
+    text-transform: capitalize;
     -moz-user-select: none;
     -ms-user-select: none;
     -webkit-user-select: none;
