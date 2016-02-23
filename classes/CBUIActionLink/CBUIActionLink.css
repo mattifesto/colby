@@ -5,6 +5,9 @@
     display: flex;
     justify-content: center;
     min-height: 44px;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 }
 
 .CBUIActionLink.disabled {
