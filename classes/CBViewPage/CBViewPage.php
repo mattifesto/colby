@@ -572,32 +572,6 @@ EOT;
 
         $model->schemaVersion = 3;
 
-        // classNameForKind
-
-        if (isset($model->classNameForKind) && class_exists($classNameForKind = $model->classNameForKind)) {
-            if (is_callable($function = "{$classNameForKind}::createModelForKind")) {
-                $modelForKind = call_user_func($function);
-
-                if ($modelForKind === false) {
-                    return false;
-                } else {
-                    $model->modelForKind = $modelForKind;
-                }
-            } else {
-                $model->modelForKind = null;
-            }
-
-            if (is_callable($function = "{$classNameForKind}::transformTitle")) {
-                $model->title       = call_user_func($function, $model->title, ['modelForKind' => $modelForKind]);
-                $model->titleHTML   = ColbyConvert::textToHTML($model->title);
-            }
-
-            if (is_callable($function = "{$classNameForKind}::transformDescription")) {
-                $model->description     = call_user_func($function, $model->description, ['modelForKind' => $modelForKind]);
-                $model->descriptionHTML = ColbyConvert::textToHTML($model->title);
-            }
-        }
-
         // 2015.09.19 classNameForSettings
         if (!isset($model->classNameForSettings)) {
             $model->classNameForSettings = '';
