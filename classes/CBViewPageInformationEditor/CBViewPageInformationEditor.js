@@ -138,7 +138,7 @@ var CBViewPageInformationEditor = {
                 labelText : "Page Settings",
                 navigateCallback : args.navigateCallback,
                 navigateToItemCallback : args.navigateToItemCallback,
-                property : "classNameForSettings",
+                propertyName : "classNameForSettings",
                 spec : args.spec,
                 specChangedCallback : args.specChangedCallback,
                 options : classNames,
@@ -146,32 +146,28 @@ var CBViewPageInformationEditor = {
             section.appendChild(item);
         }
 
-        /* deprecated option container */
-        var flexContainer       = document.createElement("div");
-        flexContainer.className = "flexContainer";
-
+        /* classNameForKind */
         if (CBPageClassNamesForKinds.length > 0) {
             classNames = CBPageClassNamesForKinds.map(function(className) {
-                return { textContent : className.replace(/PageKind$/, ""), value : className };
+                return { title : className.replace(/PageKind$/, ""), value : className };
             });
 
-            classNames.unshift({ textContent : "None", value : "" });
+            classNames.unshift({ title : "None", value : undefined });
 
-            flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
-                data                : classNames,
-                handleSpecChanged   : args.specChangedCallback,
-                labelText           : "Kind",
-                propertyName        : "classNameForKind",
-                spec                : args.spec
-            }));
+            item = CBUI.createSectionItem();
+            item.appendChild(CBUISelector.create({
+                labelText : "Page Kind",
+                navigateCallback : args.navigateCallback,
+                navigateToItemCallback : args.navigateToItemCallback,
+                propertyName : "classNameForKind",
+                spec : args.spec,
+                specChangedCallback : args.specChangedCallback,
+                options : classNames,
+            }).element);
+            section.appendChild(item);
         }
 
-        item = CBUI.createSectionItem();
-        item.appendChild(flexContainer);
-        section.appendChild(item);
-
         element.appendChild(section);
-
         element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
