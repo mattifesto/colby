@@ -125,6 +125,27 @@ var CBViewPageInformationEditor = {
         }).element);
         section.appendChild(item);
 
+        /* classNameForSettings */
+        if (CBPageClassNamesForSettings.length > 0) {
+            classNames = CBPageClassNamesForSettings.map(function(className) {
+                return { title : className.replace(/PageKind$/, ""), value : className };
+            });
+
+            classNames.unshift({ title : "Default", value : undefined });
+
+            item = CBUI.createSectionItem();
+            item.appendChild(CBUISelector.create({
+                labelText : "Page Settings",
+                navigateCallback : args.navigateCallback,
+                navigateToItemCallback : args.navigateToItemCallback,
+                property : "classNameForSettings",
+                spec : args.spec,
+                specChangedCallback : args.specChangedCallback,
+                options : classNames,
+            }).element);
+            section.appendChild(item);
+        }
+
         /* deprecated option container */
         var flexContainer       = document.createElement("div");
         flexContainer.className = "flexContainer";
@@ -141,22 +162,6 @@ var CBViewPageInformationEditor = {
                 handleSpecChanged   : args.specChangedCallback,
                 labelText           : "Kind",
                 propertyName        : "classNameForKind",
-                spec                : args.spec
-            }));
-        }
-
-        if (CBPageClassNamesForSettings.length > 0) {
-            classNames = CBPageClassNamesForSettings.map(function(className) {
-                return { textContent : className.replace(/PageKind$/, ""), value : className };
-            });
-
-            classNames.unshift({ textContent : "Default", value : "" });
-
-            flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
-                data                : classNames,
-                handleSpecChanged   : args.specChangedCallback,
-                labelText           : "Page Settings",
-                propertyName        : "classNameForSettings",
                 spec                : args.spec
             }));
         }
