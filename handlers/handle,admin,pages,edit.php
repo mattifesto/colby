@@ -64,11 +64,6 @@ $listNames = CBViewPageLists::availableListNames();
 
 CBHTMLOutput::exportVariable('CBPageEditorAvailablePageListClassNames', $listNames);
 
-/* kinds */
-CBHTMLOutput::exportVariable('CBClassNamesForKinds', CBPagesPreferences::classNamesForKinds());
-/* page settings */
-CBHTMLOutput::exportVariable('CBClassNamesForSettings', CBPagesPreferences::classNamesForSettings());
-
 /**
  * Export page templates
  */

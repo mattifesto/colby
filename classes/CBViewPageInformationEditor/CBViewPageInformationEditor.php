@@ -29,6 +29,16 @@ final class CBViewPageInformationEditor {
     }
 
     /**
+     * @return [[string, mixed]]
+     */
+    public static function requiredJavaScriptVariables() {
+        return [
+            ['CBPageClassNamesForKinds', CBPagesPreferences::classNamesForKinds()],
+            ['CBPageClassNamesForSettings', CBPagesPreferences::classNamesForSettings()],
+        ];
+    }
+
+    /**
      * @param string $filename
      *
      * @return string

@@ -119,8 +119,8 @@ var CBViewPageInformationEditor = {
             spec                : args.spec
         }));
 
-        if (CBClassNamesForKinds.length > 0) {
-            classNames = CBClassNamesForKinds.map(function(className) {
+        if (CBPageClassNamesForKinds.length > 0) {
+            classNames = CBPageClassNamesForKinds.map(function(className) {
                 return { textContent : className.replace(/PageKind$/, ""), value : className };
             });
 
@@ -135,8 +135,8 @@ var CBViewPageInformationEditor = {
             }));
         }
 
-        if (CBClassNamesForSettings.length > 0) {
-            classNames = CBClassNamesForSettings.map(function(className) {
+        if (CBPageClassNamesForSettings.length > 0) {
+            classNames = CBPageClassNamesForSettings.map(function(className) {
                 return { textContent : className.replace(/PageKind$/, ""), value : className };
             });
 
