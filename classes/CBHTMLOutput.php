@@ -23,7 +23,7 @@ class CBHTMLOutput
     const JSAsync           = 1; // 1 << 0
     const JSInHeadElement   = 2; // 1 << 1
 
-    public static $classNameForSettings = '';
+    public static $classNameForSettings;
 
     private static $CSSURLs;
     private static $descriptionHTML;
@@ -186,7 +186,7 @@ class CBHTMLOutput
         $settingsHeadContent        = '';
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent   = '';
-        $classNameForSettings       = (self::$classNameForSettings === '') ? CBSitePreferences::defaultClassNameForPageSettings() : self::$classNameForSettings;
+        $classNameForSettings       = empty(self::$classNameForSettings) ? CBSitePreferences::defaultClassNameForPageSettings() : self::$classNameForSettings;
 
         CBHTMLOutput::processRequiredClassNames();
 
@@ -344,7 +344,7 @@ class CBHTMLOutput
             ob_end_clean();
         }
 
-        self::$classNameForSettings = '';
+        self::$classNameForSettings = null;
         self::$CSSURLs = array();
         self::$descriptionHTML = '';
         self::$exportedLists = array();
