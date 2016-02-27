@@ -13,10 +13,11 @@ var CBPagesPreferencesEditorFactory = {
         var element = document.createElement("div");
         element.className = "CBPagesPreferencesEditor";
         var properties = [
-            { name : "supportedViewClassNames", labelText : "Supported View Class Names"},
-            { name : "deprecatedViewClassNames", labelText : "Deprecated View Class Name"},
-            { name : "classNamesForKinds", labelText : "Class Names for Kinds"},
-            { name : "classNamesForSettings", labelText : "Class Names for Page Settings"},
+            { name : "supportedViewClassNames", labelText : "Supported View Class Names" },
+            { name : "deprecatedViewClassNames", labelText : "Deprecated View Class Name" },
+            { name : "classNamesForKinds", labelText : "Class Names for Kinds" },
+            { name : "classNamesForLayouts", labelText : "Class Names for Layouts" },
+            { name : "classNamesForSettings", labelText : "Class Names for Page Settings" },
         ];
 
         element.appendChild(CBUI.createHalfSpace());

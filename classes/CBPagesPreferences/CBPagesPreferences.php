@@ -40,8 +40,17 @@ final class CBPagesPreferences {
      */
     public static function classNamesForKinds() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
+        return CBModel::value($model, 'classNamesForKinds', []);
+    }
 
-        return $model->classNamesForKinds;
+    /**
+     * Returns an array of class names for page layouts.
+     *
+     * @return [{string}]
+     */
+    public static function classNamesForLayouts() {
+        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
+        return CBModel::value($model, 'classNamesForLayouts', []);
     }
 
     /**
@@ -51,12 +60,7 @@ final class CBPagesPreferences {
      */
     public static function classNamesForSettings() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-
-        if (isset($model->classNamesForSettings) && is_array($model->classNamesForSettings)) {
-            return $model->classNamesForSettings;
-        } else {
-            return [];
-        }
+        return CBModel::value($model, 'classNamesForSettings', []);
     }
 
     /**
@@ -104,27 +108,31 @@ final class CBPagesPreferences {
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
-        $model                              = CBModels::modelWithClassName(__CLASS__);
-        $model->classNamesForKinds          = [];
-        $model->deprecatedViewClassNames    = [];
-        $model->supportedViewClassNames     = [];
+        $model = (object)['className' => __CLASS__];
+        $model->deprecatedViewClassNames = [];
+        $model->supportedViewClassNames = [];
 
-        if (isset($spec->supportedViewClassNames)) {
+        if (!empty($spec->supportedViewClassNames)) {
             $model->supportedViewClassNames = array_unique(preg_split(
                 '/[\s,]+/', $spec->supportedViewClassNames, null, PREG_SPLIT_NO_EMPTY));
         }
 
-        if (isset($spec->deprecatedViewClassNames)) {
+        if (!empty($spec->deprecatedViewClassNames)) {
             $model->deprecatedViewClassNames = array_unique(preg_split(
                 '/[\s,]+/', $spec->deprecatedViewClassNames, null, PREG_SPLIT_NO_EMPTY));
         }
 
-        if (isset($spec->classNamesForKinds)) {
+        if (!empty($spec->classNamesForKinds)) {
             $model->classNamesForKinds = array_unique(preg_split(
                 '/[\s,]+/', $spec->classNamesForKinds, null, PREG_SPLIT_NO_EMPTY));
         }
 
-        if (isset($spec->classNamesForSettings)) {
+        if (!empty($spec->classNamesForLayouts)) {
+            $model->classNamesForLayouts = array_unique(preg_split(
+                '/[\s,]+/', $spec->classNamesForLayouts, null, PREG_SPLIT_NO_EMPTY));
+        }
+
+        if (!empty($spec->classNamesForSettings)) {
             $model->classNamesForSettings = array_unique(preg_split(
                 '/[\s,]+/', $spec->classNamesForSettings, null, PREG_SPLIT_NO_EMPTY));
         }
@@ -133,9 +141,12 @@ final class CBPagesPreferences {
     }
 
     /**
-     * @return {string}
+     * @param string $filename
+     *
+     * @return string
      */
     public static function URL($filename) {
-        return CBSystemURL . "/classes/CBPagesPreferences/{$filename}";
+        $className = __CLASS__;
+        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }

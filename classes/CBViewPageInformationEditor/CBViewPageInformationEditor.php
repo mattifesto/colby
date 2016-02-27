@@ -34,6 +34,7 @@ final class CBViewPageInformationEditor {
     public static function requiredJavaScriptVariables() {
         return [
             ['CBPageClassNamesForKinds', CBPagesPreferences::classNamesForKinds()],
+            ['CBPageClassNamesForLayouts', CBPagesPreferences::classNamesForLayouts()],
             ['CBPageClassNamesForSettings', CBPagesPreferences::classNamesForSettings()],
         ];
     }
