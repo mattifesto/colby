@@ -6,7 +6,7 @@ final class CBViewPageInformationEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBImageEditor', 'CBUI', 'CBUIStringEditor'];
+        return ['CBImageEditor', 'CBUI', 'CBUISelector', 'CBUIStringEditor'];
     }
 
     /**
@@ -33,9 +33,11 @@ final class CBViewPageInformationEditor {
      */
     public static function requiredJavaScriptVariables() {
         return [
+            ['CBCurrentUserID', ColbyUser::currentUserId()],
             ['CBPageClassNamesForKinds', CBPagesPreferences::classNamesForKinds()],
             ['CBPageClassNamesForLayouts', CBPagesPreferences::classNamesForLayouts()],
             ['CBPageClassNamesForSettings', CBPagesPreferences::classNamesForSettings()],
+            ['CBUsersWhoAreAdministrators', CBViewPageInformationEditor::usersWhoAreAdministrators()],
         ];
     }
 
@@ -47,5 +49,21 @@ final class CBViewPageInformationEditor {
     public static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
+    }
+
+    /**
+     * @return [{stdClass}]
+     */
+    private static function usersWhoAreAdministrators() {
+        $SQL = <<<EOT
+
+            SELECT `user`.`ID`, `user`.`facebookName` as `name`
+            FROM `ColbyUsers` AS `user`
+            JOIN `ColbyUsersWhoAreAdministrators` AS `administrator`
+            ON `user`.`ID` = `administrator`.`userID`
+
+EOT;
+
+        return CBDB::SQLToObjects($SQL);
     }
 }

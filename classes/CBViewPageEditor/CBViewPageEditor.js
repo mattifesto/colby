@@ -66,6 +66,7 @@ var CBViewPageEditor = {
         editorContainer.appendChild(CBViewPageInformationEditor.createEditor({
             handleTitleChanged : CBViewPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
             makeFrontPageCallback : CBViewPageEditor.makeFrontPage.bind(undefined, { ID : args.spec.ID }),
+            navigateCallback : args.navigateCallback,
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         }));

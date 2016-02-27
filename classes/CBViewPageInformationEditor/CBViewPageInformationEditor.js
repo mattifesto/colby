@@ -104,20 +104,30 @@ var CBViewPageInformationEditor = {
         }));
         section.appendChild(item);
 
-        var flexContainer       = document.createElement("div");
-        flexContainer.className = "flexContainer";
+        /* publishedBy */
+        if (!args.spec.publishedBy) {
+            args.spec.publishedBy = CBCurrentUserID;
+        }
 
         var users = CBUsersWhoAreAdministrators.map(function(user) {
-            return { textContent : user.name, value : user.ID };
+            return { title : user.name, value : user.ID };
         });
 
-        flexContainer.appendChild(CBStringEditorFactory.createSelectEditor({
-            data                : users,
-            handleSpecChanged   : args.specChangedCallback,
-            labelText           : "Published By",
-            propertyName        : "publishedBy",
-            spec                : args.spec
-        }));
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUISelector.create({
+            labelText : "Published By",
+            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
+            propertyName : "publishedBy",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+            options : users,
+        }).element);
+        section.appendChild(item);
+
+        /* deprecated option container */
+        var flexContainer       = document.createElement("div");
+        flexContainer.className = "flexContainer";
 
         if (CBPageClassNamesForKinds.length > 0) {
             classNames = CBPageClassNamesForKinds.map(function(className) {

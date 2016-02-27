@@ -103,34 +103,6 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 <?php
 
-$sql = <<<EOT
-
-    SELECT
-        `user`.`ID`,
-        `user`.`facebookName` as `name`
-    FROM
-        `ColbyUsers` AS `user`
-    JOIN
-        `ColbyUsersWhoAreAdministrators` AS `administrator`
-    ON
-        `user`.`ID` = `administrator`.`userID`
-
-EOT;
-
-$result = Colby::query($sql);
-
-$users = array();
-
-while ($object = $result->fetch_object())
-{
-    $users[] = $object;
-}
-
-$result->free();
-
-CBHTMLOutput::exportVariable('CBUsersWhoAreAdministrators', $users);
-CBHTMLOutput::exportVariable('CBCurrentUserID', ColbyUser::currentUserId());
-
 include CBSystemDirectory . '/sections/admin-page-footer-2.php';
 
 CBHTMLOutput::render();
