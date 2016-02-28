@@ -47,9 +47,10 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param function navigateCallback
-     * @param object spec
-     * @param function specChangedCallback
+     * @param function args.navigateCallback (deprecated)
+     * @param function args.navigateToItemCallback
+     * @param object args.spec
+     * @param function args.specChangedCallback
      *
      * @return undefined
      */
@@ -65,6 +66,7 @@ var CBViewPageEditor = {
             handleTitleChanged : CBViewPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
             makeFrontPageCallback : CBViewPageEditor.makeFrontPage.bind(undefined, { ID : args.spec.ID }),
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         }));
@@ -78,6 +80,7 @@ var CBViewPageEditor = {
             arrayChangedCallback : args.specChangedCallback,
             classNames : CBPageEditorAvailableViewClassNames,
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
         }));
 
         CBViewPageEditor.handleTitleChanged({spec : args.spec});
