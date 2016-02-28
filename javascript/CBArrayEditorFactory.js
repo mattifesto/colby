@@ -12,6 +12,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      * @param object spec
      *
@@ -23,6 +24,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             sectionElement : args.sectionElement,
             spec : spec,
         });
@@ -38,6 +40,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      *
      * @return  undefined
@@ -51,6 +54,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             sectionElement : args.sectionElement,
         });
 
@@ -73,6 +77,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      *
      * @return Element
      */
@@ -90,6 +95,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
                 arrayChangedCallback : args.arrayChangedCallback,
                 classNames : args.classNames,
                 navigateCallback : args.navigateCallback,
+                navigateToItemCallback : args.navigateToItemCallback,
                 sectionElement : section,
                 spec : spec,
             });
@@ -105,6 +111,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
                 arrayChangedCallback : args.arrayChangedCallback,
                 classNames : args.classNames,
                 navigateCallback : args.navigateCallback,
+                navigateToItemCallback : args.navigateToItemCallback,
                 sectionElement : section,
             }),
             labelText : "Append...",
@@ -121,6 +128,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      * @param object args.spec
      *
@@ -133,23 +141,34 @@ var CBArrayEditor = CBArrayEditorFactory = {
 
         var content = document.createElement("div");
         content.className = "content";
-
-        content.addEventListener("click", args.navigateCallback.bind(undefined, args.spec));
-
         var title = document.createElement("div");
         title.className = "title";
         title.textContent = args.spec.className;
-
         var description = document.createElement("div");
         description.className = "description";
-        description.textContent = CBArrayEditor.specToDescription(args.spec) || "\u00A0";
+
+        var arrayElementChangedCallback = CBArrayEditor.handleArrayElementChanged.bind(undefined, {
+            descriptionElement : description,
+            spec : args.spec,
+            specChangedCallback : args.arrayChangedCallback,
+        });
+
+        arrayElementChangedCallback();
 
         content.appendChild(title);
         content.appendChild(description);
         element.appendChild(content);
 
-        // arrange
+        var editArrayElementRequestedCallback = CBArrayEditor.handleEditArrayElementRequested.bind(undefined, {
+            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
+            spec : args.spec,
+            specChangedCallback : arrayElementChangedCallback,
+        });
 
+        content.addEventListener("click", editArrayElementRequestedCallback);
+
+        // arrange
         action = document.createElement("div");
         action.className = "action arrange up";
         action.textContent = "up";
@@ -173,7 +192,6 @@ var CBArrayEditor = CBArrayEditorFactory = {
         element.appendChild(action);
 
         // edit
-
         action = document.createElement("div");
         action.className = "action edit cut";
         action.textContent = "cut";
@@ -201,13 +219,13 @@ var CBArrayEditor = CBArrayEditorFactory = {
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             sectionElement : args.sectionElement,
             specToInsertBefore : args.spec,
         }));
         element.appendChild(action);
 
         // insert
-
         action = document.createElement("div");
         action.className = "action insert";
         action.textContent = "insert";
@@ -216,6 +234,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             sectionElement : args.sectionElement,
             specToInsertBefore : args.spec,
         }));
@@ -232,6 +251,18 @@ var CBArrayEditor = CBArrayEditorFactory = {
         element.appendChild(action);
 
         return element;
+    },
+
+    /**
+     * @param Element args.descriptionElement
+     * @param object args.spec
+     * @param function args.specChangedCallback
+     *
+     */
+    handleArrayElementChanged : function (args) {
+        var nonBreakingSpace = "\u00A0";
+        args.descriptionElement.textContent = CBArrayEditor.specToDescription(args.spec) || nonBreakingSpace;
+        args.specChangedCallback.call();
     },
 
     /**
@@ -281,6 +312,33 @@ var CBArrayEditor = CBArrayEditorFactory = {
 
             args.arrayChangedCallback();
         }
+    },
+
+    /**
+     * @param function args.navigateCallback (deprecated)
+     * @param function args.navigateToItemCallback
+     * @param object args.spec
+     * @param function args.specChangedCallback
+     *
+     * @return undefined
+     */
+    handleEditArrayElementRequested : function (args) {
+        var element = document.createElement("div");
+        var editor = CBUISpecEditor.create({
+            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        });
+
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(editor.element);
+        element.appendChild(CBUI.createHalfSpace());
+
+        args.navigateToItemCallback({
+            element : element,
+            title : args.spec.className || "Unknown",
+        });
     },
 
     /**
@@ -338,6 +396,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      * @param object args.specToInsertBefore
      *
@@ -358,6 +417,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      * @param function args.arrayChangedCallback
      * @param function args.classNames
      * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      * @param object args.specToInsertBefore
      * @param object spec
@@ -372,6 +432,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             sectionElement : args.sectionElement,
             spec : spec,
         });
@@ -387,6 +448,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
      * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      * @param object args.specToInsertBefore
      *
@@ -401,6 +463,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             sectionElement : args.sectionElement,
             specToInsertBefore : args.specToInsertBefore,
         });
