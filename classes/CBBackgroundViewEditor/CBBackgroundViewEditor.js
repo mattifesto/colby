@@ -3,7 +3,8 @@
 var CBBackgroundViewEditor = {
 
     /**
-     * @param function args.navigateCallback
+     * @param function args.navigateCallback (deprecated)
+     * @param function args.navigateToItemCallback
      * @param Object args.spec
      * @param function args.specChangedCallback
      *
@@ -81,6 +82,7 @@ var CBBackgroundViewEditor = {
             arrayChangedCallback : args.specChangedCallback,
             classNames : CBBackgroundViewAddableViews,
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
         }));
 
         element.appendChild(CBUI.createHalfSpace());
