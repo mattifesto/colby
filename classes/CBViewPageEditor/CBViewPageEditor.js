@@ -37,12 +37,10 @@ var CBViewPageEditor = {
              * be opportunity to improve clarity of this process.
              */
 
-            CBViewPageEditor.model = JSON.parse(template.modelJSON);
-            CBViewPageEditor.model.ID = CBURLQueryVariables["data-store-id"];
+            var spec = JSON.parse(template.modelJSON);
+            spec.ID = CBURLQueryVariables["data-store-id"];
 
-            var navigationState = { stack : [CBViewPageEditor.model] };
-
-            CBViewPageEditor.displayEditor({ navigationState : navigationState });
+            CBViewPageEditor.displayEditorForPageSpec(spec);
         };
 
         pageTemplateOption.addEventListener("click", handler, false);
@@ -88,39 +86,34 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param object args.navigationState
+     * @param object spec
      *
      * @return undefined
      */
-    displayEditor : function(args) {
-        var index = (history.state) ? history.state.index : 0;
-        var spec = args.navigationState.stack[index];
-        var editorFactory = window[spec.className + "Editor"] ||
-                            window[spec.className + "EditorFactory"] ||
-                            CBDefaultEditor;
+    displayEditorForPageSpec : function (spec) {
+        CBViewPageEditor.model = spec;
+        var element = document.createElement("div");
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
         var specChangedCallback = CBViewPageEditor.requestSave.bind(CBViewPageEditor);
-        var navigateCallback = CBViewPageEditor.navigate.bind(undefined, { navigationState : args.navigationState });
+        var navigationView = CBUINavigationView.create({
+            defaultSpecChangedCallback : specChangedCallback,
+            rootItem : {
+                element : element,
+                title : "Page Editor",
+            },
+        });
 
-        var title = document.createElement("div");
-        title.textContent = spec.className;
-
-        main.appendChild(CBUI.createHeader({
-            centerElement : title,
-        }));
-
-        main.appendChild(CBUI.createHalfSpace());
-
-        main.appendChild(editorFactory.createEditor({
-            navigateCallback : navigateCallback,
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUISpecEditor.create({
+            navigateCallback : navigationView.navigateToSpecCallback,
+            navigateToItemCallback : navigationView.navigateToItemCallback,
             spec : spec,
             specChangedCallback : specChangedCallback,
-        }));
+        }).element);
+        element.appendChild(CBUI.createHalfSpace());
 
-        main.appendChild(CBUI.createHalfSpace());
-
-        window.scroll(0, 0);
+        main.appendChild(navigationView.element);
     },
 
     /**
@@ -145,17 +138,6 @@ var CBViewPageEditor = {
         title = title.trim();
         title = (title.length > 0) ? ": " + title : "";
         document.title = "Page Editor" + title;
-    },
-
-    /**
-     * @param Object args.navigationState
-     *
-     * @return undefined
-     */
-    handlePopState : function (args, event) {
-        CBViewPageEditor.displayEditor({
-            navigationState : args.navigationState,
-        });
     },
 
     /**
@@ -184,35 +166,12 @@ var CBViewPageEditor = {
     makeFrontPageDidLoad : function (args) {
         Colby.displayResponse(Colby.responseFromXMLHttpRequest(args.xhr));
     },
-
-    /**
-     * @param Object args.navigationState
-     *
-     * @return undefined
-     */
-    navigate : function (args, spec) {
-        var index = (history.state) ? history.state.index : 0;
-
-        index++;
-        args.navigationState.stack.splice(index, Number.MAX_VALUE, spec);
-        history.pushState({ index : index }, undefined);
-
-        CBViewPageEditor.displayEditor({
-            navigationState : args.navigationState,
-        });
-    },
 };
 
 /**
  * @return undefined
  */
 CBViewPageEditor.DOMContentDidLoad = function() {
-    // If the user has been navigating and reloads the page then the model
-    // will have been removed from memory. If some sort of state has been
-    // pushed it will refer to parts of that non-existent model. We need to
-    // reset the editor and calling replaceState will do that.
-    history.replaceState(undefined, undefined);
-
     CBViewPageEditor.saveModelTimer = Object.create(CBDelayTimer).init();
     CBViewPageEditor.saveModelTimer.callback = CBViewPageEditor.saveModel.bind(CBViewPageEditor);
     CBViewPageEditor.saveModelTimer.delayInMilliseconds = 2000;
@@ -256,14 +215,7 @@ CBViewPageEditor.fetchModelDidLoad = function(args) {
                 spec.className = "CBViewPage";
             }
 
-            var navigationState = { stack : [spec] };
-            CBViewPageEditor.model = spec;
-
-            CBViewPageEditor.displayEditor({ navigationState : navigationState });
-
-            window.addEventListener("popstate", CBViewPageEditor.handlePopState.bind(undefined, {
-                navigationState : navigationState,
-            }));
+            CBViewPageEditor.displayEditorForPageSpec(spec);
         } else {
             CBViewPageEditor.displayPageTemplateChooser();
         }
