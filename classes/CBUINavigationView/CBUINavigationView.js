@@ -38,6 +38,8 @@ var CBUINavigationView = {
     /**
      * @param function args.defaultSpecChangedCallback (deprecated)
      * @param object? args.rootItem
+     *  Specifying a rootItem argument is exactly the same as calling this
+     *  function followed by a call to navigateToItemCallback().
      *
      * @return {
      *  Element element,
@@ -116,6 +118,10 @@ var CBUINavigationView = {
 
         state.element.textContent = null;
         state.element.appendChild(toItem.container);
+
+        if (state.items.length > 1) {
+            history.pushState(undefined, undefined);
+        }
     },
 
     /**
@@ -146,7 +152,5 @@ var CBUINavigationView = {
             element : element,
             title : spec.title || spec.className || "Unknown",
         });
-
-        history.pushState(undefined, undefined);
     },
 };
