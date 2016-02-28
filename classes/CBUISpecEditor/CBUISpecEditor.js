@@ -10,11 +10,13 @@ var CBUISpecEditor = {
      * class.
      *
      * @param function args.navigateCallback (deprecated)
-     * @param function args.navigateToElementCallback
+     * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
      *
-     * @return Element
+     * @return {
+     *  Element element,
+     * }
      */
     create : function (args) {
         var spec = args.spec;
@@ -25,12 +27,10 @@ var CBUISpecEditor = {
         return {
             element : editorFactory.createEditor({
                 navigateCallback : args.navigateCallback, /* deprecated */
-                navigateToElementCallback : args.navigateToElementCallback,
+                navigateToElementCallback : args.navigateToItemCallback,
                 spec : spec,
                 specChangedCallback : args.specChangedCallback,
             }),
         };
     },
-
-
 };
