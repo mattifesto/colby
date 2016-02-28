@@ -37,7 +37,7 @@ var CBUINavigationView = {
 
     /**
      * @param function args.defaultSpecChangedCallback (deprecated)
-     * @param object args.rootItem
+     * @param object? args.rootItem
      *
      * @return {
      *  Element element,
@@ -59,7 +59,9 @@ var CBUINavigationView = {
 
         window.addEventListener("popstate", CBUINavigationView.handlePopState.bind(undefined, state));
 
-        navigateToItemCallback(args.rootItem);
+        if (args.rootItem !== undefined) {
+            navigateToItemCallback(args.rootItem);
+        }
 
         return {
             element : element,
