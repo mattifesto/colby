@@ -4,6 +4,7 @@ var CBContainerViewEditor = {
 
     /**
      * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
      *
@@ -49,6 +50,7 @@ var CBContainerViewEditor = {
             classNameForKind : "CBContainerView",
             labelText : "Theme",
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             propertyName : "themeID",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
@@ -107,6 +109,7 @@ var CBContainerViewEditor = {
             arrayChangedCallback : args.specChangedCallback,
             classNames : CBContainerViewAddableViews,
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
         }));
 
         element.appendChild(CBUI.createHalfSpace());
