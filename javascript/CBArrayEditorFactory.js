@@ -508,20 +508,14 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
+     * @deprecated use CBUISpec.specToDescription
+     *
      * @param object? spec
      *
      * @return string|undefined
      */
     specToDescription : function (spec) {
-        if (spec === undefined) { return undefined; }
-
-        var editor = window[spec.className + "Editor"];
-
-        if (editor !== undefined && typeof editor.specToDescription === "function") {
-            return editor.specToDescription.call(undefined, spec);
-        } else {
-            return spec.title;
-        }
+        return CBUISpec.specToDescription(spec);
     },
 
     /**

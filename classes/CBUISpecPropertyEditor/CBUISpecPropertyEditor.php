@@ -12,7 +12,7 @@ final class CBUISpecPropertyEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink'];
+        return ['CBUI', 'CBUIActionLink', 'CBUISpec'];
     }
 
     /**

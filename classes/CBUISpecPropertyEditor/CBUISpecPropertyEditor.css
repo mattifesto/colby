@@ -1,0 +1,15 @@
+.CBUISpecPropertyEditor .button {
+    cursor: pointer;
+    padding: 5px 10px;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.CBUISpecPropertyEditor .description {
+    color: hsl(0, 0%, 50%);
+    font-size: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

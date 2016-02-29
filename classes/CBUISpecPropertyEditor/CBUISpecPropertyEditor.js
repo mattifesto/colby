@@ -103,6 +103,7 @@ var CBUISpecPropertyEditor = {
      * @return undefined
      */
     updateDisplay : function (args) {
+        var nonBreakingSpace = "\u00A0";
         var spec = args.spec[args.propertyName];
         var titleText = "None";
 
@@ -115,8 +116,12 @@ var CBUISpecPropertyEditor = {
         var title = document.createElement("div");
         title.className = "title";
         title.textContent = titleText;
+        var description = document.createElement("div");
+        description.className = "description";
+        description.textContent = CBUISpec.specToDescription(args.spec.layout) || nonBreakingSpace;
 
         element.appendChild(title);
+        element.appendChild(description);
 
         args.specItemElement.textContent = null;
         args.specItemElement.appendChild(element);
