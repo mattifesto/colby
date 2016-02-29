@@ -152,12 +152,40 @@ var CBUISelector = {
     },
 
     /**
+     * @param function args.navigateToItemCallback
+     * @param [object] args.options
+     *  object = { string title, string? description, mixed value }
+     * @param mixed? args.selectedValue
+     * @param string? args.title
+     *
+     * @return Promise -> mixed
+     */
+    selectValue : function (args) {
+        var func = function (resolve, reject) {
+            if (args.options.length === 1) {
+                resolve (args.options[0].value);
+                return;
+            }
+
+            CBUISelector.showSelector({
+                callback : resolve,
+                navigateToItemCallback : args.navigateToItemCallback,
+                options : args.options,
+                selectedValue : args.selectedValue,
+                title : args.title,
+            });
+        };
+
+        return new Promise(func);
+    },
+
+    /**
      * @param function args.callback
      * @param function args.navigateToItemCallback
      * @param [object] args.options
-     *  option = { string title, string? description, mixed value }
+     *  object = { string title, string? description, mixed value }
      * @param mixed? args.selectedValue
-     * @param string? title
+     * @param string? args.title
      *
      * @return undefined
      */
