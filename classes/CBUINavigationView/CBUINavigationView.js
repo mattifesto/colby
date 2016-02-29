@@ -122,6 +122,8 @@ var CBUINavigationView = {
         if (state.items.length > 1) {
             history.pushState(undefined, undefined);
         }
+
+        window.scrollTo(0, 0);
     },
 
     /**
