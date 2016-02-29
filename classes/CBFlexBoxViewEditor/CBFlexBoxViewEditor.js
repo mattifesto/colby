@@ -4,10 +4,11 @@ var CBFlexBoxViewEditor = {
 
     /**
      * @param function args.navigateCallback
-     * @param   {Object}    spec
-     * @param   {function}  specChangedCallback
+     * @param function args.navigateToItemCallback
+     * @param object args.spec
+     * @param function args.specChangedCallback
      *
-     * @return  {Element}
+     * @return Element
      */
     createEditor : function(args) {
         var row;
@@ -258,6 +259,7 @@ var CBFlexBoxViewEditor = {
             arrayChangedCallback : args.specChangedCallback,
             classNames : CBPageEditorAvailableViewClassNames,
             navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
         }));
 
         element.appendChild(CBUI.createHalfSpace());
@@ -382,7 +384,7 @@ var CBFlexBoxViewEditor = {
 
         if (Array.isArray(subviews)) {
             for (var i = 0; i < subviews.length && !description; i++) {
-                description = CBArrayEditor.specToDescription(subviews[i]);
+                description = CBUISpec.specToDescription(subviews[i]);
             }
         }
 

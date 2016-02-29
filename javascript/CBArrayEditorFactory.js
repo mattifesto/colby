@@ -264,7 +264,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      */
     handleArrayElementChanged : function (args) {
         var nonBreakingSpace = "\u00A0";
-        args.descriptionElement.textContent = CBArrayEditor.specToDescription(args.spec) || nonBreakingSpace;
+        args.descriptionElement.textContent = CBUISpec.specToDescription(args.spec) || nonBreakingSpace;
         args.specChangedCallback.call();
     },
 
@@ -505,17 +505,6 @@ var CBArrayEditor = CBArrayEditorFactory = {
                 title : "Select a View",
             });
         });
-    },
-
-    /**
-     * @deprecated use CBUISpec.specToDescription
-     *
-     * @param object? spec
-     *
-     * @return string|undefined
-     */
-    specToDescription : function (spec) {
-        return CBUISpec.specToDescription(spec);
     },
 
     /**

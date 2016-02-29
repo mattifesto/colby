@@ -331,7 +331,7 @@ var CBContainerViewEditor = {
 
         if (Array.isArray(subviews)) {
             for (var i = 0; i < subviews.length && !description; i++) {
-                description = CBArrayEditor.specToDescription(subviews[i]);
+                description = CBUISpec.specToDescription(subviews[i]);
             }
         }
 

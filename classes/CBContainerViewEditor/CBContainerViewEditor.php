@@ -6,7 +6,7 @@ final class CBContainerViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIBooleanEditor', 'CBUIImageSizeView', 'CBUIImageUploader', 'CBUIImageView', 'CBUISelector', 'CBUIStringEditor', 'CBUIThemeSelector'];
+        return ['CBArrayEditor', 'CBUI', 'CBUIBooleanEditor', 'CBUIImageSizeView', 'CBUIImageUploader', 'CBUIImageView', 'CBUISelector', 'CBUISpec', 'CBUIStringEditor', 'CBUIThemeSelector'];
     }
 
     /**

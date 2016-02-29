@@ -3,7 +3,7 @@
 var CBBackgroundViewEditor = {
 
     /**
-     * @param function args.navigateCallback (deprecated)
+     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param Object args.spec
      * @param function args.specChangedCallback
@@ -138,7 +138,7 @@ var CBBackgroundViewEditor = {
 
         if (Array.isArray(children)) {
             for (var i = 0; i < children.length && !description; i++) {
-                description = CBArrayEditor.specToDescription(children[i]);
+                description = CBUISpec.specToDescription(children[i]);
             }
         }
 
