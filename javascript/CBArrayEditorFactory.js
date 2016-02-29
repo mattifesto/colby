@@ -47,7 +47,10 @@ var CBArrayEditor = CBArrayEditorFactory = {
      */
     appendSelectedModel : function (args) {
         var requestModelClassName = CBArrayEditor.requestModelClassName;
-        var requestArgs = { classNames : args.classNames, };
+        var requestArgs = {
+            classNames : args.classNames,
+            navigateToItemCallback : args.navigateToItemCallback,
+        };
         var classNameToModel = CBArrayEditor.classNameToModel;
         var appendModel = CBArrayEditor.append.bind(undefined, {
             array : args.array,
@@ -456,7 +459,10 @@ var CBArrayEditor = CBArrayEditorFactory = {
      */
     insertSelectedModel : function (args) {
         var requestModelClassName = CBArrayEditor.requestModelClassName;
-        var requestArgs = { classNames : args.classNames, };
+        var requestArgs = {
+            classNames : args.classNames,
+            navigateToItemCallback : args.navigateToItemCallback,
+        };
         var classNameToModel = CBArrayEditor.classNameToModel;
         var insertModel = CBArrayEditor.insert.bind(undefined, {
             array : args.array,
@@ -471,8 +477,9 @@ var CBArrayEditor = CBArrayEditorFactory = {
         requestModelClassName(requestArgs).then(classNameToModel).then(insertModel);
     },
 
-    /*
+    /**
      * @param [string] args.classNames
+     * @param function args.navigateToItemCallback
      *
      * @return Promise -> string
      */
@@ -483,46 +490,20 @@ var CBArrayEditor = CBArrayEditorFactory = {
                 return;
             }
 
-            var element = document.createElement("div");
-            element.className = "CBArrayEditorModelSelector CBUIRoot";
-
-            var title = document.createElement("div");
-            title.textContent = "Select a Model Class";
-
-            var cancel = document.createElement("div");
-            cancel.className = "CBUIHeaderAction";
-            cancel.textContent = "Cancel";
-
-            cancel.addEventListener("click", function () {
-                document.body.removeChild(element);
+            var options = args.classNames.map(function (className) {
+                return {
+                    title : className,
+                    value : className,
+                };
             });
 
-            element.appendChild(CBUI.createHeader({
-                centerElement : title,
-                rightElement : cancel,
-            }));
-
-            element.appendChild(CBUI.createHalfSpace());
-
-            var section = CBUI.createSection();
-
-            args.classNames.forEach(function (className) {
-                var item = CBUI.createSectionItem();
-                item.classList.add("item");
-                item.textContent = className;
-
-                item.addEventListener("click", function () {
-                    document.body.removeChild(element);
-                    resolve(className);
-                });
-
-                section.appendChild(item);
+            CBUISelector.showSelector({
+                callback : resolve,
+                navigateToItemCallback : args.navigateToItemCallback,
+                options : options,
+                selectedValue : undefined,
+                title : "Select a View",
             });
-
-            element.appendChild(section);
-            element.appendChild(CBUI.createHalfSpace());
-
-            document.body.appendChild(element);
         });
     },
 
