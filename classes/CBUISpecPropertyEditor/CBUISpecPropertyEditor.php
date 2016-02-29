@@ -1,13 +1,12 @@
 <?php
 
 /**
- * This class edits a property holding an array of specs and should potentially
- * be named CBUISpecArrayEditor or CBUISpecArrayPropertyEditor.
+ * This class edits a property that holds a spec.
  *
- * It is similar to the CBUISpecPropertyEditor which does the same thing but
- * for a single spec instead of an array.
+ * It is similar to the CBArrayEditor class which does the same thing but for an
+ * array of specs.
  */
-final class CBArrayEditor {
+final class CBUISpecPropertyEditor {
 
     /**
      * @return [string]
@@ -20,14 +19,14 @@ final class CBArrayEditor {
      * @return [string]
      */
     public static function requiredCSSURLs() {
-        return [CBSystemURL . '/javascript/CBArrayEditor.css'];
+        return [CBUISpecPropertyEditor::URL('CBUISpecPropertyEditor.css')];
     }
 
     /**
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [CBSystemURL . '/javascript/CBArrayEditorFactory.js'];
+        return [CBUISpecPropertyEditor::URL('CBUISpecPropertyEditor.js')];
     }
 
     /**

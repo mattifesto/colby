@@ -128,7 +128,7 @@ var CBViewPageInformationEditor = {
         /* classNameForSettings */
         if (CBPageClassNamesForSettings.length > 0) {
             classNames = CBPageClassNamesForSettings.map(function(className) {
-                return { title : className.replace(/PageKind$/, ""), value : className };
+                return { title : className, value : className };
             });
 
             classNames.unshift({ title : "Default", value : undefined });
@@ -149,7 +149,7 @@ var CBViewPageInformationEditor = {
         /* classNameForKind */
         if (CBPageClassNamesForKinds.length > 0) {
             classNames = CBPageClassNamesForKinds.map(function(className) {
-                return { title : className.replace(/PageKind$/, ""), value : className };
+                return { title : className, value : className };
             });
 
             classNames.unshift({ title : "None", value : undefined });
@@ -235,6 +235,28 @@ var CBViewPageInformationEditor = {
         section.appendChild(item);
 
         element.appendChild(section);
+
+        /* layout */
+        if (CBPageClassNamesForLayouts.length > 0) {
+            element.appendChild(CBUI.createHalfSpace());
+
+            var options = CBPageClassNamesForLayouts.map(function(className) {
+                return { title : className, value : className };
+            });
+
+            options.unshift({ title : "None", value : undefined });
+
+            var editor = CBUISpecPropertyEditor.create({
+                labelText : "Layout",
+                navigateToItemCallback : args.navigateToItemCallback,
+                options : options,
+                propertyName : "layout",
+                spec : args.spec,
+                specChangedCallback : args.specChangedCallback,
+            });
+
+            element.appendChild(editor.element);
+        }
 
         return element;
     },
@@ -322,7 +344,10 @@ var CBViewPageInformationEditor = {
         return control.rootElement();
     },
 
-    handleThumbnailUploaded : function(args, response) {
+    /**
+     * @return undefined
+     */
+    handleThumbnailUploaded : function (args, response) {
         args.spec.thumbnailURL  = response.sizes.rs200clc200.URL;
 
         CBImageEditorFactory.displayThumbnail({
