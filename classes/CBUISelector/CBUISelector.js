@@ -27,7 +27,7 @@ var CBUISelector = {
         var arrow = document.createElement("div");
         arrow.className = "arrow";
         arrow.textContent = ">";
-        var state = {};
+        var state = { options : undefined };
 
         element.appendChild(label);
         element.appendChild(selectedValueTitle);
@@ -54,20 +54,145 @@ var CBUISelector = {
 
         updateOptionsCallback(args.options);
 
-        element.addEventListener("click", args.navigateCallback.bind(undefined, {
-            className : "CBUISelectorValue",
-            propertyName : args.propertyName,
-            spec : args.spec,
-            state : state,
-            title : args.labelText || "",
-            updateValueCallback : updateValueCallback,
-        }));
+        if (args.navigateToItemCallback) {
+            var clickedCallback = CBUISelector.showSelectorForControl.bind(undefined, {
+                callback : updateValueCallback,
+                labelText : args.labelText,
+                navigateToItemCallback : args.navigateToItemCallback,
+                propertyName : args.propertyName,
+                spec : args.spec,
+                state : state,
+            });
+
+            element.addEventListener("click", clickedCallback);
+        } else {
+            element.addEventListener("click", args.navigateCallback.bind(undefined, {
+                className : "CBUISelectorValue",
+                propertyName : args.propertyName,
+                spec : args.spec,
+                state : state,
+                title : args.labelText || "",
+                updateValueCallback : updateValueCallback,
+            }));
+        }
 
         return {
             element : element,
             updateOptionsCallback : updateOptionsCallback,
             updateValueCallback : updateValueCallback,
         };
+    },
+
+    /**
+     * @param function args.callback
+     * @param object args.option
+     *  { string title, string? description, mixed value }
+     * @param mixed? args.selectedValue
+     *
+     * @return Element
+     */
+    createOption : function (args) {
+        var element = document.createElement("div");
+        element.className = "CBUISelectorOption";
+        var title = document.createElement("div");
+        title.className = "title";
+        title.textContent = args.option.title;
+        var description = document.createElement("div");
+        description.className = "description";
+        var nonBreakingSpace = "\u00A0";
+        description.textContent = args.option.description || nonBreakingSpace;
+
+        element.appendChild(title);
+        element.appendChild(description);
+
+        element.addEventListener("click", args.callback.bind(undefined, args.option.value));
+
+        return element;
+    },
+
+    /**
+     * @param function args.callback
+     * @param [object] args.options
+     *  option = { string title, string? description, mixed value }
+     * @param mixed? args.selectedValue
+     *
+     * @return Element
+     */
+    createSelector : function (args) {
+        var element = document.createElement("div");
+        var section = CBUI.createSection();
+
+        element.appendChild(CBUI.createHalfSpace());
+
+        args.options.forEach(function (option) {
+            var item = CBUI.createSectionItem();
+            item.appendChild(CBUISelector.createOption({
+                callback : args.callback,
+                option : option,
+                selectedValue : args.selectedValue,
+            }));
+            section.appendChild(item);
+        });
+
+        element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
+
+        return element;
+    },
+
+    /**
+     * @param function callback
+     * @param mixed value
+     *
+     * @return undefined
+     */
+    handleOptionSelected : function (callback, value) {
+        callback.call(undefined, value);
+        history.back();
+    },
+
+    /**
+     * @param function args.callback
+     * @param function args.navigateToItemCallback
+     * @param [object] args.options
+     *  option = { string title, string? description, mixed value }
+     * @param mixed? args.selectedValue
+     * @param string? title
+     *
+     * @return undefined
+     */
+    showSelector : function (args) {
+        var optionSelectedCallback = CBUISelector.handleOptionSelected.bind(undefined, args.callback);
+        var selector = CBUISelector.createSelector({
+            callback : optionSelectedCallback,
+            options : args.options,
+            selectedValue : args.selectedValue,
+        });
+
+        args.navigateToItemCallback.call(undefined, {
+            element : selector,
+            title : args.title,
+        });
+    },
+
+    /**
+     * @param function args.callback
+     * @param string args.labelText
+     * @param function args.navigateToItemCallback
+     * @param string args.propertyName
+     * @param object args.spec
+     * @param object args.state
+     *
+     * @return undefined
+     */
+    showSelectorForControl : function (args) {
+        CBUISelector.showSelector({
+            callback : args.callback,
+            navigateToItemCallback : args.navigateToItemCallback,
+            options : args.state.options,
+            selectedValue : args.spec[args.propertyName],
+            title : args.labelText,
+        });
     },
 
     /**

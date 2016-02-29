@@ -19,10 +19,13 @@
     top: 0;
 }
 
+.CBUISelectorOption,
 .CBUISelectorValueEditor .CBUISectionItem {
+    cursor: pointer;
     padding: 5px 10px;
 }
 
+.CBUISelectorOption .description,
 .CBUISelectorValueEditor .description {
     color: hsl(0, 0%, 50%);
 }
