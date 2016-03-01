@@ -43,6 +43,15 @@ var CBUISpecPropertyEditor = {
         var specItem = CBUI.createSectionItem();
         section.appendChild(specItem);
 
+        var editLayoutPreferencesCallback = CBUISpecPropertyEditor.handleEditLayoutPreferences.bind(undefined, {
+            navigateToItemCallback : args.navigateToItemCallback,
+            propertyName : args.propertyName,
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        });
+
+        specItem.addEventListener("click", editLayoutPreferencesCallback);
+
         var updateDisplayCallback = CBUISpecPropertyEditor.updateDisplay.bind(undefined, {
             propertyName : args.propertyName,
             spec : args.spec,
@@ -77,6 +86,38 @@ var CBUISpecPropertyEditor = {
         return {
             element : element,
         };
+    },
+
+    /**
+     * @param function args.navigateToItemCallback
+     * @param string args.propertyName
+     * @param object args.spec
+     * @param function args.specChangedCallback
+     *
+     * @return undefined
+     */
+    handleEditLayoutPreferences : function (args) {
+        var element = document.createElement("div");
+        var layoutSpec = args.spec[args.propertyName];
+
+        if (layoutSpec === undefined) {
+            return;
+        }
+
+        var editor = CBUISpecEditor.create({
+            navigateToItemCallback : args.navigateToItemCallback,
+            spec : args.spec[args.propertyName],
+            specChangedCallback : args.specChangedCallback,
+        });
+
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(editor.element);
+        element.appendChild(CBUI.createHalfSpace());
+
+        args.navigateToItemCallback({
+            element : element,
+            title : args.spec.className || "Unknown",
+        });
     },
 
     /**
