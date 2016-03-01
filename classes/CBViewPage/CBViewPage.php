@@ -376,7 +376,15 @@ EOT;
 
         CBModelCache::cacheModelsByID($dependencyIDs);
 
-        array_walk($model->sections, 'CBView::renderModelAsHTML');
+        $renderContent = function () use ($model) {
+            array_walk($model->sections, 'CBView::renderModelAsHTML');
+        };
+
+        if (isset($model->layout->className) && is_callable($renderLayout = "{$model->layout->className}::render")) {
+            call_user_func($renderLayout, $model->layout, $renderContent);
+        } else {
+            $renderContent();
+        }
 
         CBHTMLOutput::render();
 
@@ -455,6 +463,7 @@ EOT;
         $model->description             = isset($spec->description) ? $spec->description : '';
         $model->isPublished             = isset($spec->isPublished) ? !!$spec->isPublished : false;
         $model->iteration               = 0;
+        $model->layout = CBModel::value($spec, 'layout');
         $model->listClassNames          = isset($spec->listClassNames) ? $spec->listClassNames : array();
         $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
         $model->publishedBy             = isset($spec->publishedBy) ? $spec->publishedBy : null;
