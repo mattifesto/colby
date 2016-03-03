@@ -46,10 +46,10 @@ CBModels::install();
 CBModelsPreferences::install();
 CBPages::install();
 CBSitePreferences::install();
-CBMainMenu::install();
-CBThemedTextView::install();
+CBStandardModels::install();
+CBThemedTextView::install(); /* deprecated */
 CBImages::install();
-CBRequestTracker::install();
+CBRequestTracker::install(); /* deprecated */
 
 $SQL = <<<EOT
 

@@ -2,9 +2,15 @@
 
 final class CBThemedTextView {
 
+    /**
+     * @deprecated use CBPageTitleAndDescriptionView along with
+     * CBStandardModels::CBThemeIDForCBPageTitleAndDescriptionView
+     */
     const standardPageHeaderThemeID = '2a5eb6c836914ef8f33b15f0853ac61df554505e';
 
     /**
+     * @deprecated use CBPageTitleAndDescriptionView
+     *
      * @return null
      */
     public static function install() {
