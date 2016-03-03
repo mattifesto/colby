@@ -41,12 +41,6 @@ var CBAdminPageForEditingModels = {
      * @return  undefined
      */
     handleDOMContentLoaded : function() {
-        // If the user has been navigating and reloads the page then the model
-        // will have been removed from memory. If some sort of state has been
-        // pushed it will refer to parts of that non-existent model. We need to
-        // reset the editor and calling replaceState will do that.
-        history.replaceState(undefined, undefined);
-
         var formData = new FormData();
         formData.append("className", CBModelClassName);
         formData.append("ID", CBModelID);
@@ -64,38 +58,19 @@ var CBAdminPageForEditingModels = {
     },
 
     /**
-     * @param   {XMLHttpRequest} xhr
+     * @param XMLHttpRequest args.xhr
      *
-     * @return  undefined
+     * @return undefined
      */
     handleModelLoaded : function(args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
             var spec = response.spec || { ID : CBModelID, className : CBModelClassName };
-            var navigationState = { stack : [spec] }
-
-            CBAdminPageForEditingModels.renderEditor({
-                navigationState : navigationState,
-            });
-
-            window.addEventListener("popstate", CBAdminPageForEditingModels.handlePopState.bind(undefined, {
-                navigationState : navigationState,
-            }));
+            CBAdminPageForEditingModels.renderEditorForSpec(spec);
         } else {
             Colby.displayResponse(response);
         }
-    },
-
-    /**
-     * @param Object args.navigationState
-     *
-     * @return undefined
-     */
-    handlePopState : function (args, event) {
-        CBAdminPageForEditingModels.renderEditor({
-            navigationState : args.navigationState,
-        });
     },
 
     /**
@@ -232,54 +207,37 @@ var CBAdminPageForEditingModels = {
     },
 
     /**
-     * @param Object args.navigationState
+     * @param object spec
      *
      * @return undefined
      */
-    navigate : function (args, spec) {
-        var index = (history.state) ? history.state.index : 0;
-
-        index++;
-        args.navigationState.stack.splice(index, Number.MAX_VALUE, spec);
-        history.pushState({ index : index }, undefined);
-
-        CBAdminPageForEditingModels.renderEditor({
-            navigationState : args.navigationState,
-        });
-    },
-
-    /**
-     * @param object args.navigationState
-     *
-     * @return undefined
-     */
-    renderEditor : function(args) {
-        var index = (history.state) ? history.state.index : 0;
-        var spec = args.navigationState.stack[index];
-        var editorFactory = window[spec.className + "Editor"] ||
-                            window[spec.className + "EditorFactory"] ||
-                            CBDefaultEditor;
+    renderEditorForSpec : function (spec) {
+        var element = document.createElement("div");
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
         var specChangedCallback = CBAdminPageForEditingModels.handleSpecChanged.bind(undefined, {
             info : {},
-            spec : args.navigationState.stack[0],
+            spec : spec,
+        });
+        var navigationView = CBUINavigationView.create({
+            defaultSpecChangedCallback : specChangedCallback,
         });
 
-        main.appendChild(CBAdminPageForEditingModels.createHeader({
-            spec : spec
-        }));
-
-        main.appendChild(CBUI.createHalfSpace());
-
-        main.appendChild(editorFactory.createEditor({
-            handleSpecChanged : specChangedCallback, /* deprecated: use specChangedCallback */
-            navigateCallback : CBAdminPageForEditingModels.navigate.bind(undefined, { navigationState : args.navigationState, }),
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUISpecEditor.create({
+            navigateCallback : navigationView.navigateToSpecCallback,
+            navigateToItemCallback : navigationView.navigateToItemCallback,
             spec : spec,
             specChangedCallback : specChangedCallback,
-        }));
+        }).element);
+        element.appendChild(CBUI.createHalfSpace());
 
-        main.appendChild(CBUI.createHalfSpace());
+        navigationView.navigateToItemCallback.call(undefined, {
+            element : element,
+            title : spec.className + " Editor",
+        });
+
+        main.appendChild(navigationView.element);
     },
 
     /**
