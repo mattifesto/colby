@@ -4,6 +4,7 @@ var CBMenuEditor = {
 
     /**
      * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param Object args.spec
      * @param function args.specChangedCallback
      *
@@ -32,7 +33,7 @@ var CBMenuEditor = {
 
         section.appendChild(item);
         element.appendChild(section);
-        
+
         element.appendChild(CBUI.createHalfSpace());
 
         element.appendChild(CBUI.createSectionHeader({text : "Menu Items"}));
@@ -41,7 +42,8 @@ var CBMenuEditor = {
             array : args.spec.items,
             arrayChangedCallback : args.specChangedCallback,
             classNames : ["CBMenuItem"],
-            navigateCallback : args.navigateCallback
+            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
         }));
 
         element.appendChild(CBUI.createHalfSpace());
