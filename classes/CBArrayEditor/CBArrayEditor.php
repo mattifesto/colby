@@ -13,7 +13,7 @@ final class CBArrayEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink', 'CBUISpec'];
+        return ['CBUI', 'CBUIActionLink', 'CBUISpec', 'CBUISpecEditor'];
     }
 
     /**
