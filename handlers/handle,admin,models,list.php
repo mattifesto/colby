@@ -49,10 +49,10 @@ if (is_callable($function = "{$classNameForModels}::compareModels")) {
 <div class="CBUIRoot">
     <div class="CBUIHeader">
         <div class="left"></div>
-        <div class="center"><?= $titleAsHTML ?></div>
+        <div class="center"><div class="CBUIHeaderTitle"><?= $titleAsHTML ?></div></div>
         <div class="right">
             <?php if (!defined("{$classNameForModels}::ID")) { ?>
-            <div class="CBUIHeaderAction" onclick="CBHandleAdminModelsList.handleNewClicked();">New</div>
+            <div class="CBUIHeaderButtonItem" onclick="CBHandleAdminModelsList.handleNewClicked();">New</div>
             <?php } ?>
         </div>
     </div>
