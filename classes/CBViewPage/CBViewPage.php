@@ -376,14 +376,14 @@ EOT;
 
         CBModelCache::cacheModelsByID($dependencyIDs);
 
-        $renderContent = function () use ($model) {
+        $renderContentCallback = function () use ($model) {
             array_walk($model->sections, 'CBView::renderModelAsHTML');
         };
 
         if (isset($model->layout->className) && is_callable($renderLayout = "{$model->layout->className}::render")) {
-            call_user_func($renderLayout, $model->layout, $renderContent);
+            call_user_func($renderLayout, $model->layout, $renderContentCallback);
         } else {
-            $renderContent();
+            $renderContentCallback();
         }
 
         CBHTMLOutput::render();
@@ -463,7 +463,6 @@ EOT;
         $model->description             = isset($spec->description) ? $spec->description : '';
         $model->isPublished             = isset($spec->isPublished) ? !!$spec->isPublished : false;
         $model->iteration               = 0;
-        $model->layout = CBModel::value($spec, 'layout');
         $model->listClassNames          = isset($spec->listClassNames) ? $spec->listClassNames : array();
         $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
         $model->publishedBy             = isset($spec->publishedBy) ? $spec->publishedBy : null;
@@ -474,10 +473,19 @@ EOT;
         $model->URI                     = $model->URI !== '' ? $model->URI : $model->ID;
 
         /**
+         * Layout
+         */
+
+        if (isset($spec->layout)) {
+            $model->layout = CBModel::specToOptionalModel($spec->layout);
+        }
+
+        /**
          * Views
          */
 
         if (isset($spec->sections)) {
+            /* TODO: use CBModel::specToOptionalModel */
             $model->sections = array_map('CBView::specToModel', $spec->sections);
         } else {
             $model->sections = array();
