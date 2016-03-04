@@ -3,17 +3,20 @@
 final class CBPageTitleAndDescriptionView {
 
     /**
-     * @param stdClass $model
+     * @param bool? $model->hideDescription
+     * @param bool? $model->showPublicationDate
+     * @param hex160? $model->themeID
+     *
      *
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
-        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
+        $classes = ['CBPageTitleAndDescriptionView'];
 
-        $classes = [
-            'CBPageTitleAndDescriptionView',
-            CBTheme::IDToCSSClass($model->themeID),
-        ];
+        if (!empty($model->themeID)) {
+            CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
+            $classes[] = CBTheme::IDToCSSClass($model->themeID);
+        }
 
         $context = CBPageContext::current();
 
