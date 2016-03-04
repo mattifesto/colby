@@ -150,13 +150,17 @@ var CBArrayEditor = CBArrayEditorFactory = {
         var description = document.createElement("div");
         description.className = "description";
 
-        var arrayElementChangedCallback = CBArrayEditor.handleArrayElementChanged.bind(undefined, {
+        var updateArrayElementDescriptionCallback = CBArrayEditor.updateArrayElementDescription.bind(undefined, {
             descriptionElement : description,
             spec : args.spec,
-            specChangedCallback : args.arrayChangedCallback,
         });
 
-        arrayElementChangedCallback();
+        updateArrayElementDescriptionCallback();
+
+        var arrayElementChangedCallback = CBArrayEditor.handleArrayElementChanged.bind(undefined, {
+            specChangedCallback : args.arrayChangedCallback,
+            updateArrayElementDescriptionCallback : updateArrayElementDescriptionCallback,
+        });
 
         content.appendChild(title);
         content.appendChild(description);
@@ -257,14 +261,13 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param Element args.descriptionElement
-     * @param object args.spec
      * @param function args.specChangedCallback
+     * @param function args.updateArrayElementDescriptionCallback
      *
+     * @return undefined
      */
     handleArrayElementChanged : function (args) {
-        var nonBreakingSpace = "\u00A0";
-        args.descriptionElement.textContent = CBUISpec.specToDescription(args.spec) || nonBreakingSpace;
+        args.updateArrayElementDescriptionCallback.call();
         args.specChangedCallback.call();
     },
 
@@ -521,6 +524,17 @@ var CBArrayEditor = CBArrayEditorFactory = {
             args.sectionItemElement.classList.add("show-actions");
             args.toggleButtonElement.textContent = ">";
         }
+    },
+
+    /**
+     * @param Element args.descriptionElement
+     * @param object args.spec
+     *
+     * @return undefined
+     */
+    updateArrayElementDescription : function (args) {
+        var nonBreakingSpace = "\u00A0";
+        args.descriptionElement.textContent = CBUISpec.specToDescription(args.spec) || nonBreakingSpace;
     },
 };
 
