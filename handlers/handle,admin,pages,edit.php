@@ -31,7 +31,12 @@ CBHTMLOutput::requireClassName('CBViewPageEditor');
  * Include all of the supported views.
  */
 
-foreach (CBPagesPreferences::classNamesForEditableViews() as $className) {
+$classNamesForEditableModels = array_merge(
+    CBPagesPreferences::classNamesForEditableViews(),
+    CBPagesPreferences::classNamesForLayouts()
+);
+
+foreach ($classNamesForEditableModels as $className) {
     if (class_exists($editorClassName = "{$className}Editor")) {
         CBHTMLOutput::requireClassName($editorClassName);
     } else {
