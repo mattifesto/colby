@@ -21,25 +21,6 @@ final class CBModelsPreferences {
     }
 
     /**
-     * @return [string]
-     */
-    public static function editorURLsForCSS() {
-        return [
-            CBModelsPreferences::URL('CBModelsPreferencesEditor.css')
-        ];
-    }
-
-    /**
-     * @return [string]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
-            CBModelsPreferences::URL('CBModelsPreferencesEditorFactory.js'),
-        ];
-    }
-
-    /**
      * @return stdClass
      */
     public static function info() {
@@ -83,10 +64,12 @@ final class CBModelsPreferences {
     }
 
     /**
+     * @param string $filename
+     *
      * @return string
      */
     public static function URL($filename) {
-        $class = __CLASS__;
-        return CBSystemURL . "/classes/{$class}/{$filename}";
+        $className = __CLASS__;
+        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }

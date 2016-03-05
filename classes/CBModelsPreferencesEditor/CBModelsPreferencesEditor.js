@@ -1,0 +1,31 @@
+"use strict";
+
+var CBModelsPreferencesEditor = {
+
+    /**
+     * @param object args.spec
+     * @param function args.specChangedCallback
+     *
+     * @return Element
+     */
+    createEditor : function(args) {
+        var element = document.createElement("section");
+        element.className = "CBModelsPreferencesEditor";
+        var section = CBUI.createSection();
+
+        /* classNamesOfEditableModels */
+        var item = CBUI.createSectionItem();
+
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Class Names of Editable Models",
+            propertyName : "classNamesOfEditableModels",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
+
+        return element;
+    },
+};
