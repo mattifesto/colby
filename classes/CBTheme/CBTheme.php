@@ -16,18 +16,6 @@ final class CBTheme {
     }
 
     /**
-     * @deprecated Transition from custom theme to CBTheme
-     *
-     * @return [string]
-     */
-    public static function editorURLsForJavaScript2(array $URLs = []) {
-        return array_merge([
-            CBSystemURL . '/javascript/CBResponsiveEditorFactory.js',
-            CBSystemURL . '/javascript/CBThemeEditorFactory.js',
-        ], $URLs);
-    }
-
-    /**
      * @param hex160 $ID
      *
      * @return string
