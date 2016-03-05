@@ -3,20 +3,6 @@
 final class CBTextView {
 
     /**
-    @return array
-    */
-    public static function editorURLsForCSS() {
-        return [self::URL('CBTextViewEditor.css')];
-    }
-
-    /**
-    @return array
-    */
-    public static function editorURLsForJavaScript() {
-        return [self::URL('CBTextViewEditorFactory.js')];
-    }
-
-    /**
      * @return string
      */
     public static function modelToSearchText(stdClass $model = null) {
@@ -42,9 +28,12 @@ final class CBTextView {
     }
 
     /**
+     * @param string $filename
+     *
      * @return string
      */
-    private static function URL($filename) {
-        return CBSystemURL . "/classes/CBTextView/{$filename}";
+    public static function URL($filename) {
+        $className = __CLASS__;
+        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
