@@ -3,24 +3,7 @@
 final class CBTextBoxViewTheme {
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForCSS() {
-        return [ CBTextBoxViewTheme::URL('CBTextBoxViewThemeEditor.css') ];
-    }
-
-    /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBTextBoxViewTheme::URL('CBTextBoxViewThemeEditorFactory.js')
-        ];
-    }
-
-    /**
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function info() {
         return CBModelClassInfo::specToModel((object)[
@@ -44,7 +27,7 @@ final class CBTextBoxViewTheme {
     }
 
     /**
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
         $model          = CBModels::modelWithClassName(__CLASS__);
@@ -59,7 +42,7 @@ final class CBTextBoxViewTheme {
      * class name for the CBTextBoxViewTheme. The string "\textbox" will not be
      * replaced.
      *
-     * @return {string}
+     * @return string
      */
     private static function templateToStyles($template, $ID, $title = '') {
         $keyword    = 'textbox';
@@ -75,9 +58,12 @@ final class CBTextBoxViewTheme {
     }
 
     /**
-     * @return {string}
+     * @param string $filename
+     *
+     * @return string
      */
     public static function URL($filename) {
-        return CBSystemURL . "/classes/CBTextBoxViewTheme/{$filename}";
+        $className = __CLASS__;
+        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
