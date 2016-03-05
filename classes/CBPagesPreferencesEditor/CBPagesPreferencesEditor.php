@@ -12,13 +12,6 @@ final class CBPagesPreferencesEditor {
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
-        return [CBPagesPreferencesEditor::URL('CBPagesPreferencesEditor.css')];
-    }
-
-    /**
-     * @return [string]
-     */
     public static function requiredJavaScriptURLs() {
         return [CBPagesPreferencesEditor::URL('CBPagesPreferencesEditorFactory.js')];
     }

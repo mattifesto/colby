@@ -64,23 +64,6 @@ final class CBPagesPreferences {
     }
 
     /**
-     * @return [{string}]
-     */
-    public static function editorURLsForCSS() {
-        return [ CBPagesPreferences::URL('CBPagesPreferencesEditor.css') ];
-    }
-
-    /**
-     * @return [{string}]
-     */
-    public static function editorURLsForJavaScript() {
-        return [
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBPagesPreferences::URL('CBPagesPreferencesEditorFactory.js')
-        ];
-    }
-
-    /**
      * @return {stdClass}
      */
     public static function info() {
