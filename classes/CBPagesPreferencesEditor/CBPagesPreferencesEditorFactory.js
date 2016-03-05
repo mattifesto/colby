@@ -3,8 +3,8 @@
 var CBPagesPreferencesEditorFactory = {
 
     /**
-     * @param function handleSpecChanged
      * @param object spec
+     * @param function specChangedCallback
      *
      * @return Element
      */
@@ -20,25 +20,20 @@ var CBPagesPreferencesEditorFactory = {
             { name : "classNamesForSettings", labelText : "Class Names for Page Settings" },
         ];
 
-        element.appendChild(CBUI.createHalfSpace());
-
         section = CBUI.createSection();
 
         properties.forEach(function (property) {
             item = CBUI.createSectionItem();
-
             item.appendChild(CBUIStringEditor.createEditor({
                 labelText           : property.labelText,
                 propertyName        : property.name,
                 spec                : args.spec,
-                specChangedCallback : args.handleSpecChanged,
+                specChangedCallback : args.specChangedCallback,
             }).element);
-
             section.appendChild(item);
         });
 
         element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
