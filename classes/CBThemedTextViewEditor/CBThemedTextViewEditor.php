@@ -27,6 +27,8 @@ final class CBThemedTextViewEditor {
     }
 
     /**
+     * @param string $filename
+     *
      * @return string
      */
     public static function URL($filename) {

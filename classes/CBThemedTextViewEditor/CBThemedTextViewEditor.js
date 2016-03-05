@@ -62,7 +62,7 @@ var CBThemedTextViewEditor = {
      * @param string? spec.contentAsMarkaround
      * @param string? spec.titleAsMarkaround
      *
-     * @return string
+     * @return string|undefined
      */
     specToDescription : function (spec) {
         return spec.titleAsMarkaround || spec.contentAsMarkaround;
