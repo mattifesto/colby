@@ -3,24 +3,6 @@
 final class CBUI {
 
     /**
-     * @deprecated use requiredCSSURLs
-     *
-     * @return [string]
-     */
-    public static function editorURLsForCSS() {
-        return CBUI::requiredCSSURLs();
-    }
-
-    /**
-     * @deprecated use requiredJavaScriptURLs
-     *
-     * @return [string]
-     */
-    public static function editorURLsForJavaScript() {
-        return CBUI::requiredJavaScriptURLs();
-    }
-
-    /**
      * @return [string]
      */
     public static function requiredCSSURLs() {
