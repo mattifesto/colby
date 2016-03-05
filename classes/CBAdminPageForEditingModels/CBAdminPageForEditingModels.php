@@ -3,28 +3,6 @@
 class CBAdminPageForEditingModels {
 
     /**
-     * @deprecated create a "{$className}Editor" class instead
-     *
-     * @return null
-     */
-    private static function loadEditingResourcesForClassName($className) {
-        if (is_callable($function = "{$className}::classNamesForEditorDependencies")) {
-            $classNames = call_user_func($function);
-            array_walk($classNames, 'CBAdminPageForEditingModels::loadEditingResourcesForClassName');
-        }
-
-        if (is_callable($function = "{$className}::editorURLsForCSS")) {
-            $URLs = call_user_func($function);
-            array_walk($URLs, function($URL) { CBHTMLOutput::addCSSURL($URL); });
-        }
-
-        if (is_callable($function = "{$className}::editorURLsForJavaScript")) {
-            $URLs = call_user_func($function);
-            array_walk($URLs, function($URL) { CBHTMLOutput::addJavaScriptURL($URL); });
-        }
-    }
-
-    /**
      * @return {stdClass} | exit
      */
     private static function fetchArguments() {
@@ -88,8 +66,6 @@ class CBAdminPageForEditingModels {
 
         if (class_exists($editorClassName = "{$args->className}Editor")) {
             CBHTMLOutput::requireClassName($editorClassName);
-        } else {
-            CBAdminPageForEditingModels::loadEditingResourcesForClassName($args->className);
         }
 
         CBHTMLOutput::addCSSURL(        CBAdminPageForEditingModels::URL('CBAdminPageForEditingModels.css'));
@@ -106,9 +82,12 @@ class CBAdminPageForEditingModels {
     }
 
     /**
-     * @return {string}
+     * @param string $filename
+     *
+     * @return string
      */
     public static function URL($filename) {
-        return CBSystemURL . "/classes/CBAdminPageForEditingModels/{$filename}";
+        $className = __CLASS__;
+        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
