@@ -3,24 +3,6 @@
 final class CBUIStringEditor {
 
     /**
-     * @deprecated use requiredCSSURLs
-     *
-     * @return [string]
-     */
-    public static function editorURLsForCSS() {
-        return CBUIStringEditor::requiredCSSURLs();
-    }
-
-    /**
-     * @deprecated use requiredJavaScriptURLs
-     *
-     * @return [string]
-     */
-    public static function editorURLsForJavaScript() {
-        return CBUIStringEditor::requiredJavaScriptURLs();
-    }
-
-    /**
      * @return [string]
      */
     public static function requiredCSSURLs() {
