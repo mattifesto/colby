@@ -211,6 +211,8 @@ EOT;
     }
 
     /**
+     * @deprecated use CBPageContext::current()
+     *
      * @return stdClass|null
      */
     public static function modelContext() {
