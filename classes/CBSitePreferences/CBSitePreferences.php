@@ -247,7 +247,7 @@ final class CBSitePreferences {
         $model->frontPageID = CBModel::value($spec, 'frontPageID');
         $model->googleTagManagerID = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
 
-        if (is_array($spec->custom)) {
+        if (isset($spec->custom) && is_array($spec->custom)) {
             $model->custom = new stdClass();
             $keyValueModels = array_filter($spec->custom, function ($spec) { return $spec->className === 'CBKeyValuePair'; });
             $keyValueModels = array_map('CBModel::specToOptionalModel', $keyValueModels);
