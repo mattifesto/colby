@@ -38,14 +38,11 @@ final class CBSitePreferences {
      * instance, a site shouldn't send passwords to debug log or reveal user
      * data to public pages in debug mode.
      *
-     * This function returns true if the site preferences have not be properly
-     * set up in an effort to both expose that fact and help find out why.
-     *
-     * @return {bool}
+     * @return bool
      */
     public static function debug() {
         $model = CBSitePreferences::model();
-        return $model->debug;
+        return isset($model->debug) ? ($model->debug === true) : false;
     }
 
     /**
