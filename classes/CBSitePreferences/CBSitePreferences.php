@@ -57,20 +57,11 @@ final class CBSitePreferences {
     }
 
     /**
-     * @return {bool}
+     * @return bool
      */
     public static function disallowRobots() {
-
-        /**
-         * @TODO 2015.09.20
-         * Remove CBShouldDisallowRobots from all sites and remove this code.
-         */
-        if (defined('CBShouldDisallowRobots')) {
-            return !!CBShouldDisallowRobots;
-        }
-
         $model = CBSitePreferences::model();
-        return $model->disallowRobots;
+        return isset($model->disallowRobots) ? ($model->disallowRobots === true) : false;
     }
 
     /**
@@ -152,11 +143,6 @@ final class CBSitePreferences {
             // 2015.09.19 googleAnalyticsTrackingID
             if (!isset($model->googleTagManagerID)) {
                 $model->googleTagManagerID = '';
-            }
-
-            // 2015.09.20 disallowRobots
-            if (!isset($model->disallowRobots)) {
-                $model->disallowRobots = false;
             }
 
             // 2015.10.04 defaultClassNameForPageSettings
