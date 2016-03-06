@@ -15,6 +15,21 @@ final class CBSitePreferences {
     private static $model   = false;
 
     /**
+     * @param string $key
+     *
+     * @return mixed|null
+     */
+    public static function customValueForKey($key) {
+        $model = CBSitePreferences::model();
+
+        if (isset($model->custom->{$key})) {
+            return $model->custom->{$key};
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Returns true if the site is in "debug" mode. Development and test sites
      * should generally have this property set to true and production sites
      * should not unless they are actively being investigated.
@@ -231,6 +246,17 @@ final class CBSitePreferences {
         $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
         $model->frontPageID = CBModel::value($spec, 'frontPageID');
         $model->googleTagManagerID = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
+
+        if (is_array($spec->custom)) {
+            $model->custom = new stdClass();
+            $keyValueModels = array_filter($spec->custom, function ($spec) { return $spec->className === 'CBKeyValuePair'; });
+            $keyValueModels = array_map('CBModel::specToOptionalModel', $keyValueModels);
+            $keyValueModels = array_filter($keyValueModels, function ($model) { return !empty($model->key); });
+
+            foreach ($keyValueModels as $keyValueModel) {
+                $model->custom->{$keyValueModel->key} = $keyValueModel->value;
+            }
+        }
 
         return $model;
     }

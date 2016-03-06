@@ -3,6 +3,8 @@
 var CBSitePreferencesEditor = {
 
     /**
+     * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
      *
@@ -52,6 +54,20 @@ var CBSitePreferencesEditor = {
         section.appendChild(item);
 
         element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({
+            text : "Custom",
+        }));
+
+        if (args.spec.custom === undefined) { args.spec.custom = []; }
+
+        element.appendChild(CBArrayEditor.createEditor({
+            array : args.spec.custom,
+            arrayChangedCallback : args.specChangedCallback,
+            classNames : ['CBKeyValuePair'],
+            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
+        }));
 
         return element;
     },

@@ -6,7 +6,7 @@ final class CBSitePreferencesEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor'];
+        return ['CBArrayEditor', 'CBKeyValuePairEditor', 'CBUI', 'CBUIStringEditor'];
     }
 
     /**
