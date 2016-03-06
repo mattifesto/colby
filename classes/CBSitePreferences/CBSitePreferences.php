@@ -88,13 +88,12 @@ final class CBSitePreferences {
     }
 
     /**
-     * @return  {string}
-     *  Returns a Google Tag Manager ID or an empty string.
+     * @return string
+     *  Returns an empty string if unset for legacy reasons.
      */
     public static function googleTagManagerID() {
         $model = CBSitePreferences::model();
-
-        return $model->googleTagManagerID;
+        return empty($model->googleTagManagerID) ? '' : $model->googleTagManagerID;
     }
 
     /**
@@ -138,11 +137,6 @@ final class CBSitePreferences {
                 $model = json_decode(file_get_contents($filepath));
             } else {
                 $model = CBSitePreferences::specToModel(new stdClass());
-            }
-
-            // 2015.09.19 googleAnalyticsTrackingID
-            if (!isset($model->googleTagManagerID)) {
-                $model->googleTagManagerID = '';
             }
 
             // 2015.10.04 defaultClassNameForPageSettings
