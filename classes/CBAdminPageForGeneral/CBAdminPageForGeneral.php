@@ -78,7 +78,24 @@ EOT;
             return;
         }
 
+        /**
+         * Deprecated constant strings are broken up to avoid false positives
+         * in the CBManager app.
+         */
+        $deprecatedConstants = [
+            ['CB'.'SiteIsBeingDebugged', 'Use site preferences.'],
+            ['CB'.'SiteIsBeingDubugged', 'Use site preferences.'],
+            ['COLBY'.'_SITE_IS_BEING_DEBUGGED', 'Use site preferences.'],
+        ];
         $messagesAsHTML = [];
+
+        foreach ($deprecatedConstants as $constant) {
+            if (defined($constant[0])) {
+                $constantAsHTML = cbhtml($constant[0]);
+                $message = cbhtml($constant[1]);
+                $messagesAsHTML[] = "The `{$constantAsHTML}` constant has been deprecated. {$message}";
+            }
+        }
 
         if (defined('CBShouldDisallowRobots')) {
             $messagesAsHTML[] = <<<EOT

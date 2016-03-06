@@ -68,23 +68,15 @@ section.widget .version-number + .version-number {
 /**
  * CBSiteConfigurationIssuesView
  *
- * 1. The combination of the `max-width` rules and `word-wrap: break-word`
- *    ensure that long words in the content of this view will not mess up the
- *    layout of the view or the page.
+ * 1. The `word-wrap: break-word` rule ensures that long words in the content of
+ * this view will not mess up the layout of the view or the page.
  */
 
 .CBSiteConfigurationIssuesView {
-    align-self:         center;
-    -webkit-align-self: center;
-    max-width:          480px; /* 1 */
-    padding:            20px 0;
-    word-wrap:          break-word; /* 1 */
-}
-
-@media (max-width: 479px) {
-    .CBSiteConfigurationIssuesView {
-        max-width: 100vw; /* 1 */
-    }
+    margin: 0 auto;
+    max-width: 720px; /* 1 */
+    padding: 20px 0;
+    word-wrap: break-word; /* 1 */
 }
 
 .CBSiteConfigurationIssuesView h1 {
