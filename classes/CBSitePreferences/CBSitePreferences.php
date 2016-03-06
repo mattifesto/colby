@@ -46,14 +46,14 @@ final class CBSitePreferences {
     }
 
     /**
-     * Returns the default page settings class name or an empty string of one
-     * hasn't been set. This class will be used by the CBHTMLOutput class.
+     * This function is used by the CBHTMLOutput class.
      *
-     * @return {string}
+     * @return string
+     *  Returns an empty string if unset for legacy reasons.
      */
     public static function defaultClassNameForPageSettings() {
         $model = CBSitePreferences::model();
-        return $model->defaultClassNameForPageSettings;
+        return empty($model->defaultClassNameForPageSettings) ? '' : $model->defaultClassNameForPageSettings;
     }
 
     /**
@@ -137,11 +137,6 @@ final class CBSitePreferences {
                 $model = json_decode(file_get_contents($filepath));
             } else {
                 $model = CBSitePreferences::specToModel(new stdClass());
-            }
-
-            // 2015.10.04 defaultClassNameForPageSettings
-            if (!isset($model->defaultClassNameForPageSettings)) {
-                $model->defaultClassNameForPageSettings = '';
             }
 
             CBSitePreferences::$model = $model;
