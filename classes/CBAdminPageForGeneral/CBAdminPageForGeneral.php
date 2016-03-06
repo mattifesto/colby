@@ -86,7 +86,12 @@ EOT;
             ['CB'.'SiteIsBeingDebugged', 'Use site preferences.'],
             ['CB'.'SiteIsBeingDubugged', 'Use site preferences.'],
             ['COLBY'.'_SITE_IS_BEING_DEBUGGED', 'Use site preferences.'],
+            ['CB'.'ShouldDisallowRobots', 'Use site preferences.'],
+            ['CB'.'GoogleAnalyticsID', 'Use site preferences'],
+            ['GOOGLE'.'_UNIVERSAL_ANALYTICS_TRACKING_ID', 'Use site preferences'],
+            ['CB'.'SiteConfiguration::defaultClassNameForPageSettings', 'Use site preferences.']
         ];
+
         $messagesAsHTML = [];
 
         foreach ($deprecatedConstants as $constant) {
@@ -95,50 +100,6 @@ EOT;
                 $message = cbhtml($constant[1]);
                 $messagesAsHTML[] = "The `{$constantAsHTML}` constant has been deprecated. {$message}";
             }
-        }
-
-        if (defined('CBShouldDisallowRobots')) {
-            $messagesAsHTML[] = <<<EOT
-
-                The CBShouldDisallowRobots constant has been set for this site.
-                This constant is deprecated and has been replaced by a site
-                preference. Make sure the site preference is set properly and
-                then remove this constant.
-
-EOT;
-        }
-
-        if (defined('CBGoogleAnalyticsID')) {
-            $messagesAsHTML[] = <<<EOT
-
-                The <code>CBGoogleAnalyticsID</code> constant has been set for this site.
-                This constant is deprecated and has been replaced by the Google
-                Tag Manager ID setting in site preferences. Create a Google Tag
-                Manager account for this site and then remove this constant.
-
-EOT;
-        }
-
-        if (defined('GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID')) {
-            $messagesAsHTML[] = <<<EOT
-
-                The <code>GOOGLE_UNIVERSAL_ANALYTICS_TRACKING_ID</code> constant has been set
-                for this site. This constant is deprecated and has been replaced
-                by the Google Tag Manager ID setting in site preferences. Create
-                a Google Tag Manager account for this site and then remove this
-                constant.
-
-EOT;
-        }
-
-        if (defined('CBSiteConfiguration::defaultClassNameForPageSettings')) {
-            $messagesAsHTML[] = <<<EOT
-
-                The <code>CBSiteConfiguration::defaultClassNameForPageSettings</code>
-                constant has been deprecated. Set the class in site settings
-                instead.
-
-EOT;
         }
 
         if (empty($messagesAsHTML)) {
