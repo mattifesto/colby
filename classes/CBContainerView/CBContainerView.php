@@ -119,9 +119,9 @@ EOT;
      */
     public static function modelToSearchText(stdClass $model) {
         if (isset($model->subviews)) {
-            $text = array_map('CBView::modelToSearchText', $model->subviews);
-
-            return implode(' ', $text);
+            $texts = array_map('CBView::modelToSearchText', $model->subviews);
+            $texts = array_filter($texts, function ($text) { return !empty($text); });
+            return implode(' ', $texts);
         }
 
         return '';
