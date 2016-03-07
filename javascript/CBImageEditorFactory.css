@@ -18,17 +18,11 @@
 }
 
 .CBImageEditorPreview {
-    align-items:                center;
-    -webkit-align-items:        center;
-    background-color:           white;
-    display:                    flex;
-    display:                    -webkit-flex;
-    height:                     200px;
-    justify-content:            center;
-    -webkit-justify-content:    center;
-    padding:                    20px;
-    position:                   relative;
-    width:                      400px;
+    align-items: center;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    position: relative;
 }
 
 .CBImageEditorPreview.dark {
@@ -37,17 +31,17 @@
 
 .CBImageEditorPreview > img {
     max-height: 200px;
-    max-width:  400px;
+    max-width: 100%;
 }
 
 .CBImageEditorPreview > .size {
-    bottom:     1px;
-    color:      hsl(0, 0%, 50%);
-    font-size:  13px;
-    left:       0;
-    position:   absolute;
+    bottom: 1px;
+    color: hsl(0, 0%, 50%);
+    font-size: 13px;
+    left: 0;
+    position: absolute;
     text-align: center;
-    width:      100%;
+    width: 100%;
 }
 
 .CBImageEditorThumbnailPreview {
@@ -67,7 +61,7 @@
 
 .CBImageEditorThumbnailPreview > img {
     max-height: 75px;
-    max-width:  75px;
+    max-width: 75px;
 }
 
 .CBImageEditor320 {
