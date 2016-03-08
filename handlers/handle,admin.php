@@ -21,7 +21,7 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 ?>
 
 <main class="CBUIRoot">
-    <div class="CBLibraryListView CBSystemFont">
+    <div class="CBLibraryListView">
         <?php
 
         $adminWidgetFilenames = Colby::globSnippets('admin-widget-*.php');

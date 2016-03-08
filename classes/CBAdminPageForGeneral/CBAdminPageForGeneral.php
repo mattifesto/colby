@@ -109,7 +109,7 @@ EOT;
 
         ?>
 
-        <div class="CBSiteConfigurationIssuesView CBSystemFont">
+        <div class="CBSiteConfigurationIssuesView">
             <h1>Site Configuration Issues</h1>
             <ul>
                 <?php array_walk($messagesAsHTML, function($messageAsHTML) {

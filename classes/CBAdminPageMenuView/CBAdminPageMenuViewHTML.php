@@ -1,4 +1,4 @@
-<section class="CBAdminPageMenuView CBSystemFont">
+<section class="CBAdminPageMenuView">
 
     <?php
 

@@ -20,7 +20,7 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 ?>
 
-<main class="CBSystemFont">
+<main>
 
     <table class="list-of-pages">
         <thead><tr>

@@ -10,7 +10,7 @@ CBHTMLOutput::setDescriptionHTML('You are not authorized to view this page.');
 
 ?>
 
-<main class="CBSystemFont">
+<main>
     <style scoped>
 
         main {

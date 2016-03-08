@@ -25,7 +25,7 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 ?>
 
-<main class="CBSystemFont">
+<main>
 </main>
 
 <?php

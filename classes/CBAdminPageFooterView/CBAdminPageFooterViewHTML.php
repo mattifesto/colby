@@ -1,5 +1,5 @@
 <div class="flex-fill"></div>
-<section class="CBAdminPageFooterView CBSystemFont">
+<section class="CBAdminPageFooterView">
     <ul>
         <li>Copyright &copy; 2012-<?php echo gmdate('Y'); ?> Mattifesto Design</li>
 

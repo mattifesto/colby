@@ -91,7 +91,7 @@ include CBSystemDirectory . '/sections/admin-page-menu.php';
 
 ?>
 
-<main class="CBSystemFont CBUIRoot">
+<main class="CBUIRoot">
 </main>
 
 <?php

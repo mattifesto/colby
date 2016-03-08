@@ -24,9 +24,7 @@ final class CBPageSettingsForAdminPages {
             html {
                 color: hsl(0, 0%, 20%);
                 font-family: "Open Sans";
-            }
-            .CBSystemFont {
-                font-family: "Open Sans";
+                line-height: 1.4;
             }
         </style>
     <?php }
