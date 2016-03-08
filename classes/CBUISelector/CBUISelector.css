@@ -20,12 +20,17 @@
 }
 
 .CBUISelectorOption,
-.CBUISelectorValueEditor .CBUISectionItem {
+.CBUISelectorValueEditor .CBUISectionItem /* deprecated */ {
     cursor: pointer;
     padding: 5px 10px;
 }
 
+.CBUISelectorOption:hover {
+    background-color: hsl(60, 100%, 95%);
+}
+
 .CBUISelectorOption .description,
-.CBUISelectorValueEditor .description {
-    color: hsl(0, 0%, 50%);
+.CBUISelectorValueEditor .description /* deprecated */ {
+    color: hsl(0, 0%, 65%);
+    font-size: 0.8em;
 }
