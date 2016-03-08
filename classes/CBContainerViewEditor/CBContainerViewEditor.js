@@ -79,7 +79,7 @@ var CBContainerViewEditor = {
         /* HREF */
         item = HREFSectionItem;
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "HREF",
+            labelText : "URL",
             propertyName : "HREF",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
