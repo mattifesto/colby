@@ -115,7 +115,13 @@ var CBContainerViewEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         /* large image section */
-        element.appendChild(CBUI.createSectionHeader({ text : "Large Image" }));
+        element.appendChild(CBUI.createSectionHeader({
+            paragraphs : [
+                "Maximum Width: 2560pt (5120px)",
+                "Focus Width: 1068pt (2136px)",
+            ],
+            text : "Large Image"
+        }));
 
         section = CBUI.createSection();
 
@@ -156,7 +162,13 @@ var CBContainerViewEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         /* medium image section */
-        element.appendChild(CBUI.createSectionHeader({ text : "Medium Image" }));
+        element.appendChild(CBUI.createSectionHeader({
+            paragraphs : [
+                "Maximum Width: 1068pt (2136px)",
+                "Focus Width: 736pt (1472px)",
+            ],
+            text : "Medium Image"
+        }));
 
         section = CBUI.createSection();
 
@@ -197,8 +209,13 @@ var CBContainerViewEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         /* small image section */
-        element.appendChild(CBUI.createSectionHeader({ text : "Small Image" }));
-
+        element.appendChild(CBUI.createSectionHeader({
+            paragraphs : [
+                "Maximum Width: 736pt (1472px)",
+                "Focus Width: 320pt (640px)",
+            ],
+            text : "Small Image"
+        }));
         section = CBUI.createSection();
 
         /* image view */
