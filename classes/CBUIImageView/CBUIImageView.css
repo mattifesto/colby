@@ -1,5 +1,8 @@
 .CBUIImageView {
     min-height: 44px;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 }
 
 .CBUIImageView.dark {
