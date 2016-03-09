@@ -126,14 +126,28 @@ var CBUI = {
     },
 
     /**
+     * @param [string] args.paragraphs
      * @param string args.text
      *
      * @return Element
      */
     createSectionHeader : function (args) {
-        var element = document.createElement("div");
+        var element = document.createElement("header");
         element.className = "CBUISectionHeader";
-        element.textContent = args.text;
+        var title = document.createElement("h1");
+        title.textContent = args.text;
+        var description = document.createElement("div");
+
+        if (Array.isArray(args.paragraphs)) {
+            args.paragraphs.forEach(function (paragraph) {
+                var p = document.createElement("p");
+                p.textContent = paragraph;
+                description.appendChild(p);
+            });
+        }
+
+        element.appendChild(title);
+        element.appendChild(description);
 
         return element;
     },
