@@ -28,33 +28,38 @@ final class CBImageLinkView {
     public static function renderModelAsHTML(stdClass $model) {
         CBHTMLOutput::addCSSURL(self::URL('CBImageLinkViewHTML.css'));
 
-        echo '<div class="CBImageLinkView">';
-
-        if ($model->HREF) {
-            echo "<a href=\"{$model->HREF}\">";
-        }
-
         switch ($model->density) {
             case '2x':
                 $height = ceil($model->height / 2);
-                $width  = ceil($model->width / 2);
+                $width = ceil($model->width / 2);
                 break;
 
             default:
                 $height = $model->height;
-                $width  = $model->width;
+                $width = $model->width;
                 break;
         }
 
-        $CSS = "width: {$width}px; height: {$height}px;";
+        $styles = [];
+        $styles[] = "height: {$height}px;";
+        $styles[] = "width: {$width}px;";
+        $styles = implode(' ', $styles);
 
-        echo "<img src=\"{$model->URLAsHTML}\" alt=\"{$model->altAsHTML}\" style=\"{$CSS}\">";
-
-        if ($model->HREF) {
-            echo '</a>';
+        if (empty($model->HREF)) {
+            $tag = 'div';
+            $href = '';
+        } else {
+            $tag = 'a';
+            $href = 'href="' . $model->HREF . '"';
         }
 
-        echo '</div>';
+        ?>
+
+        <<?= $tag ?> class="CBImageLinkView" <?= $href ?> style="<?= $styles ?>">
+            <img src="<?= $model->URLAsHTML ?>" alt="<?= $model->altAsHTML ?>" style="<?= $styles ?>">
+        </<?= $tag ?>>
+
+        <?php
     }
 
     /**
@@ -69,17 +74,17 @@ final class CBImageLinkView {
      * @return {stdClass}
      */
     public static function specToModel(stdClass $spec) {
-        $model              = CBView::modelWithClassName(__CLASS__);
-        $model->alt         = isset($spec->alt) ? (string)$spec->alt : null;
-        $model->altAsHTML   = ColbyConvert::textToHTML($model->alt);
+        $model = (object)['className' => __CLASS__];
+        $model->alt = isset($spec->alt) ? (string)$spec->alt : null;
+        $model->altAsHTML = ColbyConvert::textToHTML($model->alt);
         $retina = CBModel::value($spec, 'retina', false);
         $model->density = $retina ? '2x' : '1x';
-        $model->height      = isset($spec->height) ? (int)$spec->height : null;
-        $model->HREF        = isset($spec->HREF) ? (string)$spec->HREF : null;
-        $model->HREFAsHTML  = ColbyConvert::textToHTML($model->HREF);
-        $model->URL         = isset($spec->URL) ? (string)$spec->URL : null;
-        $model->URLAsHTML   = ColbyConvert::textToHTML($model->URL);
-        $model->width       = isset($spec->width) ? (int)$spec->width : null;
+        $model->height = isset($spec->height) ? (int)$spec->height : null;
+        $model->HREF = CBModel::value($spec, 'HREF', null, 'trim');
+        $model->HREFAsHTML = cbhtml($model->HREF);
+        $model->URL = isset($spec->URL) ? (string)$spec->URL : null;
+        $model->URLAsHTML = ColbyConvert::textToHTML($model->URL);
+        $model->width = isset($spec->width) ? (int)$spec->width : null;
 
         return $model;
     }
