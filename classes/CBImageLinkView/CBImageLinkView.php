@@ -40,10 +40,7 @@ final class CBImageLinkView {
                 break;
         }
 
-        $styles = [];
-        $styles[] = "height: {$height}px;";
-        $styles[] = "width: {$width}px;";
-        $styles = implode(' ', $styles);
+        $styles = "height: {$height}px; width: {$width}px;";
 
         if (empty($model->HREF)) {
             $tag = 'div';
@@ -55,7 +52,7 @@ final class CBImageLinkView {
 
         ?>
 
-        <<?= $tag ?> class="CBImageLinkView" <?= $href ?> style="<?= $styles ?>">
+        <<?= $tag ?> class="CBImageLinkView" <?= $href ?>>
             <img src="<?= $model->URLAsHTML ?>" alt="<?= $model->altAsHTML ?>" style="<?= $styles ?>">
         </<?= $tag ?>>
 
