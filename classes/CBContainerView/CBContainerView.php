@@ -159,8 +159,13 @@ EOT;
         }
 
         $classes = implode(' ', $classes);
+        $styles = [];
+        if (!empty($model->backgroundColor)) { $styles[] = "background-color: {$model->backgroundColor}"; }
+        if (!empty($model->backgroundImage)) { $styles[] = "background-image: {$model->backgroundImage}"; }
+        if (!empty($model->backgroundPositionY)) { $styles[] = "background-position: center {$model->backgroundPositionY}"; }
+        $styles = empty($styles) ? '' : ' style="' . implode('; ', $styles) . '"';
 
-        ?><<?= $tagName, $HREF ?> class="<?= $classes ?>"><?php
+        ?><<?= $tagName, $HREF ?> class="<?= $classes ?>"<?= $styles ?>><?php
             array_walk($model->subviews, 'CBView::renderModelAsHTML');
         ?></<?= $tagName ?>><?php
     }
@@ -172,6 +177,9 @@ EOT;
      */
     public static function specToModel(stdClass $spec) {
         $model = (object)['className' => __CLASS__];
+        $model->backgroundColor = CBModel::value($spec, 'backgroundColor', null, 'CBConvert::stringToCSSColor');
+        $model->backgroundImage = CBModel::value($spec, 'backgroundImage', null, 'CBConvert::stringToCSSBackgroundImage');
+        $model->backgroundPositionY = CBModel::value($spec, 'backgroundPositionY', null, 'CBConvert::stringToCSSValue');
         $model->imageThemeID = CBModel::value($spec, 'imageThemeID');
         $model->HREF = CBModel::value($spec, 'HREF');
         $model->HREFAsHTML = cbhtml($model->HREF);

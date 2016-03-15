@@ -1,4 +1,7 @@
 "use strict";
+/* globals CBArrayEditor, CBContainerViewAddableViews, CBUI, CBUIBooleanEditor,
+           CBUIImageSizeView, CBUIImageUploader, CBUIImageView, CBUISelector,
+           CBUISpec, CBUIStringEditor, CBUIThemeSelector, Colby */
 
 var CBContainerViewEditor = {
 
@@ -57,6 +60,23 @@ var CBContainerViewEditor = {
         }).element);
         section.appendChild(item);
 
+        /* backgroundPositionY */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUISelector.create({
+            labelText : "Background Position",
+            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
+            propertyName : "backgroundPositionY",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+            options : [
+                { title : "Default (Top)", value : undefined },
+                { title : "Center", value : "center" },
+                { title : "Bottom", value : "bottom" },
+            ],
+        }).element);
+        section.appendChild(item);
+
         /* tagName */
         item = CBUI.createSectionItem();
         var options = [
@@ -86,7 +106,27 @@ var CBContainerViewEditor = {
         }).element);
         section.appendChild(item);
 
-        /* use image height */
+        /* backgroundColor */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Background Color",
+            propertyName : "backgroundColor",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* backgroundImage */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Background Gradient",
+            propertyName : "backgroundImage",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* useImageHeight */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIBooleanEditor.create({
             labelText : "Use Image Height",
