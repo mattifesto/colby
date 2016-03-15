@@ -38,4 +38,14 @@ final class CBConvert {
         $value = str_replace([';', '"', "'"], '', trim($string));
         return empty($value) ? null : $value;
     }
+
+    /**
+     * @param mixed $value
+     *
+     * @return string|null
+     */
+    public static function valueToOptionalTrimmedString($value) {
+        $string = trim($value);
+        return ($string === '') ? null : $string;
+    }
 }
