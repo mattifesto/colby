@@ -1,9 +1,9 @@
+.CBContainerView {
+    background-position: center top;
+    background-repeat: no-repeat;
+}
+
 a.CBContainerView {
     color: inherit;
     text-decoration: inherit;
-}
-
-.CBContainerView.useImageHeight {
-    background-position: center top;
-    background-repeat: no-repeat;
 }
