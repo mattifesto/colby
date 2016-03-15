@@ -193,6 +193,15 @@ EOT;
     }
 
     /**
+     * @param hex160 $model->ID
+     *
+     * NOTE 2016.03.15 This function is somewhat messed up and it's very
+     * important. It makes a ton of assumptions many of which may be wrong. It
+     * needs to be reviewed, have its parameters well documented, and fixed to
+     * either be private or work for any caller. This function is the gatekeeper
+     * to the ColbyPages table and any flaws it has are therefore large flaws.
+     *
+     * NOTE The comments below may make incorrect assumptions:
      * To avoid duplicating property validation this function assumes the model
      * parameter has been generated with the `CBPages::specToModel` function or
      * another function that properly validates and sets the reserved page model
@@ -211,8 +220,8 @@ EOT;
      */
     public static function modelToRowValues(stdClass $model) {
         $archiveID = CBHex160::toSQL($model->ID);
-        $className = CBDB::stringToSQL($model->className);
-        $classNameForKind = CBDB::stringToSQL($model->classNameForKind);
+        $className = CBDB::valueToOptionalTrimmedSQL($model->className); // NOTE This should probably be required.
+        $classNameForKind = CBDB::valueToOptionalTrimmedSQL($model->classNameForKind);
         $created = (int)$model->created;
         $iteration = 0;
         $modified = (int)$model->modified;
@@ -494,7 +503,7 @@ EOT;
      */
     public static function specToModel(stdClass $spec) {
         $model = CBModels::modelWithClassName($spec->className, ['ID' => $spec->ID]);
-        $model->classNameForKind = CBModel::value($spec, 'classNameForKind', null);
+        $model->classNameForKind = CBModel::value($spec, 'classNameForKind', null, 'CBConvert::valueToOptionalTrimmedString');
         $model->dencodedURIPath = isset($spec->URIPath) ? CBPages::stringToDencodedURIPath($spec->URIPath) : '';
         $model->dencodedURIPath = ($model->dencodedURIPath === '') ? $spec->ID : $model->dencodedURIPath;
         $model->description = isset($spec->description) ? trim($spec->description) : '';
