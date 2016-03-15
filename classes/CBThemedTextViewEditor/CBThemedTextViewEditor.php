@@ -6,7 +6,7 @@ final class CBThemedTextViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor', 'CBUIThemeSelector'];
+        return ['CBUI', 'CBUIBooleanEditor', 'CBUIStringEditor', 'CBUIThemeSelector'];
     }
 
     /**

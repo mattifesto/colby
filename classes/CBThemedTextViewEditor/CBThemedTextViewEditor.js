@@ -53,6 +53,36 @@ var CBThemedTextViewEditor = {
         }).element);
         section.appendChild(item);
 
+        /* titleColor */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Title Color",
+            propertyName : "titleColor",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* contentColor */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Content Color",
+            propertyName : "contentColor",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* center */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Center",
+            propertyName : "center",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
         element.appendChild(section);
 
         return element;
