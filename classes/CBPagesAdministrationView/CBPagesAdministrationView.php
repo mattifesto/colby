@@ -3,6 +3,13 @@
 final class CBPagesAdministrationView {
 
     /**
+     * @return [string|null]
+     */
+    private static function fetchExistingPageKinds() {
+        return CBDB::SQLToArray('SELECT DISTINCT `classNameForKind` FROM `ColbyPages`');
+    }
+
+    /**
      * @return [string]
      */
     public static function requiredClassNames() {
@@ -29,6 +36,17 @@ final class CBPagesAdministrationView {
     }
 
     /**
+     * @return [[string, mixed]]
+     */
+    public static function requiredJavaScriptVariables() {
+        return [
+            ['CBPagesClassNamesForKinds', CBPagesAdministrationView::fetchExistingPageKinds()]
+        ];
+    }
+
+    /**
+     * @param string $filename
+     *
      * @return string
      */
     public static function URL($filename) {

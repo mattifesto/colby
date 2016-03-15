@@ -98,6 +98,16 @@ EOT;
         $parameters = json_decode($_POST['parametersAsJSON']);
         $conditions = [];
 
+        /* classNameForKind (null means all, 'unspecified' means NULL) */
+        if (isset($parameters->classNameForKind)) {
+            if ($parameters->classNameForKind === 'unspecified') {
+                $conditions[] = '`classNameForKind` IS NULL';
+            } else {
+                $classNameForKindAsSQL = CBDB::stringToSQL($parameters->classNameForKind);
+                $conditions[] = "`classNameForKind` = {$classNameForKindAsSQL}";
+            }
+        }
+
         /* published */
         if (isset($parameters->published)) {
             if ($parameters->published === true) {
