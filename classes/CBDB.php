@@ -140,4 +140,16 @@ final class CBDB {
         $value = Colby::mysqli()->escape_string($value);
         return "'{$value}'";
     }
+
+    /**
+     * Returns the trimmed string escaped for SQL in single quotes ready to be
+     * used as a value in a query. If the trimmed string is empty 'NULL' will be
+     * returned.
+     *
+     * return string
+     */
+    public static function valueToOptionalTrimmedSQL($value) {
+        $value = CBConvert::valueToOptionalTrimmedString($value);
+        return ($value === null) ? 'NULL' : CBDB::stringToSQL($value);
+    }
 }
