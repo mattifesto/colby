@@ -103,6 +103,9 @@ CBUpgradesForVersion178::run();
 // 2016.02.10
 CBUpgradesForVersion183::run();
 
+// 2016.03.15
+CBUpgradesForVersion188::run();
+
 /**
  *
  */
