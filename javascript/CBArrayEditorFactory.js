@@ -1,4 +1,5 @@
 "use strict";
+/* globals CBUI, CBUIActionLink, CBUISelector, CBUISpec, CBUISpecEditor */
 
 /**
  * @deprecated use CBArrayEditor
@@ -30,9 +31,29 @@ var CBArrayEditor = CBArrayEditorFactory = {
         });
 
         args.array.push(spec);
-        args.sectionElement.insertBefore(element, args.sectionElement.lastElementChild);
+        args.sectionElement.insertBefore(element, args.sectionElement.lastElementChild.previousSibling);
 
         args.arrayChangedCallback.call();
+    },
+
+    /**
+     * @param [object] args.array
+     * @param function args.arrayChangedCallback
+     * @param [string] args.classNames
+     * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
+     * @param Element args.sectionElement
+     *
+     * @return  undefined
+     */
+    appendFromClipboardWasClicked : function (args) {
+        var specAsJSON = localStorage.getItem("specClipboard");
+
+        if (specAsJSON === null) { return; }
+
+        var spec = JSON.parse(specAsJSON);
+
+        CBArrayEditor.append(args, spec);
     },
 
     /**
@@ -117,7 +138,22 @@ var CBArrayEditor = CBArrayEditorFactory = {
                 navigateToItemCallback : args.navigateToItemCallback,
                 sectionElement : section,
             }),
-            labelText : "Append...",
+            labelText : "Append New...",
+        }).element);
+        section.appendChild(item);
+
+        /* append from clipboard */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIActionLink.create({
+            callback : CBArrayEditor.appendFromClipboardWasClicked.bind(undefined, {
+                array : args.array,
+                arrayChangedCallback : args.arrayChangedCallback,
+                classNames : args.classNames,
+                navigateCallback : args.navigateCallback,
+                navigateToItemCallback : args.navigateToItemCallback,
+                sectionElement : section,
+            }),
+            labelText : "Append From Clipboard...",
         }).element);
         section.appendChild(item);
 
