@@ -1,4 +1,6 @@
 "use strict";
+/* globals CBPageList, CBPagesClassNamesForKinds, CBUI, CBUINavigationView,
+           CBUISelector, CBUIStringEditor, Colby */
 
 var CBPagesAdministrationView = {
 
@@ -28,6 +30,7 @@ var CBPagesAdministrationView = {
         });
 
         element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({ text : "Search Criteria" }));
 
         section = CBUI.createSection();
 
@@ -103,7 +106,10 @@ var CBPagesAdministrationView = {
         section.appendChild(item);
 
         element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({ text : "Results" }));
         element.appendChild(pageListContainer);
+        element.appendChild(CBUI.createHalfSpace());
 
         fetchPagesCallback();
 

@@ -1,44 +1,12 @@
-.CBPageListView {
-    background-color: hsl(0, 0%, 90%);
-    padding: 22px 0;
-}
-
-.CBPageList {
-    background-color: white;
-    border-color: hsl(0, 0%, 80%);
-    border-style: solid;
-    border-width: 1px 0;
-    box-sizing: border-box;
-    margin: 0 auto;
-    max-width: 720px;
-}
-
-@media all and (min-width: 720px) {
-    .CBPageList {
-        border-radius: 10px;
-        border-width: 1px;
-        overflow: hidden;
-    }
-}
-
 .CBPageListPage {
     box-sizing: border-box;
+    cursor: pointer;
     display: flex;
     min-height: 44px;
 }
 
-.CBPageListPage + .CBPageListPage {
-    border-top: 1px solid hsl(0, 0%, 80%);
-}
-.CBPageListPage:hover {
-    background-color: hsla(210, 100%, 80%, 0.5);
-}
-
-.CBPageListPage.selected {
-    background-color: hsl(210, 100%, 80%);
-}
-
 .CBPageListPage > .title {
+    align-self: center;
     flex: 1 1 auto;
     overflow: hidden;
     padding: 5px 10px;
@@ -51,7 +19,7 @@
     cursor: pointer;
     display: none;
     justify-content: center;
-    width: 50px;
+    padding: 0 10px;
 }
 
 .CBPageListPage.selected > .button,
@@ -61,13 +29,9 @@
 }
 
 .CBPageListPage > .copy {
-    background-color: hsl(60, 100%, 80%);
-}
-
-.CBPageListPage > .edit {
-    background-color: hsl(120, 100%, 80%);
+    background-color: hsl(60, 100%, 70%);
 }
 
 .CBPageListPage > .trash {
-    background-color: hsl(0, 100%, 80%);
+    background-color: hsl(0, 100%, 70%);
 }
