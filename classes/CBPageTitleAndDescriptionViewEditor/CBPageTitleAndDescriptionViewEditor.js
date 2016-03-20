@@ -1,4 +1,5 @@
 "use strict";
+/* globals CBUI, CBUIBooleanEditor, CBUIStringEditor, CBUIThemeSelector */
 
 var CBPageTitleAndDescriptionViewEditor = {
 
@@ -22,6 +23,36 @@ var CBPageTitleAndDescriptionViewEditor = {
             labelText : "Theme",
             navigateCallback : args.navigateCallback,
             propertyName : "themeID",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* titleColor */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Title Color",
+            propertyName : "titleColor",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* descriptionColor */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Description Color",
+            propertyName : "descriptionColor",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        /* publishedColor */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Published Color",
+            propertyName : "publishedColor",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         }).element);

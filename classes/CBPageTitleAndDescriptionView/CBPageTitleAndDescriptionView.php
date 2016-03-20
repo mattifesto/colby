@@ -22,16 +22,31 @@ final class CBPageTitleAndDescriptionView {
 
         ?><header class="<?= implode(' ', $classes) ?>"><?php
             if (!empty($context->titleAsHTML)) {
-                echo "<h1>{$context->titleAsHTML}</h1>";
+                if (empty($model->titleColor)) {
+                    $style = '';
+                } else {
+                    $style = " style='color: {$model->titleColor}'";
+                }
+                echo "<h1{$style}>{$context->titleAsHTML}</h1>";
             }
 
             if (!empty($context->descriptionAsHTML) && empty($model->hideDescription)) {
-                echo "<div class='description'>{$context->descriptionAsHTML}</div>";
+                if (empty($model->descriptionColor)) {
+                    $style = '';
+                } else {
+                    $style = " style='color: {$model->descriptionColor}'";
+                }
+                echo "<div class='description'{$style}>{$context->descriptionAsHTML}</div>";
             }
 
             if (!empty($model->showPublicationDate)) {
+                if (empty($model->publishedColor)) {
+                    $style = '';
+                } else {
+                    $style = " style='color: {$model->publishedColor}'";
+                }
                 $publishedAsHTML = ColbyConvert::timestampToHTML($context->publishedTimestamp, 'Unpublished');
-                echo "<div class='published'>{$publishedAsHTML}</div>";
+                echo "<div class='published'{$style}>{$publishedAsHTML}</div>";
             }
         ?></header><?php
     }
@@ -42,11 +57,18 @@ final class CBPageTitleAndDescriptionView {
      * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
+        $colorForProperty = function ($propertyName) use ($spec) {
+            return CBModel::value($spec, $propertyName, null, 'CBConvert::stringToCSSColor');
+        };
+
         return (object)[
             'className' => __CLASS__,
+            'descriptionColor' => $colorForProperty('descriptionColor'),
             'hideDescription' => CBModel::value($spec, 'hideDescription', false, 'boolval'),
+            'publishedColor' => $colorForProperty('publishedColor'),
             'showPublicationDate' => CBModel::value($spec, 'showPublicationDate', false, 'boolval'),
             'themeID' => CBModel::value($spec, 'themeID'),
+            'titleColor' => $colorForProperty('titleColor'),
         ];
     }
 }
