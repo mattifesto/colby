@@ -28,7 +28,7 @@ final class CBPageListView {
         } else if ($year !== null) {
             CBHTMLOutput::render404();
         } else {
-            $limit = 'LIMIT 10';
+            $limit = 'LIMIT 25';
             $title = 'Recent';
         }
         $wheres[] = '`published` IS NOT NULL';
@@ -50,22 +50,27 @@ EOT;
         ?>
 
         <div class="CBPageListView <?= CBTheme::IDToCSSClass($model->themeID) ?>">
-            <h1><?= $title ?></h1><?php
+            <h1><?= $title ?></h1>
+            <div class="links">
 
-            foreach ($pages as $page) { ?>
-                <a href="<?= CBSiteURL . "/{$page->URI}/" ?>" class="link"><?php
-                    if (!empty($page->thumbnailURL)) { ?>
-                        <div class="thumbnail">
-                            <figure style="background-image: url(<?= $page->thumbnailURL ?>);"></figure>
+                <?php foreach ($pages as $page) { ?>
+                    <a href="<?= CBSiteURL . "/{$page->URI}/" ?>" class="link"><?php
+                        if (!empty($page->thumbnailURL)) { ?>
+                            <div class="thumbnail">
+                                <figure style="background-image: url(<?= $page->thumbnailURL ?>);"></figure>
+                            </div>
+                        <?php } ?>
+                        <div>
+                            <h1><?= $page->titleHTML ?></h1>
+                            <div class="description"><?= $page->subtitleHTML ?></div>
+                            <div><?= ColbyConvert::timestampToHTML($page->published) ?></div>
                         </div>
-                    <?php } ?>
-                    <div>
-                        <h1><?= $page->titleHTML ?></h1>
-                        <div class="description"><?= $page->subtitleHTML ?></div>
-                        <div><?= ColbyConvert::timestampToHTML($page->published) ?></div>
-                    </div>
-                </a>
-            <?php }
+                    </a>
+                <?php } ?>
+
+            </div>
+
+            <?php
 
             $SQL = <<<EOT
 
