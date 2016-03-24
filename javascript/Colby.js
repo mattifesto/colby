@@ -189,7 +189,7 @@ var Colby = {
 
         Colby.intervalCount++;
 
-        var date, element, timestamp;
+        var args, date, dateString, element, timestamp;
         var elements = document.getElementsByClassName('time');
         var countOfElements = elements.length;
         var now = new Date();
@@ -200,14 +200,22 @@ var Colby = {
 
             if (timestamp === null) {
                 if (element.hasAttribute("data-nulltextcontent")) {
-                    element.textContent = element.getAttribute("data-nulltextcontent");
+                    element.textContent =
+                        element.getAttribute("data-nulltextcontent");
                 }
 
                 continue;
             }
 
             date = new Date(timestamp);
-            element.textContent = Colby.dateToRelativeLocaleString(date, now);
+            args = undefined;
+
+            if (element.classList.contains("compact")) {
+                args = { "compact" : true };
+            }
+
+            dateString = Colby.dateToRelativeLocaleString(date, now, args);
+            element.textContent = dateString;
         }
     },
 };
@@ -353,69 +361,59 @@ Colby.dataStoreIDToURI = function(dataStoreID)
 };
 
 /**
+ * NOTE: 2015.03.24
+ * The `toLocaleDateString` function can be used in the future when the
+ * `locales` and `options` arguments are supported in all browsers. This can
+ * be tracked at Mozilla's documentation for the function.
+ *
+ * @param Date date
+ * @param object? args
+ * @param bool args.compact
+ *
  * @return string
  *  This method returns a date in the following format: "February 14, 2010".
  */
-Colby.dateToLocaleDateString = function(date)
-{
-    /**
-     * 2013.05.07
-     *
-     * Just before this comment was written this function used the
-     * `toLocaleDateString` method because it was thought that it would
-     * produce better localized results. However, mostly what it did was
-     * produce unpredictable results on different browsers. Most of the output
-     * was not even close to the preferred format that this method now
-     * returns.
-     *
-     * I had an epiphany that, at least for now, all of the websites that
-     * use Colby are in English anyway so having the goal of writing dates
-     * using the locale was somewhat misguided, especially since it didn't
-     * work anyway.
-     *
-     * If dates are needed in another language it will be a better approach to
-     * just localize this method rather than relying on browsers to do it. If
-     * the technology improves this decision can be revisited.
-     */
+Colby.dateToLocaleDateString = function(date, args) {
+    if (args === undefined) args = {};
 
-    return Colby.monthNames[date.getMonth()] +
-           ' ' +
-           date.getDate() +
-           ', ' + date.getFullYear();
+    if (args.compact === true) {
+        return date.getFullYear() + "/" +
+            ("00" + (date.getMonth() + 1)).slice(-2) + "/" +
+            ("00" + date.getDate()).slice(-2);
+    } else {
+        return Colby.monthNames[date.getMonth()] + " " +
+            date.getDate() + ", " +
+            date.getFullYear();
+    }
 };
 
 /**
  * @return string
  */
-Colby.dateToLocaleTimeString = function(date)
-{
-    var formattedHour = date.getHours() % 12;
+Colby.dateToLocaleTimeString = function(date, args) {
+    if (args === undefined) args = {};
 
+    var formattedAMPM, formattedHour, formattedMinutes;
+    formattedHour = date.getHours() % 12;
     formattedHour = formattedHour ? formattedHour : 12;
+    formattedMinutes = ("00" + date.getMinutes()).slice(-2);
 
-    var formattedMinutes = date.getMinutes().toString();
-
-    if (formattedMinutes.length < 2)
-    {
-        formattedMinutes = '0'.concat(formattedMinutes);
+    if (args.compact === true) {
+        formattedAMPM = (date.getHours() > 11) ? 'pm' : 'am';
+        formattedHour = ("00" + formattedHour).slice(-2);
+    } else {
+        formattedAMPM = (date.getHours() > 11) ? ' p.m.' : ' a.m.';
     }
 
-    var formattedAMPM = (date.getHours() > 11) ? 'p.m.' : 'a.m.';
-
-    return formattedHour +
-    ':' +
-    formattedMinutes +
-    ' ' +
-    formattedAMPM;
+    return formattedHour + ':' + formattedMinutes + formattedAMPM;
 };
 
 /**
  * @return string
  */
-Colby.dateToRelativeLocaleString = function(date, now)
-{
+Colby.dateToRelativeLocaleString = function(date, now, args) {
+    if (args === undefined) args = {};
     var timespan = now.getTime() - date.getTime();
-
     var string;
 
     // date is in the future by more than 60 seconds
@@ -444,19 +442,19 @@ Colby.dateToRelativeLocaleString = function(date, now)
     // less that 24 hours and today
     else if (timespan < (1000 * 60 * 60 * 24) && date.getDate() == now.getDate())
     {
-        string = 'Today at ' + Colby.dateToLocaleTimeString(date);
+        string = 'Today at ' + Colby.dateToLocaleTimeString(date, args);
     }
 
     // less than 48 house and yesterday
     else if (timespan < (1000 * 60 * 60 * 24 * 2) && ((date.getDay() + 1) % 7) == now.getDay())
     {
-        string = 'Yesterday at ' + Colby.dateToLocaleTimeString(date);
+        string = 'Yesterday at ' + Colby.dateToLocaleTimeString(date, args);
     }
 
     // just return date and time
     else
     {
-        string = Colby.dateToLocaleDateString(date) + ' ' + Colby.dateToLocaleTimeString(date);
+        string = Colby.dateToLocaleDateString(date, args) + ' ' + Colby.dateToLocaleTimeString(date, args);
     }
 
     return string;
