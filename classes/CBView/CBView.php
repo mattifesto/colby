@@ -14,7 +14,7 @@ final class CBView {
     }
 
     /**
-     * @note functional programming
+     * @deprecated use (object)['className' => '<desired class name>']
      *
      * @return stdClass
      */
@@ -29,18 +29,6 @@ final class CBView {
      * @return void
      */
     public static function renderModelAsHTML(stdClass $model = null) {
-
-        /**
-         * 2015.03.31 TODO:
-         *  When views were instances, we called the following generic model
-         *  upgrader function. I'm not entirely sure that this function isn't
-         *  still necessary.
-         *
-         *  It upgrades the model in place, so it's not a very good function.
-         *
-         *  CBViewModelUpgrader::upgradeModel($model);
-         */
-
         if (isset($model->className) && $model->className != 'CBView') {
             $function = "{$model->className}::renderModelAsHTML";
 
