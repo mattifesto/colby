@@ -58,42 +58,6 @@ EOT;
     }
 
     /**
-     * @deprecated
-     *
-     * 2015.02.20
-     * This function is being created as deprecated. The reason is that this
-     * class is moving to a paradigm where the default model object is just an
-     * empty stdClass. If a property doesn't exist, its value is considered to
-     * be null-ish. For now, however, the code still expects all of these
-     * properties to exist.
-     *
-     * @return stdClass
-     */
-    public static function createDefaultModel() {
-        $model = (object)[
-            'className' => 'CBViewPage',
-        ];
-        $model->ID = null;
-        $model->description = '';
-        $model->descriptionHTML = '';
-        $model->groupID = null;
-        $model->isPublished = false;
-        $model->listClassNames = array();
-        $model->publicationTimeStamp = null;
-        $model->publishedBy = null;
-        $model->schema = 'CBPage';
-        $model->schemaVersion = 3;
-        $model->sections = array();
-        $model->thumbnailURL = null;
-        $model->title = '';
-        $model->titleHTML = '';
-        $model->URI = null;
-        $model->URIIsStatic = false;
-
-        return $model;
-    }
-
-    /**
      * @param hex160 $ID
      *
      * @return stdClass|false
