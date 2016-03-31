@@ -72,6 +72,18 @@ final class CBContainerView {
         }
     }
 
+    /**
+     * @deprecated use mediaRuleRetinaOnly
+     * 2016.03.30
+     *
+     * I am not modifying this function because I have decided to use only
+     * retina images. In the future there will be no non-retina displays and
+     * raising the compression on a retina image often creates a better images
+     * of equal size. However, if this decision backfires I don't want to have
+     * to rewrite this code so I am leaving this function here for now.
+     *
+     * @return string
+     */
     private static function mediaRule(array $args) {
         $class = $maxWidth = $imageURL1x = $imageURL2x = $width = $height = null;
         extract($args, EXTR_IF_EXISTS);
@@ -110,6 +122,36 @@ EOT;
         $rule2x = "@media {$mediaRuleFor2x} {\n{$rule2x}\n}";
 
         return "{$comment}\n{$rule}\n\n{$rule2x}";
+    }
+
+    /**
+     * @return string
+     */
+    private static function mediaRuleRetinaOnly(array $args) {
+        $class = $maxWidth = $imageURL1x = $imageURL2x = $width = $height = null;
+        extract($args, EXTR_IF_EXISTS);
+
+        $rule = <<<EOT
+    .{$class} {
+        background-image: url({$imageURL2x});
+        background-size: {$width}px {$height}px;
+    }
+
+    .{$class}.useImageHeight {
+        min-height: {$height}px;
+    }
+EOT;
+
+        $comment = '/* rule for unlimited width */';
+
+        if (isset($maxWidth)) {
+            $comment = "/* rule for max-width: {$maxWidth}px */";
+            $mediaRuleForWidth = "(max-width: {$maxWidth}px)";
+
+            $rule = "@media {$mediaRuleForWidth} {\n{$rule}\n}";
+        }
+
+        return "{$comment}\n{$rule}";
     }
 
     /**
@@ -275,7 +317,7 @@ EOT;
         }
 
         $rules[0]['maxWidth'] = null;
-        $rules = array_map('CBContainerView::mediaRule', $rules);
+        $rules = array_map('CBContainerView::mediaRuleRetinaOnly', $rules);
 
         return implode("\n\n", $rules);
     }
