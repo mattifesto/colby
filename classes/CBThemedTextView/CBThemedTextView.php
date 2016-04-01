@@ -49,7 +49,10 @@ final class CBThemedTextView {
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
-        $themeID = CBModel::value($model, 'themeID');
+        if (empty($themeID = CBModel::value($model, 'themeID'))) {
+            $themeID = CBStandardModels::CBThemeIDForCBTextViewForBodyText;
+        };
+
         $class = CBTheme::IDToCSSClass($themeID);
         $class = "CBThemedTextView {$class}";
 
