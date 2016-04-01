@@ -11,16 +11,18 @@ final class CBPageTitleAndDescriptionView {
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
-        $classes = ['CBPageTitleAndDescriptionView'];
+        if (empty($themeID = CBModel::value($model, 'themeID'))) {
+            $themeID = CBStandardModels::CBThemeIDForCBPageTitleAndDescriptionView;
+        };
 
-        if (!empty($model->themeID)) {
-            CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
-            $classes[] = CBTheme::IDToCSSClass($model->themeID);
-        }
+        $class = CBTheme::IDToCSSClass($themeID);
+        $class = "CBPageTitleAndDescriptionView {$class}";
+
+        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
 
         $context = CBPageContext::current();
 
-        ?><header class="<?= implode(' ', $classes) ?>"><?php
+        ?><header class="<?= $class ?>"><?php
             if (!empty($context->titleAsHTML)) {
                 if (empty($model->titleColor)) {
                     $style = '';
