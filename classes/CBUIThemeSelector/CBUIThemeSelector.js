@@ -63,7 +63,7 @@ var CBUIThemeSelector = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            var options = [{title:"No Theme", description:"", value:undefined}].concat(response.options);
+            var options = [{title:"Default", description:"", value:undefined}].concat(response.options);
             args.updateOptionsCallback(options);
         } else {
             Colby.displayResponse(response);
