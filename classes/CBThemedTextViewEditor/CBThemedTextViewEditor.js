@@ -1,4 +1,5 @@
 "use strict";
+/* globals CBUI, CBUIBooleanEditor, CBUIStringEditor, CBUIThemeSelector */
 
 var CBThemedTextViewEditor = {
 
@@ -33,6 +34,10 @@ var CBThemedTextViewEditor = {
         }).element);
         section.appendChild(item);
 
+        element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
+        section = CBUI.createSection();
+
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
             labelText : "URL",
@@ -41,6 +46,10 @@ var CBThemedTextViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
+
+        element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
+        section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIThemeSelector.create({
