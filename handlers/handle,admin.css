@@ -1,37 +1,39 @@
 .CBLibraryListView {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     padding: 20px 0;
-    text-align: center;
 }
 
 section.widget {
-    box-sizing:     border-box;
-    display:        inline-block;
-    min-height:     100px;
-    padding:        10px;
+    box-sizing: border-box;
+    display: inline-block;
+    min-height: 100px;
+    padding: 10px;
     vertical-align: top;
-    width:          320px;
+    width: 320px;
 }
 
 section.widget > header > h1 {
-    background-color:   hsl(0, 0%, 20%);
-    color:              white;
-    font-size:          18px;
-    font-weight:        normal;
-    letter-spacing:     1px;
-    padding:            10px 0;
-    text-align:         center;
+    background-color: hsl(0, 0%, 20%);
+    color: white;
+    font-size: 18px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    padding: 10px 0;
+    text-align: center;
 }
 
 section.widget > div {
-    border-color:   hsl(0, 0%, 20%);
-    border-style:   solid;
-    border-width:   0 2px 2px;
-    padding:        5px;
+    background-color: white;
+    border-color: hsl(0, 0%, 20%);
+    border-style: solid;
+    border-width: 0 2px 2px;
+    padding: 5px;
 }
 
 
 section.widget .version-numbers {
-    background-color: white;
     text-align: center;
 }
 
@@ -80,7 +82,7 @@ section.widget .version-number + .version-number {
 }
 
 .CBSiteConfigurationIssuesView h1 {
-    padding:    0 20px;
+    padding: 0 20px;
     text-align: center;
 }
 
@@ -90,5 +92,5 @@ section.widget .version-number + .version-number {
 
 .CBSiteConfigurationIssuesView li {
     list-style: none;
-    padding:    20px;
+    padding: 20px;
 }

@@ -24,10 +24,23 @@ CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
     <div class="CBLibraryListView">
         <?php
 
-        $adminWidgetFilenames = Colby::globSnippets('admin-widget-*.php');
+        $widgetClassNames = Colby::globFiles('classes/*AdminWidgetFor*');
+        $widgetClassNames = array_map(function ($className) {
+            return basename($className, '.php');
+        }, $widgetClassNames);
 
-        foreach ($adminWidgetFilenames as $adminWidgetFilename)
-        {
+        sort($widgetClassNames);
+
+        array_walk($widgetClassNames, function($className) {
+            if (is_callable($function = "{$className}::render")) {
+                call_user_func($function);
+            }
+        });
+
+        /* deprecated: use widget classes */
+        $adminWidgetFilenames = Colby::globFiles('snippets/admin-widget-*.php');
+
+        foreach ($adminWidgetFilenames as $adminWidgetFilename) {
             include $adminWidgetFilename;
         }
 
