@@ -252,10 +252,11 @@ final class Colby {
     }
 
     /**
+     * @param string $pattern
+     *
      * @return array
      */
-    public static function globFiles($pattern)
-    {
+    public static function globFiles($pattern) {
         $filenames = array();
 
         foreach (self::$libraryDirectories as $libraryDirectory)
@@ -275,16 +276,6 @@ final class Colby {
         }
 
         return $filenames;
-    }
-
-    /**
-     * @return array
-     */
-    public static function globSnippets($pattern)
-    {
-        $pattern = "snippets/{$pattern}";
-
-        return self::globFiles($pattern);
     }
 
     /**
