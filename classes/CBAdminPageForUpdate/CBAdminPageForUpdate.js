@@ -1,27 +1,37 @@
 "use strict";
+/* globals Colby */
 
-var ColbySiteUpdater = {};
+var ColbySiteUpdater = {
 
-ColbySiteUpdater.update = function(sender)
-{
-    sender.disabled = true;
+    update : function (sender) {
+        sender.disabled = true;
 
-    var xhr = new XMLHttpRequest();
+        var xhr = new XMLHttpRequest();
+        xhr.onerror = Colby.displayXHRError.bind({xhr:xhr});
+        xhr.onload = ColbySiteUpdater.updateDidLoad.bind(undefined, {
+            button : sender,
+            xhr : xhr,
+        });
+        xhr.open('POST', '/api/?class=CBAdminPageForUpdate&function=updateForAjax', true);
+        xhr.send();
 
-    var handleAjaxResponse = function()
-    {
-        var response = Colby.responseFromXMLHttpRequest(xhr);
+        document.getElementById('progress').removeAttribute('value');
+    },
+
+    /**
+     * @param Element args.button
+     * @param XMLHttpRequest args.xhr
+     *
+     * @return undefined
+     */
+    updateDidLoad : function (args) {
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         Colby.displayResponse(response);
 
         document.getElementById('progress').setAttribute('value', 0);
 
-        sender.disabled = false;
-    };
+        args.button.disabled = false;
 
-    xhr.open('POST', '/api/?class=CBAdminPageForUpdate&function=updateForAjax', true);
-    xhr.onload = handleAjaxResponse;
-    xhr.send();
-
-    document.getElementById('progress').removeAttribute('value');
+    }
 };
