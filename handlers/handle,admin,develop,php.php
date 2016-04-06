@@ -41,8 +41,12 @@ $iniValues = ini_get_all(null, false);
     <table class="phpini">
         <tbody>
             <tr>
-                <th style="text-align: right;">PHP Version</th>
-                <td><?php echo phpversion() ?></td>
+                <th style="text-align: right;">Version</th>
+                <td><?= phpversion() ?></td>
+            </tr>
+            <tr>
+                <th style="text-align: right;">username</th>
+                <td><?= cbhtml(`whoami`) ?></td>
             </tr>
 
             <?php
