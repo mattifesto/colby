@@ -1,6 +1,6 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Administrators')) {
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
@@ -10,8 +10,7 @@ CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Update');
 CBHTMLOutput::setDescriptionHTML('Tools to perform site version updates.');
-
-CBHTMLOutput::addJavaScriptURL("{$classURL}/CBAdminPageForUpdate.js");
+CBHTMLOutput::requireClassName('CBAdminPageForUpdate');
 
 $spec                           = new stdClass();
 $spec->selectedMenuItemName     = 'develop';
@@ -19,21 +18,7 @@ $spec->selectedSubmenuItemName  = 'update';
 
 CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
-?>
-
-<main>
-    <div style="margin: 50px 0px; text-align: center;">
-        <progress id="progress"
-                  value="0"
-                  style="width: 100px;"></progress>
-    </div>
-
-    <div style="text-align: center;">
-        <button onclick="ColbySiteUpdater.update(this);">Update Site</button>
-    </div>
-</main>
-
-<?php
+?><main class="CBUIRoot"></main><?php
 
 CBAdminPageFooterView::renderModelAsHTML();
 

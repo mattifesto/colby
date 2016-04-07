@@ -34,6 +34,20 @@ EOT;
     }
 
     /**
+     * @return [string]
+     */
+    public static function requiredClassNames() {
+        return ['CBUI', 'CBUIActionLink'];
+    }
+
+    /**
+     * @return [string]
+     */
+    public static function requiredJavaScriptURLs() {
+        return [CBAdminPageForUpdate::URL('CBAdminPageForUpdate.js')];
+    }
+
+    /**
      * @return void
      */
     public static function update() {
@@ -67,5 +81,15 @@ EOT;
         }
 
         return $permissions;
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @return string
+     */
+    public static function URL($filename) {
+        $className = __CLASS__;
+        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
