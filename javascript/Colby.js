@@ -104,9 +104,12 @@ var Colby = {
     },
 
     /**
-     * @return object
+     * @return {
+     *  string message,
+     *  bool wasSuccessful
+     * }
      */
-    responseFromXMLHttpRequest : function(xhr) {
+    responseFromXMLHttpRequest : function (xhr) {
         var response;
 
         switch (xhr.status) {
