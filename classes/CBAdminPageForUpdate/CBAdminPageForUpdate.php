@@ -27,7 +27,45 @@ EOT;
     }
 
     /**
-     * @return void
+     * @return null
+     */
+    public static function pullUpdatesForAjax() {
+        $response = new CBAjaxResponse();
+
+        $response->description = "$ git pull\n\n";
+        $result = CBGit::pull();
+        $response->description .= $result->output;
+        $response->descriptionFormat = 'preformatted';
+
+        if ($result->wasSuccessful) {
+            $response->description .= "\n$ git submodule update\n\n";
+
+            $result = CBGit::submoduleUpdate();
+
+            if ($result->wasSuccessful) {
+                $response->message = "Git pull and submodule update were successful";
+            } else {
+                $response->message = "Git pull was successful but submodue update failed.";
+            }
+
+            $response->description .= $result->output;
+        } else {
+            $response->message = 'Git pull failed.';
+        }
+
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function pullUpdatesForAjaxPermissions() {
+        return (object)['group' => 'Developers'];
+    }
+
+    /**
+     * @return null
      */
     public static function renderAsHTML() {
         include __DIR__ . '/CBAdminPageForUpdateHTML.php';
@@ -38,6 +76,13 @@ EOT;
      */
     public static function requiredClassNames() {
         return ['CBUI', 'CBUIActionLink'];
+    }
+
+    /**
+     * @return [string]
+     */
+    public static function requiredCSSURLs() {
+        return [CBAdminPageForUpdate::URL('CBAdminPageForUpdate.css')];
     }
 
     /**

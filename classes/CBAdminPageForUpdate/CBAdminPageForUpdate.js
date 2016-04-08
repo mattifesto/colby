@@ -47,17 +47,6 @@ var ColbySiteUpdater = {
     },
 
     /**
-     * This could become a convenience function of CSULog.
-     *
-     * @param string reason
-     *
-     * @return undefined
-     */
-    displayReason : function (reason) {
-        CSULog.append({message:"Error: " + reason});
-    },
-
-    /**
      * @return undefined
      */
     DOMContentDidLoad : function () {
@@ -105,8 +94,7 @@ var ColbySiteUpdater = {
      * @return undefined
      */
     getAjaxResponseDidError : function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-        args.reject(response.message);
+        args.reject(Colby.responseFromXMLHttpRequest(args.xhr));
     },
 
     /**
@@ -120,10 +108,20 @@ var ColbySiteUpdater = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            args.resolve(args);
+            args.resolve(response);
         } else {
-            args.reject(response.message);
+            args.reject(response);
         }
+    },
+
+    /**
+     * @return Promise
+     */
+    promiseToPullUpdates : function() {
+        CSULog.append({message:"Pulling updates..."});
+        return ColbySiteUpdater.promiseToGetAjaxResponse({
+            URL : "/api/?class=CBAdminPageForUpdate&function=pullUpdates",
+        });
     },
 
     /**
@@ -140,7 +138,7 @@ var ColbySiteUpdater = {
      * @return undefined
      */
     reportSuccess : function () {
-        CSULog.append({message:"Update succeeded"});
+        CSULog.append({message:"Update completed."});
     },
 
     /**
@@ -150,9 +148,13 @@ var ColbySiteUpdater = {
         ColbySiteUpdater.context.disableActionLinkCallback();
 
         ColbySiteUpdater.promiseToBackupDatabase()
+            .then(CSULog.appendAjaxResponse)
+            .then(ColbySiteUpdater.promiseToPullUpdates)
+            .then(CSULog.appendAjaxResponse)
             .then(ColbySiteUpdater.promiseToUpdateSite)
+            .then(CSULog.appendAjaxResponse)
             .then(ColbySiteUpdater.reportSuccess)
-            .catch(ColbySiteUpdater.displayReason)
+            .catch(CSULog.appendErrorReason)
             .then(ColbySiteUpdater.finish);
     },
 };
@@ -176,10 +178,46 @@ var CSULog = {
 
         var name = args.name || "default";
         var log = CSULog.logs[name];
-        var message = document.createElement("p");
+        var message = document.createElement("div");
+        message.className = "CSULogEntry";
         message.textContent = args.message;
 
         log.appendChild(message);
+    },
+
+    appendAjaxResponse : function (response) {
+        var element = document.createElement("div");
+        element.className = "CSULogEntry";
+        var message = document.createElement("div");
+        message.className = "message";
+        message.textContent = response.message;
+
+        element.appendChild(message);
+
+        if (response.description !== undefined) {
+            var description = document.createElement("div");
+            description.className = "description" +
+                ((response.descriptionFormat === "preformatted") ? " preformatted" : "");
+            description.textContent = response.description;
+
+            element.appendChild(description);
+        }
+
+        CSULog.logs["default"].appendChild(element);
+    },
+
+    appendErrorReason : function (reason) {
+        if (typeof reason === "string") {
+            CSULog.append("Error: " + reason);
+            return;
+        } else if (typeof reason === "object") {
+            if (reason.className === "CBAjaxResponse") {
+                CSULog.appendAjaxResponse(reason);
+                return;
+            }
+        }
+
+        CSULog.append("Error: No reason was provided.");
     },
 
     /**

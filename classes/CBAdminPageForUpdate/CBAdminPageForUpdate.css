@@ -1,0 +1,13 @@
+.CSULogEntry {
+    padding: 5px 10px;
+}
+
+.CSULogEntry .description {
+    color: hsl(0, 0%, 50%);
+    font-size: 14px;
+    padding: 0 10px;
+}
+
+.CSULogEntry .description.preformatted {
+    white-space: pre;
+}
