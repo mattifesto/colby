@@ -115,18 +115,19 @@ var Colby = {
         switch (xhr.status) {
             case 0:
                 response = {
+                    className : "CBAjaxResponse",
                     message : "An Ajax request was aborted. This may be because of a network error making the server unavailable or because the Ajax request URL is incorrect.",
                     wasSuccessful : false
                 };
                 break;
-
             case 200:
                 response = JSON.parse(xhr.responseText);
                 break;
             default:
                 response = {
-                    message         : xhr.status + ': ' + xhr.statusText,
-                    wasSuccessful   : false
+                    className : "CBAjaxResponse",
+                    message : xhr.status + ' ' + xhr.statusText,
+                    wasSuccessful : false
                 };
                 break;
         }
