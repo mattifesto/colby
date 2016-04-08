@@ -32,20 +32,20 @@ EOT;
     public static function pullUpdatesForAjax() {
         $response = new CBAjaxResponse();
 
-        $response->description = "$ git pull\n\n";
+        $response->description = "$ git pull\n";
         $result = CBGit::pull();
         $response->description .= $result->output;
         $response->descriptionFormat = 'preformatted';
 
         if ($result->wasSuccessful) {
-            $response->description .= "\n$ git submodule update\n\n";
+            $response->description .= "\n\n$ git submodule update\n";
 
             $result = CBGit::submoduleUpdate();
 
             if ($result->wasSuccessful) {
-                $response->message = "Git pull and submodule update were successful";
+                $response->message = 'Git pull and submodule update were successful.';
             } else {
-                $response->message = "Git pull was successful but submodue update failed.";
+                $response->message = 'Git pull was successful but submodue update failed.';
             }
 
             $response->description .= $result->output;
