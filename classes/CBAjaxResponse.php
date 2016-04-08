@@ -1,14 +1,11 @@
 <?php
 
-/**
- *
- */
-class CBAjaxResponse
-{
-    private $isActive       = true;
+class CBAjaxResponse {
+    private $isActive = true;
 
-    public $message         = '';
-    public $wasSuccessful   = false;
+    public $className = 'CBAjaxResponse';
+    public $message = '';
+    public $wasSuccessful = false;
 
     /**
      * @return CBAjaxResponse
