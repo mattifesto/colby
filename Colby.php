@@ -185,7 +185,7 @@ final class Colby {
      * allows the website to override the behavior of the Colby system and the
      * libraries.
      *
-     * @param[in] path
+     * @param string path
      *
      *  The relative path of the file to be found, for example:
      *
@@ -194,35 +194,23 @@ final class Colby {
      *
      * @return string | null
      */
-    public static function findFile($path, $returnFormat = Colby::returnAbsoluteFilename)
-    {
-        foreach (self::$libraryDirectories as $libraryDirectory)
-        {
-            if ($libraryDirectory)
-            {
+    public static function findFile($path, $returnFormat = Colby::returnAbsoluteFilename) {
+        foreach (self::$libraryDirectories as $libraryDirectory) {
+            if ($libraryDirectory) {
                 $intraSiteFilename = "{$libraryDirectory}/{$path}";
-            }
-            else
-            {
+            } else {
                 $intraSiteFilename = $path;
             }
 
             $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
 
-            if (is_file($absoluteFilename))
-            {
-                switch ($returnFormat)
-                {
+            if (is_file($absoluteFilename)) {
+                switch ($returnFormat) {
                     case Colby::returnAbsoluteFilename:
-
                         return $absoluteFilename;
-
                     case Colby::returnURL:
-
                         return COLBY_SITE_URL . "/{$intraSiteFilename}";
-
                     default:
-
                         throw new InvalidArgumentException('returnFormat');
                 }
             }
@@ -232,22 +220,22 @@ final class Colby {
     }
 
     /**
+     * @deprecated use findFile
+     *
      * @return string | null
      */
-    public static function findHandler($filename, $returnFormat = Colby::returnAbsoluteFilename)
-    {
+    public static function findHandler($filename, $returnFormat = Colby::returnAbsoluteFilename) {
         $path = "handlers/{$filename}";
-
         return self::findFile($path, $returnFormat);
     }
 
     /**
+     * @deprecated use findFile
+     *
      * @return string | null
      */
-    public static function findSnippet($filename)
-    {
+    public static function findSnippet($filename) {
         $path = "snippets/{$filename}";
-
         return self::findFile($path);
     }
 
