@@ -2,7 +2,7 @@
 
     <?php
 
-    $selectedMenuItemName       = $model->selectedMenuItemName;
+    $selectedMenuItemName = CBModel::value($model, 'selectedMenuItemName');
 
     self::renderMenu($menuModel, $selectedMenuItemName, 'CBMenu');
 

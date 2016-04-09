@@ -37,11 +37,15 @@ final class CBAdminPageMenuView {
     }
 
     /**
-     * @param stdClass $model
+     * @param stdClass? $model
      *
      * @return void
      */
     public static function renderModelAsHTML(stdClass $model = null) {
+        if ($model === null) {
+            $model = new stdClass();
+        }
+
         CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBAdminPageMenuView/CBAdminPageMenuViewHTML.css');
 
         /**
