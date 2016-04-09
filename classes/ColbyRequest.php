@@ -87,7 +87,7 @@ EOT;
                     }
                 }
 
-                return include Colby::findHandler('handle-front-page.php');
+                return include Colby::findFile('handlers/handle-front-page.php');
             };
         } else if (1 === $countOfStubs && 'robots.txt' === self::$decodedStubs[0]) {
             $canonicalEncodedPath = '/robots.txt';
@@ -105,11 +105,11 @@ EOT;
             $allStubs = implode(',', self::$encodedStubs);
             $firstStub = self::$encodedStubs[0];
 
-            if ($allStubsHandlerFilepath = Colby::findHandler("handle,{$allStubs}.php")) {
+            if ($allStubsHandlerFilepath = Colby::findFile("handlers/handle,{$allStubs}.php")) {
                 $function = function() use ($allStubsHandlerFilepath) {
                     return include $allStubsHandlerFilepath;
                 };
-            } else if ($firstStubHandlerFilepath = Colby::findHandler("handle,{$firstStub},.php")) {
+            } else if ($firstStubHandlerFilepath = Colby::findFile("handlers/handle,{$firstStub},.php")) {
                 $function = function() use ($firstStubHandlerFilepath) {
                     return include $firstStubHandlerFilepath;
                 };
@@ -152,7 +152,7 @@ EOT;
          * 1 which indicates that the page doesn't exist.
          */
 
-        include Colby::findHandler('handle-default.php');
+        include Colby::findFile('handlers/handle-default.php');
     }
 
     /**
