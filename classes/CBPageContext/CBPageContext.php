@@ -44,6 +44,12 @@ final class CBPageContext {
      * @return stdClass|false
      */
     public static function current() {
-        return clone end(self::$contexts);
+        $context = end(self::$contexts);
+
+        if (empty($context)) {
+            return false;
+        } else {
+            return clone $context;
+        }
     }
 }
