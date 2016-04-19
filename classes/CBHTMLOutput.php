@@ -26,7 +26,7 @@ class CBHTMLOutput
     public static $classNameForSettings;
 
     private static $CSSURLs;
-    private static $descriptionHTML;
+    private static $descriptionHTML; /* deprecated */
     private static $exportedLists;
     private static $exportedVariables;
     private static $isActive = false;
@@ -35,7 +35,7 @@ class CBHTMLOutput
     private static $javaScriptURLs;
     private static $javaScriptURLsInHead;
     private static $requiredClassNames;
-    private static $titleHTML;
+    private static $titleHTML; /* deprecated */
 
     /**
      * @param string|empty $CSSURL
@@ -182,11 +182,12 @@ class CBHTMLOutput
      * @return void
      */
     public static function render() {
-        $bodyContent                = ob_get_clean();
-        $settingsHeadContent        = '';
+        $bodyContent = ob_get_clean();
+        $pageContext = CBPageContext::current();
+        $settingsHeadContent = '';
         $settingsStartOfBodyContent = '';
-        $settingsEndOfBodyContent   = '';
-        $classNameForSettings       = empty(self::$classNameForSettings) ? CBSitePreferences::defaultClassNameForPageSettings() : self::$classNameForSettings;
+        $settingsEndOfBodyContent = '';
+        $classNameForSettings = empty(self::$classNameForSettings) ? CBSitePreferences::defaultClassNameForPageSettings() : self::$classNameForSettings;
 
         CBHTMLOutput::processRequiredClassNames();
 
@@ -219,8 +220,8 @@ class CBHTMLOutput
         <html lang="en">
             <head>
                 <meta charset="UTF-8">
-                <title><?php echo self::$titleHTML; ?></title>
-                <meta name="description" content="<?php echo self::$descriptionHTML; ?>">
+                <title><?= empty($pageContext->titleAsHTML) ? self::$titleHTML : $pageContext->titleAsHTML ?></title>
+                <meta name="description" content="<?= empty($pageContext->descriptionAsHTML) ? self::$descriptionHTML : $pageContext->descriptionAsHTML ?>">
                 <?= $settingsHeadContent ?>
                 <?php self::renderJavaScriptInHead(); ?>
                 <?php self::renderCSSLinks(); ?>
@@ -359,6 +360,8 @@ class CBHTMLOutput
     }
 
     /**
+     * @deprecated use CBPageContext
+     *
      * @return null
      */
     public static function setTitleHTML($titleHTML) {
@@ -366,6 +369,8 @@ class CBHTMLOutput
     }
 
     /**
+     * @deprecated use CBPageContext
+     *
      * @return null
      */
     public static function setDescriptionHTML($descriptionHTML) {
