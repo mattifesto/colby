@@ -3,6 +3,18 @@
 var CBUISpec = {
 
     /**
+     * @param string args.propertyName
+     * @param object args.spec
+     * @param object args.specChangedCallback
+     *
+     * @return mixed
+     */
+    setValue : function (args, value) {
+        args.spec[args.propertyName] = value;
+        args.specChangedCallback.call();
+    },
+
+    /**
      * @param object? spec
      *
      * @return string|undefined
