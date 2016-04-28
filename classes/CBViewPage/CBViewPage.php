@@ -87,8 +87,8 @@ final class CBViewPage {
         $ID = null;
         extract($args, EXTR_IF_EXISTS);
 
-        $IDAsSQL    = ColbyConvert::textToSQL($ID);
-        $SQL        = "SELECT `iteration` FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$IDAsSQL}')";
+        $IDAsSQL = ColbyConvert::textToSQL($ID);
+        $SQL = "SELECT `iteration` FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$IDAsSQL}')";
 
         return CBDB::SQLToValue($SQL);
     }
@@ -154,14 +154,23 @@ final class CBViewPage {
      * @return string
      */
     public static function modelToSearchText($model) {
-        $searchText         = array();
-        $searchText[]       = $model->title;
-        $searchText[]       = $model->description;
+        $searchText = array();
+        $searchText[] = $model->title;
+        $searchText[] = $model->description;
         self::$modelContext = $model;
+
+        CBPageContext::push([
+            'descriptionAsHTML' => $model->descriptionHTML,
+            'ID' => $model->ID,
+            'publishedTimestamp' => $model->publicationTimeStamp,
+            'titleAsHTML' => $model->titleHTML,
+        ]);
 
         foreach ($model->sections as $modelForView) {
             $searchText[] = CBView::modelToSearchText($modelForView);
         }
+
+        CBPageContext::pop();
 
         self::$modelContext = null;
 
@@ -176,7 +185,7 @@ final class CBViewPage {
      * @return null
      */
     public static function renderAsHTMLForID($ID, $iteration) {
-        $directory  = CBDataStore::directoryForID($ID);
+        $directory = CBDataStore::directoryForID($ID);
 
         if (is_file($filepath = "{$directory}/model-{$iteration}.json")) {
 
@@ -332,17 +341,17 @@ final class CBViewPage {
             $model->classNameForKind = null;
         }
 
-        $model->classNameForSettings    = isset($spec->classNameForSettings) ? trim($spec->classNameForSettings) : '';
-        $model->description             = isset($spec->description) ? $spec->description : '';
-        $model->isPublished             = isset($spec->isPublished) ? !!$spec->isPublished : false;
-        $model->iteration               = 0;
-        $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
-        $model->publishedBy             = isset($spec->publishedBy) ? $spec->publishedBy : null;
-        $model->schemaVersion           = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
-        $model->thumbnailURL            = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null;
-        $model->title                   = isset($spec->title) ? $spec->title : '';
-        $model->URI                     = isset($spec->URI) ? trim($spec->URI) : '';
-        $model->URI                     = $model->URI !== '' ? $model->URI : $model->ID;
+        $model->classNameForSettings = isset($spec->classNameForSettings) ? trim($spec->classNameForSettings) : '';
+        $model->description = isset($spec->description) ? $spec->description : '';
+        $model->isPublished = isset($spec->isPublished) ? !!$spec->isPublished : false;
+        $model->iteration = 0;
+        $model->publicationTimeStamp = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
+        $model->publishedBy = isset($spec->publishedBy) ? $spec->publishedBy : null;
+        $model->schemaVersion = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
+        $model->thumbnailURL = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null;
+        $model->title = isset($spec->title) ? $spec->title : '';
+        $model->URI = isset($spec->URI) ? trim($spec->URI) : '';
+        $model->URI = $model->URI !== '' ? $model->URI : $model->ID;
 
         /**
          * Layout
@@ -367,10 +376,10 @@ final class CBViewPage {
          * Computed values
          */
 
-        $model->descriptionHTML         = ColbyConvert::textToHTML($model->description);
-        $model->thumbnailURLAsHTML      = ColbyConvert::textToHTML($model->thumbnailURL);
-        $model->titleHTML               = ColbyConvert::textToHTML($model->title);
-        $model->URIAsHTML               = ColbyConvert::textToHTML($model->URI);
+        $model->descriptionHTML = ColbyConvert::textToHTML($model->description);
+        $model->thumbnailURLAsHTML = ColbyConvert::textToHTML($model->thumbnailURL);
+        $model->titleHTML = ColbyConvert::textToHTML($model->title);
+        $model->URIAsHTML = ColbyConvert::textToHTML($model->URI);
 
         return $model;
     }
@@ -379,7 +388,7 @@ final class CBViewPage {
      * @return stdClass|false
      */
     public static function specWithID($ID, $iteration) {
-        $directory  = CBDataStore::directoryForID($ID);
+        $directory = CBDataStore::directoryForID($ID);
 
         if (is_file($filepath = "{$directory}/spec-{$iteration}.json")) {
 
