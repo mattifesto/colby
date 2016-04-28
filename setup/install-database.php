@@ -53,29 +53,6 @@ CBRequestTracker::install(); /* deprecated */
 
 $SQL = <<<EOT
 
-    CREATE TABLE IF NOT EXISTS `CBPageLists` (
-        `pageRowID`             BIGINT UNSIGNED NOT NULL,
-        `listClassName`         VARCHAR(80),
-        `sort1`                 BIGINT,
-        `sort2`                 BIGINT,
-
-        PRIMARY KEY (`pageRowID`, `listClassName`),
-        KEY `CBPageList` (`listClassName`, `sort1`, `sort2`),
-        CONSTRAINT `CBPageListPages`
-            FOREIGN KEY (`pageRowID`)
-            REFERENCES `ColbyPages` (`ID`)
-            ON DELETE CASCADE
-    )
-    ENGINE=InnoDB
-    DEFAULT CHARSET=utf8
-    COLLATE=utf8_unicode_ci
-
-EOT;
-
-Colby::query($SQL);
-
-$SQL = <<<EOT
-
     CREATE TABLE IF NOT EXISTS `CBDictionary` (
         `key`                   VARCHAR(100),
         `valueJSON`             LONGTEXT,
