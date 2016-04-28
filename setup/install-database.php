@@ -83,6 +83,9 @@ CBUpgradesForVersion183::run();
 // 2016.03.15
 CBUpgradesForVersion188::run();
 
+// 2016.04.28
+CBUpgradesForVersion191::run();
+
 /**
  *
  */
