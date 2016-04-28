@@ -1,61 +1,8 @@
 <?php
 
-/**
- * 2014.09.25 Version 2
- *
- *  Added the `created` and `updated` properties. When pages were first
- *  developed this information was provided by the `ColbyArchive` class. But
- *  `ColbyArchive` has been deprecated and for pages that don't use it, this
- *  information is not available.
- *
- *  The design of these properties requires that if the properties do not exist
- *  it should not cause an error. If they do not exist, it is okay for a process
- *  to set them to reasonable values if it needs them. It is okay to set the
- *  `created` property to the same value as the `updated` property if the
- *  `created` property is not yet set. There's no need to try to guess when the
- *  page was actually created if that information is not readily available.
- *
- * 2014.09.26 Version 3
- *
- *  Added the `listClassNames` property which holds an array of list class
- *  names representing the lists which include this page.
- */
 final class CBViewPage {
 
     private static $modelContext;
-
-    /**
-     * @return null
-     */
-    private static function addToPageLists($model, $pageRowID) {
-        if ($model->isPublished) {
-            $publishedAsSQL = (int)$model->publicationTimeStamp;
-            $yearMonthAsSQL = ColbyConvert::timestampToYearMonth($model->publicationTimeStamp);
-            $yearMonthAsSQL = "'{$yearMonthAsSQL}'";
-        } else {
-            $publishedAsSQL = 'NULL';
-            $yearMonthAsSQL = 'NULL';
-        }
-
-        $listClassNames = isset($model->listClassNames) ? $model->listClassNames : array();
-
-        foreach ($listClassNames as $className) {
-            $classNameAsSQL = ColbyConvert::textToSQL($className);
-            $SQL            = <<<EOT
-
-                INSERT INTO
-                    `CBPageLists`
-                SET
-                    `pageRowID`     = {$pageRowID},
-                    `listClassName` = '{$classNameAsSQL}',
-                    `sort1`         = {$yearMonthAsSQL},
-                    `sort2`         = {$publishedAsSQL}
-
-EOT;
-
-            Colby::query($SQL);
-        }
-    }
 
     /**
      * @param hex160 $ID
@@ -222,41 +169,6 @@ EOT;
     }
 
     /**
-     * This function removes the post from all editable page lists because
-     * editable page lists are specified in `$spec->listClassNames`.
-     * This page may be in other page lists but those are managed by other
-     * processes.
-     *
-     * @return null
-     */
-    private static function removeFromEditablePageLists($model, $pageRowID) {
-        $availableListNames     = CBViewPageLists::availableListNames();
-        $listClassNames         = isset($model->listClassNames) ? $model->listClassNames : [];
-        $listClassNames         = array_merge($availableListNames, $listClassNames);
-        $listClassNames         = array_unique($listClassNames);
-        $listClassNamesForSQL   = [];
-
-        if (empty($listClassNames)) { return; }
-
-        foreach ($listClassNames as $listClassName) {
-            $classNameForSQL        = ColbyConvert::textToSQL($listClassName);
-            $classNameForSQL        = "'{$classNameForSQL}'";
-            $listClassNamesForSQL[] = $classNameForSQL;
-        }
-
-        $listClassNamesForSQL   = implode(',', $listClassNamesForSQL);
-        $SQL                    = <<<EOT
-
-            DELETE FROM `CBPageLists`
-            WHERE       `pageRowID` = {$pageRowID} AND
-                        `listClassName` IN ({$listClassNamesForSQL})
-
-EOT;
-
-        Colby::query($SQL);
-    }
-
-    /**
      * @deprecated use renderModelAsHTML
      *  Once all pages are saved to the CBModels table, this function will no
      *  longer be called.
@@ -386,11 +298,6 @@ EOT;
 
         CBViewPage::save(['spec' => $spec]);
 
-        /**
-         * @deprecated The following line should go away with page lists
-         */
-        CBViewPage::updatePageLists(CBModels::fetchModelByID($spec->ID));
-
         $response->wasSuccessful = true;
         $response->send();
     }
@@ -429,7 +336,6 @@ EOT;
         $model->description             = isset($spec->description) ? $spec->description : '';
         $model->isPublished             = isset($spec->isPublished) ? !!$spec->isPublished : false;
         $model->iteration               = 0;
-        $model->listClassNames          = isset($spec->listClassNames) ? $spec->listClassNames : array();
         $model->publicationTimeStamp    = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
         $model->publishedBy             = isset($spec->publishedBy) ? $spec->publishedBy : null;
         $model->schemaVersion           = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
@@ -511,20 +417,6 @@ EOT;
     }
 
     /**
-     * @return null
-     */
-    private static function updatePageLists($model) {
-        $IDAsSQL = CBHex160::toSQL($model->ID);
-        $pageRowID = CBDB::SQLToValue("SELECT `ID` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
-
-        CBViewPage::removeFromEditablePageLists($model, $pageRowID);
-
-        if ($model->isPublished) {
-            CBViewPage::addToPageLists($model, $pageRowID);
-        }
-    }
-
-    /**
      * This function performs a render time transform on a page model. This may
      * mean upgrading old models, but more likely it means transforming model
      * properties in response to query variables. This is how a single page can
@@ -545,12 +437,6 @@ EOT;
 
         if (!isset($model->created)) {
             $model->created = $model->updated;
-        }
-
-        // Version 3
-
-        if (!isset($model->listClassNames)) {
-            $model->listClassNames = array();
         }
 
         $model->schemaVersion = 3;
