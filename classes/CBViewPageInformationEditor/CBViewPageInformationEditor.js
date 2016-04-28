@@ -1,4 +1,8 @@
-"use strict";
+"use strict"; /* jshint strict: global */
+/* globals CBCurrentUserID, CBImageEditorFactory, CBPageClassNamesForKinds,
+   CBPageClassNamesForLayouts, CBPageClassNamesForSettings, CBPageURIControl,
+   CBPublicationControl, CBUI, CBUISelector, CBUISpecPropertyEditor,
+   CBUIStringEditor, CBUsersWhoAreAdministrators, Colby */
 
 var CBViewPageInformationEditor = {
 
@@ -196,25 +200,6 @@ var CBViewPageInformationEditor = {
         section.appendChild(item);
 
         element.appendChild(section);
-
-        /**
-         * @deprecated use kinds
-         * page lists
-         */
-
-        if (CBPageEditorAvailablePageListClassNames.length > 0) {
-            element.appendChild(CBUI.createHalfSpace());
-
-            section = CBUI.createSection();
-            item = CBUI.createSectionItem();
-            item.appendChild(CBViewPageInformationEditor.createPageListsEditorElement({
-                spec : args.spec,
-                specChangedCallback : args.specChangedCallback,
-            }));
-            section.appendChild(item);
-            element.appendChild(section);
-        }
-
         element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
@@ -256,67 +241,6 @@ var CBViewPageInformationEditor = {
             });
 
             element.appendChild(editor.element);
-        }
-
-        return element;
-    },
-
-    /**
-     * @param   {string}    listClassName
-     * @param   {Object}    spec
-     * @param function args.specChangedCallback
-     *
-     * @return  {Element}
-     */
-    createPageListOptionElement : function(args) {
-        var listClassName   = args.listClassName;
-
-        var container       = document.createElement("div");
-        var checkbox        = document.createElement("input");
-        checkbox.type       = "checkbox";
-        var label           = document.createElement("label");
-        label.textContent   = listClassName;
-
-        container.appendChild(checkbox);
-        container.appendChild(label);
-
-        if (args.spec.listClassNames) {
-            var index = args.spec.listClassNames.indexOf(listClassName);
-
-            if (index >= 0) {
-                checkbox.checked = true;
-            }
-        }
-
-        checkbox.addEventListener("change", CBViewPageInformationEditor.checkboxDidChangeForListClassName.bind(undefined, {
-            checkbox : checkbox,
-            listClassName : listClassName,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }));
-
-        return container;
-    },
-
-    /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     *
-     * @return Element
-     */
-    createPageListsEditorElement : function(args) {
-        var count           = CBPageEditorAvailablePageListClassNames.length;
-        var element         = document.createElement("div");
-        element.className   = "pagelists";
-
-        for (var i = 0; i < count; i++) {
-            var optionElement = CBViewPageInformationEditor.createPageListOptionElement({
-                listClassName : CBPageEditorAvailablePageListClassNames[i],
-                spec : args.spec,
-                specChangedCallback : args.specChangedCallback,
-            });
-
-            element.appendChild(optionElement);
         }
 
         return element;

@@ -49,15 +49,6 @@ foreach ($classNamesForEditableModels as $className) {
 CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', CBPagesPreferences::classNamesForAddableViews());
 
 /**
- * @deprecated use kinds
- * Export page lists
- */
-
-$listNames = CBViewPageLists::availableListNames();
-
-CBHTMLOutput::exportVariable('CBPageEditorAvailablePageListClassNames', $listNames);
-
-/**
  * Export page templates
  */
 
