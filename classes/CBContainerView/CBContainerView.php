@@ -170,7 +170,9 @@ EOT;
     }
 
     /**
-     * @param stdClass $model
+     * @param [stdClass]? $model->subviews;
+     * @param hex160? $model->themeID;
+     * @param bool? $model->useImageHeight;
      *
      * @return null
      */
@@ -192,7 +194,7 @@ EOT;
             $classes[] = "T{$model->imageThemeID}";
         }
 
-        if ($model->useImageHeight) {
+        if (!empty($model->useImageHeight)) {
             $classes[] = "useImageHeight";
         }
 
