@@ -41,6 +41,7 @@ final class CBThemedTextView {
     }
 
     /**
+     * @param bool? $model->center;
      * @param string? $model->contentAsHTML
      * @param hex160? $model->themeID
      * @param string? $model->titleAsHTML
