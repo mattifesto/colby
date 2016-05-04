@@ -31,36 +31,31 @@ final class Colby {
     public static $libraryDirectories = array();
 
     /**
-     * @return void
+     * @return bool
      */
     public static function autoload($className) {
+        foreach (self::$libraryDirectories as $directory) {
+            $directory = empty($directory) ? '' : "/{$directory}";
+            $filepath = CBSiteDirectory . "{$directory}/classes/{$className}.php";
 
-        /**
-         * 2105.09.15 BUGBUG:
-         * There is a long standing bug here. The search order should be to
-         * check each library, one after the other, for the file. But what
-         * actually happens is that each library is checked for the file
-         * directly inside the classes directory and then each library is
-         * checked for the file inside the class name directory. It's not a case
-         * that has ever come up, but it's a bug all the same.
-         */
+            if (is_file($filepath)) {
+                break;
+            }
 
-        $filename = Colby::findFile("classes/{$className}.php");
+            $filepath = CBSiteDirectory . "{$directory}/classes/{$className}/{$className}.php";
 
-        if (!$filename)
-        {
-            $filename = Colby::findFile("classes/{$className}/{$className}.php");
+            if (is_file($filepath)) {
+                break;
+            }
+
+            $filepath = null;
         }
 
-        if ($filename)
-        {
-            include_once $filename;
-
-            return true;
-        }
-        else
-        {
+        if (empty($filepath)) {
             return false;
+        } else {
+            include_once $filepath;
+            return true;
         }
     }
 
