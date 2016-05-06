@@ -76,12 +76,11 @@ EOT;
                 if (isset($frontPageID)) {
                     $model = CBModels::fetchModelByID($frontPageID);
 
-                    if ($model === false) {
-                        /* deprecated */
-                        $iteration = ColbyRequest::currentIterationForPageID($frontPageID);
-                        CBViewPage::renderAsHTMLForID($frontPageID, $iteration);
-                        return 1;
-                    } else if (is_callable($function = "{$model->className}::renderModelAsHTML")) {
+                    if (!empty($model->className) &&
+                        is_callable($function = "{$model->className}::renderModelAsHTML"))
+                    {
+                        $model->title = CBSiteName;
+                        $model->titleHTML = CBSiteNameHTML;
                         call_user_func($function, $model);
                         return 1;
                     }
