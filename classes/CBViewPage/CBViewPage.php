@@ -248,14 +248,6 @@ final class CBViewPage {
             CBHTMLOutput::$classNameForSettings = $model->classNameForSettings;
         }
 
-        if (ColbyRequest::isForFrontPage()) {
-            CBHTMLOutput::setTitleHTML(CBSiteNameHTML);
-        } else {
-            CBHTMLOutput::setTitleHTML($model->titleHTML);
-        }
-
-        CBHTMLOutput::setDescriptionHTML($model->descriptionHTML);
-
         $dependencyIDs = array_reduce($model->sections, function($carry, $viewModel) {
             $carry = array_merge($carry, CBView::modelToModelDependencies($viewModel));
             return $carry;
