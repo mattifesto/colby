@@ -5,31 +5,19 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
 }
 
 $ID = $_GET['ID'];
-$iteration = isset($_GET['iteration']) ? $_GET['iteration'] : null;
-$IDAsSQL = CBHex160::toSQL($ID);
-$SQL = <<<EOT
+$version = empty($_GET['version']) ? null : $_GET['version'];
 
-    SELECT      `p`.`className`,
-                `p`.`iteration`,
-                `v`.`modelAsJSON` as `model`
-    FROM        `ColbyPages`        AS `p`
-    LEFT JOIN   `CBModels`          AS `m` ON `p`.`archiveID` = `m`.`ID`
-    LEFT JOIN   `CBModelVersions`   AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
-    WHERE       `p`.`archiveID` = {$IDAsSQL}
-
-EOT;
-
-$data = CBDB::SQLToObject($SQL);
-
-if ($data === false) {
-    echo 'No page exists for the provided data store ID.';
-    return 1;
+if (empty($version)) {
+    $model = CBModels::fetchModelByID($ID);
 } else {
-    $data->model = json_decode($data->model);
+    $model = CBModels::fetchModelByIDWithVersion($ID, $version);
 }
 
-if ($data->model && is_callable($function = "{$data->className}::renderModelAsHTML")) {
-    call_user_func($function, $data->model);
+
+if (!empty($model->className) &&
+    is_callable($function = "{$model->className}::renderModelAsHTML"))
+{
+    call_user_func($function, $model);
 } else {
-    call_user_func("{$data->className}::renderAsHTMLForID", $ID, $data->iteration);
+    echo 'No page exists for the provided data store ID and version.';
 }
