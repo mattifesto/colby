@@ -92,9 +92,10 @@ EOT;
             $query = $_GET;
             unset($query['year']);
             $query = http_build_query($query);
+            $query = empty($query) ? strtok($_SERVER['REQUEST_URI'], '?') : "?{$query}";
 
             ?><div class="archives">
-                <a href="?<?= $query ?>">Recent</a>
+                <a href="<?= $query ?>">Recent</a>
                 <?php
 
                 foreach ($years as $year) {
