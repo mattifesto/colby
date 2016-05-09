@@ -105,20 +105,36 @@ final class CBTheme {
     }
 
     /**
+     * @param string $template
+     * @param hex160 $ID
+     *
+     * @return string
+     */
+    public static function stylesTemplateToStylesCSS($template, $ID) {
+        $keyword = 'view';
+        $escape = "\\\\{$keyword}";
+        $hash = sha1($escape);
+        $selector = ".T{$ID}";
+        $css = $template;
+        $css = preg_replace("/{$escape}/", $hash, $css);
+        $css = preg_replace("/\\.?{$keyword}/", $selector, $css);
+        $css = preg_replace("/{$hash}/", $keyword, $css);
+
+        if (preg_match('/<\\/style *>/', $css, $matches)) {
+            throw new RuntimeException("The styles template specified for the \$template argument contains the string \"{$matches[0]}\" which is not allowed for security reasons.");
+        }
+
+        return $css;
+    }
+
+    /**
      * This function replaces the strings "view" or ".view" with the CSS
      * class name for the theme. The string "\view" will not be replaced.
      *
      * @return string
      */
     private static function templateToStyles($template, $ID, $title, $className) {
-        $keyword = 'view';
-        $escape = "\\\\{$keyword}";
-        $hash = sha1($escape);
-        $selector = ".T{$ID}";
-        $styles = $template;
-        $styles = preg_replace("/{$escape}/", $hash, $styles);
-        $styles = preg_replace("/\\.?{$keyword}/", $selector, $styles);
-        $styles = preg_replace("/{$hash}/", $keyword, $styles);
+        $styles = CBTheme::stylesTemplateToStylesCSS($template, $ID);
         $styles = "{$styles}\n\n/**\n * Styles for the \"{$title}\" {$className}\n */\n";
         return $styles;
     }
