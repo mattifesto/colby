@@ -61,8 +61,20 @@ final class CBThemedTextView {
         $class = CBTheme::IDToCSSClass($themeID);
         $class = "CBThemedTextView {$class}";
 
+        if (!empty($model->stylesID)) {
+            $stylesClass = CBTheme::IDToCSSClass($model->stylesID);
+            $class = "{$class} {$stylesClass}";
+        }
+
         CBHTMLOutput::addCSSURL(CBThemedTextView::URL('CBThemedTextView.css'));
         CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
+
+        if (empty($model->stylesID)) {
+            $styleElement = null;
+        } else {
+            $styleElement = "<style scoped>{$model->stylesCSS}</style>";
+        }
+
 
         $style = empty($model->center) ? '' : ' style="text-align: center"';
 
@@ -88,7 +100,7 @@ final class CBThemedTextView {
             $content = "<div{$style}>{$model->contentAsHTML}</div>";
         }
 
-        echo $open, $title, $content, $close;
+        echo $open, $styleElement, $title, $content, $close;
     }
 
     /**
@@ -109,6 +121,15 @@ final class CBThemedTextView {
         $model->titleColor = CBModel::value($spec, 'titleColor', null, 'CBConvert::stringToCSSColor');
         $model->URL = isset($spec->URL) ? trim($spec->URL) : '';
         $model->URLAsHTML = ColbyConvert::textToHTML($model->URL);
+
+        /* view styles */
+
+        $stylesTemplate = empty($spec->stylesTemplate) ? '' : trim($spec->stylesTemplate);
+
+        if (!empty($stylesTemplate)) {
+            $model->stylesID = CBHex160::random();
+            $model->stylesCSS = CBTheme::stylesTemplateToStylesCSS($stylesTemplate, $model->stylesID);
+        }
 
         return $model;
     }

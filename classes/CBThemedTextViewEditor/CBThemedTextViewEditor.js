@@ -46,9 +46,9 @@ var CBThemedTextViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
         element.appendChild(section);
         element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
@@ -91,7 +91,19 @@ var CBThemedTextViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
+        element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
 
+        section = CBUI.createSection();
+        item = CBUI.createSectionItem();
+
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Styles Template",
+            propertyName : "stylesTemplate",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
         element.appendChild(section);
 
         return element;
