@@ -202,6 +202,10 @@ EOT;
             $classes[] = $class;
         }
 
+        if (!empty($model->stylesID)) {
+            $classes[] = CBTheme::IDToCSSClass($model->stylesID);
+        }
+
         $classes = implode(' ', $classes);
         $styles = [];
         if (!empty($model->backgroundColor)) { $styles[] = "background-color: {$model->backgroundColor}"; }
@@ -210,6 +214,10 @@ EOT;
         $styles = empty($styles) ? '' : ' style="' . implode('; ', $styles) . '"';
 
         ?><<?= $tagName, $HREF ?> class="<?= $classes ?>"<?= $styles ?>><?php
+            if (!empty($model->stylesCSS)) {
+                echo "<style scoped>{$model->stylesCSS}</style>";
+            }
+
             array_walk($model->subviews, 'CBView::renderModelAsHTML');
         ?></<?= $tagName ?>><?php
     }
@@ -240,6 +248,15 @@ EOT;
             default:
                 unset($model->tagName);
                 break;
+        }
+
+        /* view styles */
+
+        $stylesTemplate = empty($spec->stylesTemplate) ? '' : trim($spec->stylesTemplate);
+
+        if (!empty($stylesTemplate)) {
+            $model->stylesID = CBHex160::random();
+            $model->stylesCSS = CBTheme::stylesTemplateToStylesCSS($stylesTemplate, $model->stylesID);
         }
 
         return $model;
