@@ -30,12 +30,10 @@ a.CBStandardBodyTextTheme:hover > div {
 .CBStandardBodyTextTheme b > i,
 .CBStandardBodyTextTheme i > b {
   font-style: italic;
-  font-weight: 300;
 }
 
 .CBStandardBodyTextTheme > h1 {
   font-size: 36px;
-  font-weight: 300;
 }
 
 .CBStandardBodyTextTheme > h1 + div {
@@ -44,18 +42,11 @@ a.CBStandardBodyTextTheme:hover > div {
 
 .CBStandardBodyTextTheme > div {
   font-size: 20px;
-  font-weight: 300;
   line-height: 1.5;
 }
 
 .CBStandardBodyTextTheme > div > * + * {
   margin-top: 1em;
-}
-
-.CBStandardBodyTextTheme > div > h1,
-.CBStandardBodyTextTheme > div > h2,
-.CBStandardBodyTextTheme > div > h3 {
-  font-weight: 300;
 }
 
 .CBStandardBodyTextTheme > div > h1 {
