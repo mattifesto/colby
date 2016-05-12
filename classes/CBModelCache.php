@@ -27,20 +27,15 @@ final class CBModelCache {
     }
 
     /**
-     * Similar to `modelByID` except that if the model isn't yet cached it will
-     * attempt to fetch it from the database and place it in the cache. This
-     * function exists because there are times where some code may be run in a
-     * context where models are cached and also in another context where they
-     * aren't. Obviously the context where models aren't cached will have lower
-     * performance, especially since it will be fetching models one at a time.
+     * This is the function to call if you need a model now. If the model isn't
+     * in the cache a query will be run to fetch the requested model and all
+     * other needed models.
      *
-     * An example of this is a view with dependencies which may be included in a
-     * CBViewPage which caches dependencies or in a URL handler which probably
-     * doesn't.
+     * If the model doesn't exist in the database then false will be returned.
      *
-     * @param   {hex160}    $ID
+     * @param hex160 $ID
      *
-     * @return  {stdClass} | false
+     * @return stdClass|false
      */
     public static function fetchModelByID($ID) {
         CBModelCache::cacheModelsByID([$ID]);
