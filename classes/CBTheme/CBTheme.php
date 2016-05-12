@@ -85,21 +85,17 @@ final class CBTheme {
      * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
-        $model = CBTheme::specToModelWithClassName($spec, __CLASS__);
-        $model->classNameForKind = isset($spec->classNameForKind) ? $spec->classNameForKind : null;
-        $model->description = isset($spec->description) ? $spec->description : null;
-
-        return $model;
-    }
-
-    /**
-     * @return stdClass
-     */
-    public static function specToModelWithClassName(stdClass $spec, $className) {
-        $model = CBModels::modelWithClassName($className);
-        $template = isset($spec->styles) ? $spec->styles : '';
-        $title = isset($spec->title) ? trim($spec->title) : '';
-        $model->styles = CBTheme::templateToStyles($template, $spec->ID, $title, $className);
+        $classNameForKind = CBModel::value($spec, 'classNameForKind');
+        $template = CBModel::value($spec, 'styles', '');
+        $title = CBModel::value($spec, 'title', '', 'trim');
+        $model = (object)[
+            'className' => __CLASS__,
+            'classNameForKind' => $classNameForKind,
+            'description' => CBModel::value($spec, 'description'),
+            'styles' => CBTheme::templateToStyles($template, $spec->ID, $title, $classNameForKind),
+            'template' => $template,
+            'title' => $title,
+        ];
 
         return $model;
     }
