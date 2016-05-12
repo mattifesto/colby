@@ -16,6 +16,8 @@ final class CBTheme {
     }
 
     /**
+     * @deprecated use CBTheme::IDToCSSClasses()
+     *
      * @param hex160 $ID
      *
      * @return string
@@ -29,6 +31,28 @@ final class CBTheme {
     }
 
     /**
+     * @param hex160 $ID
+     *
+     * @return [string]
+     */
+    public static function IDToCSSClasses($ID) {
+        if (empty($ID)) {
+            return ['NoTheme'];
+        } else {
+            $model = CBModelCache::fetchModelByID($ID);
+            $classes = ["T{$ID}"];
+
+            if (!empty($model->classNameForTheme)) {
+                $classes[] = $model->classNameForTheme;
+            }
+
+            return $classes;
+        }
+    }
+
+    /**
+     * @deprecated use CBTheme::useThemeWithID()
+     *
      * @param hex160 $ID
      *
      * @return string
@@ -91,6 +115,7 @@ final class CBTheme {
         $model = (object)[
             'className' => __CLASS__,
             'classNameForKind' => $classNameForKind,
+            'classNameForTheme' => CBModel::value($spec, 'classNameForTheme', null, 'trim'),
             'description' => CBModel::value($spec, 'description'),
             'styles' => CBTheme::templateToStyles($template, $spec->ID, $title, $classNameForKind),
             'template' => $template,
@@ -133,5 +158,23 @@ final class CBTheme {
         $styles = CBTheme::stylesTemplateToStylesCSS($template, $ID);
         $styles = "{$styles}\n\n/**\n * Styles for the \"{$title}\" {$className}\n */\n";
         return $styles;
+    }
+
+    /**
+     * Call this function while rendering to make sure all of the theme
+     * resources will be loaded.
+     *
+     * @param hex160 $ID
+     *
+     * @return null
+     */
+    public static function useThemeWithID($ID) {
+        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($ID));
+
+        $model = CBModelCache::fetchModelByID($ID);
+
+        if (!empty($model->classNameForTheme)) {
+            CBHTMLOutput::requireClassName($model->classNameForTheme);
+        }
     }
 }

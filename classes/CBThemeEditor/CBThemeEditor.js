@@ -15,6 +15,7 @@ var CBThemeEditor = {
         var properties = [
             { name : "title", labelText : "Title" },
             { name : "classNameForKind", labelText : "Class Name for Kind" },
+            { name : "classNameForTheme", labelText : "Class Name for Theme" },
             { name : "description", labelText : "Description" },
         ];
 
