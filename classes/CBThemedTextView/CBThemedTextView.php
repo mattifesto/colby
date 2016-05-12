@@ -58,7 +58,10 @@ final class CBThemedTextView {
             $themeID = CBStandardModels::CBThemeIDForCBTextViewForBodyText;
         };
 
-        $class = CBTheme::IDToCSSClass($themeID);
+        CBHTMLOutput::addCSSURL(CBThemedTextView::URL('CBThemedTextView.css'));
+        CBTheme::useThemeWithID($themeID);
+
+        $class = implode(' ', CBTheme::IDToCSSClasses($themeID));
         $class = "CBThemedTextView {$class}";
 
         if (!empty($model->stylesID)) {
@@ -66,15 +69,11 @@ final class CBThemedTextView {
             $class = "{$class} {$stylesClass}";
         }
 
-        CBHTMLOutput::addCSSURL(CBThemedTextView::URL('CBThemedTextView.css'));
-        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
-
         if (empty($model->stylesID)) {
             $styleElement = null;
         } else {
             $styleElement = "<style scoped>{$model->stylesCSS}</style>";
         }
-
 
         $style = empty($model->center) ? '' : ' style="text-align: center"';
 
