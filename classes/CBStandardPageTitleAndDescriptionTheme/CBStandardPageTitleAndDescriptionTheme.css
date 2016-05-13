@@ -1,0 +1,25 @@
+.CBStandardPageTitleAndDescriptionTheme {
+  padding: 20px 20px 40px;
+  text-align: center;
+}
+
+.CBStandardPageTitleAndDescriptionTheme > h1 {
+  font-size: 36px;
+}
+
+.CBStandardPageTitleAndDescriptionTheme > div {
+  margin: 20px auto 0;
+}
+
+.CBStandardPageTitleAndDescriptionTheme > .description {
+  color: hsl(0, 0%, 40%);
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.5;
+  max-width: 480px;
+}
+
+.CBStandardPageTitleAndDescriptionTheme > .published {
+  color: hsl(0, 0%, 60%);
+  margin-top: 40px;
+}
