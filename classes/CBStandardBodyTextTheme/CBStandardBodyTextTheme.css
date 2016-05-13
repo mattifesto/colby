@@ -8,55 +8,47 @@ a.CBStandardBodyTextTheme {
 
 .CBStandardBodyTextTheme > h1,
 .CBStandardBodyTextTheme > div {
-  margin: 0 auto;
-  max-width: 680px;
-}
-
-a.CBStandardBodyTextTheme > h1,
-a.CBStandardBodyTextTheme > div {
-  color: #3f3fef;
+    margin: 0 auto;
+    max-width: 680px;
 }
 
 a.CBStandardBodyTextTheme:hover > h1,
 a.CBStandardBodyTextTheme:hover > div {
-  text-decoration: underline;
+    text-decoration: underline;
+}
+
+.CBStandardBodyTextTheme blockquote,
+.CBStandardBodyTextTheme dd {
+    padding: 0 40px;
 }
 
 .CBStandardBodyTextTheme cite {
-  color: hsl(0, 0%, 50%);
-  font-style: italic;
+    color: hsl(0, 0%, 50%);
+    font-style: italic;
 }
 
-.CBStandardBodyTextTheme b > i,
-.CBStandardBodyTextTheme i > b {
-  font-style: italic;
-}
-
-.CBStandardBodyTextTheme > h1 {
-  font-size: 36px;
+.CBStandardBodyTextTheme b cite,
+.CBStandardBodyTextTheme b i,
+.CBStandardBodyTextTheme cite b,
+.CBStandardBodyTextTheme cite i,
+.CBStandardBodyTextTheme i b,
+.CBStandardBodyTextTheme i cite {
+    font-style: inherit;
+    font-weight: inherit;
 }
 
 .CBStandardBodyTextTheme > h1 + div {
-  margin-top: 20px;
+    margin-top: 10px;
 }
 
 .CBStandardBodyTextTheme > div {
-  font-size: 20px;
-  line-height: 1.5;
+    line-height: 1.5;
 }
 
-.CBStandardBodyTextTheme > div > * + * {
-  margin-top: 1em;
-}
-
-.CBStandardBodyTextTheme > div > h1 {
-  font-size: 28px;
-}
-
-.CBStandardBodyTextTheme > div > h2 {
-  font-size: 24px;
-}
-
-.CBStandardBodyTextTheme > div > h3 {
-  font-size: 20px;
+.CBStandardBodyTextTheme > div blockquote + *,
+.CBStandardBodyTextTheme > div dl + *,
+.CBStandardBodyTextTheme > div ol + *,
+.CBStandardBodyTextTheme > div p + *,
+.CBStandardBodyTextTheme > div ul + * {
+    margin-top: 1em;
 }
