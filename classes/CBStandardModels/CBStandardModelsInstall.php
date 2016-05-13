@@ -12,12 +12,6 @@ $specs = [
         'classNameForKind' => 'CBMenuView',
         'title' => 'Standard Main Menu',
     ],
-    (object)[
-        'ID' => CBStandardModels::CBThemeIDForCBPageTitleAndDescriptionView,
-        'className' => 'CBTheme',
-        'classNameForKind' => 'CBPageTitleAndDescriptionView',
-        'title' => 'Standard',
-    ],
 ];
 
 $IDs = array_map(function ($spec) { return $spec->ID; }, $specs);

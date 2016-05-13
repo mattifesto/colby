@@ -12,13 +12,13 @@ final class CBPageTitleAndDescriptionView {
      */
     public static function renderModelAsHTML(stdClass $model) {
         if (empty($themeID = CBModel::value($model, 'themeID'))) {
-            $themeID = CBStandardModels::CBThemeIDForCBPageTitleAndDescriptionView;
+            $themeID = CBStandardPageTitleAndDescriptionTheme::ID;
         };
 
-        $class = CBTheme::IDToCSSClass($themeID);
-        $class = "CBPageTitleAndDescriptionView {$class}";
+        CBTheme::useThemeWithID($themeID);
 
-        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
+        $class = implode(' ', CBTheme::IDToCSSClasses($themeID));
+        $class = "CBPageTitleAndDescriptionView {$class}";
 
         $context = CBPageContext::current();
 
