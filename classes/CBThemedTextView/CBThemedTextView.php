@@ -14,19 +14,22 @@ final class CBThemedTextView {
      * @return null
      */
     public static function install() {
-
-        // Ensure the standard page header theme exists.
-
+        /* deprecate the standard page header theme if it exists */
         $spec = CBModels::fetchSpecByID(CBThemedTextView::standardPageHeaderThemeID);
 
         if ($spec === false) {
-            $spec = (object)[
-                'ID' => CBThemedTextView::standardPageHeaderThemeID,
-                'className' => 'CBTheme',
-                'classNameForKind' => 'CBTextView',
-                'title' => 'Standard Page Header',
-            ];
+            return;
+        }
 
+        $originalSpec = clone $spec;
+
+        /* reset properties */
+        $spec->className = 'CBTheme';
+        $spec->classNameForKind = 'CBTextView';
+        $spec->description = 'Use CBPageTitleAndDescriptionView with its default theme instead.';
+        $spec->title = 'Deprecated (Standard Page Header)';
+
+        if ($spec != $originalSpec) {
             CBModels::save([$spec]);
         }
     }
