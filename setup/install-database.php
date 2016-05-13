@@ -48,6 +48,7 @@ CBPages::install();
 CBSitePreferences::install();
 CBStandardModels::install();
 CBThemedTextView::install(); /* deprecated */
+CBStandardBodyTextTheme::install();
 CBImages::install();
 CBRequestTracker::install(); /* deprecated */
 

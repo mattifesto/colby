@@ -18,12 +18,6 @@ $specs = [
         'classNameForKind' => 'CBPageTitleAndDescriptionView',
         'title' => 'Standard',
     ],
-    (object)[
-        'ID' => CBStandardModels::CBThemeIDForCBTextViewForBodyText,
-        'className' => 'CBTheme',
-        'classNameForKind' => 'CBTextView',
-        'title' => 'Standard Body Text',
-    ],
 ];
 
 $IDs = array_map(function ($spec) { return $spec->ID; }, $specs);
