@@ -3,19 +3,14 @@
 final class CBThemedTextView {
 
     /**
-     * @deprecated use CBPageTitleAndDescriptionView along with
-     * CBStandardModels::CBThemeIDForCBPageTitleAndDescriptionView
-     */
-    const standardPageHeaderThemeID = '2a5eb6c836914ef8f33b15f0853ac61df554505e';
-
-    /**
      * @deprecated use CBPageTitleAndDescriptionView
      *
      * @return null
      */
     public static function install() {
         /* deprecate the standard page header theme if it exists */
-        $spec = CBModels::fetchSpecByID(CBThemedTextView::standardPageHeaderThemeID);
+        $deprecatedStandardPageHeaderThemeID = '2a5eb6c836914ef8f33b15f0853ac61df554505e';
+        $spec = CBModels::fetchSpecByID($deprecatedStandardPageHeaderThemeID);
 
         if ($spec === false) {
             return;
