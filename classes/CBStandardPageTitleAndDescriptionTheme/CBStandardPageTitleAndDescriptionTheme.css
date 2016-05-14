@@ -3,6 +3,10 @@
   text-align: center;
 }
 
+.CBStandardPageTitleAndDescriptionTheme > h1 {
+    font-size: 2em;
+}
+
 .CBStandardPageTitleAndDescriptionTheme > div {
   margin: 20px auto 0;
 }

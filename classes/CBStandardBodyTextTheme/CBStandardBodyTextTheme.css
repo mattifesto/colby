@@ -17,6 +17,30 @@ a.CBStandardBodyTextTheme:hover > div {
     text-decoration: underline;
 }
 
+.CBStandardBodyTextTheme > div {
+    line-height: 1.5;
+}
+
+.CBStandardBodyTextTheme h1 {
+    font-size: 1.5em;
+}
+
+.CBStandardBodyTextTheme > div h1 {
+    margin-top: 40px; /* match title whitespace */
+}
+
+.CBStandardBodyTextTheme h1 + * {
+    margin-top: 10px;
+}
+
+.CBStandardBodyTextTheme h2 {
+    font-size: 1.25em;
+}
+
+.CBStandardBodyTextTheme h3 {
+    font-size: 1em;
+}
+
 .CBStandardBodyTextTheme blockquote,
 .CBStandardBodyTextTheme dd {
     padding: 0 40px;
@@ -37,18 +61,10 @@ a.CBStandardBodyTextTheme:hover > div {
     font-weight: inherit;
 }
 
-.CBStandardBodyTextTheme > h1 + div {
-    margin-top: 10px;
-}
-
-.CBStandardBodyTextTheme > div {
-    line-height: 1.5;
-}
-
-.CBStandardBodyTextTheme > div blockquote + *,
-.CBStandardBodyTextTheme > div dl + *,
-.CBStandardBodyTextTheme > div ol + *,
-.CBStandardBodyTextTheme > div p + *,
-.CBStandardBodyTextTheme > div ul + * {
+.CBStandardBodyTextTheme blockquote + *,
+.CBStandardBodyTextTheme dl + *,
+.CBStandardBodyTextTheme ol + *,
+.CBStandardBodyTextTheme p + *,
+.CBStandardBodyTextTheme ul + * {
     margin-top: 1em;
 }
