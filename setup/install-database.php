@@ -52,6 +52,7 @@ CBStandardBodyTextTheme::install();
 CBStandardPageTitleAndDescriptionTheme::install();
 CBImages::install();
 CBRequestTracker::install(); /* deprecated */
+CBWellKnownPageForTestingPageTitleAndBodyText::install();
 
 $SQL = <<<EOT
 
