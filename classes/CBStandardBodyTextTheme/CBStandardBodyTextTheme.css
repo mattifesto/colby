@@ -30,7 +30,7 @@ a.CBStandardBodyTextTheme:hover > div {
 }
 
 .CBStandardBodyTextTheme h1 + * {
-    margin-top: 10px;
+    margin-top: 0.5em;
 }
 
 .CBStandardBodyTextTheme h2 {
@@ -44,6 +44,10 @@ a.CBStandardBodyTextTheme:hover > div {
 .CBStandardBodyTextTheme blockquote,
 .CBStandardBodyTextTheme dd {
     padding: 0 40px;
+}
+
+.CBStandardBodyTextTheme dd + dt {
+    margin-top: 0.5em;
 }
 
 .CBStandardBodyTextTheme cite {
