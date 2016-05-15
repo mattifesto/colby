@@ -12,7 +12,7 @@ final class CBPageTitleAndDescriptionView {
      */
     public static function renderModelAsHTML(stdClass $model) {
         if (empty($themeID = CBModel::value($model, 'themeID'))) {
-            $themeID = CBStandardPageTitleAndDescriptionTheme::ID;
+            $themeID = CBWellKnownThemeForPageTitleAndDescription::ID;
         };
 
         CBTheme::useThemeWithID($themeID);

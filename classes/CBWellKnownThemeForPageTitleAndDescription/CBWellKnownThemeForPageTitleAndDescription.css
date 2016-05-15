@@ -1,24 +1,24 @@
-.CBStandardPageTitleAndDescriptionTheme {
+.CBWellKnownThemeForPageTitleAndDescription {
   padding: 20px 20px 40px;
   text-align: center;
 }
 
-.CBStandardPageTitleAndDescriptionTheme > h1 {
+.CBWellKnownThemeForPageTitleAndDescription > h1 {
     font-size: 2em;
 }
 
-.CBStandardPageTitleAndDescriptionTheme > div {
+.CBWellKnownThemeForPageTitleAndDescription > div {
   margin: 20px auto 0;
 }
 
-.CBStandardPageTitleAndDescriptionTheme > .description {
+.CBWellKnownThemeForPageTitleAndDescription > .description {
   color: hsl(0, 0%, 40%);
   font-style: italic;
   line-height: 1.5;
   max-width: 480px;
 }
 
-.CBStandardPageTitleAndDescriptionTheme > .published {
+.CBWellKnownThemeForPageTitleAndDescription > .published {
   color: hsl(0, 0%, 60%);
   margin-top: 40px;
 }

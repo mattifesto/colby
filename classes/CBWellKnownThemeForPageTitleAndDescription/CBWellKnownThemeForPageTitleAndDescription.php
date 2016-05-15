@@ -1,6 +1,6 @@
 <?php
 
-final class CBStandardPageTitleAndDescriptionTheme {
+final class CBWellKnownThemeForPageTitleAndDescription {
 
     const ID = '664d22662308f7443e4c3b43683d4934de087b86';
 
@@ -8,11 +8,11 @@ final class CBStandardPageTitleAndDescriptionTheme {
      * @return null
      */
     public static function install() {
-        $spec = CBModels::fetchSpecByID(CBStandardPageTitleAndDescriptionTheme::ID);
+        $spec = CBModels::fetchSpecByID(CBWellKnownThemeForPageTitleAndDescription::ID);
 
         if (empty($spec)) {
             $spec = (object)[
-                'ID' => CBStandardPageTitleAndDescriptionTheme::ID,
+                'ID' => CBWellKnownThemeForPageTitleAndDescription::ID,
             ];
         }
 
@@ -21,9 +21,9 @@ final class CBStandardPageTitleAndDescriptionTheme {
         /* set or reset required properties */
         $spec->className = 'CBTheme';
         $spec->classNameForKind = 'CBPageTitleAndDescriptionView';
-        $spec->classNameForTheme = 'CBStandardPageTitleAndDescriptionTheme';
+        $spec->classNameForTheme = 'CBWellKnownThemeForPageTitleAndDescription';
         $spec->description = 'The default theme for CBPageTitleAndDescriptionView.';
-        $spec->title = 'CBStandardPageTitleAndDescriptionTheme';
+        $spec->title = 'CBWellKnownThemeForPageTitleAndDescription';
 
         if ($spec != $originalSpec) {
             CBModels::save([$spec]);
@@ -34,7 +34,7 @@ final class CBStandardPageTitleAndDescriptionTheme {
      * @return [string]
      */
     public static function requiredCSSURLs() {
-        return [CBStandardPageTitleAndDescriptionTheme::URL('CBStandardPageTitleAndDescriptionTheme.css')];
+        return [CBWellKnownThemeForPageTitleAndDescription::URL('CBWellKnownThemeForPageTitleAndDescription.css')];
     }
 
     /**
