@@ -1,74 +1,74 @@
-.CBStandardBodyTextTheme {
+.CBWellKnownThemeForContent {
   padding: 20px;
 }
 
-a.CBStandardBodyTextTheme {
+a.CBWellKnownThemeForContent {
   text-decoration: none;
 }
 
-.CBStandardBodyTextTheme > h1,
-.CBStandardBodyTextTheme > div {
+.CBWellKnownThemeForContent > h1,
+.CBWellKnownThemeForContent > div {
     margin: 0 auto;
     max-width: 680px;
 }
 
-a.CBStandardBodyTextTheme:hover > h1,
-a.CBStandardBodyTextTheme:hover > div {
+a.CBWellKnownThemeForContent:hover > h1,
+a.CBWellKnownThemeForContent:hover > div {
     text-decoration: underline;
 }
 
-.CBStandardBodyTextTheme > div {
+.CBWellKnownThemeForContent > div {
     line-height: 1.5;
 }
 
-.CBStandardBodyTextTheme h1 {
+.CBWellKnownThemeForContent h1 {
     font-size: 1.5em;
 }
 
-.CBStandardBodyTextTheme > div h1 {
+.CBWellKnownThemeForContent > div h1 {
     margin-top: 40px; /* match title whitespace */
 }
 
-.CBStandardBodyTextTheme h1 + * {
+.CBWellKnownThemeForContent h1 + * {
     margin-top: 0.5em;
 }
 
-.CBStandardBodyTextTheme h2 {
+.CBWellKnownThemeForContent h2 {
     font-size: 1.25em;
 }
 
-.CBStandardBodyTextTheme h3 {
+.CBWellKnownThemeForContent h3 {
     font-size: 1em;
 }
 
-.CBStandardBodyTextTheme blockquote,
-.CBStandardBodyTextTheme dd {
+.CBWellKnownThemeForContent blockquote,
+.CBWellKnownThemeForContent dd {
     padding: 0 40px;
 }
 
-.CBStandardBodyTextTheme dd + dt {
+.CBWellKnownThemeForContent dd + dt {
     margin-top: 0.5em;
 }
 
-.CBStandardBodyTextTheme cite {
+.CBWellKnownThemeForContent cite {
     color: hsl(0, 0%, 50%);
     font-style: italic;
 }
 
-.CBStandardBodyTextTheme b cite,
-.CBStandardBodyTextTheme b i,
-.CBStandardBodyTextTheme cite b,
-.CBStandardBodyTextTheme cite i,
-.CBStandardBodyTextTheme i b,
-.CBStandardBodyTextTheme i cite {
+.CBWellKnownThemeForContent b cite,
+.CBWellKnownThemeForContent b i,
+.CBWellKnownThemeForContent cite b,
+.CBWellKnownThemeForContent cite i,
+.CBWellKnownThemeForContent i b,
+.CBWellKnownThemeForContent i cite {
     font-style: inherit;
     font-weight: inherit;
 }
 
-.CBStandardBodyTextTheme blockquote + *,
-.CBStandardBodyTextTheme dl + *,
-.CBStandardBodyTextTheme ol + *,
-.CBStandardBodyTextTheme p + *,
-.CBStandardBodyTextTheme ul + * {
+.CBWellKnownThemeForContent blockquote + *,
+.CBWellKnownThemeForContent dl + *,
+.CBWellKnownThemeForContent ol + *,
+.CBWellKnownThemeForContent p + *,
+.CBWellKnownThemeForContent ul + * {
     margin-top: 1em;
 }

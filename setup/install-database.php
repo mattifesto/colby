@@ -48,10 +48,10 @@ CBPages::install();
 CBSitePreferences::install();
 CBStandardModels::install();
 CBThemedTextView::install(); /* deprecated */
-CBStandardBodyTextTheme::install();
-CBStandardPageTitleAndDescriptionTheme::install();
 CBImages::install();
 CBRequestTracker::install(); /* deprecated */
+CBWellKnownThemeForContent::install();
+CBStandardPageTitleAndDescriptionTheme::install();
 CBWellKnownPageForTestingPageTitleAndBodyText::install();
 
 $SQL = <<<EOT

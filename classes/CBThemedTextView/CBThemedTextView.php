@@ -53,7 +53,7 @@ final class CBThemedTextView {
         }
 
         if (empty($themeID = CBModel::value($model, 'themeID'))) {
-            $themeID = CBStandardModels::CBThemeIDForCBTextViewForBodyText;
+            $themeID = CBWellKnownThemeForContent::ID;
         };
 
         CBHTMLOutput::addCSSURL(CBThemedTextView::URL('CBThemedTextView.css'));

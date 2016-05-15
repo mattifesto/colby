@@ -1,6 +1,6 @@
 <?php
 
-final class CBStandardBodyTextTheme {
+final class CBWellKnownThemeForContent {
 
     const ID = '0d1bedea8d5e706950f1878ad3aff961ba36b631';
 
@@ -8,11 +8,11 @@ final class CBStandardBodyTextTheme {
      * @return null
      */
     public static function install() {
-        $spec = CBModels::fetchSpecByID(CBStandardBodyTextTheme::ID);
+        $spec = CBModels::fetchSpecByID(CBWellKnownThemeForContent::ID);
 
         if (empty($spec)) {
             $spec = (object)[
-                'ID' => CBStandardBodyTextTheme::ID,
+                'ID' => CBWellKnownThemeForContent::ID,
             ];
         }
 
@@ -21,9 +21,9 @@ final class CBStandardBodyTextTheme {
         /* set or reset required properties */
         $spec->className = 'CBTheme';
         $spec->classNameForKind = 'CBTextView';
-        $spec->classNameForTheme = 'CBStandardBodyTextTheme';
+        $spec->classNameForTheme = 'CBWellKnownThemeForContent';
         $spec->description = 'The default theme for CBThemedTextView.';
-        $spec->title = 'CBStandardBodyTextTheme';
+        $spec->title = 'CBWellKnownThemeForContent';
 
         if ($spec != $originalSpec) {
             CBModels::save([$spec]);
@@ -34,7 +34,7 @@ final class CBStandardBodyTextTheme {
      * @return [string]
      */
     public static function requiredCSSURLs() {
-        return [CBStandardBodyTextTheme::URL('CBStandardBodyTextTheme.css')];
+        return [CBWellKnownThemeForContent::URL('CBWellKnownThemeForContent.css')];
     }
 
     /**
