@@ -4,15 +4,19 @@ final class CBWellKnownPageForTestingPageTitleAndBodyText {
 
     const ID = 'f42f10168d15e025bb99231f034b5bf319da7388';
 
+    /**
+     * @return null
+     */
     public static function install() {
         $spec = CBModels::fetchSpecByID(CBWellKnownPageForTestingPageTitleAndBodyText::ID);
-        $originalSpec = clone $spec;
 
         if ($spec === false) {
             $spec = (object)[
                 'ID' => CBWellKnownPageForTestingPageTitleAndBodyText::ID,
             ];
         }
+
+        $originalSpec = clone $spec;
 
         $spec->className = 'CBViewPage';
         $spec->title = 'Well-Known Page for Testing Page Title and Body Text';

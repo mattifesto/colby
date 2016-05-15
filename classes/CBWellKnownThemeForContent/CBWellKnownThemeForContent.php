@@ -10,7 +10,7 @@ final class CBWellKnownThemeForContent {
     public static function install() {
         $spec = CBModels::fetchSpecByID(CBWellKnownThemeForContent::ID);
 
-        if (empty($spec)) {
+        if ($spec === false) {
             $spec = (object)[
                 'ID' => CBWellKnownThemeForContent::ID,
             ];
