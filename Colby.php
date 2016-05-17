@@ -748,6 +748,18 @@ final class Colby {
     }
 
     /**
+     * @param string $base
+     * @param string $className
+     *
+     * @return string
+     */
+    public static function URLForCSSForClass($base, $className) {
+        return "{$base}/classes/{$className}/{$className}.css";
+    }
+
+    /**
+     * @deprecated switch to URLForJavaScriptForClass similar to function above
+     *
      * @param string $className
      *
      * @return string
