@@ -20,9 +20,22 @@ final class CBPageTitleAndDescriptionView {
         $class = implode(' ', CBTheme::IDToCSSClasses($themeID));
         $class = "CBPageTitleAndDescriptionView {$class}";
 
+        if (!empty($model->stylesID)) {
+            $stylesClass = CBTheme::IDToCSSClass($model->stylesID);
+            $class = "{$class} {$stylesClass}";
+        }
+
+        if (empty($model->stylesID)) {
+            $styleElement = null;
+        } else {
+            $styleElement = "<style scoped>{$model->stylesCSS}</style>";
+        }
+
         $context = CBPageContext::current();
 
         ?><header class="<?= $class ?>"><?php
+            echo $styleElement;
+
             if (!empty($context->titleAsHTML)) {
                 if (empty($model->titleColor)) {
                     $style = '';
@@ -63,7 +76,7 @@ final class CBPageTitleAndDescriptionView {
             return CBModel::value($spec, $propertyName, null, 'CBConvert::stringToCSSColor');
         };
 
-        return (object)[
+        $model = (object)[
             'className' => __CLASS__,
             'descriptionColor' => $colorForProperty('descriptionColor'),
             'hideDescription' => CBModel::value($spec, 'hideDescription', false, 'boolval'),
@@ -72,5 +85,16 @@ final class CBPageTitleAndDescriptionView {
             'themeID' => CBModel::value($spec, 'themeID'),
             'titleColor' => $colorForProperty('titleColor'),
         ];
+
+        /* view styles */
+
+        $stylesTemplate = empty($spec->stylesTemplate) ? '' : trim($spec->stylesTemplate);
+
+        if (!empty($stylesTemplate)) {
+            $model->stylesID = CBHex160::random();
+            $model->stylesCSS = CBTheme::stylesTemplateToStylesCSS($stylesTemplate, $model->stylesID);
+        }
+
+        return $model;
     }
 }
