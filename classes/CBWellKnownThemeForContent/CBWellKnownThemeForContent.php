@@ -34,16 +34,13 @@ final class CBWellKnownThemeForContent {
      * @return [string]
      */
     public static function requiredCSSURLs() {
-        return [CBWellKnownThemeForContent::URL('CBWellKnownThemeForContent.css')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    public static function URL($filename) {
         $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+        $URLs = [Colby::URLForCSSForClass(CBSystemURL, $className)];
+
+        if (is_file(CBSiteDirectory . "/classes/{$className}/{$className}.css")) {
+            $URLs[] = Colby::URLForCSSForClass(CBSiteURL, $className);
+        }
+
+        return $URLs;
     }
 }
