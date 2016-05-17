@@ -746,6 +746,15 @@ final class Colby {
     public static function siteIsBeingDebugged() {
         return CBSitePreferences::debug();
     }
+
+    /**
+     * @param string $className
+     *
+     * @return string
+     */
+    public static function URLForJavaScriptForSiteClass($className) {
+        return CBSiteURL . "/classes/{$className}/{$className}.js";
+    }
 }
 
 /**
