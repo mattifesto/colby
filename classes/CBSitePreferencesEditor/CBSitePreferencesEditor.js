@@ -54,6 +54,38 @@ var CBSitePreferencesEditor = {
         section.appendChild(item);
 
         element.appendChild(section);
+
+        /* Google reCAPTCHA */
+
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({
+            text : "Google reCAPTCHA",
+        }));
+
+        section = CBUI.createSection();
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Site Key",
+            propertyName : "reCAPTCHASiteKey",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Secret Key",
+            propertyName : "reCAPTCHASecretKey",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
+
+        /* custom values */
+
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({
             text : "Custom",

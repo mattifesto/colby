@@ -167,6 +167,22 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return string|null
+     */
+    public static function reCAPTCHASecretKey() {
+        $model = CBSitePreferences::model();
+        return empty($model->reCAPTCHASecretKey) ? null : $model->reCAPTCHASecretKey;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function reCAPTCHASiteKey() {
+        $model = CBSitePreferences::model();
+        return empty($model->reCAPTCHASiteKey) ? null : $model->reCAPTCHASiteKey;
+    }
+
+    /**
      * @param hex160 $ID
      *
      * @return null
@@ -218,6 +234,8 @@ final class CBSitePreferences {
         $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
         $model->frontPageID = CBModel::value($spec, 'frontPageID');
         $model->googleTagManagerID = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
+        $model->reCAPTCHASecretKey = CBModel::value($spec, 'reCAPTCHASecretKey', null, 'trim');
+        $model->reCAPTCHASiteKey = CBModel::value($spec, 'reCAPTCHASiteKey', null, 'trim');
 
         if (isset($spec->custom) && is_array($spec->custom)) {
             $model->custom = new stdClass();
