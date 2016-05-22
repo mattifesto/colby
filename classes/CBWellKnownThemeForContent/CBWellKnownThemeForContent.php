@@ -35,10 +35,10 @@ final class CBWellKnownThemeForContent {
      */
     public static function requiredCSSURLs() {
         $className = __CLASS__;
-        $URLs = [Colby::URLForCSSForClass(CBSystemURL, $className)];
+        $URLs = [Colby::flexnameForCSSForClass(CBSystemURL, $className)];
 
-        if (is_file(CBSiteDirectory . "/classes/{$className}/{$className}.css")) {
-            $URLs[] = Colby::URLForCSSForClass(CBSiteURL, $className);
+        if (is_file(Colby::flexnameForCSSForClass(CBSiteDirectory, $className))) {
+            $URLs[] = Colby::flexnameForCSSForClass(CBSiteURL, $className);
         }
 
         return $URLs;

@@ -235,6 +235,26 @@ final class Colby {
     }
 
     /**
+     * @param string $flexdir
+     * @param string $className
+     *
+     * @return string
+     */
+    public static function flexnameForCSSForClass($flexdir, $className) {
+        return "{$flexdir}/classes/{$className}/{$className}.css";
+    }
+
+    /**
+     * @param string $flexdir
+     * @param string $className
+     *
+     * @return string
+     */
+    public static function flexnameForJavaScriptForClass($flexdir, $className) {
+        return "{$flexdir}/classes/{$className}/{$className}.js";
+    }
+
+    /**
      * @param string $pattern
      *
      * @return array
@@ -748,17 +768,7 @@ final class Colby {
     }
 
     /**
-     * @param string $base
-     * @param string $className
-     *
-     * @return string
-     */
-    public static function URLForCSSForClass($base, $className) {
-        return "{$base}/classes/{$className}/{$className}.css";
-    }
-
-    /**
-     * @deprecated switch to URLForJavaScriptForClass similar to function above
+     * @deprecated use URLForJavaScriptForClass
      *
      * @param string $className
      *
