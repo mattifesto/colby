@@ -29,11 +29,9 @@ final class CBUICaptcha {
     }
 
     /**
-     * @return null
+     * @return bool
      */
-    public static function verifyForAjax() {
-        $response = new CBAjaxResponse();
-        $responseKey = $_POST['responseKey'];
+    public static function responseKeyIsValid($captchaResponseKey) {
         $secretKey = CBSitePreferences::reCAPTCHASecretKey();
         $ch = curl_init();
 
@@ -42,7 +40,7 @@ final class CBUICaptcha {
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, [
-            'response' => $responseKey,
+            'response' => $captchaResponseKey,
             'secret' => $secretKey,
         ]);
 
@@ -58,22 +56,12 @@ final class CBUICaptcha {
             $errno = curl_errno($ch);
             $error = curl_error($ch);
 
-            $response->wasSuccessful = false;
-            $response->message = "cURL error number: {$errno}. cURL error: {$error}";
-        } else {
-            $result = json_decode($result);
-            $response->wasSuccessful = $result->success;
+            throw new RuntimeException("cURL error number: {$errno}. cURL error: {$error}");
         }
 
         curl_close($ch);
 
-        $response->send();
-    }
-
-    /**
-     * @return stdClass
-     */
-    public static function verifyForAjaxPermissions() {
-        return (object)['group' => 'Public'];
+        $result = json_decode($result);
+        return $result->success;
     }
 }

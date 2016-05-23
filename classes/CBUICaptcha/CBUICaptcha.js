@@ -1,60 +1,102 @@
 "use strict"; /* jshint strict: global */
-/* globals CBUICaptchaReCAPTCHASiteKey, Colby, grecaptcha */
+/* globals CBUICaptchaReCAPTCHASiteKey, grecaptcha */
 
+/**
+ * This control can currently only be used one time per page.
+ */
 var CBUICaptcha = {
 
+    captchaDidExpireCallback : undefined,
+    captchaWasCompletedCallback : undefined,
+
     /**
+     * @param function args.captchaStateChangedCallback
+     * @param string args.propertyName
+     * @param object args.spec
+     * @param function args.specChangedCallback
+     *
+     * @return undefined
+     */
+    captchaDidExpire : function (args) {
+        args.spec[args.propertyName] = undefined;
+
+        if (args.captchaStateChangedCallback !== undefined) {
+            args.captchaStateChangedCallback.call({
+                "ready" : false,
+            });
+        }
+
+        grecaptcha.reset();
+
+        args.specChangedCallback.call();
+    },
+
+    /**
+     * @param function args.captchaStateChangedCallback
+     * @param string args.propertyName
+     * @param object args.spec
+     * @param function args.specChangedCallback
+     * @param string responseKey
+     *
+     * @return undefined
+     */
+    captchaWasCompleted : function (args, responseKey) {
+        args.spec[args.propertyName] = responseKey;
+
+        if (args.captchaStateChangedCallback !== undefined) {
+            args.captchaStateChangedCallback.call({
+                "ready" : true,
+            });
+        }
+
+        args.specChangedCallback.call();
+    },
+
+    /**
+     * @param function args.captchaStateChangedCallback
+     * @param string args.propertyName
+     *  This is the name of the property that will hold the responseKey provided
+     *  by Google in response to the captcha being completed.
+     * @param object args.spec
+     * @param object args.specChangedCallback
+     *
      * @return {
      *  Element element,
      * }
      */
     create : function (args) {
+        if (CBUICaptcha.captchaDidExpireCallback !== undefined) {
+            throw "The CBUICaptcha control can only be used once per page.";
+        }
+
         var element = document.createElement("div");
         element.className = "CBUICaptcha";
         var captcha = document.createElement("div");
         captcha.className = "g-recaptcha";
 
-        captcha.setAttribute("data-callback", "CBUICaptchaUserWasVerified");
-        captcha.setAttribute("data-expired-callback", "CBUICaptchaResponseDidExpire");
+        captcha.setAttribute("data-callback", "CBUICaptchaWasCompleted");
+        captcha.setAttribute("data-expired-callback", "CBUICaptchaDidExpire");
         captcha.setAttribute("data-sitekey", CBUICaptchaReCAPTCHASiteKey);
 
         element.appendChild(captcha);
 
+        CBUICaptcha.captchaDidExpireCallback = CBUICaptcha.captchaDidExpire.bind(undefined, {
+            captchaStateChangedCallback : args.captchaStateChangedCallback,
+            propertyName : args.propertyName,
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        });
+
+        CBUICaptcha.captchaWasCompletedCallback = CBUICaptcha.captchaWasCompleted.bind(undefined, {
+            captchaStateChangedCallback : args.captchaStateChangedCallback,
+            propertyName : args.propertyName,
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        });
+
         return {
             element : element,
         };
-    },
-
-    /**
-     * @param string args.responseKey
-     *
-     * @return undefined
-     */
-    verify : function (args) {
-        var data = new FormData();
-        data.append("responseKey", args.responseKey);
-
-        var xhr = new XMLHttpRequest();
-        xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr : xhr});
-        xhr.onload = CBUICaptcha.verifyDidLoad.bind(undefined, {xhr : xhr});
-
-        xhr.open("POST", "/api/?class=CBUICaptcha&function=verify");
-        xhr.send(data);
-    },
-
-    /**
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    verifyDidLoad : function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            alert('yay');
-        } else {
-            Colby.displayResponse(response);
-        }
     },
 };
 
@@ -63,12 +105,13 @@ var CBUICaptcha = {
  *
  * @return undefined
  */
-function CBUICaptchaUserWasVerified(responseKey) {
-    CBUICaptcha.verify({
-        responseKey : responseKey,
-    });
+function CBUICaptchaWasCompleted(responseKey) {
+    CBUICaptcha.captchaWasCompletedCallback(responseKey);
 }
 
-function CBUICaptchaResponseDidExpire() {
-    grecaptcha.reset();
+/**
+ * @return undefined
+ */
+function CBUICaptchaDidExpire() {
+    CBUICaptcha.captchaDidExpireCallback();
 }
