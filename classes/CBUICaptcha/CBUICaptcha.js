@@ -10,7 +10,6 @@ var CBUICaptcha = {
     captchaWasCompletedCallback : undefined,
 
     /**
-     * @param function args.captchaStateChangedCallback
      * @param string args.propertyName
      * @param object args.spec
      * @param function args.specChangedCallback
@@ -20,19 +19,12 @@ var CBUICaptcha = {
     captchaDidExpire : function (args) {
         args.spec[args.propertyName] = undefined;
 
-        if (args.captchaStateChangedCallback !== undefined) {
-            args.captchaStateChangedCallback.call({
-                "ready" : false,
-            });
-        }
-
         grecaptcha.reset();
 
         args.specChangedCallback.call();
     },
 
     /**
-     * @param function args.captchaStateChangedCallback
      * @param string args.propertyName
      * @param object args.spec
      * @param function args.specChangedCallback
@@ -43,17 +35,10 @@ var CBUICaptcha = {
     captchaWasCompleted : function (args, responseKey) {
         args.spec[args.propertyName] = responseKey;
 
-        if (args.captchaStateChangedCallback !== undefined) {
-            args.captchaStateChangedCallback.call({
-                "ready" : true,
-            });
-        }
-
         args.specChangedCallback.call();
     },
 
     /**
-     * @param function args.captchaStateChangedCallback
      * @param string args.propertyName
      *  This is the name of the property that will hold the responseKey provided
      *  by Google in response to the captcha being completed.
@@ -81,14 +66,12 @@ var CBUICaptcha = {
         element.appendChild(captcha);
 
         CBUICaptcha.captchaDidExpireCallback = CBUICaptcha.captchaDidExpire.bind(undefined, {
-            captchaStateChangedCallback : args.captchaStateChangedCallback,
             propertyName : args.propertyName,
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         });
 
         CBUICaptcha.captchaWasCompletedCallback = CBUICaptcha.captchaWasCompleted.bind(undefined, {
-            captchaStateChangedCallback : args.captchaStateChangedCallback,
             propertyName : args.propertyName,
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
