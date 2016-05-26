@@ -156,7 +156,8 @@ class CBHTMLOutput
      * @return null
      */
     private static function processRequiredClassNames() {
-        $resolvedClassNames = CBRequiredClassNamesResolver::resolveRequiredClassNames(self::$requiredClassNames);
+        $requiredClassNames = array_keys(self::$requiredClassNames);
+        $resolvedClassNames = CBRequiredClassNamesResolver::resolveRequiredClassNames($requiredClassNames);
 
         foreach ($resolvedClassNames as $className) {
             if (is_callable($function = "{$className}::requiredCSSURLs")) {
@@ -333,7 +334,9 @@ class CBHTMLOutput
      * @return null
      */
     public static function requireClassName($className) {
-        self::$requiredClassNames[] = $className;
+        if (!array_key_exists($className, self::$requiredClassNames)) {
+            self::$requiredClassNames[$className] = true;
+        }
     }
 
     /**
