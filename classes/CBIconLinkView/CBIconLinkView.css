@@ -1,0 +1,33 @@
+.CBIconLinkView {
+    display: flex;
+    justify-content: center;
+}
+
+.CBIconLinkView .container {
+    box-sizing: border-box;
+    padding: 20px;
+    width: 320px;
+}
+
+.CBIconLinkView .icon {
+    background-color: hsl(30, 50%, 80%);
+    border-radius: 10%;
+    padding-top: 100%;
+}
+
+.CBIconLinkView .text {
+    padding-top: 5px;
+    text-align: center;
+}
+
+@media (max-width: 1279px) {
+    .CBIconLinkView .container {
+        width: 240px;
+    }
+}
+
+@media (max-width: 719px) {
+    .CBIconLinkView .container{
+        width: 160px;
+    }
+}
