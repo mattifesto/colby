@@ -133,6 +133,27 @@ class CBDataStore
     }
 
     /**
+     * @param hex160 $ID
+     * @param string? $basename
+     * @param string? $flexdir
+     *
+     * @return string
+     */
+    public static function flexpath($ID, $basename = null, $flexdir = null) {
+        $flexpath = CBDataStore::directoryNameFromDocumentRoot($ID);
+
+        if (!empty($basename)) {
+            $flexpath = "{$flexpath}/{$basename}";
+        }
+
+        if (!empty($flexdir)) {
+            $flexpath = "{$flexdir}/{$flexpath}";
+        }
+
+        return $flexpath;
+    }
+
+    /**
      * @deprecated use `makeDirectoryForID`
      *
      * This function has "create if not exists" semantics.
