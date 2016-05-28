@@ -284,8 +284,9 @@ EOT;
         $response->extension = $info->extension;
         $response->ID = $info->ID;
         $response->image = (object)[
-            'base' => 'original',
+            'base' => 'original', /* @deprecated use filename */
             'extension' => $info->extension,
+            'filename' => 'original',
             'height' => $info->height,
             'ID' => $info->ID,
             'width' => $info->width,
