@@ -27,6 +27,11 @@ final class CBContainerView {
     }
 
     /**
+     * @deprecated use CBImage::flexpath()
+     *
+     * This function uses the $base variable to mean $filename and $filename
+     * variable to mean $basename.
+     *
      * @param stdClass $image
      * @param string? $args->base
      *
