@@ -1,5 +1,6 @@
 "use strict"; /* jshint strict: global */
-/* globals CBUI, CBUIStringEditor */
+/* globals CBUI, CBUIImageView, CBUIImageSizeView, CBUIImageUploader,
+           CBUIStringEditor */
 
 var CBIconLinkViewEditor = {
 
@@ -33,7 +34,63 @@ var CBIconLinkViewEditor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
+
+        /* image section */
+        element.appendChild(CBUI.createSectionHeader({
+            paragraphs : [
+                "Suggested Size: 320pt (640px) × 320pt (640px)",
+            ],
+            text : "Image"
+        }));
+
+        section = CBUI.createSection();
+
+        /* image view */
+        item = CBUI.createSectionItem();
+        var imageView = CBUIImageView.create({
+            propertyName : "image",
+            spec : args.spec,
+        });
+        item.appendChild(imageView.element);
+        section.appendChild(item);
+
+        /* image size view */
+        item = CBUI.createSectionItem();
+        var imageSizeView = CBUIImageSizeView.create({
+            propertyName : "image",
+            spec : args.spec,
+        });
+        item.appendChild(imageSizeView.element);
+        section.appendChild(item);
+
+        /* image uploader */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIImageUploader.create({
+            propertyName : "image",
+            spec : args.spec,
+            specChangedCallback : CBIconLinkViewEditor.imageChanged.bind(undefined, {
+                callbacks : [
+                    imageView.imageChangedCallback,
+                    imageSizeView.imageChangedCallback,
+                    args.specChangedCallback,
+                ],
+            }),
+        }).element);
+        section.appendChild(item);
+        element.appendChild(section);
 
         return element;
+    },
+
+    /**
+     * @param [function] args.callbacks
+     *
+     * @return undefined
+     */
+    imageChanged : function (args) {
+        args.callbacks.forEach(function (callback) {
+            callback.call();
+        });
     },
 };

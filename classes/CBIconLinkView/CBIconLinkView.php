@@ -19,11 +19,18 @@ final class CBIconLinkView {
             $textElement = "<div class=\"text\">{$model->textAsHTML}</div>";
         }
 
+        if (empty($model->image)) {
+            $imageCSS = 'background-color: hsl(30, 50%, 80%)';
+        } else {
+            $imageCSS = CBImage::flexpath($model->image);
+            $imageCSS = "background-image: url(/{$imageCSS}); background-size: cover";
+        }
+
         ?>
 
         <div class="CBIconLinkView">
             <a class="container" <?= $HREF ?>>
-                <div class="icon"></div>
+                <div class="icon" style="<?= $imageCSS ?>"></div>
                 <?= $textElement?>
             </a>
         </div>
@@ -45,6 +52,7 @@ final class CBIconLinkView {
     public static function specToModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
+            'image' => CBModel::value($spec, 'image', null, 'CBImage::specToModel'),
             'text' => ($text = CBModel::value($spec, 'text', '', 'trim')),
             'textAsHTML' => cbhtml($text),
             'URL' => ($URL = CBModel::value($spec, 'URL', '', 'trim')),
