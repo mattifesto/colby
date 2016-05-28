@@ -27,6 +27,15 @@ var CBIconLinkViewEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Text Color",
+            propertyName : "textColor",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
             labelText : "URL",
             propertyName : "URL",
             spec : args.spec,
@@ -92,5 +101,14 @@ var CBIconLinkViewEditor = {
         args.callbacks.forEach(function (callback) {
             callback.call();
         });
+    },
+
+    /**
+     * @param string? spec.text
+     *
+     * @return string|undefined
+     */
+    specToDescription : function (spec) {
+        return spec.text;
     },
 };

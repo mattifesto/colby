@@ -26,10 +26,12 @@ final class CBIconLinkView {
             $imageCSS = "background-image: url(/{$imageCSS}); background-size: cover";
         }
 
+        $style = empty($model->textColor) ? '' : " style=\"color: {$model->textColor}\"";
+
         ?>
 
         <div class="CBIconLinkView">
-            <a class="container" <?= $HREF ?>>
+            <a class="container" <?= $HREF, $style ?>>
                 <div class="icon" style="<?= $imageCSS ?>"></div>
                 <?= $textElement?>
             </a>
@@ -55,6 +57,7 @@ final class CBIconLinkView {
             'image' => CBModel::value($spec, 'image', null, 'CBImage::specToModel'),
             'text' => ($text = CBModel::value($spec, 'text', '', 'trim')),
             'textAsHTML' => cbhtml($text),
+            'textColor' => CBModel::value($spec, 'textColor', null, 'CBConvert::stringToCSSColor'),
             'URL' => ($URL = CBModel::value($spec, 'URL', '', 'trim')),
             'URLAsHTML' => cbhtml($URL),
         ];
