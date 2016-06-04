@@ -9,5 +9,6 @@
 }
 
 .CSULogEntry .description.preformatted {
+    font-family: monospace;
     white-space: pre;
 }
