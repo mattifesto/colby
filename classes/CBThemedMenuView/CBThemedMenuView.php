@@ -63,6 +63,33 @@ EOT;
     }
 
     /**
+     * @param CBMenu $model
+     * @param hex160? $args->themeID
+     * @param string? $args->selectedItemName
+     *
+     * @return null
+     */
+    public static function renderMenuAsHTML(stdClass $model, stdClass $args = null) {
+        if (empty($model->items)) {
+            return;
+        }
+
+        $themeID = CBModel::value($args, 'themeID');
+        $class = CBTheme::IDToCSSClass($themeID);
+        $class = "CBThemedMenuView {$class}";
+        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
+
+        ?> <div class="<?= $class ?>"><ul> <?php
+
+            foreach($model->items as $item) {
+                $selected = (!empty($args->selectedItemName) && $args->selectedItemName === $item->name);
+                CBThemedMenuView::renderMenuItem($item, ['selected' => $selected]);
+            }
+
+        ?> </ul></div> <?php
+    }
+
+    /**
      * @param {stdClass} $menuItem
      *
      * @return null
@@ -106,27 +133,7 @@ EOT;
 
         $menu = CBModelCache::fetchModelByID($model->menuID);
 
-        if ($menu === false || empty($menu->items)) {
-            return;
-        }
-
-        $themeID = CBModel::value($model, 'themeID');
-        $class = CBTheme::IDToCSSClass($themeID);
-        $class = "CBThemedMenuView {$class}";
-        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
-
-        ?>
-
-        <div class="<?= $class ?>"><ul> <?php
-
-            foreach($menu->items as $item) {
-                $selected = (!empty($model->selectedItemName) && $model->selectedItemName === $item->name);
-                CBThemedMenuView::renderMenuItem($item, ['selected' => $selected]);
-            }
-
-        ?> </ul></div>
-
-        <?php
+        CBThemedMenuView::renderMenuAsHTML($menu, $model);
     }
 
     /**
