@@ -10,7 +10,7 @@ final class CBPageTitleAndDescriptionView {
      *
      * @return null
      */
-    public static function renderModelAsHTML(stdClass $model) {
+    public static function renderModelAsHTML(stdClass $model = null) {
         if (empty($themeID = CBModel::value($model, 'themeID'))) {
             $themeID = CBWellKnownThemeForPageTitleAndDescription::ID;
         };
