@@ -50,14 +50,22 @@ final class CBModel {
     }
 
     /**
-     * @param stdClass $model
+     * @param stdClass? $model
+     *  The $model parameter is generally expected to be a stdClass instance or
+     *  `null`, but it can be any value such as `42`. If it is not stdClass this
+     *  function will treat is as `null` and return the default value.
+     *
+     *  This behavior reduces the amount of validation code required in many
+     *  cases. For instance, it allows code to fetch a model and not validate
+     *  that the model exists (the model value may be `false` in this case)
+     *  before checking to see if a value is set.
      * @param string $propertyName
-     * @param mixed $default
-     * @param function $transform
+     * @param mixed? $default
+     * @param function? $transform
      *
      * @return mixed
      */
-    public static function value(stdClass $model, $propertyName, $default = null, callable $transform = null) {
+    public static function value($model = null, $propertyName, $default = null, callable $transform = null) {
         if (isset($model->{$propertyName})) {
             if ($transform !== null) {
                 return call_user_func($transform, $model->{$propertyName});
