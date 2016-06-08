@@ -54,13 +54,15 @@ class CBAjaxResponse {
     }
 
     /**
-     * @return void
+     * @return null
      */
-    public function send()
-    {
-        if (!$this->isActive)
-        {
+    public function send() {
+        if (!$this->isActive) {
             return;
+        }
+
+        if (!isset($this->warnings)) {
+            $this->warnings = CBAjaxContext::warnings();
         }
 
         header('Content-type: application/json');
