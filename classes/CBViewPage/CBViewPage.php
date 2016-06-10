@@ -19,7 +19,7 @@ final class CBViewPage {
                 $spec = CBViewPage::specWithID($ID, $iteration);
 
                 if (empty($spec)) {
-                    throw new RuntimeException("The spec is missing for the following ID: {$ID}");
+                    return false;
                 }
             }
         } else if ($spec->className !== 'CBViewPage') {
