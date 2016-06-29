@@ -14,9 +14,12 @@ $pagesMenu = new stdClass();
 $pagesMenu->create = newMenuItem('Create', '/admin/pages/edit/');
 $pagesMenu->find = newMenuItem('Find', '/admin/pages/find/');
 $pagesMenu->trash = newMenuItem('Trash', '/admin/pages/trash/');
-
 $CBAdminMenu->pages = newMenuItem('Pages', '/admin/pages/find/', $pagesMenu);
-$CBAdminMenu->models = newMenuItem('Models', '/admin/models/directory/');
+
+$CBAdminMenu->models = newMenuItem('Models', '/admin/models/directory/', (object)[
+    'directory' => newMenuItem('Directory', '/admin/models/directory/'),
+    'import' => newMenuItem('Import', '/admin/page/?class=CBAdminPageForModelImport')
+]);
 
 $helpMenu                   = new stdClass();
 $menuItemID                 = 'markaround-syntax';
