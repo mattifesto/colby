@@ -361,13 +361,16 @@ EOT;
      * Saves a new versions of models. This function should almost always be
      * called inside of a transaction.
      *
-     * @param [{stdClass}]  $specs
+     * @param [{stdClass}] $specs
      *  All of the specs must have the same class name. For specs of different
      *  classes make multiple calls.
+     * @param bool $force
+     *  Use this to disable version checking and force the model save. This
+     *  should be used rarely and cautiously. Model import from CSV uses it.
      *
      * @return null
      */
-    public static function save(array $specs) {
+    public static function save(array $specs, $force = false) {
         if (empty($specs)) { return; }
 
         $className = reset($specs)->className;
@@ -382,11 +385,13 @@ EOT;
         $modified           = time();
         $initialDataByID    = CBModels::selectInitialDataForUpdateByID($IDs, $modified);
 
-        array_walk($specs, function($spec) use ($initialDataByID) {
+        array_walk($specs, function ($spec) use ($initialDataByID, $force) {
             $specVersion    = isset($spec->version) ? $spec->version : 0;
             $tableVersion   = (int)$initialDataByID[$spec->ID]->version;
 
-            if ($specVersion !== $tableVersion) {
+            if ($force === true) {
+                 $specVersion= $tableVersion;
+            } else if ($specVersion !== $tableVersion) {
                 throw new RuntimeException('CBModelVersionMismatch');
             }
         });
