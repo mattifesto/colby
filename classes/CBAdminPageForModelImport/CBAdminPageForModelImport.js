@@ -11,16 +11,28 @@ var CBAdminPageForModelImport = {
         var element = document.createElement("div");
         element.className = "CBAdminPageForModelImport";
 
+        var input = document.createElement("input");
+        input.type = "file";
+        input.style.display = "none";
+
+        var actionLink = CBUIActionLink.create({
+            "callback" : input.click.bind(input),
+            "labelText" : "Upload CSV Files...",
+        });
+
+        input.addEventListener("change", CBAdminPageForModelImport.uploadCSVFiles.bind(undefined, {
+            disableActionLinkCallback : actionLink.disableCallback,
+            enableActionLinkCallback : actionLink.enableCallback,
+            fileInputElement : input,
+        }));
+
+        element.appendChild(input);
+
         element.appendChild(CBUI.createHalfSpace());
 
         var section = CBUI.createSection();
         var item = CBUI.createSectionItem();
-        item.appendChild(CBUIActionLink.create({
-            "callback" : CBAdminPageForModelImport.uploadCSVFiles.bind(undefined, {
-
-            }),
-            "labelText" : "Upload CSV Files...",
-        }).element);
+        item.appendChild(actionLink.element);
         section.appendChild(item);
         element.appendChild(section);
 
@@ -30,10 +42,15 @@ var CBAdminPageForModelImport = {
     },
 
     /**
+     * @param function args.disableActionLinkCallback
+     * @param function args.enableActionLinkCallback
+     * @param Element args.fileInputElement
+     *
      * @return undefined
      */
     uploadCSVFiles : function(args) {
-        alert("foo");
+        args.disableActionLinkCallback.call();
+        window.setTimeout(args.enableActionLinkCallback, 2000);
     },
 };
 
