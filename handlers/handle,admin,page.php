@@ -4,6 +4,9 @@
  * Required class methods:
  *  adminPagePermissions()
  *
+ * Recommended class methods:
+ *  adminPageMenuNamePath()
+ *
  * Optional class methods:
  *  adminPageRenderContent()
  *
@@ -22,7 +25,17 @@ if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
         CBHTMLOutput::begin();
         CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
         CBHTMLOutput::requireClassName($class);
-        CBAdminPageMenuView::renderModelAsHTML();
+
+        $menuSpec = new stdClass();
+
+        if (is_callable($function = "{$class}::adminPageMenuNamePath")) {
+            $names = call_user_func($function);
+            if ($names[0]) { $menuSpec->selectedMenuItemName = $names[0]; }
+            if ($names[1]) { $menuSpec->selectedSubmenuItemName = $names[1]; }
+        }
+
+        CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($menuSpec));
+
         ?><main class="CBUIRoot"><?php
         if (is_callable($function = "{$class}::adminPageRenderContent")) {
             call_user_func($function);
