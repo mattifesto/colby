@@ -10,7 +10,11 @@ final class CBTestPageTests {
         $IDAsSQL = CBHex160::toSQL($ID);
         $countSQL = "SELECT COUNT(*) FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}";
 
+        Colby::query('START TRANSACTION');
+
         CBModels::deleteModelsByID([$ID]);
+
+        Colby::query('COMMIT');
 
         if (CBDB::SQLToValue($countSQL) !== '0') {
             throw new Exception('The test page already exists in the `ColbyPages` table.');
@@ -22,7 +26,11 @@ final class CBTestPageTests {
         $spec->title = 'Hello, world!';
         $spec->URIPath = 'hello-world';
 
+        Colby::query('START TRANSACTION');
+
         CBModels::save([$spec]);
+
+        Colby::query('COMMIT');
 
         if (CBDB::SQLToValue($countSQL) !== '1') {
             throw new Exception('The test page does not exist in the `ColbyPages` table.');
@@ -31,7 +39,11 @@ final class CBTestPageTests {
         // Comment out the remaining lines of this function to leave the test
         // page in so that it can be viewed and searched for.
 
+        Colby::query('START TRANSACTION');
+
         CBModels::deleteModelsByID([$ID]);
+
+        Colby::query('COMMIT');
 
         if (CBDB::SQLToValue($countSQL) !== '0') {
             throw new Exception('The test page still exists in the `ColbyPages` table.');
