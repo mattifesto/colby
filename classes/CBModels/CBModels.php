@@ -42,8 +42,15 @@ EOT;
     }
 
     /**
-     * Delete models. This function should almost always be called inside of a
-     * transaction.
+     * Delete models.
+     *
+     * Important: This function executes multiple queries each of which must
+     * succeed for the save to be successful, so it should always be called
+     * inside of a transaction.
+     *
+     *      Colby::query('START TRANSACTION');
+     *      CBModels::deleteModelsByID($ID);
+     *      Colby::query('COMMIT');
      *
      * @param [hex160] $IDs
      *  All of the referenced models must have the same class name. Make
@@ -358,8 +365,15 @@ EOT;
     }
 
     /**
-     * Saves a new versions of models. This function should almost always be
-     * called inside of a transaction.
+     * Creates and saves models using specifications.
+     *
+     * Important: This function executes multiple queries each of which must
+     * succeed for the save to be successful, so it should always be called
+     * inside of a transaction.
+     *
+     *      Colby::query('START TRANSACTION');
+     *      CBModels::save([$spec]);
+     *      Colby::query('COMMIT');
      *
      * @param [{stdClass}] $specs
      *  All of the specs must have the same class name. For specs of different
@@ -374,45 +388,53 @@ EOT;
         if (empty($specs)) { return; }
 
         $className = reset($specs)->className;
+        $modified = time();
 
-        array_walk($specs, function($spec) use ($className) {
+        $tuples = array_map(function ($spec) use ($className) {
             if ($spec->className !== $className) {
                 throw new InvalidArgumentException('specs: All specs must have the same className.');
             }
-        });
 
-        $IDs                = array_map(function ($spec) { return $spec->ID; }, $specs);
-        $modified           = time();
-        $initialDataByID    = CBModels::selectInitialDataForUpdateByID($IDs, $modified);
+            $model = call_user_func("{$className}::specToModel", $spec);
 
-        array_walk($specs, function ($spec) use ($initialDataByID, $force) {
-            $specVersion    = isset($spec->version) ? $spec->version : 0;
-            $tableVersion   = (int)$initialDataByID[$spec->ID]->version;
-
-            if ($force === true) {
-                 $specVersion= $tableVersion;
-            } else if ($specVersion !== $tableVersion) {
-                throw new RuntimeException('CBModelVersionMismatch');
+            if (empty($model->ID)) {
+                $model->ID = $spec->ID;
             }
-        });
 
-        $specToModel    = "{$className}::specToModel";
-        $specToTuple    = function($spec) use ($specToModel) {
-            $tuple          = new stdClass();
-            $tuple->spec    = $spec;
-            $tuple->model   = call_user_func($specToModel, $spec);
-            return $tuple;
-        };
-        $tuples         = array_map($specToTuple, $specs);
+            if (!isset($model->title)) {
+                $model->title = CBModel::value($spec, 'title', null, 'trim');
+            }
 
-        array_walk($tuples, function($tuple) use ($initialDataByID, $modified) {
-            $ID                     = $tuple->spec->ID;
-            $tuple->model->ID       = $ID;
-            $title                  = CBModel::value($tuple->spec, 'title', null, 'trim');
-            $tuple->spec->created   = $tuple->model->created    = $initialDataByID[$ID]->created;
-            $tuple->spec->modified  = $tuple->model->modified   = $modified;
-            $tuple->spec->title     = $tuple->model->title      = $title;
-            $tuple->spec->version   = $tuple->model->version    = $initialDataByID[$ID]->version + 1;
+            return (object)[
+                'spec' => $spec,
+                'model' => $model,
+            ];
+        }, $specs);
+
+        $IDs = array_map(function ($tuple) { return $tuple->model->ID; }, $tuples);
+        $initialDataByID = CBModels::selectInitialDataForUpdateByID($IDs, $modified);
+
+        array_walk($tuples, function ($tuple) use ($initialDataByID, $modified, $force) {
+            $ID = $tuple->model->ID;
+            $mostRecentVersion = (int)$initialDataByID[$ID]->version;
+
+            if ($force !== true) {
+                $specVersion = CBModel::value($tuple->spec, 'version', 0);
+
+                if ($specVersion !== $mostRecentVersion) {
+                    throw new RuntimeException('CBModelVersionMismatch');
+                }
+            }
+
+            $tuple->model->created = $initialDataByID[$ID]->created;
+            $tuple->model->modified = $modified;
+
+            /**
+             * 2016.06.29 In the future I would like to not set the version on
+             * the spec. The spec should theoretically remain unchanged. It's a
+             * data vs. metadata issue.
+             */
+            $tuple->spec->version = $tuple->model->version = $mostRecentVersion + 1;
         });
 
         if (is_callable($function = "{$className}::modelsWillSave")) {
@@ -473,11 +495,11 @@ EOT;
         /* 1: CBModelVersions */
 
         $values     = array_map(function($tuple) {
-            $IDAsSQL                = CBHex160::toSQL($tuple->spec->ID);
+            $IDAsSQL                = CBHex160::toSQL($tuple->model->ID);
             $modelAsJSONAsSQL       = CBDB::stringToSQL(json_encode($tuple->model));
             $specAsJSONAsSQL        = CBDB::stringToSQL(json_encode($tuple->spec));
 
-            return "({$IDAsSQL}, {$tuple->spec->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->spec->modified})";
+            return "({$IDAsSQL}, {$tuple->model->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->model->modified})";
         }, $tuples);
         $values     = implode(',', $values);
 
@@ -486,11 +508,11 @@ EOT;
         /* 2: CBModels */
 
         $values     = array_map(function($tuple) {
-            $IDAsSQL                = CBHex160::toSQL($tuple->spec->ID);
-            $classNameAsSQL         = CBDB::stringToSQL($tuple->spec->className);
-            $titleAsSQL             = CBDB::stringToSQL($tuple->spec->title);
+            $IDAsSQL                = CBHex160::toSQL($tuple->model->ID);
+            $classNameAsSQL         = CBDB::stringToSQL($tuple->model->className);
+            $titleAsSQL             = CBDB::stringToSQL($tuple->model->title);
 
-            return "({$IDAsSQL}, {$classNameAsSQL}, {$tuple->spec->created}, {$tuple->spec->modified}, {$titleAsSQL}, {$tuple->spec->version})";
+            return "({$IDAsSQL}, {$classNameAsSQL}, {$tuple->model->created}, {$tuple->model->modified}, {$titleAsSQL}, {$tuple->model->version})";
         }, $tuples);
         $values     = implode(',', $values);
 
