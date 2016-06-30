@@ -76,15 +76,30 @@ final class CBAdminPageForModelImport {
                 throw new RuntimeException("The data file provided is empty");
             }
 
+            CBModelContext::push();
+
             while (($data = fgetcsv($handle)) !== false) {
                 $spec = CBAdminPageForModelImport::objectFromCSVRowData($data, $columns);
 
                 if ($spec !== null) {
+                    if (empty($spec->className)) {
+                        CBModelContext::appendErrorMessage("A spec row with other data specified did not specify a className.");
+                        continue;
+                    }
+
+                    Colby::query('START TRANSACTION');
+
                     CBModels::save([$spec], /* force */ true);
+
+                    Colby::query('COMMIT');
                 }
             }
+
+            $modelContext = CBModelContext::pop();
         }
 
+        $response->errors = $modelContext->errors;
+        $response->warnings = $modelContext->warnings;
         $response->message = "Data file uploaded successfully";
         $response->wasSuccessful = true;
         $response->send();
