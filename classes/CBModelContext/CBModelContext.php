@@ -13,7 +13,7 @@ final class CBModelContext {
         $context = end(CBModelContext::$contexts);
 
         if ($context) {
-            $context->errors = $message;
+            $context->errors[] = $message;
         }
     }
 
@@ -26,7 +26,7 @@ final class CBModelContext {
         $context = end(CBModelContext::$contexts);
 
         if ($context) {
-            $context->warnings = $message;
+            $context->warnings[] = $message;
         }
     }
 
