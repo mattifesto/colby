@@ -1,4 +1,4 @@
-"use strict";
+"use strict"; /* jshint strict: global */
 
 var Colby = {
     'intervalId' : null,
@@ -71,6 +71,61 @@ var Colby = {
      */
     displayXHRError : function (args) {
         Colby.displayResponse(Colby.responseFromXMLHttpRequest(args.xhr));
+    },
+
+    /**
+     * @return undefined
+     */
+    doTask : function () {
+        var status = Colby.taskStatus;
+
+        if (status === undefined) {
+            status = {
+                requestCount : 0,
+                waiting : false,
+            };
+
+            Colby.taskStatus = status;
+        }
+
+        if (status.waiting) {
+            return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.onerror = Colby.doTaskDidError.bind(undefined, {status:status,xhr:xhr});
+        xhr.onload = Colby.doTaskDidLoad.bind(undefined, {status:status,xhr:xhr});
+        xhr.open("POST", "/api/?class=CBTasks&function=doTask");
+        xhr.send();
+
+        status.requestCount += 1;
+        status.waiting = true;
+    },
+
+    /**
+     * @param object args.status
+     * @param XMLHttpRequest args.xhr
+     *
+     * @return undefined
+     */
+    doTaskDidError : function (args) {
+        args.status.waiting = false;
+        args.status.error = true;
+    },
+
+    /**
+     * @param object args.status
+     * @param XMLHttpRequest args.xhr
+     *
+     * @return undefined
+     */
+    doTaskDidLoad : function (args) {
+        args.status.waiting = false;
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
+
+        if (response.timeout !== undefined) {
+            window.setTimeout(Colby.doTask, response.timeout);
+        }
     },
 
     /**
@@ -665,4 +720,6 @@ Colby.updateTimestampForElementWithId = function(timestamp, id)
 
     document.head.appendChild(link);
     document.addEventListener('DOMContentLoaded', Colby.handleContentLoaded, false);
+
+    Colby.doTask();
 })();
