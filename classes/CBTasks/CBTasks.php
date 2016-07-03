@@ -13,7 +13,7 @@ final class CBTasks {
             SELECT `ID`, `className`, `function`, `argsAsJSON`
             FROM `CBTasks`
             WHERE `started` IS NULL
-            ORDER BY `started`, `priority`, `serial`
+            ORDER BY `started`, `priority`, `ID`
             LIMIT 1
             FOR UPDATE
 
@@ -84,17 +84,16 @@ EOT;
     public static function install() {
         $SQL = <<<EOT
 
-        CREATE TABLE `CBTasks` (
-            `ID` BIGINT UNSIGNED NOT NULL,
+        CREATE TABLE IF NOT EXISTS `CBTasks` (
+            `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             `className` VARCHAR(80),
             `function` VARCHAR(80),
             `argsAsJSON` TEXT,
             `priority` BIGINT NOT NULL DEFAULT 0,
-            `serial` SERIAL,
             `started` BIGINT,
             PRIMARY KEY (`ID`),
             KEY `className_started` (`className`, `started`),
-            KEY `started_priority_serial` (`started`, `priority`, `serial`)
+            KEY `started_priority_ID` (`started`, `priority`, `ID`)
         )
         ENGINE=InnoDB
         DEFAULT CHARSET=utf8
