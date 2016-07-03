@@ -93,14 +93,15 @@ EOT;
     }
 
     /**
-     * @return void
+     * @return null
      */
     public static function update() {
         include Colby::findFile('setup/update.php');
+        CBLog::addMessage('System', 'The system was updated.');
     }
 
     /**
-     * @return void
+     * @return null
      */
     public static function updateForAjax() {
         $response = new CBAjaxResponse();
