@@ -40,7 +40,7 @@ EOT;
 
 Colby::query($SQL);
 
-
+CBLog::install();
 CBTasks::install();
 CBUsers::install();
 CBModels::install();
