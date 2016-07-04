@@ -78,6 +78,8 @@ final class CBAdminPageForModelImport {
 
             CBModelContext::push();
 
+            $argsArray = [];
+
             while (($data = fgetcsv($handle)) !== false) {
                 $spec = CBAdminPageForModelImport::objectFromCSVRowData($data, $columns);
 
@@ -87,13 +89,15 @@ final class CBAdminPageForModelImport {
                         continue;
                     }
 
-                    Colby::query('START TRANSACTION');
-
-                    CBModels::save([$spec], /* force */ true);
-
-                    Colby::query('COMMIT');
+                    $argsArray[] = (object)[
+                        'spec' => $spec,
+                    ];
                 }
             }
+
+            CBTasks::add('CBModel', 'importSpec', $argsArray, -1);
+
+            fclose($handle);
 
             $modelContext = CBModelContext::pop();
         }
