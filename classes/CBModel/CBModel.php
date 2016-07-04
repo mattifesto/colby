@@ -3,6 +3,27 @@
 final class CBModel {
 
     /**
+     * @param stdClass $args->spec
+     *
+     * @return null
+     */
+    public static function importSpecForTask(stdClass $args) {
+        $spec = $args->spec;
+
+        if (is_callable($function = "{$spec->className}::importSpec")) {
+            call_user_func($function, $spec);
+        } else {
+            Colby::query('START TRANSACTION');
+            CBModels::save([$spec], /* force */ true);
+            Colby::query('COMMIT');
+        }
+
+        $className = CBModel::value($spec, 'className', 'Unset', 'trim');
+
+        CBLog::addMessage('CBModel', "A task was run to import a spec of class '{$className}'");
+    }
+
+    /**
      * @return string|null
      */
     public static function modelToOptionalSearchText(stdClass $model) {
