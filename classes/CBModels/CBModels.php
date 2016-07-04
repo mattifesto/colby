@@ -324,8 +324,9 @@ EOT;
      * IDs that don't exist.
      */
     private static function selectInitialDataForUpdateByID(array $IDs, $modified) {
-        $IDsAsSQL   = CBHex160::toSQL($IDs);
-        $SQL        = <<<EOT
+        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $modifiedAsSQL = (int)$modified;
+        $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`ID`)) AS `ID`, `created`, `version`
             FROM    `CBModels`
@@ -334,17 +335,21 @@ EOT;
 
 EOT;
 
-        $initialDataByID = CBDB::SQLToObjects($SQL, ['keyField' => 'ID']);
+        $metaByID = CBDB::SQLToObjects($SQL, ['keyField' => 'ID']);
 
-        if (count($initialDataByID) != count($IDs)) {
-            $newIDs = array_diff($IDs, array_keys($initialDataByID));
-
-            foreach ($newIDs as $ID) {
-                $initialDataByID[$ID] = (object)['created' => $modified, 'version' => 0];
+        foreach ($IDs as $ID) {
+            if (isset($metaByID[$ID])) {
+                $metaByID[$ID]->modified = $modified;
+            } else {
+                $metaByID[$ID] = (object)[
+                    'created' => $modified,
+                    'modified' => $modified,
+                    'version' => 0,
+                ];
             }
         }
 
-        return $initialDataByID;
+        return $metaByID;
     }
 
     /**
@@ -433,8 +438,17 @@ EOT;
              * 2016.06.29 In the future I would like to not set the version on
              * the spec. The spec should theoretically remain unchanged. It's a
              * data vs. metadata issue.
+             *
+             * 2016.07.03 No new properties should be set on the spec or the
+             * model. Use the meta property instead.
              */
             $tuple->spec->version = $tuple->model->version = $mostRecentVersion + 1;
+
+            $tuple->meta = (object)[
+                'created' => $initialDataByID[$ID]->created,
+                'modified' => $modified,
+                'version' => $mostRecentVersion + 1,
+            ];
         });
 
         if (is_callable($function = "{$className}::modelsWillSave")) {
@@ -489,32 +503,32 @@ EOT;
      *
      * This function is meant to be called during a database transaction.
      *
-     * @param [{'spec' : {stdClass}, 'model' : {stdClass}}] $tuples
+     * @param [{'spec':stdClass, 'model':stdClass, 'meta':stdClass}] $tuples
      */
     private static function saveToDatabase(array $tuples) {
         /* 1: CBModelVersions */
 
-        $values     = array_map(function($tuple) {
+        $values = array_map(function($tuple) {
             $IDAsSQL                = CBHex160::toSQL($tuple->model->ID);
             $modelAsJSONAsSQL       = CBDB::stringToSQL(json_encode($tuple->model));
             $specAsJSONAsSQL        = CBDB::stringToSQL(json_encode($tuple->spec));
 
-            return "({$IDAsSQL}, {$tuple->model->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->model->modified})";
+            return "({$IDAsSQL}, {$tuple->meta->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->meta->modified})";
         }, $tuples);
-        $values     = implode(',', $values);
+        $values = implode(',', $values);
 
         Colby::query("INSERT INTO `CBModelVersions` VALUES {$values}");
 
         /* 2: CBModels */
 
-        $values     = array_map(function($tuple) {
-            $IDAsSQL                = CBHex160::toSQL($tuple->model->ID);
-            $classNameAsSQL         = CBDB::stringToSQL($tuple->model->className);
-            $titleAsSQL             = CBDB::stringToSQL($tuple->model->title);
+        $values = array_map(function($tuple) {
+            $IDAsSQL = CBHex160::toSQL($tuple->model->ID);
+            $classNameAsSQL = CBDB::stringToSQL($tuple->model->className);
+            $titleAsSQL = CBDB::stringToSQL(CBModel::value($tuple->model, 'title', ''));
 
-            return "({$IDAsSQL}, {$classNameAsSQL}, {$tuple->model->created}, {$tuple->model->modified}, {$titleAsSQL}, {$tuple->model->version})";
+            return "({$IDAsSQL}, {$classNameAsSQL}, {$tuple->meta->created}, {$tuple->meta->modified}, {$titleAsSQL}, {$tuple->meta->version})";
         }, $tuples);
-        $values     = implode(',', $values);
+        $values = implode(',', $values);
 
         CBModels::createModelsTable(/* temporary: */ true);
         Colby::query("INSERT INTO `CBModelsTemp` VALUES {$values}");
@@ -544,6 +558,53 @@ EOT;
         Colby::query($SQL);
 
         Colby::query('DROP TEMPORARY TABLE `CBModelsTemp`');
+    }
+
+    /**
+     * NOTE: This function executes multiple queries each of which must
+     * succeed for the save to be successful, so it should always be called
+     * inside of a transaction.
+     *
+     * @param [{spec:stdClass, model:stdClass, version:int|'force'}]
+     *
+     * @return null
+     */
+    public static function saveTuples(array $tuples) {
+        if (empty($tuples)) { return; }
+
+        $className = reset($tuples)->model->className;
+        $IDs = array_map(function ($tuple) { return $tuple->model->ID; }, $tuples);
+        $metaByID = CBModels::selectInitialDataForUpdateByID($IDs, time());
+
+        $dbtuples = array_map(function ($tuple) use ($className, $metaByID) {
+            $ID = $tuple->model->ID;
+
+            if ($tuple->model->className !== $className) {
+                throw new InvalidArgumentException('All models must have the same className.');
+            }
+
+            if ($tuple->version !== 'force') {
+                if ($tuple->version !== $metaByID[$ID]->version) {
+                    throw new RuntimeException('CBModelVersionMismatch');
+                }
+            }
+
+            return (object)[
+                'spec' => $tuple->spec,
+                'model' => $tuple->model,
+                'meta' => (object)[
+                    'created' => $metaByID[$ID]->created,
+                    'modified' => $metaByID[$ID]->modified,
+                    'version' => $metaByID[$ID]->version + 1,
+                ],
+            ];
+        }, $tuples);
+
+        if (is_callable($function = "{$className}::modelsWillSave")) {
+            call_user_func($function, $tuples);
+        }
+
+        CBModels::saveToDatabase($dbtuples);
     }
 
     /**
