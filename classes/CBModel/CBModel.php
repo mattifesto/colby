@@ -13,14 +13,19 @@ final class CBModel {
         if (is_callable($function = "{$spec->className}::importSpec")) {
             call_user_func($function, $spec);
         } else {
-            Colby::query('START TRANSACTION');
-            CBModels::save([$spec], /* force */ true);
-            Colby::query('COMMIT');
+            try {
+                Colby::query('START TRANSACTION');
+                CBModels::save([$spec], /* force */ true);
+                Colby::query('COMMIT');
+            } catch (Exception $exception) {
+                Colby::query('ROLLBACK');
+                throw $exception;
+            }
         }
 
         $className = CBModel::value($spec, 'className', 'Unset', 'trim');
 
-        CBLog::addMessage('CBModel', "A task was run to import a spec of class '{$className}'");
+        CBLog::addMessage('CBModel', 6, "A task was run to import a spec of class '{$className}'");
     }
 
     /**
