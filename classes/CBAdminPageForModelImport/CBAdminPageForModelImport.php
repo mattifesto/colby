@@ -49,7 +49,7 @@ final class CBAdminPageForModelImport {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink'];
+        return ['CBUI', 'CBUIActionLink', 'CBUITaskStatus'];
     }
 
     /**
@@ -76,8 +76,6 @@ final class CBAdminPageForModelImport {
                 throw new RuntimeException("The data file provided is empty");
             }
 
-            CBModelContext::push();
-
             $argsArray = [];
 
             while (($data = fgetcsv($handle)) !== false) {
@@ -85,7 +83,7 @@ final class CBAdminPageForModelImport {
 
                 if ($spec !== null) {
                     if (empty($spec->className)) {
-                        CBModelContext::appendErrorMessage("A spec row with other data specified did not specify a className.");
+                        CBLog::addMessage('CBAdminPageForModelImport', 3, 'A spec row with other data specified did not specify a className.');
                         continue;
                     }
 
@@ -98,12 +96,10 @@ final class CBAdminPageForModelImport {
             CBTasks::add('CBModel', 'importSpec', $argsArray, -1);
 
             fclose($handle);
-
-            $modelContext = CBModelContext::pop();
         }
 
-        $response->errors = $modelContext->errors;
-        $response->warnings = $modelContext->warnings;
+        CBLog::addMessage('CBAdminPageForModelImport', 5, 'A data file was imported.');
+
         $response->message = "Data file uploaded successfully";
         $response->wasSuccessful = true;
         $response->send();

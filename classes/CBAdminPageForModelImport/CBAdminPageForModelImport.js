@@ -38,6 +38,8 @@ var CBAdminPageForModelImport = {
 
         element.appendChild(CBUI.createHalfSpace());
 
+        element.appendChild(CBUITaskStatus.create().element);
+
         main.appendChild(element);
     },
 
@@ -64,7 +66,11 @@ var CBAdminPageForModelImport = {
     handleDataFileUploadRequestDidLoad : function (args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
-        Colby.displayResponse(response);
+        if (response.wasSuccessful) {
+            Colby.doTask();
+        } else {
+            Colby.displayResponse(response);
+        }
 
         args.enableActionLinkCallback.call();
     },
