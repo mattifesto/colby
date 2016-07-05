@@ -92,7 +92,7 @@ var CBUITaskStatus = {
         args.status.waiting = false;
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
-        if (response.succeeded) {
+        if (response.wasSuccessful) {
             args.pendingTaskCountElement.textContent = response.pendingTaskCount;
 
             var lines = response.entries.map(function (entry) {
