@@ -1,0 +1,9 @@
+.CBUITaskStatus .log {
+    background-color: hsl(0, 0%, 20%);
+    color: hsl(0, 0%, 70%);
+    font-family: monospace;
+    font-size: 12px;
+    height: 300px;
+    overflow-y: scroll;
+    white-space: pre-wrap;
+}
