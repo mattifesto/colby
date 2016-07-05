@@ -9,23 +9,24 @@ final class CBModel {
      */
     public static function importSpecForTask(stdClass $args) {
         $spec = $args->spec;
+        $model = CBModel::specToOptionalModel($spec);
 
-        if (is_callable($function = "{$spec->className}::importSpec")) {
-            call_user_func($function, $spec);
-        } else {
+        if ($model !== null) {
             try {
                 Colby::query('START TRANSACTION');
-                CBModels::save([$spec], /* force */ true);
+                CBModels::saveTuples([(object)[
+                    'spec' => $spec,
+                    'model' => $model,
+                    'version' => 'force',
+                ]]);
                 Colby::query('COMMIT');
             } catch (Exception $exception) {
                 Colby::query('ROLLBACK');
                 throw $exception;
             }
+
+            CBLog::addMessage('CBModel', 6, "A task was run to import a spec of class '{$model->className}'");
         }
-
-        $className = CBModel::value($spec, 'className', 'Unset', 'trim');
-
-        CBLog::addMessage('CBModel', 6, "A task was run to import a spec of class '{$className}'");
     }
 
     /**
