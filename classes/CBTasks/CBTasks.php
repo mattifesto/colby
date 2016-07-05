@@ -33,6 +33,34 @@ EOT;
     }
 
     /**
+     * NOTE: This function exists because this delete request was sometimes
+     * causing a deadlock in high activity situations. Deadlocks can occur and
+     * the prescribed way of handling them is to retry, which is what this
+     * function does.
+     *
+     * @param hex160 $starter
+     *
+     * @return null
+     */
+    public static function deleteForStarter($starter) {
+        $starterAsSQL = CBHex160::toSQL($starter);
+        $countOfDeadlocks = 0;
+
+        while (true) {
+            try {
+                Colby::query("DELETE FROM `CBTasks` WHERE `starter` = {$starterAsSQL}");
+                break;
+            } catch (Exception $exception) {
+                if (Colby::mysqli()->errno === 1213 && $countOfDeadlocks < 5) {
+                    $countOfDeadlocks += 1;
+                } else {
+                    throw $exception;
+                }
+            }
+        }
+    }
+
+    /**
      * @return null
      */
     public static function doTask() {
@@ -78,7 +106,7 @@ EOT;
             throw new Exception("The function {$function}() requested by task {$ID} is not callable.");
         }
 
-        Colby::query("DELETE FROM `CBTasks` WHERE `starter` = {$starterAsSQL}");
+        CBTasks::deleteForStarter($starter);
     }
 
     /**
@@ -109,6 +137,29 @@ EOT;
      * @return stdClass
      */
     public static function doTaskForAjaxPermissions() {
+        return (object)['group' => 'Public'];
+    }
+
+    /**
+     * @return null
+     */
+    public static function getStatusForAjax() {
+        $response = new CBAjaxResponse();
+
+        $response->pendingTaskCount = CBDB::SQLToValue('SELECT COUNT(*) FROM `CBTasks`');
+        $response->entries = CBLog::entries((object)[
+            'minSeverity' => 5,
+            'sinceTimestamp' => time() - (60 * 1000),
+        ]);
+        $response->timeout = 1000;
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function getStatusForAjaxPermissions() {
         return (object)['group' => 'Public'];
     }
 
