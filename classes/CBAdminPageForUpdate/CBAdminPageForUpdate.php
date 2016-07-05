@@ -97,7 +97,7 @@ EOT;
      */
     public static function update() {
         include Colby::findFile('setup/update.php');
-        CBLog::addMessage('System', 'The system was updated.');
+        CBLog::addMessage('System', 5, 'The system was updated.');
     }
 
     /**
