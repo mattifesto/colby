@@ -92,6 +92,11 @@ var Colby = {
             return;
         }
 
+        if (status.timeoutID) {
+            window.clearTimeout(status.timeoutID);
+            status.timeoutID = undefined;
+        }
+
         var xhr = new XMLHttpRequest();
         xhr.onerror = Colby.doTaskDidError.bind(undefined, {status:status,xhr:xhr});
         xhr.onload = Colby.doTaskDidLoad.bind(undefined, {status:status,xhr:xhr});
@@ -124,7 +129,7 @@ var Colby = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.timeout !== undefined) {
-            window.setTimeout(Colby.doTask, response.timeout);
+            args.status.timeoutID = window.setTimeout(Colby.doTask, response.timeout);
         }
     },
 
