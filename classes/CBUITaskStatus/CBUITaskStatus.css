@@ -3,7 +3,7 @@
     color: hsl(0, 0%, 70%);
     font-family: monospace;
     font-size: 12px;
-    height: 300px;
-    overflow-y: scroll;
+    min-height: 300px;
+    padding: 20px;
     white-space: pre-wrap;
 }
