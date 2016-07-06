@@ -19,7 +19,7 @@ $iniValues = ini_get_all(null, false);
 ?>
 
 <main>
-    <style scoped>
+    <style>
 
         table.phpini
         {

@@ -38,7 +38,7 @@ $result->free();
 ?>
 
 <main>
-    <style scoped>
+    <style>
 
         main
         {

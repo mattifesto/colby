@@ -28,7 +28,7 @@ final class CBPageTitleAndDescriptionView {
         if (empty($model->stylesID)) {
             $styleElement = null;
         } else {
-            $styleElement = "<style scoped>{$model->stylesCSS}</style>";
+            $styleElement = "<style>{$model->stylesCSS}</style>";
         }
 
         $context = CBPageContext::current();

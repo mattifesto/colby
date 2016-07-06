@@ -7,7 +7,7 @@ CBHTMLOutput::setDescriptionHTML('This is the default front page.');
 ?>
 
 <main>
-    <style scoped>
+    <style>
 
         main > p {
             line-height:    1.5;

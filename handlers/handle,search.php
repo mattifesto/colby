@@ -30,7 +30,7 @@ include Colby::findFile('sections/standard-page-header.php');
 ?>
 
 <form action="<?php echo COLBY_SITE_URL; ?>/search/" <?php echo $formClass; ?>>
-    <style scoped>
+    <style>
 
         form.search-page input[type=text] {
             padding: 5px;
@@ -85,7 +85,7 @@ if (empty($searchQuery)) {
 ?>
 
 <section class="CBPageSearchResultsView">
-    <style scoped>
+    <style>
         .CBPageSearchResultsView {
             display: flex;
             flex-wrap: wrap;

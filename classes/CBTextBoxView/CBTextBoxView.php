@@ -138,7 +138,7 @@ EOT;
         ?>
 
         <?= $open ?>
-            <style scoped><?= implode("\n", $styles) ?></style>
+            <style><?= implode("\n", $styles) ?></style>
             <?= $title ?>
             <?= $content ?>
         <?= $close ?>

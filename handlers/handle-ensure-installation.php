@@ -43,7 +43,7 @@ CBHTMLOutput::setDescriptionHTML('This page performs the initial installation of
 ?>
 
 <main>
-    <style scoped>
+    <style>
 
         main
         {

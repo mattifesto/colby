@@ -11,7 +11,7 @@ CBHTMLOutput::setDescriptionHTML('You are not authorized to view this page.');
 ?>
 
 <main>
-    <style scoped>
+    <style>
 
         main {
             padding-top:  100px;

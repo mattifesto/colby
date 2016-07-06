@@ -70,7 +70,7 @@ final class CBThemedTextView {
         if (empty($model->stylesID)) {
             $styleElement = null;
         } else {
-            $styleElement = "<style scoped>{$model->stylesCSS}</style>";
+            $styleElement = "<style>{$model->stylesCSS}</style>";
         }
 
         $style = empty($model->center) ? '' : ' style="text-align: center"';

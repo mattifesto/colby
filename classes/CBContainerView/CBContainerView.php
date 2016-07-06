@@ -220,7 +220,7 @@ EOT;
 
         ?><<?= $tagName, $HREF ?> class="<?= $classes ?>"<?= $styles ?>><?php
             if (!empty($model->stylesCSS)) {
-                echo "<style scoped>{$model->stylesCSS}</style>";
+                echo "<style>{$model->stylesCSS}</style>";
             }
 
             array_walk($model->subviews, 'CBView::renderModelAsHTML');
