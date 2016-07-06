@@ -89,12 +89,10 @@ final class Colby {
      *  The data type of the returned data will match the data type that was
      *  passed into the `encrypt` function.
      */
-    public static function decrypt($cipherDataString)
-    {
+    public static function decrypt($cipherDataString) {
         $cipherData = unserialize($cipherDataString);
 
-        if ($cipherData->version != 1)
-        {
+        if ($cipherData->version != 1) {
             throw new RuntimeException("Unknown Colby cipher data version: {$cipherData->version}.");
         }
 
@@ -104,8 +102,7 @@ final class Colby {
                                           self::encryptionOptions,
                                           $cipherData->initializationVector);
 
-        if (false === $serializedData)
-        {
+        if (false === $serializedData) {
             throw new RuntimeException("Unable to decrypt the ciphertext: {$cipherData->ciphertext}");
         }
 
@@ -137,10 +134,8 @@ final class Colby {
      *  caller wants to take advantage of this fact, however it would probably
      *  be of little use to do so.
      */
-    public static function encrypt($data)
-    {
+    public static function encrypt($data) {
         $serializedData = serialize($data);
-
         $cipherData = new stdClass();
 
         /**
@@ -151,7 +146,6 @@ final class Colby {
 
         $cipherData->version = 1;
         $cipherData->initializationVector = openssl_random_pseudo_bytes(self::countOfInitializationVectorBytes);
-
         $cipherData->ciphertext = openssl_encrypt($serializedData,
                                                   self::encryptionMethod,
                                                   CBEncryptionPassword,
@@ -164,8 +158,7 @@ final class Colby {
     /**
      * @return string
      */
-    public static function exceptionStackTrace($exception)
-    {
+    public static function exceptionStackTrace($exception) {
         ob_start();
 
         include(COLBY_SITE_DIRECTORY .
@@ -262,19 +255,14 @@ final class Colby {
     public static function globFiles($pattern) {
         $filenames = array();
 
-        foreach (self::$libraryDirectories as $libraryDirectory)
-        {
-            if ($libraryDirectory)
-            {
+        foreach (self::$libraryDirectories as $libraryDirectory) {
+            if ($libraryDirectory) {
                 $intraSitePattern = "{$libraryDirectory}/{$pattern}";
-            }
-            else
-            {
+            } else {
                 $intraSitePattern = $pattern;
             }
 
             $libraryFilenames = glob(COLBY_SITE_DIRECTORY . "/{$intraSitePattern}");
-
             $filenames = array_merge($filenames, $libraryFilenames);
         }
 
@@ -284,10 +272,8 @@ final class Colby {
     /**
      * @return void
      */
-    public static function handleError($errno, $errstr, $errfile, $errline)
-    {
+    public static function handleError($errno, $errstr, $errfile, $errline) {
         $severity = 2;
-
         throw new ErrorException($errstr, $errno, $severity, $errfile, $errline);
     }
 
@@ -310,8 +296,8 @@ final class Colby {
      *
      * @return void
      */
-    public static function handleException($exception, $handlerName = null)
-    {
+    public static function handleException($exception, $handlerName = null) {
+
         /**
          * Exception handlers should never throw exceptions because if they
          * do, it's very difficult to debug. While working on major system
@@ -328,24 +314,21 @@ final class Colby {
          * being actively worked on.
          */
 
-        try
-        {
+        try {
             Colby::reportException($exception);
 
             $absoluteHandlerFilename = null;
 
-            if ($handlerName)
-            {
+            if ($handlerName) {
                 $absoluteHandlerFilename = Colby::findHandler("handle-exception-{$handlerName}.php");
             }
 
-            if (!$absoluteHandlerFilename)
-            {
+            if (!$absoluteHandlerFilename) {
                 $absoluteHandlerFilename = self::findHandler('handle-exception.php');
             }
 
-            if (!$absoluteHandlerFilename)
-            {
+            if (!$absoluteHandlerFilename) {
+
                 /**
                  * Something would have to be wrong with the system
                  * configuration to get here, but if that happens we want to
@@ -353,14 +336,10 @@ final class Colby {
                  */
 
                 error_log($exception->getMessage());
-            }
-            else
-            {
+            } else {
                 include $absoluteHandlerFilename;
             }
-        }
-        catch (Exception $rareException)
-        {
+        } catch (Exception $rareException) {
             error_log('Colby::handleException() RARE EXCEPTION: ' . $rareException->getMessage());
         }
     }
@@ -375,12 +354,10 @@ final class Colby {
      *
      * @return void
      */
-    public static function handleShutdown()
-    {
+    public static function handleShutdown() {
         $error = error_get_last();
 
-        if ($error)
-        {
+        if ($error) {
             $severity   = 1;
             $message    = 'Fatal Error: ' . $error['message'];
             $number     = $error['type'];
@@ -396,8 +373,7 @@ final class Colby {
     /**
      * This function should be called only once and is called by the system.
      */
-    public static function initialize()
-    {
+    public static function initialize() {
         /**
          * Colby sites always run with all error reporting turned on.
          */
@@ -478,12 +454,9 @@ final class Colby {
          * code block can be removed after the transition is complete.
          */
 
-        if (!defined('CBSiteURL'))
-        {
+        if (!defined('CBSiteURL')) {
             define('CBSiteURL', COLBY_SITE_URL);
-        }
-        else if (!defined('COLBY_SITE_URL'))
-        {
+        } else if (!defined('COLBY_SITE_URL')) {
             define('COLBY_SITE_URL', CBSystemURL);
         }
 
@@ -504,8 +477,7 @@ final class Colby {
          * this function, an email will be sent.
          */
 
-        if (defined('COLBY_EMAIL_LIBRARY_DIRECTORY'))
-        {
+        if (defined('COLBY_EMAIL_LIBRARY_DIRECTORY')) {
             include_once COLBY_EMAIL_LIBRARY_DIRECTORY . '/lib/swift_required.php';
         }
 
@@ -528,14 +500,12 @@ final class Colby {
          * Ensure that any required constants have been set.
          */
 
-        if (!defined('COLBY_SITE_NAME'))
-        {
+        if (!defined('COLBY_SITE_NAME')) {
             throw new RuntimeException(
                 'The constant `COLBY_SITE_NAME` has not been set.');
         }
 
-        if (!defined('COLBY_SITE_ADMINISTRATOR'))
-        {
+        if (!defined('COLBY_SITE_ADMINISTRATOR')) {
             throw new RuntimeException(
                 'The constant `COLBY_SITE_ADMINISTRATOR` has not been set.');
         }
@@ -556,7 +526,6 @@ final class Colby {
          */
 
         if (get_magic_quotes_runtime() || get_magic_quotes_gpc()) {
-
             $mqr = get_magic_quotes_runtime();
             $mqr = var_export($mqr, true);
             $mqg = get_magic_quotes_gpc();
@@ -569,8 +538,7 @@ final class Colby {
     /**
      * @return void
      */
-    public static function loadLibrary($libraryDirectory)
-    {
+    public static function loadLibrary($libraryDirectory) {
         $absoluteLibraryDirectory = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}";
 
         include_once "{$absoluteLibraryDirectory}/version.php";
@@ -582,25 +550,21 @@ final class Colby {
     /// <summary>
     ///
     /// </summary>
-    public static function mysqli()
-    {
-        if (null === self::$mysqli)
-        {
+    public static function mysqli() {
+        if (null === self::$mysqli) {
             $mysqli = new mysqli(
                 COLBY_MYSQL_HOST,
                 COLBY_MYSQL_USER,
                 COLBY_MYSQL_PASSWORD,
                 COLBY_MYSQL_DATABASE);
 
-            if ($mysqli->connect_error)
-            {
+            if ($mysqli->connect_error) {
                 throw new RuntimeException($mysqli->connect_error);
             }
 
             // The default MySQL character set is "latin1" but the tables use "utf8"
 
-            if (!$mysqli->set_charset('utf8'))
-            {
+            if (!$mysqli->set_charset('utf8')) {
                 throw new RuntimeException(
                     'Unable to set mysqli character set to "utf8".');
             }
@@ -623,16 +587,13 @@ final class Colby {
      *
      * @return void
      */
-    public static function queries($sql)
-    {
+    public static function queries($sql) {
         $mysqli = Colby::mysqli();
-
         $indexOfTheSQLStatementWithAnError = 0;
-
         $theFirstSQLStatementWasSuccessful = $mysqli->multi_query($sql);
 
-        if ($theFirstSQLStatementWasSuccessful)
-        {
+        if ($theFirstSQLStatementWasSuccessful) {
+
             /**
              * The following code just iterates through any result sets
              * without retrieving them. There would be result sets if the user
@@ -647,14 +608,12 @@ final class Colby {
              * always be the statement with the error.
              */
 
-            while ($mysqli->more_results() && $mysqli->next_result())
-            {
+            while ($mysqli->more_results() && $mysqli->next_result()) {
                 $indexOfTheSQLStatementWithAnError++;
             }
         }
 
-        if ($mysqli->error)
-        {
+        if ($mysqli->error) {
             throw new RuntimeException("Index of the SQL statement with an error: {$indexOfTheSQLStatementWithAnError}\n\nMySQL error: {$mysqli->error}");
         }
     }
@@ -715,10 +674,8 @@ final class Colby {
      *
      * @return void
      */
-    public static function reportException(Exception $exception)
-    {
-        try
-        {
+    public static function reportException(Exception $exception) {
+        try {
             $exceptionMessage = $exception->getMessage();
 
             /**
@@ -763,9 +720,7 @@ final class Colby {
 
                 $mailer->send($message);
             }
-        }
-        catch (Exception $rareException)
-        {
+        } catch (Exception $rareException) {
             error_log('Colby::reportException() RARE EXCEPTION: ' . $rareException->getMessage());
         }
     }
