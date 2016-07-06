@@ -37,7 +37,13 @@ final class CBHex160 {
 
         $values = array_map(function($value) {
             if (!CBHex160::is($value)) {
-                throw new RuntimeException("The value '{$value}' is not a 160-bit hexadecimal value.");
+                if (preg_match('/[a-fA-F0-9]{40}/', $value)) {
+                    $message = "The value '{$value}' is not a hex160 value because it contains capital letters.";
+                } else {
+                    $message = "The value '{$value}' is not a 160-bit hexadecimal value.";
+                }
+
+                throw new RuntimeException($message);
             }
             $value = ColbyConvert::textToSQL($value);
             return "UNHEX('{$value}')";
