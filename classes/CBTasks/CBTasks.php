@@ -148,7 +148,7 @@ EOT;
         $response->pendingTaskCount = CBDB::SQLToValue('SELECT COUNT(*) FROM `CBTasks`');
         $response->entries = CBLog::entries((object)[
             'minSeverity' => 5,
-            'sinceTimestamp' => time() - (60 * 1000),
+            'sinceTimestamp' => time() - (60 * 60),
         ]);
         $response->timeout = 1000;
         $response->wasSuccessful = true;
