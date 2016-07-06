@@ -33,34 +33,6 @@ EOT;
     }
 
     /**
-     * NOTE: This function exists because this delete request was sometimes
-     * causing a deadlock in high activity situations. Deadlocks can occur and
-     * the prescribed way of handling them is to retry, which is what this
-     * function does.
-     *
-     * @param hex160 $starter
-     *
-     * @return null
-     */
-    public static function deleteForStarter($starter) {
-        $starterAsSQL = CBHex160::toSQL($starter);
-        $countOfDeadlocks = 0;
-
-        while (true) {
-            try {
-                Colby::query("DELETE FROM `CBTasks` WHERE `starter` = {$starterAsSQL}");
-                break;
-            } catch (Exception $exception) {
-                if (Colby::mysqli()->errno === 1213 && $countOfDeadlocks < 5) {
-                    $countOfDeadlocks += 1;
-                } else {
-                    throw $exception;
-                }
-            }
-        }
-    }
-
-    /**
      * @return null
      */
     public static function doTask() {
@@ -77,36 +49,63 @@ EOT;
 
 EOT;
 
-        Colby::query($SQL);
+        Colby::query($SQL, /* retryOnDeadlock */ true);
 
         if (Colby::mysqli()->affected_rows !== 1) {
             return;
         }
 
-        $SQL = <<<EOT
+        try {
+            /* 1. Get task information */
 
-            SELECT `className`, `function`, `argsAsJSON`
-            FROM `CBTasks`
-            WHERE `starter` = {$starterAsSQL}
+            $SQL = <<<EOT
+
+                SELECT `className`, `function`, `argsAsJSON`
+                FROM `CBTasks`
+                WHERE `starter` = {$starterAsSQL}
 
 EOT;
 
-        $task = CBDB::SQLToObject($SQL);
+            $task = CBDB::SQLToObject($SQL, /* retryOnDeadlock */ true);
 
-        // TODO: Add more detailed error handling.
+            /* 2. Perform the task, this may start and commit a transaction. */
 
-        if (is_callable($function = "{$task->className}::{$task->function}ForTask")) {
-            if (empty($task->argsAsJSON)) {
-                $args = null;
+            if (is_callable($function = "{$task->className}::{$task->function}ForTask")) {
+                if (empty($task->argsAsJSON)) {
+                    $args = null;
+                } else {
+                    $args = json_decode($task->argsAsJSON);
+                }
+                call_user_func($function, $args);
             } else {
-                $args = json_decode($task->argsAsJSON);
+                throw new Exception("The function {$function}() requested by task {$ID} is not callable.");
             }
-            call_user_func($function, $args);
-        } else {
-            throw new Exception("The function {$function}() requested by task {$ID} is not callable.");
-        }
 
-        CBTasks::deleteForStarter($starter);
+            /* 3. The task has completed, remove it. */
+
+            $SQL = "DELETE FROM `CBTasks` WHERE `starter` = {$starterAsSQL}";
+            Colby::query($SQL, /* retryOnDeadlock */ true);
+        } catch (Exception $exception) {
+
+            /**
+             * Setting `starter` to NULL indicates that the task was started
+             * but failed for some reason. In the admin area the task can be
+             * restarted or investigated. We don't reset the task because if
+             * it failed because of a real issue it will never succeed.
+             */
+
+            $SQL = <<<EOT
+
+                UPDATE `CBTasks`
+                SET `started` = NULL, `starter` = NULL
+                WHERE `starter` = {$starterAsSQL}
+
+EOT;
+
+            Colby::query($SQL, /* retryOnDeadlock */ true);
+
+            throw $exception;
+        }
     }
 
     /**
