@@ -662,17 +662,29 @@ final class Colby {
     /**
      * This function is used to run a single query and check for errors.
      *
+     * @param string $SQL
+     * @param boolean $retryOnDeadlock
+     *
      * @return mysqli_result | boolean
      */
-    public static function query($sql)
-    {
+    public static function query($SQL, $retryOnDeadlock = false) {
         $mysqli = Colby::mysqli();
+        $countOfDeadlocks = 0;
+        $maxDeadlocks = 5;
 
-        $result = $mysqli->query($sql);
+        while (true) {
+            $result = $mysqli->query($SQL);
 
-        if ($mysqli->error)
-        {
-            throw new RuntimeException("MySQL error: \"{$mysqli->error}\", MySQL error number: $mysqli->errno\n\n{$sql}");
+            if ($mysqli->errno === 1213 && $retryOnDeadlock && $countOfDeadlocks < $maxDeadlocks) {
+                $countOfDeadlocks += 1;
+                continue;
+            }
+
+            if ($mysqli->error) {
+                throw new RuntimeException("MySQL error: \"{$mysqli->error}\", MySQL error number: {$mysqli->errno}\n\n{$SQL}");
+            }
+
+            break;
         }
 
         return $result;
