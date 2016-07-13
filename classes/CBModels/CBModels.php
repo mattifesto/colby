@@ -17,9 +17,9 @@ final class CBModels {
      * @return null
      */
     public static function createModelsTable($temporary = false) {
-        $name           = $temporary ? 'CBModelsTemp' : 'CBModels';
-        $options        = $temporary ? 'TEMPORARY' : '';
-        $SQL            = <<<EOT
+        $name = $temporary ? 'CBModelsTemp' : 'CBModels';
+        $options = $temporary ? 'TEMPORARY' : '';
+        $SQL = <<<EOT
 
             CREATE {$options} TABLE IF NOT EXISTS `{$name}` (
                 `ID`        BINARY(20) NOT NULL,
@@ -104,8 +104,8 @@ EOT;
     private static function fetchCreatedTimestampsForIDs(array $IDs) {
         if (empty($IDs)) { return []; }
 
-        $IDsAsSQL   = CBHex160::toSQL($IDs);
-        $SQL        = <<<EOT
+        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`ID`)), `timestamp`
             FROM    `CBModelVersions`
@@ -145,8 +145,8 @@ EOT;
     public static function fetchModelsByID(array $IDs) {
         if (empty($IDs)) { return []; }
 
-        $IDsAsSQL   = CBHex160::toSQL($IDs);
-        $SQL        = <<<EOT
+        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`m`.`ID`)), `v`.`modelAsJSON`
             FROM    `CBModels` AS `m`
@@ -169,14 +169,14 @@ EOT;
      * Usage Frequency: Occasionally
      */
     public static function fetchModelByIDWithVersion($ID, $version) {
-        $IDAsSQL        = CBHex160::toSQL($ID);
-        $versionAsSQL   = (int)$version;
-        $SQL            = <<<EOT
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $versionAsSQL = (int)$version;
+        $SQL = <<<EOT
 
             SELECT  `modelAsJSON`
             FROM    `CBModelVersions`
-            WHERE   `ID`        = {$IDAsSQL} AND
-                    `version`   = {$versionAsSQL}
+            WHERE   `ID` = {$IDAsSQL} AND
+                    `version` = {$versionAsSQL}
 
 EOT;
 
@@ -313,11 +313,11 @@ EOT;
         $ID = null;
         extract($args, EXTR_IF_EXISTS);
 
-        $model              = new stdClass();
-        $model->className   = (string)$className;
+        $model = new stdClass();
+        $model->className = (string)$className;
 
         if ($ID) {
-            $model->ID      = (string)$ID;
+            $model->ID = (string)$ID;
         }
 
         return $model;
@@ -381,7 +381,7 @@ EOT;
                 $specVersion = CBModel::value($tuple->spec, 'version', 0);
 
                 if ($specVersion !== $mostRecentVersion) {
-                    throw new RuntimeException('CBModelVersionMismatch');
+                    throw new CBModelVersionMismatchException();
                 }
             }
 
@@ -416,29 +416,20 @@ EOT;
      * @return {stdClass}
      */
     public static function saveForAjax() {
-        $response   = new CBAjaxResponse();
-        $spec       = json_decode($_POST['specAsJSON']);
+        $response = new CBAjaxResponse();
+        $spec = json_decode($_POST['specAsJSON']);
 
         Colby::query('START TRANSACTION');
 
         try {
             CBModels::save([$spec]);
             Colby::query('COMMIT');
+            $response->wasSuccessful = true;
         } catch (Exception $exception) {
             Colby::query('ROLLBACK');
-
-            if ($exception->getMessage() === 'CBModelVersionMismatch') {
-                $response->wasSuccessful    = false;
-                $response->message          = 'This model has been updated since it was fetched.';
-                $response->code             = 'version mismatch';
-                $response->send();
-                return;
-            } else {
-                throw $exception;
-            }
+            throw $exception;
         }
 
-        $response->wasSuccessful = true;
         $response->send();
     }
 
@@ -464,9 +455,9 @@ EOT;
         /* 1: CBModelVersions */
 
         $values = array_map(function($tuple) {
-            $IDAsSQL                = CBHex160::toSQL($tuple->model->ID);
-            $modelAsJSONAsSQL       = CBDB::stringToSQL(json_encode($tuple->model));
-            $specAsJSONAsSQL        = CBDB::stringToSQL(json_encode($tuple->spec));
+            $IDAsSQL = CBHex160::toSQL($tuple->model->ID);
+            $modelAsJSONAsSQL = CBDB::stringToSQL(json_encode($tuple->model));
+            $specAsJSONAsSQL = CBDB::stringToSQL(json_encode($tuple->spec));
 
             return "({$IDAsSQL}, {$tuple->meta->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->meta->modified})";
         }, $tuples);
@@ -493,9 +484,9 @@ EOT;
             UPDATE  `CBModels`      AS `m`
             JOIN    `CBModelsTemp`  AS `t` ON `m`.`ID` = `t`.`ID`
             SET     `m`.`className` = `t`.`className`,
-                    `m`.`modified`  = `t`.`modified`,
-                    `m`.`title`     = `t`.`title`,
-                    `m`.`version`   = `t`.`version`
+                    `m`.`modified` = `t`.`modified`,
+                    `m`.`title` = `t`.`title`,
+                    `m`.`version` = `t`.`version`
 
 EOT;
 
@@ -540,7 +531,7 @@ EOT;
 
             if ($tuple->version !== 'force') {
                 if ($tuple->version !== $metaByID[$ID]->version) {
-                    throw new RuntimeException('CBModelVersionMismatch');
+                    throw new CBModelVersionMismatchException();
                 }
             }
 
