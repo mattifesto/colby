@@ -156,6 +156,9 @@ final class Colby {
     }
 
     /**
+     * @deprecated This function returns more that just the stack trace and
+     * should be avoided. Callers should be refactored.
+     *
      * @return string
      */
     public static function exceptionStackTrace($exception) {
@@ -672,21 +675,25 @@ final class Colby {
      * is useful when code catches an exception it wants to report but doesn't
      * want to re-throw.
      *
+     * @param Exception $exception
+     * @param int $severity
+     *  An RFC3164 severity code. See CBLog::addMessage().
+     *
      * @return void
      */
-    public static function reportException(Exception $exception) {
+    public static function reportException(Exception $exception, $severity = 3) {
         try {
             $exceptionMessage = $exception->getMessage();
-
-            /**
-             * Report the exception to the error log
-             */
-
-            error_log('Exception report for file: ' .
+            $exceptionTitle = strtok($exceptionMessage, "\r\n");
+            $exceptionStackTrace = '## ' .
                 $exception->getFile() .
-                ', line: ' .
+                '(' .
                 $exception->getLine() .
-                ", message: {$exceptionMessage}");
+                ")\n" .
+                $exception->getTraceAsString();
+            $exceptionMessage .= "\n\n{$exceptionStackTrace}";
+
+            CBLog::addMessage('Exception', 3, $exceptionMessage);
 
             /**
              * Report the exception via email to the administrator
@@ -705,11 +712,11 @@ final class Colby {
 
                 $mailer = Swift_Mailer::newInstance($transport);
 
-                $messageSubject     = COLBY_SITE_NAME . " Error ({$exceptionMessage})";
+                $messageSubject     = COLBY_SITE_NAME . " Error ({$exceptionTitle})";
                 $messageFrom        = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
                 $messageTo          = array(COLBY_SITE_ADMINISTRATOR);
-                $messageBody        = Colby::exceptionStackTrace($exception);
-                $messageBodyHTML    = '<pre>' . ColbyConvert::textToHTML($messageBody) . '</pre>';
+                $messageBody        = $exceptionMessage;
+                $messageBodyHTML    = '<pre>' . ColbyConvert::textToHTML($exceptionMessage) . '</pre>';
 
                 $message = Swift_Message::newInstance();
                 $message->setSubject($messageSubject);
@@ -720,8 +727,13 @@ final class Colby {
 
                 $mailer->send($message);
             }
-        } catch (Exception $rareException) {
-            error_log('Colby::reportException() RARE EXCEPTION: ' . $rareException->getMessage());
+        } catch (Exception $innerException) {
+            try {
+                $innerExceptionMessage = __METHOD__ . '() inner exception: ' . $innerException->getMessage();
+                CBLog::addMessage('Exception', 2, $innerExceptionMessage);
+            } catch (Exception $ignoredException) {
+                // Nothing more can be done if a failure occurs here.
+            }
         }
     }
 

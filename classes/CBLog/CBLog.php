@@ -29,6 +29,11 @@ EOT;
     }
 
     /**
+     * Adds a message to the CBLog table.
+     *
+     * This function will never throw an exception so it can be called without
+     * fear of recursive exceptions.
+     *
      * @param string $category
      * @param string $severity
      *
@@ -44,31 +49,50 @@ EOT;
      *  6  Informational: informational messages
      *  7  Debug: debug-level messages
      *
+     *  If the severity is less than 4, the message will also be sent to
+     *  error_log().
+     *
      * @param string $message
      */
     public static function addMessage($category, $severity, $message) {
-        $categoryAsSQL = CBDB::stringToSQL($category);
-        $messageAsSQL = CBDB::stringToSQL($message);
-        $severityAsSQL = (int)$severity;
-        $timestampAsSQL = time();
+        try {
+            if ($severity < 4) {
+                try {
+                    error_log($message);
+                } catch (Exception $ignoredException) {
+                    // We can't do much if error_log() fails.
+                }
+            }
 
-        $SQL = <<<EOT
+            $categoryAsSQL = CBDB::stringToSQL($category);
+            $messageAsSQL = CBDB::stringToSQL($message);
+            $severityAsSQL = (int)$severity;
+            $timestampAsSQL = time();
 
-            INSERT INTO `CBLog` (
-                `category`,
-                `message`,
-                `severity`,
-                `timestamp`
-            ) VALUES (
-                {$categoryAsSQL},
-                {$messageAsSQL},
-                {$severityAsSQL},
-                {$timestampAsSQL}
-            )
+            $SQL = <<<EOT
+
+                INSERT INTO `CBLog` (
+                    `category`,
+                    `message`,
+                    `severity`,
+                    `timestamp`
+                ) VALUES (
+                    {$categoryAsSQL},
+                    {$messageAsSQL},
+                    {$severityAsSQL},
+                    {$timestampAsSQL}
+                )
 
 EOT;
 
-        Colby::query($SQL);
+            Colby::query($SQL);
+        } catch (Exception $innerException) {
+            try {
+                error_log(__METHOD__ . '() inner exception: ' . $innerException->getMessage());
+            } catch (Exception $ignoredException) {
+                // We can't do much if error_log() fails.
+            }
+        }
     }
 
     /**
