@@ -30,8 +30,8 @@ if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
 
         if (is_callable($function = "{$class}::adminPageMenuNamePath")) {
             $names = call_user_func($function);
-            if ($names[0]) { $menuSpec->selectedMenuItemName = $names[0]; }
-            if ($names[1]) { $menuSpec->selectedSubmenuItemName = $names[1]; }
+            if (!empty($names[0])) { $menuSpec->selectedMenuItemName = $names[0]; }
+            if (!empty($names[1])) { $menuSpec->selectedSubmenuItemName = $names[1]; }
         }
 
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($menuSpec));
