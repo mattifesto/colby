@@ -16,6 +16,27 @@ var Colby = {
         Colby.showPanel();
     },
 
+    /**
+     * @param hex160 ID
+     * @param string basename
+     * @param string flexdir
+     *
+     * @return string
+     */
+    dataStoreFlexpath : function (ID, basename, flexdir) {
+        var flexpath = ID.replace(/^(..)(..)/, "data/$1/$2/");
+
+        if (basename) {
+            flexpath = flexpath + "/" + basename;
+        }
+
+        if (flexdir) {
+            flexpath = flexdir + "/" + flexpath;
+        }
+
+        return flexpath;
+    },
+
     dateToLocaleString : function (date) {
         return Colby.dateToLocaleDateString(date) + " " + Colby.dateToLocaleTimeString(date);
     },
