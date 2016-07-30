@@ -3,6 +3,11 @@
 final class CBImage {
 
     /**
+     * @deprecated 2016.07.28
+     *  Images are now generically identified with the image ID and extension.
+     *  Use these values along with a filename and the CBDataStore::flexpath()
+     *  function instead of this function.
+     *
      * @param hex160 $image->ID
      * @param string $image->filename (used if $filename parameter is empty)
      * @param string $image->extension
