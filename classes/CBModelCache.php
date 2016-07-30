@@ -50,6 +50,13 @@ final class CBModelCache {
     }
 
     /**
+     * @return null
+     */
+    public static function fetchModelsLazilyByID(array $IDs) {
+        self::$neededModelIDs = array_merge(self::$neededModelIDs, $IDs);
+    }
+
+    /**
      * @param   {hex160}    $ID
      *
      * @return  {stdClass} | false
