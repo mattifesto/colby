@@ -259,8 +259,12 @@ final class CBViewPage {
             array_walk($model->sections, 'CBView::renderModelAsHTML');
         };
 
-        if (isset($model->layout->className) && is_callable($renderLayout = "{$model->layout->className}::render")) {
-            call_user_func($renderLayout, $model->layout, $renderContentCallback);
+        if (!empty($model->layout->className)) {
+            CBHTMLOutput::requireClassName($model->layout->className);
+
+            if (is_callable($renderLayout = "{$model->layout->className}::render")) {
+                call_user_func($renderLayout, $model->layout, $renderContentCallback);
+            }
         } else {
             $renderContentCallback();
         }
