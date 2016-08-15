@@ -1,0 +1,31 @@
+.CBUIDropdown {
+    cursor: default;
+    position: relative;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.CBUIDropdown .menu {
+    display: none;
+}
+
+.CBUIDropdown.expanded .menu {
+    display: block;
+}
+
+.CBUIDropdownShield {
+    background: rgba(0, 0, 0, 0.3);
+    display: none;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+}
+
+.CBUIDropdownShield.raised {
+    display: block;
+}
