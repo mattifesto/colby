@@ -23,6 +23,24 @@ class ColbyConvert
     }
 
     /**
+     * Sanitizes a cents string into a cents int. If the string is not a valid
+     * cents string, null is returned.
+     *
+     * @param string $centsString
+     *
+     * @return int|null
+     */
+    public static function centsStringToOptionalCentsInt($centsString) {
+        $centsString = trim($centsString);
+
+        if (preg_match('/^[0-9]+$/', $centsString)) {
+            return intval($centsString);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * This function converts an amount expressed in dollars with limited
      * optional formatting to an amount expressed in cents. Fractional cents
      * are allowed to be passed in, but they will be truncated. So if
