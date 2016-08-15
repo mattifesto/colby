@@ -72,9 +72,9 @@ var CBUIImageChooser = {
     },
 
     /**
-     * @param function imageChosenCallback
-     * @param Element input
-     * @param function setImageURLCallback
+     * @param function args.imageChosenCallback
+     * @param Element args.input
+     * @param function args.setImageURLCallback
      *
      * @return undefined
      */
@@ -90,8 +90,9 @@ var CBUIImageChooser = {
     },
 
     /**
-     * @param function imageRemovedCallback
-     * @param function setImageURLCallback
+     * @param function args.imageRemovedCallback
+     * @param function args.setImageURLCallback
+     * @param Event event
      *
      * @return undefined
      */
