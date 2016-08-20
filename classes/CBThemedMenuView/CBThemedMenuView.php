@@ -90,7 +90,8 @@ EOT;
     }
 
     /**
-     * @param {stdClass} $menuItem
+     * @param stdClass $menuItem
+     * @param bool? $args['selected']
      *
      * @return null
      */
