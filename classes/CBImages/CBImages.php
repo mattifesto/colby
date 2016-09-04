@@ -76,7 +76,7 @@ class CBImages {
      *
      * @param hex160 $ID
      *  The image ID
-     * @param string $exception
+     * @param string $extension
      *  The image extension
      * @param string $operation
      *  The reduction operation, example: "rs200clc200"
@@ -268,6 +268,10 @@ EOT;
     /**
      * 2015.06.04 This is intended to be the primary Ajax function used to
      * upload and resize an image.
+     *
+     * @param file $_POST['image']
+     *
+     * @return null
      */
     public static function uploadForAjax() {
         $response = new CBAjaxResponse();
