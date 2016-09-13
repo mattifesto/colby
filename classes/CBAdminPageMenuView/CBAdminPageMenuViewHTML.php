@@ -6,11 +6,11 @@
 
     self::renderMenu($menuModel, $selectedMenuItemName, 'CBMenu');
 
-    if ($selectedMenuItemName &&
+    if (!empty($selectedMenuItemName) &&
         isset($menuModel->{$selectedMenuItemName}->submenu))
     {
-        $submenu                    = $menuModel->{$selectedMenuItemName}->submenu;
-        $selectedSubmenuItemName    = $model->selectedSubmenuItemName;
+        $submenu = $menuModel->{$selectedMenuItemName}->submenu;
+        $selectedSubmenuItemName = CBModel::value($model, 'selectedSubmenuItemName');
 
         self::renderMenu($submenu, $selectedSubmenuItemName, 'CBSubmenu');
     }
