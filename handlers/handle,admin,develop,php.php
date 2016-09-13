@@ -20,61 +20,75 @@ $iniValues = ini_get_all(null, false);
 
 <main>
     <style>
-
-        table.phpini
-        {
-            font-family:    "Source Sans Pro";
-            margin:         0px auto;
-            table-layout:   fixed;
-            width:          800px;
+        .phpini > .row {
+            display: flex;
         }
 
-        table.phpini td,
-        table.phpini th,
-        table.phpini tr
-        {
-            padding:    0px 5px;
-            width:      50%;
+        .phpini > .row > * {
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+            padding: 0px 10px;
+            width: 50%;
         }
 
-    </style>
-    <table class="phpini">
-        <tbody>
-            <tr>
-                <th style="text-align: right;">Version</th>
-                <td><?= phpversion() ?></td>
-            </tr>
-            <tr>
-                <th style="text-align: right;">username</th>
-                <td><?= cbhtml(`whoami`) ?></td>
-            </tr>
+        .phpini > .row > :first-child {
+            font-weight: bold;
+            text-align: right;
+        }
 
-            <?php
+        .phpini .empty {
+            color: hsl(0, 0%, 70%);
+        }
 
-            foreach ($iniValues as $key => $value)
-            {
-                if (empty($value))
-                {
-                    $value = '<no value>';
-                }
-
-                $keyHTML = ColbyConvert::textToHTML($key);
-                $valueHTML = ColbyConvert::textToHTML($value);
-
-                echo <<<EOT
-
-                    <tr>
-                        <th style="text-align: right;">{$keyHTML}</th>
-                        <td>{$valueHTML}</td>
-                    </tr>
-
-EOT;
+        @media (max-width: 735px) {
+            .phpini > .row {
+                display: block;
+                padding-bottom: 5px;
             }
 
-            ?>
+            .phpini > .row > * {
+                width: auto;
+            }
+            
+            .phpini > .row > :first-child {
+                text-align: left;
+            }
+        }
+    </style>
+    <div class="phpini">
+        <div class="row">
+            <div>Version</div>
+            <div><?= phpversion() ?></div>
+        </div>
+        <div class="row">
+            <div>username</div>
+            <div><?= cbhtml(`whoami`) ?></div>
+        </div>
 
-        </tbody>
-    </table>
+        <?php
+
+        foreach ($iniValues as $key => $value) {
+            $keyHTML = ColbyConvert::textToHTML($key);
+
+            if (empty($value)) {
+                $valueHTML = '<span class="empty">empty</span>';
+            } else {
+                $valueHTML = ColbyConvert::textToHTML($value);
+            }
+
+            echo <<<EOT
+
+                <div class="row">
+                    <div>{$keyHTML}</div>
+                    <div>{$valueHTML}</div>
+                </div>
+
+EOT;
+        }
+
+        ?>
+
+    </div>
 </main>
 
 <?php
