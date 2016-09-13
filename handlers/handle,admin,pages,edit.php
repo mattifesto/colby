@@ -76,9 +76,9 @@ if ($CBPageEditorAvailablePageTemplateClassNames || class_exists('CBPageTemplate
 
 CBHTMLOutput::exportVariable('CBURLQueryVariables', $_GET);
 
-$selectedMenuItemID     = 'pages';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+CBAdminPageMenuView::renderModelAsHTML((object)[
+    'selectedMenuItemName' => 'pages',
+]);
 
 ?>
 

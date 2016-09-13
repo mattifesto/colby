@@ -4,8 +4,6 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
 CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Pages Trash');
@@ -13,10 +11,10 @@ CBHTMLOutput::setDescriptionHTML('Pages that have been put in the trash.');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,pages.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,pages,trash.js');
 
-$selectedMenuItemID     = 'pages';
-$selectedSubmenuItemID  = 'trash';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+CBAdminPageMenuView::renderModelAsHTML((object)[
+    'selectedMenuItemName' => 'pages',
+    'selectedSubmenuItemName' => 'trash',
+]);
 
 ?>
 

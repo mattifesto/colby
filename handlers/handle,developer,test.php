@@ -1,10 +1,6 @@
 <?php
 
-include_once CBSystemDirectory . '/classes/CBHTMLOutput.php';
-
-
-if (!ColbyUser::current()->isOneOfThe('Administrators'))
-{
+if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
@@ -18,10 +14,10 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,developer,test.css');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,developer,test.js');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/Tests.js');
 
-$selectedMenuItemID     = 'test';
-$selectedSubmenuItemID  = 'test';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+CBAdminPageMenuView::renderModelAsHTML((object)[
+    'selectedMenuItemName' => 'test',
+    'selectedSubmenuItemName' => 'test',
+]);
 
 ?>
 

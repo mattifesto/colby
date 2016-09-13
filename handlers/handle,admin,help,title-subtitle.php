@@ -10,10 +10,10 @@ CBHTMLOutput::setTitleHTML('Titles and Descriptions Help');
 CBHTMLOutput::setDescriptionHTML('Help for creating effective titles and descriptions.');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard-formatted-content.css');
 
-$selectedMenuItemID     = 'help';
-$selectedSubmenuItemID  = 'title-subtitle';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+CBAdminPageMenuView::renderModelAsHTML((object)[
+    'selectedMenuItemName' => 'help',
+    'selectedSubmenuItemName' => 'title-subtitle',
+]);
 
 $markaround = file_get_contents(COLBY_SITE_DIRECTORY . '/colby/snippets/help/title-subtitle.txt');
 

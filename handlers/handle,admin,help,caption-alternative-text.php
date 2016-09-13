@@ -10,10 +10,10 @@ CBHTMLOutput::setTitleHTML('Captions and Alternative Text Help');
 CBHTMLOutput::setDescriptionHTML('Help for creating effective captions and alternative text.');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard-formatted-content.css');
 
-$selectedMenuItemID     = 'help';
-$selectedSubmenuItemID  = 'caption-alternative-text';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+CBAdminPageMenuView::renderModelAsHTML((object)[
+    'selectedMenuItemName' => 'help',
+    'selectedSubmenuItemName' => 'caption-alternative-text',
+]);
 
 $markaround = file_get_contents(CBSystemDirectory . '/snippets/help/caption-alternative-text.txt');
 

@@ -10,10 +10,10 @@ CBHTMLOutput::setDescriptionHTML('Help for markaround syntax.');
 CBHTMLOutput::begin();
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard-formatted-content.css');
 
-$selectedMenuItemID     = 'help';
-$selectedSubmenuItemID  = 'markaround-syntax';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+CBAdminPageMenuView::renderModelAsHTML((object)[
+    'selectedMenuItemName' => 'help',
+    'selectedSubmenuItemName' => 'markaround-syntax',
+]);
 
 $markaround = file_get_contents(CBSystemDirectory . '/snippets/help/markaround.txt');
 

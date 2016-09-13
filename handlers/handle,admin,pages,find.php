@@ -10,10 +10,10 @@ CBHTMLOutput::setTitleHTML('Find Pages');
 CBHTMLOutput::setDescriptionHTML('Find pages to edit, copy, or delete.');
 CBHTMLOutput::requireClassName('CBPagesAdministrationView');
 
-$selectedMenuItemID     = 'pages';
-$selectedSubmenuItemID  = 'find';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+CBAdminPageMenuView::renderModelAsHTML((object)[
+    'selectedMenuItemName' => 'pages',
+    'selectedSubmenuItemName' => 'find',
+]);
 
 echo '<main class="CBUIRoot"></main>';
 
