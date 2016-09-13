@@ -9,10 +9,10 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('PHP Information');
 CBHTMLOutput::setDescriptionHTML('Information about the version and setup of PHP running for this website.');
 
-$selectedMenuItemID     = 'develop';
-$selectedSubmenuItemID  = 'php';
-
-include CBSystemDirectory . '/sections/admin-page-menu.php';
+CBAdminPageMenuView::renderModelAsHTML((object)[
+    'selectedMenuItemName' => 'develop',
+    'selectedSubmenuItemName' => 'php',
+]);
 
 $iniValues = ini_get_all(null, false);
 
@@ -49,7 +49,7 @@ $iniValues = ini_get_all(null, false);
             .phpini > .row > * {
                 width: auto;
             }
-            
+
             .phpini > .row > :first-child {
                 text-align: left;
             }
