@@ -38,8 +38,10 @@ final class CBAdminPageMenuView {
 
     /**
      * @param stdClass? $model
+     * @param string? $model->selectedMenuItemName
+     * @param string? $model->selectedSubmenuItemName
      *
-     * @return void
+     * @return null
      */
     public static function renderModelAsHTML(stdClass $model = null) {
         if ($model === null) {
