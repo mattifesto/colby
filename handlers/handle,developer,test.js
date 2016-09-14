@@ -1,22 +1,51 @@
-"use strict";
+"use strict"; /* jshint strict: global */
+/* globals Colby, ColbyUnitTests */
 
 var CBTestPage = {
 
     /**
-    @return {Element}
-    */
+     * @param Element state.statusElement
+     * @param string message
+     * @param string? args.className
+     *
+     * @return undefined
+     */
+    appendStatus : function (state, message, args) {
+        var lineElement = document.createElement("div");
+        lineElement.className = "line";
+        lineElement.textContent = message;
+
+        if (args && args.className) {
+            lineElement.classList.add(args.className);
+        }
+
+        state.statusElement.appendChild(lineElement);
+    },
+
+    /**
+     * @return {Element}
+     */
     createTestUI : function() {
-        var element         = document.createElement("div");
-        element.className   = "CBTestUI";
-        var button          = document.createElement("button");
-        button.textContent  = "Run Tests";
-        var status          = document.createElement("textarea");
+        var element = document.createElement("div");
+        element.className = "CBTestUI";
+        var containerElement = document.createElement("div");
+        containerElement.className = "container";
+        var button = document.createElement("button");
+        button.textContent = "Run Tests";
+        var status = document.createElement("div");
+        status.className = "status";
+
+        var appendStatusCallback = CBTestPage.appendStatus.bind(undefined, {
+            statusElement : status,
+        });
 
         button.addEventListener("click", CBTestPage.handleRunTests.bind(undefined, {
-            buttonElement   : button,
-            statusElement   : status }));
+            buttonElement : button,
+            appendStatusCallback : appendStatusCallback,
+        }));
 
-        element.appendChild(button);
+        containerElement.appendChild(button);
+        element.appendChild(containerElement);
         element.appendChild(status);
 
         return element;
@@ -32,113 +61,128 @@ var CBTestPage = {
     },
 
     /**
-    @return {undefined}
-    */
+     * @param function args.appendStatusCallback
+     * @param element args.buttonElement
+     *
+     * @return undefined
+     */
     handleListOfTestsReceived : function(args) {
-        var response    = Colby.responseFromXMLHttpRequest(args.xhr);
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
             CBTestPage.runTest({
+                appendStatusCallback : args.appendStatusCallback,
                 buttonElement   : args.buttonElement,
                 index           : 0,
-                statusElement   : args.statusElement,
-                tests           : response.tests });
+                tests           : response.tests,
+            });
         } else {
-            args.statusElement.value += response.message + "\n";
+            args.appendStatusCallback(response.message, {className:"error"});
             args.buttonElement.disabled = false;
         }
     },
 
     /**
-    @param {Element}    buttonElement
-    @param {Element}    statusElement
-
-    @return {undefined}
-    */
+     * @param function args.appendStatusCallback
+     * @param Element args.buttonElement
+     *
+     * @return undefined
+     */
     handleRunTests : function(args) {
-        var date                    = new Date();
+        var date = new Date();
         args.buttonElement.disabled = true;
-        var xhr                     = new XMLHttpRequest();
-        xhr.onload                  = CBTestPage.handleListOfTestsReceived.bind(undefined, {
-            buttonElement           : args.buttonElement,
-            statusElement           : args.statusElement,
-            xhr                     : xhr });
+        var xhr = new XMLHttpRequest();
+        xhr.onload = CBTestPage.handleListOfTestsReceived.bind(undefined, {
+            buttonElement : args.buttonElement,
+            appendStatusCallback : args.appendStatusCallback,
+            xhr : xhr,
+        });
 
-        args.statusElement.value    = "Tests Started - " +
-                                      date.toLocaleDateString() +
-                                      " " +
-                                      date.toLocaleTimeString() +
-                                      "\n";
+        args.appendStatusCallback("");
+        args.appendStatusCallback("Tests Started - " +
+            date.toLocaleDateString() +
+            " " +
+            date.toLocaleTimeString() +
+            "\n");
 
         CBTestPage.runJavaScriptTests({
-            statusElement   : args.statusElement });
+            appendStatusCallback : args.appendStatusCallback,
+        });
 
         xhr.open('POST', '/api/?class=CBUnitTests&function=getListOfTests', true);
         xhr.send();
     },
 
     /**
-    @param {Element}        buttonElement
-    @param {int}            index
-    @param {Element}        statusElement
-    @param {array}          tests
-    @param {XMLHttpRequest} xhr
+     * @param function args.appendStatusCallback
+     * @param Element args.buttonElement
+     * @param int args.index
+     * @param array args.tests
+     * @param XMLHttpRequest args.xhr
 
-    @return {undefined}
-    */
+     * @return undefined
+     */
     handleTestCompleted : function(args) {
-        var response    = Colby.responseFromXMLHttpRequest(args.xhr);
-        args.index      = args.index + 1;
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
+        var message;
+        args.index = args.index + 1;
 
-        if (response.wasSuccessful && !response.message) {
-            response.message = "Succeeded";
+        if (response.wasSuccessful) {
+            message = response.message ? response.message : "Succeeded";
+            args.appendStatusCallback(message, { className : "success" });
+        } else {
+            message = response.message ? response.message : "Failed";
+            args.appendStatusCallback(message, { className : "failure" });
         }
 
-        args.statusElement.value += response.message + "\n";
 
         if (args.index < args.tests.length) {
             CBTestPage.runTest({
+                appendStatusCallback : args.appendStatusCallback,
                 buttonElement   : args.buttonElement,
                 index           : args.index,
-                statusElement   : args.statusElement,
-                tests           : args.tests });
+                tests           : args.tests,
+            });
         } else {
             args.buttonElement.disabled = false;
         }
     },
 
     /**
-    @param {Element} statusElement
-
-    @return void
-    */
+     * @param function args.appendStatusCallback
+     *
+     * @return undefined
+     */
     runJavaScriptTests : function(args) {
-        args.statusElement.value += "Starting JavaScript tests.\n";
+        args.appendStatusCallback("Starting JavaScript tests.");
 
         var message = ColbyUnitTests.runJavaScriptTests();
 
-        args.statusElement.value += message + "\n";
+        args.appendStatusCallback(message, { className : "success" });
     },
 
     /**
-    @param {Element}    buttonElement
-    @param {int}        index
-    @param {Element}    statusElement
-    @param {array}      tests
-
-    @return {undefined}
-    */
+     * @param function args.appendStatusCallback
+     * @param Element args.buttonElement
+     * @param int args.index
+     * @param [object] args.tests
+     *
+     * @return undefined
+     */
     runTest : function(args) {
-        var className       = args.tests[args.index][0];
-        var functionName    = args.tests[args.index][1];
-        var xhr             = new XMLHttpRequest();
-        xhr.onload          = CBTestPage.handleTestCompleted.bind(undefined, {
-            buttonElement   : args.buttonElement,
-            index           : args.index,
-            statusElement   : args.statusElement,
-            tests           : args.tests,
-            xhr             : xhr });
-        var URI             = "/test/?class=" + className;
+        var className = args.tests[args.index][0];
+        var functionName = args.tests[args.index][1];
+
+        var xhr = new XMLHttpRequest();
+        xhr.onload = CBTestPage.handleTestCompleted.bind(undefined, {
+            appendStatusCallback : args.appendStatusCallback,
+            buttonElement : args.buttonElement,
+            index : args.index,
+            tests : args.tests,
+            xhr : xhr,
+        });
+
+        var URI = "/test/?class=" + className;
 
         if (functionName !== undefined) {
             URI += "&function=" + functionName;
@@ -147,8 +191,8 @@ var CBTestPage = {
         xhr.open('POST', URI, true);
         xhr.send();
 
-        args.statusElement.value += "Test: " + className + (functionName ? " - " + functionName : '') + "\n";
-    }
+        args.appendStatusCallback("Test: " + className + (functionName ? " - " + functionName : ''));
+    },
 };
 
 document.addEventListener("DOMContentLoaded", CBTestPage.DOMContentDidLoad);

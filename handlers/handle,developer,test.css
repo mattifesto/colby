@@ -1,15 +1,25 @@
-.CBTestUI {
-    margin:     0 auto;
+.CBTestUI .container {
+    padding: 10px;
     text-align: center;
-    width:      720px;
 }
 
-.CBTestUI button {
-    margin:     0 5px;
+.CBTestUI .status {
+    background-color: hsl(0, 0%, 20%);
+    color: hsl(0, 0%, 80%);
+    padding: 10px;
 }
 
-.CBTestUI textarea {
-    height:     400px;
-    margin:     10px 0 0;
-    width:      100%;
+.CBTestUI .line.error {
+    color: hsl(30, 50%, 50%);
+    padding: 0 10px;
+}
+
+.CBTestUI .line.failure {
+    color: hsl(0, 50%, 50%);
+    padding-bottom: 5px;
+}
+
+.CBTestUI .line.success {
+    color: hsl(120, 50%, 50%);
+    padding-bottom: 5px;
 }
