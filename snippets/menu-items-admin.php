@@ -41,7 +41,6 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
 
     $developMenu                    = new stdClass();
     $developMenu->images            = newMenuItem('Images', '/admin/develop/images/');
-    $developMenu->menus             = newMenuItem('Menus', '/admin/develop/menus/');
     $developMenu->php               = newMenuItem('PHP', '/admin/develop/php/');
     $developMenu->update            = newMenuItem('Update', '/developer/update/');
     $developMenu->documents         = newMenuItem('Pages', '/admin/documents/');
