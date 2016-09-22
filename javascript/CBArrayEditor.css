@@ -4,6 +4,7 @@
 
 .CBArrayEditor .CBUISectionItem .content {
     flex: 1 1 auto;
+    min-width: 0;
     padding: 5px 10px;
 }
 
