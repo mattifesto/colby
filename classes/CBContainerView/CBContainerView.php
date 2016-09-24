@@ -182,8 +182,10 @@ EOT;
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model) {
+        $themeID = empty($model->themeID) ? null : $model->themeID;
+
         CBHTMLOutput::addCSSURL(CBContainerView::URL('CBContainerView.css'));
-        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($model->themeID));
+        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
 
         $classes = ['CBContainerView'];
         $tagName = empty($model->tagName) ? 'div' : $model->tagName;
@@ -203,9 +205,14 @@ EOT;
             $classes[] = "useImageHeight";
         }
 
-        if (($class = CBTheme::IDToCSSClass($model->themeID)) !== null) {
-            $classes[] = $class;
-        }
+        /**
+         * 2016.09.23
+         * The line below should call CBTheme::IDToCSSClasses().
+         * The line for the stylesID below that should call a different function
+         * that only returns a class name for an ID. (No "NoTheme" class.)
+         */
+
+        $classes[] = CBTheme::IDToCSSClass($themeID);
 
         if (!empty($model->stylesID)) {
             $classes[] = CBTheme::IDToCSSClass($model->stylesID);
