@@ -3,6 +3,28 @@
 class CBAdminPageForImages {
 
     /**
+     * @return [string]
+     */
+    public static function adminPageMenuNamePath() {
+        return ['develop', 'images'];
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function adminPagePermissions() {
+        return (object)['group' => 'Developers'];
+    }
+
+    /**
+     * @return void
+     */
+    public static function adminPageRenderContent() {
+        CBHTMLOutput::setTitleHTML('Images Administration');
+        CBHTMLOutput::setDescriptionHTML('Tools to administer website images.');
+    }
+
+    /**
      * @return null
      */
     public static function fetchImagesForAjax() {
@@ -40,38 +62,22 @@ EOT;
     }
 
     /**
-     * @return void
+     * @return [string]
      */
-    public static function renderAsHTML() {
-        if (!ColbyUser::current()->isOneOfThe('Developers')) {
-            return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
-        }
-
-        CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
-        CBHTMLOutput::begin();
-        CBHTMLOutput::setTitleHTML('Images Administration');
-        CBHTMLOutput::setDescriptionHTML('Tools to administer website images.');
-        CBHTMLOutput::addCSSURL(CBSystemURL . '/javascript/CBAdminImageThumbnail.css');
-        CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBAdminImageThumbnailFactory.js');
-        CBHTMLOutput::addCSSURL(CBAdminPageForImages::URL('CBAdminPageForImages.css'));
-        CBHTMLOutput::addJavaScriptURL(CBAdminPageForImages::URL('CBAdminPageForImages.js'));
-
-        $spec                           = new stdClass();
-        $spec->selectedMenuItemName     = 'develop';
-        $spec->selectedSubmenuItemName  = 'images';
-        CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
-
-        echo '<main></main>';
-
-        CBAdminPageFooterView::renderModelAsHTML();
-        CBHTMLOutput::render();
+    public static function requiredCSSURLs() {
+        return [
+            CBSystemURL . '/javascript/CBAdminImageThumbnail.css',
+            Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__),
+        ];
     }
 
     /**
-     * @return {string}
+     * @return [string]
      */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+    public static function requiredJavaScriptURLs() {
+        return [
+            CBSystemURL . '/javascript/CBAdminImageThumbnailFactory.js',
+            Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__),
+        ];
     }
 }

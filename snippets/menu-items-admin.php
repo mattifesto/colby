@@ -40,7 +40,7 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
     $generalMenu->permissions       = newMenuItem('Permissions', '/admin/users/');
 
     $developMenu                    = new stdClass();
-    $developMenu->images            = newMenuItem('Images', '/admin/develop/images/');
+    $developMenu->images            = newMenuItem('Images', '/admin/page/?class=CBAdminPageForImages');
     $developMenu->php               = newMenuItem('PHP', '/admin/develop/php/');
     $developMenu->update            = newMenuItem('Update', '/developer/update/');
     $developMenu->documents         = newMenuItem('Pages', '/admin/documents/');

@@ -1,3 +1,0 @@
-<?php
-
-CBAdminPageForImages::renderAsHTML();
