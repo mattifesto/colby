@@ -1,4 +1,4 @@
-"use strict";
+"use strict"; /* jshint strict: global */
 /* globals CBUI, Colby */
 
 var CBPageList = {
@@ -39,15 +39,17 @@ var CBPageList = {
         title.className = "title";
         title.textContent = page.keyValueData.title;
         var copy = document.createElement("div");
-        copy.className = "button copy";
+        copy.className = "CBPageListCopyButton";
         copy.textContent = "Copy";
         var trash = document.createElement("div");
-        trash.className = "button trash";
+        trash.className = "CBPageListTrashButton";
         trash.textContent = "Trash";
+        var buttonHider = CBUIButtonHider.create();
 
         element.appendChild(title);
-        element.appendChild(copy);
-        element.appendChild(trash);
+        buttonHider.appendChildCallback(copy);
+        buttonHider.appendChildCallback(trash);
+        element.appendChild(buttonHider.element);
 
         title.addEventListener("click", CBPageList.handlePageElementEditWasClicked.bind(undefined, {
             className : page.className,
@@ -126,5 +128,62 @@ var CBPageList = {
         } else {
             Colby.displayResponse(response);
         }
+    },
+};
+
+/**
+ * 2010.09.29 Testing for a permanent button hider control.
+ */
+var CBUIButtonHider = {
+
+    /**
+     * @param Element state.buttonsElement
+     * @param Element element
+     *
+     * @return undefined
+     */
+    appendChild : function (state, element) {
+        state.buttonsElement.appendChild(element);
+    },
+
+    /**
+     * @return {
+     *  function appendChildCallback,
+     *  Element element,
+     * }
+     */
+    create : function () {
+        var element = document.createElement("div");
+        element.className = "CBUIButtonHider";
+
+        var hider = document.createElement("div");
+        hider.className = "hider";
+        element.appendChild(hider);
+
+        hider.addEventListener("click", CBUIButtonHider.handleHiderClicked.bind(undefined, {
+            element : element,
+        }));
+
+        var buttons = document.createElement("div");
+        buttons.className = "buttons";
+        element.appendChild(buttons);
+
+        var appendChildCallback = CBUIButtonHider.appendChild.bind(undefined, {
+            buttonsElement : buttons,
+        });
+
+        return {
+            appendChildCallback : appendChildCallback,
+            element : element,
+        };
+    },
+
+    /**
+     * @param Element state.element
+     *
+     * @return undefined
+     */
+    handleHiderClicked : function (state) {
+        state.element.classList.toggle("open");
     },
 };

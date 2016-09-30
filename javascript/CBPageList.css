@@ -14,24 +14,60 @@
     white-space: nowrap;
 }
 
-.CBPageListPage > .button {
-    align-items: center;
-    cursor: pointer;
-    display: none;
-    justify-content: center;
-    padding: 0 10px;
+.CBPageListPage > .CBUIButtonHider {
+    border-left: 1px solid hsl(0, 0%, 80%);
 }
 
-.CBPageListPage.selected > .button,
-.CBPageListPage:hover > .button {
-    display: flex;
-    flex: none;
-}
-
-.CBPageListPage > .copy {
+.CBPageListCopyButton {
     background-color: hsl(60, 100%, 70%);
 }
 
-.CBPageListPage > .trash {
+.CBPageListTrashButton {
     background-color: hsl(0, 100%, 70%);
+}
+
+/* CBUIButtonHider */
+
+.CBUIButtonHider {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.CBUIButtonHider .hider {
+    align-items: center;
+    color: hsl(0, 0%, 80%);
+    cursor: default;
+    display: flex;
+    flex: none;
+    padding: 0 20px;
+}
+
+.CBUIButtonHider .hider:hover {
+    color: hsl(0, 0%, 20%);
+}
+
+.CBUIButtonHider .hider::before {
+    content: "<";
+}
+
+.CBUIButtonHider.open .hider::before {
+    content: ">";
+}
+
+.CBUIButtonHider .buttons {
+    display: none;
+}
+
+.CBUIButtonHider.open .buttons {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.CBUIButtonHider .buttons > * {
+    align-items: center;
+    cursor: default;
+    display: flex;
+    flex: none;
+    padding: 0 10px;
 }
