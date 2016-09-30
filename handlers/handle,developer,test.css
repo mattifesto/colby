@@ -4,8 +4,6 @@
 }
 
 .CBTestUI .status {
-    background-color: hsl(0, 0%, 20%);
-    color: hsl(0, 0%, 80%);
     padding: 10px;
 }
 
@@ -22,4 +20,14 @@
 .CBTestUI .line.success {
     color: hsl(120, 50%, 50%);
     padding-bottom: 5px;
+}
+
+main {
+    background-color: hsl(0, 0%, 20%);
+    color: hsl(0, 0%, 80%);
+    flex: 1 1 auto;
+}
+
+main + .flex-fill {
+    display: none;
 }

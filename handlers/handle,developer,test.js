@@ -23,6 +23,15 @@ var CBTestPage = {
     },
 
     /**
+     * @param Element args.statusElement
+     *
+     * @return undefined
+     */
+    clearStatus : function (args) {
+        args.statusElement.textContent = null;
+    },
+
+    /**
      * @return {Element}
      */
     createTestUI : function() {
@@ -39,9 +48,14 @@ var CBTestPage = {
             statusElement : status,
         });
 
+        var clearStatusCallback = CBTestPage.clearStatus.bind(undefined, {
+            statusElement : status,
+        });
+
         button.addEventListener("click", CBTestPage.handleRunTests.bind(undefined, {
-            buttonElement : button,
             appendStatusCallback : appendStatusCallback,
+            buttonElement : button,
+            clearStatusCallback : clearStatusCallback,
         }));
 
         containerElement.appendChild(button);
@@ -85,6 +99,7 @@ var CBTestPage = {
     /**
      * @param function args.appendStatusCallback
      * @param Element args.buttonElement
+     * @param function args.clearStatusCallback
      *
      * @return undefined
      */
@@ -98,12 +113,12 @@ var CBTestPage = {
             xhr : xhr,
         });
 
-        args.appendStatusCallback("");
+        args.clearStatusCallback();
         args.appendStatusCallback("Tests Started - " +
             date.toLocaleDateString() +
             " " +
-            date.toLocaleTimeString() +
-            "\n");
+            date.toLocaleTimeString());
+        args.appendStatusCallback("\u00A0");
 
         CBTestPage.runJavaScriptTests({
             appendStatusCallback : args.appendStatusCallback,
