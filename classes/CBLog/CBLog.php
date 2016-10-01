@@ -96,12 +96,30 @@ EOT;
     }
 
     /**
+     * return null
+     */
+    public static function fetchLogsForAjax() {
+        $response = new CBAjaxResponse();
+
+        $response->logs = CBLog::entries();
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * return stdClass
+     */
+    public static function fetchLogsForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * @param int $args->sinceTimestamp
      * @param int $args->minSeverity
      *
      * @return [stdClass]
      */
-    public static function entries($args) {
+    public static function entries($args = null) {
         $whereAsSQL = [];
 
         if (isset($args->sinceTimestamp)) {
@@ -116,13 +134,17 @@ EOT;
 
         }
 
-        $whereAsSQL = implode(' AND ', $whereAsSQL);
+        if (empty($whereAsSQL)) {
+            $whereAsSQL = '';
+        } else {
+            $whereAsSQL = 'WHERE ' . implode(' AND ', $whereAsSQL);
+        }
 
         $SQL = <<<EOT
 
             SELECT `category`, `message`, `timestamp`
             FROM `CBLog`
-            WHERE {$whereAsSQL}
+            {$whereAsSQL}
             ORDER BY `timestamp`
 
 EOT;

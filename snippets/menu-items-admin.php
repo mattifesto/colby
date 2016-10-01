@@ -7,6 +7,7 @@ $CBAdminMenu->home = newMenuItem('Home', '/');
 
 $generalMenu            = new stdClass();
 $generalMenu->status    = newMenuItem('Status', '/admin/');
+$generalMenu->logs = newMenuItem('Logs', '/admin/page/?class=CBAdminPageForLogs');
 $CBAdminMenu->general   = newMenuItem('General', '/admin/', $generalMenu);
 
 
