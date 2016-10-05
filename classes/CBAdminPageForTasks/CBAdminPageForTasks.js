@@ -1,7 +1,7 @@
 "use strict"; /* jshint strict: global */
 /* globals Colby */
 
-var CBAdminPageForLogs = {
+var CBAdminPageForTasks = {
 
     /**
      * @return Element
@@ -9,7 +9,7 @@ var CBAdminPageForLogs = {
     create : function () {
         var element = document.createElement("div");
 
-        CBAdminPageForLogs.fetchLogs({element:element});
+        CBAdminPageForTasks.fetchTasks({element:element});
 
         return element;
     },
@@ -19,16 +19,16 @@ var CBAdminPageForLogs = {
      */
     DOMContentDidLoad : function () {
         var main = document.getElementsByTagName("main")[0];
-        main.appendChild(CBAdminPageForLogs.create());
+        main.appendChild(CBAdminPageForTasks.create());
     },
 
     /**
-     * @param Object log
+     * @param Object task
      */
-    elementForLog : function (log) {
+    elementForTask : function (task) {
         var element = document.createElement("div");
-        element.className = "log";
-        element.textContent = log.message;
+        element.className = "task";
+        element.textContent = task.className + "::" + task.function;
 
         return element;
     },
@@ -38,11 +38,11 @@ var CBAdminPageForLogs = {
      *
      * @return undefined
      */
-    fetchLogs : function (args) {
+    fetchTasks : function (args) {
         var xhr = new XMLHttpRequest();
         xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
-        xhr.onload = CBAdminPageForLogs.fetchLogsDidLoad.bind(undefined, {element:args.element,xhr:xhr});
-        xhr.open("POST", "/api/?class=CBLog&function=fetchLogs");
+        xhr.onload = CBAdminPageForTasks.fetchTasksDidLoad.bind(undefined, {element:args.element,xhr:xhr});
+        xhr.open("POST", "/api/?class=CBTasks&function=fetchTasks");
         xhr.send();
     },
 
@@ -52,18 +52,18 @@ var CBAdminPageForLogs = {
      *
      * @return undefined
      */
-    fetchLogsDidLoad : function (args) {
+    fetchTasksDidLoad : function (args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            if (response.logs.length > 0) {
+            if (response.tasks.length > 0) {
                 args.element.textContent = "";
-                response.logs.forEach(function (log) {
-                    var logElement = CBAdminPageForLogs.elementForLog(log);
-                    args.element.appendChild(logElement);
+                response.tasks.forEach(function (task) {
+                    var taskElement = CBAdminPageForTasks.elementForTask(task);
+                    args.element.appendChild(taskElement);
                 });
             } else {
-                args.element.textContent = "No logs";
+                args.element.textContent = "No tasks";
             }
         } else {
             Colby.displayResponse(response);
@@ -71,4 +71,4 @@ var CBAdminPageForLogs = {
     },
 };
 
-document.addEventListener("DOMContentLoaded", CBAdminPageForLogs.DOMContentDidLoad);
+document.addEventListener("DOMContentLoaded", CBAdminPageForTasks.DOMContentDidLoad);

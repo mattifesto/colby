@@ -142,6 +142,31 @@ EOT;
     /**
      * @return null
      */
+    public static function fetchTasksForAjax() {
+        $response = new CBAjaxResponse();
+
+        $SQL =<<<EOT
+
+            SELECT *
+            FROM `CBTasks`
+
+EOT;
+
+        $response->tasks = CBDB::SQLToObjects($SQL);
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * return stdClass
+     */
+    public static function fetchTasksForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
+     * @return null
+     */
     public static function getStatusForAjax() {
         $response = new CBAjaxResponse();
 

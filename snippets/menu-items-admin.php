@@ -6,9 +6,10 @@ $CBAdminMenu = new stdClass();
 $CBAdminMenu->home = newMenuItem('Home', '/');
 
 $generalMenu            = new stdClass();
-$generalMenu->status    = newMenuItem('Status', '/admin/');
+$generalMenu->status = newMenuItem('Status', '/admin/');
+$generalMenu->tasks = newMenuItem('Tasks', '/admin/page/?class=CBAdminPageForTasks');
 $generalMenu->logs = newMenuItem('Logs', '/admin/page/?class=CBAdminPageForLogs');
-$CBAdminMenu->general   = newMenuItem('General', '/admin/', $generalMenu);
+$CBAdminMenu->general = newMenuItem('General', '/admin/', $generalMenu);
 
 
 $pagesMenu = new stdClass();
