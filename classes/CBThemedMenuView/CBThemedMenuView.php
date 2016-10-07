@@ -75,9 +75,10 @@ EOT;
         }
 
         $themeID = CBModel::value($args, 'themeID');
-        $class = CBTheme::IDToCSSClass($themeID);
+        $class = implode(' ', CBTheme::IDToCSSClasses($themeID));
         $class = "CBThemedMenuView {$class}";
-        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
+
+        CBTheme::useThemeWithID($themeID);
 
         ?> <div class="<?= $class ?>"><ul> <?php
 
