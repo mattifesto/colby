@@ -106,6 +106,20 @@ final class CBTheme {
     }
 
     /**
+     * @param string? $spec->classNameForKind
+     *  The class name of the object this theme styles. This is technically an
+     *  optional parameter but practically required.
+     * @param string? $spec->classNameForTheme
+     *  This class will be required if the theme is used. It will also be added
+     *  to the class names of the theme element. This allows well known themes
+     *  to place their CSS in a style and also to include JavaScript.
+     * @param string? $spec->description
+     *  A friendly description of the theme's purpose.
+     * @param string? $spec->styles
+     *  The CSS for the theme in template syntax.
+     * @param string? $spec->title
+     *  The theme's title.
+     *
      * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
@@ -164,11 +178,13 @@ final class CBTheme {
      * Call this function while rendering to make sure all of the theme
      * resources will be loaded.
      *
-     * @param hex160 $ID
+     * @param hex160? $ID
      *
      * @return null
      */
     public static function useThemeWithID($ID) {
+        if (empty($ID)) { return; }
+
         CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($ID));
 
         $model = CBModelCache::fetchModelByID($ID);
