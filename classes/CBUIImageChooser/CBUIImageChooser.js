@@ -9,6 +9,15 @@
  *
  * Because this control does not upload the image the using code must call
  * setImageURLCallback once an image URL is available for the chosen image.
+ *
+ * Instructions:
+ *
+ *  - The imageChosenCallback is generally custom written for each use of this
+ *    class. In it you will generally call one or more Ajax functions to upload
+ *    and possibly resize the selected image.
+ *
+ *  - The imageRemovedCallback should generally just unset the spec variables
+ *    related to the image.
  */
 var CBUIImageChooser = {
 
