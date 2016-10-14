@@ -39,8 +39,36 @@ final class CBPagesAdministrationView {
      * @return [[string, mixed]]
      */
     public static function requiredJavaScriptVariables() {
+        $pageKinds = CBPagesAdministrationView::fetchExistingPageKinds();
+
+        $pageKinds = array_map(function ($pageKind) {
+            if ($pageKind === null) {
+                return (object)[
+                    'title' => 'Unspecified',
+                    'value' => 'unspecified',
+                ];
+            } else {
+                return (object)[
+                    'title' => $pageKind,
+                    'value' => $pageKind,
+                ];
+            }
+        }, $pageKinds);
+
+
+        array_unshift($pageKinds,
+            (object)[
+                'title' => 'All',
+                /* value unspecified */
+            ],
+            (object)[
+                'title' => 'Current Front Page',
+                'value' => 'currentFrontPage',
+            ]
+        );
+
         return [
-            ['CBPagesClassNamesForKinds', CBPagesAdministrationView::fetchExistingPageKinds()]
+            ['CBPageKindsOptions', $pageKinds]
         ];
     }
 

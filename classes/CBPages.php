@@ -102,6 +102,15 @@ EOT;
         if (isset($parameters->classNameForKind)) {
             if ($parameters->classNameForKind === 'unspecified') {
                 $conditions[] = '`classNameForKind` IS NULL';
+            } else if ($parameters->classNameForKind === 'currentFrontPage') {
+                $frontPageID = CBSitePreferences::frontPageID();
+
+                if (empty($frontPageID)) {
+                    $conditions[] = 'FALSE'; /* return no results */
+                } else {
+                    $frontPageIDForSQL = CBHex160::toSQL($frontPageID);
+                    $conditions[] = "`archiveID` = {$frontPageIDForSQL}";
+                }
             } else {
                 $classNameForKindAsSQL = CBDB::stringToSQL($parameters->classNameForKind);
                 $conditions[] = "`classNameForKind` = {$classNameForKindAsSQL}";

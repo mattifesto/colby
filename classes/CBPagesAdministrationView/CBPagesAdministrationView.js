@@ -1,5 +1,5 @@
-"use strict";
-/* globals CBPageList, CBPagesClassNamesForKinds, CBUI, CBUINavigationView,
+"use strict"; /* jshint strict: global */
+/* globals CBPageKindsOptions, CBPageList, CBUI, CBUINavigationView,
            CBUISelector, CBUIStringEditor, Colby */
 
 var CBPagesAdministrationView = {
@@ -35,19 +35,6 @@ var CBPagesAdministrationView = {
         section = CBUI.createSection();
 
         /* classNameForKind */
-        var options = CBPagesClassNamesForKinds.map(function (classNameForKind) {
-            var title, value;
-            if (classNameForKind === null) {
-                title = "Unspecified";
-                value = "unspecified";
-            } else {
-                title = classNameForKind;
-                value = classNameForKind;
-            }
-
-            return { title : title, value : value };
-        });
-        options.unshift({ title : "All", value : undefined });
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText : "Kind",
@@ -56,7 +43,7 @@ var CBPagesAdministrationView = {
             propertyName : "classNameForKind",
             spec : parameters,
             specChangedCallback : fetchPagesCallback,
-            options : options,
+            options : CBPageKindsOptions,
         }).element);
         section.appendChild(item);
 
