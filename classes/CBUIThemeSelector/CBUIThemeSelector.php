@@ -30,6 +30,10 @@ EOT;
             ];
         }, $themes));
 
+        if (is_callable($function = "{$classNameForKind}::themeOptions")) {
+            $options = array_merge(call_user_func($function), $options);
+        }
+
         $response->options = $options;
         $response->wasSuccessful = true;
         $response->send();
