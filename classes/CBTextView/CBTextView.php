@@ -28,6 +28,16 @@ final class CBTextView {
     }
 
     /**
+     * For some reason we've set up all the CBThemedTextView themes with a
+     * CBTextView class. We were planning on renaming that class.
+     *
+     * @return [stdClass]
+     */
+    static function themeOptions() {
+        return CBThemedTextView::themeOptions();
+    }
+
+    /**
      * @param string $filename
      *
      * @return string

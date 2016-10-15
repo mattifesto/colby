@@ -30,18 +30,36 @@ final class CBThemedTextView {
     }
 
     /**
-     * @param {stdClass} $model
+     * @param stdClass $model
      *
-     * @return {string}
+     * @return string
      */
     public static function modelToSearchText(stdClass $model) {
         return "{$model->title} {$model->contentAsMarkaround}";
     }
 
     /**
+     * @param string $themeID
+     *
+     * @return null|hex160
+     */
+    static function parseThemeID($themeID) {
+        if (empty($themeID)) {
+            return CBWellKnownThemeForContent::ID;
+        } else if ('none' == $themeID) {
+            return null;
+        } else {
+            return $themeID;
+        }
+    }
+
+    /**
      * @param bool? $model->center;
      * @param string? $model->contentAsHTML
      * @param hex160? $model->themeID
+     *  empty or unset - default theme
+     *  "none" - no theme
+     *  hex160 - themeID
      * @param string? $model->titleAsHTML
      * @param string? $model->URLAsHTML
      *
@@ -52,9 +70,7 @@ final class CBThemedTextView {
             return;
         }
 
-        if (empty($themeID = CBModel::value($model, 'themeID'))) {
-            $themeID = CBWellKnownThemeForContent::ID;
-        };
+        $themeID = CBModel::value($model, 'themeID', CBWellKnownThemeForContent::ID, 'CBThemedTextView::parseThemeID');
 
         CBHTMLOutput::addCSSURL(CBThemedTextView::URL('CBThemedTextView.css'));
         CBTheme::useThemeWithID($themeID);
@@ -101,9 +117,9 @@ final class CBThemedTextView {
     }
 
     /**
-     * @param {stdClass} $spec
+     * @param stdClass $spec
      *
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
         $model = CBModels::modelWithClassName(__CLASS__);
@@ -132,9 +148,22 @@ final class CBThemedTextView {
     }
 
     /**
-     * @param {string} $filename
+     * @return [stdClass]
+     */
+    static function themeOptions() {
+        return [
+            (object)[
+                'title' => 'No Theme',
+                'description' => '',
+                'value' => 'none',
+            ],
+        ];
+    }
+
+    /**
+     * @param string $filename
      *
-     * @return {string}
+     * @return string
      */
     public static function URL($filename) {
         $className = __CLASS__;
