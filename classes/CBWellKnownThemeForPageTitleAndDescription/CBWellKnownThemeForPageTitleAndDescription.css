@@ -12,13 +12,14 @@
 }
 
 .CBWellKnownThemeForPageTitleAndDescription > .description {
-  color: hsl(0, 0%, 40%);
+  color: rgba(0, 0, 0, 0.6);
   font-style: italic;
   line-height: 1.5;
   max-width: 480px;
 }
 
 .CBWellKnownThemeForPageTitleAndDescription > .published {
-  color: hsl(0, 0%, 60%);
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 80%;
   margin-top: 40px;
 }
