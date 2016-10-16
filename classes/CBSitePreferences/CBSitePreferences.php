@@ -11,8 +11,8 @@
  */
 final class CBSitePreferences {
 
-    const ID                = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
-    private static $model   = false;
+    const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
+    private static $model = false;
 
     /**
      * @param string $key
@@ -111,6 +111,10 @@ final class CBSitePreferences {
      * valid values for all properties without having to add a new update script
      * each time the properties change.
      *
+     * 2016.10.16 The comment above uses deprecated logic. The model should be
+     * valid whether properties are set or not. However this may not yet be
+     * the case.
+     *
      * @return null
      */
     public static function install() {
@@ -124,9 +128,15 @@ final class CBSitePreferences {
     }
 
     /**
-     * @return null
+     * @return stdClass
+     *
+     *  Properties:
+     *
+     *      string? facebookURL
+     *      hex160? frontPageID
+     *      string? twitterURL
      */
-    private static function model() {
+    static function model() {
         if (CBSitePreferences::$model === false) {
             $filepath = CBDataStore::filepath([
                 'ID'        => CBSitePreferences::ID,
@@ -225,18 +235,21 @@ final class CBSitePreferences {
     }
 
     /**
-     * @return {stdClass}
+     * @param $spec stdClass
+     *
+     * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
         $model = CBModels::modelWithClassName(__CLASS__);
         $model->debug = isset($spec->debug) ? !!$spec->debug : false;
         $model->defaultClassNameForPageSettings = isset($spec->defaultClassNameForPageSettings) ? trim($spec->defaultClassNameForPageSettings) : '';
         $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
+        $model->facebookURL = CBModel::value($spec, 'facebookURL', '', 'trim');
         $model->frontPageID = CBModel::value($spec, 'frontPageID');
         $model->googleTagManagerID = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
         $model->reCAPTCHASecretKey = CBModel::value($spec, 'reCAPTCHASecretKey', null, 'trim');
         $model->reCAPTCHASiteKey = CBModel::value($spec, 'reCAPTCHASiteKey', null, 'trim');
-
+        $model->twitterURL = CBModel::value($spec, 'twitterURL', '', 'trim');
         if (isset($spec->custom) && is_array($spec->custom)) {
             $model->custom = new stdClass();
             $keyValueModels = array_filter($spec->custom, function ($spec) { return $spec->className === 'CBKeyValuePair'; });

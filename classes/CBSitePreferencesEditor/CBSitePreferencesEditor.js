@@ -55,6 +55,35 @@ var CBSitePreferencesEditor = {
 
         element.appendChild(section);
 
+        /* Social */
+
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({
+            text : "Social",
+        }));
+
+        section = CBUI.createSection();
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Facebook URL",
+            propertyName : "facebookURL",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Twitter URL",
+            propertyName : "twitterURL",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
+
         /* Google reCAPTCHA */
 
         element.appendChild(CBUI.createHalfSpace());
