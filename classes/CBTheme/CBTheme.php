@@ -16,7 +16,13 @@ final class CBTheme {
     }
 
     /**
-     * @deprecated use CBTheme::IDToCSSClasses()
+     * If you have a CBTheme ID you should probably call
+     * CBTheme::IDToCSSClasses() instead.
+     *
+     * Use caution when using this function to convert an ID that is not a
+     * CBTheme ID. The function returns "NoTheme" for an empty ID which will get
+     * in the way if you also have themes functionality. The workaround is to
+     * only call this function if you're sure you have a non-empty ID.
      *
      * @param hex160 $ID
      *
