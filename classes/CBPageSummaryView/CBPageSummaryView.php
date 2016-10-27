@@ -2,7 +2,27 @@
 
 /**
  * The data stored in the `keyValueData` column of the `ColbyPages` table is
- * a JSON encoded model of this class.
+ * a JSON encoded model usually created by this class.
+ *
+ * Here is a list of the recommended properties for `keyValueData` models. Like
+ * many modern models an unset value is also valid, especially due to the
+ * historically changing nature of this schema.
+ *
+ *      ID: hex160
+ *      title: string
+ *      titleHTML: string
+ *      description: string
+ *      descriptionHTML: string
+ *      URI: string
+ *      thumbnailURL: string
+ *      isPublished: bool
+ *      publicationTimeStamp: int (timestamp)
+ *      created: int (timestamp)
+ *      updated: int (timestamp)
+ *
+ * 2016.10.27 TODO
+ * The schema of this model will be updated by adding tasks which will verify
+ * that all page models are in compliance change or notify of those that aren't.
  *
  * 2015.10.29 TODO
  * This class is a work in progress. Many, if not most, of the properties are
@@ -28,9 +48,9 @@ final class CBPageSummaryView {
      * encodedURLForThumbnail value which is not escaped for HTML. Future
      * versions of this structure should have both.
      *
-     * @param {stdClass} $pageModel
+     * @param stdClass $pageModel
      *
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function pageModelToModel(stdClass $pageModel) {
         $model = (object)[
@@ -63,9 +83,9 @@ final class CBPageSummaryView {
      * For instance, the $pageModel->titleHTML value is assumed to have already
      * been escaped for use in HTML.
      *
-     * @param {stdClass} $pageModel
+     * @param stdClass $pageModel
      *
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function viewPageModelToModel(stdClass $pageModel) {
         $model = (object)[
