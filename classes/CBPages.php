@@ -91,6 +91,11 @@ EOT;
     }
 
     /**
+     * This is called by the "find pages" admin page.
+     *
+     * 2016.10.27 TODO
+     * Should this be moved to the CBAdminPageForPagesFind class?
+     *
      * @return null
      */
     public static function fetchPageListForAjax() {
