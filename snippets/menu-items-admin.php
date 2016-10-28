@@ -16,12 +16,17 @@ $pagesMenu = new stdClass();
 $pagesMenu->create = newMenuItem('Create', '/admin/pages/edit/');
 $pagesMenu->find = newMenuItem('Find', '/admin/page/?class=CBAdminPageForPagesFind');
 $pagesMenu->trash = newMenuItem('Trash', '/admin/pages/trash/');
+if (ColbyUser::current()->isOneOfThe('Developers')) {
+    $pagesMenu->trash2 = newMenuItem('Trash 2', '/admin/page?class=CBAdminPageForPagesTrash');
+}
 $CBAdminMenu->pages = newMenuItem('Pages', '/admin/page/?class=CBAdminPageForPagesFind', $pagesMenu);
+
 
 $CBAdminMenu->models = newMenuItem('Models', '/admin/models/directory/', (object)[
     'directory' => newMenuItem('Directory', '/admin/models/directory/'),
     'import' => newMenuItem('Import', '/admin/page/?class=CBAdminPageForModelImport')
 ]);
+
 
 $helpMenu                   = new stdClass();
 $menuItemID                 = 'markaround-syntax';
