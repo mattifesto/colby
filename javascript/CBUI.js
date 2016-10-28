@@ -163,6 +163,44 @@ var CBUI = {
     },
 
     /**
+     * @param string args.title
+     * @param function args.callback
+     * @param [{title: string, callback: function}] args.commands
+     *
+     * @return {
+     *  Element element,
+     * }
+     */
+    createSectionItemWithCommands : function(args) {
+        var element = CBUI.createSectionItem();
+        element.classList.add("CBUISectionItemWithCommands");
+        var titleElement = document.createElement("div");
+        titleElement.className = "title";
+        titleElement.textContent = args.title;
+        titleElement.addEventListener("click", args.callback);
+        var commandsElement = document.createElement("div");
+        commandsElement.className = "commands";
+
+        if (Array.isArray(args.commands)) {
+            args.commands.forEach(function (command) {
+                var commandElement = document.createElement("div");
+                commandElement.className = "command";
+                commandElement.textContent = command.title;
+                commandElement.addEventListener("click", command.callback);
+
+                commandsElement.appendChild(commandElement);
+            });
+        }
+
+        element.appendChild(titleElement);
+        element.appendChild(commandsElement);
+
+        return {
+            element : element,
+        };
+    },
+
+    /**
      * @param Element element
      * @param string text
      *

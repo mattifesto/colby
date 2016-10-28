@@ -128,3 +128,24 @@
     color: hsl(0, 0%, 50%);
     font-size: 14px;
 }
+
+.CBUISectionItemWithCommands {
+    display: flex;
+}
+
+.CBUISectionItemWithCommands .title {
+    flex: 1 1 auto;
+    padding: 5px;
+}
+
+.CBUISectionItemWithCommands .commands {
+    display: flex;
+    flex: none;
+}
+
+.CBUISectionItemWithCommands .command {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}
