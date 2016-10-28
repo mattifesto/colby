@@ -1,0 +1,60 @@
+<?php
+
+final class CBAdminPageForPagesTrash {
+
+    /**
+     * @return [string]
+     */
+    public static function adminPageMenuNamePath() {
+        return ['pages', 'trash2'];
+    }
+
+    /**
+     * @return stdClass
+     */
+    public static function adminPagePermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
+     * @return null
+     */
+    public static function adminPageRenderContent() {
+        CBHTMLOutput::setTitleHTML('Pages Trash');
+        CBHTMLOutput::setDescriptionHTML('Management of pages that are in the trash.');
+    }
+
+    /**
+     * @return null
+     */
+    static function fetchPageSummaryModelsForAjax() {
+        $response = new CBAjaxResponse();
+        $response->models = CBDB::SQLToArray(
+            'SELECT `keyValueData` FROM `CBPagesInTheTrash`',
+            ['valueIsJSON' => true]
+        );
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function fetchPageSummaryModelsForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
+     * @return [string]
+     */
+    public static function requiredClassNames() {
+        return ['CBUI'];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function requiredJavaScriptURLs() {
+        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
+    }
+}
