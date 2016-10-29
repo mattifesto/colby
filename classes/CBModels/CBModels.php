@@ -97,6 +97,27 @@ EOT;
     }
 
     /**
+     * @return null
+     */
+    static function deleteModelsByIDForAjax() {
+        $response = new CBAjaxResponse();
+
+        $IDs = json_decode($_POST['IDsAsJSON']);
+
+        CBModels::deleteModelsByID($IDs);
+
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function deleteModelsByIDForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * @param [hex160] $IDs
      *
      * @return [int]
