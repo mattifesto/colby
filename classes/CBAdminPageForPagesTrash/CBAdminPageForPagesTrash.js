@@ -28,6 +28,42 @@ var CBAdminPageForPagesTrash = {
     },
 
     /**
+     * @param [hex160]? args.IDs
+     * @param Element args.sectionItemElement
+     *
+     * @return undefined
+     */
+    deletePage : function (args) {
+        var formData = new FormData();
+        formData.append("IDsAsJSON", JSON.stringify(args.IDs));
+
+        var xhr = new XMLHttpRequest();
+        xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
+        xhr.onload = CBAdminPageForPagesTrash.deletePageDidLoad.bind(undefined, {
+            sectionItemElement : args.sectionItemElement,
+            xhr : xhr,
+        });
+        xhr.open("POST", "/api/?class=CBModels&function=deleteModelsByID");
+        xhr.send(formData);
+    },
+
+    /**
+     * @param Element args.sectionItemElement
+     * @param XMLHttpRequest args.xhr
+     *
+     * @return undefined
+     */
+    deletePageDidLoad : function (args) {
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
+
+        if (response.wasSuccessful) {
+            args.sectionItemElement.parentElement.removeChild(args.sectionItemElement);
+        } else {
+            Colby.displayResponse(response);
+        }
+    },
+
+    /**
      * @param Element args.section
      *
      * @return undefined
@@ -56,17 +92,27 @@ var CBAdminPageForPagesTrash = {
             args.section.textContent = undefined;
 
             response.models.forEach(function (model) {
-                args.section.appendChild(CBUI.createSectionItemWithCommands({
-                    title : model.title,
-                    callback : function () { alert("title"); },
-                    commands : [{
-                        title : "Delete",
-                        callback : function () { alert("delete"); },
-                    },{
-                        title : "Recover",
-                        callback : function () { alert("recover"); },
-                    }],
-                }).element);
+                var sectionItem = CBUI.createSectionItem2();
+                sectionItem.titleElement.textContent = model.title;
+
+                args.section.appendChild(sectionItem.element);
+
+                var recoverCommand = document.createElement("div");
+                recoverCommand.className = "command";
+                recoverCommand.textContent = "Recover";
+                recoverCommand.addEventListener("click", function() { alert("recover"); });
+
+                sectionItem.commandsElement.appendChild(recoverCommand);
+
+                var deleteCommand = document.createElement("div");
+                deleteCommand.className = "command";
+                deleteCommand.textContent = "Delete";
+                deleteCommand.addEventListener("click", CBAdminPageForPagesTrash.deletePage.bind(undefined, {
+                    IDs : [model.ID],
+                    sectionItemElement : sectionItem.element,
+                }));
+
+                sectionItem.commandsElement.appendChild(deleteCommand);
             });
         } else {
             Colby.displayResponse(response);
