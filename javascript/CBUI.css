@@ -129,22 +129,33 @@
     font-size: 14px;
 }
 
-.CBUISectionItemWithCommands {
+.CBUISectionItem2 {
     display: flex;
 }
 
-.CBUISectionItemWithCommands .title {
+.CBUISectionItem2 > .title {
     flex: 1 1 auto;
     padding: 5px;
 }
 
-.CBUISectionItemWithCommands .commands {
+.CBUISectionItem2 > .commands {
     display: flex;
     flex: none;
 }
 
-.CBUISectionItemWithCommands .command {
+.CBUISectionItem2 > .toggle {
     align-items: center;
+    border-left: 1px solid hsl(0, 0%, 80%);
+    box-sizing: border-box;
+    display: flex;
+    flex: none;
+    justify-content: center;
+    width: 50px;
+}
+
+.CBUISectionItem2 .command {
+    align-items: center;
+    border-left: 1px solid hsl(0, 0%, 80%);
     display: flex;
     justify-content: center;
     padding: 5px;

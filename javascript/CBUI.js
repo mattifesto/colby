@@ -163,40 +163,38 @@ var CBUI = {
     },
 
     /**
-     * @param string args.title
-     * @param function args.callback
-     * @param [{title: string, callback: function}] args.commands
-     *
      * @return {
-     *  Element element,
+     *  Element element
+     *      The section item element.
+     *  Element titleElement
+     *      You can either add child elements to this or just set the
+     *      textContent property.
+     *  Element commandsElement
+     *      Add subelements with click event handlers to this element. A simple
+     *      <div> with text and a className of "command" will be given the
+     *      standard basic styles of a command. Or you can add custom command
+     *      elements.
      * }
      */
-    createSectionItemWithCommands : function(args) {
+    createSectionItem2 : function () {
         var element = CBUI.createSectionItem();
-        element.classList.add("CBUISectionItemWithCommands");
+        element.classList.add("CBUISectionItem2");
         var titleElement = document.createElement("div");
         titleElement.className = "title";
-        titleElement.textContent = args.title;
-        titleElement.addEventListener("click", args.callback);
         var commandsElement = document.createElement("div");
         commandsElement.className = "commands";
-
-        if (Array.isArray(args.commands)) {
-            args.commands.forEach(function (command) {
-                var commandElement = document.createElement("div");
-                commandElement.className = "command";
-                commandElement.textContent = command.title;
-                commandElement.addEventListener("click", command.callback);
-
-                commandsElement.appendChild(commandElement);
-            });
-        }
+        var toggleCommandsElement = document.createElement("div");
+        toggleCommandsElement.className = "toggle";
+        toggleCommandsElement.textContent = "<";
 
         element.appendChild(titleElement);
         element.appendChild(commandsElement);
+        element.appendChild(toggleCommandsElement);
 
         return {
             element : element,
+            titleElement : titleElement,
+            commandsElement : commandsElement,
         };
     },
 
