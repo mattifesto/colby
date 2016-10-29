@@ -63,8 +63,12 @@ EOT;
     }
 
     /**
-     * Deletes rows from the ColbyPages table. This function doesn't do any
-     * additional work, such as deleting a data store directory.
+     * Deletes rows from the ColbyPages table.
+     *
+     * This function isn't meant to do any additional work. If you want to fully
+     * delete a page call:
+     *
+     *      CBModel::deleteModelsByID($pageID)
      *
      * @return null
      */
@@ -77,8 +81,12 @@ EOT;
     }
 
     /**
-     * Deletes rows from the ColbyPagesIntheTrash table. This function doesn't
-     * do any additional work, such as deleting a data store directory.
+     * Deletes rows from the ColbyPagesIntheTrash table.
+     *
+     * This function isn't meant to do any additional work. If you want to fully
+     * delete a page call:
+     *
+     *      CBModel::deleteModelsByID($pageID)
      *
      * @return null
      */
