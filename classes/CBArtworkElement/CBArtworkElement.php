@@ -51,13 +51,21 @@ final class CBArtworkElement {
                 }
 
                 .ID-<?= $ID ?> > div {
-                    background-image: url("<?= $URLAsHTML ?>");
-                    background-repeat: no-repeat;
-                    background-size: cover;
+                    overflow: hidden;
+                    position: relative;
                     <?= $paddingBottom ?>
                 }
+
+                .ID-<?= $ID ?> > div > img {
+                    left: 0;
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                }
             </style>
-            <div></div>
+            <div>
+                <img src="<?= $URLAsHTML ?>" alt="">
+            </div>
         </div>
 
         <?php
