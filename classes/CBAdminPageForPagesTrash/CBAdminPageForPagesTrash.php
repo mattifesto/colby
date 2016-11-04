@@ -45,6 +45,29 @@ final class CBAdminPageForPagesTrash {
     }
 
     /**
+     * @param hex160 $_POST['ID']
+     *
+     * @return null
+     */
+    static function recoverPageForAjax() {
+        $response = new CBAjaxResponse();
+
+        $ID = $_POST['ID'];
+
+        CBPages::recoverRowWithDataStoreIDFromTheTrash($ID);
+
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function recoverPageForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * @return [string]
      */
     public static function requiredClassNames() {

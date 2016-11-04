@@ -100,7 +100,10 @@ var CBAdminPageForPagesTrash = {
                 var recoverCommand = document.createElement("div");
                 recoverCommand.className = "command";
                 recoverCommand.textContent = "Recover";
-                recoverCommand.addEventListener("click", function() { alert("recover"); });
+                recoverCommand.addEventListener("click", CBAdminPageForPagesTrash.recoverPage.bind(undefined, {
+                    ID : model.ID,
+                    sectionItemElement : sectionItem.element,
+                }));
 
                 sectionItem.commandsElement.appendChild(recoverCommand);
 
@@ -114,6 +117,42 @@ var CBAdminPageForPagesTrash = {
 
                 sectionItem.commandsElement.appendChild(deleteCommand);
             });
+        } else {
+            Colby.displayResponse(response);
+        }
+    },
+
+    /**
+     * @param hex160 args.ID
+     * @param Element args.sectionItemElement
+     *
+     * @return undefined
+     */
+    recoverPage : function (args) {
+        var formData = new FormData();
+        formData.append("ID", args.ID);
+
+        var xhr = new XMLHttpRequest();
+        xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
+        xhr.onload = CBAdminPageForPagesTrash.recoverPageDidLoad.bind(undefined, {
+            sectionItemElement : args.sectionItemElement,
+            xhr : xhr,
+        });
+        xhr.open("POST", "/api/?class=CBAdminPageForPagesTrash&function=recoverPage");
+        xhr.send(formData);
+    },
+
+    /**
+     * @param Element args.sectionItemElement
+     * @param XMLHttpRequest args.xhr
+     *
+     * @return undefined
+     */
+    recoverPageDidLoad : function (args) {
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
+
+        if (response.wasSuccessful) {
+            args.sectionItemElement.parentElement.removeChild(args.sectionItemElement);
         } else {
             Colby.displayResponse(response);
         }
