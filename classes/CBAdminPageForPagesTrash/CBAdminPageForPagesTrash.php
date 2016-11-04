@@ -6,7 +6,7 @@ final class CBAdminPageForPagesTrash {
      * @return [string]
      */
     public static function adminPageMenuNamePath() {
-        return ['pages', 'trash2'];
+        return ['pages', 'trash'];
     }
 
     /**

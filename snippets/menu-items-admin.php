@@ -15,10 +15,7 @@ $CBAdminMenu->general = newMenuItem('General', '/admin/', $generalMenu);
 $pagesMenu = new stdClass();
 $pagesMenu->create = newMenuItem('Create', '/admin/pages/edit/');
 $pagesMenu->find = newMenuItem('Find', '/admin/page/?class=CBAdminPageForPagesFind');
-$pagesMenu->trash = newMenuItem('Trash', '/admin/pages/trash/');
-if (ColbyUser::current()->isOneOfThe('Developers')) {
-    $pagesMenu->trash2 = newMenuItem('Trash 2', '/admin/page?class=CBAdminPageForPagesTrash');
-}
+$pagesMenu->trash = newMenuItem('Trash', '/admin/page?class=CBAdminPageForPagesTrash');
 $CBAdminMenu->pages = newMenuItem('Pages', '/admin/page/?class=CBAdminPageForPagesFind', $pagesMenu);
 
 
