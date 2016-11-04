@@ -5,6 +5,13 @@ final class CBUI {
     /**
      * @return [string]
      */
+    static function requiredClassNames() {
+        return ['CBUIDropdown'];
+    }
+
+    /**
+     * @return [string]
+     */
     public static function requiredCSSURLs() {
         return [CBSystemURL . '/javascript/CBUI.css'];
     }

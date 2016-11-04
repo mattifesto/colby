@@ -1,4 +1,5 @@
 "use strict"; /* jshint strict: global */
+/* global CBUIDropdown */
 
 var CBUI = {
 
@@ -181,20 +182,15 @@ var CBUI = {
         element.classList.add("CBUISectionItem2");
         var titleElement = document.createElement("div");
         titleElement.className = "title";
-        var commandsElement = document.createElement("div");
-        commandsElement.className = "commands";
-        var toggleCommandsElement = document.createElement("div");
-        toggleCommandsElement.className = "toggle";
-        toggleCommandsElement.textContent = "<";
+        var dropdown = CBUIDropdown.create();
 
         element.appendChild(titleElement);
-        element.appendChild(commandsElement);
-        element.appendChild(toggleCommandsElement);
+        element.appendChild(dropdown.dropdownElement);
 
         return {
             element : element,
             titleElement : titleElement,
-            commandsElement : commandsElement,
+            commandsElement : dropdown.menuElement,
         };
     },
 

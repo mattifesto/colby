@@ -138,12 +138,19 @@
     padding: 5px;
 }
 
-.CBUISectionItem2 > .commands {
+.CBUISectionItem2 > .CBUIDropdown {
+    background-color: inherit;
     display: flex;
     flex: none;
+    flex-direction: row-reverse;
+    position: relative;
 }
 
-.CBUISectionItem2 > .toggle {
+.CBUISectionItem2 > .CBUIDropdown.expanded {
+    z-index: 1000;
+}
+
+.CBUISectionItem2 > .CBUIDropdown > .button {
     align-items: center;
     border-left: 1px solid hsl(0, 0%, 80%);
     box-sizing: border-box;
@@ -151,6 +158,22 @@
     flex: none;
     justify-content: center;
     width: 50px;
+}
+
+.CBUISectionItem2 > .CBUIDropdown > .button::after {
+    content: "<";
+}
+
+.CBUISectionItem2 > .CBUIDropdown.expanded > .button::after {
+    content: ">";
+}
+
+.CBUISectionItem2 > .CBUIDropdown > .menu {
+    display: none;
+}
+
+.CBUISectionItem2 > .CBUIDropdown.expanded > .menu {
+    display: flex;
 }
 
 .CBUISectionItem2 .command {
