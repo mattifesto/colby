@@ -6,7 +6,7 @@ final class CBArtworkViewEditor {
      * @return [string]
      */
     static function requiredClassNames() {
-        return ['CBUI', 'CBUIImageChooser'];
+        return ['CBUI', 'CBUIImageChooser', 'CBUIStringEditor'];
     }
 
     /**

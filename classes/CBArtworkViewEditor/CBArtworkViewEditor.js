@@ -1,5 +1,5 @@
 "use strict"; /* jshint strict: global */
-/* globals Colby, CBUI, CBUIImageChooser */
+/* globals Colby, CBUI, CBUIImageChooser, CBUIStringEditor */
 
 var CBArtworkViewEditor = {
 
@@ -33,6 +33,15 @@ var CBArtworkViewEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(chooser.element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Alternative Text",
+            propertyName : "alternativeText",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
         section.appendChild(item);
 
         element.appendChild(section);

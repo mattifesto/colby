@@ -3,6 +3,8 @@
 final class CBArtworkView {
 
     /**
+     * @param string? $model->alternativeText
+     *
      * @return null
      */
     static function renderModelAsHTML(stdClass $model) {
@@ -19,6 +21,7 @@ final class CBArtworkView {
         $basename = "{$image->filename}.{$image->extension}";
 
         CBArtworkElement::render([
+            'alternativeText' => CBModel::value($model, 'alternativeText', ''),
             'height' => $image->height,
             'maxWidth' => empty($model->maxWidth) ? $image->width / 2 : $image->maxWidth,
             'width' => $image->width,
@@ -36,6 +39,7 @@ final class CBArtworkView {
     }
 
     /**
+     * @param string? $spec->alternativeText
      * @param string $spec->image?->extension
      * @param string $spec->image?->filename
      * @param int $spec->image?->height
@@ -47,6 +51,7 @@ final class CBArtworkView {
     static function specToModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
+            'alternativeText' => CBModel::value($spec, 'alternativeText', '', 'trim'),
         ];
 
         if (!empty($spec->image)) {

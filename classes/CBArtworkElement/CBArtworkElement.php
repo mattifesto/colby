@@ -12,6 +12,8 @@
 final class CBArtworkElement {
 
     /**
+     * @param string? $args['alternativeText']
+     *  The alternative text for the image.
      * @param int $args['height']
      *  The height in image pixels of the image.
      * @param int $args['width']
@@ -41,6 +43,12 @@ final class CBArtworkElement {
             $maxWidth = "max-width: {$maxWidth}px;";
         }
 
+        if (empty($args['alternativeText'])) {
+            $alternativeTextAsHTML = '';
+        } else {
+            $alternativeTextAsHTML = cbhtml($args['alternativeText']);
+        }
+
         ?>
 
         <div class="CBArtworkElement ID-<?= $ID ?>">
@@ -64,7 +72,7 @@ final class CBArtworkElement {
                 }
             </style>
             <div>
-                <img src="<?= $URLAsHTML ?>" alt="">
+                <img src="<?= $URLAsHTML ?>" alt="<?= $alternativeTextAsHTML ?>">
             </div>
         </div>
 
