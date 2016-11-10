@@ -1,5 +1,10 @@
 .CBArtworkView {
+    align-items: center;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     padding: 20px;
+}
+
+.CBArtworkView .pin {
+    margin-top: 10px;
 }

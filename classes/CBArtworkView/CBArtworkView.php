@@ -14,19 +14,37 @@ final class CBArtworkView {
         }
 
         CBHTMLOutput::requireClassName(__CLASS__);
+        CBHTMLOutput::addPinterest();
 
         echo '<figure class="CBArtworkView">';
 
         $image = $model->image;
         $basename = "{$image->filename}.{$image->extension}";
+        $imageURL = CBDataStore::flexpath($image->ID, $basename, CBSiteURL);
+        $pageContext = CBPageContext::current();
+        $descriptionAsHTML = CBModel::value($pageContext, 'descriptionAsHTML', '');
 
         CBArtworkElement::render([
             'alternativeText' => CBModel::value($model, 'alternativeText', ''),
             'height' => $image->height,
             'maxWidth' => empty($model->maxWidth) ? $image->width / 2 : $image->maxWidth,
             'width' => $image->width,
-            'URL' => CBDataStore::flexpath($image->ID, $basename, CBSiteURL),
+            'URL' => $imageURL,
         ]);
+
+        ?>
+
+        <div class="pin">
+            <a href="https://www.pinterest.com/pin/create/button/"
+               data-pin-custom="true"
+               data-pin-description="<?= $descriptionAsHTML ?>"
+               data-pin-do="buttonPin"
+               data-pin-media="<?= $imageURL ?>">
+                Pin to Pinterest
+            </a>
+        </div>
+
+        <?php
 
         echo '</figure>';
     }
