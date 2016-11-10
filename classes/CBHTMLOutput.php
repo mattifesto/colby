@@ -22,6 +22,7 @@ class CBHTMLOutput
 {
     const JSAsync           = 1; // 1 << 0
     const JSInHeadElement   = 2; // 1 << 1
+    const JSDefer           = 4; // 1 << 2
 
     public static $classNameForSettings;
 
@@ -33,7 +34,6 @@ class CBHTMLOutput
     private static $javaScriptSnippetFilenames;
     private static $javaScriptSnippetStrings;
     private static $javaScriptURLs;
-    private static $javaScriptURLsInHead;
     private static $requiredClassNames;
     private static $titleHTML; /* deprecated */
 
@@ -70,15 +70,13 @@ class CBHTMLOutput
     /**
      * @return void
      */
-    public static function addJavaScriptURL($javaScriptURL, $options = 0)
-    {
+    static function addJavaScriptURL($javaScriptURL, $options = 0) {
         /**
          * The options parameter used to be a boolean parameter indicating
          * whether the JavaScript was asynchronous or not.
          */
 
-        if (true === $options)
-        {
+        if (true === $options) {
             $backtrace = debug_backtrace();
 
             error_log("Use of a boolean parameter with the `CBHTMLOutput::addJavaScriptURL` method has been deprecated. Used in {$backtrace[0]['file']} on line {$backtrace[0]['line']}");
@@ -86,14 +84,17 @@ class CBHTMLOutput
             $options = CBHTMLOutput::JSAsync;
         }
 
-        if ($options & CBHTMLOutput::JSInHeadElement)
-        {
-            self::$javaScriptURLsInHead[$javaScriptURL] = !!($options & CBHTMLOutput::JSAsync);
-        }
-        else
-        {
-            self::$javaScriptURLs[$javaScriptURL] = !!($options & CBHTMLOutput::JSAsync);
-        }
+        self::$javaScriptURLs[$javaScriptURL] = $options;
+    }
+
+    /**
+     * @return null
+     */
+    static function addPinterest() {
+        CBHTMLOutput::addJavaScriptURL(
+            '//assets.pinterest.com/js/pinit.js',
+            CBHTMLOutput::JSAsync | CBHTMLOutput::JSDefer
+        );
     }
 
     /**
@@ -278,55 +279,56 @@ class CBHTMLOutput
     /**
      * @return void
      */
-    private static function renderJavaScript()
-    {
-        echo "<script>\n\"use strict\";\n";
+    private static function renderJavaScript() {
+        if (!empty(CBHTMLOutput::$exportedVariables) || !empty(CBHTMLOutput::$exportedLists)) {
+            echo "<script>\n\"use strict\";\n";
 
-        foreach (self::$exportedVariables as $name => $value)
-        {
-            echo "var {$name} = {$value};\n";
+            foreach (CBHTMLOutput::$exportedVariables as $name => $value) {
+                echo "var {$name} = {$value};\n";
+            }
+
+            foreach (CBHTMLOutput::$exportedLists as $name => $list) {
+                echo "var {$name} = {};\n";
+
+                foreach ($list as $key => $value) {
+                    echo "{$name}[\"{$key}\"] = {$value};\n";
+                }
+            }
+
+            echo "</script>\n";
         }
 
-        foreach (self::$exportedLists as $name => $list)
-        {
-            echo "var {$name} = {};\n";
+        foreach (CBHTMLOutput::$javaScriptURLs as $URL => $options) {
+            if (!($options & CBHTMLOutput::JSInHeadElement)) {
+                $async = $options & CBHTMLOutput::JSAsync ? 'async ' : '';
+                $defer = $options & CBHTMLOutput::JSDefer ? 'defer ' : '';
 
-            foreach ($list as $key => $value)
-            {
-                echo "{$name}[\"{$key}\"] = {$value};\n";
+                echo '<script ' . $async . $defer . 'src="' . $URL . '"></script>';
             }
         }
 
-        echo "</script>\n";
-
-        foreach (self::$javaScriptURLs as $URL => $isAsync)
-        {
-            $async = $isAsync ? 'async ' : '';
-
-            echo '<script ' . $async . 'src="' . $URL . '"></script>';
-        }
-
-        foreach (self::$javaScriptSnippetFilenames as $snippetFilename)
-        {
+        foreach (CBHTMLOutput::$javaScriptSnippetFilenames as $snippetFilename) {
             include $snippetFilename;
         }
 
-        foreach (self::$javaScriptSnippetStrings as $snippetString)
-        {
-            echo "\n<script>\n\"use strict\";\n\n{$snippetString}\n\n</script>\n";
+        if (!empty(CBHTMLOutput::$javaScriptSnippetStrings)) {
+            foreach (CBHTMLOutput::$javaScriptSnippetStrings as $snippetString) {
+                echo "\n<script>\n\"use strict\";\n\n{$snippetString}\n\n</script>\n";
+            }
         }
     }
 
     /**
      * @return void
      */
-    private static function renderJavaScriptInHead()
-    {
-        foreach (self::$javaScriptURLsInHead as $URL => $isAsync)
-        {
-            $async = $isAsync ? 'async ' : '';
+    private static function renderJavaScriptInHead() {
+        foreach (CBHTMLOutput::$javaScriptURLs as $URL => $options) {
+            if ($options & CBHTMLOutput::JSInHeadElement) {
+                $async = $options & CBHTMLOutput::JSAsync ? 'async ' : '';
+                $defer = $options & CBHTMLOutput::JSDefer ? 'defer ' : '';
 
-            echo '<script ' . $async . 'src="' . $URL . '"></script>';
+                echo '<script ' . $async . $defer . 'src="' . $URL . '"></script>';
+            }
         }
     }
 
@@ -357,7 +359,6 @@ class CBHTMLOutput
         self::$javaScriptSnippetFilenames = array();
         self::$javaScriptSnippetStrings = array();
         self::$javaScriptURLs = array();
-        self::$javaScriptURLsInHead = array();
         self::$requiredClassNames = [];
         self::$titleHTML = '';
     }
