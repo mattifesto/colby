@@ -8,3 +8,15 @@
 .CBArtworkView .pin {
     margin-top: 10px;
 }
+
+/**
+ * This should be the default cursor but I think Pinterest JavaScript is doing
+ * something to change it.
+ */
+.CBArtworkView a {
+    cursor: pointer;
+}
+
+.CBArtworkView a:hover {
+    text-decoration: underline;
+}
