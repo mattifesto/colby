@@ -2,27 +2,48 @@
 
 header('Content-type: text/xml');
 
-$URLs   = [CBSiteURL . '/'];
-$URLs   = array_merge($URLs, CBPages::pageURLs());
+$frontPageSummaryModel = [
+    (object)[
+        'URI' => '/',
+    ],
+];
 
-if (defined('CBSiteConfiguration::pageProviderClassNames')) {
-    foreach (CBSiteConfiguration::pageProviderClassNames as $className) {
-        if (is_callable($function = "$className::pageURLs")) {
-            $URLs = array_merge($URLs, call_user_func($function));
-        }
-    }
-}
+$SQL = <<<EOT
+
+    SELECT  `keyValueData`
+    FROM    `ColbyPages`
+    WHERE   `published` IS NOT NULL
+
+EOT;
+
+$pageSummaryModels = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+$pageSummaryModels = array_merge($frontPageSummaryModel, $pageSummaryModels);
 
 echo '<?xml version="1.0" encoding="utf-8" ?>';
 
 ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <?php
 
-   array_walk($URLs, function($URL) {
-       echo "<url><loc>$URL</loc></url>";
+   array_walk($pageSummaryModels, function ($model) {
+       if (empty($model->URI)) {
+           continue;
+       } else if ($model->URI === '/') {
+           $URL = CBSiteURL . '/';
+       } else {
+           $URL = CBSiteURL . "/{$model->URI}/";
+       }
+
+       echo '<url>';
+       echo "<loc>{$URL}</loc>";
+
+       $lastmodTimestamp = empty($model->updated) ? null : (int)$model->updated;
+       if (!empty($lastmodTimestamp)) {
+           $lastmodW3C = gmdate(DateTime::W3C, $lastmodTimestamp);
+           echo "<lastmod>{$lastmodW3C}</lastmod>";
+       }
+
+       echo '</url>';
    });
 
    ?>

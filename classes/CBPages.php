@@ -365,25 +365,6 @@ EOT;
     }
 
     /**
-     * @return  {array}
-     */
-    public static function pageURLs() {
-        $SQL = <<<EOT
-
-            SELECT  `URI`
-            FROM    `ColbyPages`
-            WHERE   `published` IS NOT NULL
-
-EOT;
-
-        $URIs = CBDB::SQLToArray($SQL);
-
-        return array_map(function($URI) {
-            return CBSiteURL . "/{$URI}/";
-        }, $URIs);
-    }
-
-    /**
      * @param [{stdClass}] $models
      *
      * @return null
