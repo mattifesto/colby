@@ -3,22 +3,39 @@
 final class CBIconLinkView {
 
     /**
-     * @param stdClass $model
+     * @param string? $model->URLAsHTML
+     * @param string? $model->textColor
      *
-     * @return null
+     * @return [string:string]
      */
-    public static function renderModelAsHTML(stdClass $model) {
-        CBHTMLOutput::requireClassName(__CLASS__);
-
-        $textAsHTML = empty($model->textAsHTML) ? '' : $model->textAsHTML;
-        $HREF = empty($model->URLAsHTML) ? '' : "href=\"{$model->URLAsHTML}\"";
-
-        if (empty($model->textAsHTML)) {
-            $textElement = '';
+    private static function containerElement(stdClass $model) {
+        if (empty($model->URLAsHTML)) {
+            $hrefAttribute = '';
+            $tagName = 'div';
         } else {
-            $textElement = "<div class=\"text\">{$model->textAsHTML}</div>";
+            $hrefAttribute = "href=\"{$model->URLAsHTML}\"";
+            $tagName = 'a';
         }
 
+        if (empty($model->textColor)) {
+            $styleAttribute = '';
+        } else {
+            $styleAttribute = "style=\"color: {$model->textColor}\"";
+        }
+
+        return [
+            'openHTML' => "<{$tagName} class=\"container\" {$hrefAttribute} {$styleAttribute}>",
+            'closeHTML' => "</{$tagName}>",
+        ];
+    }
+
+    /**
+     * @param bool? $model->disableRoundedCorners
+     * @param stdClass? $model->image
+     *
+     * @return string
+     */
+    private static function imageElementHTML(stdClass $model) {
         if (empty($model->image)) {
             $imageCSS = 'background-color: hsl(30, 50%, 80%)';
         } else {
@@ -26,15 +43,49 @@ final class CBIconLinkView {
             $imageCSS = "background-image: url(/{$imageCSS}); background-size: cover";
         }
 
-        $style = empty($model->textColor) ? '' : " style=\"color: {$model->textColor}\"";
+        if (empty($model->disableRoundedCorners)) {
+            $classes = "icon rounded";
+        } else {
+            $classes = "icon";
+        }
+
+        return "<div class=\"{$classes}\" style=\"{$imageCSS}\"></div>";
+    }
+
+    /**
+     * @param string? $model->textAsHTML
+     *
+     * @return string
+     */
+    private static function textElementHTML(stdClass $model) {
+        if (empty($model->textAsHTML)) {
+            return '';
+        } else {
+            return "<div class=\"text\">{$model->textAsHTML}</div>";
+        }
+    }
+
+    /**
+     * @param string? $model->textAsHTML
+     * @param string? $model->URLAsHTML
+     * @param stdClass? $model->image
+     *
+     * @return null
+     */
+    public static function renderModelAsHTML(stdClass $model) {
+        CBHTMLOutput::requireClassName(__CLASS__);
+
+        $containerElement = CBIconLinkView::containerElement($model);
+        $imageElementHTML = CBIconLinkView::imageElementHTML($model);
+        $textElementHTML = CBIconLinkView::textElementHTML($model);
 
         ?>
 
         <div class="CBIconLinkView">
-            <a class="container" <?= $HREF, $style ?>>
-                <div class="icon" style="<?= $imageCSS ?>"></div>
-                <?= $textElement?>
-            </a>
+            <?= $containerElement['openHTML'] ?>
+                <?= $imageElementHTML ?>
+                <?= $textElementHTML ?>
+            <?= $containerElement['closeHTML'] ?>
         </div>
 
     <?php }
@@ -54,6 +105,7 @@ final class CBIconLinkView {
     public static function specToModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
+            'disableRoundedCorners' => CBModel::value($spec, 'disableRoundedCorners', false, 'boolval'),
             'image' => CBModel::value($spec, 'image', null, 'CBImage::specToModel'),
             'text' => ($text = CBModel::value($spec, 'text', '', 'trim')),
             'textAsHTML' => cbhtml($text),

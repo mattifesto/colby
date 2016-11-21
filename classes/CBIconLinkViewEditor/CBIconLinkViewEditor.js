@@ -1,6 +1,6 @@
 "use strict"; /* jshint strict: global */
-/* globals CBUI, CBUIImageView, CBUIImageSizeView, CBUIImageUploader,
-           CBUIStringEditor */
+/* globals CBUI, CBUIBooleanEditor, CBUIImageView, CBUIImageSizeView,
+           CBUIImageUploader, CBUIStringEditor */
 
 var CBIconLinkViewEditor = {
 
@@ -42,6 +42,16 @@ var CBIconLinkViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Disable Rounded Corners",
+            propertyName : "disableRoundedCorners",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
         element.appendChild(section);
         element.appendChild(CBUI.createHalfSpace());
 
