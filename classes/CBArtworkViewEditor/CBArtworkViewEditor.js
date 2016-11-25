@@ -1,5 +1,10 @@
 "use strict"; /* jshint strict: global */
-/* globals Colby, CBUI, CBUIImageChooser, CBUIStringEditor */
+/* globals
+    CBUI,
+    CBUIImageChooser,
+    CBUIStringEditor,
+    CBViewPageEditor,
+    Colby */
 
 var CBArtworkViewEditor = {
 
@@ -100,6 +105,8 @@ var CBArtworkViewEditor = {
             args.specChangedCallback();
 
             args.setImageURLCallback(CBArtworkViewEditor.imageToURL(args.spec.image));
+
+            CBViewPageEditor.suggestThumbnailImage(response.image);
         } else {
             Colby.displayResponse(response);
         }
@@ -121,10 +128,15 @@ var CBArtworkViewEditor = {
     },
 
     /**
+     * @deprecated use Colby.imageToURL()
+     *
+     * @param string image.filename
+     * @param string image.extension
+     * @param hex160 image.ID
+     *
      * @return string
      */
     imageToURL : function (image) {
-        var basename = image.filename + "." + image.extension;
-        return "/" + Colby.dataStoreFlexpath(image.ID, basename);
+        return Colby.imageToURL(image);
     },
 };
