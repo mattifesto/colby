@@ -1,8 +1,19 @@
 "use strict"; /* jshint strict: global */
-/* globals CBCurrentUserID, CBImageEditorFactory, CBPageClassNamesForKinds,
-   CBPageClassNamesForLayouts, CBPageClassNamesForSettings, CBPageURIControl,
-   CBPublicationControl, CBUI, CBUISelector, CBUISpecPropertyEditor,
-   CBUIStringEditor, CBUsersWhoAreAdministrators, Colby */
+/* globals
+    CBCurrentUserID,
+    CBPageClassNamesForKinds,
+    CBPageClassNamesForLayouts,
+    CBPageClassNamesForSettings,
+    CBPageURIControl,
+    CBPublicationControl,
+    CBUI,
+    CBUIImageChooser,
+    CBUISelector,
+    CBUISpecPropertyEditor,
+    CBUIStringEditor,
+    CBUsersWhoAreAdministrators,
+    CBViewPageEditor,
+    Colby */
 
 var CBViewPageInformationEditor = {
 
@@ -174,37 +185,34 @@ var CBViewPageInformationEditor = {
         element.appendChild(section);
         element.appendChild(CBUI.createHalfSpace());
 
+        /* thumbnail */
+
         section = CBUI.createSection();
 
-        /* thumbnail  uploader */
+        var thumbnailChosenCallback = CBViewPageInformationEditor.handleThumbnailChosen;
+        var thumbnailRemovedCallback = CBViewPageInformationEditor.handleThumbnailRemoved;
+        var chooser = CBUIImageChooser.createThumbnailSizedChooser({
+            imageChosenCallback : thumbnailChosenCallback,
+            imageRemovedCallback : thumbnailRemovedCallback,
+        });
+
+        CBViewPageEditor.thumbnailChangedCallback = CBViewPageInformationEditor.handleThumbnailChanged.bind(undefined, {
+            setImageURLCallback : chooser.setImageURLCallback,
+        });
+
         item = CBUI.createSectionItem();
-        var thumbnail = document.createElement("div");
-        thumbnail.className = "thumbnail";
-        preview = CBImageEditorFactory.createThumbnailPreviewElement();
-        var upload  = CBImageEditorFactory.createEditorUploadButton({
-            handleImageUploaded : CBViewPageInformationEditor.handleThumbnailUploaded.bind(undefined, {
-                handleSpecChanged   : args.specChangedCallback,
-                previewImageElement : preview.img,
-                spec                : args.spec
-            }),
-            imageSizes              : ["rs200clc200"],
-            textContent             : "Upload Page Thumbnail...",
-        });
-        thumbnail.appendChild(preview.element);
-        thumbnail.appendChild(upload);
-        CBImageEditorFactory.displayThumbnail({
-            img : preview.img,
-            URL : args.spec.thumbnailURL
-        });
-        item.appendChild(thumbnail);
+        item.appendChild(chooser.element);
         section.appendChild(item);
 
         element.appendChild(section);
         element.appendChild(CBUI.createHalfSpace());
 
-        section = CBUI.createSection();
+        chooser.setImageURLCallback(args.spec.thumbnailURL);
 
         /* actions */
+
+        section = CBUI.createSection();
+
         item = CBUI.createSectionItem();
         var actions = document.createElement("div");
         actions.className = "actions";
@@ -269,17 +277,51 @@ var CBViewPageInformationEditor = {
     },
 
     /**
+     * @param function args.setImageURLCallback
+     * @param object pageArgs.spec
+     * @param object pageArgs.image
+     */
+    handleThumbnailChanged : function (args, pageArgs) {
+        args.setImageURLCallback(pageArgs.spec.thumbnailURL);
+    },
+
+    /**
+     * @param file chooserArgs.file
+     * @param function chooserArgs.setImageURLCallback
+     *
      * @return undefined
      */
-    handleThumbnailUploaded : function (args, response) {
-        args.spec.thumbnailURL  = response.sizes.rs200clc200.URL;
+    handleThumbnailChosen : function (chooserArgs) {
+        var formData = new FormData();
+        formData.append("image", chooserArgs.file);
 
-        CBImageEditorFactory.displayThumbnail({
-            img : args.previewImageElement,
-            URL : args.spec.thumbnailURL
-        });
+        var xhr = new XMLHttpRequest();
+        xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
+        xhr.onload = CBViewPageInformationEditor.handleThumbnailChosenDidLoad.bind(undefined, {xhr:xhr});
+        xhr.open("POST", "/api/?class=CBImages&function=upload");
+        xhr.send(formData);
+    },
 
-        args.handleSpecChanged.call();
+    /**
+     * @param XMLHttpRequest args.xhr
+     *
+     * @return undefined
+     */
+    handleThumbnailChosenDidLoad : function (args) {
+        var response = Colby.responseFromXMLHttpRequest(args.xhr);
+
+        if (response.wasSuccessful) {
+            CBViewPageEditor.setThumbnailImage(response.image);
+        } else {
+            Colby.displayResponse(response);
+        }
+    },
+
+    /**
+     * @return undefined
+     */
+    handleThumbnailRemoved : function () {
+        CBViewPageEditor.setThumbnailImage();
     },
 
     /**
@@ -353,5 +395,5 @@ var CBViewPageInformationEditor = {
         args.spec.URIIsStatic   = sender.isStatic();
 
         args.handleSpecChanged.call();
-    }
+    },
 };

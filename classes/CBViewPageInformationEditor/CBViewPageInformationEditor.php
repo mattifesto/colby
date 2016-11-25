@@ -6,7 +6,7 @@ final class CBViewPageInformationEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBImageEditor', 'CBUI', 'CBUISelector', 'CBUISpecPropertyEditor', 'CBUIStringEditor'];
+        return ['CBUI', 'CBUIImageChooser', 'CBUISelector', 'CBUISpecPropertyEditor', 'CBUIStringEditor'];
     }
 
     /**
