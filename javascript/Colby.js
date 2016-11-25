@@ -166,6 +166,18 @@ var Colby = {
     },
 
     /**
+     * @param string image.filename
+     * @param string image.extension
+     * @param hex160 image.ID
+     *
+     * @return string
+     */
+    imageToURL : function (image) {
+        var basename = image.filename + "." + image.extension;
+        return "/" + Colby.dataStoreFlexpath(image.ID, basename);
+    },
+
+    /**
      * @return bool
      */
     localStorageIsSupported : function () {
