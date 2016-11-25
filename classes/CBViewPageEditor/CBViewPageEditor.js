@@ -1,4 +1,15 @@
-"use strict";
+"use strict"; /* jshint strict: global */
+/* globals
+    CBArrayEditor,
+    CBDelayTimer,
+    CBPageEditorAvailableViewClassNames,
+    CBPageTemplateDescriptors,
+    CBUI,
+    CBUINavigationView,
+    CBUISpecEditor,
+    CBURLQueryVariables,
+    CBViewPageInformationEditor,
+    Colby */
 
 /**
  * The CBViewPageEditor variable allows this class to be the editor factory for
@@ -7,7 +18,22 @@
  * too much effort.
  */
 var CBViewPageEditor = {
-    model : null,
+
+    /**
+     * @deprecated use CBViewPageEditor.spec
+     */
+    model : undefined,
+
+    /**
+     * This variable will be set to the spec as soon as the spec is loaded or
+     * a page template is selected.
+     */
+    spec : undefined,
+
+    /**
+     * This will be set to a function by the CBViewPageInformationEditor.
+     */
+    thumbnailChangedCallback : undefined,
 
     /**
      * @return void
@@ -95,6 +121,7 @@ var CBViewPageEditor = {
      */
     displayEditorForPageSpec : function (spec) {
         CBViewPageEditor.model = spec;
+        CBViewPageEditor.spec = spec;
         var element = document.createElement("div");
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
@@ -169,6 +196,118 @@ var CBViewPageEditor = {
     makeFrontPageDidLoad : function (args) {
         Colby.displayResponse(Colby.responseFromXMLHttpRequest(args.xhr));
     },
+
+    /**
+     * @return undefined
+     */
+    requestSave : function () {
+        CBViewPageEditor.saveModelTimer.restart();
+    },
+
+    /**
+     * @return undefined
+     */
+    resizeThumbnailDidError : function () {
+        Colby.displayXHRError(CBViewPageEditor.resizeThumbnailXHR);
+        CBViewPageEditor.resizeThumbnailXHR = undefined;
+    },
+
+    /**
+     * @return undefined
+     */
+    resizeThumbnailDidLoad : function () {
+        var response = Colby.responseFromXMLHttpRequest(CBViewPageEditor.resizeThumbnailXHR);
+        CBViewPageEditor.resizeThumbnailXHR = undefined;
+
+        if (response.wasSuccessful) {
+            CBViewPageEditor.setThumbnail(response.image);
+        } else {
+            Colby.displayResponse(response);
+        }
+    },
+
+    /**
+     * You most likely want to call setThumbnailImage() or
+     * suggestThumbnailImage() instead of this function.
+     *
+     * @param object? image
+     *
+     * @return undefined
+     */
+    setThumbnail : function (image) {
+        if (CBViewPageEditor.resizeThumbnailXHR) {
+            CBViewPageEditor.resizeThumbnailXHR.abort();
+            CBViewPageEditor.resizeThumbnailXHR = undefined;
+        }
+
+        var spec = CBViewPageEditor.spec;
+
+        if (spec === undefined) {
+            return;
+        }
+
+        if (image === undefined) {
+            spec.thumbnailURL = undefined;
+        } else {
+            spec.thumbnailURL = Colby.imageToURL(image);
+        }
+
+        var callback = CBViewPageEditor.thumbnailChangedCallback;
+
+        if (callback) {
+            callback({ spec: spec, image: image });
+        }
+
+        CBViewPageEditor.requestSave();
+    },
+
+    /**
+     * @param {ID: hex160, extension: string}? image
+     *
+     * @return undefined
+     */
+    setThumbnailImage : function (image) {
+        var spec = CBViewPageEditor.spec;
+
+        if (spec === undefined) {
+            return;
+        }
+
+        if (CBViewPageEditor.resizeThumbnailXHR) {
+            CBViewPageEditor.resizeThumbnailXHR.abort();
+            CBViewPageEditor.resizeThumbnailXHR = undefined;
+        }
+
+        if (image === undefined) {
+            CBViewPageEditor.setThumbnail();
+        } else {
+            var formData = new FormData();
+            formData.append("ID", image.ID);
+            formData.append("extension", image.extension);
+            formData.append("operation", "rs200clc200");
+
+            var xhr = new XMLHttpRequest();
+            xhr.onerror = CBViewPageEditor.resizeThumbnailDidError;
+            xhr.onload = CBViewPageEditor.resizeThumbnailDidLoad;
+            xhr.open("POST", "/api/?class=CBImages&function=reduceImage");
+            xhr.send(formData);
+
+            CBViewPageEditor.resizeThumbnailXHR = xhr;
+        }
+    },
+
+    /**
+     * @param {ID: hex160, extension: string} image
+     *
+     * @return undefined
+     */
+    suggestThumbnailImage : function (image) {
+        var spec = CBViewPageEditor.spec;
+
+        if (spec && !spec.thumbnailURL) {
+            CBViewPageEditor.setThumbnailImage(image);
+        }
+    },
 };
 
 /**
@@ -227,14 +366,6 @@ CBViewPageEditor.fetchModelDidLoad = function(args) {
     }
 };
 
-
-/**
- * @return void
- */
-CBViewPageEditor.requestSave = function()
-{
-    this.saveModelTimer.restart();
-};
 
 /**
  * Do not call this function directly. It should only be called by the save
