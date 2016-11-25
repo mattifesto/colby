@@ -71,6 +71,8 @@ class CBImages {
     }
 
     /**
+     * @deprecated use CBImage::reduceImage()
+     *
      * Creates a reduced image for an operation only if the reduced image
      * doesn't already exist.
      *
@@ -84,16 +86,7 @@ class CBImages {
      * @return null
      */
     public static function makeReducedImageForOperation($ID, $extension, $operation) {
-        $sourceFilepath = CBDataStore::flexpath($ID, "original.{$extension}", CBSiteDirectory);
-        $destinationFilepath = CBDataStore::flexpath($ID, "{$operation}.{$extension}", CBSiteDirectory);
-
-        if (!is_file($destinationFilepath)) {
-            $size = getimagesize($sourceFilepath);
-            $projection = CBProjection::withSize($size[0], $size[1]);
-            $projection = CBProjection::applyOpString($projection, $operation);
-
-            CBImages::reduceImageFile($sourceFilepath, $destinationFilepath, $projection);
-        }
+        reduceImage($ID, $extension, $operation);
     }
 
     /**
@@ -149,6 +142,74 @@ class CBImages {
                 imagepng($output, $destinationFilepath);
                 break;
         }
+    }
+
+    /**
+     * Creates a reduced image for an operation only if the reduced image
+     * doesn't already exist.
+     *
+     * @param hex160 $ID
+     *  The image ID
+     * @param string $extension
+     *  The image extension
+     * @param string $operation
+     *  The reduction operation, example: "rs200clc200"
+     *
+     * @return stdClass (image)
+     */
+    static function reduceImage($ID, $extension, $operation) {
+        $sourceFilepath = CBDataStore::flexpath($ID, "original.{$extension}", CBSiteDirectory);
+        $destinationFilepath = CBDataStore::flexpath($ID, "{$operation}.{$extension}", CBSiteDirectory);
+
+        if (!is_file($destinationFilepath)) {
+            $size = getimagesize($sourceFilepath);
+            $projection = CBProjection::withSize($size[0], $size[1]);
+            $projection = CBProjection::applyOpString($projection, $operation);
+
+            CBImages::reduceImageFile($sourceFilepath, $destinationFilepath, $projection);
+        }
+
+        $size = getimagesize($destinationFilepath);
+
+        return (object)[
+            'extension' => $extension,
+            'filename' => $operation,
+            'height' => $size[1],
+            'ID' => $ID,
+            'width' => $size[0],
+        ];
+    }
+
+    /**
+     * @param string $_POST['extension']
+     * @param hex160 $_POST['ID']
+     * @param string $_POST['operation']
+     *
+     * @return {
+     *      image : {
+     *          extension : string,
+     *          filename : string,
+     *          height : int,
+     *          ID : hex160,
+     *          width : int,
+     *      }
+     *  }
+     */
+    static function reduceImageForAjax() {
+        $response = new CBAjaxResponse();
+        $extension = $_POST['extension'];
+        $ID = $_POST['ID'];
+        $operation = $_POST['operation'];
+        $response->image = CBImages::reduceImage($ID, $extension, $operation);
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function reduceImageForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
     }
 
     /**
