@@ -139,4 +139,13 @@ var CBArtworkViewEditor = {
     imageToURL : function (image) {
         return Colby.imageToURL(image);
     },
+
+    /**
+     * @param string? spec.alternativeText
+     *
+     * @return string|undefined
+     */
+    specToDescription : function (spec) {
+        return spec.alternativeText;
+    },
 };
