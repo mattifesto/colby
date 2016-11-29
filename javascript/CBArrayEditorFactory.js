@@ -1,12 +1,14 @@
-"use strict";
-/* globals CBUI, CBUIActionLink, CBUISelector, CBUISpec, CBUISpecEditor */
+"use strict"; /* jshint strict: global */
+/* globals
+    CBUI,
+    CBUIActionLink,
+    CBUISelector,
+    CBUISpec,
+    CBUISpecEditor,
+    Colby,
+    Promise */
 
-/**
- * @deprecated use CBArrayEditor
- */
-var CBArrayEditorFactory;
-
-var CBArrayEditor = CBArrayEditorFactory = {
+var CBArrayEditor = {
 
     /**
      * @param [object] args.array
@@ -20,7 +22,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      * @return  undefined
      */
     append : function (args, spec) {
-        var element = CBArrayEditor.createSectionItemElement({
+        var element = CBArrayEditor.createSectionItemElement2({
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -90,7 +92,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      *
      * @return object
      */
-    classNameToModel : function(className) {
+    classNameToModel: function (className) {
         return {
             className : className,
         };
@@ -114,7 +116,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
         section.className = "CBUISection";
 
         args.array.forEach(function (spec) {
-            var element = CBArrayEditor.createSectionItemElement({
+            var element = CBArrayEditor.createSectionItemElement2({
                 array : args.array,
                 arrayChangedCallback : args.arrayChangedCallback,
                 classNames : args.classNames,
@@ -173,91 +175,89 @@ var CBArrayEditor = CBArrayEditorFactory = {
      *
      * @return Element
      */
-    createSectionItemElement : function (args) {
-        var action;
-        var element = CBUI.createSectionItem();
-        element.classList.add("item");
+    createSectionItemElement2 : function (args) {
+        var item = CBUI.createSectionItem2();
 
-        var content = document.createElement("div");
-        content.className = "content";
-        var title = document.createElement("div");
-        title.className = "title";
-        title.textContent = args.spec.className;
-        var description = document.createElement("div");
-        description.className = "description";
+        var typeElement = document.createElement("div");
+        typeElement.className = "type";
+        typeElement.textContent = args.spec.className;
+        item.titleElement.appendChild(typeElement);
 
-        var updateArrayElementDescriptionCallback = CBArrayEditor.updateArrayElementDescription.bind(undefined, {
-            descriptionElement : description,
-            spec : args.spec,
+        var descriptionElement = document.createElement("div");
+        descriptionElement.className = "description";
+        item.titleElement.appendChild(descriptionElement);
+
+        /* specChangedCallback */
+
+        var descriptionChangedCallback = CBArrayEditor.updateSpecDescriptionElement.bind(undefined, {
+            descriptionElement: descriptionElement,
+            spec: args.spec,
         });
+        descriptionChangedCallback();
 
-        updateArrayElementDescriptionCallback();
+        var specChangedCallback = Colby.call.bind(undefined, [
+            descriptionChangedCallback,
+            args.arrayChangedCallback,
+        ]);
 
-        var arrayElementChangedCallback = CBArrayEditor.handleArrayElementChanged.bind(undefined, {
-            specChangedCallback : args.arrayChangedCallback,
-            updateArrayElementDescriptionCallback : updateArrayElementDescriptionCallback,
-        });
+        /* edit */
 
-        content.appendChild(title);
-        content.appendChild(description);
-        element.appendChild(content);
-
-        var editArrayElementRequestedCallback = CBArrayEditor.handleEditArrayElementRequested.bind(undefined, {
+        var editSpecCallback = CBArrayEditor.editSpec.bind(undefined, {
             navigateCallback : args.navigateCallback,
             navigateToItemCallback : args.navigateToItemCallback,
             spec : args.spec,
-            specChangedCallback : arrayElementChangedCallback,
+            specChangedCallback : specChangedCallback,
         });
 
-        content.addEventListener("click", editArrayElementRequestedCallback);
+        item.titleElement.addEventListener("click", editSpecCallback);
 
-        // arrange
-        action = document.createElement("div");
-        action.className = "action arrange up";
-        action.textContent = "up";
-        action.addEventListener("click", CBArrayEditor.handleMoveUpWasClicked.bind(undefined, {
+        /* commands */
+
+        var upCommand = document.createElement("div");
+        upCommand.className = "command arrange up";
+        upCommand.textContent = "Up";
+        upCommand.addEventListener("click", CBArrayEditor.handleMoveUpWasClicked.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             sectionElement : args.sectionElement,
             spec : args.spec,
         }));
-        element.appendChild(action);
+        item.commandsElement.appendChild(upCommand);
 
-        action = document.createElement("div");
-        action.className = "action arrange down optional";
-        action.textContent = "down";
-        action.addEventListener("click", CBArrayEditor.handleMoveDownWasClicked.bind(undefined, {
+        var downCommand = document.createElement("div");
+        downCommand.className = "command arrange down optional";
+        downCommand.textContent = "Down";
+        downCommand.addEventListener("click", CBArrayEditor.handleMoveDownWasClicked.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             sectionElement : args.sectionElement,
             spec : args.spec,
         }));
-        element.appendChild(action);
+        item.commandsElement.appendChild(downCommand);
 
-        // edit
-        action = document.createElement("div");
-        action.className = "action edit cut";
-        action.textContent = "cut";
-        action.addEventListener("click", CBArrayEditor.handleCutWasClicked.bind(undefined, {
+        var cutCommand = document.createElement("div");
+        cutCommand.className = "command edit cut";
+        cutCommand.textContent = "Cut";
+        cutCommand.addEventListener("click", CBArrayEditor.handleCutWasClicked.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             sectionElement : args.sectionElement,
             spec : args.spec,
         }));
-        element.appendChild(action);
+        item.commandsElement.appendChild(cutCommand);
 
-        action = document.createElement("div");
-        action.className = "action edit copy optional";
-        action.textContent = "copy";
-        action.addEventListener("click", CBArrayEditor.handleCopyWasClicked.bind(undefined, {
+        var copyCommand = document.createElement("div");
+        copyCommand.className = "command edit copy optional";
+        copyCommand.textContent = "Copy";
+        copyCommand.addEventListener("click", CBArrayEditor.handleCopyWasClicked.bind(undefined, {
             spec : args.spec,
         }));
-        element.appendChild(action);
+        item.commandsElement.appendChild(copyCommand);
 
-        action = document.createElement("div");
-        action.className = "action edit paste";
-        action.textContent = "paste";
-        action.addEventListener("click", CBArrayEditor.handlePasteWasClicked.bind(undefined, {
+        var pasteCommand = document.createElement("div");
+        pasteCommand.className = "command edit paste";
+        pasteCommand.textContent = "Paste";
+        pasteCommand.addEventListener("click", CBArrayEditor.handlePasteWasClicked.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -266,13 +266,12 @@ var CBArrayEditor = CBArrayEditorFactory = {
             sectionElement : args.sectionElement,
             specToInsertBefore : args.spec,
         }));
-        element.appendChild(action);
+        item.commandsElement.appendChild(pasteCommand);
 
-        // insert
-        action = document.createElement("div");
-        action.className = "action insert";
-        action.textContent = "insert";
-        action.addEventListener("click", CBArrayEditor.insertSelectedModel.bind(undefined, {
+        var insertCommand = document.createElement("div");
+        insertCommand.className = "command insert";
+        insertCommand.textContent = "Insert";
+        insertCommand.addEventListener("click", CBArrayEditor.insertSelectedModel.bind(undefined, {
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -281,46 +280,36 @@ var CBArrayEditor = CBArrayEditorFactory = {
             sectionElement : args.sectionElement,
             specToInsertBefore : args.spec,
         }));
-        element.appendChild(action);
+        item.commandsElement.appendChild(insertCommand);
 
-        /* toggle */
-        action = document.createElement("div");
-        action.className = "toggle";
-        action.textContent = "<";
-        action.addEventListener("click", CBArrayEditor.toggleActions.bind(undefined, {
-            toggleButtonElement : action,
-            sectionItemElement : element,
-        }));
-        element.appendChild(action);
-
-        return element;
+        return item.element;
     },
 
     /**
+     * @param function args.navigateCallback (deprecated)
+     * @param function args.navigateToItemCallback
+     * @param object args.spec
      * @param function args.specChangedCallback
-     * @param function args.updateArrayElementDescriptionCallback
      *
      * @return undefined
      */
-    handleArrayElementChanged : function (args) {
-        args.updateArrayElementDescriptionCallback.call();
-        args.specChangedCallback.call();
-    },
+    editSpec: function (args) {
+        var element = document.createElement("div");
+        var editor = CBUISpecEditor.create({
+            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        });
 
-    /**
-     * @param Element args.element
-     * @param Element args.sectionElement
-     *
-     * @return undefined
-     */
-    handleContentWasClicked : function (args) {
-        var elements = args.sectionElement.querySelectorAll(".CBUISectionItem.selected");
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(editor.element);
+        element.appendChild(CBUI.createHalfSpace());
 
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].classList.remove("selected");
-        }
-
-        args.element.classList.add("selected");
+        args.navigateToItemCallback({
+            element : element,
+            title : args.spec.className || "Unknown",
+        });
     },
 
     /**
@@ -354,33 +343,6 @@ var CBArrayEditor = CBArrayEditorFactory = {
 
             args.arrayChangedCallback();
         }
-    },
-
-    /**
-     * @param function args.navigateCallback (deprecated)
-     * @param function args.navigateToItemCallback
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     *
-     * @return undefined
-     */
-    handleEditArrayElementRequested : function (args) {
-        var element = document.createElement("div");
-        var editor = CBUISpecEditor.create({
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        });
-
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(editor.element);
-        element.appendChild(CBUI.createHalfSpace());
-
-        args.navigateToItemCallback({
-            element : element,
-            title : args.spec.className || "Unknown",
-        });
     },
 
     /**
@@ -469,7 +431,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
     insert : function (args, spec) {
         var indexToInsertBefore = args.array.indexOf(args.specToInsertBefore);
         var elementToInsertBefore = args.sectionElement.children.item(indexToInsertBefore);
-        var sectionItemElement = CBArrayEditor.createSectionItemElement({
+        var sectionItemElement = CBArrayEditor.createSectionItemElement2({
             array : args.array,
             arrayChangedCallback : args.arrayChangedCallback,
             classNames : args.classNames,
@@ -522,7 +484,7 @@ var CBArrayEditor = CBArrayEditorFactory = {
      *
      * @return Promise -> string
      */
-    requestModelClassName : function(args) {
+    requestModelClassName: function (args) {
         return new Promise(function (resolve, reject) {
             if (args.classNames.length === 1) {
                 resolve(args.classNames[0]);
@@ -547,32 +509,23 @@ var CBArrayEditor = CBArrayEditorFactory = {
     },
 
     /**
-     * @param Element args.sectionItemElement
-     * @param Element args.toggleButtonElement
-     *
-     * @return undefined
-     */
-    toggleActions : function (args) {
-        if (args.sectionItemElement.classList.contains("show-actions")) {
-            args.sectionItemElement.classList.remove("show-actions");
-            args.toggleButtonElement.textContent = "<";
-        } else {
-            args.sectionItemElement.classList.add("show-actions");
-            args.toggleButtonElement.textContent = ">";
-        }
-    },
-
-    /**
      * @param Element args.descriptionElement
      * @param object args.spec
      *
      * @return undefined
      */
-    updateArrayElementDescription : function (args) {
+    updateSpecDescriptionElement: function (args) {
         var nonBreakingSpace = "\u00A0";
         args.descriptionElement.textContent = CBUISpec.specToDescription(args.spec) || nonBreakingSpace;
     },
 };
+
+
+/**
+ * @deprecated use CBArrayEditor
+ */
+var CBArrayEditorFactory = CBArrayEditor;
+
 
 (function() {
     var link    = document.createElement("link");
