@@ -7,13 +7,25 @@ var Colby = {
                     'July', 'August', 'September', 'October', 'November', 'December'],
 
     /**
-     * @param {string} text
+     * @param string text
      *
      * @return undefined
      */
     alert : function(text) {
         Colby.setPanelText(text);
         Colby.showPanel();
+    },
+
+    /**
+     * This function is often used with bind() to create a single callback from
+     * multiple callbacks.
+     *
+     * @param [function] callbacks
+     *
+     * @return function
+     */
+    call: function (callbacks) {
+        callbacks.forEach(function (callback) { callback.call(); });
     },
 
     /**
