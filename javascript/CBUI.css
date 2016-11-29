@@ -135,7 +135,7 @@
 
 .CBUISectionItem2 > .title {
     flex: 1 1 auto;
-    padding: 5px;
+    padding: 5px 10px;
 }
 
 .CBUISectionItem2 > .CBUIDropdown {
@@ -178,8 +178,9 @@
 
 .CBUISectionItem2 .command {
     align-items: center;
-    border-left: 1px solid hsl(0, 0%, 80%);
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
-    padding: 5px;
+    min-width: 50px;
+    padding: 5px 10px;
 }
