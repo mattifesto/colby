@@ -51,7 +51,6 @@ a.CBWellKnownThemeForContent:hover > div {
 }
 
 .CBWellKnownThemeForContent cite {
-    color: hsl(0, 0%, 50%);
     font-style: italic;
 }
 
