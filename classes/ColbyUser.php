@@ -127,15 +127,6 @@ class ColbyUser
             return false;
         }
 
-        /**
-         * TODO: COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID should be renamed to COLBY_FACEBOOK_SUPERUSER_USERNAME
-         */
-
-        if (COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID == $this->row()->facebookId)
-        {
-            return true;
-        }
-
         if (isset($this->groups[$group]))
         {
             return $this->groups[$group];

@@ -10,22 +10,20 @@ var CBLoginTimeoutAlert = {
      * @return undefined
      */
     DOMContentDidLoad: function () {
-        if (!Colby.localStorageIsSupported()) {
-            return;
-        }
+        try {
+            if (localStorage.getItem("CBUserIsLoggedIn") !== CBUserIsLoggedIn) {
+                if (localStorage.getItem("CBUserIsLoggedIn")) {
+                    var element = document.createElement("div");
+                    element.textContent = "Your login has expired and you are currently logged out. Please login again if you need the privileges of a logged in user.";
 
-        if (localStorage.CBUserIsLoggedIn !== CBUserIsLoggedIn) {
-            if (localStorage.CBUserIsLoggedIn) {
-                var element = document.createElement("div");
-                element.textContent = "Your login has expired and you are currently logged out. Please login again if you need the privileges of a logged in user.";
+                    Colby.setPanelElement(element);
+                    Colby.showPanel();
+                }
 
-                Colby.setPanelElement(element);
-                Colby.showPanel();
-
-                localStorage.CBUserIsLoggedIn = CBUserIsLoggedIn;
-            } else {
-                localStorage.CBUserIsLoggedIn = CBUserIsLoggedIn;
+                localStorage.setItem("CBUserIsLoggedIn", CBUserIsLoggedIn);
             }
+        } catch (e) {
+            // TODO: send a silent error to the server.
         }
     },
 };

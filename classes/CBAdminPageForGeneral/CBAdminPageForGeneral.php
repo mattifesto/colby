@@ -89,7 +89,9 @@ EOT;
             ['CB'.'ShouldDisallowRobots', 'Use site preferences.'],
             ['CB'.'GoogleAnalyticsID', 'Use site preferences'],
             ['GOOGLE'.'_UNIVERSAL_ANALYTICS_TRACKING_ID', 'Use site preferences'],
-            ['CB'.'SiteConfiguration::defaultClassNameForPageSettings', 'Use site preferences.']
+            ['CB'.'SiteConfiguration::defaultClassNameForPageSettings', 'Use site preferences.'],
+            ['CB'.'FacebookFirstVerifiedUserID', 'Remove it.'],
+            ['COLBY'.'_FACEBOOK_FIRST_VERIFIED_USER_ID', 'Remove it.'],
         ];
 
         $messagesAsHTML = [];
