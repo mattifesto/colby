@@ -191,6 +191,11 @@ class CBHTMLOutput
         $settingsEndOfBodyContent = '';
         $classNameForSettings = empty(self::$classNameForSettings) ? CBSitePreferences::defaultClassNameForPageSettings() : self::$classNameForSettings;
 
+        if (is_callable($function = "{$classNameForSettings}::requiredClassNames")) {
+            $classNames = call_user_func($function);
+            array_walk($classNames, "CBHTMLOutput::requireClassName");
+        }
+
         CBHTMLOutput::processRequiredClassNames();
 
         if (is_callable($function = "{$classNameForSettings}::renderHeadContent")) {
