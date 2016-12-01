@@ -77,4 +77,32 @@ EOT;
 
         Colby::query($SQL);
     }
+
+    /**
+     * @param string $name
+     *  The name of the group such as 'Administrators' or 'WholesaleCustomers'.
+     *
+     * @return null
+     */
+    static function installUserGroup($name) {
+        $SQL = <<<EOT
+
+            CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAre{$name}` (
+                `userId`    BIGINT UNSIGNED NOT NULL,
+                `added`     DATETIME NOT NULL,
+
+                PRIMARY KEY (`userId`),
+                CONSTRAINT `ColbyUsersWhoAre{$name}_userId`
+                    FOREIGN KEY (`userId`)
+                    REFERENCES `ColbyUsers` (`id`)
+                    ON DELETE CASCADE
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8
+            COLLATE=utf8_unicode_ci
+
+EOT;
+
+        Colby::query($SQL);
+    }
 }
