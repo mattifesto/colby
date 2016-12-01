@@ -47,11 +47,12 @@ class ColbyUser
         return self::$currentUser;
     }
 
-    ///
-    /// will return the user id or null if a user is not logged in
-    ///
-    public static function currentUserId()
-    {
+    /**
+     * Returns the current user ID if a user is logged in; otherwise null.
+     *
+     * @return int|null
+     */
+    public static function currentUserId() {
         return self::$currentUserId;
     }
 
