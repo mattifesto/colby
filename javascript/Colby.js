@@ -193,19 +193,19 @@ var Colby = {
      * @return bool
      */
     localStorageIsSupported : function () {
-        if (Colby.localStorageIsSupported === undefined) {
+        if (Colby.cachedLocalStorageIsSupported === undefined) {
             var value = "value";
 
             try {
                 localStorage.setItem(value, value);
                 localStorage.removeItem(value);
-                Colby.localStorageIsSupported = true;
+                Colby.cachedLocalStorageIsSupported = true;
             } catch(e) {
-                Colby.localStorageIsSupported = false;
+                Colby.cachedLocalStorageIsSupported = false;
             }
         }
 
-        return Colby.localStorageIsSupported;
+        return Colby.cachedLocalStorageIsSupported;
     },
 
     /**
