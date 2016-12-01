@@ -10,6 +10,10 @@ var CBLoginTimeoutAlert = {
      * @return undefined
      */
     DOMContentDidLoad: function () {
+        if (!Colby.localStorageIsSupported()) {
+            return;
+        }
+
         if (localStorage.CBUserIsLoggedIn !== CBUserIsLoggedIn) {
             if (localStorage.CBUserIsLoggedIn) {
                 var element = document.createElement("div");
