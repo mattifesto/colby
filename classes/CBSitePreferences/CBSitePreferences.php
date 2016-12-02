@@ -193,6 +193,25 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return bool
+     *  Returns true if the site should send emails to the administrator when
+     *  errors occur. This function does not indicate whether email sending is
+     *  enabled for this website.
+     */
+    static function sendEmailsForErrors() {
+        if (defined('CBSiteDoesSendEmailErrorReports')) {
+            return !!CBSiteDoesSendEmailErrorReports;
+        }
+
+        /* deprecated */
+        if (defined('COLBY_SITE_ERRORS_SEND_EMAILS')) {
+            return !!COLBY_SITE_ERRORS_SEND_EMAILS;
+        }
+
+        return false;
+    }
+
+    /**
      * @param hex160 $ID
      *
      * @return null

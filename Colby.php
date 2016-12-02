@@ -699,10 +699,7 @@ final class Colby {
              * Report the exception via email to the administrator
              */
 
-            if (defined('COLBY_EMAIL_LIBRARY_DIRECTORY') &&
-                defined('COLBY_SITE_ERRORS_SEND_EMAILS') &&
-                COLBY_SITE_ERRORS_SEND_EMAILS)
-            {
+            if (CBSitePreferences::sendEmailsForErrors() && class_exists('Swift_SmtpTransport')) {
                 $transport = Swift_SmtpTransport::newInstance(COLBY_EMAIL_SMTP_SERVER,
                                                               COLBY_EMAIL_SMTP_PORT,
                                                               COLBY_EMAIL_SMTP_SECURITY);

@@ -92,6 +92,7 @@ EOT;
             ['CB'.'SiteConfiguration::defaultClassNameForPageSettings', 'Use site preferences.'],
             ['CB'.'FacebookFirstVerifiedUserID', 'Remove it.'],
             ['COLBY'.'_FACEBOOK_FIRST_VERIFIED_USER_ID', 'Remove it.'],
+            ['COLBY'.'_SITE_ERRORS_SEND_EMAILS', 'Use CBSiteDoesSendEmailErrorReports instead.']
         ];
 
         $messagesAsHTML = [];

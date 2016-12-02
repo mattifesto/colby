@@ -60,7 +60,7 @@ if (containsExcludedHash($hashes)) {
     exit;
 }
 
-if (class_exists('Swift_SmtpTransport')) {
+if (CBSitePreferences::sendEmailsForErrors() && class_exists('Swift_SmtpTransport')) {
     $CSS = <<<EOT
 
         <style>
