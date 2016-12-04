@@ -12,6 +12,8 @@
 final class CBSitePreferences {
 
     const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
+    const defaultResizeOperations = ['rl300', 'rs200clc200'];
+
     private static $model = false;
 
     /**
@@ -177,6 +179,20 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return [string]
+     *  An array of image resize operations that are allowed to be completed
+     *  when the specific image size URL is first requested.
+     */
+    static function onDemandImageResizeOperations() {
+        $model = CBSitePreferences::model();
+        $operations = CBModel::value($model, 'onDemandImageResizeOperations', [], function ($value) {
+            $operations = preg_split('/[\s,]+/', $value, -1, PREG_SPLIT_NO_EMPTY);
+            return is_array($operations) ? $operations : [];
+        });
+        return array_unique(array_merge($operations, CBSitePreferences::defaultResizeOperations));
+    }
+
+    /**
      * @return string|null
      */
     public static function reCAPTCHASecretKey() {
@@ -266,9 +282,11 @@ final class CBSitePreferences {
         $model->facebookURL = CBModel::value($spec, 'facebookURL', '', 'trim');
         $model->frontPageID = CBModel::value($spec, 'frontPageID');
         $model->googleTagManagerID = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
+        $model->onDemandImageResizeOperations = CBModel::value($spec, 'onDemandImageResizeOperations', '');
         $model->reCAPTCHASecretKey = CBModel::value($spec, 'reCAPTCHASecretKey', null, 'trim');
         $model->reCAPTCHASiteKey = CBModel::value($spec, 'reCAPTCHASiteKey', null, 'trim');
         $model->twitterURL = CBModel::value($spec, 'twitterURL', '', 'trim');
+
         if (isset($spec->custom) && is_array($spec->custom)) {
             $model->custom = new stdClass();
             $keyValueModels = array_filter($spec->custom, function ($spec) { return $spec->className === 'CBKeyValuePair'; });

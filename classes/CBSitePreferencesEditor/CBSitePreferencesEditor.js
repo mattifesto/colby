@@ -53,6 +53,15 @@ var CBSitePreferencesEditor = {
         }).element);
         section.appendChild(item);
 
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "On Demand Image Resize Operations",
+            propertyName : "onDemandImageResizeOperations",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
         element.appendChild(section);
 
         /* Social */
