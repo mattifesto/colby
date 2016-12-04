@@ -71,7 +71,45 @@ class CBImages {
     }
 
     /**
-     * @deprecated use CBImage::reduceImage()
+     * @param string $path
+     *  Example: "/data/28/12/580870551ac6833f1ea589a9490d37d48302/rw400.png"
+     *
+     * @return bool
+     */
+    static function makeAndSendImageForPath($path) {
+        if (!preg_match('%^/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/([^/]+)$%', $path, $matches)) {
+            return false;
+        }
+
+        $ID = "{$matches[1]}{$matches[2]}{$matches[3]}";
+        $basename = $matches[4];
+        $pathinfo = pathinfo($basename);
+        $operation = $pathinfo['filename'];
+        $extension = $pathinfo['extension'];
+
+        if (!in_array($operation, CBSitePreferences::onDemandImageResizeOperations())) {
+            return false;
+        }
+
+        if (!file_exists(CBDataStore::flexpath($ID, "original.{$extension}", CBSiteDirectory))) {
+            return false;
+        }
+
+        CBImages::reduceImage($ID, $extension, $operation);
+
+        $reducedFilepath = CBSiteDirectory . $path;
+        $size = getimagesize($reducedFilepath);
+        $mimeType = image_type_to_mime_type($size[2]);
+
+        /* serve image to browser */
+        header('Content-Type:' . $mimeType);
+        readfile($reducedFilepath);
+
+        return true;
+    }
+
+    /**
+     * @deprecated use CBImages::reduceImage()
      *
      * Creates a reduced image for an operation only if the reduced image
      * doesn't already exist.
@@ -86,7 +124,8 @@ class CBImages {
      * @return null
      */
     public static function makeReducedImageForOperation($ID, $extension, $operation) {
-        reduceImage($ID, $extension, $operation);
+        error_log('Call made to deprecated function: ' . __METHOD__);
+        CBImages::reduceImage($ID, $extension, $operation);
     }
 
     /**
