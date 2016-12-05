@@ -12,7 +12,11 @@
 final class CBSitePreferences {
 
     const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
-    const defaultResizeOperations = ['rl300', 'rs200clc200'];
+    const defaultResizeOperations = [
+        'rl300', /* image admin page thumbnails */
+        'rs200clc200',
+        'rw640', /* page index thumbnails */
+    ];
 
     private static $model = false;
 
