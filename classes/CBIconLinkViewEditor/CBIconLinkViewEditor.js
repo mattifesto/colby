@@ -128,6 +128,12 @@ var CBIconLinkViewEditor = {
      * @return string|undefined
      */
     specToDescription : function (spec) {
-        return spec.text || spec.alternativeText;
+        if (typeof spec.text === "string" && spec.text.trim()) {
+            return spec.text;
+        } else if (typeof spec.alternativeText === "string" && spec.alternativeText.trim()) {
+            return spec.alternativeText;
+        } else {
+            return undefined;
+        }
     },
 };
