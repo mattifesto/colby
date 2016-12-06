@@ -36,6 +36,15 @@ var CBIconLinkViewEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Alternative Text",
+            propertyName : "alternativeText",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
             labelText : "URL",
             propertyName : "URL",
             spec : args.spec,
@@ -119,6 +128,6 @@ var CBIconLinkViewEditor = {
      * @return string|undefined
      */
     specToDescription : function (spec) {
-        return spec.text;
+        return spec.text || spec.alternativeText;
     },
 };

@@ -40,7 +40,7 @@ final class CBIconLinkView {
             $imageCSS = 'background-color: hsl(30, 50%, 80%)';
         } else {
             $imageCSS = CBImage::flexpath($model->image);
-            $imageCSS = "background-image: url(/{$imageCSS}); background-size: cover";
+            $imageCSS = "background-image: url(/{$imageCSS});";
         }
 
         if (empty($model->disableRoundedCorners)) {
@@ -105,6 +105,7 @@ final class CBIconLinkView {
     public static function specToModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
+            'alternativeText' => CBModel::value($spec, 'alternativeText', 'strval'),
             'disableRoundedCorners' => CBModel::value($spec, 'disableRoundedCorners', false, 'boolval'),
             'image' => CBModel::value($spec, 'image', null, 'CBImage::specToModel'),
             'text' => ($text = CBModel::value($spec, 'text', '', 'trim')),
