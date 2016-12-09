@@ -41,4 +41,34 @@ final class CBImage {
             'width' => $spec->width,
         ];
     }
+
+    /**
+     * @param string $URI
+     *
+     * @return stdClass|null
+     *
+     *  Example: https://yaycomputer.com/data/58/52/adab0f513df82783386e121dac276bb5c9d6/original.jpeg
+     *
+     *  returns: {
+     *      extension: "jpeg",
+     *      filename: "original",
+     *      ID: "5852adab0f513df82783386e121dac276bb5c9d6",
+     *  }
+     *
+     */
+    static function URIToImage($URI) {
+        $pattern = '%/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/([^/]+)$%';
+
+        if (preg_match($pattern, $URI, $matches)) {
+            $basename = $matches[4];
+            $pathinfo = pathinfo($basename);
+            return (object)[
+                'extension' => $pathinfo['extension'],
+                'filename' => $pathinfo['filename'],
+                'ID' => "{$matches[1]}{$matches[2]}{$matches[3]}",
+            ];
+        } else {
+            return null;
+        }
+    }
 }
