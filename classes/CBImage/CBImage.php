@@ -27,18 +27,29 @@ final class CBImage {
     }
 
     /**
-     * @param stdClass $spec
+     * @param string $spec->extension
+     * @param hex160 $spec->ID
+     * @param string? $spec->filename
+     * @param int? $spec->height
+     * @param int? $spec->width
      *
      * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
+        $filename = CBModel::value($spec, 'filename', '');
+
+        if (empty($filename)) {
+            // For backward compatability with older spec schema.
+            $filename = CBModel::value($spec, 'base', '');
+        }
+
         return (object)[
             'className' => __CLASS__,
             'extension' => $spec->extension,
-            'filename' => empty($spec->filename) ? $spec->base : $spec->filename,
-            'height' => $spec->height,
+            'filename' => $filename,
+            'height' => CBModel::value($spec, 'height', null, 'intval'),
             'ID' => $spec->ID,
-            'width' => $spec->width,
+            'width' => CBModel::value($spec, 'width', null, 'intval'),
         ];
     }
 
@@ -63,6 +74,7 @@ final class CBImage {
             $basename = $matches[4];
             $pathinfo = pathinfo($basename);
             return (object)[
+                'className' => __CLASS__,
                 'extension' => $pathinfo['extension'],
                 'filename' => $pathinfo['filename'],
                 'ID' => "{$matches[1]}{$matches[2]}{$matches[3]}",

@@ -500,6 +500,11 @@ EOT;
     }
 
     /**
+     * @deprecated 2016.12.10 The are only a couple of classes that call this on
+     * the KG site. Use CBViewPage instead.
+     *
+     * Deprecated instructions:
+     *
      * Page classes should call this function first from their own `specToModel`
      * function to process all of the page class reserved properties and ensure
      * that the model is properly set up to be saved.
@@ -510,9 +515,9 @@ EOT;
      * This function defines the official properties of a page class spec and
      * model.
      *
-     * @param {stdClass} $spec
+     * @param stdClass $spec
      *
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
         $model = CBModels::modelWithClassName($spec->className, ['ID' => $spec->ID]);

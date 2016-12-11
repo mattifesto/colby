@@ -205,41 +205,26 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @return undefined
-     */
-    resizeThumbnailDidError : function () {
-        Colby.displayXHRError(CBViewPageEditor.resizeThumbnailXHR);
-        CBViewPageEditor.resizeThumbnailXHR = undefined;
-    },
-
-    /**
-     * @return undefined
-     */
-    resizeThumbnailDidLoad : function () {
-        var response = Colby.responseFromXMLHttpRequest(CBViewPageEditor.resizeThumbnailXHR);
-        CBViewPageEditor.resizeThumbnailXHR = undefined;
-
-        if (response.wasSuccessful) {
-            CBViewPageEditor.setThumbnail(response.image);
-        } else {
-            Colby.displayResponse(response);
-        }
-    },
-
-    /**
-     * You most likely want to call setThumbnailImage() or
-     * suggestThumbnailImage() instead of this function.
+     * @deprecated use setThumbnailImage()
      *
      * @param object? image
      *
      * @return undefined
      */
     setThumbnail : function (image) {
-        if (CBViewPageEditor.resizeThumbnailXHR) {
-            CBViewPageEditor.resizeThumbnailXHR.abort();
-            CBViewPageEditor.resizeThumbnailXHR = undefined;
-        }
+        CBViewPageEditor.setThumbnailImage(image);
+    },
 
+    /**
+     * @param object? image
+     *  {
+     *      extension: string,
+     *      ID: hex160,
+     *  }
+     *
+     * @return undefined
+     */
+    setThumbnailImage : function (image) {
         var spec = CBViewPageEditor.spec;
 
         if (spec === undefined) {
@@ -247,8 +232,10 @@ var CBViewPageEditor = {
         }
 
         if (image === undefined) {
+            spec.image = undefined;
             spec.thumbnailURL = undefined;
         } else {
+            spec.image = image;
             spec.thumbnailURL = Colby.imageToURL(image);
         }
 
@@ -262,41 +249,6 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param {ID: hex160, extension: string}? image
-     *
-     * @return undefined
-     */
-    setThumbnailImage : function (image) {
-        var spec = CBViewPageEditor.spec;
-
-        if (spec === undefined) {
-            return;
-        }
-
-        if (CBViewPageEditor.resizeThumbnailXHR) {
-            CBViewPageEditor.resizeThumbnailXHR.abort();
-            CBViewPageEditor.resizeThumbnailXHR = undefined;
-        }
-
-        if (image === undefined) {
-            CBViewPageEditor.setThumbnail();
-        } else {
-            var formData = new FormData();
-            formData.append("ID", image.ID);
-            formData.append("extension", image.extension);
-            formData.append("operation", "rs200clc200");
-
-            var xhr = new XMLHttpRequest();
-            xhr.onerror = CBViewPageEditor.resizeThumbnailDidError;
-            xhr.onload = CBViewPageEditor.resizeThumbnailDidLoad;
-            xhr.open("POST", "/api/?class=CBImages&function=reduceImage");
-            xhr.send(formData);
-
-            CBViewPageEditor.resizeThumbnailXHR = xhr;
-        }
-    },
-
-    /**
      * @param {ID: hex160, extension: string} image
      *
      * @return undefined
@@ -304,7 +256,7 @@ var CBViewPageEditor = {
     suggestThumbnailImage : function (image) {
         var spec = CBViewPageEditor.spec;
 
-        if (spec && !spec.thumbnailURL) {
+        if (spec && !spec.image && !spec.thumbnailURL) {
             CBViewPageEditor.setThumbnailImage(image);
         }
     },

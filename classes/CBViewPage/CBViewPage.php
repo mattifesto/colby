@@ -339,12 +339,13 @@ final class CBViewPage {
 
         $model->classNameForSettings = isset($spec->classNameForSettings) ? trim($spec->classNameForSettings) : '';
         $model->description = isset($spec->description) ? $spec->description : '';
+        $model->image = CBModel::value($spec, 'image', null, 'CBImage::specToModel');
         $model->isPublished = isset($spec->isPublished) ? !!$spec->isPublished : false;
         $model->iteration = 0;
         $model->publicationTimeStamp = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
         $model->publishedBy = isset($spec->publishedBy) ? $spec->publishedBy : null;
         $model->schemaVersion = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
-        $model->thumbnailURL = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null;
+        $model->thumbnailURL = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null; /* deprecated, use `image` */
         $model->title = isset($spec->title) ? $spec->title : '';
         $model->URI = isset($spec->URI) ? trim($spec->URI) : '';
         $model->URI = $model->URI !== '' ? $model->URI : $model->ID;
@@ -376,6 +377,10 @@ final class CBViewPage {
         $model->thumbnailURLAsHTML = ColbyConvert::textToHTML($model->thumbnailURL);
         $model->titleHTML = ColbyConvert::textToHTML($model->title);
         $model->URIAsHTML = ColbyConvert::textToHTML($model->URI);
+
+        if (empty($model->image) && !empty($model->thumbnailURL)) {
+            $model->image = CBImage::URIToImage($model->thumbnailURL);
+        }
 
         return $model;
     }

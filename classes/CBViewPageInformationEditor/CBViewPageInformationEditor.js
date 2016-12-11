@@ -207,7 +207,13 @@ var CBViewPageInformationEditor = {
         element.appendChild(section);
         element.appendChild(CBUI.createHalfSpace());
 
-        chooser.setImageURLCallback(args.spec.thumbnailURL);
+        var imageURL = args.spec.thumbnailURL; /* deprecated */
+
+        if (args.spec.image) {
+            imageURL = "/" + Colby.dataStoreFlexpath(args.spec.image.ID, "rw1280." + args.spec.image.extension);
+        }
+
+        chooser.setImageURLCallback(imageURL);
 
         /* actions */
 
