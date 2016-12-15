@@ -9,7 +9,6 @@ define('CBSiteDoesSendEmailErrorReports',   false);
 
 define('CBFacebookAppID',                   '');
 define('CBFacebookAppSecret',               '');
-define('CBFacebookFirstVerifiedUserID',     '');
 
 define('CBMySQLHost',                       '');
 define('CBMySQLDatabase',                   '');
@@ -41,10 +40,8 @@ define('COLBY_EMAIL_SMTP_PASSWORD',         'password');
 define('COLBY_SITE_URL',                        CBSiteURL);
 define('COLBY_SITE_NAME',                       CBSiteName);
 define('COLBY_SITE_ADMINISTRATOR',              CBSiteAdministratorEmail);
-define('COLBY_SITE_ERRORS_SEND_EMAILS',         CBSiteDoesSendEmailErrorReports);
 define('COLBY_FACEBOOK_APP_ID',                 CBFacebookAppID);
 define('COLBY_FACEBOOK_APP_SECRET',             CBFacebookAppSecret);
-define('COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID', CBFacebookFirstVerifiedUserID);
 define('COLBY_MYSQL_HOST',                      CBMySQLHost);
 define('COLBY_MYSQL_USER',                      CBMySQLUser);
 define('COLBY_MYSQL_PASSWORD',                  CBMySQLPassword);
