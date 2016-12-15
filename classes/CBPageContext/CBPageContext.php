@@ -22,19 +22,21 @@ final class CBPageContext {
     /**
      * @param string $descriptionAsHTML
      * @param hex160 $ID
-     * @param int $publishedBy
+     * @param string? $args['imageURL']
+     *  The image URL should be safe for HTML.
      * @param int $publishedTimestamp
      * @param string $titleAsHTML
      *
      * @return null
      */
     public static function push($args) {
-        $descriptionAsHTML = $ID = $publishedTimestamp = $titleAsHTML = null;
+        $descriptionAsHTML = $ID = $imageURL = $publishedTimestamp = $titleAsHTML = $URI = null;
         extract($args, EXTR_IF_EXISTS);
 
         array_push(self::$contexts, (object)[
             'descriptionAsHTML' => $descriptionAsHTML,
             'ID' => $ID,
+            'imageURL' => $imageURL,
             'publishedTimestamp' => $publishedTimestamp,
             'titleAsHTML' => $titleAsHTML,
         ]);

@@ -221,14 +221,25 @@ class CBHTMLOutput
 
         ob_start();
 
+        $titleAsHTML = empty($pageContext->titleAsHTML) ? self::$titleHTML : $pageContext->titleAsHTML;
+        $descriptionAsHTML = empty($pageContext->descriptionAsHTML) ? self::$descriptionHTML : $pageContext->descriptionAsHTML;
+
         ?>
 
         <!doctype html>
         <html lang="en">
             <head>
                 <meta charset="UTF-8">
-                <title><?= empty($pageContext->titleAsHTML) ? self::$titleHTML : $pageContext->titleAsHTML ?></title>
-                <meta name="description" content="<?= empty($pageContext->descriptionAsHTML) ? self::$descriptionHTML : $pageContext->descriptionAsHTML ?>">
+                <title><?= $titleAsHTML ?></title>
+                <meta name="description" content="<?= $descriptionAsHTML ?>">
+
+                <meta property="fb:app_id" content="<?= CBFacebookAppID ?>">
+                <meta property="og:title" content="<?= $titleAsHTML ?>">
+                <meta property="og:description" content="<?= $descriptionAsHTML ?>">
+                <?php if (!empty($pageContext->imageURL)) { ?>
+                    <meta property="og:image" content="<?= $pageContext->imageURL ?>">
+                <?php } ?>
+
                 <?= $settingsHeadContent ?>
                 <?php self::renderJavaScriptInHead(); ?>
                 <?php self::renderCSSLinks(); ?>

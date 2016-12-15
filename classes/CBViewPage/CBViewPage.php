@@ -152,6 +152,30 @@ final class CBViewPage {
 
     /**
      * @return string
+     *  An empty string will be returned if no image is available.
+     */
+    static function modelToImageURL($model) {
+        $image = null;
+
+        if (!empty($model->image)) {
+            $image = $model->image;
+        } else if (!empty($model->thumbnailURL)) {
+            $image = CBImage::URIToImage($model->thumbnailURL);
+
+            if (empty($image)) {
+                return $model->thumbnailURL;
+            }
+        }
+
+        if (empty($image)) {
+            return '';
+        } else {
+            return CBDataStore::flexpath($image->ID, "rw1280.{$image->extension}", CBSiteURL);
+        }
+    }
+
+    /**
+     * @return string
      */
     public static function modelToSearchText($model) {
         $searchText = array();
@@ -238,6 +262,7 @@ final class CBViewPage {
         CBPageContext::push([
             'descriptionAsHTML' => $model->descriptionHTML,
             'ID' => $model->ID,
+            'imageURL' => CBViewPage::modelToImageURL($model),
             'publishedTimestamp' => $model->publicationTimeStamp,
             'titleAsHTML' => $model->titleHTML,
         ]);
