@@ -6,7 +6,7 @@ final class CBPageTitleAndDescriptionView {
      * @param bool? $model->hideDescription
      * @param bool? $model->showPublicationDate
      * @param hex160? $model->themeID
-     *
+     * @param bool? $model->useLightTextColors
      *
      * @return null
      */
@@ -23,6 +23,10 @@ final class CBPageTitleAndDescriptionView {
         if (!empty($model->stylesID)) {
             $stylesClass = CBTheme::IDToCSSClass($model->stylesID);
             $class = "{$class} {$stylesClass}";
+        }
+
+        if (!empty($model->useLightTextColors)) {
+            $class = "{$class} light";
         }
 
         if (empty($model->stylesID)) {
@@ -84,6 +88,7 @@ final class CBPageTitleAndDescriptionView {
             'showPublicationDate' => CBModel::value($spec, 'showPublicationDate', false, 'boolval'),
             'themeID' => CBModel::value($spec, 'themeID'),
             'titleColor' => $colorForProperty('titleColor'),
+            'useLightTextColors' => CBModel::value($spec, 'useLightTextColors', false, 'boolval'),
         ];
 
         /* view styles */

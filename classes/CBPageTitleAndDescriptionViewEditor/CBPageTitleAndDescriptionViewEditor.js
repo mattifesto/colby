@@ -1,5 +1,9 @@
 "use strict"; /* jshint strict: global */
-/* globals CBUI, CBUIBooleanEditor, CBUIStringEditor, CBUIThemeSelector */
+/* globals
+    CBUI,
+    CBUIBooleanEditor,
+    CBUIStringEditor,
+    CBUIThemeSelector */
 
 var CBPageTitleAndDescriptionViewEditor = {
 
@@ -75,6 +79,15 @@ var CBPageTitleAndDescriptionViewEditor = {
             propertyName : "showPublicationDate",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText: "Use Light Text Colors",
+            propertyName: "useLightTextColors",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);

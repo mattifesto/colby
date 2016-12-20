@@ -71,3 +71,7 @@ a.CBWellKnownThemeForContent:hover > div {
 .CBWellKnownThemeForContent ul + * {
     margin-top: 1em;
 }
+
+.CBWellKnownThemeForContent.light {
+    color: rgba(255, 255, 255, 0.9);
+}

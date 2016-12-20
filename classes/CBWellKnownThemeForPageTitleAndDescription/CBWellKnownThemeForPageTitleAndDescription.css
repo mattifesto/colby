@@ -23,3 +23,17 @@
   font-size: 80%;
   margin-top: 40px;
 }
+
+/* light text colors */
+
+.CBWellKnownThemeForPageTitleAndDescription.light {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.CBWellKnownThemeForPageTitleAndDescription.light > .description {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.CBWellKnownThemeForPageTitleAndDescription.light > .published {
+    color: rgba(255, 255, 255, 0.4);
+}

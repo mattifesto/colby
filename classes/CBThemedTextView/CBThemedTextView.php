@@ -62,6 +62,7 @@ final class CBThemedTextView {
      *  hex160 - themeID
      * @param string? $model->titleAsHTML
      * @param string? $model->URLAsHTML
+     * @param bool? $model->useLightTextColors
      *
      * @return null
      */
@@ -81,6 +82,10 @@ final class CBThemedTextView {
         if (!empty($model->stylesID)) {
             $stylesClass = CBTheme::IDToCSSClass($model->stylesID);
             $class = "{$class} {$stylesClass}";
+        }
+
+        if (!empty($model->useLightTextColors)) {
+            $class = "{$class} light";
         }
 
         if (empty($model->stylesID)) {
@@ -122,7 +127,11 @@ final class CBThemedTextView {
      * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
-        $model = CBModels::modelWithClassName(__CLASS__);
+        $model = (object)[
+            'className' => __CLASS__,
+            'useLightTextColors' => CBModel::value($spec, 'useLightTextColors', false, 'boolval'),
+        ];
+
         $model->center = CBModel::value($spec, 'center', false, 'boolval');
         $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? trim($spec->contentAsMarkaround) : '';
         $model->contentAsHTML = CBMarkaround::markaroundToHTML($model->contentAsMarkaround);
