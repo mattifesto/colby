@@ -56,6 +56,24 @@ class ColbyUser
         return self::$currentUserId;
     }
 
+    /**
+     * @param int $facebookUserID
+     *
+     * @return {id: int, hash: hex160}|false
+     */
+    private static function facebookUserIDtoUserIdentity($facebookUserID) {
+        $facebookUserID = intval($facebookUserID);
+        $SQL = <<<EOT
+
+            SELECT  `ID`, LOWER(HEX(`hash`)) AS `hash`
+            FROM    `ColbyUsers`
+            WHERE   `facebookId` = {$facebookUserID}
+
+EOT;
+
+        return CBDB::SQLToObject($SQL);
+    }
+
     ///
     /// this function should be run only once
     /// it is run automatically when ColbyUser is first included
@@ -133,12 +151,11 @@ class ColbyUser
         }
 
         $sql = <<<EOT
-SELECT
-    COUNT(*) AS `isOneOfTheGroup`
-FROM
-    `ColbyUsersWhoAre{$group}`
-WHERE
-    `userId` = '{$this->id}'
+
+            SELECT COUNT(*) AS `isOneOfTheGroup`
+            FROM `ColbyUsersWhoAre{$group}`
+            WHERE `userId` = '{$this->id}'
+
 EOT;
 
         $result = Colby::mysqli()->query($sql);
@@ -181,45 +198,18 @@ EOT;
      *  the user's access expires. It's the current unix timestamp plus the
      *  duration of the user's access.
      *
-     * Note:
-     *
-     *  This function uses MySQL 'INSERT ... ON DUPLICATE KEY UPDATE ...'
-     *  which will increment the AUTO_INCREMENT id every time a user logs in,
-     *  not every time a new user is added. This is due to some optimizations
-     *  in the way InnoDB deals with AUTO_INCREMENT. It's a good thing.
-     *
-     *  This means that big gaps between user id's should be expected. The
-     *  idea that the max AUTO_INCREMENT id will be reached is not a concern.
-     *  If a trillion users logged in every day it would take over 50,000 years
-     *  for the maximum AUTO_INCREMENT id to be reached. So it's not a problem.
-     *
      * @return void
      */
-    public static function loginCurrentUser(
-        $facebookAccessToken,
-        $facebookAccessExpirationTime,
-        $facebookProperties)
+    static function loginCurrentUser($facebookAccessToken, $facebookAccessExpirationTime, $facebookProperties)
     {
         $mysqli = Colby::mysqli();
+        $facebookUserID = intval($facebookProperties->id);
 
-        $sqlFacebookId = "'{$facebookProperties->id}'";
-
-        $sql = <<<EOT
-
-            SELECT  `id`
-            FROM    `ColbyUsers`
-            WHERE   `facebookId` = {$sqlFacebookId}
-
-EOT;
-
-        $id = CBDB::SQLToValue($sql);
-
-        if ($id !== false) {
-            $sqlId = "'{$id}'";
-        } else {
-            $sqlId = null;
+        if ($facebookUserID <= 0) {
+            throw new RuntimeException('The Facebook user ID is invalid.');
         }
 
+        $userIdentity = ColbyUser::facebookUserIDtoUserIdentity($facebookUserID);
 
         $sqlFacebookAccessToken = $mysqli->escape_string($facebookAccessToken);
         $sqlFacebookAccessToken = "'{$sqlFacebookAccessToken}'";
@@ -251,7 +241,7 @@ EOT;
             $sqlFacebookTimeZone = '0';
         }
 
-        if ($sqlId) {
+        if ($userIdentity) {
             $sql = <<<EOT
 
                 UPDATE
@@ -264,56 +254,51 @@ EOT;
                     `facebookLastName` = {$sqlFacebookLastName},
                     `facebookTimeZone` = {$sqlFacebookTimeZone}
                 WHERE
-                    `id` = {$sqlId}
+                    `id` = {$userIdentity->ID}
 
 EOT;
 
             Colby::query($sql);
-        }
-        else
-        {
-            $sqlHash = sha1(microtime() . rand());
-            $sqlHash = "'{$sqlHash}'";
+        } else {
+            $userIdentity = (object)[
+                'hash' => CBHex160::random(),
+            ];
+            $userHashAsSQL = CBHex160::toSQL($userIdentity->hash);
+            $sql = <<<EOT
 
-        $sql = <<<EOT
-
-            INSERT INTO
-                `ColbyUsers`
-            (
-                `hash`,
-                `facebookId`,
-                `facebookAccessToken`,
-                `facebookAccessExpirationTime`,
-                `facebookName`,
-                `facebookFirstName`,
-                `facebookLastName`,
-                `facebookTimeZone`
-            )
-            VALUES
-            (
-                UNHEX({$sqlHash}),
-                {$sqlFacebookId},
-                {$sqlFacebookAccessToken},
-                {$sqlFacebookAccessExpirationTime},
-                {$sqlFacebookName},
-                {$sqlFacebookFirstName},
-                {$sqlFacebookLastName},
-                {$sqlFacebookTimeZone}
-            )
+                INSERT INTO `ColbyUsers` (
+                    `hash`,
+                    `facebookId`,
+                    `facebookAccessToken`,
+                    `facebookAccessExpirationTime`,
+                    `facebookName`,
+                    `facebookFirstName`,
+                    `facebookLastName`,
+                    `facebookTimeZone`
+                ) VALUES (
+                    {$userHashAsSQL},
+                    {$facebookUserID},
+                    {$sqlFacebookAccessToken},
+                    {$sqlFacebookAccessExpirationTime},
+                    {$sqlFacebookName},
+                    {$sqlFacebookFirstName},
+                    {$sqlFacebookLastName},
+                    {$sqlFacebookTimeZone}
+                )
 
 EOT;
 
             Colby::query($sql);
 
-            $id = (int)$mysqli->insert_id;
+            $userIdentity->ID = intval($mysqli->insert_id);
 
             /* Detect first user */
 
             $count = CBDB::SQLToValue('SELECT COUNT(*) FROM `ColbyUsers`');
 
             if ($count === '1') {
-                Colby::query("INSERT INTO `ColbyUsersWhoAreAdministrators` VALUES ({$id}, NOW())");
-                Colby::query("INSERT INTO `ColbyUsersWhoAreDevelopers` VALUES ({$id}, NOW())");
+                Colby::query("INSERT INTO `ColbyUsersWhoAreAdministrators` VALUES ({$userIdentity->ID}, NOW())");
+                Colby::query("INSERT INTO `ColbyUsersWhoAreDevelopers` VALUES ({$userIdentity->ID}, NOW())");
             }
         }
 
@@ -331,7 +316,7 @@ EOT;
          * pretty tough to do.
          */
 
-        $cookie->userId = $id;
+        $cookie->userId = $userIdentity->ID;
         $cookie->expirationTimestamp = time() + (60 * 60 * 4); /* 4 hours from now */
 
         $encryptedCookie = Colby::encrypt($cookie);
