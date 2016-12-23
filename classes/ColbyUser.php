@@ -2,7 +2,7 @@
 
 define('CBUserCookieName', 'colby-user-encrypted-data');
 
-class ColbyUser
+final class ColbyUser
 {
     private $id = null;
     private $groups = array();
@@ -232,7 +232,7 @@ EOT;
             $sqlFacebookTimeZone = "'{$facebookProperties->timezone}'";
         } else {
             /**
-             * 2015.09.03 Facebook did not return an of these properies for a
+             * 2015.09.03 Facebook did not return an of these properties for a
              * new app so they may be deprecated.
              * TODO: Remove them, they are not used anyway.
              */
@@ -240,6 +240,8 @@ EOT;
             $sqlFacebookLastName = "''";
             $sqlFacebookTimeZone = '0';
         }
+
+        Colby::query('START TRANSACTION');
 
         if ($userIdentity) {
             $sql = <<<EOT
@@ -301,6 +303,27 @@ EOT;
                 Colby::query("INSERT INTO `ColbyUsersWhoAreDevelopers` VALUES ({$userIdentity->ID}, NOW())");
             }
         }
+
+        /**
+         * Update the user model
+         *
+         * This update is forced because we update the full object each time so
+         * enforcing sequential updates is not important.
+         */
+
+        $spec = (object)[
+            'className' => 'CBUser',
+            'ID' => $userIdentity->hash,
+            'facebook'=> $facebookProperties,
+            'lastLoggedIn' => time(),
+            'userID' => $userIdentity->ID,
+        ];
+
+        CBModels::save([$spec], /* force */ true);
+
+        /* All database updates are complete */
+
+        Colby::query('COMMIT');
 
         /**
          * Set the Colby user cookie data.

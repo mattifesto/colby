@@ -355,9 +355,32 @@ EOT;
      *      CBModels::save([$spec]);
      *      Colby::query('COMMIT');
      *
+     * @NOTE How model ID is determined:
+     *      - The class specToModel function can set the ID value on the model
+     *        by either calculating it or copying it. Potentially no ID value
+     *        needs to be set on the spec in this case, and if it is that ID
+     *        value will be ignored.
+     *      - If specToModel returns a model with no ID value, the ID value on
+     *        the spec must be set and will be used.
+     *
+     * @NOTE Reserved and required properties:
+     *      - title: The model will be given a title property that has a value
+     *        of the trimmed value of the spec title property if it is set or an
+     *        empty string if it is not.
+     *      - created: The model will have its created property set to the
+     *        timestamp when the model was first saved.
+     *      - modified: The model will have its modified property set to the
+     *        timestamp of this save.
+     *      - version: Both the spec and model will have their version
+     *        properties set to the version assigned for this save.
+     *
+     *      It's a goal to move these properties off the spec and model objects
+     *      to a meta object eventually.
+     *
      * @param [{stdClass}] $specs
      *  All of the specs must have the same class name. For specs of different
      *  classes make multiple calls.
+     *
      * @param bool $force
      *  Use this to disable version checking and force the model save. This
      *  should be used rarely and cautiously. Model import from CSV uses it.
