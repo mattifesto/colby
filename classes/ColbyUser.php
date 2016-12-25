@@ -4,18 +4,23 @@ define('CBUserCookieName', 'colby-user-encrypted-data');
 
 final class ColbyUser
 {
+    private $hash = null;
     private $id = null;
     private $groups = array();
     private $row = null;
 
     private static $currentUser = null;
 
-    // currentUserId
-    // if we can authenticate the current logged in user
-    // we just store their id, not the table row or anything else
-    // table row may be changed by the site
-    // caching it will only lead to possible stale data bugs
+    /**
+     * currentUserHash, currentUserId
+     *
+     * If we can authenticate the current logged in user we just store their
+     * hash and ID, not the table row or anything else. The table row may be
+     * changed by the site so caching it will only lead to possible stale data
+     * bugs.
+     */
 
+    private static $currentUserHash = null;
     private static $currentUserId = null;
 
     // currentUserRow
@@ -29,22 +34,48 @@ final class ColbyUser
     /**
      * @return ColbyUser
      */
-    private function __construct()
-    {
+    private function __construct() {
+    }
+
+    /**
+     * This function adds a user to a group. It does no error handling and will
+     * throw an exception if the user is already in the group or if the group
+     * doesn't exist.
+     *
+     * @param int $userID
+     * @param string $groupName
+     *
+     * @return null
+     */
+    static function addUserToGroup($userID, $groupName) {
+        $groupName = CBDB::escapeString($groupName);
+        $groupTableName = "ColbyUsersWhoAre{$groupName}";
+        $userID = intval($userID);
+
+        Colby::query("INSERT INTO `{$groupTableName}` VALUES ({$userID}, NOW())");
     }
 
     /**
      * @return ColbyUser
      */
-    public static function current()
-    {
-        if (!self::$currentUser)
-        {
-            self::$currentUser = new ColbyUser();
-            self::$currentUser->id = self::$currentUserId;
+    public static function current() {
+        if (!ColbyUser::$currentUser) {
+            $user = new ColbyUser();
+            $user->hash = ColbyUser::$currentUserHash;
+            $user->id = ColbyUser::$currentUserId;
+            ColbyUser::$currentUser = $user;
         }
 
-        return self::$currentUser;
+        return ColbyUser::$currentUser;
+    }
+
+    /**
+     * Returns the current user hash if a user is logged in; otherwise null.
+     *
+     * @return hex160|null
+     */
+    static function currentUserHash() {
+        return self::$currentUserHash;
     }
 
     /**
@@ -52,7 +83,7 @@ final class ColbyUser
      *
      * @return int|null
      */
-    public static function currentUserId() {
+    static function currentUserId() {
         return self::$currentUserId;
     }
 
@@ -74,50 +105,34 @@ EOT;
         return CBDB::SQLToObject($SQL);
     }
 
-    ///
-    /// this function should be run only once
-    /// it is run automatically when ColbyUser is first included
-    ///
-    public static function initialize()
-    {
-        self::initializeCurrentUser();
-    }
-
     /**
+     * This function should be run only once. It is run when this class is first
+     * loaded.
+     *
      * @return void
      */
-    private static function initializeCurrentUser()
-    {
-        if (!isset($_COOKIE[CBUserCookieName]))
-        {
+    static function initialize() {
+        if (!isset($_COOKIE[CBUserCookieName])) {
             return;
         }
 
         $cookieCipherData = $_COOKIE[CBUserCookieName];
 
-        try
-        {
+        try {
             $cookie = Colby::decrypt($cookieCipherData);
 
-            if (time() > $cookie->expirationTimestamp)
-            {
-                self::removeUserCookie();
-
+            if (time() > $cookie->expirationTimestamp) {
+                ColbyUser::removeUserCookie();
                 return;
             }
 
-            /**
-             * Success, the user is now logged in.
-             */
+            /* Success, the user is now logged in. */
 
+            self::$currentUserHash = $cookie->userHash;
             self::$currentUserId = $cookie->userId;
-        }
-        catch (Exception $exception)
-        {
+        } catch (Exception $exception) {
             Colby::reportException($exception);
-
-            self::removeUserCookie();
-
+            ColbyUser::removeUserCookie();
             return;
         }
     }
@@ -327,11 +342,7 @@ EOT;
 
         /**
          * Set the Colby user cookie data.
-         */
-
-        $cookie = new stdClass();
-
-        /**
+         *
          * The only realistic way to best prevent cookie hijacking is to use
          * HTTPS. As soon as a site becomes relatively popular or makes
          * enough money to cover the cost, switch. This is what Facebook and
@@ -339,9 +350,11 @@ EOT;
          * pretty tough to do.
          */
 
-        $cookie->userId = $userIdentity->ID;
-        $cookie->expirationTimestamp = time() + (60 * 60 * 4); /* 4 hours from now */
-
+        $cookie = (object)[
+            'userHash' => $userIdentity->hash,
+            'userId' => $userIdentity->ID,
+            'expirationTimestamp' => time() + (60 * 60 * 4), /* 4 hours from now */
+        ];
         $encryptedCookie = Colby::encrypt($cookie);
 
         /**
