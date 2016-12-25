@@ -44,6 +44,7 @@ CBLog::install();
 CBTasks::install();
 CBUsers::install();
 CBModels::install();
+CBModelAssociations::install();
 CBModelsPreferences::install();
 CBPages::install();
 CBSitePreferences::install();
