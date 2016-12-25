@@ -3,6 +3,18 @@
 final class CBDB {
 
     /**
+     * Converts a string to a SQL safe string.
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    static function escapeString($value) {
+        $value = (string)$value;
+        return Colby::mysqli()->escape_string($value);
+    }
+
+    /**
      * @deprecated use `CBHex160::toSQL`
      */
     public static function hex160ToSQL($values) {
@@ -135,9 +147,8 @@ final class CBDB {
      *
      * @return {string}
      */
-    public static function stringToSQL($value) {
-        $value = (string)$value;
-        $value = Colby::mysqli()->escape_string($value);
+    static function stringToSQL($value) {
+        $value = CBDB::escapeString($value);
         return "'{$value}'";
     }
 
