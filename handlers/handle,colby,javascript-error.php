@@ -1,7 +1,9 @@
 <?php
 
+$response = new CBAjaxResponse();
+
 $attributes = array();
-$hashes     = array();
+$hashes = array();
 
 if (isset($_POST['message'])) {
     $message                    = $_POST['message'];
@@ -123,6 +125,8 @@ EOT;
 
 error_log('JavaScript error: ' . var_export($attributes, true));
 
+$response->wasSuccessful = true;
+$response->send();
 
 /**
  * @Return Boolean
