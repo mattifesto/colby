@@ -56,7 +56,7 @@ var Colby = {
     /**
      * @return undefined
      */
-    displayResponse : function(response) {
+    displayResponse : function (response) {
         var element, message;
         if ('stackTrace' in response) {
             element                     = document.createElement("div");
@@ -178,6 +178,42 @@ var Colby = {
     },
 
     /**
+     * Makes an ajax request.
+     *
+     * @param string URL
+     * @param ? data
+     *  The data can be of any form accepted by the XMLHttpRequest.send()
+     *  function. Most commonly, if used, it will be a FormData instance.
+     *
+     * @return Promise
+     * Returns a promise that passes an 'ajax response' object (created by this
+     * class) to resolve handlers. If an error occurs for any reason a
+     * JavaScript Error object is passed to reject handlers with an 'ajax
+     * response' object set to the Error's `ajaxResponse` propery.
+     */
+    fetchAjaxResponse: function(URL, data) {
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.onloadend = handler;
+            xhr.open("POST", URL);
+            xhr.send(data);
+
+            function handler() {
+                var ajaxResponse = Colby.responseFromXMLHttpRequest(xhr);
+
+                if (ajaxResponse.wasSuccessful) {
+                    resolve(ajaxResponse);
+                } else {
+                    var error = new Error(ajaxResponse.message);
+                    error.ajaxResponse = ajaxResponse;
+
+                    reject(error);
+                }
+            }
+        });
+    },
+
+    /**
      * @param string image.filename
      * @param string image.extension
      * @param hex160 image.ID
@@ -209,9 +245,44 @@ var Colby = {
     },
 
     /**
+     * Use this function with promises to report errors back to the server.
+     *
+     *      fetchData().catch(Colby.report)
+     *
+     * @param Error error
+     *
+     * @return Promise
+     *  Returns a rejected promise the error parameter value.
+     */
+    report: function (error) {
+        var column, line, message, pageURL, scriptURL;
+
+        column = (error && error.column) ? error.column : "";
+        line = (error && error.line) ? error.line : "";
+        message = error ? error.toString() : "";
+        pageURL = location.href;
+        scriptURL = (error && error.sourceURL) ? error.sourceURL : "";
+
+        var formData = new FormData();
+        formData.append("columnNumber", column);
+        formData.append("lineNumber", line);
+        formData.append("message", message);
+        formData.append("pageURL", pageURL);
+        formData.append("scriptURL", scriptURL);
+
+        // TODO: could insert a catch here for rare errors
+        return Colby.fetchAjaxResponse("/colby/javascript-error/", formData).then(handle, handle);
+
+        function handle() {
+            return Promise.reject(error);
+        }
+    },
+
+    /**
      * @return {
-     *  string message,
-     *  bool wasSuccessful
+     *  message: string,
+     *  wasSuccessful: bool,
+     *  xhr: XMLHttpRequest,
      * }
      */
     responseFromXMLHttpRequest : function (xhr) {
@@ -222,7 +293,7 @@ var Colby = {
                 response = {
                     className : "CBAjaxResponse",
                     message : "An Ajax request was aborted. This may be because of a network error making the server unavailable or because the Ajax request URL is incorrect.",
-                    wasSuccessful : false
+                    wasSuccessful : false,
                 };
                 break;
             case 200:
@@ -232,10 +303,12 @@ var Colby = {
                 response = {
                     className : "CBAjaxResponse",
                     message : xhr.status + ' ' + xhr.statusText,
-                    wasSuccessful : false
+                    wasSuccessful : false,
                 };
                 break;
         }
+
+        response.xhr = xhr;
 
         return response;
     },
@@ -349,26 +422,29 @@ Colby.extend = function(objectToExtend, objectWithProperties) {
 };
 
 /**
- * This function is out of order to get the error handler set
- * as soon as possible.
+ * This function is out of order to get the error handler set as soon as
+ * possible.
  *
  * NOTE: Some errors will somehow disable this error handling. It's very odd.
  * When this happens use debugging to find the error and once you fix it the
  * error handling will start working again. I'm not sure exactly which errors
  * cause this strange behavior.
  *
- * @return void
+ * BUG: 2016.12.28
+ * Because this makes an asynchronous request it will not work if there is
+ * navigation immediately after which cancels the request.
+ *
+ * @return undefined
  */
-Colby.handleError = function(message, scriptURL, lineNumber, columnNumber, error)
-{
+Colby.handleError = function(message, scriptURL, lineNumber, columnNumber, error) {
     var formData = new FormData();
-    formData.append("message",      message);
-    formData.append("pageURL",      location.href);
-    formData.append("scriptURL",    scriptURL ? scriptURL : "");
-    formData.append("lineNumber",   lineNumber);
+    formData.append("message", message);
+    formData.append("pageURL", location.href);
+    formData.append("scriptURL", scriptURL || "");
+    formData.append("lineNumber", lineNumber);
 
     var XHR = new XMLHttpRequest();
-    XHR.open("POST", "/colby/javascript-error/", true);
+    XHR.open("POST", "/colby/javascript-error/");
     XHR.send(formData);
 
     return false;
