@@ -35,18 +35,12 @@ var CBUISpecSaver = {
     /**
      * @return Promise
      */
-    flush: function (args) {
+    flush: function () {
         var promises = [];
 
         if (CBUISpecSaver.flushPromise) {
             return CBUISpecSaver.flushPromise;
         }
-
-        /*
-        return Promise.reject(new Error("no way")).catch(Colby.report)
-            .then(function () { alert("fulfilled"); })
-            .catch(function (error) { alert(error.message); });
-        */
 
         Object.keys(CBUISpecSaver.specDataByID).forEach(function (ID) {
             var specData = CBUISpecSaver.specDataByID[ID];
@@ -62,11 +56,13 @@ var CBUISpecSaver = {
             }
         });
 
-        CBUISpecSaver.flushPromise = Promise.all(promises).then(args.callback).catch(Colby.report).then(clear, clear);
+        CBUISpecSaver.flushPromise = Promise.all(promises).catch(Colby.report).then(clear, clear);
 
         function clear() {
             CBUISpecSaver.flushPromise = undefined;
         }
+
+        return CBUISpecSaver.flushPromise;
     },
 
     /**
