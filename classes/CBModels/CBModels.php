@@ -345,6 +345,36 @@ EOT;
     }
 
     /**
+     * Removes the oldest versions, but not the current version, of a model.
+     * This function is used clear out unneeded previous versions of a model.
+     *
+     * @param [hex160] $IDs
+     * @param timestamp $maxTimestamp
+     *      Previous versions of the models with timestamps les than
+     *      $maxTimestamp will be deleted.
+     *
+     * @return null
+     */
+    static function removeOldestVersions($IDs, $maxTimestamp) {
+        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $maxTimestampAsSQL = intval($maxTimestamp);
+
+        $SQL = <<<EOT
+
+            DELETE      `v`
+            FROM        `CBModels` AS `m`
+            INNER JOIN  `CBModelVersions` as `v`
+            ON          `m`.`ID` = `v`.`ID`
+            WHERE       `m`.`ID` IN ({$IDsAsSQL}) AND
+                        `m`.`version` != `v`.`version` AND
+                        `v`.`timestamp` < {$maxTimestampAsSQL}
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
      * Removes previous versions, but not the current version, of a model. This
      * function is used clear out unneeded previous versions of a model. This is
      * called at the end of CBModels::save().
