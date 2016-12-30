@@ -94,6 +94,9 @@ final class CBViewPage {
     }
 
     /**
+     * @deprecated 2016.12.30 This function performs a basic and obvious task
+     * that can be done by the caller.
+     *
      * Returns either the lastest spec or a new spec for a page ID.
      *
      * TODO: Consider adding a "clobber" argument to specify that the function
@@ -302,6 +305,8 @@ final class CBViewPage {
     }
 
     /**
+     * @deprecated use CBModels::save().
+     *
      * This function updates the page data in the database and saves the page
      * model files.
      *
@@ -312,31 +317,7 @@ final class CBViewPage {
     public static function save($args) {
         $spec = $args['spec'];
 
-        if (empty($spec->ID)) {
-            $spec->ID = $spec->dataStoreID;
-        }
-
         CBModels::save([$spec]);
-    }
-
-    /**
-     * @return null
-     */
-    public static function saveEditedPageForAjax() {
-        $response = new CBAjaxResponse();
-        $spec = json_decode($_POST['model-json']);
-
-        CBViewPage::save(['spec' => $spec]);
-
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return stdClass
-     */
-    public static function saveEditedPageForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
     }
 
     /**
