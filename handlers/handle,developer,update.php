@@ -1,3 +1,0 @@
-<?php
-
-CBAdminPageForUpdate::renderAsHTML();

@@ -3,10 +3,32 @@
 class CBAdminPageForUpdate {
 
     /**
+     * @return [string]
+     */
+    static function adminPageMenuNamePath() {
+        return ['develop', 'update'];
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function adminPagePermissions() {
+        return (object)['group' => 'Developers'];
+    }
+
+    /**
+     * @return void
+     */
+    static function adminPageRenderContent() {
+        CBHTMLOutput::setTitleHTML('Update');
+        CBHTMLOutput::setDescriptionHTML('Tools to perform site version updates.');
+    }
+
+    /**
      * @return bool
      */
-    public static function installationIsRequired() {
-        $sql = <<<EOT
+    static function installationIsRequired() {
+        $SQL = <<<EOT
 
             SELECT
                 COUNT(*) AS `count`
@@ -18,18 +40,15 @@ class CBAdminPageForUpdate {
 
 EOT;
 
-        $result                 = Colby::query($sql);
-        $installationIsRequired = !$result->fetch_object()->count;
+        $count = CBDB::SQLToValue($SQL);
 
-        $result->free();
-
-        return $installationIsRequired;
+        return $count > 0;
     }
 
     /**
      * @return null
      */
-    public static function pullUpdatesForAjax() {
+    static function pullUpdatesForAjax() {
         $response = new CBAjaxResponse();
 
         $response->description = "$ git pull\n";
@@ -60,42 +79,35 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function pullUpdatesForAjaxPermissions() {
+    static function pullUpdatesForAjaxPermissions() {
         return (object)['group' => 'Developers'];
-    }
-
-    /**
-     * @return null
-     */
-    public static function renderAsHTML() {
-        include __DIR__ . '/CBAdminPageForUpdateHTML.php';
     }
 
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function requiredClassNames() {
         return ['CBUI', 'CBUIActionLink'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
-        return [CBAdminPageForUpdate::URL('CBAdminPageForUpdate.css')];
+    static function requiredCSSURLs() {
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
-        return [CBAdminPageForUpdate::URL('CBAdminPageForUpdate.js')];
+    static function requiredJavaScriptURLs() {
+        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
      * @return null
      */
-    public static function update() {
+    static function update() {
         include Colby::findFile('setup/update.php');
         CBLog::addMessage('System', 5, 'The system was updated.');
     }
@@ -103,10 +115,10 @@ EOT;
     /**
      * @return null
      */
-    public static function updateForAjax() {
+    static function updateForAjax() {
         $response = new CBAjaxResponse();
 
-        self::update();
+        CBAdminPageForUpdate::update();
 
         $response->wasSuccessful    = true;
         $response->message          = "The site was successfully updated.";
@@ -116,26 +128,15 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function updateForAjaxPermissions() {
+    static function updateForAjaxPermissions() {
         $permissions = new stdClass();
 
-        if (isset($_POST['requestIsForInitialInstallation']) &&
-            self::installationIsRequired()) {
+        if (isset($_POST['requestIsForInitialInstallation']) && CBAdminPageForUpdate::installationIsRequired()) {
             $permissions->group = 'Public';
         } else {
             $permissions->group = 'Developers';
         }
 
         return $permissions;
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
