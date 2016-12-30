@@ -126,7 +126,7 @@ var CBUIImageChooser = {
             args.imageElement.src = URL;
         } else {
             args.buttonElement.classList.remove("image");
-            args.imageElement.src = null;
+            args.imageElement.src = "";
         }
     },
 };

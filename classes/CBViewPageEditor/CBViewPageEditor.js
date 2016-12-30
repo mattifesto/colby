@@ -1,12 +1,12 @@
 "use strict"; /* jshint strict: global */
 /* globals
     CBArrayEditor,
-    CBDelayTimer,
     CBPageEditorAvailableViewClassNames,
     CBPageTemplateDescriptors,
     CBUI,
     CBUINavigationView,
     CBUISpecEditor,
+    CBUISpecSaver,
     CBURLQueryVariables,
     CBViewPageInformationEditor,
     Colby */
@@ -122,12 +122,15 @@ var CBViewPageEditor = {
     displayEditorForPageSpec : function (spec) {
         CBViewPageEditor.model = spec;
         CBViewPageEditor.spec = spec;
+
+        var specSaver = CBUISpecSaver.create({spec: spec});
+        CBViewPageEditor.specChangedCallback = specSaver.specChangedCallback;
+
         var element = document.createElement("div");
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
-        var specChangedCallback = CBViewPageEditor.requestSave.bind(CBViewPageEditor);
         var navigationView = CBUINavigationView.create({
-            defaultSpecChangedCallback : specChangedCallback,
+            defaultSpecChangedCallback : CBViewPageEditor.specChangedCallback,
             rootItem : {
                 element : element,
                 title : "Page Editor",
@@ -139,7 +142,7 @@ var CBViewPageEditor = {
             navigateCallback : navigationView.navigateToSpecCallback,
             navigateToItemCallback : navigationView.navigateToItemCallback,
             spec : spec,
-            specChangedCallback : specChangedCallback,
+            specChangedCallback : CBViewPageEditor.specChangedCallback,
         }).element);
         element.appendChild(CBUI.createHalfSpace());
 
@@ -198,13 +201,6 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @return undefined
-     */
-    requestSave : function () {
-        CBViewPageEditor.saveModelTimer.restart();
-    },
-
-    /**
      * @deprecated use setThumbnailImage()
      *
      * @param object? image
@@ -245,7 +241,7 @@ var CBViewPageEditor = {
             callback({ spec: spec, image: image });
         }
 
-        CBViewPageEditor.requestSave();
+        CBViewPageEditor.specChangedCallback.call();
     },
 
     /**
@@ -266,10 +262,6 @@ var CBViewPageEditor = {
  * @return undefined
  */
 CBViewPageEditor.DOMContentDidLoad = function() {
-    CBViewPageEditor.saveModelTimer = Object.create(CBDelayTimer).init();
-    CBViewPageEditor.saveModelTimer.callback = CBViewPageEditor.saveModel.bind(CBViewPageEditor);
-    CBViewPageEditor.saveModelTimer.delayInMilliseconds = 2000;
-
     CBViewPageEditor.fetchModel();
 };
 
@@ -316,77 +308,6 @@ CBViewPageEditor.fetchModelDidLoad = function(args) {
     } else {
         Colby.displayResponse(response);
     }
-};
-
-
-/**
- * Do not call this function directly. It should only be called by the save
- * timer.
- *
- * @return void
- */
-CBViewPageEditor.saveModel = function() {
-
-    var timeStampInSeconds  = Math.floor(Date.now() / 1000);
-    this.model.updated      = timeStampInSeconds;
-
-    if (!this.model.created) {
-
-        this.model.created = timeStampInSeconds;
-    }
-
-    var formData = new FormData();
-    formData.append("model-json", JSON.stringify(this.model));
-
-    var xhr     = new XMLHttpRequest();
-    xhr.onload  = this.saveModelAjaxRequestDidComplete.bind(this, xhr);
-    xhr.onerror = this.saveModelAjaxRequestDidFail.bind(this, xhr);
-
-    xhr.open("POST", "/api/?class=CBViewPage&function=saveEditedPage");
-    xhr.send(formData);
-
-    /**
-     * Prevent another callback while the model is being saved.
-     */
-
-    this.saveModelTimer.pause();
-};
-
-/**
- * @return undefined
- */
-CBViewPageEditor.saveModelAjaxRequestDidComplete = function(xhr) {
-    this.saveModelTimer.resume();
-
-    var response = Colby.responseFromXMLHttpRequest(xhr);
-
-    if (response.wasSuccessful) {
-        if ('version' in this.model) {
-            this.model.version++;
-        } else {
-            this.model.version = 1;
-        }
-    } else {
-        Colby.displayResponse(response);
-    }
-};
-
-/**
- * Sometimes the server will reject a request. Without this handler, that
- * rejection will silently stop all future attempts to save even though they
- * would most likely complete successfully. This handler could do more, but
- * what it does do is allow future save requests to go through.
- *
- * It also restarts the timer since there is still data to be saved.
- *
- * TODO: Keep a fail count or something an eventually report to the user that
- * communication with the server is not working.
- *
- * @return undefined
- */
-CBViewPageEditor.saveModelAjaxRequestDidFail = function(xhr) {
-    this.saveModelTimer.resume();
-    this.saveModelTimer.restart();
 };
 
 var CBPageEditor = CBViewPageEditor; /* deprecated */

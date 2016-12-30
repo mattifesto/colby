@@ -78,7 +78,7 @@ var CBUISpecSaver = {
             specData.timeoutID = undefined;
         }
 
-        specData.timeoutID = setTimeout(callback, 5000);
+        specData.timeoutID = setTimeout(callback, 1000);
 
         function callback() {
             specData.timeoutID = undefined;
@@ -130,7 +130,13 @@ var CBUISpecSaver = {
         //         shortly so remove the pending request flag.
         //      3. If there is no pending request, clear the promise.
         function handleResolved(value) {
-            specData.spec.version += 1;
+            var spec = specData.spec;
+
+            if (spec.version === undefined) {
+                spec.version = 1;
+            } else {
+                spec.version += 1;
+            }
 
             if (specData.hasPendingRequest) {
                 specData.hasPendingRequest = undefined;

@@ -6,33 +6,20 @@ final class CBViewPageEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBArrayEditor', 'CBUI', 'CBUINavigationView', 'CBUISpecEditor', 'CBViewPageInformationEditor'];
+        return ['CBArrayEditor', 'CBUI', 'CBUINavigationView', 'CBUISpecEditor', 'CBUISpecSaver', 'CBViewPageInformationEditor'];
     }
 
     /**
      * @return [string]
      */
     public static function requiredCSSURLs() {
-        return [CBViewPageEditor::URL('CBViewPageEditor.css')];
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [
-            CBSystemURL . '/javascript/CBDelayTimer.js', /* deprecated */
-            CBViewPageEditor::URL('CBViewPageEditor.js'),
-        ];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 }
