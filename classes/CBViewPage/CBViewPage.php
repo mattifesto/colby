@@ -6,25 +6,33 @@ final class CBViewPage {
 
     /**
      * @param hex160 $ID
+     * @param bool $create
+     *      If a spec doesn't already exist for the ID, an empty one will be
+     *      created if this parameter is true. There are enough processes for
+     *      pages that this option has measurable benefits.
      *
      * @return stdClass|false
      */
-    public static function fetchSpecByID($ID) {
+    static function fetchSpecByID($ID, $create = false) {
         $spec = CBModels::fetchSpecByID($ID);
 
-        if ($spec === false) {
+        if (empty($spec)) {
             $iteration = CBViewPage::iterationForID(['ID' => $ID]);
 
             if ($iteration !== false) {
                 $spec = CBViewPage::specWithID($ID, $iteration);
+            }
 
-                if (empty($spec)) {
-                    return false;
-                }
+            if (empty($spec) && $create) {
+                $spec = (object)[
+                    'className' => __CLASS__,
+                    'ID' => $ID,
+                ];
             }
         } else if ($spec->className !== 'CBViewPage') {
             throw new RuntimeException("The spec with the following ID is not a CBViewPage: {$ID}");
         }
+
 
         return $spec;
     }
@@ -91,37 +99,6 @@ final class CBViewPage {
         $SQL = "SELECT `iteration` FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$IDAsSQL}')";
 
         return CBDB::SQLToValue($SQL);
-    }
-
-    /**
-     * @deprecated 2016.12.30 This function performs a basic and obvious task
-     * that can be done by the caller.
-     *
-     * Returns either the lastest spec or a new spec for a page ID.
-     *
-     * TODO: Consider adding a "clobber" argument to specify that the function
-     * should return a spec with only the minimal necessary data to allow it to
-     * save. This would be used by callers that want to drop all of the current
-     * spec data and restart fresh. It would save the time of a file load
-     * and also prevent old data from accumulating over time for pages that have
-     * a longer life and are frequently modified.
-     *
-     * @return stdClass
-     */
-    public static function makeSpecForID($args) {
-        $ID = null;
-        extract($args, EXTR_IF_EXISTS);
-
-        $spec = CBViewPage::fetchSpecByID($ID);
-
-        if (!$spec) {
-            $spec = (object)[
-                'ID' => $ID,
-                'className' => __CLASS__,
-            ];
-        }
-
-        return $spec;
     }
 
     /**
@@ -302,22 +279,6 @@ final class CBViewPage {
         CBPageContext::pop();
 
         CBViewPage::$modelContext = null; /* deprecated */
-    }
-
-    /**
-     * @deprecated use CBModels::save().
-     *
-     * This function updates the page data in the database and saves the page
-     * model files.
-     *
-     * @param stdClass $args['spec']
-     *
-     * @return null
-     */
-    public static function save($args) {
-        $spec = $args['spec'];
-
-        CBModels::save([$spec]);
     }
 
     /**

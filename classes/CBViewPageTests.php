@@ -9,17 +9,18 @@ final class CBViewPageTests {
         $ID                     = '697f4e4cb46436f5c204e495caff5957d4d62a31';
         $kind                   = 'CBViewPageTestPages';
 
-        CBPages::deletePagesByID([$ID]);
+        CBModels::deleteModelsByID([$ID]);
+
         if (is_dir(CBDataStore::directoryForID($ID))) {
             CBDataStore::deleteForID(['ID' => $ID]);
         }
 
-        $spec                   = CBViewPage::makeSpecForID(['ID' => $ID]);
+        $spec                   = CBViewPage::fetchSpecByID($ID, true);
         $spec->classNameForKind = $kind;
         $spec->isPublished      = true;
         $spec->URI              = 'CBViewPageTests/supercalifragilisticexpialidocious';
 
-        CBViewPage::save(['spec' => $spec]);
+        CBModels::save([$spec]);
 
         $count = CBDB::SQLToValue("SELECT COUNT(*) FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$ID}')");
 
@@ -41,7 +42,7 @@ final class CBViewPageTests {
             throw new Exception("The page URI: {$pu} does not match the spec URI: {$su}.");
         }
 
-        CBPages::deletePagesByID([$ID]);
+        CBModels::deleteModelsByID([$ID]);
         CBDataStore::deleteForID(['ID' => $ID]);
     }
 }
