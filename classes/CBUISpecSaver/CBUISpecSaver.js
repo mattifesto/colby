@@ -9,6 +9,8 @@ var CBUISpecSaver = {
 
     /**
      * @param object args.spec
+     * @param function? args.fulfilledCallback
+     * @param function? args.rejectedCallback
      *
      * @return {
      *      specChangedCallback: function,
@@ -19,6 +21,8 @@ var CBUISpecSaver = {
             Colby.alert("This spec already has a specSaver.");
         } else {
             CBUISpecSaver.specDataByID[args.spec.ID] = {
+                fulfilledCallback: args.fulfilledCallback,
+                rejectedCallback: args.rejectedCallback,
                 spec: args.spec,
             };
         }
@@ -121,7 +125,9 @@ var CBUISpecSaver = {
             var formData = new FormData();
             formData.append("specAsJSON", JSON.stringify(specData.spec));
 
-            return Colby.fetchAjaxResponse(URL, formData).then(handleResolved).catch(handleRejected);
+            return Colby.fetchAjaxResponse(URL, formData)
+                .then(fulfilled, rejected)
+                .then(specData.fulfilledCallback, specData.rejectedCallback);
         }
 
         // When a request is resolved:
@@ -129,7 +135,7 @@ var CBUISpecSaver = {
         //      2. If there is a pending request that request will be activated
         //         shortly so remove the pending request flag.
         //      3. If there is no pending request, clear the promise.
-        function handleResolved(value) {
+        function fulfilled(ajaxResponse) {
             var spec = specData.spec;
 
             if (spec.version === undefined) {
@@ -144,7 +150,7 @@ var CBUISpecSaver = {
                 specData.promise = undefined;
             }
 
-            return value;
+            return ajaxResponse;
         }
 
         // When a request is rejected stop all active and pending requests:
@@ -153,11 +159,11 @@ var CBUISpecSaver = {
         //         handlers in the promise chain.
         //
         // TODO: Display an error message? Try again?
-        function handleRejected(value) {
+        function rejected(error) {
             specData.hasPendingRequest = undefined;
             specData.promise = undefined;
 
-            return Promise.reject(value);
+            return Promise.reject(error);
         }
     },
 };

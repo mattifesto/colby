@@ -123,7 +123,12 @@ var CBViewPageEditor = {
         CBViewPageEditor.model = spec;
         CBViewPageEditor.spec = spec;
 
-        var specSaver = CBUISpecSaver.create({spec: spec});
+        var specSaver = CBUISpecSaver.create({
+            fulfilledCallback: CBViewPageEditor.saveWasFulfilled,
+            rejectedCallback: CBViewPageEditor.saveWasRejected,
+            spec: spec,
+        });
+
         CBViewPageEditor.specChangedCallback = specSaver.specChangedCallback;
 
         var element = document.createElement("div");
@@ -198,6 +203,30 @@ var CBViewPageEditor = {
      */
     makeFrontPageDidLoad : function (args) {
         Colby.displayResponse(Colby.responseFromXMLHttpRequest(args.xhr));
+    },
+
+    /**
+     * @param object ajaxResponse
+     *
+     * @return object
+     */
+    saveWasFulfilled: function (ajaxResponse) {
+        return ajaxResponse;
+    },
+
+    /**
+     * @param Error error
+     *
+     * @return Promise (rejected)
+     */
+    saveWasRejected: function (error) {
+        if (error.ajaxResponse) {
+            Colby.displayResponse(error.ajaxResponse);
+        } else {
+            Colby.alert(error.message || "CBViewPageEditor.saveWasRejected(): No error message was provided.");
+        }
+
+        return Promise.reject(error);
     },
 
     /**
