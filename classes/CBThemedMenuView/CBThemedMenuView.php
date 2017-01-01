@@ -3,9 +3,9 @@
 final class CBThemedMenuView {
 
     /**
-     * @return {stdClass}
+     * @return null
      */
-    public static function fetchMenuItemOptionsForAjax() {
+    static function fetchMenuItemOptionsForAjax() {
         $response = new CBAjaxResponse();
         $menuID = $_POST['menuID'];
 
@@ -29,16 +29,16 @@ final class CBThemedMenuView {
     }
 
     /**
-     * @return {stdClass}
+     * @return stdClass
      */
-    public static function fetchMenuItemOptionsForAjaxPermissions() {
+    static function fetchMenuItemOptionsForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
     /**
-     * @return {stdClass}
+     * @return null
      */
-    public static function fetchMenusForAjax() {
+    static function fetchMenusForAjax() {
         $response   = new CBAjaxResponse();
         $SQL        = <<<EOT
 
@@ -56,9 +56,9 @@ EOT;
     }
 
     /**
-     * @return {stdClass}
+     * @return stdClass
      */
-    public static function fetchMenusForAjaxPermissions() {
+    function fetchMenusForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
@@ -69,7 +69,7 @@ EOT;
      *
      * @return null
      */
-    public static function renderMenuAsHTML(stdClass $model, stdClass $args = null) {
+    static function renderMenuAsHTML(stdClass $model, stdClass $args = null) {
         if (empty($model->items)) {
             return;
         }
@@ -96,7 +96,7 @@ EOT;
      *
      * @return null
      */
-    public static function renderMenuItem(stdClass $menuItem, array $args = []) {
+    static function renderMenuItem(stdClass $menuItem, array $args = []) {
         $selected = false;
         extract($args, EXTR_IF_EXISTS);
 
@@ -128,7 +128,7 @@ EOT;
      *
      * @return null
      */
-    public static function renderModelAsHTML(stdClass $model) {
+    static function renderModelAsHTML(stdClass $model) {
         if (empty($model->menuID)) {
             return;
         }
@@ -139,26 +139,18 @@ EOT;
     }
 
     /**
-     * @param {stdClass} $spec
+     * @param hex160? $spec->menuID
+     * @param string? $spec->selectedItemName
+     * @param hex160? $spec->themeID
      *
-     * @return {stdClass}
+     * @return stdClass
      */
-    public static function specToModel(stdClass $spec) {
+    static function specToModel(stdClass $spec) {
         $model = CBModels::modelWithClassName(__CLASS__);
         $model->menuID = isset($spec->menuID) ? trim($spec->menuID) : '';
         $model->selectedItemName = isset($spec->selectedItemName) ? trim($spec->selectedItemName) : '';
         $model->themeID = isset($spec->themeID) ? trim($spec->themeID) : '';
 
         return $model;
-    }
-
-    /**
-     * @param {string} $filename
-     *
-     * @return {string}
-     */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }

@@ -7,16 +7,14 @@ final class CBWellKnownThemeForContent {
     /**
      * @return null
      */
-    public static function install() {
-        $spec = CBModels::fetchSpecByID(CBWellKnownThemeForContent::ID);
+    static function install() {
+        $originalSpec = CBModels::fetchSpecByID(CBWellKnownThemeForContent::ID);
 
-        if ($spec === false) {
-            $spec = (object)[
-                'ID' => CBWellKnownThemeForContent::ID,
-            ];
+        if (empty($originalSpec)) {
+            $spec = (object)['ID' => CBWellKnownThemeForContent::ID];
+        } else {
+            $spec = clone $originalSpec;
         }
-
-        $originalSpec = clone $spec;
 
         /* set or reset required properties */
         $spec->className = 'CBTheme';
@@ -33,7 +31,7 @@ final class CBWellKnownThemeForContent {
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         $className = __CLASS__;
         $URLs = [Colby::flexnameForCSSForClass(CBSystemURL, $className)];
 
