@@ -1,4 +1,13 @@
-"use strict";
+"use strict"; /* jshint strict: global */
+/* globals
+    CBModelClassInfo,
+    CBModelClassName,
+    CBModelID,
+    Colby,
+    CBUI,
+    CBUINavigationView,
+    CBUISpecEditor */
+
 
 var CBAdminPageForEditingModels = {
 
