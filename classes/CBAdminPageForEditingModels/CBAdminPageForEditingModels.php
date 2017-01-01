@@ -87,7 +87,7 @@ class CBAdminPageForEditingModels {
      * @return [string]
      */
     static function requiredClassNames() {
-        return ['CBUI', 'CBUINavigationView', 'CBArrayEditor'];
+        return ['CBUI', 'CBUINavigationView', 'CBUISpecSaver'];
     }
 
     /**
