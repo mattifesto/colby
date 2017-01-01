@@ -90,7 +90,7 @@ var CBPageList = {
         if (args.className === "CBViewPage") {
             location.href = "/admin/pages/edit/?data-store-id=" + args.ID;
         } else {
-            location.href = "/admin/models/edit/?ID=" + args.ID;
+            location.href = "/admin/page/?class=CBAdminPageForEditingModels&ID=" + args.ID;
         }
     },
 

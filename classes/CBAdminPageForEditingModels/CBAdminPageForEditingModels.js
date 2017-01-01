@@ -41,6 +41,10 @@ var CBAdminPageForEditingModels = {
      * @return  undefined
      */
     handleDOMContentLoaded : function() {
+        if (window.CBAdminPageForEditingModelsAuthorizationFailed) {
+            return;
+        }
+
         var formData = new FormData();
         formData.append("className", CBModelClassName);
         formData.append("ID", CBModelID);

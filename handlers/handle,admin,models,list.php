@@ -60,7 +60,7 @@ if (is_callable($function = "{$classNameForModels}::compareModels")) {
     <div class="CBUISection">
         <?php foreach ($models as $model) { ?>
             <div class="CBUISectionItem"
-                 onclick="window.location = '/admin/models/edit/?ID=<?= $model->ID ?>';">
+                 onclick="window.location = '/admin/page/?class=CBAdminPageForEditingModels&ID=<?= $model->ID ?>';">
                 <?= empty($model->title) ? 'Untitled' : cbhtml($model->title) ?>
                 <div class="information"><?php
                     if (is_callable($function = "{$classNameForModels}::modelToSummaryText")) {
@@ -88,7 +88,7 @@ var CBHandleAdminModelsList = {
      * @return  undefined
      */
     handleNewClicked : function(args) {
-        window.location.href = "/admin/models/edit/?className=" + <?= json_encode($classNameForModels) ?>;
+        window.location.href = "/admin/page/?class=CBAdminPageForEditingModels&className=" + <?= json_encode($classNameForModels) ?>;
     },
 };
 
