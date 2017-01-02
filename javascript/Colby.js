@@ -49,14 +49,34 @@ var Colby = {
         return flexpath;
     },
 
-    dateToLocaleString : function (date) {
+    /**
+     * @return string
+     */
+    dateToLocaleString: function (date) {
         return Colby.dateToLocaleDateString(date) + " " + Colby.dateToLocaleTimeString(date);
     },
 
     /**
+     * @param Error error
+     *
+     * @return Promise (rejected)
+     */
+    displayError: function (error) {
+        if (error.ajaxResponse) {
+            Colby.displayResponse(error.ajaxResponse);
+        } else {
+            Colby.alert(error.message || "No error message was provided.");
+        }
+
+        return Promise.reject(error);
+    },
+
+    /**
+     * @param ajaxResponse response
+     *
      * @return undefined
      */
-    displayResponse : function (response) {
+    displayResponse: function (response) {
         var element, message;
         if ('stackTrace' in response) {
             element                     = document.createElement("div");

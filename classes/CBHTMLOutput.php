@@ -181,7 +181,21 @@ class CBHTMLOutput
     }
 
     /**
-     * @return void
+     * NOTE: 2017.01.01
+     *
+     *      This function include a polyfill for Promise right before the
+     *      content of renderEndOfBodyContent() which generally includes
+     *      "Colby.js".
+     *
+     *      While CBHTMLOutput has generally tried to avoid placing any dogma on
+     *      pages, this effort doesn't always make sense. At this point Promise
+     *      is very useful and included with all browsers except IE11.
+     *      "Colby.js" now uses Promise to ease ajax requests. If there ever
+     *      comes a time when this polyfill is getting in the way, feel free to
+     *      reconsider. However, it is highly unlikely that will happen before
+     *      we stop supporting IE11 altogether and remove the polyfill.
+     *
+     * @return null
      */
     public static function render() {
         $bodyContent = ob_get_clean();
@@ -247,6 +261,7 @@ class CBHTMLOutput
             <body>
                 <?= $settingsStartOfBodyContent ?>
                 <?php echo $bodyContent; $bodyContent = null; ?>
+                <script src="<?= CBSystemURL ?>/javascript/es6-promise.auto.min.js"></script>
                 <?= $settingsEndOfBodyContent ?>
                 <?php self::renderJavaScript(); ?>
             </body>
