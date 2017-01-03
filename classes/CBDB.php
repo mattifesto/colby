@@ -115,7 +115,8 @@ final class CBDB {
     /**
      * Takes a SQL statement and returns an array of objects representing each
      * row.
-     * @return [{stdClass}]
+     *
+     * @return [stdClass] | [key => stdClass]
      */
     public static function SQLToObjects($SQL, $args = []) {
         $keyField = null;
