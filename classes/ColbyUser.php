@@ -7,7 +7,6 @@ final class ColbyUser
     private $hash = null;
     private $id = null;
     private $groups = array();
-    private $row = null;
 
     private static $currentUser = null;
 
@@ -99,6 +98,26 @@ final class ColbyUser
             SELECT  `ID`, LOWER(HEX(`hash`)) AS `hash`
             FROM    `ColbyUsers`
             WHERE   `facebookId` = {$facebookUserID}
+
+EOT;
+
+        return CBDB::SQLToObject($SQL);
+    }
+
+
+    /**
+     * @param hex160 $userHash
+     *
+     * @return stdClass|false
+     */
+    static function fetchUserRowByHash($userHash) {
+        $userHashAsSQL = CBHex160::toSQL($userHash);
+
+        $SQL = <<<EOT
+
+            SELECT  *
+            FROM    `ColbyUsers`
+            WHERE   `hash` = {$userHashAsSQL}
 
 EOT;
 
@@ -492,39 +511,8 @@ EOT;
     }
 
     /**
-     * @return stdClass | null
-     */
-    public function row()
-    {
-        if (!$this->id)
-        {
-            return null;
-        }
-
-        if ($this->row)
-        {
-            return $this->row;
-        }
-
-        $sql = <<<EOT
-SELECT
-    *
-FROM
-    `ColbyUsers`
-WHERE
-    `id` = '{$this->id}'
-EOT;
-
-        $result = Colby::query($sql);
-
-        $this->row = $result->fetch_object();
-
-        $result->free();
-
-        return $this->row;
-    }
-
-    /**
+     * @deprecated use ColbyUser::fetchUserRowByHash()
+     *
      * @param int $userId
      *
      *  If $userId is null the method returns the user row for the currently
@@ -535,54 +523,42 @@ EOT;
      *  Returns the user row for a given user id. If the userId doesn't exist
      *  null is returned.
      */
-    public static function userRow($userId = null)
-    {
-        if (null === $userId)
-        {
-            if (null === self::$currentUserId)
-            {
+    static function userRow($userId = null) {
+        if (null === $userId) {
+            if (null === self::$currentUserId) {
                 return null;
             }
 
             $userId = self::$currentUserId;
-        }
-        else
-        {
+        } else {
             $userId = intval($userId); // intval confirmed 64-bit capable (signed though)
         }
 
-        if (   $userId == self::$currentUserId
-            && self::$currentUserRow)
-        {
+        if ($userId == self::$currentUserId && self::$currentUserRow) {
             return self::$currentUserRow;
         }
 
         $sqlUserId = "'{$userId}'";
 
         $sql = <<<EOT
-SELECT
-    *
-FROM
-    `ColbyUsers`
-WHERE
-    `id` = {$sqlUserId}
+
+            SELECT *
+            FROM `ColbyUsers`
+            WHERE `id` = {$sqlUserId}
+
 EOT;
 
         $result = Colby::query($sql);
 
-        if (1 === $result->num_rows)
-        {
+        if (1 === $result->num_rows) {
             $userRow = $result->fetch_object();
-        }
-        else
-        {
+        } else {
             $userRow = null;
         }
 
         $result->free();
 
-        if ($userId == self::$currentUserId)
-        {
+        if ($userId == self::$currentUserId) {
             // cache current user row
             // user data shouldn't change significantly during a request
             // if it does, that will be the main task of the request
