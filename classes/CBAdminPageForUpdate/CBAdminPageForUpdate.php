@@ -1,6 +1,6 @@
 <?php
 
-class CBAdminPageForUpdate {
+final class CBAdminPageForUpdate {
 
     /**
      * @return [string]
