@@ -138,7 +138,8 @@ EOT;
     $sql = <<<EOT
 
         SELECT
-            `ColbyUsers`.`id`,
+            `id`,
+            lower(hex(`hash`)) as `hash`,
             `ColbyUsers`.`facebookId`,
             `ColbyUsers`.`facebookName`,
             `ColbyUsers`.`hasBeenVerified`,
@@ -158,7 +159,6 @@ EOT;
     <table class="permissions-administration">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
 
                 <?php
@@ -176,13 +176,13 @@ EOT;
 
             <?php
 
-            while ($row = $result->fetch_object())
-            {
+            while ($row = $result->fetch_object()) {
+                $userPageURI = "/admin/page/?class=CBAdminPageForUser&amp;hash={$row->hash}";
+
                 ?>
 
                 <tr>
-                    <td><?php echo $row->id; ?></td>
-                    <td><?php echo $row->facebookName; ?></td>
+                    <td><a href="<?= $userPageURI ?>"><?php echo $row->facebookName; ?></a></td>
 
                     <?php
 
