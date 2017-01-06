@@ -1,8 +1,13 @@
 .CBUIBooleanEditor {
     align-items: center;
+    cursor: default;
     display: flex;
     min-height: 44px;
     padding: 0 10px;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 }
 
 .CBUIBooleanEditor .label {
