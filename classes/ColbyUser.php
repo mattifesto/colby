@@ -37,6 +37,8 @@ final class ColbyUser
     }
 
     /**
+     * @deprecated use ColbyUser::updateGroupMembership()
+     *
      * This function adds a user to a group. It does no error handling and will
      * throw an exception if the user is already in the group or if the group
      * doesn't exist.
@@ -110,18 +112,36 @@ EOT;
      *
      * @return stdClass|false
      */
-    static function fetchUserRowByHash($userHash) {
+    static function fetchUserDataByHash($userHash) {
         $userHashAsSQL = CBHex160::toSQL($userHash);
 
         $SQL = <<<EOT
 
-            SELECT  *
+            SELECT  `id`,
+                    lower(hex(`hash`)) as `hash`,
+                    `facebookId`,
+                    `facebookName`,
+                    `facebookFirstName`,
+                    `facebookLastName`
             FROM    `ColbyUsers`
             WHERE   `hash` = {$userHashAsSQL}
 
 EOT;
 
         return CBDB::SQLToObject($SQL);
+    }
+
+    /**
+     * @param string $groupName
+     *
+     * @return string|false
+     */
+    static function groupNameToTableName($groupName) {
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $groupName)) {
+            return false;
+        }
+
+        return "ColbyUsersWhoAre{$groupName}";
     }
 
     /**
@@ -165,6 +185,39 @@ EOT;
     }
 
     /**
+     * @param int $userID
+     * @param string $groupName
+     *
+     * @return bool
+     */
+    static function isMemberOfGroup($userID, $groupName) {
+        $userIDAsSQL = intval($userID);
+        $tableName = ColbyUser::groupNameToTableName($groupName);
+
+        if ($tableName === false) {
+            return false;
+        }
+
+        $SQL = <<<EOT
+
+            SELECT COUNT(*)
+            FROM `{$tableName}`
+            WHERE `userId` = {$userIDAsSQL}
+
+EOT;
+
+        try {
+            $isMember = CBDB::SQLToValue($SQL) > 0;
+        } catch (Exception $exception) {
+            return false;
+        }
+
+        return $isMember;
+    }
+
+    /**
+     * @deprecated use ColbyUser::isMemberOfGroup()
+     *
      * @return bool
      */
     public function isOneOfThe($group)
@@ -508,6 +561,36 @@ EOT;
         $time = time() - (60 * 60 * 24);
 
         setcookie(CBUserCookieName, '', $time, '/');
+    }
+
+    /**
+     * @param int $userID
+     * @param string $group
+     * @param bool $isMember
+     *
+     * @return null
+     */
+    static function updateGroupMembership($userID, $groupName, $isMember) {
+        $tableName = ColbyUser::groupNameToTableName($groupName);
+        $userIDAsSQL = intval($userID);
+
+        if ($isMember) {
+            $SQL = <<<EOT
+
+                INSERT IGNORE INTO `{$tableName}`
+                VALUES ({$userIDAsSQL}, NOW())
+
+EOT;
+        } else {
+            $SQL = <<<EOT
+
+                DELETE FROM `{$tableName}`
+                WHERE `userId` = {$userIDAsSQL}
+
+EOT;
+        }
+
+        Colby::query($SQL);
     }
 
     /**
