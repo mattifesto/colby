@@ -80,7 +80,7 @@ EOT;
 
     /**
      * @param string $name
-     *  The name of the group such as 'Administrators' or 'WholesaleCustomers'.
+     *  The name of the group such as 'Administrators' or 'LEWholesaleCustomers'.
      *
      * @return null
      */
