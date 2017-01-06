@@ -177,7 +177,7 @@ EOT;
             <?php
 
             while ($row = $result->fetch_object()) {
-                $userPageURI = "/admin/page/?class=CBAdminPageForUser&amp;hash={$row->hash}";
+                $userPageURI = "/admin/page/?class=CBAdminPageForUserSettings&amp;hash={$row->hash}";
 
                 ?>
 

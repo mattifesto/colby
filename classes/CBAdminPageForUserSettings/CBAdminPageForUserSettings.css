@@ -1,0 +1,14 @@
+.CBAdminPageForUserSettings {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 20px;
+}
+
+.CBAdminPageForUserSettings img {
+    display: block;
+    height: 100px;
+    object-fit: contain;
+    object-position: center;
+    width: 100px;
+}
