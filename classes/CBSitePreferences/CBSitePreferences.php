@@ -22,6 +22,22 @@ final class CBSitePreferences {
     private static $model = false;
 
     /**
+     * The value of this setting should be changed directly on the spec by
+     * adjusting the array value of classNamesForUserSettings.
+     *
+     * @return [string]
+     */
+    static function classNamesForUserSettings() {
+        $model = CBSitePreferences::model();
+
+        if (empty($model->classNamesForUserSettings)) {
+            return [];
+        } else {
+            return $model->classNamesForUserSettings;
+        }
+    }
+
+    /**
      * @param string $key
      *
      * @return mixed|null
@@ -129,6 +145,33 @@ final class CBSitePreferences {
 
         if ($spec === false) {
             $spec = CBModels::modelWithClassName(__CLASS__, ['ID' => CBSitePreferences::ID]);
+        }
+
+        CBModels::save([$spec]);
+    }
+
+    /**
+     * This function should be called by installation functions that want to add
+     * a class name for user settings.
+     *
+     * @param string $className
+     *
+     * @return null
+     */
+    static function installClassNameForUserSettings($className) {
+        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
+
+        // We assume spec has been saved by the CBSitePreferences::install()
+        // function. If not, we want to let the error occur as notification.
+
+        if (empty($spec->classNamesForUserSettings)) {
+            $spec->classNamesForUserSettings = [$className];
+        } else {
+            if (in_array($className, $spec->classNamesForUserSettings)) {
+                return;
+            } else {
+                $spec->classNamesForUserSettings[] = $className;
+            }
         }
 
         CBModels::save([$spec]);
@@ -279,8 +322,17 @@ final class CBSitePreferences {
      *
      * @return stdClass
      */
-    public static function specToModel(stdClass $spec) {
-        $model = CBModels::modelWithClassName(__CLASS__);
+    static function specToModel(stdClass $spec) {
+        $model = (object)[
+            'className' => __CLASS__,
+            'classNamesForUserSettings' => CBModel::value($spec, 'classNamesForUserSettings', [], function ($value) {
+                if (is_array($value)) {
+                    return array_map('trim', $value);
+                } else {
+                    return [];
+                }
+            }),
+        ];
         $model->debug = isset($spec->debug) ? !!$spec->debug : false;
         $model->defaultClassNameForPageSettings = isset($spec->defaultClassNameForPageSettings) ? trim($spec->defaultClassNameForPageSettings) : '';
         $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
@@ -307,9 +359,31 @@ final class CBSitePreferences {
     }
 
     /**
-     * @return {string}
+     * This function should be called by installation functions that want to
+     * remove a class name for user settings.
+     *
+     * @param string $className
+     *
+     * @return null
      */
-    public static function URL($filename) {
-        return CBSystemURL . "/classes/CBSitePreferences/{$filename}";
+    static function uninstallClassNameForUserSettings($className) {
+        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
+
+        // We assume spec has been saved by the CBSitePreferences::install()
+        // function. If not, we want to let the error occur as notification.
+
+        if (empty($spec->classNamesForUserSettings)) {
+            return;
+        } else {
+            $classNames = array_filter($spec->classNamesForUserSettings, function ($value) use ($className) {
+                return $value !== $className;
+            });
+
+            if (count($classNames) !== count($spec->classNamesForUserSettings)) {
+                $spec->classNamesForUserSettings = $classNames;
+
+                CBModels::save([$spec]);
+            }
+        }
     }
 }
