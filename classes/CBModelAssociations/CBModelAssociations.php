@@ -20,10 +20,10 @@ final class CBModelAssociations {
 
         $SQL = <<<EOT
 
-            SELECT COUNT(*)
-            FROM `CBModelAssociations`
-            WHERE `ID` = {$IDAsSQL} AND
-                  `className` = {$classNameAsSQL}
+            SELECT  COUNT(*)
+            FROM    `CBModelAssociations`
+            WHERE   `ID` = {$IDAsSQL} AND
+                    `className` = {$classNameAsSQL}
 
 EOT;
 
@@ -53,22 +53,32 @@ EOT;
      * @param hex160 $ID
      * @param string $className
      *
-     * @return stdClass|false
+     * @return hex160|false
      */
-    static function fetchModel($ID, $className) {
+    static function fetchAssociatedID($ID, $className) {
         $IDAsSQL = CBHex160::toSQL($ID);
         $classNameAsSQL = CBDB::stringToSQL($className);
 
         $SQL = <<<EOT
 
-            SELECT LOWER(HEX(`associatedID`))
-            FROM `CBModelAssociations`
-            WHERE `ID` = {$IDAsSQL} AND
-                  `className` = {$classNameAsSQL}
+            SELECT  LOWER(HEX(`associatedID`))
+            FROM    `CBModelAssociations`
+            WHERE   `ID` = {$IDAsSQL} AND
+                    `className` = {$classNameAsSQL}
 
 EOT;
 
-        $associatedID = CBDB::SQLToValue($SQL);
+        return CBDB::SQLToValue($SQL);
+    }
+
+    /**
+     * @param hex160 $ID
+     * @param string $className
+     *
+     * @return stdClass|false
+     */
+    static function fetchModel($ID, $className) {
+        $associatedID = CBModelAssociations::fetchAssociatedID($ID, $className);
 
         if (empty($associatedID)) {
             return false;
@@ -84,25 +94,69 @@ EOT;
      * @return stdClass|false
      */
     static function fetchSpec($ID, $className) {
-        $IDAsSQL = CBHex160::toSQL($ID);
-        $classNameAsSQL = CBDB::stringToSQL($className);
-
-        $SQL = <<<EOT
-
-            SELECT LOWER(HEX(`associatedID`))
-            FROM `CBModelAssociations`
-            WHERE `ID` = {$IDAsSQL} AND
-                  `className` = {$classNameAsSQL}
-
-EOT;
-
-        $associatedID = CBDB::SQLToValue($SQL);
+        $associatedID = CBModelAssociations::fetchAssociatedID($ID, $className);
 
         if (empty($associatedID)) {
             return false;
         } else {
             return CBModels::fetchSpecByID($associatedID);
         }
+    }
+
+    /**
+     * Best in a transaction.
+     */
+    static function makeSpec($ID, $className) {
+        $spec = CBModelAssociations::fetchSpec($ID, $className);
+
+        if ($spec === false) {
+            $associatedID = CBHex160::random();
+            $spec = (object)[
+                'className' => $className,
+                'ID' => $associatedID,
+            ];
+
+            CBModels::save([$spec]);
+            CBModelAssociations::createAssociation($ID, $className, $spec->ID);
+
+            $spec = CBModels::fetchSpecByID($associatedID);
+        }
+
+        return $spec;
+    }
+
+    /**
+     * @return null
+     */
+    static function makeSpecForAjax() {
+        $response = new CBAjaxResponse();
+        $ID = $_POST['ID'];
+        $className = $_POST['className'];
+
+        try {
+            Colby::query('START TRANSACTION');
+            $spec = CBModelAssociations::makeSpec($ID, $className);
+            Colby::query('COMMIT');
+        } catch (Exception $exception) {
+            Colby::query('ROLLBACK');
+            throw $exception;
+        }
+
+        if (CBModels::currentUserCanRead($spec)) {
+            $response->spec = $spec;
+        } else {
+            $response->message = "You do not have permission to read the associated spec for ID: {$ID} and className: {$className}";
+        }
+
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function makeSpecForAjaxPermissions() {
+        return (object)['group' => 'Public'];
     }
 
     /**
