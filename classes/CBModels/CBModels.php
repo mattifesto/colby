@@ -42,6 +42,46 @@ EOT;
     }
 
     /**
+     * @param stdClass $model
+     *
+     * @return bool
+     *      Returns true if the current user can read the model via Ajax;
+     *      otherwise false. If permissions aren't implement by the model class
+     *      the default is that Administrators can read and others can't.
+     */
+    static function currentUserCanRead(stdClass $model) {
+        if (empty($model->className)) {
+            return false;
+        }
+
+        if (is_callable($function = "{$model->className}::currentUserCanRead")) {
+            return call_user_func($function, $model);
+        } else {
+            return ColbyUser::isMemberOfGroup(ColbyUser::currentUserId(), 'Administrators');
+        }
+    }
+
+    /**
+     * @param stdClass $model
+     *
+     * @return bool
+     *      Returns true if the current user can write the model via Ajax;
+     *      otherwise false. If permissions aren't implement by the model class
+     *      the default is that Administrators can write and others can't.
+     */
+    static function currentUserCanWrite(stdClass $model) {
+        if (empty($model->className)) {
+            return false;
+        }
+
+        if (is_callable($function = "{$model->className}::currentUserCanWrite")) {
+            return call_user_func($function, $model);
+        } else {
+            return ColbyUser::isMemberOfGroup(ColbyUser::currentUserId(), 'Administrators');
+        }
+    }
+
+    /**
      * Delete models.
      *
      * Important: This function executes multiple queries each of which must
@@ -258,21 +298,31 @@ EOT;
     }
 
     /**
-     * @return {stdClass}
+     * @return null
      */
     public static function fetchSpecForAjax() {
         $response = new CBAjaxResponse();
-        $spec = CBModels::fetchSpecByID($_POST['ID']);
-        $className = ($spec !== false) ? $spec->className : $_POST['className'];
+        $ID = $_POST['ID'];
+        $spec = CBModels::fetchSpecByID($ID);
+
+        // NOTE: 2017.01.07
+        // It should be literally impossible for the spec className to be empty.
+        $className = empty($spec->className) ? $_POST['className'] : $spec->className;
         $info = CBModelClassInfo::classNameToInfo($className);
 
+        // NOTE: 2017.01.07
+        // Deprecate this first condition used by the model editor. Also not
+        // having permission to read a spec should not set wasSuccessful to
+        // false. Also passing the className in $_POST above is weird, also used
+        // by the model editor.
         if (!ColbyUser::current()->isOneOfThe($info->userGroup)) {
             $response->message = "You do not have permission to edit this model.";
             $response->wasSuccessful = false;
+        } else if (CBModels::currentUserCanRead($spec)) {
+            $response->spec = $spec;
+            $response->wasSuccessful = true;
         } else {
-            if ($spec != false) {
-                $response->spec = $spec;
-            }
+            $response->message = "You do not have permissions to read the spec with ID: {$ID}";
             $response->wasSuccessful = true;
         }
 
@@ -280,10 +330,10 @@ EOT;
     }
 
     /**
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function fetchSpecForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+        return (object)['group' => 'Public'];
     }
 
     /**
@@ -522,31 +572,40 @@ EOT;
     }
 
     /**
-     * @return {stdClass}
+     * @return null
      */
     public static function saveForAjax() {
         $response = new CBAjaxResponse();
         $spec = json_decode($_POST['specAsJSON']);
 
-        Colby::query('START TRANSACTION');
+        if (CBModels::currentUserCanWrite($spec)) {
+            Colby::query('START TRANSACTION');
 
-        try {
-            CBModels::save([$spec]);
-            Colby::query('COMMIT');
-            $response->wasSuccessful = true;
-        } catch (Exception $exception) {
-            Colby::query('ROLLBACK');
-            throw $exception;
+            try {
+                CBModels::save([$spec]);
+                Colby::query('COMMIT');
+                $response->wasSuccessful = true;
+            } catch (Exception $exception) {
+                Colby::query('ROLLBACK');
+                throw $exception;
+            }
+        } else {
+            // Unlike fetchSpecForAjax, an unsuccessful save does mark the
+            // response as not successful. Not being able to write is something
+            // the end user should be explicitly notified about.
+            $ID = empty($spec->ID) ? 'no ID specified' : $spec->ID;
+            $response->message = "You do not have permissions to write the spec with ID: {$ID}";
+            $response->wasSuccessful = false;
         }
 
         $response->send();
     }
 
     /**
-     * @return {stdClass}
+     * @return stdClass
      */
     public static function saveForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+        return (object)['group' => 'Public'];
     }
 
     /**
