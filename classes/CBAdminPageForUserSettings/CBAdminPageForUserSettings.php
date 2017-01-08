@@ -30,14 +30,12 @@ final class CBAdminPageForUserSettings {
 
         ?>
 
-        <div class="CBAdminPageForUserSettings">
+        <div class="identity">
             <img src="<?= $userPhotoURL ?>">
             <div><?= $userData->facebookName ?></div>
         </div>
 
         <?php
-
-        CBHTMLOutput::requireClassName('CBGroupUserSettings');
 
         CBGroupUserSettings::renderUserSettings($userData, 'Administrators');
         CBGroupUserSettings::renderUserSettings($userData, 'Developers');
@@ -51,6 +49,13 @@ final class CBAdminPageForUserSettings {
                 call_user_func($function, $userData);
             }
         }
+    }
+
+    /**
+     * @return [string]
+     */
+    static function requireClassNames() {
+        return ['CBGroupUserSettings'];
     }
 
     /**
