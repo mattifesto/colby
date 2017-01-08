@@ -9,6 +9,7 @@ $generalMenu            = new stdClass();
 $generalMenu->status = newMenuItem('Status', '/admin/');
 $generalMenu->tasks = newMenuItem('Tasks', '/admin/page/?class=CBAdminPageForTasks');
 $generalMenu->logs = newMenuItem('Logs', '/admin/page/?class=CBAdminPageForLogs');
+$generalMenu->users = newMenuItem('Users', '/admin/page/?class=CBAdminPageForUsers');
 $CBAdminMenu->general = newMenuItem('General', '/admin/', $generalMenu);
 
 
@@ -41,8 +42,6 @@ $helpMenu->{$menuItemID}    = newMenuItem($menuItemHTML, $menuItemURI);
 $CBAdminMenu->help          = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
 
 if (ColbyUser::current()->isOneOfThe('Developers')) {
-    $generalMenu->permissions       = newMenuItem('Permissions', '/admin/users/');
-
     $developMenu                    = new stdClass();
     $developMenu->images            = newMenuItem('Images', '/admin/page/?class=CBAdminPageForImages');
     $developMenu->php               = newMenuItem('PHP', '/admin/develop/php/');
