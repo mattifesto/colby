@@ -36,7 +36,7 @@ if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
 
         CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($menuSpec));
 
-        ?><main class="CBUIRoot"><?php
+        ?><main class="CBUIRoot <?= $class ?>"><?php
         if (is_callable($function = "{$class}::adminPageRenderContent")) {
             call_user_func($function);
         }
