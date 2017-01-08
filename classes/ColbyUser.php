@@ -2,8 +2,7 @@
 
 define('CBUserCookieName', 'colby-user-encrypted-data');
 
-final class ColbyUser
-{
+final class ColbyUser {
     private $hash = null;
     private $id = null;
     private $groups = array();
@@ -113,8 +112,11 @@ EOT;
      * @return stdClass|false
      */
     static function fetchUserDataByHash($userHash) {
-        $userHashAsSQL = CBHex160::toSQL($userHash);
+        if (empty($userHash)) {
+            return false;
+        }
 
+        $userHashAsSQL = CBHex160::toSQL($userHash);
         $SQL = <<<EOT
 
             SELECT  `id`,
@@ -594,7 +596,7 @@ EOT;
     }
 
     /**
-     * @deprecated use ColbyUser::fetchUserRowByHash()
+     * @deprecated use ColbyUser::fetchUserDataByHash()
      *
      * @param int $userId
      *
