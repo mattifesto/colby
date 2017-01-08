@@ -375,9 +375,9 @@ final class CBSitePreferences {
         if (empty($spec->classNamesForUserSettings)) {
             return;
         } else {
-            $classNames = array_filter($spec->classNamesForUserSettings, function ($value) use ($className) {
+            $classNames = array_values(array_filter($spec->classNamesForUserSettings, function ($value) use ($className) {
                 return $value !== $className;
-            });
+            }));
 
             if (count($classNames) !== count($spec->classNamesForUserSettings)) {
                 $spec->classNamesForUserSettings = $classNames;
