@@ -120,7 +120,7 @@ EOT;
         $SQL = <<<EOT
 
             SELECT  `id`,
-                    lower(hex(`hash`)) as `hash`,
+                    LOWER(HEX(`hash`)) as `hash`,
                     `facebookId`,
                     `facebookName`,
                     `facebookFirstName`,
