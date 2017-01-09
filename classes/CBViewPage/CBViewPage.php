@@ -155,12 +155,21 @@ final class CBViewPage {
     }
 
     /**
+     * @param stdClass $model
+     *
      * @return string
      */
-    public static function modelToSearchText($model) {
+    static function modelToSearchText($model) {
         $searchText = array();
         $searchText[] = $model->title;
         $searchText[] = $model->description;
+
+        if (!empty($model->layout->className)) {
+            if (is_callable($function = "{$model->layout->className}::modelToSearchText")) {
+                $searchText[] = call_user_func($function, $model->layout);
+            }
+        }
+
         self::$modelContext = $model;
 
         CBPageContext::push([
