@@ -449,21 +449,15 @@ EOT;
      *  a string containg an HTML anchor element
      *  <a href="...">log in</a>
      */
-    public static function loginHyperlink($redirectURL = null)
-    {
-        if (!COLBY_FACEBOOK_APP_ID)
-        {
+    static function loginHyperlink($redirectURL = null) {
+        if (!CBFacebookAppID) {
             return '<span style="color: red;">this site is not configured to support users</span>';
-        }
-        else if (ColbyUser::currentUserId())
-        {
+        } else if (ColbyUser::currentUserId()) {
             $url = ColbyUser::logoutURL($redirectURL);
             $url = ColbyConvert::textToHTML($url);
 
             return "<a href=\"{$url}\">Log Out</a>";
-        }
-        else
-        {
+        } else {
             $url = ColbyUser::loginURL($redirectURL);
             $url = ColbyConvert::textToHTML($url);
 
@@ -501,8 +495,8 @@ EOT;
         $state->colby_redirect_uri = $redirectURL;
 
         $url = 'https://www.facebook.com/dialog/oauth' .
-            '?client_id=' . COLBY_FACEBOOK_APP_ID .
-            '&redirect_uri=' . urlencode(COLBY_SITE_URL . '/colby/facebook-oauth-handler/') .
+            '?client_id=' . CBFacebookAppID .
+            '&redirect_uri=' . urlencode(CBSiteURL . '/colby/facebook-oauth-handler/') .
             '&state=' . urlencode(json_encode($state));
 
         return $url;
@@ -546,9 +540,44 @@ EOT;
         $state = new stdClass();
         $state->colby_redirect_uri = $redirectURL;
 
-        $url = COLBY_SITE_URL . '/colby/logout/?state=' . urlencode(json_encode($state));
+        $url = CBSiteURL . '/colby/logout/?state=' . urlencode(json_encode($state));
 
         return $url;
+    }
+
+    /**
+     * @param string $URL
+     *
+     * @return null
+     */
+    static function renderSignInWithFacebookButton($URL = null) {
+        $loginURL = ColbyUser::loginURL($URL);
+
+        ?>
+
+        <a class="CBSignInWithFacebook" href="<?= $loginURL ?>">
+            <style>
+                .CBSignInWithFacebook {
+                    background-color: #3b5998; /* hsl(221, 44%, 41%) */
+                    background-image: url(/colby/classes/ColbyUser/FB-f-Logo__white_29.png);
+                    background-position: 8px center;
+                    background-repeat: no-repeat;
+                    border-radius: 8px;
+                    color: white;
+                    cursor: default;
+                    display: inline-block;
+                    padding: 12px 80px;
+                }
+
+                .CBSignInWithFacebook:hover {
+                    background-color: hsl(221, 44%, 51%);
+                    text-decoration: none;
+                }
+            </style>
+            Sign in with Facebook
+        </a>
+
+        <?php
     }
 
     /**
