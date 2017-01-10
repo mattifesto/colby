@@ -7,22 +7,30 @@ final class CBWellKnownPageForTestingPageTitleAndBodyText {
     /**
      * @return null
      */
-    public static function install() {
-        $spec = CBModels::fetchSpecByID(CBWellKnownPageForTestingPageTitleAndBodyText::ID);
+    static function install() {
+        $originalSpec = CBModels::fetchSpecByID(CBWellKnownPageForTestingPageTitleAndBodyText::ID);
 
-        if ($spec === false) {
+        if (empty($originalSpec)) {
             $spec = (object)[
                 'ID' => CBWellKnownPageForTestingPageTitleAndBodyText::ID,
             ];
+        } else {
+            $spec = clone $originalSpec;
         }
 
-        $originalSpec = clone $spec;
-
         $spec->className = 'CBViewPage';
-        $spec->title = 'Well-Known Page for Testing Page Title and Body Text';
         $spec->description = 'This page is used to test the formatting of CBPageTitleAndDescriptionView and CBThemedTextView.';
         $spec->isPublished = false;
+        $spec->title = 'Well-Known Page for Testing Page Title and Body Text';
         $spec->URI = null;
+
+        if (empty($spec->publicationTimeStamp)) {
+            $spec->publicationTimeStamp = time();
+        }
+
+        if (empty($spec->publishedBy)) {
+            $spec->publishedBy = ColbyUser::currentUserId();
+        }
 
         include __DIR__ . '/sections.php';
 
