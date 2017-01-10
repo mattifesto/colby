@@ -74,6 +74,26 @@
     text-align: center;
 }
 
+.CBUIKeyValue {
+    padding: 5px 10px;
+}
+
+.CBUIKeyValue > .key {
+    color: hsl(0, 0%, 50%);
+}
+
+.CBUILink {
+    align-items: center;
+    display: flex;
+    min-height: 44px;
+    padding: 5px 10px;
+}
+
+.CBUILink > span {
+    text-align: center;
+    width: 100%;
+}
+
 .CBUISection {
     border-color: hsl(0, 0%, 80%);
     border-style: solid;
