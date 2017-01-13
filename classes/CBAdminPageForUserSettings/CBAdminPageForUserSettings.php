@@ -54,7 +54,7 @@ final class CBAdminPageForUserSettings {
     /**
      * @return [string]
      */
-    static function requireClassNames() {
+    static function requiredClassNames() {
         return ['CBGroupUserSettings'];
     }
 
