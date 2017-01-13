@@ -164,8 +164,7 @@ final class Colby {
     public static function exceptionStackTrace($exception) {
         ob_start();
 
-        include(COLBY_SITE_DIRECTORY .
-            '/colby/snippets/exception-stack-trace.php');
+        include(CBSystemDirectory . '/snippets/exception-stack-trace.php');
 
         return ob_get_clean();
     }
@@ -679,21 +678,14 @@ final class Colby {
      * @param int $severity
      *  An RFC3164 severity code. See CBLog::addMessage().
      *
-     * @return void
+     * @return null
      */
     public static function reportException(Exception $exception, $severity = 3) {
         try {
-            $exceptionMessage = $exception->getMessage();
-            $exceptionTitle = strtok($exceptionMessage, "\r\n");
-            $exceptionStackTrace = '## ' .
-                $exception->getFile() .
-                '(' .
-                $exception->getLine() .
-                ")\n" .
-                $exception->getTraceAsString();
-            $exceptionMessage .= "\n\n{$exceptionStackTrace}";
+            $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
+            $messageBody = Colby::exceptionStackTrace($exception);
 
-            CBLog::addMessage('Exception', 3, $exceptionMessage);
+            CBLog::addMessage('Exception', 3, $messageBody);
 
             /**
              * Report the exception via email to the administrator
@@ -709,11 +701,11 @@ final class Colby {
 
                 $mailer = Swift_Mailer::newInstance($transport);
 
-                $messageSubject     = COLBY_SITE_NAME . " Error ({$exceptionTitle})";
+                $truncatedMessage   = CBConvert::truncate($exception->getMessage());
+                $messageSubject     = "Error | {$serverName} | {$truncatedMessage}";
                 $messageFrom        = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
                 $messageTo          = array(COLBY_SITE_ADMINISTRATOR);
-                $messageBody        = $exceptionMessage;
-                $messageBodyHTML    = '<pre>' . ColbyConvert::textToHTML($exceptionMessage) . '</pre>';
+                $messageBodyHTML    = '<pre>' . cbhtml($messageBody) . '</pre>';
 
                 $message = Swift_Message::newInstance();
                 $message->setSubject($messageSubject);
