@@ -1,4 +1,4 @@
-"use strict";
+"use strict"; /* jshint strict: global */
 
 var CBUIBooleanEditor = {
 
@@ -7,6 +7,10 @@ var CBUIBooleanEditor = {
      * @param string args.propertyName
      * @param object args.spec
      * @param function args.specChangedCallback
+     * @param function? args.valueShouldChangeCallback
+     *      This callback will be called after the user has clicked the button
+     *      but before the value changes. It returns true to proceed with the
+     *      change or false to cancel it.
      *
      * @return {
      *  Element element,
@@ -38,6 +42,7 @@ var CBUIBooleanEditor = {
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
             updateInterfaceCallback : updateInterfaceCallback,
+            valueShouldChangeCallback : args.valueShouldChangeCallback,
         }));
 
         updateInterfaceCallback();
@@ -52,6 +57,7 @@ var CBUIBooleanEditor = {
      * @param object args.spec
      * @param function args.specChangedCallback
      * @param function args.updateInterfaceCallback
+     * @param function? args.valueShouldChangeCallback
      *
      * @return undefined
      */
@@ -62,6 +68,12 @@ var CBUIBooleanEditor = {
             value = false;
         } else {
             value = true;
+        }
+
+        if (args.valueShouldChangeCallback) {
+            if (!args.valueShouldChangeCallback.call(undefined, value)) {
+                return;
+            }
         }
 
         args.spec[args.propertyName] = value;
