@@ -48,4 +48,26 @@ final class CBConvert {
         $string = trim($value);
         return ($string === '') ? null : $string;
     }
+
+    /**
+     * @param string $value
+     * @param int $length
+     * @param string $append
+     *
+     * @return string
+     *      This function always returns a trimmed string containing no line
+     *      breaks or tabs.
+     */
+    static function truncate($value, $length = 40, $append = '…') {
+        $value = trim($value);
+        $value = preg_replace('/[ \n\r\t]+/', ' ', $value);
+
+        if (strlen($value) > $length) {
+            $value = wordwrap($value, $length);
+            $value = explode("\n", $value, 2);
+            $value = $value[0] . $append;
+        }
+
+        return $value;
+    }
 }
