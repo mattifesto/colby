@@ -7,6 +7,20 @@
 var CBGroupUserSettings = {
 
     /**
+     * @param object spec
+     * @param bool newValue
+     *
+     * @return bool
+     */
+    valueShouldChange: function (spec, newValue) {
+        if (newValue === false) {
+            return confirm("Are you sure you want to remove this user from the " + spec.groupName + " group?");
+        }
+
+        return true;
+    },
+
+    /**
      * @param Element args.element
      * @param object args.spec
      *
@@ -25,6 +39,7 @@ var CBGroupUserSettings = {
                 spec: args.spec,
                 // TODO: disable UI function
             }),
+            valueShouldChangeCallback: CBGroupUserSettings.valueShouldChange.bind(undefined, args.spec),
         }).element);
         section.appendChild(item);
 
@@ -62,7 +77,7 @@ var CBGroupUserSettings = {
      *
      * @return Promise
      */
-    save: function(args) {
+    save: function (args) {
         var formData = new FormData();
         formData.append("specAsJSON", JSON.stringify(args.spec));
 
