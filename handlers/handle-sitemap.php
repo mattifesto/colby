@@ -27,7 +27,7 @@ echo '<?xml version="1.0" encoding="utf-8" ?>';
 
    array_walk($pageSummaryModels, function ($model) {
        if (empty($model->URI)) {
-           continue;
+           return;
        } else if ($model->URI === '/') {
            $URL = CBSiteURL . '/';
        } else {
