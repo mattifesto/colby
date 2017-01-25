@@ -1,7 +1,17 @@
-"use strict";
-/* globals CBArrayEditor, CBContainerViewAddableViews, CBUI, CBUIBooleanEditor,
-           CBUIImageSizeView, CBUIImageUploader, CBUIImageView, CBUISelector,
-           CBUISpec, CBUIStringEditor, CBUIThemeSelector, Colby */
+"use strict"; /* jshint strict: global */
+/* globals
+    CBArrayEditor,
+    CBContainerViewAddableViews,
+    CBUI,
+    CBUIBooleanEditor,
+    CBUIImageSizeView,
+    CBUIImageUploader,
+    CBUIImageView,
+    CBUISelector,
+    CBUISpec,
+    CBUIStringEditor,
+    CBUIThemeSelector,
+    Colby */
 
 var CBContainerViewEditor = {
 
