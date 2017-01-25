@@ -20,6 +20,7 @@ final class ColbyUser {
 
     private static $currentUserHash = null;
     private static $currentUserId = null;
+    private static $currentUserGroups = [];
 
     // currentUserRow
     // this is cached, see the following document for discussion
@@ -88,6 +89,29 @@ final class ColbyUser {
     }
 
     /**
+     * This function is more efficient than CoblyUser::isMemberOfGroup() because
+     * it memoizes the results for the current user.
+     *
+     * @param string $groupName
+     *
+     * @return bool
+     */
+    static function currentUserIsMemberOfGroup($groupName) {
+        if (empty(ColbyUser::$currentUserId)) {
+            return false;
+        }
+
+        if (isset(ColbyUser::$currentUserGroups[$groupName])) {
+            return ColbyUser::$currentUserGroups[$groupName];
+        } else {
+            $isMember = ColbyUser::isMemberOfGroup(ColbyUser::$currentUserId, $groupName);
+            ColbyUser::$currentUserGroups[$groupName] = $isMember;
+
+            return $isMember;
+        }
+    }
+
+    /**
      * @param int $facebookUserID
      *
      * @return {id: int, hash: hex160}|false
@@ -105,6 +129,29 @@ EOT;
         return CBDB::SQLToObject($SQL);
     }
 
+    /**
+     * @return [string]
+     */
+    static function fetchGroupNames() {
+        $SQL = <<<EOT
+
+            SELECT  `table_name`
+            FROM    `information_schema`.`tables`
+            WHERE   `table_schema` = DATABASE()
+
+EOT;
+
+        $tableNames = CBDB::SQLToArray($SQL);
+        $groupNames = [];
+
+        foreach ($tableNames as $tableName) {
+            if (preg_match('/^ColbyUsersWhoAre(.+)$/', $tableName, $matches)) {
+                $groupNames[] = $matches[1];
+            }
+        }
+
+        return $groupNames;
+    }
 
     /**
      * @param hex160 $userHash
@@ -187,6 +234,9 @@ EOT;
     }
 
     /**
+     * ColbyUser::currentUserIsMemberOfGroup() is a more efficient alternative
+     * for the current user.
+     *
      * @param int $userID
      * @param string $groupName
      *
