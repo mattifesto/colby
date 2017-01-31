@@ -39,7 +39,7 @@ class CBImages {
     }
 
     /**
-     * @deprecated use CBImages::makeReducedImageForOperation()
+     * @deprecated use CBImages::reduceImage()
      *
      * @param {hex160} $ID
      * @param {string} $operation
@@ -57,6 +57,7 @@ class CBImages {
      *  The image filepath for false if an image with this ID doesn't exist
      */
     public static function makeImage($ID, $operation = null) {
+        error_log('Call made to deprecated function: ' . __METHOD__);
         $originalImageFilepath = CBImages::IDToOriginalFilepath($ID);
 
         if ($operation === null || $originalImageFilepath === false) {
@@ -65,7 +66,7 @@ class CBImages {
 
         $extension = pathinfo($originalImageFilepath, PATHINFO_EXTENSION);
 
-        CBImages::makeReducedImageForOperation($ID, $extension, $operation);
+        CBImages::reduceImage($ID, $extension, $operation);
 
         return CBDataStore::flexpath($ID, "{$operation}.{$extension}", CBSiteDirectory);
     }
