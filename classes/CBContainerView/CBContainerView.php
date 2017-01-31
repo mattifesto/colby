@@ -57,19 +57,19 @@ final class CBContainerView {
      */
     private static function makeImagesForSpec(stdClass $spec) {
         if (!empty($spec->smallImage->ID)) {
-            CBImages::makeImage($spec->smallImage->ID, 's0.5');
+            CBImages::reduceImage($spec->smallImage->ID, $spec->smallImage->extension, 's0.5');
         }
 
         if (!empty($spec->mediumImage->ID)) {
-            CBImages::makeImage($spec->mediumImage->ID, 's0.5');
+            CBImages::reduceImage($spec->mediumImage->ID, $spec->mediumImage->extension, 's0.5');
         }
 
         if (!empty($spec->largeImage->ID)) {
-            CBImages::makeImage($spec->largeImage->ID, 's0.5');
+            CBImages::reduceImage($spec->largeImage->ID, $spec->largeImage->extension, 's0.5');
 
             if ($spec->largeImage->width > 3840) {
-                CBImages::makeImage($spec->largeImage->ID, 'cwc3840');
-                CBImages::makeImage($spec->largeImage->ID, 'cwc3840s0.5');
+                CBImages::reduceImage($spec->largeImage->ID, $spec->largeImage->extension, 'cwc3840');
+                CBImages::reduceImage($spec->largeImage->ID, $spec->largeImage->extension, 'cwc3840s0.5');
             }
         }
     }
@@ -282,8 +282,8 @@ EOT;
         $rules = [];
 
         if (isset($spec->largeImage)) {
-            $imageURL2x = self::imageToURL($spec->largeImage);
-            $imageURL1x = self::imageToURL($spec->largeImage, 's0.5');
+            $imageURL2x = CBContainerView::imageToURL($spec->largeImage);
+            $imageURL1x = CBContainerView::imageToURL($spec->largeImage, 's0.5');
             $width = intval($spec->largeImage->width / 2);
             $height = intval($spec->largeImage->height / 2);
 
@@ -297,8 +297,8 @@ EOT;
             ];
 
             if ($spec->largeImage->width > 3380) {
-                $imageURL2x = self::imageToURL($spec->largeImage, 'cwc3840');
-                $imageURL1x = self::imageToURL($spec->largeImage, 'cwc3840s0.5');
+                $imageURL2x = CBContainerView::imageToURL($spec->largeImage, 'cwc3840');
+                $imageURL1x = CBContainerView::imageToURL($spec->largeImage, 'cwc3840s0.5');
                 $width = 1920;
 
                 $rules[] = [
@@ -313,8 +313,8 @@ EOT;
         }
 
         if (isset($spec->mediumImage)) {
-            $imageURL2x = self::imageToURL($spec->mediumImage);
-            $imageURL1x = self::imageToURL($spec->mediumImage, 's0.5');
+            $imageURL2x = CBContainerView::imageToURL($spec->mediumImage);
+            $imageURL1x = CBContainerView::imageToURL($spec->mediumImage, 's0.5');
             $width = intval($spec->mediumImage->width / 2);
             $height = intval($spec->mediumImage->height / 2);
 
@@ -329,8 +329,8 @@ EOT;
         }
 
         if (isset($spec->smallImage)) {
-            $imageURL2x = self::imageToURL($spec->smallImage);
-            $imageURL1x = self::imageToURL($spec->smallImage, 's0.5');
+            $imageURL2x = CBContainerView::imageToURL($spec->smallImage);
+            $imageURL1x = CBContainerView::imageToURL($spec->smallImage, 's0.5');
             $width = intval($spec->smallImage->width / 2);
             $height = intval($spec->smallImage->height / 2);
 
@@ -373,7 +373,7 @@ EOT;
         $response = new CBAjaxResponse();
         $spec = json_decode($_POST['specAsJSON']);
 
-        self::makeImagesForSpec($spec);
+        CBContainerView::makeImagesForSpec($spec);
 
         if ($imageThemeID = CBContainerView::specToImageThemeID($spec)) {
             $filepath = CBContainerView::imageThemeIDToStyleSheetFilepath($imageThemeID);
