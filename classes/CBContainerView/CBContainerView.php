@@ -27,30 +27,27 @@ final class CBContainerView {
     }
 
     /**
-     * @deprecated use CBImage::flexpath()
-     *
-     * This function uses the $base variable to mean $filename and $filename
-     * variable to mean $basename.
+     * @deprecated transitioning to CBDataStore::flexpath()
      *
      * @param stdClass $image
-     * @param string? $args->base
+     * @param string? $filename
      *
      * @return string
      */
-    private static function imageToURL(stdClass $image, $args = []) {
-        $base = null;
-        extract($args, EXTR_IF_EXISTS);
-
-        if ($base === null) {
-            $filename = "{$image->base}.{$image->extension}";
-        } else {
-            $filename = "{$base}.{$image->extension}";
+    private static function imageToURL(stdClass $image, $filename = null) {
+        if ($filename === null) {
+            if (empty($image->filename)) {
+                // NOTE: 2017.01.30 Old backward compatability with 'base',
+                //       figure out when we can remove.
+                $filename = $image->base;
+            } else {
+                $filename = $image->filename;
+            }
         }
 
-        return CBDataStore::toURL([
-            'ID' => $image->ID,
-            'filename' => $filename,
-        ]);
+        $basename = "{$filename}.{$image->extension}";
+
+        return CBDataStore::flexpath($image->ID, $basename, CBSiteURL);
     }
 
     /**
@@ -184,7 +181,7 @@ EOT;
     public static function renderModelAsHTML(stdClass $model) {
         $themeID = empty($model->themeID) ? null : $model->themeID;
 
-        CBHTMLOutput::addCSSURL(CBContainerView::URL('CBContainerView.css'));
+        CBHTMLOutput::addCSSURL(Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__));
         CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
 
         $classes = ['CBContainerView'];
@@ -286,7 +283,7 @@ EOT;
 
         if (isset($spec->largeImage)) {
             $imageURL2x = self::imageToURL($spec->largeImage);
-            $imageURL1x = self::imageToURL($spec->largeImage, ['base' => 's0.5']);
+            $imageURL1x = self::imageToURL($spec->largeImage, 's0.5');
             $width = intval($spec->largeImage->width / 2);
             $height = intval($spec->largeImage->height / 2);
 
@@ -300,8 +297,8 @@ EOT;
             ];
 
             if ($spec->largeImage->width > 3380) {
-                $imageURL2x = self::imageToURL($spec->largeImage, ['base' => 'cwc3840']);
-                $imageURL1x = self::imageToURL($spec->largeImage, ['base' => 'cwc3840s0.5']);
+                $imageURL2x = self::imageToURL($spec->largeImage, 'cwc3840');
+                $imageURL1x = self::imageToURL($spec->largeImage, 'cwc3840s0.5');
                 $width = 1920;
 
                 $rules[] = [
@@ -317,7 +314,7 @@ EOT;
 
         if (isset($spec->mediumImage)) {
             $imageURL2x = self::imageToURL($spec->mediumImage);
-            $imageURL1x = self::imageToURL($spec->mediumImage, ['base' => 's0.5']);
+            $imageURL1x = self::imageToURL($spec->mediumImage, 's0.5');
             $width = intval($spec->mediumImage->width / 2);
             $height = intval($spec->mediumImage->height / 2);
 
@@ -333,7 +330,7 @@ EOT;
 
         if (isset($spec->smallImage)) {
             $imageURL2x = self::imageToURL($spec->smallImage);
-            $imageURL1x = self::imageToURL($spec->smallImage, ['base' => 's0.5']);
+            $imageURL1x = self::imageToURL($spec->smallImage, 's0.5');
             $width = intval($spec->smallImage->width / 2);
             $height = intval($spec->smallImage->height / 2);
 
@@ -398,15 +395,5 @@ EOT;
      */
     public static function updateStylesForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
