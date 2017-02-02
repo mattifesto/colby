@@ -52,9 +52,9 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
     $CBAdminMenu->develop = newMenuItem('Develop', '/admin/develop/php/', $developMenu);
 
     $testMenu                           = new stdClass();
-    $testMenu->test                     = newMenuItem('Unit Tests', '/developer/test/');
+    $testMenu->test                     = newMenuItem('Website Tests', '/admin/page/?class=CBAdminPageForTests');
 
-    $CBAdminMenu->test = newMenuItem('Test', '/developer/test/', $testMenu);
+    $CBAdminMenu->test = newMenuItem('Test', '/admin/page/?class=CBAdminPageForTests', $testMenu);
 }
 
 /**
