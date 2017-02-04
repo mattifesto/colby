@@ -60,9 +60,9 @@ EOT;
 
             $SQL = <<<EOT
 
-                SELECT `className`, `function`, `argsAsJSON`
-                FROM `CBTasks`
-                WHERE `starter` = {$starterAsSQL}
+                SELECT  `ID`, `className`, `function`, `argsAsJSON`
+                FROM    `CBTasks`
+                WHERE   `starter` = {$starterAsSQL}
 
 EOT;
 
@@ -78,7 +78,7 @@ EOT;
                 }
                 call_user_func($function, $args);
             } else {
-                throw new Exception("The function {$function}() requested by task {$ID} is not callable.");
+                throw new Exception("The function {$function}() requested by task {$task->ID} is not callable.");
             }
 
             /* 3. The task has completed, remove it. */
@@ -88,17 +88,18 @@ EOT;
         } catch (Exception $exception) {
 
             /**
-             * Setting `starter` to NULL indicates that the task was started
-             * but failed for some reason. In the admin area the task can be
-             * restarted or investigated. We don't reset the task because if
-             * it failed because of a real issue it will never succeed.
+             * Setting `starter` to NULL but leaving started as not NULL
+             * indicates that the task was started but failed for some reason.
+             * In the admin area the task can be restarted or investigated. We
+             * don't reset the task because if it failed because of a real issue
+             * it will never succeed.
              */
 
             $SQL = <<<EOT
 
-                UPDATE `CBTasks`
-                SET `started` = NULL, `starter` = NULL
-                WHERE `starter` = {$starterAsSQL}
+                UPDATE  `CBTasks`
+                SET     `starter` = NULL
+                WHERE   `starter` = {$starterAsSQL}
 
 EOT;
 
