@@ -371,50 +371,62 @@ EOT;
      * upload and resize an image.
      *
      * @param file $_POST['image']
+     * @param [string] $_POST['imageSizesAsJSON']
+     *      This option will be used less now that automatic image resizing
+     *      exists.
+     *
+     *      Example: ['rw300', 'rh400', 'rs200clc200']
      *
      * @return null
+     * @return Ajax
+     *
+     *      {
+     *          stdClass image
+     *          [stdClass] sizes
+     *      }
      */
     public static function uploadForAjax() {
         $response = new CBAjaxResponse();
-        $info = CBImages::uploadImageWithName('image');
-        $originalFilepath = CBDataStore::filepath([
-            'ID' => $info->ID,
-            'filename' => $info->filenameFromDataStore ]);
-        $requestedSizes = isset($_POST['imageSizesAsJSON']) ? json_decode($_POST['imageSizesAsJSON']) : [];
+        $image = CBImages::uploadImageWithName('image');
+        $basename = "{$image->filename}.{$image->extension}";
+
         $sizes['original'] = (object)[
-            'height' => $info->height,
-            'width' => $info->width,
+            'height' => $image->height,
+            'width' => $image->width,
             'URL' => CBDataStore::toURL([
-                'ID' => $info->ID,
-                'filename' => $info->filenameFromDataStore ])
+                'ID' => $image->ID,
+                'filename' => $basename,
+            ]),
         ];
 
-        foreach ($requestedSizes as $size) {
-            $filename = "{$size}.{$info->extension}";
-            $filepath = CBDataStore::filepath(['ID' => $info->ID, 'filename' => $filename]);
-            $projection = CBProjection::withSize($info->width, $info->height);
-            $projection = CBProjection::applyOpString($projection, $size);
+        $requestedSizes = isset($_POST['imageSizesAsJSON']) ? json_decode($_POST['imageSizesAsJSON']) : [];
 
-            CBImages::reduceImageFile($originalFilepath, $filepath, $projection);
+        foreach ($requestedSizes as $operation) {
+            $reducedImage = CBImages::reducedImage($image->ID, $image->extension, $operation);
+            $reducedImageBasename = "{$reducedImage->filename}.{$reducedImage->extension}";
 
-            $sizes[$size] = (object)[
-                'height' => $projection->destination->height,
-                'width' => $projection->destination->width,
-                'URL' => CBDataStore::toURL([ 'ID' => $info->ID, 'filename' => $filename ])
+            $sizes[$operation] = (object)[
+                'height' => $reducedImage->height,
+                'width' => $reducedImage->width,
+                'URL' => CBDataStore::toURL([
+                    'ID' => $reducedImage->ID,
+                    'filename' => $reducedImageBasename,
+                ]),
             ];
         }
 
-        $response->extension = $info->extension;
-        $response->ID = $info->ID;
+        $response->extension = $image->extension;   /* @deprecated use $image->extension */
+        $response->ID = $image->ID;                 /* @deprecated use $image->ID */
         $response->image = (object)[
-            'base' => 'original', /* @deprecated use filename */
-            'extension' => $info->extension,
-            'filename' => 'original',
-            'height' => $info->height,
-            'ID' => $info->ID,
-            'width' => $info->width,
+            'base' => $image->filename,             /* @deprecated use $image->filename */
+            'extension' => $image->extension,
+            'filename' => $image->filename,
+            'height' => $image->height,
+            'ID' => $image->ID,
+            'width' => $image->width,
         ];
         $response->sizes = $sizes;
+        $response->message = "Image uploaded successfully";
         $response->wasSuccessful = true;
         $response->send();
     }
@@ -429,13 +441,15 @@ EOT;
     /**
      * @param string $name
      *
-     * @return {
-     *  string extension,
-     *  string filenameFromDataStore,
-     *  int height,
-     *  hex160 ID,
-     *  int width,
-     * }
+     * @return stdClass (image)
+     *
+     *      {
+     *          string extension,
+     *          string filename,
+     *          int height,
+     *          hex160 ID,
+     *          int width,
+     *      }
      */
     public static function uploadImageWithName($name) {
         ColbyImageUploader::verifyUploadedFile($name);
@@ -454,8 +468,9 @@ EOT;
             $extension = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
             $ID = sha1_file($temporaryFilepath);
             $dataStore = new CBDataStore($ID);
-            $filename = "original.{$extension}";
-            $permanentFilepath = $dataStore->directory() . "/{$filename}";
+            $filename = "original";
+            $basename = "{$filename}.{$extension}";
+            $permanentFilepath = $dataStore->directory() . "/{$basename}";
 
             CBImages::updateRow($ID, $timestamp, $extension);
             $dataStore->makeDirectory();
@@ -466,14 +481,15 @@ EOT;
             throw $exception;
         }
 
-        $info = new stdClass();
-        $info->extension = $extension;
-        $info->filenameFromDataStore = $filename;
-        $info->height = $size[1];
-        $info->ID = $ID;
-        $info->size = $size; // @deprecated use width and height
-        $info->width = $size[0];
+        $image = new stdClass();
+        $image->extension = $extension;
+        $image->filename = $filename;
+        $image->filenameFromDataStore = $basename;
+        $image->height = $size[1];
+        $image->ID = $ID;
+        $image->size = $size; // @deprecated use width and height
+        $image->width = $size[0];
 
-        return $info;
+        return $image;
     }
 }
