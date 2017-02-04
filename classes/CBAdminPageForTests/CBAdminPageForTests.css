@@ -1,23 +1,31 @@
-.CBTestUI .container {
-    padding: 10px;
-    text-align: center;
-}
-
-.CBTestUI .status {
+.CBAdminPageForTests .container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
     padding: 10px;
 }
 
-.CBTestUI .line.error {
+.CBAdminPageForTests img {
+    height: 90px;
+    margin-bottom: 5px;
+    width: 160px;
+}
+
+.CBAdminPageForTests .status {
+    padding: 10px;
+}
+
+.CBAdminPageForTests .line.error {
     color: hsl(30, 50%, 50%);
     padding: 0 10px;
 }
 
-.CBTestUI .line.failure {
+.CBAdminPageForTests .line.failure {
     color: hsl(0, 50%, 50%);
     padding-bottom: 5px;
 }
 
-.CBTestUI .line.success {
+.CBAdminPageForTests .line.success {
     color: hsl(120, 50%, 50%);
     padding-bottom: 5px;
 }
