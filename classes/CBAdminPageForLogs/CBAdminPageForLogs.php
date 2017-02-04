@@ -5,21 +5,21 @@ final class CBAdminPageForLogs {
     /**
      * @return [string]
      */
-    public static function adminPageMenuNamePath() {
+    static function adminPageMenuNamePath() {
         return ['general', 'logs'];
     }
 
     /**
      * @return stdClass
      */
-    public static function adminPagePermissions() {
+    static function adminPagePermissions() {
         return (object)['group' => 'Administrators'];
     }
 
     /**
      * @return null
      */
-    public static function adminPageRenderContent() {
+    static function adminPageRenderContent() {
         CBHTMLOutput::setTitleHTML('Logs');
         CBHTMLOutput::setDescriptionHTML('View logs');
     }
@@ -27,7 +27,7 @@ final class CBAdminPageForLogs {
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 }
