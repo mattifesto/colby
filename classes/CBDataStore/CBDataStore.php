@@ -154,7 +154,7 @@ final class CBDataStore {
      *
      * This function has "create if not exists" semantics.
      *
-     * @return void
+     * @return null
      */
     public function makeDirectory() {
         if (!is_dir($this->directory())) {
@@ -165,7 +165,7 @@ final class CBDataStore {
     /**
      * This function has "create if not exists" semantics.
      *
-     * @return void
+     * @return null
      */
     public static function makeDirectoryForID($ID) {
         $directory = self::directoryForID($ID);
@@ -176,6 +176,8 @@ final class CBDataStore {
     }
 
     /**
+     * @deprecated user CBDataStore::flexpath()
+     *
      * @return string
      */
     public function URL() {
@@ -183,6 +185,8 @@ final class CBDataStore {
     }
 
     /**
+     * @deprecated use CBDataStore::flexpath()
+     *
      * @param   {hex160}        ID (required)
      * @param   {string}|null   filename
      *
