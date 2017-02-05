@@ -110,26 +110,6 @@ class CBImages {
     }
 
     /**
-     * @deprecated use CBImages::reduceImage()
-     *
-     * Creates a reduced image for an operation only if the reduced image
-     * doesn't already exist.
-     *
-     * @param hex160 $ID
-     *  The image ID
-     * @param string $extension
-     *  The image extension
-     * @param string $operation
-     *  The reduction operation, example: "rs200clc200"
-     *
-     * @return null
-     */
-    public static function makeReducedImageForOperation($ID, $extension, $operation) {
-        error_log('Call made to deprecated function: ' . __METHOD__);
-        CBImages::reduceImage($ID, $extension, $operation);
-    }
-
-    /**
      * Creates a reduced image for an operation only if the reduced image
      * doesn't already exist.
      *
