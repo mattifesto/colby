@@ -12,7 +12,7 @@ final class CBViewPageTests {
         CBModels::deleteModelsByID([$ID]);
 
         if (is_dir(CBDataStore::directoryForID($ID))) {
-            CBDataStore::deleteForID(['ID' => $ID]);
+            CBDataStore::deleteByID($ID);
         }
 
         $spec                   = CBViewPage::fetchSpecByID($ID, true);
@@ -43,6 +43,6 @@ final class CBViewPageTests {
         }
 
         CBModels::deleteModelsByID([$ID]);
-        CBDataStore::deleteForID(['ID' => $ID]);
+        CBDataStore::deleteByID($ID);
     }
 }

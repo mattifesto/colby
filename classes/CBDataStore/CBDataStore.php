@@ -12,26 +12,24 @@
  * class or any PHP code unless it is database related. The file locking
  * functionality of PHP isn't very certain and that fact is well documented.
  */
-class CBDataStore
-{
+final class CBDataStore {
     private $dataStoreID = null;
 
     /**
      * @return CBDataStore
      */
-    public function __construct($dataStoreID)
-    {
+    public function __construct($dataStoreID) {
         $this->dataStoreID  = strtolower($dataStoreID);
         $this->path         = preg_replace('/^(..)(..)/', '$1/$2/', $this->dataStoreID);
     }
 
     /**
-     * @deprecated use `CBDataStore::deleteForID`
+     * @deprecated use CBDataStore::deleteByID()
      *
-     * @return void
+     * @return null
      */
     public function delete() {
-        CBDataStore::deleteForID(['ID' => $this->dataStoreID]);
+        CBDataStore::deleteByID($this->dataStoreID);
     }
 
     /**
@@ -75,21 +73,11 @@ class CBDataStore
     }
 
     /**
-     * @deprecated use deleteByID
-     */
-    public static function deleteForID($args) {
-        $ID = null;
-        extract($args, EXTR_IF_EXISTS);
-        CBDataStore::deleteByID($ID);
-    }
-
-    /**
      * @deprecated use `directoryForID`
      *
      * @return string
      */
-    public function directory()
-    {
+    public function directory() {
         return CBSiteDirectory . "/data/{$this->path}";
     }
 
