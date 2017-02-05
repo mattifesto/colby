@@ -13,24 +13,6 @@
  * functionality of PHP isn't very certain and that fact is well documented.
  */
 final class CBDataStore {
-    private $dataStoreID = null;
-
-    /**
-     * @return CBDataStore
-     */
-    public function __construct($dataStoreID) {
-        $this->dataStoreID  = strtolower($dataStoreID);
-        $this->path         = preg_replace('/^(..)(..)/', '$1/$2/', $this->dataStoreID);
-    }
-
-    /**
-     * @deprecated use CBDataStore::deleteByID()
-     *
-     * @return null
-     */
-    public function delete() {
-        CBDataStore::deleteByID($this->dataStoreID);
-    }
 
     /**
      * Deletes a data store with "delete if exists" semantics.
@@ -45,7 +27,7 @@ final class CBDataStore {
      *
      * @return null
      */
-    public static function deleteByID($ID) {
+    static function deleteByID($ID) {
         if (!CBHex160::is($ID)) {
             throw new InvalidArgumentException("'{$ID}' is not a valid data store ID.");
         }
@@ -73,18 +55,9 @@ final class CBDataStore {
     }
 
     /**
-     * @deprecated use `directoryForID`
-     *
      * @return string
      */
-    public function directory() {
-        return CBSiteDirectory . "/data/{$this->path}";
-    }
-
-    /**
-     * @return string
-     */
-    public static function directoryForID($ID) {
+    static function directoryForID($ID) {
         $directoryName = self::directoryNameFromDocumentRoot($ID);
 
         return CBSiteDirectory . "/{$directoryName}";
@@ -97,7 +70,7 @@ final class CBDataStore {
      * @return string
      *      example: "data/1a/b9/879ccb12eaaeda7b81b08fa433fde8bc86e3"
      */
-    public static function directoryNameFromDocumentRoot($ID) {
+    static function directoryNameFromDocumentRoot($ID) {
         $ID             = strtolower($ID);
         $directoryName  = preg_replace('/^(..)(..)/', '$1/$2/', $ID);
 
@@ -116,7 +89,7 @@ final class CBDataStore {
      *
      * @return string
      */
-    public static function filepath($args) {
+    static function filepath($args) {
         $filename = $ID = '';
         extract($args, EXTR_IF_EXISTS);
 
@@ -135,7 +108,7 @@ final class CBDataStore {
      *
      * @return string
      */
-    public static function flexpath($ID, $basename = null, $flexdir = null) {
+    static function flexpath($ID, $basename = null, $flexdir = null) {
         $flexpath = CBDataStore::directoryNameFromDocumentRoot($ID);
 
         if (!empty($basename)) {
@@ -150,38 +123,16 @@ final class CBDataStore {
     }
 
     /**
-     * @deprecated use `makeDirectoryForID`
-     *
      * This function has "create if not exists" semantics.
      *
      * @return null
      */
-    public function makeDirectory() {
-        if (!is_dir($this->directory())) {
-            mkdir($this->directory(), /* mode: */ 0777, /* recursive: */ true);
-        }
-    }
-
-    /**
-     * This function has "create if not exists" semantics.
-     *
-     * @return null
-     */
-    public static function makeDirectoryForID($ID) {
+    static function makeDirectoryForID($ID) {
         $directory = self::directoryForID($ID);
 
         if (!is_dir($directory)) {
             mkdir($directory, /* mode: */ 0777, /* recursive: */ true);
         }
-    }
-
-    /**
-     * @deprecated user CBDataStore::flexpath()
-     *
-     * @return string
-     */
-    public function URL() {
-        return CBSiteURL . "/data/{$this->path}";
     }
 
     /**
@@ -192,7 +143,7 @@ final class CBDataStore {
      *
      * @return  {string}
      */
-    public static function toURL($args) {
+    static function toURL($args) {
         $ID = $filename = null;
         extract($args, EXTR_IF_EXISTS);
 
