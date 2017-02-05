@@ -17,8 +17,7 @@ $spec->selectedMenuItemName     = 'develop';
 $spec->selectedSubmenuItemName  = 'documents';
 CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
 
-$dataStore  = new CBDataStore(CBPagesAdministrationDataStoreID);
-$filepath   = $dataStore->directory(). '/data.json';
+$filepath   = CBDataStore::directoryForID(CBPagesAdministrationDataStoreID) . '/data.json';
 
 if (is_file($filepath)) {
     $data = json_decode(file_get_contents($filepath));

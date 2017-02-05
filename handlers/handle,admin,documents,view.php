@@ -4,7 +4,7 @@ if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
+include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
 
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
@@ -160,17 +160,17 @@ EOT;
 }
 
 /**
- * @return void
+ * @return null
  */
 function renderDataStoreFileListForID($ID) {
-    $dataStore = new CBDataStore($ID);
+    $directory = CBDataStore::directoryForID($ID);
 
-    if (!is_dir($dataStore->directory())) {
+    if (!is_dir($directory)) {
         return;
     }
 
     $list   = array();
-    $handle = opendir($dataStore->directory());
+    $handle = opendir($directory);
 
     while (false !== ($filename = readdir($handle))) {
         if (is_dir($filename)) {

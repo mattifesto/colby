@@ -2,15 +2,13 @@
 
 include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
-{
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
 
 $response   = new CBAjaxResponse();
 $partIndex  = (int)$_POST['part-index'];
-$dataStore  = new CBDataStore(CBPagesAdministrationDataStoreID);
-$filepath   = $dataStore->directory() . '/data.json';
+$filepath   = CBDataStore::directoryForID(CBPagesAdministrationDataStoreID) . '/data.json';
 
 if (0 == $partIndex || !is_file($filepath)) {
     $data                           = new stdClass();
@@ -22,7 +20,7 @@ if (0 == $partIndex || !is_file($filepath)) {
 
 DataStoreExplorer::explorePart($partIndex, $data);
 
-$dataStore->makeDirectory();
+CBDataStore::makeDirectoryForID(CBPagesAdministrationDataStoreID);
 file_put_contents($filepath, json_encode($data));
 
 /**
