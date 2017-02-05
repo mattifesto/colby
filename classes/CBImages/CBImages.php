@@ -286,10 +286,10 @@ EOT;
     public static function uploadAndReduceForAjax() {
         $response = new CBAjaxResponse();
 
-        $originalInfo = CBImages::uploadImageWithName('image');
-        $originalFilename = "original.{$originalInfo->extension}";
-        $dataStore = new CBDataStore($originalInfo->ID);
-        $projection = CBProjection::withSize($originalInfo->size[0], $originalInfo->size[1]);
+        $image = CBImages::uploadImageWithName('image');
+        $originalFilename = "original.{$image->extension}";
+        $dataStoreDirectory = CBDataStore::directoryForID($image->ID);
+        $projection = CBProjection::withSize($image->width, $image->height);
         $destinationFilename = '';
 
         if (isset($_POST['reduceToWidth'])) {
@@ -317,20 +317,20 @@ EOT;
         }
 
         if ($destinationFilename) {
-            $destinationFilename = "{$destinationFilename}.{$originalInfo->extension}";
-            $originalFilepath = $dataStore->directory() . "/{$originalFilename}";
-            $destinationFilepath = $dataStore->directory() . "/{$destinationFilename}";
+            $destinationFilename = "{$destinationFilename}.{$image->extension}";
+            $originalFilepath = $dataStoreDirectory . "/{$originalFilename}";
+            $destinationFilepath = $dataStoreDirectory . "/{$destinationFilename}";
 
             CBImages::reduceImageFile($originalFilepath, $destinationFilepath, $projection);
         } else {
             $destinationFilename = $originalFilename;
-            $originalFilepath = $dataStore->directory() . "/{$originalFilename}";
-            $destinationFilepath = $dataStore->directory() . "/{$destinationFilename}";
+            $originalFilepath = $dataStoreDirectory . "/{$originalFilename}";
+            $destinationFilepath = $dataStoreDirectory . "/{$destinationFilename}";
         }
 
         $size = getimagesize($destinationFilepath);
         $response->filename = $destinationFilename;
-        $response->URL = $dataStore->URL() . "/{$destinationFilename}";
+        $response->URL = CBDataStore::flexpath($image->ID, $destinationFilename, CBSiteURL);
         $response->URLForHTML = ColbyConvert::textToHTML($response->URL);
         $response->actualWidth = $size[0];
         $response->actualHeight = $size[1];
@@ -447,13 +447,12 @@ EOT;
             $timestamp = isset($_POST['timestamp']) ? $_POST['timestamp'] : time();
             $extension = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
             $ID = sha1_file($temporaryFilepath);
-            $dataStore = new CBDataStore($ID);
             $filename = "original";
             $basename = "{$filename}.{$extension}";
-            $permanentFilepath = $dataStore->directory() . "/{$basename}";
+            $permanentFilepath = CBDataStore::flexpath($ID, $basename, CBSiteDirectory);
 
             CBImages::updateRow($ID, $timestamp, $extension);
-            $dataStore->makeDirectory();
+            CBDataStore::makeDirectoryForID($ID);
             move_uploaded_file($temporaryFilepath, $permanentFilepath);
             Colby::query('COMMIT');
         } catch (Exception $exception) {
