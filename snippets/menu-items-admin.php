@@ -43,6 +43,7 @@ $CBAdminMenu->help          = newMenuItem('Help', '/admin/help/markaround-syntax
 
 if (ColbyUser::current()->isOneOfThe('Developers')) {
     $developMenu                    = new stdClass();
+    $developMenu->CBArtworkElement  = newMenuItem('CBArtworkElement', '/admin/page/?class=CBAdminPageForCBArtworkElement');
     $developMenu->images            = newMenuItem('Images', '/admin/page/?class=CBAdminPageForImages');
     $developMenu->php               = newMenuItem('PHP', '/admin/develop/php/');
     $developMenu->update            = newMenuItem('Update', '/admin/page/?class=CBAdminPageForUpdate');
