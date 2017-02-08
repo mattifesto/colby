@@ -15,9 +15,9 @@ final class CBArtworkElement {
      * @param string? $args['alternativeText']
      *  The alternative text for the image.
      * @param int $args['height']
-     *  The height in image pixels of the image.
+     *  The aspect height of the image, image pixel height can work here.
      * @param int $args['width']
-     *  The width in image pixels of the image.
+     *  The aspect width of the image, image pixel width can work here.
      * @param float? $args['maxWidth']
      *  The maximum with in CSS pixels that the image should be displayed.
      * @param string $args['URL']
