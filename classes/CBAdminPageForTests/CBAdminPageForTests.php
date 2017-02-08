@@ -3,6 +3,11 @@
 final class CBAdminPageForTests {
 
     /**
+     * The data store ID of the test image.
+     */
+    const imageID = '3dd8e721048bbe8ea5f0c043fab73277a0b0044c';
+
+    /**
      * @return [string]
      */
     static function adminPageMenuNamePath() {
