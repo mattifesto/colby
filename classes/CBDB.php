@@ -76,7 +76,10 @@ final class CBDB {
     /**
      * Takes a SQL statement and returns the value of the first column of the
      * first row.
-     * @return {string}|false
+     *
+     * @param bool? $args['valueIsJSON']
+     *
+     * @return mixed|false
      */
     public static function SQLToValue($SQL, $args = []) {
         $valueIsJSON = false;
