@@ -245,6 +245,37 @@ EOT;
     }
 
     /**
+     * @param hex160 $ID
+     *
+     * @return stdClass
+     */
+    static function fetchModelVersionsByID($ID) {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $SQL = <<<EOT
+
+            SELECT      `version`, `timestamp`, `specAsJSON`, `modelAsJSON`
+            FROM        `CBModelVersions`
+            WHERE       `ID` = {$IDAsSQL}
+            ORDER BY    `version` DESC
+
+EOT;
+
+        return CBDB::SQLToObjects($SQL);
+    }
+
+    static function fetchModelVersionsByIDForAjax() {
+        $response = new CBAjaxResponse();
+        $ID = $_POST['ID'];
+        $response->versions = CBModels::fetchModelVersionsByID($ID);
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    static function fetchModelVersionsByIDForAjaxPermissions() {
+        return (object)['group' => 'Developers'];
+    }
+
+    /**
      * Retreives the current version of a spec
      *
      * Scenarios:       Fetch the spec for a web page
@@ -457,6 +488,50 @@ EOT;
     }
 
     /**
+     * @param hex160 $ID
+     * @param int $version
+     *
+     * @return null
+     */
+    static function revert($ID, $version) {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $versionAsSQL = intval($version);
+        $SQL = <<<EOT
+
+            SELECT  `specAsJSON`
+            FROM    `CBModelVersions`
+            WHERE   `ID` = $IDAsSQL AND
+                    `version` = $versionAsSQL
+
+EOT;
+
+        $spec = CBDB::SQLToValue($SQL, ['valueIsJSON' => true]);
+
+        CBModels::save([$spec], /* force: */ true);
+    }
+
+    /**
+     * @return null
+     */
+    static function revertForAjax() {
+        $response = new CBAjaxResponse();
+        $ID = $_POST['ID'];
+        $version = $_POST['version'];
+
+        CBModels::revert($ID, $version);
+
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function revertForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * Creates and saves models using specifications.
      *
      * Important: This function executes multiple queries each of which must
@@ -496,6 +571,7 @@ EOT;
      * @param bool $force
      *  Use this to disable version checking and force the model save. This
      *  should be used rarely and cautiously. Model import from CSV uses it.
+     *  CBModels::revert() also uses it.
      *
      * @return null
      */
