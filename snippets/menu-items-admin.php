@@ -20,11 +20,10 @@ $pagesMenu->trash = newMenuItem('Trash', '/admin/page?class=CBAdminPageForPagesT
 $CBAdminMenu->pages = newMenuItem('Pages', '/admin/page/?class=CBAdminPageForPagesFind', $pagesMenu);
 
 
-$CBAdminMenu->models = newMenuItem('Models', '/admin/models/directory/', (object)[
+$modelsMenu = (object)[
     'directory' => newMenuItem('Directory', '/admin/models/directory/'),
-    'import' => newMenuItem('Import', '/admin/page/?class=CBAdminPageForModelImport')
-]);
-
+    'import' => newMenuItem('Import', '/admin/page/?class=CBAdminPageForModelImport'),
+];
 
 $helpMenu                   = new stdClass();
 $menuItemID                 = 'markaround-syntax';
@@ -52,11 +51,16 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
 
     $CBAdminMenu->develop = newMenuItem('Develop', '/admin/develop/php/', $developMenu);
 
-    $testMenu                           = new stdClass();
-    $testMenu->test                     = newMenuItem('Website Tests', '/admin/page/?class=CBAdminPageForTests');
+    $testMenu = (object)[
+        'test' => newMenuItem('Website Tests', '/admin/page/?class=CBAdminPageForTests'),
+    ];
 
     $CBAdminMenu->test = newMenuItem('Test', '/admin/page/?class=CBAdminPageForTests', $testMenu);
+
+    $modelsMenu->inspector = newMenuItem('Inspector', '/admin/page/?class=CBAdminPageForModelInspector');
 }
+
+$CBAdminMenu->models = newMenuItem('Models', '/admin/models/directory/', $modelsMenu);
 
 /**
  * @return stdClass
