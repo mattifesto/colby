@@ -15,23 +15,21 @@ final class CBImageView {
     /**
      * @return bool
      */
-    public static function modelHasImage(stdClass $model = null) {
+    static function modelHasImage(stdClass $model = null) {
         return !!$model->filename;
     }
 
     /**
      * @return string
      */
-    public static function modelToSearchText(stdClass $model = null) {
-        $altTextModel = isset($model->alternativeTextViewModel) ? $model->alternativeTextViewModel : null;
-
-        return CBTextView::modelToSearchText($altTextModel);
+    static function modelToSearchText(stdClass $model = null) {
+        return isset($model->alternativeTextViewModel->text) ? $model->alternativeTextViewModel->text : '';
     }
 
     /**
      * @return void
      */
-    public static function renderModelAsHTML(stdClass $model = null) {
+    static function renderModelAsHTML(stdClass $model = null) {
         $styles = array();
 
         if ($model->displayHeight || $model->displayWidth) {
@@ -74,20 +72,31 @@ final class CBImageView {
     /**
      * @return stdClass
      */
-    public static function specToModel(stdClass $spec = null) {
-        $model                  = CBView::modelWithClassName(__CLASS__);
-        $model->actualHeight    = isset($spec->actualHeight) ? $spec->actualHeight : null;
-        $model->actualWidth     = isset($spec->actualWidth) ? $spec->actualWidth : null;
-        $model->displayHeight   = isset($spec->displayHeight) ? $spec->displayHeight : null;
-        $model->displayWidth    = isset($spec->displayWidth) ? $spec->displayWidth : null;
-        $model->filename        = isset($spec->filename) ? $spec->filename : null;
-        $model->maxHeight       = isset($spec->maxHeight) ? $spec->maxHeight : null;
-        $model->maxWidth        = isset($spec->maxWidth) ? $spec->maxWidth : null;
-        $model->URL             = isset($spec->URL) ? $spec->URL : null;
-        $model->URLForHTML      = ColbyConvert::textToHTML($model->URL);
-        $altTextSpec            = isset($spec->alternativeTextViewModel) ? $spec->alternativeTextViewModel : null;
+    static function specToModel(stdClass $spec = null) {
+        $model = CBView::modelWithClassName(__CLASS__);
+        $model->actualHeight = isset($spec->actualHeight) ? $spec->actualHeight : null;
+        $model->actualWidth = isset($spec->actualWidth) ? $spec->actualWidth : null;
+        $model->displayHeight = isset($spec->displayHeight) ? $spec->displayHeight : null;
+        $model->displayWidth = isset($spec->displayWidth) ? $spec->displayWidth : null;
+        $model->filename = isset($spec->filename) ? $spec->filename : null;
+        $model->maxHeight = isset($spec->maxHeight) ? $spec->maxHeight : null;
+        $model->maxWidth = isset($spec->maxWidth) ? $spec->maxWidth : null;
+        $model->URL = isset($spec->URL) ? $spec->URL : null;
+        $model->URLForHTML = ColbyConvert::textToHTML($model->URL);
+        $altTextSpec = isset($spec->alternativeTextViewModel) ? $spec->alternativeTextViewModel : null;
 
-        $model->alternativeTextViewModel = CBTextView::specToModel($altTextSpec);
+        $model->alternativeTextViewModel = CBImageView::textViewSpecToModel($altTextSpec);
+
+        return $model;
+    }
+
+    /**
+     * @return stdClass
+     */
+    private static function textViewSpecToModel(stdClass $spec = null) {
+        $model = (object)[];
+        $model->text = isset($spec->text) ? (string)$spec->text : '';
+        $model->HTML = ColbyConvert::textToHTML($model->text);
 
         return $model;
     }
@@ -97,7 +106,7 @@ final class CBImageView {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }
