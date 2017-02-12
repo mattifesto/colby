@@ -55,16 +55,17 @@ final class CBImage {
 
     /**
      * @param string $URI
+     *      https://yaycomputer.com/data/58/52/adab0f513df82783386e121dac276bb5c9d6/original.jpeg
      *
      * @return stdClass|null
      *
-     *  Example: https://yaycomputer.com/data/58/52/adab0f513df82783386e121dac276bb5c9d6/original.jpeg
-     *
-     *  returns: {
-     *      extension: "jpeg",
-     *      filename: "original",
-     *      ID: "5852adab0f513df82783386e121dac276bb5c9d6",
-     *  }
+     *      {
+     *          extension: string,
+     *          filename: string,
+     *          height: int?,
+     *          ID: hex160,
+     *          width: int?,
+     *      }
      *
      */
     static function URIToImage($URI) {
@@ -73,12 +74,24 @@ final class CBImage {
         if (preg_match($pattern, $URI, $matches)) {
             $basename = $matches[4];
             $pathinfo = pathinfo($basename);
-            return (object)[
+            $image = (object)[
                 'className' => __CLASS__,
                 'extension' => $pathinfo['extension'],
                 'filename' => $pathinfo['filename'],
                 'ID' => "{$matches[1]}{$matches[2]}{$matches[3]}",
             ];
+
+            $filepath = CBDataStore::flexpath($image->ID, $basename, CBSiteDirectory);
+
+            if (file_exists($filepath) && ($size = getimagesize($filepath))) {
+                $image->width = $size[0];
+                $image->height = $size[1];
+            } else {
+                $image->height = null;
+                $image->width = null;
+            }
+
+            return $image;
         } else {
             return null;
         }
