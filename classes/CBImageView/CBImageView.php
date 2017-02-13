@@ -27,7 +27,9 @@ final class CBImageView {
     }
 
     /**
-     * @return void
+     * @param stdClass? $model
+     *
+     * @return null
      */
     static function renderModelAsHTML(stdClass $model = null) {
         $styles = array();
@@ -70,6 +72,8 @@ final class CBImageView {
     }
 
     /**
+     * @param stdClass? $spec
+     *
      * @return stdClass
      */
     static function specToModel(stdClass $spec = null) {
@@ -85,18 +89,15 @@ final class CBImageView {
         $model->URLForHTML = ColbyConvert::textToHTML($model->URL);
         $altTextSpec = isset($spec->alternativeTextViewModel) ? $spec->alternativeTextViewModel : null;
 
-        $model->alternativeTextViewModel = CBImageView::textViewSpecToModel($altTextSpec);
+        $textViewSpecToModel = function (stdClass $spec = null) {
+            $model = (object)[];
+            $model->text = isset($spec->text) ? (string)$spec->text : '';
+            $model->HTML = ColbyConvert::textToHTML($model->text);
 
-        return $model;
-    }
+            return $model;
+        }
 
-    /**
-     * @return stdClass
-     */
-    private static function textViewSpecToModel(stdClass $spec = null) {
-        $model = (object)[];
-        $model->text = isset($spec->text) ? (string)$spec->text : '';
-        $model->HTML = ColbyConvert::textToHTML($model->text);
+        $model->alternativeTextViewModel = $textViewSpecToModel($altTextSpec);
 
         return $model;
     }
