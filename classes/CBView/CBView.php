@@ -26,10 +26,18 @@ final class CBView {
     }
 
     /**
-     * @return void
+     * Always use this function to render a view instead of calling
+     * renderModelAsHTML() directly on the class. This function will also make
+     * sure that all of the view class's dependencies are included.
+     *
+     * @param stdClass? $model
+     *
+     * @return null
      */
-    public static function renderModelAsHTML(stdClass $model = null) {
+    static function renderModelAsHTML(stdClass $model = null) {
         if (isset($model->className) && $model->className != 'CBView') {
+            CBHTMLOutput::requireClassName($model->className);
+
             $function = "{$model->className}::renderModelAsHTML";
 
             if (is_callable($function)) {
@@ -43,7 +51,7 @@ final class CBView {
             $modelAsJSONAsHTML = '';
         }
 
-        echo "<!-- CBView default output{$modelAsJSONAsHTML} -->";
+        echo "<!-- CBView::renderModelAsHTML() default output{$modelAsJSONAsHTML} -->";
     }
 
     /**
