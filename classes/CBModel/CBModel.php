@@ -86,13 +86,25 @@ final class CBModel {
      *  cases. For instance, it allows code to fetch a model and not validate
      *  that the model exists (the model value may be `false` in this case)
      *  before checking to see if a value is set.
-     * @param string $propertyName
+     * @param string $keyPath
+     *      Examples: "height", "width", "image.height", "image.alternativeText.text"
      * @param mixed? $default
      * @param function? $transform
      *
      * @return mixed
      */
-    public static function value($model = null, $propertyName, $default = null, callable $transform = null) {
+    static function value($model = null, $keyPath, $default = null, callable $transform = null) {
+        $keys = explode('.', $keyPath);
+        $propertyName = array_pop($keys);
+
+        foreach($keys as $key) {
+            if (isset($model->{$key}) && is_object($model->{$key})) {
+                $model = $model->{$key};
+            } else {
+                return $default;
+            }
+        }
+
         if (isset($model->{$propertyName})) {
             if ($transform !== null) {
                 return call_user_func($transform, $model->{$propertyName});
