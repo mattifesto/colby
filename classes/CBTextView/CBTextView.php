@@ -6,7 +6,7 @@ final class CBTextView {
      * @return string
      */
     static function modelToSearchText(stdClass $model = null) {
-        return $model->text;
+        return CBModel::value($model, 'text', '', 'trim');
     }
 
     /**
