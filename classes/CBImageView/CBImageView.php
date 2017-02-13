@@ -95,7 +95,7 @@ final class CBImageView {
             $model->HTML = ColbyConvert::textToHTML($model->text);
 
             return $model;
-        }
+        };
 
         $model->alternativeTextViewModel = $textViewSpecToModel($altTextSpec);
 
