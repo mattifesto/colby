@@ -23,7 +23,7 @@ final class CBImageView {
      * @return string
      */
     static function modelToSearchText(stdClass $model = null) {
-        return isset($model->alternativeTextViewModel->text) ? $model->alternativeTextViewModel->text : '';
+        return CBModel::value($model, 'alternativeTextViewModel.text', '', 'trim');
     }
 
     /**
