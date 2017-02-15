@@ -9,6 +9,7 @@ final class CBMenu {
         return CBModelClassInfo::specToModel((object)[
             'pluralTitle' => 'Menus',
             'singularTitle' => 'Menu',
+            'userGroup' => 'Administrators',
         ]);
     }
 
