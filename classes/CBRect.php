@@ -3,6 +3,19 @@
 class CBRect {
 
     /**
+     * @param stdClass $rect1 (rect)
+     * @param stdClass $rect2 (rect)
+     *
+     * @return bool
+     */
+    static function areEqual(stdClass $rect1, stdClass $rect2) {
+        return $rect1->x == $rect2->x &&
+               $rect1->y == $rect2->y &&
+               $rect1->width == $rect2->width &&
+               $rect1->height = $rect2->height;
+    }
+
+    /**
      * @return stdClass (rect)
      */
     public static function copyRect($rect) {
@@ -11,19 +24,6 @@ class CBRect {
         $r->y       = $rect->y;
         $r->width   = $rect->width;
         $r->height  = $rect->height;
-
-        return $r;
-    }
-
-    /**
-     * @return stdClass (rect)
-     */
-    public static function withSize($width, $height) {
-        $r          = new stdClass();
-        $r->x       = 0;
-        $r->y       = 0;
-        $r->width   = $width;
-        $r->height  = $height;
 
         return $r;
     }
@@ -86,6 +86,19 @@ class CBRect {
             $r->height  = $r->height * ($width / $r->width);
             $r->width   = $width;
         }
+
+        return $r;
+    }
+
+    /**
+     * @return stdClass (rect)
+     */
+    public static function withSize($width, $height) {
+        $r          = new stdClass();
+        $r->x       = 0;
+        $r->y       = 0;
+        $r->width   = $width;
+        $r->height  = $height;
 
         return $r;
     }
