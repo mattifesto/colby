@@ -5,10 +5,69 @@
 
 var CBAdminPageForTests = {
 
+    testImageID: "3dd8e721048bbe8ea5f0c043fab73277a0b0044c",
     fileInputElement: undefined,
+    promise: undefined,
 
-    testPromise: undefined,
+    /**
+     * @param string URI
+     *
+     * @return Promise
+     */
+    fetchURIDoesExist: function (URI) {
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.onloadend = handler;
+            xhr.open("HEAD", URI);
+            xhr.send();
 
+            function handler() {
+                if (xhr.status === 200) {
+                    resolve(true);
+                } else if (xhr.status === 404) {
+                    resolve(false); // The image has been deleted, as expected.
+                } else {
+                    reject(new Error("verifyURIExistence() request returned an unexpected status: " + xhr.status));
+                }
+            }
+        });
+    },
+
+    /**
+     * @param mixed value
+     *      This function is meant to be a parameter to Promise.then().
+     *
+     * @return Promise
+     */
+    runTestForClassCBImagesFunctionDeleteByID: function (value) {
+        CBAdminPageForTests.appendStatusCallback("Ajax: CBImages - deleteByID");
+
+        var URL = "/api/?class=CBImages&function=deleteByID";
+        var data = new FormData();
+
+        data.append("ID", CBAdminPageForTests.testImageID);
+
+        var imageURI = "/" + Colby.dataStoreFlexpath(CBAdminPageForTests.testImageID, "original.jpeg");
+
+        return Colby.fetchAjaxResponse(URL, data)
+                    .then(report1)
+                    .then(report2);
+
+        function report1(response) {
+            CBAdminPageForTests.appendStatusCallback(response.message, { className : "success" });
+            CBAdminPageForTests.appendStatusCallback("Ajax: CBImages - check for original image file");
+
+            return CBAdminPageForTests.fetchURIDoesExist(imageURI);
+        }
+
+        function report2(doesExist) {
+            if (doesExist) {
+                throw new Error("The image file is available.");
+            } else {
+                CBAdminPageForTests.appendStatusCallback("The image file is not available.", { className : "success" });
+            }
+        }
+    },
 
     /**
      * @param mixed value
@@ -24,20 +83,49 @@ var CBAdminPageForTests = {
 
         data.append("image", CBAdminPageForTests.fileInputElement.files[0]);
 
-        return Colby.fetchAjaxResponse(URL, data).then(resolved);
+        return Colby.fetchAjaxResponse(URL, data)
+                    .then(report1)
+                    .then(report2)
+                    .then(report3);
 
-        function resolved(response) {
+        function report1(response) {
             var image = response.image;
 
             if (image.extension === "jpeg" &&
                 image.filename === "original" &&
                 image.height === 900 &&
-                image.ID === "3dd8e721048bbe8ea5f0c043fab73277a0b0044c" &&
+                image.ID === CBAdminPageForTests.testImageID &&
                 image.width === 1600)
             {
                 CBAdminPageForTests.appendStatusCallback(response.message, { className : "success" });
+                CBAdminPageForTests.appendStatusCallback("Ajax: CBImages - check for original image file");
+
+                var imageURI = "/" + Colby.dataStoreFlexpath(CBAdminPageForTests.testImageID, "original.jpeg");
+
+                return CBAdminPageForTests.fetchURIDoesExist(imageURI);
             } else {
-                throw new Error("Something Bad");
+                throw new Error("The image file did not upload correctly.");
+            }
+        }
+
+        function report2(doesExist) {
+            if (doesExist) {
+                CBAdminPageForTests.appendStatusCallback("The image file is available.", { className : "success" });
+                CBAdminPageForTests.appendStatusCallback("Ajax: CBImages - check for resized image file");
+
+                var imageURI = "/" + Colby.dataStoreFlexpath(CBAdminPageForTests.testImageID, "rw640.jpeg");
+
+                return CBAdminPageForTests.fetchURIDoesExist(imageURI);
+            } else {
+                throw new Error("The image file is not available.");
+            }
+        }
+
+        function report3(doesExist) {
+            if (doesExist) {
+                CBAdminPageForTests.appendStatusCallback("The image file is available.", { className : "success" });
+            } else {
+                throw new Error("The image file is not available.");
             }
         }
     },
@@ -163,10 +251,13 @@ var CBTestPage = {
 
         CBAdminPageForTests.promise = Promise.resolve()
             .then(CBTestPage.runJavaScriptTests)
+            .then(CBAdminPageForTests.runTestForClassCBImagesFunctionDeleteByID)
             .then(CBAdminPageForTests.runTestForClassCBImagesFunctionUpload)
             .then(resolved, rejected);
 
         function resolved() {
+            CBAdminPageForTests.promise = undefined;
+
             var xhr = new XMLHttpRequest();
             xhr.onload = CBTestPage.handleListOfTestsReceived.bind(undefined, {
                 buttonElement : args.buttonElement,
