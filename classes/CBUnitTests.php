@@ -16,6 +16,7 @@ class CBUnitTests {
             ['CBDB',        'SQLToArray'],
             ['CBDB',        'SQLToAssociativeArray'],
             ['CBDB',        'SQLToValue'],
+            ['CBImages',    'resize'],
             ['CBModelCache'],
             ['CBModels',    'fetchModelByID'],
             ['CBModels',    'fetchModelsByID'],
