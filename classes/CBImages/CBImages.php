@@ -12,11 +12,32 @@ class CBImages {
      *
      * @return null
      */
-    public static function deleteByID($ID) {
+    static function deleteByID($ID) {
         $IDAsSQL = CBHex160::toSQL($ID);
         $SQL = "DELETE FROM `CBImages` WHERE `ID` = {$IDAsSQL}";
         Colby::query($SQL);
         CBDataStore::deleteByID($ID);
+    }
+
+    /**
+     * @return null
+     */
+    static function deleteByIDForAjax() {
+        $response = new CBAjaxResponse();
+        $ID = $_POST['ID'];
+
+        CBImages::deleteByID($ID);
+
+        $response->message = "The image and the data storage for image ID {$ID} were deleted.";
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function deleteByIDForAjaxPermissions() {
+        return (object)['group' => 'Developers'];
     }
 
     /**
@@ -154,9 +175,15 @@ class CBImages {
 
         ini_set('memory_limit', '256M');
 
+        $size = getimagesize($sourceFilepath);
+
+        if (CBProjection::isNoOpForSize($projection, $size[0], $size[1])) {
+            copy($sourceFilepath, $destinationFilepath);
+            return;
+        }
+
         $src = $projection->source;
         $dst = $projection->destination;
-        $size = getimagesize($sourceFilepath);
         $output = imagecreatetruecolor($dst->width, $dst->height);
 
         switch ($size[2]) {
@@ -406,7 +433,7 @@ EOT;
             'width' => $image->width,
         ];
         $response->sizes = $sizes;
-        $response->message = "Image uploaded successfully";
+        $response->message = "The image with an ID of {$response->image->ID} uploaded successfully";
         $response->wasSuccessful = true;
         $response->send();
     }
