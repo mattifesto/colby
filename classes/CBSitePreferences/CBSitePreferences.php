@@ -15,8 +15,10 @@ final class CBSitePreferences {
     const defaultResizeOperations = [
         'rl300',        /* image admin page thumbnails */
         'rs200clc200',  /* tiny square thumbnails */
-        'rw640',        /* small */
-        'rw1280',       /* medium */
+        'rw640',        /* small 320 x ? */
+        'rw1280',       /* medium 640 x ? */
+        'rw1600rh1200', /* fit 800 x 600 */
+        'rw1920rh1440', /* fit 960 x 720 */
     ];
 
     private static $model = false;
