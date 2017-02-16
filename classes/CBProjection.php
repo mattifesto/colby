@@ -144,7 +144,7 @@ class CBProjection {
      */
     static function isNoOpForSize($projection, $width, $height) {
         return CBRect::areEqual($projection->source, $projection->destination) &&
-               CBRect::areEqual($projection->source, CBRect::withSize($width, $height))
+               CBRect::areEqual($projection->source, CBRect::withSize($width, $height));
     }
 
     /**
