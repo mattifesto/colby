@@ -1,7 +1,7 @@
 <?php
 
 final class CBGit {
-
+    
     /**
      * @return {
      *  string output
@@ -37,7 +37,7 @@ final class CBGit {
         chdir(CBSiteDirectory);
 
         try {
-            exec('git submodule update 2>&1', $output, $exitcode);
+            exec('git submodule update --init --recursive 2>&1', $output, $exitcode);
         } finally {
             chdir($pwd);
         }
