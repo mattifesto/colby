@@ -19,18 +19,25 @@ final class CBArtworkView {
         echo '<figure class="CBArtworkView">';
 
         $image = $model->image;
-        $basename = "{$image->filename}.{$image->extension}";
+        $basename = "rw1600.{$image->extension}";
         $imageURL = CBDataStore::flexpath($image->ID, $basename, CBSiteURL);
         $alternativeText = CBModel::value($model, 'alternativeText', '');
         $alternativeTextAsHTML = cbhtml($alternativeText);
+        $captionAsHTML = CBModel::value($model, 'captionAsHTML', '', 'trim');
 
         CBArtworkElement::render([
             'alternativeText' => $alternativeText,
             'height' => $image->height,
-            'maxWidth' => empty($model->maxWidth) ? $image->width / 2 : $image->maxWidth,
+            'maxWidth' => 800,
             'width' => $image->width,
             'URL' => $imageURL,
         ]);
+
+        if (!empty($captionAsHTML)) { ?>
+            <div class="caption">
+                <?= $captionAsHTML ?>
+            </div>
+        <?php }
 
         ?>
 
@@ -70,18 +77,12 @@ final class CBArtworkView {
         $model = (object)[
             'className' => __CLASS__,
             'alternativeText' => CBModel::value($spec, 'alternativeText', '', 'trim'),
+            'captionAsMarkdown' => CBModel::value($spec, 'captionAsMarkdown', ''),
+            'image' => CBModel::value($spec, 'image', null, 'CBImage::specToModel'),
         ];
 
-        if (!empty($spec->image)) {
-            $image = $spec->image;
-            $model->image = (object)[
-                'extension' => $image->extension,
-                'filename' => $image->filename,
-                'height' => $image->height,
-                'ID' => $image->ID,
-                'width' => $image->width,
-            ];
-        }
+        $parsedown = new Parsedown();
+        $model->captionAsHTML = $parsedown->text($model->captionAsMarkdown);
 
         return $model;
     }

@@ -5,8 +5,16 @@
     padding: 20px;
 }
 
+.CBArtworkView .caption {
+    border-bottom: 1px solid var(--CBFaintLineColor);
+    font-size: 80%;
+    padding: 5px 0;
+    max-width: 560px;
+}
+
 .CBArtworkView .pin {
-    margin-top: 10px;
+    font-size: 80%;
+    margin-top: 5px;
 }
 
 /**

@@ -49,6 +49,15 @@ var CBArtworkViewEditor = {
         }).element);
         section.appendChild(item);
 
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Caption",
+            propertyName : "captionAsMarkdown",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
         element.appendChild(section);
 
         if (args.spec.image) {
