@@ -262,13 +262,6 @@ final class CBViewPage {
             CBHTMLOutput::$classNameForSettings = $model->classNameForSettings;
         }
 
-        $dependencyIDs = array_reduce($model->sections, function($carry, $viewModel) {
-            $carry = array_merge($carry, CBView::modelToModelDependencies($viewModel));
-            return $carry;
-        }, []);
-
-        CBModelCache::cacheModelsByID($dependencyIDs);
-
         $renderContentCallback = function () use ($model) {
             array_walk($model->sections, 'CBView::renderModelAsHTML');
         };
