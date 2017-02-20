@@ -10,7 +10,7 @@ var ColbySiteUpdater = {
      * @return Element
      */
     createElement : function() {
-        var section, item;
+        var section, item, action;
         var element = document.createElement("div");
         element.className = "ColbySiteUpdater";
 
@@ -18,9 +18,22 @@ var ColbySiteUpdater = {
 
         section = CBUI.createSection();
 
-        /* action */
+        /* backup, pull, and update */
         item = CBUI.createSectionItem();
-        var action = CBUIActionLink.create({
+        action = CBUIActionLink.create({
+            callback : ColbySiteUpdater.backupPullAndUpdate,
+            labelText : "Backup, Pull, and Update Site",
+        });
+        ColbySiteUpdater.context = {
+            disableActionLinkCallback : action.disableCallback,
+            enableActionLinkCallback : action.enableCallback,
+        };
+        item.appendChild(action.element);
+        section.appendChild(item);
+
+        /* update only */
+        item = CBUI.createSectionItem();
+        action = CBUIActionLink.create({
             callback : ColbySiteUpdater.update,
             labelText : "Update Site",
         });
@@ -96,7 +109,7 @@ var ColbySiteUpdater = {
     /**
      * @return undefined
      */
-    update : function () {
+    backupPullAndUpdateupdate : function () {
         ColbySiteUpdater.context.disableActionLinkCallback();
 
         // promiseToUpdateSite is call twice to ensure new submodules are
@@ -109,6 +122,22 @@ var ColbySiteUpdater = {
             .then(ColbySiteUpdater.promiseToUpdateSite)
             .then(CSULog.appendAjaxResponse)
             .then(ColbySiteUpdater.promiseToUpdateSite)
+            .then(ColbySiteUpdater.reportSuccess)
+            .catch(CSULog.appendError)
+            .then(ColbySiteUpdater.finish);
+    },
+
+    /**
+     * @return undefined
+     */
+    update : function () {
+        ColbySiteUpdater.context.disableActionLinkCallback();
+
+        // promiseToUpdateSite is call twice to ensure new submodules are
+        // properly initialized
+
+        ColbySiteUpdater.promiseToUpdateSite()
+            .then(CSULog.appendAjaxResponse)
             .then(ColbySiteUpdater.reportSuccess)
             .catch(CSULog.appendError)
             .then(ColbySiteUpdater.finish);
