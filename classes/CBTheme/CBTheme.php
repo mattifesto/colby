@@ -146,6 +146,8 @@ final class CBTheme {
     }
 
     /**
+     * @deprecated use CBView::localCSSTemplateToLocalCSS()
+     *
      * @param string $template
      * @param hex160 $ID
      *

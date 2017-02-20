@@ -3,6 +3,43 @@
 final class CBView {
 
     /**
+     * @param string $keyword
+     *
+     *      The keyword used in the template to refer to the local element.
+     *      Usually it's "view". The keyword can be escaped in the template by
+     *      prefixing it with a backslash: "\view". The keyword can be prefixed
+     *      by a dot to enabled sometimes required scenarios like:
+     *
+     *      a.view { ... }
+     *
+     * @param string $localCSSTemplate
+     * @param string $selector
+     *
+     *      Examples: ".MyClass", "#MyID", ".ID_80d0c20a7d38fb6995f663e8e253b3d77f17fe2c"
+     *
+     * @return string
+     */
+    static function localCSSTemplateToLocalCSS($localCSSTemplate, $keyword, $selector) {
+        $escapedKeywordPlaceholder = CBHex160::random();
+        $localCSS = $localCSSTemplate;
+
+        // Replace escaped keywords with a temporary placeholder.
+        $localCSS = preg_replace("/\\\\{$keyword}/", $escapedKeywordPlaceholder, $localCSS);
+
+        // Replace the keyword, optionally prefixed with a dot, with the selector.
+        $localCSS = preg_replace("/\\.?{$keyword}/", $selector, $localCSS);
+
+        // Replace the temporary placeholder with the unescaped keyword.
+        $localCSS = preg_replace("/{$escapedKeywordPlaceholder}/", $keyword, $localCSS);
+
+        if (preg_match('/<\\/style *>/', $localCSS, $matches)) {
+            throw new RuntimeException("The \$localCSSTemplate argument contains the string \"{$matches[0]}\" which is not allowed for security reasons.");
+        }
+
+        return $localCSS;
+    }
+
+    /**
      * @return string
      */
     static function modelToSearchText(stdClass $model = null) {
