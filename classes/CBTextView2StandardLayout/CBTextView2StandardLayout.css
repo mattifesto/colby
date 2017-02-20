@@ -1,0 +1,80 @@
+.CBTextView2StandardLayout {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.CBTextView2StandardLayout.center {
+    text-align: center;
+}
+
+.CBTextView2StandardLayout.dark {
+    color: var(--CBTextColorDark);
+}
+
+.CBTextView2StandardLayout.justify {
+    text-align: justify;
+}
+
+.CBTextView2StandardLayout.light {
+    color: var(--CBTextColorLight);
+}
+
+.CBTextView2StandardLayout.right {
+    text-align: right;
+}
+
+.CBTextView2StandardLayout > div {
+    width: 680px;
+}
+
+.CBTextView2StandardLayout {
+    line-height: 1.5;
+}
+
+.CBTextView2StandardLayout h1 {
+    font-size: 1.5em;
+}
+
+.CBTextView2StandardLayout h1 + * {
+    margin-top: 0.5em;
+}
+
+.CBTextView2StandardLayout h2 {
+    font-size: 1.25em;
+}
+
+.CBTextView2StandardLayout h3 {
+    font-size: 1em;
+}
+
+.CBTextView2StandardLayout blockquote,
+.CBTextView2StandardLayout dd {
+    padding: 0 40px;
+}
+
+.CBTextView2StandardLayout dd + dt {
+    margin-top: 0.5em;
+}
+
+.CBTextView2StandardLayout cite {
+    font-style: italic;
+}
+
+.CBTextView2StandardLayout b cite,
+.CBTextView2StandardLayout b i,
+.CBTextView2StandardLayout cite b,
+.CBTextView2StandardLayout cite i,
+.CBTextView2StandardLayout i b,
+.CBTextView2StandardLayout i cite {
+    font-style: inherit;
+    font-weight: inherit;
+}
+
+.CBTextView2StandardLayout blockquote + *,
+.CBTextView2StandardLayout dl + *,
+.CBTextView2StandardLayout ol + *,
+.CBTextView2StandardLayout p + *,
+.CBTextView2StandardLayout ul + * {
+    margin-top: 1em;
+}
