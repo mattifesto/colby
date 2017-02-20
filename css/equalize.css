@@ -20,6 +20,10 @@ html {
     --CBFaintLineColor: hsla(0, 0%, 0%, 0.2);
     --CBFaintLineColorDark: hsla(0, 0%, 0%, 0.2);
     --CBFaintLineColorLight: hsla(0, 0%, 100%, 0.2);
+
+    --CBTextColor: hsla(0, 0%, 0%, 0.9);
+    --CBTextColorDark: hsla(0, 0%, 0%, 0.9);
+    --CBTextColorLight: hsla(0, 0%, 100%, 0.9);
 }
 
 body {
