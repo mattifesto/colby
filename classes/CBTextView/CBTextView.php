@@ -10,7 +10,7 @@ final class CBTextView {
     }
 
     /**
-     * @return void
+     * @return null
      */
     static function renderModelAsHTML(stdClass $model = null) {
         echo "<span class=\"CBTextView\">{$model->HTML}</span>";
