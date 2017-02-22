@@ -18,18 +18,22 @@ var ColbySiteUpdater = {
 
         section = CBUI.createSection();
 
+        ColbySiteUpdater.context = {
+            disableCallbacks: [],
+            enableCallbacks: [],
+        };
+
         /* backup, pull, and update */
         item = CBUI.createSectionItem();
         action = CBUIActionLink.create({
             callback : ColbySiteUpdater.backupPullAndUpdate,
             labelText : "Backup, Pull, and Update Site",
         });
-        ColbySiteUpdater.context = {
-            disableActionLinkCallback : action.disableCallback,
-            enableActionLinkCallback : action.enableCallback,
-        };
         item.appendChild(action.element);
         section.appendChild(item);
+
+        ColbySiteUpdater.context.disableCallbacks.push(action.disableCallback);
+        ColbySiteUpdater.context.enableCallbacks.push(action.enableCallback);
 
         /* update only */
         item = CBUI.createSectionItem();
@@ -37,12 +41,11 @@ var ColbySiteUpdater = {
             callback : ColbySiteUpdater.update,
             labelText : "Update Site",
         });
-        ColbySiteUpdater.context = {
-            disableActionLinkCallback : action.disableCallback,
-            enableActionLinkCallback : action.enableCallback,
-        };
         item.appendChild(action.element);
         section.appendChild(item);
+
+        ColbySiteUpdater.context.disableCallbacks.push(action.disableCallback);
+        ColbySiteUpdater.context.enableCallbacks.push(action.enableCallback);
 
         element.appendChild(section);
         element.appendChild(CBUI.createHalfSpace());
@@ -72,7 +75,11 @@ var ColbySiteUpdater = {
      * @return undefined
      */
     finish : function () {
-        setTimeout(ColbySiteUpdater.context.enableActionLinkCallback, 2000);
+        setTimeout(function () {
+            ColbySiteUpdater.context.enableCallbacks.forEach(function (callback) {
+                callback.call();
+            });
+        }, 2000);
     },
 
     /**
@@ -109,8 +116,10 @@ var ColbySiteUpdater = {
     /**
      * @return undefined
      */
-    backupPullAndUpdateupdate : function () {
-        ColbySiteUpdater.context.disableActionLinkCallback();
+    backupPullAndUpdate : function () {
+        ColbySiteUpdater.context.disableCallbacks.forEach(function (callback) {
+            callback.call();
+        });
 
         // promiseToUpdateSite is call twice to ensure new submodules are
         // properly initialized
@@ -131,7 +140,9 @@ var ColbySiteUpdater = {
      * @return undefined
      */
     update : function () {
-        ColbySiteUpdater.context.disableActionLinkCallback();
+        ColbySiteUpdater.context.disableCallbacks.forEach(function (callback) {
+            callback.call();
+        });
 
         // promiseToUpdateSite is call twice to ensure new submodules are
         // properly initialized
