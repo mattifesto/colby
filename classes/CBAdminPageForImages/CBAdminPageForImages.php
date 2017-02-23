@@ -60,10 +60,7 @@ EOT;
      * @return [string]
      */
     public static function requiredCSSURLs() {
-        return [
-            CBSystemURL . '/javascript/CBAdminImageThumbnail.css',
-            Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__),
-        ];
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**

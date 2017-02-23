@@ -1,7 +1,14 @@
 .CBAdminPageForImages {
+    align-items: flex-start;
+    background-color: hsl(0, 0%, 30%);
     display: flex;
+    flex: 1 1 auto;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+.CBAdminPageForImages + * {
+    display: none;
 }
 
 .CBAdminPageForImages .thumbnail {
