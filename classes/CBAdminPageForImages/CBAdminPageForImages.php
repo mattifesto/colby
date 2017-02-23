@@ -41,7 +41,7 @@ EOT;
         $images = CBDB::SQLToObjects($SQL);
 
         foreach ($images as $image) {
-            $image->thumbnailURL = CBDataStore::flexpath($image->ID, "rl300.{$image->extension}", CBSiteURL);
+            $image->thumbnailURL = CBDataStore::flexpath($image->ID, "rw320.{$image->extension}", CBSiteURL);
         }
 
         $response->images = $images;
@@ -70,9 +70,6 @@ EOT;
      * @return [string]
      */
     public static function requiredJavaScriptURLs() {
-        return [
-            CBSystemURL . '/javascript/CBAdminImageThumbnailFactory.js',
-            Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__),
-        ];
+        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 }

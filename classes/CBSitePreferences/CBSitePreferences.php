@@ -13,9 +13,10 @@ final class CBSitePreferences {
 
     const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
     const defaultResizeOperations = [
-        'rl300',        /* image admin page thumbnails */
-        'rs200clc200',  /* tiny square thumbnails */
+        'rs200clc200',  /*  100 x 100 */
+        'rw320',        /*  160 x ? */
         'rw640',        /*  320 x ? */
+        'rw960',        /*  480 x ? */
         'rw1280',       /*  640 x ? */
         'rw1600',       /*  800 x ? */
         'rw1920',       /*  960 x ? */

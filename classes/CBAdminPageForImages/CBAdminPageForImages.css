@@ -3,3 +3,39 @@
     flex-wrap: wrap;
     justify-content: center;
 }
+
+.CBAdminPageForImages .thumbnail {
+    box-sizing: border-box;
+    height: 160px;
+    padding: 5px;
+    width: 160px;
+}
+
+.CBAdminPageForImages .thumbnail > img {
+    background-color: hsl(0, 0%, 20%);
+    display: block;
+    height: 100%;
+    object-fit: contain;
+    width: 100%;
+}
+
+@media (max-width: 640px) {
+    .CBAdminPageForImages .thumbnail {
+        height: 25vw;
+        width: 25vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .CBAdminPageForImages .thumbnail {
+        height: 120px;
+        width: 120px;
+    }
+}
+
+@media (max-width: 360px) {
+    .CBAdminPageForImages .thumbnail {
+        height: 33vw;
+        width: 33vw;
+    }
+}

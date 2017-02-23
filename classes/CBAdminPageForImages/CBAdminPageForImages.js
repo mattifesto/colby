@@ -1,4 +1,6 @@
-"use strict";
+"use strict"; /* jshint strict: global */
+/* global
+    Colby */
 
 var CBAdminPageForImages = {
 
@@ -12,6 +14,22 @@ var CBAdminPageForImages = {
         CBAdminPageForImages.fetchImages({
             element : element
         });
+
+        return element;
+    },
+
+    /**
+     * @param string args.thumbnailURL
+     *
+     * @return Element
+     */
+    createThumbnailElement: function(args) {
+        var element = document.createElement("div");
+        element.className = "thumbnail";
+        var img = document.createElement("img");
+        img.src = args.thumbnailURL;
+
+        element.appendChild(img);
 
         return element;
     },
@@ -43,7 +61,7 @@ var CBAdminPageForImages = {
      * @return undefined
      */
     fetchImagesDidError : function(args) {
-        Colby.alert('The list of images failed to load.')
+        Colby.alert('The list of images failed to load.');
     },
 
     /**
@@ -59,7 +77,7 @@ var CBAdminPageForImages = {
             args.element.textContent = null;
 
             for (var i = 0; i < response.images.length; i++) {
-                args.element.appendChild(CBAdminImageThumbnailFactory.createElement(response.images[i]));
+                args.element.appendChild(CBAdminPageForImages.createThumbnailElement(response.images[i]));
             }
         } else {
             Colby.displayResponse(response);
