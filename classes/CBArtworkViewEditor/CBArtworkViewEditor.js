@@ -2,6 +2,7 @@
 /* globals
     CBUI,
     CBUIImageChooser,
+    CBUISelector,
     CBUIStringEditor,
     CBViewPageEditor,
     Colby */
@@ -53,6 +54,28 @@ var CBArtworkViewEditor = {
         item.appendChild(CBUIStringEditor.createEditor({
             labelText : "Caption",
             propertyName : "captionAsMarkdown",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUISelector.create({
+            labelText : "Maximum Display Width",
+            navigateCallback: args.navigateCallback,
+            navigateToItemCallback: args.navigateToItemCallback,
+            options: [
+                {title: "160 CSS pixels", value: "rw320"},
+                {title: "320 CSS pixels", value: "rw640"},
+                {title: "480 CSS pixels", value: "rw960"},
+                {title: "640 CSS pixels", value: "rw1280"},
+                {title: "800 CSS pixels (default)"},
+                {title: "960 CSS pixels", value: "rw1920"},
+                {title: "1280 CSS pixels", value: "rw2560"},
+                {title: "Image Width", description: "The maximum width in CSS pixels is half the count of horizontal pixels of the uploaded image.", value: "original"},
+                {title: "Page Width", description: "The uploaded image will always use the full width of the page regardless of its size.", value: "page"},
+            ],
+            propertyName : "size",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         }).element);
