@@ -25,7 +25,7 @@
 }
 
 .CBTextView2StandardLayout > div {
-    width: 680px;
+    max-width: 680px;
 }
 
 .CBTextView2StandardLayout {
