@@ -6,7 +6,7 @@ final class CBAdminPageForModelInspector {
      * @return [string]
      */
     static function adminPageMenuNamePath() {
-        return ['test', 'test'];
+        return ['models', 'inspector'];
     }
 
     /**
