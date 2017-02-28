@@ -10,7 +10,7 @@ CBHTMLOutput::setDescriptionHTML('You are not authorized to view this page.');
 
 ?>
 
-<main>
+<main style="flex: 1 0 auto">
     <style>
 
         main {
@@ -51,15 +51,7 @@ CBHTMLOutput::setDescriptionHTML('You are not authorized to view this page.');
 
         <?php
     } else {
-        ?>
-
-        <p>You must be logged in to view this page.
-
-        <div>
-            <a class="CBLogInLink" href="<?php echo ColbyUser::loginURL(); ?>">log in</a>
-        </div>
-
-        <?php
+        ColbyUser::renderSignInWithFacebookButton();
     }
 
     ?>
