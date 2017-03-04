@@ -10,7 +10,7 @@ CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Website Status');
 CBHTMLOutput::setDescriptionHTML('The status of the website');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBUI.js');
+CBHTMLOutput::requireClassName('CBUI');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 
 $spec                           = new stdClass();

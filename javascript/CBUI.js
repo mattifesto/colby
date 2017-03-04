@@ -137,7 +137,7 @@ var CBUI = {
      *
      * @param string? args.text
      *
-     *      The title. This is named "text" because it was originally the only 
+     *      The title. This is named "text" because it was originally the only
      *      supported property.
      *
      * @return Element
@@ -220,11 +220,3 @@ var CBUI = {
         element.textContent = text;
     },
 };
-
-(function() {
-    var link    = document.createElement("link");
-    link.rel    = "stylesheet";
-    link.href   = "/colby/javascript/CBUI.css";
-
-    document.head.appendChild(link);
-})();

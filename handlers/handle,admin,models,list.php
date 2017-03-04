@@ -30,7 +30,7 @@ CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML("{$titleAsHTML}");
 CBHTMLOutput::setDescriptionHTML("A list of {$titleAsHTML}");
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/javascript/CBUI.js');
+CBHTMLOutput::requireClassName('CBUI');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,models,list.css');
 
 $spec = (object)['selectedMenuItemName' => 'models'];
