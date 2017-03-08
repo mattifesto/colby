@@ -194,7 +194,7 @@ EOT
 $spec->sections[] = (object)[
     'className' => 'CBTextView2',
     'CSSClassNames' => 'light',
-    'localCSSTemplate' => 'view {background-color: hsl(0, 0%, 20%)}',
+    'localCSSTemplate' => 'view {background-color: hsl(30, 30%, 20%)}',
     'contentAsCommonMark' => <<<EOT
 ## "light"
 
@@ -213,7 +213,7 @@ EOT
 $spec->sections[] = (object)[
     'className' => 'CBTextView2',
     'CSSClassNames' => 'dark',
-    'localCSSTemplate' => 'view {background-color: hsl(0, 0%, 80%)}',
+    'localCSSTemplate' => 'view {background-color: hsl(30, 30%, 80%)}',
     'contentAsCommonMark' => <<<EOT
 ## "dark"
 
@@ -234,7 +234,7 @@ $spec->sections[] = (object)[
 
 $spec->sections[] = (object)[
     'className' => 'CBTextView2',
-    'CSSClassNames' => 'CBTextView2StandardLayout center',
+    'CSSClassNames' => 'center',
     'contentAsCommonMark' => <<<EOT
 [View the Mattifesto Home Page (inherited color) >](https://mattifesto.com/)
 EOT
@@ -242,9 +242,77 @@ EOT
 
 $spec->sections[] = (object)[
     'className' => 'CBTextView2',
-    'CSSClassNames' => 'CBTextView2StandardLayout center',
+    'CSSClassNames' => 'center',
     'localCSSTemplate' => 'view a {color: orange}',
     'contentAsCommonMark' => <<<EOT
 [View the Mattifesto Home Page (local CSS color, orange) >](https://mattifesto.com/)
 EOT
 ];
+
+$spec->sections[] = (object)[
+    'className' => 'CBTextView2',
+    'contentAsCommonMark' => '# Side by Side',
+];
+
+$container = (object)[
+    'className' => 'CBContainerView',
+    'stylesTemplate' => <<<EOT
+view {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 100px;
+}
+
+view > * {
+    box-sizing: border-box;
+    flex: 1 1 320px;
+    max-width: 480px;
+}
+EOT
+];
+
+$container->subviews[] = (object)[
+    'className' => 'CBTextView2',
+    'CSSClassNames' => 'dark',
+    'localCSSTemplate' => <<<EOT
+view {
+    background-color: hsl(30, 30%, 80%);
+}
+
+view .special {
+    color: blue;
+}
+EOT
+    ,
+    'contentAsCommonMark' => <<<EOT
+Small text.
+
+Side <span class="special">by</span> side!
+EOT
+];
+
+$container->subviews[] = (object)[
+    'className' => 'CBTextView2',
+    'CSSClassNames' => 'light',
+    'localCSSTemplate' => <<<EOT
+view {
+    background-color: hsl(30, 30%, 20%);
+}
+
+view .special {
+    color: red;
+}
+EOT
+    ,
+    'contentAsCommonMark' => <<<EOT
+Large text.
+
+Side <span class="special">by</span> side is accomplished by using
+a CBContainerView to contain two text views and then setting up the styles
+template with appropriate styles. Look at this page as an example and ask for
+help because some of the technology is complex.
+EOT
+];
+
+$spec->sections[] = $container;
