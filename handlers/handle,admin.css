@@ -34,12 +34,18 @@ section.widget > div {
 
 
 section.widget .version-numbers {
+    display: flex;
+    justify-content: center;
+}
+
+section.widget .version-numbers > * {
+    flex: 0 1 160px;
+    padding: 5px;
     text-align: center;
 }
 
-section.widget .version-number {
-    display: inline-block;
-    padding: 5px;
+section.widget .version-numbers > * + * {
+    border-left: 1px solid #dddddd;
 }
 
 section.widget .version-number h1 {
@@ -53,10 +59,6 @@ section.widget .version-number .number {
     margin-top: -10px;
     font-size: 40px;
     font-weight: 700;
-}
-
-section.widget .version-number + .version-number {
-    border-left: 1px solid #dddddd;
 }
 
 /**
