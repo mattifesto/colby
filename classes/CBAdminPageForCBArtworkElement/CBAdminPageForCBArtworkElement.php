@@ -23,7 +23,7 @@ final class CBAdminPageForCBArtworkElement {
         CBHTMLOutput::setTitleHTML('CBArtworkElement');
         CBHTMLOutput::setDescriptionHTML('Description and examples of CBArtworkElement functionality.');
 
-        $URL = CBDataStore::flexpath(CBAdminPageForTests::imageID, 'rl300.jpeg', CBSiteURL);
+        $URL = CBDataStore::flexpath(CBAdminPageForTests::imageID, 'rw320.jpeg', CBSiteURL);
 
         ?>
 
@@ -53,19 +53,12 @@ final class CBAdminPageForCBArtworkElement {
         </style>
         <div class="content">
             <div>
-                Below is the text image used on this page. It's the rl300 size of
+                Below is the text image used on this page. It's the rw320 size of
                 the system test image. The original image is 1600x900, but this
-                image is 300x168.
+                image is 320x180.
             </div>
-            <div style="margin-bottom: 50px;">
+            <div style="margin-bottom: 50px; text-align: center">
                 <img src="<?= $URL ?>">
-            </div>
-            <div>
-                The original image has has an aspect ratio of 16 x 9 but the
-                resized image has an aspect ratio of 16 x 8.96 due to the resize
-                math. You will notice a small empty space at the bottom of the
-                CBArtworkElement elements because of this. For this page empty
-                space in the CBArtworkElement is red.
             </div>
             <div>
                 Below is an artwork element with an aspect ratio of 16 x 9 and
@@ -99,7 +92,8 @@ final class CBAdminPageForCBArtworkElement {
                 Below is an artwork element with a more narrow aspect ratio of
                 15 x 9 and no maxWidth specified. The image has extra space at
                 the bottom because it reserved space for the apect ratio and the
-                image was not able to fill it.
+                image was not able to fill it. Empty space for this document
+                displays as red.
             </div>
             <?php
 
