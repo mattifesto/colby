@@ -617,6 +617,7 @@ EOT;
                     cursor: default;
                     display: inline-block;
                     padding: 12px 80px;
+                    text-decoration: none;
                 }
 
                 .CBSignInWithFacebook:hover {
