@@ -39,13 +39,10 @@ section.widget .version-numbers {
 }
 
 section.widget .version-numbers > * {
-    flex: 0 1 160px;
+    box-sizing: border-box;
+    flex: 1 1 160px;
     padding: 5px;
     text-align: center;
-}
-
-section.widget .version-numbers > * + * {
-    border-left: 1px solid #dddddd;
 }
 
 section.widget .version-number h1 {
