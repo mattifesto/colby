@@ -174,10 +174,15 @@ var CBArtworkViewEditor = {
 
     /**
      * @param string? spec.alternativeText
+     * @param string? spec.captionAsMarkdown
      *
      * @return string|undefined
      */
     specToDescription : function (spec) {
-        return spec.alternativeText;
+        if (typeof spec.alternativeText === "string" && spec.alternativeText.trim().length > 0) {
+            return spec.alternativeText;
+        } else {
+            return spec.captionAsMarkdown;
+        }
     },
 };
