@@ -6,7 +6,7 @@ final class CBAdminPageForCBArtworkElement {
      * @return [string]
      */
     static function adminPageMenuNamePath() {
-        return ['develop', 'CBArtworkElement'];
+        return ['help', 'CBArtworkElement'];
     }
 
     /**

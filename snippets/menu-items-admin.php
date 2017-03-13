@@ -38,11 +38,11 @@ $menuItemID                 = 'caption-alternative-text';
 $menuItemHTML               = 'Captions &amp; Alternative Text';
 $menuItemURI                = '/admin/help/caption-alternative-text';
 $helpMenu->{$menuItemID}    = newMenuItem($menuItemHTML, $menuItemURI);
+$helpMenu->CBArtworkElement = newMenuItem('CBArtworkElement', '/admin/page/?class=CBAdminPageForCBArtworkElement');
 $CBAdminMenu->help          = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
 
 if (ColbyUser::current()->isOneOfThe('Developers')) {
     $developMenu                    = new stdClass();
-    $developMenu->CBArtworkElement  = newMenuItem('CBArtworkElement', '/admin/page/?class=CBAdminPageForCBArtworkElement');
     $developMenu->images            = newMenuItem('Images', '/admin/page/?class=CBAdminPageForImages');
     $developMenu->php               = newMenuItem('PHP', '/admin/develop/php/');
     $developMenu->update            = newMenuItem('Update', '/admin/page/?class=CBAdminPageForUpdate');
