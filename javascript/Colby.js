@@ -237,11 +237,16 @@ var Colby = {
      * @param string image.filename
      * @param string image.extension
      * @param hex160 image.ID
+     * @param string? filename
+     *      If specified, this will be used instead of the filename in the image
+     *      parameter. Used to specify a smaller size such as "rw320" because
+     *      often the image parameter will specify original.
      *
      * @return string
      */
-    imageToURL : function (image) {
-        var basename = image.filename + "." + image.extension;
+    imageToURL : function (image, filename) {
+        filename = filename || image.filename;
+        var basename = filename + "." + image.extension;
         return "/" + Colby.dataStoreFlexpath(image.ID, basename);
     },
 
