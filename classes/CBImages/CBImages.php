@@ -424,14 +424,7 @@ EOT;
 
         $response->extension = $image->extension;   /* @deprecated use $image->extension */
         $response->ID = $image->ID;                 /* @deprecated use $image->ID */
-        $response->image = (object)[
-            'base' => $image->filename,             /* @deprecated use $image->filename */
-            'extension' => $image->extension,
-            'filename' => $image->filename,
-            'height' => $image->height,
-            'ID' => $image->ID,
-            'width' => $image->width,
-        ];
+        $response->image = $image;
         $response->sizes = $sizes;
         $response->message = "The image with an ID of {$response->image->ID} uploaded successfully";
         $response->wasSuccessful = true;
@@ -487,15 +480,12 @@ EOT;
             throw $exception;
         }
 
-        $image = new stdClass();
-        $image->extension = $extension;
-        $image->filename = $filename;
-        $image->filenameFromDataStore = $basename;
-        $image->height = $size[1];
-        $image->ID = $ID;
-        $image->size = $size; // @deprecated use width and height
-        $image->width = $size[0];
-
-        return $image;
+        return (object)[
+            'extension' => $extension,
+            'filename' => $filename,
+            'height' => $size[1],
+            'ID' => $ID,
+            'width' => $size[0],
+        ];
     }
 }
