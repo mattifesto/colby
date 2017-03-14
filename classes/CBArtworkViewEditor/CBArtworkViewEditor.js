@@ -84,7 +84,7 @@ var CBArtworkViewEditor = {
         element.appendChild(section);
 
         if (args.spec.image) {
-            chooser.setImageURLCallback(CBArtworkViewEditor.imageToURL(args.spec.image));
+            chooser.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw320"));
         }
 
         return element;
@@ -126,18 +126,14 @@ var CBArtworkViewEditor = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            args.spec.image = {
-                extension : response.image.extension,
-                filename : response.image.filename,
-                height : response.image.height,
-                ID : response.ID,
-                width : response.image.width,
-            };
+            args.spec.image = response.image;
 
             args.specChangedCallback();
 
-            args.setImageURLCallback(CBArtworkViewEditor.imageToURL(args.spec.image));
+            // set view editor thumbnail
+            args.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw320"));
 
+            // suggest page thumbnail
             CBViewPageEditor.suggestThumbnailImage(response.image);
         } else {
             Colby.displayResponse(response);
@@ -157,19 +153,6 @@ var CBArtworkViewEditor = {
         args.specChangedCallback();
 
         chooserArgs.setImageURLCallback();
-    },
-
-    /**
-     * @deprecated use Colby.imageToURL()
-     *
-     * @param string image.filename
-     * @param string image.extension
-     * @param hex160 image.ID
-     *
-     * @return string
-     */
-    imageToURL : function (image) {
-        return Colby.imageToURL(image);
     },
 
     /**
