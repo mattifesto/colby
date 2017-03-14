@@ -210,7 +210,7 @@ var CBViewPageInformationEditor = {
         var imageURL = args.spec.thumbnailURL; /* deprecated */
 
         if (args.spec.image) {
-            imageURL = "/" + Colby.dataStoreFlexpath(args.spec.image.ID, "rw1280." + args.spec.image.extension);
+            imageURL = Colby.imageToURL(args.spec.image, "rw320");
         }
 
         chooser.setImageURLCallback(imageURL);
@@ -283,12 +283,23 @@ var CBViewPageInformationEditor = {
     },
 
     /**
+     * All this function does is set the uploader thumbnail image. It may be
+     * able to be replaced with a bound setImageURL callback. I think it's only
+     * called by this file. Also we probably don't have to handle the
+     * thumbnailURL case anymore.
+     *
      * @param function args.setImageURLCallback
      * @param object pageArgs.spec
      * @param object pageArgs.image
      */
     handleThumbnailChanged : function (args, pageArgs) {
-        args.setImageURLCallback(pageArgs.spec.thumbnailURL);
+        if (pageArgs.image) {
+            args.setImageURLCallback(Colby.imageToURL(pageArgs.image, "rw320"));
+        } else if (pageArgs.spec.thumbnailURL) {
+            args.setImageURLCallback(pageArgs.spec.thumbnailURL);
+        } else {
+            args.setImageURLCallback();
+        }
     },
 
     /**

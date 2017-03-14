@@ -1,4 +1,4 @@
-"use strict"; /* jshint strict: global */
+"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
 /* globals
     CBArrayEditor,
     CBPageEditorAvailableViewClassNames,
@@ -261,7 +261,7 @@ var CBViewPageEditor = {
             spec.thumbnailURL = undefined;
         } else {
             spec.image = image;
-            spec.thumbnailURL = Colby.imageToURL(image);
+            spec.thumbnailURL = Colby.imageToURL(image, "rw640");
         }
 
         var callback = CBViewPageEditor.thumbnailChangedCallback;
