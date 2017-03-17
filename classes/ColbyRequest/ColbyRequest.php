@@ -79,8 +79,8 @@ EOT;
                     if (!empty($model->className) &&
                         is_callable($function = "{$model->className}::renderModelAsHTML"))
                     {
-                        $model->title = CBSiteName;
-                        $model->titleHTML = CBSiteNameHTML;
+                        $model->title = CBSitePreferences::siteName();
+                        $model->titleHTML = cbhtml($model->title);
                         call_user_func($function, $model);
                         return 1;
                     }
