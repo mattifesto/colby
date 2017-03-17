@@ -502,11 +502,6 @@ final class Colby {
          * Ensure that any required constants have been set.
          */
 
-        if (!defined('COLBY_SITE_NAME')) {
-            throw new RuntimeException(
-                'The constant `COLBY_SITE_NAME` has not been set.');
-        }
-
         if (!defined('COLBY_SITE_ADMINISTRATOR')) {
             throw new RuntimeException(
                 'The constant `COLBY_SITE_ADMINISTRATOR` has not been set.');
