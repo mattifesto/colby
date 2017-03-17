@@ -110,7 +110,7 @@ EOT;
 
     $mailer = Swift_Mailer::newInstance($transport);
 
-    $messageSubject = COLBY_SITE_NAME . " JS Error: {$message}";
+    $messageSubject = CBSitePreferences::siteName() . " JS Error: {$message}";
     $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
     $messageTo = array(COLBY_SITE_ADMINISTRATOR);
 
