@@ -315,6 +315,20 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return string
+     */
+    static function siteName() {
+        $model = CBSitePreferences::model();
+        $siteName = CBModel::value($model, 'siteName', '');
+
+        if (empty($siteName) && defined('CBSiteName')) { // @deprecated
+            return CBSiteName;
+        } else {
+            return $siteName;
+        }
+    }
+
+    /**
      * @return stdClass
      */
     public static function setFrontPageIDForAjaxPermissions() {
