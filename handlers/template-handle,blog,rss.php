@@ -21,9 +21,9 @@ $rss->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:content', 'http://p
 
 $channel = $rss->appendChild(new DOMElement('channel'));
 
-appendChildWithText($channel, 'title', COLBY_SITE_NAME . ' Blog Posts');
+appendChildWithText($channel, 'title', CBSitePreferences::siteName() . ' Blog Posts');
 appendChildWithText($channel, 'link', COLBY_SITE_URL . '/blog/');
-appendChildWithText($channel, 'description', COLBY_SITE_NAME . ' Blog Posts');
+appendChildWithText($channel, 'description', CBSitePreferences::siteName() . ' Blog Posts');
 appendChildWithText($channel, 'language', 'en-us');
 
 $link = $channel->appendChild(new DOMElement('atom:link', null, 'http://www.w3.org/2005/Atom'));
