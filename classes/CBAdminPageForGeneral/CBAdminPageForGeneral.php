@@ -94,6 +94,8 @@ EOT;
             ['COLBY'.'_FACEBOOK_FIRST_VERIFIED_USER_ID', 'Remove it.'],
             ['COLBY'.'_SITE_ERRORS_SEND_EMAILS', 'Use CBSiteDoesSendEmailErrorReports instead.'],
             ['COLBY'.'_SITE_NAME', 'Remove it and use site preferences.'], // 2017.03.17
+            ['CB'.'SiteName', 'Remove it and use site preferences.'], // 2017.03.17
+            ['CB'.'SiteNameHTML', 'Remove it and use site preferences.'], // 2017.03.17
         ];
 
         $messagesAsHTML = [];
