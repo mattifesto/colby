@@ -80,7 +80,7 @@ EOT;
 
         /**
          * Deprecated constant strings are broken up to avoid false positives
-         * in the CBManager app.
+         * when searching for them with tools.
          */
         $deprecatedConstants = [
             ['CB'.'SiteIsBeingDebugged', 'Use site preferences.'],
@@ -92,7 +92,8 @@ EOT;
             ['CB'.'SiteConfiguration::defaultClassNameForPageSettings', 'Use site preferences.'],
             ['CB'.'FacebookFirstVerifiedUserID', 'Remove it.'],
             ['COLBY'.'_FACEBOOK_FIRST_VERIFIED_USER_ID', 'Remove it.'],
-            ['COLBY'.'_SITE_ERRORS_SEND_EMAILS', 'Use CBSiteDoesSendEmailErrorReports instead.']
+            ['COLBY'.'_SITE_ERRORS_SEND_EMAILS', 'Use CBSiteDoesSendEmailErrorReports instead.'],
+            ['COLBY'.'_SITE_NAME', 'Remove it and use site preferences.'], // 2017.03.17
         ];
 
         $messagesAsHTML = [];
