@@ -1,4 +1,9 @@
-"use strict";
+"use strict"; /* jshint strict: global */
+/* globals
+    CBArrayEditor,
+    CBBooleanEditorFactory,
+    CBUI,
+    CBUIStringEditor */
 
 var CBSitePreferencesEditor = {
 
@@ -14,6 +19,20 @@ var CBSitePreferencesEditor = {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBSitePreferencesEditor";
+
+        section = CBUI.createSection();
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Site Name",
+            propertyName : "siteName",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
 
