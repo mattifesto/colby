@@ -199,7 +199,7 @@ final class Colby {
                     case Colby::returnAbsoluteFilename:
                         return $absoluteFilename;
                     case Colby::returnURL:
-                        return COLBY_SITE_URL . "/{$intraSiteFilename}";
+                        return CBSitePreferences::siteURL() . "/{$intraSiteFilename}";
                     default:
                         throw new InvalidArgumentException('returnFormat');
                 }
@@ -373,9 +373,15 @@ final class Colby {
     }
 
     /**
-     * This function should be called only once and is called by the system.
+     * To use Colby, you must include this file. When you include this file,
+     * this function is the first function that is called and basically boots
+     * Colby.
+     *
+     * This function should be well documented with comments and even a new
+     * developer should be able to read it to understand how the system gets
+     * initialized.
      */
-    public static function initialize() {
+    static function initialize() {
         /**
          * Colby sites always run with all error reporting turned on.
          */
@@ -394,9 +400,17 @@ final class Colby {
          * Only the following lines should use `require_once`.
          */
 
+        // defines CBSystemVersionNumber
         require_once __DIR__ . '/version.php';
-        require_once __DIR__ . '/constants.php';
-        require_once COLBY_SITE_DIRECTORY . '/version.php';
+
+        define('CBSystemDirectory', __DIR__);
+        define('CBSiteDirectory', $_SERVER['DOCUMENT_ROOT']);
+        define('CBPageTypeID', '89fe3a7d77424ba16c5101eeb0448c7688547ab2'); // @deprecated
+        define('COLBY_SYSTEM_DIRECTORY', __DIR__); // @deprecated
+        define('COLBY_SITE_DIRECTORY', $_SERVER['DOCUMENT_ROOT']); // @deprecated
+
+        // defines CBSiteVersionNumber
+        require_once CBSiteDirectory . '/version.php';
 
         /**
          * Library directories are relative paths from the site directory. So
@@ -411,9 +425,7 @@ final class Colby {
          * The Colby system library directory will almost always be "colby".
          */
 
-        $colbySystemLibraryDirectory = str_replace(COLBY_SITE_DIRECTORY . '/',
-                                                   '',
-                                                   COLBY_SYSTEM_DIRECTORY);
+        $colbySystemLibraryDirectory = str_replace(CBSiteDirectory . '/', '', CBSystemDirectory);
 
         /**
          * Add the site and Colby system library directories as the first two
@@ -447,27 +459,7 @@ final class Colby {
          * The CBSiteURL constant is set in this file.
          */
 
-        include_once COLBY_SITE_DIRECTORY . '/colby-configuration.php';
-
-        /**
-         * The `COLBY_SITE_URL` constant was deprecated in favor of `CBSiteURL`.
-         * During the transition, the site's `colby-configuration.php` file may
-         * have set either or both. This code ensures that both are set. This
-         * code block can be removed after the transition is complete.
-         */
-
-        if (!defined('CBSiteURL')) {
-            define('CBSiteURL', COLBY_SITE_URL);
-        } else if (!defined('COLBY_SITE_URL')) {
-            define('COLBY_SITE_URL', CBSystemURL);
-        }
-
-        /**
-         * Set the CBSystemURL constant.
-         */
-
-        define('CBSystemURL', CBSiteURL . "/{$colbySystemLibraryDirectory}");
-        define('COLBY_SYSTEM_URL', CBSystemURL); // deprecated
+        include_once CBSiteDirectory . '/colby-configuration.php';
 
         /**
          * The `colby-configuration.php` file will indicate whether the Swift
@@ -484,7 +476,11 @@ final class Colby {
         }
 
         /**
-         * Set up Colby auto loading.
+         * Set up auto loading.
+         *
+         * After this call, autoloadng will be enabled for site classes and
+         * Colby classes. It will not be enabled for optional 3rd party
+         * libraries until 'site-configuration.php' is loaded below.
          *
          * This autoloading function must be the last autoloading function
          * because it will throw an exception if it is not able to successfully
@@ -499,7 +495,26 @@ final class Colby {
         spl_autoload_register('Colby::autoload');
 
         /**
+         * Set the CBSystemURL constant.
+         *
+         * This ensures that autoloading for Colby is working.
+         *
+         * NOTE: 2017.03.19
+         *
+         *      This may move to CBSitePreferences::systemURL() in the future
+         *      but I'm not sure about it now.
+         */
+
+        define('CBSystemURL', CBSitePreferences::siteURL() . "/{$colbySystemLibraryDirectory}");
+        define('COLBY_SYSTEM_URL', CBSystemURL); // @deprecated
+
+        /**
          * Ensure that any required constants have been set.
+         *
+         * @deprecated 2017.03.19
+         *
+         *      This will move to CBSitePreferences::administratorEmail() or a
+         *      function name similar to that.
          */
 
         if (!defined('COLBY_SITE_ADMINISTRATOR')) {
@@ -508,12 +523,20 @@ final class Colby {
         }
 
         /**
-         * Include the site configuration file. This file is checked in and
-         * therefore shared between different versions of the site. Shared
-         * constants are set and any required libraries are loaded in this file.
+         * Include the site configuration file. Unlike 'colby-configuration.php'
+         * which contains instance specific settings, 'site-configuration.php'
+         * is checked in and shared by all instances of the site such as
+         * development, test, and production instances. This code in this file
+         * should perform the following tasks:
+         *
+         *      1. Set shared constants used by all instances of the site.
+         *      2. Call Colby::loadLibrary() for any 3rd party libraries that
+         *         are used by the site.
+         *
+         * After these tasks are performed autoloading will be fully enabled.
          */
 
-        include_once COLBY_SITE_DIRECTORY . '/site-configuration.php';
+        include_once CBSiteDirectory . '/site-configuration.php';
 
         /**
          * 2014.08.26

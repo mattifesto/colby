@@ -329,6 +329,27 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return string
+     *      Returns the site URL with no trailing slash.
+     */
+    static function siteURL() {
+        $model = CBSitePreferences::model();
+        $siteURL = CBModel::value($model, 'siteURL', '');
+
+        if (!empty($siteURL)) {
+            return $siteURL;
+        } else {
+            if (defined('CBSiteURL')) { // @deprecated
+                return CBSiteURL;
+            } else if (defined('COLBY_SITE_URL')) { // @deprecated
+                return COLBY_SITE_URL;
+            } else {
+                return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['SERVER_NAME'];
+            }
+        }
+    }
+
+    /**
      * @return stdClass
      */
     public static function setFrontPageIDForAjaxPermissions() {
