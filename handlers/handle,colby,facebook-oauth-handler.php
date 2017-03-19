@@ -34,7 +34,7 @@ if (isset($_GET['error']))
 $accessTokenURL = 'https://graph.facebook.com/oauth/access_token' .
     '?client_id=' . COLBY_FACEBOOK_APP_ID .
     '&redirect_uri=' .
-        urlencode(COLBY_SITE_URL
+        urlencode(CBSitePreferences::siteURL()
             . '/colby/facebook-oauth-handler/') .
     '&client_secret=' . COLBY_FACEBOOK_APP_SECRET .
     '&code=' . $_GET['code'];

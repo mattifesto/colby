@@ -28,9 +28,8 @@ unset($menuBuilder);
 /**
  * @return string
  */
-function linkForArchiveId($archiveId)
-{
-    $href = COLBY_SITE_URL . "/admin/documents/view/?archive-id={$archiveId}";
+function linkForArchiveId($archiveId) {
+    $href = CBSitePreferences::siteURL() . "/admin/documents/view/?archive-id={$archiveId}";
 
     return "<a href=\"{$href}\"><span class=\"hash\">{$archiveId}</span></a>";
 }
@@ -38,8 +37,7 @@ function linkForArchiveId($archiveId)
 /**
  *
  */
-function renderDocumentsAdministrationMenu()
-{
+function renderDocumentsAdministrationMenu() {
     global $documentsAdministrationMenu;
 
     echo '<ul class="horizontal">';
@@ -63,7 +61,6 @@ function renderDocumentsAdministrationMenu()
 /**
  *
  */
-function viewLinkForArchiveId($archiveId)
-{
+function viewLinkForArchiveId($archiveId) {
     echo linkForArchiveId($archiveId);
 }

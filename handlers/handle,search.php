@@ -29,7 +29,7 @@ include Colby::findFile('sections/standard-page-header.php');
 
 ?>
 
-<form action="<?php echo COLBY_SITE_URL; ?>/search/" <?php echo $formClass; ?>>
+<form action="<?php echo CBSitePreferences::siteURL(); ?>/search/" <?php echo $formClass; ?>>
     <style>
 
         form.search-page input[type=text] {

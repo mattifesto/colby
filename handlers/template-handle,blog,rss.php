@@ -22,12 +22,12 @@ $rss->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:content', 'http://p
 $channel = $rss->appendChild(new DOMElement('channel'));
 
 appendChildWithText($channel, 'title', CBSitePreferences::siteName() . ' Blog Posts');
-appendChildWithText($channel, 'link', COLBY_SITE_URL . '/blog/');
+appendChildWithText($channel, 'link', CBSitePreferences::siteURL() . '/blog/');
 appendChildWithText($channel, 'description', CBSitePreferences::siteName() . ' Blog Posts');
 appendChildWithText($channel, 'language', 'en-us');
 
 $link = $channel->appendChild(new DOMElement('atom:link', null, 'http://www.w3.org/2005/Atom'));
-$link->setAttribute('href', COLBY_SITE_URL . '/blog/rss/');
+$link->setAttribute('href', CBSitePreferences::siteURL() . '/blog/rss/');
 $link->setAttribute('rel', 'self');
 $link->setAttribute('type', 'application/rss+xml');
 
@@ -59,7 +59,7 @@ if ($result->num_rows > 0)
 
         $title = htmlspecialchars_decode($row->titleHTML, ENT_QUOTES);
         $subtitle = htmlspecialchars_decode($row->subtitleHTML, ENT_QUOTES);
-        $url = COLBY_SITE_URL . "/{$row->URI}/";
+        $url = CBSitePreferences::siteURL() . "/{$row->URI}/";
         $published = gmdate(DateTime::RSS, $row->published);
 
         appendChildWithText($item, 'title', $title);
