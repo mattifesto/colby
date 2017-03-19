@@ -1,8 +1,6 @@
 <?php
 
 define('CBSiteURL',                         '');
-define('CBSiteName',                        '');
-define('CBSiteNameHTML',                    '');
 
 define('CBSiteAdministratorEmail',          '');
 define('CBSiteDoesSendEmailErrorReports',   false);
@@ -37,8 +35,6 @@ define('COLBY_EMAIL_SMTP_PASSWORD',         'password');
  * Deprecated constants
  */
 
-define('COLBY_SITE_URL',                        CBSiteURL);
-define('COLBY_SITE_NAME',                       CBSiteName);
 define('COLBY_SITE_ADMINISTRATOR',              CBSiteAdministratorEmail);
 define('COLBY_FACEBOOK_APP_ID',                 CBFacebookAppID);
 define('COLBY_FACEBOOK_APP_SECRET',             CBFacebookAppSecret);
