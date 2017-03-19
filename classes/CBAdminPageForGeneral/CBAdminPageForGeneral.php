@@ -72,9 +72,10 @@ EOT;
     /**
      * @return null
      */
-    public static function renderSiteConfigurationIssuesView() {
+    static function renderSiteConfigurationIssuesView() {
+        echo '<!-- Site Configuration Issues -->';
+
         if (!ColbyUser::current()->isOneOfThe('Developers')) {
-            echo '<!-- CBSiteConfigurationIssuesView -->';
             return;
         }
 
@@ -96,34 +97,31 @@ EOT;
             ['COLBY'.'_SITE_NAME', 'Remove it and use site preferences.'], // 2017.03.17
             ['CB'.'SiteName', 'Remove it and use site preferences.'], // 2017.03.17
             ['CB'.'SiteNameHTML', 'Remove it and use site preferences.'], // 2017.03.17
+            ['COLBY'.'_SITE_URL', 'Remove it and use site preferences.'], // 2017.03.19
+            ['CB'.'SiteURL', 'Remove it and use site preferences.'], // 2017.03.19
         ];
 
-        $messagesAsHTML = [];
+        $hasContent = false;
+
+        ob_start();
+
+        CBUI::renderHalfSpace();
+        CBUI::renderSectionHeader('Site Configuration Issues');
+        CBUI::renderSectionStart();
 
         foreach ($deprecatedConstants as $constant) {
             if (defined($constant[0])) {
-                $constantAsHTML = cbhtml($constant[0]);
-                $message = cbhtml($constant[1]);
-                $messagesAsHTML[] = "The `{$constantAsHTML}` constant has been deprecated. {$message}";
+                $hasContent = true;
+                CBUI::renderKeyValueSectionItem($constant[0], 'This constant has been deprecated. ' . $constant[1]);
             }
         }
 
-        if (empty($messagesAsHTML)) {
-            echo '<!-- CBSiteConfigurationIssuesView -->';
-            return;
+        CBUI::renderSectionEnd();
+
+        if ($hasContent) {
+            ob_end_flush();
+        } else {
+            ob_end_clean();
         }
-
-        ?>
-
-        <div class="CBSiteConfigurationIssuesView">
-            <h1>Site Configuration Issues</h1>
-            <ul>
-                <?php array_walk($messagesAsHTML, function($messageAsHTML) {
-                    echo "<li>{$messageAsHTML}</li>";
-                }); ?>
-            </ul>
-        </div>
-
-        <?php
     }
 }

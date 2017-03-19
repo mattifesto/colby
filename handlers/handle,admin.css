@@ -65,31 +65,3 @@ section.widget .version-number .number {
 .CBURIItem {
     padding: 10px;
 }
-
-/**
- * CBSiteConfigurationIssuesView
- *
- * 1. The `word-wrap: break-word` rule ensures that long words in the content of
- * this view will not mess up the layout of the view or the page.
- */
-
-.CBSiteConfigurationIssuesView {
-    margin: 0 auto;
-    max-width: 720px; /* 1 */
-    padding: 20px 0;
-    word-wrap: break-word; /* 1 */
-}
-
-.CBSiteConfigurationIssuesView h1 {
-    padding: 0 20px;
-    text-align: center;
-}
-
-.CBSiteConfigurationIssuesView ul {
-    padding: 0;
-}
-
-.CBSiteConfigurationIssuesView li {
-    list-style: none;
-    padding: 20px;
-}
