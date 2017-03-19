@@ -23,7 +23,7 @@ final class CBAdminPageForCBArtworkElement {
         CBHTMLOutput::setTitleHTML('CBArtworkElement');
         CBHTMLOutput::setDescriptionHTML('Description and examples of CBArtworkElement functionality.');
 
-        $URL = CBDataStore::flexpath(CBAdminPageForTests::imageID, 'rw320.jpeg', CBSiteURL);
+        $URL = CBDataStore::flexpath(CBAdminPageForTests::imageID, 'rw320.jpeg', CBSitePreferences::siteURL());
 
         ?>
 

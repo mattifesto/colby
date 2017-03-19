@@ -104,7 +104,7 @@ final class CBDataStore {
      * @param hex160 $ID
      * @param string? $basename
      * @param string? $flexdir
-     *      This will usually be either CBSiteDirectory or CBSiteURL.
+     *      This will usually be either CBSiteDirectory or CBSitePreferences::siteURL().
      *
      * @return string
      */
@@ -148,7 +148,7 @@ final class CBDataStore {
         extract($args, EXTR_IF_EXISTS);
 
         $directoryName  = self::directoryNameFromDocumentRoot($ID);
-        $URL            = CBSiteURL . "/{$directoryName}";
+        $URL            = CBSitePreferences::siteURL() . "/{$directoryName}";
 
         if ($filename) {
             return "{$URL}/{$filename}";

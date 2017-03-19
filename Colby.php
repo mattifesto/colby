@@ -456,7 +456,6 @@ final class Colby {
         /**
          * Include the local configuration file. This file is not checked in
          * and therefore is not shared between different versions of the site.
-         * The CBSiteURL constant is set in this file.
          */
 
         include_once CBSiteDirectory . '/colby-configuration.php';
@@ -761,7 +760,7 @@ final class Colby {
      * @return string
      */
     public static function URLForJavaScriptForSiteClass($className) {
-        return CBSiteURL . "/classes/{$className}/{$className}.js";
+        return CBSitePreferences::siteURL() . "/classes/{$className}/{$className}.js";
     }
 }
 

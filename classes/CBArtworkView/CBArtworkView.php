@@ -78,7 +78,7 @@ final class CBArtworkView {
                 break;
         }
 
-        $imageURL = CBDataStore::flexpath($image->ID, "{$filename}.{$image->extension}", CBSiteURL);
+        $imageURL = CBDataStore::flexpath($image->ID, "{$filename}.{$image->extension}", CBSitePreferences::siteURL());
 
         CBArtworkElement::render([
             'alternativeText' => $alternativeText,

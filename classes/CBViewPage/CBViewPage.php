@@ -150,7 +150,7 @@ final class CBViewPage {
         if (empty($image)) {
             return '';
         } else {
-            return CBDataStore::flexpath($image->ID, "rw1280.{$image->extension}", CBSiteURL);
+            return CBDataStore::flexpath($image->ID, "rw1280.{$image->extension}", CBSitePreferences::siteURL());
         }
     }
 

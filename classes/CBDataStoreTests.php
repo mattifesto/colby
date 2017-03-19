@@ -30,7 +30,7 @@ class CBDataStoreTests {
     public static function toURLTest() {
         $ID         = '25c4a69a256a778ff892c60779a31ee1025b1e68';
         $URL        = CBDataStore::toURL(['ID' => $ID]);
-        $expected   = CBSiteURL . '/data/25/c4/a69a256a778ff892c60779a31ee1025b1e68';
+        $expected   = CBSitePreferences::siteURL() . '/data/25/c4/a69a256a778ff892c60779a31ee1025b1e68';
 
         if ($URL !== $expected) {
             $a = json_encode($URL);
@@ -39,7 +39,7 @@ class CBDataStoreTests {
         }
 
         $URL        = CBDataStore::toURL(['ID' => $ID, 'filename' => 'hello.jpg']);
-        $expected   = CBSiteURL . '/data/25/c4/a69a256a778ff892c60779a31ee1025b1e68/hello.jpg';
+        $expected   = CBSitePreferences::siteURL() . '/data/25/c4/a69a256a778ff892c60779a31ee1025b1e68/hello.jpg';
 
         if ($URL !== $expected) {
             $a = json_encode($URL);

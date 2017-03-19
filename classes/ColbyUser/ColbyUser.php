@@ -546,7 +546,7 @@ EOT;
 
         $url = 'https://www.facebook.com/dialog/oauth' .
             '?client_id=' . CBFacebookAppID .
-            '&redirect_uri=' . urlencode(CBSiteURL . '/colby/facebook-oauth-handler/') .
+            '&redirect_uri=' . urlencode(CBSitePreferences::siteURL() . '/colby/facebook-oauth-handler/') .
             '&state=' . urlencode(json_encode($state));
 
         return $url;
@@ -590,7 +590,7 @@ EOT;
         $state = new stdClass();
         $state->colby_redirect_uri = $redirectURL;
 
-        $url = CBSiteURL . '/colby/logout/?state=' . urlencode(json_encode($state));
+        $url = CBSitePreferences::siteURL() . '/colby/logout/?state=' . urlencode(json_encode($state));
 
         return $url;
     }

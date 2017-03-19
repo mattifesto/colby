@@ -36,7 +36,7 @@ final class CBWellKnownThemeForContent {
         $URLs = [Colby::flexnameForCSSForClass(CBSystemURL, $className)];
 
         if (is_file(Colby::flexnameForCSSForClass(CBSiteDirectory, $className))) {
-            $URLs[] = Colby::flexnameForCSSForClass(CBSiteURL, $className);
+            $URLs[] = Colby::flexnameForCSSForClass(CBSitePreferences::siteURL(), $className);
         }
 
         return $URLs;

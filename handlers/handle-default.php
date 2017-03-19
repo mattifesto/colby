@@ -12,7 +12,7 @@ CBHTMLOutput::setDescriptionHTML('The page you requested was not found.');
     <p style="margin-bottom: 40px;">The page you requested was not found.
 
     <div style="font-size: 1.5em;">
-        <?= CBSiteURL, htmlspecialchars( preg_replace('/([\/\?&])/', ' $1 ', $_SERVER['REQUEST_URI'])) ?>
+        <?= CBSitePreferences::siteURL(), htmlspecialchars( preg_replace('/([\/\?&])/', ' $1 ', $_SERVER['REQUEST_URI'])) ?>
     </div>
 </main>
 

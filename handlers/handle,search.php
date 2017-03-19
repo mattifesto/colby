@@ -155,7 +155,7 @@ END;
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_object()) {
-            $URL = CBSiteURL . "/{$row->URI}/";
+            $URL = CBSitePreferences::siteURL() . "/{$row->URI}/";
 
             ?>
 

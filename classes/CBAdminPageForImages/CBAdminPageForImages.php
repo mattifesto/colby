@@ -41,7 +41,7 @@ EOT;
         $images = CBDB::SQLToObjects($SQL);
 
         foreach ($images as $image) {
-            $image->thumbnailURL = CBDataStore::flexpath($image->ID, "rw320.{$image->extension}", CBSiteURL);
+            $image->thumbnailURL = CBDataStore::flexpath($image->ID, "rw320.{$image->extension}", CBSitePreferences::siteURL());
         }
 
         $response->images = $images;

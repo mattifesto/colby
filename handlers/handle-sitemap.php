@@ -29,9 +29,9 @@ echo '<?xml version="1.0" encoding="utf-8" ?>';
        if (empty($model->URI)) {
            return;
        } else if ($model->URI === '/') {
-           $URL = CBSiteURL . '/';
+           $URL = CBSitePreferences::siteURL() . '/';
        } else {
-           $URL = CBSiteURL . "/{$model->URI}/";
+           $URL = CBSitePreferences::siteURL() . "/{$model->URI}/";
        }
 
        echo '<url>';

@@ -357,7 +357,7 @@ EOT;
 
         $size = getimagesize($destinationFilepath);
         $response->filename = $destinationFilename;
-        $response->URL = CBDataStore::flexpath($image->ID, $destinationFilename, CBSiteURL);
+        $response->URL = CBDataStore::flexpath($image->ID, $destinationFilename, CBSitePreferences::siteURL());
         $response->URLForHTML = ColbyConvert::textToHTML($response->URL);
         $response->actualWidth = $size[0];
         $response->actualHeight = $size[1];

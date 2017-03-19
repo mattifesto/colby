@@ -115,7 +115,7 @@ EOT;
             <div class="links">
 
                 <?php foreach ($args->pageSummaries as $page) { ?>
-                    <a href="<?= CBSiteURL . "/{$page->URI}/" ?>" class="link"><?php
+                    <a href="<?= CBSitePreferences::siteURL() . "/{$page->URI}/" ?>" class="link"><?php
                         if (!empty($page->thumbnailURL)) { ?>
                             <div class="thumbnail">
                                 <figure style="background-image: url(<?= $page->thumbnailURL ?>);"></figure>

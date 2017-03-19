@@ -62,7 +62,7 @@ EOT;
         echo '<div class="URI">URI: ', ColbyConvert::textToHTML($data[0]->URI), '</div>';
 
         foreach ($data as $datum) {
-            $editURL = CBSiteURL . "/admin/pages/edit/?data-store-id={$datum->dataStoreID}";
+            $editURL = CBSitePreferences::siteURL() . "/admin/pages/edit/?data-store-id={$datum->dataStoreID}";
             echo "<div>{$datum->titleHTML} <a href=\"{$editURL}\">edit</a></div>";
         }
 

@@ -47,7 +47,7 @@ final class CBContainerView {
 
         $basename = "{$filename}.{$image->extension}";
 
-        return CBDataStore::flexpath($image->ID, $basename, CBSiteURL);
+        return CBDataStore::flexpath($image->ID, $basename, CBSitePreferences::siteURL());
     }
 
     /**
