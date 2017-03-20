@@ -110,9 +110,11 @@ EOT;
 
     $mailer = Swift_Mailer::newInstance($transport);
 
-    $messageSubject = CBSitePreferences::siteName() . " JS Error: {$message}";
+    $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
+    $truncatedMessage = CBConvert::truncate($message);
+    $messageSubject = "JS Error | {$serverName} | {$truncatedMessage}";
     $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
-    $messageTo = array(COLBY_SITE_ADMINISTRATOR);
+    $messageTo = CBSitePreferences::administratorEmails();
 
     $message = Swift_Message::newInstance();
     $message->setSubject($messageSubject);

@@ -508,20 +508,6 @@ final class Colby {
         define('COLBY_SYSTEM_URL', CBSystemURL); // @deprecated
 
         /**
-         * Ensure that any required constants have been set.
-         *
-         * @deprecated 2017.03.19
-         *
-         *      This will move to CBSitePreferences::administratorEmail() or a
-         *      function name similar to that.
-         */
-
-        if (!defined('COLBY_SITE_ADMINISTRATOR')) {
-            throw new RuntimeException(
-                'The constant `COLBY_SITE_ADMINISTRATOR` has not been set.');
-        }
-
-        /**
          * Include the site configuration file. Unlike 'colby-configuration.php'
          * which contains instance specific settings, 'site-configuration.php'
          * is checked in and shared by all instances of the site such as
@@ -721,7 +707,7 @@ final class Colby {
                 $truncatedMessage   = CBConvert::truncate($exception->getMessage());
                 $messageSubject     = "Error | {$serverName} | {$truncatedMessage}";
                 $messageFrom        = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
-                $messageTo          = array(COLBY_SITE_ADMINISTRATOR);
+                $messageTo          = CBSitePreferences::administratorEmails();
                 $messageBodyHTML    = '<pre>' . cbhtml($messageBody) . '</pre>';
 
                 $message = Swift_Message::newInstance();
