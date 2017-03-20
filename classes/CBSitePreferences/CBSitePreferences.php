@@ -26,6 +26,24 @@ final class CBSitePreferences {
     private static $model = false;
 
     /**
+     * return [string]
+     */
+    static function administratorEmails() {
+        $model = CBSitePreferences::model();
+        $emails = CBModel::value($model, 'administratorEmails', '');
+
+        if (!empty($emails)) {
+            return $emails;
+        } else if (defined('CBSiteAdministratorEmail')) { // @deprecated
+            return [CBSiteAdministratorEmail];
+        } else if (defined('COLBY_SITE_ADMINISTRATOR')) { // @deprecated
+            return [COLBY_SITE_ADMINISTRATOR];
+        } else {
+            return [];
+        }
+    }
+
+    /**
      * The value of this setting should be changed directly on the spec by
      * adjusting the array value of classNamesForUserSettings.
      *
