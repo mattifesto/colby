@@ -3,7 +3,9 @@
     CBArrayEditor,
     CBBooleanEditorFactory,
     CBUI,
-    CBUIStringEditor */
+    CBUIActionLink,
+    CBUIStringEditor,
+    Colby */
 
 var CBSitePreferencesEditor = {
 
@@ -28,6 +30,29 @@ var CBSitePreferencesEditor = {
             propertyName : "siteName",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
+
+        section = CBUI.createSection();
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIActionLink.create({
+            callback : function () {
+                CBSitePreferencesEditor.promise = Colby.fetchAjaxResponse("/api/?class=CBSitePreferencesEditor&function=errorTest");
+            },
+            labelText : "PHP Error Test",
+        }).element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIActionLink.create({
+            callback : function () {
+                throw new Error("Sample JavaScript Error");
+            },
+            labelText : "JavaScript Error Test",
         }).element);
         section.appendChild(item);
 

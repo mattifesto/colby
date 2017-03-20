@@ -3,10 +3,29 @@
 final class CBSitePreferencesEditor {
 
     /**
+     * @return null
+     */
+    static function errorTestForAjax() {
+        $response = new CBAjaxResponse();
+
+        throw new RuntimeException("Sample PHP Error");
+
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function errorTestForAjaxPermissions() {
+        return (object)['group' => 'Developers'];
+    }
+
+    /**
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBArrayEditor', 'CBKeyValuePairEditor', 'CBUI', 'CBUIStringEditor'];
+        return ['CBArrayEditor', 'CBKeyValuePairEditor', 'CBUI', 'CBUIActionLink', 'CBUIStringEditor'];
     }
 
     /**
