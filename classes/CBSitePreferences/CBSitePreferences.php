@@ -30,7 +30,7 @@ final class CBSitePreferences {
      */
     static function administratorEmails() {
         $model = CBSitePreferences::model();
-        $emails = CBModel::value($model, 'administratorEmails', '');
+        $emails = CBModel::value($model, 'administratorEmails', []);
 
         if (!empty($emails)) {
             return $emails;
@@ -389,6 +389,11 @@ final class CBSitePreferences {
     static function specToModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
+            'administratorEmails' => CBModel::value($spec, 'administratorEmails', [], function ($value) {
+                return array_unique(preg_split(
+                    '/[\s,]+/', $value, null, PREG_SPLIT_NO_EMPTY
+                ));
+            }),
             'classNamesForUserSettings' => CBModel::value($spec, 'classNamesForUserSettings', [], function ($value) {
                 if (is_array($value)) {
                     return array_map('trim', $value);
