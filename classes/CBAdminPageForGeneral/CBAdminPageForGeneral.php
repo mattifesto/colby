@@ -98,6 +98,8 @@ EOT;
             ['CB'.'SiteName', 'Remove it and use site preferences.'], // 2017.03.17
             ['CB'.'SiteNameHTML', 'Remove it and use site preferences.'], // 2017.03.17
             ['COLBY'.'_SITE_URL', 'Remove it and use site preferences.'], // 2017.03.19
+            ['CB'.'SiteAdministratorEmail', 'Remove it and use site preferences.'], // 2017.03.22
+            ['COLBY'.'_SITE_ADMINISTRATOR', 'Remove it and use site preferences.'], // 2017.03.22
         ];
 
         $hasContent = false;
