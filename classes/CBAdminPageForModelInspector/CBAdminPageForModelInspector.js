@@ -11,8 +11,30 @@ var CBAdminPageForModelInspector = {
      * @return undefined
      */
     DOMContentDidLoad: function () {
+        var section, item;
+        var spec = {
+            ID: CBAdminPageForModelInspectorID,
+        };
         var main = document.getElementsByTagName("main")[0];
         var versionsSectionElement = CBUI.createSection();
+        var IDDidChangeCallback = CBAdminPageForModelInspector.IDDidChange.bind(undefined, {
+            spec: spec,
+            versionsSectionElement, versionsSectionElement,
+        });
+
+        main.appendChild(CBUI.createHalfSpace());
+
+        section = CBUI.createSection();
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+                labelText: "Model ID",
+                propertyName: "ID",
+                spec: spec,
+                specChangedCallback: IDDidChangeCallback,
+        }).element);
+        section.appendChild(item);
+
+        main.appendChild(section);
 
         main.appendChild(CBUI.createHalfSpace());
 
@@ -20,20 +42,20 @@ var CBAdminPageForModelInspector = {
 
         main.appendChild(CBUI.createHalfSpace());
 
-        CBAdminPageForModelInspector.IDDidChange(CBAdminPageForModelInspectorID, versionsSectionElement);
+        IDDidChangeCallback();
     },
 
     /**
-     * @param hex160 ID
-     * @param Element versionsSectionElement
+     * @param hex160? args.spec.ID
+     * @param Element args.versionsSectionElement
      *
      * @return undefined
      */
-    IDDidChange: function (ID, versionsSectionElement) {
-        if (/^[0-9a-f]{40}$/.test(ID)) {
+    IDDidChange: function (args) {
+        if (/^[0-9a-f]{40}$/.test(args.spec.ID)) {
             console.log("yes");
             var data = new FormData();
-            data.append("ID", ID);
+            data.append("ID", args.spec.ID);
 
             Colby.fetchAjaxResponse("/api/?class=CBModels&function=fetchModelVersionsByID", data)
                  .then(resolved)
@@ -41,7 +63,7 @@ var CBAdminPageForModelInspector = {
         }
 
         function resolved(response) {
-            versionsSectionElement.textContent = undefined;
+            args.versionsSectionElement.textContent = undefined;
             response.versions.forEach(function (version) {
                 var item = CBUI.createSectionItem2();
 
@@ -72,7 +94,7 @@ var CBAdminPageForModelInspector = {
                 item.commandsElement.appendChild(revertCommand);
 
                 //item.titleElement.textContent = version.version;
-                versionsSectionElement.appendChild(item.element);
+                args.versionsSectionElement.appendChild(item.element);
 
                 function showModel() {
                     var pre = document.createElement("div");
