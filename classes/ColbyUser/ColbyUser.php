@@ -337,10 +337,9 @@ EOT;
      *  the user's access expires. It's the current unix timestamp plus the
      *  duration of the user's access.
      *
-     * @return void
+     * @return null
      */
-    static function loginCurrentUser($facebookAccessToken, $facebookAccessExpirationTime, $facebookProperties)
-    {
+    static function loginCurrentUser($facebookAccessToken, $facebookAccessExpirationTime, $facebookProperties) {
         $mysqli = Colby::mysqli();
         $facebookUserID = intval($facebookProperties->id);
 
@@ -455,6 +454,7 @@ EOT;
             'ID' => $userIdentity->hash,
             'facebook'=> $facebookProperties,
             'lastLoggedIn' => time(),
+            'title' => CBModel::value($facebookProperties, 'name', '', 'trim'),
             'userID' => $userIdentity->ID,
         ];
 
