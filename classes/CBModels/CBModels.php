@@ -431,7 +431,7 @@ EOT;
      *
      * @param [hex160] $IDs
      * @param timestamp $maxTimestamp
-     *      Previous versions of the models with timestamps les than
+     *      Previous versions of the models with timestamps less than
      *      $maxTimestamp will be deleted.
      *
      * @return null
@@ -643,8 +643,11 @@ EOT;
 
         CBModels::saveToDatabase($tuples);
 
-        /* Remove previous versions less than 10 minutes old. */
+        /* Remove versions less than 10 minutes old. */
         CBModels::removePreviousVersions($IDs, $modified - (60 * 10));
+
+        /* Remove versions more than 30 days old */
+        CBModels::removeOldestVersions($IDs, $modified - (60 * 60 * 24 * 30));
     }
 
     /**
