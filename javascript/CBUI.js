@@ -117,6 +117,34 @@ var CBUI = {
     },
 
     /**
+     * @param string? args.key
+     * @param string? args.value
+     *
+     * @return {
+     *      Element element,
+     * }
+     */
+    createKeyValueSectionItem: function (args) {
+        var item = CBUI.createSectionItem();
+        var keyValue = document.createElement("div");
+        keyValue.className = "CBUIKeyValue";
+        var key = document.createElement("div");
+        key.className = "key";
+        key.textContent = args.key || "";
+        var value = document.createElement("div");
+        value.className = "value";
+        value.textContent = args.value || "";
+
+        keyValue.appendChild(key);
+        keyValue.appendChild(value);
+        item.appendChild(keyValue);
+
+        return {
+            element: item,
+        };
+    },
+
+    /**
      * @return Element
      */
     createSection : function () {
