@@ -3,6 +3,7 @@
 /* global
     CBAdminPageForModelInspectorID,
     CBUI,
+    CBUIStringEditor,
     Colby */
 
 var CBAdminPageForModelInspector = {
@@ -16,10 +17,10 @@ var CBAdminPageForModelInspector = {
             ID: CBAdminPageForModelInspectorID,
         };
         var main = document.getElementsByTagName("main")[0];
-        var versionsSectionElement = CBUI.createSection();
+        var container = document.createElement("div");
         var IDDidChangeCallback = CBAdminPageForModelInspector.IDDidChange.bind(undefined, {
             spec: spec,
-            versionsSectionElement, versionsSectionElement,
+            container: container,
         });
 
         main.appendChild(CBUI.createHalfSpace());
@@ -38,7 +39,7 @@ var CBAdminPageForModelInspector = {
 
         main.appendChild(CBUI.createHalfSpace());
 
-        main.appendChild(versionsSectionElement);
+        main.appendChild(container);
 
         main.appendChild(CBUI.createHalfSpace());
 
@@ -47,23 +48,51 @@ var CBAdminPageForModelInspector = {
 
     /**
      * @param hex160? args.spec.ID
-     * @param Element args.versionsSectionElement
+     * @param Element args.container
      *
      * @return undefined
      */
     IDDidChange: function (args) {
         if (/^[0-9a-f]{40}$/.test(args.spec.ID)) {
-            console.log("yes");
             var data = new FormData();
             data.append("ID", args.spec.ID);
 
             Colby.fetchAjaxResponse("/api/?class=CBModels&function=fetchModelVersionsByID", data)
                  .then(resolved)
-                 .catch(Colby.report);
+                 .catch(Colby.report)
+                 .catch(Colby.displayError);
         }
 
         function resolved(response) {
-            args.versionsSectionElement.textContent = undefined;
+            var section;
+            var model = JSON.parse(response.versions[0].modelAsJSON);
+
+            args.container.textContent = undefined;
+
+            section = CBUI.createSection();
+
+            section.appendChild(CBUI.createKeyValueSectionItem({
+                key: "Class Name",
+                value: model.className,
+            }).element);
+            args.container.appendChild(section);
+
+            section.appendChild(CBUI.createKeyValueSectionItem({
+                key: "Title",
+                value: model.title,
+            }).element);
+            args.container.appendChild(section);
+
+            section.appendChild(CBUI.createKeyValueSectionItem({
+                key: "Description",
+                value: model.description,
+            }).element);
+            args.container.appendChild(section);
+
+            args.container.appendChild(CBUI.createHalfSpace());
+
+            section = CBUI.createSection();
+
             response.versions.forEach(function (version) {
                 var item = CBUI.createSectionItem2();
 
@@ -93,8 +122,7 @@ var CBAdminPageForModelInspector = {
 
                 item.commandsElement.appendChild(revertCommand);
 
-                //item.titleElement.textContent = version.version;
-                args.versionsSectionElement.appendChild(item.element);
+                section.appendChild(item.element);
 
                 function showModel() {
                     var pre = document.createElement("div");
@@ -116,7 +144,7 @@ var CBAdminPageForModelInspector = {
 
                 function revert() {
                     var data = new FormData();
-                    data.append("ID", ID);
+                    data.append("ID", args.spec.ID);
                     data.append("version", version.version);
 
                     Colby.fetchAjaxResponse("/api/?class=CBModels&function=revert", data)
@@ -128,6 +156,8 @@ var CBAdminPageForModelInspector = {
                     }
                 }
             });
+
+            args.container.appendChild(section);
 
             Colby.updateTimes();
         }
