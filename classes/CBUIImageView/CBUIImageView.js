@@ -1,4 +1,6 @@
-"use strict";
+"use strict"; /* jshint strict: global */
+/* globals
+    Colby */
 
 var CBUIImageView = {
 
@@ -39,7 +41,7 @@ var CBUIImageView = {
      * @return string
      */
     imageToURL : function (image) {
-        return Colby.dataStoreIDToURI(image.ID) + "/" + image.base + "." + image.extension;
+        return Colby.dataStoreIDToURI(image.ID) + "/rw960." + image.extension;
     },
 
     /**
@@ -53,7 +55,7 @@ var CBUIImageView = {
         var image = args.spec[args.propertyName];
 
         if (image === undefined) {
-            args.img.src = null;
+            args.img.src = "";
             args.img.style.display = "none";
         } else {
             args.img.src = CBUIImageView.imageToURL(image);
