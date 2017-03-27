@@ -62,8 +62,9 @@ if ($response === false) {
     throw new RuntimeException("Facebook OAuth: The request to exchange a code for an access token failed with the error: {$error}");
 }
 
-if (curl_getinfo($curlHandle, CURLINFO_HTTP_CODE) === 400)
-{
+$httpStatusCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+
+if ($httpStatusCode === 400) { // error
     $object = json_decode($response);
 
     throw new RuntimeException('Error retrieving Facebook access token: ' .
@@ -82,12 +83,20 @@ curl_close($curlHandle);
 $params = null;
 parse_str($response, $params);
 
-if (!isset($params['access_token'])) {
-    throw new RuntimeException('Facebook OAuth: The response to the request to exchange a code for an access token does not contain an access token. Here is the response: ' . json_encode($response));
+if (isset($params['access_token'])) {
+    $userAccessToken = $params['access_token'];
+    $userAccessExpirationTime = time() + $params['expires'] - 60;
+} else {
+    $params = json_decode($response);
+
+    if (isset($params->access_token)) {
+        $userAccessToken = $params->access_token;
+        $userAccessExpirationTime = time() + $params->expires_in - 60;
+    } else {
+        throw new RuntimeException('Facebook OAuth: The response to the request to exchange a code for an access token does not contain an access token. Here is the response: ' . json_encode($response));
+    }
 }
 
-$userAccessToken = $params['access_token'];
-$userAccessExpirationTime = time() + $params['expires'] - 60;
 
 /**
  * Use the access token to get the user's information from Facebook.
