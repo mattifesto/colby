@@ -516,48 +516,17 @@ EOT;
     }
 
     /**
-     * @param string $redirect
-     *  The URL to go to after logging out.
-     *
-     *  This URL should not be escaped for use in HTML.
-     *
-     *  The URL can be URL encoded or not.
-     *      (If a case is found where it needs to be one or the other,
-     *       update this documentation.)
-     *
-     *  If no URL is provided, $_SERVER['REQUEST_URI'] will be used.
-     *
-     * @return string
-     *  The URL to visit to log out.
-     *
-     *  This URL will be properly URL encoded.
-     *
-     *  This URL will not be escaped for use in HTML.
+     * @deprecated use CBFacebook::loginURL
      */
-    public static function loginURL($redirectURL = null)
-    {
-        if (!$redirectURL)
-        {
-            $redirectURL = $_SERVER['REQUEST_URI'];
-        }
-
-        $state = new stdClass();
-        $state->colby_redirect_uri = $redirectURL;
-
-        $url = 'https://www.facebook.com/dialog/oauth' .
-            '?client_id=' . CBFacebookAppID .
-            '&redirect_uri=' . urlencode(CBSitePreferences::siteURL() . '/colby/facebook-oauth-handler/') .
-            '&state=' . urlencode(json_encode($state));
-
-        return $url;
+    static function loginURL($redirectURL = null) {
+        return CBFacebook::loginURL($redirectURL);
     }
 
     /**
      * This function must be called before any output is generated because it
      * sets a cookie.
      */
-    public static function logoutCurrentUser()
-    {
+    static function logoutCurrentUser() {
         self::removeUserCookie();
     }
 
@@ -580,19 +549,17 @@ EOT;
      *
      *  This URL will not be escaped for use in HTML.
      */
-    public static function logoutURL($redirectURL = null)
-    {
-        if (!$redirectURL)
-        {
+    static function logoutURL($redirectURL = null) {
+        if (!$redirectURL) {
             $redirectURL = $_SERVER['REQUEST_URI'];
         }
 
         $state = new stdClass();
         $state->colby_redirect_uri = $redirectURL;
 
-        $url = CBSitePreferences::siteURL() . '/colby/logout/?state=' . urlencode(json_encode($state));
+        $URL = CBSitePreferences::siteURL() . '/colby/logout/?state=' . urlencode(json_encode($state));
 
-        return $url;
+        return $URL;
     }
 
     /**

@@ -26,7 +26,7 @@ final class CBAdminPageForUserSettings {
         CBHTMLOutput::setTitleHTML('User');
         CBHTMLOutput::setDescriptionHTML('Tools for viewing and editing a user\'s settings.');
 
-        $userPhotoURL = "https://graph.facebook.com/{$userData->facebookId}/picture?type=large";
+        $userPhotoURL = CBFacebook::userImageURL($userData->facebookId);
 
         ?>
 

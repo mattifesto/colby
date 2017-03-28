@@ -1,156 +1,30 @@
 <?php
 
 /**
- * After the user is sent to the Facebook login page, the user will be
- * redirected to this page. If the user has refused to allow us to log them in,
- * we will immediately redirect them back to the page where they clicked the
- * login link which will look the same as when they left it. If they do allow
- * us to log them in they will be logged in before being redirected to the page
- * which will now either show them the content or let them know that they don't
- * have permissions to view the page.
- *
- * Just because a user successfully logs in doesn't mean they have permissions
- * to see that page.
+ * After the browser is sent to the Facebook login page, the browser will be
+ * redirected to this page by Facebook. Regardless of the succes of Facebook
+ * authentication the browser will be redirected to the redirect URI specified
+ * when the process began. If they are not logged in, they will not see the
+ * page.
  */
 
-/**
- * Check to see if the user didn't accept the Login dialog and clicked Cancel.
- */
-
-if (isset($_GET['error']))
-{
-    /**
-     * Return the user to the page they started at because they decided not
-     * to give us permission to log them in. (They chose "Cancel".)
-     */
-
+// If the user cancels or any error occurs Facebook authentication has been
+// denied.
+if (isset($_GET['error'])) {
     goto done;
 }
 
-/**
- * Exchange the code we received for an access token for the user.
- */
-
-$accessTokenURL = 'https://graph.facebook.com/oauth/access_token' .
-    '?client_id=' . COLBY_FACEBOOK_APP_ID .
-    '&redirect_uri=' .
-        urlencode(CBSitePreferences::siteURL()
-            . '/colby/facebook-oauth-handler/') .
-    '&client_secret=' . COLBY_FACEBOOK_APP_SECRET .
-    '&code=' . $_GET['code'];
-
-$curlHandle = curl_init();
-curl_setopt($curlHandle, CURLOPT_URL, $accessTokenURL);
-curl_setopt($curlHandle, CURLOPT_HEADER, 0);
-curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+$accessTokenObject = CBFacebook::fetchAccessTokenObject($_GET['code']);
+$userProperties = CBFacebook::fetchUserProperties($accessTokenObject->access_token);
 
 /**
- * 2014.08.03
- * Sometimes Facebook responds very slowly to these requests. It's not the
- * web, direct requests from the server are also slow. There's a theory that
- * it has something to do with "round robin DNS", but I never figured that out.
- * However, setting this time out for some reason makes it respond faster.
- * There should be a time out regardless, but I just wanted to document the
- * importance of this.
- */
-curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 5);
-
-$response = curl_exec($curlHandle);
-
-if ($response === false) {
-    $error = curl_errno($curlHandle);
-    throw new RuntimeException("Facebook OAuth: The request to exchange a code for an access token failed with the error: {$error}");
-}
-
-$httpStatusCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
-
-if ($httpStatusCode === 400) { // error
-    $object = json_decode($response);
-
-    throw new RuntimeException('Error retrieving Facebook access token: ' .
-        $object->error->type .
-        ', ' .
-        $object->error->message);
-}
-
-curl_close($curlHandle);
-
-/**
- * The access token request returns a successful response in the form of a
- * query string which has a query variable containing the access token.
- */
-
-$params = null;
-parse_str($response, $params);
-
-if (isset($params['access_token'])) {
-    $userAccessToken = $params['access_token'];
-    $userAccessExpirationTime = time() + $params['expires'] - 60;
-} else {
-    $params = json_decode($response);
-
-    if (isset($params->access_token)) {
-        $userAccessToken = $params->access_token;
-        $userAccessExpirationTime = time() + $params->expires_in - 60;
-    } else {
-        throw new RuntimeException('Facebook OAuth: The response to the request to exchange a code for an access token does not contain an access token. Here is the response: ' . json_encode($response));
-    }
-}
-
-
-/**
- * Use the access token to get the user's information from Facebook.
- */
-
-$userPropertiesURL = "https://graph.facebook.com/me?access_token={$userAccessToken}";
-
-$curlHandle = curl_init();
-curl_setopt($curlHandle, CURLOPT_URL, $userPropertiesURL);
-curl_setopt($curlHandle, CURLOPT_HEADER, 0);
-curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
-
-/**
- * 2014.08.03
- * Sometimes Facebook responds very slowly to these requests. It's not the
- * web, direct requests from the server are also slow. There's a theory that
- * it has something to do with "round robin DNS", but I never figured that out.
- * However, setting this time out for some reason makes it respond faster.
- * There should be a time out regardless, but I just wanted to document the
- * importance of this.
- */
-curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 5);
-
-$response = curl_exec($curlHandle);
-
-$httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
-
-if ($httpCode === 400)
-{
-    $object = json_decode($response);
-
-    throw new RuntimeException('Error retrieving Facebook user properties: ' .
-        $object->error->type .
-        ', ' .
-        $object->error->message);
-}
-
-curl_close($curlHandle);
-
-/**
- * Decode the user properties and log the user in.
- */
-
-$userProperties = json_decode($response);
-
-/**
- * 2013.10.24.1201
- * ISSUE: This is to address an issue one user is having that when they log
+ * NOTE: 2013.10.24
+ * This is to address an issue one user is having that when they log
  * in everything seems to work but the user properties don't contain a `name`
  * property. There is no repro for this issue.
  */
 
-if (!isset($userProperties->name))
-{
+if (!isset($userProperties->name)) {
     throw new RuntimeException('The user properties do not contain a name: ' .
                                serialize($userProperties) .
                                ' User properties retrieval URL: ' .
@@ -160,8 +34,8 @@ if (!isset($userProperties->name))
 }
 
 ColbyUser::loginCurrentUser(
-    $userAccessToken,
-    $userAccessExpirationTime,
+    $accessTokenObject->access_token,
+    time() + $accessTokenObject->expires_in - 60,
     $userProperties);
 
 done:
