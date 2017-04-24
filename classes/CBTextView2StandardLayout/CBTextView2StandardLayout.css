@@ -57,6 +57,10 @@
     margin-top: 0.5em;
 }
 
+.CBTextView2StandardLayout pre {
+    white-space: pre-wrap;
+}
+
 .CBTextView2StandardLayout cite {
     font-style: italic;
 }
@@ -75,6 +79,7 @@
 .CBTextView2StandardLayout dl + *,
 .CBTextView2StandardLayout ol + *,
 .CBTextView2StandardLayout p + *,
+.CBTextView2StandardLayout pre + *,
 .CBTextView2StandardLayout ul + * {
     margin-top: 1em;
 }
