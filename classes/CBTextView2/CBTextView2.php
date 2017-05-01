@@ -14,6 +14,9 @@ final class CBTextView2 {
      * formatted content if required.
      *
      * @param string? $model->contentAsHTML
+     *
+     *      If this is empty, the view will not render.
+     *
      * @param [string]? $model->CSSClassNames
      * @param bool? $model->isCustom
      *
@@ -31,6 +34,11 @@ final class CBTextView2 {
      * @return null
      */
     static function renderModelAsHTML(stdClass $model) {
+        if (empty($model->contentAsHTML)) {
+            echo '<!-- CBTextView2 with no content -->';
+            return;
+        }
+
         if (is_array($model->CSSClassNames)) {
             if (empty($model->isCustom)) {
                 $standardCSSClassNames = ['CBTextView2StandardLayout'];
@@ -74,6 +82,11 @@ final class CBTextView2 {
             'contentAsCommonMark' => CBModel::value($spec, 'contentAsCommonMark', ''),
             'isCustom' => CBModel::value($spec, 'isCustom', false, 'boolval'),
         ];
+
+        // Views with no content will not render, contentAsHTML is left empty
+        if (empty(trim($model->contentAsCommonMark))) {
+            return $model;
+        }
 
         // contentAsHTML
         $parsedown = new Parsedown();
