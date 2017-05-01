@@ -339,6 +339,28 @@ var Colby = {
     },
 
     /**
+     * @param int unixTimestamp
+     * @param string defaultTextContent
+     *
+     *      This text will be displayed if there is no unix timestamp.
+     *
+     * @return Element
+     */
+    unixTimestampToElement: function (unixTimestamp, defaultTextContent) {
+        var element = document.createElement("time");
+        element.className = "time";
+        element.textContent = "---";
+
+        if (unixTimestamp) {
+            element.dataset.timestamp = unixTimestamp * 1000;
+        } else {
+            element.dataset.nulltextcontent = defaultTextContent || "";
+        }
+
+        return element;
+    },
+
+    /**
      * This function converts a unix timestamp to a string that can be parsed
      * properly by Date.parse().
      *
