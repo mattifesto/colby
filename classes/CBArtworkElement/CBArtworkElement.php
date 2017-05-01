@@ -25,7 +25,7 @@ final class CBArtworkElement {
      *
      * @return null
      */
-    public static function render(array $args = []) {
+    static function render(array $args = []) {
         if (empty($args['height']) || empty($args['width']) || empty($args['URL'])) {
             return;
         }
@@ -77,5 +77,12 @@ final class CBArtworkElement {
         </div>
 
         <?php
+    }
+
+    /**
+     * @return [string]
+     */
+    static function requiredJavaScriptURLs() {
+        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 }
