@@ -1,0 +1,53 @@
+.CBPageListView2StandardLayout {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    font-size: 80%;
+    margin-top: 20px;
+}
+
+.CBPageListView2StandardLayout > article {
+    background-color: hsl(0, 0%, 7%);
+    border: 1px solid var(--CBFaintLineColor);
+    margin-bottom: 60px;
+    max-width: 100%;
+    width: 600px;
+}
+
+.CBPageListView2StandardLayout > article > .date,
+.CBPageListView2StandardLayout > article > .title,
+.CBPageListView2StandardLayout > article > .description {
+    display: block;
+    margin: 10px 20px;
+}
+
+.CBPageListView2StandardLayout > article > .date {
+    font-size: 80%;
+    text-transform: uppercase;
+    text-align: right;
+}
+
+.CBPageListView2StandardLayout > article > .date time,
+    .CBPageListView2StandardLayout > div > .description {
+    color: hsla(0, 0%, 100%, 0.6);
+}
+
+.CBPageListView2StandardLayout > article > .title {
+    color: inherit;
+    text-decoration: none;
+}
+
+@media (max-width: 600px) {
+    .CBPageListView2StandardLayout > article {
+        background-color: transparent;
+        border-width: 0;
+    }
+}
+
+.CBPageListView2StandardLayout > .more {
+    border: 1px solid var(--CBFaintLineColor);
+    border-radius: 5px;
+    margin-bottom: 60px;
+    padding: 10px;
+}
