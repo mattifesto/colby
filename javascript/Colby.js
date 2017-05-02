@@ -447,6 +447,25 @@ var Colby = {
             element.textContent = dateString;
         }
     },
+
+    /**
+     * @param string URI
+     *
+     * @return object|undefined
+     */
+    URIToImage: function (URI) {
+        var regex = /\/data\/([0-9a-f]{2})\/([0-9a-f]{2})\/([0-9a-f]{36})\/([^\/\.]+)\.([^\/\.]+)$/;
+        var matches = URI.match(regex);
+
+        if (matches) {
+            return {
+                className: "CBImage",
+                extension: matches[5],
+                filename: matches[4],
+                ID: matches[1] + matches[2] + matches[3],
+            };
+        }
+    },
 };
 
 /**
