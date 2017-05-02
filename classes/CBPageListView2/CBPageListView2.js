@@ -32,7 +32,7 @@ var CBPageListView2 = {
                     src: page.thumbnailURL,
                 });
                 var dateElement = document.createElement("div");
-                dateElement.className = "date";
+                dateElement.className = "published";
                 dateElement.appendChild(Colby.unixTimestampToElement(page.publicationTimeStamp));
                 var titleElement = document.createElement("a");
                 titleElement.className = "title";
@@ -44,8 +44,8 @@ var CBPageListView2 = {
 
                 element.addEventListener("click", CBPageListView2.navigate.bind(undefined, "/" + page.URI + "/"));
 
-                element.appendChild(artworkElement);
                 element.appendChild(dateElement);
+                element.appendChild(artworkElement);
                 element.appendChild(titleElement);
                 element.appendChild(descriptionElement);
 

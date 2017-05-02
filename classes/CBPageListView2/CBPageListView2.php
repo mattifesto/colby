@@ -100,4 +100,24 @@ EOT;
     static function requiredJavaScriptURLs() {
         return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
+
+    static function specToModel(stdClass $spec) {
+        $model = (object)[
+            'className' => __CLASS__,
+            'classNameForKind' => CBModel::value($spec, 'classNameForKind', '', 'trim'),
+            'isCustom' => CBModel::value($spec, 'isCustom', false, 'boolval'),
+        ];
+
+        // CSSClassNames
+        $CSSClassNames = CBModel::value($spec, 'CSSClassNames', '');
+        $CSSClassNames = preg_split('/[\s,]+/', $CSSClassNames, null, PREG_SPLIT_NO_EMPTY);
+
+        if ($CSSClassNames === false) {
+            throw new RuntimeException("preg_split() returned false");
+        }
+
+        $model->CSSClassNames = $CSSClassNames;
+
+        return $model;
+    }
 }

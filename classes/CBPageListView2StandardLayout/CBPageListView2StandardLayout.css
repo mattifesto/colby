@@ -8,29 +8,46 @@
 }
 
 .CBPageListView2StandardLayout > article {
-    background-color: hsl(0, 0%, 7%);
-    border: 1px solid var(--CBFaintLineColor);
+    background-color: var(--CBDefaultThemeBackgroundColorForPanel);
     margin-bottom: 60px;
     max-width: 100%;
     width: 600px;
 }
 
-.CBPageListView2StandardLayout > article > .date,
-.CBPageListView2StandardLayout > article > .title,
-.CBPageListView2StandardLayout > article > .description {
-    display: block;
-    margin: 10px 20px;
+.CBPageListView2StandardLayout.dark > article {
+    background-color: var(--CBDarkThemeBackgroundColorForPanel);
 }
 
-.CBPageListView2StandardLayout > article > .date {
+.CBPageListView2StandardLayout.light > article {
+    background-color: var(--CBLightThemeBackgroundColorForPanel);
+}
+
+.CBPageListView2StandardLayout > article > .published,
+.CBPageListView2StandardLayout > article > .title,
+.CBPageListView2StandardLayout > article > .description {
+    display: block; /* title is an anchor */
+    margin: 10px 15px;
+}
+
+.CBPageListView2StandardLayout > article > .published {
     font-size: 80%;
     text-transform: uppercase;
     text-align: right;
 }
 
-.CBPageListView2StandardLayout > article > .date time,
-    .CBPageListView2StandardLayout > div > .description {
-    color: hsla(0, 0%, 100%, 0.6);
+.CBPageListView2StandardLayout > article > .published,
+.CBPageListView2StandardLayout > article > .description {
+    color: var(--CBDefaultThemeTextColor2);
+}
+
+.CBPageListView2StandardLayout.dark > article > .published,
+.CBPageListView2StandardLayout.dark > article > .description {
+    color: var(--CBDarkThemeTextColor2);
+}
+
+.CBPageListView2StandardLayout.light > article > .published,
+.CBPageListView2StandardLayout.light > article > .description {
+    color: var(--CBLightThemeTextColor2);
 }
 
 .CBPageListView2StandardLayout > article > .title {
@@ -46,7 +63,7 @@
 }
 
 .CBPageListView2StandardLayout > .more {
-    border: 1px solid var(--CBFaintLineColor);
+    border: 1px solid var(--CBDefaultThemeLineColor);
     border-radius: 5px;
     margin-bottom: 60px;
     padding: 10px;
