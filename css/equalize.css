@@ -17,13 +17,31 @@ html {
     -ms-text-size-adjust:       100%;               /* 4 */
     -webkit-text-size-adjust:   100%;               /* 4 */
 
-    --CBFaintLineColor: hsla(0, 0%, 0%, 0.2);
-    --CBFaintLineColorDark: hsla(0, 0%, 0%, 0.2);
-    --CBFaintLineColorLight: hsla(0, 0%, 100%, 0.2);
+    --CBFaintLineColor: hsla(0, 0%, 0%, 0.2); /* deprecated */
+    --CBFaintLineColorDark: hsla(0, 0%, 0%, 0.2); /* deprecated */
+    --CBFaintLineColorLight: hsla(0, 0%, 100%, 0.2); /* deprecated */
 
-    --CBTextColor: hsla(0, 0%, 0%, 0.9);
-    --CBTextColorDark: hsla(0, 0%, 0%, 0.9);
-    --CBTextColorLight: hsla(0, 0%, 100%, 0.9);
+    --CBTextColor: hsla(0, 0%, 0%, 0.9); /* deprecated use CBDefaultThemeTextColor */
+    --CBTextColorDark: hsla(0, 0%, 0%, 0.9); /* deprecated use CBLightThemeTextColor */
+    --CBTextColorLight: hsla(0, 0%, 100%, 0.9); /* deprecated use CBDarkThemeTextColor */
+
+    --CBDefaultThemeBackgroundColor: hsl(0, 0%, 100%);
+    --CBDefaultThemeBackgroundColorForPanel: hsla(30, 30%, 70%, 0.1);
+    --CBDefaultThemeLineColor: hsla(0, 0%, 0%, 0.2);
+    --CBDefaultThemeTextColor: hsla(0, 0%, 0%, 0.9);
+    --CBDefaultThemeTextColor2: hsla(0, 0%, 0%, 0.5);
+
+    --CBLightThemeBackgroundColor: hsl(0, 0%, 100%);
+    --CBLightThemeBackgroundColorForPanel: hsla(30, 30%, 70%, 0.1);
+    --CBLightThemeLineColor: hsla(0, 0%, 0%, 0.2);
+    --CBLightThemeTextColor: hsla(0, 0%, 0%, 0.9);
+    --CBLightThemeTextColor2: hsla(0, 0%, 0%, 0.5);
+
+    --CBDarkThemeBackgroundColor: hsl(0, 0%, 20%);
+    --CBDarkThemeBackgroundColorForPanel: hsla(0, 0%, 100%, 0.05);
+    --CBDarkThemeLineColor: hsla(0, 0%, 100%, 0.2);
+    --CBDarkThemeTextColor: hsla(0, 0%, 100%, 0.9);
+    --CBDarkThemeTextColor2: hsla(0, 0%, 100%, 0.5);
 }
 
 body {
