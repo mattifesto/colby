@@ -36,8 +36,14 @@ var CBArtworkElement = {
             containerElement.style.overflow = "hidden";
             containerElement.style.position = "relative";
             containerElement.style.paddingBottom = ((args.image.height / args.image.width) * 100) + "%";
-        } else {
-            imgElement.src = args.src; /* deprecated */
+        } else { /* deprecated */
+            var image = Colby.URIToImage(args.src);
+
+            if (image) {
+                imgElement.src = Colby.imageToURL(image, "rw1280");
+            } else {
+                imgElement.src = args.src;
+            }
         }
 
         containerElement.appendChild(imgElement);
