@@ -7,6 +7,14 @@
     margin-top: 20px;
 }
 
+.CBPageListView2StandardLayout.dark {
+    color: var(--CBDarkThemeTextColor);
+}
+
+.CBPageListView2StandardLayout.light {
+    color: var(--CBLightThemeTextColor);
+}
+
 .CBPageListView2StandardLayout > article {
     background-color: var(--CBDefaultThemeBackgroundColorForPanel);
     margin-bottom: 60px;
