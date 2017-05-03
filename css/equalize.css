@@ -26,13 +26,13 @@ html {
     --CBTextColorLight: hsla(0, 0%, 100%, 0.9); /* deprecated use CBDarkThemeTextColor */
 
     --CBDefaultThemeBackgroundColor: hsl(0, 0%, 100%);
-    --CBDefaultThemeBackgroundColorForPanel: hsla(30, 30%, 70%, 0.1);
+    --CBDefaultThemeBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
     --CBDefaultThemeLineColor: hsla(0, 0%, 0%, 0.2);
     --CBDefaultThemeTextColor: hsla(0, 0%, 0%, 0.9);
     --CBDefaultThemeTextColor2: hsla(0, 0%, 0%, 0.5);
 
     --CBLightThemeBackgroundColor: hsl(0, 0%, 100%);
-    --CBLightThemeBackgroundColorForPanel: hsla(30, 30%, 70%, 0.1);
+    --CBLightThemeBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
     --CBLightThemeLineColor: hsla(0, 0%, 0%, 0.2);
     --CBLightThemeTextColor: hsla(0, 0%, 0%, 0.9);
     --CBLightThemeTextColor2: hsla(0, 0%, 0%, 0.5);

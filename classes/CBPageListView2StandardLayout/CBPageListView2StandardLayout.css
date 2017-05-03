@@ -8,25 +8,31 @@
 }
 
 .CBPageListView2StandardLayout.dark {
+    color: hsla(0, 0%, 100%, 0.9);
     color: var(--CBDarkThemeTextColor);
 }
 
 .CBPageListView2StandardLayout.light {
+    color: hsla(0, 0%, 0%, 0.2);
     color: var(--CBLightThemeTextColor);
 }
 
 .CBPageListView2StandardLayout > article {
+    background-color: hsla(0, 0%, 100%, 0.8);
     background-color: var(--CBDefaultThemeBackgroundColorForPanel);
+    border-radius: 5px;
     margin-bottom: 60px;
     max-width: 100%;
     width: 600px;
 }
 
 .CBPageListView2StandardLayout.dark > article {
+    background-color: hsla(0, 0%, 100%, 0.05);
     background-color: var(--CBDarkThemeBackgroundColorForPanel);
 }
 
 .CBPageListView2StandardLayout.light > article {
+    background-color: hsla(0, 0%, 100%, 0.8);
     background-color: var(--CBLightThemeBackgroundColorForPanel);
 }
 
@@ -45,16 +51,19 @@
 
 .CBPageListView2StandardLayout > article > .published,
 .CBPageListView2StandardLayout > article > .description {
+    color: hsla(0, 0%, 0%, 0.5);
     color: var(--CBDefaultThemeTextColor2);
 }
 
 .CBPageListView2StandardLayout.dark > article > .published,
 .CBPageListView2StandardLayout.dark > article > .description {
+    color: hsla(0, 0%, 100%, 0.5);
     color: var(--CBDarkThemeTextColor2);
 }
 
 .CBPageListView2StandardLayout.light > article > .published,
 .CBPageListView2StandardLayout.light > article > .description {
+    color: hsla(0, 0%, 0%, 0.5);
     color: var(--CBLightThemeTextColor2);
 }
 
@@ -63,16 +72,26 @@
     text-decoration: none;
 }
 
-@media (max-width: 600px) {
-    .CBPageListView2StandardLayout > article {
-        background-color: transparent;
-        border-width: 0;
-    }
-}
-
 .CBPageListView2StandardLayout > .more {
+    border: 1px solid hsla(0, 0%, 0%, 0.2);
     border: 1px solid var(--CBDefaultThemeLineColor);
     border-radius: 5px;
     margin-bottom: 60px;
     padding: 10px;
+}
+
+.CBPageListView2StandardLayout.dark > .more {
+    border-color: hsla(0, 0%, 100%, 0.2);
+    border-color: var(--CBDarkThemeLineColor);
+}
+
+.CBPageListView2StandardLayout > .more {
+    border-color: hsla(0, 0%, 0%, 0.2);
+    border-color: var(--CBLightThemeLineColor);
+}
+
+@media (max-width: 600px) {
+    .CBPageListView2StandardLayout > article {
+        border-radius: 0;
+    }
 }
