@@ -12,14 +12,29 @@
 final class CBArtworkElement {
 
     /**
+     * @param int $maxHeight
+     *  The length in any units of the maximum desired height.
+     * @param int $aspectWidth
+     *  The length in any units (same as $aspectHeight) of the image width.
+     * @param int $aspectHeight
+     *  The length in any units (same as $aspectWidth) of the image height.
+     * @return int
+     */
+    static function maxHeightToMaxWidth($maxHeight, $aspectWidth, $aspectHeight) {
+        return $maxHeight * ($aspectWidth / $aspectHeight);
+    }
+
+    /**
      * @param string? $args['alternativeText']
      *  The alternative text for the image.
      * @param int $args['height']
      *  The aspect height of the image, image pixel height can work here.
      * @param int $args['width']
      *  The aspect width of the image, image pixel width can work here.
+     * @param float? $args['maxHeight']
+     *  The maximum height in CSS pixels that the image should be displayed.
      * @param float? $args['maxWidth']
-     *  The maximum with in CSS pixels that the image should be displayed.
+     *  The maximum width in CSS pixels that the image should be displayed.
      * @param string $args['URL']
      *  The URL for the image.
      *
@@ -30,17 +45,32 @@ final class CBArtworkElement {
             return;
         }
 
+        $aspectWidth = $args['width'];
+        $aspectHeight = $args['height'];
         $ID = CBHex160::random();
-        $inverseAspectRatio = $args['height'] / $args['width'];
+        $inverseAspectRatio = $aspectHeight/ $aspectWidth;
         $URLAsHTML = cbhtml($args['URL']);
         $paddingBottom = $inverseAspectRatio * 100;
         $paddingBottom = "padding-bottom: {$paddingBottom}%;";
 
-        if (empty($args['maxWidth'])) {
-            $maxWidth = '/* no max-width */';
-        } else {
-            $maxWidth = floatval($args['maxWidth']);
+        $maxWidth = false;
+
+        if (!empty($args['maxHeight'])) {
+            $maxWidth = CBArtworkElement::maxHeightToMaxWidth($args['maxHeight'], $aspectWidth, $aspectHeight);
+        }
+
+        if (!empty($args['maxWidth'])) {
+            if ($maxWidth) {
+                $maxWidth = min(floatval($args['maxWidth']), $maxWidth);
+            } else {
+                $maxWidth = floatval($args['maxWidth']);
+            }
+        }
+
+        if ($maxWidth) {
             $maxWidth = "max-width: {$maxWidth}px;";
+        } else {
+            $maxWidth = '/* no max-width */';
         }
 
         if (empty($args['alternativeText'])) {
