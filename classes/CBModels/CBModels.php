@@ -329,33 +329,59 @@ EOT;
     }
 
     /**
+     * Fetches a spec by ID.
+     *
+     * @param hex160 $_POST['ID']
+     *
      * @return null
+     *
+     *      Ajax response properties:
+     *
+     *      object? spec
+     *          The spec property will be set to the spec if the spec exists and
+     *          the current user has read permissions; otherwise it will not be
+     *          set.
+     *
+     *      Ajax errors:
+     *
+     *      If the spec exists but user does not have permission to read the it,
+     *      this is treated as an error. When you use this API it is assumed you
+     *      have permission to read the spec, if you don't it's an error.
+     *
+     *      If the spec doesn't exist but the user wouldn't have permission to
+     *      read it, there is no error from this API. If an app needs to predict
+     *      permissions it should use another API.
      */
-    public static function fetchSpecForAjax() {
+    static function fetchSpecForAjax() {
         $response = new CBAjaxResponse();
         $ID = $_POST['ID'];
         $spec = CBModels::fetchSpecByID($ID);
 
-        // NOTE: 2017.01.07
-        // It should be literally impossible for the spec className to be empty.
-        $className = empty($spec->className) ? $_POST['className'] : $spec->className;
-        $info = CBModelClassInfo::classNameToInfo($className);
+        if (empty($spec)) {
+            $response->message = "A spec was not found with ID: {$ID}.";
+            $response->wasSuccessful = true;
+            goto done;
+        }
 
-        // NOTE: 2017.01.07
-        // Deprecate this first condition used by the model editor. Also not
-        // having permission to read a spec should not set wasSuccessful to
-        // false. Also passing the className in $_POST above is weird, also used
-        // by the model editor.
+        $info = CBModelClassInfo::classNameToInfo($spec->className);
+
+        // NOTE: 2017.01.07, 2017.05.16
+        // The logic of checking the info user group and currentUserCanRead is
+        // confusing here. I am not sure exactly what is supposed to happen.
+        // Figure it out and document in comments. Hint: I feel like the info
+        // should go away and possibly be integrated in to currentUserCanRead.
         if (!ColbyUser::current()->isOneOfThe($info->userGroup)) {
-            $response->message = "You do not have permission to edit this model.";
+            $response->message = "You do not have permission to read the spec with ID: {$ID}.";
             $response->wasSuccessful = false;
         } else if (CBModels::currentUserCanRead($spec)) {
             $response->spec = $spec;
             $response->wasSuccessful = true;
         } else {
-            $response->message = "You do not have permissions to read the spec with ID: {$ID}";
-            $response->wasSuccessful = true;
+            $response->message = "You do not have permission to read the spec with ID: {$ID}.";
+            $response->wasSuccessful = false;
         }
+
+        done:
 
         $response->send();
     }
@@ -363,7 +389,7 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function fetchSpecForAjaxPermissions() {
+    static function fetchSpecForAjaxPermissions() {
         return (object)['group' => 'Public'];
     }
 
