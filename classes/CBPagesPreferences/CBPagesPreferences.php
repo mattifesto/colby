@@ -3,15 +3,22 @@
 final class CBPagesPreferences {
 
     const ID = '3ff6fabd8a0da44f1b2d5f5faee6961af8e5a9df';
+    const defaultClassNamesForSupportedViews = [
+        'CBArtworkView',
+        'CBContainerView',
+        'CBCustomView',
+        'CBTextView2',
+    ];
 
     /**
-     * Returns an array of view class names that can be added to a page.
+     * @return [string]
      *
-     * @return [{string}]
+     *      An array of view class names that can be added to a page.
      */
-    public static function classNamesForAddableViews() {
-        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        $classNames = array_unique(array_diff($model->supportedViewClassNames, $model->deprecatedViewClassNames));
+    static function classNamesForAddableViews() {
+        $supportedClassNames = CBPagesPreferences::classNamesForSupportedViews();
+        $deprecatedClassNames = CBPagesPreferences::classNamesForDeprecatedViews();
+        $classNames = array_unique(array_diff($supportedClassNames, $deprecatedClassNames));
         $classNames = array_filter($classNames, function ($className) {
             return class_exists($className);
         });
@@ -20,13 +27,25 @@ final class CBPagesPreferences {
     }
 
     /**
-     * Returns an array of view class names that can be edited for a page.
+     * @return [string]
      *
-     * @return [{string}]
+     *      An array of site specific deprecated view class names.
      */
-    public static function classNamesForEditableViews() {
+    static function classNamesForDeprecatedViews() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        $classNames = array_unique(array_merge($model->supportedViewClassNames, $model->deprecatedViewClassNames));
+
+        return $model->deprecatedViewClassNames;
+    }
+
+    /**
+     * @return [string]
+     *
+     *      An array of view class names that can be edited for a page.
+     */
+    static function classNamesForEditableViews() {
+        $supportedClassNames = CBPagesPreferences::classNamesForSupportedViews();
+        $deprecatedClassNames = CBPagesPreferences::classNamesForDeprecatedViews();
+        $classNames = array_unique(array_merge($supportedClassNames, $deprecatedClassNames));
         $classNames = array_filter($classNames, function ($className) {
             return class_exists($className);
         });
@@ -37,9 +56,9 @@ final class CBPagesPreferences {
     /**
      * Returns an array of class names for page kinds.
      *
-     * @return [{string}]
+     * @return [string]
      */
-    public static function classNamesForKinds() {
+    static function classNamesForKinds() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
         return CBModel::value($model, 'classNamesForKinds', []);
     }
@@ -47,9 +66,9 @@ final class CBPagesPreferences {
     /**
      * Returns an array of class names for page layouts.
      *
-     * @return [{string}]
+     * @return [string]
      */
-    public static function classNamesForLayouts() {
+    static function classNamesForLayouts() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
         return CBModel::value($model, 'classNamesForLayouts', []);
     }
@@ -57,17 +76,32 @@ final class CBPagesPreferences {
     /**
      * Returns an array of class names for page kinds.
      *
-     * @return [{string}]
+     * @return [string]
      */
-    public static function classNamesForSettings() {
+    static function classNamesForSettings() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
         return CBModel::value($model, 'classNamesForSettings', []);
     }
 
     /**
-     * @return {stdClass}
+     * @return [string]
+     *
+     *      A alphabetized merge of the default supported view class names and
+     *      the site specific supported view class names.
      */
-    public static function info() {
+    static function classNamesForSupportedViews() {
+        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
+        $classNames = array_merge(CBPagesPreferences::defaultClassNamesForSupportedViews, $model->supportedViewClassNames);
+        $classNames = array_unique($classNames);
+        sort($classNames);
+
+        return $classNames;
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function info() {
         return CBModelClassInfo::specToModel((object)[
             'pluralTitle' => 'Pages Preferences',
             'singularTitle' => 'Pages Preferences'
@@ -77,21 +111,20 @@ final class CBPagesPreferences {
     /**
      * @return null
      */
-    public static function install() {
+    static function install() {
         $spec = CBModels::fetchSpecByID(CBPagesPreferences::ID);
 
         if ($spec === false) {
             $spec = CBModels::modelWithClassName(__CLASS__, [ 'ID' => CBPagesPreferences::ID ]);
-            $spec->supportedViewClassNames = 'CBBackgroundView CBImageLinkView CBThemedTextView';
         }
 
         CBModels::save([$spec]);
     }
 
     /**
-     * @return {stdClass}
+     * @return stdClass
      */
-    public static function specToModel(stdClass $spec) {
+    static function specToModel(stdClass $spec) {
         $model = (object)['className' => __CLASS__];
         $model->deprecatedViewClassNames = [];
         $model->supportedViewClassNames = [];
@@ -129,7 +162,7 @@ final class CBPagesPreferences {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }
