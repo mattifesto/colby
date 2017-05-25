@@ -1,0 +1,7 @@
+.CBPageLayout {
+    flex: 1 1 auto;
+}
+
+.CBPageLayout.endContentWithWhiteSpace {
+    padding-bottom: 100px;
+}
