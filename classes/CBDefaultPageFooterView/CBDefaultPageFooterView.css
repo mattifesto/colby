@@ -1,0 +1,9 @@
+.CBDefaultPageFooterView {
+    padding: 40px 20px 10px;
+}
+
+.CBDefaultPageFooterView .copyright {
+    color: var(--CBTextColor2);
+    font-size: 80%;
+    text-align: center;
+}
