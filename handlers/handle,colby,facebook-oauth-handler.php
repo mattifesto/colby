@@ -22,15 +22,14 @@ $userProperties = CBFacebook::fetchUserProperties($accessTokenObject->access_tok
  * This is to address an issue one user is having that when they log
  * in everything seems to work but the user properties don't contain a `name`
  * property. There is no repro for this issue.
+ *
+ * NOTE: 2017.05.25
+ * In the future give the user a more helpful message and log the current
+ * exception message for the admin to see.
  */
 
 if (!isset($userProperties->name)) {
-    throw new RuntimeException('The user properties do not contain a name: ' .
-                               serialize($userProperties) .
-                               ' User properties retrieval URL: ' .
-                               $userPropertiesURL .
-                               ' HTTP code: ' .
-                               $httpCode);
+    throw new RuntimeException('The Facebook user properties do not contain a "name" property: ' . json_encode($userProperties));
 }
 
 ColbyUser::loginCurrentUser(
