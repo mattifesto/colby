@@ -12,28 +12,28 @@
 }
 
 .CBWellKnownThemeForPageTitleAndDescription > .description {
-  color: rgba(0, 0, 0, 0.6);
-  font-style: italic;
-  line-height: 1.5;
-  max-width: 480px;
+    color: var(--CBTextColor2);
+    font-style: italic;
+    line-height: 1.5;
+    max-width: 480px;
 }
 
 .CBWellKnownThemeForPageTitleAndDescription > .published {
-  color: rgba(0, 0, 0, 0.4);
-  font-size: 80%;
-  margin-top: 40px;
+    color: var(--CBTextColor2);
+    font-size: 80%;
+    margin-top: 40px;
 }
 
-/* light text colors */
+/* light text colors (deprecated, use theme classes) */
 
 .CBWellKnownThemeForPageTitleAndDescription.light {
-    color: rgba(255, 255, 255, 0.9);
+    color: hsla(0, 0%, 100%, 0.9); /* CBTextColor for CBDarkTheme */
 }
 
 .CBWellKnownThemeForPageTitleAndDescription.light > .description {
-    color: rgba(255, 255, 255, 0.6);
+    color: hsla(0, 0%, 100%, 0.7); /* CBTextColor2 for CBDarkTheme */
 }
 
 .CBWellKnownThemeForPageTitleAndDescription.light > .published {
-    color: rgba(255, 255, 255, 0.4);
+    color: hsla(0, 0%, 100%, 0.7); /* CBTextColor2 for CBDarkTheme */
 }

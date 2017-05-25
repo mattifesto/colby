@@ -8,16 +8,18 @@
     text-align: center;
 }
 
+/* deprecated: use CBLightTheme to get dark text */
 .CBTextView2StandardLayout.dark {
-    color: var(--CBTextColorDark);
+    color: hsla(0, 0%, 0%, 0.9); /* CBTextColor for CBLightTheme */
 }
 
 .CBTextView2StandardLayout.justify {
     text-align: justify;
 }
 
+/* deprecated: use CBDarkTheme to get dark text */
 .CBTextView2StandardLayout.light {
-    color: var(--CBTextColorLight);
+    color: hsla(0, 0%, 100%, 0.9); /* CBTextColor for CBDarkTheme */
 }
 
 .CBTextView2StandardLayout.right {

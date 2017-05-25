@@ -32,14 +32,13 @@ var CBTextView2Editor = {
 
         element.appendChild(CBUI.createSectionHeader({
             paragraphs: [`
-                CSSClassNames can provide additional formatting of the text. The
-                general layout class names also support extensions such as
-                "center", "justify", "right", "light", and "dark". If you want
-                your content centered, enter "center" in this field.
+                CSS class names can provide additional formatting of the text.
+                The default styles support extensions such as "center",
+                "justify", and "right". You can also use "CBDarkTheme" and
+                "CBLightTheme".
                 `,`
-                Default class names are automatically included so if you wish to
-                produce a completely customized presentation enabled the Custom
-                option.
+                To remove the default styles and produce a completely custom
+                presentation enable the Custom option.
             `],
         }));
 
