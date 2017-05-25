@@ -3,6 +3,9 @@
 final class CBPagesPreferences {
 
     const ID = '3ff6fabd8a0da44f1b2d5f5faee6961af8e5a9df';
+    const defaultClassNamesForLayouts = [
+        'CBPageLayout',
+    ];
     const defaultClassNamesForSupportedViews = [
         'CBArtworkView',
         'CBContainerView',
@@ -70,7 +73,9 @@ final class CBPagesPreferences {
      */
     static function classNamesForLayouts() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        return CBModel::value($model, 'classNamesForLayouts', []);
+        $classNamesForLayouts = CBModel::value($model, 'classNamesForLayouts', []);
+
+        return array_unique(array_merge(CBPagesPreferences::defaultClassNamesForLayouts, $classNamesForLayouts));
     }
 
     /**
