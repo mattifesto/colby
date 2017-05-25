@@ -204,6 +204,12 @@ class CBHTMLOutput
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent = '';
         $classNameForSettings = empty(self::$classNameForSettings) ? CBSitePreferences::defaultClassNameForPageSettings() : self::$classNameForSettings;
+        $defaultThemeClassName = 'CBLightTheme';
+
+        if (is_callable($function = "{$classNameForSettings}::defaultThemeClassName")) {
+            $defaultThemeClassName = call_user_func($function);
+            CBHTMLOutput::requireClassName($defaultThemeClassName);
+        }
 
         if (is_callable($function = "{$classNameForSettings}::requiredClassNames")) {
             $classNames = call_user_func($function);
@@ -241,7 +247,7 @@ class CBHTMLOutput
         ?>
 
         <!doctype html>
-        <html lang="en">
+        <html lang="en" class="<?= $defaultThemeClassName ?>">
             <head>
                 <meta charset="UTF-8">
                 <title><?= $titleAsHTML ?></title>
