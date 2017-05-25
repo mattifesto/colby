@@ -25,10 +25,11 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML($titleHTML);
 CBHTMLOutput::setDescriptionHTML('Search for site content.');
 
-include Colby::findFile('sections/standard-page-header.php');
+CBPageLayout::renderPageHeader();
 
 ?>
 
+<main style="flex: 1 1 auto;">
 <form action="<?php echo CBSitePreferences::siteURL(); ?>/search/" <?php echo $formClass; ?>>
     <style>
 
@@ -193,6 +194,8 @@ END;
 
 done:
 
-include Colby::findFile('sections/standard-page-footer.php');
+echo '</main>';
+
+CBPageLayout::renderPageFooter();
 
 CBHTMLOutput::render();
