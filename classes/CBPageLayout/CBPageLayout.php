@@ -36,11 +36,15 @@ final class CBPageLayout {
             <?= $localCSS ?>
             <?php
 
+                if (!empty($layoutModel->isArticle)) { echo "<article>"; }
+
                 if (is_callable($function = "{$layoutModel->customLayoutClassName}::renderPageContent")) {
                     call_user_func($function, $layoutModel->customLayoutProperties);
                 } else {
                     $renderContentCallback();
                 }
+
+                if (!empty($layoutModel->isArticle)) { echo "</article>"; }
 
             ?>
         </main>
@@ -105,6 +109,7 @@ final class CBPageLayout {
      * @param string? $spec->CSSClassNames
      * @param string? $spec->customLayoutClassName
      * @param stdClass? $spec->customLayoutProperties
+     * @param bool? $spec->isArticle
      * @param string? $spec->localCSSTemplate
      *
      * @return stdClass
@@ -114,6 +119,7 @@ final class CBPageLayout {
             'className' => __CLASS__,
             'customLayoutClassName' => CBModel::value($spec, 'customLayoutClassName', '', 'trim'),
             'customLayoutProperties' => CBModel::value($spec, 'customLayoutProperties', (object)[]),
+            'isArticle' => CBModel::value($spec, 'isArticle', false, 'boolval'),
         ];
 
         // CSS class names

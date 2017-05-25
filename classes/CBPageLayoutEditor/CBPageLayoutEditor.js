@@ -1,6 +1,7 @@
 "use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
 /* global
     CBUI,
+    CBUIBooleanEditor,
     CBUIStringEditor */
 
 var CBPageLayoutEditor = {
@@ -45,6 +46,21 @@ var CBPageLayoutEditor = {
         item.appendChild(CBUIStringEditor.createEditor({
             labelText : "Local CSS Template",
             propertyName : "localCSSTemplate",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+        element.appendChild(section);
+
+        /* is article */
+
+        element.appendChild(CBUI.createHalfSpace());
+
+        section = CBUI.createSection();
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText : "Page Content is an Article",
+            propertyName : "isArticle",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         }).element);
