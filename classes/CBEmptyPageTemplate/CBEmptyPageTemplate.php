@@ -3,7 +3,7 @@
 /**
  * This class creates a spec that represents and empty CBViewPage.
  */
-class CBPageTemplate {
+class CBEmptyPageTemplate {
 
     /**
      * @return stdClass
@@ -16,6 +16,6 @@ class CBPageTemplate {
      * @return string
      */
     public static function title() {
-        return 'Blank Page';
+        return 'Empty Page';
     }
 }
