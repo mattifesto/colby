@@ -67,7 +67,7 @@ final class CBPageLayout {
 
         if (is_callable($function = "{$className}::renderPageFooter")) {
             call_user_func($function, $properties);
-        } else if (is_callable($function = 'CBPageLayoutHelpers::renderDefaultPageFooter')) {
+        } else if (is_callable($function = 'CBPageHelpers::renderDefaultPageFooter')) {
             call_user_func($function, $properties);
         } else {
             CBView::renderModelAsHTML((object)[
@@ -89,7 +89,7 @@ final class CBPageLayout {
 
         if (is_callable($function = "{$className}::renderPageHeader")) {
             call_user_func($function, $properties);
-        } else if (is_callable($function = 'CBPageLayoutHelpers::renderDefaultPageHeader')) {
+        } else if (is_callable($function = 'CBPageHelpers::renderDefaultPageHeader')) {
             call_user_func($function, $properties);
         } else {
             CBView::renderModelAsHTML((object)[
