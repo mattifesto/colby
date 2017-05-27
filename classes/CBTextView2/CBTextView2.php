@@ -39,7 +39,7 @@ final class CBTextView2 {
             return;
         }
 
-        if (is_array($model->CSSClassNames)) {
+        if (!empty($model->CSSClassNames) && is_array($model->CSSClassNames)) {
             if (empty($model->isCustom)) {
                 $standardCSSClassNames = ['CBTextView2StandardLayout'];
                 $CSSClassNames = array_unique(array_merge($standardCSSClassNames, $model->CSSClassNames));
