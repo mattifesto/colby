@@ -215,6 +215,16 @@ EOT;
             $classes[] = CBTheme::IDToCSSClass($model->stylesID);
         }
 
+        /* CSS class names */
+
+        if (!empty($model->CSSClassNames) && is_array($model->CSSClassNames)) {
+            array_walk($model->CSSClassNames, 'CBHTMLOutput::requireClassName');
+
+            $classes = array_unique(array_merge($classes, $model->CSSClassNames));
+        }
+
+        /* render */
+
         $classes = implode(' ', $classes);
         $styles = [];
         if (!empty($model->backgroundColor)) { $styles[] = "background-color: {$model->backgroundColor}"; }
@@ -258,6 +268,17 @@ EOT;
                 unset($model->tagName);
                 break;
         }
+
+        /* CSS class names */
+
+        $CSSClassNames = CBModel::value($spec, 'CSSClassNames', '');
+        $CSSClassNames = preg_split('/[\s,]+/', $CSSClassNames, null, PREG_SPLIT_NO_EMPTY);
+
+        if ($CSSClassNames === false) {
+            throw new RuntimeException("preg_split() returned false");
+        }
+
+        $model->CSSClassNames = $CSSClassNames;
 
         /* view styles */
 

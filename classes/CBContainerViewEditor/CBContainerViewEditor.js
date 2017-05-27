@@ -301,11 +301,28 @@ var CBContainerViewEditor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        /* CSS class names */
+
         element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "CSS Class Names",
+            propertyName : "CSSClassNames",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+        element.appendChild(section);
 
+        /* local CSS template */
+
+        element.appendChild(CBUI.createHalfSpace());
+
+        section = CBUI.createSection();
+        item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
             labelText : "Styles Template",
             propertyName : "stylesTemplate",
