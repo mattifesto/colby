@@ -9,12 +9,7 @@ final class CBPageLayout {
 
         /* CSS class names */
 
-        $CSSClassNames = ['CBPageLayout'];
-        $layoutModelCSSClassNames = CBModel::value($layoutModel, 'CSSClassNames');
-
-        if (is_array($layoutModelCSSClassNames) && !empty($layoutModelCSSClassNames)) {
-            $CSSClassNames = array_unique(array_merge($CSSClassNames, $layoutModelCSSClassNames));
-        }
+        $CSSClassNames = CBModel::valueAsArray($layoutModel, 'CSSClassNames');
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
@@ -32,7 +27,7 @@ final class CBPageLayout {
 
         ?>
 
-        <main class="<?= $CSSClassNames ?>">
+        <main class="CBPageLayout <?= $CSSClassNames ?>">
             <?= $localCSS ?>
             <?php
 
