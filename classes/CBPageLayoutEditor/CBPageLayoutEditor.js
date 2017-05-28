@@ -18,10 +18,14 @@ var CBPageLayoutEditor = {
         element.className = "CBPageLayoutEditor";
 
         element.appendChild(CBUI.createSectionHeader({
-            paragraphs: [`
-                CSSClassNames can provide additional options. "CBLightTheme" and
-                "CBDarkTheme" are two examples of class names that work here.
-            `],
+            paragraphs: [
+                `CSS class names can provide additional options. CSS class names
+                 commonly used with this view are:`,
+                `CBLightTheme: a theme with a light background and dark text.`,
+                `CBDarkTheme: a theme with a dark backround and light text.`,
+                `endContentWithWhiteSpace: adds a comfortable amount of white
+                 space and the end of the page content.`
+            ],
         }));
 
         /* CSS class names */
