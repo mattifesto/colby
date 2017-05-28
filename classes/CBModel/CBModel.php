@@ -115,4 +115,32 @@ final class CBModel {
             return $default;
         }
     }
+
+    /**
+     * This function is used to get the value of a model property that is
+     * expected to be an array. Unset and non-array values will be returned as
+     * and empty array.
+     *
+     * This function exists because during rendering this functionality is often
+     * needed and is difficult to perform correctly.
+     *
+     * @param stdClass? $model
+     * @param string $keyPath
+     * @param function? $transform
+     *
+     * @return [mixed]
+     */
+    static function valueAsArray($model = null, $keyPath, callable $transform = null) {
+        $value = CBModel::value($model, $keyPath);
+
+        if (!is_array($value)) {
+            $value = [];
+        }
+
+        if ($transform !== null) {
+            $value = call_user_func($transform, $value);
+        }
+
+        return $value;
+    }
 }
