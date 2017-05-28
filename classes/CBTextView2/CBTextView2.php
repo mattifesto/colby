@@ -39,24 +39,19 @@ final class CBTextView2 {
             return;
         }
 
-        if (!empty($model->CSSClassNames) && is_array($model->CSSClassNames)) {
-            if (empty($model->isCustom)) {
-                $standardCSSClassNames = ['CBTextView2StandardLayout'];
-                $CSSClassNames = array_unique(array_merge($standardCSSClassNames, $model->CSSClassNames));
-            } else {
-                $CSSClassNames = $model->CSSClassNames;
-            }
+        $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
 
-            array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
-
-            $classes = cbhtml(implode(' ', $CSSClassNames));
-        } else {
-            $classes = "";
+        if (empty($model->isCustom)) {
+            array_unshift($CSSClassNames, 'CBTextView2StandardLayout');
         }
+
+        array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
+
+        $CSSClassNames = cbhtml(implode(' ', $CSSClassNames));
 
         ?>
 
-        <div class="CBTextView2 <?= $classes ?>">
+        <div class="CBTextView2 <?= $CSSClassNames ?>">
             <?php if (!empty($model->localCSS)) { ?>
                 <style><?= $model->localCSS ?></style>
             <?php } ?>
