@@ -7,8 +7,8 @@ final class CBPagesPreferences {
         'CBPageLayout',
     ];
     const defaultClassNamesForPageTemplates = [
+        'CBStandardPageTemplate',
         'CBEmptyPageTemplate',
-        'CBStandardPageTemplate'
     ];
     const defaultClassNamesForSupportedViews = [
         'CBArtworkView',
