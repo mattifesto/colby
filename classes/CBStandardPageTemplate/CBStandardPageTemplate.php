@@ -14,6 +14,10 @@ final class CBStandardPageTemplate {
             ],
         ];
 
+        if (is_callable($function = 'CBPageHelpers::classNameForPageSettings')) {
+            $spec->classNameForSettings = call_user_func($function);
+        }
+
         $spec->sections[] = (object)[
             'className' => 'CBPageTitleAndDescriptionView',
         ];

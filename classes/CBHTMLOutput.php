@@ -203,17 +203,20 @@ class CBHTMLOutput
         $settingsHeadContent = '';
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent = '';
-        $classNameForSettings = empty(self::$classNameForSettings) ? CBSitePreferences::defaultClassNameForPageSettings() : self::$classNameForSettings;
+        $classNameForSettings = CBHTMLOutput::$classNameForSettings;
         $defaultThemeClassName = 'CBLightTheme';
 
-        if (is_callable($function = "{$classNameForSettings}::defaultThemeClassName")) {
-            $defaultThemeClassName = call_user_func($function);
-            CBHTMLOutput::requireClassName($defaultThemeClassName);
+        if (empty($classNameForSettings)) {
+            $classNameForSettings = CBSitePreferences::defaultClassNameForPageSettings();
         }
 
-        if (is_callable($function = "{$classNameForSettings}::requiredClassNames")) {
-            $classNames = call_user_func($function);
-            array_walk($classNames, "CBHTMLOutput::requireClassName");
+        if (!empty($classNameForSettings)) {
+            CBHTMLOutput::requireClassName($classNameForSettings);
+
+            if (is_callable($function = "{$classNameForSettings}::defaultThemeClassName")) {
+                $defaultThemeClassName = call_user_func($function);
+                CBHTMLOutput::requireClassName($defaultThemeClassName);
+            }
         }
 
         CBHTMLOutput::processRequiredClassNames();
