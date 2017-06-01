@@ -16,6 +16,7 @@ Disallow: /
 
 User-agent: *
 Disallow: /admin/
+Disallow: /api/
 Disallow: /developer/
 
 <?php }
