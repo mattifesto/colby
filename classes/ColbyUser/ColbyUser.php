@@ -168,6 +168,7 @@ EOT;
 
             SELECT  `id`,
                     LOWER(HEX(`hash`)) as `hash`,
+                    `facebookAccessToken`,
                     `facebookId`,
                     `facebookName`,
                     `facebookFirstName`,
@@ -358,26 +359,11 @@ EOT;
         $sqlFacebookName = $mysqli->escape_string($sqlFacebookName);
         $sqlFacebookName = "'{$sqlFacebookName}'";
 
-        if (isset($facebookProperties->first_name)) {
-            $sqlFacebookFirstName = ColbyConvert::textToHTML($facebookProperties->first_name);
-            $sqlFacebookFirstName = $mysqli->escape_string($sqlFacebookFirstName);
-            $sqlFacebookFirstName = "'{$sqlFacebookFirstName}'";
-
-            $sqlFacebookLastName = ColbyConvert::textToHTML($facebookProperties->last_name);
-            $sqlFacebookLastName = $mysqli->escape_string($sqlFacebookLastName);
-            $sqlFacebookLastName = "'{$sqlFacebookLastName}'";
-
-            $sqlFacebookTimeZone = "'{$facebookProperties->timezone}'";
-        } else {
-            /**
-             * 2015.09.03 Facebook did not return an of these properties for a
-             * new app so they may be deprecated.
-             * TODO: Remove them, they are not used anyway.
-             */
-            $sqlFacebookFirstName = "''";
-            $sqlFacebookLastName = "''";
-            $sqlFacebookTimeZone = '0';
-        }
+        /**
+         * First name, last name, and time zone are deprecated.
+         * TODO: Remove them from the table, they are not used anyway. This
+         * table needs to updated to store JSON or use a model.
+         */
 
         Colby::query('START TRANSACTION');
 
@@ -390,9 +376,9 @@ EOT;
                     `facebookAccessToken` = {$sqlFacebookAccessToken},
                     `facebookAccessExpirationTime` = {$sqlFacebookAccessExpirationTime},
                     `facebookName` = {$sqlFacebookName},
-                    `facebookFirstName` = {$sqlFacebookFirstName},
-                    `facebookLastName` = {$sqlFacebookLastName},
-                    `facebookTimeZone` = {$sqlFacebookTimeZone}
+                    `facebookFirstName` = '',
+                    `facebookLastName` = '',
+                    `facebookTimeZone` = 0
                 WHERE
                     `id` = {$userIdentity->ID}
 
@@ -421,9 +407,9 @@ EOT;
                     {$sqlFacebookAccessToken},
                     {$sqlFacebookAccessExpirationTime},
                     {$sqlFacebookName},
-                    {$sqlFacebookFirstName},
-                    {$sqlFacebookLastName},
-                    {$sqlFacebookTimeZone}
+                    '',
+                    '',
+                    0
                 )
 
 EOT;

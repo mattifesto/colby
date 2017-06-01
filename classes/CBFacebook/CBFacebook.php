@@ -23,14 +23,19 @@ final class CBFacebook {
          */
 
         $redirectURI = CBSitePreferences::siteURL() . '/colby/facebook-oauth-handler/';
-        $accessTokenURL = 'https://graph.facebook.com/v2.8/oauth/access_token' .
+        $URL = 'https://graph.facebook.com/v2.9/oauth/access_token' .
             '?client_id=' . COLBY_FACEBOOK_APP_ID .
             '&redirect_uri=' . urlencode($redirectURI) .
             '&client_secret=' . COLBY_FACEBOOK_APP_SECRET .
             '&code=' . $code;
 
+        return CBFacebook::fetchGraphAPIResponse($URL);
+    }
+
+    static function fetchGraphAPIResponse($URL) {
         $curlHandle = curl_init();
-        curl_setopt($curlHandle, CURLOPT_URL, $accessTokenURL);
+
+        curl_setopt($curlHandle, CURLOPT_URL, $URL);
         curl_setopt($curlHandle, CURLOPT_HEADER, 0);
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
 
@@ -43,75 +48,22 @@ final class CBFacebook {
          * There should be a time out regardless, but I just wanted to document the
          * importance of this.
          */
-
         curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 5);
 
         $response = curl_exec($curlHandle);
 
         if ($response === false) {
             $error = curl_errno($curlHandle);
+            curl_close($curlHandle);
             throw new RuntimeException("Facebook OAuth: The request to exchange a code for an access token failed with the error: {$error}");
         }
-
-        $httpStatusCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
-
-        if ($httpStatusCode === 400) { // error
-            $object = json_decode($response);
-
-            throw new RuntimeException('Error retrieving Facebook access token: ' .
-                $object->error->type .
-                ', ' .
-                $object->error->message);
-        }
-
-        curl_close($curlHandle);
-
-        /**
-         * The access token request returns a response in the form of a JSON
-         * string which represents an object containing the access token.
-         */
-
-        $object = json_decode($response);
-
-        if (empty($object->access_token) || empty($object->expires_in)) {
-            throw new RuntimeException('Facebook OAuth: The response to the request to exchange a code for an access token does not contain an access token. Here is the response: ' . $response);
-        }
-
-        return $object;
-    }
-
-    /**
-     * @param string $accessToken
-     *
-     * @return stdClass
-     */
-    static function fetchUserProperties($accessToken) {
-        $userPropertiesURL = "https://graph.facebook.com/me?access_token={$accessToken}";
-
-        $curlHandle = curl_init();
-        curl_setopt($curlHandle, CURLOPT_URL, $userPropertiesURL);
-        curl_setopt($curlHandle, CURLOPT_HEADER, 0);
-        curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
-
-        /**
-         * NOTE: 2014.08.03
-         * Sometimes Facebook responds very slowly to these requests. It's not the
-         * web, direct requests from the server are also slow. There's a theory that
-         * it has something to do with "round robin DNS", but I never figured that out.
-         * However, setting this time out for some reason makes it respond faster.
-         * There should be a time out regardless, but I just wanted to document the
-         * importance of this.
-         */
-        curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 5);
-
-        $response = curl_exec($curlHandle);
 
         $httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
 
         if ($httpCode === 400) {
             $object = json_decode($response);
 
-            throw new RuntimeException('Error retrieving Facebook user properties: ' .
+            throw new RuntimeException('Error retrieving Facebook Graph API response: ' .
                 $object->error->type .
                 ', ' .
                 $object->error->message);
@@ -120,6 +72,18 @@ final class CBFacebook {
         curl_close($curlHandle);
 
         return json_decode($response);
+    }
+
+    /**
+     * @param string $accessToken
+     *
+     * @return stdClass
+     */
+    static function fetchUserProperties($accessToken) {
+        $fields = 'fields=name,metadata{type}';
+        $URL = "https://graph.facebook.com/v2.9/me?access_token={$accessToken}&metadata=1&{$fields}";
+
+        return CBFacebook::fetchGraphAPIResponse($URL);
     }
 
     /**
@@ -161,7 +125,7 @@ final class CBFacebook {
          * why.
          */
 
-        $URL = 'https://www.facebook.com/v2.8/dialog/oauth' .
+        $URL = 'https://www.facebook.com/v2.9/dialog/oauth' .
             '?client_id=' . CBFacebookAppID .
             '&redirect_uri=' . urlencode($redirectURI) .
             '&state=' . urlencode(json_encode($state));
@@ -175,6 +139,6 @@ final class CBFacebook {
      * @return string
      */
     static function userImageURL($facebookID) {
-        return "https://graph.facebook.com/{$facebookID}/picture?type=large";
+        return "https://graph.facebook.com/v2.9/{$facebookID}/picture?type=large";
     }
 }
