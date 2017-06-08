@@ -7,6 +7,8 @@
  */
 final class CBFacebook {
 
+    const loginStateCookieName = "facebook-login-state";
+
     /**
      * @param string $code
      *
@@ -107,30 +109,35 @@ final class CBFacebook {
      * @return string
      *      The returned URL is properly URL encoded.
      */
-    static function loginURL($redirectURL = null) {
-        if (!$redirectURL) {
-            $redirectURL = $_SERVER['REQUEST_URI'];
+    static function loginURL($redirectURI = null) {
+        if (empty($redirectURI)) {
+            $redirectURI = $_SERVER['REQUEST_URI'];
         }
 
         $state = new stdClass();
-        $state->colby_redirect_uri = $redirectURL;
+        $state->colby_redirect_uri = $redirectURI;
 
-        $redirectURI = CBSitePreferences::siteURL() . '/colby/facebook-oauth-handler/';
-
-        /**
-         * NOTE: 2017.03.28
-         * The Facebook URL below uses www.facebook.com instead of
-         * graph.facebook.com. This is on purpose, documented as such, and is
-         * required for this URL to work properly. The documentation doesn't say
-         * why.
-         */
-
-        $URL = 'https://www.facebook.com/v2.9/dialog/oauth' .
-            '?client_id=' . CBFacebookAppID .
-            '&redirect_uri=' . urlencode($redirectURI) .
-            '&state=' . urlencode(json_encode($state));
+        $URL = CBSitePreferences::siteURL() . '/colby/facebook-login/' .
+            '?state=' . urlencode(json_encode($state));
 
         return $URL;
+    }
+
+    /**
+     * NOTE: 2017.03.28
+     * The Facebook URL below uses www.facebook.com instead of
+     * graph.facebook.com. This is on purpose, documented as such, and is
+     * required for this URL to work properly. The documentation doesn't say
+     * why.
+     *
+     * @return string
+     */
+    static function loginURLForFacebook() {
+        $redirectURI = CBSitePreferences::siteURL() . '/colby/facebook-oauth-handler/';
+
+        return 'https://www.facebook.com/v2.9/dialog/oauth' .
+            '?client_id=' . CBFacebookAppID .
+            '&redirect_uri=' . urlencode($redirectURI);
     }
 
     /**
