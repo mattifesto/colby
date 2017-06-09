@@ -26,15 +26,17 @@ if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
         CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
         CBHTMLOutput::requireClassName($class);
 
-        $menuSpec = new stdClass();
+        $menuModel = (object)[
+            'className' => 'CBAdminPageMenuView',
+        ];
 
         if (is_callable($function = "{$class}::adminPageMenuNamePath")) {
             $names = call_user_func($function);
-            if (!empty($names[0])) { $menuSpec->selectedMenuItemName = $names[0]; }
-            if (!empty($names[1])) { $menuSpec->selectedSubmenuItemName = $names[1]; }
+            if (!empty($names[0])) { $menuModel->selectedMenuItemName = $names[0]; }
+            if (!empty($names[1])) { $menuModel->selectedSubmenuItemName = $names[1]; }
         }
 
-        CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($menuSpec));
+        CBView::renderModelAsHTML($menuModel);
 
         ?><main class="CBUIRoot <?= $class ?>" style="flex: 1 0 auto;"><?php
         if (is_callable($function = "{$class}::adminPageRenderContent")) {
