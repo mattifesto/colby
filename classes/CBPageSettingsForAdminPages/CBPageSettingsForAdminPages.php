@@ -3,6 +3,30 @@
 final class CBPageSettingsForAdminPages {
 
     /**
+     * @param Exception $exception
+     *
+     * @return null
+     */
+    static function renderPageForException(Exception $exception) {
+         $model = (object)[
+             'classNameForSettings' => 'CBPageSettingsForAdminPages',
+             'titleHTML' => 'Exception',
+             'layout' => (object)[
+                 'className' => 'CBPageLayout',
+                 'customLayoutClassName' => 'CBAdminPageLayout',
+             ],
+             'sections' => [
+                 (object)[
+                     'className' => 'CBExceptionView',
+                     'exception' => $exception,
+                 ],
+             ],
+         ];
+
+         CBViewPage::renderModelAsHTML($model);
+    }
+
+    /**
      * @return  null
      */
     public static function renderEndOfBodyContent() { ?>
