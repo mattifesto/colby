@@ -50,7 +50,7 @@ final class CBAdminPageForUsers {
 
             SELECT      LOWER(HEX(`hash`)) as `hash`, `facebookName`
             FROM        `ColbyUsers`
-            ORDER BY    `facebookLastName`
+            ORDER BY    `facebookName`
 
 EOT;
 
