@@ -2,6 +2,17 @@
 
 final class CBLog {
 
+    static $severityDescriptions = [
+        'Emergency',        // 0
+        'Alert',            // 1
+        'Critical',         // 2
+        'Error',            // 3
+        'Warning',          // 4
+        'Notice',           // 5
+        'Informational',    // 6
+        'Debug',            // 7
+    ];
+
     /**
      * @return null
      */
@@ -150,5 +161,18 @@ EOT;
 EOT;
 
         return CBDB::SQLToObjects($SQL);
+    }
+
+    /**
+     * @param int $severity
+     *
+     * @return string
+     */
+    static function severityToDescription($severity) {
+        if (isset(CBLog::$severityDescriptions[$severity])) {
+            return CBLog::$severityDescriptions[$severity];
+        } else {
+            return "Unknown severity code: {$severity}";
+        }
     }
 }

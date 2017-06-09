@@ -368,7 +368,7 @@ final class Colby {
 
             $exception  = new ErrorException($message, $number, $severity, $filename, $line);
 
-            self::reportException($exception);
+            self::reportException($exception, $severity);
         }
     }
 
@@ -688,7 +688,7 @@ final class Colby {
             $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
             $messageBody = Colby::exceptionStackTrace($exception);
 
-            CBLog::addMessage('Exception', 3, $messageBody);
+            CBLog::addMessage('Exception', $severity, $messageBody);
 
             /**
              * Report the exception via email to the administrator
@@ -704,11 +704,12 @@ final class Colby {
 
                 $mailer = Swift_Mailer::newInstance($transport);
 
-                $truncatedMessage   = CBConvert::truncate($exception->getMessage());
-                $messageSubject     = "Error | {$serverName} | {$truncatedMessage}";
-                $messageFrom        = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
-                $messageTo          = CBSitePreferences::administratorEmails();
-                $messageBodyHTML    = '<pre>' . cbhtml($messageBody) . '</pre>';
+                $truncatedMessage = CBConvert::truncate($exception->getMessage());
+                $severityDescription = CBLog::severityToDescription($severity);
+                $messageSubject = "{$severityDescription} | {$serverName} | {$truncatedMessage}";
+                $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
+                $messageTo = CBSitePreferences::administratorEmails();
+                $messageBodyHTML = '<pre>' . cbhtml($messageBody) . '</pre>';
 
                 $message = Swift_Message::newInstance();
                 $message->setSubject($messageSubject);

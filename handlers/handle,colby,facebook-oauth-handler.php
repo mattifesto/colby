@@ -44,6 +44,12 @@ done:
  * the URI from which the user initiated the login request.
  */
 
-$state = json_decode($_COOKIE[CBFacebook::loginStateCookieName]);
+try {
+    $state = json_decode($_COOKIE[CBFacebook::loginStateCookieName]);
+    $location = $state->colby_redirect_uri;
+} catch (Exception $exception) {
+    Colby::reportException($exception, 5);
+    $location = '/';
+}
 
-header('Location: ' . $state->colby_redirect_uri);
+header('Location: ' . $location);
