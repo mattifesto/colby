@@ -23,7 +23,10 @@ final class CBPageLayout {
             $localCSS = "<style>{$layoutModel->localCSS}</style>";
         }
 
-        CBPageLayout::renderPageHeader($layoutModel->customLayoutClassName, $layoutModel->customLayoutProperties);
+        $customLayoutClassName = CBModel::value($layoutModel, 'customLayoutClassName', '');
+        $customLayoutProperties = CBModel::value($layoutModel, 'customLayoutProperties', (object)[]);
+
+        CBPageLayout::renderPageHeader($customLayoutClassName, $customLayoutProperties);
 
         ?>
 
@@ -46,7 +49,7 @@ final class CBPageLayout {
 
         <?php
 
-        CBPageLayout::renderPageFooter($layoutModel->customLayoutClassName, $layoutModel->customLayoutProperties);
+        CBPageLayout::renderPageFooter($customLayoutClassName, $customLayoutProperties);
     }
 
     /**
