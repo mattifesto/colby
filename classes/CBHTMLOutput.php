@@ -144,13 +144,34 @@ class CBHTMLOutput
     }
 
     /**
-     * @return void
+     * @param Exception $exception
+     *
+     * @return null
      */
-    public static function handleException($exception)
-    {
-        self::reset();
+    static function handleException($exception) {
+        $classNameForSettings = CBHTMLOutput::$classNameForSettings;
 
-        Colby::handleException($exception);
+        // Partial page may have been rendered, clear output buffer
+        CBHTMLOutput::reset();
+
+        if (is_callable($function = "{$classNameForSettings}::renderPageForException")) {
+            try {
+                call_user_func($function, $exception);
+                Colby::reportException($exception);
+            } catch (Exception $innerException) {
+                // Partial page may have been rendered, clear output buffer
+                CBHTMLOutput::reset();
+
+                // Report the exception that occured in the try block
+                Colby::reportException($innerException);
+
+                // Revert to the bare bones Colby exception handler for the
+                // original exception
+                Colby::handleException($exception);
+            }
+        } else {
+            Colby::handleException($exception);
+        }
     }
 
     /**
