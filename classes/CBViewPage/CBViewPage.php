@@ -249,11 +249,11 @@ final class CBViewPage {
         CBViewPage::$modelContext = $model; /* deprecated */
 
         CBPageContext::push([
-            'descriptionAsHTML' => $model->descriptionHTML,
-            'ID' => $model->ID,
+            'descriptionAsHTML' => CBModel::value($model, 'descriptionHTML', ''),
+            'ID' => CBModel::value($model, 'ID', ''),
             'imageURL' => CBViewPage::modelToImageURL($model),
-            'publishedTimestamp' => $model->publicationTimeStamp,
-            'titleAsHTML' => $model->titleHTML,
+            'publishedTimestamp' => CBModel::value($model, 'publicationTimeStamp'),
+            'titleAsHTML' => CBModel::value($model, 'titleHTML', ''),
         ]);
 
         CBHTMLOutput::begin();
@@ -263,7 +263,8 @@ final class CBViewPage {
         }
 
         $renderContentCallback = function () use ($model) {
-            array_walk($model->sections, 'CBView::renderModelAsHTML');
+            $sections = CBModel::valueAsArray($model, 'sections');
+            array_walk($sections, 'CBView::renderModelAsHTML');
         };
 
         if (!empty($model->layout->className)) {
