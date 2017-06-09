@@ -12,10 +12,11 @@ CBHTMLOutput::setTitleHTML('ColbyPages Table Rows');
 CBHTMLOutput::setDescriptionHTML('Pages that are in the ColbyPages table.');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,documents,colby-pages-rows.css');
 
-$spec                           = new stdClass();
-$spec->selectedMenuItemName     = 'develop';
-$spec->selectedSubmenuItemName  = 'documents';
-CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
+    'selectedMenuItemName' => 'develop',
+    'selectedSubmenuItemName' => 'documents',
+]);
 
 ?>
 

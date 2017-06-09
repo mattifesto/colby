@@ -10,7 +10,8 @@ CBHTMLOutput::setDescriptionHTML('Help for markaround syntax.');
 CBHTMLOutput::begin();
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard-formatted-content.css');
 
-CBAdminPageMenuView::renderModelAsHTML((object)[
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'help',
     'selectedSubmenuItemName' => 'markaround-syntax',
 ]);

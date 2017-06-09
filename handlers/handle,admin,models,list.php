@@ -33,8 +33,10 @@ CBHTMLOutput::setDescriptionHTML("A list of {$titleAsHTML}");
 CBHTMLOutput::requireClassName('CBUI');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,models,list.css');
 
-$spec = (object)['selectedMenuItemName' => 'models'];
-CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
+    'selectedMenuItemName' => 'models',
+]);
 
 $models = CBHandleAdminModelsList::fetchModelsByClassName($classNameForModels);
 

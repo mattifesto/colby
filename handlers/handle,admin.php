@@ -13,10 +13,11 @@ CBHTMLOutput::setDescriptionHTML('The status of the website');
 CBHTMLOutput::requireClassName('CBUI');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 
-$spec                           = new stdClass();
-$spec->selectedMenuItemName     = 'general';
-$spec->selectedSubmenuItemName  = 'status';
-CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
+    'selectedMenuItemName' => 'general',
+    'selectedSubmenuItemName' => 'status',
+]);
 
 ?>
 

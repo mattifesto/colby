@@ -93,7 +93,8 @@ if ($CBPageEditorAvailablePageTemplateClassNames || class_exists('CBPageTemplate
 
 CBHTMLOutput::exportVariable('CBURLQueryVariables', $_GET);
 
-CBAdminPageMenuView::renderModelAsHTML((object)[
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'pages',
 ]);
 

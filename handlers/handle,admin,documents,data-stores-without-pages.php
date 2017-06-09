@@ -11,10 +11,11 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Stray Archives');
 CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
 
-$spec                           = new stdClass();
-$spec->selectedMenuItemName     = 'develop';
-$spec->selectedSubmenuItemName  = 'documents';
-CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
+    'selectedMenuItemName' => 'develop',
+    'selectedSubmenuItemName' => 'documents',
+]);
 
 $filepath = CBDataStore::directoryForID(CBPagesAdministrationDataStoreID) . '/data.json';
 

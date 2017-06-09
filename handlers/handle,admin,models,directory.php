@@ -11,12 +11,11 @@ CBHTMLOutput::setDescriptionHTML('A list of model classes');
 CBHTMLOutput::requireClassName('CBUI');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,models,directory.css');
 
-$spec = (object)[
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'models',
     'selectedSubmenuItemName' => 'directory',
-];
-
-CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
+]);
 
 $items = [];
 

@@ -10,7 +10,8 @@ CBHTMLOutput::setTitleHTML('Captions and Alternative Text Help');
 CBHTMLOutput::setDescriptionHTML('Help for creating effective captions and alternative text.');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard-formatted-content.css');
 
-CBAdminPageMenuView::renderModelAsHTML((object)[
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'help',
     'selectedSubmenuItemName' => 'caption-alternative-text',
 ]);

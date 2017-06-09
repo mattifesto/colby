@@ -11,10 +11,11 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Archive Details');
 CBHTMLOutput::setDescriptionHTML('View the contents of an archive.');
 
-$spec                           = new stdClass();
-$spec->selectedMenuItemName     = 'develop';
-$spec->selectedSubmenuItemName  = 'documents';
-CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
+    'selectedMenuItemName' => 'develop',
+    'selectedSubmenuItemName' => 'documents',
+]);
 
 $ID = $_GET['archive-id'];
 

@@ -10,7 +10,8 @@ CBHTMLOutput::setTitleHTML('Titles and Descriptions Help');
 CBHTMLOutput::setDescriptionHTML('Help for creating effective titles and descriptions.');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard-formatted-content.css');
 
-CBAdminPageMenuView::renderModelAsHTML((object)[
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'help',
     'selectedSubmenuItemName' => 'title-subtitle',
 ]);

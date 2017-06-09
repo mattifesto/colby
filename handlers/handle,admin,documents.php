@@ -12,10 +12,11 @@ CBHTMLOutput::setTitleHTML('Documents');
 CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,documents.js');
 
-$spec                           = new stdClass();
-$spec->selectedMenuItemName     = 'develop';
-$spec->selectedSubmenuItemName  = 'documents';
-CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
+    'selectedMenuItemName' => 'develop',
+    'selectedSubmenuItemName' => 'documents',
+]);
 
 $filepath   = CBDataStore::directoryForID(CBPagesAdministrationDataStoreID) . '/data.json';
 

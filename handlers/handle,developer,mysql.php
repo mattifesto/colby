@@ -12,10 +12,11 @@ CBHTMLOutput::setTitleHTML('MySQL Backup');
 CBHTMLOutput::setDescriptionHTML('Backup the MySQL database.');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,developer,mysql.js');
 
-$spec                           = new stdClass();
-$spec->selectedMenuItemName     = 'develop';
-$spec->selectedSubmenuItemName  = 'mysql';
-CBAdminPageMenuView::renderModelAsHTML(CBAdminPageMenuView::specToModel($spec));
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
+    'selectedMenuItemName' => 'develop',
+    'selectedSubmenuItemName' => 'mysql',
+]);
 
 ?>
 

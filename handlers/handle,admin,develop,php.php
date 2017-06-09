@@ -9,7 +9,8 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('PHP Information');
 CBHTMLOutput::setDescriptionHTML('Information about the version and setup of PHP running for this website.');
 
-CBAdminPageMenuView::renderModelAsHTML((object)[
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'develop',
     'selectedSubmenuItemName' => 'php',
 ]);
