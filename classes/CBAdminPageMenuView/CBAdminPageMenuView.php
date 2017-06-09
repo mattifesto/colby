@@ -44,11 +44,6 @@ final class CBAdminPageMenuView {
      * @return null
      */
     public static function renderModelAsHTML(stdClass $model = null) {
-        if ($model === null) {
-            $model = new stdClass();
-        }
-
-        CBHTMLOutput::addCSSURL(CBSystemURL . '/classes/CBAdminPageMenuView/CBAdminPageMenuViewHTML.css');
 
         /**
          * The `Colby::findFile` function is used so that the website can
@@ -67,7 +62,37 @@ final class CBAdminPageMenuView {
         global $CBAdminMenu;
         $menuModel = $CBAdminMenu;
 
-        include __DIR__ . '/CBAdminPageMenuViewHTML.php';
+        ?>
+
+        <section class="CBAdminPageMenuView">
+
+            <?php
+
+            $selectedMenuItemName = CBModel::value($model, 'selectedMenuItemName');
+
+            self::renderMenu($menuModel, $selectedMenuItemName, 'CBMenu');
+
+            if (!empty($selectedMenuItemName) &&
+                isset($menuModel->{$selectedMenuItemName}->submenu))
+            {
+                $submenu = $menuModel->{$selectedMenuItemName}->submenu;
+                $selectedSubmenuItemName = CBModel::value($model, 'selectedSubmenuItemName');
+
+                self::renderMenu($submenu, $selectedSubmenuItemName, 'CBSubmenu');
+            }
+
+            ?>
+
+        </section>
+
+        <?php
+    }
+
+    /**
+     * @return [string]
+     */
+    static function requiredCSSURLs() {
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
