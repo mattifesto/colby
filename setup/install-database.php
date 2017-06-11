@@ -41,7 +41,8 @@ EOT;
 Colby::query($SQL);
 
 CBLog::install();
-CBTasks::install();
+CBTasks::install(); /* deprecated */
+CBTasks2::install();
 CBUsers::install();
 CBModels::install();
 CBModelAssociations::install();
@@ -56,6 +57,11 @@ CBWellKnownThemeForContent::install();
 CBWellKnownThemeForPageTitleAndDescription::install();
 CBWellKnownPageForTestingCBTextView2::install();
 CBWellKnownPageForTestingPageTitleAndBodyText::install();
+
+/**
+ * @NOTE 2017.06.11 Eventually this will be added to CBPing
+ */
+CBPageVerificationTask::startForNewPages();
 
 $SQL = <<<EOT
 
