@@ -127,9 +127,11 @@ var Colby = {
     },
 
     /**
+     * @deprecated CBTask replaced by CBTask2
+     *
      * @return undefined
      */
-    doTask : function () {
+    doTask: function () {
         var status = Colby.taskStatus;
 
         if (status === undefined) {
@@ -161,23 +163,27 @@ var Colby = {
     },
 
     /**
+     * @deprecated CBTask replaced by CBTask2
+     *
      * @param object args.status
      * @param XMLHttpRequest args.xhr
      *
      * @return undefined
      */
-    doTaskDidError : function (args) {
+    doTaskDidError: function (args) {
         args.status.waiting = false;
         args.status.error = true;
     },
 
     /**
+     * @deprecated CBTask replaced by CBTask2
+     *
      * @param object args.status
      * @param XMLHttpRequest args.xhr
      *
      * @return undefined
      */
-    doTaskDidLoad : function (args) {
+    doTaskDidLoad: function (args) {
         args.status.waiting = false;
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
@@ -911,7 +917,36 @@ Colby.updateTimestampForElementWithId = function(timestamp, id)
     link.href = "/colby/javascript/Colby.css";
 
     document.head.appendChild(link);
-    document.addEventListener('DOMContentLoaded', Colby.handleContentLoaded, false);
-
-    Colby.doTask();
 })();
+
+/**
+ * General page loaded tasks
+ */
+
+document.addEventListener('DOMContentLoaded', function () {
+    Colby.beginUpdatingTimes();
+    Colby.doTask(); // deprecated
+});
+
+/**
+ * CBTasks2 dispatch
+ */
+
+Colby.CBTasks2DispatchAlways = false;
+Colby.CBTasks2DispatchDelay = 5000;
+
+document.addEventListener('DOMContentLoaded', function () {
+    dispatch();
+
+    function dispatch() {
+        Colby.CBTasks2Promise =
+            Colby.fetchAjaxResponse("/api/?class=CBTasks2&function=dispatchNextTask")
+            .then(restart);
+    }
+
+    function restart(response) {
+        if (Colby.CBTasks2DispatchAlways || response.taskWasDispatched) {
+            setTimeout(dispatch, Colby.CBTasks2DispatchDelay);
+        }
+    }
+});
