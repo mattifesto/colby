@@ -1,0 +1,23 @@
+.CBAdminPageForTasks .key {
+    font-size: 70%;
+}
+
+.CBAdminPageForTasks .key .ID {
+    color: rgba(0, 0, 0, 0.5);
+    font-family: monospace;
+}
+
+.CBAdminPageForTasks .output {
+    padding: 10px;
+}
+
+.CBAdminPageForTasks .output .message {
+}
+
+.CBAdminPageForTasks .output .details {
+    display: none;
+}
+
+.CBAdminPageForTasks .output .details.show {
+    display: block;
+}
