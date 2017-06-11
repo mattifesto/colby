@@ -194,8 +194,12 @@ class CBHTMLOutput
 
             if (is_callable($function = "{$className}::requiredJavaScriptVariables")) {
                 $variables = call_user_func($function);
-                array_walk($variables, function ($variable) {
-                    CBHTMLOutput::exportVariable($variable[0], $variable[1]);
+                array_walk($variables, function ($variable) use ($function) {
+                    if (is_array($variable) && count($variable) > 1) {
+                        CBHTMLOutput::exportVariable($variable[0], $variable[1]);
+                    } else {
+                        throw new Exception("The function {$function}() returned a bad value.");
+                    }
                 });
             }
         }
