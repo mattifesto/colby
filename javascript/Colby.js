@@ -848,10 +848,19 @@ Colby.textToHTML = function(text)
 };
 
 /**
+ * @param string text
+ *
  * @return string
  */
-Colby.textToURI = function(text)
-{
+Colby.textToURI = function (text) {
+
+    /**
+     * Colby limits URIs to 100 characters, we'll reduce the text to 80
+     * characters to leave room for multi-byte characters.
+     */
+
+    text = text.substr(0, 80);
+
     /**
      * Convert all characters to lowercase to start the URI string.
      */
@@ -861,6 +870,7 @@ Colby.textToURI = function(text)
     /**
      * Replace ampersands surrounded by white space with the word "and"
      */
+
     uri = uri.replace(/\s&\s/g, ' and ');
 
     /**
