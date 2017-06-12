@@ -68,6 +68,18 @@ $ID = $_GET['archive-id'];
 
     <?php
 
+    echo '<section><h1>CBModels</h1>';
+
+    $spec = CBModels::fetchSpecByID($ID);
+
+    if ($spec === false) {
+        ?><div>This page has no spec in the CBModels table</div><?php
+    } else {
+        ?><div>This page has a spec in the CBModels table</div><?php
+    }
+
+    echo '</section>';
+
     renderColbyPagesRowForID($ID);
 
     renderDataStoreFileListForID($ID)
@@ -97,16 +109,20 @@ CBHTMLOutput::render();
 /* ---------------------------------------------------------------- */
 
 /**
- * @return void
+ * @return null
  */
-function renderColbyPagesRowForID($ID)
-{
+function renderColbyPagesRowForID($ID) {
     $IDAsSQL    = ColbyConvert::textToSQL($ID);
     $sql        = <<<EOT
 
         SELECT
             `id`,
             LOWER(HEX(`archiveID`)) as `archiveID`,
+            `className`,
+            `classNameForKind`,
+            `created`,
+            `iteration`,
+            `modified`,
             `URI`,
             `titleHTML`,
             `subtitleHTML`,
@@ -130,20 +146,15 @@ EOT;
 
         <?php
 
-        if ($result->num_rows != 1)
-        {
+        if ($result->num_rows != 1) {
             echo "<p>This ID does not represent a page.";
-        }
-        else
-        {
+        } else {
             $row = $result->fetch_object();
 
-            foreach ($row as $name => $value)
-            {
+            foreach ($row as $name => $value) {
                 $type = null;
 
-                if ('published' == $name)
-                {
+                if ('published' == $name || 'created' == $name || 'modified' == $name) {
                     $type = 'time';
                 }
 
