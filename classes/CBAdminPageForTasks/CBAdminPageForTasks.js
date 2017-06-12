@@ -86,12 +86,22 @@ var CBAdminPageForTasks = {
             }
         });
 
-        if (output.linkURI) {
-            var link = document.createElement("a");
-            link.textContent = output.linkText ? output.linkText : "link";
-            link.href = output.linkURI;
+        details.appendChild(CBAdminPageForTasks.createKeyElement(output.taskClassName, output.taskID));
 
-            details.appendChild(link);
+        var links = output.links || [];
+        links.forEach(function (link) {
+            var anchor = document.createElement("a");
+            anchor.textContent = link.text;
+            anchor.href = link.URI;
+
+            details.appendChild(anchor);
+        });
+
+        if (output.exception) {
+            var pre = document.createElement("pre");
+            pre.textContent = output.exception;
+
+            details.appendChild(pre);
         }
 
         element.appendChild(message);
@@ -108,13 +118,31 @@ var CBAdminPageForTasks = {
      */
     createStatusContent: function (response) {
         var element = document.createElement("div");
-        element.textContent = "Available Tasks: " + response.countOfAvailableTasks +
-                              " Scheduled Tasks: " + response.countOfScheduledTasks +
-                              " Completed Last Minute: " + response.countOfTasksCompletedInTheLastMinute +
-                              " Completed Last Hour: " + response.countOfTasksCompletedInTheLastHour +
-                              " Completed Last 24 Hours: " + response.countOfTasksCompletedInTheLast24Hours;
+
+        element.appendChild(create("Available Tasks", response.countOfAvailableTasks));
+        element.appendChild(create("Scheduled Tasks", response.countOfScheduledTasks));
+        element.appendChild(create("Last Minute", response.countOfTasksCompletedInTheLastMinute));
+        element.appendChild(create("Last Hour", response.countOfTasksCompletedInTheLastHour));
+        element.appendChild(create("Last 24 Hours", response.countOfTasksCompletedInTheLast24Hours));
+        element.appendChild(create("CBTasks2DispatchDelay", Colby.CBTasks2DispatchDelay));
 
         return element;
+
+        function create(text, value) {
+            var textvalue = document.createElement("div");
+            textvalue.className = "textvalue";
+            var textElement = document.createElement("div");
+            textElement.className = "text";
+            textElement.textContent = text;
+            var valueElement = document.createElement("div");
+            valueElement.className = "value";
+            valueElement.textContent = value;
+
+            textvalue.appendChild(textElement);
+            textvalue.appendChild(valueElement);
+
+            return textvalue;
+        }
     },
 
     /**
@@ -171,21 +199,6 @@ var CBAdminPageForTasks = {
 
             response.issues.forEach(function (output) {
                 var element = CBAdminPageForTasks.createOutputElement(output);
-                /*
-                var element = document.createElement("div");
-                var description = document.createElement("div");
-                description.textContent = output.message;
-
-                element.appendChild(description);
-
-                if (output.linkURI) {
-                    var link = document.createElement("a");
-                    link.textContent = output.linkText ? output.linkText : "link";
-                    link.href = output.linkURI;
-
-                    element.appendChild(link);
-                }
-                */
                 container.appendChild(element);
             });
         }
@@ -209,6 +222,12 @@ var CBAdminPageForTasks = {
         function display(response) {
             element.textContent = "";
             element.appendChild(CBAdminPageForTasks.createStatusContent(response));
+
+            if (response.countOfAvailableTasks > 0) {
+                Colby.CBTasks2DispatchDelay = 1; // 1 millisecond
+            } else {
+                Colby.CBTasks2DispatchDelay = 2000; // 2 seconds
+            }
 
             return response;
         }
@@ -252,7 +271,6 @@ var CBAdminPageForTasks = {
 
 document.addEventListener("DOMContentLoaded", function () {
     Colby.CBTasks2DispatchAlways = true;
-    Colby.CBTasks2DispatchDelay = 1000;
     var main = document.getElementsByTagName("main")[0];
     main.appendChild(CBAdminPageForTasks.create());
 });

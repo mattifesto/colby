@@ -21,3 +21,29 @@
 .CBAdminPageForTasks .output .details.show {
     display: block;
 }
+
+.CBAdminPageForTasks .output .details a {
+    margin: 5px;
+}
+
+.CBAdminPageForTasks .status > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.CBAdminPageForTasks .status .textvalue {
+    background-color: hsl(30, 30%, 90%);
+    border: 2px solid hsl(30, 30%, 90%);
+    margin: 5px;
+}
+
+.CBAdminPageForTasks .status .textvalue .value {
+    background-color: var(--CBBackgroundColor);
+}
+
+.CBAdminPageForTasks .status .textvalue > * {
+    padding: 2px 5px;
+    text-align: center;
+}
