@@ -10,8 +10,16 @@ final class CBPageVerificationTask {
      */
     static function CBTask2ExecuteTask($ID) {
         $severity = 8;
-        $linkURI = '';
-        $linkText = '';
+        $links = [
+            (object)[
+                'URI' => "/admin/documents/view/?archive-id={$ID}",
+                'text' => 'data store information',
+            ],
+            (object)[
+                'URI' => "/admin/pages/preview/?ID={$ID}",
+                'text' => 'preview',
+            ],
+        ];
 
         if (!CBPageVerificationTask::fetchPageDoesExist($ID)) {
             $messages[] = '(5) This page no longer exists';
@@ -19,10 +27,41 @@ final class CBPageVerificationTask {
             goto done;
         }
 
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $className = CBDB::SQLToValue("SELECT `className` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
+
+        if (empty($className)) {
+            $messages[] = '(3) This page has no className';
+            $severity = min(3, $severity);
+            goto done;
+        } else if ($className === 'CBViewPage') {
+            $links[] = (object)[
+                'URI' => "/admin/pages/edit/?data-store-id={$ID}",
+                'text' => 'edit',
+            ];
+        }
+
         $spec = CBModels::fetchSpecByID($ID);
 
+        /**
+         * Update an old file based spec to a CBModels spec
+         */
+
+        if ($spec === false && $className === 'CBViewPage') {
+            $spec = CBViewPage::fetchSpecByID($ID);
+
+            if ($spec !== false) {
+                // sometimes this isn't set on old specs
+                $spec->className = 'CBViewPage';
+
+                CBModels::save([$spec]);
+
+                $spec = CBModels::fetchSpecByID($ID);
+            }
+        }
+
         if ($spec === false) {
-            $messages[] = '(4) This page has no spec';
+            $messages[] = '(4) This page has no spec in the CBModels table';
             $severity = min(4, $severity);
             goto done;
         }
@@ -34,21 +73,8 @@ final class CBPageVerificationTask {
             $severity = min(4, $severity);
         }
 
-        $className = CBModel::value($spec, 'className');
-
-        if (empty($className)) {
-            $messages[] = '(3) The spec has no className';
-            $severity = min(3, $severity);
-            goto done;
-        }
-
-        if ($className === 'CBViewPage') {
-            $linkURI = "/admin/pages/edit/?data-store-id={$ID}";
-            $linkText = 'edit page';
-        }
-
         if (empty($messages)) {
-            $messages[] = "Page successfully verified";
+            $messages[] = "No issues";
         }
 
         done:
@@ -56,8 +82,7 @@ final class CBPageVerificationTask {
         return (object)[
             'message' => implode(' | ', $messages),
             'severity' => $severity,
-            'linkURI' => $linkURI,
-            'linkText' => $linkText
+            'links' => $links,
         ];
     }
 
