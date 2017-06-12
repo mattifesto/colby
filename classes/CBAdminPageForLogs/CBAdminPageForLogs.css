@@ -1,0 +1,20 @@
+.CBAdminPageForLogs .entry {
+    display: flex;
+    font-size: 12px;
+    padding: 10px 0;
+}
+
+.CBAdminPageForLogs .entry > * {
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+.CBAdminPageForLogs .entry > time {
+    flex: none;
+    width: 160px;
+}
+
+.CBAdminPageForLogs .entry > .message {
+    white-space: pre-wrap;
+    word-break: break-all; /* not my favorite, but the only way to break long words with pre-wrap */
+}

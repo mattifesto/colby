@@ -30,4 +30,11 @@ final class CBAdminPageForLogs {
     static function requiredJavaScriptURLs() {
         return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
+
+    /**
+     * @return [string]
+     */
+    static function requiredCSSURLs() {
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    }
 }

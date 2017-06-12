@@ -112,7 +112,10 @@ EOT;
     public static function fetchLogsForAjax() {
         $response = new CBAjaxResponse();
 
-        $response->logs = CBLog::entries();
+        $response->logs = CBLog::entries((object)[
+            'sinceTimestamp' => time() - (60 * 60 * 24 * 30), // 30 days
+        ]);
+
         $response->wasSuccessful = true;
         $response->send();
     }
@@ -153,10 +156,10 @@ EOT;
 
         $SQL = <<<EOT
 
-            SELECT `category`, `message`, `timestamp`
+            SELECT `category`, `message`, `severity`, `timestamp`
             FROM `CBLog`
             {$whereAsSQL}
-            ORDER BY `timestamp`
+            ORDER BY `timestamp` DESC
 
 EOT;
 
