@@ -169,8 +169,7 @@ EOT;
 
             $output->message = CBModel::value($status, 'message', 'Completed', 'strval');
             $output->severity = CBModel::value($status, 'severity', CBTasks2::defaultSeverity, 'intval');
-            $output->linkURI = CBModel::value($status, 'linkURI', '');
-            $output->linkText = CBModel::value($status, 'linkText', '');
+            $output->links = CBModel::valueAsArray($status, 'links');
 
         } catch (Exception $exception) {
 
@@ -254,8 +253,12 @@ EOT;
         }
 
         if (!empty($scheduled)) {
-            $updates[] = "`completed` = NULL";
-            $updates[] = "`output` = NULL";
+
+            /**
+             * A scheduled task can also be completed. In the reports it will
+             * count as both scheduled and completed.
+             */
+
             $updates[] = "`scheduled` = {$scheduledAsSQL}";
             $updates[] = "`started` = 0";
         }
