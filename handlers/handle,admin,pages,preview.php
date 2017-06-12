@@ -13,11 +13,60 @@ if (empty($version)) {
     $model = CBModels::fetchModelByIDWithVersion($ID, $version);
 }
 
+$IDAsHTML = cbhtml($ID);
 
-if (!empty($model->className) &&
-    is_callable($function = "{$model->className}::renderModelAsHTML"))
-{
-    call_user_func($function, $model);
+if ($model === false) {
+    $HTML = <<<EOT
+
+        <p>There is no model in the CBModels table for a page with this ID:
+        <pre>{$IDAsHTML}</pre>
+        <p>It's possible that this is an older page that hasn't yet moved
+           its model to CBModels.
+
+EOT;
+
+    CBViewPage::renderModelAsHTML((object)[
+        'titleHTML' => 'Page Preview Error',
+        'sections' => [
+            (object)[
+                'className' => 'CBPageTitleAndDescriptionView',
+            ],
+            (object)[
+                'className' => 'CBTextView2',
+                'contentAsHTML' => $HTML,
+                'CSSClassNames' => ['center'],
+            ],
+        ]
+
+    ]);
 } else {
-    echo 'No page exists for the provided data store ID and version.';
+    $function = "{$model->className}::renderModelAsHTML";
+
+    if (is_callable($function)) {
+        call_user_func($function, $model);
+    } else {
+        $functionAsHTML = cbhtml($function);
+        $HTML = <<<EOT
+
+            <p>The function:
+            <pre>{$functionAsHTML}()</pre>
+            <p>is not callable for the page with this ID:
+            <pre>{$IDAsHTML}</pre>
+
+EOT;
+
+        CBViewPage::renderModelAsHTML((object)[
+            'titleHTML' => 'Page Preview Error',
+            'sections' => [
+                (object)[
+                    'className' => 'CBPageTitleAndDescriptionView',
+                ],
+                (object)[
+                    'className' => 'CBTextView2',
+                    'contentAsHTML' => $HTML,
+                    'CSSClassNames' => ['center'],
+                ],
+            ]
+        ]);
+    }
 }
