@@ -35,7 +35,7 @@ final class CBAdminPageForTasks {
     static function fetchIssuesForAjax() {
         $response = new CBAjaxResponse();
 
-        $SQL = 'SELECT `output` FROM CBTasks2 WHERE `completed` IS NOT NULL AND `severity` < 7 ORDER BY `severity` DESC LIMIT 10';
+        $SQL = 'SELECT `output` FROM CBTasks2 WHERE `completed` IS NOT NULL AND `severity` < 8 ORDER BY `severity` DESC';
         $response->issues = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
 
         $response->wasSuccessful = true;
