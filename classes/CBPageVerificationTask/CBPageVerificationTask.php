@@ -1,7 +1,9 @@
 <?php
 
 /**
- * This task checks a page for errors and warnings.
+ * This task checks a page for errors and warnings. If it fixes an issue it will
+ * log a message to the system log. If it doesn't fix it, it will add a message
+ * to the return status and set the severity as appropriate.
  */
 final class CBPageVerificationTask {
 
@@ -55,6 +57,7 @@ final class CBPageVerificationTask {
                 $spec->className = 'CBViewPage';
 
                 CBModels::save([$spec]);
+                CBLog::addMessage(__CLASS__, 6, "The CBViewPage {$ID} was resaved because it did not yet have a model in the CBModels table.");
 
                 $spec = CBModels::fetchSpecByID($ID);
             }
@@ -66,11 +69,11 @@ final class CBPageVerificationTask {
             goto done;
         }
 
-        $versionCount = CBPageVerificationTask::fetchCountOfVersions($ID);
+        $versionCount = CBPageVerificationTask::fetchCountOfOldVersions($ID);
 
-        if ($versionCount > 20) {
-            $messages[] = "(4) This page has a high number, {$versionCount}, of retained versions";
-            $severity = min(4, $severity);
+        if ($versionCount > 5) {
+            CBModels::save([$spec]);
+            CBLog::addMessage(__CLASS__, 6, "The CBViewPage {$ID} was resaved to remove its {$versionCount} old versions.");
         }
 
         if (empty($messages)) {
@@ -87,13 +90,26 @@ final class CBPageVerificationTask {
     }
 
     /**
+     * This function counts versions older than 30 days because CBModels:save()
+     * will remove those versions.
+     *
      * @param hex160 $ID
      *
      * @return int
      */
-    static function fetchCountOfVersions($ID) {
+    static function fetchCountOfOldVersions($ID) {
         $IDAsSQL = CBHex160::toSQL($ID);
-        return CBDB::SQLToValue("SELECT COUNT(*) FROM `CBModelVersions` WHERE `ID` = {$IDAsSQL}");
+        $timestamp = time() - (60 * 60 * 24 * 30); // 30 days ago
+        $SQL = <<<EOT
+
+            SELECT  COUNT(*)
+            FROM    `CBModelVersions`
+            WHERE   `ID` = {$IDAsSQL} and
+                    `timestamp` < {$timestamp}
+
+EOT;
+
+        return CBDB::SQLToValue($SQL);
     }
 
     /**
