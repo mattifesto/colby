@@ -5,6 +5,9 @@ final class CBViewPage {
     private static $modelContext;
 
     /**
+     * This function loads the spec for a page regardless of whether the latest
+     * spec is saved in the CBModels table or in an older spec file.
+     *
      * @param hex160 $ID
      * @param bool $create
      *      If a spec doesn't already exist for the ID, an empty one will be
@@ -233,6 +236,12 @@ final class CBViewPage {
     }
 
     /**
+     * @param string? $model->titleHTML
+     *
+     *      This should be safe for HTML, but not contain actual HTML tags.
+     *
+     * @param [object]? $model->sections
+     *
      * @return null
      */
     public static function renderModelAsHTML($model) {
@@ -356,6 +365,9 @@ final class CBViewPage {
     }
 
     /**
+     * This function loads older specs for pages that haven't yet been saved
+     * to the CBModels table.
+     *
      * @return stdClass|false
      */
     public static function specWithID($ID, $iteration) {
