@@ -363,12 +363,12 @@ var CBViewPageInformationEditor = {
     },
 
     /**
-     * @param {string} ID
-     * @param {string} title
+     * @param hex160 ID
+     * @param string title
      *
-     * @return {string}
+     * @return string
      */
-    titleToURI : function(args) {
+    titleToURI: function (args) {
         if (args.title !== undefined && args.title.length > 0) {
             return Colby.textToURI(args.title);
         } else {
