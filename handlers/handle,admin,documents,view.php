@@ -181,26 +181,32 @@ function renderDataStoreFileListForID($ID) {
         return;
     }
 
-    $list   = array();
-    $handle = opendir($directory);
+    ?>
 
-    while (false !== ($filename = readdir($handle))) {
-        if (is_dir($filename)) {
-            $filename = "{$filename} (directory)";
+    <div style="background-color: hsl(30, 50%, 95%); width: 500px; margin: 0 auto; padding: 5px 20px 20px;">
+        <h1 style="margin-bottom: 20px; text-align: center;">Data Store Directory Listing</h1>
+
+        <?php
+
+        $iterator = new RecursiveDirectoryIterator($directory);
+
+        while ($iterator->valid()) {
+            if ($iterator->isFile()) {
+              $subpathname = $iterator->getSubPathname();
+              $subpathnameAsHTML = cbhtml($subpathname);
+              $URLAsHTML = cbhtml(CBDataStore::flexpath($ID, $subpathname, CBSiteURL));
+
+              echo "<p><code><a href='{$URLAsHTML}'>{$subpathnameAsHTML}</a></code>";
+            }
+
+            $iterator->next();
         }
 
-        $list[] = $filename;
-    }
+        ?>
 
-    echo '<section style="background-color: hsl(30, 50%, 95%); width: 500px; margin: 0 auto; padding: 5px 20px 20px;">',
-         '<h1 style="margin-bottom: 20px; text-align: center;">Data Store Directory Listing</h1>';
+    </div>
 
-    foreach ($list as $filename) {
-        $filenameAsHTML = ColbyConvert::textToHTML($filename);
-        echo "<p><code>{$filenameAsHTML}</code>";
-    }
-
-    echo '</section>';
+    <?php
 }
 
 /**
