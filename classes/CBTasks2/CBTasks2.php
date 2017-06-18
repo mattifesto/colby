@@ -105,16 +105,9 @@ EOT;
 
     /**
      * @return bool
-     *      Returns true if a task is dispatched; otherwise false.
+     *      Returns true if a task is completed; otherwise false.
      */
     static function dispatchNextTask() {
-
-        // Phase 1: Task Selection
-        //
-        // If anything in this phase fails we just let the exception throw. The
-        // task may not be started or it may be ghosted, but there's nothing we
-        // can do about it. However, things are unlikely to fail in this phase.
-
         $started = time();
         $starter = CBHex160::random();
         $starterAsSQL = CBHex160::toSQL($starter);
@@ -130,13 +123,89 @@ EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
 
-        if (Colby::mysqli()->affected_rows !== 1) {
+        if (Colby::mysqli()->affected_rows === 1) {
+            return CBTasks2::executeTaskForStarter($starter);
+        } else {
             return false;
         }
+    }
 
+    /**
+     * @return null
+     *
+     *      Ajax: {
+     *          bool taskWasDispatched
+     *      }
+     */
+    static function dispatchNextTaskForAjax() {
+        $response = new CBAjaxResponse();
+        $response->taskWasDispatched = CBTasks2::dispatchNextTask();
+        $response->wasSuccessful = true;
+        $response->send();
+    }
+
+    /**
+     * @return object
+     */
+    static function dispatchNextTaskForAjaxPermissions() {
+        return (object)['group' => 'Public'];
+    }
+
+    /**
+     * @param string $className
+     * @param hex160 $ID
+     *
+     * @return bool
+     *      Returns true if the task is completed; otherwise false.
+     */
+    static function dispatchTask($className, $ID) {
+        $classNameAsSQL = CBDB::stringToSQL($className);
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $started = time();
+        $starter = CBHex160::random();
+        $starterAsSQL = CBHex160::toSQL($starter);
         $SQL = <<<EOT
 
-            SELECT  `className`, LOWER(HEX(`ID`)) AS `ID`, `priority`
+            INSERT INTO `CBTasks2`
+            (`className`, `ID`, `started`, `starter`)
+            VALUES
+            ({$classNameAsSQL}, {$IDAsSQL}, {$started}, {$starterAsSQL})
+            ON DUPLICATE KEY UPDATE
+                `started`   = {$started},
+                `starter`   = {$starterAsSQL},
+                `output`    = NULL,
+                `completed` = NULL
+
+EOT;
+
+        Colby::query($SQL);
+
+        if (Colby::mysqli()->affected_rows > 0) {
+            return CBTasks2::executeTaskForStarter($starter);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Executes a task started by the provided starter. There are situations in
+     * which a task can be pulled away from a starter and in those cases the
+     * task will not be completed by that starter and this function will return
+     * false.
+     *
+     * The situations are rare race conditions and potentially a very closely
+     * timed calls to dispatchNextTask() and dispatchTask().
+     *
+     * @param hex160 $starter
+     *
+     * @return bool
+     *      Returns true if the task is completed; otherwise false.
+     */
+    static function executeTaskForStarter($starter) {
+        $starterAsSQL = CBHex160::toSQL($starter);
+        $SQL = <<<EOT
+
+            SELECT  `className`, LOWER(HEX(`ID`)) AS `ID`, `priority`, `started`
             FROM    `CBTasks2`
             WHERE   `starter` = {$starterAsSQL}
 
@@ -144,24 +213,32 @@ EOT;
 
         $task = CBDB::SQLToObject($SQL, /* retryOnDeadlock */ true);
 
+        /**
+         * If someone deleted or manually dispatched the task return false.
+         */
+
+        if ($task === false) {
+            return false;
+        }
+
         $output = (object)[
             'className' => 'CBTask2Output',
             'ID' => CBTasks2::modelID($task->className, $task->ID),
             'taskClassName' => $task->className,
             'taskID' => $task->ID,
             'priority' => $task->priority,
-            'started' => $started,
+            'started' => $task->started,
         ];
 
-        // Phase 2: Task execution
+        // Task execution
         //
         // Any errors occuring in this phase will be considered a failure of the
         // selected task. The task will be marked as completed no matter what
-        // happens. Sudden database failures will still ghost the task.
+        // happens. Sudden database failures may still ghost the task.
 
         try {
 
-            if (is_callable($function = "{$task->className}::CBTask2ExecuteTask")) {
+            if (is_callable($function = "{$task->className}::CBTasks2_Execute")) {
                 $status = call_user_func($function, $task->ID);
             } else {
                 throw new Exception("The function {$function}() requested by task ({$task->className}, {$task->ID}) is not callable.");
@@ -191,36 +268,19 @@ EOT;
                     `output` = {$outputAsSQL},
                     `severity` = {$output->severity}
             WHERE   `className` = {$classNameAsSQL} AND
-                    `ID` = {$IDAsSQL}
+                    `ID` = {$IDAsSQL} AND
+                    `starter` = {$starterAsSQL}
 
 EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
 
-        return true;
+        if (Colby::mysqli()->affected_rows === 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
-    /**
-     * @return null
-     *
-     *      Ajax: {
-     *          bool taskWasDispatched
-     *      }
-     */
-    static function dispatchNextTaskForAjax() {
-        $response = new CBAjaxResponse();
-        $response->taskWasDispatched = CBTasks2::dispatchNextTask();
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return object
-     */
-    static function dispatchNextTaskForAjaxPermissions() {
-        return (object)['group' => 'Public'];
-    }
-
     /**
      * @param string $className
      * @param hex160 $ID
