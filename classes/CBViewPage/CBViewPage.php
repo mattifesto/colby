@@ -137,23 +137,13 @@ final class CBViewPage {
      * @return string
      *  An empty string will be returned if no image is available.
      */
-    static function modelToImageURL($model) {
-        $image = null;
-
+    private static function modelToImageURL($model) {
         if (!empty($model->image)) {
-            $image = $model->image;
+            return CBDataStore::flexpath($model->image->ID, "rw1280.{$model->image->extension}", CBSitePreferences::siteURL());
         } else if (!empty($model->thumbnailURL)) {
-            $image = CBImage::URIToImage($model->thumbnailURL);
-
-            if (empty($image)) {
-                return $model->thumbnailURL;
-            }
-        }
-
-        if (empty($image)) {
-            return '';
+            return $model->thumbnailURL;
         } else {
-            return CBDataStore::flexpath($image->ID, "rw1280.{$image->extension}", CBSitePreferences::siteURL());
+            return '';
         }
     }
 
@@ -294,11 +284,27 @@ final class CBViewPage {
     }
 
     /**
-     * @param stdClass $spec
+     * @param hex160 $spec->ID
      *
-     * @return stdClass
+     * @param object? $spec->image
+     *
+     *      An image that represents the page, to be used for thumbnails and
+     *      other images to represent the page. Must be a valid CBImage. If this
+     *      is specifiect, `thumbnailURL` will be ignored.
+     *
+     * @param string? $spec->thumbnailURL
+     *
+     *      This image that represents the page. This property should only be
+     *      specified if the image's location is non-standard, such as on
+     *      another website. This is inferior to `image` but is not deprecated
+     *      because it's the only solution for images in non-standard locations.
+     *
+     *      While it's not deprecated, its use should be avoided because it
+     *      most likely will be deprecated at some point in the future.
+     *
+     * @return object
      */
-    public static function specToModel($spec) {
+    static function specToModel($spec) {
         $model = (object)[
             'ID' => $spec->ID,
             'className' => __CLASS__,
@@ -318,16 +324,28 @@ final class CBViewPage {
 
         $model->classNameForSettings = isset($spec->classNameForSettings) ? trim($spec->classNameForSettings) : '';
         $model->description = isset($spec->description) ? $spec->description : '';
-        $model->image = CBModel::value($spec, 'image', null, 'CBImage::specToModel');
         $model->isPublished = isset($spec->isPublished) ? !!$spec->isPublished : false;
         $model->iteration = 0;
         $model->publicationTimeStamp = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
         $model->publishedBy = isset($spec->publishedBy) ? $spec->publishedBy : null;
         $model->schemaVersion = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
-        $model->thumbnailURL = isset($spec->thumbnailURL) ? $spec->thumbnailURL : null; /* deprecated, use `image` */
         $model->title = isset($spec->title) ? $spec->title : '';
         $model->URI = isset($spec->URI) ? trim($spec->URI) : '';
         $model->URI = $model->URI !== '' ? $model->URI : $model->ID;
+
+        /**
+         * Page image
+         */
+
+        $model->image = CBModel::value($spec, 'image', null, 'CBImage::specToModel');
+
+        if (empty($model->image)) {
+            $model->thumbnailURL = CBModel::value($spec, 'thumbnailURL');
+        } else {
+            // The preference is not to set null properties but we set this one
+            // for backward compatability.
+            $model->thumbnailURL = null;
+        }
 
         /**
          * Layout
@@ -356,10 +374,6 @@ final class CBViewPage {
         $model->thumbnailURLAsHTML = ColbyConvert::textToHTML($model->thumbnailURL);
         $model->titleHTML = ColbyConvert::textToHTML($model->title);
         $model->URIAsHTML = ColbyConvert::textToHTML($model->URI);
-
-        if (empty($model->image) && !empty($model->thumbnailURL)) {
-            $model->image = CBImage::URIToImage($model->thumbnailURL);
-        }
 
         return $model;
     }
