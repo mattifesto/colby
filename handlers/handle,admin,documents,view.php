@@ -8,8 +8,9 @@ include_once CBSystemDirectory . '/snippets/shared/documents-administration.php'
 
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
-CBHTMLOutput::setTitleHTML('Archive Details');
+CBHTMLOutput::setTitleHTML('ID Info');
 CBHTMLOutput::setDescriptionHTML('View the contents of an archive.');
+CBHTMLOutput::requireClassName('CBAdminPageForID');
 
 CBView::renderModelAsHTML((object)[
     'className' => 'CBAdminPageMenuView',
@@ -17,7 +18,12 @@ CBView::renderModelAsHTML((object)[
     'selectedSubmenuItemName' => 'documents',
 ]);
 
-$ID = $_GET['archive-id'];
+if (empty($_GET['ID'])) {
+    // @deprecated use `ID` instead of `archive-id`
+    $ID = $_GET['archive-id'];
+} else {
+    $ID = $_GET['ID'];
+}
 
 ?>
 
@@ -25,79 +31,21 @@ $ID = $_GET['archive-id'];
     <?php renderDocumentsAdministrationMenu(); ?>
 </nav>
 
-<main>
-    <style>
-
-        pre
-        {
-            margin-bottom: 50px;
-        }
-
-        h6
-        {
-            margin-bottom: 20px;
-        }
-
-        section.keys-and-values
-        {
-            margin-bottom: 30px;
-        }
-
-        section.keys-and-values dl
-        {
-            display: inline-block;
-            margin: 15px 20px;
-            vertical-align: top;
-        }
-
-        section.keys-and-values dl dt
-        {
-            font-weight: bold;
-        }
-
-        section.keys-and-values dl dd .hash
-        {
-            font-size: 60%;
-        }
-
-    </style>
-
+<main class="CBAdminPageForID" style="flex: 1 1 auto;">
     <header>
-        <h1><?php echo $ID; ?></h1>
+        <h1>ID<span><?php echo $ID; ?></span></h1>
     </header>
 
     <?php
 
-    echo '<section><h1>CBModels</h1>';
-
-    $spec = CBModels::fetchSpecByID($ID);
-
-    if ($spec === false) {
-        ?><div>This page has no spec in the CBModels table</div><?php
-    } else {
-        ?><div>This page has a spec in the CBModels table</div><?php
-    }
-
-    echo '</section>';
+    CBAdminPageForID::renderCBModelsInformation($ID);
+    CBAdminPageForID::renderCBImagesInformation($ID);
 
     renderColbyPagesRowForID($ID);
 
     renderDataStoreFileListForID($ID)
 
-    /**
-     * Add a function to show any data not shown by the previous functions.
-     */
-
     ?>
-
-    <div style="margin: 80px auto; text-align: center; width: 480px;">
-        2015.08.02 This page used to have the ability to delete the page and its
-        data store but it was removed for two reasons. First it is dangerous to
-        remove data stores and the process should be thought out before enabling
-        it again. Second, it used the ColbyDocument class which is being
-        removed.
-    </div>
-
 </main>
 
 <?php
@@ -113,7 +61,7 @@ CBHTMLOutput::render();
  */
 function renderColbyPagesRowForID($ID) {
     $IDAsSQL    = ColbyConvert::textToSQL($ID);
-    $sql        = <<<EOT
+    $SQL        = <<<EOT
 
         SELECT
             `id`,
@@ -137,38 +85,26 @@ function renderColbyPagesRowForID($ID) {
 
 EOT;
 
-    $result = Colby::query($sql);
+    $row = CBDB::SQLToObject($SQL);
 
-    ?>
 
-    <section class="keys-and-values colby-documents-table-row">
-        <h1>ColbyPages Row Data</h1>
+    if ($row) {
+        echo '<section class="ColbyPages"><h1>ColbyPages Table</h1>';
 
-        <?php
+        foreach ($row as $name => $value) {
+            $type = null;
 
-        if ($result->num_rows != 1) {
-            echo "<p>This ID does not represent a page.";
-        } else {
-            $row = $result->fetch_object();
-
-            foreach ($row as $name => $value) {
-                $type = null;
-
-                if ('published' == $name || 'created' == $name || 'modified' == $name) {
-                    $type = 'time';
-                }
-
-                displayKeyValuePair($name, $value, $type);
+            if ('published' == $name || 'created' == $name || 'modified' == $name) {
+                $type = 'time';
+            } else if ('thumbnailURL' == $name) {
+                $type = 'URI';
             }
+
+            displayKeyValuePair($name, $value, $type);
         }
 
-        ?>
-
-    </section>
-
-    <?php
-
-    $result->free();
+        echo '</section>';
+    }
 }
 
 /**
@@ -183,6 +119,7 @@ function renderDataStoreFileListForID($ID) {
 
     ?>
 
+    <section>
     <div style="background-color: hsl(30, 50%, 95%); width: 500px; margin: 0 auto; padding: 5px 20px 20px;">
         <h1 style="margin-bottom: 20px; text-align: center;">Data Store Directory Listing</h1>
 
@@ -205,6 +142,7 @@ function renderDataStoreFileListForID($ID) {
         ?>
 
     </div>
+    </section>
 
     <?php
 }
@@ -212,20 +150,18 @@ function renderDataStoreFileListForID($ID) {
 /**
  * @return void
  */
-function displayKeyValuePair($key, $value, $type = null)
-{
+function displayKeyValuePair($key, $value, $type = null) {
     ?>
 
     <dl>
         <dt><?php echo ColbyConvert::textToHTML($key); ?><dt>
         <dd><?php
 
-            if ('time' == $type)
-            {
+            if ('time' == $type) {
                 displayValueForTime($value);
-            }
-            else
-            {
+            } else if ('URI' == $type) {
+                displayValueForURI($value);
+            } else {
                 displayValue($value);
             }
 
@@ -236,43 +172,45 @@ function displayKeyValuePair($key, $value, $type = null)
 }
 
 /**
- * @return void
+ * @return null
  */
-function displayValue($value)
-{
-    if (!is_scalar($value))
-    {
+function displayValue($value) {
+    if (!is_scalar($value)) {
         echo ColbyConvert::textToHTML(var_export($value, true));
-    }
-    else if (is_string($value) &&
-             preg_match('/^[0-9a-fA-F]{40}$/', $value))
-    {
+    } else if (is_string($value) && preg_match('/^[0-9a-fA-F]{40}$/', $value)) {
         /**
          * This appears to be a sha1 hash.
          */
 
         echo "<span class=\"hash\">{$value}</span>";
-
-    }
-    else
-    {
+    } else {
         echo ColbyConvert::textToHTML($value);
     }
 }
 
 /**
- * @return void
+ * @return null
  */
-function displayValueForTime($value)
-{
-    if (is_numeric($value))
-    {
+function displayValueForTime($value) {
+    if (is_numeric($value)) {
         $javaScriptTime = $value * 1000;
 
         echo "<span class=\"time\" data-timestamp=\"{$javaScriptTime}\">{$value}</span>";
-    }
-    else
-    {
+    } else {
         displayValue($value);
+    }
+}
+
+/**
+ * @return null
+ */
+function displayValueForURI($value) {
+    $valueAsHTML = cbhtml($value);
+
+    echo "<span>{$valueAsHTML}</span>";
+
+    if ($ID = CBDataStore::URIToID($value)) {
+        $link = "/admin/documents/view/?ID={$ID}";
+        echo "<br><a href=\"{$link}\">data store information</a>";
     }
 }
