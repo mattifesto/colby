@@ -58,7 +58,7 @@ final class CBDataStore {
      * @return string
      */
     static function directoryForID($ID) {
-        $directoryName = self::directoryNameFromDocumentRoot($ID);
+        $directoryName = CBDataStore::directoryNameFromDocumentRoot($ID);
 
         return CBSiteDirectory . "/{$directoryName}";
     }
@@ -155,5 +155,66 @@ final class CBDataStore {
         } else {
             return $URL;
         }
+    }
+
+    /**
+     * Detects whether the URI represents a local data store and returns the
+     * data store ID. The data store does not have to exist for the function to
+     * return the ID.
+     *
+     * @param string $URI
+     *
+     *      Local URIs:
+     *
+     *      http://domain/data/.../
+     *      https://domain/data/.../
+     *      //domain/data/.../
+     *      /data/.../
+     *
+     *      Absolute directory:
+     *
+     *      CBSiteDirectory/data/.../
+     *
+     * @return hex160|false
+     *
+     *      If the URI is local and references a data store the data store ID is
+     *      returned; otherwise false.
+     */
+    static function URIToID($URI) {
+        $components = parse_url($URI);
+
+        if (!empty($components['host'])) {
+            if ($components['host'] !== CBSitePreferences::siteDomainName()) {
+                return false;
+            }
+        }
+
+        if (empty($components['path'])) {
+            return false;
+        }
+
+        $path = $components['path'];
+
+        /**
+         * Test for web addresses
+         */
+
+        $pattern = '%^/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/%';
+
+        if (preg_match($pattern, $path, $matches)) {
+            return "{$matches[1]}{$matches[2]}{$matches[3]}";
+        }
+
+        /**
+         * Test for absolute directories
+         */
+        $siteDirectory = CBSiteDirectory;
+        $pattern = "%^{$siteDirectory}/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/%";
+
+        if (preg_match($pattern, $path, $matches)) {
+            return "{$matches[1]}{$matches[2]}{$matches[3]}";
+        }
+
+        return false;
     }
 }
