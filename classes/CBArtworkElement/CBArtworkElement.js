@@ -36,14 +36,21 @@ var CBArtworkElement = {
             containerElement.style.overflow = "hidden";
             containerElement.style.position = "relative";
             containerElement.style.paddingBottom = ((args.image.height / args.image.width) * 100) + "%";
-        } else { /* deprecated */
-            var image = Colby.URIToImage(args.src);
+        } else {
 
-            if (image) {
-                imgElement.src = Colby.imageToURL(image, "rw1280");
-            } else {
-                imgElement.src = args.src;
+            /**
+             * Returning only the img element with a max-width will get the job
+             * done. The element will change size after the image loads.
+             */
+
+            imgElement.src = args.src;
+            imgElement.style.display = "block";
+
+            if (args.maxWidth) {
+                imgElement.style.maxWidth = args.maxWidth + "px";
             }
+
+            return imgElement;
         }
 
         containerElement.appendChild(imgElement);
