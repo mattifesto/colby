@@ -60,6 +60,145 @@ class CBImages {
     }
 
     /**
+     * This function will import the largest image in the provided data store
+     * as a CBInage.
+     *
+     * @return object|false
+     *
+     *      If the data store contains images, a CBImage model will be returned;
+     *      otherwise false.
+     */
+    static function importOldStyleImageDataStore($ID) {
+        $directory = CBDataStore::directoryForID($ID);
+        $iterator = new RecursiveDirectoryIterator($directory);
+        $largestArea = 0;
+        $largestPathname = '';
+
+        while ($iterator->valid()) {
+            if ($iterator->isFile()) {
+              $pathname = $iterator->getPathname();
+              $extension = strtolower(pathinfo($pathname, PATHINFO_EXTENSION));
+
+              switch ($extension) {
+                  case 'jpg':
+                  case 'jpeg':
+                  case 'png':
+                  case 'gif':
+                      $size = getimagesize($pathname);
+                      $area = $size[0] * $size[1];
+
+                      if ($area > $largestArea) {
+                          $largestArea = $area;
+                          $largestPathname = $pathname;
+                      }
+
+                      break;
+
+                  default:
+
+                      break;
+              }
+            }
+
+            $iterator->next();
+        }
+
+        if ($largestArea === 0) {
+            return false;
+        }
+
+        $image = CBImages::importImage($largestPathname);
+        $noticeFilepath = CBDataStore::flexpath($ID, 'ImportedToCBImage.json', CBSiteDirectory);
+
+        file_put_contents($noticeFilepath, json_encode($image));
+
+        return $image;
+    }
+
+    /**
+     * @return object
+     *
+     *      Returns a CBImage model.
+     */
+    static function importImage($filepath) {
+        $size = getimagesize($filepath);
+
+        if ($size === false || !in_array($size[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
+            throw new Exception('The file specified is either not a an image or has a file format that is not supported.');
+        }
+
+        Colby::query('START TRANSACTION');
+
+        try {
+            $timestamp = time();
+            $extension = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
+            $ID = sha1_file($filepath);
+            $filename = "original";
+            $basename = "{$filename}.{$extension}";
+            $destinationFilepath = CBDataStore::flexpath($ID, $basename, CBSiteDirectory);
+
+            CBImages::updateRow($ID, $timestamp, $extension);
+            CBDataStore::makeDirectoryForID($ID);
+            copy($filepath, $destinationFilepath);
+            Colby::query('COMMIT');
+        } catch (Exception $exception) {
+            Colby::query('ROLLBACK');
+            throw $exception;
+        }
+
+        return (object)[
+            'extension' => $extension,
+            'filename' => $filename,
+            'height' => $size[1],
+            'ID' => $ID,
+            'width' => $size[0],
+        ];
+    }
+
+    /**
+     * @return null
+     */
+    static function install() {
+        $SQL = <<<EOT
+
+            CREATE TABLE IF NOT EXISTS `CBImages` (
+                `ID`        BINARY(20) NOT NULL,
+                `created`   BIGINT NOT NULL,
+                `extension` VARCHAR(10) NOT NULL,
+                `modified`  BIGINT NOT NULL,
+
+                PRIMARY KEY (`ID`)
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8
+            COLLATE=utf8_unicode_ci
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
+     * This function determines in an ID is a valid CBImage ID.
+     *
+     * @param hex160 $ID
+     *
+     * @return bool
+     */
+    static function isInstance($ID) {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $SQL = <<<EOT
+
+            SELECT COUNT(*)
+            FROM `CBImages`
+            WHERE `ID` = {$IDAsSQL}
+
+EOT;
+
+        return boolval(CBDB::SQLToValue($SQL));
+    }
+
+    /**
      * @deprecated use CBImages::reduceImage()
      *
      * @param {hex160} $ID
@@ -93,10 +232,21 @@ class CBImages {
     }
 
     /**
+     * This function is called by ColbyRequest before declaring a request a 404
+     * error. It will produce generated image sizes for CBImages. The next
+     * request for that URL will just return the image file that's been saved
+     * to disk.
+     *
      * @param string $path
+     *
      *  Example: "/data/28/12/580870551ac6833f1ea589a9490d37d48302/rw400.png"
      *
+     *  This parameter may be any path, the function determines where it can
+     *  react to the path.
+     *
      * @return bool
+     *
+     *  Returns true if an image was generated and sent; otherwise false.
      */
     static function makeAndSendImageForPath($path) {
         if (!preg_match('%^/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/([^/]+)$%', $path, $matches)) {
@@ -128,6 +278,36 @@ class CBImages {
         readfile($reducedFilepath);
 
         return true;
+    }
+
+    /**
+     * @param hex160 $ID
+     *
+     * @return object (CBImage)|false
+     */
+    static function makeModelForID($ID) {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $extension = CBDB::SQLToValue("SELECT `extension` FROM `CBImages` WHERE `ID` = {$IDAsSQL}");
+
+        if ($extension === false) {
+            return false;
+        }
+
+        $originalImageFilepath = CBDataStore::flexpath($ID, "original.{$extension}", CBSiteDirectory);
+        $size = getimagesize($originalImageFilepath);
+
+        if ($size === false) {
+            return false;
+        }
+
+        return (object)[
+            'className' => 'CBImage',
+            'extension' => $extension,
+            'filename' => 'original',
+            'height' => $size[1],
+            'ID' => $ID,
+            'width' => $size[0],
+        ];
     }
 
     /**
@@ -167,9 +347,12 @@ class CBImages {
     }
 
     /**
+     * This function can be used to simply reduce an image file that may or may
+     * not be a CBImage. It is used by the other functions to reduce CBImages.
+     *
      * @return null
      */
-    public static function reduceImageFile($sourceFilepath, $destinationFilepath, $projection, $args = []) {
+    static function reduceImageFile($sourceFilepath, $destinationFilepath, $projection, $args = []) {
         $quality = null;
         extract($args, EXTR_IF_EXISTS);
 
@@ -257,29 +440,6 @@ class CBImages {
      */
     static function reduceImageForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
-    }
-
-    /**
-     * @return null
-     */
-    public static function install() {
-        $SQL = <<<EOT
-
-            CREATE TABLE IF NOT EXISTS `CBImages` (
-                `ID`        BINARY(20) NOT NULL,
-                `created`   BIGINT NOT NULL,
-                `extension` VARCHAR(10) NOT NULL,
-                `modified`  BIGINT NOT NULL,
-
-                PRIMARY KEY (`ID`)
-            )
-            ENGINE=InnoDB
-            DEFAULT CHARSET=utf8
-            COLLATE=utf8_unicode_ci
-
-EOT;
-
-        Colby::query($SQL);
     }
 
     /**
@@ -439,6 +599,8 @@ EOT;
     }
 
     /**
+     * NOTE: 2017.06.16 This function should be modified to call importImage()
+     *
      * @param string $name
      *
      * @return stdClass (image)
