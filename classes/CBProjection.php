@@ -136,6 +136,16 @@ class CBProjection {
     }
 
     /**
+     * @param string $filepath
+     *
+     * @return object (projection)
+     */
+    static function fromImageFilepath($filepath) {
+        $size = getimagesize($filepath);
+        return CBProjection::withSize($size[0], $size[1]);
+    }
+
+    /**
      * @param stdClass $projection
      * @param number $width
      * @param number $height
