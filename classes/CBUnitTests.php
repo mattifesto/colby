@@ -3,29 +3,33 @@
 class CBUnitTests {
 
     /**
-     * @return null;
+     * @return null
      */
-    public static function getListOfTestsForAjax() {
-        $response           = new CBAjaxResponse();
-        $response->tests    = [
-            ['CBConvert',   'textToStub'],
-            ['CBDataStore', 'directoryNameFromDocumentRoot'],
-            ['CBDataStore', 'toURL'],
-            ['CBDB',        'hex160ToSQL'],
-            ['CBDB',        'optional'],
-            ['CBDB',        'SQLToArray'],
-            ['CBDB',        'SQLToAssociativeArray'],
-            ['CBDB',        'SQLToValue'],
-            ['CBImages',    'resize'],
+    static function getListOfTestsForAjax() {
+        $response = new CBAjaxResponse();
+        $response->tests = [
+            ['CBConvert',               'textToStub'],
+            ['CBDataStore',             'directoryNameFromDocumentRoot'],
+            ['CBDataStore',             'toURL'],
+            ['CBDataStore',             'URIToID'],
+            ['CBDB',                    'hex160ToSQL'],
+            ['CBDB',                    'optional'],
+            ['CBDB',                    'SQLToArray'],
+            ['CBDB',                    'SQLToAssociativeArray'],
+            ['CBDB',                    'SQLToValue'],
+            ['CBImages',                'resize'],
             ['CBModelCache'],
-            ['CBModels',    'fetchModelByID'],
-            ['CBModels',    'fetchModelsByID'],
-            ['CBPages',     'stringToDencodedURIPath'],
+            ['CBModels',                'fetchModelByID'],
+            ['CBModels',                'fetchModelsByID'],
+            ['CBPages',                 'stringToDencodedURIPath'],
             ['CBProjection'],
             ['CBSitePreferences'],
             ['CBTestPage'],
             ['CBUnit'],
-            ['CBViewPage',  'save']];
+            ['CBViewPage',              'save'],
+            ['CBPageVerificationTask',  'importThumbnailURLToImage'],
+            ['CBPageVerificationTask',  'upgradeThumbnailURLToImage'],
+        ];
 
         if (is_callable($function = 'CBTests::tests')) {
             $response->tests = array_merge($response->tests, call_user_func($function));
@@ -36,35 +40,41 @@ class CBUnitTests {
     }
 
     /**
-     * @return {stdClass}
+     * @return object
      */
-    public static function getListOfTestsForAjaxPermissions() {
+    static function getListOfTestsForAjaxPermissions() {
         return (object)['group' => 'Developers'];
     }
 
     /**
-     * @return void
+     * This test runs the oldest test left in their deprecated test running
+     * methods. All tests run in this function should be updated so this
+     * function can be removed.
+     *
+     * @return null
      */
-    public static function test() {
+    static function test() {
 
-        // Deprecated style
+        // Oldest style
 
         $testDirectory = CBSystemDirectory . '/snippets/tests';
 
-        include "{$testDirectory}/Test,Colby,decrypt,encrypt.php";
+        include "{$testDirectory}/Test,Colby,decrypt,encrypt.php"; // move to ColbyTests
 
-        // New style
+        // Older style
 
-        CBUnitTestsForCBDataStore::runAll();
-        CBUnitTestsForCBMarkaround::runAll();
-        CBUnitTestsForCBView::runAll();
-        CBUnitTestsForColbyConvert::runAll();
-        CBUnitTestsForColbyMarkaroundParser::runAll();
+        CBUnitTestsForCBDataStore::runAll();            // move to CBDataStoreTests
+        CBUnitTestsForCBMarkaround::runAll();           // move to CBMarkaroundTests
+        CBUnitTestsForCBView::runAll();                 // move to CBViewTests
+        CBUnitTestsForColbyConvert::runAll();           // move to CBConvertTests
+        CBUnitTestsForColbyMarkaroundParser::runAll();  // move to CBMarkaroundParserTests
     }
 }
 
 /**
  * This function is intended to be used with scalar values.
+ *
+ * @return null
  */
 function CBCompareAnActualTestResultToAnExpectedTestResult($actualTestResult, $expectedTestResult)
 {
