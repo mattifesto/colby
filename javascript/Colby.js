@@ -455,6 +455,9 @@ var Colby = {
     },
 
     /**
+     * This code is dangerous because it can provide an image structure for
+     * a URI that doesn't represent an image.
+     *
      * @param string URI
      *
      * @return object|undefined
