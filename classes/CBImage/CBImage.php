@@ -16,7 +16,7 @@ final class CBImage {
      *
      * @return string
      */
-    public static function flexpath(stdClass $image, $filename = null, $flexdir = null) {
+    static function flexpath(stdClass $image, $filename = null, $flexdir = null) {
         if (empty($filename)) {
             $filename = empty($image->filename) ? $image->base : $image->filename;
         }
@@ -35,7 +35,7 @@ final class CBImage {
      *
      * @return stdClass
      */
-    public static function specToModel(stdClass $spec) {
+    static function specToModel(stdClass $spec) {
         $filename = CBModel::value($spec, 'filename', '');
 
         if (empty($filename)) {
@@ -51,49 +51,5 @@ final class CBImage {
             'ID' => $spec->ID,
             'width' => CBModel::value($spec, 'width', null, 'intval'),
         ];
-    }
-
-    /**
-     * @param string $URI
-     *      https://yaycomputer.com/data/58/52/adab0f513df82783386e121dac276bb5c9d6/original.jpeg
-     *
-     * @return stdClass|null
-     *
-     *      {
-     *          extension: string,
-     *          filename: string,
-     *          height: int?,
-     *          ID: hex160,
-     *          width: int?,
-     *      }
-     *
-     */
-    static function URIToImage($URI) {
-        $pattern = '%/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/([^/]+)$%';
-
-        if (preg_match($pattern, $URI, $matches)) {
-            $basename = $matches[4];
-            $pathinfo = pathinfo($basename);
-            $image = (object)[
-                'className' => __CLASS__,
-                'extension' => $pathinfo['extension'],
-                'filename' => $pathinfo['filename'],
-                'ID' => "{$matches[1]}{$matches[2]}{$matches[3]}",
-            ];
-
-            $filepath = CBDataStore::flexpath($image->ID, $basename, CBSiteDirectory);
-
-            if (file_exists($filepath) && ($size = getimagesize($filepath))) {
-                $image->width = $size[0];
-                $image->height = $size[1];
-            } else {
-                $image->height = null;
-                $image->width = null;
-            }
-
-            return $image;
-        } else {
-            return null;
-        }
     }
 }
