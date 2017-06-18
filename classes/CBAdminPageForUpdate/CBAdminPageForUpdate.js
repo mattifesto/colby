@@ -121,14 +121,16 @@ var ColbySiteUpdater = {
             callback.call();
         });
 
-        // promiseToUpdateSite is call twice to ensure new submodules are
-        // properly initialized
+        /**
+         * ColbySiteUpdater.promiseToPullUpdates is called twice to ensure new
+         * submodules are properly initialized
+         */
 
         ColbySiteUpdater.promiseToBackupDatabase()
             .then(CSULog.appendAjaxResponse)
             .then(ColbySiteUpdater.promiseToPullUpdates)
             .then(CSULog.appendAjaxResponse)
-            .then(ColbySiteUpdater.promiseToUpdateSite)
+            .then(ColbySiteUpdater.promiseToPullUpdates)
             .then(CSULog.appendAjaxResponse)
             .then(ColbySiteUpdater.promiseToUpdateSite)
             .then(ColbySiteUpdater.reportSuccess)
