@@ -5,7 +5,7 @@ class CBDataStoreTests {
     /**
      * @return null
      */
-    public static function directoryNameFromDocumentRootTest() {
+    static function directoryNameFromDocumentRootTest() {
         $IDs[]      = 'ee06b609529f624ad6491c5b83fd6daa1387dc7c';
         $IDs[]      = '4F122d0cb0504937a60111f370a06E2b9306fb9D';
         $IDs[]      = strtoupper('254f4ba1bf8d8690a993fbf0b03e263202726d74');
@@ -27,7 +27,7 @@ class CBDataStoreTests {
     /**
      * @return null
      */
-    public static function toURLTest() {
+    static function toURLTest() {
         $ID         = '25c4a69a256a778ff892c60779a31ee1025b1e68';
         $URL        = CBDataStore::toURL(['ID' => $ID]);
         $expected   = CBSitePreferences::siteURL() . '/data/25/c4/a69a256a778ff892c60779a31ee1025b1e68';
@@ -45,6 +45,38 @@ class CBDataStoreTests {
             $a = json_encode($URL);
             $e = json_encode($expected);
             throw new Exception("The actual URL: {$a} does not match the expected URL: {$e}");
+        }
+    }
+
+    /**
+     * @return null
+     */
+    static function URIToIDTest() {
+        $ID = CBHex160::random();
+        $path = CBDataStore::directoryNameFromDocumentRoot($ID);
+        $siteDomainName = CBSitePreferences::siteDomainName();
+        $siteDirectory = CBSitePreferences::siteDirectory();
+
+        $tests = [
+            ["/{$path}/", $ID],
+            ["/$path", false],
+            ["/ff/{$path}/", false],
+            ["http://{$siteDomainName}/{$path}/test.txt", $ID],
+            ["https://{$siteDomainName}:8080/{$path}/thumbnail.jpg", $ID],
+            ["ftp://{$siteDomainName}/{$path}/download.png", $ID],
+            ["//{$siteDomainName}/{$path}/", $ID],
+            ["{$siteDirectory}/{$path}/sub/dir/data.json", $ID],
+            ["http://apple.com/{$path}/main.html", false],
+        ];
+
+        foreach ($tests as $test) {
+            $value = CBDataStore::URIToID($test[0]);
+
+            if ($value !== $test[1]) {
+                $v = json_encode($value);
+                $e = json_encode($test[1]);
+                throw new Exception("The returned value for the URI: '{$test[0]}' was '{$v}'. The expected value was '{$e}'");
+            }
         }
     }
 }
