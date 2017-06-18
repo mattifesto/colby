@@ -335,6 +335,20 @@ final class CBSitePreferences {
     /**
      * @return string
      */
+    static function siteDirectory() {
+        return CBSiteDirectory;
+    }
+
+    /**
+     * @return string
+     */
+    static function siteDomainName() {
+        return explode('//', CBSiteURL)[1];
+    }
+
+    /**
+     * @return string
+     */
     static function siteName() {
         $model = CBSitePreferences::model();
         $siteName = CBModel::value($model, 'siteName', '');
