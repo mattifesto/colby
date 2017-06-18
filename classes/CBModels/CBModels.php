@@ -92,14 +92,18 @@ EOT;
      *      CBModels::deleteModelsByID($ID);
      *      Colby::query('COMMIT');
      *
-     * @param [hex160] $IDs
+     * @param hex160|[hex160] $IDs
      *  All of the referenced models must have the same class name. Make
      *  separate calls for each class name.
      *
      * @return null
      */
-    public static function deleteModelsByID(array $IDs) {
+    static function deleteByID($IDs) {
         if (empty($IDs)) { return; }
+
+        if (!is_array($IDs)) {
+            $IDs = [$IDs];
+        }
 
         $IDsForSQL = CBHex160::toSQL($IDs);
         $SQL = <<<EOT
@@ -134,6 +138,13 @@ EOT;
 EOT;
 
         Colby::query($SQL);
+    }
+
+    /**
+     * @deprecated use CBModels::deleteByID()
+     */
+    static function deleteModelsByID($IDs) {
+        return CBModels::deleteByID($IDs);
     }
 
     /**
@@ -263,6 +274,11 @@ EOT;
         return CBDB::SQLToObjects($SQL);
     }
 
+    /**
+     * @param hex160 $_POST['ID']
+     *
+     * @return null
+     */
     static function fetchModelVersionsByIDForAjax() {
         $response = new CBAjaxResponse();
         $ID = $_POST['ID'];
@@ -271,8 +287,44 @@ EOT;
         $response->send();
     }
 
+    /**
+     * @return object
+     */
     static function fetchModelVersionsByIDForAjaxPermissions() {
         return (object)['group' => 'Developers'];
+    }
+
+    /**
+     * Fetches the spec and model for use in tasks that analyze both.
+     *
+     * @param hex160 $ID
+     *
+     * @return object
+     *
+     *      object ->spec
+     *      object ->model
+     */
+    static function fetchSpecAndModelByID($ID) {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $SQL = <<<EOT
+
+            SELECT  `v`.`specAsJSON` AS `spec`, `v`.`modelAsJSON` AS `model`
+            FROM    `CBModels` AS `m`
+            JOIN    `CBModelVersions` AS `v`
+              ON    `m`.`ID` = `v`.`ID` AND
+                    `m`.`version` = `v`.`version`
+            WHERE   `m`.`ID` = {$IDAsSQL}
+
+EOT;
+
+        $value = CBDB::SQLToObject($SQL);
+
+        if ($value) {
+            $value->spec = json_decode($value->spec);
+            $value->model = json_decode($value->model);
+        }
+
+        return $value;
     }
 
     /**
