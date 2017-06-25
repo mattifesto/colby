@@ -91,20 +91,24 @@ final class CBContainerView {
         extract($args, EXTR_IF_EXISTS);
 
         $rule = <<<EOT
-    .{$class} {
-        background-image: url({$imageURL1x});
-        background-size: {$width}px {$height}px;
-    }
 
-    .{$class}.useImageHeight {
-        min-height: {$height}px;
-    }
+            .{$class} {
+                background-image: url({$imageURL1x});
+                background-size: {$width}px {$height}px;
+            }
+
+            .{$class}.useImageHeight {
+                min-height: {$height}px;
+            }
+
 EOT;
 
         $rule2x = <<<EOT
-    .{$class} {
-        background-image: url({$imageURL2x});
-    }
+
+            .{$class} {
+                background-image: url({$imageURL2x});
+            }
+
 EOT;
 
         $comment = '/* rule for unlimited width */';
@@ -134,14 +138,16 @@ EOT;
         extract($args, EXTR_IF_EXISTS);
 
         $rule = <<<EOT
-    .{$class} {
-        background-image: url({$imageURL2x});
-        background-size: {$width}px {$height}px;
-    }
 
-    .{$class}.useImageHeight {
-        min-height: {$height}px;
-    }
+            .{$class} {
+                background-image: url({$imageURL2x});
+                background-size: {$width}px {$height}px;
+            }
+
+            .{$class}.useImageHeight {
+                min-height: {$height}px;
+            }
+
 EOT;
 
         $comment = '/* rule for unlimited width */';
