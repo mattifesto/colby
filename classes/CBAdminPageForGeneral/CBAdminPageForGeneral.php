@@ -72,6 +72,32 @@ EOT;
     /**
      * @return null
      */
+    static function renderPingStatus() {
+        $now = time();
+        $spec = CBModels::fetchSpecByID(CBRemoteAdministration::pingModelID());
+
+        CBUI::renderHalfSpace();
+        CBUI::renderSectionStart();
+
+        if ($spec === false) {
+            $message = "Alert: This site has never received a maintenance ping.";
+        } else {
+            $pinged = CBModel::value($spec, 'pinged', 0, 'intval');
+
+            if ($pinged < ($now - (60 * 10))) {
+                $message = "Alert: This site has not been pinged for maintenance in an extended period of time.";
+            } else {
+                $message = "Healthy";
+            }
+        }
+
+        CBUI::renderKeyValueSectionItem('Ping Status', $message);
+        CBUI::renderSectionEnd();
+    }
+
+    /**
+     * @return null
+     */
     static function renderSiteConfigurationIssuesView() {
         echo '<!-- Site Configuration Issues -->';
 
