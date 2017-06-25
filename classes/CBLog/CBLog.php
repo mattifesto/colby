@@ -167,6 +167,29 @@ EOT;
     }
 
     /**
+     * @return int
+     *
+     *      Returns the number of entries removed.
+     */
+    static function removeExpiredEntries() {
+        $timestamp = time() - (60 * 60 * 24 * 30 /* 30 days */);
+        $SQL = <<<EOT
+
+            DELETE FROM `CBLog`
+            WHERE timestamp < {$timestamp}
+
+EOT;
+
+        Colby::query($SQL);
+
+        $count = Colby::mysqli()->affected_rows;
+
+        CBLog::addMessage(__METHOD__, 6, "Removed {$count} expired entries from the CBLog table.");
+
+        return $count;
+    }
+
+    /**
      * @param int $severity
      *
      * @return string
