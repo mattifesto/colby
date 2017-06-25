@@ -54,6 +54,8 @@ CBView::renderModelAsHTML((object)[
 
     CBAdminPageForGeneral::renderSiteConfigurationIssuesView();
 
+    CBAdminPageForGeneral::renderPingStatus();
+
     ?>
 
 </main>
