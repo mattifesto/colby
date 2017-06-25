@@ -227,6 +227,7 @@ EOT;
             'taskClassName' => $task->className,
             'taskID' => $task->ID,
             'priority' => $task->priority,
+            'scheduled' => null,
             'started' => $task->started,
         ];
 
@@ -244,16 +245,24 @@ EOT;
                 throw new Exception("The function {$function}() requested by task ({$task->className}, {$task->ID}) is not callable.");
             }
 
-            $output->message = CBModel::value($status, 'message', 'Completed', 'strval');
-            $output->severity = CBModel::value($status, 'severity', CBTasks2::defaultSeverity, 'intval');
             $output->links = CBModel::valueAsArray($status, 'links');
+            $output->message = CBModel::value($status, 'message', 'Completed', 'strval');
+            $output->scheduled = CBModel::value($status, 'scheduled', null, 'intval');
+            $output->severity = CBModel::value($status, 'severity', CBTasks2::defaultSeverity, 'intval');
+
 
         } catch (Exception $exception) {
 
             $output->exception = Colby::exceptionStackTrace($exception);
-            $output->severity = 3;
             $output->message = $exception->getMessage();
+            $output->severity = 3;
 
+        }
+
+        if ($output->scheduled > $output->started) {
+            $scheduledAsSQL = $output->scheduled;
+        } else {
+            $scheduledAsSQL = 'NULL';
         }
 
         $classNameAsSQL = CBDB::stringToSQL($task->className);
@@ -266,6 +275,7 @@ EOT;
             UPDATE  `CBTasks2`
             SET     `completed` = {$output->completed},
                     `output` = {$outputAsSQL},
+                    `scheduled` = {$scheduledAsSQL},
                     `severity` = {$output->severity}
             WHERE   `className` = {$classNameAsSQL} AND
                     `ID` = {$IDAsSQL} AND
