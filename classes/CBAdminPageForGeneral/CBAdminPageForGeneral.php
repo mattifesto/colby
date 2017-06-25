@@ -80,12 +80,12 @@ EOT;
         CBUI::renderSectionStart();
 
         if ($spec === false) {
-            $message = "Alert: This site has never received a maintenance ping.";
+            $message = "Alert: This site has never been pinged.";
         } else {
             $pinged = CBModel::value($spec, 'pinged', 0, 'intval');
 
-            if ($pinged < ($now - (60 * 10))) {
-                $message = "Alert: This site has not been pinged for maintenance in an extended period of time.";
+            if ($pinged < ($now - (60 * 15))) {
+                $message = "Alert: This site has not been pinged for over 15 minutes.";
             } else {
                 $message = "Healthy";
             }
