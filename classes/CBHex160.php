@@ -50,4 +50,14 @@ final class CBHex160 {
 
         return implode(',', $values);
     }
+
+    /**
+     * This ID can be used in situations where a non-unique placeholder hex160
+     * value is needed.
+     *
+     * @return hex160
+     */
+    static function zero() {
+        return '0000000000000000000000000000000000000000';
+    }
 }
