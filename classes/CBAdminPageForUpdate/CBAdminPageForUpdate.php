@@ -26,23 +26,23 @@ final class CBAdminPageForUpdate {
 
     /**
      * @return bool
+     *
+     *      Returns true if the Colby tables need to be installed; otherwise
+     *      false.
      */
     static function installationIsRequired() {
         $SQL = <<<EOT
 
-            SELECT
-                COUNT(*) AS `count`
-            FROM
-                `information_schema`.`TABLES`
-            WHERE
-                `TABLE_SCHEMA`  = DATABASE() AND
-                `TABLE_NAME`    = 'CBDictionary'
+            SELECT  COUNT(*) AS `count`
+            FROM    `information_schema`.`TABLES`
+            WHERE   `TABLE_SCHEMA`  = DATABASE() AND
+                    `TABLE_NAME`    = 'ColbyPages'
 
 EOT;
 
         $count = CBDB::SQLToValue($SQL);
 
-        return $count > 0;
+        return $count == 0;
     }
 
     /**

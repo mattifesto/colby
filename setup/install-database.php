@@ -13,7 +13,6 @@
  * This is the current uninstall SQL:
  *
 
-DROP TABLE `CBDictionary`;
 DROP TABLE `CBPagesInTheTrash`;
 DROP TABLE `ColbyPages`;
 DROP TABLE `ColbyUsersWhoAreAdministrators`;
@@ -64,23 +63,6 @@ CBWellKnownPageForTestingPageTitleAndBodyText::install();
  */
 CBPageVerificationTask::startForNewPages();
 
-$SQL = <<<EOT
-
-    CREATE TABLE IF NOT EXISTS `CBDictionary` (
-        `key`                   VARCHAR(100),
-        `valueJSON`             LONGTEXT,
-        `number`                BIGINT UNSIGNED NOT NULL DEFAULT 1,
-
-        PRIMARY KEY (`key`)
-    )
-    ENGINE=InnoDB
-    DEFAULT CHARSET=utf8
-    COLLATE=utf8_unicode_ci
-
-EOT;
-
-Colby::query($SQL);
-
 // 2015.10.26
 CBUpgradesForVersion172::run();
 
@@ -99,14 +81,5 @@ CBUpgradesForVersion188::run();
 // 2016.04.28
 CBUpgradesForVersion191::run();
 
-/**
- *
- */
-
-$tuple = CBDictionaryTuple::initWithKey('CBSystemVersionNumber');
-$tuple->value = CBSystemVersionNumber;
-$tuple->update();
-
-$tuple = CBDictionaryTuple::initWithKey('CBSiteVersionNumber');
-$tuple->value = CBSiteVersionNumber;
-$tuple->update();
+// 2017.06.25
+CBUpgradesForVersion279::run();

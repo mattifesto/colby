@@ -10,29 +10,8 @@
 
 $databaseIsAvailable = COLBY_MYSQL_HOST && COLBY_MYSQL_DATABASE && COLBY_MYSQL_USER;
 
-if ($databaseIsAvailable)
-{
-    $sql = <<<EOT
-
-        SELECT
-            COUNT(*) AS `count`
-        FROM
-            `information_schema`.`TABLES`
-        WHERE
-            `TABLE_SCHEMA`  = DATABASE() AND
-            `TABLE_NAME`    = 'CBDictionary'
-
-EOT;
-
-    $result                 = Colby::query($sql);
-    $databaseIsInstalled    = $result->fetch_object()->count;
-
-    $result->free();
-
-    if ($databaseIsInstalled)
-    {
-        return;
-    }
+if ($databaseIsAvailable && !CBAdminPageForUpdate::installationIsRequired()) {
+    return;
 }
 
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
