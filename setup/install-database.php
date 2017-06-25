@@ -43,6 +43,7 @@ Colby::query($SQL);
 CBLog::install();
 CBTasks::install(); /* deprecated */
 CBTasks2::install();
+CBLogMaintenanceTask::install();
 CBUsers::install();
 CBModels::install();
 CBModelAssociations::install();
