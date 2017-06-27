@@ -18,7 +18,18 @@ final class CBArtworkView {
     /**
      * @param string? $model->alternativeText
      * @param string? $model->captionAsHTML
-     * @param stdClass $model->image
+     * @param string? $model->captionAsMarkdown
+     *
+     *      This will be used as fallback alternative text if alternativeText
+     *      is empty.
+     *
+     * @param object? (CBImage) $model->image
+     * @param string? $model->size
+     *
+     *      The maximum width of the image in retina pixels. rw1600 (800pt) is
+     *      the default.
+     *
+     *      rw320|rw640|rw960|rw1280|rw1600|rw1920|rw2560|original|page
      *
      * @return null
      */
@@ -35,6 +46,19 @@ final class CBArtworkView {
 
         $image = $model->image;
         $alternativeText = CBModel::value($model, 'alternativeText', '');
+
+        /**
+         * 2017.06.26
+         * After working with customers and being annoyed with copying caption
+         * into alternative text, I decided to make this imperfect change and
+         * use the caption markdown as fallback alternitive text. It's more
+         * imperfect if there's actual markdown formatting, but it still works.
+         */
+
+        if (empty($alternativeText)) {
+            $alternativeText = mb_substr(CBModel::value($model, 'captionAsMarkdown', '', 'trim'), 0, 100);
+        }
+
         $alternativeTextAsHTML = cbhtml($alternativeText);
         $captionAsHTML = CBModel::value($model, 'captionAsHTML', '');
         $size = CBModel::value($model, 'size', 'rw1600');
@@ -120,15 +144,17 @@ final class CBArtworkView {
 
     /**
      * @param string? $spec->alternativeText
-     * @param string $spec->captionAsMarkdown
+     * @param string? $spec->captionAsMarkdown
      *
      *      The markdown format is CommonMark.
      *
-     * @param string $spec->image?->extension
-     * @param string $spec->image?->filename
-     * @param int $spec->image?->height
-     * @param hex160 $spec->image?->ID
-     * @param int $spec->image?->width
+     * @param object? (CBImage) $spec->image
+     * @param string? $model->size
+     *
+     *      The maximum width of the image in retina pixels. rw1600 (800pt) is
+     *      the default.
+     *
+     *      rw320|rw640|rw960|rw1280|rw1600|rw1920|rw2560|original|page
      *
      * @return stdClass
      */
