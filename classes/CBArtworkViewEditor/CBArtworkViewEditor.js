@@ -32,7 +32,7 @@ var CBArtworkViewEditor = {
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
         });
-        var chooser = CBUIImageChooser.createThumbnailSizedChooser({
+        var chooser = CBUIImageChooser.createFullSizedChooser({
             imageChosenCallback : imageChosenCallback,
             imageRemovedCallback : imageRemovedCallback,
         });
@@ -84,7 +84,7 @@ var CBArtworkViewEditor = {
         element.appendChild(section);
 
         if (args.spec.image) {
-            chooser.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw320"));
+            chooser.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
         }
 
         return element;
@@ -131,7 +131,7 @@ var CBArtworkViewEditor = {
             args.specChangedCallback();
 
             // set view editor thumbnail
-            args.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw320"));
+            args.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
 
             // suggest page thumbnail
             CBViewPageEditor.suggestThumbnailImage(response.image);
