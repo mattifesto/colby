@@ -1,6 +1,30 @@
-.CBUIImageChooser {
+.CBUIImageChooser.full {
+    background-color: hsl(0, 0%, 20%);
+    min-height: 44px;
+    padding: 20px 20px 0;
+}
+
+.CBUIImageChooser.full img {
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.CBUIImageChooser.full .commands {
+    color: hsl(30, 100%, 50%);
+    color: var(--CBTextColorForLinks);
+    display: flex;
+    justify-content: center;
+}
+
+.CBUIImageChooser.full .commands > * {
+    cursor: pointer;
+    margin: 10px 10px;
+}
+
+.CBUIImageChooser.thumbnail {
     padding: 10px;
 }
+
 
 .CBUIImageChooser .button {
     align-items: center;

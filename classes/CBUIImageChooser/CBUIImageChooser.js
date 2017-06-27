@@ -30,6 +30,82 @@ var CBUIImageChooser = {
      *  function setImageURLCallback
      * }
      */
+    createFullSizedChooser : function (args) {
+        var element = document.createElement("div");
+        element.className = "CBUIImageChooser full";
+        var imageElement = document.createElement("img");
+        imageElement.style.display = "none";
+        var inputElement = document.createElement("input");
+        inputElement.type = "file";
+        inputElement.style.display = "none";
+
+        var commandsElement = document.createElement("div");
+        commandsElement.className = "commands";
+        var chooseElement = document.createElement("div");
+        chooseElement.textContent = "choose";
+        var removeElement = document.createElement("div");
+        removeElement.style.display = "none";
+        removeElement.textContent = "remove";
+
+        function setImageURI(URI) {
+            if (URI) {
+                imageElement.src = URI;
+                imageElement.style.display = "block";
+                removeElement.style.display = "block";
+            } else {
+                imageElement.src = "";
+                imageElement.style.display = "none";
+                removeElement.style.display = "none";
+            }
+        }
+
+        chooseElement.addEventListener("click", function () {
+            inputElement.click();
+        });
+
+        inputElement.addEventListener("change", function () {
+            if (typeof args.imageChosenCallback === "function") {
+                args.imageChosenCallback.call(undefined, {
+                    file: inputElement.files[0],
+                    setImageURLCallback: setImageURI
+                });
+            }
+
+            inputElement.value = null;
+        });
+
+
+        removeElement.addEventListener("click", function () {
+            setImageURI("");
+
+            if (typeof args.imageRemovedCallback === "function") {
+                args.imageRemovedCallback.call(undefined, {
+                    setImageURLCallback: setImageURI,
+                });
+            }
+        });
+
+        element.appendChild(inputElement);
+        element.appendChild(imageElement);
+        commandsElement.appendChild(chooseElement);
+        commandsElement.appendChild(removeElement);
+        element.appendChild(commandsElement);
+
+        return {
+            element: element,
+            setImageURLCallback: setImageURI,
+        };
+    },
+
+    /**
+     * @param function args.imageChosenCallback
+     * @param function args.imageRemovedCallback
+     *
+     * @return {
+     *  Element element
+     *  function setImageURLCallback
+     * }
+     */
     createThumbnailSizedChooser : function (args) {
         var element = document.createElement("div");
         element.className = "CBUIImageChooser thumbnail";
