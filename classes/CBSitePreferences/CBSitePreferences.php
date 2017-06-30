@@ -15,6 +15,7 @@ final class CBSitePreferences {
     const defaultResizeOperations = [
         'rs200clc200',  /*  100 x 100 */
         'rw320',        /*  160 x ? */
+        'rw480',        /*  240 x ? */
         'rw640',        /*  320 x ? */
         'rw960',        /*  480 x ? */
         'rw1280',       /*  640 x ? */
