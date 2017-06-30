@@ -1,21 +1,35 @@
+/**
+ * The `max-width: 100%` declaration is present for situations where this
+ * element is the child of a `display: flex` parent. In this situation elements
+ * are not constrained by the parent element's width. However, CBArtworkView
+ * elements should be constrained by their parent element's width in this
+ * scenario.
+ */
 .CBArtworkView {
     align-items: center;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    max-width: 100%;
     padding: 20px;
 }
 
-.CBArtworkView .caption {
-    border-bottom: 1px solid var(--CBLineColor);
+.CBArtworkView figcaption {
+    box-sizing: border-box;
     color: var(--CBTextColor2);
     font-size: 80%;
     padding: 5px 0;
-    max-width: 560px;
+    text-align: center;
+    width: 100%;
 }
 
-.CBArtworkView .pin {
+.CBArtworkView .social {
+    border-top: 0.5px solid var(--CBLineColor);
+    box-sizing: border-box;
     font-size: 80%;
-    margin-top: 5px;
+    margin-top: 20px;
+    padding: 0 5px;
+    text-align: center;
 }
 
 /**

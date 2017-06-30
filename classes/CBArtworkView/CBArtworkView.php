@@ -42,8 +42,6 @@ final class CBArtworkView {
         CBHTMLOutput::requireClassName(__CLASS__);
         CBHTMLOutput::addPinterest();
 
-        echo '<figure class="CBArtworkView">';
-
         $image = $model->image;
         $alternativeText = CBModel::value($model, 'alternativeText', '');
 
@@ -102,37 +100,53 @@ final class CBArtworkView {
                 break;
         }
 
-        $imageURL = CBDataStore::flexpath($image->ID, "{$filename}.{$image->extension}", CBSitePreferences::siteURL());
-
-        CBArtworkElement::render([
-            'alternativeText' => $alternativeText,
-            'height' => $image->height,
-            'maxWidth' => $maxWidth,
-            'width' => $image->width,
-            'URL' => $imageURL,
-        ]);
-
-        if (!empty($captionAsHTML)) { ?>
-            <div class="caption">
-                <?= $captionAsHTML ?>
-            </div>
-        <?php }
+        if ($maxWidth) {
+            $captionDeclarations = "max-width: {$maxWidth}px";
+        } else {
+            $captionDeclarations = '';
+        }
 
         ?>
 
-        <div class="pin">
-            <a href="https://www.pinterest.com/pin/create/button/"
-               data-pin-custom="true"
-               data-pin-description="<?= $alternativeTextAsHTML ?>"
-               data-pin-do="buttonPin"
-               data-pin-media="<?= $imageURL ?>">
-                Pin to Pinterest
-            </a>
-        </div>
+        <figure class="CBArtworkView">
+
+            <?php
+
+            $imageURL = CBDataStore::flexpath($image->ID, "{$filename}.{$image->extension}", CBSitePreferences::siteURL());
+
+            CBArtworkElement::render([
+                'alternativeText' => $alternativeText,
+                'height' => $image->height,
+                'maxWidth' => $maxWidth,
+                'width' => $image->width,
+                'URL' => $imageURL,
+            ]);
+
+            if (!empty($captionAsHTML)) {
+                ?>
+
+                <figcaption style="<?= $captionDeclarations ?>">
+                    <?= $captionAsHTML ?>
+                </figcaption>
+
+                <?php
+            }
+
+            ?>
+
+            <div class="social" style="<?= $captionDeclarations ?>">
+                <a href="https://www.pinterest.com/pin/create/button/"
+                   data-pin-custom="true"
+                   data-pin-description="<?= $alternativeTextAsHTML ?>"
+                   data-pin-do="buttonPin"
+                   data-pin-media="<?= $imageURL ?>">
+                    Pin to Pinterest
+                </a>
+            </div>
+
+        </figure>
 
         <?php
-
-        echo '</figure>';
     }
 
     /**
