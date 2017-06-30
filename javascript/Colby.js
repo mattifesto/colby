@@ -251,6 +251,10 @@ var Colby = {
      * @return string
      */
     imageToURL : function (image, filename) {
+        if (!image) {
+            return "";
+        }
+
         filename = filename || image.filename;
         var basename = filename + "." + image.extension;
         return "/" + Colby.dataStoreFlexpath(image.ID, basename);
