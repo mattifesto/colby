@@ -51,7 +51,7 @@ final class CBArtworkElement {
         $inverseAspectRatio = $aspectHeight/ $aspectWidth;
         $URLAsHTML = cbhtml($args['URL']);
         $paddingBottom = $inverseAspectRatio * 100;
-        $paddingBottom = "padding-bottom: {$paddingBottom}%;";
+        $paddingBottomDeclaration = "padding-bottom: {$paddingBottom}%";
 
         $maxWidth = false;
 
@@ -68,9 +68,9 @@ final class CBArtworkElement {
         }
 
         if ($maxWidth) {
-            $maxWidth = "max-width: {$maxWidth}px;";
+            $widthDeclaration = "width: {$maxWidth}px";
         } else {
-            $maxWidth = '/* no max-width */';
+            $widthDeclaration = 'width: 100vw';
         }
 
         if (empty($args['alternativeText'])) {
@@ -79,22 +79,39 @@ final class CBArtworkElement {
             $alternativeTextAsHTML = cbhtml($args['alternativeText']);
         }
 
+        /**
+         * NOTE: It's important the style of this element be in the format:
+         *
+         *      width: 640px; max-width: 100%;
+         *
+         *  instead of:
+         *
+         *      width: 100%; max-width: 640px;
+         *
+         *  In most scenarios, these two formats mean the same thing. But not
+         *  when the element is a child of a `display: flex` parent. In this
+         *  case the first format expresses a desired size and the element will
+         *  have that size unless it won't fit and then it will be allowed to
+         *  shrink. The second format will allow the element to be reduced to
+         *  zero width by its parent.
+         */
+
         ?>
 
         <div class="CBArtworkElement ID-<?= $ID ?>">
             <style>
-                .ID-<?= $ID ?> {
-                    <?= $maxWidth ?>
-                    width: 100%;
+                <?= ".ID-{$ID}" ?> {
+                    <?= $widthDeclaration ?>;
+                    max-width: 100%;
                 }
 
-                .ID-<?= $ID ?> > div {
+                <?= ".ID-{$ID}" ?> > div {
                     overflow: hidden;
                     position: relative;
-                    <?= $paddingBottom ?>
+                    <?= $paddingBottomDeclaration ?>;
                 }
 
-                .ID-<?= $ID ?> > div > img {
+                <?= ".ID-{$ID}" ?> > div > img {
                     left: 0;
                     position: absolute;
                     top: 0;
