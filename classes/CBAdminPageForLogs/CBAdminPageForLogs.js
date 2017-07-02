@@ -1,12 +1,14 @@
 "use strict"; /* jshint strict: global */
-/* globals Colby */
+/* globals
+    CBUIExpandableRow,
+    Colby */
 
 var CBAdminPageForLogs = {
 
     /**
      * @return Element
      */
-    create : function () {
+    create: function () {
         var element = document.createElement("div");
         element.className = "entries";
 
@@ -19,16 +21,33 @@ var CBAdminPageForLogs = {
 
         function display(response) {
             response.logs.forEach(function (log) {
-                var entryElement = document.createElement("div");
-                entryElement.className = "entry";
-                var timeElement = Colby.unixTimestampToElement(log.timestamp);
-                var messageElement = document.createElement("div");
-                messageElement.className = "message";
-                messageElement.textContent = log.message;
 
-                entryElement.appendChild(timeElement);
-                entryElement.appendChild(messageElement);
-                element.appendChild(entryElement);
+                var title = log.message.substr(0, 100);
+                var titleElement = document.createElement("div");
+                titleElement.textContent = title;
+
+                var timeElement = Colby.unixTimestampToElement(log.timestamp);
+
+                var row = CBUIExpandableRow.create();
+                row.columnsElement.appendChild(timeElement);
+                row.columnsElement.appendChild(titleElement);
+
+
+                if (title.length !== log.message.length) {
+                    var messageElement = document.createElement("div");
+                    messageElement.textContent = log.message;
+
+                    row.contentElement.appendChild(messageElement);
+                }
+
+                if (log.model && log.model.exceptionStackTrace) {
+                    var exceptionStackTraceElement = document.createElement("pre");
+                    exceptionStackTraceElement.textContent = log.model.exceptionStackTrace;
+
+                    row.contentElement.appendChild(exceptionStackTraceElement);
+                }
+
+                element.appendChild(row.element);
             });
         }
     },

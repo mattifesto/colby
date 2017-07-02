@@ -27,6 +27,13 @@ final class CBAdminPageForLogs {
     /**
      * @return [string]
      */
+    static function requiredClassNames() {
+        return ['CBUIExpandableRow'];
+    }
+
+    /**
+     * @return [string]
+     */
     static function requiredJavaScriptURLs() {
         return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
