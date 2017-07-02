@@ -23,6 +23,7 @@ final class CBLog {
                 `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
                 `category` VARCHAR(80) NOT NULL,
                 `message` TEXT NOT NULL,
+                `modelAsJSON` LONGTEXT,
                 `severity` TINYINT NOT NULL,
                 `timestamp` BIGINT NOT NULL,
                 PRIMARY KEY (`ID`),
@@ -37,6 +38,24 @@ final class CBLog {
 EOT;
 
         Colby::query($SQL);
+
+        /**
+         * @NOTE Upgrade 2017.07.01
+         *
+         *      Add the `modelAsJSON` column
+         */
+
+        if (!CBDBA::tableHasColumnNamed('CBLog', 'modelAsJSON')) {
+            $SQL = <<<EOT
+
+                ALTER TABLE `CBLog`
+                ADD COLUMN  `modelAsJSON` LONGTEXT
+                AFTER       `message`
+
+EOT;
+
+            Colby::query($SQL);
+        }
     }
 
     /**
@@ -65,11 +84,11 @@ EOT;
      *
      * @param string $message
      */
-    public static function addMessage($category, $severity, $message) {
+    static function addMessage($category, $severity, $message, stdClass $model = null) {
         try {
             if ($severity < 4) {
                 try {
-                    error_log($message);
+                    error_log('Source: ' . __METHOD__ . '(), ' . $message);
                 } catch (Exception $ignoredException) {
                     // We can't do much if error_log() fails.
                 }
@@ -80,16 +99,24 @@ EOT;
             $severityAsSQL = (int)$severity;
             $timestampAsSQL = time();
 
+            if ($model) {
+                $modelAsJSONAsSQL = CBDB::stringToSQL(json_encode($model));
+            } else {
+                $modelAsJSONAsSQL = 'NULL';
+            }
+
             $SQL = <<<EOT
 
                 INSERT INTO `CBLog` (
                     `category`,
                     `message`,
+                    `modelAsJSON`,
                     `severity`,
                     `timestamp`
                 ) VALUES (
                     {$categoryAsSQL},
                     {$messageAsSQL},
+                    {$modelAsJSONAsSQL},
                     {$severityAsSQL},
                     {$timestampAsSQL}
                 )
@@ -109,7 +136,7 @@ EOT;
     /**
      * return null
      */
-    public static function fetchLogsForAjax() {
+    static function fetchLogsForAjax() {
         $response = new CBAjaxResponse();
 
         $response->logs = CBLog::entries((object)[
@@ -156,14 +183,22 @@ EOT;
 
         $SQL = <<<EOT
 
-            SELECT `category`, `message`, `severity`, `timestamp`
+            SELECT `category`, `message`, `modelAsJSON` AS `model`, `severity`, `timestamp`
             FROM `CBLog`
             {$whereAsSQL}
             ORDER BY `timestamp` DESC
 
 EOT;
 
-        return CBDB::SQLToObjects($SQL);
+        $entries = CBDB::SQLToObjects($SQL);
+
+        foreach ($entries as $entry) {
+            if (!empty($entry->model)) {
+                $entry->model = json_decode($entry->model);
+            }
+        }
+
+        return $entries;
     }
 
     /**
