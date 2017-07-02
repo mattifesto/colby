@@ -686,9 +686,11 @@ final class Colby {
     public static function reportException(Exception $exception, $severity = 3) {
         try {
             $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
-            $messageBody = Colby::exceptionStackTrace($exception);
+            $model = (object)[
+                'exceptionStackTrace' => Colby::exceptionStackTrace($exception),
+            ];
 
-            CBLog::addMessage('Exception', $severity, $messageBody);
+            CBLog::addMessage(__METHOD__, $severity, $exception->getMessage(), $model);
 
             /**
              * Report the exception via email to the administrator
@@ -709,23 +711,29 @@ final class Colby {
                 $messageSubject = "{$severityDescription} | {$serverName} | {$truncatedMessage}";
                 $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
                 $messageTo = CBSitePreferences::administratorEmails();
-                $messageBodyHTML = '<pre>' . cbhtml($messageBody) . '</pre>';
+                $messageBodyHTML = '<pre>' . cbhtml($model->exceptionStackTrace) . '</pre>';
 
                 $message = Swift_Message::newInstance();
                 $message->setSubject($messageSubject);
                 $message->setFrom($messageFrom);
                 $message->setTo($messageTo);
-                $message->setBody($messageBody);
+                $message->setBody($model->exceptionStackTrace);
                 $message->addPart($messageBodyHTML, 'text/html');
 
                 $mailer->send($message);
             }
         } catch (Exception $innerException) {
             try {
-                $innerExceptionMessage = __METHOD__ . '() inner exception: ' . $innerException->getMessage();
-                CBLog::addMessage('Exception', 2, $innerExceptionMessage);
+                $model = (object)[
+                    'exceptionStackTrace' => Colby::exceptionStackTrace($innerException),
+                ];
+                $innerExceptionMessage = 'Inner exception: ' . $innerException->getMessage();
+
+                CBLog::addMessage(__METHOD__, 2, $innerExceptionMessage, $model);
             } catch (Exception $ignoredException) {
-                // Nothing more can be done if a failure occurs here.
+                // At this point we're three exceptions deep so we just try to
+                // get an error log message written if possible.
+                error_log('Source: ' . __METHOD__ . '(), Ignored exception: ' . $ignoredException->getMessage());
             }
         }
     }
