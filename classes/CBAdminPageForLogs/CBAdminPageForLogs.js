@@ -27,6 +27,7 @@ var CBAdminPageForLogs = {
                 titleElement.textContent = title;
 
                 var timeElement = Colby.unixTimestampToElement(log.timestamp);
+                timeElement.classList.add("compact");
 
                 var row = CBUIExpandableRow.create();
                 row.columnsElement.appendChild(timeElement);
@@ -48,6 +49,8 @@ var CBAdminPageForLogs = {
                 }
 
                 element.appendChild(row.element);
+
+                Colby.updateTimes();
             });
         }
     },
