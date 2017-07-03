@@ -4,6 +4,56 @@
     padding: 20px;
 }
 
+/**
+ * The align-self and flex declarations make the view fill and flexible
+ * container.
+ */
+.CBTextView2StandardLayout.hero1 {
+    align-self: stretch;
+    flex: 1 1 auto;
+    font-size: 3vw;
+    line-height: normal;
+    padding: 5vw;
+}
+
+@media (max-width: 479px) {
+    .CBTextView2StandardLayout.hero1 {
+        font-size: 8vw;
+    }
+}
+
+.CBTextView2StandardLayout .content {
+    flex: 0 1 36em;
+}
+
+.CBTextView2StandardLayout.hero1 .content {
+    flex: 0 1 auto;
+}
+
+.CBTextView2StandardLayout.hleft {
+    justify-content: flex-start;
+}
+
+.CBTextView2StandardLayout.hright {
+    justify-content: flex-end;
+}
+
+.CBTextView2StandardLayout.hcenter {
+    justify-content: center;
+}
+
+.CBTextView2StandardLayout.vtop {
+    align-items: flex-start;
+}
+
+.CBTextView2StandardLayout.vbottom {
+    align-items: flex-end;
+}
+
+.CBTextView2StandardLayout.vcenter {
+    align-items: center;
+}
+
 .CBTextView2StandardLayout.center {
     text-align: center;
 }
@@ -26,10 +76,6 @@
     text-align: right;
 }
 
-.CBTextView2StandardLayout > div {
-    flex: 0 1 36em;
-}
-
 .CBTextView2StandardLayout {
     line-height: 1.5;
 }
@@ -38,13 +84,47 @@
     font-size: 1.25em;
 }
 
+.CBTextView2StandardLayout.hero1 h1 {
+    font-size: 4em;
+}
+
 .CBTextView2StandardLayout h2 {
     font-size: 1em;
+}
+
+.CBTextView2StandardLayout.hero1 h2 {
+    font-size: 3em;
 }
 
 .CBTextView2StandardLayout h3 {
     color: var(--CBTextColor2);
     font-size: 1em;
+}
+
+.CBTextView2StandardLayout.hero1 h3 {
+    color: inherit;
+    font-size: 2em;
+}
+
+.CBTextView2StandardLayout.hero1 h4 {
+    font-size: 1.5em;
+}
+
+.CBTextView2StandardLayout.hero1 h5 {
+    font-size: 1.25em;
+}
+
+.CBTextView2StandardLayout.hero1 h6 {
+    font-size: 1em;
+}
+
+.CBTextView2StandardLayout.hero1 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.CBTextView2StandardLayout.hero1 a:hover {
+    text-decoration: underline;
 }
 
 .CBTextView2StandardLayout blockquote,
@@ -81,4 +161,14 @@
 .CBTextView2StandardLayout pre + *,
 .CBTextView2StandardLayout ul + * {
     margin-top: 1.5em;
+}
+
+.CBTextView2StandardLayout.hero1 .content > * + * {
+    margin-top: 3vw;
+}
+
+@media (max-width: 479px) {
+    .CBTextView2StandardLayout.hero1 .content > * + * {
+        margin-top: 8vw;
+    }
 }

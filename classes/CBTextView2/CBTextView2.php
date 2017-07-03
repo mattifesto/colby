@@ -55,7 +55,7 @@ final class CBTextView2 {
             <?php if (!empty($model->localCSS)) { ?>
                 <style><?= $model->localCSS ?></style>
             <?php } ?>
-            <div>
+            <div class="content">
                 <?= CBModel::value($model, 'contentAsHTML', '') ?>
             </div>
         </div>
