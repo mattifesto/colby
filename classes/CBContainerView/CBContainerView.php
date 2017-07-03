@@ -253,14 +253,16 @@ EOT;
      * @return stdClass
      */
     public static function specToModel(stdClass $spec) {
-        $model = (object)['className' => __CLASS__];
+        $model = (object)[
+            'className' => __CLASS__,
+            'subviews' => CBModel::namedSpecArrayToModelArray($spec, 'subviews'),
+        ];
         $model->backgroundColor = CBModel::value($spec, 'backgroundColor', null, 'CBConvert::stringToCSSColor');
         $model->backgroundImage = CBModel::value($spec, 'backgroundImage', null, 'CBConvert::stringToCSSBackgroundImage');
         $model->backgroundPositionY = CBModel::value($spec, 'backgroundPositionY', null, 'CBConvert::stringToCSSValue');
         $model->imageThemeID = CBModel::value($spec, 'imageThemeID');
         $model->HREF = CBModel::value($spec, 'HREF');
         $model->HREFAsHTML = cbhtml($model->HREF);
-        $model->subviews = array_map('CBView::specToModel', isset($spec->subviews) ? $spec->subviews : []);
         $model->tagName = CBModel::value($spec, 'tagName');
         $model->themeID = CBModel::value($spec, 'themeID');
         $model->useImageHeight = CBModel::value($spec, 'useImageHeight', false, 'boolval');
