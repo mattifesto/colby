@@ -8,16 +8,6 @@ final class CBLinkView1 {
      * @return null
      */
     static function renderModelAsHTML(stdClass $model) {
-
-        /*
-        $image = (object)[
-            'ID' => '51ac8b6829d16c3de26ec9b0527d77439a82dcd3',
-            'filename' => 'original',
-            'height' => 1200,
-            'width' => 1600,
-            'extension' => 'jpeg',
-        ];*/
-
         if (empty($model->image)) {
             echo '<!-- CBLinkView1: no image specified -->';
             return;
