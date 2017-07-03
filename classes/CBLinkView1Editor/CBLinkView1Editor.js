@@ -8,6 +8,12 @@
 
 var CBLinkView1Editor = {
 
+    /**
+     * @param object args.spec
+     * @param function args.specChangedCallback
+     *
+     * @return Element
+     */
     createEditor: function (args) {
         var section, item;
         var element = document.createElement("div");
