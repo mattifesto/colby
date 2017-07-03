@@ -13,6 +13,7 @@ final class CBPagesPreferences {
     const defaultClassNamesForSupportedViews = [
         'CBArtworkView',
         'CBContainerView',
+        'CBContainerView2',
         'CBCustomView',
         'CBLinkView1',
         'CBTextView2',
