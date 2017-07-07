@@ -284,13 +284,32 @@ class CBHTMLOutput
                 <meta property="fb:app_id" content="<?= CBFacebookAppID ?>">
                 <meta property="og:title" content="<?= $titleAsHTML ?>">
                 <meta property="og:description" content="<?= $descriptionAsHTML ?>">
-                <?php if (!empty($pageContext->imageURL)) { ?>
-                    <meta property="og:image" content="<?= $pageContext->imageURL ?>">
-                <?php } ?>
 
-                <?= $settingsHeadContent ?>
-                <?php self::renderJavaScriptInHead(); ?>
-                <?php self::renderCSSLinks(); ?>
+                <?php
+
+                if (!empty($pageContext->imageURL)) {
+                    ?>
+                    <meta property="og:image" content="<?= $pageContext->imageURL ?>">
+                    <?php
+                }
+
+                $imageForIcon = CBSitePreferences::imageForIcon();
+
+                if (!empty($imageForIcon)) {
+                    $basename = "rw320.{$imageForIcon->extension}";
+                    $iconURL = CBDataStore::flexpath($imageForIcon->ID, $basename, CBSiteURL);
+
+                    ?>
+                    <link rel="icon" sizes="320x320" href="<?= $iconURL ?>">
+                    <?php
+                }
+
+                echo $settingsHeadContent;
+
+                CBHTMLOutput::renderJavaScriptInHead();
+                CBHTMLOutput::renderCSSLinks();
+
+                ?>
             </head>
             <body>
                 <?= $settingsStartOfBodyContent ?>
