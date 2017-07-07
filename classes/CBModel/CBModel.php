@@ -64,12 +64,25 @@ final class CBModel {
      * is available to convert the spec into a model this function will return
      * null.
      *
-     * @param stdClass $spec
+     * @param object? $spec
+     * @param string? $expectedClassName
      *
-     * @return stdClass|null
+     *      If you are expecting a specific class name, pass that class name as
+     *      this parameter. If the spec does not have this class name, the
+     *      function will return null.
+     *
+     * @return object|null
      */
-    public static function specToOptionalModel(stdClass $spec) {
-        if (isset($spec->className) && is_callable($function = "{$spec->className}::specToModel")) {
+    static function specToOptionalModel($spec = null, $expectedClassName = null) {
+        if (empty($spec->className)) {
+            return null;
+        }
+
+        if (!empty($expectedClassName) && $spec->className !== $expectedClassName) {
+            return null;
+        }
+
+        if (is_callable($function = "{$spec->className}::specToModel")) {
             return call_user_func($function, $spec);
         } else {
             return null;
@@ -142,5 +155,25 @@ final class CBModel {
         }
 
         return $value;
+    }
+
+    /**
+     * This function is used when you expect a model property to contain an
+     * optional spec which, if set, you would like converted to a model.
+     *
+     * @param object? $model
+     * @param string $keyPath
+     * @param string? $expectedClassName
+     *
+     *      Use this parameter if you expect the spec property value to have a
+     *      specific class name and would rather have null returned if it does
+     *      not have that class name.
+     *
+     * @return object|null
+     */
+    static function valueAsSpecToModel($model = null, $keyPath, $expectedClassName = null) {
+        $value = CBModel::value($model, $keyPath);
+
+        return CBModel::specToOptionalModel($value, $expectedClassName);
     }
 }
