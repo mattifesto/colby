@@ -4,6 +4,7 @@
     CBBooleanEditorFactory,
     CBUI,
     CBUIActionLink,
+    CBUIImageChooser,
     CBUIStringEditor,
     Colby */
 
@@ -43,8 +44,44 @@ var CBSitePreferencesEditor = {
         section.appendChild(item);
 
         element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
 
+        /* imageForIcon */
+
+        element.appendChild(CBUI.createHalfSpace());
+        section = CBUI.createSection();
+
+        var chooser = CBUIImageChooser.createFullSizedChooser({
+            imageChosenCallback : function (chooserArgs) {
+                var ajaxURI = "/api/?class=CBImages&function=upload";
+                var formData = new FormData();
+                formData.append("image", chooserArgs.file);
+
+                CBSitePreferencesEditor.promise = Colby.fetchAjaxResponse(ajaxURI, formData)
+                    .then(handleImageUploaded);
+
+                function handleImageUploaded(response) {
+                    args.spec.imageForIcon = response.image;
+                    args.specChangedCallback();
+                    chooserArgs.setImageURLCallback(Colby.imageToURL(response.image, "rw960"));
+                }
+            },
+            imageRemovedCallback : function () {
+                args.spec.imageForIcon = undefined;
+                args.specChangedCallback();
+            },
+        });
+
+        chooser.setImageURLCallback(Colby.imageToURL(args.spec.imageForIcon, "rw960"));
+
+        item = CBUI.createSectionItem();
+        item.appendChild(chooser.element);
+        section.appendChild(item);
+
+        element.appendChild(section);
+
+        /* error tests */
+
+        element.appendChild(CBUI.createHalfSpace());
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();

@@ -15,7 +15,7 @@ final class CBSitePreferencesEditor {
     }
 
     /**
-     * @return stdClass
+     * @return object
      */
     static function errorTestForAjaxPermissions() {
         return (object)['group' => 'Developers'];
@@ -24,33 +24,24 @@ final class CBSitePreferencesEditor {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
-        return ['CBArrayEditor', 'CBKeyValuePairEditor', 'CBUI', 'CBUIActionLink', 'CBUIStringEditor'];
+    static function requiredClassNames() {
+        return ['CBArrayEditor', 'CBKeyValuePairEditor', 'CBUI', 'CBUIImageChooser', 'CBUIActionLink', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
-        return [CBSitePreferencesEditor::URL('CBSitePreferencesEditor.css')];
+    static function requiredCSSURLs() {
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [
             CBSystemURL . '/javascript/CBBooleanEditorFactory.js',
-            CBSitePreferencesEditor::URL('CBSitePreferencesEditor.js')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+            Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__),
+        ];
     }
 }

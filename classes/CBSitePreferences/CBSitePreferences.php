@@ -143,6 +143,19 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return object:CBImage|false
+     */
+    static function imageForIcon() {
+        $model = CBSitePreferences::model();
+
+        if (empty($model->imageForIcon)) {
+            return false;
+        } else {
+            return $model->imageForIcon;
+        }
+    }
+
+    /**
      * @return {stdClass}
      */
     public static function info() {
@@ -316,7 +329,7 @@ final class CBSitePreferences {
         CBSitePreferences::$model = false;
 
         /* remove deprecated data store */
-        CBDataSTore::deleteByID(CBPageTypeID);
+        CBDataStore::deleteByID(CBPageTypeID);
     }
 
     /**
@@ -416,6 +429,7 @@ final class CBSitePreferences {
                     return [];
                 }
             }),
+            'imageForIcon' => CBModel::valueAsSpecToModel($spec, 'imageForIcon', 'CBImage'),
             'siteName' => CBModel::value($spec, 'siteName', '', 'trim'),
         ];
 
