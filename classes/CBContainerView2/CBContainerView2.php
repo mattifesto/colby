@@ -61,7 +61,7 @@ final class CBContainerView2 {
 
                 return $names;
             }),
-            'image' => CBModel::value($spec, 'image', null, 'CBImage::specToModel'),
+            'image' => CBModel::valueAsSpecToModel($spec, 'image', 'CBImage'),
             'subviews' => CBModel::namedSpecArrayToModelArray($spec, 'subviews'),
         ];
     }
