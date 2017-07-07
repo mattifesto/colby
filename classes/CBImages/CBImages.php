@@ -147,6 +147,7 @@ class CBImages {
         }
 
         return (object)[
+            'className' => 'CBImage',
             'extension' => $extension,
             'filename' => $filename,
             'height' => $size[1],
@@ -338,6 +339,7 @@ EOT;
         $size = getimagesize($destinationFilepath);
 
         return (object)[
+            'className' => 'CBImage',
             'extension' => $extension,
             'filename' => $operation,
             'height' => $size[1],
@@ -643,6 +645,7 @@ EOT;
         }
 
         return (object)[
+            'className' => 'CBImage',
             'extension' => $extension,
             'filename' => $filename,
             'height' => $size[1],
