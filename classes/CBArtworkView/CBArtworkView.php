@@ -177,7 +177,7 @@ final class CBArtworkView {
             'className' => __CLASS__,
             'alternativeText' => CBModel::value($spec, 'alternativeText', '', 'trim'),
             'captionAsMarkdown' => CBModel::value($spec, 'captionAsMarkdown', ''),
-            'image' => CBModel::value($spec, 'image', null, 'CBImage::specToModel'),
+            'image' => CBModel::valueAsSpecToModel($spec, 'image', 'CBImage'),
             'size' => CBModel::value($spec, 'size', 'default', 'trim'),
         ];
 
