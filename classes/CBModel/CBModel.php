@@ -68,21 +68,36 @@ final class CBModel {
      * @param string? $expectedClassName
      *
      *      If you are expecting a specific class name, pass that class name as
-     *      this parameter. If the spec does not have this class name, the
-     *      function will return null.
+     *      this parameter. If the spec has its className property set and it is
+     *      different than this class name, the function will return null.
+     *
+     *      If the spec does not have its className property set, this parameter
+     *      will be used as the class name. This is to provide backward
+     *      compatability with the use of specs that incorrectly didn't specify
+     *      class names.
      *
      * @return object|null
      */
     static function specToOptionalModel($spec = null, $expectedClassName = null) {
+        if (!is_object($spec)) {
+            return null;
+        }
+
         if (empty($spec->className)) {
-            return null;
+            if (empty($expectedClassName)) {
+                return null;
+            } else {
+                $className = $expectedClassName;
+            }
+        } else {
+            if (!empty($expectedClassName) && $spec->className !== $expectedClassName) {
+                return null;
+            }
+
+            $className = $spec->className;
         }
 
-        if (!empty($expectedClassName) && $spec->className !== $expectedClassName) {
-            return null;
-        }
-
-        if (is_callable($function = "{$spec->className}::specToModel")) {
+        if (is_callable($function = "{$className}::specToModel")) {
             return call_user_func($function, $spec);
         } else {
             return null;
