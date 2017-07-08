@@ -66,4 +66,13 @@ var CBPageListView2Editor = {
 
         return element;
     },
+
+    /**
+     * @param string? spec.classNameForKind
+     *
+     * @return string|undefined
+     */
+    specToDescription : function (spec) {
+        return spec.classNameForKind;
+    },
 };
