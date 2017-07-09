@@ -33,10 +33,10 @@ $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
  * Generate the command and execute.
  */
 
-$host       = escapeshellarg(COLBY_MYSQL_HOST);
-$user       = escapeshellarg(COLBY_MYSQL_USER);
-$password   = escapeshellarg(COLBY_MYSQL_PASSWORD);
-$database   = escapeshellarg(COLBY_MYSQL_DATABASE);
+$host       = escapeshellarg(CBSitePreferences::mysqlHost());
+$user       = escapeshellarg(CBSitePreferences::mysqlUser());
+$password   = escapeshellarg(CBSitePreferences::mysqlPassword());
+$database   = escapeshellarg(CBSitePreferences::mysqlDatabase());
 $output     = array();
 
 /**

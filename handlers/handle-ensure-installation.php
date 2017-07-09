@@ -8,7 +8,7 @@
  * This handler will always output an entire page or nothing at all.
  */
 
-$databaseIsAvailable = COLBY_MYSQL_HOST && COLBY_MYSQL_DATABASE && COLBY_MYSQL_USER;
+$databaseIsAvailable = CBSitePreferences::mysqlHost() && CBSitePreferences::mysqlDatabase() && CBSitePreferences::mysqlUser();
 
 if ($databaseIsAvailable && !CBAdminPageForUpdate::installationIsRequired()) {
     return;
