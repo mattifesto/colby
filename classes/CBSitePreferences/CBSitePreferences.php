@@ -263,6 +263,34 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return string
+     */
+    static function mysqlDatabase() {
+        return defined('CBMySQLDatabase') ? CBMySQLDatabase : COLBY_MYSQL_DATABASE;
+    }
+
+    /**
+     * @return string
+     */
+    static function mysqlHost() {
+        return defined('CBMySQLHost') ? CBMySQLHost : COLBY_MYSQL_HOST;
+    }
+
+    /**
+     * @return string
+     */
+    static function mysqlPassword() {
+        return defined('CBMySQLPassword') ? CBMySQLPassword : COLBY_MYSQL_PASSWORD;
+    }
+
+    /**
+     * @return string
+     */
+    static function mysqlUser() {
+        return defined('CBMySQLUser') ? CBMySQLUser : COLBY_MYSQL_USER;
+    }
+
+    /**
      * @return [string]
      *  An array of image resize operations that are allowed to be completed
      *  when the specific image size URL is first requested.
@@ -293,6 +321,10 @@ final class CBSitePreferences {
     }
 
     /**
+     * @deprecated Changing the default to true for now because I can't think
+     * of a situation where we don't want error reports. This function should
+     * not be used and if a reason is found for it document it well here.
+     *
      * @return bool
      *  Returns true if the site should send emails to the administrator when
      *  errors occur. This function does not indicate whether email sending is
@@ -308,7 +340,7 @@ final class CBSitePreferences {
             return !!COLBY_SITE_ERRORS_SEND_EMAILS;
         }
 
-        return false;
+        return true;
     }
 
     /**
