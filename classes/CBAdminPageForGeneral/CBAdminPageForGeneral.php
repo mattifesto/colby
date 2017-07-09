@@ -126,6 +126,12 @@ EOT;
             ['COLBY'.'_SITE_URL', 'Remove it and use site preferences.'], // 2017.03.19
             ['CB'.'SiteAdministratorEmail', 'Remove it and use site preferences.'], // 2017.03.22
             ['COLBY'.'_SITE_ADMINISTRATOR', 'Remove it and use site preferences.'], // 2017.03.22
+            ['COLBY_FACEBOOK_APP_ID', 'Use CBFacebookAppID instead.'], // 2017.07.08
+            ['COLBY_FACEBOOK_APP_SECRET', 'Use CBFacebookAppSecret instead.'], // 2017.07.08
+            ['COLBY_MYSQL_HOST', 'Use CBMySQLHost instead.'], // 2017.07.08
+            ['COLBY_MYSQL_USER', 'Use CBMySQLUser instead.'], // 2017.07.08
+            ['COLBY_MYSQL_PASSWORD', 'Use CBMySQLPassword instead.'], // 2017.07.08
+            ['COLBY_MYSQL_DATABASE', 'Use CBMySQLDatabase instead.'], // 2017.07.08
         ];
 
         $hasContent = false;
