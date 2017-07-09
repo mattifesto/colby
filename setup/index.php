@@ -2,9 +2,15 @@
 
 define('CBSiteDirectory', $_SERVER['DOCUMENT_ROOT']);
 
+include CBSiteDirectory . '/colby/functions.php';
+
 ColbyInstaller::initialize();
 
 class ColbyInstaller {
+
+    private static $exception;
+    private static $properties;
+    private static $propertiesAreAllSet = false;
 
     private static $dataDirectory;
     private static $tmpDirectory;
@@ -22,7 +28,15 @@ class ColbyInstaller {
     /**
      * @return void
      */
-    public static function initialize() {
+    static function initialize() {
+
+        if (empty($_SERVER['HTTPS'])) {
+            ColbyInstaller::renderSecurityWarning();
+
+            return;
+        }
+
+        ColbyInstaller::initializeProperties();
 
         self::$dataDirectory                = CBSiteDirectory . '/data';
         self::$tmpDirectory                 = CBSiteDirectory . '/tmp';
@@ -38,42 +52,78 @@ class ColbyInstaller {
         self::$versionFilename              = CBSiteDirectory . '/version.php';
 
 
-        if (isset($_GET['install']) && $_GET['install'] == 'true') {
+        if (ColbyInstaller::$propertiesAreAllSet) {
+            try {
+                self::install();
+            } catch (Exception $exception) {
+                ColbyInstaller::$exception = $exception;
 
-            self::install();
-
+                self::renderPlan();
+            }
         } else {
-
             self::renderPlan();
         }
     }
 
     /**
-     * @return void
+     * Set the ColbyInstaller::$properties variable
+     *
+     * @return null
      */
-    public static function install() {
+    static function initializeProperties() {
+        $p = (object)[
+            'siteDomainName' => cb_post_value('siteDomainName', $_SERVER['SERVER_NAME'], 'trim'),
+            'mysqlHost' => cb_post_value('mysqlHost', '', 'trim'),
+            'mysqlUser' => cb_post_value('mysqlUser', '', 'trim'),
+            'mysqlPassword' => cb_post_value('mysqlPassword', '', 'trim'),
+            'mysqlDatabase' => cb_post_value('mysqlDatabase', '', 'trim'),
+            'facebookAppID' => cb_post_value('facebookAppID', '', 'trim'),
+            'facebookAppSecret' => cb_post_value('facebookAppSecret', '', 'trim'),
+            'emailAddress' => cb_post_value('emailAddress', '', 'trim'),
+            'emailName' => cb_post_value('emailName', '', 'trim'),
+            'smtpDomainName' => cb_post_value('smtpDomainName', 'smtp.gmail.com', 'trim'),
+            'smtpPort' => cb_post_value('smtpPort', '465', 'trim'),
+            'smtpSecurity' => cb_post_value('smtpSecurity', 'ssl', 'trim'),
+            'smtpUser' => cb_post_value('smtpUser', '', 'trim'),
+            'smtpPassword' => cb_post_value('smtpPassword', '', 'trim'),
+        ];
 
+        ColbyInstaller::$properties = $p;
+
+        ColbyInstaller::$propertiesAreAllSet =
+            !empty($p->siteDomainName) &&
+            !empty($p->mysqlHost) &&
+            !empty($p->mysqlUser) &&
+            !empty($p->mysqlPassword) &&
+            !empty($p->mysqlDatabase) &&
+            !empty($p->facebookAppID) &&
+            !empty($p->facebookAppSecret) &&
+            !empty($p->emailAddress) &&
+            !empty($p->emailName) &&
+            !empty($p->smtpDomainName) &&
+            !empty($p->smtpPort) &&
+            !empty($p->smtpSecurity) &&
+            !empty($p->smtpUser) &&
+            !empty($p->smtpPassword);
+    }
+
+    /**
+     * @return null
+     */
+    static function install() {
         if (!is_dir(self::$dataDirectory)) {
-
             mkdir(self::$dataDirectory);
         }
 
         if (!is_dir(self::$tmpDirectory)) {
-
             mkdir(self::$tmpDirectory);
         }
 
-        if (!is_file(self::$colbyConfigurationFilename)) {
-
-            copy(__DIR__ . '/colby-configuration.template.data', self::$colbyConfigurationFilename);
-        }
+        ColbyInstaller::writeColbyConfiguration();
 
         if (!is_file(self::$gitignoreFilename)) {
-
             copy(__DIR__ . '/gitignore.template.data', self::$gitignoreFilename);
-
         } else {
-
             $ignoresOld         = file(self::$gitignoreFilename);
             $ignoresNew         = file(__DIR__ . '/gitignore.template.data');
             $ignores            = array_merge($ignoresOld, $ignoresNew);
@@ -89,45 +139,34 @@ class ColbyInstaller {
         touch(self::$HTAccessFilename);
 
         if (self::shouldPerformAFullInstallation()) {
-
             $newData = file_get_contents(__DIR__ . '/htaccess.template.data');
 
             file_put_contents(self::$HTAccessFilename, $newData, FILE_APPEND);
-
         } else {
-
             $newData = file_get_contents(__DIR__ . '/htaccess.partial.template.data');
 
             file_put_contents(self::$HTAccessFilename, $newData, FILE_APPEND);
         }
 
         if (self::shouldPerformAFullInstallation()) {
-
             copy(__DIR__ . '/index.template.data', self::$indexFilename);
-
         } else {
-
             copy(__DIR__ . '/index.template.data', self::$colbyFilename);
-
         }
 
         if (!is_file(self::$siteConfigurationFilename)) {
-
             copy(__DIR__ . '/site-configuration.template.data', self::$siteConfigurationFilename);
         }
 
         if (!is_file(self::$versionFilename)) {
-
             copy(__DIR__ . '/version.template.data', self::$versionFilename);
         }
 
         if (!is_file(self::$faviconGifFilename)) {
-
             touch(self::$faviconGifFilename);
         }
 
         if (!is_file(self::$faviconIcoFilename)) {
-
             touch(self::$faviconIcoFilename);
         }
 
@@ -135,11 +174,70 @@ class ColbyInstaller {
     }
 
     /**
-     * @return void
+     * @return null
      */
-    public static function renderPlan() {
+    static function renderPageBegin() {
+        ?>
+        <!doctype html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Colby Installation</title>
+                <meta name="description"
+                      content="This HTML of this page represents a template for all HTML pages.">
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700">
+                <link rel="stylesheet" href="/colby/setup/styles.css">
+            </head>
+            <body class="ColbyInstaller">
+                <div class="main">
+        <?php
+    }
+
+    /**
+     * @return null
+     */
+    static function renderPageEnd() {
+        ?>
+                </div>
+            </body>
+        </html>
+        <?php
+    }
+
+    /**
+     * @return null
+     */
+    static function renderPlan() {
+        ColbyInstaller::renderPageBegin();
 
         include __DIR__ . '/snippets/install-plan.php';
+
+        ColbyInstaller::renderPageEnd();
+    }
+
+    /**
+     * This function is called if this page is accessed through HTTP instead of
+     * HTTPS. A secure connection is required to set up Colby.
+     */
+    static function renderSecurityWarning() {
+        $domainName = $_SERVER['SERVER_NAME'];
+        $link = "https://{$domainName}/colby/setup/";
+
+        ColbyInstaller::renderPageBegin();
+
+        ?>
+
+        <h1>Colby Requires HTTPS</h1>
+        <p>The Colby system requires all websites to run over HTTPS. Once Colby
+           has been set up, it will automatically redirect all HTTP requests to
+           HTTPS.
+        <p>Either replace the http:// in this URL with https:// in our browser
+           and reload this page or reload with the link below:
+        <p><a href="<?= $link ?>"><?= $link ?></a>
+
+        <?php
+
+        ColbyInstaller::renderPageEnd();
     }
 
     /**
@@ -150,10 +248,71 @@ class ColbyInstaller {
      * For now, if the `index.php` file exists, this will be a partial
      * installation. Otherwise it will be full installation.
      *
-     * @return Boolean
+     * @return bool
      */
     private static function shouldPerformAFullInstallation() {
-
         return !is_file(self::$indexFilename);
+    }
+
+    /**
+     * @return null
+     */
+    static function writeColbyConfiguration() {
+        if (is_file(self::$colbyConfigurationFilename)) {
+            return;
+        }
+
+        $p = ColbyInstaller::$properties;
+        $siteDomainName = addslashes($p->siteDomainName);
+
+        $facebookAppID = addslashes($p->facebookAppID);
+        $facebookAppSecret = addslashes($p->facebookAppSecret);
+
+        $mysqlHost = addslashes($p->mysqlHost);
+        $mysqlUser = addslashes($p->mysqlUser);
+        $mysqlPassword = addslashes($p->mysqlPassword);
+        $mysqlDatabase = addslashes($p->mysqlDatabase);
+
+        $encryptionPassword = bin2hex(openssl_random_pseudo_bytes(20));
+
+        $emailAddress = addslashes($p->emailAddress);
+        $emailName = addslashes($p->emailName);
+
+        $smtpDomainName = addslashes($p->smtpDomainName);
+        $smtpPort = intval($p->smtpPort);
+        $smtpSecurity = addslashes($p->smtpSecurity);
+        $smtpUser = addslashes($p->smtpUser);
+        $smtpPassword = addslashes($p->smtpPassword);
+
+        $content = <<<EOT
+<?php
+
+define('CBSiteURL',                         'https://{$siteDomainName}');
+
+define('CBFacebookAppID',                   '{$facebookAppID}');
+define('CBFacebookAppSecret',               '{$facebookAppSecret}');
+
+define('CBMySQLHost',                       '{$mysqlHost}');
+define('CBMySQLUser',                       '{$mysqlUser}');
+define('CBMySQLPassword',                   '{$mysqlPassword}');
+define('CBMySQLDatabase',                   '{$mysqlDatabase}');
+
+define('CBEncryptionPassword',              '{$encryptionPassword}');
+
+/*
+define('COLBY_EMAIL_LIBRARY_DIRECTORY',     CBSiteDirectory . '/swiftmailer');
+define('COLBY_EMAIL_SENDER',                '{$emailAddress}');
+define('COLBY_EMAIL_SENDER_NAME',           '{$emailName}');
+
+define('COLBY_EMAIL_SMTP_SERVER',           '{$smtpDomainName}');
+define('COLBY_EMAIL_SMTP_PORT',             {$smtpPort});
+define('COLBY_EMAIL_SMTP_SECURITY',         '{$smtpSecurity}');
+define('COLBY_EMAIL_SMTP_USER',             '{$smtpUser}');
+define('COLBY_EMAIL_SMTP_PASSWORD',         '{$smtpPassword}');
+*/
+
+EOT;
+
+        file_put_contents(ColbyInstaller::$colbyConfigurationFilename, $content);
     }
 }

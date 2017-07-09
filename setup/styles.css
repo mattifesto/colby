@@ -1,0 +1,47 @@
+.ColbyInstaller {
+    display: flex;
+    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+    justify-content: center;
+    padding: 0 10px;
+}
+
+.ColbyInstaller > .main {
+    flex: 0 1 600px;
+}
+
+.ColbyInstaller code {
+    color:          #8080c0;
+    font-family:    "Menlo", "Courier New", monospace;
+    font-size:      0.8em;
+}
+
+.ColbyInstaller dt {
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+.ColbyInstaller dd {
+    margin-bottom: 1.0em;
+    margin-left: 2.0em;
+}
+
+.ColbyInstaller h1,
+.ColbyInstaller h2 {
+    text-align: center;
+}
+
+.ColbyInstaller .exception {
+    background-color: hsl(60, 100%, 90%);
+    padding: 1px 10px;
+}
+
+.ColbyInstaller .property input {
+    box-sizing: border-box;
+    font: inherit;
+    padding: 5px;
+    width: 100%;
+}
+
+.ColbyInstaller .property + .property {
+    margin-top: 0.5em;
+}
