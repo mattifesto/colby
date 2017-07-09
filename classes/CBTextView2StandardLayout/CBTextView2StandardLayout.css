@@ -1,6 +1,8 @@
 .CBTextView2StandardLayout {
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
+    max-width: 100%;
     padding: 20px;
 }
 
@@ -9,8 +11,6 @@
  * container.
  */
 .CBTextView2StandardLayout.hero1 {
-    align-self: stretch;
-    flex: 1 1 auto;
     font-size: 3vw;
     line-height: normal;
     padding: 5vw;
@@ -23,35 +23,14 @@
 }
 
 .CBTextView2StandardLayout .content {
-    flex: 0 1 36em;
+    max-width: 100%;
+    width: 36em;
 }
 
+/* We don't want hero content to have an pre-set intrinsic width, which would
+   behave as a min-width, and get in the way of some scenarios. */
 .CBTextView2StandardLayout.hero1 .content {
-    flex: 0 1 auto;
-}
-
-.CBTextView2StandardLayout.hleft {
-    justify-content: flex-start;
-}
-
-.CBTextView2StandardLayout.hright {
-    justify-content: flex-end;
-}
-
-.CBTextView2StandardLayout.hcenter {
-    justify-content: center;
-}
-
-.CBTextView2StandardLayout.vtop {
-    align-items: flex-start;
-}
-
-.CBTextView2StandardLayout.vbottom {
-    align-items: flex-end;
-}
-
-.CBTextView2StandardLayout.vcenter {
-    align-items: center;
+    width: auto;
 }
 
 .CBTextView2StandardLayout.center {
