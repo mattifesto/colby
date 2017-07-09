@@ -75,6 +75,7 @@ final class CBTextView2 {
         $model = (object)[
             'className' => __CLASS__,
             'contentAsCommonMark' => CBModel::value($spec, 'contentAsCommonMark', ''),
+            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
             'isCustom' => CBModel::value($spec, 'isCustom', false, 'boolval'),
         ];
 
@@ -86,16 +87,6 @@ final class CBTextView2 {
         // contentAsHTML
         $parsedown = new Parsedown();
         $model->contentAsHTML = $parsedown->text($model->contentAsCommonMark);
-
-        // CSSClassNames
-        $CSSClassNames = CBModel::value($spec, 'CSSClassNames', '');
-        $CSSClassNames = preg_split('/[\s,]+/', $CSSClassNames, null, PREG_SPLIT_NO_EMPTY);
-
-        if ($CSSClassNames === false) {
-            throw new RuntimeException("preg_split() returned false");
-        }
-
-        $model->CSSClassNames = $CSSClassNames;
 
         // localCSS
         $localCSSTemplate = CBModel::value($spec, 'localCSSTemplate', '', 'trim');
