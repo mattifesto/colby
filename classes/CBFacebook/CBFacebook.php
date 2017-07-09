@@ -24,11 +24,13 @@ final class CBFacebook {
          * provided the $code value.
          */
 
+        $facebookAppID = defined('COLBY_FACEBOOK_APP_ID') ? COLBY_FACEBOOK_APP_ID : CBFacebookAppID;
+        $facebookAppSecret = defined('COLBY_FACEBOOK_APP_SECRET') ? COLBY_FACEBOOK_APP_SECRET : CBFacebookAppSecret;
         $redirectURI = CBSitePreferences::siteURL() . '/colby/facebook-oauth-handler/';
         $URL = 'https://graph.facebook.com/v2.9/oauth/access_token' .
-            '?client_id=' . COLBY_FACEBOOK_APP_ID .
+            '?client_id=' . $facebookAppID .
             '&redirect_uri=' . urlencode($redirectURI) .
-            '&client_secret=' . COLBY_FACEBOOK_APP_SECRET .
+            '&client_secret=' . $facebookAppSecret .
             '&code=' . $code;
 
         return CBFacebook::fetchGraphAPIResponse($URL);
