@@ -1,5 +1,7 @@
 <?php
 
+include __DIR__ . '/functions.php';
+
 Colby::initialize();
 
 final class Colby {
@@ -558,10 +560,11 @@ final class Colby {
     public static function mysqli() {
         if (null === self::$mysqli) {
             $mysqli = new mysqli(
-                COLBY_MYSQL_HOST,
-                COLBY_MYSQL_USER,
-                COLBY_MYSQL_PASSWORD,
-                COLBY_MYSQL_DATABASE);
+                CBSitePreferences::mysqlHost(),
+                CBSitePreferences::mysqlUser(),
+                CBSitePreferences::mysqlPassword(),
+                CBSitePreferences::mysqlDatabase()
+            );
 
             if ($mysqli->connect_error) {
                 throw new RuntimeException($mysqli->connect_error);
@@ -757,27 +760,4 @@ final class Colby {
     public static function URLForJavaScriptForSiteClass($className) {
         return CBSitePreferences::siteURL() . "/classes/{$className}/{$className}.js";
     }
-}
-
-/**
- * This behaves almost exactly like `array_map` except that it passes the key
- * as well as the value to the callback function.
- *
- * @return {array}
- */
-function cb_array_map_assoc(callable $callback, $array) {
-    $result = [];
-
-    foreach ($array as $key => $value) {
-        $result[$key] = call_user_func($callback, $key, $value);
-    }
-
-    return $result;
-}
-
-/**
- * Compact function for ColbyConvert::textToHTML()
- */
-function cbhtml($text) {
-    return ColbyConvert::textToHTML($text);
 }
