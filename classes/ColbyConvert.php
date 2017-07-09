@@ -168,27 +168,10 @@ class ColbyConvert
     }
 
     /**
-     * This function converts plain text to HTML by escaping it.
-     *
-     * This function is important despite how small it is. It represents the
-     * current best practices for exactly how to escape text for use in HTML.
-     *
-     * History:
-     *
-     * 2013.01.13
-     *  Changed this function to not trim the text for two reasons. One: it was
-     *  an unadvertised side effect that was non-obvious. Two: When calling this
-     *  function for text to be used in a pre-formatted elements the leading and
-     *  trailing whitespace should be preserved.
-     *
-     * @param string $text
-     *
-     * @return string
-     *  The $text parameter escaped for use in HTML.
+     * @deprecated use cbhtml()
      */
-    public static function textToHTML($text)
-    {
-        return htmlspecialchars($text, ENT_QUOTES);
+    static function textToHTML($text) {
+        return cbhtml($text);
     }
 
     /**
