@@ -28,18 +28,33 @@ var CBTextView2Editor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        /* CSSClassNames */
+
         element.appendChild(CBUI.createHalfSpace());
 
         element.appendChild(CBUI.createSectionHeader({
-            paragraphs: [`
-                CSS class names can provide additional formatting of the text.
-                The default styles support extensions such as "center",
-                "justify", and "right". You can also use "CBDarkTheme" and
-                "CBLightTheme".
+            paragraphs: [
+                `
+                Supported Class Names:
+                `,`
+                CBLightTheme: Theme with a light background and dark text.
+                `,`
+                CBDarkTheme: Theme with a dark background and light text.
+                `,`
+                center: Center the text.
+                `,`
+                justify: Justify the text.
+                `,`
+                right: Align the text to the right.
+                `,`
+                hero1: Make the text large for marketing presentations. Heading
+                levels 1-6 provide diverse font sizes.
                 `,`
                 To remove the default styles and produce a completely custom
                 presentation enable the Custom option.
-            `],
+                `
+            ],
         }));
 
         section = CBUI.createSection();
@@ -62,6 +77,9 @@ var CBTextView2Editor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        /* localCSSTemplate */
+
         element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
