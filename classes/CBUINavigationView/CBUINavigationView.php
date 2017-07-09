@@ -5,22 +5,21 @@ final class CBUINavigationView {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function requiredClassNames() {
         return ['CBUI', 'CBUISpecEditor'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
-        return [CBUINavigationView::URL('CBUINavigationView.js')];
+    static function requiredCSSURLs() {
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
-     * @return string
+     * @return [string]
      */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+    static function requiredJavaScriptURLs() {
+        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 }
