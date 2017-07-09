@@ -1,4 +1,4 @@
-"use strict"; /* jshint strict: global */
+"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
 /* globals
     CBArrayEditor,
     CBContainerView2EditorAddableViews,
@@ -47,18 +47,10 @@ var CBContainerView2Editor = {
         }).element);
         section.appendChild(item);
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "CSS Class Names",
-            propertyName : "CSSClassNames",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
         element.appendChild(section);
 
         /* subviews */
+
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({ text : "Subviews" }));
 
@@ -72,7 +64,56 @@ var CBContainerView2Editor = {
             navigateToItemCallback : args.navigateToItemCallback,
         }));
 
+        /* CSSClassNames */
+
         element.appendChild(CBUI.createHalfSpace());
+
+        element.appendChild(CBUI.createSectionHeader({
+            paragraphs: [
+                `
+                Supported Class Names:
+                `,`
+                flow: Flow subviews from left to right and wrap into new lines.
+                Center each line of children. Example scenario: displaying a
+                collection of images.
+                `,`
+                hero1: Present the view as a full window view. The minimum
+                height is the window height. The background image will always
+                cover the entire view which will hide some of the edges of the
+                image depending on the shape of the window.
+                `
+           ],
+        }));
+
+        section = CBUI.createSection();
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "CSS Class Names",
+            propertyName : "CSSClassNames",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
+
+        /* localCSSTemplate */
+
+        element.appendChild(CBUI.createHalfSpace());
+
+        section = CBUI.createSection();
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Local CSS Template",
+            propertyName : "localCSSTemplate",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
 
         return element;
 
