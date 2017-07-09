@@ -1,4 +1,4 @@
-"use strict"; /* jshint strict: global */
+"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
 /* globals
     CBUI,
     CBUIImageChooser,
@@ -82,6 +82,40 @@ var CBArtworkViewEditor = {
         section.appendChild(item);
 
         element.appendChild(section);
+
+        /* CSSClassNames */
+
+        element.appendChild(CBUI.createHalfSpace());
+
+        element.appendChild(CBUI.createSectionHeader({
+            paragraphs: [
+                `
+                Supported Class Names:
+                `,`
+                hideSocial: This will hide links to share the image via social
+                networks.
+                `,`
+                left: Align the caption text to the left.
+                `,`
+                right: Align the caption text to the right.
+                `
+           ],
+        }));
+
+        section = CBUI.createSection();
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "CSS Class Names",
+            propertyName : "CSSClassNames",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+
+        element.appendChild(section);
+
+        /* set thumnail */
 
         if (args.spec.image) {
             chooser.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
