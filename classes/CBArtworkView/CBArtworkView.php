@@ -39,7 +39,12 @@ final class CBArtworkView {
             return;
         }
 
-        CBHTMLOutput::requireClassName(__CLASS__);
+        $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
+
+        array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
+
+        $CSSClassNames = cbhtml(implode(' ', $CSSClassNames));
+
         CBHTMLOutput::addPinterest();
 
         $image = $model->image;
@@ -108,7 +113,7 @@ final class CBArtworkView {
 
         ?>
 
-        <figure class="CBArtworkView">
+        <figure class="CBArtworkView <?= $CSSClassNames ?>">
 
             <?php
 
@@ -177,6 +182,7 @@ final class CBArtworkView {
             'className' => __CLASS__,
             'alternativeText' => CBModel::value($spec, 'alternativeText', '', 'trim'),
             'captionAsMarkdown' => CBModel::value($spec, 'captionAsMarkdown', ''),
+            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
             'image' => CBModel::valueAsSpecToModel($spec, 'image', 'CBImage'),
             'size' => CBModel::value($spec, 'size', 'default', 'trim'),
         ];

@@ -23,6 +23,14 @@
     width: 100%;
 }
 
+.CBArtworkView.left figcaption {
+    text-align: left;
+}
+
+.CBArtworkView.right figcaption {
+    text-align: right;
+}
+
 .CBArtworkView .social {
     border-top: 0.5px solid var(--CBLineColor);
     box-sizing: border-box;
@@ -30,6 +38,10 @@
     margin-top: 20px;
     padding: 0 5px;
     text-align: center;
+}
+
+.CBArtworkView.hideSocial .social {
+    display: none;
 }
 
 /**
