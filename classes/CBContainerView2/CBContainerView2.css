@@ -1,7 +1,10 @@
 .CBContainerView2.hero1 {
+    align-items: center;
     display: flex;
     background-position: center;
     background-size: cover;
+    flex-wrap: wrap;
+    justify-content: center;
     min-height: 100vh;
 }
 

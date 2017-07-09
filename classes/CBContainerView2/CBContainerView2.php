@@ -27,6 +27,9 @@ final class CBContainerView2 {
         ?>
 
         <div class="CBContainerView2 <?= $CSSClassNames ?>" style="<?= $backgroundImageDeclaration ?>">
+            <?php if (!empty($model->localCSS)) { ?>
+                <style><?= $model->localCSS ?></style>
+            <?php } ?>
             <?php array_walk($subviews, 'CBView::renderModelAsHTML') ?>
         </div>
 
@@ -46,23 +49,22 @@ final class CBContainerView2 {
      * @return object
      */
     static function specToModel(stdClass $spec) {
-        return (object)[
+        $model = (object)[
             'className' => __CLASS__,
-            'CSSClassNames' => CBModel::value($spec, 'CSSClassNames', [], function ($value) {
-                if (!is_string($value)) {
-                    return [];
-                }
-
-                $names = preg_split('/[\s,]+/', $value, null, PREG_SPLIT_NO_EMPTY);
-
-                if ($names === false) {
-                    throw new RuntimeException("preg_split() returned false");
-                }
-
-                return $names;
-            }),
+            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
             'image' => CBModel::valueAsSpecToModel($spec, 'image', 'CBImage'),
             'subviews' => CBModel::namedSpecArrayToModelArray($spec, 'subviews'),
         ];
+
+        // localCSS
+        $localCSSTemplate = CBModel::value($spec, 'localCSSTemplate', '', 'trim');
+
+        if (!empty($localCSSTemplate)) {
+            $localCSSClassName = 'ID_' . CBHex160::random();
+            $model->CSSClassNames[] = $localCSSClassName;
+            $model->localCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
+        }
+
+        return $model;
     }
 }
