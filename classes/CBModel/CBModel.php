@@ -173,6 +173,33 @@ final class CBModel {
     }
 
     /**
+     * This function parses a string value into an array of names. This is used
+     * for class names style properties.
+     *
+     * "one, , two    three" => ['one', 'two', 'three']
+     *
+     * @param object? $model
+     * @param string $keyPath
+     *
+     * @return [string]
+     */
+    static function valueAsNames($model = null, $keyPath) {
+        $value = CBModel::value($model, $keyPath, '');
+
+        if (!is_string($value)) {
+            return [];
+        }
+
+        $names = preg_split('/[\s,]+/', $value, null, PREG_SPLIT_NO_EMPTY);
+
+        if ($names === false) {
+            throw new RuntimeException("preg_split() returned false");
+        }
+
+        return $names;
+    }
+
+    /**
      * This function is used when you expect a model property to contain an
      * optional spec which, if set, you would like converted to a model.
      *
