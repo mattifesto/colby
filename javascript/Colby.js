@@ -72,35 +72,48 @@ var Colby = {
     },
 
     /**
-     * @param ajaxResponse response
+     * @param object ajaxResponse
      *
      * @return undefined
      */
-    displayResponse: function (response) {
-        var element, message;
-        if ('stackTrace' in response) {
+    displayResponse: function (ajaxResponse) {
+        var element, message, button;
+        if ('stackTrace' in ajaxResponse) {
             element                     = document.createElement("div");
             message                     = document.createElement("p");
             message.style.textAlign     = "center";
             message.style.marginBottom  = "100px";
-            message.textContent         = response.message;
-            var stack                   = document.createElement("pre");
-            stack.style.fontSize        = "13px";
-            stack.textContent           = response.stackTrace;
+            message.textContent         = ajaxResponse.message;
 
             element.appendChild(message);
-            element.appendChild(stack);
+
+            if (ajaxResponse.classNameForException === "CBModelVersionMismatchException") {
+                button                  = document.createElement("button");
+                button.textContent      = "Reload";
+                button.style.display    = "block";
+                button.style.margin     = "20px auto";
+
+                button.addEventListener("click", function() { location.reload(); });
+
+                element.appendChild(button);
+            } else {
+                var stack               = document.createElement("pre");
+                stack.style.fontSize    = "13px";
+                stack.textContent       = ajaxResponse.stackTrace;
+
+                element.appendChild(stack);
+            }
 
             Colby.setPanelElement(element);
-        } else if (response.userMustLogIn) {
-            element                     = document.createElement("div");
-            message                     = document.createElement("p");
-            message.style.textAlign     = "center";
-            message.textContent         = response.message;
-            var button                  = document.createElement("button");
-            button.textContent          = "Reload";
-            button.style.display        = "block";
-            button.style.margin         = "20px auto";
+        } else if (ajaxResponse.userMustLogIn) {
+            element                 = document.createElement("div");
+            message                 = document.createElement("p");
+            message.style.textAlign = "center";
+            message.textContent     = ajaxResponse.message;
+            button                  = document.createElement("button");
+            button.textContent      = "Reload";
+            button.style.display    = "block";
+            button.style.margin     = "20px auto";
 
             button.addEventListener("click", function() { location.reload(); });
 
@@ -109,7 +122,7 @@ var Colby = {
 
             Colby.setPanelElement(element);
         } else {
-            Colby.setPanelText(response.message);
+            Colby.setPanelText(ajaxResponse.message);
         }
 
         Colby.showPanel();
