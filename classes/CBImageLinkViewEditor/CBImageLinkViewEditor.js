@@ -1,4 +1,11 @@
-"use strict";
+"use strict"; /* jshint strict: global */
+/* global
+    CBUI,
+    CBUIBooleanEditor,
+    CBUIImageUploader,
+    CBUIImageURLView,
+    CBUIStringEditor,
+    Colby */
 
 var CBImageLinkViewEditor = {
 
@@ -147,7 +154,7 @@ var CBImageLinkViewEditor = {
         var spec = args.spec;
         var image = args.specWithImage.image;
         spec.height = image.height;
-        spec.URL = Colby.dataStoreIDToURI(image.ID) + "/" + image.base + "." + image.extension;
+        spec.URL = Colby.dataStoreIDToURI(image.ID) + "/" + image.filename + "." + image.extension;
         spec.width = image.width;
     },
 
