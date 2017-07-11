@@ -4,30 +4,25 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
-CBHTMLOutput::setTitleHTML('Markaround Help');
-CBHTMLOutput::setDescriptionHTML('Help for markaround syntax.');
-CBHTMLOutput::begin();
-CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard-formatted-content.css');
+$contentAsMarkaround = file_get_contents(__DIR__ . '/handle,admin,help,markaround-syntax.markaround');
+$contentAsHTML = CBMarkaround::markaroundToHTML($contentAsMarkaround);
+$model = (object)[
+    'classNameForSettings' => 'CBPageSettingsForAdminPages',
+    'titleHTML' => 'Markaround Help',
+    'layout' => (object)[
+        'className' => 'CBPageLayout',
+        'customLayoutClassName' => 'CBAdminPageLayout',
+        'customLayoutProperties' => (object)[
+            'selectedMenuItemName' => 'help',
+            'selectedSubmenuItemName' => 'markaround-syntax',
+        ],
+    ],
+    'sections' => [
+        (object)[
+            'className' => 'CBTextView2',
+            'contentAsHTML' => $contentAsHTML,
+        ],
+    ],
+];
 
-CBView::renderModelAsHTML((object)[
-    'className' => 'CBAdminPageMenuView',
-    'selectedMenuItemName' => 'help',
-    'selectedSubmenuItemName' => 'markaround-syntax',
-]);
-
-$markaround = file_get_contents(CBSystemDirectory . '/snippets/help/markaround.txt');
-
-?>
-
-<main style="margin: 0 auto; max-width: 640px; padding: 40px 10px;">
-    <div class="formatted-content standard-formatted-content">
-        <?php echo CBMarkaround::markaroundToHTML($markaround); ?>
-    </div>
-</main>
-
-<?php
-
-CBAdminPageFooterView::renderModelAsHTML();
-
-CBHTMLOutput::render();
+CBViewPage::renderModelAsHTML($model);

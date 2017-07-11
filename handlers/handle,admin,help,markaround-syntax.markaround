@@ -53,7 +53,10 @@ Like all elements, headings will be formatted to match the overall document type
 ## This is a second level heading
 ### This is a third level heading
 
-
+Headers don't usually separate themselves from each other in the same way that
+they separate from content elements. This content provides a formatting break
+before the start of the next section. In practice this would be accomplished by
+using another view.
 
 ## Block quotations
 
@@ -61,29 +64,36 @@ Use a block quote when quoting content from another source that is longer than w
 
 ### Markaround text
 
-)> Four score and seven years ago our fathers brought forth on this continent
-)> a new nation, conceived in liberty, and dedicated to the proposition that
-)> all men are created equal.
+)> Four score and seven years ago our fathers brought
+)> forth on this continent a new nation, conceived in
+)> liberty, and dedicated to the proposition that all men
+)> are created equal.
 )>
-)> Now we are engaged in a great civil war, testing whether that nation, or
-)> any nation, so conceived and so dedicated, can long endure. We are met on
-)> a great battle-field of that war. We have come to dedicate a portion of
-)> that field, as a final resting place for those who here gave their lives
-)> that that nation might live. It is altogether fitting and proper that we
+)> Now we are engaged in a great civil war, testing
+)> whether that nation, or any nation, so conceived and
+)> so dedicated, can long endure. We are met on a great
+)> battle-field of that war. We have come to dedicate a
+)> portion of that field, as a final resting place for
+)> those who here gave their lives that that nation might
+)> live. It is altogether fitting and proper that we
 )> should do this.
 
 ### Results
 
-> Four score and seven years ago our fathers brought forth on this continent
-> a new nation, conceived in liberty, and dedicated to the proposition that
-> all men are created equal.
->
-> Now we are engaged in a great civil war, testing whether that nation, or
-> any nation, so conceived and so dedicated, can long endure. We are met on
-> a great battle-field of that war. We have come to dedicate a portion of
-> that field, as a final resting place for those who here gave their lives
-> that that nation might live. It is altogether fitting and proper that we
+> Four score and seven years ago our fathers brought
+> forth on this continent a new nation, conceived in
+> liberty, and dedicated to the proposition that all men
+> are created equal.
+
+> Now we are engaged in a great civil war, testing
+> whether that nation, or any nation, so conceived and
+> so dedicated, can long endure. We are met on a great
+> battle-field of that war. We have come to dedicate a
+> portion of that field, as a final resting place for
+> those who here gave their lives that that nation might
+> live. It is altogether fitting and proper that we
 > should do this.
+
 
 ## Description lists
 
@@ -120,6 +130,12 @@ Use description lists to display name-value style information. Both the "name" a
 )\
 )\  Likes playing fetch, eating cheese,
 )\  and sleeping under the covers.
+)\
+)\} Favorite Treats
+)\] Enjoys all food.
+)\
+)\  Jerky is one of his favorite special
+)\  treats.
 
 
 ### Results
@@ -129,6 +145,12 @@ Use description lists to display name-value style information. Both the "name" a
 
   Likes playing fetch, eating cheese,
   and sleeping under the covers.
+
+} Favorite Treats
+] Enjoys all food.
+
+  Jerky is one of his favorite special
+  treats.
 
 
 ## Unordered lists
@@ -160,23 +182,26 @@ Unordered list items can contain multiple paragraphs by adding an empty line and
 
 )\-   Dogs
 )\
-)\    Dogs are cute furry pets that often love to fetch and play.
+)\    Dogs are cute furry pets that often love to
+)\    fetch and play.
 )\
 )\-   Cats
 )\
-)\    Cats are cute furry pets that prefer their independence and
-)\    are easy to house train.
+)\    Cats are cute furry pets that prefer their
+)\    independence and are easy to house train.
+
 
 ### Results
 
 -   Dogs
 
-    Dogs are cute furry pets that often love to fetch and play.
+    Dogs are cute furry pets that often love to
+    fetch and play.
 
 -   Cats
 
-    Cats are cute furry pets that prefer their independence and
-    are easy to house train.
+    Cats are cute furry pets that prefer their
+    independence and are easy to house train.
 
 
 
@@ -236,13 +261,17 @@ Bold text is generally used in reference materials to highlight keywords so that
 
 ### Markaround text
 
-) *Frogs* are a diverse and largely carnivorous group of
-) short-bodied, tailless amphibians composing the order *Anura*
-) (Ancient Greek an-, without + oura, tail).
+) *Frogs* are a diverse and largely carnivorous
+) group of short-bodied, tailless amphibians
+) composing the order *Anura* (Ancient Greek an-,
+) without + oura, tail).
 
 ### Result
 
-*Frogs* are a diverse and largely carnivorous group of short-bodied, tailless amphibians composing the order *Anura* (Ancient Greek an-, without + oura, tail).
+*Frogs* are a diverse and largely carnivorous
+group of short-bodied, tailless amphibians
+composing the order *Anura* (Ancient Greek an-,
+without + oura, tail).
 
 
 ## Italics
@@ -253,15 +282,17 @@ Even though italicized text is used for book and movie titles, use the citation 
 
 ### Markaround text
 
-) The questions "What are you doing?" and "What _are_ you doing?" read very
-) differently. The first might be friendly but the second is somewhat
-) accusatory.
+) The questions "What are you doing?" and "What
+) _are_ you doing?" read very differently. The
+) first might be friendly but the second is
+) somewhat accusatory.
 
 ### Result
 
-The questions "What are you doing?" and "What _are_ you doing?" read very
-differently. The first might be friendly but the second is somewhat
-accusatory.
+The questions "What are you doing?" and "What
+_are_ you doing?" read very differently. The
+first might be friendly but the second is
+somewhat accusatory.
 
 
 ## Citation
@@ -270,11 +301,13 @@ The citation syntax should be used when citing the title of a work.
 
 ### Markaround text
 
-) The book {Harry Potter and the Sorcerer's Stone} is enjoyable.
+) The book {Harry Potter and the Sorcerer's Stone}
+) is enjoyable.
 
 ### Result
 
-The book {Harry Potter and the Sorcerer's Stone} is enjoyable.
+The book {Harry Potter and the Sorcerer's Stone}
+is enjoyable.
 
 
 ## Code
@@ -283,13 +316,15 @@ Use backticks to insert short snippets of code or reference function names or ot
 
 ### Markaround text
 
-) I called the Javascript function `JSON.parse` to generate the content
-) to place in the `blockquote` element.
+) I called the Javascript function `JSON.parse` to
+) generate the content to place in the `blockquote`
+) element.
 
 ### Result
 
-I called the Javascript function `JSON.parse` to generate the content
-to place in the `blockquote` element.
+I called the Javascript function `JSON.parse` to
+generate the content to place in the `blockquote`
+element.
 
 
 # Extreme examples
@@ -363,16 +398,14 @@ The following example shows that initial whitespace is collapsed to zero.
 
 ### Markdown text
 
-))The capital T at the beginning of this line will be in the first column.
-)) The capital T at the beginning of this line will be in the first column.
-))  The capital T at the beginning of this line will be in the first column.
-))   The capital T at the beginning of this line will be in the first column.
+))The capital T at the beginning of this line.
+)) The capital T at the beginning of this line.
+))  The capital T at the beginning of this line.
+))   The capital T at the beginning of this line.
 
 ### Result
 
-)The capital T at the beginning of this line will be in the first column.
-) The capital T at the beginning of this line will be in the first column.
-)  The capital T at the beginning of this line will be in the first column.
-)   The capital T at the beginning of this line will be in the first column.
-
-
+)The capital T at the beginning of this line.
+) The capital T at the beginning of this line.
+)  The capital T at the beginning of this line.
+)   The capital T at the beginning of this line.

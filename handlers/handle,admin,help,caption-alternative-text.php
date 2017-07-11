@@ -4,30 +4,26 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
-CBHTMLOutput::begin();
-CBHTMLOutput::setTitleHTML('Captions and Alternative Text Help');
-CBHTMLOutput::setDescriptionHTML('Help for creating effective captions and alternative text.');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/css/standard-formatted-content.css');
+$parsedown = new Parsedown();
+$contentAsCommonMark = file_get_contents(__DIR__ . '/handle,admin,help,caption-alternative-text.md');
+$contentAsHTML = $parsedown->text($contentAsCommonMark);
+$model = (object)[
+    'classNameForSettings' => 'CBPageSettingsForAdminPages',
+    'titleHTML' => 'Captions and Alternative Text Help',
+    'layout' => (object)[
+        'className' => 'CBPageLayout',
+        'customLayoutClassName' => 'CBAdminPageLayout',
+        'customLayoutProperties' => (object)[
+            'selectedMenuItemName' => 'help',
+            'selectedSubmenuItemName' => 'caption-alternative-text',
+        ],
+    ],
+    'sections' => [
+        (object)[
+            'className' => 'CBTextView2',
+            'contentAsHTML' => $contentAsHTML,
+        ],
+    ],
+];
 
-CBView::renderModelAsHTML((object)[
-    'className' => 'CBAdminPageMenuView',
-    'selectedMenuItemName' => 'help',
-    'selectedSubmenuItemName' => 'caption-alternative-text',
-]);
-
-$markaround = file_get_contents(CBSystemDirectory . '/snippets/help/caption-alternative-text.txt');
-
-?>
-
-<main style="margin: 0 auto; max-width: 640px; padding: 40px 10px;">
-    <div class="formatted-content standard-formatted-content">
-        <?php echo CBMarkaround::markaroundToHTML($markaround); ?>
-    </div>
-</main>
-
-<?php
-
-CBAdminPageFooterView::renderModelAsHTML();
-
-CBHTMLOutput::render();
+CBViewPage::renderModelAsHTML($model);
