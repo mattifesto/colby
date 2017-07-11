@@ -62,7 +62,7 @@ final class CBAdminPageForCBArtworkElement {
             </div>
             <div>
                 Below is an artwork element with an aspect ratio of 16 x 9 and
-                no maxWidth specified. The image is always stretch to fill the
+                no maxWidth specified. The image is always stretched to fill the
                 available width.
             </div>
             <?php
