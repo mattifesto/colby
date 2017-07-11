@@ -106,16 +106,24 @@
     text-decoration: underline;
 }
 
-.CBTextView2StandardLayout blockquote,
-.CBTextView2StandardLayout dd {
-    padding: 0 40px;
+.CBTextView2StandardLayout blockquote {
+    margin: 2em 3em;
 }
 
-.CBTextView2StandardLayout dd + dt {
+.CBTextView2StandardLayout dd {
+    padding: 0 3em;
+}
+
+.CBTextView2StandardLayout dd,
+.CBTextView2StandardLayout dt,
+.CBTextView2StandardLayout dd p {
+    margin-bottom: 0.5em;
     margin-top: 0.5em;
 }
 
 .CBTextView2StandardLayout pre {
+    border-left: 0.2em solid var(--CBLineColor);
+    padding-left: 1em;
     white-space: pre-wrap;
 }
 
@@ -131,6 +139,20 @@
 .CBTextView2StandardLayout i cite {
     font-style: inherit;
     font-weight: inherit;
+}
+
+/* The following elements always have whitespace on top to emphasize their block. */
+.CBTextView2StandardLayout dl,
+.CBTextView2StandardLayout ol,
+.CBTextView2StandardLayout pre,
+.CBTextView2StandardLayout ul {
+    margin-top: 1.5em;
+}
+
+.CBTextView2StandardLayout li,
+.CBTextView2StandardLayout li p {
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
 }
 
 .CBTextView2StandardLayout blockquote + *,
