@@ -3,9 +3,9 @@
 final class CBStandardPageTemplate {
 
     /**
-     * @return stdClass
+     * @return object
      */
-    public static function model() {
+    static function model() {
         $spec = (object)[
             'className' => 'CBViewPage',
             'layout' => (object)[
@@ -37,7 +37,7 @@ final class CBStandardPageTemplate {
     /**
      * @return string
      */
-    public static function title() {
+    static function title() {
         return 'Standard Page';
     }
 }
