@@ -8,12 +8,22 @@
  *
  * @param string $text
  *
- * @return string
+ * @return string (HTML)
  */
 function cbhtml($text) {
     return htmlspecialchars($text, ENT_QUOTES);
 }
 
+/**
+ * @param string $markdown
+ *
+ *      The goal is for the full CommonMark spec to be supported.
+ *
+ * @return string (HTML)
+ */
+function cbmdhtml($markdown) {
+    return (new Parsedown())->text($markdown);
+}
 
 /**
  * This behaves almost exactly like `array_map` except that it passes the key
