@@ -8,6 +8,8 @@
     min-height: 100vh;
 }
 
+/* Keep below in sync with CBContainerView.css */
+
 .CBContainerView2.flow {
     display: flex;
     flex-wrap: wrap;

@@ -8,3 +8,11 @@ a.CBContainerView {
     color: inherit;
     text-decoration: inherit;
 }
+
+/* Keep below in sync with CBContainerView2.css */
+
+.CBContainerView.flow {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}

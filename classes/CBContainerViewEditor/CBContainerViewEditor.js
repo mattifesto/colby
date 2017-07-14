@@ -302,9 +302,21 @@ var CBContainerViewEditor = {
         section.appendChild(item);
         element.appendChild(section);
 
-        /* CSS class names */
+        /* CSSClassNames */
 
         element.appendChild(CBUI.createHalfSpace());
+
+        element.appendChild(CBUI.createSectionHeader({
+            paragraphs: [
+                `
+                Supported Class Names:
+                `,`
+                flow: Flow subviews from left to right and wrap into new lines.
+                Center each line of children. Example scenario: displaying a
+                collection of images.
+                `,
+           ],
+        }));
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
