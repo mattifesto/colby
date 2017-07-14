@@ -55,7 +55,7 @@ CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', CBPagesPrefe
 global $CBPageEditorAvailablePageTemplateClassNames;
 
 if ($CBPageEditorAvailablePageTemplateClassNames || class_exists('CBPageTemplateList') || class_exists('CBViewPageTemplates')) {
-    throw new Exception('This website needs to be updated to use the CBPageHelpers::availableTemplateClassNames().');
+    throw new Exception('This website needs to be updated to use the CBPageHelpers::classNamesForPageTemplates().');
 } else {
     if (is_callable($function = "CBPageHelpers::classNamesForPageTemplates")) {
         $classNames = call_user_func($function);
