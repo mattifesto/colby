@@ -16,6 +16,8 @@ html {
     text-rendering:             optimizeLegibility; /* 3 */
     -ms-text-size-adjust:       100%;               /* 4 */
     -webkit-text-size-adjust:   100%;               /* 4 */
+
+    --CBMonospaceFontFamily: 'Menlo', 'Courier New', 'Courier', monospace;
 }
 
 .CBDarkTheme {
@@ -84,6 +86,10 @@ a:link, a:active, a:focus, a:hover {
 
 a img {
     border: none;
+}
+
+code, pre {
+    font-family: var(--CBMonospaceFontFamily);
 }
 
 pre {
