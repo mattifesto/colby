@@ -25,21 +25,30 @@ $modelsMenu = (object)[
     'import' => newMenuItem('Import', '/admin/page/?class=CBAdminPageForModelImport'),
 ];
 
-$helpMenu                   = new stdClass();
-$menuItemID                 = 'markaround-syntax';
-$menuItemHTML               = 'Markaround';
-$menuItemURI                = '/admin/help/markaround-syntax/';
-$helpMenu->{$menuItemID}    = newMenuItem($menuItemHTML, $menuItemURI);
-$menuItemID                 = 'title-subtitle';
-$menuItemHTML               = 'Titles &amp; Descriptions';
-$menuItemURI                = '/admin/help/title-subtitle/';
-$helpMenu->{$menuItemID}    = newMenuItem($menuItemHTML, $menuItemURI);
-$menuItemID                 = 'caption-alternative-text';
-$menuItemHTML               = 'Captions &amp; Alternative Text';
-$menuItemURI                = '/admin/help/caption-alternative-text';
-$helpMenu->{$menuItemID}    = newMenuItem($menuItemHTML, $menuItemURI);
-$helpMenu->CBArtworkElement = newMenuItem('CBArtworkElement', '/admin/page/?class=CBAdminPageForCBArtworkElement');
-$CBAdminMenu->help          = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
+$helpMenu = (object)[
+    'markaround-syntax' => (object)[
+        'nameHTML' => 'Markaround',
+        'URI' => '/admin/help/markaround-syntax/'
+    ],
+    'title-subtitle' => (object)[
+        'nameHTML' => 'Titles &amp; Descriptions',
+        'URI' => '/admin/help/title-subtitle/',
+    ],
+    'caption-alternative-text' => (object)[
+        'nameHTML' => 'Captions &amp; Alternative Text',
+        'URI' => '/admin/help/caption-alternative-text',
+    ],
+    'CBArtworkElement' => (object)[
+        'nameHTML' => 'CBArtworkElement',
+        'URI' => '/admin/page/?class=CBAdminPageForCBArtworkElement',
+    ],
+    'api' => (object)[
+        'nameHTML' => 'API',
+        'URI' => '/admin/help/api/',
+    ],
+];
+
+$CBAdminMenu->help = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
 
 if (ColbyUser::current()->isOneOfThe('Developers')) {
     $developMenu                    = new stdClass();
