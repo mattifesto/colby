@@ -256,25 +256,28 @@ $spec->sections[] = (object)[
 
 $container = (object)[
     'className' => 'CBContainerView',
+    'CSSClassNames' => 'flow',
     'stylesTemplate' => <<<EOT
 view {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
     margin-bottom: 100px;
 }
 
 view > * {
-    box-sizing: border-box;
-    flex: 1 1 320px;
-    max-width: 480px;
+    width: 480px;
+    max-width: 50% !important;
+}
+
+@media (max-width 639px) {
+    view > * {
+        max-width: 100% !important;
+    }
 }
 EOT
 ];
 
 $container->subviews[] = (object)[
     'className' => 'CBTextView2',
-    'CSSClassNames' => 'dark',
+    'CSSClassNames' => 'CBLightTheme',
     'localCSSTemplate' => <<<EOT
 view {
     background-color: hsl(30, 30%, 80%);
@@ -294,7 +297,7 @@ EOT
 
 $container->subviews[] = (object)[
     'className' => 'CBTextView2',
-    'CSSClassNames' => 'light',
+    'CSSClassNames' => 'CBDarkTheme',
     'localCSSTemplate' => <<<EOT
 view {
     background-color: hsl(30, 30%, 20%);
