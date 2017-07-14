@@ -56,7 +56,14 @@ final class CBPageLayout {
      * Call this function without parameters to render the default page footer.
      *
      * @param string? $className
-     * @param stdClass? $properties
+     *
+     *      This class name is usually the customLayoutClassName of the layout
+     *      model.
+     *
+     * @param object? $properties
+     *
+     *      These properties are usually the customLayoutProperties of the
+     *      layout model.
      *
      * @return null
      */
@@ -78,7 +85,14 @@ final class CBPageLayout {
      * Call this function without parameters to render the default page header.
      *
      * @param string? $className
-     * @param stdClass? $properties
+     *
+     *      This class name is usually the customLayoutClassName of the layout
+     *      model.
+     *
+     * @param object? $properties
+     *
+     *      These properties are usually the customLayoutProperties of the
+     *      layout model.
      *
      * @return null
      */
