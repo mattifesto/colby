@@ -1,4 +1,4 @@
-.CBTextView2StandardLayout {
+.CBTextView2.CBTextView2StandardLayout {
     box-sizing: border-box;
     display: flex;
     justify-content: center;
@@ -110,6 +110,14 @@
     margin: 2em 3em;
 }
 
+.CBTextView2StandardLayout cite {
+    font-style: italic;
+}
+
+.CBTextView2StandardLayout code {
+    color: var(--CBTextColorForLinks);
+}
+
 .CBTextView2StandardLayout dd {
     padding: 0 3em;
 }
@@ -125,10 +133,6 @@
     border-left: 0.2em solid var(--CBLineColor);
     padding-left: 1em;
     white-space: pre-wrap;
-}
-
-.CBTextView2StandardLayout cite {
-    font-style: italic;
 }
 
 .CBTextView2StandardLayout b cite,
@@ -151,8 +155,8 @@
 
 .CBTextView2StandardLayout li,
 .CBTextView2StandardLayout li p {
-    margin-bottom: 0.5em;
-    margin-top: 0.5em;
+    margin-bottom: 0.75em;
+    margin-top: 0.75em;
 }
 
 .CBTextView2StandardLayout blockquote + *,
