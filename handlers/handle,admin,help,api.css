@@ -1,0 +1,25 @@
+.CBAPIDocumentationView {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    padding: 20px;
+}
+
+.CBAPIDocumentationView .content {
+    max-width: 100%;
+    width: 36em;
+}
+
+.CBAPIDocumentationView .api {
+    font-family: var(--CBMonospaceFontFamily);
+    margin-bottom: 0.5em;
+}
+
+.CBAPIDocumentationView .api .name {
+    color: var(--CBTextColorForLinks);
+}
+
+.CBAPIDocumentationView .description {
+    color: var(--CBTextColor2);
+    margin-left: 3em;
+}
