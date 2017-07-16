@@ -22,6 +22,7 @@
 
 .CBPageListView2StandardLayout > article .footer {
     display: flex;
+    justify-content: space-between;
 }
 
 .CBPageListView2StandardLayout > article .arrow {
