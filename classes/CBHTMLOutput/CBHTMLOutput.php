@@ -18,8 +18,8 @@
  *
  *  -   Support for exporting values to the JavaScript environment of the page.
  */
-class CBHTMLOutput
-{
+final class CBHTMLOutput {
+
     const JSAsync           = 1; // 1 << 0
     const JSInHeadElement   = 2; // 1 << 1
     const JSDefer           = 4; // 1 << 2
@@ -35,17 +35,27 @@ class CBHTMLOutput
     private static $javaScriptSnippetStrings;
     private static $javaScriptURLs;
     private static $requiredClassNames;
+    private static $styleSheets = [];
     private static $titleHTML; /* deprecated */
 
     /**
      * @param string|empty $CSSURL
      *
-     * @return void
+     * @return null
      */
-    public static function addCSSURL($CSSURL) {
+    static function addCSSURL($CSSURL) {
         if (!empty($CSSURL) && !in_array($CSSURL, self::$CSSURLs)) {
-            self::$CSSURLs[] = $CSSURL;
+            CBHTMLOutput::$CSSURLs[] = $CSSURL;
         }
+    }
+
+    /**
+     * @param string $styleSheet
+     *
+     * @return null
+     */
+    static function addCSS($styleSheet) {
+        CBHTMLOutput::$styleSheets[] = $styleSheet;
     }
 
     /**
@@ -308,6 +318,7 @@ class CBHTMLOutput
 
                 CBHTMLOutput::renderJavaScriptInHead();
                 CBHTMLOutput::renderCSSLinks();
+                CBHTMLOutput::renderStyleSheets();
 
                 ?>
             </head>
@@ -350,12 +361,10 @@ class CBHTMLOutput
     }
 
     /**
-     * @return void
+     * @return null
      */
-    private static function renderCSSLinks()
-    {
-        foreach (self::$CSSURLs as $URL)
-        {
+    private static function renderCSSLinks() {
+        foreach (CBHTMLOutput::$CSSURLs as $URL) {
             echo '<link rel="stylesheet" href="' . $URL . '">';
         }
     }
@@ -403,7 +412,7 @@ class CBHTMLOutput
     }
 
     /**
-     * @return void
+     * @return null
      */
     private static function renderJavaScriptInHead() {
         foreach (CBHTMLOutput::$javaScriptURLs as $URL => $options) {
@@ -419,6 +428,15 @@ class CBHTMLOutput
     /**
      * @return null
      */
+    private static function renderStyleSheets() {
+        array_walk(CBHTMLOutput::$styleSheets, function ($styleSheet) {
+            echo "<style>$styleSheet</style>";
+        });
+    }
+
+    /**
+     * @return null
+     */
     public static function requireClassName($className) {
         if (!array_key_exists($className, self::$requiredClassNames)) {
             self::$requiredClassNames[$className] = true;
@@ -428,23 +446,24 @@ class CBHTMLOutput
     /**
      * @return null
      */
-    public static function reset() {
-        if (self::$isActive) {
+    static function reset() {
+        if (CBHTMLOutput::$isActive) {
             restore_exception_handler();
             ob_end_clean();
         }
 
-        self::$classNameForSettings = null;
-        self::$CSSURLs = array();
-        self::$descriptionHTML = '';
-        self::$exportedLists = array();
-        self::$exportedVariables = array();
-        self::$isActive = false;
-        self::$javaScriptSnippetFilenames = array();
-        self::$javaScriptSnippetStrings = array();
-        self::$javaScriptURLs = array();
-        self::$requiredClassNames = [];
-        self::$titleHTML = '';
+        CBHTMLOutput::$classNameForSettings = null;
+        CBHTMLOutput::$CSSURLs = array();
+        CBHTMLOutput::$descriptionHTML = '';
+        CBHTMLOutput::$exportedLists = array();
+        CBHTMLOutput::$exportedVariables = array();
+        CBHTMLOutput::$isActive = false;
+        CBHTMLOutput::$javaScriptSnippetFilenames = array();
+        CBHTMLOutput::$javaScriptSnippetStrings = array();
+        CBHTMLOutput::$javaScriptURLs = array();
+        CBHTMLOutput::$requiredClassNames = [];
+        CBHTMLOutput::$styleSheets = [];
+        CBHTMLOutput::$titleHTML = '';
     }
 
     /**
