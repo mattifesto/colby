@@ -65,13 +65,10 @@ final class CBPagesPreferences {
     }
 
     /**
-     * Returns an array of class names for page kinds.
-     *
-     * @return [string]
+     * @deprecated use CBPagesPreferences::classNamesForPageKinds()
      */
     static function classNamesForKinds() {
-        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        return CBModel::value($model, 'classNamesForKinds', []);
+        return CBPagesPreferences::classNamesForPageKinds();
     }
 
     /**
@@ -87,7 +84,41 @@ final class CBPagesPreferences {
     }
 
     /**
-     * Returns an array of class names for page kinds.
+     * The default value for CBPagesPreferences::classNamesForKinds()
+     *
+     * @return [string]
+     */
+    static function classNamesForPageKindsDefault() {
+        return ['CBFrontPageKind'];
+    }
+
+    /**
+     * Returns an array of class names for page kinds. To customize the this
+     * value implement CBPageHelpers::classNamesForKinds().
+     *
+     * @NOTE 2017.07.15 The `classNamesForKinds` property on the model has been
+     *       deprecated and will be removed shortly.
+     *
+     * @return [string]
+     */
+    static function classNamesForPageKinds() {
+        if (is_callable($function = 'CBPageHelpers::classNamesForPageKinds')) {
+            return call_user_func($function);
+        }
+
+        // @deprecated
+        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
+        $kinds = CBModel::value($model, 'classNamesForKinds', []);
+
+        if (empty($kinds)) {
+            return CBPagesPreferences::classNamesForPageKindsDefault();
+        } else {
+            return $kinds;
+        }
+    }
+
+    /**
+     * Returns an array of class names for page settings.
      *
      * @return [string]
      */
