@@ -27,27 +27,43 @@ var CBPageListView2 = {
         function display(result) {
             result.pages.forEach(function (page) {
                 var element = document.createElement("article");
+                var anchorElement = document.createElement("a");
+                anchorElement.href = "/" + page.URI + "/";
+
+                /* header */
+                var dateElement = document.createElement("div");
+                dateElement.className = "published";
+                dateElement.appendChild(Colby.unixTimestampToElement(page.publicationTimeStamp));
+
+                /* image */
                 var artworkElement = CBArtworkElement.create({
                     image: page.image,
                     src: page.thumbnailURL,
                 });
-                var dateElement = document.createElement("div");
-                dateElement.className = "published";
-                dateElement.appendChild(Colby.unixTimestampToElement(page.publicationTimeStamp));
-                var titleElement = document.createElement("a");
+
+                /* footer */
+                var footerElement = document.createElement("div");
+                footerElement.className = "footer";
+                var contentElement = document.createElement("div");
+                contentElement.className = "content";
+                var titleElement = document.createElement("div");
                 titleElement.className = "title";
                 titleElement.textContent = page.title;
-                titleElement.href = "/" + page.URI + "/";
                 var descriptionElement = document.createElement("div");
                 descriptionElement.className = "description";
                 descriptionElement.textContent = page.description;
+                var arrowElement = document.createElement("div");
+                arrowElement.className = "arrow";
+                arrowElement.textContent = ">";
+                contentElement.appendChild(titleElement);
+                contentElement.appendChild(descriptionElement);
+                footerElement.appendChild(contentElement);
+                footerElement.appendChild(arrowElement);
 
-                element.addEventListener("click", CBPageListView2.navigate.bind(undefined, "/" + page.URI + "/"));
-
-                element.appendChild(dateElement);
-                element.appendChild(artworkElement);
-                element.appendChild(titleElement);
-                element.appendChild(descriptionElement);
+                anchorElement.appendChild(dateElement);
+                anchorElement.appendChild(artworkElement);
+                anchorElement.appendChild(footerElement);
+                element.appendChild(anchorElement);
 
                 state.element.insertBefore(element, state.moreButton);
                 state.published = page.publicationTimeStamp;
