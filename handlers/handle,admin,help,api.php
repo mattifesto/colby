@@ -90,6 +90,21 @@ EOT
                 ]),
                 CBModel::specToOptionalModel((object)[
                     'className' => 'CBAPIDocumentationView',
+                    'apiAsHTML' => 'static function <span class="name">classNamesForPageKinds</span>() -&gt; [string]',
+                    'descriptionAsMarkdown' => <<<EOT
+
+This function should return a list of class names for page kinds. Include the
+class names returned by the `CBPagesPreferences` function
+`classNamesForPageKindsDefault`() along with the custom class names for your
+site.
+
+If implemented, this function provides the return value for the
+`CBPagesPreferences` function `classNamesForPageKinds`().
+
+EOT
+                ]),
+                CBModel::specToOptionalModel((object)[
+                    'className' => 'CBAPIDocumentationView',
                     'apiAsHTML' => 'static function <span class="name">classNamesForPageTemplates</span>() -&gt; [string]',
                     'descriptionAsMarkdown' => <<<EOT
 
