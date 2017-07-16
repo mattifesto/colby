@@ -1,9 +1,10 @@
-.CBDefaultPageFooterView {
-    padding: 40px 20px 10px;
-}
-
 .CBDefaultPageFooterView .copyright {
+    align-items: center;
+    box-sizing: border-box;
     color: var(--CBTextColor2);
+    display: flex;
     font-size: 80%;
-    text-align: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px;
 }

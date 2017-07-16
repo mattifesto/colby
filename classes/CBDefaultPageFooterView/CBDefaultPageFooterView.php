@@ -8,7 +8,7 @@ final class CBDefaultPageFooterView {
     static function renderModelAsHTML(stdClass $model) {
         ?>
 
-        <footer class="CBDefaultPageFooterView">
+        <footer class="CBDefaultPageFooterView CBDarkTheme">
             <div class="copyright">
                 Copyright &copy; <?= gmdate('Y'), ' ', cbhtml(CBSitePreferences::siteName()); ?>
             </div>
