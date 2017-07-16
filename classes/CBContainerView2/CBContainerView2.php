@@ -24,12 +24,13 @@ final class CBContainerView2 {
 
         $subviews = CBModel::valueAsArray($model, 'subviews');
 
+        if (!empty($model->localCSS)) {
+            CBHTMLOutput::addCSS($model->localCSS);
+        }
+
         ?>
 
         <div class="CBContainerView2 <?= $CSSClassNames ?>" style="<?= $backgroundImageDeclaration ?>">
-            <?php if (!empty($model->localCSS)) { ?>
-                <style><?= $model->localCSS ?></style>
-            <?php } ?>
             <?php array_walk($subviews, 'CBView::renderModelAsHTML') ?>
         </div>
 
