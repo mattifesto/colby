@@ -14,7 +14,7 @@
     padding: 20px;
 }
 
-.CBArtworkView figcaption {
+.CBArtworkView .caption {
     box-sizing: border-box;
     color: var(--CBTextColor2);
     font-size: 80%;
@@ -23,11 +23,11 @@
     width: 100%;
 }
 
-.CBArtworkView.left figcaption {
+.CBArtworkView.left .caption {
     text-align: left;
 }
 
-.CBArtworkView.right figcaption {
+.CBArtworkView.right .caption {
     text-align: right;
 }
 

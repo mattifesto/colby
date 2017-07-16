@@ -113,7 +113,7 @@ final class CBArtworkView {
 
         ?>
 
-        <figure class="CBArtworkView <?= $CSSClassNames ?>">
+        <div class="CBArtworkView <?= $CSSClassNames ?>">
 
             <?php
 
@@ -130,9 +130,9 @@ final class CBArtworkView {
             if (!empty($captionAsHTML)) {
                 ?>
 
-                <figcaption style="<?= $captionDeclarations ?>">
+                <div class="caption" style="<?= $captionDeclarations ?>">
                     <?= $captionAsHTML ?>
-                </figcaption>
+                </div>
 
                 <?php
             }
@@ -149,7 +149,7 @@ final class CBArtworkView {
                 </a>
             </div>
 
-        </figure>
+        </div>
 
         <?php
     }
