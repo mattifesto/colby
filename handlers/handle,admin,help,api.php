@@ -113,7 +113,7 @@ specs. Each class name will produce an option for the create page menu of the
 admin area.
 
 If this function is not implememented, the value of the
-`defaultClassNamesForPageTemplates` constant on the `CBPagesPreferences` class
+`classNamesForPageTemplatesDefault` function on the `CBPagesPreferences` class
 will be used.
 
 EOT
