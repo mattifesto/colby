@@ -6,6 +6,9 @@ final class CBPagesPreferences {
     const defaultClassNamesForLayouts = [
         'CBPageLayout',
     ];
+    /**
+     * @deprecated use CBPagesPreferences::classNamesForPageTemplatesDefault()
+     */
     const defaultClassNamesForPageTemplates = [
         'CBStandardPageTemplate',
         'CBEmptyPageTemplate',
@@ -84,15 +87,6 @@ final class CBPagesPreferences {
     }
 
     /**
-     * The default value for CBPagesPreferences::classNamesForKinds()
-     *
-     * @return [string]
-     */
-    static function classNamesForPageKindsDefault() {
-        return ['CBFrontPageKind'];
-    }
-
-    /**
      * Returns an array of class names for page kinds. To customize the this
      * value implement CBPageHelpers::classNamesForKinds().
      *
@@ -115,6 +109,35 @@ final class CBPagesPreferences {
         } else {
             return $kinds;
         }
+    }
+
+    /**
+     * The default value for CBPagesPreferences::classNamesForPageKinds()
+     *
+     * @return [string]
+     */
+    static function classNamesForPageKindsDefault() {
+        return ['CBFrontPageKind'];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function classNamesForPageTemplates() {
+        if (is_callable($function = "CBPageHelpers::classNamesForPageTemplates")) {
+            return call_user_func($function);
+        } else {
+            return CBPagesPreferences::classNamesForPageTemplatesDefault();
+        }
+    }
+
+    /**
+     * The default value for CBPagesPreferences::classNamesForPageTemplates()
+     *
+     * @return [string]
+     */
+    static function classNamesForPageTemplatesDefault() {
+        return ['CBStandardPageTemplate', 'CBEmptyPageTemplate'];
     }
 
     /**
