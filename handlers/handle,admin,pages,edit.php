@@ -57,11 +57,7 @@ global $CBPageEditorAvailablePageTemplateClassNames;
 if ($CBPageEditorAvailablePageTemplateClassNames || class_exists('CBPageTemplateList') || class_exists('CBViewPageTemplates')) {
     throw new Exception('This website needs to be updated to use the CBPageHelpers::classNamesForPageTemplates().');
 } else {
-    if (is_callable($function = "CBPageHelpers::classNamesForPageTemplates")) {
-        $classNames = call_user_func($function);
-    } else {
-        $classNames = CBPagesPreferences::defaultClassNamesForPageTemplates;
-    }
+    $classNames = CBPagesPreferences::classNamesForPageTemplates();
 
     foreach ($classNames as $pageTemplateClassName) {
         if (is_callable($function = "{$pageTemplateClassName}::model")) {
