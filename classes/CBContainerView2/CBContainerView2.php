@@ -25,7 +25,15 @@ final class CBContainerView2 {
         $subviews = CBModel::valueAsArray($model, 'subviews');
 
         if (!empty($model->localCSS)) {
-            CBHTMLOutput::addCSS($model->localCSS);
+            $styleSheet = <<<EOT
+
+/* CBContainerView2 */
+
+{$model->localCSS}
+
+EOT;
+
+            CBHTMLOutput::addCSS($styleSheet);
         }
 
         ?>
