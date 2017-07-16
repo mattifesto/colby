@@ -1,0 +1,15 @@
+.CBArtworkElement {
+    max-width: 100%;
+}
+
+.CBArtworkElement > div {
+    overflow: hidden;
+    position: relative;
+}
+
+.CBArtworkElement > div > img {
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}

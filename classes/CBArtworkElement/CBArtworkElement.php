@@ -25,6 +25,15 @@ final class CBArtworkElement {
     }
 
     /**
+     * @NOTE: 2017.07.16 This class does not have a renderModelAsHTML() function
+     *        because it is note meant to be used with a model. It is just
+     *        supposed to be a set of functions. However, it does have a
+     *        required style sheet so it adds itself as a required class name.
+     *
+     *        The JavaScript is not required by a call to this function, but it
+     *        feels cleaner to have it as a requirement of the class rather than
+     *        using a different method of inclusion.
+     *
      * @param string? $args['alternativeText']
      *  The alternative text for the image.
      * @param int $args['height']
@@ -44,6 +53,8 @@ final class CBArtworkElement {
         if (empty($args['height']) || empty($args['width']) || empty($args['URL'])) {
             return;
         }
+
+        CBHTMLOutput::requireClassName('CBArtworkElement');
 
         $aspectWidth = $args['width'];
         $aspectHeight = $args['height'];
@@ -79,51 +90,38 @@ final class CBArtworkElement {
             $alternativeTextAsHTML = cbhtml($args['alternativeText']);
         }
 
-        /**
-         * NOTE: It's important the style of this element be in the format:
-         *
-         *      width: 640px; max-width: 100%;
-         *
-         *  instead of:
-         *
-         *      width: 100%; max-width: 640px;
-         *
-         *  In most scenarios, these two formats mean the same thing. But not
-         *  when the element is a child of a `display: flex` parent. In this
-         *  case the first format expresses a desired size and the element will
-         *  have that size unless it won't fit and then it will be allowed to
-         *  shrink. The second format will allow the element to be reduced to
-         *  zero width by its parent.
-         */
+        $styleSheet = <<<EOT
+
+/* CBArtworkElement */
+
+.ID-{$ID} {
+    {$widthDeclaration};
+}
+
+.ID-{$ID} > div {
+    {$paddingBottomDeclaration};
+}
+
+EOT;
+
+        CBHTMLOutput::addCSS($styleSheet);
 
         ?>
 
         <div class="CBArtworkElement ID-<?= $ID ?>">
-            <style>
-                <?= ".ID-{$ID}" ?> {
-                    <?= $widthDeclaration ?>;
-                    max-width: 100%;
-                }
-
-                <?= ".ID-{$ID}" ?> > div {
-                    overflow: hidden;
-                    position: relative;
-                    <?= $paddingBottomDeclaration ?>;
-                }
-
-                <?= ".ID-{$ID}" ?> > div > img {
-                    left: 0;
-                    position: absolute;
-                    top: 0;
-                    width: 100%;
-                }
-            </style>
             <div>
                 <img src="<?= $URLAsHTML ?>" alt="<?= $alternativeTextAsHTML ?>">
             </div>
         </div>
 
         <?php
+    }
+
+    /**
+     * @return [string]
+     */
+    static function requiredCSSURLs() {
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
