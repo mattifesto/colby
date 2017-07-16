@@ -138,23 +138,31 @@ EOT;
 
         ob_start();
 
-        CBUI::renderHalfSpace();
-        CBUI::renderSectionHeader('Site Configuration Issues');
-        CBUI::renderSectionStart();
-
         foreach ($deprecatedConstants as $constant) {
             if (defined($constant[0])) {
-                $hasContent = true;
                 CBUI::renderKeyValueSectionItem($constant[0], 'This constant has been deprecated. ' . $constant[1]);
             }
         }
 
-        CBUI::renderSectionEnd();
+        /* 2017.07.15 The classNamesForKinds property on the CBPagesPreferences
+           model has beed deprecated. */
+        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
+        $kinds = CBModel::value($model, 'classNamesForKinds', []);
 
-        if ($hasContent) {
-            ob_end_flush();
-        } else {
-            ob_end_clean();
+        if (!empty($kinds)) {
+            CBUI::renderKeyValueSectionItem('CBPagesPreferences::classNamesForKinds', 'Use CBPageHelpers instead of the CBPagesPreferences model.');
+        }
+
+        $content = ob_get_clean();
+
+        if (!empty($content)) {
+            CBUI::renderHalfSpace();
+            CBUI::renderSectionHeader('Site Configuration Issues');
+            CBUI::renderSectionStart();
+
+            echo $content;
+
+            CBUI::renderSectionEnd();
         }
     }
 }
