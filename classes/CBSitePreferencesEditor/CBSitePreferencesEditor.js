@@ -136,7 +136,7 @@ var CBSitePreferencesEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Default Class Name for Page Settings",
+            labelText : "Default Class Name for Page Settings (deprecated)",
             propertyName : "defaultClassNameForPageSettings",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
@@ -145,7 +145,7 @@ var CBSitePreferencesEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "On Demand Image Resize Operations",
+            labelText : "On Demand Image Resize Operations (deprecated)",
             propertyName : "onDemandImageResizeOperations",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
