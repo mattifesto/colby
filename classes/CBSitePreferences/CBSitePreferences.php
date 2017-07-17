@@ -92,27 +92,12 @@ final class CBSitePreferences {
     }
 
     /**
-     * This function is used by the CBHTMLOutput class when a page doesn't
-     * have a page settings class name specified.
-     *
-     * @NOTE 2017.07.09 This class now returns CBPageSettingsForResponsivePages if
-     * no class name has been set in site preferences. If this causes problems
-     * document them here, but I don't think it will. I can't currently think of
-     * a time when having no page settings is a good thing.
-     *
-     * Furthermore, CBPageSettingsForResponsivePages should represent a usable
-     * default for websites: simple, but usable visually and functionally.
+     * @deprecated use CBPagesPreferences::classNameForUnsetPageSettings()
      *
      * @return string
      */
     static function defaultClassNameForPageSettings() {
-        $model = CBSitePreferences::model();
-
-        if (empty($model->defaultClassNameForPageSettings)) {
-            return 'CBPageSettingsForResponsivePages';
-        } else {
-            return $model->defaultClassNameForPageSettings;
-        }
+        return CBPagesPreferences::classNameForUnsetPageSettings();
     }
 
     /**
