@@ -79,12 +79,23 @@ pages.
 
 Those sites don't wish to negatively impact new pages, so the
 `CBStandardPageTemplate` class will use the return value of this function as a
-hardcoded value for the `classNamesForSettings` property on the model for new
+hardcoded value for the `classNameForSettings` property on the model for new
 pages.
 
-Preferably, new pages should not set `classNamesForSettings` property on page
-models. An unset `classNamesForSettings` property will cause the current default
+Preferably, new pages should not set `classNameForSettings` property on page
+models. An unset `classNameForSettings` property will cause the current default
 class name for page settings to be used when the page is rendered.
+
+EOT
+                ]),
+                CBModel::specToOptionalModel((object)[
+                    'className' => 'CBAPIDocumentationView',
+                    'apiAsHTML' => 'static function <span class="name">classNameForUnsetPageSettings</span>() -&gt; string',
+                    'descriptionAsMarkdown' => <<<EOT
+
+The class name returned by this function will be used as the class name for page
+settings by `CBHTMLOutput` when rendering a page whose model has no value set
+for the `classNameForSettings` property.
 
 EOT
                 ]),
