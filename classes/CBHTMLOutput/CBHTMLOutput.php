@@ -159,12 +159,12 @@ final class CBHTMLOutput {
      * @return null
      */
     static function handleException($exception) {
-        $classNameForSettings = CBHTMLOutput::$classNameForSettings;
+        $classNameForPageSettings = CBHTMLOutput::$classNameForSettings;
 
         // Partial page may have been rendered, clear output buffer
         CBHTMLOutput::reset();
 
-        if (is_callable($function = "{$classNameForSettings}::renderPageForException")) {
+        if (is_callable($function = "{$classNameForPageSettings}::renderPageForException")) {
             try {
                 call_user_func($function, $exception);
                 Colby::reportException($exception);
@@ -238,17 +238,17 @@ final class CBHTMLOutput {
         $settingsHeadContent = '';
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent = '';
-        $classNameForSettings = CBHTMLOutput::$classNameForSettings;
+        $classNameForPageSettings = CBHTMLOutput::$classNameForSettings;
         $defaultThemeClassName = 'CBLightTheme';
 
-        if (empty($classNameForSettings)) {
-            $classNameForSettings = CBSitePreferences::defaultClassNameForPageSettings();
+        if (empty($classNameForPageSettings)) {
+            $classNameForPageSettings = CBPagesPreferences::classNameForUnsetPageSettings();
         }
 
-        if (!empty($classNameForSettings)) {
-            CBHTMLOutput::requireClassName($classNameForSettings);
+        if (!empty($classNameForPageSettings)) {
+            CBHTMLOutput::requireClassName($classNameForPageSettings);
 
-            if (is_callable($function = "{$classNameForSettings}::defaultThemeClassName")) {
+            if (is_callable($function = "{$classNameForPageSettings}::defaultThemeClassName")) {
                 $defaultThemeClassName = call_user_func($function);
                 CBHTMLOutput::requireClassName($defaultThemeClassName);
             }
@@ -256,21 +256,21 @@ final class CBHTMLOutput {
 
         CBHTMLOutput::processRequiredClassNames();
 
-        if (is_callable($function = "{$classNameForSettings}::renderHeadContent")) {
+        if (is_callable($function = "{$classNameForPageSettings}::renderHeadContent")) {
             ob_start();
             call_user_func($function);
 
             $settingsHeadContent = ob_get_clean();
         }
 
-        if (is_callable($function = "{$classNameForSettings}::renderStartOfBodyContent")) {
+        if (is_callable($function = "{$classNameForPageSettings}::renderStartOfBodyContent")) {
             ob_start();
             call_user_func($function);
 
             $settingsStartOfBodyContent = ob_get_clean();
         }
 
-        if (is_callable($function = "{$classNameForSettings}::renderEndOfBodyContent")) {
+        if (is_callable($function = "{$classNameForPageSettings}::renderEndOfBodyContent")) {
             ob_start();
             call_user_func($function);
 
@@ -285,7 +285,7 @@ final class CBHTMLOutput {
         ?>
 
         <!doctype html>
-        <html lang="en" class="<?= $defaultThemeClassName ?>">
+        <html lang="en" class="<?= $classNameForPageSettings, ' ', $defaultThemeClassName ?>">
             <head>
                 <meta charset="UTF-8">
                 <title><?= $titleAsHTML ?></title>
