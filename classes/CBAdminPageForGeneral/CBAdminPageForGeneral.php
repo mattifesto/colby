@@ -150,7 +150,16 @@ EOT;
         $kinds = CBModel::value($model, 'classNamesForKinds', []);
 
         if (!empty($kinds)) {
-            CBUI::renderKeyValueSectionItem('CBPagesPreferences::classNamesForKinds', 'Use CBPageHelpers instead of the CBPagesPreferences model.');
+            CBUI::renderKeyValueSectionItem('CBPagesPreferences::classNamesForKinds', 'Implement CBPageHelpers::classNamesForPageKinds() instead of the CBPagesPreferences model.');
+        }
+
+        /* 2017.07.17 The classNameForPageSettings property on the
+           CBSitePreferences model has been deprecated. */
+        $model = CBSitePreferences::model();
+        $className = CBModel::value($model, 'defaultClassNameForPageSettings');
+
+        if (!empty($className)) {
+            CBUI::renderKeyValueSectionItem('CBSitePreferences::classNameForPageSettings', 'Implement CBPageHelpers::classNameForUnsetPageSettings() instead of the CBSitePreferences model.');
         }
 
         $content = ob_get_clean();
