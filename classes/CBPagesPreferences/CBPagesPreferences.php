@@ -25,6 +25,36 @@ final class CBPagesPreferences {
     ];
 
     /**
+     * This function is used by the `CBHTMLOutput` as the class name for page
+     * settings when rendering a page whose model doesn't have a value set for
+     * the `classNameForSettings` property. It is recommended that the property
+     * not be set on a page model unless specific page settings are required.
+     *
+     * @NOTE 2017.07.09 This class now returns CBPageSettingsForResponsivePages if
+     * no class name has been set in site preferences. If this causes problems
+     * document them here, but I don't think it will. I can't currently think of
+     * a time when having no page settings is a good thing.
+     *
+     * Furthermore, CBPageSettingsForResponsivePages should represent a usable
+     * default for websites: simple, but usable visually and functionally.
+     *
+     * @return string
+     */
+    static function classNameForUnsetPageSettings() {
+        if (is_callable($function = 'CBPageHelpers::classNameForUnsetPageSettings')) {
+            return call_user_func($function);
+        }
+
+        $model = CBSitePreferences::model();
+
+        if (empty($model->defaultClassNameForPageSettings)) {
+            return 'CBPageSettingsForResponsivePages';
+        } else {
+            return $model->defaultClassNameForPageSettings; // deprecated
+        }
+    }
+
+    /**
      * @return [string]
      *
      *      An array of view class names that can be added to a page.
@@ -141,7 +171,9 @@ final class CBPagesPreferences {
     }
 
     /**
-     * Returns an array of class names for page settings.
+     * Returns an array of class names that can be presented as options for page
+     * editors for a page's page settings. Most of the time, a page editor
+     * should not set a specific class name for pages settings.
      *
      * @return [string]
      */
