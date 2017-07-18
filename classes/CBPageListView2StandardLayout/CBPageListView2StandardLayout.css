@@ -1,6 +1,5 @@
 .CBPageListView2StandardLayout {
     align-items: center;
-    cursor: pointer;
     display: flex;
     flex-direction: column;
     margin-top: 20px;
@@ -17,6 +16,7 @@
 
 .CBPageListView2StandardLayout > article > a {
     color: inherit;
+    display: block;
     text-decoration: inherit;
 }
 
