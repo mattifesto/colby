@@ -4,9 +4,7 @@
     CBContainerViewAddableViews,
     CBUI,
     CBUIBooleanEditor,
-    CBUIImageSizeView,
-    CBUIImageUploader,
-    CBUIImageView,
+    CBUIImageChooser,
     CBUISelector,
     CBUISpec,
     CBUIStringEditor,
@@ -24,7 +22,7 @@ var CBContainerViewEditor = {
      * @return Element
      */
     createEditor : function(args) {
-        var section, item, imageView, imageSizeView;
+        var section, item;
         var element = document.createElement("div");
         element.className = "CBContainerViewEditor";
 
@@ -162,9 +160,59 @@ var CBContainerViewEditor = {
             navigateToItemCallback : args.navigateToItemCallback,
         }));
 
-        element.appendChild(CBUI.createHalfSpace());
+        /**
+         * image properties
+         */
 
-        /* large image section */
+        function imageToSize(image) {
+            if (image && image.width && image.height) {
+                return (image.width / 2) + "pt × " + (image.height / 2) + "pt";
+            } else {
+                return "";
+            }
+        }
+
+        function imageToURL(image) {
+            return Colby.imageToURL(image, "rw960");
+        }
+
+        function createImageEditorElement(propertyName) {
+            var section = CBUI.createSection();
+            var chooser = CBUIImageChooser.createFullSizedChooser({
+                imageChosenCallback : function (imageChosenArgs) {
+                    var ajaxURI = "/api/?class=CBImages&function=upload";
+                    var formData = new FormData();
+                    formData.append("image", imageChosenArgs.file);
+
+                    CBContainerViewEditor.promise = Colby.fetchAjaxResponse(ajaxURI, formData)
+                        .then(handleImageUploaded);
+
+                    function handleImageUploaded(response) {
+                        args.spec[propertyName] = response.image;
+                        args.specChangedCallback();
+                        imageChosenArgs.setImageURLCallback(imageToURL(response.image));
+                        imageChosenArgs.setCaptionCallback(imageToSize(response.image));
+                    }
+                },
+                imageRemovedCallback : function () {
+                    args.spec[propertyName] = undefined;
+                    args.specChangedCallback();
+                },
+            });
+
+            chooser.setImageURLCallback(imageToURL(args.spec[propertyName]));
+            chooser.setCaptionCallback(imageToSize(args.spec[propertyName]));
+
+            var item = CBUI.createSectionItem();
+            item.appendChild(chooser.element);
+            section.appendChild(item);
+
+            return section;
+        }
+
+        /* large image */
+
+        element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({
             paragraphs : [
                 "Maximum Width: 2560pt (5120px)",
@@ -172,46 +220,11 @@ var CBContainerViewEditor = {
             ],
             text : "Large Image"
         }));
+        element.appendChild(createImageEditorElement("largeImage"));
 
-        section = CBUI.createSection();
-
-        /* image view */
-        item = CBUI.createSectionItem();
-        imageView = CBUIImageView.create({
-            propertyName : "largeImage",
-            spec : args.spec,
-        });
-        item.appendChild(imageView.element);
-        section.appendChild(item);
-
-        /* image size view */
-        item = CBUI.createSectionItem();
-        imageSizeView = CBUIImageSizeView.create({
-            propertyName : "largeImage",
-            spec : args.spec,
-        });
-        item.appendChild(imageSizeView.element);
-        section.appendChild(item);
-
-        /* image uploader */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIImageUploader.create({
-            propertyName : "largeImage",
-            spec : args.spec,
-            specChangedCallback : CBContainerViewEditor.handleImageChanged.bind(undefined, {
-                callbacks : [
-                    imageView.imageChangedCallback,
-                    imageSizeView.imageChangedCallback,
-                    styleChangedCallback,
-                ],
-            }),
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+        /* medium image */
 
         element.appendChild(CBUI.createHalfSpace());
-
-        /* medium image section */
         element.appendChild(CBUI.createSectionHeader({
             paragraphs : [
                 "Maximum Width: 1068pt (2136px)",
@@ -219,46 +232,11 @@ var CBContainerViewEditor = {
             ],
             text : "Medium Image"
         }));
+        element.appendChild(createImageEditorElement("mediumImage"));
 
-        section = CBUI.createSection();
-
-        /* image view */
-        item = CBUI.createSectionItem();
-        imageView = CBUIImageView.create({
-            propertyName : "mediumImage",
-            spec : args.spec,
-        });
-        item.appendChild(imageView.element);
-        section.appendChild(item);
-
-        /* image size view */
-        item = CBUI.createSectionItem();
-        imageSizeView = CBUIImageSizeView.create({
-            propertyName : "mediumImage",
-            spec : args.spec,
-        });
-        item.appendChild(imageSizeView.element);
-        section.appendChild(item);
-
-        /* image uploader */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIImageUploader.create({
-            propertyName : "mediumImage",
-            spec : args.spec,
-            specChangedCallback : CBContainerViewEditor.handleImageChanged.bind(undefined, {
-                callbacks : [
-                    imageView.imageChangedCallback,
-                    imageSizeView.imageChangedCallback,
-                    styleChangedCallback,
-                ],
-            }),
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+        /* small image */
 
         element.appendChild(CBUI.createHalfSpace());
-
-        /* small image section */
         element.appendChild(CBUI.createSectionHeader({
             paragraphs : [
                 "Maximum Width: 736pt (1472px)",
@@ -266,41 +244,7 @@ var CBContainerViewEditor = {
             ],
             text : "Small Image"
         }));
-        section = CBUI.createSection();
-
-        /* image view */
-        item = CBUI.createSectionItem();
-        imageView = CBUIImageView.create({
-            propertyName : "smallImage",
-            spec : args.spec,
-        });
-        item.appendChild(imageView.element);
-        section.appendChild(item);
-
-        /* image size view */
-        item = CBUI.createSectionItem();
-        imageSizeView = CBUIImageSizeView.create({
-            propertyName : "smallImage",
-            spec : args.spec,
-        });
-        item.appendChild(imageSizeView.element);
-        section.appendChild(item);
-
-        /* image uploader */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIImageUploader.create({
-            propertyName : "smallImage",
-            spec : args.spec,
-            specChangedCallback : CBContainerViewEditor.handleImageChanged.bind(undefined, {
-                callbacks : [
-                    imageView.imageChangedCallback,
-                    imageSizeView.imageChangedCallback,
-                    styleChangedCallback,
-                ],
-            }),
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+        element.appendChild(createImageEditorElement("smallImage"));
 
         /* CSSClassNames */
 
@@ -348,15 +292,6 @@ var CBContainerViewEditor = {
     },
 
     /**
-     * @param [function] args.callbacks
-     *
-     * @return undefined
-     */
-    handleImageChanged : function (args) {
-        args.callbacks.forEach(function (callback) { callback(); });
-    },
-
-    /**
      * @param Element args.HREFSectionItem
      * @param object args.spec
      * @param function args.specChangedCallback
@@ -371,59 +306,6 @@ var CBContainerViewEditor = {
         }
 
         args.specChangedCallback.call();
-    },
-
-    /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param object args.status
-     *
-     * @return undefined
-     */
-    handleStylesChanged : function (args) {
-        if (args.status.waiting === true) {
-            args.status.pending = true;
-            return;
-        } else if (args.status.pending === true) {
-            args.status.pending = undefined;
-        }
-
-        var data = new FormData();
-        data.append("specAsJSON", JSON.stringify(args.spec));
-
-        var xhr = new XMLHttpRequest();
-        xhr.onerror = Colby.displayXHRError.bind(undefined, { xhr : xhr });
-        xhr.onload = CBContainerViewEditor.handleUpdateStylesDidLoad.bind(undefined, args);
-        xhr.open("POST", "/api/?class=CBContainerView&function=updateStyles");
-        xhr.send(data);
-
-        args.status.waiting = true;
-        args.status.xhr = xhr;
-    },
-
-    /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param object args.status
-     *
-     * @return undefined
-     */
-    handleUpdateStylesDidLoad : function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.status.xhr);
-        args.status.waiting = undefined;
-        args.status.xhr = undefined;
-
-        if (response.wasSuccessful) {
-            args.spec.imageThemeID = response.imageThemeID;
-        } else {
-            Colby.displayResponse(response);
-        }
-
-        if (args.status.pending) {
-            CBContainerViewEditor.handleStylesChanged(args);
-        } else {
-            args.specChangedCallback();
-        }
     },
 
     /**

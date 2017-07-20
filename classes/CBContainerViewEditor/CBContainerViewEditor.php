@@ -5,33 +5,23 @@ final class CBContainerViewEditor {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
-        return ['CBArrayEditor', 'CBUI', 'CBUIBooleanEditor', 'CBUIImageSizeView', 'CBUIImageUploader', 'CBUIImageView', 'CBUISelector', 'CBUISpec', 'CBUIStringEditor', 'CBUIThemeSelector'];
+    static function requiredClassNames() {
+        return ['CBArrayEditor', 'CBUI', 'CBUIBooleanEditor', 'CBUIImageChooser', 'CBUISelector', 'CBUISpec', 'CBUIStringEditor', 'CBUIThemeSelector'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
-        return [CBContainerViewEditor::URL('CBContainerViewEditor.js')];
+    static function requiredJavaScriptURLs() {
+        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
      * @return [[string, mixed]]
      */
-    public static function requiredJavaScriptVariables() {
+    static function requiredJavaScriptVariables() {
         return [
             ['CBContainerViewAddableViews', CBPagesPreferences::classNamesForAddableViews()]
         ];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
