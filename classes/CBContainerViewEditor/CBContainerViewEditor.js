@@ -3,12 +3,10 @@
     CBArrayEditor,
     CBContainerViewAddableViews,
     CBUI,
-    CBUIBooleanEditor,
     CBUIImageChooser,
     CBUISelector,
     CBUISpec,
     CBUIStringEditor,
-    CBUIThemeSelector,
     Colby */
 
 var CBContainerViewEditor = {
@@ -46,36 +44,6 @@ var CBContainerViewEditor = {
             propertyName : "title",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
-        /* theme */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIThemeSelector.create({
-            classNameForKind : "CBContainerView",
-            labelText : "Theme",
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            propertyName : "themeID",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
-        /* backgroundPositionY */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUISelector.create({
-            labelText : "Background Position",
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            propertyName : "backgroundPositionY",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-            options : [
-                { title : "Default (Top)", value : undefined },
-                { title : "Center", value : "center" },
-                { title : "Bottom", value : "bottom" },
-            ],
         }).element);
         section.appendChild(item);
 
@@ -117,31 +85,10 @@ var CBContainerViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
-        /* backgroundImage */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Background Gradient",
-            propertyName : "backgroundImage",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
-        /* useImageHeight */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Use Image Height",
-            propertyName : "useImageHeight",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
         element.appendChild(section);
 
-        element.appendChild(CBUI.createHalfSpace());
-
         /* subviews */
+        element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({ text : "Subviews" }));
 
         if (args.spec.subviews === undefined) { args.spec.subviews = []; }
@@ -252,6 +199,10 @@ var CBContainerViewEditor = {
                 flow: Flow subviews from left to right and wrap into new lines.
                 Center each line of children. Example scenario: displaying a
                 collection of images.
+                `,`
+                noMinHeight: Don't use the height of the background images or
+                any other minimum height specified as the minimum height for the
+                view.
                 `,
            ],
         }));
