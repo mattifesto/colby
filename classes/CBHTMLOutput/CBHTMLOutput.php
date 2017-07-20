@@ -55,7 +55,9 @@ final class CBHTMLOutput {
      * @return null
      */
     static function addCSS($styleSheet) {
-        CBHTMLOutput::$styleSheets[] = $styleSheet;
+        if (!empty($styleSheet)) {
+            CBHTMLOutput::$styleSheets[] = $styleSheet;
+        }
     }
 
     /**
