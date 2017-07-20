@@ -8,10 +8,39 @@
     min-height: 100vh;
 }
 
-/* Keep below in sync with CBContainerView.css */
+/* Keep below in sync with CBContainerView.css
+ */
 
 .CBContainerView2.flow {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+/* The quad style is meant to be used on a full width container with no margins
+ * or padding. Other uses will allow flex items to be reduced to less than 320px
+ * wide.
+ */
+
+.CBContainerView2.quad {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.CBContainerView2.quad > * {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    width: 25%;
+}
+
+@media (max-width: 959px) {
+    .CBContainerView2.quad > * {
+        width: 50%;
+    }
+}
+
+@media (max-width: 639px) {
+    .CBContainerView2.quad > * {
+        width: 100%;
+    }
 }
