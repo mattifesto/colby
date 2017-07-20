@@ -94,11 +94,11 @@ final class CBArtworkElement {
 
 /* CBArtworkElement */
 
-.ID-{$ID} {
+.ID_{$ID} {
     {$widthDeclaration};
 }
 
-.ID-{$ID} > div {
+.ID_{$ID} > div {
     {$paddingBottomDeclaration};
 }
 
@@ -108,7 +108,7 @@ EOT;
 
         ?>
 
-        <div class="CBArtworkElement ID-<?= $ID ?>">
+        <div class="CBArtworkElement ID_<?= $ID ?>">
             <div>
                 <img src="<?= $URLAsHTML ?>" alt="<?= $alternativeTextAsHTML ?>">
             </div>
