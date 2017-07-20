@@ -3,6 +3,8 @@
 final class CBContainerView {
 
     /**
+     * @deprecated use CBContainerView::modelToImageCSS()
+     *
      * @param hex160 $imageThemeID
      *
      * @return string
@@ -15,6 +17,8 @@ final class CBContainerView {
     }
 
     /**
+     * @deprecated use CBContainerView::modelToImageCSS()
+     *
      * @param hex160 $imageThemeID
      *
      * @return string
@@ -51,6 +55,8 @@ final class CBContainerView {
     }
 
     /**
+     * @deprecated use CBContainerView::modelToImageCSS()
+     *
      * @param stdClass $spec
      *
      * @return null
@@ -75,7 +81,8 @@ final class CBContainerView {
     }
 
     /**
-     * @deprecated use mediaRuleRetinaOnly
+     * @deprecated use CBContainerView::mediaRuleRetinaOnly()
+     *
      * 2016.03.30
      *
      * I am not modifying this function because I have decided to use only
@@ -163,6 +170,72 @@ EOT;
     }
 
     /**
+     * @param object $model
+     * @param string $CSSClassName
+     *
+     * @return string
+     */
+    static function modelToImageCSS(stdClass $model, $CSSClassName) {
+        $blocks = [];
+        $maxWidth = null;
+        $function = function ($CSSClassName, $image, $maxWidth = null) {
+            $imageHeight = $image->height / 2;
+            $imageWidth = $image->width / 2;
+            $URL = CBDataStore::flexpath($image->ID, "original.{$image->extension}", CBSiteURL);
+            $CSS = <<<EOT
+
+.{$CSSClassName} {
+    background-image: url({$URL});
+    background-size: {$imageWidth}px {$imageHeight}px;
+}
+
+.{$CSSClassName}.useImageHeight {
+    min-height: {$imageHeight}px;
+}
+
+EOT;
+
+            if (!empty($maxWidth)) {
+                $CSS = <<<EOT
+
+@media (max-width: {$maxWidth}px) {
+{$CSS}
+}
+
+EOT;
+            }
+
+            return $CSS;
+        };
+
+        if (!empty($model->largeImage)) {
+            $blocks[] = call_user_func($function, $CSSClassName, $model->largeImage);
+        }
+
+        if (!empty($model->mediumImage)) {
+            if (!empty($blocks)) {
+                $maxWidth = 1068;
+            }
+
+            $blocks[] = call_user_func($function, $CSSClassName, $model->mediumImage, $maxWidth);
+        }
+
+        if (!empty($model->smallImage)) {
+            if (!empty($blocks)) {
+                $maxWidth = 735;
+            }
+
+            $blocks[] = call_user_func($function, $CSSClassName, $model->smallImage, $maxWidth);
+        }
+
+        if (!empty($blocks)) {
+            array_unshift($blocks, '/* CBContainerView Images */');
+        }
+
+        return implode("\n\n", $blocks);
+    }
+
+    /**
      * @param stdClass $model
      *
      * @return string
@@ -184,10 +257,9 @@ EOT;
      *
      * @return null
      */
-    public static function renderModelAsHTML(stdClass $model) {
+    static function renderModelAsHTML(stdClass $model) {
         $themeID = empty($model->themeID) ? null : $model->themeID;
 
-        CBHTMLOutput::addCSSURL(Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__));
         CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
 
         $classes = ['CBContainerView'];
@@ -199,7 +271,11 @@ EOT;
             $HREF = null;
         }
 
-        if (!empty($model->imageThemeID)) {
+        if (empty($model->imageThemeID)) {
+            $CSSClassName = 'ID-' . CBHex160::random();
+            CBHTMLOutput::addCSS(CBContainerView::modelToImageCSS($model, $CSSClassName));
+            $classes[] = $CSSClassName;
+        } else {
             CBHTMLOutput::addCSSURL(CBContainerView::imageThemeIDToStyleSheetURL($model->imageThemeID));
             $classes[] = "T{$model->imageThemeID}";
         }
@@ -238,13 +314,20 @@ EOT;
         if (!empty($model->backgroundPositionY)) { $styles[] = "background-position: center {$model->backgroundPositionY}"; }
         $styles = empty($styles) ? '' : ' style="' . implode('; ', $styles) . '"';
 
-        ?><<?= $tagName, $HREF ?> class="<?= $classes ?>"<?= $styles ?>><?php
-            if (!empty($model->stylesCSS)) {
-                echo "<style>{$model->stylesCSS}</style>";
-            }
+        if (!empty($model->stylesCSS)) {
+            CBHTMLOutput::addCSS($model->stylesCSS);
+        }
 
+        ?><<?= $tagName, $HREF ?> class="<?= $classes ?>"<?= $styles ?>><?php
             array_walk($model->subviews, 'CBView::renderModelAsHTML');
         ?></<?= $tagName ?>><?php
+    }
+
+    /**
+     * @return [string]
+     */
+    static function requiredCSSURLs() {
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
@@ -255,12 +338,14 @@ EOT;
     public static function specToModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
+            'largeImage' => CBModel::valueAsSpecToModel($spec, 'largeImage', 'CBImage'),
+            'mediumImage' => CBModel::valueAsSpecToModel($spec, 'mediumImage', 'CBImage'),
+            'smallImage' => CBModel::valueAsSpecToModel($spec, 'smallImage', 'CBImage'),
             'subviews' => CBModel::namedSpecArrayToModelArray($spec, 'subviews'),
         ];
         $model->backgroundColor = CBModel::value($spec, 'backgroundColor', null, 'CBConvert::stringToCSSColor');
         $model->backgroundImage = CBModel::value($spec, 'backgroundImage', null, 'CBConvert::stringToCSSBackgroundImage');
         $model->backgroundPositionY = CBModel::value($spec, 'backgroundPositionY', null, 'CBConvert::stringToCSSValue');
-        $model->imageThemeID = CBModel::value($spec, 'imageThemeID');
         $model->HREF = CBModel::value($spec, 'HREF');
         $model->HREFAsHTML = cbhtml($model->HREF);
         $model->tagName = CBModel::value($spec, 'tagName');
@@ -301,6 +386,8 @@ EOT;
     }
 
     /**
+     * @deprecated use CBContainerView::modelToImageCSS()
+     *
      * @return string?
      */
     public static function specToImageThemeCSS(stdClass $spec, array $args) {
@@ -380,6 +467,8 @@ EOT;
     }
 
     /**
+     * @deprecated use CBContainerView::modelToImageCSS()
+     *
      * return hex160?
      */
     public static function specToImageThemeID(stdClass $spec) {
@@ -395,7 +484,8 @@ EOT;
     }
 
     /**
-     * //TODO: You should save a model here for the theme probably. Discuss.
+     * @deprecated use CBContainerView::modelToImageCSS()
+     *
      * @return null
      */
     public static function updateStylesForAjax() {
@@ -420,6 +510,8 @@ EOT;
     }
 
     /**
+     * @deprecated use CBContainerView::modelToImageCSS()
+     *
      * @return null
      */
     public static function updateStylesForAjaxPermissions() {
