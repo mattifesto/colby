@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * @NOTE 2017.07.20
+ *
+ * This class has updated the way it accomplishes image styling. Older instances
+ * will still work but will be updated to the new method if resaved.
+ *
+ * A few features have been completely removed:
+ *
+ *      - Themes: these have been deprecated in Colby for a while now.
+ *      - localCSS (stylesTemplate): no longer uses the CBTheme class
+ *      - backgroundImage: this property was used for the background gradent
+ *          propery in the editor was rarely used and should be moved to local
+ *          CSS
+ *      - backgroundPositionY: this property should be moved to local CSS
+ */
 final class CBContainerView {
 
     /**
@@ -187,9 +202,6 @@ EOT;
 .{$CSSClassName} {
     background-image: url({$URL});
     background-size: {$imageWidth}px {$imageHeight}px;
-}
-
-.{$CSSClassName}.useImageHeight {
     min-height: {$imageHeight}px;
 }
 
@@ -251,17 +263,11 @@ EOT;
     }
 
     /**
-     * @param [stdClass]? $model->subviews;
-     * @param hex160? $model->themeID;
-     * @param bool? $model->useImageHeight;
+     * @param [object]? $model->subviews;
      *
      * @return null
      */
     static function renderModelAsHTML(stdClass $model) {
-        $themeID = empty($model->themeID) ? null : $model->themeID;
-
-        CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($themeID));
-
         $classes = ['CBContainerView'];
         $tagName = empty($model->tagName) ? 'div' : $model->tagName;
 
@@ -272,7 +278,7 @@ EOT;
         }
 
         if (empty($model->imageThemeID)) {
-            $CSSClassName = 'ID-' . CBHex160::random();
+            $CSSClassName = 'ID_' . CBHex160::random();
             CBHTMLOutput::addCSS(CBContainerView::modelToImageCSS($model, $CSSClassName));
             $classes[] = $CSSClassName;
         } else {
@@ -280,21 +286,17 @@ EOT;
             $classes[] = "T{$model->imageThemeID}";
         }
 
-        if (!empty($model->useImageHeight)) {
-            $classes[] = "useImageHeight";
-        }
-
         /**
-         * 2016.09.23
-         * The line below should call CBTheme::IDToCSSClasses().
-         * The line for the stylesID below that should call a different function
-         * that only returns a class name for an ID. (No "NoTheme" class.)
+         * @NOTE 2017.07.20
+         *
+         * $model->styleID is deprecated and has the class name for the local
+         * styles will be included in CSSClassNames by specToModel(). This code
+         * should stay while the old instances age out. A resave updates to the
+         * new method.
          */
 
-        $classes[] = CBTheme::IDToCSSClass($themeID);
-
         if (!empty($model->stylesID)) {
-            $classes[] = CBTheme::IDToCSSClass($model->stylesID);
+            $classes[] = "T{$model->stylesID}";
         }
 
         /* CSS class names */
@@ -310,8 +312,6 @@ EOT;
         $classes = implode(' ', $classes);
         $styles = [];
         if (!empty($model->backgroundColor)) { $styles[] = "background-color: {$model->backgroundColor}"; }
-        if (!empty($model->backgroundImage)) { $styles[] = "background-image: {$model->backgroundImage}"; }
-        if (!empty($model->backgroundPositionY)) { $styles[] = "background-position: center {$model->backgroundPositionY}"; }
         $styles = empty($styles) ? '' : ' style="' . implode('; ', $styles) . '"';
 
         if (!empty($model->stylesCSS)) {
@@ -344,13 +344,9 @@ EOT;
             'subviews' => CBModel::namedSpecArrayToModelArray($spec, 'subviews'),
         ];
         $model->backgroundColor = CBModel::value($spec, 'backgroundColor', null, 'CBConvert::stringToCSSColor');
-        $model->backgroundImage = CBModel::value($spec, 'backgroundImage', null, 'CBConvert::stringToCSSBackgroundImage');
-        $model->backgroundPositionY = CBModel::value($spec, 'backgroundPositionY', null, 'CBConvert::stringToCSSValue');
         $model->HREF = CBModel::value($spec, 'HREF');
         $model->HREFAsHTML = cbhtml($model->HREF);
         $model->tagName = CBModel::value($spec, 'tagName');
-        $model->themeID = CBModel::value($spec, 'themeID');
-        $model->useImageHeight = CBModel::value($spec, 'useImageHeight', false, 'boolval');
 
         switch ($model->tagName) {
             case 'article':
@@ -373,13 +369,14 @@ EOT;
 
         $model->CSSClassNames = $CSSClassNames;
 
-        /* view styles */
+        // localCSS (stylesTemplate)
+        // This code differs from standard for backward compatability reasons.
+        $localCSSTemplate = CBModel::value($spec, 'stylesTemplate', '', 'trim');
 
-        $stylesTemplate = empty($spec->stylesTemplate) ? '' : trim($spec->stylesTemplate);
-
-        if (!empty($stylesTemplate)) {
-            $model->stylesID = CBHex160::random();
-            $model->stylesCSS = CBTheme::stylesTemplateToStylesCSS($stylesTemplate, $model->stylesID);
+        if (!empty($localCSSTemplate)) {
+            $localCSSClassName = 'ID_' . CBHex160::random();
+            $model->CSSClassNames[] = $localCSSClassName;
+            $model->stylesCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
         }
 
         return $model;

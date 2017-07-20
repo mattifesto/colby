@@ -9,6 +9,10 @@ a.CBContainerView {
     text-decoration: inherit;
 }
 
+.CBContainerView.noMinHeight {
+    min-height: 0;
+}
+
 /* Keep below in sync with CBContainerView2.css
  */
 
