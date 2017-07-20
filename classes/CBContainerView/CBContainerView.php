@@ -283,7 +283,7 @@ EOT;
             $classes[] = $CSSClassName;
         } else {
             CBHTMLOutput::addCSSURL(CBContainerView::imageThemeIDToStyleSheetURL($model->imageThemeID));
-            $classes[] = "T{$model->imageThemeID}";
+            $classes[] = "T{$model->imageThemeID} useImageHeight";
         }
 
         /**
