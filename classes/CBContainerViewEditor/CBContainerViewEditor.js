@@ -1,4 +1,4 @@
-"use strict"; /* jshint strict: global */
+"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
 /* globals
     CBArrayEditor,
     CBContainerViewAddableViews,
@@ -25,12 +25,6 @@ var CBContainerViewEditor = {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBContainerViewEditor";
-
-        var styleChangedCallback = CBContainerViewEditor.handleStylesChanged.bind(undefined, {
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-            status : {},
-        });
 
         var HREFSectionItem = CBUI.createSectionItem();
 
