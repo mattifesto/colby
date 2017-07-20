@@ -27,17 +27,22 @@ var CBUIImageChooser = {
      *
      * @return {
      *  Element element
+     *  function setCaptionCallback
      *  function setImageURLCallback
      * }
      */
     createFullSizedChooser : function (args) {
         var element = document.createElement("div");
-        element.className = "CBUIImageChooser full";
+        element.className = "CBUIImageChooser CBDarkTheme full";
         var imageElement = document.createElement("img");
         imageElement.style.display = "none";
         var inputElement = document.createElement("input");
         inputElement.type = "file";
         inputElement.style.display = "none";
+
+        var captionElement = document.createElement("div");
+        captionElement.className = "caption";
+        captionElement.style.display = "none";
 
         var commandsElement = document.createElement("div");
         commandsElement.className = "commands";
@@ -46,6 +51,18 @@ var CBUIImageChooser = {
         var removeElement = document.createElement("div");
         removeElement.style.display = "none";
         removeElement.textContent = "remove";
+
+        function setCaption(caption) {
+            caption = String(caption);
+
+            if (caption === "") {
+                captionElement.style.display = "none";
+            } else {
+                captionElement.style.display = "block";
+            }
+
+            captionElement.textContent = caption;
+        }
 
         function setImageURI(URI) {
             if (URI) {
@@ -67,7 +84,8 @@ var CBUIImageChooser = {
             if (typeof args.imageChosenCallback === "function") {
                 args.imageChosenCallback.call(undefined, {
                     file: inputElement.files[0],
-                    setImageURLCallback: setImageURI
+                    setCaptionCallback: setCaption,
+                    setImageURLCallback: setImageURI,
                 });
             }
 
@@ -77,6 +95,7 @@ var CBUIImageChooser = {
 
         removeElement.addEventListener("click", function () {
             setImageURI("");
+            setCaption("");
 
             if (typeof args.imageRemovedCallback === "function") {
                 args.imageRemovedCallback.call(undefined, {
@@ -87,12 +106,14 @@ var CBUIImageChooser = {
 
         element.appendChild(inputElement);
         element.appendChild(imageElement);
+        element.appendChild(captionElement);
         commandsElement.appendChild(chooseElement);
         commandsElement.appendChild(removeElement);
         element.appendChild(commandsElement);
 
         return {
             element: element,
+            setCaptionCallback: setCaption,
             setImageURLCallback: setImageURI,
         };
     },

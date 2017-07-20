@@ -1,12 +1,17 @@
 .CBUIImageChooser.full {
-    background-color: hsl(0, 0%, 20%);
     min-height: 44px;
-    padding: 20px 20px 0;
+    padding: 20px 20px 5px;
 }
 
 .CBUIImageChooser.full img {
     margin: 0 auto;
     max-width: 100%;
+    padding: 0 0 5px;
+}
+
+.CBUIImageChooser.full .caption {
+    padding: 0 10px 5px;
+    text-align: center;
 }
 
 .CBUIImageChooser.full .commands {
@@ -18,7 +23,7 @@
 
 .CBUIImageChooser.full .commands > * {
     cursor: pointer;
-    margin: 10px 10px;
+    padding: 0 10px 5px;
 }
 
 .CBUIImageChooser.thumbnail {
