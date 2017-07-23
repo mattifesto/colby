@@ -25,7 +25,13 @@ var CBPageListView2 = {
              .catch(Colby.report);
 
         function display(result) {
+            var count = 0;
+
             result.pages.forEach(function (page) {
+                if (state.renderStyleIsRecent && count >= 2) {
+                    return;
+                }
+
                 var element = document.createElement("article");
                 var anchorElement = document.createElement("a");
                 anchorElement.href = "/" + page.URI + "/";
@@ -65,19 +71,24 @@ var CBPageListView2 = {
                 anchorElement.appendChild(footerElement);
                 element.appendChild(anchorElement);
 
-                state.element.insertBefore(element, state.moreButton);
+                state.element.insertBefore(element, state.buttonContainerElement);
                 state.published = page.publicationTimeStamp;
+
+                count += 1;
             });
 
             Colby.updateTimes();
 
-            if (state.moreButton === undefined) {
-                state.moreButton = document.createElement("div");
-                state.moreButton.className = "more";
-                state.moreButton.textContent = "view more";
-                state.moreButton.addEventListener("click", CBPageListView2.fetchPages.bind(undefined, state));
+            if (!state.renderStyleIsRecent && state.buttonContainerElement === undefined) {
+                state.buttonContainerElement = document.createElement("div");
+                state.buttonContainerElement.className = "buttonContainer";
+                var buttonElement = document.createElement("div");
+                buttonElement.className = "button";
+                buttonElement.textContent = "view more";
+                buttonElement.addEventListener("click", CBPageListView2.fetchPages.bind(undefined, state));
+                state.buttonContainerElement.appendChild(buttonElement);
 
-                state.element.appendChild(state.moreButton);
+                state.element.appendChild(state.buttonContainerElement);
             }
         }
     },
@@ -94,10 +105,11 @@ var CBPageListView2 = {
 
 document.addEventListener("DOMContentLoaded", function () {
     var elements = document.getElementsByClassName("CBPageListView2");
-    var state;
 
     for (var i = 0; i < elements.length; i++) {
-        state = {element:elements[i]};
-        CBPageListView2.fetchPages(state);
+        CBPageListView2.fetchPages({
+            element: elements[i],
+            renderStyleIsRecent: elements[i].classList.contains("recent"),
+        });
     }
 });

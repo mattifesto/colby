@@ -1,7 +1,6 @@
 "use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
 /* global
     CBUI,
-    CBUIBooleanEditor,
     CBUIStringEditor */
 
 var CBPageListView2Editor = {
@@ -32,14 +31,9 @@ var CBPageListView2Editor = {
 
         element.appendChild(CBUI.createSectionHeader({
             paragraphs: [`
-                CSSClassNames can provide additional formatting of the text. The
-                general layout class names also support extensions such as
-                "center", "justify", "right", "light", and "dark". If you want
-                your content centered, enter "center" in this field.
+                Feature CSS Class Names
                 `,`
-                Default class names are automatically included so if you wish to
-                produce a completely customized presentation enabled the Custom
-                option.
+                "custom": disable the default view styles.
             `],
         }));
 
@@ -54,14 +48,6 @@ var CBPageListView2Editor = {
         }).element);
         section.appendChild(item);
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText: "Custom",
-            propertyName: "isCustom",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
         element.appendChild(section);
 
         return element;

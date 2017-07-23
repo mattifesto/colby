@@ -6,7 +6,7 @@ final class CBPageListView2Editor {
      * @return [string]
      */
     static function requiredClassNames() {
-        return ['CBUI', 'CBUIBooleanEditor', 'CBUIStringEditor'];
+        return ['CBUI', 'CBUIStringEditor'];
     }
 
     /**

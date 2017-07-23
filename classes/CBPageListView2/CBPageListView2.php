@@ -46,33 +46,23 @@ EOT;
     /**
      * @param string $model->classNameForKind
      * @param [string]? $model->CSSClassNames
-     * @param bool? $model->isCustom
-     *
-     *      If this is true, the renderer will not include the standard CSS
-     *      class names and will only include the class names specified by the
-     *      CSSClassNames property. This disables the standard formatting of the
-     *      view and allows for fully customized presentation.
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass  $model) {
+    static function renderModelAsHTML(stdClass $model) {
         if (empty($model->classNameForKind)) {
             echo '<!-- CBPageListView2 with no classNameForKind -->';
             return;
         }
 
-        if (empty($model->isCustom)) {
-            $defaultCSSClassNames = ['CBPageListView2StandardLayout'];
-        } else {
-            $defaultCSSClassNames = [];
+        $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
+
+        if (!in_array('custom', $CSSClassNames)) {
+            $CSSClassNames[] = 'CBPageListView2_default';
         }
 
-        $modelCSSClassNames = CBModel::value($model, 'CSSClassNames', []);
-
-        if (is_array($modelCSSClassNames)) {
-            $CSSClassNames = array_unique(array_merge($defaultCSSClassNames, $modelCSSClassNames));
-        } else {
-            $CSSClassNames = $defaultCSSClassNames;
+        if (in_array('recent', $CSSClassNames)) {
+            $CSSClassNames[] = 'CBPageListView2_recent';
         }
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
@@ -97,27 +87,27 @@ EOT;
     /**
      * @return [string]
      */
+    static function requiredCSSURLs() {
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    }
+
+    /**
+     * @return [string]
+     */
     static function requiredJavaScriptURLs() {
         return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
     static function specToModel(stdClass $spec) {
-        $model = (object)[
+        return (object)[
             'className' => __CLASS__,
             'classNameForKind' => CBModel::value($spec, 'classNameForKind', '', 'trim'),
-            'isCustom' => CBModel::value($spec, 'isCustom', false, 'boolval'),
+            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
         ];
-
-        // CSSClassNames
-        $CSSClassNames = CBModel::value($spec, 'CSSClassNames', '');
-        $CSSClassNames = preg_split('/[\s,]+/', $CSSClassNames, null, PREG_SPLIT_NO_EMPTY);
-
-        if ($CSSClassNames === false) {
-            throw new RuntimeException("preg_split() returned false");
-        }
-
-        $model->CSSClassNames = $CSSClassNames;
-
-        return $model;
     }
 }

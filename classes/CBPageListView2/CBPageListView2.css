@@ -1,0 +1,97 @@
+.CBPageListView2_recent {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.CBPageListView2_default > article {
+    align-items: flex-start;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+}
+
+.CBPageListView2_default > article > a {
+    background-color: var(--CBBackgroundColor);
+    border: 1px solid var(--CBLineColor);
+    border-radius: 3px;
+    color: inherit;
+    display: block;
+    margin-bottom: 60px;
+    max-width: 100%;
+    text-decoration: inherit;
+    width: 600px;
+}
+
+.CBPageListView2_recent > article {
+    padding: 0 10px;
+}
+
+.CBPageListView2_recent > article > a {
+    width: 320px;
+}
+
+.CBPageListView2_default > article .footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.CBPageListView2_default > article .arrow {
+    align-items: center;
+    display: flex;
+    flex: none;
+    font-size: 48px;
+    justify-content: center;
+    opacity: 0.1;
+    width: 50px;
+}
+
+.CBPageListView2_default > article > a:hover .arrow {
+    color: var(--CBTextColorForLinks);
+    opacity: 1;
+}
+
+.CBPageListView2_default > article .published,
+.CBPageListView2_default > article .title,
+.CBPageListView2_default > article .description {
+    margin: 10px 15px;
+}
+
+.CBPageListView2_default > article .published {
+    font-size: 70%;
+    text-transform: uppercase;
+    text-align: right;
+}
+
+.CBPageListView2_default > article .published,
+.CBPageListView2_default > article .description {
+    color: var(--CBTextColor2);
+}
+
+.CBPageListView2_default > article .description {
+    font-size: 90%;
+}
+
+.CBPageListView2_default > article .title {
+    color: inherit;
+    text-decoration: none;
+}
+
+.CBPageListView2_default .buttonContainer {
+    text-align: center;
+}
+
+.CBPageListView2_default .button {
+    display: inline-block;
+    background-color: var(--CBBackgroundColor);
+    border: 1px solid var(--CBLineColor);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+@media (max-width: 600px) {
+    .CBPageListView2 > article {
+        border-radius: 0;
+    }
+}
