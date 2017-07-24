@@ -366,21 +366,26 @@ class ColbyConvert
     }
 
     /**
+     * @param int? $timestamp
+     * @param string? $nullTextContent
+     *
      * @return string
      */
-    public static function timestampToHTML($timestamp = null, $nullTextContent = null) {
-        $attributes[] = 'class="time"';
+    static function timestampToHTML($timestamp = null, $nullTextContent = null) {
+        $classAttribute = 'class="time"';
 
-        if ($timestamp !== null) {
+        if (is_numeric($timestamp)) {
+            $datetime = gmdate('c', $timestamp);
+            $datetimeAttribute = "datetime=\"{$datetime}\"";
             $timestampForJavaScript = $timestamp * 1000;
-            $attributes[] = "data-timestamp=\"{$timestampForJavaScript}\"";
-        } else if ($nullTextContent !== null) {
-            $attributes[] = 'data-nulltextcontent="' . cbhtml($nullTextContent). '"';
+            $timestampAttribute = "data-timestamp=\"{$timestampForJavaScript}\"";
+
+            return "<time {$classAttribute} {$datetimeAttribute} {$timestampAttribute}></time>";
+        } else {
+            $nullTextContentAttribute = 'data-nulltextcontent="' . cbhtml($nullTextContent). '"';
+
+            return "<span {$classAttribute} {$nullTextContentAttribute}></span>";
         }
-
-        $attributes = implode(' ', $attributes);
-
-        return "<time {$attributes}></time>";
     }
 
     /**
