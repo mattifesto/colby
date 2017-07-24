@@ -27,14 +27,19 @@ var CBPageListView2Editor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        /* CSSClassNames */
+
         element.appendChild(CBUI.createHalfSpace());
 
         element.appendChild(CBUI.createSectionHeader({
-            paragraphs: [`
-                Feature CSS Class Names
+            paragraphs: [
+                `
+                View Specific CSS Class Names
                 `,`
                 "custom": disable the default view styles.
-            `],
+                `
+            ],
         }));
 
         section = CBUI.createSection();
@@ -47,7 +52,6 @@ var CBPageListView2Editor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
         element.appendChild(section);
 
         return element;
