@@ -1,0 +1,39 @@
+.CBPageTitleAndDescriptionView_default {
+  padding: 20px 20px 40px;
+  text-align: center;
+}
+
+.CBPageTitleAndDescriptionView_default > h1 {
+    font-size: 2em;
+}
+
+.CBPageTitleAndDescriptionView_default > div {
+  margin: 20px auto 0;
+}
+
+.CBPageTitleAndDescriptionView_default > .description {
+    color: var(--CBTextColor2);
+    font-style: italic;
+    line-height: 1.5;
+    max-width: 480px;
+}
+
+.CBPageTitleAndDescriptionView_default > .published {
+    color: var(--CBTextColor2);
+    font-size: 80%;
+    margin-top: 40px;
+}
+
+/* light text colors (deprecated) */
+
+.CBPageTitleAndDescriptionView_default.light {
+    color: hsla(0, 0%, 100%, 0.9); /* CBTextColor for CBDarkTheme */
+}
+
+.CBPageTitleAndDescriptionView_default.light > .description {
+    color: hsla(0, 0%, 100%, 0.7); /* CBTextColor2 for CBDarkTheme */
+}
+
+.CBPageTitleAndDescriptionView_default.light > .published {
+    color: hsla(0, 0%, 100%, 0.7); /* CBTextColor2 for CBDarkTheme */
+}
