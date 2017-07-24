@@ -163,12 +163,14 @@ final class CBViewPage {
             }
         }
 
-        self::$modelContext = $model;
+        CBViewPage::$modelContext = $model; /* deprecated */
+
+        $publicationTimeStamp = CBModel::value($model, 'publicationTimeStamp');
 
         CBPageContext::push([
             'descriptionAsHTML' => $model->descriptionHTML,
             'ID' => $model->ID,
-            'publishedTimestamp' => $model->publicationTimeStamp,
+            'publishedTimestamp' => empty($model->isPublished) ? null : $publicationTimeStamp,
             'titleAsHTML' => $model->titleHTML,
         ]);
 
@@ -178,7 +180,7 @@ final class CBViewPage {
 
         CBPageContext::pop();
 
-        self::$modelContext = null;
+        CBViewPage::$modelContext = null; /* deprecated */
 
         return implode(' ', $searchText);
     }
@@ -247,11 +249,13 @@ final class CBViewPage {
 
         CBViewPage::$modelContext = $model; /* deprecated */
 
+        $publicationTimeStamp = CBModel::value($model, 'publicationTimeStamp');
+
         CBPageContext::push([
             'descriptionAsHTML' => CBModel::value($model, 'descriptionHTML', ''),
             'ID' => CBModel::value($model, 'ID', ''),
             'imageURL' => CBViewPage::modelToImageURL($model),
-            'publishedTimestamp' => CBModel::value($model, 'publicationTimeStamp'),
+            'publishedTimestamp' => empty($model->isPublished) ? null : $publicationTimeStamp,
             'titleAsHTML' => CBModel::value($model, 'titleHTML', ''),
         ]);
 
