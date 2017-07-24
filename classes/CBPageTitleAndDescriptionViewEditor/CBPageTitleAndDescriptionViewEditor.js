@@ -1,9 +1,8 @@
-"use strict"; /* jshint strict: global */
+"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
 /* globals
     CBUI,
     CBUIBooleanEditor,
-    CBUIStringEditor,
-    CBUIThemeSelector */
+    CBUIStringEditor */
 
 var CBPageTitleAndDescriptionViewEditor = {
 
@@ -20,58 +19,6 @@ var CBPageTitleAndDescriptionViewEditor = {
 
         section = CBUI.createSection();
 
-        /* themeID */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIThemeSelector.create({
-            classNameForKind : "CBPageTitleAndDescriptionView",
-            labelText : "Theme",
-            navigateCallback : args.navigateCallback,
-            propertyName : "themeID",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
-        /* titleColor */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Title Color",
-            propertyName : "titleColor",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
-        /* descriptionColor */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Description Color",
-            propertyName : "descriptionColor",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
-        /* publishedColor */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Published Color",
-            propertyName : "publishedColor",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
-        /* hideDescription */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Hide Description",
-            propertyName : "hideDescription",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
         /* showPublicationDate */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIBooleanEditor.create({
@@ -81,23 +28,43 @@ var CBPageTitleAndDescriptionViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
+        element.appendChild(section);
+
+        /* CSSClassNames */
+
+        element.appendChild(CBUI.createHalfSpace());
+
+        element.appendChild(CBUI.createSectionHeader({
+            paragraphs: [
+                `
+                View Specific CSS Class Names:
+                `,`
+                "custom": disable the default view styles.
+                `
+            ],
+        }));
+
+        section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText: "Use Light Text Colors",
-            propertyName: "useLightTextColors",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "CSS Class Names",
+            propertyName : "CSSClassNames",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        /* localCSSTemplate (uses stylesTemplate property on this view) */
+
         element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
 
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Styles Template",
+            labelText : "Local CSS Template",
             propertyName : "stylesTemplate",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
