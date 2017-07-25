@@ -20,6 +20,8 @@ final class CBTextView2 {
      * @param [string]? $model->CSSClassNames
      * @param bool? $model->isCustom
      *
+     *      @deprecated use "custom" CSS class name
+     *
      *      If this is true, the renderer will not include the standard CSS
      *      class names and will only include the class names specified by the
      *      CSSClassNames property. This disables the standard formatting of the
@@ -41,26 +43,38 @@ final class CBTextView2 {
 
         $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
 
-        if (empty($model->isCustom)) {
-            array_unshift($CSSClassNames, 'CBTextView2StandardLayout');
-        }
-
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
+        if (empty($model->isCustom) && !in_array('custom', $CSSClassNames)) {
+            $CSSClassNames[] = 'CBTextView2_default';
+        }
+
+        if (in_array('hero1', $CSSClassNames)) {
+            $CSSClassNames[] = 'CBTextView2_hero1';
+        }
+
         $CSSClassNames = cbhtml(implode(' ', $CSSClassNames));
+
+        if (!empty($model->localCSS)) {
+            CBHTMLOutput::addCSS($model->localCSS);
+        }
 
         ?>
 
         <div class="CBTextView2 <?= $CSSClassNames ?>">
-            <?php if (!empty($model->localCSS)) { ?>
-                <style><?= $model->localCSS ?></style>
-            <?php } ?>
             <div class="content">
                 <?= CBModel::value($model, 'contentAsHTML', '') ?>
             </div>
         </div>
 
         <?php
+    }
+
+    /**
+     * @return [string]
+     */
+    static function requiredCSSURLs() {
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**

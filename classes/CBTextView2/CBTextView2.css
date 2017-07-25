@@ -1,0 +1,190 @@
+.CBTextView2_default {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    padding: 20px;
+}
+
+.CBTextView2_default .content {
+    max-width: 100%;
+    width: 36em;
+}
+
+.CBTextView2_default.center {
+    text-align: center;
+}
+
+/* deprecated: use CBLightTheme to get dark text */
+.CBTextView2_default.dark {
+    color: hsla(0, 0%, 0%, 0.9); /* CBTextColor for CBLightTheme */
+}
+
+.CBTextView2_default.justify {
+    text-align: justify;
+}
+
+/* deprecated: use CBDarkTheme to get dark text */
+.CBTextView2_default.light {
+    color: hsla(0, 0%, 100%, 0.9); /* CBTextColor for CBDarkTheme */
+}
+
+.CBTextView2_default.right {
+    text-align: right;
+}
+
+.CBTextView2_default {
+    line-height: 1.5;
+}
+
+.CBTextView2_default h1 {
+    font-size: 1.25em;
+}
+
+.CBTextView2_default h2 {
+    font-size: 1em;
+}
+
+.CBTextView2_default h3 {
+    color: var(--CBTextColor2);
+    font-size: 1em;
+}
+
+.CBTextView2_default blockquote {
+    margin: 2em 3em;
+}
+
+.CBTextView2_default cite {
+    font-style: italic;
+}
+
+.CBTextView2_default code {
+    color: var(--CBTextColorForLinks);
+}
+
+.CBTextView2_default dd {
+    padding: 0 3em;
+}
+
+.CBTextView2_default dd,
+.CBTextView2_default dt,
+.CBTextView2_default dd p {
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+}
+
+.CBTextView2_default pre {
+    border-left: 0.2em solid var(--CBLineColor);
+    padding-left: 1em;
+    white-space: pre-wrap;
+}
+
+.CBTextView2_default b cite,
+.CBTextView2_default b i,
+.CBTextView2_default cite b,
+.CBTextView2_default cite i,
+.CBTextView2_default i b,
+.CBTextView2_default i cite {
+    font-style: inherit;
+    font-weight: inherit;
+}
+
+/* The following elements always have whitespace on top to emphasize their block. */
+.CBTextView2_default dl,
+.CBTextView2_default ol,
+.CBTextView2_default pre,
+.CBTextView2_default ul {
+    margin-top: 1.5em;
+}
+
+.CBTextView2_default li,
+.CBTextView2_default li p {
+    margin-bottom: 0.75em;
+    margin-top: 0.75em;
+}
+
+.CBTextView2_default blockquote + *,
+.CBTextView2_default dl + *,
+.CBTextView2_default ol + *,
+.CBTextView2_default p + *,
+.CBTextView2_default pre + *,
+.CBTextView2_default ul + * {
+    margin-top: 1.5em;
+}
+
+/* hero1 */
+
+.CBTextView2_hero1 {
+    font-size: 3vw;
+    padding: 5vw;
+}
+
+.CBTextView2_hero1 h1 {
+    font-size: 4em;
+}
+
+.CBTextView2_hero1 h2 {
+    font-size: 3em;
+}
+
+.CBTextView2_hero1 h3 {
+    color: inherit;
+    font-size: 2em;
+}
+
+.CBTextView2_hero1 h4 {
+    font-size: 1.5em;
+}
+
+.CBTextView2_hero1 h5 {
+    font-size: 1.25em;
+}
+
+.CBTextView2_hero1 h6 {
+    font-size: 1em;
+}
+
+.CBTextView2_hero1 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.CBTextView2_hero1 a:hover {
+    text-decoration: underline;
+}
+
+/* font sizes must be smaller for narrow views */
+@media (max-width: 600px) {
+    .CBTextView2_hero1 {
+        font-size: 18px; /* (600/100) * 3 */
+    }
+
+    .CBTextView2_hero1 h1 {
+        font-size: 2em;
+    }
+
+    .CBTextView2_hero1 h2 {
+        font-size: 1.7em;
+    }
+
+    .CBTextView2_hero1 h3 {
+        font-size: 1.6em;
+    }
+}
+
+/* font sizes max at 1280px */
+@media (min-width: 1280px) {
+    .CBTextView2_hero1 {
+        font-size: 38.4px; /* (1280/100) * 3 */
+    }
+}
+
+/* We don't want hero content to have an pre-set intrinsic width, which would
+   behave as a min-width, and get in the way of some scenarios. */
+.CBTextView2_hero1 .content {
+    width: auto;
+}
+
+.CBTextView2_hero1 .content > * + * {
+    margin-top: 5vh;
+}
