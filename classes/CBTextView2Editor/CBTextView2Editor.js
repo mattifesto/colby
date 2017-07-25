@@ -1,7 +1,6 @@
 "use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
 /* global
     CBUI,
-    CBUIBooleanEditor,
     CBUIStringEditor */
 
 var CBTextView2Editor = {
@@ -36,23 +35,23 @@ var CBTextView2Editor = {
         element.appendChild(CBUI.createSectionHeader({
             paragraphs: [
                 `
-                Supported Class Names:
+                View Specific CSS Class Names:
                 `,`
-                CBLightTheme: Theme with a light background and dark text.
+                "center": center the text.
                 `,`
-                CBDarkTheme: Theme with a dark background and light text.
+                "justify": justify the text.
                 `,`
-                center: Center the text.
+                "right": align the text to the right.
                 `,`
-                justify: Justify the text.
+                "hero1": large text for marketing presentations.
                 `,`
-                right: Align the text to the right.
+                "custom": disable the default view styles.
                 `,`
-                hero1: Make the text large for marketing presentations. Heading
-                levels 1-6 provide diverse font sizes.
+                Supported CSS Class Names:
                 `,`
-                To remove the default styles and produce a completely custom
-                presentation enable the Custom option.
+                "CBLightTheme": light background and dark text.
+                `,`
+                "CBDarkTheme": dark background and light text.
                 `
             ],
         }));
@@ -65,15 +64,6 @@ var CBTextView2Editor = {
             propertyName : "CSSClassNames",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText: "Custom",
-            propertyName: "isCustom",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
