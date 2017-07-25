@@ -43,7 +43,9 @@ if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
             call_user_func($function);
         }
         ?></main><?php
-        CBAdminPageFooterView::renderModelAsHTML();
+        CBView::renderModelAsHTML((object)[
+            'className' => 'CBAdminPageFooterView',
+        ]);
         CBHTMLOutput::render();
     } else {
         return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';

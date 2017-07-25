@@ -5,4 +5,6 @@
  * in the files that include it.
  */
 
-CBAdminPageFooterView::renderModelAsHTML();
+ CBView::renderModelAsHTML((object)[
+     'className' => 'CBAdminPageFooterView',
+ ]);

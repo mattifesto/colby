@@ -65,5 +65,8 @@ foreach (CBModelsPreferences::classNamesOfEditableModels() as $className) {
 
 <?php
 
-CBAdminPageFooterView::renderModelAsHTML();
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageFooterView',
+]);
+
 CBHTMLOutput::render();

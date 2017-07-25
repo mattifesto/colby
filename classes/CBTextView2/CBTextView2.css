@@ -62,6 +62,10 @@
     color: var(--CBTextColorForLinks);
 }
 
+.CBTextView2_default pre code {
+    color: inherit;
+}
+
 .CBTextView2_default dd {
     padding: 0 3em;
 }

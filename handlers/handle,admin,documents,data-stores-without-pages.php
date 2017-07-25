@@ -57,6 +57,8 @@ $filepath = CBDataStore::directoryForID(CBPagesAdministrationDataStoreID) . '/da
 
 <?php
 
-CBAdminPageFooterView::renderModelAsHTML();
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageFooterView',
+]);
 
 CBHTMLOutput::render();

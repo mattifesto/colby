@@ -57,6 +57,8 @@ if (is_file($filepath)) {
 
 <?php
 
-CBAdminPageFooterView::renderModelAsHTML();
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageFooterView',
+]);
 
 CBHTMLOutput::render();

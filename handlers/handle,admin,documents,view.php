@@ -50,7 +50,9 @@ if (empty($_GET['ID'])) {
 
 <?php
 
-CBAdminPageFooterView::renderModelAsHTML();
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageFooterView',
+]);
 
 CBHTMLOutput::render();
 

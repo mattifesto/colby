@@ -23,9 +23,10 @@ final class CBCustomView {
      * @return null
      */
     static function renderModelAsHTML(stdClass $model) {
-        if (!empty($model->customViewClassName) && is_callable($function = "{$model->customViewClassName}::renderModelAsHTML")) {
-            CBHTMLOutput::requireClassName($model->customViewClassName);
-            call_user_func($function, $model);
+        if (!empty($model->customViewClassName)) {
+            CBView::renderModelAsHTML((object)[
+                'className' => $model->customViewClassName,
+            ]);
         } else {
             $classNameAsHTMLComment = CBModel::value($model, 'customViewClassName', '<unset>', function ($value) {
                 return '"' . $value . '"';

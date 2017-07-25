@@ -29,8 +29,15 @@ CBView::renderModelAsHTML((object)[
 
         <?php
 
-        CBPagesTableSummaryView::renderModelAsHTML((object)['type' => 'published']);
-        CBPagesTableSummaryView::renderModelAsHTML((object)['type' => 'unpublished']);
+        CBView::renderModelAsHTML((object)[
+            'className' => 'CBPagesTableSummaryView',
+            'type' => 'published'
+        ]);
+
+        CBView::renderModelAsHTML((object)[
+            'className' => 'CBPagesTableSummaryView',
+            'type' => 'unpublished'
+        ]);
 
         ?>
 
@@ -38,7 +45,9 @@ CBView::renderModelAsHTML((object)[
 
     <?php
 
-    UnpublishedPagesWithURIsView::renderModelAsHTML();
+    CBView::renderModelAsHTML((object)[
+        'className' => 'UnpublishedPagesWithURIsView',
+    ]);
 
     $SQL = <<< EOT
 
@@ -67,7 +76,9 @@ EOT;
 
 <?php
 
-CBAdminPageFooterView::renderModelAsHTML();
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageFooterView',
+]);
 
 CBHTMLOutput::render();
 

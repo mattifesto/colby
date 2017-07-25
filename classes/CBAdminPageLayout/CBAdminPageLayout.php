@@ -13,13 +13,11 @@ final class CBAdminPageLayout {
      * @return null
      */
     static function renderPageHeader(stdClass $properties) {
-        $model = (object)[
+        CBView::renderModelAsHTML((object)[
             'className' => 'CBAdminPageMenuView',
             'selectedMenuItemName' => CBModel::value($properties, 'selectedMenuItemName'),
             'selectedSubmenuItemName' => CBModel::value($properties, 'selectedSubmenuItemName'),
-        ];
-
-        CBView::renderModelAsHTML($model);
+        ]);
     }
 
     /**
@@ -28,6 +26,8 @@ final class CBAdminPageLayout {
      * @return null
      */
     static function renderPageFooter(stdClass $properties) {
-        CBAdminPageFooterView::renderModelAsHTML();
+        CBView::renderModelAsHTML((object)[
+            'className' => 'CBAdminPageFooterView',
+        ]);
     }
 }

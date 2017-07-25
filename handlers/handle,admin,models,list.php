@@ -77,7 +77,9 @@ if (is_callable($function = "{$classNameForModels}::compareModels")) {
 
 <?php
 
-CBAdminPageFooterView::renderModelAsHTML();
+CBView::renderModelAsHTML((object)[
+    'className' => 'CBAdminPageFooterView',
+]);
 
 ?>
 
