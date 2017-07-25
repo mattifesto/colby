@@ -9,7 +9,6 @@ $spec->sections[] = (object)[
 
 $spec->sections[] = (object)[
     'className' => 'CBTextView2',
-    'CSSClassNames' => 'CBTextView2StandardLayout',
     'contentAsCommonMark' => <<<EOT
 # Introduction
 
@@ -25,57 +24,31 @@ EOT
 
 $spec->sections[] = (object)[
     'className' => 'CBTextView2',
-    'CSSClassNames' => 'CBTextView2StandardLayout',
+    'CSSClassNames' => 'CBDarkTheme',
     'contentAsCommonMark' => <<<EOT
-# First Level Heading
-
-Duis dapibus, nibh quis efficitur fringilla, nulla felis sodales enim, in
-sodales nibh neque eu lacus. Nulla nec arcu eu urna tristique sagittis. Morbi
-libero libero, imperdiet bibendum orci vel, convallis ultrices sapien.
-Vestibulum est est, vehicula sit amet mauris at, suscipit euismod mi. Fusce
-elementum pulvinar ligula eu sollicitudin.
-
+# Formatting
 ## Unordered List
 
-Maecenas blandit velit ac molestie porttitor. Praesent posuere, purus ac
-tincidunt feugiat, sapien tellus pharetra odio, quis ultricies arcu quam vitae
-odio. In mauris augue, scelerisque at lobortis in, laoreet eu lorem. Suspendisse
-porttitor at risus nec viverra. Praesent consectetur mattis dolor, vitae cursus
-tellus fermentum et. Fusce risus massa, tincidunt ac feugiat et, vulputate a
-neque.
+Maecenas blandit velit ac molestie porttitor.
 
 - Pellentesque tincidunt gravida tellus ut suscipit.
 - Donec pharetra nisl sit amet ante gravida interdum.
 - Praesent vel magna sed urna blandit euismod.
 - Interdum et malesuada fames ac ante ipsum primis in faucibus.
 
-Duis ut accumsan tellus. Aenean pulvinar mi eget dui suscipit eleifend. Aenean
-vel erat nec mi varius faucibus. Nulla vitae lacus vitae leo convallis
-condimentum. Nam egestas elit vitae cursus venenatis. Nunc lacinia est eget
-dolor rhoncus, sit amet fringilla purus mollis.
+Duis ut accumsan tellus.
 
 ## Ordered List
-
-Mauris quis metus a felis cursus maximus. Fusce dignissim, ex et ultrices
-tempor, magna velit aliquam purus, a aliquet eros augue ut neque. Quisque
-laoreet velit nec augue pretium, a tempor mauris pellentesque. Morbi semper
-eleifend tellus, non tincidunt elit aliquam quis.
 
 1. Cras suscipit semper felis, non condimentum eros maximus posuere.
 1. Pellentesque at ipsum vitae ligula placerat dictum at ac turpis.
 45. Nam gravida sit amet ante iaculis sollicitudin.
 
-Ut blandit molestie posuere. Nam sem nunc, tincidunt eu erat a, tincidunt
-vestibulum ante. Morbi sit amet porta dui. Proin vel dapibus massa, id
-sollicitudin ex. Suspendisse id consequat lectus, vitae ornare lectus. Praesent
-ultricies scelerisque condimentum. Pellentesque dapibus lacinia luctus.
-Pellentesque pretium posuere felis suscipit suscipit.
+Ut blandit molestie posuere.
 
 ## Description List
 
-Praesent nec consectetur orci, ultrices sagittis nisl. Morbi vitae risus nec est
-tincidunt commodo sit amet in ipsum. Quisque quis massa eros. Phasellus at arcu
-consectetur, accumsan leo vitae, maximus elit.
+Praesent nec consectetur orci, ultrices sagittis nisl.
 
 <dl>
     <dt>Mauris ligula risus</dt>
@@ -91,9 +64,7 @@ nisi felis at ex.
 
 ## Block Quote
 
-Donec pharetra nisl sit amet ante gravida interdum. Praesent vel magna sed urna
-blandit euismod. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-Duis ut accumsan tellus.
+Donec pharetra nisl sit amet ante gravida interdum.
 
 > Aenean pulvinar mi eget dui suscipit eleifend. Aenean vel erat nec mi varius
 > faucibus. Nulla vitae lacus vitae leo convallis condimentum. Nam egestas elit
@@ -101,10 +72,6 @@ Duis ut accumsan tellus.
 > fringilla purus mollis.
 
 ## Third Level Headings
-
-Vivamus cursus, magna et maximus pulvinar, mauris massa ullamcorper nibh, sed
-mattis libero felis eu nisl. Nulla laoreet maximus lobortis.
-
 ### Quisque varius
 
 Quisque varius dignissim diam, ut convallis ipsum lacinia sed. Maecenas volutpat
@@ -115,11 +82,6 @@ malesuada venenatis.
 Cras at rutrum tellus. Mauris venenatis tristique ornare. Morbi eleifend, ante
 dictum placerat volutpat, leo dui scelerisque nunc, id fringilla nisi metus sit
 amet nibh.
-
-### Donec bibendum
-
-Donec bibendum, neque lacinia varius placerat, nibh quam eleifend nisi, id
-eleifend eros augue at ipsum. Integer gravida imperdiet volutpat.
 
 ## Inline formatting
 
@@ -135,6 +97,25 @@ Test of <cite>a citation containing **bold**</cite>.
 
 Test of <cite>a citation containing _italics_</cite>.
 
+EOT
+];
+
+$spec->sections[] = (object)[
+    'className' => 'CBTextView2',
+    'CSSClassNames' => 'hero1 center CBDarkTheme',
+    'localCSSTemplate' => <<<EOT
+view {
+    align-items: center;
+    background-color: hsl(0, 70%, 25%);
+    min-height: 100vh;
+}
+EOT
+    ,
+    'contentAsCommonMark' => <<<EOT
+# Hero
+## Superman
+#### Clark Griswold Kent
+Faster than a speeding bullet!
 EOT
 ];
 
@@ -193,48 +174,13 @@ EOT
 
 $spec->sections[] = (object)[
     'className' => 'CBTextView2',
-    'CSSClassNames' => 'light',
-    'localCSSTemplate' => 'view {background-color: hsl(30, 30%, 20%)}',
-    'contentAsCommonMark' => <<<EOT
-## "light"
-
-The default text color is set by the site to be compatible with the default
-background color. The the site may change the defaults at any time. This means
-that if you set a custom background color you should specify whether the text
-appropriate for that background color is light or dark. If the site defaults
-change your view will still appear as you intended it to.
-
-Adding the word "light" to the list of CSSClassNames makes the text light
-colored for use on dark custom backgrounds.
-
-EOT
-];
-
-$spec->sections[] = (object)[
-    'className' => 'CBTextView2',
-    'CSSClassNames' => 'dark',
-    'localCSSTemplate' => 'view {background-color: hsl(30, 30%, 80%)}',
-    'contentAsCommonMark' => <<<EOT
-## "dark"
-
-Adding the word "dark" to the list of CSSClassNames makes the text dark
-colored for use on light custom backgrounds.
-
-Cras at rutrum tellus. Mauris venenatis tristique ornare. Morbi eleifend, ante
-dictum placerat volutpat, leo dui scelerisque nunc, id fringilla nisi metus sit
-amet nibh. Donec bibendum, neque lacinia varius placerat, nibh quam eleifend nisi, id
-eleifend eros augue at ipsum. Integer gravida imperdiet volutpat.
-EOT
-];
-
-$spec->sections[] = (object)[
-    'className' => 'CBTextView2',
+    'CSSClassNames' => 'CBDarkTheme',
     'contentAsCommonMark' => '# Hyperlinks',
 ];
 
 $spec->sections[] = (object)[
     'className' => 'CBTextView2',
-    'CSSClassNames' => 'center',
+    'CSSClassNames' => 'center CBDarkTheme',
     'contentAsCommonMark' => <<<EOT
 [View the Mattifesto Home Page (inherited color) >](https://mattifesto.com/)
 EOT
@@ -242,7 +188,7 @@ EOT
 
 $spec->sections[] = (object)[
     'className' => 'CBTextView2',
-    'CSSClassNames' => 'center',
+    'CSSClassNames' => 'center CBDarkTheme',
     'localCSSTemplate' => 'view a {color: orange}',
     'contentAsCommonMark' => <<<EOT
 [View the Mattifesto Home Page (local CSS color, orange) >](https://mattifesto.com/)
@@ -258,18 +204,14 @@ $container = (object)[
     'className' => 'CBContainerView',
     'CSSClassNames' => 'flow',
     'stylesTemplate' => <<<EOT
-view {
-    margin-bottom: 100px;
-}
-
 view > * {
-    width: 480px;
-    max-width: 50% !important;
+    width: 50%;
+    max-width: 480px;
 }
 
-@media (max-width 639px) {
+@media (max-width: 639px) {
     view > * {
-        max-width: 100% !important;
+        width: 100%;
     }
 }
 EOT
@@ -289,7 +231,7 @@ view .special {
 EOT
     ,
     'contentAsCommonMark' => <<<EOT
-Small text.
+Left side.
 
 Side <span class="special">by</span> side!
 EOT
@@ -309,7 +251,7 @@ view .special {
 EOT
     ,
     'contentAsCommonMark' => <<<EOT
-Large text.
+Right side.
 
 Side <span class="special">by</span> side is accomplished by using
 a CBContainerView to contain two text views and then setting up the styles

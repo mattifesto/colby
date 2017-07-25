@@ -15,7 +15,11 @@ final class CBWellKnownPageForTestingCBTextView2 {
         $spec = (object)[
             'ID' => CBWellKnownPageForTestingCBTextView2::ID,
             'className' => 'CBViewPage',
-            'description' => 'A page for testing and experimenting with CBTextView2 and CBTextView2StandardLayout.',
+            'description' => 'A page for testing and experimenting with CBTextView2.',
+            'layout' => (object)[
+                'className' => 'CBPageLayout',
+                'CSSClassNames' => 'CBLightTheme',
+            ],
             'title' => 'Well-Known Page for Testing CBTextView2',
         ];
 
