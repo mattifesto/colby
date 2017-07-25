@@ -1,6 +1,11 @@
 "use strict"; /* jshint strict: global */
-/* globals CBUI, CBUIBooleanEditor, CBUIImageView, CBUIImageSizeView,
-           CBUIImageUploader, CBUIStringEditor */
+/* globals
+    CBUI,
+    CBUIBooleanEditor,
+    CBUIImageView,
+    CBUIImageSizeView,
+    CBUIImageUploader,
+    CBUIStringEditor */
 
 var CBIconLinkViewEditor = {
 
