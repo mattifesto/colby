@@ -201,6 +201,27 @@ final class CBModel {
 
     /**
      * This function is used when you expect a model property to contain an
+     * object. If the property does contain an object, it will be returned. If
+     * not, an empty object will be returned. A non-object property value is
+     * ignored.
+     *
+     * @param object? $model
+     * @param string $keyPath
+     *
+     * @return object
+     */
+    static function valueAsObject($model = null, $keyPath) {
+        $value = CBModel::value($model, $keyPath);
+
+        if (is_object($value)) {
+            return $value;
+        } else {
+            return (object)[];
+        }
+    }
+
+    /**
+     * This function is used when you expect a model property to contain an
      * optional spec which, if set, you would like converted to a model.
      *
      * @param object? $model

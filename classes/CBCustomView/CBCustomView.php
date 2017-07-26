@@ -16,25 +16,30 @@ final class CBCustomView {
     }
 
     /**
+     * Either $model->customViewClassName or $model->properties->className must
+     * be set to a valid view class name for this view to render anything.
+     *
      * @param string? $model->customViewClassName
-     *      The class name of the custom view to render. If this is empty or
-     *      the class doesn't exist the view will not render.
+     *      The class name of the custom view to render. This does not need to
+     *      be set if the `properties` object has a `className` property. This
+     *      property is higher priority than the `className` property on the
+     *      `properties` object.
+     *
+     * @param object? $model->properties
+     *      This is the model to render. It was named properties before the
+     *      behavior of this view was finalized.
      *
      * @return null
      */
     static function renderModelAsHTML(stdClass $model) {
-        if (!empty($model->customViewClassName)) {
-            CBView::renderModelAsHTML((object)[
-                'className' => $model->customViewClassName,
-            ]);
-        } else {
-            $classNameAsHTMLComment = CBModel::value($model, 'customViewClassName', '<unset>', function ($value) {
-                return '"' . $value . '"';
-            });
-            $classNameAsHTMLComment = preg_replace('/-->/', '-- >', $classNameAsHTMLComment);
+        $modelToRender = CBModel::valueAsObject($model, 'properties');
+        $customViewClassName = CBModel::value($model, 'customViewClassName', '', 'trim');
 
-            echo "<!-- CBCustomView unable to render for customViewClassName: {$classNameAsHTMLComment}. -->";
+        if (!empty($customViewClassName)) {
+            $modelToRender->className = $customViewClassName;
         }
+
+        CBView::renderModelAsHTML($modelToRender);
     }
 
     /**
