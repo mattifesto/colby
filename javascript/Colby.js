@@ -217,27 +217,50 @@ var Colby = {
     },
 
     /**
-     * Makes an ajax request.
+     * This function is the recommended way to make an Ajax request for Colby.
+     * To alleviate error notifications in situations where customers have less
+     * stable internet service, this function will attempt the Ajax request
+     * up to three times if errors occur.
      *
      * @param string URL
-     * @param ? data
-     *  The data can be of any form accepted by the XMLHttpRequest.send()
-     *  function. Most commonly, if used, it will be a FormData instance.
+     * @param any? data
+     *
+     *      The data can be of any form accepted by the XMLHttpRequest.send()
+     *      function. Most commonly, if used, it will be a FormData instance.
      *
      * @return Promise
-     * Returns a promise that passes an 'ajax response' object (created by this
-     * class) to resolve handlers. If an error occurs for any reason a
-     * JavaScript Error object is passed to reject handlers with an 'ajax
-     * response' object set to the Error's `ajaxResponse` propery.
+     *
+     *      Returns a promise that passes an 'ajax response' object (created by
+     *      this class) to resolve handlers. If an error occurs for any reason a
+     *      JavaScript Error object is passed to reject handlers with an 'ajax
+     *      response' object set to the Error's `ajaxResponse` propery.
+     *
+     *      @NOTE There is no reference held to the promise returned, so the
+     *      caller must establish a reference to it or it will be collected
+     *      and possibly not completed.
      */
-    fetchAjaxResponse: function(URL, data) {
+    fetchAjaxResponse: function (URL, data) {
         return new Promise(function (resolve, reject) {
-            var xhr = new XMLHttpRequest();
-            xhr.onloadend = handler;
-            xhr.open("POST", URL);
-            xhr.send(data);
+            var fetchCount = 0;
+            var xhr;
 
-            function handler() {
+            fetch();
+
+            function fetch() {
+                xhr = new XMLHttpRequest();
+                xhr.onloadend = handleLoadEnd;
+                xhr.open("POST", URL);
+                xhr.send(data);
+
+                fetchCount += 1;
+            }
+
+            function handleLoadEnd() {
+                if (xhr.status !== 200 && fetchCount < 3) {
+                    fetch();
+                    return;
+                }
+
                 var ajaxResponse = Colby.responseFromXMLHttpRequest(xhr);
 
                 if (ajaxResponse.wasSuccessful) {
