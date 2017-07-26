@@ -729,9 +729,26 @@ EOT;
     }
 
     /**
+     * This function is used often by websites to save models. The page editor
+     * and model editors use it.
+     *
+     * Testing:
+     *
+     *      Because this function is so easy to execute by editing a page or
+     *      other model, it can be used to test Colby Ajax functionaily. Placing
+     *      breakpoints in JavaScript while altering this function can simulate
+     *      various scenarios.
+     *
+     *      1. You can uncomment the code at the beginning of the function to
+     *         test the handling various HTTP status codes.
+     *      2. You can stop your development web server to test the handling of
+     *         server unavailable errors.
+     *
      * @return null
      */
-    public static function saveForAjax() {
+    static function saveForAjax() {
+        // header("HTTP/1.0 404 Not Found"); return;
+
         $response = new CBAjaxResponse();
         $spec = json_decode($_POST['specAsJSON']);
 
