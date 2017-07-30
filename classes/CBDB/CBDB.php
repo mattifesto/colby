@@ -2,6 +2,8 @@
 
 final class CBDB {
 
+    private static $transactionIsActive = false;
+
     /**
      * Converts a string to a SQL safe string.
      *
@@ -154,6 +156,38 @@ final class CBDB {
     static function stringToSQL($value) {
         $value = CBDB::escapeString($value);
         return "'{$value}'";
+    }
+
+    /**
+     * This function runs a callback inside a database transaction. It's easier
+     * and more stable than writing the transaction code every time.
+     *
+     * @param callable $callback
+     *
+     * @return null
+     */
+    static function transaction(callable $callback) {
+        if (CBDB::$transactionIsActive) {
+            throw new RuntimeException('Nested transactions are not allowed.');
+        }
+
+        CBDB::$transactionIsActive = true;
+
+        try {
+            Colby::query('START TRANSACTION');
+
+            call_user_func($callback);
+
+            Colby::query('COMMIT');
+
+            CBDB::$transactionIsActive = false;
+        } catch (Exception $exception) {
+            Colby::query('ROLLBACK');
+
+            CBDB::$transactionIsActive = false;
+
+            throw $exception;
+        }
     }
 
     /**
