@@ -49,10 +49,10 @@ CBModelAssociations::install();
 CBModelsPreferences::install();
 CBPages::install();
 CBSitePreferences::install();
-CBStandardModels::install();
 CBThemedTextView::install(); /* deprecated */
 CBImages::install();
 CBRequestTracker::install(); /* deprecated */
+CBWellKnownMenuForMain::install();
 CBWellKnownThemeForContent::install();
 CBWellKnownThemeForPageTitleAndDescription::install();
 CBWellKnownPageForTestingCBTextView2::install();
