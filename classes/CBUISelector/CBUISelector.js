@@ -1,4 +1,6 @@
-"use strict";
+"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+/* global
+    CBUI */
 
 var CBUISelector = {
 
@@ -229,14 +231,18 @@ var CBUISelector = {
      */
     valueToTitle : function (args) {
         var options = args.options || [];
-        options = options.filter(function (option) {
+        var selectedOption = options.find(function (option) {
             return args.value === option.value;
         });
 
-        if (options.length > 0) {
-            return options[0].title;
+        if (selectedOption) {
+            return selectedOption.title;
         } else {
-            return args.value + ' (Unknown)';
+            if (args.value) {
+                return args.value + ' (Unknown Option)';
+            } else {
+                return 'None';
+            }
         }
     },
 
