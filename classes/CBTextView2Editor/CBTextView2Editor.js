@@ -31,7 +31,6 @@ var CBTextView2Editor = {
         /* CSSClassNames */
 
         element.appendChild(CBUI.createHalfSpace());
-
         element.appendChild(CBUI.createSectionHeader({
             paragraphs: [
                 `
@@ -57,8 +56,8 @@ var CBTextView2Editor = {
         }));
 
         section = CBUI.createSection();
-
         item = CBUI.createSectionItem();
+
         item.appendChild(CBUIStringEditor.createEditor({
             labelText : "CSS Class Names",
             propertyName : "CSSClassNames",
