@@ -236,7 +236,7 @@ final class CBViewPage {
      *
      * @return null
      */
-    public static function renderModelAsHTML($model) {
+    static function renderModelAsHTML($model) {
         $model = CBViewPage::upgradeRenderModel($model);
 
         // The `upgradeRenderModel` function will return `false` when the query
@@ -256,6 +256,7 @@ final class CBViewPage {
             'ID' => CBModel::value($model, 'ID', ''),
             'imageURL' => CBViewPage::modelToImageURL($model),
             'publishedTimestamp' => empty($model->isPublished) ? null : $publicationTimeStamp,
+            'selectedMainMenuItemName' => CBModel::value($model, 'selectedMainMenuItemName'),
             'titleAsHTML' => CBModel::value($model, 'titleHTML', ''),
         ]);
 
@@ -309,33 +310,31 @@ final class CBViewPage {
      * @return object
      */
     static function specToModel($spec) {
+        $time = time();
         $model = (object)[
             'ID' => $spec->ID,
             'className' => __CLASS__,
+            'classNameForKind' => CBModel::value($spec, 'classNameForKind', '', 'trim'),
+            'classNameForSettings' => CBModel::value($spec, 'classNameForSettings', '', 'trim'),
+            'selectedMainMenuItemName' => CBModel::value($spec, 'selectedMainMenuItemName', '', 'trim'),
+            'title' => CBModel::value($spec, 'title', '', 'trim'),
+            'URI' => CBModel::value($spec, 'URI', $spec->ID, function ($value) use ($spec) {
+                $value = trim($value);
+
+                if (empty($value)) {
+                    return $spec->ID;
+                } else {
+                    return $value;
+                }
+            }),
         ];
-        $time = time();
 
-        /* Optional values */
-
-        if (isset($spec->classNameForKind) &&
-            is_string($spec->classNameForKind) &&
-            strlen($value = trim($spec->classNameForKind)) > 0)
-        {
-            $model->classNameForKind = $value;
-        } else {
-            $model->classNameForKind = null;
-        }
-
-        $model->classNameForSettings = isset($spec->classNameForSettings) ? trim($spec->classNameForSettings) : '';
         $model->description = isset($spec->description) ? $spec->description : '';
         $model->isPublished = isset($spec->isPublished) ? !!$spec->isPublished : false;
         $model->iteration = 0;
         $model->publicationTimeStamp = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
         $model->publishedBy = isset($spec->publishedBy) ? $spec->publishedBy : null;
         $model->schemaVersion = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
-        $model->title = isset($spec->title) ? $spec->title : '';
-        $model->URI = isset($spec->URI) ? trim($spec->URI) : '';
-        $model->URI = $model->URI !== '' ? $model->URI : $model->ID;
 
         /**
          * Page image
