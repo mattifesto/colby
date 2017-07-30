@@ -256,7 +256,7 @@ var Colby = {
             }
 
             function handleLoadEnd() {
-                if (xhr.status !== 200 && fetchCount < 3) {
+                if (xhr.status === 0 && fetchCount < 3) {
                     fetch();
                     return;
                 }
@@ -363,7 +363,11 @@ var Colby = {
             case 0:
                 response = {
                     className : "CBAjaxResponse",
-                    message : "An Ajax request was aborted. This may be because of a network error making the server unavailable or because the Ajax request URL is incorrect.",
+                    message : "An error occured when making an Ajax request " +
+                              "to the server. This was most likely caused by " +
+                              "a network issue or less likely caused by the " +
+                              "server domain name in the request URL being " +
+                              "incorrect.",
                     wasSuccessful : false,
                 };
                 break;
@@ -373,7 +377,10 @@ var Colby = {
             default:
                 response = {
                     className : "CBAjaxResponse",
-                    message : xhr.status + ' ' + xhr.statusText,
+                    message : "An Ajax request to the server returned an " +
+                              "unexpected response with the status code " +
+                              xhr.status + " and the status text: \"" +
+                              xhr.statusText + "\".",
                     wasSuccessful : false,
                 };
                 break;
