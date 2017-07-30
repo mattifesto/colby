@@ -58,7 +58,7 @@ EOT;
     /**
      * @return stdClass
      */
-    function fetchMenusForAjaxPermissions() {
+    static function fetchMenusForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
