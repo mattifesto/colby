@@ -13,6 +13,7 @@
     CBUIStringEditor,
     CBUsersWhoAreAdministrators,
     CBViewPageEditor,
+    CBViewPageInformationEditor_mainMenuItemOptions,
     Colby */
 
 var CBViewPageInformationEditor = {
@@ -181,6 +182,18 @@ var CBViewPageInformationEditor = {
             }).element);
             section.appendChild(item);
         }
+
+        /* selectedMainMenuItemName */
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUISelector.create({
+            labelText: "Selected Main Menu Item",
+            navigateCallback: args.navigateCallback,
+            options: CBViewPageInformationEditor_mainMenuItemOptions,
+            propertyName: "selectedMainMenuItemName",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
 
         element.appendChild(section);
         element.appendChild(CBUI.createHalfSpace());

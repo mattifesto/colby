@@ -3,6 +3,26 @@
 final class CBViewPageInformationEditor {
 
     /**
+     * @return [object]
+     */
+    static function fetchMainMenuItemOptions() {
+        $mainMenu = CBModels::fetchModelByID(CBWellKnownMenuForMain::ID());
+
+        $options = [(object)[
+            'title' => 'None',
+        ]];
+
+        foreach ($mainMenu->items as $item) {
+            $options[] = (object)[
+                'title' => $item->text,
+                'value' => $item->name,
+            ];
+        }
+
+        return $options;
+    }
+
+    /**
      * @return [string]
      */
     public static function requiredClassNames() {
@@ -38,6 +58,7 @@ final class CBViewPageInformationEditor {
             ['CBPageClassNamesForLayouts', CBPagesPreferences::classNamesForLayouts()],
             ['CBPageClassNamesForSettings', CBPagesPreferences::classNamesForSettings()],
             ['CBUsersWhoAreAdministrators', CBViewPageInformationEditor::usersWhoAreAdministrators()],
+            ['CBViewPageInformationEditor_mainMenuItemOptions', CBViewPageInformationEditor::fetchMainMenuItemOptions()],
         ];
     }
 
