@@ -3,7 +3,7 @@
 final class CBMenu {
 
     /**
-     * @return stdClass
+     * @return object
      */
     static function info() {
         return CBModelClassInfo::specToModel((object)[
@@ -14,15 +14,21 @@ final class CBMenu {
     }
 
     /**
-     * @param string? $spec->title
      * @param array? $spec->items
+     * @param string? $spec->title
+     * @param string? $spec->titleURI
      *
-     * @return stdClass
+     * @return object
      */
     static function specToModel(stdClass $spec) {
-        $model          = CBModels::modelWithClassName(__CLASS__);
-        $model->title   = isset($spec->title) ? (string)$spec->title : '';
-        $model->items   = isset($spec->items) ? array_map('CBMenuItem::specToModel', $spec->items) : [];
+        $model = (object)[
+            'className' => __CLASS__,
+            'title' => CBModel::value($spec, 'title', '', 'trim'),
+            'titleURI' => CBModel::value($spec, 'titleURI', '', 'trim'),
+        ];
+
+        $items = CBModel::valueAsArray($spec, 'items');
+        $model->items = array_map('CBMenuItem::specToModel', $items);
 
         return $model;
     }
