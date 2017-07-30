@@ -19,6 +19,7 @@ final class CBPagesPreferences {
         'CBContainerView2',
         'CBCustomView',
         'CBLinkView1',
+        'CBMenuView',
         'CBPageListView2',
         'CBPageTitleAndDescriptionView',
         'CBTextView2',
