@@ -1,0 +1,240 @@
+/**
+ * CBMenuView_default
+ */
+
+.CBMenuView_default {
+    background-color: var(--CBBackgroundColor);
+    box-sizing: border-box;
+    max-width: 100%;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.CBMenuView_default > .menu_items {
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.CBMenuView_default > .menu_items > .container {
+    display: flex;
+    max-width: 100%;
+}
+
+.CBMenuView_default > .menu_items .title {
+    display: none;
+}
+
+.CBMenuView_default ul {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    max-width: 100%;
+    padding: 0;
+    width: 980px;
+}
+
+.CBMenuView_default .selected {
+    color: var(--CBTextColorForLinks);
+}
+
+.CBMenuView_default a {
+    color: inherit;
+    line-height: 44px;
+    text-decoration: none;
+}
+
+.CBMenuView_default a:hover {
+    color: var(--CBTextColorForLinks);
+}
+
+@media (min-width: 737px) {
+    .CBMenuView_default > .menu_header {
+        display: none;
+    }
+
+    .CBMenuView_default li {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 736px) {
+    .CBMenuView_default .menu_items {
+        display: none;
+    }
+
+    .CBMenuView_default.open {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+    }
+
+    .CBMenuView_default.open .menu_items {
+        display: block;
+    }
+
+    .CBMenuView_default > .menu_header {
+        display: flex;
+    }
+
+    .CBMenuView_default > .menu_header > * {
+        line-height: 44px;
+        padding: 0 10px;
+    }
+
+    .CBMenuView_default > .menu_header .title {
+        display: none;
+    }
+
+    .CBMenuView_default > .menu_header .left,
+    .CBMenuView_default > .menu_header .right {
+        flex: 1 1 1px;
+    }
+
+    .CBMenuView_default > .menu_header .left {
+        cursor: pointer;
+    }
+
+    .CBMenuView_default > .menu_header .left::before {
+        content: "\2630"; /* hamburger menu character */
+    }
+
+    .CBMenuView_default > .menu_items ul {
+        display: block;
+    }
+}
+
+/**
+ * CBMenuView_submenu1
+ */
+
+.CBMenuView_submenu1 {
+    background-color: var(--CBBackgroundColor);
+    box-sizing: border-box;
+    max-width: 100%;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.CBMenuView_submenu1 > .menu_header {
+    display: none;
+}
+
+.CBMenuView_submenu1 > .menu_items {
+    display: flex;
+    justify-content: center;
+}
+
+.CBMenuView_submenu1 ul {
+    list-style: none;
+    padding: 0;
+}
+
+.CBMenuView_submenu1 .selected {
+    color: var(--CBTextColorForLinks);
+}
+
+.CBMenuView_submenu1 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.CBMenuView_submenu1 .menu_items a {
+    display: inline-block;
+    line-height: 44px;
+}
+
+.CBMenuView_submenu1 a:hover {
+    color: var(--CBTextColorForLinks);
+}
+
+@media (min-width: 737px) {
+    .CBMenuView_submenu1 .menu_items {
+        padding: 0 10px;
+    }
+
+    .CBMenuView_submenu1 .container {
+        border-bottom: 1px solid var(--CBLineColor);
+        display: flex;
+        justify-content: space-between;
+        max-width: 100%;
+        width: 960px;
+    }
+
+    .CBMenuView_submenu1 > .menu_items .title {
+        font-size: 120%;
+        line-height: 52px;
+    }
+
+    .CBMenuView_submenu1 ul {
+        display: flex;
+        padding-top: 8px;
+    }
+
+    .CBMenuView_submenu1 li {
+        font-size: 14px;
+    }
+
+    .CBMenuView_submenu1 li + li {
+        margin-left: 30px;
+    }
+}
+
+@media (max-width: 736px) {
+    .CBMenuView_submenu1 {
+        border-bottom: 1px solid var(--CBLineColor);
+    }
+
+    .CBMenuView_submenu1 > .menu_header {
+        display: flex;
+    }
+
+    .CBMenuView_submenu1 > .menu_header > * {
+        line-height: 44px;
+    }
+
+    .CBMenuView_submenu1 > .menu_header > .left,
+    .CBMenuView_submenu1 > .menu_header > .right {
+        flex: 1 1 1px;
+        padding: 0 10px;
+    }
+
+    .CBMenuView_submenu1 > .menu_header > .right {
+        text-align: right;
+    }
+
+    .CBMenuView_submenu1 > .menu_header > .center {
+        cursor: pointer;
+        padding: 0 30px;
+    }
+
+    .CBMenuView_submenu1 > .menu_header > .center::before {
+        content: "\2630"; /* hamburger menu character */
+    }
+
+    .CBMenuView_submenu1 > .menu_items {
+        display: none;
+    }
+
+    .CBMenuView_submenu1.open > .menu_items {
+        display: block;
+    }
+
+    .CBMenuView_submenu1 .menu_items .title {
+        display: none;
+    }
+
+    .CBMenuView_submenu1 ul {
+        display: block;
+    }
+
+    .CBMenuView_submenu1 li {
+        padding: 0 10px;
+    }
+}
