@@ -41,11 +41,11 @@ class CBAdminPageForEditingModels {
             }
         }
 
-        CBHTMLOutput::exportVariable('CBModelID',           $args->ID);
-        CBHTMLOutput::exportVariable('CBModelClassName',    $args->className);
+        CBHTMLOutput::exportVariable('CBAdminPageForEditingModels_modelID', $args->ID);
+        CBHTMLOutput::exportVariable('CBAdminPageForEditingModels_modelClassName', $args->className);
 
         if (is_callable($function = "{$args->className}::info")) {
-            CBHTMLOutput::exportVariable('CBModelClassInfo', call_user_func($function));
+            CBHTMLOutput::exportVariable('CBAdminPageForEditingModels_modelClassInfo', call_user_func($function));
         }
 
         if (class_exists($editorClassName = "{$args->className}Editor")) {

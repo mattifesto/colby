@@ -1,8 +1,8 @@
 "use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
 /* globals
-    CBModelClassInfo,
-    CBModelClassName,
-    CBModelID,
+    CBAdminPageForEditingModels_modelClassInfo,
+    CBAdminPageForEditingModels_modelClassName,
+    CBAdminPageForEditingModels_modelID,
     Colby,
     CBUI,
     CBUINavigationView,
@@ -36,7 +36,7 @@ var CBAdminPageForEditingModels = {
         left.className = "left";
         var center = document.createElement("div");
         center.className = "center";
-        center.textContent = (window.CBModelClassInfo ? CBModelClassInfo.singularTitle : args.spec.className) + " Editor";
+        center.textContent = (window.CBAdminPageForEditingModels_modelClassInfo ? CBAdminPageForEditingModels_modelClassInfo.singularTitle : args.spec.className) + " Editor";
         var right = document.createElement("div");
         right.className = "right";
 
@@ -56,8 +56,8 @@ var CBAdminPageForEditingModels = {
         }
 
         var formData = new FormData();
-        formData.append("className", CBModelClassName);
-        formData.append("ID", CBModelID);
+        formData.append("className", CBAdminPageForEditingModels_modelClassName);
+        formData.append("ID", CBAdminPageForEditingModels_modelID);
 
         var xhr = new XMLHttpRequest();
         xhr.onload = CBAdminPageForEditingModels.handleModelLoaded.bind(undefined, {
@@ -80,7 +80,7 @@ var CBAdminPageForEditingModels = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            var spec = response.spec || { ID : CBModelID, className : CBModelClassName };
+            var spec = response.spec || { ID : CBAdminPageForEditingModels_modelID, className : CBAdminPageForEditingModels_modelClassName };
             CBAdminPageForEditingModels.renderEditorForSpec(spec);
         } else {
             Colby.displayResponse(response);
