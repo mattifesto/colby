@@ -291,7 +291,9 @@ var CBViewPageEditor = {
  * @return undefined
  */
 CBViewPageEditor.DOMContentDidLoad = function() {
-    CBViewPageEditor.fetchModel();
+    if (window.CBAdminPageForEditingModels_modelID === undefined) { // if we're not using the model editor
+        CBViewPageEditor.fetchModel();
+    }
 };
 
 /**
@@ -338,7 +340,5 @@ CBViewPageEditor.fetchModelDidLoad = function(args) {
         Colby.displayResponse(response);
     }
 };
-
-var CBPageEditor = CBViewPageEditor; /* deprecated */
 
 document.addEventListener("DOMContentLoaded", CBViewPageEditor.DOMContentDidLoad);

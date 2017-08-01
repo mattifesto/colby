@@ -28,27 +28,6 @@ CBHTMLOutput::requireClassName('CBDefaultEditor');
 CBHTMLOutput::requireClassName('CBViewPageEditor');
 
 /**
- * Include all of the supported views.
- */
-
-$classNamesForEditableModels = array_merge(
-    CBPagesPreferences::classNamesForEditableViews(),
-    CBPagesPreferences::classNamesForLayouts()
-);
-
-foreach ($classNamesForEditableModels as $className) {
-    if (class_exists($editorClassName = "{$className}Editor")) {
-        CBHTMLOutput::requireClassName($editorClassName);
-    }
-}
-
-/**
- * Create the list of selectable views available to be added to the page.
- */
-
-CBHTMLOutput::exportVariable('CBPageEditorAvailableViewClassNames', CBPagesPreferences::classNamesForAddableViews());
-
-/**
  * Export page templates
  */
 
