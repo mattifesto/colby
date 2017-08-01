@@ -8,16 +8,14 @@ var CBPageList = {
      *
      * @return Element
      */
-    createElement : function(pages) {
+    createElement: function(pages) {
         var element = document.createElement("div");
         element.className = "CBPageListView";
 
         var section = CBUI.createSection();
 
         pages.forEach(function (page) {
-            var item = CBUI.createSectionItem();
-            item.appendChild(CBPageList.createPageElement(page, item));
-            section.appendChild(item);
+            section.appendChild(CBPageList.createPageSectionItem(page));
         });
 
         element.appendChild(section);
@@ -30,42 +28,47 @@ var CBPageList = {
      * @param hex160 page.ID
      * @param object page.keyValueData
      *
-     * @return {Element}
+     * @return Element
      */
-    createPageElement : function (page, itemElement) {
-        var element = document.createElement("div");
-        element.className = "CBPageListPage";
-        var title = document.createElement("div");
-        title.className = "title";
-        title.textContent = page.keyValueData.title;
-        var copy = document.createElement("div");
-        copy.className = "CBPageListCopyButton";
-        copy.textContent = "Copy";
-        var trash = document.createElement("div");
-        trash.className = "CBPageListTrashButton";
-        trash.textContent = "Trash";
-        var buttonHider = CBUIButtonHider.create();
+    createPageSectionItem: function (page) {
+        var item = CBUI.createSectionItem2();
 
-        element.appendChild(title);
-        buttonHider.appendChildCallback(copy);
-        buttonHider.appendChildCallback(trash);
-        element.appendChild(buttonHider.element);
+        /* description */
+        var descriptionElement = document.createElement("div");
+        descriptionElement.className = "title";
+        descriptionElement.textContent = page.keyValueData.title;
 
-        title.addEventListener("click", CBPageList.handlePageElementEditWasClicked.bind(undefined, {
-            className : page.className,
-            ID : page.ID,
+        item.titleElement.appendChild(descriptionElement);
+
+        item.titleElement.addEventListener("click", CBPageList.handlePageElementEditWasClicked.bind(undefined, {
+            className: page.className,
+            ID: page.ID,
         }));
 
-        copy.addEventListener("click", CBPageList.handlePageElementCopyWasClicked.bind(undefined, {
-            IDToCopy : page.ID,
+        /* copy */
+        var copyCommandElement = document.createElement("div");
+        copyCommandElement.className = "command CBPageListCopyButton";
+        copyCommandElement.textContent = "Copy";
+
+        item.commandsElement.appendChild(copyCommandElement);
+
+        copyCommandElement.addEventListener("click", CBPageList.handlePageElementCopyWasClicked.bind(undefined, {
+            IDToCopy: page.ID,
         }));
 
-        trash.addEventListener("click", CBPageList.handlePageElementTrashWasClicked.bind(undefined, {
-            element : itemElement,
-            ID : page.ID,
+        /* trash */
+        var trashCommandElement = document.createElement("div");
+        trashCommandElement.className = "command CBPageListTrashButton";
+        trashCommandElement.textContent = "Trash";
+
+        item.commandsElement.appendChild(trashCommandElement);
+
+        trashCommandElement.addEventListener("click", CBPageList.handlePageElementTrashWasClicked.bind(undefined, {
+            element: item,
+            ID: page.ID,
         }));
 
-        return element;
+        return item.element;
     },
 
     /**
@@ -128,62 +131,5 @@ var CBPageList = {
         } else {
             Colby.displayResponse(response);
         }
-    },
-};
-
-/**
- * 2010.09.29 Testing for a permanent button hider control.
- */
-var CBUIButtonHider = {
-
-    /**
-     * @param Element state.buttonsElement
-     * @param Element element
-     *
-     * @return undefined
-     */
-    appendChild : function (state, element) {
-        state.buttonsElement.appendChild(element);
-    },
-
-    /**
-     * @return {
-     *  function appendChildCallback,
-     *  Element element,
-     * }
-     */
-    create : function () {
-        var element = document.createElement("div");
-        element.className = "CBUIButtonHider";
-
-        var hider = document.createElement("div");
-        hider.className = "hider";
-        element.appendChild(hider);
-
-        hider.addEventListener("click", CBUIButtonHider.handleHiderClicked.bind(undefined, {
-            element : element,
-        }));
-
-        var buttons = document.createElement("div");
-        buttons.className = "buttons";
-        element.appendChild(buttons);
-
-        var appendChildCallback = CBUIButtonHider.appendChild.bind(undefined, {
-            buttonsElement : buttons,
-        });
-
-        return {
-            appendChildCallback : appendChildCallback,
-            element : element,
-        };
-    },
-
-    /**
-     * @param Element state.element
-     *
-     * @return undefined
-     */
-    handleHiderClicked : function (state) {
-        state.element.classList.toggle("open");
     },
 };

@@ -155,9 +155,15 @@
 
 .CBUISectionItem2 {
     display: flex;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
 }
 
 .CBUISectionItem2 > .title {
+    cursor: pointer;
     flex: 1 1 auto;
     padding: 5px 10px;
 }

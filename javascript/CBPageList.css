@@ -1,73 +1,7 @@
-.CBPageListPage {
-    box-sizing: border-box;
-    cursor: pointer;
-    display: flex;
-    min-height: 44px;
-}
-
-.CBPageListPage > .title {
-    align-self: center;
-    flex: 1 1 auto;
-    overflow: hidden;
-    padding: 5px 10px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.CBPageListPage > .CBUIButtonHider {
-    border-left: 1px solid hsl(0, 0%, 80%);
-}
-
 .CBPageListCopyButton {
     background-color: hsl(60, 100%, 70%);
 }
 
 .CBPageListTrashButton {
     background-color: hsl(0, 100%, 70%);
-}
-
-/* CBUIButtonHider */
-
-.CBUIButtonHider {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-}
-
-.CBUIButtonHider .hider {
-    align-items: center;
-    color: hsl(0, 0%, 80%);
-    cursor: default;
-    display: flex;
-    flex: none;
-    padding: 0 20px;
-}
-
-.CBUIButtonHider .hider:hover {
-    color: hsl(0, 0%, 20%);
-}
-
-.CBUIButtonHider .hider::before {
-    content: "<";
-}
-
-.CBUIButtonHider.open .hider::before {
-    content: ">";
-}
-
-.CBUIButtonHider .buttons {
-    display: none;
-}
-
-.CBUIButtonHider.open .buttons {
-    display: flex;
-    flex-direction: row-reverse;
-}
-
-.CBUIButtonHider .buttons > * {
-    align-items: center;
-    cursor: default;
-    display: flex;
-    flex: none;
-    padding: 0 10px;
 }
