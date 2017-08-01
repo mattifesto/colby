@@ -42,6 +42,8 @@ final class CBViewPageEditor {
     static function requiredJavaScriptVariables() {
         return [
             ['CBPageEditorAvailableViewClassNames', CBPagesPreferences::classNamesForAddableViews()],
+            ['CBViewPageEditor_specID', cb_query_string_value('data-store-id')],
+            ['CBViewPageEditor_specIDToCopy', cb_query_string_value('id-to-copy')],
         ];
     }
 }

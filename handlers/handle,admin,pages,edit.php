@@ -58,16 +58,6 @@ if ($CBPageEditorAvailablePageTemplateClassNames || class_exists('CBPageTemplate
     }
 }
 
-/**
- * Export query variables
- *
- * 2014.04.08
- *  This can be removed when this page moves to storing the archive ID as a hash
- *  variable.
- */
-
-CBHTMLOutput::exportVariable('CBURLQueryVariables', $_GET);
-
 CBView::renderModelAsHTML((object)[
     'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'pages',

@@ -7,7 +7,8 @@
     CBUINavigationView,
     CBUISpecEditor,
     CBUISpecSaver,
-    CBURLQueryVariables,
+    CBViewPageEditor_specID,
+    CBViewPageEditor_specIDToCopy,
     CBViewPageInformationEditor,
     Colby */
 
@@ -64,7 +65,7 @@ var CBViewPageEditor = {
              */
 
             var spec = JSON.parse(template.modelJSON);
-            spec.ID = CBURLQueryVariables["data-store-id"];
+            spec.ID = CBViewPageEditor_specID;
 
             CBViewPageEditor.displayEditorForPageSpec(spec);
         };
@@ -301,10 +302,10 @@ CBViewPageEditor.DOMContentDidLoad = function() {
  */
 CBViewPageEditor.fetchModel = function() {
     var formData = new FormData();
-    formData.append("id", CBURLQueryVariables["data-store-id"]);
+    formData.append("id", CBViewPageEditor_specID);
 
-    if (CBURLQueryVariables["id-to-copy"] !== undefined) {
-        formData.append("id-to-copy", CBURLQueryVariables["id-to-copy"]);
+    if (CBViewPageEditor_specIDToCopy) {
+        formData.append("id-to-copy", CBViewPageEditor_specIDToCopy);
     }
 
     var xhr = new XMLHttpRequest();
