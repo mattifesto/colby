@@ -123,7 +123,7 @@ final class CBDB {
      *
      * @return [stdClass] | [key => stdClass]
      */
-    public static function SQLToObjects($SQL, $args = []) {
+    static function SQLToObjects($SQL, $args = []) {
         $keyField = null;
         extract($args, EXTR_IF_EXISTS);
 
@@ -140,6 +140,7 @@ final class CBDB {
         }
 
         $result->free();
+
         return $objects;
     }
 
