@@ -10,6 +10,7 @@
     display: flex;
     justify-content: center;
     max-width: 100%;
+    padding: 20px 0;
 }
 
 .CBPageListView2_default > article > a {
@@ -18,7 +19,6 @@
     border-radius: 3px;
     color: inherit;
     display: block;
-    margin-bottom: 60px;
     max-width: 100%;
     text-decoration: inherit;
     width: 600px;
@@ -80,6 +80,7 @@
 
 .CBPageListView2_default .buttonContainer {
     text-align: center;
+    padding: 20px 0;
 }
 
 .CBPageListView2_default .button {
