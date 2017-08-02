@@ -33,6 +33,10 @@ final class CBMenuView {
             $CSSClassNames[] = 'CBMenuView_default';
         }
 
+        if (count($menu->items) < 5) {
+            $CSSClassNames[] = 'few';
+        }
+
         $CSSClassNames = implode(' ', $CSSClassNames);
 
         $titleAsHTML = cbhtml($menu->title);

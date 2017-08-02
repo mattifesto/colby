@@ -37,6 +37,7 @@
     width: 980px;
 }
 
+
 .CBMenuView_default .selected {
     color: var(--CBTextColorForLinks);
 }
@@ -56,8 +57,16 @@
         display: none;
     }
 
+    .CBMenuView_default.few ul {
+        justify-content: center;
+    }
+
     .CBMenuView_default li {
         font-size: 14px;
+    }
+
+    .CBMenuView_default.few li {
+        padding: 0 20px;
     }
 }
 
