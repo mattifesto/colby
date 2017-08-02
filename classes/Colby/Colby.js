@@ -971,14 +971,6 @@ Colby.updateTimestampForElementWithId = function(timestamp, id)
     Colby.beginUpdatingTimes();
 };
 
-(function() {
-    var link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "/colby/javascript/Colby.css";
-
-    document.head.appendChild(link);
-})();
-
 /**
  * General page loaded tasks
  */

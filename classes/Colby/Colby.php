@@ -1,7 +1,5 @@
 <?php
 
-include __DIR__ . '/functions.php';
-
 Colby::initialize();
 
 final class Colby {
@@ -429,13 +427,9 @@ final class Colby {
          * Only the following lines should use `require_once`.
          */
 
-        // defines CBSystemVersionNumber
-        require_once __DIR__ . '/version.php';
-
-        define('CBSystemDirectory', __DIR__);
         define('CBSiteDirectory', $_SERVER['DOCUMENT_ROOT']);
         define('CBPageTypeID', '89fe3a7d77424ba16c5101eeb0448c7688547ab2'); // @deprecated
-        define('COLBY_SYSTEM_DIRECTORY', __DIR__); // @deprecated
+        define('COLBY_SYSTEM_DIRECTORY', CBSystemDirectory); // @deprecated
         define('COLBY_SITE_DIRECTORY', $_SERVER['DOCUMENT_ROOT']); // @deprecated
 
         // defines CBSiteVersionNumber
@@ -766,6 +760,20 @@ final class Colby {
                 error_log('Source: ' . __METHOD__ . '(), Ignored exception: ' . $ignoredException->getMessage());
             }
         }
+    }
+
+    /**
+     * @return [string]
+     */
+    static function requiredCSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', CBSystemURL)];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function requiredJavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', CBSystemURL)];
     }
 
     /**
