@@ -232,23 +232,50 @@ final class Colby {
     }
 
     /**
+     * @deprecated use Colby::flexpath()
+     *
      * @param string $flexdir
      * @param string $className
      *
      * @return string
      */
-    public static function flexnameForCSSForClass($flexdir, $className) {
-        return "{$flexdir}/classes/{$className}/{$className}.css";
+    static function flexnameForCSSForClass($flexdir, $className) {
+        return Colby::flexpath($className, 'css', $flexdir);
     }
 
     /**
+     * @deprecated use Colby::flexpath()
+     *
      * @param string $flexdir
      * @param string $className
      *
      * @return string
      */
-    public static function flexnameForJavaScriptForClass($flexdir, $className) {
-        return "{$flexdir}/classes/{$className}/{$className}.js";
+    static function flexnameForJavaScriptForClass($flexdir, $className) {
+        return Colby::flexpath($className, 'js', $flexdir);
+    }
+
+    /**
+     * This function builds a flexpath from a class name. It is mosly used to
+     * construct flexpaths for css and js files associated with a class.
+     *
+     * It mirrors CBDataStore::flexpath() in the way it chooses and orders its
+     * paramaters from most important to optional.
+     *
+     * @param string $className
+     * @param string $extension
+     * @param string? $flexdir
+     *
+     * @return string
+     */
+    static function flexpath($className, $extension, $flexdir = null) {
+        $flexpath = "classes/{$className}/{$className}.{$extension}";
+
+        if (empty($flexdir)) {
+            return $flexpath;
+        } else {
+            return "{$flexdir}/{$flexpath}";
+        }
     }
 
     /**
