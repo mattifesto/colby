@@ -234,7 +234,7 @@ final class CBHTMLOutput {
      *
      * @return null
      */
-    public static function render() {
+    static function render() {
         $bodyContent = ob_get_clean();
         $pageContext = CBPageContext::current();
         $settingsHeadContent = '';
@@ -466,6 +466,15 @@ final class CBHTMLOutput {
         CBHTMLOutput::$requiredClassNames = [];
         CBHTMLOutput::$styleSheets = [];
         CBHTMLOutput::$titleHTML = '';
+
+        /**
+         * @NOTE 2017.08.02 Colby was added by default to requiredClassNames to
+         *       smooth the transition to moving the Colby.js and Colby.css files.
+         *       Now, if you need these files for a view, layout, or whatever, you
+         *       should add Colby to your list of required class names.
+         */
+
+        CBHTMLOutput::requireClassName('Colby');
     }
 
     /**
