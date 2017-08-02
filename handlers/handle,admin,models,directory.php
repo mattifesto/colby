@@ -36,7 +36,7 @@ foreach (CBModelsPreferences::classNamesOfEditableModels() as $className) {
         $ID = constant("{$className}::ID");
         $item->href = "/admin/page/?class=CBAdminPageForEditingModels&ID={$ID}";
     } else {
-        $item->href = "/admin/models/list/?class={$className}";
+        $item->href = "/admin/page/?class=CBAdminPageForModelList&modelClassName={$className}";
     }
 
     if (!empty($info->pluralTitleAsHTML)) {
