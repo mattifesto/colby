@@ -1,8 +1,15 @@
 <?php
 
 /**
- * This is an example and test of a page class. Use it as a template for
- * building other page classes.
+ * Most page models are created using the CBViewPage className. However, it's
+ * relatively easy to create pages using a custom class name for cases where
+ * this is appropriate.
+ *
+ * These cases are rare, though, and it's more likely to be beneficial to create
+ * custom views and layouts instead.
+ *
+ * This is an example of creating a custom page class, and CBTestPageTests uses
+ * this page class. Use it as an example when creating a custom page class.
  */
 final class CBTestPage {
 
@@ -11,7 +18,7 @@ final class CBTestPage {
      *
      * @return null
      */
-    public static function modelsWillSave(array $tuples) {
+    static function modelsWillSave(array $tuples) {
         $models = array_map(function($tuple) { return $tuple->model; }, $tuples);
         CBPages::save($models);
     }
@@ -21,7 +28,7 @@ final class CBTestPage {
      *
      * @return null
      */
-    public static function modelsWillDelete(array $IDs) {
+    static function modelsWillDelete(array $IDs) {
         CBPages::deletePagesByID($IDs);
     }
 
@@ -30,7 +37,7 @@ final class CBTestPage {
      *
      * @return string
      */
-    public static function modelToSearchText(stdClass $model) {
+    static function modelToSearchText(stdClass $model) {
         return "{$model->title} {$model->description}";
     }
 
@@ -39,12 +46,18 @@ final class CBTestPage {
      *
      * @return null
      */
-    public static function renderModelAsHTML(stdClass $model) {
+    static function renderModelAsHTML(stdClass $model) {
+        $titleAsHTML = CBModel::value($model, 'title', '', 'cbhtml');
+
         CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForResponsivePages';
         CBHTMLOutput::begin();
-        CBHTMLOutput::setTitleHTML('Test');
+        CBHTMLOutput::setTitleHTML($titleAsHTML);
 
-        echo "<h1 style=\"padding: 100px; text-align: center;\">{$model->titleAsHTML}</h1>";
+        ?>
+
+        <h1 style="padding: 100px; text-align: center;"><?= $titleAsHTML ?></h1>
+
+        <?php
 
         CBHTMLOutput::render();
     }
@@ -54,9 +67,14 @@ final class CBTestPage {
      *
      * @return stdClass
      */
-    public static function specToModel(stdClass $spec) {
-        $model = CBPages::specToModel($spec);
-
-        return $model;
+    static function specToModel(stdClass $spec) {
+        return (object)[
+            'className' => __CLASS__,
+            'title' => CBModel::value($spec, 'title', ''),
+            'description' => CBModel::value($spec, 'description', ''),
+            'isPublished' => CBModel::value($spec, 'isPublished'),
+            'publicationTimeStamp' => CBModel::value($spec, 'publicationTimeStamp'),
+            'URI' => CBModel::value($spec, 'URI'),
+        ];
     }
 }
