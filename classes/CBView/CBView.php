@@ -40,13 +40,17 @@ final class CBView {
     }
 
     /**
+     * Always use this function to get the search text for either view or page
+     * models.
+     *
+     * @NOTE 2017.08.04 This function may be more approprate on another class
+     *       that would represent search functionality for any model.
+     *
      * @return string
      */
     static function modelToSearchText(stdClass $model = null) {
         if (isset($model->className) && $model->className != 'CBView') {
-            $function = "{$model->className}::modelToSearchText";
-
-            if (is_callable($function)) {
+            if (is_callable($function = "{$model->className}::modelToSearchText")) {
                 return call_user_func($function, $model);
             }
         }
