@@ -61,7 +61,7 @@ final class CBHideByUserGroupView {
             'hideFromNonmembers' => CBModel::value($spec, 'hideFromNonmembers', false, 'boolval'),
             'groupName' => CBModel::value($spec, 'groupName', '', 'trim'),
             'subviews' => CBModel::value($spec, 'subviews', [], function ($subviews) {
-                return array_map('CBView::specToModel', $subviews);
+                return array_map('CBModel::specToModel', $subviews);
             }),
         ];
     }
