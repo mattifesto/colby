@@ -5,7 +5,7 @@ final class CBBackgroundView {
     /**
      * @return string
      */
-    public static function modelToSearchText(stdClass $model = null) {
+    static function modelToSearchText(stdClass $model = null) {
         if (isset($model->children)) {
             $text = array_map('CBView::modelToSearchText', $model->children);
 
@@ -16,16 +16,52 @@ final class CBBackgroundView {
     }
 
     /**
-     * @param stdClass? $model
+     * @param object $model
      *
      * @return null
      */
-    public static function renderModelAsHTML(stdClass $model = null) {
-        if (!$model) {
-            $model = self::specToModel();
+    static function renderModelAsHTML(stdClass $model) {
+        $styles     = [];
+        $styles[]   = "display: flex; display: -ms-flexbox; display: -webkit-flex;";
+        $styles[]   = "justify-content: center; -ms-flex-pack: center; -webkit-justify-content: center;";
+        $styles[]   = "flex-wrap: wrap; -ms-flex-wrap: wrap; -webkit-flex-wrap: wrap;";
+
+        if ($model->imageURL) {
+            $styles[] = "background-image: url({$model->imageURLHTML});";
+            $styles[] = "background-position: center top;";
+
+            if ($model->imageShouldRepeatVertically) {
+                if ($model->imageShouldRepeatHorizontally) {
+                    $repeat = "repeat";
+                } else {
+                    $repeat = "repeat-y";
+                }
+            } else if ($model->imageShouldRepeatHorizontally) {
+                $repeat = "repeat-x";
+            } else {
+                $repeat = "no-repeat";
+            }
+
+            $styles[]   = "background-repeat: {$repeat};";
         }
 
-        include __DIR__ . '/CBBackgroundViewHTML.php';
+        if (!empty($model->color)) {
+            $styles[] = "background-color: {$model->colorHTML};";
+        }
+
+        if ($model->minimumViewHeightIsImageHeight) {
+            $styles[] = "min-height: {$model->imageHeight}px;";
+        }
+
+        $styles = implode(' ', $styles);
+
+        ?>
+
+        <div class="CBBackgroundView" style="<?= $styles; ?>">
+            <?php array_walk($model->children, 'CBView::renderModelAsHTML'); ?>
+        </div>
+
+        <?php
     }
 
     /**
@@ -33,7 +69,7 @@ final class CBBackgroundView {
      *
      * @return stdClass
      */
-    public static function specToModel(stdClass $spec = null) {
+    static function specToModel(stdClass $spec = null) {
         $model                                  = CBView::modelWithClassName(__CLASS__);
         $model->color                           = isset($spec->color) ? $spec->color : null;
         $model->colorHTML                       = ColbyConvert::textToHTML($model->color);
@@ -49,18 +85,8 @@ final class CBBackgroundView {
                                                     $spec->minimumViewHeightIsImageHeight : true;
 
         $subviewSpecs       = isset($spec->children) ? $spec->children : [];
-        $model->children    = array_map('CBView::specToModel', $subviewSpecs);
+        $model->children    = array_map('CBModel::specToModel', $subviewSpecs);
 
         return $model;
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
