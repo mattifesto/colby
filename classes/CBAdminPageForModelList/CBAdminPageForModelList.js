@@ -40,10 +40,23 @@ var CBAdminPageForModelList = {
                                       encodeURIComponent(model.ID);
                 });
 
+                /* export */
+                var exportCommandElement = document.createElement("div");
+                exportCommandElement.className = "command";
+                exportCommandElement.textContent = "Export";
+
+                exportCommandElement.addEventListener("click", function () {
+                    window.location = "/admin/models/export/?ID=" +
+                                      encodeURIComponent(model.ID);
+                });
+
+                item.commandsElement.appendChild(exportCommandElement);
+
                 section.appendChild(item.element);
             });
 
             mainElement.appendChild(section);
+            mainElement.appendChild(CBUI.createHalfSpace());
         }
     },
 };
