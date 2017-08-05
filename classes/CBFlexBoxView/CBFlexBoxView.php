@@ -92,7 +92,7 @@ final class CBFlexBoxView {
         $model->flexFlex        = CBFlexBoxView::specToFlexFlex($spec);
         $model->height          = isset($spec->height) ? CBFlexBoxView::valueToPixelExtent($spec->height) : null;
         $model->imageURL        = isset($spec->imageURL) ? CBFlexBoxView::URLToCSS($spec->imageURL) : '';
-        $model->subviews        = isset($spec->subviews) ? array_map('CBView::specToModel', $spec->subviews) : [];
+        $model->subviews        = isset($spec->subviews) ? array_map('CBModel::specToModel', $spec->subviews) : [];
         $model->width           = isset($spec->width) ? CBFlexBoxView::valueToPixelExtent($spec->width) : null;
         $type                   = isset($spec->type) ? trim($spec->type) : '';
 
