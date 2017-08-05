@@ -289,8 +289,6 @@ final class CBViewPage {
     }
 
     /**
-     * @param hex160 $spec->ID
-     *
      * @param object? $spec->image
      *
      *      An image that represents the page, to be used for thumbnails and
@@ -310,19 +308,19 @@ final class CBViewPage {
      * @return object
      */
     static function specToModel($spec) {
+        $ID = CBModel::value($spec, 'ID', '');
         $time = time();
         $model = (object)[
-            'ID' => $spec->ID,
             'className' => __CLASS__,
             'classNameForKind' => CBModel::value($spec, 'classNameForKind', '', 'trim'),
             'classNameForSettings' => CBModel::value($spec, 'classNameForSettings', '', 'trim'),
             'selectedMainMenuItemName' => CBModel::value($spec, 'selectedMainMenuItemName', '', 'trim'),
             'title' => CBModel::value($spec, 'title', '', 'trim'),
-            'URI' => CBModel::value($spec, 'URI', $spec->ID, function ($value) use ($spec) {
+            'URI' => CBModel::value($spec, 'URI', $ID, function ($value) use ($ID) {
                 $value = trim($value);
 
                 if (empty($value)) {
-                    return $spec->ID;
+                    return $ID;
                 } else {
                     return $value;
                 }
