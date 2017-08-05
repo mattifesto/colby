@@ -65,7 +65,6 @@ class CBUnitTests {
 
         CBUnitTestsForCBDataStore::runAll();            // move to CBDataStoreTests
         CBUnitTestsForCBMarkaround::runAll();           // move to CBMarkaroundTests
-        CBUnitTestsForCBView::runAll();                 // move to CBViewTests
         CBUnitTestsForColbyConvert::runAll();           // move to CBConvertTests
         CBUnitTestsForColbyMarkaroundParser::runAll();  // move to CBMarkaroundParserTests
     }
