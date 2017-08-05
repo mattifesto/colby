@@ -26,7 +26,7 @@ final class CBModelsTests {
             }
         ]);
 
-        CBModels::save($specs);
+        CBModels::save(array_values($specs));
     }
 
     /**
