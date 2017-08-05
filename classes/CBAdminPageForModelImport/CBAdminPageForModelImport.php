@@ -33,13 +33,11 @@ final class CBAdminPageForModelImport {
             goto done;
         }
 
-        CBDB::transaction(
-            function () use ($spec) {
-                CBModels::save([$spec]);
-            }
-        );
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save([$spec], /* force: */ true);
+        });
 
-        $response->message = $_FILES['file']['type'];
+        $response->message = 'Model imported successfully.';
         $response->wasSuccessful = true;
 
         done:
