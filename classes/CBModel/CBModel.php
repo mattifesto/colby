@@ -7,26 +7,12 @@ final class CBModel {
      *
      * @return null
      */
-    public static function importSpecForTask(stdClass $args) {
-        $spec = $args->spec;
-        $model = CBModel::specToOptionalModel($spec);
+    static function importSpecForTask(stdClass $args) {
+        CBDB::transaction(function () use ($args) {
+            CBModels::save([$args->spec], /* force: */ true);
+        });
 
-        if ($model !== null) {
-            try {
-                Colby::query('START TRANSACTION');
-                CBModels::saveTuples([(object)[
-                    'spec' => $spec,
-                    'model' => $model,
-                    'version' => 'force',
-                ]]);
-                Colby::query('COMMIT');
-            } catch (Exception $exception) {
-                Colby::query('ROLLBACK');
-                throw $exception;
-            }
-
-            CBLog::addMessage('CBModel', 6, "A task was run to import a spec of class '{$model->className}'");
-        }
+        CBLog::addMessage('CBModel', 6, "A task was run to import a spec of class '{$model->className}'");
     }
 
     /**
@@ -60,9 +46,73 @@ final class CBModel {
     }
 
     /**
-     * This is the official way to convert a spec into a model. If no function
-     * is available to convert the spec into a model this function will return
-     * null.
+     * This is the official way to convert a spec to a model. It expects the
+     * spec to be properly formed and the "{$spec->className}::specToModel"
+     * function to be available and working.
+     *
+     * The function throws a Exception if something goes wrong. The exception
+     * message will describe the error that occurred.
+     *
+     * Reading this function will help developers understand the exact
+     * interactions and requirements of specs and models.
+     *
+     * @NOTE It is technically possible for the model to receive a generated ID
+     *       that is different from the spec's ID. In this case, the spec is
+     *       probably "wrong" to have an ID set, but it's not an error for the
+     *       same reason that it's never an error for a spec to have properties
+     *       set that aren't used by the model. The model's ID is the ID used
+     *       when saving the model.
+     *
+     * @NOTE If the model generates an ID, it must be deterministic so that
+     *       the same ID will be produced from another call to specToModel().
+     *       Good candidates for this are specs with unique string properties
+     *       such as `productCode`.
+     *
+     * @NOTE If the model is not given a title by specToModel() it will be given
+     *       a title of a trimmed spec title property, if set, or an empty
+     *       string.
+     *
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function specToModel(stdClass $spec) {
+        if (empty($spec->className)) {
+            throw new Exception(__METHOD__ . ' The spec does not have its `className` property set.');
+        }
+
+        if (!is_callable($function = "{$spec->className}::specToModel")) {
+            throw new Exception(__METHOD__ . " The spec compilation function `{$function}` is not available.");
+        }
+
+        $model = call_user_func($function, $spec);
+
+        if (empty($model->ID)) {
+            if (empty($spec->ID) || !CBHex160::is($spec->ID)) {
+                throw new Exception(__METHOD__ . ' The model `ID` was not generated and the spec `ID` is not properly set.');
+            } else {
+                $model->ID = $spec->ID;
+            }
+        } else if (!CBHex160::is($model->ID)) {
+            $IDsAsJSON = json_encode($model->ID);
+            throw new Exception(__METHOD__ . " The model `ID` was generated but was set to an invalid value: {$IDsAsJSON}");
+        }
+
+        if ($model->className !== $spec->className) {
+            throw new Exception(__METHOD__ . ' The model `className` property does not match the spec `className` property.');
+        }
+
+        if (!isset($model->title)) {
+            $model->title = CBModel::value($spec, 'title', '', 'trim');
+        }
+
+        return $model;
+    }
+
+    /**
+     * This is an alternate way to convert a spec into a model when the spec
+     * values are not reliable. If the spec cannot be propertly converted to a
+     * model, null is returned.
      *
      * @param object? $spec
      * @param string? $expectedClassName
@@ -84,24 +134,21 @@ final class CBModel {
         }
 
         if (empty($spec->className)) {
-            if (empty($expectedClassName)) {
-                return null;
-            } else {
-                $className = $expectedClassName;
-            }
-        } else {
-            if (!empty($expectedClassName) && $spec->className !== $expectedClassName) {
+            $spec = clone $spec;
+            $spec->className = $expectedClassName;
+        } else if (!empty($expectedClassName)) {
+            if ($spec->className !== $expectedClassName) {
                 return null;
             }
-
-            $className = $spec->className;
         }
 
-        if (is_callable($function = "{$className}::specToModel")) {
-            return call_user_func($function, $spec);
-        } else {
+        try {
+            $model = CBModel::specToModel($spec);
+        } catch (Exception $exception) {
             return null;
         }
+
+        return $model;
     }
 
     /**
