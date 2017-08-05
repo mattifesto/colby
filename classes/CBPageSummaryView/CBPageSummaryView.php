@@ -36,75 +36,27 @@
 final class CBPageSummaryView {
 
     /**
-     * @deprecated Related to CBPages::specToModel(), use a CBViewPage instead.
+     * @param object $pageModel
      *
-     * To avoid duplicating property validation this function assumes the model
-     * parameter has been generated with the `CBPages::specToModel` function or
-     * another function that properly validates and sets the reserved page model
-     * properties. It is a the responsibility of the caller to make sure this is
-     * true.
-     *
-     * For instance, the $pageModel->titleAsHTML value is assumed to have
-     * already been escaped for use in HTML.
-     *
-     * @param stdClass $pageModel
-     *
-     * @return stdClass
+     * @return object
      */
-    public static function pageModelToModel(stdClass $pageModel) {
-        $model = (object)[
-            'ID' => $pageModel->ID,
+    static function viewPageModelToModel(stdClass $pageModel) {
+        return (object)[
             'className' => __CLASS__,
+            'ID' => CBModel::value($pageModel, 'ID'),
+            'created' => CBModel::value($pageModel, 'created', 0, 'intval'),
+            'dataStoreID' => CBModel::value($pageModel, 'ID'),
+            'description' => CBModel::value($pageModel, 'description', ''),
+            'descriptionHTML' => CBModel::value($pageModel, 'description', '', 'cbhtml'),
+            'image' => CBModel::value($pageModel, 'image'),
+            'isPublished' => CBModel::value($pageModel, 'isPublished'),
+            'publicationTimeStamp' => CBModel::value($pageModel, 'publicationTimeStamp'),
+            'publishedBy' => CBModel::value($pageModel, 'publishedBy'),
+            'thumbnailURL' => CBModel::value($pageModel, 'thumbnailURL'),
+            'title' => CBModel::value($pageModel, 'title'),
+            'titleHTML' => CBModel::value($pageModel, 'title', '', 'cbhtml'),
+            'updated' => CBModel::value($pageModel, 'modified'),
+            'URI' => CBModel::value($pageModel, 'URI'),
         ];
-        $model->created = $pageModel->created;
-        $model->dataStoreID = $pageModel->ID;
-        $model->description = $pageModel->description;
-        $model->descriptionHTML = $pageModel->descriptionAsHTML;
-        $model->isPublished = isset($pageModel->published);
-        $model->publicationTimeStamp = $pageModel->published;
-        $model->publishedBy = null;
-        $model->thumbnailURL = $pageModel->encodedURLForThumbnail;
-        $model->title = $pageModel->title;
-        $model->titleHTML = $pageModel->titleAsHTML;
-        $model->updated = $pageModel->modified;
-        $model->URI = $pageModel->dencodedURIPath;
-
-        return $model;
-    }
-
-    /**
-     * To avoid duplicating property validation this function assumes the model
-     * parameter has been generated with the `CBViewPage::specToModel` function or
-     * another function that properly validates and sets the reserved page model
-     * properties. It is a the responsibility of the caller to make sure this is
-     * true.
-     *
-     * For instance, the $pageModel->titleHTML value is assumed to have already
-     * been escaped for use in HTML.
-     *
-     * @param stdClass $pageModel
-     *
-     * @return stdClass
-     */
-    public static function viewPageModelToModel(stdClass $pageModel) {
-        $model = (object)[
-            'ID' => $pageModel->ID,
-            'className' => __CLASS__,
-        ];
-        $model->created = $pageModel->created;
-        $model->dataStoreID = $pageModel->ID;
-        $model->description = $pageModel->description;
-        $model->descriptionHTML = $pageModel->descriptionHTML;
-        $model->image = $pageModel->image;
-        $model->isPublished = $pageModel->isPublished;
-        $model->publicationTimeStamp = $pageModel->publicationTimeStamp;
-        $model->publishedBy = $pageModel->publishedBy;
-        $model->thumbnailURL = $pageModel->thumbnailURL; /* deprecated */
-        $model->title = $pageModel->title;
-        $model->titleHTML = $pageModel->titleHTML;
-        $model->updated = $pageModel->modified;
-        $model->URI = $pageModel->URI;
-
-        return $model;
     }
 }
