@@ -17,6 +17,44 @@ final class CBAdminPageForModelImport {
     }
 
     /**
+     * @return null
+     */
+    static function importJSONForAjax() {
+        $response = new CBAjaxResponse();
+
+        switch ($type = $_FILES['file']['type']) {
+        case 'application/json':
+        case 'text/plain':
+            $spec = json_decode(file_get_contents($_FILES['file']['tmp_name']));
+            break;
+
+        default:
+            $response->message = "This type of the uploaded file is \"{$type}\" which is not an accepted JSON file type.";
+            goto done;
+        }
+
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save([$spec]);
+            }
+        );
+
+        $response->message = $_FILES['file']['type'];
+        $response->wasSuccessful = true;
+
+        done:
+
+        $response->send();
+    }
+
+    /**
+     * @return object
+     */
+    static function importJSONForAjaxPermissions() {
+        return (object)['group' => 'Administrators'];
+    }
+
+    /**
      * @param [string] $rowData
      * @param [string] $columnData
      *

@@ -1,5 +1,9 @@
 "use strict"; /* jshint strict: global */
-/* globals CBUI, CBUIActionLink, Colby */
+/* globals
+    CBUI,
+    CBUIActionLink,
+    CBUITaskStatus,
+    Colby */
 
 var CBAdminPageForModelImport = {
 
@@ -7,17 +11,71 @@ var CBAdminPageForModelImport = {
      * @return undefined
      */
     DOMContentDidLoad : function() {
+        var section, item;
         var main = document.getElementsByTagName("main")[0];
         var element = document.createElement("div");
         element.className = "CBAdminPageForModelImport";
 
+
+
+        /* import JSON */
+
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({
+            paragraphs: ["Import Single Model"],
+        }));
+        section = CBUI.createSection();
+        item = CBUI.createSectionItem();
+        var jsonInputElement = document.createElement("input");
+        jsonInputElement.type = "file";
+        jsonInputElement.style.display = "none";
+        var jsonActionLink = CBUIActionLink.create({
+            callback: jsonInputElement.click.bind(jsonInputElement),
+            labelText: "Import JSON File...",
+        });
+
+        jsonInputElement.addEventListener("change", function() {
+            var URL = "/api/?class=CBAdminPageForModelImport&function=importJSON";
+
+            var formData = new FormData();
+            formData.append("file", jsonInputElement.files[0]);
+
+            jsonInputElement.value = null;
+
+            CBAdminPageForModelImport.jsonPromise = Colby.fetchAjaxResponse(URL, formData)
+                .then(resolved, rejected);
+
+            function resolved(ajaxResponse) {
+                Colby.displayResponse(ajaxResponse);
+            }
+
+            function rejected(error) {
+                //Colby.report(error);
+                Colby.displayError(error);
+            }
+        });
+
+        item.appendChild(jsonInputElement);
+        item.appendChild(jsonActionLink.element);
+        section.appendChild(item);
+
+        element.appendChild(section);
+
+        /* import CSV */
+
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({
+            paragraphs: ["Import Multiple Models"],
+        }));
+
+        section = CBUI.createSection();
         var input = document.createElement("input");
         input.type = "file";
         input.style.display = "none";
 
         var actionLink = CBUIActionLink.create({
             "callback" : input.click.bind(input),
-            "labelText" : "Upload CSV Files...",
+            "labelText" : "Import CSV File...",
         });
 
         input.addEventListener("change", CBAdminPageForModelImport.handleFileInputChanged.bind(undefined, {
@@ -27,13 +85,11 @@ var CBAdminPageForModelImport = {
         }));
 
         element.appendChild(input);
-
-        element.appendChild(CBUI.createHalfSpace());
-
-        var section = CBUI.createSection();
-        var item = CBUI.createSectionItem();
+        item = CBUI.createSectionItem();
         item.appendChild(actionLink.element);
+
         section.appendChild(item);
+
         element.appendChild(section);
 
         element.appendChild(CBUI.createHalfSpace());
