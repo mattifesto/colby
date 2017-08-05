@@ -225,8 +225,6 @@ EOT;
     }
 
     /**
-     * @param hex160 $model->ID
-     *
      * NOTE 2016.03.15 This function is somewhat messed up and it's very
      * important. It makes a ton of assumptions many of which may be wrong. It
      * needs to be reviewed, have its parameters well documented, and fixed to
@@ -243,53 +241,41 @@ EOT;
      * For instance, the $model->titleAsHTML value is assumed to have already
      * been escaped for use in HTML.
      *
-     * 2016.02.11 CBViewPages are now saved as models, but their model is still
-     * non-standard so there are some special cases in this function that should
-     * eventually be removed once CBViewPage is changed to follow the standard
-     * page model conventions.
-     *
      * @return string
      */
-    public static function modelToRowValues(stdClass $model) {
-        $archiveID = CBHex160::toSQL($model->ID);
-        $className = CBDB::valueToOptionalTrimmedSQL($model->className); // NOTE This should probably be required.
-        $classNameForKind = CBDB::valueToOptionalTrimmedSQL($model->classNameForKind);
-        $created = (int)$model->created;
-        $iteration = 0;
-        $modified = (int)$model->modified;
+    static function modelToRowValues(stdClass $model) {
+        $now = time();
+        $IDAsSQL = CBHex160::toSQL(CBModel::value($model, 'ID'));
+        $className = CBModel::value($model, 'className', '');
+        $classNameAsSQL = CBDB::stringToSQL($className);
+        $classNameForKindAsSQL = CBDB::stringToSQL(CBModel::value($model, 'classNameForKind'));
+        $createdAsSQL = CBModel::value($model, 'created', $now, 'intval');
+        $iterationAsSQL = 0; /* deprecated */
+        $modifiedAsSQL = CBModel::value($model, 'modified', $now, 'intval');
 
-        if ($model->className === 'CBViewPage') {
-            $published = $model->isPublished ? $model->publicationTimeStamp : 'NULL';
-            $publishedBy = ($model->isPublished && isset($model->publishedBy)) ? (int)$model->publishedBy : 'NULL';
-            $publishedMonth = $model->isPublished ? ColbyConvert::timestampToYearMonth($model->publicationTimeStamp) : 'NULL';
-            $subtitleHTML = CBDB::stringToSQL($model->descriptionHTML);
-            $thumbnailURL = CBDB::stringToSQL($model->thumbnailURLAsHTML);
-            $titleHTML = CBDB::stringToSQL($model->titleHTML);
-            $URI = CBDB::stringToSQL($model->URI);
+        $isPublished = CBModel::value($model, 'isPublished', false, 'boolval');
 
-            $pageSummaryModel = CBPageSummaryView::viewPageModelToModel($model);
+        if ($isPublished) {
+            $publishedAsSQL = CBModel::value($model, 'publicationTimeStamp', $now, 'intval');
+            $publishedByAsSQL = CBModel::value($model, 'publishedBy', 'NULL', 'intval');
+            $publishedMonthAsSQL = ColbyConvert::timestampToYearMonth($publishedAsSQL);
         } else {
-            $published = isset($model->published) ? (int)$model->published : 'NULL';
-            $publishedBy = 'NULL'; // Not sure if this will be used in the future
-            $publishedMonth = isset($model->published) ? ColbyConvert::timestampToYearMonth($model->published) : 'NULL';
-            $subtitleHTML = CBDB::stringToSQL($model->descriptionAsHTML);
-            $thumbnailURL = CBDB::stringToSQL($model->encodedURLForThumbnail);
-            $titleHTML = CBDB::stringToSQL($model->titleAsHTML);
-            $URI = CBDB::stringToSQL($model->dencodedURIPath);
-
-            if (is_callable($function = "{$model->className}::modelToPageSummaryModel")) {
-                $pageSummaryModel = call_user_func($function, $model);
-            } else {
-                $pageSummaryModel = CBPageSummaryView::pageModelToModel($model);
-            }
+            $publishedAsSQL = 'NULL';
+            $publishedByAsSQL = 'NULL';
+            $publishedMonthAsSQL = 'NULL';
         }
 
+        $titleHTMLAsSQL = CBDB::stringToSQL(CBModel::value($model, 'title', '', 'cbhtml'));
+        $subtitleHTMLAsSQL = CBDB::stringToSQL(CBModel::value($model, 'description', '', 'cbhtml'));
+
+        $thumbnailURLAsSQL = CBDB::stringToSQL(CBModel::value($model, 'thumbnailURL', '', 'cbhtml'));
+        $URIAsSQL = CBDB::stringToSQL(CBModel::value($model, 'URI', ''));
+
+        $pageSummaryModel = CBPageSummaryView::viewPageModelToModel($model);
         $keyValueDataAsSQL = CBDB::stringToSQL(json_encode($pageSummaryModel));
+        $searchTextAsSQL = CBDB::stringToSQL(CBView::modelToSearchText($model));
 
-        $function = "{$model->className}::modelToSearchText";
-        $searchText = is_callable($function) ? CBDB::stringToSQL(call_user_func($function, $model)) : "''";
-
-        return "($archiveID, $keyValueDataAsSQL, $className, $classNameForKind, $created, $iteration, $modified, $URI, $titleHTML, $subtitleHTML, $thumbnailURL, $searchText, $published, $publishedBy, $publishedMonth)";
+        return "($IDAsSQL, $keyValueDataAsSQL, $classNameAsSQL, $classNameForKindAsSQL, $createdAsSQL, $iterationAsSQL, $modifiedAsSQL, $URIAsSQL, $titleHTMLAsSQL, $subtitleHTMLAsSQL, $thumbnailURLAsSQL, $searchTextAsSQL, $publishedAsSQL, $publishedByAsSQL, $publishedMonthAsSQL)";
     }
 
     /**
@@ -497,43 +483,6 @@ EOT;
             $clauses = implode(' AND ', $clauses);
             return "({$clauses})";
         }
-    }
-
-    /**
-     * @deprecated 2016.12.10 The are only a couple of classes that call this on
-     * the KG site. Use CBViewPage instead.
-     *
-     * Deprecated instructions:
-     *
-     * Page classes should call this function first from their own `specToModel`
-     * function to process all of the page class reserved properties and ensure
-     * that the model is properly set up to be saved.
-     *
-     * After that, the page class should continue processing its own custom
-     * properties.
-     *
-     * This function defines the official properties of a page class spec and
-     * model.
-     *
-     * @param stdClass $spec
-     *
-     * @return stdClass
-     */
-    public static function specToModel(stdClass $spec) {
-        $model = CBModels::modelWithClassName($spec->className, ['ID' => $spec->ID]);
-        $model->classNameForKind = CBModel::value($spec, 'classNameForKind', null, 'CBConvert::valueToOptionalTrimmedString');
-        $model->dencodedURIPath = isset($spec->URIPath) ? CBPages::stringToDencodedURIPath($spec->URIPath) : '';
-        $model->dencodedURIPath = ($model->dencodedURIPath === '') ? $spec->ID : $model->dencodedURIPath;
-        $model->description = isset($spec->description) ? trim($spec->description) : '';
-        $model->descriptionAsHTML = ColbyConvert::textToHTML($model->description);
-        $model->encodedURLForThumbnail = isset($spec->encodedURLForThumbnail) ? trim($spec->encodedURLForThumbnail) : '';
-        $model->encodedURLForThumbnailAsHTML = ColbyConvert::textToHTML($model->encodedURLForThumbnail);
-        $model->hidden = isset($spec->hidden) && ($spec->hidden === true);
-        $model->published = (isset($spec->published) && $model->hidden === false) ? (int)$spec->published : null;
-        $model->title = CBModels::specToTitle($spec);
-        $model->titleAsHTML = ColbyConvert::textToHTML($model->title);
-
-        return $model;
     }
 
     /**
