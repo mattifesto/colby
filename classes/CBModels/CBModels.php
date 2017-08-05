@@ -629,9 +629,6 @@ EOT;
      *        the spec must be set and will be used.
      *
      * @NOTE Reserved and required properties:
-     *      - title: The model will be given a title property that has a value
-     *        of the trimmed value of the spec title property if it is set or an
-     *        empty string if it is not.
      *      - created: The model will have its created property set to the
      *        timestamp when the model was first saved.
      *      - modified: The model will have its modified property set to the
@@ -653,25 +650,22 @@ EOT;
      *
      * @return null
      */
-    public static function save(array $specs, $force = false) {
+    static function save(array $specs, $force = false) {
         if (empty($specs)) { return; }
 
-        $className = reset($specs)->className;
+        if (empty($specs[0]->className)) {
+            throw new Exception(__METHOD__ . ' The first spec does not have its `className` propery set.');
+        } else {
+            $sharedClassName = $specs[0]->className;
+        }
+
         $modified = time();
 
-        $tuples = array_map(function ($spec) use ($className) {
-            if ($spec->className !== $className) {
-                throw new InvalidArgumentException('specs: All specs must have the same className.');
-            }
+        $tuples = array_map(function ($spec) use ($sharedClassName) {
+            $model = CBModel::specToModel($spec);
 
-            $model = call_user_func("{$className}::specToModel", $spec);
-
-            if (empty($model->ID)) {
-                $model->ID = $spec->ID;
-            }
-
-            if (!isset($model->title)) {
-                $model->title = CBModel::value($spec, 'title', null, 'trim');
+            if ($model->className !== $sharedClassName) {
+                throw new Exception('All specs must have the same className.');
             }
 
             return (object)[
@@ -715,7 +709,7 @@ EOT;
             ];
         });
 
-        if (is_callable($function = "{$className}::modelsWillSave")) {
+        if (is_callable($function = "{$sharedClassName}::modelsWillSave")) {
             call_user_func($function, $tuples);
         }
 
@@ -846,53 +840,6 @@ EOT;
         Colby::query($SQL);
 
         Colby::query('DROP TEMPORARY TABLE `CBModelsTemp`');
-    }
-
-    /**
-     * NOTE: This function executes multiple queries each of which must
-     * succeed for the save to be successful, so it should always be called
-     * inside of a transaction.
-     *
-     * @param [{spec:stdClass, model:stdClass, version:int|'force'}]
-     *
-     * @return null
-     */
-    public static function saveTuples(array $tuples) {
-        if (empty($tuples)) { return; }
-
-        $className = reset($tuples)->model->className;
-        $IDs = array_map(function ($tuple) { return $tuple->model->ID; }, $tuples);
-        $metaByID = CBModels::selectInitialDataForUpdateByID($IDs, time());
-
-        $dbtuples = array_map(function ($tuple) use ($className, $metaByID) {
-            $ID = $tuple->model->ID;
-
-            if ($tuple->model->className !== $className) {
-                throw new InvalidArgumentException('All models must have the same className.');
-            }
-
-            if ($tuple->version !== 'force') {
-                if ($tuple->version !== $metaByID[$ID]->version) {
-                    throw new CBModelVersionMismatchException();
-                }
-            }
-
-            return (object)[
-                'spec' => $tuple->spec,
-                'model' => $tuple->model,
-                'meta' => (object)[
-                    'created' => $metaByID[$ID]->created,
-                    'modified' => $metaByID[$ID]->modified,
-                    'version' => $metaByID[$ID]->version + 1,
-                ],
-            ];
-        }, $tuples);
-
-        if (is_callable($function = "{$className}::modelsWillSave")) {
-            call_user_func($function, $tuples);
-        }
-
-        CBModels::saveToDatabase($dbtuples);
     }
 
     /**
