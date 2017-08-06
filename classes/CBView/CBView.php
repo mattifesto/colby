@@ -110,38 +110,13 @@ final class CBView {
      * @return null
      */
     static function renderSpecAsHTML(stdClass $spec) {
-        $model = CBView::specToModel($spec);
-        CBView::renderModelAsHTML($model);
-    }
-
-    /**
-     * @deprecated use CBModel::specToOptionalModel
-     *
-     * This function transforms a view specification into a model. This
-     * function always succeeds. If the view class has no `specToModel`
-     * function the model will be a copy of the specification. If the
-     * specification has no `className` property, the `className` property
-     * on the model will be set to "CBView".
-     *
-     * @return stdClass
-     */
-    static function specToModel(stdClass $spec = null) {
-        if (isset($spec->className) && $spec->className != 'CBView') {
-            $function = "{$spec->className}::specToModel";
-
-            if (is_callable($function)) {
-                return call_user_func($function, $spec);
-            }
-        }
-
-        if ($spec) {
-            $model = json_decode(json_encode($spec));
+        if ($model = CBModel::specToModel($spec)) {
+            CBView::renderModelAsHTML($model);
         } else {
-            $model = new stdClass();
+            $className = CBModel::value($spec, 'className', '');
+            $className = str_replace('--', ' - - ', $className);
+
+            echo "<!-- CBView::renderSpecAsHTML() could not convert a '{$className}' spec into a model. -->";
         }
-
-        $model->className = isset($model->className) ? $model->className : 'CBView';
-
-        return $model;
     }
 }
