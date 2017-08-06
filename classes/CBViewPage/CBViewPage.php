@@ -152,15 +152,14 @@ final class CBViewPage {
      *
      * @return string
      */
-    static function modelToSearchText($model) {
-        $searchText = array();
-        $searchText[] = $model->title;
-        $searchText[] = $model->description;
+    static function CBModel_toSearchText($model) {
+        $strings = [
+            CBModel::value($model, 'title'),
+            CBModel::value($model, 'description'),
+        ];
 
-        if (!empty($model->layout->className)) {
-            if (is_callable($function = "{$model->layout->className}::modelToSearchText")) {
-                $searchText[] = call_user_func($function, $model->layout);
-            }
+        if ($layout = CBModel::valueAsObject($model, 'layout')) {
+            $strings[] = CBModel::toSearchText($layout);
         }
 
         CBViewPage::$modelContext = $model; /* deprecated */
@@ -174,15 +173,15 @@ final class CBViewPage {
             'titleAsHTML' => $model->titleHTML,
         ]);
 
-        foreach ($model->sections as $modelForView) {
-            $searchText[] = CBView::modelToSearchText($modelForView);
-        }
+        $views = CBModel::valueAsObjects($model, 'sections');
+        $strings = array_merge($strings, array_map('CBModel::toSearchText', $views));
 
         CBPageContext::pop();
 
         CBViewPage::$modelContext = null; /* deprecated */
 
-        return implode(' ', $searchText);
+        $strings = array_filter($strings);
+        return implode(' ', $strings);
     }
 
     /**
