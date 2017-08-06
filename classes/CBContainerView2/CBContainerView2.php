@@ -61,8 +61,8 @@ EOT;
         $model = (object)[
             'className' => __CLASS__,
             'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
-            'image' => CBModel::valueAsSpecToModel($spec, 'image', 'CBImage'),
-            'subviews' => CBModel::namedSpecArrayToModelArray($spec, 'subviews'),
+            'image' => CBModel::valueToModel($spec, 'image', 'CBImage'),
+            'subviews' => CBModel::valueToModels($spec, 'subviews'),
         ];
 
         // localCSS

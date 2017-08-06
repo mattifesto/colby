@@ -84,8 +84,7 @@ final class CBBackgroundView {
         $model->minimumViewHeightIsImageHeight  = isset($spec->minimumViewHeightIsImageHeight) ?
                                                     $spec->minimumViewHeightIsImageHeight : true;
 
-        $subviewSpecs       = isset($spec->children) ? $spec->children : [];
-        $model->children    = array_map('CBModel::specToModel', $subviewSpecs);
+        $model->children = CBModel::valueToModels($spec, 'children');
 
         return $model;
     }

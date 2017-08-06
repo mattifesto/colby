@@ -341,7 +341,7 @@ EOT;
             'largeImage' => CBModel::valueAsSpecToModel($spec, 'largeImage', 'CBImage'),
             'mediumImage' => CBModel::valueAsSpecToModel($spec, 'mediumImage', 'CBImage'),
             'smallImage' => CBModel::valueAsSpecToModel($spec, 'smallImage', 'CBImage'),
-            'subviews' => CBModel::namedSpecArrayToModelArray($spec, 'subviews'),
+            'subviews' => CBModel::valueToModels($spec, 'subviews'),
         ];
         $model->backgroundColor = CBModel::value($spec, 'backgroundColor', null, 'CBConvert::stringToCSSColor');
         $model->HREF = CBModel::value($spec, 'HREF');
