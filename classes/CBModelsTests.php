@@ -203,11 +203,11 @@ final class CBModelsTests {
         $spec               = $specs[$ID];
         $spec->className    = __CLASS__;
         $spec->title        = 'Hello, world!';
-        $model              = self::specToModel($spec);
+        $model              = CBModel::specToModel($spec);
 
         CBModels::updateModels([(object)['spec' => $spec, 'model' => $model]]);
 
-        self::checkSQL([
+        CBModelsTests::checkSQL([
             ["SELECT COUNT(*) FROM `CBModels` WHERE `ID` = {$IDAsSQL} AND `version` = 1", '1'],
             ["SELECT COUNT(*) FROM `CBModelVersions` WHERE `ID` = {$IDAsSQL}", '1']
         ]);
@@ -216,11 +216,11 @@ final class CBModelsTests {
         $specs              = CBModels::makeSpecsForUpdate([$ID]);
         $spec               = $specs[$ID];
         $spec->title        = 'Mama Mia!';
-        $model              = self::specToModel($spec);
+        $model              = CBModel::specToModel($spec);
 
         CBModels::updateModels([(object)['spec' => $spec, 'model' => $model]]);
 
-        self::checkSQL([
+        CBModelsTests::checkSQL([
             ["SELECT COUNT(*) FROM `CBModels` WHERE `ID` = {$IDAsSQL} AND `version` = 2", '1'],
             ["SELECT COUNT(*) FROM `CBModelVersions` WHERE `ID` = {$IDAsSQL}", '2']
         ]);
@@ -229,11 +229,11 @@ final class CBModelsTests {
         $specs              = CBModels::makeSpecsForUpdate([$ID]);
         $spec               = $specs[$ID];
         $spec->title        = 'Gimme! Gimme! Gimme!';
-        $model              = self::specToModel($spec);
+        $model              = CBModel::specToModel($spec);
 
         CBModels::updateModels([(object)['spec' => $spec, 'model' => $model]]);
 
-        self::checkSQL([
+        CBModelsTests::checkSQL([
             ["SELECT COUNT(*) FROM `CBModels` WHERE `ID` = {$IDAsSQL} AND `version` = 3", '1'],
             ["SELECT COUNT(*) FROM `CBModelVersions` WHERE `ID` = {$IDAsSQL}", '3']
         ]);
@@ -303,8 +303,8 @@ final class CBModelTest {
             throw new Exception(__METHOD__ . ' Incorrect `nameAsHTML` property');
         }
 
-        if ($model->title !== "Title for {$ID}") {
-            throw new Exception(__METHOD__ . ' Incorrect `title` property');
+        if (!empty($model->title)) {
+            throw new Exception(__METHOD__ . ' The `title` property should not be set.');
         }
 
         if ($version !== false && $model->version !== $version) {
@@ -317,10 +317,12 @@ final class CBModelTest {
     /**
      * @return {stdClass}
      */
-    public static function specToModel(stdClass $spec) {
-        $model              = CBModels::modelWithClassName(__CLASS__);
-        $model->name        = isset($spec->name) ? (string)$spec->name : '';
-        $model->nameAsHTML  = ColbyConvert::textToHTML($model->name);
+    static function specToModel(stdClass $spec) {
+        $model = (object)[
+            'className' => __CLASS__,
+        ];
+        $model->name = isset($spec->name) ? (string)$spec->name : '';
+        $model->nameAsHTML = ColbyConvert::textToHTML($model->name);
 
         return $model;
     }
