@@ -338,7 +338,7 @@ final class CBViewPage {
          * Page image
          */
 
-        $model->image = CBModel::value($spec, 'image', null, 'CBImage::specToModel');
+        $model->image = CBModel::valueAsSpecToModel($spec, 'image', 'CBImage');
 
         if (empty($model->image)) {
             $model->thumbnailURL = CBModel::value($spec, 'thumbnailURL');
@@ -348,24 +348,8 @@ final class CBViewPage {
             $model->thumbnailURL = null;
         }
 
-        /**
-         * Layout
-         */
-
-        if (isset($spec->layout)) {
-            $model->layout = CBModel::specToOptionalModel($spec->layout);
-        }
-
-        /**
-         * Views
-         */
-
-        if (isset($spec->sections)) {
-            /* TODO: use CBModel::specToOptionalModel */
-            $model->sections = array_map('CBView::specToModel', $spec->sections);
-        } else {
-            $model->sections = array();
-        }
+        $model->layout = CBModel::valueToModel($spec, 'layout');
+        $model->sections = CBModel::valueToModels($spec, 'sections');
 
         /**
          * Computed values
