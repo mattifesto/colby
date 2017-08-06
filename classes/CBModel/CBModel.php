@@ -16,17 +16,6 @@ final class CBModel {
     }
 
     /**
-     * @return string|null
-     */
-    public static function modelToOptionalSearchText(stdClass $model) {
-        if (isset($model->className) && is_callable($function = "{$model->className}::modelToOptionalSearchText")) {
-            return call_user_func($function, $model);
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * This is the official way to convert a spec to a model.
      *
      * Reading this function will help developers understand the exact
@@ -113,6 +102,27 @@ final class CBModel {
     }
 
     /**
+     * @return string|null
+     */
+    static function toSearchText(stdClass $model) {
+        $className = CBModel::value($model, 'className', '');
+        $ID = CBModel::value($model, 'ID', '');
+        $text = '';
+
+        if (is_callable($function = "{$className}::CBModel_toSearchText")) {
+            $text = call_user_func($function, $model);
+        } else if (is_callable($function = "{$className}::modelToSearchText")) { // deprecated
+            $text = call_user_func($function, $model);
+        }
+
+        $result = implode(' ', array_filter([$text, $className, $ID]));
+
+        error_log($result);
+
+        return $result;
+    }
+
+    /**
      * @param stdClass? $model
      *
      *  The $model parameter is generally expected to be a stdClass instance or
@@ -165,13 +175,13 @@ final class CBModel {
      * This function exists because during rendering this functionality is often
      * needed and is difficult to perform correctly.
      *
-     * @param stdClass? $model
+     * @param object? $model
      * @param string $keyPath
      * @param function? $transform
      *
      * @return [mixed]
      */
-    static function valueAsArray($model = null, $keyPath, callable $transform = null) {
+    static function valueAsArray($model, $keyPath, callable $transform = null) {
         $value = CBModel::value($model, $keyPath);
 
         if (!is_array($value)) {
@@ -196,7 +206,7 @@ final class CBModel {
      *
      * @return [string]
      */
-    static function valueAsNames($model = null, $keyPath) {
+    static function valueAsNames($model, $keyPath) {
         $value = CBModel::value($model, $keyPath, '');
 
         if (!is_string($value)) {
@@ -223,7 +233,7 @@ final class CBModel {
      *
      * @return object
      */
-    static function valueAsObject($model = null, $keyPath) {
+    static function valueAsObject($model, $keyPath) {
         $value = CBModel::value($model, $keyPath);
 
         if (is_object($value)) {
@@ -231,6 +241,20 @@ final class CBModel {
         } else {
             return (object)[];
         }
+    }
+
+    /**
+     * @param object? $model
+     * @param string $keyPath
+     *
+     * @return [object]
+     */
+    static function valueAsObjects($model, $keyPath) {
+        $array = CBModel::valueAsArray($model, $keyPath);
+
+        return array_values(array_filter($array, function($item) {
+            return is_object($item);
+        }));
     }
 
     /**
@@ -247,7 +271,7 @@ final class CBModel {
      *
      * @return object|null
      */
-    static function valueAsSpecToModel($model = null, $keyPath, $expectedClassName = null) {
+    static function valueAsSpecToModel($model, $keyPath, $expectedClassName = null) {
         $value = CBModel::value($model, $keyPath);
 
         return CBModel::specToOptionalModel($value, $expectedClassName);
@@ -295,7 +319,7 @@ final class CBModel {
      *
      * @return [object]
      */
-    static function valueToModels($model = null, $keyPath) {
+    static function valueToModels($model, $keyPath) {
         $models = [];
         $specs = CBModel::valueAsArray($model, $keyPath);
 
