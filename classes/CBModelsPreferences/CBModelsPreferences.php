@@ -7,6 +7,7 @@ final class CBModelsPreferences {
         'CBMenu',
         'CBTextBoxViewTheme',
         'CBTheme',
+        'CBViewPage',
         'CBSitePreferences',
         'CBModelsPreferences',
         'CBPagesPreferences'
