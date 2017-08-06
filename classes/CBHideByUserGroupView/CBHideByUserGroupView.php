@@ -3,16 +3,15 @@
 final class CBHideByUserGroupView {
 
     /**
-     * @param [stdClass]? $model->subviews
+     * @param object $model
      *
      * @return string
      */
-    static function modelToSearchText(stdClass $model) {
-        if (!empty($model->subviews)) {
-            return implode(' ', array_map('CBView::modelToSearchText', $model->subviews));
-        } else {
-            return '';
-        }
+    static function CBModel_toSearchText(stdClass $model) {
+        $subviews = CBModel::valueAsObjects($model, 'subviews');
+        $strings = array_map('CBModel::toSearchText', $subviews);
+        $strings = array_filter($strings);
+        return implode(' ', $strings);
     }
 
     /**
@@ -24,7 +23,7 @@ final class CBHideByUserGroupView {
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         if (empty($model->subviews)) {
             return;
         }
@@ -54,7 +53,7 @@ final class CBHideByUserGroupView {
      *
      * @return stdClass
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
             'hideFromMembers' => CBModel::value($spec, 'hideFromMembers', false, 'boolval'),

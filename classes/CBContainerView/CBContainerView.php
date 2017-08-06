@@ -248,26 +248,23 @@ EOT;
     }
 
     /**
-     * @param stdClass $model
+     * @param object $model
      *
      * @return string
      */
-    public static function modelToSearchText(stdClass $model) {
-        if (isset($model->subviews)) {
-            $texts = array_map('CBView::modelToSearchText', $model->subviews);
-            $texts = array_filter($texts, function ($text) { return !empty($text); });
-            return implode(' ', $texts);
-        }
-
-        return '';
+    static function CBModel_toSearchText(stdClass $model) {
+        $subviews = CBModel::valueAsObjects($model, 'subviews');
+        $strings = array_map('CBModel::toSearchText', $subviews);
+        $strings = array_filter($strings);
+        return implode(' ', $strings);
     }
 
     /**
-     * @param [object]? $model->subviews;
+     * @param object $model
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         $classes = ['CBContainerView'];
         $tagName = empty($model->tagName) ? 'div' : $model->tagName;
 
@@ -331,11 +328,11 @@ EOT;
     }
 
     /**
-     * @param stdClass $spec
+     * @param object $spec
      *
-     * @return stdClass
+     * @return object
      */
-    public static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
             'largeImage' => CBModel::valueAsSpecToModel($spec, 'largeImage', 'CBImage'),

@@ -3,16 +3,15 @@
 final class CBBackgroundView {
 
     /**
+     * @param object $model
+     *
      * @return string
      */
-    static function modelToSearchText(stdClass $model = null) {
-        if (isset($model->children)) {
-            $text = array_map('CBView::modelToSearchText', $model->children);
-
-            return implode(' ', $text);
-        }
-
-        return '';
+    static function CBModel_toSearchText(stdClass $model) {
+        $subviews = CBModel::valueAsObjects($model, 'children');
+        $strings = array_map('CBModel::toSearchText', $subviews);
+        $strings = array_filter($strings);
+        return implode(' ', $strings);
     }
 
     /**
@@ -20,7 +19,7 @@ final class CBBackgroundView {
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         $styles     = [];
         $styles[]   = "display: flex; display: -ms-flexbox; display: -webkit-flex;";
         $styles[]   = "justify-content: center; -ms-flex-pack: center; -webkit-justify-content: center;";
@@ -65,11 +64,11 @@ final class CBBackgroundView {
     }
 
     /**
-     * @param stdClass $spec
+     * @param object $spec
      *
-     * @return stdClass
+     * @return object
      */
-    static function specToModel(stdClass $spec = null) {
+    static function CBModel_toModel(stdClass $spec = null) {
         $model                                  = CBView::modelWithClassName(__CLASS__);
         $model->color                           = isset($spec->color) ? $spec->color : null;
         $model->colorHTML                       = ColbyConvert::textToHTML($model->color);

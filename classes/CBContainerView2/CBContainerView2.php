@@ -5,9 +5,21 @@ final class CBContainerView2 {
     /**
      * @param object $model
      *
+     * @return string
+     */
+    static function CBModel_toSearchText(stdClass $model) {
+        $subviews = CBModel::valueAsObjects($model, 'subviews');
+        $strings = array_map('CBModel::toSearchText', $subviews);
+        $strings = array_filter($strings);
+        return implode(' ', $strings);
+    }
+
+    /**
+     * @param object $model
+     *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
@@ -57,7 +69,7 @@ EOT;
      *
      * @return object
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
             'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
