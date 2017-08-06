@@ -841,13 +841,4 @@ EOT;
 
         Colby::query('DROP TEMPORARY TABLE `CBModelsTemp`');
     }
-
-    /**
-     * @deprecated use CBModel::value()
-     *
-     * @return string
-     */
-    public static function specToTitle(stdClass $spec) {
-        return CBModel::value($spec, 'title', null, 'trim');
-    }
 }
