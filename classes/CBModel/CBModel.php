@@ -49,12 +49,17 @@ final class CBModel {
      *      To be active, a model's className must exist in the system and have
      *      functions implemented related to its desired actions.
      */
-    static function specToModel(stdClass $spec) {
-        if (empty($spec->className) || !is_callable($function = "{$spec->className}::specToModel")) {
+    static function toModel(stdClass $spec) {
+        $className = CBModel::value($spec, 'className', '');
+
+        if (is_callable($function = "{$className}::CBModel_toModel")) {
+            $model = call_user_func($function, $spec);
+        } else if (is_callable($function = "{$className}::specToModel")) { // deprecated
+            $model = call_user_func($function, $spec);
+        } else {
             return null;
         }
 
-        $model = call_user_func($function, $spec);
 
         if (empty($model->className)) {
             return null;
@@ -65,6 +70,19 @@ final class CBModel {
         }
 
         return $model;
+    }
+
+    /**
+     * @deprecated use CBModel::toModel()
+     */
+    static function specToModel(stdClass $spec) {
+        $className = CBModel::value($spec, 'className', '');
+
+        if ($className != 'CBModel') {
+            return CBModel::toModel($spec);
+        } else {
+            return null;
+        }
     }
 
     /**
