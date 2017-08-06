@@ -133,11 +133,7 @@ final class CBModel {
             $text = call_user_func($function, $model);
         }
 
-        $result = implode(' ', array_filter([$text, $className, $ID]));
-
-        error_log($result);
-
-        return $result;
+        return implode(' ', array_filter([$text, $className, $ID]));
     }
 
     /**
