@@ -27,31 +27,7 @@ final class CBModel {
     }
 
     /**
-     * This function looks for a spec array on a named property of a spec and
-     * if one exists converts the specs into models removing the elements where
-     * the spec element cannot be converted.
-     *
-     * @param stdClass $spec
-     * @param string $propertyName
-     *
-     * @return [stdClass]
-     */
-    public static function namedSpecArrayToModelArray(stdClass $spec, $propertyName) {
-        if (isset($spec->{$propertyName}) && is_array($specArray = $spec->{$propertyName})) {
-            $modelArray = array_map('CBModel::specToOptionalModel', $specArray);
-            return array_filter($modelArray, function ($model) { return $model !== null; });
-        } else {
-            return [];
-        }
-    }
-
-    /**
-     * This is the official way to convert a spec to a model. It expects the
-     * spec to be properly formed and the "{$spec->className}::specToModel"
-     * function to be available and working.
-     *
-     * The function throws a Exception if something goes wrong. The exception
-     * message will describe the error that occurred.
+     * This is the official way to convert a spec to a model.
      *
      * Reading this function will help developers understand the exact
      * interactions and requirements of specs and models.
@@ -68,42 +44,35 @@ final class CBModel {
      *       Good candidates for this are specs with unique string properties
      *       such as `productCode`.
      *
-     * @NOTE If the model is not given a title by specToModel() it will be given
-     *       a title of a trimmed spec title property, if set, or an empty
-     *       string.
+     * @NOTE A model is allowed to have a different className than the spec.
+     *       This can be used by deprecated classes to generate non-deprecated
+     *       models.
      *
      * @param object $spec
      *
-     * @return object
+     * @return object|null
+     *
+     *      A spec is not an object that is guaranteed to be able to produce a
+     *      model. One of the few requirements of a spec is that have a set and
+     *      supported className property. Othewise the spec is just an object
+     *      and null will be returned as the model.
+     *
+     *      To be active, a model's className must exist in the system and have
+     *      functions implemented related to its desired actions.
      */
     static function specToModel(stdClass $spec) {
-        if (empty($spec->className)) {
-            throw new Exception(__METHOD__ . ' The spec does not have its `className` property set.');
-        }
-
-        if (!is_callable($function = "{$spec->className}::specToModel")) {
-            throw new Exception(__METHOD__ . " The spec compilation function `{$function}` is not available.");
+        if (empty($spec->className) || !is_callable($function = "{$spec->className}::specToModel")) {
+            return null;
         }
 
         $model = call_user_func($function, $spec);
 
-        if (empty($model->ID)) {
-            if (empty($spec->ID) || !CBHex160::is($spec->ID)) {
-                throw new Exception(__METHOD__ . ' The model `ID` was not generated and the spec `ID` is not properly set.');
-            } else {
-                $model->ID = $spec->ID;
-            }
-        } else if (!CBHex160::is($model->ID)) {
-            $IDsAsJSON = json_encode($model->ID);
-            throw new Exception(__METHOD__ . " The model `ID` was generated but was set to an invalid value: {$IDsAsJSON}");
+        if (empty($model->className)) {
+            return null;
         }
 
-        if ($model->className !== $spec->className) {
-            throw new Exception(__METHOD__ . ' The model `className` property does not match the spec `className` property.');
-        }
-
-        if (!isset($model->title)) {
-            $model->title = CBModel::value($spec, 'title', '', 'trim');
+        if (empty($model->ID) && !empty($spec->ID) && CBHex160::is($spec->ID)) {
+            $model->ID = $spec->ID;
         }
 
         return $model;
@@ -136,23 +105,16 @@ final class CBModel {
         if (empty($spec->className)) {
             $spec = clone $spec;
             $spec->className = $expectedClassName;
-        } else if (!empty($expectedClassName)) {
-            if ($spec->className !== $expectedClassName) {
-                return null;
-            }
-        }
-
-        try {
-            $model = CBModel::specToModel($spec);
-        } catch (Exception $exception) {
+        } else if (!empty($expectedClassName) && ($spec->className !== $expectedClassName)) {
             return null;
         }
 
-        return $model;
+        return CBModel::specToModel($spec);
     }
 
     /**
      * @param stdClass? $model
+     *
      *  The $model parameter is generally expected to be a stdClass instance or
      *  `null`, but it can be any value such as `42`. If it is not stdClass this
      *  function will treat is as `null` and return the default value.
@@ -161,14 +123,18 @@ final class CBModel {
      *  cases. For instance, it allows code to fetch a model and not validate
      *  that the model exists (the model value may be `false` in this case)
      *  before checking to see if a value is set.
+     *
      * @param string $keyPath
-     *      Examples: "height", "width", "image.height", "image.alternativeText.text"
+     *
+     *      Examples: "height", "width", "image.height",
+     *                "image.alternativeText.text"
+     *
      * @param mixed? $default
      * @param function? $transform
      *
      * @return mixed
      */
-    static function value($model = null, $keyPath, $default = null, callable $transform = null) {
+    static function value($model, $keyPath, $default = null, callable $transform = null) {
         $keys = explode('.', $keyPath);
         $propertyName = array_pop($keys);
 
@@ -268,16 +234,16 @@ final class CBModel {
     }
 
     /**
-     * This function is used when you expect a model property to contain an
-     * optional spec which, if set, you would like converted to a model.
+     * @deprecated use CBModel::valueToModel()
      *
-     * @param object? $model
-     * @param string $keyPath
-     * @param string? $expectedClassName
+     * This function uses the $expectedClassName parameter in a deprecated way.
+     * If the spec doesn't have a className set it will use $expectedClassName
+     * as its className. If you have a scenario where you need this type of
+     * functionality, this a scenario that needs a bug fix.
      *
-     *      Use this parameter if you expect the spec property value to have a
-     *      specific class name and would rather have null returned if it does
-     *      not have that class name.
+     * The known case of this is some old CBImage specs that didn't have a class
+     * name which has been fixed for the future, but not for some past specs.
+     * Those cases should be handled locally.
      *
      * @return object|null
      */
@@ -285,5 +251,60 @@ final class CBModel {
         $value = CBModel::value($model, $keyPath);
 
         return CBModel::specToOptionalModel($value, $expectedClassName);
+    }
+
+    /**
+     * Use this function when a property may hold a spec which you would like
+     * converted to a model.
+     *
+     * @NOTE The name "valueTo" instead of "valueAs" indicates that the original
+     *       property value may be undergoing conversion.
+     *
+     * @param object? $model
+     * @param string $keyPath
+     * @param string? $expectedClassName
+     *
+     *      If the requested property holds an object and that object does not
+     *      have its className property set to $expectedClassName this function
+     *      will return null.
+     *
+     * @return object|null
+     *
+     *      This function returns null if the property does not contain an
+     *      object or if the object is not a spec.
+     */
+    static function valueToModel($model, $keyPath, $expectedClassName = null) {
+        $spec = CBModel::value($model, $keyPath);
+
+        if (is_object($spec)) {
+            if (!empty($expectedClassName)) {
+                if (empty($spec->className) || $spec->className !== $expectedClassName) {
+                    return null;
+                }
+            }
+
+            return CBModel::specToModel($spec);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @NOTE The name "valueTo" instead of "valueAs" indicates that the original
+     *       property value may be undergoing conversion.
+     *
+     * @return [object]
+     */
+    static function valueToModels($model = null, $keyPath) {
+        $models = [];
+        $specs = CBModel::valueAsArray($model, $keyPath);
+
+        foreach ($specs as $spec) {
+            if (is_object($spec) && ($model = CBModel::specToModel($spec))) {
+                $models[] = $model;
+            }
+        }
+
+        return $models;
     }
 }
