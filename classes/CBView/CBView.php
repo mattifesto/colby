@@ -65,32 +65,43 @@ final class CBView {
     }
 
     /**
-     * Always use this function to render a view instead of calling
-     * renderModelAsHTML() directly on the class. This function will also make
-     * sure that all of the view class's dependencies are included.
+     * Always use this function to render a view instead of calling the render
+     * interfaces directly on the view class. This function will also make sure
+     * that all of the view class's dependencies are included.
      *
-     * @param stdClass? $model
+     * @param object? $model
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model = null) {
-        if (isset($model->className) && $model->className != 'CBView') {
-            CBHTMLOutput::requireClassName($model->className);
+    static function render(stdClass $model) {
+        $className = CBModel::value($model, 'className', '');
 
-            $function = "{$model->className}::renderModelAsHTML";
-
-            if (is_callable($function)) {
-                return call_user_func($function, $model);
-            }
+        if (empty($className)) {
+            return;
         }
 
-        if (CBSitePreferences::debug()) {
-            $modelAsJSONAsHTML = ': ' . str_replace('--', ' - - ', json_encode($model));
-        } else {
-            $modelAsJSONAsHTML = '';
-        }
+        CBHTMLOutput::requireClassName($className);
 
-        echo "<!-- CBView::renderModelAsHTML() default output{$modelAsJSONAsHTML} -->";
+        if (is_callable($function = "{$className}::CBView_render")) {
+            return call_user_func($function, $model);
+        } else if (is_callable($function = "{$className}::renderModelAsHTML")) { // deprecated
+            return call_user_func($function, $model);
+        } else if (CBSitePreferences::debug()) {
+            $classNameAsComment = ': ' . str_replace('--', ' - - ', $className);
+
+            echo "<!-- CBView::renderModelAsHTML() found no CBView_render() function for the class: \"{$classNameAsComment}\" -->";
+        }
+    }
+
+    /**
+     * @deprecated use CBView::render()
+     */
+    static function renderModelAsHTML(stdClass $model) {
+        $className = CBModel::value($model, 'className', '');
+
+        if ($className != 'CBView') {
+            return CBView::render($model);
+        }
     }
 
     /**
