@@ -273,7 +273,7 @@ EOT;
 
         $pageSummaryModel = CBPageSummaryView::viewPageModelToModel($model);
         $keyValueDataAsSQL = CBDB::stringToSQL(json_encode($pageSummaryModel));
-        $searchTextAsSQL = CBDB::stringToSQL(CBView::modelToSearchText($model));
+        $searchTextAsSQL = CBDB::stringToSQL(CBModel::toSearchText($model));
 
         return "($IDAsSQL, $keyValueDataAsSQL, $classNameAsSQL, $classNameForKindAsSQL, $createdAsSQL, $iterationAsSQL, $modifiedAsSQL, $URIAsSQL, $titleHTMLAsSQL, $subtitleHTMLAsSQL, $thumbnailURLAsSQL, $searchTextAsSQL, $publishedAsSQL, $publishedByAsSQL, $publishedMonthAsSQL)";
     }
