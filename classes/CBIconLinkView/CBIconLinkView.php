@@ -3,6 +3,18 @@
 final class CBIconLinkView {
 
     /**
+     * @param object $model
+     *
+     * @return string
+     */
+    static function CBModel_toSearchText(stdClass $model) {
+        $strings[] = CBModel::value($model, 'text');
+        $strings[] = CBModel::value($model, 'alternativeText');
+
+        return implode(' ', array_filter($strings));
+    }
+
+    /**
      * @param string? $model->URLAsHTML
      * @param string? $model->textColor
      *
@@ -31,16 +43,15 @@ final class CBIconLinkView {
 
     /**
      * @param bool? $model->disableRoundedCorners
-     * @param stdClass? $model->image
+     * @param object? $model->image
      *
      * @return string
      */
     private static function imageElementHTML(stdClass $model) {
-        if (empty($model->image)) {
-            $imageCSS = 'background-color: hsl(30, 50%, 80%)';
+        if ($flexpath = CBImage::valueToFlexpath($model, 'image', 'rw640')) {
+            $imageCSS = "background-image: url(/{$flexpath});";
         } else {
-            $imageCSS = CBImage::flexpath($model->image);
-            $imageCSS = "background-image: url(/{$imageCSS});";
+            $imageCSS = 'background-color: hsl(30, 50%, 80%)';
         }
 
         if (empty($model->disableRoundedCorners)) {
@@ -72,7 +83,7 @@ final class CBIconLinkView {
      *
      * @return null
      */
-    public static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         CBHTMLOutput::requireClassName(__CLASS__);
 
         $containerElement = CBIconLinkView::containerElement($model);
@@ -93,16 +104,16 @@ final class CBIconLinkView {
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
-     * @param stdClass $spec
+     * @param object $spec
      *
-     * @return stdClass
+     * @return object
      */
-    public static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
             'alternativeText' => CBModel::value($spec, 'alternativeText', 'strval'),
