@@ -2,10 +2,9 @@
 /* globals
     CBUI,
     CBUIBooleanEditor,
-    CBUIImageView,
-    CBUIImageSizeView,
-    CBUIImageUploader,
-    CBUIStringEditor */
+    CBUIImageChooser,
+    CBUIStringEditor,
+    Colby */
 
 var CBIconLinkViewEditor = {
 
@@ -65,11 +64,11 @@ var CBIconLinkViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
         element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
 
-        /* image section */
+        /* image  */
+
+        element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({
             paragraphs : [
                 "Suggested Size: 320pt (640px) × 320pt (640px)",
@@ -77,43 +76,48 @@ var CBIconLinkViewEditor = {
             text : "Image"
         }));
 
+        var chooser = CBUIImageChooser.createFullSizedChooser({
+            imageChosenCallback : handleImageChosen,
+            imageRemovedCallback : handleImageRemoved,
+        });
+
+        if (args.spec.image) {
+            chooser.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
+        }
+
         section = CBUI.createSection();
-
-        /* image view */
         item = CBUI.createSectionItem();
-        var imageView = CBUIImageView.create({
-            propertyName : "image",
-            spec : args.spec,
-        });
-        item.appendChild(imageView.element);
-        section.appendChild(item);
-
-        /* image size view */
-        item = CBUI.createSectionItem();
-        var imageSizeView = CBUIImageSizeView.create({
-            propertyName : "image",
-            spec : args.spec,
-        });
-        item.appendChild(imageSizeView.element);
-        section.appendChild(item);
-
-        /* image uploader */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIImageUploader.create({
-            propertyName : "image",
-            spec : args.spec,
-            specChangedCallback : CBIconLinkViewEditor.imageChanged.bind(undefined, {
-                callbacks : [
-                    imageView.imageChangedCallback,
-                    imageSizeView.imageChangedCallback,
-                    args.specChangedCallback,
-                ],
-            }),
-        }).element);
+        item.appendChild(chooser.element);
         section.appendChild(item);
         element.appendChild(section);
 
         return element;
+
+        /**
+         *
+         */
+        function handleImageChosen(chooserArgs) {
+            var ajaxURI = "/api/?class=CBImages&function=upload";
+            var formData = new FormData();
+            formData.append("image", chooserArgs.file);
+
+            CBIconLinkViewEditor.promise = Colby.fetchAjaxResponse(ajaxURI, formData)
+                .then(handleImageUploaded);
+
+            function handleImageUploaded(response) {
+                args.spec.image = response.image;
+                args.specChangedCallback();
+                chooserArgs.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
+            }
+        }
+
+        /**
+         *
+         */
+        function handleImageRemoved(chooserArgs) {
+            args.spec.image = undefined;
+            args.specChangedCallback();
+        }
     },
 
     /**

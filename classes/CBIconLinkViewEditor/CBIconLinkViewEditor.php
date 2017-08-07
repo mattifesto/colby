@@ -6,8 +6,7 @@ final class CBIconLinkViewEditor {
      * @return [string]
      */
     public static function requiredClassNames() {
-        return ['CBUI', 'CBUIBooleanEditor', 'CBUIImageView',
-                'CBUIImageSizeView', 'CBUIImageUploader', 'CBUIStringEditor'];
+        return ['CBUI', 'CBUIBooleanEditor', 'CBUIImageChooser', 'CBUIStringEditor'];
     }
 
     /**
