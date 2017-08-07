@@ -39,8 +39,8 @@ CBPageLayout::renderPageHeader();
 
         form.search-page.has-query > div {
             padding: 20px 50px;
-            background-color: #f7f7f7;
-            border-bottom: 1px solid #dddddd;
+            background-color: var(--CBBackgroundColor2);
+            border-bottom: 1px solid var(--CBLineColor);
         }
 
         form.search-page.has-query input[type=text] {
