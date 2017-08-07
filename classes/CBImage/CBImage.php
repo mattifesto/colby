@@ -3,30 +3,6 @@
 final class CBImage {
 
     /**
-     * @deprecated 2016.07.28
-     *  Images are now generically identified with the image ID and extension.
-     *  Use these values along with a filename and the CBDataStore::flexpath()
-     *  function instead of this function.
-     *
-     * @param hex160 $image->ID
-     * @param string $image->filename (used if $filename parameter is empty)
-     * @param string $image->extension
-     * @param string? $filename
-     * @param string? $flexdir
-     *
-     * @return string
-     */
-    static function flexpath(stdClass $image, $filename = null, $flexdir = null) {
-        if (empty($filename)) {
-            $filename = empty($image->filename) ? $image->base : $image->filename;
-        }
-
-        $basename = "{$filename}.{$image->extension}";
-
-        return CBDataStore::flexpath($image->ID, $basename, $flexdir);
-    }
-
-    /**
      * @param string $spec->extension
      * @param hex160 $spec->ID
      * @param string? $spec->filename
@@ -51,5 +27,45 @@ final class CBImage {
             'ID' => $spec->ID,
             'width' => CBModel::value($spec, 'width', null, 'intval'),
         ];
+    }
+
+    /**
+     * This function is similar to the CBModel::value... functions.
+     *
+     * @param object $model
+     * @param string $keyPath
+     * @param string? $operation
+     * @param string? $flexdir
+     *
+     * @return string|false
+     */
+    static function valueToFlexpath(stdClass $model, $keyPath, $operation = null, $flexdir = null) {
+        $ID = CBModel::value($model, "{$keyPath}.ID");
+
+        if (!CBHex160::is($ID)) {
+            return false;
+        }
+
+        $extension = CBModel::value($model, "{$keyPath}.extension");
+
+        if (empty($extension)) {
+            return false;
+        }
+
+        if ($operation) {
+            $filename = $operation;
+        } else {
+            $filename = CBModel::value($model, "{$keyPath}.filename");
+
+            if (empty($filename)) {
+                $filename = CBModel::value($model, "{$keyPath}.base"); // deprecated
+
+                if (empty($filename)) {
+                    return false;
+                }
+            }
+        }
+
+        return CBDataStore::flexpath($ID, "{$filename}.{$extension}", $flexdir);
     }
 }
