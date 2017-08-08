@@ -126,23 +126,23 @@ final class CBTheme {
      * @param string? $spec->title
      *  The theme's title.
      *
-     * @return stdClass
+     * @return object
      */
-    public static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $classNameForKind = CBModel::value($spec, 'classNameForKind');
+        $ID = CBModel::valueAsID($spec, 'ID');
         $template = CBModel::value($spec, 'styles', '');
         $title = CBModel::value($spec, 'title', '', 'trim');
-        $model = (object)[
+
+        return (object)[
             'className' => __CLASS__,
             'classNameForKind' => $classNameForKind,
             'classNameForTheme' => CBModel::value($spec, 'classNameForTheme', null, 'trim'),
             'description' => CBModel::value($spec, 'description'),
-            'styles' => CBTheme::templateToStyles($template, $spec->ID, $title, $classNameForKind),
+            'styles' => CBTheme::templateToStyles($template, $ID, $title, $classNameForKind),
             'template' => $template,
             'title' => $title,
         ];
-
-        return $model;
     }
 
     /**
