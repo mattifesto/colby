@@ -118,7 +118,7 @@ final class CBIconLinkView {
             'className' => __CLASS__,
             'alternativeText' => CBModel::value($spec, 'alternativeText', 'strval'),
             'disableRoundedCorners' => CBModel::value($spec, 'disableRoundedCorners', false, 'boolval'),
-            'image' => CBModel::value($spec, 'image', null, 'CBImage::specToModel'),
+            'image' => CBModel::valueToModel($spec, 'image', 'CBImage'),
             'text' => ($text = CBModel::value($spec, 'text', '', 'trim')),
             'textAsHTML' => cbhtml($text),
             'textColor' => CBModel::value($spec, 'textColor', null, 'CBConvert::stringToCSSColor'),
