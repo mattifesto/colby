@@ -207,30 +207,10 @@ var CBTestPage = {
     /**
      * @return undefined
      */
-    DOMContentDidLoad : function() {
+    DOMContentDidLoad: function() {
         var main = document.getElementsByTagName("main")[0];
 
         main.appendChild(CBTestPage.createTestUI());
-    },
-
-    /**
-     * @param element args.buttonElement
-     *
-     * @return undefined
-     */
-    handleListOfTestsReceived : function(args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            CBTestPage.runTest({
-                buttonElement   : args.buttonElement,
-                index           : 0,
-                tests           : response.tests,
-            });
-        } else {
-            CBAdminPageForTests.appendStatusCallback(response.message, {className:"error"});
-            args.buttonElement.disabled = false;
-        }
     },
 
     /**
@@ -249,92 +229,74 @@ var CBTestPage = {
             date.toLocaleTimeString());
         CBAdminPageForTests.appendStatusCallback("\u00A0");
 
-        CBAdminPageForTests.promise = Promise.resolve()
+        var promise = Promise.resolve()
             .then(CBTestPage.runJavaScriptTests)
             .then(CBAdminPageForTests.runTestForClassCBImagesFunctionDeleteByID)
             .then(CBAdminPageForTests.runTestForClassCBImagesFunctionUpload)
-            .then(resolved, rejected);
+            .then(fetchTests)
+            .then(runTests)
+            .then(finish, report);
 
-        function resolved() {
-            CBAdminPageForTests.promise = undefined;
+        function fetchTests() {
+            return Colby.fetchAjaxResponse("/api/?class=CBUnitTests&function=getListOfTests");
+        }
 
-            var xhr = new XMLHttpRequest();
-            xhr.onload = CBTestPage.handleListOfTestsReceived.bind(undefined, {
-                buttonElement : args.buttonElement,
-                xhr : xhr,
+        function runTests(response) {
+            return new Promise(function (resolve, reject) {
+                var i = 0;
+
+                next();
+
+                function run(test) {
+                    var className = test[0];
+                    var functionName = test[1];
+
+                    var URI = "/test/?class=" + className;
+
+                    if (functionName !== undefined) {
+                        URI += "&function=" + functionName;
+                    }
+
+                    CBAdminPageForTests.appendStatusCallback("Test: " + className + (functionName ? " - " + functionName : ''));
+
+                    var promise = Colby.fetchAjaxResponse(URI)
+                        .then(reportTestSuccess, reportTestFailure)
+                        .then(next, next);
+
+                    Colby.retain(promise);
+
+                    function reportTestSuccess(response) {
+                        CBAdminPageForTests.appendStatusCallback(response.message || "Succeeded", { className : "success" });
+                        Colby.release(promise);
+                    }
+
+                    function reportTestFailure(error) {
+                        CBAdminPageForTests.appendStatusCallback(error.message || "Failed", { className : "failure" });
+                        Colby.release(promise);
+                    }
+                }
+
+                function next() {
+                    if (i < response.tests.length) {
+                        run(response.tests[i]);
+                        i += 1;
+                    } else {
+                        resolve();
+                    }
+                }
             });
-
-            xhr.open('POST', '/api/?class=CBUnitTests&function=getListOfTests', true);
-            xhr.send();
         }
 
-        function rejected(error) {
-            CBAdminPageForTests.appendStatusCallback("Failed: " + error.message, {className:"failure"});
-        }
-    },
-
-    /**
-     * @param Element args.buttonElement
-     * @param int args.index
-     * @param array args.tests
-     * @param XMLHttpRequest args.xhr
-
-     * @return undefined
-     */
-    handleTestCompleted : function(args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-        var message;
-        args.index = args.index + 1;
-
-        if (response.wasSuccessful) {
-            message = response.message ? response.message : "Succeeded";
-            CBAdminPageForTests.appendStatusCallback(message, { className : "success" });
-        } else {
-            message = response.message ? response.message : "Failed";
-            CBAdminPageForTests.appendStatusCallback(message, { className : "failure" });
-        }
-
-
-        if (args.index < args.tests.length) {
-            CBTestPage.runTest({
-                buttonElement   : args.buttonElement,
-                index           : args.index,
-                tests           : args.tests,
-            });
-        } else {
+        function finish() {
+            Colby.release(promise);
             args.buttonElement.disabled = false;
         }
-    },
 
-    /**
-     * @param Element args.buttonElement
-     * @param int args.index
-     * @param [object] args.tests
-     *
-     * @return undefined
-     */
-    runTest : function(args) {
-        var className = args.tests[args.index][0];
-        var functionName = args.tests[args.index][1];
-
-        var xhr = new XMLHttpRequest();
-        xhr.onload = CBTestPage.handleTestCompleted.bind(undefined, {
-            buttonElement : args.buttonElement,
-            index : args.index,
-            tests : args.tests,
-            xhr : xhr,
-        });
-
-        var URI = "/test/?class=" + className;
-
-        if (functionName !== undefined) {
-            URI += "&function=" + functionName;
+        function report(error) {
+            CBAdminPageForTests.appendStatusCallback("Failed: " + error.message, {className:"failure"});
+            Colby.release(promise);
+            args.buttonElement.disabled = false;
         }
-
-        xhr.open('POST', URI, true);
-        xhr.send();
-
-        CBAdminPageForTests.appendStatusCallback("Test: " + className + (functionName ? " - " + functionName : ''));
     },
 
     /**
