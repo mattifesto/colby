@@ -1,10 +1,11 @@
 "use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
 
 var Colby = {
-    'intervalId' : null,
-    'intervalCount' : 0,
-    'monthNames' : ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'],
+    intervalId:     null,
+    intervalCount:  0,
+    monthNames:     ['January', 'February', 'March', 'April', 'May', 'June',
+                     'July', 'August', 'September', 'October', 'November',
+                     'December'],
 
     /**
      * @param string text
@@ -316,6 +317,21 @@ var Colby = {
     },
 
     /**
+     * Release objects retained with Colby.retain()
+     *
+     * @return undefined
+     */
+    release: function (item) {
+        if (Colby.retainedItems !== undefined) {
+            var index = Colby.retainedItems.indexOf(item);
+
+            if (index >= 0) {
+                Colby.retainedItems.splice(index, 1);
+            }
+        }
+    },
+
+    /**
      * Use this function with promises to report errors back to the server.
      *
      *      fetchData().catch(Colby.report)
@@ -389,6 +405,20 @@ var Colby = {
         response.xhr = xhr;
 
         return response;
+    },
+
+    /**
+     * Retains objects that shouldn't be garbage collected. This is a good way
+     * to temporarily retain unresolved promises. Release with Colby.release()
+     *
+     * @return undefined
+     */
+    retain: function (item) {
+        if (Colby.retainedItems === undefined) {
+            Colby.retainedItems = [];
+        }
+
+        Colby.retainedItems.push(item);
     },
 
     /**
