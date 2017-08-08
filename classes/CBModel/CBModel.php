@@ -210,6 +210,22 @@ final class CBModel {
     }
 
     /**
+     * @param object? $model
+     * @param string $keyPath
+     *
+     * @return hex160|null
+     */
+    static function valueAsID($model, $keyPath) {
+        $ID = CBModel::value($model, $keyPath);
+
+        if (CBHex160::is($ID)) {
+            return $ID;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * This function parses a string value into an array of names. This is used
      * for class names style properties.
      *
