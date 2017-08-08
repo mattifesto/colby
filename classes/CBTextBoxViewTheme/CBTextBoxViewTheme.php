@@ -27,14 +27,19 @@ final class CBTextBoxViewTheme {
     }
 
     /**
-     * @return stdClass
+     * @param object $spec
+     *
+     * @return object
      */
-    public static function specToModel(stdClass $spec) {
-        $model          = CBModels::modelWithClassName(__CLASS__);
-        $template       = isset($spec->styles) ? $spec->styles : '';
-        $model->styles  = CBTextBoxViewTheme::templateToStyles($template, $spec->ID, $spec->title);
+    static function CBModel_toModel(stdClass $spec) {
+        $template = CBModel::value($spec, 'styles', '');
+        $ID = CBModel::valueAsID($spec, 'ID');
+        $title = CBModel::value($spec, 'title', '');
 
-        return $model;
+        return (object)[
+            'className' => __CLASS__,
+            'styles' => CBTextBoxViewTheme::templateToStyles($template, $ID, $title),
+        ];
     }
 
     /**
