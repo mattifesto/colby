@@ -3,29 +3,65 @@
 final class CBImage {
 
     /**
+     * This model is validated more than most models because all of the
+     * properties are required for the model to be valid.
+     *
      * @param string $spec->extension
      * @param hex160 $spec->ID
-     * @param string? $spec->filename
-     * @param int? $spec->height
-     * @param int? $spec->width
+     * @param string $spec->filename
+     * @param int $spec->height
+     * @param int $spec->width
      *
-     * @return stdClass
+     * @return object|null
      */
-    static function specToModel(stdClass $spec) {
-        $filename = CBModel::value($spec, 'filename', '');
+    static function CBModel_toModel(stdClass $spec) {
+        $extension = CBModel::value($spec, 'extension');
+
+        if (empty($extension)) {
+            CBLog::addMessage(__METHOD__, 4, "The spec `extension` property is empty.");
+            return null;
+        }
+
+        $filename = CBModel::value($spec, 'filename');
 
         if (empty($filename)) {
             // For backward compatability with older spec schema.
-            $filename = CBModel::value($spec, 'base', '');
+            $filename = CBModel::value($spec, 'base');
+        }
+
+        if (empty($filename)) {
+            CBLog::addMessage(__METHOD__, 4, "The spec `filename` property is empty.");
+            return null;
+        }
+
+        $height = CBModel::value($spec, 'height', 0, 'intval');
+
+        if ($height < 1) {
+            CBLog::addMessage(__METHOD__, 4, "The spec `height` property is invalid.");
+            return null;
+        }
+
+        $ID = CBModel::valueAsID($spec, 'ID');
+
+        if (empty($ID)) {
+            CBLog::addMessage(__METHOD__, 4, "The spec `ID` property is invalid.");
+            return null;
+        }
+
+        $width = CBModel::value($spec, 'width', 0, 'intval');
+
+        if ($width < 1) {
+            CBLog::addMessage(__METHOD__, 4, "The spec `width` property is invalid.");
+            return null;
         }
 
         return (object)[
             'className' => __CLASS__,
-            'extension' => $spec->extension,
+            'extension' => $extension,
             'filename' => $filename,
-            'height' => CBModel::value($spec, 'height', null, 'intval'),
-            'ID' => $spec->ID,
-            'width' => CBModel::value($spec, 'width', null, 'intval'),
+            'height' => $height,
+            'ID' => $ID,
+            'width' => $width,
         ];
     }
 
