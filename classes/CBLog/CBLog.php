@@ -88,7 +88,7 @@ EOT;
         try {
             if ($severity < 4) {
                 try {
-                    error_log('Source: ' . __METHOD__ . '(), ' . $message);
+                    error_log(__METHOD__ . ', source: ' . $category . ', ' . $message);
                 } catch (Exception $ignoredException) {
                     // We can't do much if error_log() fails.
                 }
