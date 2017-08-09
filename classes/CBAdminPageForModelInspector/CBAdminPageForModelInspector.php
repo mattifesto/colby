@@ -42,9 +42,9 @@ final class CBAdminPageForModelInspector {
      * @return [[key, value]]
      */
     static function requiredJavaScriptVariables() {
-        $ID = empty($_GET['ID']) ? '' : $_GET['ID'];
+        $ID = cb_query_string_value('ID');
         return [
-            ['CBAdminPageForModelInspectorID', $ID],
+            ['CBAdminPageForModelInspector_modelID', $ID],
         ];
     }
 }

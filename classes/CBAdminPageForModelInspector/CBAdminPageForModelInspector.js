@@ -1,7 +1,6 @@
 "use strict"; /* jshint strict: global */
-
 /* global
-    CBAdminPageForModelInspectorID,
+    CBAdminPageForModelInspector_modelID,
     CBUI,
     CBUIStringEditor,
     Colby */
@@ -14,7 +13,7 @@ var CBAdminPageForModelInspector = {
     DOMContentDidLoad: function () {
         var section, item;
         var spec = {
-            ID: CBAdminPageForModelInspectorID,
+            ID: CBAdminPageForModelInspector_modelID,
         };
         var main = document.getElementsByTagName("main")[0];
         var container = document.createElement("div");

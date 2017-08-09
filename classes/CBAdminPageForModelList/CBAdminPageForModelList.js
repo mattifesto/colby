@@ -52,6 +52,18 @@ var CBAdminPageForModelList = {
 
                 item.commandsElement.appendChild(exportCommandElement);
 
+                /* inspect */
+                var inspectCommandElement = document.createElement("div");
+                inspectCommandElement.className = "command";
+                inspectCommandElement.textContent = "Inspect";
+
+                inspectCommandElement.addEventListener("click", function () {
+                    window.location = "/admin/page/?class=CBAdminPageForModelInspector&ID=" +
+                                      encodeURIComponent(model.ID);
+                });
+
+                item.commandsElement.appendChild(inspectCommandElement);
+
                 section.appendChild(item.element);
             });
 
