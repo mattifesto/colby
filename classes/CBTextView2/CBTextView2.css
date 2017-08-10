@@ -46,8 +46,8 @@
 }
 
 .CBTextView2_default h3 {
-    color: var(--CBTextColor2);
     font-size: 1em;
+    font-weight: normal;
 }
 
 .CBTextView2_default blockquote {
