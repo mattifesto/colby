@@ -116,7 +116,7 @@ final class CBModel {
             return null;
         }
 
-        return CBModel::specToModel($spec);
+        return CBModel::toModel($spec);
     }
 
     /**
@@ -316,11 +316,36 @@ final class CBModel {
      *
      * @param object? $model
      * @param string $keyPath
+     *
+     *      The requested property value must be an object or this function will
+     *      return null.
+     *
      * @param string? $expectedClassName
      *
-     *      If the requested property holds an object and that object does not
-     *      have its className property set to $expectedClassName this function
-     *      will return null.
+     *      Scenarios:
+     *
+     *      spec->className is not empty, expectedClassName is empty
+     *
+     *          spec is converted to a model
+     *
+     *      spec->className is not empty, expectedClassName is not empty
+     *
+     *          if spec->className != $expectedClassName null is returned
+     *          otherwise the spec is converted to a model
+     *
+     *      spec->ClassName is empty, expectedClassName is empty
+     *
+     *          null is returned
+     *
+     *      spec->className is empty, expectedClassName is not empty
+     *
+     *          spec->className is set to $expectedClassName
+     *          spec is converted to a model
+     *
+     *      @NOTE 2017.08.10 A spec should always have its className property
+     *            set, but in the past that hasn't always been the case. Using
+     *            the expectedClassName as the className for specs that need it
+     *            solves some backward compatability issues.
      *
      * @return object|null
      *
@@ -330,17 +355,21 @@ final class CBModel {
     static function valueToModel($model, $keyPath, $expectedClassName = null) {
         $spec = CBModel::value($model, $keyPath);
 
-        if (is_object($spec)) {
-            if (!empty($expectedClassName)) {
-                if (empty($spec->className) || $spec->className !== $expectedClassName) {
-                    return null;
-                }
-            }
-
-            return CBModel::specToModel($spec);
-        } else {
+        if (!is_object($spec)) {
             return null;
         }
+
+        if (empty($spec->className)) {
+            if (empty($expectedClassName)) {
+                return null;
+            }
+
+            $spec->className = $expectedClassName;
+        } else if (!empty($expectedClassName) && $spec->className != $expectedClassName) {
+            return null;
+        }
+
+        return CBModel::toModel($spec);
     }
 
     /**
@@ -354,7 +383,7 @@ final class CBModel {
         $specs = CBModel::valueAsArray($model, $keyPath);
 
         foreach ($specs as $spec) {
-            if (is_object($spec) && ($model = CBModel::specToModel($spec))) {
+            if (is_object($spec) && ($model = CBModel::toModel($spec))) {
                 $models[] = $model;
             }
         }
