@@ -267,7 +267,7 @@ final class CBViewPage {
 
         $renderContentCallback = function () use ($model) {
             $sections = CBModel::valueAsArray($model, 'sections');
-            array_walk($sections, 'CBView::renderModelAsHTML');
+            array_walk($sections, 'CBView::render');
         };
 
         if (!empty($model->layout->className)) {
