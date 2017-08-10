@@ -1,7 +1,9 @@
-.CBWellKnownThemeForContent {
+.CBWellKnownThemeForContent,
+a.CBWellKnownThemeForContent {
     box-sizing: border-box;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     max-width: 100%;
     padding: 20px;
 }
