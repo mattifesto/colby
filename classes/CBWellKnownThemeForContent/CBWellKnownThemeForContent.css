@@ -1,15 +1,19 @@
 .CBWellKnownThemeForContent {
-  padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    padding: 20px;
 }
 
 a.CBWellKnownThemeForContent {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 .CBWellKnownThemeForContent > h1,
 .CBWellKnownThemeForContent > div {
-    margin: 0 auto;
-    max-width: 680px;
+    max-width: 100%;
+    width: 36em;
 }
 
 a.CBWellKnownThemeForContent:hover > h1,
