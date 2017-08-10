@@ -1,8 +1,9 @@
 /*
-
-    This file is used to give all platforms and browsers an equal starting point for CSS. If there is anything very basic that's different among platforms or browsers then rules should be added to this file to equalize and make the experience the same for all browsers and platforms.
-    Rules that commonly change between themes or sites should not be placed in this file.
-
+This file is used to give all platforms and browsers an equal starting point for
+CSS. If there is anything very basic that's different among platforms or
+browsers then rules should be added to this file to equalize and make the
+experience the same for all browsers and platforms. Rules that commonly change
+between themes or sites should not be placed in this file.
 */
 
 
@@ -21,18 +22,31 @@ html {
 }
 
 .CBDarkTheme {
-    --CBBackgroundColor: hsl(0, 0%, 15%);
-    --CBBackgroundColor2: hsl(0, 0%, 17%);
+    --CBBackgroundColor: hsl(0, 0%, 10%);
+    --CBBackgroundColor2: hsl(0, 0%, 14%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.05);
     --CBLineColor: hsla(0, 0%, 100%, 0.1);
-    --CBTextColor: hsla(0, 0%, 100%, 0.9);
-    --CBTextColor2: hsla(0, 0%, 100%, 0.6);
+    --CBTextColor: hsla(0, 0%, 100%, 0.7);
+    --CBTextColor2: hsla(0, 0%, 100%, 0.5);
+    --CBTextColorForHeadings: hsla(0, 0%, 100%, 1.0);
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
     background-color: hsl(0, 0%, 15%); /* for older browsers */
     background-color: var(--CBBackgroundColor);
-    color: hsla(0, 0%, 100%, 0.9); /* for older browsers */
-    color: var(--CBTextColor)
+    color: hsla(0, 0%, 100%, 0.7); /* for older browsers */
+    color: var(--CBTextColor);
+
+    /*
+    The default font antialiasing technique used on MacOS make light text on
+    dark backgrounds look ridiculously heavy on a Mac. It also makes dark on
+    light text look heavier. Switching from "subpixel-antialiased" to
+    "antialiased" renders text with a more appropriate weight. Google fonts has
+    this turned on all the time, even for dark on light text. Review this
+    occasionally to check for changes to MacOS font rendering.
+    */
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .CBLightTheme {
@@ -42,16 +56,25 @@ html {
     --CBLineColor: hsla(0, 0%, 0%, 0.1);
     --CBTextColor: hsla(0, 0%, 0%, 0.9);
     --CBTextColor2: hsla(0, 0%, 0%, 0.6);
+    --CBTextColorForHeadings: hsla(0, 0%, 0%, 0.95);
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
     background-color: hsl(0, 0%, 100%); /* for older browsers */
     background-color: var(--CBBackgroundColor);
     color: hsla(0, 0%, 0%, 0.9); /* for older browsers */
-    color: var(--CBTextColor)
+    color: var(--CBTextColor);
+
+    /* See CBDarkTheme comments */
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
 }
 
 a {
     color: var(--CBTextColorForLinks);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--CBTextColorForHeadings);
 }
 
 body {
