@@ -12,18 +12,20 @@ a.CBWellKnownThemeForContent {
     text-decoration: none;
 }
 
-.CBWellKnownThemeForContent > h1,
 .CBWellKnownThemeForContent > div {
     max-width: 100%;
     width: 36em;
 }
 
-a.CBWellKnownThemeForContent:hover > h1,
 a.CBWellKnownThemeForContent:hover > div {
     text-decoration: underline;
 }
 
-.CBWellKnownThemeForContent > div {
+a.CBWellKnownThemeForContent .title h1 {
+    color: inherit;
+}
+
+.CBWellKnownThemeForContent .content {
     line-height: 1.5;
 }
 
@@ -31,7 +33,7 @@ a.CBWellKnownThemeForContent:hover > div {
     font-size: 1.5em;
 }
 
-.CBWellKnownThemeForContent > div h1 {
+.CBWellKnownThemeForContent .content h1 {
     margin-top: 40px; /* match title whitespace */
 }
 

@@ -108,14 +108,14 @@ final class CBThemedTextView {
             $title = '';
         } else {
             $style = empty($model->titleColor) ? '' : " style=\"color: {$model->titleColor}\"";
-            $title = "<h1{$style}>{$model->titleAsHTML}</h1>";
+            $title = "<div class=\"title\"><h1{$style}>{$model->titleAsHTML}</h1></div>";
         }
 
         if (empty($model->contentAsHTML)) {
             $content = '';
         } else {
             $style = empty($model->contentColor) ? '' : " style=\"color: {$model->contentColor}\"";
-            $content = "<div{$style}>{$model->contentAsHTML}</div>";
+            $content = "<div class=\"content\" {$style}>{$model->contentAsHTML}</div>";
         }
 
         echo $open, $styleElement, $title, $content, $close;
