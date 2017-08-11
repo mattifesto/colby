@@ -16,7 +16,16 @@ final class CBPageSettingsForStaticPages {
         <script src="<?= CBSystemURL ?>/javascript/html5shiv.js"></script>
         <script src="<?= CBSystemURL ?>/javascript/ColbyEqualize.js"></script>
         <link rel="stylesheet" href="<?= CBSystemURL ?>/css/equalize.css">
-        <style>html { color: hsl(0, 0%, 20%); min-width: 980px; }</style>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:600' rel='stylesheet'>
+        <style>
+            html {
+                font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+                font-size: 18px;
+                min-width: 980px;
+            }
+        </style>
     <?php }
 
     /**

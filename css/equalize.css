@@ -31,22 +31,10 @@ html {
     --CBTextColorForHeadings: hsla(0, 0%, 100%, 1.0);
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
-    background-color: hsl(0, 0%, 15%); /* for older browsers */
+    background-color: hsl(0, 0%, 10%); /* for older browsers */
     background-color: var(--CBBackgroundColor);
     color: hsla(0, 0%, 100%, 0.7); /* for older browsers */
     color: var(--CBTextColor);
-
-    /*
-    The default font antialiasing technique used on MacOS make light text on
-    dark backgrounds look ridiculously heavy on a Mac. It also makes dark on
-    light text look heavier. Switching from "subpixel-antialiased" to
-    "antialiased" renders text with a more appropriate weight. Google fonts has
-    this turned on all the time, even for dark on light text. Review this
-    occasionally to check for changes to MacOS font rendering.
-    */
-
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 .CBLightTheme {
@@ -63,10 +51,6 @@ html {
     background-color: var(--CBBackgroundColor);
     color: hsla(0, 0%, 0%, 0.9); /* for older browsers */
     color: var(--CBTextColor);
-
-    /* See CBDarkTheme comments */
-    -webkit-font-smoothing: subpixel-antialiased;
-    -moz-osx-font-smoothing: auto;
 }
 
 a {
