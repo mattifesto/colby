@@ -116,7 +116,7 @@ final class CBView {
      */
     static function renderSpecAsHTML(stdClass $spec) {
         if ($model = CBModel::specToModel($spec)) {
-            CBView::renderModelAsHTML($model);
+            CBView::render($model);
         } else {
             $className = CBModel::value($spec, 'className', '');
             $className = str_replace('--', ' - - ', $className);
