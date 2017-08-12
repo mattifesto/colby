@@ -377,10 +377,10 @@ final class CBSitePreferences {
     }
 
     /**
-     * @return string
+     * @deprecated use cbsitedir()
      */
     static function siteDirectory() {
-        return CBSiteDirectory;
+        return cbsitedir();
     }
 
     /**
@@ -405,31 +405,10 @@ final class CBSitePreferences {
     }
 
     /**
-     * NOTE: 2017.03.19
-     *
-     *      Any code wanting the site URL should call this function to get it.
-     *      Most of this time this function will return the value of the
-     *      CBSiteURL constant. However, this constant should never be used
-     *      directly. The implementation may change in the future.
-     *
-     *      A constant is currently used because if the user can edit this
-     *      property and enters it incorrectly the website will stop working
-     *      with very little recourse because the editor will no longer reload.
-     *
-     *      As other options become more reliable, or other constants provide
-     *      more flexibility, this function's implementation will change.
-     *
-     * @return string
-     *      Returns the site URL with no trailing slash.
+     * @deprecated use cbsiteurl()
      */
     static function siteURL() {
-        if (defined(CBSiteURL)) {
-            return CBSiteURL;
-        } else if (defined('COLBY_SITE_URL')) { // @deprecated
-            return COLBY_SITE_URL;
-        } else {
-            return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['SERVER_NAME'];
-        }
+        return cbsiteurl();
     }
 
     /**
