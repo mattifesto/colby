@@ -19,6 +19,8 @@ function cbhtml($text) {
  *
  *      The goal is for the full CommonMark spec to be supported.
  *
+ *      @NOTE This shoudn't be in this file because it has a depencency.
+ *
  * @return string (HTML)
  */
 function cbmdhtml($markdown) {
