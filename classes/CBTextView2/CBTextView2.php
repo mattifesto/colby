@@ -5,7 +5,7 @@ final class CBTextView2 {
     /**
      * @return string
      */
-    static function modelToSearchText(stdClass $model) {
+    static function CBModel_toSearchText(stdClass $model) {
         return CBModel::value($model, 'contentAsCommonMark', '', 'trim');
     }
 
@@ -35,7 +35,7 @@ final class CBTextView2 {
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         if (empty($model->contentAsHTML)) {
             echo '<!-- CBTextView2 with no content -->';
             return;
@@ -73,8 +73,8 @@ final class CBTextView2 {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
@@ -85,7 +85,7 @@ final class CBTextView2 {
      *
      * @return stdClass
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
             'contentAsCommonMark' => CBModel::value($spec, 'contentAsCommonMark', ''),

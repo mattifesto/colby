@@ -23,7 +23,7 @@ html {
 
 .CBDarkTheme {
     --CBBackgroundColor: hsl(0, 0%, 10%);
-    --CBBackgroundColor2: hsl(0, 0%, 14%);
+    --CBBackgroundColor2: hsl(0, 0%, 15%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.05);
     --CBLineColor: hsla(0, 0%, 100%, 0.1);
     --CBTextColor: hsla(0, 0%, 100%, 0.7);
@@ -39,7 +39,7 @@ html {
 
 .CBLightTheme {
     --CBBackgroundColor: hsl(0, 0%, 100%);
-    --CBBackgroundColor2: hsl(0, 0%, 98%);
+    --CBBackgroundColor2: hsl(30, 30%, 90%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
     --CBLineColor: hsla(0, 0%, 0%, 0.1);
     --CBTextColor: hsla(0, 0%, 0%, 0.9);
