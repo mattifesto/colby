@@ -1,13 +1,19 @@
 "use strict"; /* jshint strict: global */
-/* globals CBPageKindsOptions, CBPageList, CBUI, CBUINavigationView,
-           CBUISelector, CBUIStringEditor, Colby */
+/* globals
+    CBPageKindsOptions,
+    CBPageList,
+    CBUI,
+    CBUINavigationView,
+    CBUISelector,
+    CBUIStringEditor,
+    Colby */
 
 var CBPagesAdministrationView = {
 
     /**
-     * @return {Element}
+     * @return Element
      */
-    createElement : function() {
+    createElement: function() {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBPagesAdministrationView";
@@ -110,73 +116,47 @@ var CBPagesAdministrationView = {
      *
      * @return undefined
      */
-    fetchPages : function (args) {
+    fetchPages: function (args) {
         if (args.state.waiting === true) {
             args.state.argsForNextRequest = args;
             return;
         }
 
         args.state.waiting = true;
+
         var data = new FormData();
         data.append("parametersAsJSON", JSON.stringify(args.parameters));
 
-        var xhr = new XMLHttpRequest();
-        xhr.onload = CBPagesAdministrationView.fetchPagesDidLoad.bind(undefined, {
-            element : args.element,
-            state : args.state,
-            xhr : xhr
-        });
-        xhr.onerror = CBPagesAdministrationView.fetchPagesDidError.bind(undefined, {
-            state : args.state,
-        });
+        var promise = Colby.fetchAjaxResponse("/api/?class=CBPages&function=fetchPageList", data)
+            .then(onResolve, onReject)
+            .then(onFinally, onFinally);
 
-        xhr.open("POST", "/api/?class=CBPages&function=fetchPageList");
-        xhr.send(data);
-    },
+        Colby.retain(promise);
 
-    /**
-     * @param object args.state
-     *
-     * @return undefined
-     */
-    fetchPagesDidError : function (args) {
-        Colby.alert("An error occurred when attempting to fetch the list of pages.");
-
-        args.state.waiting = undefined;
-
-        if (args.state.argsForNextRequest) {
-            var argsForNextRequest = args.state.argsForNextRequest;
-            args.state.argsForNextRequest = undefined;
-
-            CBPagesAdministrationView.fetchPages.call(undefined, argsForNextRequest);
-        }
-    },
-
-    /**
-     * @param {Element} element
-     *
-     * @return undefined
-     */
-    fetchPagesDidLoad : function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
+        function onResolve(response) {
             var pages = response.pages;
             var list = CBPageList.createElement(pages);
 
             args.element.textContent = null;
             args.element.appendChild(list);
-        } else {
-            Colby.displayResponse(response);
         }
 
-        args.state.waiting = undefined;
+        function onReject(error) {
+            Colby.report(error);
+            Colby.displayError(error);
+        }
 
-        if (args.state.argsForNextRequest) {
-            var argsForNextRequest = args.state.argsForNextRequest;
-            args.state.argsForNextRequest = undefined;
+        function onFinally() {
+            args.state.waiting = undefined;
 
-            CBPagesAdministrationView.fetchPages.call(undefined, argsForNextRequest);
+            if (args.state.argsForNextRequest) {
+                var argsForNextRequest = args.state.argsForNextRequest;
+                args.state.argsForNextRequest = undefined;
+
+                CBPagesAdministrationView.fetchPages(argsForNextRequest);
+            }
+
+            Colby.release(promise);
         }
     },
 };
