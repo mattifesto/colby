@@ -204,7 +204,7 @@ final class CBHTMLOutput {
                 array_walk($URLs, function ($URL) { CBHTMLOutput::addJavaScriptURL($URL); });
             }
 
-            if (is_callable($function = "{$className}::requiredJavaScriptVariables")) {
+            if (is_callable($function = "{$className}::CBHTMLOutput_JavaScriptVariables") || is_callable($function = "{$className}::requiredJavaScriptVariables")) {
                 $variables = call_user_func($function);
                 array_walk($variables, function ($variable) use ($function) {
                     if (is_array($variable) && count($variable) > 1) {
