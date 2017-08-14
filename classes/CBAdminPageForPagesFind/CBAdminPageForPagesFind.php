@@ -35,19 +35,14 @@ final class CBAdminPageForPagesFind {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [
-            cbsysurl() . '/javascript/CBPageList.css', // This is the only use of this
-        ];
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [
-            cbsysurl() . '/javascript/CBPageList.js', // This is the only use of this
-            Colby::flexpath(__CLASS__, 'js', cbsysurl()),
-        ];
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 
     /**
