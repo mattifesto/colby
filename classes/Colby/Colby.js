@@ -95,9 +95,14 @@ var Colby = {
     },
 
     /**
+     * Use this function with promises to display error messages to the user.
+     *
+     *      fetchAjaxResponse(...).catch(Colby.report).catch(Colby.displayError)
+     *
      * @param Error error
      *
-     * @return Promise (rejected)
+     * @return Promise
+     *  Returns a rejected promise the error parameter value.
      */
     displayError: function (error) {
         if (error.ajaxResponse) {
@@ -371,7 +376,7 @@ var Colby = {
     /**
      * Use this function with promises to report errors back to the server.
      *
-     *      fetchData().catch(Colby.report)
+     *      fetchAjaxResponse(...).catch(Colby.report).catch(Colby.displayError)
      *
      * @param Error error
      *
