@@ -25,7 +25,7 @@ final class CBRequiredClassNamesResolver {
                 continue;
             }
 
-            if (is_callable($function = "{$className}::requiredClassNames")) {
+            if (is_callable($function = "{$className}::CBHTMLOutput_requiredClassNames") || is_callable($function = "{$className}::requiredClassNames")) {
                 $this->resolve(call_user_func($function));
             }
 
