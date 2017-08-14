@@ -133,6 +133,35 @@ ul.horizontal > li {
     margin-right:   0.75em; /* 2 */
 }
 
+/*
+z-index guide
+
+500 Sticky menus and panels
+
+    A menu or panel needs to be at a higher z-index so that elements declared
+    later in the document scroll underneath the menu or panel.
+
+1000 Full viewport modal shield
+
+    A full viewport modal shield is a fixed element displayed underneath a model
+    element used to prevent input from reaching the elements underneath.
+
+    1000 is the z-index of the shield element, so the modal elements above the
+    shield may have a z-index of 1001 or some other number greater than 1000.
+
+    No element should have a constant z-index of 1000 or higher. An element can
+    adopt this z-index when it becomes modal and adopt more normal z-index when
+    it when it is no longer modal.
+
+1500 Full viewport error message shield
+
+    A full viewport error message shield is like a full viewport modal shield
+    except that it can potentially be displayed while a full viewport modal
+    shield is being displayed and must have a higher z-index.
+
+    1500 is the z-index of the shield, so the error message elements may have a
+    z-index of 1501 or greater.
+*/
 
 /*
 
