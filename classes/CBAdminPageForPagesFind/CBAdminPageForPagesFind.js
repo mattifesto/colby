@@ -226,7 +226,7 @@ var CBPageList = {
         item.commandsElement.appendChild(trashCommandElement);
 
         trashCommandElement.addEventListener("click", CBPageList.handlePageElementTrashWasClicked.bind(undefined, {
-            element: item,
+            element: item.element,
             ID: page.ID,
         }));
 
@@ -260,38 +260,27 @@ var CBPageList = {
     },
 
     /**
-     * @param {Element} element
-     * @param {hex160} ID
+     * @param Element args.element
+     * @param hex160 args.ID
      *
      * @return undefined
      */
-    handlePageElementTrashWasClicked : function(args) {
+    handlePageElementTrashWasClicked: function(args) {
         var formData = new FormData();
         formData.append("dataStoreID", args.ID);
 
-        var xhr = new XMLHttpRequest();
-        xhr.onload = CBPageList.handlePageElementTrashRequestDidLoad.bind(undefined, {
-            element : args.element,
-            xhr : xhr,
-        });
+        var promise = Colby.fetchAjaxResponse("/admin/pages/api/move-to-the-trash/", formData)
+            .then(onResolve, Colby.report)
+            .then(onFinally, onFinally);
 
-        xhr.open("POST", "/admin/pages/api/move-to-the-trash/", true);
-        xhr.send(formData);
-    },
+        Colby.retain(promise);
 
-    /**
-     * @param {Element} args.element
-     * @param {XMLHttpRequest} args.xhr
-     *
-     * @return undefined
-     */
-    handlePageElementTrashRequestDidLoad : function(args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
+        function onResolve(response) {
             args.element.parentElement.removeChild(args.element);
-        } else {
-            Colby.displayResponse(response);
+        }
+
+        function onFinally() {
+            Colby.release(promise);
         }
     },
 };
