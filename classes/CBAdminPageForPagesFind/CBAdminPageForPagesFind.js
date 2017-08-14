@@ -8,7 +8,7 @@
     CBUIStringEditor,
     Colby */
 
-var CBPagesAdministrationView = {
+var CBAdminPageForPagesFind = {
 
     /**
      * @return Element
@@ -16,12 +16,12 @@ var CBPagesAdministrationView = {
     createElement: function() {
         var section, item;
         var element = document.createElement("div");
-        element.className = "CBPagesAdministrationView";
+        element.className = "CBAdminPageForPagesFind";
         var pageListContainer = document.createElement("div");
 
         var parameters = {};
 
-        var fetchPagesCallback = CBPagesAdministrationView.fetchPages.bind(undefined, {
+        var fetchPagesCallback = CBAdminPageForPagesFind.fetchPages.bind(undefined, {
             element : pageListContainer,
             parameters : parameters,
             state : {},
@@ -153,7 +153,7 @@ var CBPagesAdministrationView = {
                 var argsForNextRequest = args.state.argsForNextRequest;
                 args.state.argsForNextRequest = undefined;
 
-                CBPagesAdministrationView.fetchPages(argsForNextRequest);
+                CBAdminPageForPagesFind.fetchPages(argsForNextRequest);
             }
 
             Colby.release(promise);
@@ -164,5 +164,5 @@ var CBPagesAdministrationView = {
 document.addEventListener("DOMContentLoaded", function() {
     var main = document.getElementsByTagName("main")[0];
 
-    main.appendChild(CBPagesAdministrationView.createElement());
+    main.appendChild(CBAdminPageForPagesFind.createElement());
 });

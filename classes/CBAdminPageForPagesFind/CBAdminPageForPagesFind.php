@@ -5,21 +5,21 @@ final class CBAdminPageForPagesFind {
     /**
      * @return [string]
      */
-    public static function adminPageMenuNamePath() {
+    static function adminPageMenuNamePath() {
         return ['pages', 'find'];
     }
 
     /**
-     * @return stdClass
+     * @return object
      */
-    public static function adminPagePermissions() {
+    static function adminPagePermissions() {
         return (object)['group' => 'Administrators'];
     }
 
     /**
      * @return null
      */
-    public static function adminPageRenderContent() {
+    static function adminPageRenderContent() {
         CBHTMLOutput::setTitleHTML('Find Pages');
         CBHTMLOutput::setDescriptionHTML('Find pages to edit, copy, or delete.');
     }
@@ -27,14 +27,63 @@ final class CBAdminPageForPagesFind {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames() {
+         return ['CBUI', 'CBUINavigationView', 'CBUISelector', 'CBUIStringEditor'];
+    }
 
-        /**
-         * @deprecated This class holds an older implementation of this page
-         * and the functions that belong in this class should move to this
-         * class and an associated class JavaScript file.
-         */
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [
+            cbsysurl() . '/javascript/CBPageList.css', // This is the only use of this
+        ];
+    }
 
-        return ['CBPagesAdministrationView'];
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [
+            cbsysurl() . '/javascript/CBPageList.js', // This is the only use of this
+            Colby::flexpath(__CLASS__, 'js', cbsysurl()),
+        ];
+    }
+
+    /**
+     * @return [[string, mixed]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables() {
+        $pageKinds = CBDB::SQLToArray('SELECT DISTINCT `classNameForKind` FROM `ColbyPages`');
+
+        $pageKinds = array_map(function ($pageKind) {
+            if ($pageKind === null) {
+                return (object)[
+                    'title' => 'Unspecified',
+                    'value' => 'unspecified',
+                ];
+            } else {
+                return (object)[
+                    'title' => $pageKind,
+                    'value' => $pageKind,
+                ];
+            }
+        }, $pageKinds);
+
+
+        array_unshift($pageKinds,
+            (object)[
+                'title' => 'All',
+                /* value unspecified */
+            ],
+            (object)[
+                'title' => 'Current Front Page',
+                'value' => 'currentFrontPage',
+            ]
+        );
+
+        return [
+            ['CBPageKindsOptions', $pageKinds]
+        ];
     }
 }
