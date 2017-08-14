@@ -3,11 +3,12 @@
 final class CBMenuView {
 
     /**
-     * @param object $model
+     * @param string $model->CSSClassNames
+     * @param hex160 $model->menuID
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         $menuID = CBModel::value($model, 'menuID');
 
         if (empty($menuID)) {
@@ -114,14 +115,14 @@ final class CBMenuView {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 
@@ -130,7 +131,7 @@ final class CBMenuView {
      *
      * @return object
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
             'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
