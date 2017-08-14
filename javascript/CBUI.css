@@ -177,7 +177,7 @@
 }
 
 .CBUISectionItem2 > .CBUIDropdown.expanded {
-    z-index: 1000;
+    z-index: 1001;
 }
 
 .CBUISectionItem2 > .CBUIDropdown > .button {
