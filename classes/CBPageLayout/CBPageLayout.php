@@ -113,8 +113,8 @@ final class CBPageLayout {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
@@ -126,7 +126,7 @@ final class CBPageLayout {
      *
      * @return stdClass
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
             'customLayoutClassName' => CBModel::value($spec, 'customLayoutClassName', '', 'trim'),
