@@ -5,16 +5,15 @@ final class CBDefaultPageHeaderView {
     /**
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         ?>
 
-        <header class="CBDefaultPageHeaderView">
+        <header class="CBDefaultPageHeaderView CBDarkTheme">
             <?php
 
             CBView::renderModelAsHTML((object)[
                 'className' => 'CBMenuView',
                 'menuID' => CBWellKnownMenuForMain::ID(),
-                'CSSClassNames' => ['CBDarkTheme'],
             ]);
 
             ?>
