@@ -14,7 +14,7 @@
 }
 
 .CBPageListView2_default > article > a {
-    background-color: var(--CBBackgroundColor);
+    background-color: var(--CBBackgroundColor2);
     border: 1px solid var(--CBLineColor);
     border-radius: 3px;
     color: inherit;
