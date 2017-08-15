@@ -717,7 +717,11 @@ final class Colby {
                 'exceptionStackTrace' => Colby::exceptionStackTrace($exception),
             ];
 
-            CBLog::addMessage(__METHOD__, $severity, $exception->getMessage(), $model);
+            $exMessage = $exception->getMessage();
+            $exBasename = basename($exception->getFile());
+            $exLine = $exception->getLine();
+            $logMessage = "\"{$exMessage}\" in {$exBasename} line {$exLine}";
+            CBLog::addMessage(__METHOD__, $severity, $logMessage, $model);
 
             /**
              * Report the exception via email to the administrator
