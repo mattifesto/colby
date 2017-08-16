@@ -304,7 +304,7 @@ final class Colby {
     /**
      * @return void
      */
-    public static function handleError($errno, $errstr, $errfile, $errline) {
+    static function handleError($errno, $errstr, $errfile, $errline) {
         $severity = 2;
         throw new ErrorException($errstr, $errno, $severity, $errfile, $errline);
     }
@@ -328,7 +328,7 @@ final class Colby {
      *
      * @return void
      */
-    public static function handleException($exception, $handlerName = null) {
+    static function handleException($exception, $handlerName = null) {
 
         /**
          * Exception handlers should never throw exceptions because if they
@@ -386,7 +386,7 @@ final class Colby {
      *
      * @return void
      */
-    public static function handleShutdown() {
+    static function handleShutdown() {
         $error = error_get_last();
 
         if ($error) {
@@ -398,7 +398,7 @@ final class Colby {
 
             $exception  = new ErrorException($message, $number, $severity, $filename, $line);
 
-            self::reportException($exception, $severity);
+            Colby::reportException($exception, $severity);
         }
     }
 
@@ -710,7 +710,7 @@ final class Colby {
      *
      * @return null
      */
-    public static function reportException(Exception $exception, $severity = 3) {
+    static function reportException(/* when php7 only: Throwable */ $exception, $severity = 3) {
         try {
             $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
             $model = (object)[
