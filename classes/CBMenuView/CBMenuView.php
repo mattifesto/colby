@@ -4,19 +4,29 @@ final class CBMenuView {
 
     /**
      * @param string $model->CSSClassNames
+     * @param object $model->menu
+     *
+     *      This parameter is used by direct callers that dynamically construct
+     *      a menu. It takes higher priority than menuID. This parameter will
+     *      not be preserved by CBModel_toModel().
+     *
      * @param hex160 $model->menuID
      *
      * @return null
      */
     static function CBView_render(stdClass $model) {
-        $menuID = CBModel::value($model, 'menuID');
+        $menu = CBModel::valueAsObject($model, 'menu');
 
-        if (empty($menuID)) {
-            echo '<!-- CBMenuView: no menu ID -->';
-            return;
+        if (empty($menu)) {
+            $menuID = CBModel::value($model, 'menuID');
+
+            if (empty($menuID)) {
+                echo '<!-- CBMenuView: no menu ID -->';
+                return;
+            }
+
+            $menu = CBModels::fetchModelByID($menuID);
         }
-
-        $menu = CBModels::fetchModelByID($menuID);
 
         if (empty($menu) || empty($menu->items)) {
             echo '<!-- CBMenuView: no menu items -->';
@@ -40,7 +50,7 @@ final class CBMenuView {
 
         $CSSClassNames = implode(' ', $CSSClassNames);
 
-        $titleAsHTML = cbhtml($menu->title);
+        $titleAsHTML = CBModel::value($model, 'title', '', 'cbhtml');
         $titleURIAsHTML = CBModel::value($menu, 'titleURI', '', 'cbhtml');
 
         /**
