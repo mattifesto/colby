@@ -126,9 +126,10 @@ EOT;
             Colby::query($SQL);
         } catch (Exception $innerException) {
             try {
-                error_log(__METHOD__ . '() inner exception: ' . $innerException->getMessage());
+                $message = CBConvert::throwableToMessage($innerException);
+                error_log(__METHOD__ . " inner exception: {$message}");
             } catch (Exception $ignoredException) {
-                // We can't do much if error_log() fails.
+                error_log(__METHOD__ . ' ignored exception');
             }
         }
     }
