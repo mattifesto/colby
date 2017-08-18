@@ -154,6 +154,25 @@ var CBSitePreferencesEditor = {
 
         element.appendChild(section);
 
+        /* Slack */
+
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({
+            text : "Slack",
+        }));
+
+        section = CBUI.createSection();
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIStringEditor.createEditor({
+            labelText : "Webhook URL",
+            propertyName : "slackWebhookURL",
+            spec : args.spec,
+            specChangedCallback : args.specChangedCallback,
+        }).element);
+        section.appendChild(item);
+        element.appendChild(section);
+
         /* Social */
 
         element.appendChild(CBUI.createHalfSpace());
