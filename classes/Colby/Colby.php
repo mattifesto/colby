@@ -31,21 +31,21 @@ final class Colby {
     // A list of root relative directories to be search when looking for
     // snippets, handlers, or document related files.
 
-    public static $libraryDirectories = array();
+    public static $libraryDirectories = [];
 
     /**
      * @return bool
      */
-    public static function autoload($className) {
-        foreach (self::$libraryDirectories as $directory) {
+    static function autoload($className) {
+        foreach (Colby::$libraryDirectories as $directory) {
             $directory = empty($directory) ? '' : "/{$directory}";
-            $filepath = CBSiteDirectory . "{$directory}/classes/{$className}.php";
+            $filepath = cbsitedir() . "{$directory}/classes/{$className}.php";
 
             if (is_file($filepath)) {
                 break;
             }
 
-            $filepath = CBSiteDirectory . "{$directory}/classes/{$className}/{$className}.php";
+            $filepath = cbsitedir() . "{$directory}/classes/{$className}/{$className}.php";
 
             if (is_file($filepath)) {
                 break;
@@ -403,76 +403,51 @@ final class Colby {
     }
 
     /**
-     * To use Colby, you must include this file. When you include this file,
-     * this function is the first function that is called and basically boots
-     * Colby.
+     * To use Colby you must include init.php which includes this file which
+     * runs this function. The contents of this function may be entirely or
+     * partially moved to init.php over time. The init.php file is how Colby is
+     * booted.
      *
      * This function should be well documented with comments and even a new
      * developer should be able to read it to understand how the system gets
      * initialized.
+     *
+     * Before this function runs, the following are available:
+     *
+     *      CBSiteDirectory (<CBSystemDirectory>/init.php)
+     *      CBSiteVersionNumber (<CBSiteDirectory>/version.php)
+     *      CBSystemDirectory (<CBSystemDirectory>/init.php)
+     *      CBSystemVersionNumber (<CBSystemDirectory>/version.php)
+     *
+     *      <CBSystemDirectory>/function.php has already been included by
+     *      <CBSystemDirectory>/init.php
      */
     static function initialize() {
-        /**
-         * Colby sites always run with all error reporting turned on.
-         */
-
-        error_reporting(E_ALL | E_STRICT);
-
-        /**
-         * Includes performed before setting up error handling should use
-         * `require` or `require_once` to halt execution if they aren't
-         * successful.
-         *
-         * Includes performed after setting up error handling should use
-         * `include` or `include_once` which will invoke the error handling
-         * mechanism if they aren't successful.
-         *
-         * Only the following lines should use `require_once`.
-         */
-
-        define('CBSiteDirectory', $_SERVER['DOCUMENT_ROOT']);
-        define('CBPageTypeID', '89fe3a7d77424ba16c5101eeb0448c7688547ab2'); // @deprecated
-        define('COLBY_SYSTEM_DIRECTORY', CBSystemDirectory); // @deprecated
-        define('COLBY_SITE_DIRECTORY', $_SERVER['DOCUMENT_ROOT']); // @deprecated
-
-        // defines CBSiteVersionNumber
-        require_once CBSiteDirectory . '/version.php';
 
         /**
          * Library directories are relative paths from the site directory. So
          * the site library directory is simply an empty string.
-         */
-
-        $siteLibraryDirectory = '';
-
-        /**
-         * Calculate the Colby system library directory which is the relative
-         * path between the site directory and the Colby system directory.
-         * The Colby system library directory will almost always be "colby".
-         */
-
-        $colbySystemLibraryDirectory = str_replace(CBSiteDirectory . '/', '', CBSystemDirectory);
-
-        /**
+         *
          * Add the site and Colby system library directories as the first two
          * library directories. These library directories are required for
          * error handling to function properly.
          *
          * Library directories at the lowest index in the array are checked
-         * first and therefore have the highest priority. So when searching
-         * for library files, the site will have the highest priority, the
-         * Colby system will have the next highest priority. When the
+         * first and therefore have the highest priority. When searching for
+         * library files, the site library will have the highest priority and
+         * the Colby library will have the next highest priority. When the
          * "site-configuration.php" file is included later in this method,
          * any additional libraries will have still lower priority with the
          * libraries loaded earlier having greater priority than the libraries
          * loaded later.
          */
 
-        self::$libraryDirectories[] = $siteLibraryDirectory;
-        self::$libraryDirectories[] = $colbySystemLibraryDirectory;
+        Colby::$libraryDirectories[] = '';
+        Colby::$libraryDirectories[] = 'colby';
 
         /**
-         * Set up error handling.
+         * Once the first library directories are configured, we can set up
+         * error handling.
          */
 
         set_error_handler('Colby::handleError');
@@ -480,74 +455,69 @@ final class Colby {
         register_shutdown_function('Colby::handleShutdown');
 
         /**
-         * Include the local configuration file. This file is not checked in
-         * and therefore is not shared between different versions of the site.
-         */
-
-        include_once CBSiteDirectory . '/colby-configuration.php';
-
-        /**
-         * The `colby-configuration.php` file will indicate whether the Swift
-         * Mailer email library is enabled for this site or not. We need to
-         * include the required file from that library right after that because
-         * the error handling code checks to see if the library should be
-         * available and then assumes it is. From this point on if the library
-         * is available and an error occurs, even in the remaining lines of
-         * this function, an email will be sent.
-         */
-
-        if (defined('COLBY_EMAIL_LIBRARY_DIRECTORY')) {
-            include_once COLBY_EMAIL_LIBRARY_DIRECTORY . '/lib/swift_required.php';
-        }
-
-        /**
-         * Set up auto loading.
+         * Set up auto loading. Auto loading is used by error handling. Colby
+         * used to try to make sure error handling used no other files, but when
+         * things are working well, more advanced functionaly is required to log
+         * a report errors to system administrators.
          *
-         * After this call, autoloadng will be enabled for site classes and
-         * Colby classes. It will not be enabled for optional 3rd party
-         * libraries until 'site-configuration.php' is loaded below.
+         * After this call, autoloadng will be enabled for the site library and
+         * the Colby library. More libraries will be added when
+         * site-configuration.php is included below.
          *
-         * This autoloading function must be the last autoloading function
-         * because it will throw an exception if it is not able to successfully
-         * load a class. This behavior is necessary because if no exception is
-         * thrown a fatal error will occur and there's nothing Colby can do to
-         * handle it and therefore the error will go unnoticed and the visitor
-         * will get a blank page. Autoloaders added after this should use the
-         * $prepend parameter to `spl_autoload_register` to ensure that they
-         * are not the last autoloader.
+         * @NOTE This comment replaces earlier comments about how this must be
+         * the last autoloader because it can throw an excetion. However, after
+         * studying Colby::autoload() this doesn't appear to be explicitly true.
+         * The earlier comment was written poorly. If you find there are
+         * limitations in this area, document them clearly and explicity here.
          */
 
         spl_autoload_register('Colby::autoload');
 
         /**
-         * Set the CBSystemURL constant.
+         * Once error handling is enabled, the local configuration file can be
+         * included. This file is not checked in and therefore is not shared
+         * between different versions of the site. If it has a problem, error
+         * handling must be enabled to let the site administrator know about it.
          *
-         * This ensures that autoloading for Colby is working.
+         * Every once in a while it's a good idea to insert a syntax error into
+         * colby-configuration.php and make sure that an error is reported when
+         * trying to access a page.
          *
-         * NOTE: 2017.03.19
+         *      2017.08.17 When a syntax error was placed and a page was loaded
+         *      the error was correctly reported on the page. The error was also
+         *      correctly reported to Slack. Additionally an inner exception
+         *      during CBLog::addMessage() was reported because the syntax error
+         *      was placed before the database constants are set causing the
+         *      function to fail writing to the database. This is fine.
          *
-         *      This may move to CBSitePreferences::systemURL() in the future
-         *      but I'm not sure about it now.
+         * This file defines CBSiteURL.
          */
 
-        define('CBSystemURL', CBSitePreferences::siteURL() . "/{$colbySystemLibraryDirectory}");
-        define('COLBY_SYSTEM_URL', CBSystemURL); // @deprecated
+        include_once cbsitedir() . '/colby-configuration.php';
+
+        /**
+         * Now that the CBSiteURL constant has been defined, the CBSystemURL
+         * constant can also be defined.
+         */
+
+        define('CBSystemURL', cbsiteurl() . "/colby");
+        define('COLBY_SYSTEM_URL', cbsysurl()); // @deprecated
 
         /**
          * Include the site configuration file. Unlike 'colby-configuration.php'
          * which contains instance specific settings, 'site-configuration.php'
          * is checked in and shared by all instances of the site such as
-         * development, test, and production instances. This code in this file
+         * development, test, and production instances. The code in this file
          * should perform the following tasks:
          *
          *      1. Set shared constants used by all instances of the site.
-         *      2. Call Colby::loadLibrary() for any 3rd party libraries that
+         *      2. Call Colby::loadLibrary() for any additional libraries that
          *         are used by the site.
          *
-         * After these tasks are performed autoloading will be fully enabled.
+         * After these tasks are performed autoloading will be fully functional.
          */
 
-        include_once CBSiteDirectory . '/site-configuration.php';
+        include_once cbsitedir() . '/site-configuration.php';
 
         /**
          * 2014.08.26
@@ -567,22 +537,22 @@ final class Colby {
     }
 
     /**
-     * @return void
+     * @return null
      */
-    public static function loadLibrary($libraryDirectory) {
-        $absoluteLibraryDirectory = COLBY_SITE_DIRECTORY . "/{$libraryDirectory}";
+    static function loadLibrary($libraryDirectory) {
+        $absoluteLibraryDirectory = cbsitedir() . "/{$libraryDirectory}";
 
         include_once "{$absoluteLibraryDirectory}/version.php";
         include_once "{$absoluteLibraryDirectory}/library-configuration.php";
 
-        self::$libraryDirectories[] = $libraryDirectory;
+        Colby::$libraryDirectories[] = $libraryDirectory;
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    public static function mysqli() {
-        if (null === self::$mysqli) {
+    /**
+     * @return mysqli
+     */
+    static function mysqli() {
+        if (null === Colby::$mysqli) {
             $mysqli = new mysqli(
                 CBSitePreferences::mysqlHost(),
                 CBSitePreferences::mysqlUser(),
@@ -601,10 +571,10 @@ final class Colby {
                     'Unable to set mysqli character set to "utf8".');
             }
 
-            self::$mysqli = $mysqli;
+            Colby::$mysqli = $mysqli;
         }
 
-        return self::$mysqli;
+        return Colby::$mysqli;
     }
 
     /**
@@ -710,61 +680,50 @@ final class Colby {
      *
      * @return null
      */
-    static function reportException(/* when php7 only: Throwable */ $exception, $severity = 3) {
+    static function reportException(/* Throwable */ $exception, $severity = 3) {
         try {
             $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
             $model = (object)[
                 'exceptionStackTrace' => Colby::exceptionStackTrace($exception),
             ];
+            $logMessage = CBConvert::throwableToMessage($exception);
+            $URI = $_SERVER['REQUEST_URI'];
+            $link = "https://{$serverName}{$URI}";
 
-            $exMessage = $exception->getMessage();
-            $exBasename = basename($exception->getFile());
-            $exLine = $exception->getLine();
-            $logMessage = "\"{$exMessage}\" in {$exBasename} line {$exLine}";
+            /* CBLog::addMessage() never throws an exception */
             CBLog::addMessage(__METHOD__, $severity, $logMessage, $model);
 
-            /**
-             * Report the exception via email to the administrator
-             */
-
-            if (CBSitePreferences::sendEmailsForErrors() && class_exists('Swift_SmtpTransport')) {
-                $transport = Swift_SmtpTransport::newInstance(COLBY_EMAIL_SMTP_SERVER,
-                                                              COLBY_EMAIL_SMTP_PORT,
-                                                              COLBY_EMAIL_SMTP_SECURITY);
-
-                $transport->setUsername(COLBY_EMAIL_SMTP_USER);
-                $transport->setPassword(COLBY_EMAIL_SMTP_PASSWORD);
-
-                $mailer = Swift_Mailer::newInstance($transport);
-
-                $truncatedMessage = CBConvert::truncate($exception->getMessage());
-                $severityDescription = CBLog::severityToDescription($severity);
-                $messageSubject = "{$severityDescription} | {$serverName} | {$truncatedMessage}";
-                $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
-                $messageTo = CBSitePreferences::administratorEmails();
-                $messageBodyHTML = '<pre>' . cbhtml($model->exceptionStackTrace) . '</pre>';
-
-                $message = Swift_Message::newInstance();
-                $message->setSubject($messageSubject);
-                $message->setFrom($messageFrom);
-                $message->setTo($messageTo);
-                $message->setBody($model->exceptionStackTrace);
-                $message->addPart($messageBodyHTML, 'text/html');
-
-                $mailer->send($message);
-            }
+            /* CBSlack::sendMessage() can throw an exception, so it called last */
+            CBSlack::sendMessage((object)[
+                'message' => $logMessage . " <{$link}|link>",
+                'attachments' => [
+                    (object)[
+                        'title' => 'Server Name',
+                        'text' => $serverName,
+                    ],
+                    (object)[
+                        'title' => 'URI',
+                        'text' => $URI,
+                    ],
+                    (object)[
+                        'title' => 'Function',
+                        'text' => CBConvert::throwableToFunction($exception),
+                    ],
+                ],
+            ]);
         } catch (Exception $innerException) {
             try {
                 $model = (object)[
                     'exceptionStackTrace' => Colby::exceptionStackTrace($innerException),
                 ];
-                $innerExceptionMessage = 'Inner exception: ' . $innerException->getMessage();
+                $innerExceptionMessage = 'Inner exception: ' .
+                    CBConvert::throwableToMessage($innerException);
 
                 CBLog::addMessage(__METHOD__, 2, $innerExceptionMessage, $model);
             } catch (Exception $ignoredException) {
                 // At this point we're three exceptions deep so we just try to
                 // get an error log message written if possible.
-                error_log('Source: ' . __METHOD__ . '(), Ignored exception: ' . $ignoredException->getMessage());
+                error_log('Source: ' . __METHOD__ . '(), Ignored exception: ' . CBConvert::throwableToMessage($ignoredException));
             }
         }
     }
@@ -804,12 +763,6 @@ final class Colby {
     }
 }
 
-/**
- * @return string
- */
-function cbsitedir() {
-    return CBSiteDirectory;
-}
 
 /**
  * NOTE: 2017.03.19
@@ -839,12 +792,6 @@ function cbsiteurl() {
     }
 }
 
-/**
- * @return string
- */
-function cbsysdir() {
-    return CBSystemDirectory;
-}
 
 /**
  * @return string
