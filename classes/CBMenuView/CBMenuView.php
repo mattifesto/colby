@@ -15,9 +15,9 @@ final class CBMenuView {
      * @return null
      */
     static function CBView_render(stdClass $model) {
-        $menu = CBModel::valueAsObject($model, 'menu');
+        $menu = CBModel::value($model, 'menu');
 
-        if (empty($menu)) {
+        if (!is_object($menu)) {
             $menuID = CBModel::value($model, 'menuID');
 
             if (empty($menuID)) {
