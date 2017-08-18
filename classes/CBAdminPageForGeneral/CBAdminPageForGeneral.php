@@ -174,6 +174,16 @@ EOT;
         if (is_dir(cbsitedir() . '/swiftmailer')) {
             CBUI::renderKeyValueSectionItem('Swiftmailer', 'Your site directory contains a `swiftmailer` directory. Swiftmailer use has been deprecated.');
         }
+
+        /* 2017.08.17 Search for use of deprecated `colby/Colby.php` file. */
+        if (is_file($filepath = cbsitedir() . '/index.php')) {
+            $text = file_get_contents($filepath);
+
+            if (preg_match('/Colby\.php/', $text)) {
+                CBUI::renderKeyValueSectionItem('colby/Colby.php', 'The "index.php" file for this site references the deprecated "colby/Colby.php" file. Replace this with a reference to the "colby/init.php" file.');
+            }
+        }
+
         $content = ob_get_clean();
 
         if (!empty($content)) {
