@@ -62,70 +62,26 @@ if (containsExcludedHash($hashes)) {
     exit;
 }
 
-if (CBSitePreferences::sendEmailsForErrors() && class_exists('Swift_SmtpTransport')) {
-    $CSS = <<<EOT
+$messages = [];
 
-        <style>
-
-            th, td
-            {
-                padding:        5px;
-                vertical-align: top;
-            }
-
-            td small
-            {
-                color:          #808080;
-                display:        inline-block;
-                font-family:    "Courier New";
-                padding-top:    5px;
-            }
-
-        </style>
-EOT;
-
-    $html = "<table>{$CSS}";
-
-    foreach ($attributes as $key => $value) {
-        $keyHTML    = ColbyConvert::textToHTML($key);
-        $valueHTML  = ColbyConvert::textToHTML($value);
-        $valueHTML  = "<div>$valueHTML</div>";
-
-        if (isset($hashes[$key])) {
-            $hashHTML   = ColbyConvert::textToHTML($hashes[$key]);
-            $valueHTML  = "{$valueHTML}<div><small>{$hashHTML}</small></div>";
-        }
-
-        $html .= "<tr><th style='text-align: right;'>{$keyHTML}</th><td>{$valueHTML}</td></tr>";
-    }
-
-    $html .= '</table>';
-
-    $transport = Swift_SmtpTransport::newInstance(COLBY_EMAIL_SMTP_SERVER,
-                                                  COLBY_EMAIL_SMTP_PORT,
-                                                  COLBY_EMAIL_SMTP_SECURITY);
-
-    $transport->setUsername(COLBY_EMAIL_SMTP_USER);
-    $transport->setPassword(COLBY_EMAIL_SMTP_PASSWORD);
-
-    $mailer = Swift_Mailer::newInstance($transport);
-
-    $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
-    $truncatedMessage = CBConvert::truncate($message);
-    $messageSubject = "JS Error | {$serverName} | {$truncatedMessage}";
-    $messageFrom = array(COLBY_EMAIL_SENDER => COLBY_EMAIL_SENDER_NAME);
-    $messageTo = CBSitePreferences::administratorEmails();
-
-    $message = Swift_Message::newInstance();
-    $message->setSubject($messageSubject);
-    $message->setFrom($messageFrom);
-    $message->setTo($messageTo);
-    $message->setBody($html, 'text/html');
-
-    $mailer->send($message);
+foreach ($attributes as $key => $value) {
+    $hash = $hashes[$key];
+    $messages[] = "*{$key}*\n{$value}\n$hash\n";
 }
 
-error_log('JavaScript error: ' . var_export($attributes, true));
+CBSlack::sendMessage((object)[
+    'message' => "JavaScript: {$message}",
+    'attachments' => [
+        (object)[
+            'text' => implode("\n", $messages),
+            'mrkdwn_in' => ['text'],
+        ],
+    ],
+]);
+
+CBLog::addMessage('/javascript-error/', 3, $message, (object)[
+    'text' => implode("\n", $messages),
+]);
 
 $response->wasSuccessful = true;
 $response->send();
