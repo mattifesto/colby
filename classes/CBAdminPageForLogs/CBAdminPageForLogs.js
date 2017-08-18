@@ -48,6 +48,13 @@ var CBAdminPageForLogs = {
                     row.contentElement.appendChild(exceptionStackTraceElement);
                 }
 
+                if (log.model && log.model.text) {
+                    var textElement = document.createElement("pre");
+                    textElement.textContent = log.model.text;
+
+                    row.contentElement.appendChild(textElement);
+                }
+
                 element.appendChild(row.element);
 
                 Colby.updateTimes();
