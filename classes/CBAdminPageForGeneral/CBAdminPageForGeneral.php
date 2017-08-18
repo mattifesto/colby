@@ -162,6 +162,18 @@ EOT;
             CBUI::renderKeyValueSectionItem('CBSitePreferences::classNameForPageSettings', 'Implement CBPageHelpers::classNameForUnsetPageSettings() instead of the CBSitePreferences model.');
         }
 
+        /* 2017.08.17 The slackWebhookURL propery on the CBSitePreferences model
+           is not technically required, but it is effectively required because
+           an admin should be tracking site errors. */
+        $slackWebhookURL = CBModel::value($model, 'slackWebhookURL');
+
+        if (empty($slackWebhookURL)) {
+            CBUI::renderKeyValueSectionItem('Slack Webhook URL', 'Enter a Slack Webhook URL in site preferences to receive error notifications.');
+        }
+
+        if (is_dir(cbsitedir() . '/swiftmailer')) {
+            CBUI::renderKeyValueSectionItem('Swiftmailer', 'Your site directory contains a `swiftmailer` directory. Swiftmailer use has been deprecated.');
+        }
         $content = ob_get_clean();
 
         if (!empty($content)) {
