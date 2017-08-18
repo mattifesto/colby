@@ -40,6 +40,42 @@ final class CBConvert {
     }
 
     /**
+     * Returns the name of the function where the error occurred.
+     *
+     * This function needs to be very stable because it will be called from
+     * error handlers.
+     *
+     * @return string
+     */
+    static function throwableToFunction(/* Throwable: */ $throwable) {
+        $trace = $throwable->getTrace();
+        $entry = $trace[0];
+        $class = empty($entry['class']) ? '' : $entry['class'];
+        $type = empty($entry['type']) ? '' : $entry['type'];
+        $function = empty($entry['function']) ? '' : $entry['function'];
+
+        return "{$class}{$type}{$function}()\n";
+    }
+
+    /**
+     * Creates a string with the thrown message and reasonably helpful
+     * information for finding the source of the problem. This function should
+     * be used for creating all "short" descriptions of an error.
+     *
+     * This function needs to be very stable because it will be called from
+     * error handlers.
+     *
+     * @return string
+     */
+    static function throwableToMessage(/* Throwable */ $throwable) {
+        $message = $throwable->getMessage();
+        $basename = basename($throwable->getFile());
+        $line = $throwable->getLine();
+
+        return "\"{$message}\" in {$basename} line {$line}";
+    }
+
+    /**
      * @param mixed $value
      *
      * @return string|null
