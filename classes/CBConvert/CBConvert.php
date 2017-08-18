@@ -76,16 +76,6 @@ final class CBConvert {
     }
 
     /**
-     * @param mixed $value
-     *
-     * @return string|null
-     */
-    public static function valueToOptionalTrimmedString($value) {
-        $string = trim($value);
-        return ($string === '') ? null : $string;
-    }
-
-    /**
      * @param string $value
      * @param int $length
      * @param string $append
@@ -105,5 +95,15 @@ final class CBConvert {
         }
 
         return $value;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return string|null
+     */
+    static function valueToOptionalTrimmedString($value) {
+        $string = trim($value);
+        return ($string === '') ? null : $string;
     }
 }
