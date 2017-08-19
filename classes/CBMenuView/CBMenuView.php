@@ -50,7 +50,7 @@ final class CBMenuView {
 
         $CSSClassNames = implode(' ', $CSSClassNames);
 
-        $titleAsHTML = CBModel::value($model, 'title', '', 'cbhtml');
+        $titleAsHTML = CBModel::value($menu, 'title', '', 'cbhtml');
         $titleURIAsHTML = CBModel::value($menu, 'titleURI', '', 'cbhtml');
 
         /**
@@ -71,7 +71,7 @@ final class CBMenuView {
         <nav class="CBMenuView <?= $CSSClassNames ?>">
             <div class="menu_header">
                 <div class="left"><a class="title" href="<?= $titleURIAsHTML ?>"><?= $titleAsHTML ?></a></div>
-                <div class="center"></div>
+                <div class="center"><a class="title" href="<?= $titleURIAsHTML ?>"><?= $titleAsHTML ?></a></div>
                 <div class="right"></div>
             </div>
             <div class="menu_items">
@@ -89,6 +89,8 @@ final class CBMenuView {
                     ?>
 
                     <ul>
+                        <li class="title"><a href="<?= $titleURIAsHTML ?>"><span><?= $titleAsHTML ?></span></a></li>
+
                         <?php
 
                         $items = CBModel::valueAsArray($menu, 'items');
