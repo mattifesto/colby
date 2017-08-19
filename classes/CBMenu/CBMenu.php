@@ -20,15 +20,13 @@ final class CBMenu {
      *
      * @return object
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
+            'items' => CBModel::valueToModels($spec, 'items'),
             'title' => CBModel::value($spec, 'title', '', 'trim'),
             'titleURI' => CBModel::value($spec, 'titleURI', '', 'trim'),
         ];
-
-        $items = CBModel::valueAsArray($spec, 'items');
-        $model->items = array_map('CBMenuItem::specToModel', $items);
 
         return $model;
     }
