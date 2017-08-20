@@ -171,10 +171,6 @@ EOT;
             CBUI::renderKeyValueSectionItem('Slack Webhook URL', 'Enter a Slack Webhook URL in site preferences to receive error notifications.');
         }
 
-        if (is_dir(cbsitedir() . '/swiftmailer')) {
-            CBUI::renderKeyValueSectionItem('Swiftmailer', 'Your site directory contains a `swiftmailer` directory. Swiftmailer use has been deprecated.');
-        }
-
         /* 2017.08.17 Search for use of deprecated `colby/Colby.php` file. */
         if (is_file($filepath = cbsitedir() . '/index.php')) {
             $text = file_get_contents($filepath);
