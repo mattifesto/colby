@@ -2,34 +2,43 @@
 
 $response = new CBAjaxResponse();
 
+/* The error contains all of the information we need. Once it is confirmed to be
+   relatively pervasive, drop the other data sources. */
+
+$pError = cb_post_value('errorAsJSON', (object)[], 'json_decode');
+$pMessage = cb_post_value('message', '');
+$pPageURL = cb_post_value('pageURL', '');
+$pSourceURL = cb_post_value('sourceURL', '');
+$pLine = cb_post_value('line', null, 'intval');
+$pColumn = cb_post_value('column', null, 'intval');
+
+if (empty($pError->message)) { $pError->message = $pMessage; }
+if (empty($pError->sourceURL)) { $pError->sourceURL = $pSourceURL; }
+if (empty($pError->line)) { $pError->line = $pLine; }
+if (empty($pError->column)) { $pError->column = $pColumn; }
+
 $attributes = array();
 $hashes = array();
 
 if (isset($_POST['message'])) {
-    $message                    = $_POST['message'];
-
     $key                        = 'Message';
-    $value                      = $message;
-    $attributes[$key]           = $value;
-    $hash                       = sha1("{$key}: {$value}");
+    $attributes[$key]           = $pMessage;
+    $hash                       = sha1("{$key}: {$pMessage}");
     $hashes[$key]               = $hash;
 
     $key                        = 'Page URL';
-    $value                      = $_POST['pageURL'];
-    $attributes[$key]           = $value;
-    $hash                       = sha1("{$key}: {$value}");
+    $attributes[$key]           = $pPageURL;
+    $hash                       = sha1("{$key}: {$pPageURL}");
     $hashes[$key]               = $hash;
 
     $key                        = 'Script URL';
-    $value                      = $_POST['scriptURL'];
-    $attributes[$key]           = $value;
-    $hash                       = sha1("{$key}: {$value}");
+    $attributes[$key]           = $pSourceURL;
+    $hash                       = sha1("{$key}: {$pSourceURL}");
     $hashes[$key]               = $hash;
 
     $key                        = 'Line Number';
-    $value                      = $_POST['lineNumber'];
-    $attributes[$key]           = $value;
-    $hash                       = sha1("{$key}: {$value}");
+    $attributes[$key]           = $pLine;
+    $hash                       = sha1("{$key}: {$pLine}");
     $hashes[$key]               = $hash;
 
     $key                        = 'Script + Message';
@@ -38,11 +47,10 @@ if (isset($_POST['message'])) {
     $hash                       = sha1("{$key}: {$value}");
     $hashes[$key]               = $hash;
 } else {
-    $message                    = 'Unspecified';
     $key                        = 'Message';
-    $value                      = 'Colby: The standard error parameters were not specified.';
-    $attributes[$key]           = $value;
-    $hash                       = sha1("{$key}: {$value}");
+    $pMessage                   = 'Colby: The standard error parameters were not specified.';
+    $attributes[$key]           = $pMessage;
+    $hash                       = sha1("{$key}: {$pMessage}");
     $hashes[$key]               = $hash;
 }
 
@@ -69,14 +77,11 @@ foreach ($attributes as $key => $value) {
     $messages[] = "*{$key}*\n{$value}\n$hash\n";
 }
 
+$message = CBConvert::javaScriptErrorToMessage($pError);
+$link = cbsiteurl() . '/admin/page/?class=CBAdminPageForLogs';
+
 CBSlack::sendMessage((object)[
-    'message' => "JavaScript: {$message}",
-    'attachments' => [
-        (object)[
-            'text' => implode("\n", $messages),
-            'mrkdwn_in' => ['text'],
-        ],
-    ],
+    'message' => "{$message} <{$link}|link>",
 ]);
 
 CBLog::addMessage('/javascript-error/', 3, $message, (object)[
