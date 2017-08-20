@@ -630,12 +630,25 @@ Colby.extend = function(objectToExtend, objectWithProperties) {
  *
  * @return undefined
  */
-Colby.handleError = function(message, scriptURL, lineNumber, columnNumber, error) {
+Colby.handleError = function(message, sourceURL, line, column, error) {
     var formData = new FormData();
     formData.append("message", message);
+    formData.append("sourceURL", sourceURL || "");
+    formData.append("line", line);
+    formData.append("column", column);
     formData.append("pageURL", location.href);
-    formData.append("scriptURL", scriptURL || "");
-    formData.append("lineNumber", lineNumber);
+
+    if (error) {
+        /* JSON.stringify doesn't work perfectly for an error object */
+
+        var s = JSON.stringify({
+            message: error.message,
+            sourceURL: error.sourceURL,
+            line: error.line,
+            column: error.column,
+        });
+        formData.append("errorAsJSON", s);
+    }
 
     var XHR = new XMLHttpRequest();
     XHR.open("POST", "/colby/javascript-error/");
