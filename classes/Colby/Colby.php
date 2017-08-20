@@ -688,28 +688,14 @@ final class Colby {
             ];
             $logMessage = CBConvert::throwableToMessage($exception);
             $URI = $_SERVER['REQUEST_URI'];
-            $link = "https://{$serverName}{$URI}";
+            $link = cbsiteurl() . '/admin/page/?class=CBAdminPageForLogs';
 
             /* CBLog::addMessage() never throws an exception */
             CBLog::addMessage(__METHOD__, $severity, $logMessage, $model);
 
             /* CBSlack::sendMessage() can throw an exception, so it called last */
             CBSlack::sendMessage((object)[
-                'message' => $logMessage . " <{$link}|link>",
-                'attachments' => [
-                    (object)[
-                        'title' => 'Server Name',
-                        'text' => $serverName,
-                    ],
-                    (object)[
-                        'title' => 'URI',
-                        'text' => $URI,
-                    ],
-                    (object)[
-                        'title' => 'Function',
-                        'text' => CBConvert::throwableToFunction($exception),
-                    ],
-                ],
+                'message' => "{$logMessage} <{$link}|link>",
             ]);
         } catch (Exception $innerException) {
             try {
