@@ -3,6 +3,20 @@
 final class CBConvert {
 
     /**
+     * @param object $error
+     *
+     * @return string
+     */
+    static function javaScriptErrorToMessage($error) {
+        $message = CBModel::value($error, 'message', '(no message)');
+        $basename = basename(CBModel::value($error, 'sourceURL', '(no source)'));
+        $line = CBModel::value($error, 'line', '(no line)');
+
+        return "\"{$message}\" in {$basename} line {$line}";
+
+    }
+
+    /**
      * Determines whether a string is a CSS background image. If so then it is
      * sanitized and returned; if not then null is returned.
      *
