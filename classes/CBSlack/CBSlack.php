@@ -14,10 +14,11 @@ final class CBSlack {
             return;
         }
 
+        $username = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : CBSitePreferences::siteName();
         $message = CBModel::value($args, 'message', '', 'strval');
         $payload = (object)[
-            'channel' =>  '#errors',
-            'username' =>  CBSitePreferences::siteName(),
+            'channel' => '#errors',
+            'username' => $username,
             'text' =>  $message,
         ];
 
