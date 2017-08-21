@@ -615,8 +615,8 @@ EOT;
      *          int width,
      *      }
      */
-    public static function uploadImageWithName($name) {
-        ColbyImageUploader::verifyUploadedFile($name);
+    static function uploadImageWithName($name) {
+        CBImages::verifyUploadedFile($name);
 
         $temporaryFilepath = $_FILES[$name]['tmp_name'];
         $size = getimagesize($temporaryFilepath);
@@ -652,5 +652,41 @@ EOT;
             'ID' => $ID,
             'width' => $size[0],
         ];
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return null
+     */
+    static function verifyUploadedFile($name) {
+        if ($_FILES[$name]['error'] != UPLOAD_ERR_OK) {
+            switch ($_FILES[$name]['error']) {
+                case UPLOAD_ERR_INI_SIZE:
+
+                    $maxSize = ini_get('upload_max_filesize');
+                    $message = "The file uploaded exceeds the allowed upload size of: {$maxSize}.";
+
+                    break;
+
+                case UPLOAD_ERR_FORM_SIZE:
+
+                    $maxSize = ini_get('post_max_size');
+                    $message = "The file uploaded exceeds the allowed post upload size of: {$maxSize}.";
+
+                    break;
+
+                case UPLOAD_ERR_PARTIAL:
+                case UPLOAD_ERR_NO_FILE:
+                case UPLOAD_ERR_NO_TMP_DIR:
+                case UPLOAD_ERR_CANT_WRITE:
+                case UPLOAD_ERR_EXTENSION:
+                default:
+
+                    $message = "File upload error code: {$_FILES[$name]['error']}";
+            }
+
+            throw new RuntimeException($message);
+        }
     }
 }
