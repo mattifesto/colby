@@ -162,6 +162,22 @@
     user-select: none
 }
 
+.CBUISectionItem2 > .thumbnail {
+    display: none;
+}
+
+.CBUISectionItem2 > .thumbnail.set {
+    display: block;
+    padding: 5px 0 5px 5px;
+}
+
+.CBUISectionItem2 > .thumbnail img {
+    display: block;
+    height: 40px;
+    object-fit: cover;
+    width: 40px;
+}
+
 .CBUISectionItem2 > .title {
     cursor: pointer;
     flex: 1 1 auto;

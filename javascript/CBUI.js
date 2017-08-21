@@ -219,22 +219,39 @@ var CBUI = {
      *      <div> with text and a className of "command" will be given the
      *      standard basic styles of a command. Or you can add custom command
      *      elements.
+     *  function setThumbnailURI
      * }
      */
     createSectionItem2 : function () {
         var element = CBUI.createSectionItem();
         element.classList.add("CBUISectionItem2");
+        var thumbnailElement = document.createElement("div");
+        thumbnailElement.className = "thumbnail";
+        var imageElement = document.createElement("img");
         var titleElement = document.createElement("div");
         titleElement.className = "title";
         var dropdown = CBUIDropdown.create();
 
+        thumbnailElement.appendChild(imageElement);
+        element.appendChild(thumbnailElement);
         element.appendChild(titleElement);
         element.appendChild(dropdown.dropdownElement);
 
+        function setThumbnailURI(URI) {
+            if (URI) {
+                thumbnailElement.classList.add("set");
+            } else {
+                thumbnailElement.classList.remove("set");
+            }
+
+            imageElement.src = URI;
+        }
+
         return {
-            element : element,
-            titleElement : titleElement,
-            commandsElement : dropdown.menuElement,
+            element: element,
+            titleElement: titleElement,
+            commandsElement: dropdown.menuElement,
+            setThumbnailURI: setThumbnailURI,
         };
     },
 
