@@ -3,30 +3,23 @@
 final class CBThemedTextView {
 
     /**
-     * @deprecated use CBPageTitleAndDescriptionView
+     * @deprecated
+     *
+     *      2017.08.20 This function removes all well-known themes assocated
+     *      width CBThemedTextView. Once it has been run once on all sites it
+     *      can be deleted.
      *
      * @return null
      */
-    public static function install() {
-        /* deprecate the standard page header theme if it exists */
-        $deprecatedStandardPageHeaderThemeID = '2a5eb6c836914ef8f33b15f0853ac61df554505e';
-        $spec = CBModels::fetchSpecByID($deprecatedStandardPageHeaderThemeID);
+    static function install() {
+        CBDB::transaction(function () {
+            $IDs = [
+                '2a5eb6c836914ef8f33b15f0853ac61df554505e', // standard page header theme (pre CBPageTitleAndDescriptionView)
+                '0d1bedea8d5e706950f1878ad3aff961ba36b631', // CBWellKnownThemeForContent
+            ];
 
-        if ($spec === false) {
-            return;
-        }
-
-        $originalSpec = clone $spec;
-
-        /* reset properties */
-        $spec->className = 'CBTheme';
-        $spec->classNameForKind = 'CBTextView';
-        $spec->description = 'Use CBPageTitleAndDescriptionView with its default theme instead.';
-        $spec->title = 'Deprecated (Standard Page Header)';
-
-        if ($spec != $originalSpec) {
-            CBModels::save([$spec]);
-        }
+            CBModels::deleteByID($IDs);
+        });
     }
 
     /**
