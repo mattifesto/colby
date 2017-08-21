@@ -1,29 +1,6 @@
 <?php
 
-include_once COLBY_SYSTEM_DIRECTORY . '/classes/ColbyNestedDictionaryBuilder.php';
-
 define('CBPagesAdministrationDataStoreID', '5bda1825fe0be9524106061b910fd0b8e1dde0c2');
-
-$menuBuilder = ColbyNestedDictionaryBuilder::builderWithTitle('Documents Administration Menu');
-
-$menuBuilder->addValue('main', 'titleHTML', 'Overview');
-$menuBuilder->addValue('main', 'uri', '/admin/documents/');
-
-$menuBuilder->addValue('colby-documents-rows', 'titleHTML', 'ColbyPages Rows');
-$menuBuilder->addValue('colby-documents-rows', 'uri', '/admin/documents/colby-pages-rows/');
-
-$menuBuilder->addValue('stray-archives', 'titleHTML', 'Data Stores without Pages');
-$menuBuilder->addValue('stray-archives', 'uri', '/admin/documents/data-stores-without-pages/');
-
-$menuBuilder->addValue('stray-documents', 'titleHTML', 'Pages without Data Stores');
-$menuBuilder->addValue('stray-documents', 'uri', '/admin/documents/pages-without-data-stores/');
-
-
-global $documentsAdministrationMenu;
-
-$documentsAdministrationMenu = $menuBuilder->nestedDictionary();
-
-unset($menuBuilder);
 
 /**
  * @return string
@@ -35,27 +12,49 @@ function linkForArchiveId($archiveId) {
 }
 
 /**
+ * @param string $selectedItemName
  *
+ * @return null
  */
-function renderDocumentsAdministrationMenu() {
-    global $documentsAdministrationMenu;
+function renderDocumentsAdministrationMenu($selectedItemName = '') {
+    $menu = (object)[
+        'className' => 'CBMenu',
+        'title' => 'Documents',
+        'titleURI' => '/admin/documents/',
+        'items' => [
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'overview',
+                'text' => 'Overview',
+                'URL' => '/admin/documents/'
+            ],
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'colbypages',
+                'text' => 'ColbyPages',
+                'URL' => '/admin/documents/colby-pages-rows/'
+            ],
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'datastoreswithoutpages',
+                'text' => 'Data Stores w/o Pages',
+                'URL' => '/admin/documents/data-stores-without-pages/'
+            ],
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'pageswithoutdatastores',
+                'text' => 'Pages w/o Data Stores',
+                'URL' => '/admin/documents/pages-without-data-stores/'
+            ],
+        ],
+    ];
 
-    echo '<ul class="horizontal">';
-
-    foreach ($documentsAdministrationMenu->items as $itemKey => $item)
-    {
-        ?>
-
-        <li class="item <?php echo $itemKey; ?>">
-            <a href="<?php echo $item->uri; ?>">
-                <?php echo $item->titleHTML; ?>
-            </a>
-        </li>
-
-        <?php
-    }
-
-    echo '</ul>';
+    CBView::render((object)[
+        'className' => 'CBMenuView',
+        'CSSClassNames' => ['submenu1'],
+        'menu' => $menu,
+        'selectedItemName' => $selectedItemName,
+    ]);
 }
 
 /**
