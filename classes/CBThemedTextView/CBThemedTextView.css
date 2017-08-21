@@ -1,3 +1,89 @@
 a.CBThemedTextView {
     display: block;
 }
+
+.CBThemedTextView_default,
+a.CBThemedTextView_default {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+    padding: 20px;
+}
+
+a.CBThemedTextView_default {
+    text-decoration: none;
+}
+
+.CBThemedTextView_default > div {
+    max-width: 100%;
+    width: 36em;
+}
+
+a.CBThemedTextView_default:hover > div {
+    text-decoration: underline;
+}
+
+a.CBThemedTextView_default .title h1 {
+    color: inherit;
+}
+
+.CBThemedTextView_default .content {
+    line-height: 1.5;
+}
+
+.CBThemedTextView_default h1 {
+    font-size: 1.5em;
+}
+
+.CBThemedTextView_default .content h1 {
+    margin-top: 40px; /* match title whitespace */
+}
+
+.CBThemedTextView_default h1 + * {
+    margin-top: 0.5em;
+}
+
+.CBThemedTextView_default h2 {
+    font-size: 1.25em;
+}
+
+.CBThemedTextView_default h3 {
+    font-size: 1em;
+}
+
+.CBThemedTextView_default blockquote,
+.CBThemedTextView_default dd {
+    padding: 0 40px;
+}
+
+.CBThemedTextView_default dd + dt {
+    margin-top: 0.5em;
+}
+
+.CBThemedTextView_default cite {
+    font-style: italic;
+}
+
+.CBThemedTextView_default b cite,
+.CBThemedTextView_default b i,
+.CBThemedTextView_default cite b,
+.CBThemedTextView_default cite i,
+.CBThemedTextView_default i b,
+.CBThemedTextView_default i cite {
+    font-style: inherit;
+    font-weight: inherit;
+}
+
+.CBThemedTextView_default blockquote + *,
+.CBThemedTextView_default dl + *,
+.CBThemedTextView_default ol + *,
+.CBThemedTextView_default p + *,
+.CBThemedTextView_default ul + * {
+    margin-top: 1em;
+}
+
+.CBThemedTextView_default.light {
+    color: rgba(255, 255, 255, 0.9);
+}

@@ -34,53 +34,28 @@ final class CBThemedTextView {
      *
      * @return string
      */
-    public static function modelToSearchText(stdClass $model) {
+    static function CBModel_toSearchText(stdClass $model) {
         return "{$model->title} {$model->contentAsMarkaround}";
-    }
-
-    /**
-     * @param string $themeID
-     *
-     * @return null|hex160
-     */
-    static function parseThemeID($themeID) {
-        if (empty($themeID)) {
-            return CBWellKnownThemeForContent::ID;
-        } else if ('none' == $themeID) {
-            return null;
-        } else {
-            return $themeID;
-        }
     }
 
     /**
      * @param bool? $model->center;
      * @param string? $model->contentAsHTML
-     * @param hex160? $model->themeID
-     *  empty or unset - default theme
-     *  "none" - no theme
-     *  hex160 - themeID
      * @param string? $model->titleAsHTML
      * @param string? $model->URLAsHTML
      * @param bool? $model->useLightTextColors
      *
      * @return null
      */
-    public static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         if (empty($model->titleAsHTML) && empty($model->contentAsHTML)) {
             return;
         }
 
-        $themeID = CBModel::value($model, 'themeID', CBWellKnownThemeForContent::ID, 'CBThemedTextView::parseThemeID');
-
-        CBHTMLOutput::addCSSURL(CBThemedTextView::URL('CBThemedTextView.css'));
-        CBTheme::useThemeWithID($themeID);
-
-        $class = implode(' ', CBTheme::IDToCSSClasses($themeID));
-        $class = "CBThemedTextView {$class}";
+        $class = "CBThemedTextView CBThemedTextView_default";
 
         if (!empty($model->stylesID)) {
-            $stylesClass = CBTheme::IDToCSSClass($model->stylesID);
+            $stylesClass = "T{$model->stylesID}";
             $class = "{$class} {$stylesClass}";
         }
 
@@ -88,11 +63,7 @@ final class CBThemedTextView {
             $class = "{$class} light";
         }
 
-        if (empty($model->stylesID)) {
-            $styleElement = null;
-        } else {
-            $styleElement = "<style>{$model->stylesCSS}</style>";
-        }
+        CBHTMLOutput::addCSS(CBModel::value($model, 'stylesCSS'));
 
         $style = empty($model->center) ? '' : ' style="text-align: center"';
 
@@ -118,7 +89,7 @@ final class CBThemedTextView {
             $content = "<div class=\"content\" {$style}>{$model->contentAsHTML}</div>";
         }
 
-        echo $open, $styleElement, $title, $content, $close;
+        echo $open, $title, $content, $close;
     }
 
     /**
@@ -126,7 +97,7 @@ final class CBThemedTextView {
      *
      * @return stdClass
      */
-    public static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
             'useLightTextColors' => CBModel::value($spec, 'useLightTextColors', false, 'boolval'),
@@ -136,7 +107,6 @@ final class CBThemedTextView {
         $model->contentAsMarkaround = isset($spec->contentAsMarkaround) ? trim($spec->contentAsMarkaround) : '';
         $model->contentAsHTML = CBMarkaround::markaroundToHTML($model->contentAsMarkaround);
         $model->contentColor = CBModel::value($spec, 'contentColor', null, 'CBConvert::stringToCSSColor');
-        $model->themeID = isset($spec->themeID) ? $spec->themeID : false;
         $model->titleAsMarkaround = isset($spec->titleAsMarkaround) ? trim($spec->titleAsMarkaround) : '';
         $model->title = CBMarkaround::paragraphToText($model->titleAsMarkaround);
         $model->titleAsHTML = CBMarkaround::paragraphToHTML($model->titleAsMarkaround);
@@ -144,38 +114,19 @@ final class CBThemedTextView {
         $model->URL = isset($spec->URL) ? trim($spec->URL) : '';
         $model->URLAsHTML = ColbyConvert::textToHTML($model->URL);
 
-        /* view styles */
-
-        $stylesTemplate = empty($spec->stylesTemplate) ? '' : trim($spec->stylesTemplate);
-
-        if (!empty($stylesTemplate)) {
+        if (!empty($stylesTemplate = CBModel::value($spec, 'stylesTemplate', '', 'trim'))) {
             $model->stylesID = CBHex160::random();
-            $model->stylesCSS = CBTheme::stylesTemplateToStylesCSS($stylesTemplate, $model->stylesID);
+            $localCSSClassName = "T{$model->stylesID}";
+            $model->stylesCSS = CBView::localCSSTemplateToLocalCSS($stylesTemplate, 'view', ".{$localCSSClassName}");
         }
 
         return $model;
     }
 
     /**
-     * @return [stdClass]
-     */
-    static function themeOptions() {
-        return [
-            (object)[
-                'title' => 'No Theme',
-                'description' => '',
-                'value' => 'none',
-            ],
-        ];
-    }
-
-    /**
-     * @param string $filename
-     *
      * @return string
      */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 }
