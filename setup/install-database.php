@@ -53,7 +53,6 @@ CBThemedTextView::install(); /* deprecated */
 CBImages::install();
 CBRequestTracker::install(); /* deprecated */
 CBWellKnownMenuForMain::install();
-CBWellKnownThemeForContent::install();
 CBWellKnownThemeForPageTitleAndDescription::install();
 CBWellKnownPageForTestingCBTextView2::install();
 CBWellKnownPageForTestingPageTitleAndBodyText::install();

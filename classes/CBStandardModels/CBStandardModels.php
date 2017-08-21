@@ -13,7 +13,4 @@ final class CBStandardModels {
 
     /* @deprecated use CBWellKnownThemeForPageTitleAndDescription::ID */
     const CBThemeIDForCBPageTitleAndDescriptionView = '664d22662308f7443e4c3b43683d4934de087b86';
-
-    /* @deprecated use CBWellKnownThemeForContent::ID */
-    const CBThemeIDForCBTextViewForBodyText = '0d1bedea8d5e706950f1878ad3aff961ba36b631';
 }
