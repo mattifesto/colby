@@ -18,19 +18,22 @@ final class CBModelCacheTests {
             throw new Exception('Model appears to exist when it should not.');
         }
 
-        $spec = CBModels::modelWithClassName('CBTextBoxView', ['ID' => $ID]);
+        $spec = (object)[
+            'className' => 'CBTextView2',
+            'ID' => $ID,
+        ];
 
         CBModels::save([$spec]);
 
         $model = CBModelCache::fetchModelByID($ID);
 
-        if (!isset($model->className) || $model->className !== 'CBTextBoxView') {
+        if (!isset($model->className) || $model->className !== 'CBTextView2') {
             throw new Exception('The model does not appear to have been fetched properly.');
         }
 
         $model = CBModelCache::modelByID($ID);
 
-        if (!isset($model->className) || $model->className !== 'CBTextBoxView') {
+        if (!isset($model->className) || $model->className !== 'CBTextView2') {
             throw new Exception('The model does not appear to have been cached properly.');
         }
 
@@ -52,7 +55,7 @@ final class CBModelCacheTests {
 
         $model = CBModelCache::modelByID($ID);
 
-        if (!isset($model->className) || $model->className !== 'CBTextBoxView') {
+        if (!isset($model->className) || $model->className !== 'CBTextView2') {
             throw new Exception('The model does not appear to have been cached as a needed model properly.');
         }
 

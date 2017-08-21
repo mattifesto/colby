@@ -5,7 +5,6 @@ final class CBModelsPreferences {
     const ID = '69b3958b95e87cca628fc2b9cd70f420faf33a0a';
     const defaultClassNamesOfEditableModels = [
         'CBMenu',
-        'CBTextBoxViewTheme',
         'CBTheme',
         'CBViewPage',
         'CBSitePreferences',
