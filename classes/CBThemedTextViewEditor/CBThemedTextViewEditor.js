@@ -1,5 +1,8 @@
-"use strict";
-/* globals CBUI, CBUIBooleanEditor, CBUIStringEditor, CBUIThemeSelector */
+"use strict"; /* jshint strict: global */
+/* globals
+    CBUI,
+    CBUIBooleanEditor,
+    CBUIStringEditor */
 
 var CBThemedTextViewEditor = {
 
@@ -50,17 +53,6 @@ var CBThemedTextViewEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
-
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIThemeSelector.create({
-            classNameForKind : "CBTextView",
-            labelText : "Theme",
-            navigateCallback : args.navigateCallback,
-            propertyName : "themeID",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
 
         /* titleColor */
         item = CBUI.createSectionItem();

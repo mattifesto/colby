@@ -5,34 +5,21 @@ final class CBThemedTextViewEditor {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
-        return ['CBUI', 'CBUIBooleanEditor', 'CBUIStringEditor', 'CBUIThemeSelector'];
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUI', 'CBUIBooleanEditor', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
-        return [CBThemedTextViewEditor::URL('CBThemedTextViewEditor.css')];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
-        return [
-            CBSystemURL . '/javascript/CBStringEditorFactory.js',
-            CBThemedTextViewEditor::URL('CBThemedTextViewEditor.js'),
-        ];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 }
