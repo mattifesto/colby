@@ -110,11 +110,11 @@ final class CBView {
      * even call the view's functions directly, but allowing rendering a spec
      * with a single function call saves many lines of code over an entire site.
      *
-     * @param stdClass $spec
+     * @param object $spec
      *
      * @return null
      */
-    static function renderSpecAsHTML(stdClass $spec) {
+    static function renderSpec(stdClass $spec) {
         if ($model = CBModel::specToModel($spec)) {
             CBView::render($model);
         } else {
@@ -123,5 +123,12 @@ final class CBView {
 
             echo "<!-- CBView::renderSpecAsHTML() could not convert a '{$className}' spec into a model. -->";
         }
+    }
+
+    /**
+     * @deprecated use CBView::renderSpec()
+     */
+    static function renderSpecAsHTML(stdClass $spec) {
+        CBView::renderSpec($spec);
     }
 }
