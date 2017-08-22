@@ -86,21 +86,21 @@ final class CBUI {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames() {
         return ['CBUIDropdown'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
-        return [CBSystemURL . '/javascript/CBUI.css'];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
-        return [CBSystemURL . '/javascript/CBUI.js'];
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 }
