@@ -319,6 +319,10 @@ var Colby = {
     },
 
     /**
+     * @NOTE 2017.08.21 Eventually we can check the image model className but
+     * right now there are still a lot of old image specs that were created
+     * without a className property.
+     *
      * @param string image.filename
      * @param string image.extension
      * @param hex160 image.ID
@@ -330,7 +334,7 @@ var Colby = {
      * @return string
      */
     imageToURL : function (image, filename) {
-        if (!image) {
+        if (typeof image != "object" /* || image.className !== "CBImage" */) {
             return "";
         }
 
