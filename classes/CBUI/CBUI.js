@@ -240,11 +240,11 @@ var CBUI = {
         function setThumbnailURI(URI) {
             if (URI) {
                 thumbnailElement.classList.add("set");
+                imageElement.src = URI;
             } else {
                 thumbnailElement.classList.remove("set");
+                imageElement.src = "";
             }
-
-            imageElement.src = URI;
         }
 
         return {
