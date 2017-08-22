@@ -5,7 +5,6 @@
     CBUISelector,
     CBUISpec,
     CBUISpecEditor,
-    Colby,
     Promise */
 
 var CBArrayEditor = {
@@ -187,18 +186,24 @@ var CBArrayEditor = {
         descriptionElement.className = "description";
         item.titleElement.appendChild(descriptionElement);
 
-        /* specChangedCallback */
+        function updateThumbnail() {
+            item.setThumbnailURI(CBUISpec.specToThumbnailURI(args.spec));
+        }
 
-        var descriptionChangedCallback = CBArrayEditor.updateSpecDescriptionElement.bind(undefined, {
-            descriptionElement: descriptionElement,
-            spec: args.spec,
-        });
-        descriptionChangedCallback();
+        updateThumbnail();
 
-        var specChangedCallback = Colby.call.bind(undefined, [
-            descriptionChangedCallback,
-            args.arrayChangedCallback,
-        ]);
+        function updateDescriptionElement() {
+            var nonBreakingSpace = "\u00A0";
+            descriptionElement.textContent = CBUISpec.specToDescription(args.spec) || nonBreakingSpace;
+        }
+
+        updateDescriptionElement();
+
+        function specChangedCallback() {
+            updateThumbnail();
+            updateDescriptionElement();
+            args.arrayChangedCallback();
+        }
 
         /* edit */
 
@@ -506,17 +511,6 @@ var CBArrayEditor = {
                 title : "Select a View",
             });
         });
-    },
-
-    /**
-     * @param Element args.descriptionElement
-     * @param object args.spec
-     *
-     * @return undefined
-     */
-    updateSpecDescriptionElement: function (args) {
-        var nonBreakingSpace = "\u00A0";
-        args.descriptionElement.textContent = CBUISpec.specToDescription(args.spec) || nonBreakingSpace;
     },
 };
 
