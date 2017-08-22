@@ -513,18 +513,3 @@ var CBArrayEditor = {
         });
     },
 };
-
-
-/**
- * @deprecated use CBArrayEditor
- */
-var CBArrayEditorFactory = CBArrayEditor;
-
-
-(function() {
-    var link    = document.createElement("link");
-    link.rel    = "stylesheet";
-    link.href   = "/colby/javascript/CBArrayEditor.css";
-
-    document.head.appendChild(link);
-})();

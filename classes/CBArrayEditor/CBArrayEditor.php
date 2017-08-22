@@ -12,31 +12,21 @@ final class CBArrayEditor {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames() {
         return ['CBUI', 'CBUIActionLink', 'CBUISpec', 'CBUISpecEditor'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
-        return [CBSystemURL . '/javascript/CBArrayEditor.css'];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
-        return [CBSystemURL . '/javascript/CBArrayEditorFactory.js'];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    public static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 }
