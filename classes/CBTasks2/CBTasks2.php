@@ -62,6 +62,20 @@ EOT;
     }
 
     /**
+     *  @NOTE The `IDForGroup` is used to associate related tasks with each
+     *        other.
+     *
+     *      Issue: This column is not part of the primary key and it's possible
+     *      to reassign the group of a task that was part of another group.
+     *
+     * @NOTE The `output` column should hold JSON.
+     *
+     * @NOTE Task States:
+     *
+     *      Available: `started` IS NULL
+     *      Scheduled: `scheduled` IS NOT NULL AND `started` IS NOT NULL
+     *      Completed: `completed` IS NOT NULL
+     *
      * @return null
      */
     static function install() {
@@ -250,7 +264,6 @@ EOT;
             $output->scheduled = CBModel::value($status, 'scheduled', null, 'intval');
             $output->severity = CBModel::value($status, 'severity', CBTasks2::defaultSeverity, 'intval');
 
-
         } catch (Exception $exception) {
 
             $output->exception = Colby::exceptionStackTrace($exception);
@@ -302,38 +315,84 @@ EOT;
     }
 
     /**
-     * Creates or updates a task.
+     * This function is use to both create and update a task.
+     *
+     * @param string $className
+     *
+     *      This is the class name of the class that implements the
+     *      CBTasks2_Execute() function which will be called to perform the
+     *      task.
+     *
+     * @param hex160 $ID
+     *
+     *      This is an $ID that is associated with the data of the task. A task
+     *      that operated on a page would use a page ID. A task that operated on
+     *      a model would use a model ID. A task that operates as a singleton
+     *      would usually use CBHex160::zero() for this value.
+     *
+     * @param hex160 $IDForGroup
+     *
+     *      This is used to identify a group of related tasks. For instance when
+     *      performing a spreadsheet import, all rows of the spreadsheet would
+     *      be turned into tasks and all of those tasks and generated subtasks
+     *      would be given the same $IDForGroup. This allows you to track the
+     *      status of the spreadsheet import or cancel it if necessary.
+     *
+     *      When this is specified, it will usually be a random ID.
+     *
+     * @param int $priority
+     *
+     *      Priority values are between 0 and 255 with lower numbers
+     *      representing higher priority. The default priority is 100.
+     *
+     * @param int (timestamp) $scheduled
+     *
+     *      If a value is provided that's less than or equal to time() then the
+     *      task will be made available. This is how you restart a task. If the
+     *      value is greater than time() the task will be scheduled.
+     *
+     *      A null value will make a new task available and will have no effect
+     *      on an existing task's availability.
      *
      * @return null
      */
     static function updateTask($className, $ID, $IDForGroup = null, $priority = null, $scheduled = null) {
         $classNameAsSQL = CBDB::stringToSQL($className);
         $IDAsSQL = CBHex160::toSQL($ID);
-        $IDForGroupAsSQL = empty($IDForGroup) ? 'NULL' : CBHex160::toSQL($IDForGroup);
-        $priorityAsSQL = empty($priority) ? CBTasks2::defaultPriority : intval($priority);
-        $scheduledAsSQL = empty($scheduled) ? 'NULL' : intval($scheduled);
         $updates = [];
 
-        if (!empty($IDForGroup)) {
+        if ($IDForGroup !== null) {
+            $IDForGroupAsSQL = CBHex160::toSQL($IDForGroup);
             $updates[] = "`IDForGroup` = {$IDForGroupAsSQL}";
+        } else {
+            $IDForGroupAsSQL = 'NULL';
         }
 
-        if (!empty($priority)) {
+        if ($priority !== null) {
+            $priorityAsSQL = intval($priority);
             $updates[] = "`priority` = {$priorityAsSQL}";
+        } else {
+            $priorityAsSQL = CBTasks2::defaultPriority;
         }
 
-        if (!empty($scheduled)) {
+        if ($scheduled !== null) {
+            $scheduledAsSQL = intval($scheduled);
 
-            /**
-             * A scheduled task can also be completed. In the reports it will
-             * count as both scheduled and completed.
-             */
-
-            $updates[] = "`scheduled` = {$scheduledAsSQL}";
-            $updates[] = "`started` = 0";
+            if ($scheduledAsSQL <= time()) {
+                /* remove scheduled and make the task available */
+                $updates[] = "`scheduled` = NULL";
+                $updates[] = "`started` = NULL";
+            } else {
+                /* replace scheduled and make the task unavailable */
+                $updates[] = "`scheduled` = {$scheduledAsSQL}";
+                $updates[] = "`started` = 0";
+            }
+        } else {
+            $scheduledAsSQL = 'NULL';
         }
 
         if (empty($updates)) {
+            /* placeholder update for INSERT ON DUPLICATE KEY UPDATE */
             $updates[] = '`priority` = `priority`';
         }
 
