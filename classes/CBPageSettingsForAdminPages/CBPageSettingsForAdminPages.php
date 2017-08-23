@@ -3,6 +3,13 @@
 final class CBPageSettingsForAdminPages {
 
     /**
+     * @return string
+     */
+    static function defaultThemeClassName() {
+        return 'CBAdminTheme';
+    }
+
+    /**
      * @param Throwable $exception
      *
      * @return null
@@ -49,6 +56,18 @@ final class CBPageSettingsForAdminPages {
                 color: hsl(0, 0%, 20%);
                 font-family: "Open Sans";
                 line-height: 1.4;
+            }
+            .CBAdminTheme {
+                --CBBackgroundColor: hsl(0, 0%, 100%);
+                --CBBackgroundColor2: hsl(0, 0%, 90%);
+                --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
+                --CBLineColor: hsla(0, 0%, 0%, 0.2);
+                --CBTextColor: hsla(0, 0%, 0%, 0.8);
+                --CBTextColor2: hsla(0, 0%, 0%, 0.6);
+                --CBTextColorForHeadings: hsla(0, 0%, 0%, 1.0);
+
+                background-color: var(--CBBackgroundColor);
+                color: var(--CBTextColor);
             }
         </style>
     <?php }
