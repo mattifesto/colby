@@ -1,5 +1,5 @@
 .CBUIRoot {
-    background-color: hsl(0, 0%, 90%);
+    background-color: var(--CBBackgroundColor2);
     flex: 1 0 auto;
 }
 
@@ -8,13 +8,22 @@
 }
 
 .CBUIButton {
-    background-color: hsl(210, 100%, 70%);
-    border: 2px solid hsl(210, 100%, 60%);
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.CBUIButton .button {
+    background-color: var(--CBButtonBackgroundColor);
     border-radius: 5px;
-    color: hsl(210, 100%, 40%);
-    display: inline-block;
-    margin: 5px;
-    padding: 3px 5px;
+    color: var(--CBButtonTextColor);
+    cursor: default;
+    padding: 10px 20px;
+
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 }
 
 .CBUIHalfSpace {

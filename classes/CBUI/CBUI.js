@@ -4,26 +4,33 @@
 var CBUI = {
 
     /**
-     * @param function args.buttonClickedCallback
+     * @param function args.callback
      * @param string args.text
      *
-     * @return {
-     *  Element element,
-     *  function updateTextCallback
-     * }
+     * @return object
+     *
+     *      Element element
+     *      function updateText
      */
-    createButton : function (args) {
+    createButton: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIButton";
-        var updateTextCallback = CBUI.updateTextContent.bind(undefined, element);
+        var buttonElement = document.createElement("div");
+        buttonElement.className = "button";
 
-        updateTextCallback.call(undefined, args.text);
+        function updateText(value) {
+            buttonElement.textContent = value;
+        }
 
-        element.addEventListener("click", args.buttonClickedCallback);
+        updateText(args.text);
+
+        buttonElement.addEventListener("click", args.callback);
+
+        element.appendChild(buttonElement);
 
         return {
-            element : element,
-            updateTextCallback : updateTextCallback,
+            element: element,
+            updateText: updateText,
         };
     },
 
@@ -253,15 +260,5 @@ var CBUI = {
             commandsElement: dropdown.menuElement,
             setThumbnailURI: setThumbnailURI,
         };
-    },
-
-    /**
-     * @param Element element
-     * @param string text
-     *
-     * @return undefined
-     */
-    updateTextContent : function (element, text) {
-        element.textContent = text;
     },
 };
