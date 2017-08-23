@@ -1,29 +1,54 @@
+.CBAdminPageForTasks .buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 .CBAdminPageForTasks .key {
-    font-size: 70%;
+    padding: 10px;
 }
 
 .CBAdminPageForTasks .key .ID {
     color: rgba(0, 0, 0, 0.5);
-    font-family: monospace;
+    font-family: var(--CBMonospaceFontFamily);
 }
 
 .CBAdminPageForTasks .output {
     padding: 10px;
 }
 
-.CBAdminPageForTasks .output .message {
+.CBAdminPageForTasks .output > div {
+    background-color: var(--CBBackgroundColor);
+    border: 1px solid var(--CBLineColor);
+    border-radius: 5px;
+}
+
+.CBAdminPageForTasks .message {
+    padding: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .CBAdminPageForTasks .output .details {
     display: none;
 }
 
-.CBAdminPageForTasks .output .details.show {
+.CBAdminPageForTasks .output.expanded .message {
+    white-space: pre-line;
+}
+
+.CBAdminPageForTasks .output.expanded .details {
     display: block;
 }
 
 .CBAdminPageForTasks .output .details a {
-    margin: 5px;
+    padding: 10px;
+}
+
+.CBAdminPageForTasks .output .flow {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .CBAdminPageForTasks .status > div {
@@ -34,13 +59,20 @@
 }
 
 .CBAdminPageForTasks .status .textvalue {
-    background-color: hsl(30, 30%, 90%);
-    border: 2px solid hsl(30, 30%, 90%);
+    background-color: var(--CBBackgroundColor);
+    border: 1px solid var(--CBLineColor);
+    border-radius: 5px;
     margin: 5px;
+    padding: 2px;
+
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 }
 
-.CBAdminPageForTasks .status .textvalue .value {
-    background-color: var(--CBBackgroundColor);
+.CBAdminPageForTasks .status .textvalue .text {
+    color: var(--CBTextColor2);
 }
 
 .CBAdminPageForTasks .status .textvalue > * {

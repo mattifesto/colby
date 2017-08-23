@@ -1,5 +1,7 @@
 "use strict"; /* jshint strict: global */
-/* globals Colby */
+/* globals
+    CBUI,
+    Colby */
 
 var CBAdminPageForTasks = {
 
@@ -9,24 +11,48 @@ var CBAdminPageForTasks = {
     create: function () {
         var element = document.createElement("div");
         element.className = "CBAdminPageForTasks";
-
-        var allButtonElement = document.createElement("button");
-        allButtonElement.textContent = "Start Verification for all Pages";
-        allButtonElement.addEventListener("click", CBAdminPageForTasks.startVerificationForAllPages);
-        element.appendChild(allButtonElement);
-
-        var newButtonElement = document.createElement("button");
-        newButtonElement.textContent = "Start Verification for new Pages";
-        newButtonElement.addEventListener("click", CBAdminPageForTasks.startVerificationForNewPages);
-        element.appendChild(newButtonElement);
-
-        var scheduleButton = document.createElement("button");
-        scheduleButton.textContent = "Schedule a Task";
-        scheduleButton.addEventListener("click", CBAdminPageForTasks.scheduleATask);
-        element.appendChild(scheduleButton);
+        var buttonsElement = document.createElement("div");
+        buttonsElement.className = "buttons";
 
         var statusElement = CBAdminPageForTasks.createStatusElement();
         element.appendChild(statusElement);
+
+        buttonsElement.appendChild(CBUI.createButton({
+            callback: CBAdminPageForTasks.startVerificationForAllPages,
+            text: "Start Verification for All Pages",
+        }).element);
+
+        buttonsElement.appendChild(CBUI.createButton({
+            callback: CBAdminPageForTasks.startVerificationForNewPages,
+            text: "Start Verification for New Pages",
+        }).element);
+
+        buttonsElement.appendChild(CBUI.createButton({
+            callback: function() {
+                var promise = Colby.fetchAjaxResponse("/api/?class=CBTaskForSample&function=start")
+                    .then(onFulfilled, Colby.displayError)
+                    .then(onFinally, onFinally);
+
+                Colby.retain(promise);
+
+                function onFulfilled() {
+
+                }
+
+                function onFinally() {
+                    Colby.release(promise);
+                }
+
+            },
+            text: "Start CBTaskForSample",
+        }).element);
+
+        buttonsElement.appendChild(CBUI.createButton({
+            callback: CBAdminPageForTasks.scheduleATask,
+            text: "Schedule a Task",
+        }).element);
+
+        element.appendChild(buttonsElement);
 
         var issuesElement = CBAdminPageForTasks.createIssuesElement();
         element.appendChild(issuesElement);
@@ -63,39 +89,36 @@ var CBAdminPageForTasks = {
     createOutputElement: function (output) {
         var element = document.createElement("div");
         element.className = "output";
+
+        var contentElement = document.createElement("div");
+
+        contentElement.addEventListener("click", function() {
+            element.classList.toggle("expanded");
+        });
+
         var message = document.createElement("div");
         message.className = "message";
         message.textContent = output.message;
 
-        var control = document.createElement("div");
-        var checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        var checkboxText = document.createElement("span");
-        checkboxText.textContent = "show details";
-        control.appendChild(checkbox);
-        control.appendChild(checkboxText);
-
         var details = document.createElement("div");
         details.className = "details";
 
-        checkbox.addEventListener("click", function () {
-            if (checkbox.checked) {
-                details.classList.add("show");
-            } else {
-                details.classList.remove("show");
-            }
-        });
-
         details.appendChild(CBAdminPageForTasks.createKeyElement(output.taskClassName, output.taskID));
 
-        var links = output.links || [];
-        links.forEach(function (link) {
-            var anchor = document.createElement("a");
-            anchor.textContent = link.text;
-            anchor.href = link.URI;
+        if (Array.isArray(output.links) && output.links.length > 0) {
+            var section = document.createElement("div");
+            section.className = "section flow";
 
-            details.appendChild(anchor);
-        });
+            output.links.forEach(function (link) {
+                var anchor = document.createElement("a");
+                anchor.textContent = link.text;
+                anchor.href = link.URI;
+
+                section.appendChild(anchor);
+            });
+
+            details.appendChild(section);
+        }
 
         if (output.exception) {
             var pre = document.createElement("pre");
@@ -104,9 +127,9 @@ var CBAdminPageForTasks = {
             details.appendChild(pre);
         }
 
-        element.appendChild(message);
-        element.appendChild(control);
-        element.appendChild(details);
+        contentElement.appendChild(message);
+        contentElement.appendChild(details);
+        element.appendChild(contentElement);
 
         return element;
     },
@@ -163,44 +186,41 @@ var CBAdminPageForTasks = {
     createIssuesElement: function () {
         var element = document.createElement("div");
         element.className = "issues";
+        var issuesElement = document.createElement("div");
+        var button = CBUI.createButton({
+            callback: fetchIssues,
+            text: "Fetch Issues",
+        });
 
-        var issuesContainer = document.createElement("div");
+        element.appendChild(button.element);
+        element.appendChild(issuesElement);
 
-        var button = document.createElement("button");
-        button.textContent = "Fetch Issues";
-        button.addEventListener("click", CBAdminPageForTasks.fetchIssues.bind(undefined, issuesContainer, button));
-
-        element.appendChild(button);
-        element.appendChild(issuesContainer);
-
-        CBAdminPageForTasks.fetchIssues(issuesContainer, button);
+        fetchIssues();
 
         return element;
-    },
-
-    /**
-     * @return null
-     */
-    fetchIssues: function (container, button) {
-        container.textContent = "";
-        button.disabled = true;
-
-        CBAdminPageForTasks.fetchStatusPromise =
-             fetchIssues()
-            .then(display)
-            .catch(Colby.displayError);
 
         function fetchIssues() {
-            return Colby.fetchAjaxResponse("/api/?class=CBAdminPageForTasks&function=fetchIssues");
-        }
+            issuesElement.textContent = "";
+            /* TODO: disable button */
 
-        function display(response) {
-            button.disabled = false;
+            var promise = Colby.fetchAjaxResponse("/api/?class=CBAdminPageForTasks&function=fetchIssues")
+                .then(onFulfilled, Colby.displayError)
+                .then(onFinally, onFinally);
 
-            response.issues.forEach(function (output) {
-                var element = CBAdminPageForTasks.createOutputElement(output);
-                container.appendChild(element);
-            });
+            Colby.retain(promise);
+
+            function onFulfilled(response) {
+                /* TODO: enabled button */
+
+                response.issues.forEach(function (output) {
+                    var element = CBAdminPageForTasks.createOutputElement(output);
+                    issuesElement.appendChild(element);
+                });
+            }
+
+            function onFinally() {
+                Colby.release(promise);
+            }
         }
     },
 

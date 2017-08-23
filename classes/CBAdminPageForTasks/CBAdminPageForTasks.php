@@ -5,21 +5,21 @@ final class CBAdminPageForTasks {
     /**
      * @return [string]
      */
-    public static function adminPageMenuNamePath() {
+    static function adminPageMenuNamePath() {
         return ['general', 'tasks'];
     }
 
     /**
      * @return stdClass
      */
-    public static function adminPagePermissions() {
+    static function adminPagePermissions() {
         return (object)['group' => 'Administrators'];
     }
 
     /**
      * @return null
      */
-    public static function adminPageRenderContent() {
+    static function adminPageRenderContent() {
         CBHTMLOutput::setTitleHTML('Tasks');
         CBHTMLOutput::setDescriptionHTML('View tasks');
     }
@@ -80,15 +80,22 @@ final class CBAdminPageForTasks {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUI'];
     }
 
     /**
