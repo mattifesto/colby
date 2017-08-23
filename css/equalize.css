@@ -18,18 +18,20 @@ html {
     -ms-text-size-adjust:       100%;               /* 4 */
     -webkit-text-size-adjust:   100%;               /* 4 */
 
+    --CBButtonBackgroundColor: hsl(210, 80%, 50%);
+    --CBButtonTextColor: hsl(0, 0%, 100%);
     --CBMonospaceFontFamily: 'Menlo', 'Courier New', 'Courier', monospace;
+    --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 }
 
 .CBDarkTheme {
     --CBBackgroundColor: hsl(0, 0%, 10%);
     --CBBackgroundColor2: hsl(0, 0%, 15%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.05);
-    --CBLineColor: hsla(0, 0%, 100%, 0.1);
+    --CBLineColor: hsla(0, 0%, 100%, 0.2);
     --CBTextColor: hsla(0, 0%, 100%, 0.7);
     --CBTextColor2: hsla(0, 0%, 100%, 0.5);
     --CBTextColorForHeadings: hsla(0, 0%, 100%, 1.0);
-    --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
     background-color: hsl(0, 0%, 10%); /* for older browsers */
     background-color: var(--CBBackgroundColor);
@@ -41,11 +43,10 @@ html {
     --CBBackgroundColor: hsl(0, 0%, 100%);
     --CBBackgroundColor2: hsl(30, 50%, 97%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
-    --CBLineColor: hsla(30, 50%, 50%, 0.2);
+    --CBLineColor: hsla(0, 0%, 0%, 0.2);
     --CBTextColor: hsla(0, 0%, 0%, 0.8);
     --CBTextColor2: hsla(0, 0%, 0%, 0.6);
-    --CBTextColorForHeadings: hsla(0, 0%, 0%, 1);
-    --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
+    --CBTextColorForHeadings: hsla(0, 0%, 0%, 1.0);
 
     background-color: hsl(0, 0%, 100%); /* for older browsers */
     background-color: var(--CBBackgroundColor);
