@@ -46,6 +46,10 @@ $helpMenu = (object)[
         'nameHTML' => 'API',
         'URI' => '/admin/help/api/',
     ],
+    'cssvariables' => (object)[
+        'nameHTML' => 'CSS Variables',
+        'URI' => '/admin/page/?class=CBAdminPageForCSSVariables'
+    ],
 ];
 
 $CBAdminMenu->help = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);

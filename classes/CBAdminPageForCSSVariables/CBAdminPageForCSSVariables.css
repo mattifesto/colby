@@ -1,0 +1,16 @@
+.CBAdminPageForCSSVariables .b2 {
+    background-color: var(--CBBackgroundColor2);
+}
+
+.CBAdminPageForCSSVariables .panel {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.CBAdminPageForCSSVariables .panel > div {
+    background-color: var(--CBBackgroundColor);
+    border: 1px solid var(--CBLineColor);
+    border-radius: 5px;
+    max-width: 100%;
+}
