@@ -434,7 +434,17 @@ var Colby = {
                 };
                 break;
             case 200:
-                response = JSON.parse(xhr.responseText);
+                try {
+                    response = JSON.parse(xhr.responseText);
+                } catch (error) {
+                    response = {
+                        className: "CBAjaxResponse",
+                        message: "An Ajax request to the server returned " +
+                                 "without error but the xhr.responseText is " +
+                                 "not valid JSON.",
+                        wasSuccessful: false,
+                    };
+                }
                 break;
             default:
                 response = {
