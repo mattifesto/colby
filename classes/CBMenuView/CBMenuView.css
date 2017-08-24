@@ -5,6 +5,7 @@
 .CBMenuView_default {
     background-color: var(--CBBackgroundColor2);
     box-sizing: border-box;
+    color: var(--CBTextColorForHeadings);
     max-width: 100%;
 
     -webkit-user-select: none;
