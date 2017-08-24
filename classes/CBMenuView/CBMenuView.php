@@ -28,7 +28,7 @@ final class CBMenuView {
             $menu = CBModels::fetchModelByID($menuID);
         }
 
-        if (empty($menu) || empty($menu->items)) {
+        if (empty($menu) || (empty($menu->title) && empty($menu->items))) {
             echo '<!-- CBMenuView: no menu items -->';
             return;
         }
