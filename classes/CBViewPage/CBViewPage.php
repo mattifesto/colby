@@ -5,6 +5,15 @@ final class CBViewPage {
     private static $modelContext;
 
     /**
+     * @param object $model
+     *
+     * @return [object]
+     */
+    static function CBView_toSubviews(stdClass $model) {
+        return CBModel::valueAsArray($model, 'sections');
+    }
+
+    /**
      * This function loads the spec for a page regardless of whether the latest
      * spec is saved in the CBModels table or in an older spec file.
      *
@@ -306,7 +315,7 @@ final class CBViewPage {
      *
      * @return object
      */
-    static function specToModel($spec) {
+    static function CBModel_toModel($spec) {
         $ID = CBModel::value($spec, 'ID', '');
         $time = time();
         $model = (object)[
