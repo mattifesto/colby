@@ -68,12 +68,15 @@ final class CBAdminPageForCSSVariables {
         ?>
 
         <div class="b">
-            <?php CBAdminPageForCSSVariables::renderText() ?>
+            <?php
+            CBAdminPageForCSSVariables::renderText();
+            CBAdminPageForCSSVariables::renderPanel('panel1');
+            ?>
         </div>
         <div class="b b2">
             <?php
                 CBAdminPageForCSSVariables::renderText();
-                CBAdminPageForCSSVariables::renderPanel();
+                CBAdminPageForCSSVariables::renderPanel('panel2');
              ?>
         </div>
 
@@ -94,9 +97,9 @@ EOT
         ]);
     }
 
-    static function renderPanel() {
+    static function renderPanel($className) {
         ?>
-        <div class="panel">
+        <div class="panel <?= cbhtml($className) ?>">
             <div>
                 <?php CBAdminPageForCSSVariables::renderPanelText(); ?>
             </div>
@@ -110,13 +113,8 @@ EOT
             'contentAsCommonMark' => <<<EOT
 # Panel
 
-A panel scenario occurs when a CBBackgroundColor rectangle with a CBLineColor
-border is place on top of a CBBackgroundColor2 background. This scenario is use
-for rendering lists such as a list of blog posts.
-
-Panels are not intended to be used with CBBackgroundColor2 on top of
-CBBackgroundColor. This is because CBBackgroundColor is intended to be the
-preferable background color of the two background colors.
+A panel is a rectangle with the alternate background color and a CBLineColor
+border. Panels are used when rendering lists such as a list of blog posts.
 
 EOT
         ]);
