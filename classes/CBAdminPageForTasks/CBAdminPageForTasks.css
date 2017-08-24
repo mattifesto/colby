@@ -23,19 +23,33 @@
     border-radius: 5px;
 }
 
-.CBAdminPageForTasks .message {
+.CBAdminPageForTasks .output .toggle {
+    color: var(--CBTextColor2);
+    padding: 5px 10px 0;
+    text-transform: uppercase;
+}
+
+.CBAdminPageForTasks .output .toggle::before {
+    content: "More";
+}
+
+.CBAdminPageForTasks .output.expanded .toggle::before {
+    content: "Less";
+}
+
+.CBAdminPageForTasks .output .message {
     padding: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.CBAdminPageForTasks .output .details {
-    display: none;
-}
-
 .CBAdminPageForTasks .output.expanded .message {
     white-space: pre-line;
+}
+
+.CBAdminPageForTasks .output .details {
+    display: none;
 }
 
 .CBAdminPageForTasks .output.expanded .details {
@@ -44,6 +58,12 @@
 
 .CBAdminPageForTasks .output .details a {
     padding: 10px;
+}
+
+.CBAdminPageForTasks .output .details pre {
+    color: var(--CBTextColor2);
+    font-size: 80%;
+    padding: 20px;
 }
 
 .CBAdminPageForTasks .output .flow {

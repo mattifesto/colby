@@ -90,11 +90,14 @@ var CBAdminPageForTasks = {
         var element = document.createElement("div");
         element.className = "output";
 
-        var contentElement = document.createElement("div");
+        var toggleElement = document.createElement("div");
+        toggleElement.className = "toggle";
 
-        contentElement.addEventListener("click", function() {
+        toggleElement.addEventListener("click", function() {
             element.classList.toggle("expanded");
         });
+
+        var contentElement = document.createElement("div");
 
         var message = document.createElement("div");
         message.className = "message";
@@ -127,6 +130,7 @@ var CBAdminPageForTasks = {
             details.appendChild(pre);
         }
 
+        contentElement.appendChild(toggleElement);
         contentElement.appendChild(message);
         contentElement.appendChild(details);
         element.appendChild(contentElement);
