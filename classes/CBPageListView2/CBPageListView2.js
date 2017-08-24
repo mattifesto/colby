@@ -42,33 +42,30 @@ var CBPageListView2 = {
                 dateElement.appendChild(Colby.unixTimestampToElement(page.publicationTimeStamp));
 
                 /* image */
+                var imageElement = document.createElement("div");
+                imageElement.className = "image";
                 var artworkElement = CBArtworkElement.create({
                     image: page.image,
                     src: page.thumbnailURL,
                 });
 
-                /* footer */
-                var footerElement = document.createElement("div");
-                footerElement.className = "footer";
-                var contentElement = document.createElement("div");
-                contentElement.className = "content";
+                imageElement.appendChild(artworkElement);
+
                 var titleElement = document.createElement("h2");
                 titleElement.className = "title";
                 titleElement.textContent = page.title;
                 var descriptionElement = document.createElement("div");
                 descriptionElement.className = "description";
                 descriptionElement.textContent = page.description;
-                var arrowElement = document.createElement("div");
-                arrowElement.className = "arrow";
-                arrowElement.textContent = ">";
-                contentElement.appendChild(titleElement);
-                contentElement.appendChild(descriptionElement);
-                footerElement.appendChild(contentElement);
-                footerElement.appendChild(arrowElement);
+                var readModeElement = document.createElement("div");
+                readModeElement.className = "readmore";
+                readModeElement.textContent = "read more...";
 
                 anchorElement.appendChild(dateElement);
-                anchorElement.appendChild(artworkElement);
-                anchorElement.appendChild(footerElement);
+                anchorElement.appendChild(imageElement);
+                anchorElement.appendChild(titleElement);
+                anchorElement.appendChild(descriptionElement);
+                anchorElement.appendChild(readModeElement);
                 element.appendChild(anchorElement);
 
                 state.element.insertBefore(element, state.buttonContainerElement);

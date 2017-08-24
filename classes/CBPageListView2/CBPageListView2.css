@@ -16,12 +16,16 @@
 .CBPageListView2_default > article > a {
     background-color: var(--CBBackgroundColor2);
     border: 1px solid var(--CBLineColor);
-    border-radius: 3px;
+    border-radius: 5px;
     color: inherit;
     display: block;
     max-width: 100%;
     text-decoration: inherit;
     width: 600px;
+}
+
+.CBPageListView2_default > article > a:hover {
+    border: 1px solid var(--CBTextColorForLinks);
 }
 
 .CBPageListView2_recent > article {
@@ -32,30 +36,22 @@
     width: 320px;
 }
 
-.CBPageListView2_default > article .footer {
-    display: flex;
-    justify-content: space-between;
+
+.CBPageListView2_default > article .readmore {
+    color: var(--CBTextColor2);
 }
 
-.CBPageListView2_default > article .arrow {
-    align-items: center;
-    display: flex;
-    flex: none;
-    font-size: 48px;
-    justify-content: center;
-    opacity: 0.1;
-    width: 50px;
-}
-
-.CBPageListView2_default > article > a:hover .arrow {
+.CBPageListView2_default > article > a:hover .readmore {
     color: var(--CBTextColorForLinks);
-    opacity: 1;
 }
 
-.CBPageListView2_default > article .published,
-.CBPageListView2_default > article .title,
-.CBPageListView2_default > article .description {
-    margin: 10px 15px;
+.CBPageListView2_default .image {
+    padding: 0 15px;
+}
+
+.CBPageListView2_default > article > a > * {
+    margin: 10px 0;
+    padding: 0 15px;
 }
 
 .CBPageListView2_default > article .published {
@@ -67,10 +63,6 @@
 .CBPageListView2_default > article .published,
 .CBPageListView2_default > article .description {
     color: var(--CBTextColor);
-}
-
-.CBPageListView2_default > article .description {
-    font-size: 90%;
 }
 
 .CBPageListView2_default > article .title {
