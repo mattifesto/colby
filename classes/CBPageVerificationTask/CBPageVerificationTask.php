@@ -7,6 +7,25 @@
  */
 final class CBPageVerificationTask {
 
+    static $messageContext = [];
+
+    /**
+     * @return [string]
+     */
+    static function allowedViewClassNames() {
+        static $allowedViewClassNames;
+
+        if ($allowedViewClassNames === null) {
+            if (is_callable($function = 'CBPageHelpers::allowedViewClassNames')) {
+                $allowedViewClassNames = call_user_func($function);
+            } else {
+                $allowedViewClassNames = CBPagesPreferences::classNamesForSupportedViews();
+            }
+        }
+
+        return $allowedViewClassNames;
+    }
+
     /**
      * @param hex160 $ID
      *
@@ -15,6 +34,7 @@ final class CBPageVerificationTask {
      * @return object
      */
     static function CBTasks2_Execute($ID) {
+        $messages = [];
         $resave = false;
         $severity = 8;
         $links = [
@@ -137,6 +157,19 @@ final class CBPageVerificationTask {
             }
         }
 
+        /* check for deprecated views */
+
+        CBPageVerificationTask::$messageContext = [];
+        $views = CBView::toSubviews($data->spec);
+        array_walk($views, 'CBPageVerificationTask::verifyView');
+
+        if (!empty(CBPageVerificationTask::$messageContext)) {
+            $messages[] = "View issues:\n" . implode("\n", CBPageVerificationTask::$messageContext);
+            $severity = min(4, $severity);
+        }
+
+        /* check for many old versions */
+
         $versionCount = CBPageVerificationTask::fetchCountOfOldVersions($ID);
 
         if ($versionCount > 5) {
@@ -156,7 +189,7 @@ final class CBPageVerificationTask {
         done:
 
         return (object)[
-            'message' => implode(' | ', $messages),
+            'message' => implode("\n\n", $messages),
             'severity' => $severity,
             'links' => $links,
         ];
@@ -273,5 +306,22 @@ EOT;
      */
     static function startForNewPagesForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
+    }
+
+    /**
+     * @param object $spec
+     *
+     * @return
+     */
+    static function verifyView($spec) {
+        $className = CBModel::value($spec, 'className');
+
+        if (!in_array($className, CBPageVerificationTask::allowedViewClassNames())) {
+            CBPageVerificationTask::$messageContext[] = "The {$className} class is not supported.";
+        }
+
+        $subviews = CBView::toSubviews($spec);
+
+        array_walk($subviews, 'CBPageVerificationTask::verifyView');
     }
 }
