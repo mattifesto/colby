@@ -131,4 +131,23 @@ final class CBView {
     static function renderSpecAsHTML(stdClass $spec) {
         CBView::renderSpec($spec);
     }
+
+    /**
+     * @param object $model
+     *
+     *      This function is able to be used with either specs or models.
+     *
+     * @return [object]
+     */
+    static function toSubviews(stdClass $model) {
+        if ($className = CBModel::value($model, 'className')) {
+            if (is_callable($function = "{$className}::CBView_toSubviews")) {
+                return call_user_func($function, $model);
+            } else {
+                return CBModel::valueAsArray($model, 'subviews');
+            }
+        } else {
+            return [];
+        }
+    }
 }
