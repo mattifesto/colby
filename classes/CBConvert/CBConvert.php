@@ -8,11 +8,27 @@ final class CBConvert {
      * @return string
      */
     static function javaScriptErrorToMessage($error) {
-        $message = CBModel::value($error, 'message', '(no message)');
-        $basename = basename(CBModel::value($error, 'sourceURL', '(no source)'));
-        $line = CBModel::value($error, 'line', '(no line)');
+        $message = CBModel::value($error, 'message');
 
-        return "\"{$message}\" in {$basename} line {$line}";
+        if (empty($message)) {
+            $message = '(no message)';
+        }
+
+        $basename = CBModel::value($error, 'sourceURL');
+
+        if (empty($basename)) {
+            $basename = '(no sourceURL)';
+        } else {
+            $basename = basename($basename);
+        }
+
+        $line = CBModel::value($error, 'line');
+
+        if (empty($line)) {
+            $line = '(no line)';
+        }
+
+        return "\"{$message}\" in {$basename} at line {$line}";
 
     }
 
