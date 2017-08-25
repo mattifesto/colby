@@ -3,6 +3,49 @@
 final class CBRequest {
 
     /**
+     * @return bool
+     *
+     *      Returns true if this was an Ajax request; otherwise false.
+     */
+    static function callAjaxFunction() {
+        $modelAsJSON = cb_post_value('ajax');
+
+        if (empty($modelAsJSON)) {
+            return false;
+        }
+
+        $response = new CBAjaxResponse();
+        $model = json_decode($modelAsJSON);
+        $className = CBModel::value($model, 'functionClassName');
+        $functionName = CBModel::value($model, 'functionName');
+        $args = CBModel::valueAsObject($model, 'args');
+
+        $function = "{$className}::{$functionName}Ajax";
+        $getGroupFunction = "{$className}::{$functionName}Group";
+
+        if (is_callable($function) && is_callable($getGroupFunction)) {
+            $group = call_user_func($getGroupFunction);
+
+            if (ColbyUser::currentUserIsMemberOfGroup($group)) {
+                $response->cancel();
+                return call_user_func($function, $args);
+            } else if (ColbyUser::currentUserId() === null) {
+                $response->message          = "The requested Ajax function cannot be called because you are not currently logged in, possibly because your session has timed out. Reloading the current page will usually remedy this.";
+                $response->userMustLogIn    = true;
+            } else {
+                $response->message          = "You do not have permission to call a requested Ajax function.";
+                $response->userMustLogIn    = false;
+            }
+        } else {
+            CBLog::addMessage(__METHOD__, 5, "A request was made to call the ajax function {$className}::{$functionName} which is not implemented.");
+            $response->message = 'You do not have permission to call a requested Ajax function.';
+        }
+
+        $response->send();
+    }
+
+
+    /**
      * The original intent of this function is to allow a page preview to work
      * with query variables. If it is eventually enhanced to be used for some
      * additional purpose, document it in the comments.
@@ -23,7 +66,7 @@ final class CBRequest {
      *
      *      ?page=2&name=Bob+Jones
      */
-    public static function canonicalQueryString(array $pairs = []) {
+    static function canonicalQueryString(array $pairs = []) {
         if (isset($_GET['iteration'])) {
             array_unshift($pairs, ['iteration', $_GET['iteration']]);
         }
@@ -56,14 +99,14 @@ final class CBRequest {
      *
      * @return [{string}]
      */
-    public static function decodedPathToDecodedStubs($decodedPath) {
+    static function decodedPathToDecodedStubs($decodedPath) {
         return preg_split('/[\/]+/', $decodedPath, null, PREG_SPLIT_NO_EMPTY);
     }
 
     /**
      * @return {string}
      */
-    public static function decodedPathToCanonicalEncodedPath($decodedPath) {
+    static function decodedPathToCanonicalEncodedPath($decodedPath) {
         $stubs = CBRequest::decodedPathToDecodedStubs($decodedPath);
         $stubs = array_map('rawurlencode', $stubs);
         $path = implode('/', $stubs);
@@ -73,7 +116,7 @@ final class CBRequest {
     /**
      * @return {string}
      */
-    public static function requestURIToOriginalEncodedPath($requestURI = null) {
+    static function requestURIToOriginalEncodedPath($requestURI = null) {
         $requestURI = ($requestURI !== null) ? $requestURI : $_SERVER['REQUEST_URI'];
 
         preg_match('/^(.*?)(\?.*)?$/', $requestURI, $matches);
@@ -84,7 +127,7 @@ final class CBRequest {
     /**
      * @return {string}
      */
-    public static function requestURIToOriginalEncodedQueryString($requestURI = null) {
+    static function requestURIToOriginalEncodedQueryString($requestURI = null) {
         $requestURI = ($requestURI !== null) ? $requestURI : $_SERVER['REQUEST_URI'];
 
         preg_match('/^(.*?)(\?.*)?$/', $requestURI, $matches);
