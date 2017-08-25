@@ -30,6 +30,24 @@ var Colby = {
     },
 
     /**
+     * @param string className
+     * @param string functionName
+     * @param object args
+     *
+     * @return Promise
+     */
+    callAjaxFunction: function (functionClassName, functionName, args) {
+        var formData = new FormData();
+        formData.append("ajax", JSON.stringify({
+            functionClassName: functionClassName,
+            functionName: functionName,
+            args: args,
+        }));
+
+        return Colby.fetchAjaxResponse("/", formData);
+    },
+
+    /**
      * Converts cents to dollars.
      *
      *      150 => "1.50"
@@ -260,6 +278,33 @@ var Colby = {
     },
 
     /**
+     * Converts an error object to a CBJavaScriptError model.
+     *
+     * History:
+     *
+     *      An initial goal was to stringify and Error object and send it to an
+     *      ajax function. But when an Error object is stringified it doesn't
+     *      serialize all of its properties.
+     *
+     *      Additional information that is not contained in the Error object is
+     *      added to the model returned by this function.
+     *
+     * @param Error error
+     *
+     * @return object (CBJavaScriptError)
+     */
+    errorToCBJavaScriptErrorModel: function (error) {
+        return {
+            className: 'CBJavaScriptError',
+            column: error.column,
+            line: error.line,
+            message: error.message,
+            pageURL: location.href,
+            sourceURL: error.sourceURL,
+        };
+    },
+
+    /**
      * This function is the recommended way to make an Ajax request for Colby.
      * To alleviate error notifications in situations where customers have less
      * stable internet service, this function will attempt the Ajax request
@@ -388,25 +433,11 @@ var Colby = {
      *  Returns a rejected promise the error parameter value.
      */
     report: function (error) {
-        var column, line, message, pageURL, scriptURL;
+        return Colby.callAjaxFunction("CBJavaScript", "reportError", {
+            errorModel: Colby.errorToCBJavaScriptErrorModel(error),
+        }).then(onFinally, onFinally);
 
-        column = (error && error.column) ? error.column : "";
-        line = (error && error.line) ? error.line : "";
-        message = error ? error.toString() : "";
-        pageURL = location.href;
-        scriptURL = (error && error.sourceURL) ? error.sourceURL : "";
-
-        var formData = new FormData();
-        formData.append("columnNumber", column);
-        formData.append("lineNumber", line);
-        formData.append("message", message);
-        formData.append("pageURL", pageURL);
-        formData.append("scriptURL", scriptURL);
-
-        // TODO: could insert a catch here for rare errors
-        return Colby.fetchAjaxResponse("/colby/javascript-error/", formData).then(handle, handle);
-
-        function handle() {
+        function onFinally() {
             return Promise.reject(error);
         }
     },
@@ -642,31 +673,26 @@ Colby.extend = function(objectToExtend, objectWithProperties) {
  * Because this makes an asynchronous request it will not work if there is
  * navigation immediately after which cancels the request.
  *
- * @return undefined
+ * @return false
  */
 Colby.handleError = function(message, sourceURL, line, column, error) {
-    var formData = new FormData();
-    formData.append("message", message);
-    formData.append("sourceURL", sourceURL || "");
-    formData.append("line", line);
-    formData.append("column", column);
-    formData.append("pageURL", location.href);
-
-    if (error) {
-        /* JSON.stringify doesn't work perfectly for an error object */
-
-        var s = JSON.stringify({
-            message: error.message,
-            sourceURL: error.sourceURL,
-            line: error.line,
-            column: error.column,
-        });
-        formData.append("errorAsJSON", s);
+    if (error === undefined) {
+        error = {
+            column: column,
+            line: line,
+            message: message + " (no error object provided)",
+            sourceURL: sourceURL,
+        };
     }
 
-    var XHR = new XMLHttpRequest();
-    XHR.open("POST", "/colby/javascript-error/");
-    XHR.send(formData);
+    var promise = Colby.report(error)
+        .then(onFinally, onFinally);
+
+    Colby.retain(promise);
+
+    function onFinally() {
+        Colby.release(promise);
+    }
 
     return false;
 };
