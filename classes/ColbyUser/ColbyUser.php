@@ -59,7 +59,7 @@ final class ColbyUser {
     /**
      * @return ColbyUser
      */
-    public static function current() {
+    static function current() {
         if (!ColbyUser::$currentUser) {
             $user = new ColbyUser();
             $user->hash = ColbyUser::$currentUserHash;
@@ -85,7 +85,7 @@ final class ColbyUser {
      * @return int|null
      */
     static function currentUserId() {
-        return self::$currentUserId;
+        return ColbyUser::$currentUserId;
     }
 
     /**
@@ -229,8 +229,7 @@ EOT;
     /**
      * @return bool
      */
-    public function isLoggedIn()
-    {
+    public function isLoggedIn() {
         return !!$this->id;
     }
 
@@ -244,6 +243,10 @@ EOT;
      * @return bool
      */
     static function isMemberOfGroup($userID, $groupName) {
+        if ($groupName === 'Public') {
+            return true;
+        }
+
         $userIDAsSQL = intval($userID);
         $tableName = ColbyUser::groupNameToTableName($groupName);
 
@@ -273,20 +276,20 @@ EOT;
      *
      * @return bool
      */
-    public function isOneOfThe($group)
-    {
-        if (!preg_match('/^[a-zA-Z0-9]+$/', $group))
-        {
+    function isOneOfThe($group) {
+        if ($group === 'Public') {
+            return true;
+        }
+
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $group)) {
             throw new InvalidArgumentException('group');
         }
 
-        if (!$this->id)
-        {
+        if (!$this->id) {
             return false;
         }
 
-        if (isset($this->groups[$group]))
-        {
+        if (isset($this->groups[$group])) {
             return $this->groups[$group];
         }
 
@@ -308,12 +311,9 @@ EOT;
          * represent a bad database state they will be caught by other queries.
          */
 
-        if (Colby::mysqli()->error)
-        {
+        if (Colby::mysqli()->error) {
             $isOneOfTheGroup = false;
-        }
-        else
-        {
+        } else {
             $isOneOfTheGroup = $result->fetch_object()->isOneOfTheGroup;
 
             $result->free();
