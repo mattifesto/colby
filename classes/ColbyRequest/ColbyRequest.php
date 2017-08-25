@@ -59,12 +59,16 @@ EOT;
      * If no handler file is found, the method will search for the URL
      * in the database to see if it can load it that way.
      *
-     * @return void
+     * @return null
      */
-    public static function handleRequest() {
+    static function handleRequest() {
         $canonicalEncodedPath = '';
-        $countOfStubs = count(self::$decodedStubs);
+        $countOfStubs = count(ColbyRequest::$decodedStubs);
         $function = null;
+
+        if (0 === $countOfStubs && CBRequest::callAjaxFunction()) {
+            return;
+        }
 
         if ((0 === $countOfStubs) ||
             (1 === $countOfStubs && 'index.php' === self::$decodedStubs[0]))
