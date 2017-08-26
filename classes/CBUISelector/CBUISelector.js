@@ -232,7 +232,7 @@ var CBUISelector = {
     valueToTitle : function (args) {
         var options = args.options || [];
         var selectedOption = options.find(function (option) {
-            return args.value === option.value;
+            return args.value == option.value; /* allow string to int equality */
         });
 
         if (selectedOption) {
