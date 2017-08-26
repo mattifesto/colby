@@ -248,7 +248,13 @@ EOT;
         $IDAsSQL = CBHex160::toSQL(CBModel::value($model, 'ID'));
         $className = CBModel::value($model, 'className', '');
         $classNameAsSQL = CBDB::stringToSQL($className);
-        $classNameForKindAsSQL = CBDB::stringToSQL(CBModel::value($model, 'classNameForKind'));
+        $classNameForKindAsSQL = CBModel::value($model, 'classNameForKind', 'NULL', function ($value) {
+            if (empty($value)) {
+                return 'NULL'; /* falsy value (empty string) should be treated as null */
+            } else {
+                return CBDB::stringToSQL($value);
+            }
+        });
         $createdAsSQL = CBModel::value($model, 'created', $now, 'intval');
         $iterationAsSQL = 0; /* deprecated */
         $modifiedAsSQL = CBModel::value($model, 'modified', $now, 'intval');
