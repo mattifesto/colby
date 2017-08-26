@@ -55,7 +55,7 @@ final class CBViewPage {
      *
      * @return null
      */
-    public static function fetchSpecForAjax() {
+    static function fetchSpecForAjax() {
         $response = new CBAjaxResponse();
         $ID = $_POST['id'];
         $spec = CBViewPage::fetchSpecByID($ID);
@@ -322,6 +322,10 @@ final class CBViewPage {
             'className' => __CLASS__,
             'classNameForKind' => CBModel::value($spec, 'classNameForKind', '', 'trim'),
             'classNameForSettings' => CBModel::value($spec, 'classNameForSettings', '', 'trim'),
+            'description' => CBModel::value($spec, 'description', '', 'strval'),
+            'isPublished' => CBModel::value($spec, 'isPublished', false, 'boolval'),
+            'iteration' => 0, /* deprecated */
+            'publishedBy' => CBModel::value($spec, 'publishedBy', null, 'intval'),
             'selectedMainMenuItemName' => CBModel::value($spec, 'selectedMainMenuItemName', '', 'trim'),
             'title' => CBModel::value($spec, 'title', '', 'trim'),
             'URI' => CBModel::value($spec, 'URI', $ID, function ($value) use ($ID) {
@@ -335,12 +339,7 @@ final class CBViewPage {
             }),
         ];
 
-        $model->description = isset($spec->description) ? $spec->description : '';
-        $model->isPublished = isset($spec->isPublished) ? !!$spec->isPublished : false;
-        $model->iteration = 0;
         $model->publicationTimeStamp = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
-        $model->publishedBy = isset($spec->publishedBy) ? $spec->publishedBy : null;
-        $model->schemaVersion = isset($spec->schemaVersion) ? $spec->schemaVersion : null; /* Deprecated? */
 
         /**
          * Page image
@@ -427,9 +426,6 @@ final class CBViewPage {
      *  rendered.
      */
     private static function upgradeRenderModel($model) {
-
-         // Version 2
-
         if (!isset($model->updated)) {
             $model->updated = time();
         }
@@ -437,8 +433,6 @@ final class CBViewPage {
         if (!isset($model->created)) {
             $model->created = $model->updated;
         }
-
-        $model->schemaVersion = 3;
 
         // 2015.09.19 classNameForSettings
         if (!isset($model->classNameForSettings)) {
