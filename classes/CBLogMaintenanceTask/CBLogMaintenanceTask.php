@@ -23,7 +23,6 @@ final class CBLogMaintenanceTask {
         }
 
         CBLog::removeExpiredEntries();
-        CBLog::addMessage(__CLASS__, 6, 'Performed regular maintenance on the CBLog table.');
 
         return (object)[
             'scheduled' => time() + (60 * 60 * 24), /* 24 hours from now */
