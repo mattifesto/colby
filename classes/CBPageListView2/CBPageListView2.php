@@ -9,7 +9,7 @@ final class CBPageListView2 {
      */
     static function fetchPagesForAjax() {
         $response = new CBAjaxResponse();
-        $classNameForKindAsSQL = CBDB::stringToSQL($_POST['classNameForKind']);
+        $classNameForKindAsSQL = CBDB::stringToSQL(cb_post_value('classNameForKind', ''));
 
         if (empty($_POST['publishBeforeTimestamp'])) {
             $publishedBeforeClause = '';
