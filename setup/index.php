@@ -55,7 +55,7 @@ class ColbyInstaller {
         if (ColbyInstaller::$propertiesAreAllSet) {
             try {
                 self::install();
-            } catch (Exception $exception) {
+            } catch (Throwable $exception) {
                 ColbyInstaller::$exception = $exception;
 
                 self::renderPlan();
@@ -79,13 +79,6 @@ class ColbyInstaller {
             'mysqlDatabase' => cb_post_value('mysqlDatabase', '', 'trim'),
             'facebookAppID' => cb_post_value('facebookAppID', '', 'trim'),
             'facebookAppSecret' => cb_post_value('facebookAppSecret', '', 'trim'),
-            'emailAddress' => cb_post_value('emailAddress', '', 'trim'),
-            'emailName' => cb_post_value('emailName', '', 'trim'),
-            'smtpDomainName' => cb_post_value('smtpDomainName', 'smtp.gmail.com', 'trim'),
-            'smtpPort' => cb_post_value('smtpPort', '465', 'trim'),
-            'smtpSecurity' => cb_post_value('smtpSecurity', 'ssl', 'trim'),
-            'smtpUser' => cb_post_value('smtpUser', '', 'trim'),
-            'smtpPassword' => cb_post_value('smtpPassword', '', 'trim'),
         ];
 
         ColbyInstaller::$properties = $p;
@@ -97,20 +90,49 @@ class ColbyInstaller {
             !empty($p->mysqlPassword) &&
             !empty($p->mysqlDatabase) &&
             !empty($p->facebookAppID) &&
-            !empty($p->facebookAppSecret) &&
-            !empty($p->emailAddress) &&
-            !empty($p->emailName) &&
-            !empty($p->smtpDomainName) &&
-            !empty($p->smtpPort) &&
-            !empty($p->smtpSecurity) &&
-            !empty($p->smtpUser) &&
-            !empty($p->smtpPassword);
+            !empty($p->facebookAppSecret);
     }
 
     /**
      * @return null
      */
     static function install() {
+        /* Verify MySQL login properties */
+
+        $mysqliDriver = new mysqli_driver();
+        $mysqliDriver->report_mode = MYSQLI_REPORT_STRICT;
+
+        $mysqli = new mysqli(
+            self::$properties->mysqlHost,
+            self::$properties->mysqlUser,
+            self::$properties->mysqlPassword,
+            self::$properties->mysqlDatabase
+        );
+
+        if ($mysqli->connect_error) {
+            throw new Exception($mysqli->connect_error);
+        }
+
+        if (!$mysqli->set_charset('utf8')) {
+            throw new Exception( 'Unable to set the mysqli character set to UTF-8.');
+        }
+
+        $mysqli->query('CREATE TABLE `ColbyInstallationTest` (`title` VARCHAR(80))');
+
+        if ($mysqli->error) {
+            throw new Exception("The MySQL account provided is unable to create tables: {$mysqli->error}");
+        }
+
+        $mysqli->query('DROP TABLE `ColbyInstallationTest`');
+
+        if ($mysqli->error) {
+            throw new Exception("The MySQL account provided is unable to drop tables: {$mysqli->error}");
+        }
+
+        $mysqli->close();
+
+        /* Create files and directories */
+
         if (!is_dir(self::$dataDirectory)) {
             mkdir(self::$dataDirectory);
         }
@@ -210,7 +232,7 @@ class ColbyInstaller {
     static function renderPlan() {
         ColbyInstaller::renderPageBegin();
 
-        include __DIR__ . '/snippets/install-plan.php';
+        include __DIR__ . '/install-page.php';
 
         ColbyInstaller::renderPageEnd();
     }
@@ -231,7 +253,7 @@ class ColbyInstaller {
         <p>The Colby system requires all websites to run over HTTPS. Once Colby
            has been set up, it will automatically redirect all HTTP requests to
            HTTPS.
-        <p>Either replace the http:// in this URL with https:// in our browser
+        <p>Either replace the http:// in this URL with https:// in your browser
            and reload this page or reload with the link below:
         <p><a href="<?= $link ?>"><?= $link ?></a>
 
@@ -275,15 +297,6 @@ class ColbyInstaller {
 
         $encryptionPassword = bin2hex(openssl_random_pseudo_bytes(20));
 
-        $emailAddress = addslashes($p->emailAddress);
-        $emailName = addslashes($p->emailName);
-
-        $smtpDomainName = addslashes($p->smtpDomainName);
-        $smtpPort = intval($p->smtpPort);
-        $smtpSecurity = addslashes($p->smtpSecurity);
-        $smtpUser = addslashes($p->smtpUser);
-        $smtpPassword = addslashes($p->smtpPassword);
-
         $content = <<<EOT
 <?php
 
@@ -298,18 +311,6 @@ define('CBMySQLPassword',                   '{$mysqlPassword}');
 define('CBMySQLDatabase',                   '{$mysqlDatabase}');
 
 define('CBEncryptionPassword',              '{$encryptionPassword}');
-
-/*
-define('COLBY_EMAIL_LIBRARY_DIRECTORY',     CBSiteDirectory . '/swiftmailer');
-define('COLBY_EMAIL_SENDER',                '{$emailAddress}');
-define('COLBY_EMAIL_SENDER_NAME',           '{$emailName}');
-
-define('COLBY_EMAIL_SMTP_SERVER',           '{$smtpDomainName}');
-define('COLBY_EMAIL_SMTP_PORT',             {$smtpPort});
-define('COLBY_EMAIL_SMTP_SECURITY',         '{$smtpSecurity}');
-define('COLBY_EMAIL_SMTP_USER',             '{$smtpUser}');
-define('COLBY_EMAIL_SMTP_PASSWORD',         '{$smtpPassword}');
-*/
 
 EOT;
 
