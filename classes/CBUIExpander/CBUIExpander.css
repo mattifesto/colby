@@ -1,0 +1,68 @@
+.CBUIExpander {
+    padding: 10px 15px;
+}
+
+.CBUIExpander .panel {
+    background-color: var(--CBBackgroundColor);
+    border: 1px solid var(--CBLineColor);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.CBUIExpander .toggle {
+    background-color: var(--CBButtonBackgroundColor);
+    border-bottom-right-radius: 5px;
+    color: var(--CBButtonTextColor);
+    display: inline-block;
+    font-size: 80%;
+    padding: 5px 10px;
+    text-align: center;
+    text-transform: lowercase;
+    user-select: none;
+    width: 3em;
+
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.CBUIExpander .toggle::before {
+    content: "Show";
+}
+
+.CBUIExpander.expanded .toggle::before {
+    content: "Hide";
+}
+
+.CBUIExpander time {
+    display: inline-block;
+    color: var(--CBTextColo2);
+    font-size: 80%;
+    padding: 5px 10px;
+}
+
+.CBUIExpander .summary {
+    padding: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.CBUIExpander.expanded .summary {
+    display: none;
+}
+
+.CBUIExpander .content {
+    display: none;
+}
+
+.CBUIExpander.expanded .content {
+    display: block;
+    padding: 10px;
+    white-space: pre-line;
+}
+
+.CBUIExpander a {
+    display: block;
+    padding: 5px 0;
+}
