@@ -1,6 +1,8 @@
 <?php
 
-include(Colby::findHandler('handle-ensure-installation.php'));
+if (CBAdminPageForUpdate::installationIsRequired()) {
+    CBAdminPageForUpdate::update();
+}
 
 if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
