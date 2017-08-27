@@ -27,21 +27,21 @@ final class CBAdminPageForLogs {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
-        return ['CBUIExpandableRow'];
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUIExpander'];
     }
 
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 }

@@ -1,6 +1,6 @@
 "use strict"; /* jshint strict: global */
 /* globals
-    CBUIExpandableRow,
+    CBUIExpander,
     Colby */
 
 var CBAdminPageForLogs = {
@@ -12,53 +12,43 @@ var CBAdminPageForLogs = {
         var element = document.createElement("div");
         element.className = "entries";
 
-        CBAdminPageForLogs.promise =
-            Colby.fetchAjaxResponse("/api/?class=CBLog&function=fetchLogs")
-            .then(display)
-            .catch(Colby.displayError);
+        var promise = Colby.fetchAjaxResponse("/api/?class=CBLog&function=fetchLogs")
+            .then(onFulfilled)
+            .catch(onRejected)
+            .then(onFinally, onFinally);
+
+        Colby.retain(promise);
 
         return element;
 
-        function display(response) {
+        function onFulfilled(response) {
             response.logs.forEach(function (log) {
-
-                var title = log.message.substr(0, 100);
-                var titleElement = document.createElement("div");
-                titleElement.textContent = title;
-
-                var timeElement = Colby.unixTimestampToElement(log.timestamp);
-                timeElement.classList.add("compact");
-
-                var row = CBUIExpandableRow.create();
-                row.columnsElement.appendChild(timeElement);
-                row.columnsElement.appendChild(titleElement);
-
-
-                if (title.length !== log.message.length) {
-                    var messageElement = document.createElement("div");
-                    messageElement.textContent = log.message;
-
-                    row.contentElement.appendChild(messageElement);
-                }
+                var message = log.message;
 
                 if (log.model && log.model.exceptionStackTrace) {
-                    var exceptionStackTraceElement = document.createElement("pre");
-                    exceptionStackTraceElement.textContent = log.model.exceptionStackTrace;
-
-                    row.contentElement.appendChild(exceptionStackTraceElement);
+                    message += "\n\n" + log.model.exceptionStackTrace;
                 }
 
                 if (log.model && log.model.text) {
-                    var textElement = document.createElement("pre");
-                    textElement.textContent = log.model.text;
-
-                    row.contentElement.appendChild(textElement);
+                    message += "\n\n" + log.model.text;
                 }
 
-                element.appendChild(row.element);
+                element.appendChild(CBUIExpander.create({
+                    message: message,
+                    timestamp: log.timestamp,
+                }).element);
 
                 Colby.updateTimes();
             });
+        }
+
+        function onRejected(error) {
+            Colby.report(error);
+            Colby.displayError(error);
+        }
+
+        function onFinally() {
+            Colby.release(promise);
         }
     },
 };
