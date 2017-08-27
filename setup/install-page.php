@@ -65,34 +65,6 @@ if (ColbyInstaller::$exception) {
         <div>Facebook App Secret</div>
         <input type="text" name="facebookAppSecret" value="<?= cbhtml($p->facebookAppSecret) ?>">
     </div>
-    <div class="property">
-        <div>Email Address</div>
-        <input type="text" name="emailAddress" value="<?= cbhtml($p->emailAddress) ?>">
-    </div>
-    <div class="property">
-        <div>Email Name</div>
-        <input type="text" name="emailName" value="<?= cbhtml($p->emailName) ?>">
-    </div>
-    <div class="property">
-        <div>SMTP Server Domain Name</div>
-        <input type="text" name="smtpDomainName" value="<?= cbhtml($p->smtpDomainName) ?>">
-    </div>
-    <div class="property">
-        <div>SMTP Server Port</div>
-        <input type="text" name="smtpPort" value="<?= cbhtml($p->smtpPort) ?>">
-    </div>
-    <div class="property">
-        <div>SMTP Server Security</div>
-        <input type="text" name="smtpSecurity" value="<?= cbhtml($p->smtpSecurity) ?>">
-    </div>
-    <div class="property">
-        <div>SMTP User</div>
-        <input type="text" name="smtpUser" value="<?= cbhtml($p->smtpUser) ?>">
-    </div>
-    <div class="property">
-        <div>SMTP Password</div>
-        <input type="text" name="smtpPassword" value="<?= cbhtml($p->smtpPassword) ?>">
-    </div>
     <input type="submit">
 </form>
 
