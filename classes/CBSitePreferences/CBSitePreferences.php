@@ -214,7 +214,9 @@ final class CBSitePreferences {
             if (is_file($filepath)) {
                 $model = json_decode(file_get_contents($filepath));
             } else {
-                $model = CBSitePreferences::specToModel(new stdClass());
+                $model = CBModel::toModel((object)[
+                    'className' => 'CBSitePreferences',
+                ]);
             }
 
             CBSitePreferences::$model = $model;
