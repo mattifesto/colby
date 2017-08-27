@@ -95,7 +95,7 @@ final class CBAdminPageForTasks {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI'];
+        return ['CBUIExpander'];
     }
 
     /**

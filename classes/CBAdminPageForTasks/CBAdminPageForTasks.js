@@ -1,6 +1,7 @@
 "use strict"; /* jshint strict: global */
 /* globals
     CBUI,
+    CBUIExpander,
     Colby */
 
 var CBAdminPageForTasks = {
@@ -82,63 +83,6 @@ var CBAdminPageForTasks = {
     },
 
     /**
-     * @param object output
-     *
-     * @return Element
-     */
-    createOutputElement: function (output) {
-        var element = document.createElement("div");
-        element.className = "output";
-
-        var toggleElement = document.createElement("div");
-        toggleElement.className = "toggle";
-
-        toggleElement.addEventListener("click", function() {
-            element.classList.toggle("expanded");
-        });
-
-        var contentElement = document.createElement("div");
-
-        var message = document.createElement("div");
-        message.className = "message";
-        message.textContent = output.message;
-
-        var details = document.createElement("div");
-        details.className = "details";
-
-        details.appendChild(CBAdminPageForTasks.createKeyElement(output.taskClassName, output.taskID));
-
-        if (Array.isArray(output.links) && output.links.length > 0) {
-            var section = document.createElement("div");
-            section.className = "section flow";
-
-            output.links.forEach(function (link) {
-                var anchor = document.createElement("a");
-                anchor.textContent = link.text;
-                anchor.href = link.URI;
-
-                section.appendChild(anchor);
-            });
-
-            details.appendChild(section);
-        }
-
-        if (output.exception) {
-            var pre = document.createElement("pre");
-            pre.textContent = output.exception;
-
-            details.appendChild(pre);
-        }
-
-        contentElement.appendChild(toggleElement);
-        contentElement.appendChild(message);
-        contentElement.appendChild(details);
-        element.appendChild(contentElement);
-
-        return element;
-    },
-
-    /**
      * @param object response
      *
      * @return Element
@@ -208,18 +152,35 @@ var CBAdminPageForTasks = {
             /* TODO: disable button */
 
             var promise = Colby.fetchAjaxResponse("/api/?class=CBAdminPageForTasks&function=fetchIssues")
-                .then(onFulfilled, Colby.displayError)
+                .then(onFulfilled)
+                .catch(onRejected)
                 .then(onFinally, onFinally);
 
             Colby.retain(promise);
 
             function onFulfilled(response) {
-                /* TODO: enabled button */
-
                 response.issues.forEach(function (output) {
-                    var element = CBAdminPageForTasks.createOutputElement(output);
-                    issuesElement.appendChild(element);
+                    var message = output.message + "\n\n" + output.className + "\n" + output.taskID;
+
+                    if (output.exception) {
+                        message += "\n\n" + output.exception;
+                    }
+
+                    var expander = CBUIExpander.create({
+                        links: output.links,
+                        message: message,
+                        timestamp: output.completed,
+                    });
+
+                    issuesElement.appendChild(expander.element);
                 });
+
+                Colby.updateTimes();
+            }
+
+            function onRejected(error) {
+                Colby.report(error);
+                Colby.displayError(error);
             }
 
             function onFinally() {

@@ -13,64 +13,6 @@
     font-family: var(--CBMonospaceFontFamily);
 }
 
-.CBAdminPageForTasks .output {
-    padding: 10px;
-}
-
-.CBAdminPageForTasks .output > div {
-    background-color: var(--CBBackgroundColor);
-    border: 1px solid var(--CBLineColor);
-    border-radius: 5px;
-}
-
-.CBAdminPageForTasks .output .toggle {
-    color: var(--CBTextColor2);
-    padding: 5px 10px 0;
-    text-transform: uppercase;
-}
-
-.CBAdminPageForTasks .output .toggle::before {
-    content: "More";
-}
-
-.CBAdminPageForTasks .output.expanded .toggle::before {
-    content: "Less";
-}
-
-.CBAdminPageForTasks .output .message {
-    padding: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.CBAdminPageForTasks .output.expanded .message {
-    white-space: pre-line;
-}
-
-.CBAdminPageForTasks .output .details {
-    display: none;
-}
-
-.CBAdminPageForTasks .output.expanded .details {
-    display: block;
-}
-
-.CBAdminPageForTasks .output .details a {
-    padding: 10px;
-}
-
-.CBAdminPageForTasks .output .details pre {
-    color: var(--CBTextColor2);
-    font-size: 80%;
-    padding: 20px;
-}
-
-.CBAdminPageForTasks .output .flow {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .CBAdminPageForTasks .status > div {
     display: flex;
     flex-wrap: wrap;
