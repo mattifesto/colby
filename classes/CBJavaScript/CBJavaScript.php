@@ -18,39 +18,31 @@ class CBJavaScript {
         $attributes = array();
         $hashes = array();
 
-        if (isset($_POST['message'])) {
-            $key                        = 'Message';
-            $attributes[$key]           = $pMessage;
-            $hash                       = sha1("{$key}: {$pMessage}");
-            $hashes[$key]               = $hash;
+        $key                        = 'Message';
+        $attributes[$key]           = $pMessage;
+        $hash                       = sha1("{$key}: {$pMessage}");
+        $hashes[$key]               = $hash;
 
-            $key                        = 'Page URL';
-            $attributes[$key]           = $pPageURL;
-            $hash                       = sha1("{$key}: {$pPageURL}");
-            $hashes[$key]               = $hash;
+        $key                        = 'Page URL';
+        $attributes[$key]           = $pPageURL;
+        $hash                       = sha1("{$key}: {$pPageURL}");
+        $hashes[$key]               = $hash;
 
-            $key                        = 'Script URL';
-            $attributes[$key]           = $pSourceURL;
-            $hash                       = sha1("{$key}: {$pSourceURL}");
-            $hashes[$key]               = $hash;
+        $key                        = 'Script URL';
+        $attributes[$key]           = $pSourceURL;
+        $hash                       = sha1("{$key}: {$pSourceURL}");
+        $hashes[$key]               = $hash;
 
-            $key                        = 'Line Number';
-            $attributes[$key]           = $pLine;
-            $hash                       = sha1("{$key}: {$pLine}");
-            $hashes[$key]               = $hash;
+        $key                        = 'Line Number';
+        $attributes[$key]           = $pLine;
+        $hash                       = sha1("{$key}: {$pLine}");
+        $hashes[$key]               = $hash;
 
-            $key                        = 'Script + Message';
-            $value                      = "{$hashes['Script URL']} + {$hashes['Message']}";
-            $attributes[$key]           = $value;
-            $hash                       = sha1("{$key}: {$value}");
-            $hashes[$key]               = $hash;
-        } else {
-            $key                        = 'Message';
-            $pMessage                   = 'Colby: The standard error parameters were not specified.';
-            $attributes[$key]           = $pMessage;
-            $hash                       = sha1("{$key}: {$pMessage}");
-            $hashes[$key]               = $hash;
-        }
+        $key                        = 'Script + Message';
+        $value                      = "{$hashes['Script URL']} + {$hashes['Message']}";
+        $attributes[$key]           = $value;
+        $hash                       = sha1("{$key}: {$value}");
+        $hashes[$key]               = $hash;
 
         $key                        = 'User Agent';
         $value                      = $_SERVER['HTTP_USER_AGENT'];
