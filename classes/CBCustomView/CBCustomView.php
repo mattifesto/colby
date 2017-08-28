@@ -39,7 +39,7 @@ final class CBCustomView {
             $modelToRender->className = $customViewClassName;
         }
 
-        CBView::renderModelAsHTML($modelToRender);
+        CBView::render($modelToRender);
     }
 
     /**

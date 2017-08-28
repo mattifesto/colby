@@ -58,7 +58,7 @@ if ($CBPageEditorAvailablePageTemplateClassNames || class_exists('CBPageTemplate
     }
 }
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'pages',
 ]);

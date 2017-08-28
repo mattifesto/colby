@@ -57,7 +57,7 @@ final class CBBackgroundView {
         ?>
 
         <div class="CBBackgroundView" style="<?= $styles; ?>">
-            <?php array_walk($model->children, 'CBView::renderModelAsHTML'); ?>
+            <?php array_walk($model->children, 'CBView::render'); ?>
         </div>
 
         <?php

@@ -12,7 +12,7 @@ CBHTMLOutput::setTitleHTML('Documents');
 CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,documents.js');
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'develop',
     'selectedSubmenuItemName' => 'documents',
@@ -57,7 +57,7 @@ if (is_file($filepath)) {
 
 <?php
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageFooterView',
 ]);
 

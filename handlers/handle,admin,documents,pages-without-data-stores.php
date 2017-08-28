@@ -13,7 +13,7 @@ CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Stray Documents');
 CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'develop',
     'selectedSubmenuItemName' => 'documents',
@@ -59,7 +59,7 @@ $filepath = CBDataStore::directoryForID(CBPagesAdministrationDataStoreID) . '/da
 
 <?php
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageFooterView',
 ]);
 

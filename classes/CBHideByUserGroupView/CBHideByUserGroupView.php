@@ -42,7 +42,7 @@ final class CBHideByUserGroupView {
             return;
         }
 
-        array_walk($model->subviews, 'CBView::renderModelAsHTML');
+        array_walk($model->subviews, 'CBView::render');
     }
 
     /**

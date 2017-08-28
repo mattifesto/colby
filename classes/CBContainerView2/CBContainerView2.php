@@ -51,7 +51,7 @@ EOT;
         ?>
 
         <div class="CBContainerView2 <?= $CSSClassNames ?>" style="<?= $backgroundImageDeclaration ?>">
-            <?php array_walk($subviews, 'CBView::renderModelAsHTML') ?>
+            <?php array_walk($subviews, 'CBView::render') ?>
         </div>
 
         <?php

@@ -11,7 +11,7 @@ CBHTMLOutput::setDescriptionHTML('A list of model classes');
 CBHTMLOutput::requireClassName('CBUI');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,models,directory.css');
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'models',
     'selectedSubmenuItemName' => 'directory',
@@ -65,7 +65,7 @@ foreach (CBModelsPreferences::classNamesOfEditableModels() as $className) {
 
 <?php
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageFooterView',
 ]);
 

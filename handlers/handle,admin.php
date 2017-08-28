@@ -15,7 +15,7 @@ CBHTMLOutput::setDescriptionHTML('The status of the website');
 CBHTMLOutput::requireClassName('CBUI');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin.css');
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'general',
     'selectedSubmenuItemName' => 'status',
@@ -64,7 +64,7 @@ CBView::renderModelAsHTML((object)[
 
 <?php
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageFooterView',
 ]);
 

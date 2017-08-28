@@ -12,7 +12,7 @@ CBHTMLOutput::setTitleHTML('ID Info');
 CBHTMLOutput::setDescriptionHTML('View the contents of an archive.');
 CBHTMLOutput::requireClassName('CBAdminPageForID');
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'develop',
     'selectedSubmenuItemName' => 'documents',
@@ -50,7 +50,7 @@ if (empty($_GET['ID'])) {
 
 <?php
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageFooterView',
 ]);
 

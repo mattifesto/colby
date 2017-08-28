@@ -37,14 +37,14 @@ if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
             if (!empty($names[1])) { $menuModel->selectedSubmenuItemName = $names[1]; }
         }
 
-        CBView::renderModelAsHTML($menuModel);
+        CBView::render($menuModel);
 
         ?><main class="CBUIRoot <?= $class ?>" style="flex: 1 0 auto;"><?php
         if (is_callable($function = "{$class}::adminPageRenderContent")) {
             call_user_func($function);
         }
         ?></main><?php
-        CBView::renderModelAsHTML((object)[
+        CBView::render((object)[
             'className' => 'CBAdminPageFooterView',
         ]);
         CBHTMLOutput::render();

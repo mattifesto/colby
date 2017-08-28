@@ -75,7 +75,7 @@ final class CBPageLayout {
         } else if (is_callable($function = 'CBPageHelpers::renderDefaultPageFooter')) {
             call_user_func($function, $properties);
         } else {
-            CBView::renderModelAsHTML((object)[
+            CBView::render((object)[
                 'className' => 'CBDefaultPageFooterView',
             ]);
         }
@@ -104,7 +104,7 @@ final class CBPageLayout {
         } else if (is_callable($function = 'CBPageHelpers::renderDefaultPageHeader')) {
             call_user_func($function, $properties);
         } else {
-            CBView::renderModelAsHTML((object)[
+            CBView::render((object)[
                 'className' => 'CBDefaultPageHeaderView',
             ]);
         }

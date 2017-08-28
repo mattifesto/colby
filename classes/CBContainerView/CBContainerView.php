@@ -162,7 +162,7 @@ EOT;
         }
 
         ?><<?= $tagName, $HREF ?> class="<?= $classes ?>"<?= $styles ?>><?php
-            array_walk($model->subviews, 'CBView::renderModelAsHTML');
+            array_walk($model->subviews, 'CBView::render');
         ?></<?= $tagName ?>><?php
     }
 

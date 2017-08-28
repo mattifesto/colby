@@ -12,7 +12,7 @@ CBHTMLOutput::setTitleHTML('ColbyPages Table Rows');
 CBHTMLOutput::setDescriptionHTML('Pages that are in the ColbyPages table.');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,documents,colby-pages-rows.css');
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'develop',
     'selectedSubmenuItemName' => 'documents',
@@ -29,12 +29,12 @@ CBView::renderModelAsHTML((object)[
 
         <?php
 
-        CBView::renderModelAsHTML((object)[
+        CBView::render((object)[
             'className' => 'CBPagesTableSummaryView',
             'type' => 'published'
         ]);
 
-        CBView::renderModelAsHTML((object)[
+        CBView::render((object)[
             'className' => 'CBPagesTableSummaryView',
             'type' => 'unpublished'
         ]);
@@ -45,7 +45,7 @@ CBView::renderModelAsHTML((object)[
 
     <?php
 
-    CBView::renderModelAsHTML((object)[
+    CBView::render((object)[
         'className' => 'UnpublishedPagesWithURIsView',
     ]);
 
@@ -76,7 +76,7 @@ EOT;
 
 <?php
 
-CBView::renderModelAsHTML((object)[
+CBView::render((object)[
     'className' => 'CBAdminPageFooterView',
 ]);
 

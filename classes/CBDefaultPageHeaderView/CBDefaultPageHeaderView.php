@@ -13,7 +13,7 @@ final class CBDefaultPageHeaderView {
         <header class="CBDefaultPageHeaderView CBDarkTheme">
             <?php
 
-            CBView::renderModelAsHTML((object)[
+            CBView::render((object)[
                 'className' => 'CBMenuView',
                 'menuID' => CBWellKnownMenuForMain::ID(),
                 'selectedItemName' => $selectedMainMenuItemName,

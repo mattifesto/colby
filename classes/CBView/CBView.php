@@ -89,7 +89,7 @@ final class CBView {
         } else if (CBSitePreferences::debug()) {
             $classNameAsComment = ': ' . str_replace('--', ' - - ', $className);
 
-            echo "<!-- CBView::renderModelAsHTML() found no CBView_render() function for the class: \"{$classNameAsComment}\" -->";
+            echo "<!-- CBView::render() found no CBView_render() function for the class: \"{$classNameAsComment}\" -->";
         }
     }
 
