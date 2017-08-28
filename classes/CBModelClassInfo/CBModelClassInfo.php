@@ -3,25 +3,35 @@
 final class CBModelClassInfo {
 
     /**
-     * @param {string} $className
+     * @param string $className
      *
-     * @return {stdClass}
+     * @return object
      */
-    public static function classNameToInfo($className) {
-        if (is_callable($function = "{$className}::info")) {
+    static function classNameToInfo($className) {
+        if (is_callable($function = "{$className}::CBModelClassInfo_spec")) {
+            $spec = call_user_func($function);
+            $spec = clone $spec;
+            $spec->className = __CLASS__;
+            return CBModel::toModel($spec);
+        } else if (is_callable($function = "{$className}::info")) { /* deprecated */
             return call_user_func($function);
         } else {
-            return CBModelClassInfo::specToModel();
+            return CBModel::toModel((object)[
+                'className' => __CLASS__,
+            ]);
         }
     }
 
     /**
-     * @param {stdClass} $spec
+     * @param object $spec
      *
-     * @return {stdClass}
+     * @return object
      */
-    public static function specToModel(stdClass $spec = null) {
-        $model = CBModels::modelWithClassName(__CLASS__);
+    static function specToModel(stdClass $spec = null) {
+        $model = (object)[
+            'className' => __CLASS__
+        ];
+
         $model->pluralTitle = isset($spec->pluralTitle) ? trim($spec->pluralTitle) : '';
         $model->pluralTitleAsHTML = cbhtml($model->pluralTitle);
         $model->singularTitle = isset($spec->singularTitle) ? trim($spec->singularTitle) : '';
