@@ -9,9 +9,7 @@ final class CBAdminPageFooterView {
     /**
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model = null) {
-        CBHTMLOutput::requireClassName(__CLASS__);
-
+    static function CBView_render(stdClass $model) {
         ?>
 
         <section class="CBAdminPageFooterView">
@@ -44,7 +42,7 @@ final class CBAdminPageFooterView {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 }
