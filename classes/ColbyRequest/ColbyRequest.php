@@ -80,12 +80,10 @@ EOT;
                 if (isset($frontPageID)) {
                     $model = CBModels::fetchModelByID($frontPageID);
 
-                    if (!empty($model->className) &&
-                        is_callable($function = "{$model->className}::renderModelAsHTML"))
-                    {
+                    if (!empty($model)) {
                         $model->title = CBSitePreferences::siteName();
                         $model->titleHTML = cbhtml($model->title);
-                        call_user_func($function, $model);
+                        CBPage::render($model);
                         return 1;
                     }
                 }
@@ -123,14 +121,9 @@ EOT;
                 if ($row) {
                     $canonicalEncodedPath = CBRequest::decodedPathToCanonicalEncodedPath($row->URI);
 
-                    if ($row->model && is_callable("{$row->className}::renderModelAsHTML")) {
+                    if ($row->model) {
                         $function = function() use ($row) {
-                            call_user_func("{$row->className}::renderModelAsHTML", $row->model);
-                            return 1;
-                        };
-                    } else if (is_callable("{$row->className}::renderAsHTMLForID")) {
-                        $function = function() use ($row) {
-                            call_user_func("{$row->className}::renderAsHTMLForID", $row->ID, $row->iteration);
+                            CBPage::render($row->model);
                             return 1;
                         };
                     }
@@ -186,7 +179,7 @@ EOT;
     }
 
     /**
-     * @return {stdClass} | false
+     * @return object|false
      */
     private static function pageRenderingDataForURI($URI) {
         $URIAsSQL   = CBDB::stringToSQL($URI);
