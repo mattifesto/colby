@@ -138,13 +138,13 @@ final class CBSitePreferences {
     }
 
     /**
-     * @return {stdClass}
+     * @return object
      */
-    public static function info() {
-        return CBModelClassInfo::specToModel((object)[
+    static function CBModelClassInfo_spec() {
+        return (object)[
             'pluralTitle' => 'Site Preferences',
-            'singularTitle' => 'Site Preferences'
-        ]);
+            'singularTitle' => 'Site Preferences',
+        ];
     }
 
     /**
