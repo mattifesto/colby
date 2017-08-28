@@ -8,7 +8,7 @@ final class CBArtworkView {
      *
      * @return string
      */
-    static function modelToSearchText(stdClass $model) {
+    static function CBModel_toSearchText(stdClass $model) {
         $searchText[] = CBModel::value($model, 'alternativeText', '');
         $searchText[] = CBModel::value($model, 'captionAsMarkdown', '');
 
@@ -157,8 +157,8 @@ final class CBArtworkView {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
@@ -177,7 +177,7 @@ final class CBArtworkView {
      *
      * @return stdClass
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
             'alternativeText' => CBModel::value($spec, 'alternativeText', '', 'trim'),

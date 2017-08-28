@@ -16,18 +16,25 @@
 final class CBImageLinkView {
 
     /**
-     * @return {string}|null
+     * @return [string]
      */
-    static function modelToSearchText(stdClass $model) {
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+    }
+
+    /**
+     * @return string|null
+     */
+    static function CBModel_toSearchText(stdClass $model) {
         return $model->alt;
     }
 
     /**
+     * @param object $model
+     *
      * @return null
      */
     static function CBView_render(stdClass $model) {
-        CBHTMLOutput::addCSSURL(self::URL('CBImageLinkViewHTML.css'));
-
         switch ($model->density) {
             case '2x':
                 $height = ceil($model->height / 2);
@@ -68,10 +75,12 @@ final class CBImageLinkView {
      *  {string}    URL     The image URL
      *  {int}       width   The width of the image in pixels
      *
-     * @return {stdClass}
+     * @return object
      */
-    static function specToModel(stdClass $spec) {
-        $model = (object)['className' => __CLASS__];
+    static function CBModel_toModel(stdClass $spec) {
+        $model = (object)[
+            'className' => __CLASS__,
+        ];
         $model->alt = isset($spec->alt) ? (string)$spec->alt : null;
         $model->altAsHTML = ColbyConvert::textToHTML($model->alt);
         $retina = CBModel::value($spec, 'retina', false);
@@ -84,15 +93,5 @@ final class CBImageLinkView {
         $model->width = isset($spec->width) ? (int)$spec->width : null;
 
         return $model;
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }

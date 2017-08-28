@@ -40,19 +40,6 @@ final class CBView {
     }
 
     /**
-     * @deprecated use CBModel::toSearchText()
-     */
-    static function modelToSearchText(stdClass $model) {
-        $className = CBModel::value($model, 'className', '');
-
-        if ($className != 'CBView') {
-            return CBModel::toSearchText($model);
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * @deprecated use (object)['className' => '<desired class name>']
      *
      * @return stdClass

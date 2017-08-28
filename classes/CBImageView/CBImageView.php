@@ -13,25 +13,28 @@
 final class CBImageView {
 
     /**
+     * @param object $model
+     *
      * @return bool
      */
-    static function modelHasImage(stdClass $model = null) {
+    static function modelHasImage(stdClass $model) {
         return !!$model->filename;
     }
 
     /**
+     * @param object $model
      * @return string
      */
-    static function modelToSearchText(stdClass $model = null) {
+    static function CBModel_toSearchText(stdClass $model) {
         return CBModel::value($model, 'alternativeTextViewModel.text', '', 'trim');
     }
 
     /**
-     * @param stdClass? $model
+     * @param object $model
      *
      * @return null
      */
-    static function CBView_render(stdClass $model = null) {
+    static function CBView_render(stdClass $model) {
         $styles = array();
 
         if ($model->displayHeight || $model->displayWidth) {
@@ -72,12 +75,14 @@ final class CBImageView {
     }
 
     /**
-     * @param stdClass? $spec
+     * @param object $spec
      *
-     * @return stdClass
+     * @return object
      */
-    static function specToModel(stdClass $spec = null) {
-        $model = CBView::modelWithClassName(__CLASS__);
+    static function CBModel_toModel(stdClass $spec) {
+        $model = (object)[
+            'className' => __CLASS__,
+        ];
         $model->actualHeight = isset($spec->actualHeight) ? $spec->actualHeight : null;
         $model->actualWidth = isset($spec->actualWidth) ? $spec->actualWidth : null;
         $model->displayHeight = isset($spec->displayHeight) ? $spec->displayHeight : null;
@@ -100,15 +105,5 @@ final class CBImageView {
         $model->alternativeTextViewModel = $textViewSpecToModel($altTextSpec);
 
         return $model;
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }

@@ -5,13 +5,20 @@ final class CBCustomView {
     /**
      * @param string? $model->customViewClassName
      *
-     * @return string
+     * @return string|null
      */
-    static function modelToSearchText(stdClass $model) {
-        if (!empty($model->customViewClassName) && is_callable($function = "{$model->customViewClassName}::modelToSearchText")) {
-            return call_user_func($function , $model);
+    static function CBModel_toSearchText(stdClass $model) {
+        $customModel = CBModel::valueAsObject($model, 'properties');
+        $customViewClassName = CBModel::value($model, 'customViewClassName', '', 'trim');
+
+        if (!empty($customViewClassName)) {
+            $customModel->className = $customViewClassName;
+        }
+
+        if (CBModel::value($customModel, 'className') !== __CLASS__) {
+            return CBModel::toSearchText($customModel);
         } else {
-            return '';
+            return null;
         }
     }
 
@@ -32,14 +39,14 @@ final class CBCustomView {
      * @return null
      */
     static function CBView_render(stdClass $model) {
-        $modelToRender = CBModel::valueAsObject($model, 'properties');
+        $customModel = CBModel::valueAsObject($model, 'properties');
         $customViewClassName = CBModel::value($model, 'customViewClassName', '', 'trim');
 
         if (!empty($customViewClassName)) {
-            $modelToRender->className = $customViewClassName;
+            $customModel->className = $customViewClassName;
         }
 
-        CBView::render($modelToRender);
+        CBView::render($customModel);
     }
 
     /**
@@ -49,7 +56,7 @@ final class CBCustomView {
      *
      * @return stdClass
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
             'customViewClassName' => CBModel::value($spec, 'customViewClassName', '', 'trim'),
