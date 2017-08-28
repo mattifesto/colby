@@ -46,7 +46,7 @@ final class CBTestPage {
      *
      * @return null
      */
-    static function CBVIew_render(stdClass $model) {
+    static function CBPage_render(stdClass $model) {
         $titleAsHTML = CBModel::value($model, 'title', '', 'cbhtml');
 
         CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForResponsivePages';
