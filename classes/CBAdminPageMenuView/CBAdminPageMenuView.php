@@ -43,7 +43,7 @@ final class CBAdminPageMenuView {
      *
      * @return null
      */
-    public static function renderModelAsHTML(stdClass $model = null) {
+    public static function CBView_render(stdClass $model = null) {
 
         /**
          * The `Colby::findFile` function is used so that the website can

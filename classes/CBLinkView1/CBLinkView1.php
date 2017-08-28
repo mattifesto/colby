@@ -7,7 +7,7 @@ final class CBLinkView1 {
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         if (empty($model->image)) {
             echo '<!-- CBLinkView1: no image specified -->';
             return;

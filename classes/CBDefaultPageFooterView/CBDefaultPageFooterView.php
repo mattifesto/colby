@@ -5,7 +5,7 @@ final class CBDefaultPageFooterView {
     /**
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         ?>
 
         <footer class="CBDefaultPageFooterView CBDarkTheme">

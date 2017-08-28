@@ -31,7 +31,7 @@ final class CBCustomView {
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         $modelToRender = CBModel::valueAsObject($model, 'properties');
         $customViewClassName = CBModel::value($model, 'customViewClassName', '', 'trim');
 

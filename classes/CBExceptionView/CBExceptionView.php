@@ -12,7 +12,7 @@ final class CBExceptionView {
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         if (empty($model->exception)) {
             return;
         }

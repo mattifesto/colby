@@ -33,7 +33,7 @@ final class CBArtworkView {
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         if (empty($model->image)) {
             echo '<!-- CBArtworkView without an image. -->';
             return;

@@ -31,7 +31,7 @@ final class CBImageView {
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model = null) {
+    static function CBView_render(stdClass $model = null) {
         $styles = array();
 
         if ($model->displayHeight || $model->displayWidth) {

@@ -25,8 +25,8 @@ final class CBArtworkElement {
     }
 
     /**
-     * @NOTE: 2017.07.16 This class does not have a renderModelAsHTML() function
-     *        because it is note meant to be used with a model. It is just
+     * @NOTE: 2017.07.16 This class does not have a CBView_render() function
+     *        because it is not meant to be used with a model. It is just
      *        supposed to be a set of functions. However, it does have a
      *        required style sheet so it adds itself as a required class name.
      *

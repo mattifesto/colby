@@ -25,7 +25,7 @@ final class CBImageLinkView {
     /**
      * @return null
      */
-    public static function renderModelAsHTML(stdClass $model) {
+    public static function CBView_render(stdClass $model) {
         CBHTMLOutput::addCSSURL(self::URL('CBImageLinkViewHTML.css'));
 
         switch ($model->density) {

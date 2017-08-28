@@ -49,7 +49,7 @@ EOT;
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         if (empty($model->classNameForKind)) {
             echo '<!-- CBPageListView2 with no classNameForKind -->';
             return;

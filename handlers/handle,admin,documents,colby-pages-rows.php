@@ -87,7 +87,7 @@ CBHTMLOutput::render();
  */
 final class UnpublishedPagesWithURIsView {
 
-    public static function renderModelAsHTML(stdClass $model = null) {
+    static function CBView_render(stdClass $model = null) {
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`archiveID`)), `className`, `classNameForKind`, `titleHTML`, `URI`

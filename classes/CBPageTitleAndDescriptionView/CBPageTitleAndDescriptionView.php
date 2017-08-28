@@ -12,7 +12,7 @@ final class CBPageTitleAndDescriptionView {
      *
      * @return null
      */
-    static function renderModelAsHTML(stdClass $model = null) {
+    static function CBView_render(stdClass $model = null) {
         $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
 
         if (!in_array('custom', $CSSClassNames)) {
