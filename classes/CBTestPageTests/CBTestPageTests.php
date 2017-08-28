@@ -36,6 +36,27 @@ final class CBTestPageTests {
             throw new Exception('The test page does not exist in the `ColbyPages` table.');
         }
 
+        /* test search text */
+
+        $searchText = CBDB::SQLToValue("SELECT `searchText` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
+
+        if (!preg_match('/^Hello, world! A test page for/', $searchText)) {
+            throw new Exception("The test doesn't recognize the page search text: {$searchText}");
+        }
+
+        /* test render */
+
+        $model = CBModels::fetchModelByID($ID);
+
+        try {
+            ob_start();
+            CBPage::render($model);
+            ob_end_clean();
+        } catch (Throwable $throwable) {
+            ob_end_clean();
+            throw $throwable;
+        }
+
         // Comment out the remaining lines of this function to leave the test
         // page in so that it can be viewed and searched for.
 
