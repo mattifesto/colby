@@ -5,21 +5,21 @@ final class CBImageLinkViewEditor {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function requiredClassNames() {
         return ['CBUI', 'CBUIBooleanEditor', 'CBUIImageUploader', 'CBUIImageURLView', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [CBImageLinkViewEditor::URL('CBImageLinkViewEditor.css')];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [CBImageLinkViewEditor::URL('CBImageLinkViewEditor.js')];
     }
 
@@ -28,7 +28,7 @@ final class CBImageLinkViewEditor {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

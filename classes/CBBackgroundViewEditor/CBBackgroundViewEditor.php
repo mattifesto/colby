@@ -5,28 +5,28 @@ final class CBBackgroundViewEditor {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function requiredClassNames() {
         return ['CBArrayEditor', 'CBImageEditor', 'CBUI', 'CBUIActionLink', 'CBUIBooleanEditor', 'CBUISpec', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [CBBackgroundViewEditor::URL('CBBackgroundViewEditor.css')];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [CBBackgroundViewEditor::URL('CBBackgroundViewEditor.js')];
     }
 
     /**
      * @return [[string, mixed]]
      */
-    public static function requiredJavaScriptVariables() {
+    static function requiredJavaScriptVariables() {
         return [
             ['CBBackgroundViewAddableViews', CBPagesPreferences::classNamesForAddableViews()]
         ];
@@ -37,7 +37,7 @@ final class CBBackgroundViewEditor {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

@@ -5,14 +5,14 @@ final class CBUIDropdown {
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 }

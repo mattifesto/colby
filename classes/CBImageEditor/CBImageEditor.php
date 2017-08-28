@@ -5,14 +5,14 @@ final class CBImageEditor {
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [CBSystemURL . '/javascript/CBImageEditorFactory.css'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [CBSystemURL . '/javascript/CBImageEditorFactory.js'];
     }
 }

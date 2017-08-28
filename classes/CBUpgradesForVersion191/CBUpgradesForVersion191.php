@@ -11,7 +11,7 @@ final class CBUpgradesForVersion191 {
     /**
      * @return null
      */
-    public static function run() {
+    static function run() {
         Colby::query('DROP TABLE IF EXISTS `CB' . 'PageLists`');
     }
 }

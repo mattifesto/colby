@@ -42,7 +42,7 @@ class DataStoreExplorer {
      *
      * @return array
      */
-    public static function dataStoreIDsForPart($hexPartIndex) {
+    static function dataStoreIDsForPart($hexPartIndex) {
         $dataStoreIDs           = array();
         $dataStoreDirectories   = glob(CBSiteDirectory . "/data/{$hexPartIndex}/*/*");
 
@@ -62,7 +62,7 @@ class DataStoreExplorer {
     /**
      * @return void
      */
-    public static function explorePart($partIndex, $data)
+    static function explorePart($partIndex, $data)
     {
         $hexPartIndex   = sprintf('%02x', $partIndex);
         $dataStoreIDs   = self::dataStoreIDsForPart($hexPartIndex);
@@ -82,7 +82,7 @@ class DataStoreExplorer {
      *
      * @return array
      */
-    public static function pageIDsForPart($hexPartIndex) {
+    static function pageIDsForPart($hexPartIndex) {
 
         /**
          * CONCAT has three parts:

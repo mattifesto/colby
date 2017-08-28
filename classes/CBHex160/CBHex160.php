@@ -10,14 +10,14 @@ final class CBHex160 {
      * @return bool
      *      Returns true if the value is a hex160; otherwise false.
      */
-    public static function is($value) {
+    static function is($value) {
         return preg_match('/[a-f0-9]{40}/', $value);
     }
 
     /**
      * @return {hex160}
      */
-    public static function random() {
+    static function random() {
         $bytes = openssl_random_pseudo_bytes(20);
         return bin2hex($bytes);
     }
@@ -29,7 +29,7 @@ final class CBHex160 {
      * @return string
      *      "UNHEX('<hex160>')" | "UNHEX('<hex160>'),UNHEX('<hex160>'),..."
      */
-    public static function toSQL($values) {
+    static function toSQL($values) {
         if (!is_array($values)) {
             $values = [$values];
         }

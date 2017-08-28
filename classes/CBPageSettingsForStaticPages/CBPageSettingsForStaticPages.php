@@ -5,14 +5,14 @@ final class CBPageSettingsForStaticPages {
     /**
      * @return  null
      */
-    public static function renderEndOfBodyContent() { ?>
+    static function renderEndOfBodyContent() { ?>
         <script src="<?= CBSystemURL ?>/javascript/Colby.js"></script>
     <?php }
 
     /**
      * @return  null
      */
-    public static function renderHeadContent() { ?>
+    static function renderHeadContent() { ?>
         <script src="<?= CBSystemURL ?>/javascript/html5shiv.js"></script>
         <script src="<?= CBSystemURL ?>/javascript/ColbyEqualize.js"></script>
         <link rel="stylesheet" href="<?= CBSystemURL ?>/css/equalize.css">
@@ -31,7 +31,7 @@ final class CBPageSettingsForStaticPages {
     /**
      * @return  null
      */
-    public static function renderStartOfBodyContent() {
+    static function renderStartOfBodyContent() {
         $googleTagManagerID = CBSitePreferences::googleTagManagerID();
 
         if ($googleTagManagerID !== '') { ?>

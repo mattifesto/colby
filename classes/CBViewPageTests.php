@@ -5,7 +5,7 @@ final class CBViewPageTests {
     /**
      * @return null
      */
-    public static function saveTest() {
+    static function saveTest() {
         $ID                     = '697f4e4cb46436f5c204e495caff5957d4d62a31';
         $kind                   = 'CBViewPageTestPages';
 

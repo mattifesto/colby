@@ -8,14 +8,14 @@ class CBEmptyPageTemplate {
     /**
      * @return stdClass
      */
-    public static function model() {
+    static function model() {
         return (object)['className' => 'CBViewPage'];
     }
 
     /**
      * @return string
      */
-    public static function title() {
+    static function title() {
         return 'Empty Page';
     }
 }

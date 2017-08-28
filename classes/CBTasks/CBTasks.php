@@ -9,7 +9,7 @@ final class CBTasks {
      *
      * @return null
      */
-    public static function add($className, $function, array $argsArray, $priority = 0) {
+    static function add($className, $function, array $argsArray, $priority = 0) {
         $classNameAsSQL = CBDB::stringToSQL($className);
         $functionAsSQL = CBDB::stringToSQL($function);
         $priorityAsSQL = (int)$priority;
@@ -35,7 +35,7 @@ EOT;
     /**
      * @return null
      */
-    public static function doTask() {
+    static function doTask() {
         $startedAsSQL = time();
         $starter = CBHex160::random();
         $starterAsSQL = CBHex160::toSQL($starter);
@@ -112,7 +112,7 @@ EOT;
     /**
      * @return null
      */
-    public static function doTaskForAjax() {
+    static function doTaskForAjax() {
         $response = new CBAjaxResponse();
 
         CBTasks::doTask();
@@ -136,14 +136,14 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function doTaskForAjaxPermissions() {
+    static function doTaskForAjaxPermissions() {
         return (object)['group' => 'Public'];
     }
 
     /**
      * @return null
      */
-    public static function fetchTasksForAjax() {
+    static function fetchTasksForAjax() {
         $response = new CBAjaxResponse();
 
         $SQL =<<<EOT
@@ -161,14 +161,14 @@ EOT;
     /**
      * return stdClass
      */
-    public static function fetchTasksForAjaxPermissions() {
+    static function fetchTasksForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
     /**
      * @return null
      */
-    public static function getStatusForAjax() {
+    static function getStatusForAjax() {
         $response = new CBAjaxResponse();
 
         $response->pendingTaskCount = CBDB::SQLToValue('SELECT COUNT(*) FROM `CBTasks`');
@@ -184,14 +184,14 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function getStatusForAjaxPermissions() {
+    static function getStatusForAjaxPermissions() {
         return (object)['group' => 'Public'];
     }
 
     /**
      * @return null
      */
-    public static function install() {
+    static function install() {
         $SQL = <<<EOT
 
         CREATE TABLE IF NOT EXISTS `CBTasks` (

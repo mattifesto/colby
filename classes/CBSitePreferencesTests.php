@@ -5,7 +5,7 @@ final class CBSitePreferencesTests {
     /**
      * @return null
      */
-    public static function test() {
+    static function test() {
         $value = CBSitePreferences::debug();
 
         if (!is_bool($value)) {

@@ -46,7 +46,7 @@ class CBImages {
      * @return {string} | false
      *  The original image filepath or false if the image doesn't exist
      */
-    public static function IDToOriginalFilepath($ID) {
+    static function IDToOriginalFilepath($ID) {
         $filepaths = glob($s = CBDataStore::filepath([
             'ID' => $ID,
             'filename' => 'original.*'
@@ -217,7 +217,7 @@ EOT;
      * @return {string} | false
      *  The image filepath for false if an image with this ID doesn't exist
      */
-    public static function makeImage($ID, $operation = null) {
+    static function makeImage($ID, $operation = null) {
         error_log('Call made to deprecated function: ' . __METHOD__);
         $originalImageFilepath = CBImages::IDToOriginalFilepath($ID);
 
@@ -472,7 +472,7 @@ EOT;
      *
      * @return null
      */
-    public static function uploadAndReduceForAjax() {
+    static function uploadAndReduceForAjax() {
         $response = new CBAjaxResponse();
 
         $image = CBImages::uploadImageWithName('image');
@@ -531,7 +531,7 @@ EOT;
     /**
      * @return null
      */
-    public static function uploadAndReduceForAjaxPermissions() {
+    static function uploadAndReduceForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
@@ -554,7 +554,7 @@ EOT;
      *          [stdClass] sizes
      *      }
      */
-    public static function uploadForAjax() {
+    static function uploadForAjax() {
         $response = new CBAjaxResponse();
         $image = CBImages::uploadImageWithName('image');
         $basename = "{$image->filename}.{$image->extension}";
@@ -596,7 +596,7 @@ EOT;
     /**
      * @return null
      */
-    public static function uploadForAjaxPermissions() {
+    static function uploadForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 

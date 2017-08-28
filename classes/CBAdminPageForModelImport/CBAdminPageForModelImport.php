@@ -5,14 +5,14 @@ final class CBAdminPageForModelImport {
     /**
      * @return [string]
      */
-    public static function adminPageMenuNamePath() {
+    static function adminPageMenuNamePath() {
         return ['models', 'import'];
     }
 
     /**
      * @return stdClass
      */
-    public static function adminPagePermissions() {
+    static function adminPagePermissions() {
         return (object)['group' => 'Administrators'];
     }
 
@@ -65,7 +65,7 @@ final class CBAdminPageForModelImport {
      *
      * @return stdClass|null
      */
-    public static function objectFromCSVRowData($rowData, $columnData) {
+    static function objectFromCSVRowData($rowData, $columnData) {
         $fieldIndex = 0;
         $object = null;
 
@@ -91,21 +91,21 @@ final class CBAdminPageForModelImport {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function requiredClassNames() {
         return ['CBUI', 'CBUIActionLink', 'CBUITaskStatus'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
      * @return null
      */
-    public static function uploadDataFileForAjax() {
+    static function uploadDataFileForAjax() {
         $response = new CBAjaxResponse();
 
         if (strtolower(pathinfo($_FILES['dataFile']['name'], PATHINFO_EXTENSION)) !== 'csv') {
@@ -151,7 +151,7 @@ final class CBAdminPageForModelImport {
     /**
      * @return null
      */
-    public static function uploadDataFileForAjaxPermissions() {
+    static function uploadDataFileForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 }

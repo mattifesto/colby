@@ -2,7 +2,7 @@
 
 final class CBModelCacheTests {
 
-    public static function test() {
+    static function test() {
         Colby::query('START TRANSACTION');
 
         $ID     = CBHex160::random();

@@ -76,7 +76,7 @@ final class Colby {
      *
      * @return void
      */
-    public static function debugLog($message) {
+    static function debugLog($message) {
         if (self::siteIsBeingDebugged()) {
             error_log("Debug Log: {$message}");
         }
@@ -92,7 +92,7 @@ final class Colby {
      *  The data type of the returned data will match the data type that was
      *  passed into the `encrypt` function.
      */
-    public static function decrypt($cipherDataString) {
+    static function decrypt($cipherDataString) {
         $cipherData = unserialize($cipherDataString);
 
         if ($cipherData->version != 1) {
@@ -137,7 +137,7 @@ final class Colby {
      *  caller wants to take advantage of this fact, however it would probably
      *  be of little use to do so.
      */
-    public static function encrypt($data) {
+    static function encrypt($data) {
         $serializedData = serialize($data);
         $cipherData = new stdClass();
 
@@ -164,7 +164,7 @@ final class Colby {
      *
      * @return string
      */
-    public static function exceptionStackTrace($exception) {
+    static function exceptionStackTrace($exception) {
         ob_start();
 
         include(CBSystemDirectory . '/snippets/exception-stack-trace.php');
@@ -187,7 +187,7 @@ final class Colby {
      *
      * @return string | null
      */
-    public static function findFile($path, $returnFormat = Colby::returnAbsoluteFilename) {
+    static function findFile($path, $returnFormat = Colby::returnAbsoluteFilename) {
         foreach (self::$libraryDirectories as $libraryDirectory) {
             if ($libraryDirectory) {
                 $intraSiteFilename = "{$libraryDirectory}/{$path}";
@@ -217,7 +217,7 @@ final class Colby {
      *
      * @return string | null
      */
-    public static function findHandler($filename, $returnFormat = Colby::returnAbsoluteFilename) {
+    static function findHandler($filename, $returnFormat = Colby::returnAbsoluteFilename) {
         $path = "handlers/{$filename}";
         return self::findFile($path, $returnFormat);
     }
@@ -227,7 +227,7 @@ final class Colby {
      *
      * @return string | null
      */
-    public static function findSnippet($filename) {
+    static function findSnippet($filename) {
         $path = "snippets/{$filename}";
         return self::findFile($path);
     }
@@ -284,7 +284,7 @@ final class Colby {
      *
      * @return array
      */
-    public static function globFiles($pattern) {
+    static function globFiles($pattern) {
         $filenames = array();
 
         foreach (self::$libraryDirectories as $libraryDirectory) {
@@ -589,7 +589,7 @@ final class Colby {
      *
      * @return void
      */
-    public static function queries($sql) {
+    static function queries($sql) {
         $mysqli = Colby::mysqli();
         $indexOfTheSQLStatementWithAnError = 0;
         $theFirstSQLStatementWasSuccessful = $mysqli->multi_query($sql);
@@ -628,7 +628,7 @@ final class Colby {
      *
      * @return mysqli_result | boolean
      */
-    public static function query($SQL, $retryOnDeadlock = false) {
+    static function query($SQL, $retryOnDeadlock = false) {
         $mysqli = Colby::mysqli();
         $countOfDeadlocks = 0;
         $maxDeadlocks = 5;
@@ -656,7 +656,7 @@ final class Colby {
      *
      * @return {hex160}
      */
-    public static function random160() {
+    static function random160() {
         return CBHex160::random();
     }
 
@@ -733,7 +733,7 @@ final class Colby {
      *
      * @return {bool}
      */
-    public static function siteIsBeingDebugged() {
+    static function siteIsBeingDebugged() {
         return CBSitePreferences::debug();
     }
 
@@ -744,7 +744,7 @@ final class Colby {
      *
      * @return string
      */
-    public static function URLForJavaScriptForSiteClass($className) {
+    static function URLForJavaScriptForSiteClass($className) {
         return CBSitePreferences::siteURL() . "/classes/{$className}/{$className}.js";
     }
 }

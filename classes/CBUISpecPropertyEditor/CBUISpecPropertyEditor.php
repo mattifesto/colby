@@ -11,21 +11,21 @@ final class CBUISpecPropertyEditor {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function requiredClassNames() {
         return ['CBUI', 'CBUIActionLink', 'CBUISpec'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [CBUISpecPropertyEditor::URL('CBUISpecPropertyEditor.css')];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [CBUISpecPropertyEditor::URL('CBUISpecPropertyEditor.js')];
     }
 
@@ -34,7 +34,7 @@ final class CBUISpecPropertyEditor {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

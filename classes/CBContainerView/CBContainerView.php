@@ -23,7 +23,7 @@ final class CBContainerView {
      *
      * @return string
      */
-    public static function imageThemeIDToStyleSheetURL($imageThemeID) {
+    static function imageThemeIDToStyleSheetURL($imageThemeID) {
         return CBDataStore::toURL([
             'ID' => $imageThemeID,
             'filename' => 'CBContainerViewImageSetTheme.css',

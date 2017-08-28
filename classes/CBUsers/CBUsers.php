@@ -5,7 +5,7 @@ final class CBUsers {
     /**
      * @return null
      */
-    public static function install() {
+    static function install() {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `ColbyUsers` (

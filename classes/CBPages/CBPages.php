@@ -11,7 +11,7 @@ class CBPages {
     /**
      * @return null
      */
-    public static function createPagesTable($args = []) {
+    static function createPagesTable($args = []) {
         $name = 'ColbyPages'; $temporary = false;
         extract($args, EXTR_IF_EXISTS);
 
@@ -72,7 +72,7 @@ EOT;
      *
      * @return null
      */
-    public static function deletePagesByID(array $IDs) {
+    static function deletePagesByID(array $IDs) {
         if (empty($IDs)) { return; }
 
         $IDsAsSQL = CBHex160::toSQL($IDs);
@@ -90,7 +90,7 @@ EOT;
      *
      * @return null
      */
-    public static function deletePagesFromTrashByID(array $IDs) {
+    static function deletePagesFromTrashByID(array $IDs) {
         if (empty($IDs)) { return; }
 
         $IDsAsSQL = CBHex160::toSQL($IDs);
@@ -106,7 +106,7 @@ EOT;
      *
      * @return null
      */
-    public static function fetchPageListForAjax() {
+    static function fetchPageListForAjax() {
         $response = new CBAjaxResponse();
         $parameters = json_decode($_POST['parametersAsJSON']);
         $conditions = [];
@@ -197,7 +197,7 @@ EOT;
     /**
      * @return {stdClass}
      */
-    public static function fetchPageListForAjaxPermissions() {
+    static function fetchPageListForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
@@ -206,7 +206,7 @@ EOT;
      *
      * @return [{stdClass}]
      */
-    public static function fetchPageSummaryModelsByID($IDs) {
+    static function fetchPageSummaryModelsByID($IDs) {
         if (empty($IDs)) { return []; }
 
         $IDsAsSQL = CBHex160::toSQL($IDs);
@@ -218,7 +218,7 @@ EOT;
     /**
      * @return null
      */
-    public static function install() {
+    static function install() {
         CBPages::createPagesTable();
         CBPages::createPagesTable(['name' => 'CBPagesInTheTrash']);
         CBPagesPreferences::install();
@@ -287,7 +287,7 @@ EOT;
     /**
      * @return void
      */
-    public static function moveRowWithDataStoreIDToTheTrash($dataStoreID) {
+    static function moveRowWithDataStoreIDToTheTrash($dataStoreID) {
         $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
         $sql = <<<EOT
 
@@ -323,7 +323,7 @@ EOT;
     /**
      * @return void
      */
-    public static function recoverRowWithDataStoreIDFromTheTrash($dataStoreID) {
+    static function recoverRowWithDataStoreIDFromTheTrash($dataStoreID) {
         $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
         $SQL = <<<EOT
 
@@ -361,7 +361,7 @@ EOT;
      *
      * @return null
      */
-    public static function save(array $models) {
+    static function save(array $models) {
         $values = array_map('CBPages::modelToRowValues', $models);
         $values = implode(',', $values);
 
@@ -496,7 +496,7 @@ EOT;
      *
      * "////Piñata///Örtega Smith//" --> "piata/rtega-smith"
      */
-    public static function stringToDencodedURIPath($string) {
+    static function stringToDencodedURIPath($string) {
         $stubs = CBRequest::decodedPathToDecodedStubs($string);
         $stubs = array_map('ColbyConvert::textToStub', $stubs);
         $stubs = array_filter($stubs, function($stub) { return !empty($stub); });

@@ -5,7 +5,7 @@ final class CBDBTests {
     /**
      * @return null
      */
-    public static function hex160ToSQLTest() {
+    static function hex160ToSQLTest() {
         $hex160     = '88ae5c11bcb70f15a3ec446cc9144ada7e6e2838';
         $expected   = "UNHEX('{$hex160}')";
         $actual     = CBDB::hex160ToSQL($hex160);
@@ -44,7 +44,7 @@ final class CBDBTests {
      *
      * @return null
      */
-    public static function optionalTest() {
+    static function optionalTest() {
         $func       = CBDB::optional('CBDB::stringToSQL');
         $input      = ['Fred', '"Hello"', null];
         $expected   = ["'Fred'", "'\\\"Hello\\\"'", 'NULL'];
@@ -61,7 +61,7 @@ final class CBDBTests {
     /**
      * @return null
      */
-    public static function SQLToArrayTest() {
+    static function SQLToArrayTest() {
         $SQL = <<<EOT
 
             CREATE TEMPORARY TABLE `SQLToArrayTest`
@@ -103,7 +103,7 @@ EOT;
     /**
      * @return null
      */
-    public static function SQLToAssociativeArrayTest() {
+    static function SQLToAssociativeArrayTest() {
         $SQL = <<<EOT
 
             CREATE TEMPORARY TABLE `SQLToAssociativeArrayTest`
@@ -149,7 +149,7 @@ EOT;
     /**
      * @return null
      */
-    public static function SQLToValueTest() {
+    static function SQLToValueTest() {
         $SQL = <<<EOT
 
             CREATE TEMPORARY TABLE `SQLToValueTest`

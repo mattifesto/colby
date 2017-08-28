@@ -15,7 +15,7 @@ final class CBModelsPreferences {
     /**
      * @return [string]
      */
-    public static function classNamesOfEditableModels() {
+    static function classNamesOfEditableModels() {
         $model = CBModelCache::fetchModelByID(CBModelsPreferences::ID);
         return array_merge(CBModelsPreferences::defaultClassNamesOfEditableModels, $model->classNamesOfEditableModels);
     }
@@ -23,7 +23,7 @@ final class CBModelsPreferences {
     /**
      * @return stdClass
      */
-    public static function info() {
+    static function info() {
         return CBModelClassInfo::specToModel((object)[
             'pluralTitle' => 'Models Preferences',
             'singularTitle' => 'Models Preferences',
@@ -37,7 +37,7 @@ final class CBModelsPreferences {
      *
      * @return null
      */
-    public static function install() {
+    static function install() {
         $spec = CBModels::fetchSpecByID(CBModelsPreferences::ID);
 
         if ($spec === false) {
@@ -50,7 +50,7 @@ final class CBModelsPreferences {
     /**
      * @return stdClass
      */
-    public static function specToModel(stdClass $spec) {
+    static function specToModel(stdClass $spec) {
         $model = CBModels::modelWithClassName(__CLASS__);
 
         if (isset($spec->classNamesOfEditableModels)) {
@@ -68,7 +68,7 @@ final class CBModelsPreferences {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

@@ -2,7 +2,7 @@
 
 final class CBProjectionTests {
 
-    public static function test() {
+    static function test() {
         $projection = CBProjection::withSize(100, 200);
         $projection = CBProjection::scale($projection, 0.5);
 

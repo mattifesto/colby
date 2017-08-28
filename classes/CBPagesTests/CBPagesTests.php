@@ -5,7 +5,7 @@ final class CBPagesTests {
     /**
      * @return null
      */
-    public static function stringToDencodedURIPathTest() {
+    static function stringToDencodedURIPathTest() {
         $tests = [
             ['',                                    ''],
             ['///////',                             ''],

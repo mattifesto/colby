@@ -49,7 +49,7 @@ class ColbyMarkaroundParser
      *
      * @return ColbyMarkaroundParser
      */
-    public static function parserWithMarkaround($markaround)
+    static function parserWithMarkaround($markaround)
     {
         $parser = new ColbyMarkaroundParser();
         $parser->markaround = $markaround;

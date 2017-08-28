@@ -5,14 +5,14 @@ final class CBUIStringEditor {
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [CBUIStringEditor::URL('CBUIStringEditor.css')];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [CBUIStringEditor::URL('CBUIStringEditor.js')];
     }
 
@@ -21,7 +21,7 @@ final class CBUIStringEditor {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

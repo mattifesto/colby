@@ -9,14 +9,14 @@ final class CBAjaxContext {
      *
      * @return null
      */
-    public static function appendWarning($warning) {
+    static function appendWarning($warning) {
         CBAjaxContext::$warnings[] = $warning;
     }
 
     /**
      * @return [string]
      */
-    public static function warnings() {
+    static function warnings() {
         return CBAjaxContext::$warnings;
     }
 }

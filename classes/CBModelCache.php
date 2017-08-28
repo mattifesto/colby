@@ -13,7 +13,7 @@ final class CBModelCache {
      *
      * @return  null
      */
-    public static function cacheModelsByID(array $IDs) {
+    static function cacheModelsByID(array $IDs) {
         $IDsToFetch = array_unique(array_merge($IDs, self::$neededModelIDs));
         $IDsToFetch = array_filter($IDsToFetch, function($ID) {
             return CBModelCache::modelByID($ID) === false;
@@ -37,7 +37,7 @@ final class CBModelCache {
      *
      * @return stdClass|false
      */
-    public static function fetchModelByID($ID) {
+    static function fetchModelByID($ID) {
         CBModelCache::cacheModelsByID([$ID]);
         return CBModelCache::modelByID($ID);
     }
@@ -45,14 +45,14 @@ final class CBModelCache {
     /**
      * @return null
      */
-    public static function fetchModelLazilyByID($ID) {
+    static function fetchModelLazilyByID($ID) {
         self::$neededModelIDs[] = $ID;
     }
 
     /**
      * @return null
      */
-    public static function fetchModelsLazilyByID(array $IDs) {
+    static function fetchModelsLazilyByID(array $IDs) {
         self::$neededModelIDs = array_merge(self::$neededModelIDs, $IDs);
     }
 
@@ -62,14 +62,14 @@ final class CBModelCache {
      * @return  {stdClass} | false
      *  Returns the model if it's cached; otherwise false.
      */
-    public static function modelByID($ID) {
+    static function modelByID($ID) {
         return isset(CBModelCache::$cache[$ID]) ? CBModelCache::$cache[$ID] : false;
     }
 
     /**
      * @return null
      */
-    public static function uncacheModelsByID(array $IDs) {
+    static function uncacheModelsByID(array $IDs) {
         CBModelCache::$cache = array_filter(CBModelCache::$cache, function($key) use ($IDs) {
             return isset($IDs[$key]);
         }, ARRAY_FILTER_USE_KEY);

@@ -9,7 +9,7 @@ final class CBAdminPageMenuView {
     /**
      * @return void
      */
-    public static function renderMenu($menu, $selectedMenuItemName, $class) {
+    static function renderMenu($menu, $selectedMenuItemName, $class) {
 
         ?>
 
@@ -43,7 +43,7 @@ final class CBAdminPageMenuView {
      *
      * @return null
      */
-    public static function CBView_render(stdClass $model = null) {
+    static function CBView_render(stdClass $model = null) {
 
         /**
          * The `Colby::findFile` function is used so that the website can
@@ -100,7 +100,7 @@ final class CBAdminPageMenuView {
      *
      * @return stdClass
      */
-    public static function specToModel(stdClass $spec = null) {
+    static function specToModel(stdClass $spec = null) {
         $model                          = CBView::modelWithClassName(__CLASS__);
         $model->selectedMenuItemName    = isset($spec->selectedMenuItemName) ?
                                             (string)$spec->selectedMenuItemName : '';

@@ -12,7 +12,7 @@ class CBProjection {
      *
      * @return {stdClass} (projection)
      */
-    public static function applyOpString($projection, $opString) {
+    static function applyOpString($projection, $opString) {
         preg_match_all("/([a-z]+)([0-9]+(\.[0-9]+)?)/", $opString, $matches, PREG_SET_ORDER);
 
         foreach($matches as $op) {
@@ -63,7 +63,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function copyProjection($projection) {
+    static function copyProjection($projection) {
         $p              = new stdClass();
         $p->source      = CBRect::copyRect($projection->source);
         $p->destination = CBRect::copyRect($projection->destination);
@@ -74,7 +74,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function cropHeightFromCenter($projection, $height) {
+    static function cropHeightFromCenter($projection, $height) {
         if ($projection->destination->height > $height) {
             $d          = CBRect::copyRect($projection->destination);
             $d->height  = $height;
@@ -95,7 +95,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function cropLongEdgeFromCenter($projection, $length) {
+    static function cropLongEdgeFromCenter($projection, $length) {
         if ($projection->destination->height > $projection->destination->width) {
             return self::cropHeightFromCenter($projection, $length);
         } else {
@@ -106,7 +106,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function cropShortEdgeFromCenter($projection, $length) {
+    static function cropShortEdgeFromCenter($projection, $length) {
         if ($projection->destination->height < $projection->destination->width) {
             return self::cropHeightFromCenter($projection, $length);
         } else {
@@ -117,7 +117,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function cropWidthFromCenter($projection, $width) {
+    static function cropWidthFromCenter($projection, $width) {
         if ($projection->destination->width > $width) {
             $d          = CBRect::copyRect($projection->destination);
             $d->width   = $width;
@@ -160,7 +160,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function reduceHeight($projection, $height) {
+    static function reduceHeight($projection, $height) {
         $p              = new stdClass();
         $p->source      = CBRect::copyRect($projection->source);
         $p->destination = CBRect::reduceHeight($projection->destination, $height);
@@ -171,7 +171,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function reduceLongEdge($projection, $length) {
+    static function reduceLongEdge($projection, $length) {
         if ($projection->destination->height > $projection->destination->width) {
             return self::reduceHeight($projection, $length);
         } else {
@@ -182,7 +182,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function reduceShortEdge($projection, $length) {
+    static function reduceShortEdge($projection, $length) {
         if ($projection->destination->height < $projection->destination->width) {
             return self::reduceHeight($projection, $length);
         } else {
@@ -193,7 +193,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function reduceWidth($projection, $width) {
+    static function reduceWidth($projection, $width) {
         $p              = new stdClass();
         $p->source      = CBRect::copyRect($projection->source);
         $p->destination = CBRect::reduceWidth($projection->destination, $width);
@@ -204,7 +204,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function scale($projection, $factor) {
+    static function scale($projection, $factor) {
         $p = new stdClass();
         $p->source = CBRect::copyRect($projection->source);
         $p->destination = CBRect::copyRect($projection->destination);
@@ -217,7 +217,7 @@ class CBProjection {
     /**
      * @return stdClass (projection)
      */
-    public static function withSize($width, $height) {
+    static function withSize($width, $height) {
         $p              = new stdClass();
         $p->source      = CBRect::withSize($width, $height);
         $p->destination = CBRect::withSize($width, $height);

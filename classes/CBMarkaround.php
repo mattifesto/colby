@@ -24,7 +24,7 @@ final class CBMarkaround {
      *
      * @return string
      */
-    public static function markaroundToHTML($markaround) {
+    static function markaroundToHTML($markaround) {
         $parser = ColbyMarkaroundParser::parserWithMarkaround($markaround);
         return $parser->html();
     }
@@ -36,7 +36,7 @@ final class CBMarkaround {
      *
      * @return string
      */
-    public static function markaroundToText($markaround) {
+    static function markaroundToText($markaround) {
         return $markaround;
     }
 
@@ -123,14 +123,14 @@ final class CBMarkaround {
     /**
      * @return {string}
      */
-    public static function paragraphToHTML($paragraph) {
+    static function paragraphToHTML($paragraph) {
         return CBMarkaround::paragraphTo($paragraph, ['format' => 'HTML']);
     }
 
     /**
      * @return {string}
      */
-    public static function paragraphToText($paragraph) {
+    static function paragraphToText($paragraph) {
         return CBMarkaround::paragraphTo($paragraph, ['format' => 'text']);
     }
 
@@ -143,7 +143,7 @@ final class CBMarkaround {
      *
      * @return string
      */
-    public static function textToHTML($args) {
+    static function textToHTML($args) {
         $format = 'inline'; $text = '';
         extract($args);
 

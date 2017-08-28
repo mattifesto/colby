@@ -16,7 +16,7 @@ final class CBLog {
     /**
      * @return null
      */
-    public static function install() {
+    static function install() {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `CBLog` (
@@ -151,7 +151,7 @@ EOT;
     /**
      * return stdClass
      */
-    public static function fetchLogsForAjaxPermissions() {
+    static function fetchLogsForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
@@ -161,7 +161,7 @@ EOT;
      *
      * @return [stdClass]
      */
-    public static function entries($args = null) {
+    static function entries($args = null) {
         $whereAsSQL = [];
 
         if (isset($args->sinceTimestamp)) {

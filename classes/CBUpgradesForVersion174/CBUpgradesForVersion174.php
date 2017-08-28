@@ -12,7 +12,7 @@ class CBUpgradesForVersion174 {
     /**
      * @return null
      */
-    public static function run() {
+    static function run() {
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`ID`))

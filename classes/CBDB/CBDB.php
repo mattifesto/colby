@@ -19,7 +19,7 @@ final class CBDB {
     /**
      * @deprecated use `CBHex160::toSQL`
      */
-    public static function hex160ToSQL($values) {
+    static function hex160ToSQL($values) {
         return CBHex160::toSQL($values);
     }
 
@@ -34,7 +34,7 @@ final class CBDB {
      *
      * @return {function}
      */
-    public static function optional(callable $func) {
+    static function optional(callable $func) {
         return function($value) use ($func) {
             if ($value === null) {
                 return 'NULL';
@@ -57,7 +57,7 @@ final class CBDB {
      *
      * @return {array}
      */
-    public static function SQLToArray($SQL, $args = []) {
+    static function SQLToArray($SQL, $args = []) {
         $valueIsJSON = false;
         extract($args, EXTR_IF_EXISTS);
 
@@ -83,7 +83,7 @@ final class CBDB {
      *
      * @return mixed|false
      */
-    public static function SQLToValue($SQL, $args = []) {
+    static function SQLToValue($SQL, $args = []) {
         $valueIsJSON = false;
         extract($args, EXTR_IF_EXISTS);
 
@@ -104,7 +104,7 @@ final class CBDB {
      * Takes a SQL statement and returns an object for the first row.
      * @return {stdClass}|false
      */
-    public static function SQLToObject($SQL) {
+    static function SQLToObject($SQL) {
         $result = Colby::query($SQL);
         $row    = $result->fetch_object();
 
@@ -198,7 +198,7 @@ final class CBDB {
      *
      * return string
      */
-    public static function valueToOptionalTrimmedSQL($value) {
+    static function valueToOptionalTrimmedSQL($value) {
         $value = CBConvert::valueToOptionalTrimmedString($value);
         return ($value === null) ? 'NULL' : CBDB::stringToSQL($value);
     }

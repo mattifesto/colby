@@ -5,7 +5,7 @@ final class CBPagesTableSummaryView {
     /**
      * @return void
      */
-    public static function CBView_render(stdClass $model = null) {
+    static function CBView_render(stdClass $model = null) {
         CBHTMLOutput::addCSSURL(CBPagesTableSummaryView::URL('CBPagesTableSummaryView.css'));
 
         $publishedClause = ($model->type === 'published') ?
@@ -65,7 +65,7 @@ EOT;
     /**
      * @return {string}
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

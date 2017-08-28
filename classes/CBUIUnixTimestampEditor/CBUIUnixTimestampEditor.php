@@ -5,14 +5,14 @@ final class CBUIUnixTimestampEditor {
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [CBUIUnixTimestampEditor::URL('CBUIUnixTimestampEditor.css')];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [CBUIUnixTimestampEditor::URL('CBUIUnixTimestampEditor.js')];
     }
 
@@ -21,7 +21,7 @@ final class CBUIUnixTimestampEditor {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

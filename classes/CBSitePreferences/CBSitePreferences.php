@@ -65,7 +65,7 @@ final class CBSitePreferences {
      *
      * @return mixed|null
      */
-    public static function customValueForKey($key) {
+    static function customValueForKey($key) {
         $model = CBSitePreferences::model();
 
         if (isset($model->custom->{$key})) {
@@ -86,7 +86,7 @@ final class CBSitePreferences {
      *
      * @return bool
      */
-    public static function debug() {
+    static function debug() {
         $model = CBSitePreferences::model();
         return isset($model->debug) ? ($model->debug === true) : false;
     }
@@ -103,7 +103,7 @@ final class CBSitePreferences {
     /**
      * @return bool
      */
-    public static function disallowRobots() {
+    static function disallowRobots() {
         $model = CBSitePreferences::model();
         return isset($model->disallowRobots) ? ($model->disallowRobots === true) : false;
     }
@@ -119,7 +119,7 @@ final class CBSitePreferences {
      * @return string
      *  Returns an empty string if unset for legacy reasons.
      */
-    public static function googleTagManagerID() {
+    static function googleTagManagerID() {
         $model = CBSitePreferences::model();
         return empty($model->googleTagManagerID) ? '' : $model->googleTagManagerID;
     }
@@ -158,7 +158,7 @@ final class CBSitePreferences {
      *
      * @return null
      */
-    public static function install() {
+    static function install() {
         $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
 
         if ($spec === false) {
@@ -234,7 +234,7 @@ final class CBSitePreferences {
      *
      * @return null
      */
-    public static function modelsWillSave(array $tuples) {
+    static function modelsWillSave(array $tuples) {
         array_map(function($tuple) {
             $filepath   = CBDataStore::filepath([
                 'ID'        => $tuple->spec->ID,
@@ -291,7 +291,7 @@ final class CBSitePreferences {
     /**
      * @return string|null
      */
-    public static function reCAPTCHASecretKey() {
+    static function reCAPTCHASecretKey() {
         $model = CBSitePreferences::model();
         return empty($model->reCAPTCHASecretKey) ? null : $model->reCAPTCHASecretKey;
     }
@@ -299,7 +299,7 @@ final class CBSitePreferences {
     /**
      * @return string|null
      */
-    public static function reCAPTCHASiteKey() {
+    static function reCAPTCHASiteKey() {
         $model = CBSitePreferences::model();
         return empty($model->reCAPTCHASiteKey) ? null : $model->reCAPTCHASiteKey;
     }
@@ -332,7 +332,7 @@ final class CBSitePreferences {
      *
      * @return null
      */
-    public static function setFrontPageID($ID) {
+    static function setFrontPageID($ID) {
         if (!CBHex160::is($ID)) {
             throw new Exception("'{$ID}' is not a 160-bit hexadecimal value.");
         }
@@ -348,7 +348,7 @@ final class CBSitePreferences {
     /**
      * @return null
      */
-    public static function setFrontPageIDForAjax() {
+    static function setFrontPageIDForAjax() {
         $response = new CBAjaxResponse();
         $ID = $_POST['ID'];
 
@@ -397,7 +397,7 @@ final class CBSitePreferences {
     /**
      * @return stdClass
      */
-    public static function setFrontPageIDForAjaxPermissions() {
+    static function setFrontPageIDForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 

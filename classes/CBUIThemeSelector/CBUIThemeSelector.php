@@ -5,7 +5,7 @@ final class CBUIThemeSelector {
     /**
      * @return null
      */
-    public static function fetchThemeOptionsForAjax() {
+    static function fetchThemeOptionsForAjax() {
         $response = new CBAjaxResponse();
         $classNameForKind = $_POST['classNameForKind'];
 
@@ -42,21 +42,21 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function fetchThemeOptionsForAjaxPermissions() {
+    static function fetchThemeOptionsForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function requiredClassNames() {
         return ['CBUI', 'CBUISelector'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [CBUIThemeSelector::URL('CBUIThemeSelector.js')];
     }
 
@@ -65,7 +65,7 @@ EOT;
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

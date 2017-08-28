@@ -42,7 +42,7 @@ final class CBRequiredClassNamesResolver {
      *
      * @return [string]
      */
-    public static function resolveRequiredClassNames(array $classNames) {
+    static function resolveRequiredClassNames(array $classNames) {
         $resolver = new CBRequiredClassNamesResolver();
         $resolver->resolve($classNames);
 

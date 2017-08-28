@@ -5,7 +5,7 @@ final class CBTestPageTests {
     /**
      * @return null
      */
-    public static function test() {
+    static function test() {
         $ID = '1406f65b87c45a3927672cf3634a88d6daeca48b';
         $IDAsSQL = CBHex160::toSQL($ID);
         $countSQL = "SELECT COUNT(*) FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}";

@@ -31,7 +31,7 @@ final class ColbyRequest {
      *
      * @return int
      */
-    public static function currentIterationForPageID($ID) {
+    static function currentIterationForPageID($ID) {
         $IDAsSQL = CBHex160::toSQL($ID);
         $SQL = <<<EOT
 
@@ -47,7 +47,7 @@ EOT;
     /**
      * @return [{string}]
      */
-    public static function decodedStubs() {
+    static function decodedStubs() {
         return self::$decodedStubs;
     }
 
@@ -162,7 +162,7 @@ EOT;
     /**
      * @return null
      */
-    public static function initialize() {
+    static function initialize() {
         self::$originalEncodedPath = CBRequest::requestURIToOriginalEncodedPath();
         self::$decodedPath = urldecode(self::$originalEncodedPath);
         self::$decodedStubs = CBRequest::decodedPathToDecodedStubs(self::$decodedPath);
@@ -173,7 +173,7 @@ EOT;
      * @return bool
      *  Returns `true` if the current request is for the front page.
      */
-    public static function isForFrontPage()
+    static function isForFrontPage()
     {
         return !(count(self::$decodedStubs));
     }

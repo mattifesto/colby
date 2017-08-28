@@ -5,7 +5,7 @@ class CBUnitTestsForColbyConvert {
     /**
      * @return void
      */
-    public static function runAll() {
+    static function runAll() {
         self::runTestForLinesToParagraphs();
         self::runTestForTextToLines();
     }
@@ -13,7 +13,7 @@ class CBUnitTestsForColbyConvert {
     /**
      * return void
      */
-    public static function runTestForLinesToParagraphs() {
+    static function runTestForLinesToParagraphs() {
         $lines      = ['a', ' b ', ' ', '    ', '', '    c', '  d'];
         $expected   = ['a  b ', '    c   d'];
         $actual     = ColbyConvert::linesToParagraphs($lines);
@@ -28,7 +28,7 @@ class CBUnitTestsForColbyConvert {
     /**
      * return void
      */
-    public static function runTestForTextToLines() {
+    static function runTestForTextToLines() {
         $text       = "abc \r bcd \n cde \r\n def \n\r efg \r\n\r fgh \r\n\n ghi \r\r\n hij \r\n\r\n ijk";
         $expected   = ['abc ', ' bcd ', ' cde ', ' def ',
                        '', ' efg ', '', ' fgh ', '', ' ghi ', '', ' hij ', '', ' ijk'];

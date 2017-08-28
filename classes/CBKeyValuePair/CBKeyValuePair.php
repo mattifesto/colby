@@ -7,7 +7,7 @@ final class CBKeyValuePair {
      *
      * @return string|null
      */
-    public static function keyval($value) {
+    static function keyval($value) {
         $key = trim(strval($value));
 
         if (preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', $key)) {
@@ -22,7 +22,7 @@ final class CBKeyValuePair {
      *
      * @return stdClass
      */
-    public static function specToModel(stdClass $spec) {
+    static function specToModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
             'key' => CBModel::value($spec, 'key', null, 'CBKeyValuePair::keyval'),

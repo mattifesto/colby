@@ -5,21 +5,21 @@ class CBAdminPageForImages {
     /**
      * @return [string]
      */
-    public static function adminPageMenuNamePath() {
+    static function adminPageMenuNamePath() {
         return ['develop', 'images'];
     }
 
     /**
      * @return stdClass
      */
-    public static function adminPagePermissions() {
+    static function adminPagePermissions() {
         return (object)['group' => 'Developers'];
     }
 
     /**
      * @return void
      */
-    public static function adminPageRenderContent() {
+    static function adminPageRenderContent() {
         CBHTMLOutput::setTitleHTML('Images Administration');
         CBHTMLOutput::setDescriptionHTML('Tools to administer website images.');
     }
@@ -27,7 +27,7 @@ class CBAdminPageForImages {
     /**
      * @return null
      */
-    public static function fetchImagesForAjax() {
+    static function fetchImagesForAjax() {
         $response = new CBAjaxResponse();
         $SQL = <<<EOT
 
@@ -52,21 +52,21 @@ EOT;
     /**
      * @return void
      */
-    public static function fetchImagesForAjaxPermissions() {
+    static function fetchImagesForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 }

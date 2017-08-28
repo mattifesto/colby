@@ -8,7 +8,7 @@ final class CBUpgradesForVersion178 {
     /**
      * @return null
      */
-    public static function run() {
+    static function run() {
 
         // CBThemedTextViewTheme --> CBTheme
 

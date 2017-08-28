@@ -12,7 +12,7 @@ final class CBUpgradesForVersion188 {
     /**
      * @return null
      */
-    public static function run() {
+    static function run() {
         $SQL = <<<EOT
 
             UPDATE `ColbyPages`

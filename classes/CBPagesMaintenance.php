@@ -12,7 +12,7 @@ final class CBPagesMaintenance {
      *
      * @return null
      */
-    public static function cleanUnpublishedPagesForAjax() {
+    static function cleanUnpublishedPagesForAjax() {
         $response   = new CBAjaxResponse();
         $SQL        = <<<EOT
 
@@ -33,7 +33,7 @@ EOT;
     /**
      * @return {stdClass}
      */
-    public static function cleanUnpublishedPagesForAjaxPermissions() {
+    static function cleanUnpublishedPagesForAjaxPermissions() {
         return (object)['group' => 'Developers'];
     }
 }

@@ -63,7 +63,7 @@ final class CBHTMLOutput {
     /**
      * @return void
      */
-    public static function addJavaScriptSnippet($javaScriptSnippetFilename)
+    static function addJavaScriptSnippet($javaScriptSnippetFilename)
     {
         if (!in_array($javaScriptSnippetFilename, self::$javaScriptSnippetFilenames))
         {
@@ -74,7 +74,7 @@ final class CBHTMLOutput {
     /**
      * @return void
      */
-    public static function addJavaScriptSnippetString($snippetString)
+    static function addJavaScriptSnippetString($snippetString)
     {
         self::$javaScriptSnippetStrings[] = $snippetString;
     }
@@ -112,7 +112,7 @@ final class CBHTMLOutput {
     /**
      * @return void
      */
-    public static function begin()
+    static function begin()
     {
         ob_start();
 
@@ -124,7 +124,7 @@ final class CBHTMLOutput {
     /**
      * @return void
      */
-    public static function exportConstant($name)
+    static function exportConstant($name)
     {
         self::exportVariable($name, constant($name));
     }
@@ -132,7 +132,7 @@ final class CBHTMLOutput {
     /**
      * @return void
      */
-    public static function exportListItem($listName, $itemKey, $itemValue)
+    static function exportListItem($listName, $itemKey, $itemValue)
     {
         $itemValue = json_encode($itemValue);
 
@@ -148,7 +148,7 @@ final class CBHTMLOutput {
     /**
      * @return void
      */
-    public static function exportVariable($name, $value)
+    static function exportVariable($name, $value)
     {
         $value = json_encode($value);
 
@@ -356,7 +356,7 @@ final class CBHTMLOutput {
      *
      * @return null
      */
-    public static function render404() {
+    static function render404() {
         self::reset();
         include Colby::findFile('handlers/handle-default.php');
         exit;
@@ -439,7 +439,7 @@ final class CBHTMLOutput {
     /**
      * @return null
      */
-    public static function requireClassName($className) {
+    static function requireClassName($className) {
         if (!array_key_exists($className, self::$requiredClassNames)) {
             self::$requiredClassNames[$className] = true;
         }
@@ -482,7 +482,7 @@ final class CBHTMLOutput {
      *
      * @return null
      */
-    public static function setTitleHTML($titleHTML) {
+    static function setTitleHTML($titleHTML) {
         self::$titleHTML = $titleHTML;
     }
 
@@ -491,7 +491,7 @@ final class CBHTMLOutput {
      *
      * @return null
      */
-    public static function setDescriptionHTML($descriptionHTML) {
+    static function setDescriptionHTML($descriptionHTML) {
         self::$descriptionHTML = $descriptionHTML;
     }
 }

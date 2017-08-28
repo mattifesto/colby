@@ -15,7 +15,7 @@ final class CBPageContext {
     /**
      * @return stdClass
      */
-    public static function pop() {
+    static function pop() {
         return array_pop(self::$contexts);
     }
 
@@ -51,7 +51,7 @@ final class CBPageContext {
     /**
      * @return stdClass|false
      */
-    public static function current() {
+    static function current() {
         $context = end(self::$contexts);
 
         if (empty($context)) {

@@ -5,7 +5,7 @@ class ColbyConvert
     /**
      * @return string
      */
-    public static function centsIntToDollarsString($amountInCents)
+    static function centsIntToDollarsString($amountInCents)
     {
         $amountInCents = (int)$amountInCents;
 
@@ -30,7 +30,7 @@ class ColbyConvert
      *
      * @return int|null
      */
-    public static function centsStringToOptionalCentsInt($centsString) {
+    static function centsStringToOptionalCentsInt($centsString) {
         $centsString = trim($centsString);
 
         if (preg_match('/^[0-9]+$/', $centsString)) {
@@ -56,7 +56,7 @@ class ColbyConvert
      *
      * @return int
      */
-    public static function dollarsToCentsInt($amountInDollars)
+    static function dollarsToCentsInt($amountInDollars)
     {
         $amountInDollars = (string)$amountInDollars;
 
@@ -129,7 +129,7 @@ class ColbyConvert
      *
      * @return array
      */
-    public static function linesToParagraphs($lines) {
+    static function linesToParagraphs($lines) {
         $paragraphs = array_reduce($lines, function($carry, $string) {
             if (trim($string) == '') {
                 array_push($carry, array());
@@ -152,7 +152,7 @@ class ColbyConvert
      *
      * @return string
      */
-    public static function markaroundToHTML($markaround) {
+    static function markaroundToHTML($markaround) {
         Colby::debugLog('ColbyConvert::markaroundToHTML() has been deprecated.');
         return CBMarkaround::markaroundToHTML($markaround);
     }
@@ -162,7 +162,7 @@ class ColbyConvert
      *
      * @return string
      */
-    public static function textToFormattedContent($text) {
+    static function textToFormattedContent($text) {
         Colby::debugLog('ColbyConvert::textToFormattedContent() has been deprecated.');
         return CBMarkaround::markaroundToHTML($markaround);
     }
@@ -202,7 +202,7 @@ class ColbyConvert
      * @return array
      *  An array of strings.
      */
-    public static function textToLines($text) {
+    static function textToLines($text) {
         return preg_split('/(\r\n|\r|\n)/', $text);
     }
 
@@ -212,7 +212,7 @@ class ColbyConvert
      * @return string
      *  The $text parameter escaped for use in SQL.
      */
-    public static function textToSQL($text)
+    static function textToSQL($text)
     {
         return Colby::mysqli()->escape_string($text);
     }
@@ -253,7 +253,7 @@ class ColbyConvert
      *
      * common example: 'Piñata Örtega' --> 'piata-rtega'
      */
-    public static function textToStub($text) {
+    static function textToStub($text) {
         $stub = trim($text);
 
         $patterns =     array('/[\s-]+/', '/[^a-zA-Z0-9-]/', '/^-+/', '/-+$/', '/--+/');
@@ -282,7 +282,7 @@ class ColbyConvert
      *
      * @return string
      */
-    public static function textToTextWithVisibleWhitespace($text)
+    static function textToTextWithVisibleWhitespace($text)
     {
         return addcslashes($text, "\\\n\r\t");
     }
@@ -290,7 +290,7 @@ class ColbyConvert
     /**
      * @return string
      */
-    public static function timestampToFriendlyTime($timestamp)
+    static function timestampToFriendlyTime($timestamp)
     {
         $delta = time() - $timestamp;
 
@@ -408,7 +408,7 @@ class ColbyConvert
      *
      * @return string
      */
-    public static function timestampToLocalUserTime($timestamp)
+    static function timestampToLocalUserTime($timestamp)
     {
         $date = new DateTime("@{$timestamp}", new DateTimeZone('UTC'));
 
@@ -437,7 +437,7 @@ class ColbyConvert
      *
      * @returns string
      */
-    public static function timestampToOldBrowserReadableTime($timestamp)
+    static function timestampToOldBrowserReadableTime($timestamp)
     {
         /**
          * The `date` function will convert the timespan to the server's time
@@ -465,7 +465,7 @@ class ColbyConvert
     /**
      * @return string
      */
-    public static function timestampToRFC3339($timestamp)
+    static function timestampToRFC3339($timestamp)
     {
         return gmdate(DateTime::RFC3339, $timestamp);
     }
@@ -480,7 +480,7 @@ class ColbyConvert
      *
      * @return string
      */
-    public static function timestampToSQLDateTime($timestamp)
+    static function timestampToSQLDateTime($timestamp)
     {
         if (!$timestamp)
         {
@@ -500,7 +500,7 @@ class ColbyConvert
     /**
      * @return string
      */
-    public static function timestampToYearMonth($timestamp)
+    static function timestampToYearMonth($timestamp)
     {
         return gmdate('Ym', $timestamp);
     }

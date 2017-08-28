@@ -18,7 +18,7 @@ class CBRect {
     /**
      * @return stdClass (rect)
      */
-    public static function copyRect($rect) {
+    static function copyRect($rect) {
         $r          = new stdClass();
         $r->x       = $rect->x;
         $r->y       = $rect->y;
@@ -31,7 +31,7 @@ class CBRect {
     /**
      * @return stdClass (rect)
      */
-    public static function cropHeightFromCenter($rect, $height) {
+    static function cropHeightFromCenter($rect, $height) {
         $r = self::copyRect($rect);
 
         if ($r->height > $height) {
@@ -45,7 +45,7 @@ class CBRect {
     /**
      * @return stdClass (rect)
      */
-    public static function cropWidthFromCenter($rect, $width) {
+    static function cropWidthFromCenter($rect, $width) {
         $r = self::copyRect($rect);
 
         if ($r->width > $width) {
@@ -62,7 +62,7 @@ class CBRect {
      *
      * @return stdClass (rect)
      */
-    public static function reduceHeight($rect, $height) {
+    static function reduceHeight($rect, $height) {
         $r = self::copyRect($rect);
 
         if ($r->height > $height) {
@@ -79,7 +79,7 @@ class CBRect {
      *
      * @return stdClass (rect)
      */
-    public static function reduceWidth($rect, $width) {
+    static function reduceWidth($rect, $width) {
         $r = self::copyRect($rect);
 
         if ($r->width > $width) {
@@ -93,7 +93,7 @@ class CBRect {
     /**
      * @return stdClass (rect)
      */
-    public static function withSize($width, $height) {
+    static function withSize($width, $height) {
         $r          = new stdClass();
         $r->x       = 0;
         $r->y       = 0;

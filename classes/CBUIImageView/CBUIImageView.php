@@ -5,14 +5,14 @@ final class CBUIImageView {
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [CBUIImageView::URL('CBUIImageView.css')];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [CBUIImageView::URL('CBUIImageView.js')];
     }
 
@@ -21,7 +21,7 @@ final class CBUIImageView {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

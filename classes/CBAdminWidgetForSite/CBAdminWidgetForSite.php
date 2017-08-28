@@ -5,7 +5,7 @@ final class CBAdminWidgetForSite {
     /**
      * @return null
      */
-    public static function render() {
+    static function render() {
         $version = CBSiteVersionNumber;
         ?>
         <section class="widget">

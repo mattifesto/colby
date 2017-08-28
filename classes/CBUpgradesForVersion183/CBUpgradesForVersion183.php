@@ -10,7 +10,7 @@
  */
 class CBUpgradesForVersion183 {
 
-    public static function run() {
+    static function run() {
         $SQL = <<<EOT
 
             SELECT  COUNT(*)

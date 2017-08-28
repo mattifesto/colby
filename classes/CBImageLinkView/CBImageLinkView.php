@@ -18,14 +18,14 @@ final class CBImageLinkView {
     /**
      * @return {string}|null
      */
-    public static function modelToSearchText(stdClass $model) {
+    static function modelToSearchText(stdClass $model) {
         return $model->alt;
     }
 
     /**
      * @return null
      */
-    public static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model) {
         CBHTMLOutput::addCSSURL(self::URL('CBImageLinkViewHTML.css'));
 
         switch ($model->density) {
@@ -70,7 +70,7 @@ final class CBImageLinkView {
      *
      * @return {stdClass}
      */
-    public static function specToModel(stdClass $spec) {
+    static function specToModel(stdClass $spec) {
         $model = (object)['className' => __CLASS__];
         $model->alt = isset($spec->alt) ? (string)$spec->alt : null;
         $model->altAsHTML = ColbyConvert::textToHTML($model->alt);
@@ -91,7 +91,7 @@ final class CBImageLinkView {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

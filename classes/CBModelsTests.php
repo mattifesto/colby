@@ -32,7 +32,7 @@ final class CBModelsTests {
     /**
      * @return null
      */
-    public static function fetchModelByIDTest() {
+    static function fetchModelByIDTest() {
         Colby::query('START TRANSACTION');
         CBModelsTests::createTestEnvironment();
 
@@ -58,7 +58,7 @@ final class CBModelsTests {
     /**
      * @return null
      */
-    public static function fetchModelsByIDTest() {
+    static function fetchModelsByIDTest() {
         Colby::query('START TRANSACTION');
         CBModelsTests::createTestEnvironment();
 
@@ -100,7 +100,7 @@ final class CBModelsTests {
     /**
      * Tests the behavior of making a version for a new model
      */
-    public static function makeVersionsForUpdateTest() {
+    static function makeVersionsForUpdateTest() {
         $ID0 = '3222378291fdbc3b958f95c69e0233cda61cc0a8';
 
         Colby::query('START TRANSACTION');
@@ -131,7 +131,7 @@ final class CBModelsTests {
     /**
      * Tests the behavior of making a spec for a new model
      */
-    public static function makeSpecsForUpdateTest() {
+    static function makeSpecsForUpdateTest() {
         Colby::query('START TRANSACTION');
 
         $ID     = 'a5db2923b26175ef624aacbd3e4fe344bc317486';
@@ -161,7 +161,7 @@ final class CBModelsTests {
     /**
      * @return null
      */
-    public static function makeCustomSpecsForUpdateTest() {
+    static function makeCustomSpecsForUpdateTest() {
         Colby::query('START TRANSACTION');
 
         $ID     = '38ab6bc56796350379e0e579c38e95a97d7669a8';
@@ -194,7 +194,7 @@ final class CBModelsTests {
     /**
      * @return null
      */
-    public static function updateAndFetchTest() {
+    static function updateAndFetchTest() {
         Colby::query('START TRANSACTION');
 
         $ID                 = 'cc347c84af65b626520b6961612e5e6e8be7c8aa';
@@ -278,7 +278,7 @@ final class CBModelTest {
     /**
      * @return null
      */
-    public static function checkModelWithID(stdClass $model, $ID, $version = false) {
+    static function checkModelWithID(stdClass $model, $ID, $version = false) {
         if ($model->ID !== $ID) {
             throw new Exception(__METHOD__ . ' Incorrect model ID');
         }

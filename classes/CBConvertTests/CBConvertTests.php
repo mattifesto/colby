@@ -5,7 +5,7 @@ final class CBConvertTests {
     /**
      * @return null
      */
-    public static function textToStubTest() {
+    static function textToStubTest() {
         $text = ' ';
         $stub = ColbyConvert::textToStub($text);
 

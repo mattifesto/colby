@@ -94,7 +94,7 @@ final class CBViewPage {
     /**
      * @return stdClass
      */
-    public static function fetchSpecForAjaxPermissions() {
+    static function fetchSpecForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
 
@@ -103,7 +103,7 @@ final class CBViewPage {
      *
      * @return int|false
      */
-    public static function iterationForID($args) {
+    static function iterationForID($args) {
         $ID = null;
         extract($args, EXTR_IF_EXISTS);
 
@@ -118,7 +118,7 @@ final class CBViewPage {
      *
      * @return stdClass|null
      */
-    public static function modelContext() {
+    static function modelContext() {
         return self::$modelContext;
     }
 
@@ -127,7 +127,7 @@ final class CBViewPage {
      *
      * @return null
      */
-    public static function modelsWillDelete(array $IDs) {
+    static function modelsWillDelete(array $IDs) {
         CBPages::deletePagesByID($IDs);
         CBPages::deletePagesFromTrashByID($IDs);
     }
@@ -137,7 +137,7 @@ final class CBViewPage {
      *
      * @return null
      */
-    public static function modelsWillSave(array $tuples) {
+    static function modelsWillSave(array $tuples) {
         $models = array_map(function($tuple) { return $tuple->model; }, $tuples);
         CBPages::save($models);
     }
@@ -334,7 +334,7 @@ final class CBViewPage {
      *
      * @return stdClass|false
      */
-    public static function specWithID($ID, $iteration) {
+    static function specWithID($ID, $iteration) {
         $directory = CBDataStore::directoryForID($ID);
 
         if (is_file($filepath = "{$directory}/spec-{$iteration}.json")) {

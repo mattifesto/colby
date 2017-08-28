@@ -16,7 +16,7 @@ final class CBModels {
      *
      * @return null
      */
-    public static function createModelsTable($temporary = false) {
+    static function createModelsTable($temporary = false) {
         $name = $temporary ? 'CBModelsTemp' : 'CBModels';
         $options = $temporary ? 'TEMPORARY' : '';
         $SQL = <<<EOT
@@ -196,7 +196,7 @@ EOT;
      *
      * @return stdClass|false
      */
-    public static function fetchModelByID($ID) {
+    static function fetchModelByID($ID) {
         $models = self::fetchModelsByID([$ID]);
 
         if (empty($models)) {
@@ -214,7 +214,7 @@ EOT;
      *
      * @return [<hex160> => {stdClass}, ...]
      */
-    public static function fetchModelsByID(array $IDs) {
+    static function fetchModelsByID(array $IDs) {
         if (empty($IDs)) { return []; }
 
         $IDsAsSQL = CBHex160::toSQL($IDs);
@@ -240,7 +240,7 @@ EOT;
      *                  version.
      * Usage Frequency: Occasionally
      */
-    public static function fetchModelByIDWithVersion($ID, $version) {
+    static function fetchModelByIDWithVersion($ID, $version) {
         $IDAsSQL = CBHex160::toSQL($ID);
         $versionAsSQL = (int)$version;
         $SQL = <<<EOT
@@ -335,7 +335,7 @@ EOT;
      *
      * @return {stdClass} | false
      */
-    public static function fetchSpecByID($ID, $args = []) {
+    static function fetchSpecByID($ID, $args = []) {
         $specs = CBModels::fetchSpecsByID([$ID], $args);
 
         if (empty($specs)) {
@@ -353,7 +353,7 @@ EOT;
      *
      * @return [<hex160> => {stdClass}, ...]
      */
-    public static function fetchSpecsByID(array $IDs, $args = []) {
+    static function fetchSpecsByID(array $IDs, $args = []) {
         if (empty($IDs)) { return []; }
 
         $createSpecForIDCallback = null;
@@ -448,7 +448,7 @@ EOT;
     /**
      * @return null
      */
-    public static function install() {
+    static function install() {
         include __DIR__ . '/CBModelsInstall.php';
     }
 
@@ -489,7 +489,7 @@ EOT;
     /**
      * Creates a new model with a class name and optionally an ID.
      */
-    public static function modelWithClassName($className, $args = []) {
+    static function modelWithClassName($className, $args = []) {
         $ID = null;
         extract($args, EXTR_IF_EXISTS);
 
@@ -772,7 +772,7 @@ EOT;
     /**
      * @return stdClass
      */
-    public static function saveForAjaxPermissions() {
+    static function saveForAjaxPermissions() {
         return (object)['group' => 'Public'];
     }
 

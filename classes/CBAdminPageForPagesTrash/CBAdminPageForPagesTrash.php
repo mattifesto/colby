@@ -5,21 +5,21 @@ final class CBAdminPageForPagesTrash {
     /**
      * @return [string]
      */
-    public static function adminPageMenuNamePath() {
+    static function adminPageMenuNamePath() {
         return ['pages', 'trash'];
     }
 
     /**
      * @return stdClass
      */
-    public static function adminPagePermissions() {
+    static function adminPagePermissions() {
         return (object)['group' => 'Administrators'];
     }
 
     /**
      * @return null
      */
-    public static function adminPageRenderContent() {
+    static function adminPageRenderContent() {
         CBHTMLOutput::setTitleHTML('Pages Trash');
         CBHTMLOutput::setDescriptionHTML('Management of pages that are in the trash.');
     }
@@ -70,7 +70,7 @@ final class CBAdminPageForPagesTrash {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function requiredClassNames() {
         return ['CBUI'];
     }
 

@@ -8,7 +8,7 @@ final class CBGit {
      *  bool wasSuccessful
      * }
      */
-    public static function pull() {
+    static function pull() {
         $pwd = getcwd();
 
         chdir(CBSiteDirectory);
@@ -31,7 +31,7 @@ final class CBGit {
      *  bool wasSuccessful
      * }
      */
-    public static function submoduleUpdate() {
+    static function submoduleUpdate() {
         $pwd = getcwd();
 
         chdir(CBSiteDirectory);

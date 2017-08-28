@@ -5,7 +5,7 @@ class CBUnitTestsForColbyMarkaroundParser {
     /**
      * @return void
      */
-    public static function runAll() {
+    static function runAll() {
         self::orderedListTest();
         self::paragraphTest();
         self::unorderedListTest();
@@ -14,7 +14,7 @@ class CBUnitTestsForColbyMarkaroundParser {
     /**
      * @return void
      */
-    public static function orderedListTest()
+    static function orderedListTest()
     {
         $markaround = "17.5\" by 21.5\"";
         $expected   = "<p>17.5&quot; by 21.5&quot;\n";
@@ -32,7 +32,7 @@ class CBUnitTestsForColbyMarkaroundParser {
     /**
      * @return void
      */
-    public static function paragraphTest()
+    static function paragraphTest()
     {
         $markaround = "Hello *world!*";
         $expected   = "<p>Hello <b>world!</b>\n";
@@ -44,7 +44,7 @@ class CBUnitTestsForColbyMarkaroundParser {
     /**
      * @return void
      */
-    public static function unorderedListTest()
+    static function unorderedListTest()
     {
         $markaround = "-Hello";
         $expected   = "<ul>\n<li><p>Hello\n</ul>\n";
@@ -56,7 +56,7 @@ class CBUnitTestsForColbyMarkaroundParser {
     /**
      * @return void
      */
-    public static function verifyActualStringIsExpected($actual, $expected)
+    static function verifyActualStringIsExpected($actual, $expected)
     {
         if ($actual != $expected)
         {

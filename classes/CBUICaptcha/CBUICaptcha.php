@@ -5,14 +5,14 @@ final class CBUICaptcha {
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [
             'https://www.google.com/recaptcha/api.js',
             Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__),
@@ -22,7 +22,7 @@ final class CBUICaptcha {
     /**
      * @return [[string, mixed]]
      */
-    public static function requiredJavaScriptVariables() {
+    static function requiredJavaScriptVariables() {
         return [
             ['CBUICaptchaReCAPTCHASiteKey', CBSitePreferences::reCAPTCHASiteKey()],
         ];
@@ -31,7 +31,7 @@ final class CBUICaptcha {
     /**
      * @return bool
      */
-    public static function responseKeyIsValid($captchaResponseKey) {
+    static function responseKeyIsValid($captchaResponseKey) {
         $secretKey = CBSitePreferences::reCAPTCHASecretKey();
         $ch = curl_init();
 

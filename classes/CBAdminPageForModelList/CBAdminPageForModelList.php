@@ -5,7 +5,7 @@ final class CBAdminPageForModelList {
     /**
      * @return [string]
      */
-    public static function adminPageMenuNamePath() {
+    static function adminPageMenuNamePath() {
         return ['models', 'directory'];
     }
 

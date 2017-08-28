@@ -8,7 +8,7 @@ final class CBUISpec {
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [CBUISpec::URL('CBUISpec.js')];
     }
 
@@ -17,7 +17,7 @@ final class CBUISpec {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

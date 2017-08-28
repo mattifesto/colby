@@ -5,7 +5,7 @@
  */
 final class CBTheme {
 
-    public static function compareModels($model1, $model2) {
+    static function compareModels($model1, $model2) {
         $result = strcmp($model1->classNameForKind, $model2->classNameForKind);
 
         if ($result === 0) {
@@ -28,7 +28,7 @@ final class CBTheme {
      *
      * @return string
      */
-    public static function IDToCSSClass($ID) {
+    static function IDToCSSClass($ID) {
         if (empty($ID)) {
             return "NoTheme";
         } else {
@@ -41,7 +41,7 @@ final class CBTheme {
      *
      * @return [string]
      */
-    public static function IDToCSSClasses($ID) {
+    static function IDToCSSClasses($ID) {
         if (empty($ID)) {
             return ['NoTheme'];
         } else {
@@ -63,7 +63,7 @@ final class CBTheme {
      *
      * @return string
      */
-    public static function IDToCSSURL($ID) {
+    static function IDToCSSURL($ID) {
         if (empty($ID)) {
             return null;
         } else {
@@ -74,7 +74,7 @@ final class CBTheme {
     /**
      * @return stdClass
      */
-    public static function info() {
+    static function info() {
         return CBModelClassInfo::specToModel((object)[
             'pluralTitle' => 'Themes',
             'singularTitle' => 'Theme'
@@ -86,21 +86,21 @@ final class CBTheme {
      *
      * @return string
      */
-    public static function modelToSummaryText(stdClass $model) {
+    static function modelToSummaryText(stdClass $model) {
         return $model->classNameForKind;
     }
 
     /**
      * @return null
      */
-    public static function modelsWillSave(array $tuples) {
+    static function modelsWillSave(array $tuples) {
         CBTheme::modelsWillSaveWithClassName($tuples, __CLASS__);
     }
 
     /**
      * @return null
      */
-    public static function modelsWillSaveWithClassName(array $tuples, $className) {
+    static function modelsWillSaveWithClassName(array $tuples, $className) {
         array_walk($tuples, function ($tuple) use ($className) {
             CBDataStore::makeDirectoryForID($tuple->model->ID);
             $filepath = CBDataStore::filepath([
@@ -153,7 +153,7 @@ final class CBTheme {
      *
      * @return string
      */
-    public static function stylesTemplateToStylesCSS($template, $ID) {
+    static function stylesTemplateToStylesCSS($template, $ID) {
         $keyword = 'view';
         $escape = "\\\\{$keyword}";
         $hash = sha1($escape);
@@ -190,7 +190,7 @@ final class CBTheme {
      *
      * @return null
      */
-    public static function useThemeWithID($ID) {
+    static function useThemeWithID($ID) {
         if (empty($ID)) { return; }
 
         CBHTMLOutput::addCSSURL(CBTheme::IDToCSSURL($ID));

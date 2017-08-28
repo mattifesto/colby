@@ -25,21 +25,21 @@ final class CBViewPageInformationEditor {
     /**
      * @return [string]
      */
-    public static function requiredClassNames() {
+    static function requiredClassNames() {
         return ['CBUI', 'CBUIImageChooser', 'CBUISelector', 'CBUISpecPropertyEditor', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredCSSURLs() {
+    static function requiredCSSURLs() {
         return [CBViewPageInformationEditor::URL('CBViewPageInformationEditor.css')];
     }
 
     /**
      * @return [string]
      */
-    public static function requiredJavaScriptURLs() {
+    static function requiredJavaScriptURLs() {
         return [
             CBSystemURL . '/javascript/CBPageURIControl.js',
             CBSystemURL . '/javascript/CBPublicationControl.js',
@@ -51,7 +51,7 @@ final class CBViewPageInformationEditor {
     /**
      * @return [[string, mixed]]
      */
-    public static function requiredJavaScriptVariables() {
+    static function requiredJavaScriptVariables() {
         return [
             ['CBCurrentUserID', ColbyUser::currentUserId()],
             ['CBPageClassNamesForKinds', CBPagesPreferences::classNamesForKinds()],
@@ -67,7 +67,7 @@ final class CBViewPageInformationEditor {
      *
      * @return string
      */
-    public static function URL($filename) {
+    static function URL($filename) {
         $className = __CLASS__;
         return CBSystemURL . "/classes/{$className}/{$filename}";
     }

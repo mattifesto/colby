@@ -5,7 +5,7 @@ final class CBAdminPageForGeneral {
     /**
      * @return null
      */
-    public static function renderDuplicatePublishedURIWarnings() {
+    static function renderDuplicatePublishedURIWarnings() {
         $SQL = <<<EOT
 
             SELECT      `URI`
@@ -44,7 +44,7 @@ EOT;
     /**
      * @return null
      */
-    public static function renderDuplicatePublishedURIWarningForURI($URI) {
+    static function renderDuplicatePublishedURIWarningForURI($URI) {
         $URIAsSQL = CBDB::stringToSQL($URI);
         $SQL = <<<EOT
 

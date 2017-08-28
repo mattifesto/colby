@@ -41,7 +41,7 @@ final class CBConvert {
      *
      * @return string|null
      */
-    public static function stringToCSSBackgroundImage($string) {
+    static function stringToCSSBackgroundImage($string) {
         return CBConvert::stringToCSSValue($string);
     }
 
@@ -54,7 +54,7 @@ final class CBConvert {
      *
      * @return string|null
      */
-    public static function stringToCSSColor($string) {
+    static function stringToCSSColor($string) {
         return CBConvert::stringToCSSValue($string);
     }
 
@@ -64,7 +64,7 @@ final class CBConvert {
      *
      * @return string|null
      */
-    public static function stringToCSSValue($string) {
+    static function stringToCSSValue($string) {
         $value = str_replace([';', '"', "'"], '', trim($string));
         return empty($value) ? null : $value;
     }
