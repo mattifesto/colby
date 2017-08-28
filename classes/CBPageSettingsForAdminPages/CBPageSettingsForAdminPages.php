@@ -16,6 +16,7 @@ final class CBPageSettingsForAdminPages {
      */
     static function renderPageForException(/* Throwable */ $exception) {
          $model = (object)[
+             'className' => 'CBViewPage',
              'classNameForSettings' => 'CBPageSettingsForAdminPages',
              'titleHTML' => 'Exception',
              'layout' => (object)[
@@ -30,7 +31,7 @@ final class CBPageSettingsForAdminPages {
              ],
          ];
 
-         CBViewPage::renderModelAsHTML($model);
+         CBPage::render($model);
     }
 
     /**

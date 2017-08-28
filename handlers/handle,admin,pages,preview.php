@@ -25,7 +25,8 @@ if ($model === false) {
 
 EOT;
 
-    CBViewPage::renderModelAsHTML((object)[
+    CBPage::render((object)[
+        'className' => 'CBViewPage',
         'titleHTML' => 'Page Preview Error',
         'sections' => [
             (object)[
@@ -40,33 +41,5 @@ EOT;
 
     ]);
 } else {
-    $function = "{$model->className}::renderModelAsHTML";
-
-    if (is_callable($function)) {
-        call_user_func($function, $model);
-    } else {
-        $functionAsHTML = cbhtml($function);
-        $HTML = <<<EOT
-
-            <p>The function:
-            <pre>{$functionAsHTML}()</pre>
-            <p>is not callable for the page with this ID:
-            <pre>{$IDAsHTML}</pre>
-
-EOT;
-
-        CBViewPage::renderModelAsHTML((object)[
-            'titleHTML' => 'Page Preview Error',
-            'sections' => [
-                (object)[
-                    'className' => 'CBPageTitleAndDescriptionView',
-                ],
-                (object)[
-                    'className' => 'CBTextView2',
-                    'contentAsHTML' => $HTML,
-                    'CSSClassNames' => ['center'],
-                ],
-            ]
-        ]);
-    }
+    CBPage::render($model);
 }

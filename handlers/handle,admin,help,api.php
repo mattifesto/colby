@@ -40,6 +40,7 @@ EOT;
         }
 
         $model = (object)[
+            'className' => 'CBViewPage',
             'classNameForSettings' => 'CBPageSettingsForAdminPages',
             'titleHTML' => 'API',
             'descriptionHTML' => 'Optional APIs',
@@ -144,7 +145,7 @@ EOT
             ],
         ];
 
-        CBViewPage::renderModelAsHTML($model);
+        CBPage::render($model);
     }
 }
 

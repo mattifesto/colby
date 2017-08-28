@@ -8,6 +8,7 @@ $parsedown = new Parsedown();
 $contentAsCommonMark = file_get_contents(__DIR__ . '/handle,admin,help,caption-alternative-text.md');
 $contentAsHTML = $parsedown->text($contentAsCommonMark);
 $model = (object)[
+    'className' => 'CBViewPage',
     'classNameForSettings' => 'CBPageSettingsForAdminPages',
     'titleHTML' => 'Captions and Alternative Text Help',
     'layout' => (object)[
@@ -26,4 +27,4 @@ $model = (object)[
     ],
 ];
 
-CBViewPage::renderModelAsHTML($model);
+CBPage::render($model);

@@ -7,6 +7,7 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
 $contentAsMarkaround = file_get_contents(__DIR__ . '/handle,admin,help,markaround-syntax.markaround');
 $contentAsHTML = CBMarkaround::markaroundToHTML($contentAsMarkaround);
 $model = (object)[
+    'className' => 'CBViewPage',
     'classNameForSettings' => 'CBPageSettingsForAdminPages',
     'titleHTML' => 'Markaround Help',
     'layout' => (object)[
@@ -25,4 +26,4 @@ $model = (object)[
     ],
 ];
 
-CBViewPage::renderModelAsHTML($model);
+CBPage::render($model);
