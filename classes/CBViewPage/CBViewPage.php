@@ -194,48 +194,6 @@ final class CBViewPage {
     }
 
     /**
-     * @deprecated use renderModelAsHTML
-     *  Once all pages are saved to the CBModels table, this function will no
-     *  longer be called.
-     *
-     * @return null
-     */
-    public static function renderAsHTMLForID($ID, $iteration) {
-        $directory = CBDataStore::directoryForID($ID);
-
-        if (is_file($filepath = "{$directory}/model-{$iteration}.json")) {
-
-            // Pages edited after installing version 137 of Colby will have a
-            // model file saved for each iteration.
-
-        } else if (is_file($filepath = "{$directory}/render-model.json")) {
-
-            // If this file exists it means that this page was editing during
-            // a small window of time in which this was the name of the model
-            // file. Whenever a page is edited this file is deleted, but if
-            // the page hasn't been edited since that time it will still exist.
-
-        } else {
-
-            // If neither of the two previous files exist the name of the
-            // model file will be "model.json". TODO: It would be nice to
-            // create an update that would go through every view page and
-            // canonicalize this filename so that these final two conditions
-            // can be removed.
-
-            $filepath = "{$directory}/model.json";
-        }
-
-        $model = json_decode(file_get_contents($filepath));
-
-        if (empty($model->ID)) {
-            $model->ID = $model->dataStoreID;
-        }
-
-        CBViewPage::renderModelAsHTML($model);
-    }
-
-    /**
      * @param string? $model->titleHTML
      *
      *      This should be safe for HTML, but not contain actual HTML tags.
@@ -244,7 +202,7 @@ final class CBViewPage {
      *
      * @return null
      */
-    static function renderModelAsHTML($model) {
+    static function CBPage_render($model) {
         $model = CBViewPage::upgradeRenderModel($model);
 
         // The `upgradeRenderModel` function will return `false` when the query
