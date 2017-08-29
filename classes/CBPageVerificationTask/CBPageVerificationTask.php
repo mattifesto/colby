@@ -272,6 +272,19 @@ EOT;
 EOT;
 
         Colby::query($SQL);
+
+        $SQL = <<<EOT
+
+            DELETE      `CBTasks2`
+            FROM        `CBTasks2`
+            LEFT JOIN   `ColbyPages`
+            ON          `CBTasks2`.`ID` = `ColbyPages`.`archiveID`
+            WHERE       `CBTasks2`.`className` = 'CBPageVerificationTask' AND
+                        `ColbyPages`.`archiveID` IS NULL
+
+EOT;
+
+        Colby::query($SQL);
     }
 
     /**
