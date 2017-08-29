@@ -5,7 +5,7 @@ class CBJavaScript {
     /**
      * @return null
      */
-    static function reportErrorAjax(stdClass $args) {
+    static function CBAjax_reportError(stdClass $args) {
         $response = new CBAjaxResponse();
         $errorModel = CBModel::valueAsObject($args, 'errorModel');
         //$errorModel = (object)[];
@@ -83,7 +83,7 @@ class CBJavaScript {
     /**
      * @return object
      */
-    static function reportErrorGroup() {
+    static function CBAjax_reportError_group() {
         return 'Public';
     }
 
