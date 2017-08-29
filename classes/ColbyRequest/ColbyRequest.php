@@ -66,7 +66,7 @@ EOT;
         $countOfStubs = count(ColbyRequest::$decodedStubs);
         $function = null;
 
-        if (0 === $countOfStubs && CBRequest::callAjaxFunction()) {
+        if (0 === $countOfStubs && CBAjax::call()) {
             return;
         }
 
