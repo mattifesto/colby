@@ -1076,16 +1076,32 @@ Colby.CBTasks2DispatchAlways = false;
 Colby.CBTasks2DispatchDelay = 5000;
 
 document.addEventListener('DOMContentLoaded', function () {
+    var promise;
+
     dispatch();
 
     function dispatch() {
-        Colby.CBTasks2Promise =
-            Colby.fetchAjaxResponse("/api/?class=CBTasks2&function=dispatchNextTask")
-            .then(restart);
+        promise = Colby.fetchAjaxResponse("/api/?class=CBTasks2&function=dispatchNextTask")
+            .catch(onRejected)
+            .then(onFinally);
+
+        Colby.retain(promise);
     }
 
-    function restart(response) {
-        if (Colby.CBTasks2DispatchAlways || response.taskWasDispatched) {
+    function onRejected(error) {
+
+    }
+
+    function onFinally(response) {
+        Colby.release(promise);
+
+        var taskWasDispatched = true;
+
+        if (typeof response === "object") {
+            taskWasDispatched = response.taskWasDispatched;
+        }
+
+        if (Colby.CBTasks2DispatchAlways || taskWasDispatched) {
             setTimeout(dispatch, Colby.CBTasks2DispatchDelay);
         }
     }
