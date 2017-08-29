@@ -266,16 +266,14 @@ var CBPageList = {
      * @return undefined
      */
     handlePageElementTrashWasClicked: function(args) {
-        var formData = new FormData();
-        formData.append("dataStoreID", args.ID);
-
-        var promise = Colby.fetchAjaxResponse("/admin/pages/api/move-to-the-trash/", formData)
-            .then(onResolve, Colby.report)
+        var promise = Colby.callAjaxFunction("CBPages", "moveToTrash", { ID: args.ID })
+            .then(onFulfilled)
+            .catch(Colby.displayError)
             .then(onFinally, onFinally);
 
         Colby.retain(promise);
 
-        function onResolve(response) {
+        function onFulfilled(value) {
             args.element.parentElement.removeChild(args.element);
         }
 
