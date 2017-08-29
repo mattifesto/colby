@@ -357,6 +357,23 @@ EOT;
     }
 
     /**
+     * @param hex160 $args->ID
+     *
+     * @return bool
+     */
+    static function CBAjax_moveToTrash(stdClass $args) {
+        CBPages::moveRowWithDataStoreIDToTheTrash($args->ID);
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_moveToTrash_group() {
+        return 'Administrators';
+    }
+
+
+    /**
      * @param [{stdClass}] $models
      *
      * @return null
