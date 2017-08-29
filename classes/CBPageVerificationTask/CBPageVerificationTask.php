@@ -34,6 +34,7 @@ final class CBPageVerificationTask {
      * @return object
      */
     static function CBTasks2_Execute($ID) {
+        $title = 'CBPageVerificationTask';
         $messages = [];
         $resave = false;
         $severity = 8;
@@ -58,7 +59,8 @@ final class CBPageVerificationTask {
         $className = CBDB::SQLToValue("SELECT `className` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
 
         if (empty($className)) {
-            $messages[] = '(3) This page has no className';
+            $title .= ', no ColbyPages className';
+            $messages[] = 'This page has no value in the ColbyPages table\'s className column.';
             $severity = min(3, $severity);
             goto done;
         } else if ($className === 'CBViewPage') {
@@ -93,6 +95,9 @@ final class CBPageVerificationTask {
             $severity = min(4, $severity);
             goto done;
         }
+
+        $pageTitle = CBModel::value($data, 'model.title', '(no title)');
+        $messages[] = "Page Title: {$pageTitle}";
 
         /**
          * Page image issues addressed:
@@ -152,6 +157,7 @@ final class CBPageVerificationTask {
              */
 
             if (!CBImages::isInstance($data->spec->image->ID)) {
+                $title .= ', invalid image property';
                 $messages[] = '(3) The `image` property is set on the spec to an image that is not a valid CBImage instance.';
                 $severity = min(3, $severity);
             }
@@ -166,6 +172,21 @@ final class CBPageVerificationTask {
         if (!empty(CBPageVerificationTask::$messageContext)) {
             $messages[] = "View issues:\n" . implode("\n", CBPageVerificationTask::$messageContext);
             $severity = min(4, $severity);
+        }
+
+        /* test rendering */
+
+        try {
+            ob_start();
+            CBPage::render($data->model);
+            ob_end_clean();
+        } catch (Throwable $throwable) {
+            ob_end_clean();
+            $title .= ', rendering error';
+            $message = CBConvert::throwableToMessage($throwable);
+            $trace = $throwable->getTraceAsString();
+            $messages[] = "Rendering error: {$message}\n{$trace}";
+            $severity = min(3, $severity);
         }
 
         /* check for many old versions */
@@ -183,8 +204,10 @@ final class CBPageVerificationTask {
         }
 
         if (empty($messages)) {
-            $messages[] = "No issues";
+            $messages[] = "This page has no current issues";
         }
+
+        array_unshift($messages, $title);
 
         done:
 
