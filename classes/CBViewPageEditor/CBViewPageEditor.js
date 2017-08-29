@@ -112,6 +112,45 @@ var CBViewPageEditor = {
 
         CBViewPageEditor.handleTitleChanged({spec : args.spec});
 
+        editorContainer.appendChild(CBUI.createHalfSpace());
+
+        (function () {
+            var promise;
+
+            editorContainer.appendChild(CBUI.createButton({
+                text: 'Move to Trash',
+                callback: function () {
+                    if (promise !== undefined) {
+                        return;
+                    }
+
+                    if (window.confirm('Are you sure you want to move this page to the trash?')) {
+                        moveToTrash();
+                    }
+                },
+            }).element);
+
+            function moveToTrash() {
+                promise = Colby.callAjaxFunction("CBPages", "moveToTrash", { ID: args.spec.ID })
+                    .then(onFulfilled)
+                    .catch(Colby.displayError)
+                    .then(onFinally, onFinally);
+
+                Colby.retain(promise);
+            }
+
+            function onFulfilled(value) {
+                alert('The page is the trash. You will be redirected to pages administration.');
+
+                window.location = "/admin/page/?class=CBAdminPageForPagesFind";
+            }
+
+            function onFinally() {
+                Colby.release(promise);
+                promise = undefined;
+            }
+        })();
+
         return editorContainer;
     },
 
