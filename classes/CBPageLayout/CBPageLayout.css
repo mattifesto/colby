@@ -1,5 +1,28 @@
 .CBPageLayout {
+
+    /**
+     * This element will be the main element. It will be a child of the body
+     * element in between the header and the footer elements. The body element
+     * is a flexible box so that with short pages the header and the footer will
+     * be a the top and the bottom of the viewport. For that to happen, one of
+     * the elements in between has to be able to grow. When this layout is used,
+     * this element will be the only element in between, and this declaration
+     * allows it to grow.
+     */
+
     flex: 1 1 auto;
+}
+
+.CBPageLayout.center {
+
+    /**
+     * Occaisionally on pages with small content there is extra vertial white
+     * space and it is desirable to have the content vertically centered.
+     */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .CBPageLayout.endContentWithWhiteSpace {
