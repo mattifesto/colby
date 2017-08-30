@@ -41,7 +41,7 @@ html {
 
 .CBLightTheme {
     --CBBackgroundColor: hsl(0, 0%, 100%);
-    --CBBackgroundColor2: hsl(20, 30%, 97%);
+    --CBBackgroundColor2: hsl(20, 30%, 95%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
     --CBLineColor: hsla(20, 30%, 50%, 0.2);
     --CBTextColor: hsla(0, 0%, 0%, 0.8);
