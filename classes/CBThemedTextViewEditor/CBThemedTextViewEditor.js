@@ -17,6 +17,59 @@ var CBThemedTextViewEditor = {
         var element = document.createElement("div");
         element.className = "CBThemedTextViewEditor";
 
+        element.appendChild(CBUI.createButton({
+            text: "Convert to CBTextView2",
+            callback: function () {
+                var value;
+                var CSSClassNames = [];
+                var localCSSRulesets = [];
+
+                if (args.spec.center) {
+                    CSSClassNames.push("center");
+                }
+
+                value = args.spec.titleColor;
+                if (typeof value === "string" && (value = value.trim())) {
+                    localCSSRulesets.push("view > .content > h1:first-child { color: " + value + " }");
+                }
+
+                value = args.spec.contentColor;
+                if (typeof value === "string" && (value = value.trim())) {
+                    localCSSRulesets.push("view > .content { color: " + value + " }");
+                }
+
+                value = args.spec.stylesTemplate;
+                if (typeof value === "string" && (value = value.trim())) {
+                    localCSSRulesets.push(value);
+                }
+
+                var content = [];
+
+                value = args.spec.titleAsMarkaround;
+                if (typeof value === "string" && (value = value.trim())) {
+                    content.push("# " + value);
+                }
+
+                value = args.spec.contentAsMarkaround;
+                if (typeof value === "string" && (value = value.trim())) {
+                    content.push(value);
+                }
+
+                var spec = {
+                    className: "CBTextView2",
+                    contentAsCommonMark: content.join("\n\n"),
+                    CSSClassNames: CSSClassNames.join(" "),
+                    localCSSTemplate: localCSSRulesets.join("\n\n"),
+                };
+
+                var specAsJSON = JSON.stringify(spec);
+                localStorage.setItem("specClipboard", specAsJSON);
+
+                alert("The CBTextView2 is now on the clipboard. You can paste it after this view, compare the two and make revisions, then delete this view.");
+            },
+        }).element);
+
+        element.appendChild(CBUI.createHalfSpace());
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
