@@ -37,6 +37,31 @@
     line-height: 1.5;
 }
 
+/**
+ * Preformatted and code
+ */
+
+.CBTextView2_default code {
+    background-color: var(--CBBackgroundColor2);
+    padding: 0.2em 0.5em 0.3em;
+}
+
+.CBTextView2_default pre {
+    background-color: var(--CBBackgroundColor2);
+    border-radius: 5px;
+    padding: 0.8em 1.0em;
+    white-space: pre-wrap;
+}
+
+.CBTextView2_default pre > code {
+    background-color: transparent;
+    padding: 0;
+}
+
+/**
+ * Content elements
+ */
+
 .CBTextView2_default h1 {
     font-size: 1.5em;
 }
@@ -58,14 +83,6 @@
     font-style: italic;
 }
 
-.CBTextView2_default code {
-    color: var(--CBTextColorForLinks);
-}
-
-.CBTextView2_default pre code {
-    color: inherit;
-}
-
 .CBTextView2_default dd {
     padding: 0 3em;
 }
@@ -75,12 +92,6 @@
 .CBTextView2_default dd p {
     margin-bottom: 0.5em;
     margin-top: 0.5em;
-}
-
-.CBTextView2_default pre {
-    border-left: 0.2em solid var(--CBLineColor);
-    padding-left: 1em;
-    white-space: pre-wrap;
 }
 
 .CBTextView2_default b cite,
