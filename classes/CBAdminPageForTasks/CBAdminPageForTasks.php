@@ -25,28 +25,27 @@ final class CBAdminPageForTasks {
     }
 
     /**
-     * @return null
-     *
-     *      Ajax: {
-     *          recent: [object]
-     *          upcoming: [object]
-     *      }
+     * @return [object]
      */
-    static function fetchIssuesForAjax() {
-        $response = new CBAjaxResponse();
+    static function CBAjax_fetchIssues() {
+        $SQL = <<<EOT
 
-        $SQL = 'SELECT `output` FROM CBTasks2 WHERE `completed` IS NOT NULL AND `severity` < 8 ORDER BY `severity`';
-        $response->issues = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+            SELECT      `output`
+            FROM        `CBTasks2`
+            WHERE       `completed` IS NOT NULL AND
+                        `severity` < 8
+            ORDER BY    `severity`
 
-        $response->wasSuccessful = true;
-        $response->send();
+EOT;
+
+        return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
     }
 
     /**
-     * @return object
+     * @return string
      */
-    static function fetchIssuesForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function CBAjax_fetchIssues_group() {
+        return 'Administrators';
     }
 
     /**

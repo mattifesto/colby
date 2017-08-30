@@ -151,15 +151,15 @@ var CBAdminPageForTasks = {
             issuesElement.textContent = "";
             /* TODO: disable button */
 
-            var promise = Colby.fetchAjaxResponse("/api/?class=CBAdminPageForTasks&function=fetchIssues")
+            var promise = Colby.callAjaxFunction("CBAdminPageForTasks", "fetchIssues")
                 .then(onFulfilled)
                 .catch(onRejected)
                 .then(onFinally, onFinally);
 
             Colby.retain(promise);
 
-            function onFulfilled(response) {
-                response.issues.forEach(function (output) {
+            function onFulfilled(value) {
+                value.forEach(function (output) {
                     var message = output.message + "\n\n" + output.className + "\n" + output.taskID;
 
                     if (output.exception) {
