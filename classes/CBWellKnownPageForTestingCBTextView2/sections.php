@@ -19,6 +19,20 @@ is upgraded.
 
 For this reason, this is a great page to experiment with. However, it’s probably
 best not to publish the page on a production site.
+
+# Code
+
+Inline `code` elements will be formatted like `this.`
+
+```
+Preformatted code blocks
+will be formatted like this.
+
+10 FOR X=1 TO 5
+20 PRINT "Hello, world!"
+30 NEXT X
+```
+
 EOT
 ];
 
