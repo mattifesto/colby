@@ -44,7 +44,12 @@ var Colby = {
             args: args,
         }));
 
-        return Colby.fetchAjaxResponse("/", formData);
+        return Colby.fetchAjaxResponse("/", formData)
+            .then(onFulfilled);
+
+        function onFulfilled(response) {
+            return response.value;
+        }
     },
 
     /**
