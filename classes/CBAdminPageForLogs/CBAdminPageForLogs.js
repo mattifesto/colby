@@ -37,9 +37,9 @@ var CBAdminPageForLogs = {
                     message: message,
                     timestamp: log.timestamp,
                 }).element);
-
-                Colby.updateTimes();
             });
+
+            Colby.updateTimes();
         }
 
         function onRejected(error) {
