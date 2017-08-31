@@ -3,19 +3,6 @@
 final class CBModel {
 
     /**
-     * @param stdClass $args->spec
-     *
-     * @return null
-     */
-    static function importSpecForTask(stdClass $args) {
-        CBDB::transaction(function () use ($args) {
-            CBModels::save([$args->spec], /* force: */ true);
-        });
-
-        CBLog::addMessage('CBModel', 6, "A task was run to import a spec of class '{$model->className}'");
-    }
-
-    /**
      * This is the official way to convert a spec to a model.
      *
      * Reading this function will help developers understand the exact
