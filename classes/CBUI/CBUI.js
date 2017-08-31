@@ -19,7 +19,10 @@ var CBUI = {
         buttonElement.className = "button";
 
         function updateText(value) {
+            var previousValue = buttonElement.textContent;
             buttonElement.textContent = value;
+
+            return previousValue;
         }
 
         updateText(args.text);
