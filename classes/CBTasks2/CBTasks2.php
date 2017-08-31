@@ -13,6 +13,8 @@ final class CBTasks2 {
      */
     const defaultSeverity = 8;
 
+    private static $groupIDStack = [];
+
     /**
      * @return int
      */
@@ -304,6 +306,27 @@ EOT;
             return false;
         }
     }
+
+    /**
+     * @param hex160 $groupID
+     *
+     * @return int
+     */
+    static function groupIDPush($groupID) {
+        if (CBHex160::is($groupID)) {
+            return array_push(CBTasks2::$groupIDStack, $groupID);
+        } else {
+            throw new InvalidArgumentException('$groupID');
+        }
+    }
+
+    /**
+     * @return hex160|null
+     */
+    static function groupIDPop() {
+        array_pop(CBTasks2::$groupIDStack);
+    }
+
     /**
      * @param string $className
      * @param hex160 $ID
@@ -312,6 +335,13 @@ EOT;
      */
     static function modelID($className, $ID) {
         return sha1("CBTasks2 task with className: {$className} and ID: {$ID}");
+    }
+
+    /**
+     * See updateTasks
+     */
+    static function updateTask($className, $ID, $IDForGroup = null, $priority = null, $scheduled = null) {
+        return CBTasks2::updateTasks($className, [$ID], $IDForGroup, $priority, $scheduled);
     }
 
     /**
@@ -356,13 +386,13 @@ EOT;
      *
      * @return null
      */
-    static function updateTask($className, $ID, $IDForGroup = null, $priority = null, $scheduled = null) {
+    static function updateTasks($className, array $IDs, $IDForGroup = null, $priority = null, $scheduled = null) {
         $classNameAsSQL = CBDB::stringToSQL($className);
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDsAsSQL = array_map('CBHex160::toSQL', $IDs);
         $updates = [];
 
-        if ($IDForGroup !== null) {
-            $IDForGroupAsSQL = CBHex160::toSQL($IDForGroup);
+        if (($value = $IDForGroup) || ($value = end(CBTasks2::$groupIDStack))) {
+            $IDForGroupAsSQL = CBHex160::toSQL($value);
             $updates[] = "`IDForGroup` = {$IDForGroupAsSQL}";
         } else {
             $IDForGroupAsSQL = 'NULL';
@@ -397,12 +427,26 @@ EOT;
         }
 
         $updates = implode(',', $updates);
+        $values = [];
+
+        foreach ($IDsAsSQL as $IDAsSQL) {
+            $values[] = "({$classNameAsSQL}, {$IDAsSQL}, {$IDForGroupAsSQL}, NULL, {$priorityAsSQL}, {$scheduledAsSQL})";
+        }
+
+        $values = implode(',', $values);
+
+        /**
+         * INSERT ON DUPLICATE KEY UPDATE can be used here because `CBTasks2`
+         * has only one unique key. If this changes a temporary table must be
+         * used.
+         */
+
         $SQL = <<<EOT
 
             INSERT INTO `CBTasks2`
             (`className`, `ID`, `IDForGroup`, `output`, `priority`, `scheduled`)
             VALUES
-            ({$classNameAsSQL}, {$IDAsSQL}, {$IDForGroupAsSQL}, NULL, {$priorityAsSQL}, {$scheduledAsSQL})
+            {$values}
             ON DUPLICATE KEY UPDATE
             {$updates}
 
