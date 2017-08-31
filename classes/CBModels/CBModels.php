@@ -662,7 +662,11 @@ EOT;
         $modified = time();
 
         $tuples = array_map(function ($spec) use ($sharedClassName) {
-            $model = CBModel::specToModel($spec);
+            $model = CBModel::toModel($spec);
+
+            /**
+             * TODO: 2017.08.31 handle null model
+             */
 
             if ($model->className !== $sharedClassName) {
                 throw new Exception('All specs must have the same className.');
@@ -709,7 +713,13 @@ EOT;
             ];
         });
 
-        if (is_callable($function = "{$sharedClassName}::modelsWillSave")) {
+        if (is_callable($function = "{$sharedClassName}::CBModels_willSave")) {
+            $models = array_map(function ($tuple) {
+                return $tuple->model;
+            }, $tuples);
+
+            call_user_func($function, $models);
+        } else if (is_callable($function = "{$sharedClassName}::modelsWillSave")) {
             call_user_func($function, $tuples);
         }
 
