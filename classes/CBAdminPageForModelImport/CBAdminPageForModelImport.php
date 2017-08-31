@@ -119,7 +119,7 @@ final class CBAdminPageForModelImport {
                 throw new RuntimeException("The data file provided is empty");
             }
 
-            $argsArray = [];
+            $specs = [];
 
             while (($data = fgetcsv($handle)) !== false) {
                 $spec = CBAdminPageForModelImport::objectFromCSVRowData($data, $columns);
@@ -130,13 +130,17 @@ final class CBAdminPageForModelImport {
                         continue;
                     }
 
-                    $argsArray[] = (object)[
-                        'spec' => $spec,
-                    ];
+                    $specs[] = $spec;
                 }
             }
 
-            CBTasks::add('CBModel', 'importSpec', $argsArray, -1);
+            CBTasks2::groupIDPush(CBHex160::random());
+
+            CBDB::transaction(function () use ($specs) {
+                CBModels::save($specs, /* force: */ true);
+            });
+
+            CBTasks2::groupIDPop();
 
             fclose($handle);
         }
