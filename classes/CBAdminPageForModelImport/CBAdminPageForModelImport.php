@@ -40,6 +40,11 @@ final class CBAdminPageForModelImport {
             goto done;
         }
 
+        /**
+         * TODO: Separate specs into className groups to allow multiple class
+         *       names per file.
+         */
+
         CBDB::transaction(function () use ($spec) {
             CBModels::save([$spec], /* force: */ true);
         });

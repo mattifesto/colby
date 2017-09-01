@@ -16,8 +16,6 @@ var CBAdminPageForModelImport = {
         var element = document.createElement("div");
         element.className = "CBAdminPageForModelImport";
 
-
-
         /* import JSON */
 
         element.appendChild(CBUI.createHalfSpace());
@@ -35,23 +33,24 @@ var CBAdminPageForModelImport = {
         });
 
         jsonInputElement.addEventListener("change", function() {
-            var URL = "/api/?class=CBAdminPageForModelImport&function=importJSON";
-
             var formData = new FormData();
             formData.append("file", jsonInputElement.files[0]);
 
+            var promise = Colby.fetchAjaxResponse("/api/?class=CBAdminPageForModelImport&function=importJSON", formData)
+                .then(onFulfilled)
+                .catch(Colby.displayError)
+                .then(onFinally);
+
+            Colby.retain(promise);
+
             jsonInputElement.value = null;
 
-            CBAdminPageForModelImport.jsonPromise = Colby.fetchAjaxResponse(URL, formData)
-                .then(resolved, rejected);
-
-            function resolved(ajaxResponse) {
-                Colby.displayResponse(ajaxResponse);
+            function onFulfilled(response) {
+                Colby.alert("Imported successfully");
             }
 
-            function rejected(error) {
-                //Colby.report(error);
-                Colby.displayError(error);
+            function onFinally() {
+                Colby.release(promise);
             }
         });
 
