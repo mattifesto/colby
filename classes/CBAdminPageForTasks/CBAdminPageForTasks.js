@@ -30,14 +30,15 @@ var CBAdminPageForTasks = {
 
         buttonsElement.appendChild(CBUI.createButton({
             callback: function() {
-                var promise = Colby.fetchAjaxResponse("/api/?class=CBTaskForSample&function=start")
-                    .then(onFulfilled, Colby.displayError)
+                var promise = Colby.callAjaxFunction("CBTestTask", "start")
+                    .then(onFulfilled)
+                    .catch(Colby.displayError)
                     .then(onFinally, onFinally);
 
                 Colby.retain(promise);
 
                 function onFulfilled() {
-
+                    Colby.alert("CBTestTask started");
                 }
 
                 function onFinally() {
@@ -45,7 +46,7 @@ var CBAdminPageForTasks = {
                 }
 
             },
-            text: "Start CBTaskForSample",
+            text: "Start CBTestTask",
         }).element);
 
         buttonsElement.appendChild(CBUI.createButton({
