@@ -70,6 +70,7 @@ var CBAdminPageForModelImport = {
         var input = document.createElement("input");
         input.type = "file";
         input.style.display = "none";
+        section.appendChild(input);
 
         var actionLink = CBUIActionLink.create({
             "callback" : input.click.bind(input),
@@ -82,49 +83,14 @@ var CBAdminPageForModelImport = {
             fileInputElement : input,
         }));
 
-        element.appendChild(input);
         item = CBUI.createSectionItem();
         item.appendChild(actionLink.element);
-
         section.appendChild(item);
-
         element.appendChild(section);
 
         element.appendChild(CBUI.createHalfSpace());
 
         main.appendChild(element);
-    },
-
-    /**
-     * @param function args.enableActionLinkCallback
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    handleDataFileUploadRequestDidError : function(args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        Colby.displayResponse(response);
-
-        args.enableActionLinkCallback.call();
-    },
-
-    /**
-     * @param function args.enableActionLinkCallback
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    handleDataFileUploadRequestDidLoad : function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            Colby.alert("File uploaded successfully");
-        } else {
-            Colby.displayResponse(response);
-        }
-
-        args.enableActionLinkCallback.call();
     },
 
     /**
@@ -134,25 +100,29 @@ var CBAdminPageForModelImport = {
      *
      * @return undefined
      */
-    handleFileInputChanged : function(args) {
-        args.disableActionLinkCallback.call();
+    handleFileInputChanged: function (args) {
+        args.disableActionLinkCallback();
 
         var formData = new FormData();
         formData.append("dataFile", args.fileInputElement.files[0]);
 
         args.fileInputElement.value = null;
 
-        var xhr = new XMLHttpRequest();
-        xhr.onerror = CBAdminPageForModelImport.handleDataFileUploadRequestDidError.bind(undefined, {
-            enableActionLinkCallback : args.enableActionLinkCallback,
-            xhr : xhr,
-        });
-        xhr.onload = CBAdminPageForModelImport.handleDataFileUploadRequestDidLoad.bind(undefined, {
-            enableActionLinkCallback : args.enableActionLinkCallback,
-            xhr : xhr,
-        });
-        xhr.open("POST", "/api/?class=CBAdminPageForModelImport&function=uploadDataFile");
-        xhr.send(formData);
+        var promise = Colby.fetchAjaxResponse("/api/?class=CBAdminPageForModelImport&function=uploadDataFile", formData)
+            .then(onFulfilled)
+            .catch(Colby.displayError)
+            .then(onFinally);
+
+        Colby.retain(promise);
+
+        function onFulfilled(value) {
+            Colby.alert("File uploaded successfully");
+        }
+
+        function onFinally() {
+            Colby.release(promise);
+            args.enableActionLinkCallback();
+        }
     },
 };
 
