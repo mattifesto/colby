@@ -2,7 +2,6 @@
 /* globals
     CBUI,
     CBUIActionLink,
-    CBUITaskStatus,
     Colby */
 
 var CBAdminPageForModelImport = {
@@ -93,8 +92,6 @@ var CBAdminPageForModelImport = {
 
         element.appendChild(CBUI.createHalfSpace());
 
-        element.appendChild(CBUITaskStatus.create().element);
-
         main.appendChild(element);
     },
 
@@ -122,7 +119,7 @@ var CBAdminPageForModelImport = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            Colby.doTask();
+            Colby.alert("File uploaded successfully");
         } else {
             Colby.displayResponse(response);
         }

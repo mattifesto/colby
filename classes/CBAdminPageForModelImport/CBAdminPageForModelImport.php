@@ -97,7 +97,7 @@ final class CBAdminPageForModelImport {
      * @return [string]
      */
     static function requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink', 'CBUITaskStatus'];
+        return ['CBUI', 'CBUIActionLink'];
     }
 
     /**
