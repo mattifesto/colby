@@ -206,72 +206,6 @@ var Colby = {
     },
 
     /**
-     * @deprecated CBTask replaced by CBTask2
-     *
-     * @return undefined
-     */
-    doTask: function () {
-        var status = Colby.taskStatus;
-
-        if (status === undefined) {
-            status = {
-                requestCount : 0,
-                waiting : false,
-            };
-
-            Colby.taskStatus = status;
-        }
-
-        if (status.waiting) {
-            return;
-        }
-
-        if (status.timeoutID) {
-            window.clearTimeout(status.timeoutID);
-            status.timeoutID = undefined;
-        }
-
-        var xhr = new XMLHttpRequest();
-        xhr.onerror = Colby.doTaskDidError.bind(undefined, {status:status,xhr:xhr});
-        xhr.onload = Colby.doTaskDidLoad.bind(undefined, {status:status,xhr:xhr});
-        xhr.open("POST", "/api/?class=CBTasks&function=doTask");
-        xhr.send();
-
-        status.requestCount += 1;
-        status.waiting = true;
-    },
-
-    /**
-     * @deprecated CBTask replaced by CBTask2
-     *
-     * @param object args.status
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    doTaskDidError: function (args) {
-        args.status.waiting = false;
-        args.status.error = true;
-    },
-
-    /**
-     * @deprecated CBTask replaced by CBTask2
-     *
-     * @param object args.status
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    doTaskDidLoad: function (args) {
-        args.status.waiting = false;
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.timeout !== undefined) {
-            args.status.timeoutID = window.setTimeout(Colby.doTask, response.timeout);
-        }
-    },
-
-    /**
      * @param Element element
      *
      * @return int|null
@@ -1070,7 +1004,6 @@ Colby.updateTimestampForElementWithId = function(timestamp, id)
 
 document.addEventListener('DOMContentLoaded', function () {
     Colby.beginUpdatingTimes();
-    Colby.doTask(); // deprecated
 });
 
 /**
