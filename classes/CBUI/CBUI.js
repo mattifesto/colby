@@ -13,6 +13,7 @@ var CBUI = {
      *      function updateText
      */
     createButton: function (args) {
+        var callback = args.callback;
         var element = document.createElement("div");
         element.className = "CBUIButton";
         var buttonElement = document.createElement("div");
@@ -26,13 +27,24 @@ var CBUI = {
         }
 
         updateText(args.text);
-
-        buttonElement.addEventListener("click", args.callback);
+        enable();
 
         element.appendChild(buttonElement);
 
+        function disable() {
+            element.classList.add("disabled");
+            element.removeEventListener("click", callback);
+        }
+
+        function enable() {
+            element.classList.remove("disabled");
+            element.addEventListener("click", callback);
+        }
+
         return {
+            disable: disable,
             element: element,
+            enable: enable,
             updateText: updateText,
         };
     },

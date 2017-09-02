@@ -27,6 +27,11 @@
     -webkit-user-select: none;
 }
 
+.CBUIButton.disabled .button {
+    background-color: var(--CBButtonBackgroundColorDisabled);
+    color: var(--CBButtonTextColorDisabled);
+}
+
 .CBUIHalfSpace {
     height: 22px;
 }

@@ -19,7 +19,9 @@ html {
     -webkit-text-size-adjust:   100%;               /* 4 */
 
     --CBButtonBackgroundColor: hsl(210, 80%, 50%);
+    --CBButtonBackgroundColorDisabled: hsl(210, 80%, 30%);
     --CBButtonTextColor: hsl(0, 0%, 100%);
+    --CBButtonTextColorDisabled: hsla(0, 0, 100%, 0.3);
     --CBMonospaceFontFamily: 'Menlo', 'Courier New', 'Courier', monospace;
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 }
