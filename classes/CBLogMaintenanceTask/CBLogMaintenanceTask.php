@@ -9,7 +9,7 @@ final class CBLogMaintenanceTask {
      * @return null
      */
     static function install() {
-        CBTasks2::updateTask(__CLASS__, CBHex160::zero(), null, null, time());
+        CBTasks2::updateTask(__CLASS__, CBHex160::zero());
     }
 
     /**
