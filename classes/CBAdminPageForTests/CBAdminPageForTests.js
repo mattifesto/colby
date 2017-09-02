@@ -1,13 +1,43 @@
 "use strict"; /* jshint strict: global */
 /* jshint esnext: true */
 /* globals
+    CBUI,
     Colby */
 
 var CBAdminPageForTests = {
 
     testImageID: "3dd8e721048bbe8ea5f0c043fab73277a0b0044c",
-    fileInputElement: undefined,
-    promise: undefined,
+
+    createStatus: function () {
+        var element = document.createElement("div");
+        element.className = "status";
+
+        function append(message, className) {
+            var lineElement = document.createElement("div");
+            lineElement.className = "line";
+            lineElement.textContent = message;
+
+            if (className !== undefined) {
+                try {
+                    lineElement.classList.add(className);
+                } catch (error) {
+                    Colby.report(error);
+                }
+            }
+
+            element.appendChild(lineElement);
+        }
+
+        function clear() {
+            element.textContent = null;
+        }
+
+        return {
+            append: append,
+            clear: clear,
+            element: element,
+        };
+    },
 
     /**
      * @param string URI
@@ -40,7 +70,7 @@ var CBAdminPageForTests = {
      * @return Promise
      */
     runTestForClassCBImagesFunctionDeleteByID: function (value) {
-        CBAdminPageForTests.appendStatusCallback("Ajax: CBImages - deleteByID");
+        CBAdminPageForTests.status.append("Ajax: CBImages - deleteByID");
 
         var URL = "/api/?class=CBImages&function=deleteByID";
         var data = new FormData();
@@ -54,8 +84,8 @@ var CBAdminPageForTests = {
                     .then(report2);
 
         function report1(response) {
-            CBAdminPageForTests.appendStatusCallback(response.message, { className : "success" });
-            CBAdminPageForTests.appendStatusCallback("Ajax: CBImages - check for original image file");
+            CBAdminPageForTests.status.append(response.message, "success");
+            CBAdminPageForTests.status.append("Ajax: CBImages - check for original image file");
 
             return CBAdminPageForTests.fetchURIDoesExist(imageURI);
         }
@@ -64,7 +94,7 @@ var CBAdminPageForTests = {
             if (doesExist) {
                 throw new Error("The image file is available.");
             } else {
-                CBAdminPageForTests.appendStatusCallback("The image file is not available.", { className : "success" });
+                CBAdminPageForTests.status.append("The image file is not available.", "success");
             }
         }
     },
@@ -76,7 +106,7 @@ var CBAdminPageForTests = {
      * @return Promise
      */
     runTestForClassCBImagesFunctionUpload: function (value) {
-        CBAdminPageForTests.appendStatusCallback("Ajax: CBImages - upload");
+        CBAdminPageForTests.status.append("Ajax: CBImages - upload");
 
         var URL = "/api/?class=CBImages&function=upload";
         var data = new FormData();
@@ -97,8 +127,8 @@ var CBAdminPageForTests = {
                 image.ID === CBAdminPageForTests.testImageID &&
                 image.width === 1600)
             {
-                CBAdminPageForTests.appendStatusCallback(response.message, { className : "success" });
-                CBAdminPageForTests.appendStatusCallback("Ajax: CBImages - check for original image file");
+                CBAdminPageForTests.status.append(response.message, "success");
+                CBAdminPageForTests.status.append("Ajax: CBImages - check for original image file");
 
                 var imageURI = "/" + Colby.dataStoreFlexpath(CBAdminPageForTests.testImageID, "original.jpeg");
 
@@ -110,8 +140,8 @@ var CBAdminPageForTests = {
 
         function report2(doesExist) {
             if (doesExist) {
-                CBAdminPageForTests.appendStatusCallback("The image file is available.", { className : "success" });
-                CBAdminPageForTests.appendStatusCallback("Ajax: CBImages - check for resized image file");
+                CBAdminPageForTests.status.append("The image file is available.", "success");
+                CBAdminPageForTests.status.append("Ajax: CBImages - check for resized image file");
 
                 var imageURI = "/" + Colby.dataStoreFlexpath(CBAdminPageForTests.testImageID, "rw640.jpeg");
 
@@ -123,7 +153,7 @@ var CBAdminPageForTests = {
 
         function report3(doesExist) {
             if (doesExist) {
-                CBAdminPageForTests.appendStatusCallback("The image file is available.", { className : "success" });
+                CBAdminPageForTests.status.append("The image file is available.", "success");
             } else {
                 throw new Error("The image file is not available.");
             }
@@ -134,72 +164,39 @@ var CBAdminPageForTests = {
 var CBTestPage = {
 
     /**
-     * @param Element state.statusElement
-     * @param string message
-     * @param string? args.className
-     *
-     * @return undefined
-     */
-    appendStatus : function (state, message, args) {
-        var lineElement = document.createElement("div");
-        lineElement.className = "line";
-        lineElement.textContent = message;
-
-        if (args && args.className) {
-            lineElement.classList.add(args.className);
-        }
-
-        state.statusElement.appendChild(lineElement);
-    },
-
-    /**
-     * @param Element args.statusElement
-     *
-     * @return undefined
-     */
-    clearStatus : function (args) {
-        args.statusElement.textContent = null;
-    },
-
-    /**
      * @return Element
      */
-    createTestUI : function () {
+    createTestUI: function () {
         var element = document.createElement("div");
         element.className = "CBTestUI";
         var containerElement = document.createElement("div");
         containerElement.className = "container";
-        var button = document.createElement("button");
-        button.textContent = "Run Tests";
         var img = document.createElement("img");
         img.src = "/colby/classes/CBAdminPageForTests/2017.02.02.TestImage.jpg";
         var input = document.createElement("input");
         input.type = "file";
         input.style.display = "none";
-        var status = document.createElement("div");
-        status.className = "status";
+
+        var button = CBUI.createButton({
+            callback: input.click.bind(input),
+            text: "Run Tests",
+        });
+
+        var status = CBAdminPageForTests.createStatus();
+
+        CBAdminPageForTests.status = status;
 
         CBAdminPageForTests.fileInputElement = input;
 
-        CBAdminPageForTests.appendStatusCallback = CBTestPage.appendStatus.bind(undefined, {
-            statusElement : status,
-        });
-
-        CBAdminPageForTests.clearStatusCallback = CBTestPage.clearStatus.bind(undefined, {
-            statusElement : status,
-        });
-
-        button.addEventListener("click", input.click.bind(input));
-
         input.addEventListener("change", CBTestPage.handleRunTests.bind(undefined, {
-            buttonElement : button,
+            button: button,
         }));
 
         containerElement.appendChild(input);
         containerElement.appendChild(img);
-        containerElement.appendChild(button);
+        containerElement.appendChild(button.element);
         element.appendChild(containerElement);
-        element.appendChild(status);
+        element.appendChild(status.element);
 
         return element;
     },
@@ -214,28 +211,29 @@ var CBTestPage = {
     },
 
     /**
-     * @param Element args.buttonElement
+     * @param object args.button
      *
      * @return undefined
      */
     handleRunTests: function (args) {
         var date = new Date();
-        args.buttonElement.disabled = true;
+        args.button.disable();
 
-        CBAdminPageForTests.clearStatusCallback();
-        CBAdminPageForTests.appendStatusCallback("Tests Started - " +
+        CBAdminPageForTests.status.clear();
+        CBAdminPageForTests.status.append("Tests Started - " +
             date.toLocaleDateString() +
             " " +
             date.toLocaleTimeString());
-        CBAdminPageForTests.appendStatusCallback("\u00A0");
+        CBAdminPageForTests.status.append("\u00A0");
 
-        var promise = Promise.resolve()
+        Promise.resolve()
             .then(CBTestPage.runJavaScriptTests)
             .then(CBAdminPageForTests.runTestForClassCBImagesFunctionDeleteByID)
             .then(CBAdminPageForTests.runTestForClassCBImagesFunctionUpload)
             .then(fetchTests)
             .then(runTests)
-            .then(finish, report);
+            .catch(report)
+            .then(onFinally, onFinally);
 
         function fetchTests() {
             return Colby.fetchAjaxResponse("/api/?class=CBUnitTests&function=getListOfTests");
@@ -257,22 +255,18 @@ var CBTestPage = {
                         URI += "&function=" + functionName;
                     }
 
-                    CBAdminPageForTests.appendStatusCallback("Test: " + className + (functionName ? " - " + functionName : ''));
+                    CBAdminPageForTests.status.append("Test: " + className + (functionName ? " - " + functionName : ''));
 
-                    var promise = Colby.fetchAjaxResponse(URI)
+                    Colby.fetchAjaxResponse(URI)
                         .then(reportTestSuccess, reportTestFailure)
                         .then(next, next);
 
-                    Colby.retain(promise);
-
                     function reportTestSuccess(response) {
-                        CBAdminPageForTests.appendStatusCallback(response.message || "Succeeded", { className : "success" });
-                        Colby.release(promise);
+                        CBAdminPageForTests.status.append(response.message || "Succeeded", "success");
                     }
 
                     function reportTestFailure(error) {
-                        CBAdminPageForTests.appendStatusCallback(error.message || "Failed", { className : "failure" });
-                        Colby.release(promise);
+                        CBAdminPageForTests.status.append(error.message || "Failed", "failure");
                     }
                 }
 
@@ -287,15 +281,13 @@ var CBTestPage = {
             });
         }
 
-        function finish() {
-            Colby.release(promise);
-            args.buttonElement.disabled = false;
+        function report(error) {
+            CBAdminPageForTests.status.append("Failed: " + error.message, "failure");
         }
 
-        function report(error) {
-            CBAdminPageForTests.appendStatusCallback("Failed: " + error.message, {className:"failure"});
-            Colby.release(promise);
-            args.buttonElement.disabled = false;
+        function onFinally() {
+            args.button.enable();
+            CBAdminPageForTests.fileInputElement.value = null;
         }
     },
 
@@ -306,7 +298,7 @@ var CBTestPage = {
      * @return undefined
      */
     runJavaScriptTests: function(value) {
-        CBAdminPageForTests.appendStatusCallback("Starting synchronous JavaScript tests.");
+        CBAdminPageForTests.status.append("Starting synchronous JavaScript tests.");
 
         var countOfTests;
         var i;
@@ -448,7 +440,7 @@ var CBTestPage = {
 
         if (wasSuccessful) {
             var message = "Succeeded";
-            CBAdminPageForTests.appendStatusCallback(message, {className:"success"});
+            CBAdminPageForTests.status.append(message, "success");
         } else {
             throw new Error("Javascript unit tests failed.\n\n" + CBTestPage.errors);
         }

@@ -88,15 +88,22 @@ final class CBAdminPageForTests {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUI'];
     }
 
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 
     /**
