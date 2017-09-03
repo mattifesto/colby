@@ -1,41 +1,48 @@
 <?php
 
-include_once COLBY_SYSTEM_DIRECTORY . '/snippets/shared/documents-administration.php';
+include_once cbsysdir() . '/snippets/shared/documents-administration.php';
 
-if (!ColbyUser::current()->isOneOfThe('Developers')) {
-    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
-}
+final class CBDataStoreAdmin {
 
-$response   = new CBAjaxResponse();
-$partIndex  = (int)$_POST['part-index'];
-$filepath   = CBDataStore::directoryForID(CBPagesAdministrationDataStoreID) . '/data.json';
+    /**
+     * @return null
+     */
+    static function CBAjax_explore($args) {
+        $partIndex = CBModel::value($args, 'index', null, 'intval');
 
-if (0 == $partIndex || !is_file($filepath)) {
-    $data                           = new stdClass();
-    $data->dataStoresWithoutPages   = array();
-    $data->pagesWithoutDataStores   = array();
-} else {
-    $data = json_decode(file_get_contents($filepath));
-}
+        if ($partIndex === null) {
+            throw Exception("No part index specified");
+        }
 
-DataStoreExplorer::explorePart($partIndex, $data);
+        $filepath   = CBDataStore::directoryForID(CBPagesAdministrationDataStoreID) . '/data.json';
 
-CBDataStore::makeDirectoryForID(CBPagesAdministrationDataStoreID);
-file_put_contents($filepath, json_encode($data));
+        if (0 == $partIndex || !is_file($filepath)) {
+            $data                           = new stdClass();
+            $data->dataStoresWithoutPages   = array();
+            $data->pagesWithoutDataStores   = array();
+        } else {
+            $data = json_decode(file_get_contents($filepath));
+        }
 
-/**
- * Send the response.
- */
+        CBDataStoreAdmin::explorePart($partIndex, $data);
 
-$response->wasSuccessful = true;
-$response->message = 'Part explored.';
+        CBDataStore::makeDirectoryForID(CBPagesAdministrationDataStoreID);
+        file_put_contents($filepath, json_encode($data));
+    }
 
-$response->send();
+    /**
+     * @return string
+     */
+    static function CBAjax_explore_group() {
+        return 'Developers';
+    }
 
-/* ---------------------------------------------------------------- */
-
-class DataStoreExplorer {
-
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+    }
     /**
      * Returns an array of data store IDs that have existing data store
      * directories.
@@ -60,13 +67,12 @@ class DataStoreExplorer {
     }
 
     /**
-     * @return void
+     * @return null
      */
-    static function explorePart($partIndex, $data)
-    {
+    static function explorePart($partIndex, $data) {
         $hexPartIndex   = sprintf('%02x', $partIndex);
-        $dataStoreIDs   = self::dataStoreIDsForPart($hexPartIndex);
-        $pageIDs        = self::pageIDsForPart($hexPartIndex);
+        $dataStoreIDs   = CBDataStoreAdmin::dataStoreIDsForPart($hexPartIndex);
+        $pageIDs        = CBDataStoreAdmin::pageIDsForPart($hexPartIndex);
 
         $dataStoresWithoutPages         = array_diff($dataStoreIDs, $pageIDs);
         $data->dataStoresWithoutPages   = array_merge($data->dataStoresWithoutPages,

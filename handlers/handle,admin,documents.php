@@ -10,7 +10,8 @@ CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('Documents');
 CBHTMLOutput::setDescriptionHTML('List, view, delete, and manage archives.');
-CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,admin,documents.js');
+CBHTMLOutput::requireClassName('CBUI');
+CBHTMLOutput::requireClassName('CBDataStoreAdmin');
 
 CBView::render((object)[
     'className' => 'CBAdminPageMenuView',
@@ -18,7 +19,7 @@ CBView::render((object)[
     'selectedSubmenuItemName' => 'documents',
 ]);
 
-$filepath   = CBDataStore::directoryForID(CBPagesAdministrationDataStoreID) . '/data.json';
+$filepath = CBDataStore::flexpath(CBPagesAdministrationDataStoreID, 'data.json', cbsitedir());
 
 if (is_file($filepath)) {
     $data = json_decode(file_get_contents($filepath));
@@ -30,7 +31,7 @@ if (is_file($filepath)) {
     <?php renderDocumentsAdministrationMenu(); ?>
 </nav>
 
-<main style="font-family: 'Source Sans Pro';">
+<main class="CBUIRoot">
 
     <?php
 
@@ -45,13 +46,13 @@ if (is_file($filepath)) {
     ?>
 
     <ul class="horizontal" style="text-align: center;">
-        <li>Data Stores without Pages: <?php echo $countOfDataStoresWithoutPages; ?></li>
-        <li>Pages without Data Stores: <?php echo $countOfPagesWithoutDataStores; ?></li>
+        <li>Data Stores without Pages: <?= $countOfDataStoresWithoutPages ?></li>
+        <li>Pages without Data Stores: <?= $countOfPagesWithoutDataStores ?></li>
     </ul>
 
     <div style="text-align: center;">
         <progress value="0" max="256" id="progress" style="margin-bottom: 20px;"></progress><br>
-        <button onclick="ColbyArchivesExplorer.regenerateDocument();">Find Stray Archives and Documents</button>
+        <button onclick="CBDataStoreAdmin.regenerateDocument();">Find Stray Archives and Documents</button>
     </div>
 </main>
 
