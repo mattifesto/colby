@@ -39,9 +39,11 @@ EOT;
 
 Colby::query($SQL);
 
+CBDataStores::install();
 CBLog::install();
 CBTasks::install(); /* deprecated */
 CBTasks2::install();
+CBDataStoresFinderTask::install();
 CBLogMaintenanceTask::install();
 CBUsers::install();
 CBModels::install();
