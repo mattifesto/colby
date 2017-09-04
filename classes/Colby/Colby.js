@@ -7,6 +7,19 @@ var Colby = {
                      'July', 'August', 'September', 'October', 'November',
                      'December'],
 
+     /**
+      * @param function callback
+      *
+      * @return undefined
+      */
+     afterDOMContentLoaded(callback) {
+         if (document.readyState === "loading") {
+             document.addEventListener("DOMContentLoaded", callback);
+         } else {
+             callback();
+         }
+     },
+
     /**
      * @param string text
      *
@@ -118,14 +131,28 @@ var Colby = {
     },
 
     /**
-     * Use this function with promises to display error messages to the user.
+     * Use this function with promises to display error messages to the user and
+     * report the error to the server.
      *
-     *      fetchAjaxResponse(...).catch(Colby.report).catch(Colby.displayError)
+     *      callAjaxFunction().catch(Colby.displayAndReportError)
      *
      * @param Error error
      *
-     * @return Promise
-     *  Returns a rejected promise the error parameter value.
+     * @return undefined
+     */
+    displayAndReportError: function (error) {
+        Colby.displayError(error);
+        Colby.reportError(error);
+    },
+
+    /**
+     * Use this function with promises to display error messages to the user.
+     *
+     *      callAjaxFunction().catch(Colby.displayError)
+     *
+     * @param Error error
+     *
+     * @return undefined
      */
     displayError: function (error) {
         if (error.ajaxResponse) {
@@ -133,8 +160,6 @@ var Colby = {
         } else {
             Colby.alert(error.message || "No error message was provided.");
         }
-
-        return Promise.reject(error);
     },
 
     /**
@@ -362,23 +387,28 @@ var Colby = {
     },
 
     /**
-     * Use this function with promises to report errors back to the server.
+     * @deprecated use Colby.reportError()
+     */
+    report: function (error) {
+        Colby.reportError(error);
+    },
+
+    /**
+     * Use this function to report an error to the server.
      *
-     *      fetchAjaxResponse(...).catch(Colby.report).catch(Colby.displayError)
+     *      callAjaxFunction().catch(Colby.reportError)
      *
      * @param Error error
      *
-     * @return Promise
-     *  Returns a rejected promise the error parameter value.
+     * @return undefined
+     *
+     *      This function does not return the promise it creates because it is
+     *      not meant to be inserted into promise chains.
      */
-    report: function (error) {
-        return Colby.callAjaxFunction("CBJavaScript", "reportError", {
+    reportError: function (error) {
+        Colby.callAjaxFunction("CBJavaScript", "reportError", {
             errorModel: Colby.errorToCBJavaScriptErrorModel(error),
-        }).then(onFinally, onFinally);
-
-        function onFinally() {
-            return Promise.reject(error);
-        }
+        });
     },
 
     /**
@@ -624,14 +654,7 @@ Colby.handleError = function(message, sourceURL, line, column, error) {
         };
     }
 
-    var promise = Colby.report(error)
-        .then(onFinally, onFinally);
-
-    Colby.retain(promise);
-
-    function onFinally() {
-        Colby.release(promise);
-    }
+    Colby.reportError(error);
 
     return false;
 };
