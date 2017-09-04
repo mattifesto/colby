@@ -274,15 +274,20 @@ EOT;
 
         }
 
-        if ($output->scheduled > $output->started) {
-            $scheduledAsSQL = $output->scheduled;
-        } else {
+        $output->completed = time();
+        $startedAsSQL = '`started`';
+
+        if ($output->scheduled === null) {
             $scheduledAsSQL = 'NULL';
+        } else if ($output->scheduled <= $output->completed) {
+            $scheduledAsSQL = 'NULL';
+            $startedAsSQL = 'NULL';
+        } else {
+            $scheduledAsSQL = $output->scheduled;
         }
 
         $classNameAsSQL = CBDB::stringToSQL($task->className);
         $IDAsSQL = CBHex160::toSQL($task->ID);
-        $output->completed = time();
         $outputAsSQL = CBDB::stringToSQL(json_encode($output));
 
         $SQL = <<<EOT
@@ -291,7 +296,8 @@ EOT;
             SET     `completed` = {$output->completed},
                     `output` = {$outputAsSQL},
                     `scheduled` = {$scheduledAsSQL},
-                    `severity` = {$output->severity}
+                    `severity` = {$output->severity},
+                    `started` = {$startedAsSQL}
             WHERE   `className` = {$classNameAsSQL} AND
                     `ID` = {$IDAsSQL} AND
                     `starter` = {$starterAsSQL}
