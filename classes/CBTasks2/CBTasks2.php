@@ -147,13 +147,22 @@ EOT;
     }
 
     /**
+     * This ajax function will dispatch the next task if one exists. If one
+     * doesn't exist it will attempt to wake any scheduled tasks.
+     *
      * @return  {
      *              taskWasDispatched: bool
      *          }
      */
     static function CBAjax_dispatchNextTask() {
+        $taskWasDispatched = CBTasks2::dispatchNextTask();
+
+        if (!$taskWasDispatched) {
+            CBTasks2::wakeScheduledTasks();
+        }
+
         return (object)[
-            'taskWasDispatched' => CBTasks2::dispatchNextTask(),
+            'taskWasDispatched' => $taskWasDispatched,
         ];
     }
 
