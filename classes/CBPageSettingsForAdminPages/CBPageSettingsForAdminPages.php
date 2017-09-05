@@ -37,9 +37,8 @@ final class CBPageSettingsForAdminPages {
     /**
      * @return  null
      */
-    static function renderEndOfBodyContent() { ?>
-        <script src="<?= CBSystemURL ?>/javascript/Colby.js"></script>
-    <?php }
+    static function renderEndOfBodyContent() {
+    }
 
     /**
      * @return  null
