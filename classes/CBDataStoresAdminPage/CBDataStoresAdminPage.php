@@ -20,7 +20,7 @@ final class CBDataStoresAdminPage {
      * @return void
      */
     static function adminPageRenderContent() {
-        CBHTMLOutput::setTitleHTML('Data Store Administration');
+        CBHTMLOutput::setTitleHTML('Data Stores Administration');
         CBHTMLOutput::setDescriptionHTML('Information about site data stores.');
     }
 

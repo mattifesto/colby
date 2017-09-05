@@ -18,6 +18,7 @@ var CBDataStoresAdminPage = {
             text: "Start Fast Find",
             callback: function () {
                 Colby.callAjaxFunction("CBDataStoresFinderTask", "startFastFind")
+                    .then(onFulfilled)
                     .catch(Colby.displayAndReportError);
             },
         }).element);
@@ -26,16 +27,26 @@ var CBDataStoresAdminPage = {
 
         section = CBUI.createSection();
         data.forEach(function (value) {
-            section.appendChild(CBUI.createKeyValueSectionItem({
+            var item = CBUI.createKeyValueSectionItem({
                 key: value.className || "No CBModels record",
                 value: value.ID,
-            }).element);
+            });
+
+            item.element.style.cursor = "pointer";
+            item.element.addEventListener("click", function () {
+                window.location = "/admin/documents/view/?ID=" + value.ID;
+            });
+            section.appendChild(item.element);
         });
         element.appendChild(section);
 
         element.appendChild(CBUI.createHalfSpace());
 
         return element;
+
+        function onFulfilled() {
+            Colby.alert("The fast find process has been started.");
+        }
     },
 
     /**
