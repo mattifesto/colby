@@ -4,12 +4,11 @@ if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
-
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('MySQL Backup');
 CBHTMLOutput::setDescriptionHTML('Backup the MySQL database.');
+CBHTMLOutput::requireClassName('CBUI');
 CBHTMLOutput::addJavaScriptURL(CBSystemURL . '/handlers/handle,developer,mysql.js');
 
 CBView::render((object)[
@@ -20,7 +19,7 @@ CBView::render((object)[
 
 ?>
 
-<main>
+<main class="CBUIRoot" style="flex: 1 1 auto;">
     <h1 style="text-align: center;">MySQL</h1>
 
     <div style="margin: 50px 0px; text-align: center;">
