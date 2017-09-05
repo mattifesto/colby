@@ -485,23 +485,4 @@ EOT;
 
         Colby::query($SQL);
     }
-
-    /**
-     * @return null
-     */
-    static function wakeScheduledTasksForAjax() {
-        $response = new CBAjaxResponse();
-
-        CBTasks2::wakeScheduledTasks();
-
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return object
-     */
-    static function wakeScheduledTasksForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
-    }
 }
