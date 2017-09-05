@@ -14,7 +14,7 @@ CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,documents,colby-pa
 CBView::render((object)[
     'className' => 'CBAdminPageMenuView',
     'selectedMenuItemName' => 'develop',
-    'selectedSubmenuItemName' => 'documents',
+    'selectedSubmenuItemName' => 'pages',
 ]);
 
 ?>
