@@ -136,7 +136,32 @@ EOT;
             Colby::query($SQL);
         }
 
-        // TODO: remove where timestamp is not equal to $timestamp
+        /**
+         * CONCAT has three parts:
+         *
+         *  '\\\\'
+         *      This will evaluate to '\\' in the SQL which will then evaluate to
+         *      a single backslash which will escape the character that follows it
+         *      which will be necessary if that character happens to be '%'.
+         *
+         *  UNHEX('{$hexIndex}')
+         *      Since `hexPartIndex` is two hex characters this will evaluate to
+         *      a single "binary character set" character.
+         *
+         *  '%'
+         *      This percent is the wildcard character to be used in the context
+         *      of the 'LIKE' keyword.
+         */
+
+        $SQL = <<<EOT
+
+            DELETE FROM `CBDataStores`
+            WHERE       `ID` LIKE CONCAT('\\\\', UNHEX('{$hexIndex}'), '%') and
+                        `timestamp` != {$timestamp}
+
+EOT;
+
+        Colby::query($SQL);
     }
 
     /**
