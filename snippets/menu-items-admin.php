@@ -56,6 +56,7 @@ $CBAdminMenu->help = newMenuItem('Help', '/admin/help/markaround-syntax/', $help
 
 if (ColbyUser::current()->isOneOfThe('Developers')) {
     $developMenu                    = new stdClass();
+    $developMenu->datastores        = newMenuItem('Data Stores', '/admin/page/?class=CBDataStoresAdminPage');
     $developMenu->images            = newMenuItem('Images', '/admin/page/?class=CBAdminPageForImages');
     $developMenu->php               = newMenuItem('PHP', '/admin/develop/php/');
     $developMenu->update            = newMenuItem('Update', '/admin/page/?class=CBAdminPageForUpdate');
