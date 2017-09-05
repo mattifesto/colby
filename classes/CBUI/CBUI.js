@@ -1,5 +1,6 @@
 "use strict"; /* jshint strict: global */
-/* global CBUIDropdown */
+/* global
+    CBUIDropdown */
 
 var CBUI = {
 
@@ -152,7 +153,7 @@ var CBUI = {
         keyValue.className = "CBUIKeyValue";
         var key = document.createElement("div");
         key.className = "key";
-        key.textContent = args.key || "";
+        key.textContent = args.key || "\xa0";
         var value = document.createElement("div");
         value.className = "value";
         value.textContent = args.value || "";
