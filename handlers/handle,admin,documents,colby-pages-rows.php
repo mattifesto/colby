@@ -4,12 +4,11 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
-
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('ColbyPages Table Rows');
 CBHTMLOutput::setDescriptionHTML('Pages that are in the ColbyPages table.');
+CBHTMLOutput::requireClassName('CBUI');
 CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,documents,colby-pages-rows.css');
 
 CBView::render((object)[
@@ -20,11 +19,7 @@ CBView::render((object)[
 
 ?>
 
-<nav style="text-align: center; margin-bottom: 20px;">
-    <?php renderDocumentsAdministrationMenu(); ?>
-</nav>
-
-<main>
+<main class="CBUIRoot CBPagesRows">
     <div class="summaryLists">
 
         <?php
@@ -170,4 +165,13 @@ EOT;
 
         <?php
     }
+}
+
+/**
+ * @return string
+ */
+function linkForArchiveId($archiveId) {
+    $href = CBSitePreferences::siteURL() . "/admin/documents/view/?archive-id={$archiveId}";
+
+    return "<a href=\"{$href}\"><span class=\"hash\">{$archiveId}</span></a>";
 }
