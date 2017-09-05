@@ -35,6 +35,7 @@ final class CBPageVerificationTask {
      */
     static function CBTasks2_Execute($ID) {
         $title = 'CBPageVerificationTask';
+        $issues = [];
         $messages = [];
         $resave = false;
         $severity = 8;
@@ -59,7 +60,7 @@ final class CBPageVerificationTask {
         $className = CBDB::SQLToValue("SELECT `className` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
 
         if (empty($className)) {
-            $title .= ', no ColbyPages className';
+            $issues[] = 'ColbyPages className is empty';
             $messages[] = 'This page has no value in the ColbyPages table\'s className column.';
             $severity = min(3, $severity);
             goto done;
@@ -97,7 +98,9 @@ final class CBPageVerificationTask {
         }
 
         $pageTitle = CBModel::value($data, 'model.title', '(no title)');
+        $title .= ' "' . CBConvert::truncate($pageTitle, 40) . '"';
         $messages[] = "Page Title: {$pageTitle}";
+        $messages[] = "Page ID: {$ID}";
 
         /**
          * Page image issues addressed:
@@ -157,7 +160,7 @@ final class CBPageVerificationTask {
              */
 
             if (!CBImages::isInstance($data->spec->image->ID)) {
-                $title .= ', invalid image property';
+                $issues[] = 'invalid image property';
                 $messages[] = '(3) The `image` property is set on the spec to an image that is not a valid CBImage instance.';
                 $severity = min(3, $severity);
             }
@@ -182,7 +185,7 @@ final class CBPageVerificationTask {
             ob_end_clean();
         } catch (Throwable $throwable) {
             ob_end_clean();
-            $title .= ', rendering error';
+            $issues[] = 'rendering error';
             $message = CBConvert::throwableToMessage($throwable);
             $trace = $throwable->getTraceAsString();
             $messages[] = "Rendering error: {$message}\n{$trace}";
@@ -205,6 +208,11 @@ final class CBPageVerificationTask {
 
         if (empty($messages)) {
             $messages[] = "This page has no current issues";
+        }
+
+        if (!empty($issues)) {
+            $issues =  implode(', ', $issues);
+            $title = "{$title} ({$issues})";
         }
 
         array_unshift($messages, $title);
