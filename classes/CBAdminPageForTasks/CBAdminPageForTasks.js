@@ -220,8 +220,8 @@ var CBAdminPageForTasks = {
      * @return undefined
      */
     scheduleATask: function () {
-        CBAdminPageForTasks.restartVerificationForAllPagesPromise =
-             Colby.fetchAjaxResponse("/api/?class=CBAdminPageForTasks&function=scheduleATask")
+        Colby.fetchAjaxResponse("/api/?class=CBAdminPageForTasks&function=scheduleATask")
+            .then(function () { Colby.alert("A task was scheduled."); })
             .catch(Colby.displayError);
     },
 
