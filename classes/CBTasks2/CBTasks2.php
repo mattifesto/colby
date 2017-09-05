@@ -54,9 +54,9 @@ EOT;
         $SQL = <<<EOT
 
             SELECT  COUNT(*)
-            FROM    `CBTasks2`
-            WHERE   `completed` IS NOT NULL AND
-                    `completed` > {$timestampAsSQL}
+            FROM    `CBLog`
+            WHERE   `category` = 'CBTasks2_TaskCompleted' AND
+                    `timestamp` > {$timestampAsSQL}
 
 EOT;
 
@@ -311,6 +311,8 @@ EOT;
 EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
+
+        CBLog::addMessage('CBTasks2_TaskCompleted', 7, "{$output->message}", $output);
 
         if (Colby::mysqli()->affected_rows === 1) {
             return true;
