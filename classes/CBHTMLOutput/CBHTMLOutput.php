@@ -17,6 +17,25 @@
  *      whether other code already included it.
  *
  *  -   Support for exporting values to the JavaScript environment of the page.
+ *
+ * Dependencies and class names:
+ *
+ *      Dependencies are added to an HTML page by calling
+ *      CBHTMLOutput::requireClassName(). Classes that are added as dependencies
+ *      can have their own dependencies which they express by implementing the
+ *      following optional interfaces.
+ *
+ *      CBHTMLOutput_CSSURLs -> [string]
+ *          A list of CSS URLs that should be loaded.
+ *
+ *      CBHTMLOutput_JavaScriptURLs -> [string]
+ *          A list of JavaScript URLs that should be loaded.
+ *
+ *      CBHTMLOutput_JavaScriptVariables -> [[name, value]]
+ *          A list of global JavaScript variables that should be declared.
+ *
+ *      CBHTMLOutput_requiredClassNames -> [string]
+ *          A list of class names that are required.
  */
 final class CBHTMLOutput {
 
@@ -44,7 +63,7 @@ final class CBHTMLOutput {
      * @return null
      */
     static function addCSSURL($CSSURL) {
-        if (!empty($CSSURL) && !in_array($CSSURL, self::$CSSURLs)) {
+        if (!empty($CSSURL) && !in_array($CSSURL, CBHTMLOutput::$CSSURLs)) {
             CBHTMLOutput::$CSSURLs[] = $CSSURL;
         }
     }
@@ -61,26 +80,23 @@ final class CBHTMLOutput {
     }
 
     /**
-     * @return void
+     * @return null
      */
-    static function addJavaScriptSnippet($javaScriptSnippetFilename)
-    {
-        if (!in_array($javaScriptSnippetFilename, self::$javaScriptSnippetFilenames))
-        {
-            self::$javaScriptSnippetFilenames[] = $javaScriptSnippetFilename;
+    static function addJavaScriptSnippet($javaScriptSnippetFilename) {
+        if (!in_array($javaScriptSnippetFilename, CBHTMLOutput::$javaScriptSnippetFilenames)) {
+            CBHTMLOutput::$javaScriptSnippetFilenames[] = $javaScriptSnippetFilename;
         }
     }
 
     /**
-     * @return void
+     * @return null
      */
-    static function addJavaScriptSnippetString($snippetString)
-    {
-        self::$javaScriptSnippetStrings[] = $snippetString;
+    static function addJavaScriptSnippetString($snippetString) {
+        CBHTMLOutput::$javaScriptSnippetStrings[] = $snippetString;
     }
 
     /**
-     * @return void
+     * @return null
      */
     static function addJavaScriptURL($javaScriptURL, $options = 0) {
         /**
@@ -96,7 +112,7 @@ final class CBHTMLOutput {
             $options = CBHTMLOutput::JSAsync;
         }
 
-        self::$javaScriptURLs[$javaScriptURL] = $options;
+        CBHTMLOutput::$javaScriptURLs[$javaScriptURL] = $options;
     }
 
     /**
@@ -110,49 +126,44 @@ final class CBHTMLOutput {
     }
 
     /**
-     * @return void
+     * @return null
      */
-    static function begin()
-    {
+    static function begin() {
         ob_start();
 
         set_exception_handler('CBHTMLOutput::handleException');
 
-        self::$isActive = true;
+        CBHTMLOutput::$isActive = true;
     }
 
     /**
-     * @return void
+     * @return null
      */
-    static function exportConstant($name)
-    {
-        self::exportVariable($name, constant($name));
+    static function exportConstant($name) {
+        CBHTMLOutput::exportVariable($name, constant($name));
     }
 
     /**
-     * @return void
+     * @return null
      */
-    static function exportListItem($listName, $itemKey, $itemValue)
-    {
+    static function exportListItem($listName, $itemKey, $itemValue) {
         $itemValue = json_encode($itemValue);
 
-        if (!isset(self::$exportedLists[$listName]))
-        {
-            self::$exportedLists[$listName] = new ArrayObject();
+        if (!isset(CBHTMLOutput::$exportedLists[$listName])) {
+            CBHTMLOutput::$exportedLists[$listName] = new ArrayObject();
         }
 
-        $listObject = self::$exportedLists[$listName];
+        $listObject = CBHTMLOutput::$exportedLists[$listName];
         $listObject->offsetSet($itemKey, $itemValue);
     }
 
     /**
-     * @return void
+     * @return null
      */
-    static function exportVariable($name, $value)
-    {
+    static function exportVariable($name, $value) {
         $value = json_encode($value);
 
-        self::$exportedVariables[$name] = $value;
+        CBHTMLOutput::$exportedVariables[$name] = $value;
     }
 
     /**
@@ -190,7 +201,7 @@ final class CBHTMLOutput {
      * @return null
      */
     private static function processRequiredClassNames() {
-        $requiredClassNames = array_keys(self::$requiredClassNames);
+        $requiredClassNames = array_keys(CBHTMLOutput::$requiredClassNames);
         $resolvedClassNames = CBRequiredClassNamesResolver::resolveRequiredClassNames($requiredClassNames);
 
         foreach ($resolvedClassNames as $className) {
@@ -218,19 +229,12 @@ final class CBHTMLOutput {
     }
 
     /**
-     * NOTE: 2017.01.01
+     * NOTE: 2017.01.01, 2017.09.05
      *
-     *      This function include a polyfill for Promise right before the
-     *      content of renderEndOfBodyContent() which generally includes
-     *      "Colby.js".
-     *
-     *      While CBHTMLOutput has generally tried to avoid placing any dogma on
-     *      pages, this effort doesn't always make sense. At this point Promise
-     *      is very useful and included with all browsers except IE11.
-     *      "Colby.js" now uses Promise to ease ajax requests. If there ever
-     *      comes a time when this polyfill is getting in the way, feel free to
-     *      reconsider. However, it is highly unlikely that will happen before
-     *      we stop supporting IE11 altogether and remove the polyfill.
+     *      This function include a polyfill for Promise right after the body
+     *      content before JavaScript dependencies will be included. Colby makes
+     *      frequent use of Promises. The only browser that doesn't support
+     *      promise that we support is IE11.
      *
      * @return null
      */
@@ -281,8 +285,8 @@ final class CBHTMLOutput {
 
         ob_start();
 
-        $titleAsHTML = empty($pageContext->titleAsHTML) ? self::$titleHTML : $pageContext->titleAsHTML;
-        $descriptionAsHTML = empty($pageContext->descriptionAsHTML) ? self::$descriptionHTML : $pageContext->descriptionAsHTML;
+        $titleAsHTML = empty($pageContext->titleAsHTML) ? CBHTMLOutput::$titleHTML : $pageContext->titleAsHTML;
+        $descriptionAsHTML = empty($pageContext->descriptionAsHTML) ? CBHTMLOutput::$descriptionHTML : $pageContext->descriptionAsHTML;
 
         ?>
 
@@ -329,7 +333,7 @@ final class CBHTMLOutput {
                 <?php echo $bodyContent; $bodyContent = null; ?>
                 <script src="<?= CBSystemURL ?>/javascript/es6-promise.auto.min.js"></script>
                 <?= $settingsEndOfBodyContent ?>
-                <?php self::renderJavaScript(); ?>
+                <?php CBHTMLOutput::renderJavaScript(); ?>
             </body>
         </html>
 
@@ -337,7 +341,7 @@ final class CBHTMLOutput {
 
         ob_flush();
 
-        self::reset();
+        CBHTMLOutput::reset();
     }
 
     /**
@@ -357,7 +361,7 @@ final class CBHTMLOutput {
      * @return null
      */
     static function render404() {
-        self::reset();
+        CBHTMLOutput::reset();
         include Colby::findFile('handlers/handle-default.php');
         exit;
     }
@@ -372,7 +376,7 @@ final class CBHTMLOutput {
     }
 
     /**
-     * @return void
+     * @return null
      */
     private static function renderJavaScript() {
         if (!empty(CBHTMLOutput::$exportedVariables) || !empty(CBHTMLOutput::$exportedLists)) {
@@ -440,8 +444,8 @@ final class CBHTMLOutput {
      * @return null
      */
     static function requireClassName($className) {
-        if (!array_key_exists($className, self::$requiredClassNames)) {
-            self::$requiredClassNames[$className] = true;
+        if (!array_key_exists($className, CBHTMLOutput::$requiredClassNames)) {
+            CBHTMLOutput::$requiredClassNames[$className] = true;
         }
     }
 
@@ -469,9 +473,10 @@ final class CBHTMLOutput {
 
         /**
          * @NOTE 2017.08.02 Colby was added by default to requiredClassNames to
-         *       smooth the transition to moving the Colby.js and Colby.css files.
-         *       Now, if you need these files for a view, layout, or whatever, you
-         *       should add Colby to your list of required class names.
+         *       smooth the transition of moving the Colby JavaScript and CSS
+         *       files into the classes/Colby directory. Now, if you need these
+         *       files for a view, layout, or whatever, you should add Colby to
+         *       your list of required class names.
          */
 
         CBHTMLOutput::requireClassName('Colby');
@@ -483,7 +488,7 @@ final class CBHTMLOutput {
      * @return null
      */
     static function setTitleHTML($titleHTML) {
-        self::$titleHTML = $titleHTML;
+        CBHTMLOutput::$titleHTML = $titleHTML;
     }
 
     /**
@@ -492,7 +497,7 @@ final class CBHTMLOutput {
      * @return null
      */
     static function setDescriptionHTML($descriptionHTML) {
-        self::$descriptionHTML = $descriptionHTML;
+        CBHTMLOutput::$descriptionHTML = $descriptionHTML;
     }
 }
 
