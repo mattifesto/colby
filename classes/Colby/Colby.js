@@ -286,10 +286,6 @@ var Colby = {
      *      this class) to resolve handlers. If an error occurs for any reason a
      *      JavaScript Error object is passed to reject handlers with an 'ajax
      *      response' object set to the Error's `ajaxResponse` propery.
-     *
-     *      @NOTE There is no reference held to the promise returned, so the
-     *      caller must establish a reference to it or it will be collected
-     *      and possibly not completed.
      */
     fetchAjaxResponse: function (URL, data) {
         return new Promise(function (resolve, reject) {
@@ -1025,7 +1021,7 @@ Colby.updateTimestampForElementWithId = function(timestamp, id)
  * General page loaded tasks
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+Colby.afterDOMContentLoaded(function () {
     Colby.beginUpdatingTimes();
 });
 
@@ -1036,33 +1032,25 @@ document.addEventListener('DOMContentLoaded', function () {
 Colby.CBTasks2DispatchAlways = false;
 Colby.CBTasks2DispatchDelay = 5000;
 
-document.addEventListener('DOMContentLoaded', function () {
-    var promise;
-
+Colby.afterDOMContentLoaded(function () {
     dispatch();
 
     function dispatch() {
-        promise = Colby.fetchAjaxResponse("/api/?class=CBTasks2&function=dispatchNextTask")
-            .catch(onRejected)
-            .then(onFinally);
-
-        Colby.retain(promise);
+        /**
+         * Errors occuring during this process are likely to be server side
+         * errors and will be reported on the server. If the promise is rejected
+         * further requests will be stopped. This process does not communicate
+         * with the end user.
+         */
+        Colby.callAjaxFunction("CBTasks2", "dispatchNextTask")
+            .then(onFulfilled);
     }
 
-    function onRejected(error) {
-
-    }
-
-    function onFinally(response) {
-        Colby.release(promise);
-
-        var taskWasDispatched = true;
-
-        if (typeof response === "object") {
-            taskWasDispatched = response.taskWasDispatched;
-        }
-
-        if (Colby.CBTasks2DispatchAlways || taskWasDispatched) {
+    function onFulfilled(value) {
+        /**
+         * If a task was dispatched, dispatch another after a small timeout.
+         */
+        if (Colby.CBTasks2DispatchAlways || value.taskWasDispatched) {
             setTimeout(dispatch, Colby.CBTasks2DispatchDelay);
         }
     }

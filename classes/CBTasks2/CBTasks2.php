@@ -147,24 +147,21 @@ EOT;
     }
 
     /**
-     * @return null
-     *
-     *      Ajax: {
-     *          bool taskWasDispatched
-     *      }
+     * @return  {
+     *              taskWasDispatched: bool
+     *          }
      */
-    static function dispatchNextTaskForAjax() {
-        $response = new CBAjaxResponse();
-        $response->taskWasDispatched = CBTasks2::dispatchNextTask();
-        $response->wasSuccessful = true;
-        $response->send();
+    static function CBAjax_dispatchNextTask() {
+        return (object)[
+            'taskWasDispatched' => CBTasks2::dispatchNextTask(),
+        ];
     }
 
     /**
-     * @return object
+     * @return string
      */
-    static function dispatchNextTaskForAjaxPermissions() {
-        return (object)['group' => 'Public'];
+    static function CBAjax_dispatchNextTask_group() {
+        return 'Public';
     }
 
     /**
