@@ -74,6 +74,7 @@ final class CBDataStoresFinderTask {
         $spec->className = __CLASS__;
 
         $partIndex = CBModel::value($spec, 'nextPartIndex', 0, 'intval');
+        $partIndexHex = dechex($partIndex);
 
         CBDataStoresFinderTask::findDataStoresForPartIndex($partIndex);
 
@@ -89,6 +90,10 @@ final class CBDataStoresFinderTask {
         });
 
         return (object)[
+            'message' => <<<EOT
+CBDataStoresFinderTask, part index: {$partIndex} (0x{$partIndexHex})
+EOT
+            ,
             'scheduled' => !empty($spec->fastFindIsActive) ? time() : time() + (60 * 5), /* execute again in 5 minutes */
         ];
     }
@@ -175,6 +180,6 @@ EOT;
      * @return null
      */
     static function install() {
-        CBTasks2::updateTask(__CLASS__, CBDataStoresFinderTask::ID());
+        CBTasks2::updateTask(__CLASS__, CBDataStoresFinderTask::ID(), null, null, time());
     }
 }
