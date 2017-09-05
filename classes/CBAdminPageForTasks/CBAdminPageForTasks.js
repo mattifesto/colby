@@ -124,7 +124,7 @@ var CBAdminPageForTasks = {
         var element = document.createElement("div");
         element.className = "status";
 
-        CBAdminPageForTasks.fetchStatus(element);
+        CBAdminPageForTasks.startFetchingStatus(element);
 
         return element;
     },
@@ -193,19 +193,16 @@ var CBAdminPageForTasks = {
     /**
      * @return undefined
      */
-    fetchStatus: function (element) {
-        CBAdminPageForTasks.fetchStatusPromise =
-             fetchStatus()
-            .then(display)
-            .then(wake)
-            .then(restart)
-            .catch(Colby.displayError);
+    startFetchingStatus: function (element) {
+        fetchStatus();
 
         function fetchStatus() {
-            return Colby.fetchAjaxResponse("/api/?class=CBAdminPageForTasks&function=fetchStatus");
+            Colby.callAjaxFunction("CBAdminPageForTasks", "fetchStatus")
+                .then(onFulfilled)
+                .catch(Colby.displayError);
         }
 
-        function display(response) {
+        function onFulfilled(response) {
             element.textContent = "";
             element.appendChild(CBAdminPageForTasks.createStatusContent(response));
 
@@ -215,15 +212,7 @@ var CBAdminPageForTasks = {
                 Colby.CBTasks2DispatchDelay = 2000; // 2 seconds
             }
 
-            return response;
-        }
-
-        function wake() {
-            return Colby.fetchAjaxResponse("/api/?class=CBTasks2&function=wakeScheduledTasks");
-        }
-
-        function restart() {
-            setTimeout(CBAdminPageForTasks.fetchStatus, 1000, element);
+            setTimeout(fetchStatus, 1000);
         }
     },
 
@@ -255,7 +244,7 @@ var CBAdminPageForTasks = {
     },
 };
 
-document.addEventListener("DOMContentLoaded", function () {
+Colby.afterDOMContentLoaded(function () {
     Colby.CBTasks2DispatchAlways = true;
     var main = document.getElementsByTagName("main")[0];
     main.appendChild(CBAdminPageForTasks.create());

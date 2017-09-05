@@ -49,31 +49,29 @@ EOT;
     }
 
     /**
-     * @return null
-     *
-     *      Ajax: {
-     *          recent: [object]
-     *          upcoming: [object]
-     *      }
+     * @return  {
+     *              countOfAvailableTasks: int
+     *              countOfScheduledTasks: int
+     *              countOfTasksCompletedInTheLastMinute: int
+     *              countOfTasksCompletedInTheLastHour: int
+     *              countOfTasksCompletedInTheLast24Hours: int
+     *          }
      */
-    static function fetchStatusForAjax() {
-        $response = new CBAjaxResponse();
-
-        $response->countOfAvailableTasks = CBTasks2::countOfAvailableTasks();
-        $response->countOfScheduledTasks = CBTasks2::countOfScheduledTasks();
-        $response->countOfTasksCompletedInTheLastMinute = CBTasks2::countOfTasksCompletedSince(time() - 60);
-        $response->countOfTasksCompletedInTheLastHour = CBTasks2::countOfTasksCompletedSince(time() - (60 * 60));
-        $response->countOfTasksCompletedInTheLast24Hours = CBTasks2::countOfTasksCompletedSince(time() - (60 * 60 * 24));
-
-        $response->wasSuccessful = true;
-        $response->send();
+    static function CBAjax_fetchStatus() {
+        return (object)[
+            'countOfAvailableTasks' => CBTasks2::countOfAvailableTasks(),
+            'countOfScheduledTasks' => CBTasks2::countOfScheduledTasks(),
+            'countOfTasksCompletedInTheLastMinute' => CBTasks2::countOfTasksCompletedSince(time() - 60),
+            'countOfTasksCompletedInTheLastHour' => CBTasks2::countOfTasksCompletedSince(time() - (60 * 60)),
+            'countOfTasksCompletedInTheLast24Hours' => CBTasks2::countOfTasksCompletedSince(time() - (60 * 60 * 24)),
+        ];
     }
 
     /**
-     * @return object
+     * @return string
      */
-    static function fetchStatusForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function CBAjax_fetchStatus_group() {
+        return 'Administrators';
     }
 
     /**
