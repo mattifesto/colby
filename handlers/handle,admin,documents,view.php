@@ -4,8 +4,6 @@ if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-include_once CBSystemDirectory . '/snippets/shared/documents-administration.php';
-
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::begin();
 CBHTMLOutput::setTitleHTML('ID Info');
@@ -26,10 +24,6 @@ if (empty($_GET['ID'])) {
 }
 
 ?>
-
-<nav style="text-align: center; margin-bottom: 20px;">
-    <?php renderDocumentsAdministrationMenu(); ?>
-</nav>
 
 <main class="CBAdminPageForID" style="flex: 1 1 auto;">
     <header>
