@@ -15,10 +15,10 @@ var CBDataStoresAdminPage = {
         element.appendChild(CBUI.createHalfSpace());
 
         element.appendChild(CBUI.createButton({
-            text: "Start Fast Find",
+            text: "Restart Data Store Finder",
             callback: function () {
-                Colby.callAjaxFunction("CBDataStoresFinderTask", "startFastFind")
-                    .then(onFulfilled)
+                Colby.callAjaxFunction("CBDataStoresFinderTask", "restart")
+                    .then(function () { Colby.alert("The data store finder has been restarted."); })
                     .catch(Colby.displayAndReportError);
             },
         }).element);
@@ -43,10 +43,6 @@ var CBDataStoresAdminPage = {
         element.appendChild(CBUI.createHalfSpace());
 
         return element;
-
-        function onFulfilled() {
-            Colby.alert("The fast find process has been started.");
-        }
     },
 
     /**

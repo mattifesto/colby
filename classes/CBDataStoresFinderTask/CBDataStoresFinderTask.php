@@ -3,19 +3,19 @@
 /**
  * This class looks in the data store directory for data stores. It updates the
  * table CBDataStores with the IDs of existing data stores.
+ *
+ * This task splits the work of finding data stores into 256 parts which will
+ * execute one after the other. Once the task for the last part is complete, the
+ * process will restart in 24 hours.
  */
 final class CBDataStoresFinderTask {
 
     /**
-     * Calling this function start fast find mode where the task will start at
-     * index zero an restart itself as fast as possible until it has found all
-     * data stores. Then it will reset itself to normal mode.
-     *
-     * In normal mode all data stores are checked in about a day.
+     * Calling this function restarts the data store finder tasks.
      *
      * @return null
      */
-    static function CBAjax_startFastFind() {
+    static function CBAjax_restart() {
         $spec = CBModels::fetchSpecByID(CBDataStoresFinderTask::ID());
 
         if ($spec === false) {
@@ -25,7 +25,6 @@ final class CBDataStoresFinderTask {
         }
 
         $spec->className = __CLASS__;
-        $spec->fastFindIsActive = true;
         $spec->nextPartIndex = 0;
 
         CBDB::transaction(function () use ($spec) {
@@ -38,7 +37,7 @@ final class CBDataStoresFinderTask {
     /**
      * @return string
      */
-    static function CBAjax_startFastFind_group() {
+    static function CBAjax_restart_group() {
         return 'Developers';
     }
 
@@ -80,21 +79,23 @@ final class CBDataStoresFinderTask {
 
         if ($partIndex < 255) {
             $spec->nextPartIndex = $partIndex + 1;
+            $scheduled = time(); /* execute again ASAP */
         } else {
             $spec->nextPartIndex = 0;
-            unset($spec->fastFindIsActive);
+            $scheduled = time() + (60 * 60 * 24); /* execute again one day later */
         }
 
         CBDB::transaction(function () use ($spec) {
             CBModels::save([$spec]);
         });
 
-        return (object)[
-            'message' => <<<EOT
+        $message = <<<EOT
 CBDataStoresFinderTask, part index: {$partIndex} (0x{$partIndexHex})
-EOT
-            ,
-            'scheduled' => !empty($spec->fastFindIsActive) ? time() : time() + (60 * 5), /* execute again in 5 minutes */
+EOT;
+
+        return (object)[
+            'message' => $message,
+            'scheduled' => $scheduled,
         ];
     }
 
