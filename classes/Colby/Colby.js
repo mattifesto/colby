@@ -1036,20 +1036,26 @@ Colby.afterDOMContentLoaded(function () {
     dispatch();
 
     function dispatch() {
+
         /**
          * Errors occuring during this process are likely to be server side
          * errors and will be reported on the server. If the promise is rejected
          * further requests will be stopped. This process does not communicate
          * with the end user.
          */
+
         Colby.callAjaxFunction("CBTasks2", "dispatchNextTask")
-            .then(onFulfilled);
+            .then(onFulfilled)
+            .catch(Colby.reportError);
     }
 
     function onFulfilled(value) {
+
         /**
-         * If a task was dispatched, dispatch another after a small timeout.
+         * If a task was dispatched, try to dispatch another after a short
+         * time out.
          */
+
         if (Colby.CBTasks2DispatchAlways || value.taskWasDispatched) {
             setTimeout(dispatch, Colby.CBTasks2DispatchDelay);
         }

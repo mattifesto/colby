@@ -89,7 +89,7 @@ final class ColbyUser {
     }
 
     /**
-     * This function is more efficient than CoblyUser::isMemberOfGroup() because
+     * This function is more efficient than ColbyUser::isMemberOfGroup() because
      * it memoizes the results for the current user.
      *
      * @param string $groupName
@@ -97,10 +97,6 @@ final class ColbyUser {
      * @return bool
      */
     static function currentUserIsMemberOfGroup($groupName) {
-        if (empty(ColbyUser::$currentUserId)) {
-            return false;
-        }
-
         if (isset(ColbyUser::$currentUserGroups[$groupName])) {
             return ColbyUser::$currentUserGroups[$groupName];
         } else {
@@ -245,6 +241,10 @@ EOT;
     static function isMemberOfGroup($userID, $groupName) {
         if ($groupName === 'Public') {
             return true;
+        }
+
+        if (empty($userID)) {
+            return false;
         }
 
         $userIDAsSQL = intval($userID);
