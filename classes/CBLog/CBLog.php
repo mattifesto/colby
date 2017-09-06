@@ -135,31 +135,16 @@ EOT;
     }
 
     /**
-     * return null
-     */
-    static function fetchLogsForAjax() {
-        $response = new CBAjaxResponse();
-
-        $response->logs = CBLog::entries((object)[
-            'sinceTimestamp' => time() - (60 * 60 * 24 * 30), // 30 days
-        ]);
-
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * return stdClass
-     */
-    static function fetchLogsForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
-    }
-
-    /**
      * @param int $args->sinceTimestamp
      * @param int $args->minSeverity
      *
-     * @return [stdClass]
+     * @return  {
+     *              category: string
+     *              message: string
+     *              model: object
+     *              severity: int
+     *              timestamp: int
+     *          }
      */
     static function entries($args = null) {
         $whereAsSQL = [];

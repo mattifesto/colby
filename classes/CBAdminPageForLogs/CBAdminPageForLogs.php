@@ -25,6 +25,28 @@ final class CBAdminPageForLogs {
     }
 
     /**
+    * @return  {
+    *              category: string
+    *              message: string
+    *              model: object
+    *              severity: int
+    *              timestamp: int
+    *          }
+     */
+    static function CBAjax_fetchEntries() {
+        return CBLog::entries((object)[
+            'sinceTimestamp' => time() - (60 * 60 * 24 * 7), // 7 days
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_fetchEntries_group() {
+        return 'Administrators';
+    }
+
+    /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
