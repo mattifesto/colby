@@ -8,7 +8,7 @@ $CBAdminMenu->home = newMenuItem('Home', '/');
 $generalMenu            = new stdClass();
 $generalMenu->status = newMenuItem('Status', '/admin/');
 $generalMenu->tasks = newMenuItem('Tasks', '/admin/page/?class=CBAdminPageForTasks');
-$generalMenu->logs = newMenuItem('Logs', '/admin/page/?class=CBAdminPageForLogs');
+$generalMenu->logs = newMenuItem('Logs', '/admin/page/?class=CBLogAdminPage');
 $generalMenu->users = newMenuItem('Users', '/admin/page/?class=CBAdminPageForUsers');
 $CBAdminMenu->general = newMenuItem('General', '/admin/', $generalMenu);
 

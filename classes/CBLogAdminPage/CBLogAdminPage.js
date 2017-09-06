@@ -3,7 +3,7 @@
     CBUIExpander,
     Colby */
 
-var CBAdminPageForLogs = {
+var CBLogAdminPage = {
 
     /**
      * @return Element
@@ -12,7 +12,7 @@ var CBAdminPageForLogs = {
         var element = document.createElement("div");
         element.className = "entries";
 
-        Colby.callAjaxFunction("CBAdminPageForLogs", "fetchEntries")
+        Colby.callAjaxFunction("CBLogAdminPage", "fetchEntries")
             .then(onFulfilled)
             .catch(Colby.reportAndDisplayError);
 
@@ -43,5 +43,5 @@ var CBAdminPageForLogs = {
 
 Colby.afterDOMContentLoaded(function () {
     var main = document.getElementsByTagName("main")[0];
-    main.appendChild(CBAdminPageForLogs.create());
+    main.appendChild(CBLogAdminPage.create());
 });

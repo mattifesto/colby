@@ -1,6 +1,6 @@
 <?php
 
-final class CBAdminPageForLogs {
+final class CBLogAdminPage {
 
     /**
      * @return [string]
@@ -51,13 +51,6 @@ final class CBAdminPageForLogs {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return ['CBUIExpander'];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
