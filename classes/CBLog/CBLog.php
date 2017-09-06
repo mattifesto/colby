@@ -172,7 +172,7 @@ EOT;
             SELECT `category`, `message`, `modelAsJSON` AS `model`, `severity`, `timestamp`
             FROM `CBLog`
             {$whereAsSQL}
-            ORDER BY `timestamp` DESC
+            ORDER BY `ID` DESC
 
 EOT;
 
