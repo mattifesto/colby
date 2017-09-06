@@ -161,7 +161,7 @@ var CBAdminPageForTasks = {
 
             function onFulfilled(value) {
                 value.forEach(function (output) {
-                    var message = output.message + "\n\n" + output.className + "\n" + output.taskID;
+                    var message = output.message + "\n\n" + output.taskClassName + "\n" + output.taskID;
 
                     if (output.exception) {
                         message += "\n\n" + output.exception;
