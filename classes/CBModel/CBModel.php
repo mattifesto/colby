@@ -47,6 +47,16 @@ final class CBModel {
             return null;
         }
 
+        /**
+         * @NOTE 2017.09.07
+         *
+         *      Since CBModel_toModel() is not required to set the model ID
+         *      property, it should probably not be required to set the model
+         *      className property either. If unset, this function would set
+         *      the model className to the spec className. The current behavior
+         *      is leftover from a time when it was acceptable to call
+         *      CBModel_toModel() directly on a class.
+         */
 
         if (empty($model->className)) {
             return null;
