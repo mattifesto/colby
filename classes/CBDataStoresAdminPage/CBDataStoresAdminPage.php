@@ -52,7 +52,7 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI'];
+        return ['CBUI', 'CBUINavigationView', 'CBUISelector'];
     }
 
     /**
