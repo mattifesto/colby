@@ -269,7 +269,7 @@ EOT;
             (`className`, `ID`)
             SELECT 'CBPageVerificationTask', p.archiveID
             FROM `ColbyPages` AS `p`
-            LEFT OUTER JOIN `CBTasks2` as `t`
+            LEFT JOIN `CBTasks2` as `t`
                 ON `p`.`archiveID` = `t`.`ID` AND `t`.`className` = 'CBPageVerificationTask'
             ON DUPLICATE KEY UPDATE
                 `completed` = NULL,
@@ -324,7 +324,7 @@ EOT;
             (`className`, `ID`)
             SELECT 'CBPageVerificationTask', p.archiveID
             FROM `ColbyPages` AS `p`
-            LEFT OUTER JOIN `CBTasks2` as `t`
+            LEFT JOIN `CBTasks2` as `t`
                 ON `p`.`archiveID` = `t`.`ID` AND `t`.`className` = 'CBPageVerificationTask'
             WHERE `t`.`ID` IS NULL
 
