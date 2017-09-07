@@ -83,6 +83,12 @@ EOT;
      *  error_log().
      *
      * @param string $message
+     * @param object? $model (The exact properties are under consideration)
+     *
+     *      {
+     *          exceptionStackTrace: string
+     *          text: string
+     *      }
      */
     static function addMessage($category, $severity, $message, stdClass $model = null) {
         try {
