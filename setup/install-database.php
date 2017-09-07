@@ -59,8 +59,9 @@ CBWellKnownPageForTestingCBTextView2::install();
 CBWellKnownPageForTestingPageTitleAndBodyText::install();
 
 /**
- * @NOTE 2017.06.11 Eventually this will be added to CBPing
+ * These functions are also called from CBRemoteAdministration::ping()
  */
+CBImageVerificationTask::startForNewImages();
 CBPageVerificationTask::startForNewPages();
 
 // 2015.10.26
