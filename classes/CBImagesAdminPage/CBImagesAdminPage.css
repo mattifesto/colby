@@ -1,14 +1,18 @@
 .CBImagesAdminPage {
-    align-items: flex-start;
     background-color: hsl(0, 0%, 30%);
+}
+
+.CBImagesAdminPage .buttons {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+.CBImagesAdminPage .images {
+    align-items: flex-start;
     display: flex;
     flex: 1 1 auto;
     flex-wrap: wrap;
     justify-content: center;
-}
-
-.CBImagesAdminPage + * {
-    display: none;
 }
 
 .CBImagesAdminPage .thumbnail {
