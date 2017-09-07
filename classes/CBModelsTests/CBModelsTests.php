@@ -9,6 +9,20 @@ final class CBModelsTests {
     ];
 
     /**
+     * @return null
+     */
+    private static function checkSQL(array $checks) {
+        array_walk($checks, function(array $check) {
+            $value = CBDB::SQLToValue($check[0]);
+            if ($value !== $check[1]) {
+                $actual     = json_encode($value);
+                $expected   = json_encode($check[1]);
+                throw new Exception("Check returned {$actual} instead of {$expected}: {$check[0]}");
+            }
+        });
+    }
+
+    /**
      * This function assumes that the CBModels functionality is working. The
      * functions that call it will be testing to see if that is actually true.
      *
@@ -19,7 +33,7 @@ final class CBModelsTests {
     private static function createTestEnvironment() {
         $specs = CBModels::fetchSpecsByID(CBModelsTests::testModelIDs, [
             'createSpecForIDCallback' => function($ID) {
-                $spec           = CBModels::modelWithClassName('CBModelTest', ['ID' => $ID]);
+                $spec           = CBModels::modelWithClassName('CBModelsTests_TestClass', ['ID' => $ID]);
                 $spec->title    = "Title for {$ID}";
                 $spec->name     = "Name {$ID}";
                 return $spec;
@@ -41,7 +55,7 @@ final class CBModelsTests {
         $ID     = CBModelsTests::testModelIDs[2];
         $model  = CBModels::fetchModelByID($ID);
 
-        CBModelTest::checkModelWithID($model, $ID, 1);
+        CBModelsTests_TestClass::checkModelWithID($model, $ID, 1);
 
         /* 2 */
 
@@ -72,7 +86,7 @@ final class CBModelsTests {
 
         for ($i = 0; $i < 3; $i++) {
             $ID = CBModelsTests::testModelIDs[$i];
-            CBModelTest::checkModelWithID($models[$ID], $ID, 1);
+            CBModelsTests_TestClass::checkModelWithID($models[$ID], $ID, 1);
         }
 
         /* 2 */
@@ -180,20 +194,6 @@ final class CBModelsTests {
     /**
      * @return null
      */
-    private static function checkSQL(array $checks) {
-        array_walk($checks, function(array $check) {
-            $value = CBDB::SQLToValue($check[0]);
-            if ($value !== $check[1]) {
-                $actual     = json_encode($value);
-                $expected   = json_encode($check[1]);
-                throw new Exception("Check returned {$actual} instead of {$expected}: {$check[0]}");
-            }
-        });
-    }
-
-    /**
-     * @return null
-     */
     static function updateAndFetchTest() {
         Colby::query('START TRANSACTION');
 
@@ -273,9 +273,11 @@ final class CBModelsTests {
 }
 
 
-final class CBModelTest {
+final class CBModelsTests_TestClass {
 
     /**
+     * Checks a model of this class.
+     *
      * @return null
      */
     static function checkModelWithID(stdClass $model, $ID, $version = false) {
@@ -315,7 +317,9 @@ final class CBModelTest {
     }
 
     /**
-     * @return {stdClass}
+     * @param object $spec
+     *
+     * @return object
      */
     static function specToModel(stdClass $spec) {
         $model = (object)[
