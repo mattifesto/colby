@@ -119,6 +119,9 @@ EOT;
             throw $exception;
         }
 
+        CBImageVerificationTask::startForNewImages();
+        CBPageVerificationTask::startForNewPages();
+
         CBTasks2::wakeScheduledTasks();
 
         $returnValue->didExecute = true;
