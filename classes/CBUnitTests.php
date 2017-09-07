@@ -22,6 +22,8 @@ class CBUnitTests {
             ['CBModelCache'],
             ['CBModels',                'fetchModelByID'],
             ['CBModels',                'fetchModelsByID'],
+            ['CBModels',                'saveNullableModel'],
+            ['CBModels',                'saveSpecWithoutID'],
             ['CBPages',                 'stringToDencodedURIPath'],
             ['CBProjection'],
             ['CBSitePreferences'],

@@ -96,6 +96,61 @@ final class CBModelsTests {
 
         Colby::query('ROLLBACK');
     }
+
+    /**
+     * CBModel::toModel() is allowed to return null in rare cases where a spec
+     * doesn't have required properties. In general, spec shouldn't have
+     * required properties, but in cases like CBImage they do. This function
+     * tests the behavior of saving a spec that will generate a null model.
+     */
+    static function saveNullableModelTest() {
+        try {
+            Colby::query('START TRANSACTION');
+
+            $spec = (object)[
+                'ID' => CBHex160::random(),
+                'className' => 'CBImage',
+            ];
+
+            CBModels::save([$spec]);
+
+            Colby::query('ROLLBACK');
+        } catch (Throwable $throwable) {
+            Colby::query('ROLLBACK');
+
+            $message = $throwable->getMessage();
+
+            if ($message !== 'A spec being saved generated a null model.') {
+                throw $throwable;
+            }
+        }
+    }
+
+    /**
+     * CBModel::toModel() is allowed to return a model without an ID, however
+     * these models cannot be saved.
+     */
+    static function saveSpecWithoutIDTest() {
+        try {
+            Colby::query('START TRANSACTION');
+
+            $spec = (object)[
+                'className' => 'CBViewPage',
+            ];
+
+            CBModels::save([$spec]);
+
+            Colby::query('ROLLBACK');
+        } catch (Throwable $throwable) {
+            Colby::query('ROLLBACK');
+
+            $message = $throwable->getMessage();
+
+            if ($message !== 'A spec being saved generated a model without an ID.') {
+                throw $throwable;
+            }
+        }
+    }
 }
 
 
