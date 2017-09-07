@@ -654,7 +654,7 @@ EOT;
         if (empty($specs)) { return; }
 
         if (empty($specs[0]->className)) {
-            throw new Exception(__METHOD__ . ' The first spec does not have its `className` propery set.');
+            throw new Exception('The first spec does not have its `className` propery set.');
         } else {
             $sharedClassName = $specs[0]->className;
         }
@@ -664,9 +664,13 @@ EOT;
         $tuples = array_map(function ($spec) use ($sharedClassName) {
             $model = CBModel::toModel($spec);
 
-            /**
-             * TODO: 2017.08.31 handle null model
-             */
+            if ($model === null) {
+                throw new Exception('A spec being saved generated a null model.');
+            }
+
+            if (empty($model->ID)) {
+                throw new Exception('A spec being saved generated a model without an ID.');
+            }
 
             if ($model->className !== $sharedClassName) {
                 throw new Exception('All specs must have the same className.');
