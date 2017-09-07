@@ -5,40 +5,61 @@
 var CBUISelector = {
 
     /**
-     * @param string args.labelText
-     * @param function args.navigateCallback
-     * @param function args.navigateToItemCallback
-     * @param string args.propertyName
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param [{string title, string description, mixed value}] args.options
+     * @param string? args.labelText
+     * @param function? args.navigateCallback (deprecated)
+     * @param function? args.navigateToItemCallback
+     * @param string? args.propertyName
+     * @param object? args.spec
+     * @param function? args.specChangedCallback
+     * @param [{string title, string description, mixed value}]? args.options
+     * @param function? args.valueChangedCallback
      *
-     * @return {
-     *  Element element,
-     *  function updateOptionsCallback,
-     *  function updateValueCallback,
-     * }
+     *      This is an alternative to the spec and specChangedCallback
+     *      parameters when a spec isn't explicitly needed.
+     *
+     * @return  {
+     *              element: Element
+     *              updateOptionsCallback: function
+     *              updateValueCallback: function
+     *          }
      */
-    create : function (args) {
+    create: function (args) {
+
+        /**
+         * These default parameter values make it easier to get started with
+         * this control. However, the user won't be able to change the selection
+         * if the navigateToItemCallback parameter is not specified. See
+         * CBUINavigationView for more information.
+         */
+
+        var labelText = args.labelText || "Selection";
+        var options = args.options || [{ title: "Default Option" }];
+        var propertyName = args.propertyName || "value";
+        var spec = args.spec || {};
+
         var element = document.createElement("div");
         element.className = "CBUISelector";
+        var contentElement = document.createElement("div");
+        contentElement.className = "content";
         var label = document.createElement("div");
         label.className = "label";
-        label.textContent = args.labelText || "";
+        label.textContent = labelText;
         var selectedValueTitle = document.createElement("div");
         var arrow = document.createElement("div");
         arrow.className = "arrow";
         arrow.textContent = ">";
         var state = { options : undefined };
 
-        element.appendChild(label);
-        element.appendChild(selectedValueTitle);
+        contentElement.appendChild(label);
+        contentElement.appendChild(selectedValueTitle);
+        element.appendChild(contentElement);
         element.appendChild(arrow);
 
+
         var updateInterfaceCallback = CBUISelector.updateInterface.bind(undefined, {
-            propertyName : args.propertyName,
+            propertyName : propertyName,
             selectedValueTitleElement : selectedValueTitle,
-            spec : args.spec,
+            spec : spec,
             state : state,
         });
 
@@ -48,32 +69,33 @@ var CBUISelector = {
         });
 
         var updateValueCallback = CBUISelector.updateValue.bind(undefined, {
-            propertyName : args.propertyName,
-            spec : args.spec,
+            propertyName: propertyName,
+            spec: spec,
             specChangedCallback : args.specChangedCallback,
-            updateInterfaceCallback : updateInterfaceCallback,
+            updateInterfaceCallback: updateInterfaceCallback,
+            valueChangedCallback: args.valueChangedCallback,
         });
 
-        updateOptionsCallback(args.options);
+        updateOptionsCallback(options);
 
         if (args.navigateToItemCallback) {
             var clickedCallback = CBUISelector.showSelectorForControl.bind(undefined, {
                 callback : updateValueCallback,
-                labelText : args.labelText,
+                labelText : labelText,
                 navigateToItemCallback : args.navigateToItemCallback,
-                propertyName : args.propertyName,
-                spec : args.spec,
+                propertyName : propertyName,
+                spec : spec,
                 state : state,
             });
 
             element.addEventListener("click", clickedCallback);
-        } else {
+        } else if (args.navigateCallback) {
             element.addEventListener("click", args.navigateCallback.bind(undefined, {
                 className : "CBUISelectorValue",
-                propertyName : args.propertyName,
-                spec : args.spec,
+                propertyName : propertyName,
+                spec : spec,
                 state : state,
-                title : args.labelText || "",
+                title : labelText,
                 updateValueCallback : updateValueCallback,
             }));
         }
@@ -283,13 +305,21 @@ var CBUISelector = {
      * @param object args.spec
      * @param function args.specChangedCallback
      * @param function args.updateInterfaceCallback
+     * @param function? args.valueChangedCallback
      *
      * @return undefined
      */
-    updateValue : function (args, value) {
+    updateValue: function (args, value) {
         args.spec[args.propertyName] = value;
         args.updateInterfaceCallback();
-        args.specChangedCallback();
+
+        if (typeof args.specChangedCallback === "function") {
+            args.specChangedCallback();
+        }
+
+        if (typeof args.valueChangedCallback === "function") {
+            args.valueChangedCallback(value);
+        }
     },
 };
 

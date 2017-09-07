@@ -1,22 +1,25 @@
 .CBUISelector {
+    box-sizing: border-box;
+    display: flex;
+    min-height: 44px;
+}
+
+.CBUISelector .content {
+    flex: 1 1 auto;
     padding: 5px 10px;
-    position: relative;
 }
 
 .CBUISelector .label {
-    color: hsl(0, 0%, 50%);
+    color: var(--CBTextColor2);
 }
 
 .CBUISelector .arrow {
     align-items: center;
-    color: hsl(0, 0%, 50%);
+    color: var(--CBTextColor2);
     display: flex;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    height: 100%;
-    position: absolute;
-    right: 10px;
-    top: 0;
+    flex: none;
+    justify-content: center;
+    width: 30px;
 }
 
 .CBUISelectorOption,
