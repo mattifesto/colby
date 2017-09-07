@@ -1,4 +1,4 @@
-.CBAdminPageForImages {
+.CBImagesAdminPage {
     align-items: flex-start;
     background-color: hsl(0, 0%, 30%);
     display: flex;
@@ -7,18 +7,18 @@
     justify-content: center;
 }
 
-.CBAdminPageForImages + * {
+.CBImagesAdminPage + * {
     display: none;
 }
 
-.CBAdminPageForImages .thumbnail {
+.CBImagesAdminPage .thumbnail {
     box-sizing: border-box;
     height: 160px;
     padding: 5px;
     width: 160px;
 }
 
-.CBAdminPageForImages .thumbnail > img {
+.CBImagesAdminPage .thumbnail > img {
     background-color: hsl(0, 0%, 20%);
     display: block;
     height: 100%;
@@ -27,21 +27,21 @@
 }
 
 @media (max-width: 640px) {
-    .CBAdminPageForImages .thumbnail {
+    .CBImagesAdminPage .thumbnail {
         height: 25vw;
         width: 25vw;
     }
 }
 
 @media (max-width: 480px) {
-    .CBAdminPageForImages .thumbnail {
+    .CBImagesAdminPage .thumbnail {
         height: 120px;
         width: 120px;
     }
 }
 
 @media (max-width: 360px) {
-    .CBAdminPageForImages .thumbnail {
+    .CBImagesAdminPage .thumbnail {
         height: 33vw;
         width: 33vw;
     }

@@ -1,6 +1,6 @@
 <?php
 
-class CBAdminPageForImages {
+class CBImagesAdminPage {
 
     /**
      * @return [string]

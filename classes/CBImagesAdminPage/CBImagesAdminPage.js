@@ -2,16 +2,16 @@
 /* global
     Colby */
 
-var CBAdminPageForImages = {
+var CBImagesAdminPage = {
 
     /**
      * @return {Element}
      */
     createElement : function() {
         var element = document.createElement("div");
-        element.className = "CBAdminPageForImages";
+        element.className = "CBImagesAdminPage";
 
-        CBAdminPageForImages.fetchImages({
+        CBImagesAdminPage.fetchImages({
             element : element
         });
 
@@ -40,18 +40,18 @@ var CBAdminPageForImages = {
      * @return undefined
      */
     fetchImages : function(args) {
-        args.element.textContent = "CBAdminPageForImages";
+        args.element.textContent = "CBImagesAdminPage";
 
         var xhr = new XMLHttpRequest();
-        xhr.onload = CBAdminPageForImages.fetchImagesDidLoad.bind(undefined, {
+        xhr.onload = CBImagesAdminPage.fetchImagesDidLoad.bind(undefined, {
             element : args.element,
             xhr : xhr
         });
-        xhr.onerror = CBAdminPageForImages.fetchImagesDidError.bind(undefined, {
+        xhr.onerror = CBImagesAdminPage.fetchImagesDidError.bind(undefined, {
             xhr : xhr
         });
 
-        xhr.open("POST", "/api/?class=CBAdminPageForImages&function=fetchImages");
+        xhr.open("POST", "/api/?class=CBImagesAdminPage&function=fetchImages");
         xhr.send();
     },
 
@@ -77,7 +77,7 @@ var CBAdminPageForImages = {
             args.element.textContent = null;
 
             for (var i = 0; i < response.images.length; i++) {
-                args.element.appendChild(CBAdminPageForImages.createThumbnailElement(response.images[i]));
+                args.element.appendChild(CBImagesAdminPage.createThumbnailElement(response.images[i]));
             }
         } else {
             Colby.displayResponse(response);
@@ -88,5 +88,5 @@ var CBAdminPageForImages = {
 document.addEventListener("DOMContentLoaded", function() {
     var main = document.getElementsByTagName("main")[0];
 
-    main.appendChild(CBAdminPageForImages.createElement());
+    main.appendChild(CBImagesAdminPage.createElement());
 });
