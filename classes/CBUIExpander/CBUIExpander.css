@@ -58,11 +58,28 @@
 
 .CBUIExpander.expanded .content {
     display: block;
+}
+
+.CBUIExpander .content > * {
     padding: 10px;
+}
+
+.CBUIExpander .message {
     white-space: pre-line;
+}
+
+.CBUIExpander .pre {
+    font-family: var(--CBMonospaceFontFamily);
+    overflow-x: scroll;
+    white-space: pre;
 }
 
 .CBUIExpander a {
     display: block;
     padding: 5px 0;
+    text-decoration: none;
+}
+
+.CBUIExpander a:hover {
+    text-decoration: underline;
 }
