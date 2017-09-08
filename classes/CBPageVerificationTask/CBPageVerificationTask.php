@@ -41,7 +41,7 @@ final class CBPageVerificationTask {
         $severity = 8;
         $links = [
             (object)[
-                'URI' => "/admin/documents/view/?archive-id={$ID}",
+                'URI' => "/admin/page/?class=CBDataStoreAdminPage&ID={$ID}",
                 'text' => 'data store information',
             ],
             (object)[

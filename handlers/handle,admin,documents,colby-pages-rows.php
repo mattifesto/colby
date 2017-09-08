@@ -46,7 +46,7 @@ CBView::render((object)[
 
     $SQL = <<< EOT
 
-        SELECT  HEX(`archiveID`) as `ID`
+        SELECT  LOWER(HEX(`archiveID`)) as `ID`
         FROM    `ColbyPages`
         WHERE   `className` IS NULL
 
@@ -171,7 +171,7 @@ EOT;
  * @return string
  */
 function linkForArchiveId($archiveId) {
-    $href = CBSitePreferences::siteURL() . "/admin/documents/view/?archive-id={$archiveId}";
+    $href = CBSitePreferences::siteURL() . "/admin/page/?class=CBDataStoreAdminPage&ID={$archiveId}";
 
     return "<a href=\"{$href}\"><span class=\"hash\">{$archiveId}</span></a>";
 }
