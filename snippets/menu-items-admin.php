@@ -60,7 +60,7 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
     $developMenu->images        = newMenuItem('Images', '/admin/page/?class=CBImagesAdminPage');
     $developMenu->php           = newMenuItem('PHP', '/admin/develop/php/');
     $developMenu->update        = newMenuItem('Update', '/admin/page/?class=CBAdminPageForUpdate');
-    $developMenu->pages         = newMenuItem('Pages', '/admin/documents/colby-pages-rows/');
+    $developMenu->pages         = newMenuItem('Pages', '/admin/page/?class=CBPagesDevelopmentAdminPage');
     $developMenu->mysql         = newMenuItem('MySQL', '/developer/mysql/');
 
     $CBAdminMenu->develop = newMenuItem('Develop', '/admin/develop/php/', $developMenu);

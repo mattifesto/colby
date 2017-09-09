@@ -1,81 +1,83 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Administrators')) {
-    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
-}
+final class CBPagesDevelopmentAdminPage {
 
-CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
-CBHTMLOutput::begin();
-CBHTMLOutput::setTitleHTML('ColbyPages Table Rows');
-CBHTMLOutput::setDescriptionHTML('Pages that are in the ColbyPages table.');
-CBHTMLOutput::requireClassName('CBUI');
-CBHTMLOutput::addCSSURL(CBSystemURL . '/handlers/handle,admin,documents,colby-pages-rows.css');
+    /**
+     * @return [string]
+     */
+    static function adminPageMenuNamePath() {
+        return ['develop', 'pages'];
+    }
 
-CBView::render((object)[
-    'className' => 'CBAdminPageMenuView',
-    'selectedMenuItemName' => 'develop',
-    'selectedSubmenuItemName' => 'pages',
-]);
+    /**
+     * @return stdClass
+     */
+    static function adminPagePermissions() {
+        return (object)['group' => 'Developers'];
+    }
 
-?>
+    /**
+     * @return null
+     */
+    static function adminPageRenderContent() {
+        CBHTMLOutput::setTitleHTML('CBPages Development Information');
+        CBHTMLOutput::setDescriptionHTML('Pages that are in the ColbyPages table.');
 
-<main class="CBUIRoot CBPagesRows">
-    <div class="summaryLists">
+        ?>
+
+        <div class="summaryLists">
+
+            <?php
+
+            CBView::render((object)[
+                'className' => 'CBPagesTableSummaryView',
+                'type' => 'published'
+            ]);
+
+            CBView::render((object)[
+                'className' => 'CBPagesTableSummaryView',
+                'type' => 'unpublished'
+            ]);
+
+            ?>
+
+        </div>
 
         <?php
 
         CBView::render((object)[
-            'className' => 'CBPagesTableSummaryView',
-            'type' => 'published'
+            'className' => 'UnpublishedPagesWithURIsView',
         ]);
 
-        CBView::render((object)[
-            'className' => 'CBPagesTableSummaryView',
-            'type' => 'unpublished'
-        ]);
+        $SQL = <<< EOT
 
-        ?>
-
-    </div>
-
-    <?php
-
-    CBView::render((object)[
-        'className' => 'UnpublishedPagesWithURIsView',
-    ]);
-
-    $SQL = <<< EOT
-
-        SELECT  LOWER(HEX(`archiveID`)) as `ID`
-        FROM    `ColbyPages`
-        WHERE   `className` IS NULL
+            SELECT  LOWER(HEX(`archiveID`)) as `ID`
+            FROM    `ColbyPages`
+            WHERE   `className` IS NULL
 
 EOT;
 
-    $IDs = CBDB::SQLToArray($SQL);
+        $IDs = CBDB::SQLToArray($SQL);
 
-    if (count($IDs) > 0) {
+        if (count($IDs) > 0) {
 
-        echo '<section><h1>ColbyPages Rows with a NULL `className`</h1><div>';
+            echo '<section><h1>ColbyPages Rows with a NULL `className`</h1><div>';
 
-        foreach ($IDs as $ID) {
-            echo linkForArchiveId($ID), "\n";
+            foreach ($IDs as $ID) {
+                echo linkForArchiveId($ID), "\n";
+            }
+
+            echo '</div></section>';
         }
-
-        echo '</div></section>';
     }
 
-    ?>
-
-</main>
-
-<?php
-
-CBView::render((object)[
-    'className' => 'CBAdminPageFooterView',
-]);
-
-CBHTMLOutput::render();
+    /**
+     * @return string
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+    }
+}
 
 /**
  *
