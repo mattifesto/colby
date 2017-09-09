@@ -27,7 +27,7 @@ final class CBTasks2AdminPage {
     /**
      * @return [object]
      */
-    static function CBAjax_fetchIssues() {
+    static function CBAjax_fetchOutputsWithIssues() {
         $SQL = <<<EOT
 
             SELECT      `output`
@@ -44,7 +44,7 @@ EOT;
     /**
      * @return string
      */
-    static function CBAjax_fetchIssues_group() {
+    static function CBAjax_fetchOutputsWithIssues_group() {
         return 'Administrators';
     }
 

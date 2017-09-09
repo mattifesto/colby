@@ -1,4 +1,4 @@
-"use strict"; /* jshint strict: global */
+"use strict"; /* jshint strict: global */  /* jshint esversion: 6 */
 /* globals
     CBUI,
     CBUIExpander,
@@ -152,15 +152,17 @@ var CBTasks2AdminPage = {
             issuesElement.textContent = "";
             /* TODO: disable button */
 
-            var promise = Colby.callAjaxFunction("CBTasks2AdminPage", "fetchIssues")
+            var promise = Colby.callAjaxFunction("CBTasks2AdminPage", "fetchOutputsWithIssues")
                 .then(onFulfilled)
                 .catch(onRejected)
                 .then(onFinally, onFinally);
 
             Colby.retain(promise);
 
-            function onFulfilled(value) {
-                value.forEach(function (output) {
+            function onFulfilled(outputs) {
+                var count = 0;
+
+                for (let output of outputs) {
                     var message = output.message + "\n\n" + output.taskClassName + "\n" + output.taskID;
 
                     if (output.exception) {
@@ -174,7 +176,13 @@ var CBTasks2AdminPage = {
                     });
 
                     issuesElement.appendChild(expander.element);
-                });
+
+                    count += 1;
+
+                    if (count >= 100) {
+                        break;
+                    }
+                }
 
                 Colby.updateTimes();
             }
