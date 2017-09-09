@@ -1,4 +1,4 @@
-"use strict"; /* jshint strict: global */
+"use strict"; /* jshint strict: global */  /* jshint esversion: 6 */
 /* globals
     CBUIExpander,
     Colby */
@@ -19,7 +19,9 @@ var CBLogAdminPage = {
         return element;
 
         function onFulfilled(entries) {
-            entries.forEach(function (entry) {
+            var count = 0;
+
+            for (let entry of entries) {
                 var message = entry.message;
 
                 if (entry.model && entry.model.exceptionStackTrace) {
@@ -34,7 +36,13 @@ var CBLogAdminPage = {
                     message: message,
                     timestamp: entry.timestamp,
                 }).element);
-            });
+
+                count += 1;
+
+                if (count >= 100) {
+                    break;
+                }
+            }
 
             Colby.updateTimes();
         }
