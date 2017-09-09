@@ -1,22 +1,16 @@
 <?php
 
-if (isset($_SERVER['SERVER_NAME']))
-{
-    echo '   Server name: ', $_SERVER['SERVER_NAME'], "\n";
+if (isset($_SERVER['SERVER_NAME'])) {
+    echo $_SERVER['SERVER_NAME'], "\n";
 }
 
-if (isset($_SERVER['REQUEST_URI']))
-{
-    echo '   Request URI: ', $_SERVER['REQUEST_URI'], "\n";
+if (isset($_SERVER['REQUEST_URI'])) {
+    $parts = explode('?', $_SERVER['REQUEST_URI'], 2);
+    echo implode("\n", $parts);
 }
 
-if (isset($_SERVER['QUERY_STRING']))
-{
-    echo '  Query String: ', $_SERVER['QUERY_STRING'], "\n\n";
-}
+echo "\n\n\n";
+echo CBConvert::throwableToStackTrace($exception);
 
-echo 'Exception type: ', get_class($exception), "\n";
-echo '       Message: ', $exception->getMessage(), "\n\n";
-
-echo '## ', $exception->getFile(), '(', $exception->getLine(), ')', "\n";
+echo "\n\n\n";
 echo $exception->getTraceAsString();
