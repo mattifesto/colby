@@ -1,26 +1,26 @@
-.CBAdminPageForTasks .buttons {
+.CBTasks2AdminPage .buttons {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
 }
 
-.CBAdminPageForTasks .key {
+.CBTasks2AdminPage .key {
     padding: 10px;
 }
 
-.CBAdminPageForTasks .key .ID {
+.CBTasks2AdminPage .key .ID {
     color: rgba(0, 0, 0, 0.5);
     font-family: var(--CBMonospaceFontFamily);
 }
 
-.CBAdminPageForTasks .status > div {
+.CBTasks2AdminPage .status > div {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     padding: 20px;
 }
 
-.CBAdminPageForTasks .status .textvalue {
+.CBTasks2AdminPage .status .textvalue {
     background-color: var(--CBBackgroundColor);
     border: 1px solid var(--CBLineColor);
     border-radius: 5px;
@@ -33,11 +33,11 @@
     -webkit-user-select: none;
 }
 
-.CBAdminPageForTasks .status .textvalue .text {
+.CBTasks2AdminPage .status .textvalue .text {
     color: var(--CBTextColor2);
 }
 
-.CBAdminPageForTasks .status .textvalue > * {
+.CBTasks2AdminPage .status .textvalue > * {
     padding: 2px 5px;
     text-align: center;
 }

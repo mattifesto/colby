@@ -4,27 +4,27 @@
     CBUIExpander,
     Colby */
 
-var CBAdminPageForTasks = {
+var CBTasks2AdminPage = {
 
     /**
      * @return Element
      */
     create: function () {
         var element = document.createElement("div");
-        element.className = "CBAdminPageForTasks";
+        element.className = "CBTasks2AdminPage";
         var buttonsElement = document.createElement("div");
         buttonsElement.className = "buttons";
 
-        var statusElement = CBAdminPageForTasks.createStatusElement();
+        var statusElement = CBTasks2AdminPage.createStatusElement();
         element.appendChild(statusElement);
 
         buttonsElement.appendChild(CBUI.createButton({
-            callback: CBAdminPageForTasks.startVerificationForAllPages,
+            callback: CBTasks2AdminPage.startVerificationForAllPages,
             text: "Start Verification for All Pages",
         }).element);
 
         buttonsElement.appendChild(CBUI.createButton({
-            callback: CBAdminPageForTasks.startVerificationForNewPages,
+            callback: CBTasks2AdminPage.startVerificationForNewPages,
             text: "Start Verification for New Pages",
         }).element);
 
@@ -50,13 +50,13 @@ var CBAdminPageForTasks = {
         }).element);
 
         buttonsElement.appendChild(CBUI.createButton({
-            callback: CBAdminPageForTasks.scheduleATask,
+            callback: CBTasks2AdminPage.scheduleATask,
             text: "Schedule a Task",
         }).element);
 
         element.appendChild(buttonsElement);
 
-        var issuesElement = CBAdminPageForTasks.createIssuesElement();
+        var issuesElement = CBTasks2AdminPage.createIssuesElement();
         element.appendChild(issuesElement);
 
         return element;
@@ -124,7 +124,7 @@ var CBAdminPageForTasks = {
         var element = document.createElement("div");
         element.className = "status";
 
-        CBAdminPageForTasks.startFetchingStatus(element);
+        CBTasks2AdminPage.startFetchingStatus(element);
 
         return element;
     },
@@ -152,7 +152,7 @@ var CBAdminPageForTasks = {
             issuesElement.textContent = "";
             /* TODO: disable button */
 
-            var promise = Colby.callAjaxFunction("CBAdminPageForTasks", "fetchIssues")
+            var promise = Colby.callAjaxFunction("CBTasks2AdminPage", "fetchIssues")
                 .then(onFulfilled)
                 .catch(onRejected)
                 .then(onFinally, onFinally);
@@ -197,14 +197,14 @@ var CBAdminPageForTasks = {
         fetchStatus();
 
         function fetchStatus() {
-            Colby.callAjaxFunction("CBAdminPageForTasks", "fetchStatus")
+            Colby.callAjaxFunction("CBTasks2AdminPage", "fetchStatus")
                 .then(onFulfilled)
                 .catch(Colby.displayError);
         }
 
         function onFulfilled(response) {
             element.textContent = "";
-            element.appendChild(CBAdminPageForTasks.createStatusContent(response));
+            element.appendChild(CBTasks2AdminPage.createStatusContent(response));
 
             if (response.countOfAvailableTasks > 0) {
                 Colby.CBTasks2DispatchDelay = 1; // 1 millisecond
@@ -220,7 +220,7 @@ var CBAdminPageForTasks = {
      * @return undefined
      */
     scheduleATask: function () {
-        Colby.fetchAjaxResponse("/api/?class=CBAdminPageForTasks&function=scheduleATask")
+        Colby.fetchAjaxResponse("/api/?class=CBTasks2AdminPage&function=scheduleATask")
             .then(function () { Colby.alert("A task was scheduled."); })
             .catch(Colby.displayError);
     },
@@ -229,7 +229,7 @@ var CBAdminPageForTasks = {
      * @return undefined
      */
     startVerificationForAllPages: function () {
-        CBAdminPageForTasks.restartVerificationForAllPagesPromise =
+        CBTasks2AdminPage.restartVerificationForAllPagesPromise =
              Colby.fetchAjaxResponse("/api/?class=CBPageVerificationTask&function=startForAllPages")
             .catch(Colby.displayError);
     },
@@ -238,7 +238,7 @@ var CBAdminPageForTasks = {
      * @return undefined
      */
     startVerificationForNewPages: function () {
-        CBAdminPageForTasks.restartVerificationForNewPagesPromise =
+        CBTasks2AdminPage.restartVerificationForNewPagesPromise =
              Colby.fetchAjaxResponse("/api/?class=CBPageVerificationTask&function=startForNewPages")
             .catch(Colby.displayError);
     },
@@ -247,5 +247,5 @@ var CBAdminPageForTasks = {
 Colby.afterDOMContentLoaded(function () {
     Colby.CBTasks2DispatchAlways = true;
     var main = document.getElementsByTagName("main")[0];
-    main.appendChild(CBAdminPageForTasks.create());
+    main.appendChild(CBTasks2AdminPage.create());
 });

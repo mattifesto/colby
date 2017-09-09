@@ -1,6 +1,6 @@
 <?php
 
-final class CBAdminPageForTasks {
+final class CBTasks2AdminPage {
 
     /**
      * @return [string]
