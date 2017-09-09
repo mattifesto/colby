@@ -106,6 +106,40 @@ final class CBConvert {
     }
 
     /**
+     * @param Throwable $throwable
+     *
+     * @return string
+     */
+    static function throwableToStackTrace(Throwable $throwable) {
+        $lines = [];
+        $trace = $throwable->getTrace();
+
+        $class = get_class($throwable);
+        $message = $throwable->getMessage();
+        $basename = basename($throwable->getFile());
+        $line = $throwable->getLine();
+
+        $lines[] = "{$class}\n\"{$message}\"\n\n{$basename}\nline {$line}";
+
+        foreach ($trace as $item) {
+            $basename = basename($item['file']);
+            $function = $item['function'];
+            $class = '';
+            $type = '';
+
+            if (mb_substr($function, 0, 1) !== '{') {
+                $class = empty($item['class']) ? '' : $item['class'];
+                $type = empty($item['type']) ? '' : $item['type'];
+                $function = "{$function}()";
+            }
+
+            $lines[] = "{$basename}\nline {$item['line']}\n{$class}{$type}{$function}";
+        }
+
+        return implode("\n\n", $lines);
+    }
+
+    /**
      * @param string $value
      * @param int $length
      * @param string $append
