@@ -167,7 +167,7 @@ final class Colby {
     static function exceptionStackTrace($exception) {
         ob_start();
 
-        include(CBSystemDirectory . '/snippets/exception-stack-trace.php');
+        include(cbsysdir() . '/snippets/exception-stack-trace.php');
 
         return ob_get_clean();
     }
@@ -328,7 +328,7 @@ final class Colby {
      *
      * @return void
      */
-    static function handleException($exception, $handlerName = null) {
+    static function handleException($exception) {
 
         /**
          * Exception handlers should never throw exceptions because if they
@@ -347,32 +347,31 @@ final class Colby {
          */
 
         try {
+
             Colby::reportException($exception);
 
-            $absoluteHandlerFilename = null;
+            CBExceptionView::pushThrowable($exception);
 
-            if ($handlerName) {
-                $absoluteHandlerFilename = Colby::findHandler("handle-exception-{$handlerName}.php");
-            }
+            CBPage::renderSpec((object)[
+                'className' => 'CBViewPage',
+                'title' => 'Something has gone wrong',
+                'layout' => (object)[
+                    'className' => 'CBPageLayout',
+                    'CSSClassNames' => 'center',
+                ],
+                'sections' => [
+                    (object)[
+                        'className' => 'CBExceptionView',
+                    ],
+                ],
+            ]);
 
-            if (!$absoluteHandlerFilename) {
-                $absoluteHandlerFilename = self::findHandler('handle-exception.php');
-            }
+            CBExceptionView::popThrowable();
 
-            if (!$absoluteHandlerFilename) {
+        } catch (Exception $innerException) {
+            $message = CBConvert::throwableToMessage($innerException);
 
-                /**
-                 * Something would have to be wrong with the system
-                 * configuration to get here, but if that happens we want to
-                 * see the error in the error log otherwise debugging is hard.
-                 */
-
-                error_log($exception->getMessage());
-            } else {
-                include $absoluteHandlerFilename;
-            }
-        } catch (Exception $rareException) {
-            error_log('Colby::handleException() RARE EXCEPTION: ' . $rareException->getMessage());
+            error_log('Colby::handleException() INNER EXCEPTION: ' . $message);
         }
     }
 
