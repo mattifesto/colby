@@ -24,7 +24,7 @@ final class CBPageLayout {
         }
 
         $customLayoutClassName = CBModel::value($layoutModel, 'customLayoutClassName', '');
-        $customLayoutProperties = CBModel::value($layoutModel, 'customLayoutProperties', (object)[]);
+        $customLayoutProperties = CBModel::valueAsObject($layoutModel, 'customLayoutProperties');
 
         CBPageLayout::renderPageHeader($customLayoutClassName, $customLayoutProperties);
 
@@ -36,8 +36,8 @@ final class CBPageLayout {
 
                 if (!empty($layoutModel->isArticle)) { echo "<article>"; }
 
-                if (is_callable($function = "{$layoutModel->customLayoutClassName}::renderPageContent")) {
-                    call_user_func($function, $layoutModel->customLayoutProperties);
+                if (is_callable($function = "{$customLayoutClassName}::renderPageContent")) {
+                    call_user_func($function, $customLayoutProperties);
                 } else {
                     $renderContentCallback();
                 }
