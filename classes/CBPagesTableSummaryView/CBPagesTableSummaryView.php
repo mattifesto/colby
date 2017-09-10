@@ -16,8 +16,8 @@ final class CBPagesTableSummaryView {
         ?>
 
         <div class="CBPagesTableSummaryView">
-            <h1><?= $titleAsHTML ?></h1>
             <div>
+                <h1><?= $titleAsHTML ?></h1>
 
                 <?php
 
@@ -41,11 +41,11 @@ EOT;
                     ?>
 
                     <div class="nameset">
-                        <div>
-                            <div class="className"><?= $className ?></div>
-                            <div class="classNameForKind"><?= $classNameForKind ?></div>
+                        <div class="classNames">
+                            <div class="data className"><?= $className ?></div>
+                            <div class="data classNameForKind"><?= $classNameForKind ?></div>
                         </div>
-                        <div class="count"><?= $row->count ?></div>
+                        <div class="data count"><?= $row->count ?></div>
                     </div>
 
                     <?php

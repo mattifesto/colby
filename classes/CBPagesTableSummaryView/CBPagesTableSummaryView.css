@@ -1,14 +1,20 @@
 .CBPagesTableSummaryView {
     box-sizing: border-box;
-    padding: 20px 0;
-    width: 320px;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
 }
 
+.CBPagesTableSummaryView > div {
+    background-color: var(--CBBackgroundColor);
+    border: 1px solid var(--CBLineColor);
+    border-radius: 5px;
+}
 
 .CBPagesTableSummaryView h1 {
-    background-color: hsl(30, 50%, 90%);
     font-size: 1em;
     padding: 5px 10px;
+    text-align: center;
 }
 .CBPagesTableSummaryView td, .CBPagesTableSummaryView th {
     padding: 2px 5px;
@@ -22,24 +28,17 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
+}
+
+.CBPagesTableSummaryView .nameset .classNames {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.CBPagesTableSummaryView .nameset .data {
     padding: 5px 10px;
 }
 
-.CBPagesTableSummaryView .nameset + .nameset {
-    border-top: 1px solid hsl(0, 0%, 80%);
-}
-
 .CBPagesTableSummaryView .nameset .classNameForKind {
-    color: hsl(0, 0%, 60%);
-}
-
-@media all and (min-width: 480px) {
-    .CBPagesTableSummaryView {
-        padding: 20px;
-        width: 480px;
-    }
-
-    .CBPagesTableSummaryView .nameset div > div {
-        display: inline;
-    }
+    color: var(--CBTextColor2);
 }
