@@ -17,10 +17,8 @@ final class CBPageLayout {
 
         /* local CSS */
 
-        if (empty($layoutModel->localCSS)) {
-            $localCSS = '';
-        } else {
-            $localCSS = "<style>{$layoutModel->localCSS}</style>";
+        if (!empty($layoutModel->localCSS)) {
+            CBHTMLOutput::addCSS($layoutModel->localCSS);
         }
 
         $customLayoutClassName = CBModel::value($layoutModel, 'customLayoutClassName', '');
@@ -31,7 +29,6 @@ final class CBPageLayout {
         ?>
 
         <main class="CBPageLayout <?= $CSSClassNames ?>">
-            <?= $localCSS ?>
             <?php
 
                 if (!empty($layoutModel->isArticle)) { echo "<article>"; }
