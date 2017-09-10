@@ -36,7 +36,7 @@ final class CBPageTitleAndDescriptionView {
 
         $CSSClassNames = implode(' ', $CSSClassNames);
 
-        ?><header class="CBPageTitleAndDescriptionView <?= $CSSClassNames ?>"><?php
+        ?><header class="CBPageTitleAndDescriptionView <?= $CSSClassNames ?>"><div><?php
             if (!empty($context->titleAsHTML)) {
                 if (empty($model->titleColor)) {
                     $style = '';
@@ -66,7 +66,7 @@ final class CBPageTitleAndDescriptionView {
 
                 echo "<div class='published'{$style}>{$publishedAsHTML}</div>";
             }
-        ?></header><?php
+        ?></div></header><?php
     }
 
     /**

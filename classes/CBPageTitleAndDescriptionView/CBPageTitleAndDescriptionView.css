@@ -1,27 +1,35 @@
 .CBPageTitleAndDescriptionView_default {
-  padding: 20px 20px 40px;
-  text-align: center;
-}
-
-.CBPageTitleAndDescriptionView_default > h1 {
-    font-size: 2em;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    padding: 40px 6vw;
+    text-align: center;
 }
 
 .CBPageTitleAndDescriptionView_default > div {
-  margin: 20px auto 0;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
 }
 
-.CBPageTitleAndDescriptionView_default > .description {
+.CBPageTitleAndDescriptionView_default h1 {
+    font-size: 2em;
+    max-width: 36em;
+}
+
+.CBPageTitleAndDescriptionView_default .description {
     color: var(--CBTextColor2);
     font-style: italic;
     line-height: 1.5;
     max-width: 480px;
+    padding: 50px 0 0;
 }
 
-.CBPageTitleAndDescriptionView_default > .published {
+.CBPageTitleAndDescriptionView_default .published {
     color: var(--CBTextColor2);
     font-size: 80%;
-    margin-top: 40px;
+    padding: 50px 0 0;
 }
 
 /* light text colors (deprecated) */
