@@ -123,47 +123,44 @@ EOT;
         <div style="text-align: center; margin: 5px 0;">
             <button onclick="cleanUnpublishedPages();">Remove URIs from Unpublished Pages</button>
         </div>
-        <table id="unpublished">
+        <div id="unpublished">
             <style>
 
                 #unpublished {
-                    background-color:   hsl(30, 30%, 95%);
-                    border:             1px solid hsl(30, 30%, 80%);
-                    font-size:          12px;
-                    margin:             0px auto 20px;
-                    width:              960px;
+                    display: flex;
+                    justify-content: center;
+                    padding: 20px;
                 }
 
-                #unpublished td, #overview th {
-                    padding: 2px 5px;
+                #unpublished > div {
+                    background-color: var(--CBBackgroundColor);
+                    border: 1px solid var(--CBLineColor);
+                    border-radius: 5px;
                 }
 
-                #unpublished td:first-child {
-                    font-family:    monospace;
-                    font-size:      10px;
-                }
-
-                #unpublished td:last-child {
-                    white-space: nowrap;
+                #unpublished .record {
+                    padding: 10px;
                 }
 
             </style>
+            <div>
 
-            <?php
+                <?php
 
-            array_walk($pages, function($page) {
-                $values = array_values((array)$page);
-                $values = array_map(function($value) {
-                    $valueAsHTML = ColbyConvert::textToHTML($value);
-                    return "<td>{$valueAsHTML}</td>";
-                }, $values);
-                $values = implode('', $values);
-                echo "<tr>{$values}</tr>";
-            });
+                array_walk($pages, function($page) {
+                    $values = array_values((array)$page);
+                    $values = array_map(function($value) {
+                        $valueAsHTML = ColbyConvert::textToHTML($value);
+                        return "<div>{$valueAsHTML}</div>";
+                    }, $values);
+                    $values = implode('', $values);
+                    echo "<div class=\"record\">{$values}</div>";
+                });
 
-            ?>
+                ?>
 
-        </table>
+            </div>
+        </div>
 
         <?php
     }

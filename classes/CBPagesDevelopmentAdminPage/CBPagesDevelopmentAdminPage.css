@@ -2,12 +2,6 @@
     flex: 1 1 auto;
 }
 
-.summaryLists {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
 section.group-type a {
     margin: 5px 15px;
 }
