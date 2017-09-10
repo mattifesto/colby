@@ -11,6 +11,3 @@ if (isset($_SERVER['REQUEST_URI'])) {
 
 echo "\n\n\n";
 echo CBConvert::throwableToStackTrace($exception);
-
-echo "\n\n\n";
-echo $exception->getTraceAsString();
