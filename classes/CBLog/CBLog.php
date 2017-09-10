@@ -179,6 +179,7 @@ EOT;
             FROM `CBLog`
             {$whereAsSQL}
             ORDER BY `ID` DESC
+            LIMIT 500
 
 EOT;
 
