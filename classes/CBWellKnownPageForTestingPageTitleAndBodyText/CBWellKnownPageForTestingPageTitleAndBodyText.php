@@ -8,34 +8,29 @@ final class CBWellKnownPageForTestingPageTitleAndBodyText {
      * @return null
      */
     static function install() {
-        $originalSpec = CBModels::fetchSpecByID(CBWellKnownPageForTestingPageTitleAndBodyText::ID);
+        $spec = (object)[
+            'ID' => CBWellKnownPageForTestingPageTitleAndBodyText::ID,
+            'className' => 'CBViewPage',
+            'description' => 'A page for testing and experimenting with CBThemedTextView.',
+            'layout' => (object)[
+                'className' => 'CBPageLayout',
+                'CSSClassNames' => 'CBLightTheme',
+            ],
+            'title' => 'Well-Known Page for Testing CBThemedTextView',
+        ];
 
-        if (empty($originalSpec)) {
-            $spec = (object)[
-                'ID' => CBWellKnownPageForTestingPageTitleAndBodyText::ID,
-            ];
-        } else {
-            $spec = clone $originalSpec;
-        }
+        $savedSpec = CBModels::fetchSpecByID(CBWellKnownPageForTestingPageTitleAndBodyText::ID);
 
-        $spec->className = 'CBViewPage';
-        $spec->description = 'This page is used to test the formatting of CBPageTitleAndDescriptionView and CBThemedTextView.';
-        $spec->isPublished = false;
-        $spec->title = 'Well-Known Page for Testing Page Title and Body Text';
-        $spec->URI = null;
-
-        if (empty($spec->publicationTimeStamp)) {
-            $spec->publicationTimeStamp = time();
-        }
-
-        if (empty($spec->publishedBy)) {
-            $spec->publishedBy = ColbyUser::currentUserId();
+        if (!empty($savedSpec->version)) {
+            $spec->version = $savedSpec->version;
         }
 
         include __DIR__ . '/sections.php';
 
-        if ($spec != $originalSpec) {
-            CBModels::save([$spec]);
+        if ($spec != $savedSpec) {
+            CBDB::transaction(function () use ($spec) {
+                CBModels::save([$spec]);
+            });
         }
     }
 }

@@ -160,7 +160,7 @@ $section = new stdClass();
 $section->className = 'CBThemedTextView';
 $section->center = true;
 $section->contentAsMarkaround = 'View the Mattifesto Home Page (specified color) >';
-$section->contentColor = 'hsl(210, 100%, 50%)';
+$section->contentColor = 'hsl(30, 100%, 50%)';
 $section->URL = 'https://mattifesto.com/';
 
 $spec->sections[] = $section;
