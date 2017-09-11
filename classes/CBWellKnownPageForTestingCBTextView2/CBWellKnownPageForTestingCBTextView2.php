@@ -31,9 +31,10 @@ final class CBWellKnownPageForTestingCBTextView2 {
 
         include __DIR__ . '/sections.php';
 
-
         if ($spec != $savedSpec) {
-            CBModels::save([$spec]);
+            CBDB::transaction(function () use ($spec) {
+                CBModels::save([$spec]);
+            });
         }
     }
 }
