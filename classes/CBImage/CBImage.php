@@ -66,6 +66,47 @@ final class CBImage {
     }
 
     /**
+     * Use the function instead of exif_read_data() because exif_read_data()
+     * throws errors for many image files.
+     *
+     * @param string $filepath
+     *
+     * @return [string => mixed]|false
+     */
+    static function exif_read_data($filepath) {
+        try {
+            return exif_read_data($filepath);
+        } catch (Throwable $throwable) {
+            return false;
+        }
+    }
+
+    /**
+     * Use this function instead of getimagesize() because it properly returns
+     * width and height for images that are rotated via the Orientation EXIF
+     * property.
+     *
+     * @return [int => mixed]
+     */
+    static function getimagesize($filepath) {
+        $data = getimagesize($filepath);
+
+        if ($data[2] == IMG_JPEG) {
+            $exif = CBImage::exif_read_data($filepath);
+            $orientation = empty($exif['Orientation']) ? 1 : $exif['Orientation'];
+
+            if ($orientation == 6 || $orientation == 9) {
+                $width = $data[0];      // store width
+                $data[0] = $data[1];    // set width to height
+                $data[1] = $width;      // set height to width
+                $data[3] = "width=\"{$data[0]}\" height=\"{$data[1]}\"";
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * This function is similar to the CBModel::value... functions.
      *
      * @param object $model
