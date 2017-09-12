@@ -84,7 +84,7 @@ class CBImages {
                   case 'jpeg':
                   case 'png':
                   case 'gif':
-                      $size = getimagesize($pathname);
+                      $size = CBImage::getimagesize($pathname);
                       $area = $size[0] * $size[1];
 
                       if ($area > $largestArea) {
@@ -121,7 +121,7 @@ class CBImages {
      *      Returns a CBImage model.
      */
     static function importImage($filepath) {
-        $size = getimagesize($filepath);
+        $size = CBImage::getimagesize($filepath);
 
         if ($size === false || !in_array($size[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
             throw new Exception('The file specified is either not a an image or has a file format that is not supported.');
@@ -271,7 +271,7 @@ EOT;
         CBImages::reduceImage($ID, $extension, $operation);
 
         $reducedFilepath = CBSiteDirectory . $path;
-        $size = getimagesize($reducedFilepath);
+        $size = CBImage::getimagesize($reducedFilepath);
         $mimeType = image_type_to_mime_type($size[2]);
 
         /* serve image to browser */
@@ -295,7 +295,7 @@ EOT;
         }
 
         $originalImageFilepath = CBDataStore::flexpath($ID, "original.{$extension}", CBSiteDirectory);
-        $size = getimagesize($originalImageFilepath);
+        $size = CBImage::getimagesize($originalImageFilepath);
 
         if ($size === false) {
             return false;
@@ -329,14 +329,14 @@ EOT;
         $destinationFilepath = CBDataStore::flexpath($ID, "{$operation}.{$extension}", CBSiteDirectory);
 
         if (!is_file($destinationFilepath)) {
-            $size = getimagesize($sourceFilepath);
+            $size = CBImage::getimagesize($sourceFilepath);
             $projection = CBProjection::withSize($size[0], $size[1]);
             $projection = CBProjection::applyOpString($projection, $operation);
 
             CBImages::reduceImageFile($sourceFilepath, $destinationFilepath, $projection);
         }
 
-        $size = getimagesize($destinationFilepath);
+        $size = CBImage::getimagesize($destinationFilepath);
 
         return (object)[
             'className' => 'CBImage',
@@ -360,7 +360,7 @@ EOT;
 
         ini_set('memory_limit', '256M');
 
-        $size = getimagesize($sourceFilepath);
+        $size = CBImage::getimagesize($sourceFilepath);
 
         if (CBProjection::isNoOpForSize($projection, $size[0], $size[1])) {
             copy($sourceFilepath, $destinationFilepath);
@@ -374,20 +374,40 @@ EOT;
         switch ($size[2]) {
             case IMAGETYPE_GIF:
                 $input = imagecreatefromgif($sourceFilepath);
+
                 break;
+
             case IMAGETYPE_JPEG:
                 $input = imagecreatefromjpeg($sourceFilepath);
+                $exif = CBImage::exif_read_data($sourceFilepath);
+                $orientation = empty($exif['Orientation']) ? 1 : $exif['Orientation'];
+
+                if ($orientation == 3) {
+                    $input = imagerotate($input, 180, 0);
+                } else if ($orientation == 6) {
+                    $input = imagerotate($input, -90, 0);
+                } else if ($orientation == 8) {
+                    $input = imagerotate($input, 90, 0);
+                }
+
                 break;
+
             case IMAGETYPE_PNG:
                 $input = imagecreatefrompng($sourceFilepath);
+
                 imagealphablending($output, false);
                 imagesavealpha($output, true);
+
                 $transparent = imagecolorallocatealpha($output, 255, 255, 255, 127);
+
                 imagefilledrectangle($output, 0, 0, $dst->width, $dst->height, $transparent);
+
                 break;
+
             default:
                 throw new RuntimeException(
                     "The image type for the file \"{$sourceFilepath}\" is not supported.");
+
                 break;
         }
 
@@ -517,7 +537,7 @@ EOT;
             $destinationFilepath = $dataStoreDirectory . "/{$destinationFilename}";
         }
 
-        $size = getimagesize($destinationFilepath);
+        $size = CBImage::getimagesize($destinationFilepath);
         $response->filename = $destinationFilename;
         $response->URL = CBDataStore::flexpath($image->ID, $destinationFilename, CBSitePreferences::siteURL());
         $response->URLForHTML = ColbyConvert::textToHTML($response->URL);
@@ -619,7 +639,7 @@ EOT;
         CBImages::verifyUploadedFile($name);
 
         $temporaryFilepath = $_FILES[$name]['tmp_name'];
-        $size = getimagesize($temporaryFilepath);
+        $size = CBImage::getimagesize($temporaryFilepath);
 
         if ($size === false || !in_array($size[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
             throw new Exception('The file specified is either not a an image or has a file format that is not supported.');
