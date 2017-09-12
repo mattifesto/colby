@@ -7,7 +7,12 @@ if (isset($_SERVER['SERVER_NAME'])) {
 if (isset($_SERVER['REQUEST_URI'])) {
     $parts = explode('?', $_SERVER['REQUEST_URI'], 2);
     echo implode("\n", $parts);
+    echo "\n";
 }
 
-echo "\n\n\n";
+if (isset($_POST['ajax'])) {
+    echo "(ajax)\n";
+}
+
+echo "\n\n";
 echo CBConvert::throwableToStackTrace($exception);
