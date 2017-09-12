@@ -141,7 +141,7 @@ class CBProjection {
      * @return object (projection)
      */
     static function fromImageFilepath($filepath) {
-        $size = getimagesize($filepath);
+        $size = CBImage::getimagesize($filepath);
         return CBProjection::withSize($size[0], $size[1]);
     }
 

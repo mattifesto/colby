@@ -68,7 +68,7 @@ final class CBImageVerificationTask {
 
         if ($spec === false) {
             if ($severity === 8) {
-                $imagesize = getimagesize($originalFilenames[0]);
+                $imagesize = CBImage::getimagesize($originalFilenames[0]);
                 $spec = (object)[
                     'ID' => $ID,
                     'className' => 'CBImage',
