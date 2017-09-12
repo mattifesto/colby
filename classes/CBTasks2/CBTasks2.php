@@ -268,14 +268,18 @@ EOT;
             }
 
             $output->links = CBModel::valueAsArray($status, 'links');
-            $output->message = CBModel::value($status, 'message', 'Completed', 'strval');
+            $message = CBModel::value($status, 'message', '', 'strval');
+            $hint = CBModel::value($status, 'hint', '', 'strval');
+            if ($hint) { $hint = " ({$hint})"; }
+            $output->message = "{$task->className} Completed{$hint}\n{$task->ID}\n\n{$message}";
             $output->scheduled = CBModel::value($status, 'scheduled', null, 'intval');
             $output->severity = CBModel::value($status, 'severity', CBTasks2::defaultSeverity, 'intval');
 
         } catch (Exception $exception) {
 
             $output->exception = Colby::exceptionStackTrace($exception);
-            $output->message = $exception->getMessage();
+            $message = $exception->getMessage();
+            $output->message = "{$task->className} Failed\n{$task->ID}\n\n{$message}";
             $output->severity = 3;
 
         }
