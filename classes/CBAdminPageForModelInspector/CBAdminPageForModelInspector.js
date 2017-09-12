@@ -64,28 +64,35 @@ var CBAdminPageForModelInspector = {
 
         function resolved(response) {
             var section;
-            var model = JSON.parse(response.versions[0].modelAsJSON);
 
             args.container.textContent = undefined;
 
             section = CBUI.createSection();
 
-            section.appendChild(CBUI.createKeyValueSectionItem({
-                key: "Class Name",
-                value: model.className,
-            }).element);
-            args.container.appendChild(section);
+            if (response.versions.length === 0) {
+                section.appendChild(CBUI.createKeyValueSectionItem({
+                    key: "Notice",
+                    value: "This ID has no model."
+                }).element);
+            } else {
+                var model = JSON.parse(response.versions[0].modelAsJSON);
 
-            section.appendChild(CBUI.createKeyValueSectionItem({
-                key: "Title",
-                value: model.title,
-            }).element);
-            args.container.appendChild(section);
+                section.appendChild(CBUI.createKeyValueSectionItem({
+                    key: "Class Name",
+                    value: model.className,
+                }).element);
 
-            section.appendChild(CBUI.createKeyValueSectionItem({
-                key: "Description",
-                value: model.description,
-            }).element);
+                section.appendChild(CBUI.createKeyValueSectionItem({
+                    key: "Title",
+                    value: model.title,
+                }).element);
+
+                section.appendChild(CBUI.createKeyValueSectionItem({
+                    key: "Description",
+                    value: model.description,
+                }).element);
+            }
+
             args.container.appendChild(section);
 
             args.container.appendChild(CBUI.createHalfSpace());
