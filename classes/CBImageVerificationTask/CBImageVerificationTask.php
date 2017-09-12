@@ -40,7 +40,6 @@ final class CBImageVerificationTask {
      */
     static function CBTasks2_Execute($ID) {
         $severity = 8;
-        $title = __CLASS__ . " ($ID)";
         $messages = [];
         $IDAsSQL = CBHex160::toSQL($ID);
         $rowExtension = CBDB::SQLToValue("SELECT `extension` FROM `CBImages` WHERE `ID` = {$IDAsSQL}");
@@ -82,13 +81,10 @@ final class CBImageVerificationTask {
                     CBModels::save([$spec]);
                 });
 
-                $message = "A model was saved for the first time for CBImage ({$ID})";
+                $message = 'The model was saved for the first time.';
                 $messages[] = $message;
-                CBLog::addMessage(__CLASS__, 6, $message);
             }
         }
-
-        array_unshift($messages, $title);
 
         return (object)[
             'message' => implode("\n\n", $messages),

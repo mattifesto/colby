@@ -73,7 +73,7 @@ final class CBDataStoresFinderTask {
         $spec->className = __CLASS__;
 
         $partIndex = CBModel::value($spec, 'nextPartIndex', 0, 'intval');
-        $partIndexHex = dechex($partIndex);
+        $partIndexHex = sprintf('%02x', $partIndex);
 
         CBDataStoresFinderTask::findDataStoresForPartIndex($partIndex);
 
@@ -90,10 +90,11 @@ final class CBDataStoresFinderTask {
         });
 
         $message = <<<EOT
-CBDataStoresFinderTask, part index: {$partIndex} (0x{$partIndexHex})
+Part index: {$partIndex} (0x{$partIndexHex})
 EOT;
 
         return (object)[
+            'hint' => "{$partIndex}/255",
             'message' => $message,
             'scheduled' => $scheduled,
         ];

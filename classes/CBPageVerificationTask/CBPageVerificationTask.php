@@ -34,8 +34,7 @@ final class CBPageVerificationTask {
      * @return object
      */
     static function CBTasks2_Execute($ID) {
-        $title = 'CBPageVerificationTask';
-        $issues = [];
+        $hint = '';
         $messages = [];
         $resave = false;
         $severity = 8;
@@ -60,7 +59,6 @@ final class CBPageVerificationTask {
         $className = CBDB::SQLToValue("SELECT `className` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
 
         if (empty($className)) {
-            $issues[] = 'ColbyPages className is empty';
             $messages[] = 'This page has no value in the ColbyPages table\'s className column.';
             $severity = min(3, $severity);
             goto done;
@@ -97,10 +95,9 @@ final class CBPageVerificationTask {
             goto done;
         }
 
-        $pageTitle = CBModel::value($data, 'model.title', '(no title)');
-        $title .= ' "' . CBConvert::truncate($pageTitle, 40) . '"';
+        $pageTitle = CBModel::value($data, 'model.title', '', 'strval');
+        $hint = "\"{$pageTitle}\"";
         $messages[] = "Page Title: {$pageTitle}";
-        $messages[] = "Page ID: {$ID}";
 
         /**
          * Page image issues addressed:
@@ -160,7 +157,6 @@ final class CBPageVerificationTask {
              */
 
             if (!CBImages::isInstance($data->spec->image->ID)) {
-                $issues[] = 'invalid image property';
                 $messages[] = '(3) The `image` property is set on the spec to an image that is not a valid CBImage instance.';
                 $severity = min(3, $severity);
             }
@@ -185,7 +181,6 @@ final class CBPageVerificationTask {
             ob_end_clean();
         } catch (Throwable $throwable) {
             ob_end_clean();
-            $issues[] = 'rendering error';
             $message = CBConvert::throwableToMessage($throwable);
             $trace = $throwable->getTraceAsString();
             $messages[] = "Rendering error: {$message}\n{$trace}";
@@ -210,16 +205,10 @@ final class CBPageVerificationTask {
             $messages[] = "This page has no current issues";
         }
 
-        if (!empty($issues)) {
-            $issues =  implode(', ', $issues);
-            $title = "{$title} ({$issues})";
-        }
-
-        array_unshift($messages, $title);
-
         done:
 
         return (object)[
+            'hint' => $hint,
             'message' => implode("\n\n", $messages),
             'severity' => $severity,
             'links' => $links,
