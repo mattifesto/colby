@@ -111,32 +111,43 @@ final class CBConvert {
      * @return string
      */
     static function throwableToStackTrace(Throwable $throwable) {
-        $lines = [];
-        $trace = $throwable->getTrace();
+        try {
+            $lines = [];
+            $trace = $throwable->getTrace();
 
-        $class = get_class($throwable);
-        $message = $throwable->getMessage();
-        $basename = basename($throwable->getFile());
-        $line = $throwable->getLine();
+            $class = get_class($throwable);
+            $message = $throwable->getMessage();
+            $basename = basename($throwable->getFile());
+            $line = $throwable->getLine();
 
-        $lines[] = "{$class}\n\"{$message}\"\n\n{$basename}\nline {$line}";
+            $lines[] = "{$class}\n\"{$message}\"\n{$basename}\nline {$line}";
 
-        foreach ($trace as $item) {
-            $basename = basename($item['file']);
-            $function = $item['function'];
-            $class = '';
-            $type = '';
+            foreach ($trace as $item) {
+                $file = empty($item['file']) ? '(unspecified)' : $item['file'];
+                $basename = basename($file);
+                $function = empty($item['function']) ? '(unspecified)' : $item['function'];
+                $line = empty($item['line']) ? '(unspecified)' : $item['line'];
+                $class = '';
+                $type = '';
 
-            if (mb_substr($function, 0, 1) !== '{') {
-                $class = empty($item['class']) ? '' : $item['class'];
-                $type = empty($item['type']) ? '' : $item['type'];
-                $function = "{$function}()";
+                if (mb_substr($function, 0, 1) !== '{') {
+                    $class = empty($item['class']) ? '' : $item['class'];
+                    $type = empty($item['type']) ? '' : $item['type'];
+                    $function = "{$function}()";
+                }
+
+                $lines[] = "{$class}{$type}{$function}\n{$basename}\nline {$line}";
             }
 
-            $lines[] = "{$basename}\nline {$item['line']}\n{$class}{$type}{$function}";
+            return implode("\n\n", $lines);
+        } catch (Throwable $throwable) {
+            return 'INNER EXCEPTION "' .
+                $throwable->getMessage() .
+                '" during ' .
+                __METHOD__ .
+                "()\n\n" .
+                $throwable->getTraceAsString();
         }
-
-        return implode("\n\n", $lines);
     }
 
     /**
