@@ -394,6 +394,10 @@ var Colby = {
      *
      *      callAjaxFunction().catch(Colby.reportError)
      *
+     * This function will filter out errors created in reponse to a failed Ajax
+     * request because the server generated and previously logged those errors
+     * during the request.
+     *
      * @param Error error
      *
      * @return undefined
@@ -402,6 +406,10 @@ var Colby = {
      *      not meant to be inserted into promise chains.
      */
     reportError: function (error) {
+        if (error.ajaxResponse) { // Filter out Ajax errors
+            return;
+        }
+
         Colby.callAjaxFunction("CBJavaScript", "reportError", {
             errorModel: Colby.errorToCBJavaScriptErrorModel(error),
         });
