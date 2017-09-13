@@ -12,9 +12,10 @@ var CBUIBooleanEditor = {
      *      but before the value changes. It returns true to proceed with the
      *      change or false to cancel it.
      *
-     * @return {
-     *  Element element,
-     * }
+     * @return object
+     *  {
+     *      element: Element
+     *  }
      */
     create : function (args) {
         var element = document.createElement("div");
