@@ -25,13 +25,13 @@ var CBUIImageChooser = {
      * @param function args.imageChosenCallback
      * @param function args.imageRemovedCallback
      *
-     * @return {
-     *  Element element
-     *  function setCaptionCallback
-     *  function setImageURLCallback
-     * }
+     * @return  {
+     *              element: Element
+     *              setCaptionCallback: function
+     *              setImageURLCallback: function
+     *          }
      */
-    createFullSizedChooser : function (args) {
+    createFullSizedChooser: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIImageChooser CBDarkTheme full";
         var imageElement = document.createElement("img");
