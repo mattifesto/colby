@@ -1,5 +1,6 @@
-"use strict";
-
+"use strict"; /* jshint strict: global */
+/* global
+    Colby */
 
 /**
  *
