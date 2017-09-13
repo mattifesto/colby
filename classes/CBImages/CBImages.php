@@ -200,39 +200,6 @@ EOT;
     }
 
     /**
-     * @deprecated use CBImages::reduceImage()
-     *
-     * @param {hex160} $ID
-     * @param {string} $operation
-     *  An operation string describing the desired image. Images will only be
-     *  reduced, not enlarged and the result image may be smaller than the
-     *  maximum possible image size for the operation string.
-     *
-     *  Ex: "rs200clc200" - Reduce the short edge to 200 pixels and crop the
-     *  long edge to the center 200 pixels.
-     *
-     *  If null is specified as the operation string then the original image
-     *  filepath will be returned.
-     *
-     * @return {string} | false
-     *  The image filepath for false if an image with this ID doesn't exist
-     */
-    static function makeImage($ID, $operation = null) {
-        error_log('Call made to deprecated function: ' . __METHOD__);
-        $originalImageFilepath = CBImages::IDToOriginalFilepath($ID);
-
-        if ($operation === null || $originalImageFilepath === false) {
-            return $originalImageFilepath;
-        }
-
-        $extension = pathinfo($originalImageFilepath, PATHINFO_EXTENSION);
-
-        CBImages::reduceImage($ID, $extension, $operation);
-
-        return CBDataStore::flexpath($ID, "{$operation}.{$extension}", CBSiteDirectory);
-    }
-
-    /**
      * This function is called by ColbyRequest before declaring a request a 404
      * error. It will produce generated image sizes for CBImages. The next
      * request for that URL will just return the image file that's been saved
