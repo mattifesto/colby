@@ -5,40 +5,31 @@ final class CBBackgroundViewEditor {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
-        return ['CBArrayEditor', 'CBImageEditor', 'CBUI', 'CBUIActionLink', 'CBUIBooleanEditor', 'CBUISpec', 'CBUIStringEditor'];
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBArrayEditor', 'CBUI', 'CBUIActionLink', 'CBUIBooleanEditor',
+                'CBUIImageChooser', 'CBUISpec', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
-        return [CBBackgroundViewEditor::URL('CBBackgroundViewEditor.css')];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
-        return [CBBackgroundViewEditor::URL('CBBackgroundViewEditor.js')];
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 
     /**
      * @return [[string, mixed]]
      */
-    static function requiredJavaScriptVariables() {
+    static function CBHTMLOutput_JavaScriptVariables() {
         return [
             ['CBBackgroundViewAddableViews', CBPagesPreferences::classNamesForAddableViews()]
         ];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
