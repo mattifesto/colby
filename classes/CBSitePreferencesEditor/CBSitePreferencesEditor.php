@@ -5,43 +5,37 @@ final class CBSitePreferencesEditor {
     /**
      * @return null
      */
-    static function errorTestForAjax() {
-        $response = new CBAjaxResponse();
-
+    static function CBAjax_errorTest() {
         throw new RuntimeException("Sample PHP Error");
-
-        $response->wasSuccessful = true;
-        $response->send();
     }
 
     /**
-     * @return object
+     * @return string
      */
-    static function errorTestForAjaxPermissions() {
-        return (object)['group' => 'Developers'];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function requiredClassNames() {
-        return ['CBArrayEditor', 'CBKeyValuePairEditor', 'CBUI', 'CBUIImageChooser', 'CBUIActionLink', 'CBUIStringEditor'];
+    static function CBAjax_errorTest_group() {
+        return 'Developers';
     }
 
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBArrayEditor', 'CBKeyValuePairEditor', 'CBUI',
+                'CBUIBooleanEditor', 'CBUIImageChooser', 'CBUIActionLink',
+                'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
-        return [
-            CBSystemURL . '/javascript/CBBooleanEditorFactory.js',
-            Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__),
-        ];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 }

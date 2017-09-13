@@ -1,9 +1,9 @@
 "use strict"; /* jshint strict: global */
 /* globals
     CBArrayEditor,
-    CBBooleanEditorFactory,
     CBUI,
     CBUIActionLink,
+    CBUIBooleanEditor,
     CBUIImageChooser,
     CBUIStringEditor,
     Colby */
@@ -87,7 +87,7 @@ var CBSitePreferencesEditor = {
         item = CBUI.createSectionItem();
         item.appendChild(CBUIActionLink.create({
             callback : function () {
-                CBSitePreferencesEditor.promise = Colby.fetchAjaxResponse("/api/?class=CBSitePreferencesEditor&function=errorTest");
+                Colby.callAjaxFunction("CBSitePreferencesEditor", "errorTest");
             },
             labelText : "PHP Error Test",
         }).element);
@@ -108,21 +108,21 @@ var CBSitePreferencesEditor = {
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
-            handleSpecChanged : args.specChangedCallback,
+        item.appendChild(CBUIBooleanEditor.create({
             labelText : "Debug",
             propertyName : "debug",
             spec : args.spec,
-        }));
+            specChangedCallback : args.specChangedCallback,
+        }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBBooleanEditorFactory.createCheckboxEditor({
-            handleSpecChanged : args.specChangedCallback,
+        item.appendChild(CBUIBooleanEditor.create({
             labelText : "Disallow Robots",
             propertyName : "disallowRobots",
             spec : args.spec,
-        }));
+            specChangedCallback : args.specChangedCallback,
+        }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
