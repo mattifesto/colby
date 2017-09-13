@@ -20,10 +20,10 @@ final class CBBackgroundView {
      * @return null
      */
     static function CBView_render(stdClass $model) {
-        $styles     = [];
-        $styles[]   = "display: flex; display: -ms-flexbox; display: -webkit-flex;";
-        $styles[]   = "justify-content: center; -ms-flex-pack: center; -webkit-justify-content: center;";
-        $styles[]   = "flex-wrap: wrap; -ms-flex-wrap: wrap; -webkit-flex-wrap: wrap;";
+        $styles = [];
+        $styles[] = "display: flex; display: -ms-flexbox; display: -webkit-flex;";
+        $styles[] = "justify-content: center; -ms-flex-pack: center; -webkit-justify-content: center;";
+        $styles[] = "flex-wrap: wrap; -ms-flex-wrap: wrap; -webkit-flex-wrap: wrap;";
 
         if ($model->imageURL) {
             $styles[] = "background-image: url({$model->imageURLHTML});";
@@ -41,7 +41,7 @@ final class CBBackgroundView {
                 $repeat = "no-repeat";
             }
 
-            $styles[]   = "background-repeat: {$repeat};";
+            $styles[] = "background-repeat: {$repeat};";
         }
 
         if (!empty($model->color)) {
@@ -68,19 +68,23 @@ final class CBBackgroundView {
      *
      * @return object
      */
-    static function CBModel_toModel(stdClass $spec = null) {
-        $model                                  = CBView::modelWithClassName(__CLASS__);
-        $model->color                           = isset($spec->color) ? $spec->color : null;
-        $model->colorHTML                       = ColbyConvert::textToHTML($model->color);
-        $model->imageHeight                     = isset($spec->imageHeight) ? $spec->imageHeight : null;
-        $model->imageShouldRepeatHorizontally   = isset($spec->imageShouldRepeatHorizontally) ?
+    static function CBModel_toModel(stdClass $spec) {
+        $model = (object)[
+            'className' => __CLASS__,
+            'image' => CBModel::valueToModel($spec, 'image', 'CBImage'), // Added 2017.09.12
+        ];
+
+        $model->color = isset($spec->color) ? $spec->color : null;
+        $model->colorHTML = ColbyConvert::textToHTML($model->color);
+        $model->imageHeight = isset($spec->imageHeight) ? $spec->imageHeight : null;
+        $model->imageShouldRepeatHorizontally = isset($spec->imageShouldRepeatHorizontally) ?
                                                     $spec->imageShouldRepeatHorizontally : false;
-        $model->imageShouldRepeatVertically     = isset($spec->imageShouldRepeatVertically) ?
+        $model->imageShouldRepeatVertically = isset($spec->imageShouldRepeatVertically) ?
                                                     $spec->imageShouldRepeatVertically : false;
-        $model->imageURL                        = isset($spec->imageURL) ? $spec->imageURL : null;
-        $model->imageURLHTML                    = ColbyConvert::textToHTML($model->imageURL);
-        $model->imageWidth                      = isset($spec->imageWidth) ? $spec->imageWidth : null;
-        $model->minimumViewHeightIsImageHeight  = isset($spec->minimumViewHeightIsImageHeight) ?
+        $model->imageURL = isset($spec->imageURL) ? $spec->imageURL : null;
+        $model->imageURLHTML = ColbyConvert::textToHTML($model->imageURL);
+        $model->imageWidth = isset($spec->imageWidth) ? $spec->imageWidth : null;
+        $model->minimumViewHeightIsImageHeight = isset($spec->minimumViewHeightIsImageHeight) ?
                                                     $spec->minimumViewHeightIsImageHeight : true;
 
         $model->children = CBModel::valueToModels($spec, 'children');
