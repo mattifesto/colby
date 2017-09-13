@@ -25,32 +25,33 @@ final class CBViewPageInformationEditor {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
-        return ['CBUI', 'CBUIImageChooser', 'CBUISelector', 'CBUISpecPropertyEditor', 'CBUIStringEditor'];
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUI', 'CBUIImageChooser', 'CBUISelector',
+                'CBUISpecPropertyEditor', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
-        return [CBViewPageInformationEditor::URL('CBViewPageInformationEditor.css')];
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            CBSystemURL . '/javascript/CBPageURIControl.js',
-            CBSystemURL . '/javascript/CBPublicationControl.js',
-            CBViewPageInformationEditor::URL('CBViewPageInformationEditor.js'),
+            cbsysurl() . '/classes/CBViewPageInformationEditor/CBPageURIControl.js',
+            cbsysurl() . '/classes/CBViewPageInformationEditor/CBPublicationControl.js',
+            Colby::flexpath(__CLASS__, 'js', cbsysurl()),
         ];
     }
 
     /**
      * @return [[string, mixed]]
      */
-    static function requiredJavaScriptVariables() {
+    static function CBHTMLOutput_JavaScriptVariables() {
         return [
             ['CBCurrentUserID', ColbyUser::currentUserId()],
             ['CBPageClassNamesForKinds', CBPagesPreferences::classNamesForKinds()],
@@ -59,16 +60,6 @@ final class CBViewPageInformationEditor {
             ['CBUsersWhoAreAdministrators', CBViewPageInformationEditor::usersWhoAreAdministrators()],
             ['CBViewPageInformationEditor_mainMenuItemOptions', CBViewPageInformationEditor::fetchMainMenuItemOptions()],
         ];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 
     /**
