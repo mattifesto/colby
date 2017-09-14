@@ -8,7 +8,7 @@ var CBImagesAdminPage = {
     /**
      * @return Element
      */
-    createElement : function() {
+    createElement: function() {
         var element = document.createElement("div");
         element.className = "CBImagesAdminPage";
         var buttonsElement = document.createElement("div");
@@ -35,82 +35,67 @@ var CBImagesAdminPage = {
         }).element);
 
         CBImagesAdminPage.fetchImages({
-            element : imagesElement
+            element: imagesElement
         });
 
         element.appendChild(buttonsElement);
         element.appendChild(imagesElement);
+        element.appendChild(CBUI.createHalfSpace());
+
         return element;
     },
 
     /**
-     * @param string args.thumbnailURL
+     * @param object args
+     *
+     *      {
+     *          ID: hex160
+     *          thumbnailURL: string
+     *      }
      *
      * @return Element
      */
-    createThumbnailElement: function(args) {
+    createThumbnailElement: function (args) {
         var element = document.createElement("div");
         element.className = "thumbnail";
         var img = document.createElement("img");
         img.src = args.thumbnailURL;
+        var link = document.createElement("a");
+        link.textContent = ">";
+
+        link.addEventListener("click", function () {
+            window.location = "/admin/page/?class=CBDataStoreAdminPage&ID=" + args.ID;
+        });
 
         element.appendChild(img);
+        element.appendChild(link);
 
         return element;
     },
 
     /**
-     * @param {Element} args.element
+     * @param object args
+     *
+     *      {
+     *          element: Element
+     *      }
      *
      * @return undefined
      */
-    fetchImages : function(args) {
-        args.element.textContent = "CBImagesAdminPage";
+    fetchImages: function (args) {
+        Colby.callAjaxFunction("CBImagesAdminPage", "fetchImages")
+            .then(onFulfilled)
+            .catch(Colby.displayAndReportError);
 
-        var xhr = new XMLHttpRequest();
-        xhr.onload = CBImagesAdminPage.fetchImagesDidLoad.bind(undefined, {
-            element : args.element,
-            xhr : xhr
-        });
-        xhr.onerror = CBImagesAdminPage.fetchImagesDidError.bind(undefined, {
-            xhr : xhr
-        });
-
-        xhr.open("POST", "/api/?class=CBImagesAdminPage&function=fetchImages");
-        xhr.send();
-    },
-
-    /**
-     * @param {XMLHttpRequest} args.xhr
-     *
-     * @return undefined
-     */
-    fetchImagesDidError : function(args) {
-        Colby.alert('The list of images failed to load.');
-    },
-
-    /**
-     * @param {Element} args.element
-     * @param {XMLHttpRequest} args.xhr
-     *
-     * @return undefined
-     */
-    fetchImagesDidLoad : function(args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            args.element.textContent = null;
-
-            for (var i = 0; i < response.images.length; i++) {
-                args.element.appendChild(CBImagesAdminPage.createThumbnailElement(response.images[i]));
+        function onFulfilled(images) {
+            for (var i = 0; i < images.length; i++) {
+                args.element.appendChild(CBImagesAdminPage.createThumbnailElement(images[i]));
             }
-        } else {
-            Colby.displayResponse(response);
         }
-    }
+    },
 };
 
-document.addEventListener("DOMContentLoaded", function() {
+Colby.afterDOMContentLoaded(function() {
     var main = document.getElementsByTagName("main")[0];
 
     main.appendChild(CBImagesAdminPage.createElement());

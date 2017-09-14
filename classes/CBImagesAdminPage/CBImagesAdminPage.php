@@ -25,10 +25,18 @@ class CBImagesAdminPage {
     }
 
     /**
-     * @return null
+     * @return [object]
+     *
+     *      {
+     *          ID: hex160
+     *          created: int
+     *          extension: string
+     *          modified: int
+     *          thumbnailURL: string
+     *      }
+     *
      */
-    static function fetchImagesForAjax() {
-        $response = new CBAjaxResponse();
+    static function CBAjax_fetchImages() {
         $SQL = <<<EOT
 
             SELECT LOWER(HEX(`ID`)) as `ID`, `created`, `extension`, `modified`
@@ -41,19 +49,17 @@ EOT;
         $images = CBDB::SQLToObjects($SQL);
 
         foreach ($images as $image) {
-            $image->thumbnailURL = CBDataStore::flexpath($image->ID, "rw320.{$image->extension}", CBSitePreferences::siteURL());
+            $image->thumbnailURL = CBDataStore::flexpath($image->ID, "rw320.{$image->extension}", cbsiteurl());
         }
 
-        $response->images = $images;
-        $response->wasSuccessful = true;
-        $response->send();
+        return $images;
     }
 
     /**
-     * @return void
+     * @return string
      */
-    static function fetchImagesForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function CBAjax_fetchImages_group() {
+        return 'Administrators';
     }
 
     /**
