@@ -1,5 +1,8 @@
-"use strict"; /* jshint strict: global */
-/* global CBUI, Colby */
+"use strict";
+/* jshint strict: global */
+/* global
+    CBUI,
+    Colby */
 
 var CBAdminPageForPagesTrash = {
 
@@ -25,42 +28,6 @@ var CBAdminPageForPagesTrash = {
         });
 
         return element;
-    },
-
-    /**
-     * @param [hex160]? args.IDs
-     * @param Element args.sectionItemElement
-     *
-     * @return undefined
-     */
-    deletePage : function (args) {
-        var formData = new FormData();
-        formData.append("IDsAsJSON", JSON.stringify(args.IDs));
-
-        var xhr = new XMLHttpRequest();
-        xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
-        xhr.onload = CBAdminPageForPagesTrash.deletePageDidLoad.bind(undefined, {
-            sectionItemElement : args.sectionItemElement,
-            xhr : xhr,
-        });
-        xhr.open("POST", "/api/?class=CBModels&function=deleteModelsByID");
-        xhr.send(formData);
-    },
-
-    /**
-     * @param Element args.sectionItemElement
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    deletePageDidLoad : function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            args.sectionItemElement.parentElement.removeChild(args.sectionItemElement);
-        } else {
-            Colby.displayResponse(response);
-        }
     },
 
     /**
@@ -95,6 +62,10 @@ var CBAdminPageForPagesTrash = {
                 var sectionItem = CBUI.createSectionItem2();
                 sectionItem.titleElement.textContent = model.title;
 
+                sectionItem.titleElement.addEventListener("click", function() {
+                    window.location = "/admin/page/?class=CBDataStoreAdminPage&ID=" + model.ID;
+                });
+
                 args.section.appendChild(sectionItem.element);
 
                 var recoverCommand = document.createElement("div");
@@ -110,10 +81,16 @@ var CBAdminPageForPagesTrash = {
                 var deleteCommand = document.createElement("div");
                 deleteCommand.className = "command";
                 deleteCommand.textContent = "Delete";
-                deleteCommand.addEventListener("click", CBAdminPageForPagesTrash.deletePage.bind(undefined, {
-                    IDs : [model.ID],
-                    sectionItemElement : sectionItem.element,
-                }));
+                deleteCommand.addEventListener("click", function () {
+                    Colby.callAjaxFunction("CBModels", "deleteByID", { ID: model.ID })
+                        .then(onDeleteFulfilled)
+                        .catch(Colby.displayAndReportError);
+                });
+
+                function onDeleteFulfilled() {
+                    sectionItem.element.parentElement.removeChild(sectionItem.element);
+                    Colby.alert("The page was successfully deleted.");
+                }
 
                 sectionItem.commandsElement.appendChild(deleteCommand);
             });
