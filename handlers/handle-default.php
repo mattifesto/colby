@@ -2,20 +2,25 @@
 
 header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
 
-CBHTMLOutput::begin();
-CBHTMLOutput::setTitleHTML('Page Not Found');
-CBHTMLOutput::setDescriptionHTML('The page you requested was not found.');
+$URL = cbsiteurl() .
+       htmlspecialchars(preg_replace('/([\/\?&])/', ' $1 ', $_SERVER['REQUEST_URI']));
+$cm = <<<EOT
+The page you requested was not found.
 
-?>
+`{$URL}`
+EOT;
 
-<main style="text-align: center; padding: 40px 10px;">
-    <p style="margin-bottom: 40px;">The page you requested was not found.
-
-    <div style="font-size: 1.5em;">
-        <?= CBSitePreferences::siteURL(), htmlspecialchars( preg_replace('/([\/\?&])/', ' $1 ', $_SERVER['REQUEST_URI'])) ?>
-    </div>
-</main>
-
-<?php
-
-CBHTMLOutput::render();
+CBPage::renderSpec((object)[
+    'className' => 'CBViewPage',
+    'title' => 'Page Not Found',
+    'layout' => (object)[
+        'className' => 'CBPageLayout',
+    ],
+    'sections' => [
+        (object)[
+            'className' => 'CBTextView2',
+            'contentAsCommonMark' => $cm,
+            'CSSClassNames' => 'center',
+        ],
+    ],
+]);
