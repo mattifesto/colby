@@ -68,7 +68,7 @@ EOT;
      * This function isn't meant to do any additional work. If you want to fully
      * delete a page call:
      *
-     *      CBModel::deleteModelsByID($pageID)
+     *      CBModels::deleteByID($pageID)
      *
      * @return null
      */
@@ -86,7 +86,7 @@ EOT;
      * This function isn't meant to do any additional work. If you want to fully
      * delete a page call:
      *
-     *      CBModel::deleteModelsByID($pageID)
+     *      CBModels::deleteByID($pageID)
      *
      * @return null
      */
