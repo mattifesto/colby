@@ -11,7 +11,7 @@ final class CBTestPageTests {
         $countSQL = "SELECT COUNT(*) FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}";
 
         CBDB::transaction(function () use ($ID) {
-            CBModels::deleteModelsByID([$ID]);
+            CBModels::deleteByID([$ID]);
         });
 
         if (CBDB::SQLToValue($countSQL) !== '0') {
@@ -61,7 +61,7 @@ final class CBTestPageTests {
         // page in so that it can be viewed and searched for.
 
         CBDB::transaction(function () use ($ID) {
-            CBModels::deleteModelsByID([$ID]);
+            CBModels::deleteByID([$ID]);
         });
 
         if (CBDB::SQLToValue($countSQL) !== '0') {
