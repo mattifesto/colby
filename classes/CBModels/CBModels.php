@@ -12,6 +12,34 @@
 final class CBModels {
 
     /**
+     * This function is a heavy-duty delete. It will remove the model, and it
+     * will also remove the data store. If you need the files in the data store
+     * you should not be deleting the model.
+     *
+     * @param object $args
+     *
+     *      {
+     *          ID: hex160
+     *      }
+     *
+     * @return null
+     */
+    static function CBAjax_deleteByID(stdClass $args) {
+        $ID = CBModel::value($args, 'ID');
+
+        CBDB::transaction(function () use ($ID) {
+            CBModels::deleteByID($ID);
+        });
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_deleteByID_group() {
+        return 'Developers';
+    }
+
+    /**
      * Creates either the permanent or a temporary CBModels table.
      *
      * @return null
@@ -82,7 +110,9 @@ EOT;
     }
 
     /**
-     * Delete models.
+     * Delete models. This function will also delete the data stores associated
+     * with the models it deletes. If a data store exists, a model should also
+     * exists to represent it.
      *
      * Important: This function executes multiple queries each of which must
      * succeed for the save to be successful, so it should always be called
@@ -116,16 +146,18 @@ EOT;
 
         $classNames = CBDB::SQLtoArray($SQL);
 
-        if (empty($classNames)) { return; }
+        if (count($classNames) > 0) {
+            if (count($classNames) > 1) {
+                $classNames = implode(', ', $classNames);
+                $method = __METHOD__;
+                throw new RuntimeException("The IDs provided to {$method} have multiple class names: {$classNames}.");
+            }
 
-        if (count($classNames) > 1) {
-            $classNames = implode(', ', $classNames);
-            $method = __METHOD__;
-            throw new RuntimeException("The IDs provided to {$method} have multiple class names: {$classNames}.");
-        }
-
-        if (is_callable($function = "{$classNames[0]}::modelsWillDelete")) {
-            call_user_func($function, $IDs);
+            if (is_callable($function = "{$classNames[0]}::CBModels_willDelete")) {
+                call_user_func($function, $IDs);
+            } else  if (is_callable($function = "{$classNames[0]}::modelsWillDelete")) {
+                call_user_func($function, $IDs);
+            }
         }
 
         $SQL = <<<EOT
@@ -138,6 +170,10 @@ EOT;
 EOT;
 
         Colby::query($SQL);
+
+        foreach ($IDs as $ID) {
+            CBDataStore::deleteByID($ID);
+        }
     }
 
     /**
