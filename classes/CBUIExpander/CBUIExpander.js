@@ -1,11 +1,12 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
 /* global
     Colby */
 
 var CBUIExpander = {
 
     /**
-     *
+     * @return undefined
      */
     build: function (args) {
         var links, message, pre;
