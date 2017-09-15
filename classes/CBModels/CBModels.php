@@ -36,7 +36,7 @@ final class CBModels {
      * @return string
      */
     static function CBAjax_deleteByID_group() {
-        return 'Developers';
+        return 'Administrators';
     }
 
     /**
@@ -119,7 +119,7 @@ EOT;
      * inside of a transaction.
      *
      *      Colby::query('START TRANSACTION');
-     *      CBModels::deleteModelsByID($ID);
+     *      CBModels::deleteByID($ID);
      *      Colby::query('COMMIT');
      *
      * @param hex160|[hex160] $IDs
@@ -174,34 +174,6 @@ EOT;
         foreach ($IDs as $ID) {
             CBDataStore::deleteByID($ID);
         }
-    }
-
-    /**
-     * @deprecated use CBModels::deleteByID()
-     */
-    static function deleteModelsByID($IDs) {
-        return CBModels::deleteByID($IDs);
-    }
-
-    /**
-     * @return null
-     */
-    static function deleteModelsByIDForAjax() {
-        $response = new CBAjaxResponse();
-
-        $IDs = json_decode($_POST['IDsAsJSON']);
-
-        CBModels::deleteModelsByID($IDs);
-
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function deleteModelsByIDForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
     }
 
     /**
