@@ -3,12 +3,10 @@
 class CBImages {
 
     /**
-     * Deletes an image from the database and deletes all versions of the image
-     * from disk. This function should rarely be used as images are generally
-     * considered to be permanent resources because it's impossible to track
-     * dependencies especially since external sites and Google can link to them.
-     * Only delete when necessary or in specific situations where dependencies
-     * are understood.
+     * This function is called by CBImage::CBModels_willDelete() and shouldn't
+     * be called otherwise. To delete an image call
+     *
+     *      CBModels::deleteByID(<imageID>)
      *
      * @return null
      */
@@ -16,28 +14,6 @@ class CBImages {
         $IDAsSQL = CBHex160::toSQL($ID);
         $SQL = "DELETE FROM `CBImages` WHERE `ID` = {$IDAsSQL}";
         Colby::query($SQL);
-        CBDataStore::deleteByID($ID);
-    }
-
-    /**
-     * @return null
-     */
-    static function deleteByIDForAjax() {
-        $response = new CBAjaxResponse();
-        $ID = $_POST['ID'];
-
-        CBImages::deleteByID($ID);
-
-        $response->message = "The image and the data storage for image ID {$ID} were deleted.";
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function deleteByIDForAjaxPermissions() {
-        return (object)['group' => 'Developers'];
     }
 
     /**
@@ -116,12 +92,13 @@ class CBImages {
     }
 
     /**
-     * @return object
+     * @return object|false
      *
      *      Returns a CBImage model.
      */
     static function importImage($filepath) {
         $size = CBImage::getimagesize($filepath);
+        $spec = false;
 
         if ($size === false || !in_array($size[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
             throw new Exception('The file specified is either not a an image or has a file format that is not supported.');
@@ -136,8 +113,16 @@ class CBImages {
             $filename = "original";
             $basename = "{$filename}.{$extension}";
             $destinationFilepath = CBDataStore::flexpath($ID, $basename, CBSiteDirectory);
+            $spec = (object)[
+                'className' => 'CBImage',
+                'extension' => $extension,
+                'filename' => $filename,
+                'height' => $size[1],
+                'ID' => $ID,
+                'width' => $size[0],
+            ];
 
-            CBImages::updateRow($ID, $timestamp, $extension);
+            CBModels::save([$spec], /* force: */ true);
             CBDataStore::makeDirectoryForID($ID);
             copy($filepath, $destinationFilepath);
             Colby::query('COMMIT');
@@ -146,14 +131,7 @@ class CBImages {
             throw $exception;
         }
 
-        return (object)[
-            'className' => 'CBImage',
-            'extension' => $extension,
-            'filename' => $filename,
-            'height' => $size[1],
-            'ID' => $ID,
-            'width' => $size[0],
-        ];
+        return $spec;
     }
 
     /**
@@ -400,41 +378,14 @@ EOT;
     }
 
     /**
-     * @param string $_POST['extension']
-     * @param hex160 $_POST['ID']
-     * @param string $_POST['operation']
+     * This function is called by CBImage::CBModels_willSave() and shouldn't
+     * be called otherwise. Saving an image model will call this function.
      *
-     * @return {
-     *      image : {
-     *          extension : string,
-     *          filename : string,
-     *          height : int,
-     *          ID : hex160,
-     *          width : int,
-     *      }
-     *  }
-     */
-    static function reduceImageForAjax() {
-        $response = new CBAjaxResponse();
-        $extension = $_POST['extension'];
-        $ID = $_POST['ID'];
-        $operation = $_POST['operation'];
-        $response->image = CBImages::reduceImage($ID, $extension, $operation);
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function reduceImageForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
-    }
-
-    /**
+     *      CBModels::save([<imageSpec])
+     *
      * @return null
      */
-    private static function updateRow($ID, $timestamp, $extension) {
+    static function updateRow($ID, $timestamp, $extension) {
         $extensionAsSQL = ColbyConvert::textToSQL($extension);
         $extensionAsSQL = "'{$extension}'";
         $IDAsSQL = ColbyConvert::textToSQL($ID);
@@ -534,7 +485,7 @@ EOT;
      *          int width,
      *      }
      */
-    static function uploadImageWithName($name) {
+    private static function uploadImageWithName($name) {
         CBImages::verifyUploadedFile($name);
 
         $temporaryFilepath = $_FILES[$name]['tmp_name'];
@@ -553,8 +504,16 @@ EOT;
             $filename = "original";
             $basename = "{$filename}.{$extension}";
             $permanentFilepath = CBDataStore::flexpath($ID, $basename, CBSiteDirectory);
+            $spec = (object)[
+                'className' => 'CBImage',
+                'extension' => $extension,
+                'filename' => $filename,
+                'height' => $size[1],
+                'ID' => $ID,
+                'width' => $size[0],
+            ];
 
-            CBImages::updateRow($ID, $timestamp, $extension);
+            CBModels::save([$spec], /* force: */ true);
             CBDataStore::makeDirectoryForID($ID);
             move_uploaded_file($temporaryFilepath, $permanentFilepath);
             Colby::query('COMMIT');
@@ -563,14 +522,7 @@ EOT;
             throw $exception;
         }
 
-        return (object)[
-            'className' => 'CBImage',
-            'extension' => $extension,
-            'filename' => $filename,
-            'height' => $size[1],
-            'ID' => $ID,
-            'width' => $size[0],
-        ];
+        return $spec;
     }
 
     /**
