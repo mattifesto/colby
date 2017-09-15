@@ -9,11 +9,7 @@ final class CBViewPageTests {
         $ID                     = '697f4e4cb46436f5c204e495caff5957d4d62a31';
         $kind                   = 'CBViewPageTestPages';
 
-        CBModels::deleteModelsByID([$ID]);
-
-        if (is_dir(CBDataStore::directoryForID($ID))) {
-            CBDataStore::deleteByID($ID);
-        }
+        CBModels::deleteByID([$ID]);
 
         $spec                   = CBViewPage::fetchSpecByID($ID, true);
         $spec->classNameForKind = $kind;
@@ -42,7 +38,6 @@ final class CBViewPageTests {
             throw new Exception("The page URI: {$pu} does not match the spec URI: {$su}.");
         }
 
-        CBModels::deleteModelsByID([$ID]);
-        CBDataStore::deleteByID($ID);
+        CBModels::deleteByID([$ID]);
     }
 }
