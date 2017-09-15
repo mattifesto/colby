@@ -31,11 +31,24 @@ final class CBDataStoreAdminPage {
             'className' => 'CBPageTitleAndDescriptionView',
         ]);
 
-        CBDataStoreAdminPage::renderCBModelsInformation($ID);
+        $specAndModel = CBModels::fetchSpecAndModelByID($ID);
+
+        if ($specAndModel && $specAndModel->spec->className === "CBImage") {
+            CBView::render((object)[
+                'className' => 'CBArtworkView',
+                'CSSClassNames' => ['hideSocial'],
+                'image' => $specAndModel->model,
+            ]);
+        }
+
+        CBDataStoreAdminPage::renderCBModelsInformation($specAndModel);
         CBDataStoreAdminPage::renderCBImagesInformation($ID);
         CBDataStoreAdminPage::renderArchiveInformation($ID);
         CBDataStoreAdminPage::renderColbyPagesRowForID($ID);
         CBDataStoreAdminPage::renderDataStoreFileListForID($ID);
+
+        ?><div class="CBDataStoreAdminPage_delete" data-id="<?= $ID ?>"></div><?php
+
     }
 
     /**
@@ -50,6 +63,13 @@ final class CBDataStoreAdminPage {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 
     /**
@@ -101,11 +121,16 @@ EOT;
     }
 
     /**
+     * @param object|false $data
+     *
+     *      {
+     *          spec: object
+     *          model: object
+     *      }
+     *
      * @return null
      */
-    static function renderCBModelsInformation($ID) {
-        $data = CBModels::fetchSpecAndModelByID($ID);
-
+    static function renderCBModelsInformation($data) {
         if ($data === false) {
             return;
         }
