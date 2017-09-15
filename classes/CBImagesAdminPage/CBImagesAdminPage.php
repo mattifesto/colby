@@ -42,7 +42,7 @@ class CBImagesAdminPage {
             SELECT LOWER(HEX(`ID`)) as `ID`, `created`, `extension`, `modified`
             FROM `CBImages`
             ORDER BY `modified` DESC
-            LIMIT 20
+            LIMIT 500
 
 EOT;
 
