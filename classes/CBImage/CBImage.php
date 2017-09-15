@@ -66,6 +66,32 @@ final class CBImage {
     }
 
     /**
+     * Deleting images is a process that should rarely happen. Images should be
+     * kept forever even if they are no longer used. However there are various
+     * development and administrative reasons to delete images.
+     *
+     * @param [hex160] $IDs
+     *
+     * @return null
+     */
+    static function CBModels_willDelete(array $IDs) {
+        foreach ($IDs as $ID) {
+            CBImages::deleteByID($ID);
+        }
+    }
+
+    /**
+     * @param [object] $models
+     *
+     * @return null
+     */
+    static function CBModels_willSave(array $models) {
+        foreach ($models as $model) {
+            CBImages::updateRow($model->ID, time(), $model->extension);
+        }
+    }
+
+    /**
      * Use the function instead of exif_read_data() because exif_read_data()
      * throws errors for many image files.
      *
