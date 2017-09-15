@@ -232,19 +232,25 @@ var CBUI = {
     },
 
     /**
-     * @return {
-     *  Element element
-     *      The section item element.
-     *  Element titleElement
-     *      You can either add child elements to this or just set the
-     *      textContent property.
-     *  Element commandsElement
-     *      Add subelements with click event handlers to this element. A simple
-     *      <div> with text and a className of "command" will be given the
-     *      standard basic styles of a command. Or you can add custom command
-     *      elements.
-     *  function setThumbnailURI
-     * }
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *          titleElement: Element
+     *
+     *              You can either add child elements to this or just set the
+     *              textContent property. You can also add click event handlers
+     *              to this element.
+     *
+     *          commandsElement: Element
+     *
+     *              Add subelements with click event handlers to this element. A
+     *              simple <div> with text and a className of "command" will be
+     *              given the standard basic styles of a command. Or you can add
+     *              custom command elements.
+     *
+     *          setThumbnailURI: function
+     *      }
      */
     createSectionItem2 : function () {
         var element = CBUI.createSectionItem();
