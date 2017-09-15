@@ -53,8 +53,7 @@ final class CBPageVerificationTaskTests {
         // clean up
 
         CBModels::deleteByID($pageID);
-        CBImages::deleteByID(CBAdminPageForTests::testImageID());
-        CBDataStore::deleteByID(CBAdminPageForTests::oldStyleImageDataStoreID());
+        CBAdminPageForTests::removeOldStyleImageDataStore();
     }
 
     /**
@@ -109,8 +108,6 @@ final class CBPageVerificationTaskTests {
         // clean up
 
         CBModels::deleteByID($pageID);
-        CBImages::deleteByID(CBAdminPageForTests::testImageID());
-        CBDataStore::deleteByID(CBAdminPageForTests::oldStyleImageDataStoreID());
-
+        CBAdminPageForTests::removeOldStyleImageDataStore();
     }
 }
