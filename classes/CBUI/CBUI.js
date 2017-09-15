@@ -1,4 +1,5 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
 /* global
     CBUIDropdown */
 
