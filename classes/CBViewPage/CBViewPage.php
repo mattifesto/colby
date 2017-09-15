@@ -127,18 +127,17 @@ final class CBViewPage {
      *
      * @return null
      */
-    static function modelsWillDelete(array $IDs) {
+    static function CBModels_willDelete(array $IDs) {
         CBPages::deletePagesByID($IDs);
         CBPages::deletePagesFromTrashByID($IDs);
     }
 
     /**
-     * @param [stdClass] $tuples
+     * @param [object] $models
      *
      * @return null
      */
-    static function modelsWillSave(array $tuples) {
-        $models = array_map(function($tuple) { return $tuple->model; }, $tuples);
+    static function CBModels_willSave(array $models) {
         CBPages::save($models);
     }
 
