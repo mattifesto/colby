@@ -23,6 +23,10 @@ final class CBArtworkView {
      *      This will be used as fallback alternative text if alternativeText
      *      is empty.
      *
+     * @param [string]? $model->CSSClassNames
+     *
+     *      "hideSocial"
+     *
      * @param object? (CBImage) $model->image
      * @param string? $model->size
      *
