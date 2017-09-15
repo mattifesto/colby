@@ -52,16 +52,16 @@ final class CBAdminPageForTests {
      * @return null
      */
     static function prepareOldStyleImageDataStore() {
-        $ID = CBAdminPageForTests::oldStyleImageDataStoreID();
-        $siteDirectory = CBSitePreferences::siteDirectory();
+        CBAdminPageForTests::removeOldStyleImageDataStore();
 
-        CBDataStore::deleteByID($ID);
+        $ID = CBAdminPageForTests::oldStyleImageDataStoreID();
+
         CBDataStore::makeDirectoryForID($ID);
 
         $originalFilepath = CBAdminPageForTests::testImageFilepath();
-        $largeFilepath = CBDataStore::flexpath($ID, 'large.jpeg', $siteDirectory);
-        $mediumFilepath = CBDataStore::flexpath($ID, 'medium.jpeg', $siteDirectory);
-        $thumbnailFilepath = CBDataStore::flexpath($ID, 'thumbnail.jpeg', $siteDirectory);
+        $largeFilepath = CBDataStore::flexpath($ID, 'large.jpeg', cbsitedir());
+        $mediumFilepath = CBDataStore::flexpath($ID, 'medium.jpeg', cbsitedir());
+        $thumbnailFilepath = CBDataStore::flexpath($ID, 'thumbnail.jpeg', cbsitedir());
 
         copy($originalFilepath, $largeFilepath);
 
@@ -72,17 +72,14 @@ final class CBAdminPageForTests {
         $projection = CBProjection::fromImageFilepath($largeFilepath);
         $projection = CBProjection::applyOpString($projection, 'rs400clc400');
         CBImages::reduceImageFile($largeFilepath, $thumbnailFilepath, $projection);
-
-        // If this image has been imported, remove it.
-        CBImages::deleteByID(CBAdminPageForTests::testImageID());
     }
 
     /**
      * @return null
      */
     static function removeOldStyleImageDataStore() {
-        CBDataStore::deleteByID(CBAdminPageForTests::oldStyleImageDataStoreID());
-        CBImages::deleteByID(CBAdminPageForTests::testImageID());
+        CBModels::deleteByID(CBAdminPageForTests::oldStyleImageDataStoreID());
+        CBModels::deleteByID(CBAdminPageForTests::testImageID());
     }
 
     /**

@@ -64,28 +64,20 @@ var CBAdminPageForTests = {
     },
 
     /**
-     * @param mixed value
-     *      This function is meant to be a parameter to Promise.then().
-     *
      * @return Promise
      */
-    runTestForClassCBImagesFunctionDeleteByID: function (value) {
+    runTestForClassCBImagesFunctionDeleteByID: function () {
         CBAdminPageForTests.status.append("Ajax: CBImages - deleteByID");
 
-        var URL = "/api/?class=CBImages&function=deleteByID";
-        var data = new FormData();
-
-        data.append("ID", CBAdminPageForTests.testImageID);
-
-        var imageURI = "/" + Colby.dataStoreFlexpath(CBAdminPageForTests.testImageID, "original.jpeg");
-
-        return Colby.fetchAjaxResponse(URL, data)
+        return Colby.callAjaxFunction("CBModels", "deleteByID", { ID: CBAdminPageForTests.testImageID })
                     .then(report1)
                     .then(report2);
 
         function report1(response) {
-            CBAdminPageForTests.status.append(response.message, "success");
+            CBAdminPageForTests.status.append("Image model deleted", "success");
             CBAdminPageForTests.status.append("Ajax: CBImages - check for original image file");
+
+            var imageURI = "/" + Colby.dataStoreFlexpath(CBAdminPageForTests.testImageID, "original.jpeg");
 
             return CBAdminPageForTests.fetchURIDoesExist(imageURI);
         }
