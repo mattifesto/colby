@@ -138,16 +138,6 @@ final class CBSitePreferences {
     }
 
     /**
-     * @return object
-     */
-    static function CBModelClassInfo_spec() {
-        return (object)[
-            'pluralTitle' => 'Site Preferences',
-            'singularTitle' => 'Site Preferences',
-        ];
-    }
-
-    /**
      * Re-saving these preferences each update ensures that the model always has
      * valid values for all properties without having to add a new update script
      * each time the properties change.

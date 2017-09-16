@@ -423,17 +423,7 @@ EOT;
             goto done;
         }
 
-        $info = CBModelClassInfo::classNameToInfo($spec->className);
-
-        // NOTE: 2017.01.07, 2017.05.16
-        // The logic of checking the info user group and currentUserCanRead is
-        // confusing here. I am not sure exactly what is supposed to happen.
-        // Figure it out and document in comments. Hint: I feel like the info
-        // should go away and possibly be integrated in to currentUserCanRead.
-        if (!ColbyUser::current()->isOneOfThe($info->userGroup)) {
-            $response->message = "You do not have permission to read the spec with ID: {$ID}.";
-            $response->wasSuccessful = false;
-        } else if (CBModels::currentUserCanRead($spec)) {
+        if (CBModels::currentUserCanRead($spec)) {
             $response->spec = $spec;
             $response->wasSuccessful = true;
         } else {

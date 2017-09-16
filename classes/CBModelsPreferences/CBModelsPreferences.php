@@ -21,16 +21,6 @@ final class CBModelsPreferences {
     }
 
     /**
-     * @return stdClass
-     */
-    static function info() {
-        return CBModelClassInfo::specToModel((object)[
-            'pluralTitle' => 'Models Preferences',
-            'singularTitle' => 'Models Preferences',
-        ]);
-    }
-
-    /**
      * Re-saving these preferences each update ensures that the model always has
      * valid values for all properties without having to add a new update script
      * each time the properties change.

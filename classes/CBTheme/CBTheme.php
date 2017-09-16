@@ -72,16 +72,6 @@ final class CBTheme {
     }
 
     /**
-     * @return stdClass
-     */
-    static function info() {
-        return CBModelClassInfo::specToModel((object)[
-            'pluralTitle' => 'Themes',
-            'singularTitle' => 'Theme'
-        ]);
-    }
-
-    /**
      * @param string $model->classNameForKind
      *
      * @return string

@@ -3,16 +3,6 @@
 final class CBMenuItem {
 
     /**
-     * @return object
-     */
-    static function info() {
-        return CBModelClassInfo::specToModel((object)[
-            'pluralTitle' => 'Menu Items',
-            'singularTitle' => 'Menu Item',
-        ]);
-    }
-
-    /**
      * @param string? $spec->name
      * @param string? $spec->text
      * @param string? $spec->URL

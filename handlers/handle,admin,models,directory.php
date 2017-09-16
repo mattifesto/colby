@@ -24,12 +24,6 @@ foreach (CBModelsPreferences::classNamesOfEditableModels() as $className) {
         continue;
     }
 
-    $info = CBModelClassInfo::classNameToInfo($className);
-
-    if (!ColbyUser::current()->isOneOfThe($info->userGroup)) {
-        continue;
-    }
-
     $item = new stdClass();
 
     if (defined("{$className}::ID")) {
@@ -39,12 +33,7 @@ foreach (CBModelsPreferences::classNamesOfEditableModels() as $className) {
         $item->href = "/admin/page/?class=CBAdminPageForModelList&modelClassName={$className}";
     }
 
-    if (!empty($info->pluralTitleAsHTML)) {
-        $item->titleAsHTML = $info->pluralTitleAsHTML;
-    } else {
-        $item->titleAsHTML = $className;
-    }
-
+    $item->titleAsHTML = $className;
     $items[$className] = $item;
 }
 
