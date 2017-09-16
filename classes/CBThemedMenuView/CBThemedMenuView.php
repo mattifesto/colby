@@ -145,7 +145,7 @@ EOT;
      *
      * @return stdClass
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = CBModels::modelWithClassName(__CLASS__);
         $model->menuID = isset($spec->menuID) ? trim($spec->menuID) : '';
         $model->selectedItemName = isset($spec->selectedItemName) ? trim($spec->selectedItemName) : '';

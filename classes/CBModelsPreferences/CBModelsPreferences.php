@@ -40,7 +40,7 @@ final class CBModelsPreferences {
     /**
      * @return stdClass
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = CBModels::modelWithClassName(__CLASS__);
 
         if (isset($spec->classNamesOfEditableModels)) {

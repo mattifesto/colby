@@ -233,7 +233,7 @@ EOT;
      *
      * NOTE The comments below may make incorrect assumptions:
      * To avoid duplicating property validation this function assumes the model
-     * parameter has been generated with the `CBPages::specToModel` function or
+     * parameter has been generated with the `CBModel::toModel()` function or
      * another function that properly validates and sets the reserved page model
      * properties. It is a the responsibility of the caller to make sure this is
      * true.

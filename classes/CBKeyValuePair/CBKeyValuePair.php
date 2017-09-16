@@ -22,7 +22,7 @@ final class CBKeyValuePair {
      *
      * @return stdClass
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
             'key' => CBModel::value($spec, 'key', null, 'CBKeyValuePair::keyval'),

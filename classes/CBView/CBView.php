@@ -102,7 +102,7 @@ final class CBView {
      * @return null
      */
     static function renderSpec(stdClass $spec) {
-        if ($model = CBModel::specToModel($spec)) {
+        if ($model = CBModel::toModel($spec)) {
             CBView::render($model);
         } else {
             $className = CBModel::value($spec, 'className', '');

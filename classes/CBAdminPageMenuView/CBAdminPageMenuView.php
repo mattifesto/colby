@@ -100,7 +100,7 @@ final class CBAdminPageMenuView {
      *
      * @return stdClass
      */
-    static function specToModel(stdClass $spec = null) {
+    static function CBModel_toModel(stdClass $spec = null) {
         $model                          = CBView::modelWithClassName(__CLASS__);
         $model->selectedMenuItemName    = isset($spec->selectedMenuItemName) ?
                                             (string)$spec->selectedMenuItemName : '';

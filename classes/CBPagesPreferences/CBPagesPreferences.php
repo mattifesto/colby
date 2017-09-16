@@ -214,7 +214,7 @@ final class CBPagesPreferences {
     /**
      * @return stdClass
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = (object)['className' => __CLASS__];
         $model->deprecatedViewClassNames = [];
         $model->supportedViewClassNames = [];

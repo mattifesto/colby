@@ -619,20 +619,25 @@ EOT;
      *      Colby::query('COMMIT');
      *
      * @NOTE How model ID is determined:
-     *      - The class specToModel function can set the ID value on the model
-     *        by either calculating it or copying it. Potentially no ID value
-     *        needs to be set on the spec in this case, and if it is that ID
-     *        value will be ignored.
-     *      - If specToModel returns a model with no ID value, the ID value on
-     *        the spec must be set and will be used.
+     *
+     *      The class CBModel_toModel function can set the ID value on the model
+     *      by either calculating it or copying it. Potentially no ID value
+     *      needs to be set on the spec in this case, and if it is that ID value
+     *      will be ignored.
+     *
+     *      If CBModel_toModel returns a model with no ID value, the ID value on
+     *      the spec must be set and will be used.
      *
      * @NOTE Reserved and required properties:
-     *      - created: The model will have its created property set to the
-     *        timestamp when the model was first saved.
-     *      - modified: The model will have its modified property set to the
-     *        timestamp of this save.
-     *      - version: Both the spec and model will have their version
-     *        properties set to the version assigned for this save.
+     *
+     *      created: The model will have its created property set to the
+     *      timestamp when the model was first saved.\\
+     *
+     *      modified: The model will have its modified property set to the
+     *      timestamp of this save.
+     *
+     *      version: Both the spec and model will have their version properties
+     *      set to the version assigned for this save.
      *
      *      It's a goal to move these properties off the spec and model objects
      *      to a meta object eventually.

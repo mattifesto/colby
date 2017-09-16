@@ -9,7 +9,7 @@ final class CBMenuItem {
      *
      * @return object
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
             'name' => CBModel::value($spec, 'name', '', 'ColbyConvert::textToStub'),

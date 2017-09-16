@@ -81,7 +81,7 @@ final class CBPageTitleAndDescriptionView {
      *
      * @return object
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $colorForProperty = function ($propertyName) use ($spec) {
             return CBModel::value($spec, $propertyName, null, 'CBConvert::stringToCSSColor');
         };

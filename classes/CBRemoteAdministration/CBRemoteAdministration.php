@@ -157,7 +157,7 @@ EOT;
      *
      * @return object
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         return (object)[
             'className' => __CLASS__,
             'pinged' => CBModel::value($spec, 'pinged', null, 'intval'),

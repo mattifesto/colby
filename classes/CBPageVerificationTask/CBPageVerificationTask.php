@@ -106,7 +106,7 @@ final class CBPageVerificationTask {
          *        are set on the model, re-save the spec. Only one of these two
          *        properties should be set on a model.
          *
-         *        History: At one point specToModel() tried to convert a
+         *        History: At one point CBModel_toModel() tried to convert a
          *        `thumbnailURL` to an `image` and would set both. This process
          *        created an invalid `image` that would confuse renderers.
          *
@@ -130,7 +130,7 @@ final class CBPageVerificationTask {
             /**
              * We only process `thumbnailURL` on the spec if `image` is not set.
              * If `image` is set on the spec `thumbnailURL` will be ignored by
-             * CBViewPage::specToModel().
+             * CBViewPage::CBModel_toModel().
              */
 
             if ($thumbnailURL = CBModel::value($data, 'spec.thumbnailURL')) {

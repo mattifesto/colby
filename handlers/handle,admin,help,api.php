@@ -159,7 +159,7 @@ class CBAPIDocumentationView {
      *
      * @return object
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         return (object)[
             'className' => 'CBAPIDocumentationView',
             'apiAsHTML' => CBModel::value($spec, 'apiAsHTML', ''),

@@ -8,21 +8,23 @@ final class CBModel {
      * Reading this function will help developers understand the exact
      * interactions and requirements of specs and models.
      *
-     * @NOTE It is technically possible for the model to receive a generated ID
-     *       that is different from the spec's ID. In this case, the spec is
-     *       probably "wrong" to have an ID set, but it's not an error for the
-     *       same reason that it's never an error for a spec to have properties
-     *       set that aren't used by the model. The model's ID is the ID used
-     *       when saving the model.
+     *      @NOTE
+     *      It is technically possible for the model to receive a generated ID
+     *      that is different from the spec's ID. In this case, the spec is
+     *      probably "wrong" to have an ID set, but it's not an error for the
+     *      same reason that it's never an error for a spec to have properties
+     *      set that aren't used by the model. The model's ID is the ID used
+     *      when saving the model.
      *
-     * @NOTE If the model generates an ID, it must be deterministic so that
-     *       the same ID will be produced from another call to specToModel().
-     *       Good candidates for this are specs with unique string properties
-     *       such as `productCode`.
+     *      @NOTE
+     *      If the model generates an ID, it must be deterministic so that the *
+     *      same ID will be produced from another call to CBModel_toModel().
+     *      Good * candidates for this are specs with unique string properties
+     *      such as * `productCode`.
      *
-     * @NOTE A model is allowed to have a different className than the spec.
-     *       This can be used by deprecated classes to generate non-deprecated
-     *       models.
+     *      @NOTE
+     *      A model is allowed to have a different className than the spec. This
+     *      can be used by deprecated classes to generate non-deprecated models.
      *
      * @param object $spec
      *
