@@ -39,31 +39,32 @@ final class CBModel {
     static function toModel(stdClass $spec) {
         $className = CBModel::value($spec, 'className', '');
 
+        if (empty($className)) {
+            return null;
+        }
+
+        $model = null;
+
         if (is_callable($function = "{$className}::CBModel_toModel")) {
             $model = call_user_func($function, $spec);
         } else if (is_callable($function = "{$className}::specToModel")) { // deprecated
             $model = call_user_func($function, $spec);
-        } else {
+        }
+
+        if (!is_object($model)) {
             return null;
         }
 
-        /**
-         * @NOTE 2017.09.07
-         *
-         *      Since CBModel_toModel() is not required to set the model ID
-         *      property, it should probably not be required to set the model
-         *      className property either. If unset, this function would set
-         *      the model className to the spec className. The current behavior
-         *      is leftover from a time when it was acceptable to call
-         *      CBModel_toModel() directly on a class.
-         */
-
         if (empty($model->className)) {
-            return null;
+            $model->className = $className;
         }
 
         if (empty($model->ID) && !empty($spec->ID) && CBHex160::is($spec->ID)) {
             $model->ID = $spec->ID;
+        }
+
+        if (!isset($model->title) && isset($spec->title)) {
+            $model->title = strval($spec->title);
         }
 
         return $model;

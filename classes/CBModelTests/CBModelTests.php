@@ -18,6 +18,29 @@ final class CBModelTests {
     }
 
     /**
+     * This test checks the result to CBModel::toModel() when the converstion
+     * function does the minimum amount of work.
+     */
+    static function toModelMinimalImplementationTest() {
+        $spec = (object)[
+            'className' => 'CBModelTests_TestClass1',
+            'ID' => 'c4247a40d9d85524607e6e87cc1d138806765d59',
+            'title' => 'Test Title',
+        ];
+
+        $model = CBModel::toModel($spec);
+        $expectedModel = (object)[
+            'className' => 'CBModelTests_TestClass1',
+            'ID' => 'c4247a40d9d85524607e6e87cc1d138806765d59',
+            'title' => 'Test Title',
+        ];
+
+        if ($model != $expectedModel) {
+            throw new Exception('The model differs from the expected model.');
+        }
+    }
+
+    /**
      * @return [string]
      */
     static function getClassNames() {
@@ -32,5 +55,18 @@ final class CBModelTests {
         }
 
         return array_values(array_unique($classNames));
+    }
+}
+
+
+final class CBModelTests_TestClass1 {
+
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function CBModel_toModel(stdClass $spec) {
+        return (object)[];
     }
 }

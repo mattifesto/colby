@@ -19,6 +19,7 @@ class CBUnitTests {
             ['CBDB',                    'SQLToValue'],
             ['CBImages',                'resize'],
             ['CBModel',                 'toModel'],
+            ['CBModel',                 'toModelMinimalImplementation'],
             ['CBModelCache'],
             ['CBModels',                'fetchModelByID'],
             ['CBModels',                'fetchModelsByID'],

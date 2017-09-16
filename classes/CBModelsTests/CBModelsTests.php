@@ -186,8 +186,8 @@ final class CBModelsTests_TestClass {
             throw new Exception(__METHOD__ . ' Incorrect `nameAsHTML` property');
         }
 
-        if (!empty($model->title)) {
-            throw new Exception(__METHOD__ . ' The `title` property should not be set.');
+        if ($model->title !== "Title for {$ID}") {
+            throw new Exception(__METHOD__ . ' The `title` property is not correct.');
         }
 
         if ($version !== false && $model->version !== $version) {
@@ -202,7 +202,7 @@ final class CBModelsTests_TestClass {
      *
      * @return object
      */
-    static function specToModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
         ];
