@@ -6,13 +6,19 @@
 var CBUI = {
 
     /**
-     * @param function args.callback
-     * @param string args.text
+     * @param object args
+     *
+     *      {
+     *          callback: function?
+     *          text: string?
+     *      }
      *
      * @return object
      *
-     *      Element element
-     *      function updateText
+     *      {
+     *          element: Element
+     *          updateText: function
+     *      }
      */
     createButton: function (args) {
         var callback = args.callback;
