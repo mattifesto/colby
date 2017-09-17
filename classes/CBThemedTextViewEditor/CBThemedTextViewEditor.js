@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBThemedTextViewEditor */
 /* globals
     CBUI,
     CBUIBooleanEditor,
@@ -134,15 +136,6 @@ var CBThemedTextViewEditor = {
             propertyName : "center",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText: "Use Light Text Colors",
-            propertyName: "useLightTextColors",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
