@@ -1,12 +1,21 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBPageListView2 */
 /* global
     CBArtworkElement,
+    CBUI,
     Colby */
 
 var CBPageListView2 = {
 
     /**
-     * @param Element state.element
+     * @param object state
+     *
+     *      {
+     *          buttonContainerElement: Element
+     *          element: Element
+     *          renderStyleIsRecent: bool
+     *      }
      *
      * @return undefined
      */
@@ -59,7 +68,7 @@ var CBPageListView2 = {
                 descriptionElement.textContent = page.description;
                 var readModeElement = document.createElement("div");
                 readModeElement.className = "readmore";
-                readModeElement.textContent = "read more...";
+                readModeElement.textContent = "read more >";
 
                 anchorElement.appendChild(dateElement);
                 anchorElement.appendChild(imageElement);
@@ -79,13 +88,17 @@ var CBPageListView2 = {
             if (!state.renderStyleIsRecent && state.buttonContainerElement === undefined) {
                 state.buttonContainerElement = document.createElement("div");
                 state.buttonContainerElement.className = "buttonContainer";
-                var buttonElement = document.createElement("div");
-                buttonElement.className = "button";
-                buttonElement.textContent = "view more";
-                buttonElement.addEventListener("click", CBPageListView2.fetchPages.bind(undefined, state));
-                state.buttonContainerElement.appendChild(buttonElement);
+                var button = CBUI.createButton({
+                    text: "View More",
+                    callback: CBPageListView2.fetchPages.bind(undefined, state),
+                });
 
+                state.buttonContainerElement.appendChild(button.element);
                 state.element.appendChild(state.buttonContainerElement);
+            }
+
+            if (result.pages.length == 0) {
+                state.buttonContainerElement.classList.add("hidden");
             }
         }
     },
@@ -100,7 +113,7 @@ var CBPageListView2 = {
     },
 };
 
-document.addEventListener("DOMContentLoaded", function () {
+Colby.afterDOMContentLoaded(function () {
     var elements = document.getElementsByClassName("CBPageListView2");
 
     for (var i = 0; i < elements.length; i++) {

@@ -36,7 +36,6 @@
     width: 320px;
 }
 
-
 .CBPageListView2_default > article .readmore {
     color: var(--CBTextColor2);
 }
@@ -70,11 +69,6 @@
     font-weight: inherit;
 }
 
-.CBPageListView2_default .buttonContainer {
-    text-align: center;
-    padding: 20px 0;
-}
-
 .CBPageListView2_default .button {
     display: inline-block;
     background-color: var(--CBBackgroundColor);
@@ -87,4 +81,12 @@
     .CBPageListView2 > article {
         border-radius: 0;
     }
+}
+
+.CBPageListView2 .buttonContainer {
+    padding: 20px 0;
+}
+
+.CBPageListView2 .buttonContainer.hidden {
+    visibility: hidden;
 }
