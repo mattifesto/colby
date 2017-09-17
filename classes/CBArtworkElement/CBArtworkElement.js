@@ -1,13 +1,23 @@
-"use strict"; /* jshint strict: global */
-/* global
+"use strict";
+/* jshint strict: global */
+/* exported CBArtworkElement */
+/* globals
     Colby */
 
 var CBArtworkElement = {
 
     /**
-     * @param object? args.image
-     * @param string? args.src
-     * @param int? args.maxWidth
+     * @param object args
+     *
+     *      {
+     *          filename: string?   (default: "rw1280")
+     *          image: object?
+     *          src: string?
+     *          maxWidth: int?      (@deprecated use width)
+     *          width: string?      (default: "100vw" example: "480px")
+     *
+     *              The intrinsic display width in CSS pixels.
+     *      }
      *
      * @return Element
      */
@@ -18,18 +28,14 @@ var CBArtworkElement = {
 
         var element = document.createElement("div");
         element.className = "CBArtworkElement";
-        element.style.width = "100%";
-
-        if (args.maxWidth) {
-            element.style.maxWidth = args.maxWidth + "px";
-        }
+        element.style.width = args.width || (args.maxWidth ? args.maxWidth + "px" : "100vw");
 
         var containerElement = document.createElement("div");
         var imgElement = document.createElement("img");
         imgElement.style.width = "100%";
 
         if (args.image) {
-            imgElement.src = Colby.imageToURL(args.image, "rw1280");
+            imgElement.src = Colby.imageToURL(args.image, args.filename || "rw1280");
             imgElement.style.position = "absolute";
             imgElement.style.top = "0";
             imgElement.style.left = "0";
