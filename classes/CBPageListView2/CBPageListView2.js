@@ -14,6 +14,7 @@ var CBPageListView2 = {
      *      {
      *          buttonContainerElement: Element
      *          element: Element
+     *          hasFetchedAllElements: bool
      *          renderStyleIsRecent: bool
      *      }
      *
@@ -54,8 +55,10 @@ var CBPageListView2 = {
                 var imageElement = document.createElement("div");
                 imageElement.className = "image";
                 var artworkElement = CBArtworkElement.create({
+                    filename: "rw960",
                     image: page.image,
                     src: page.thumbnailURL,
+                    width: "480px",
                 });
 
                 imageElement.appendChild(artworkElement);
@@ -70,9 +73,9 @@ var CBPageListView2 = {
                 readModeElement.className = "readmore";
                 readModeElement.textContent = "read more >";
 
-                anchorElement.appendChild(dateElement);
                 anchorElement.appendChild(imageElement);
                 anchorElement.appendChild(titleElement);
+                anchorElement.appendChild(dateElement);
                 anchorElement.appendChild(descriptionElement);
                 anchorElement.appendChild(readModeElement);
                 element.appendChild(anchorElement);
@@ -97,8 +100,12 @@ var CBPageListView2 = {
                 state.element.appendChild(state.buttonContainerElement);
             }
 
-            if (result.pages.length == 0) {
+            if (result.pages.length == 0 && !state.hasFetchedAllElements) {
+                state.hasFetchedAllElements = true;
+
                 state.buttonContainerElement.classList.add("hidden");
+
+                Colby.alert("There are no additional pages.");
             }
         }
     },

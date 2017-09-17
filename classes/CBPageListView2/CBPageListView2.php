@@ -58,11 +58,7 @@ EOT;
         $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
 
         if (!in_array('custom', $CSSClassNames)) {
-            $CSSClassNames[] = 'CBPageListView2_default';
-        }
-
-        if (in_array('recent', $CSSClassNames)) {
-            $CSSClassNames[] = 'CBPageListView2_recent';
+                $CSSClassNames[] = 'CBPageListView2_default';
         }
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
@@ -81,7 +77,7 @@ EOT;
      * @return [string]
      */
     static function requiredClassNames() {
-        return ['CBArtworkElement'];
+        return ['CBArtworkElement', 'CBUI'];
     }
 
     /**
