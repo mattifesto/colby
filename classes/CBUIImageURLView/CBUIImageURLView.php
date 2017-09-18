@@ -24,7 +24,7 @@ final class CBUIImageURLView {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [CBUIImageURLView::URL('CBUIImageURLView.css')];
     }
 

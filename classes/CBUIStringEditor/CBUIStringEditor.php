@@ -5,7 +5,7 @@ final class CBUIStringEditor {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [CBUIStringEditor::URL('CBUIStringEditor.css')];
     }
 

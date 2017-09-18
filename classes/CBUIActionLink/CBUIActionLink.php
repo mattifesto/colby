@@ -12,7 +12,7 @@ final class CBUIActionLink {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [CBUIActionLink::URL('CBUIActionLink.css')];
     }
 

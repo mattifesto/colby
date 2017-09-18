@@ -5,7 +5,7 @@ final class CBUIImageSizeView {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [CBUIImageSizeView::URL('CBUIImageSizeView.css')];
     }
 

@@ -12,7 +12,7 @@ final class CBUIBooleanEditor {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [CBUIBooleanEditor::URL('CBUIBooleanEditor.css')];
     }
 

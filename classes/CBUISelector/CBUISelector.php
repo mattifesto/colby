@@ -12,7 +12,7 @@ final class CBUISelector {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [CBUISelector::URL('CBUISelector.css')];
     }
 

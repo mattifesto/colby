@@ -13,7 +13,7 @@
  * The class is automatically added to the list of required classes which also
  * makes the functions used by required classes optional:
  *  requiredClassNames()
- *  requiredCSSURLs()
+ *  CBHTMLOutput_CSSURLs()
  *  requiredJavaScriptURLs()
  */
 $class = isset($_GET['class']) ? $_GET['class'] : null;

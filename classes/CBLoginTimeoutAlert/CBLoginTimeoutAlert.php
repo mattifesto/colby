@@ -9,7 +9,7 @@ final class CBLoginTimeoutAlert {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [/*Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)*/];
     }
 

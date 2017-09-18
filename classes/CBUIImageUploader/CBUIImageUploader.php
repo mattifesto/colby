@@ -5,7 +5,7 @@ final class CBUIImageUploader {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [CBUIImageUploader::URL('CBUIImageUploader.css')];
     }
 

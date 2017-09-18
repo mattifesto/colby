@@ -12,7 +12,7 @@ final class CBImageLinkViewEditor {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [CBImageLinkViewEditor::URL('CBImageLinkViewEditor.css')];
     }
 
