@@ -53,6 +53,7 @@ final class CBHTMLOutput {
     private static $javaScriptSnippetFilenames;
     private static $javaScriptSnippetStrings;
     private static $javaScriptURLs;
+    private static $javaScriptURLsForRequiredClasses;
     private static $requiredClassNames;
     private static $styleSheets = [];
     private static $titleHTML; /* deprecated */
@@ -113,6 +114,13 @@ final class CBHTMLOutput {
         }
 
         CBHTMLOutput::$javaScriptURLs[$javaScriptURL] = $options;
+    }
+
+    /**
+     * @return null
+     */
+    private static function addJavaScriptURLForRequiredClass($javaScriptURL) {
+        CBHTMLOutput::$javaScriptURLsForRequiredClasses[$javaScriptURL] = 0;
     }
 
     /**
@@ -212,7 +220,7 @@ final class CBHTMLOutput {
 
             if (is_callable($function = "{$className}::CBHTMLOutput_JavaScriptURLs") || is_callable($function = "{$className}::requiredJavaScriptURLs")) {
                 $URLs = call_user_func($function);
-                array_walk($URLs, function ($URL) { CBHTMLOutput::addJavaScriptURL($URL); });
+                array_walk($URLs, function ($URL) { CBHTMLOutput::addJavaScriptURLForRequiredClass($URL); });
             }
 
             if (is_callable($function = "{$className}::CBHTMLOutput_JavaScriptVariables") || is_callable($function = "{$className}::requiredJavaScriptVariables")) {
@@ -397,7 +405,15 @@ final class CBHTMLOutput {
             echo "</script>\n";
         }
 
+        foreach (CBHTMLOutput::$javaScriptURLsForRequiredClasses as $URL => $options) {
+            echo "<script src=\"{$URL}\"></script>";
+        }
+
         foreach (CBHTMLOutput::$javaScriptURLs as $URL => $options) {
+            if (isset(CBHTMLOutput::$javaScriptURLsForRequiredClasses[$URL])) {
+                continue;
+            }
+
             if (!($options & CBHTMLOutput::JSInHeadElement)) {
                 $async = $options & CBHTMLOutput::JSAsync ? 'async ' : '';
                 $defer = $options & CBHTMLOutput::JSDefer ? 'defer ' : '';
@@ -466,7 +482,8 @@ final class CBHTMLOutput {
         CBHTMLOutput::$isActive = false;
         CBHTMLOutput::$javaScriptSnippetFilenames = array();
         CBHTMLOutput::$javaScriptSnippetStrings = array();
-        CBHTMLOutput::$javaScriptURLs = array();
+        CBHTMLOutput::$javaScriptURLs = [];
+        CBHTMLOutput::$javaScriptURLsForRequiredClasses = [];
         CBHTMLOutput::$requiredClassNames = [];
         CBHTMLOutput::$styleSheets = [];
         CBHTMLOutput::$titleHTML = '';

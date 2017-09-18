@@ -14,7 +14,7 @@ var Colby = {
       *
       * @return undefined
       */
-     afterDOMContentLoaded(callback) {
+     afterDOMContentLoaded: function (callback) {
          if (document.readyState === "loading") {
              document.addEventListener("DOMContentLoaded", callback);
          } else {
@@ -27,7 +27,7 @@ var Colby = {
      *
      * @return undefined
      */
-    alert : function(text) {
+    alert: function (text) {
         Colby.setPanelText(text);
         Colby.showPanel();
     },
