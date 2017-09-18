@@ -716,7 +716,7 @@ final class Colby {
     /**
      * @return [string]
      */
-    static function requiredCSSURLs() {
+    static function CBHTMLOutput_CSSURLs() {
         return [Colby::flexpath(__CLASS__, 'css', CBSystemURL)];
     }
 

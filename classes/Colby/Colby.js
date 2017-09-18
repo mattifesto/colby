@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
 
 var Colby = {
     intervalId:     null,
@@ -691,7 +693,7 @@ Colby.createPanel = function() {
     var panel = document.createElement("div");
     panel.className = "CBPanelView";
     var container = document.createElement("div");
-    container.className = "CBPanelContainer";
+    container.className = "CBPanelContainer CBLightTheme";
     var content = document.createElement("div");
     content.className = "CBPanelContent";
     var buttonView = document.createElement("div");
