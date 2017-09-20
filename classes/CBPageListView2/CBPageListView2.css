@@ -45,12 +45,9 @@
     max-width: 36em;
 }
 
-.CBPageListView2_default .readmore {
-    padding: 40px 0 0;
-}
-
-.CBPageListView2_default a:hover .readmore {
+.CBPageListView2_default a .readmore {
     color: var(--CBTextColorForLinks);
+    padding: 40px 0 0;
 }
 
 .CBPageListView2 .buttonContainer {
