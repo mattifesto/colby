@@ -23,7 +23,6 @@ html {
     --CBButtonTextColor: hsl(0, 0%, 100%);
     --CBButtonTextColorDisabled: hsla(0, 0, 100%, 0.3);
     --CBMonospaceFontFamily: 'Menlo', 'Courier New', 'Courier', monospace;
-    --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 }
 
 .CBDarkTheme {
@@ -34,6 +33,7 @@ html {
     --CBTextColor: hsla(0, 0%, 100%, 0.7);
     --CBTextColor2: hsla(0, 0%, 100%, 0.5);
     --CBTextColorForHeadings: hsla(0, 0%, 100%, 1.0);
+    --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
     background-color: hsl(0, 0%, 10%); /* for older browsers */
     background-color: var(--CBBackgroundColor);
@@ -49,6 +49,7 @@ html {
     --CBTextColor: hsla(0, 0%, 0%, 0.8);
     --CBTextColor2: hsla(0, 0%, 0%, 0.6);
     --CBTextColorForHeadings: hsla(0, 0%, 0%, 1.0);
+    --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
     background-color: hsl(0, 0%, 100%); /* for older browsers */
     background-color: var(--CBBackgroundColor);
