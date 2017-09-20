@@ -5,7 +5,7 @@ final class CBUIRadioMenu {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUIRadioMenu::URL('CBUIRadioMenu.js')];
     }
 

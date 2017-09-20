@@ -19,7 +19,7 @@ final class CBUIActionLink {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUIActionLink::URL('CBUIActionLink.js')];
     }
 

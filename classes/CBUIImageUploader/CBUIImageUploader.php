@@ -12,7 +12,7 @@ final class CBUIImageUploader {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUIImageUploader::URL('CBUIImageUploader.js')];
     }
 

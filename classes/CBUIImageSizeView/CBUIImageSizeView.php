@@ -12,7 +12,7 @@ final class CBUIImageSizeView {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUIImageSizeView::URL('CBUIImageSizeView.js')];
     }
 

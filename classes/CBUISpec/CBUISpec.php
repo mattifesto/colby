@@ -8,7 +8,7 @@ final class CBUISpec {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUISpec::URL('CBUISpec.js')];
     }
 

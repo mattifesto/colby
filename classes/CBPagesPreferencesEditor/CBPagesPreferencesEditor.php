@@ -12,7 +12,7 @@ final class CBPagesPreferencesEditor {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBPagesPreferencesEditor::URL('CBPagesPreferencesEditorFactory.js')];
     }
 

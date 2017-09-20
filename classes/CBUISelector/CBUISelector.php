@@ -19,7 +19,7 @@ final class CBUISelector {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUISelector::URL('CBUISelector.js')];
     }
 

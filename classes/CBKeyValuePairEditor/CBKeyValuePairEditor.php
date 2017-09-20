@@ -12,7 +12,7 @@ final class CBKeyValuePairEditor {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBKeyValuePairEditor::URL('CBKeyValuePairEditor.js')];
     }
 

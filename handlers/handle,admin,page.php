@@ -14,7 +14,7 @@
  * makes the functions used by required classes optional:
  *  requiredClassNames()
  *  CBHTMLOutput_CSSURLs()
- *  requiredJavaScriptURLs()
+ *  CBHTMLOutput_JavaScriptURLs()
  */
 $class = isset($_GET['class']) ? $_GET['class'] : null;
 

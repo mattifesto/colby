@@ -12,7 +12,7 @@ final class CBMenuItemEditor {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBMenuItemEditor::URL('CBMenuItemEditor.js')];
     }
 

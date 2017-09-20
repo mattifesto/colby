@@ -42,7 +42,7 @@ EOT;
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [Colby::flexpath(__CLASS__, 'js', CBSystemURL)];
     }
 

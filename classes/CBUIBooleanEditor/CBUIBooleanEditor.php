@@ -19,7 +19,7 @@ final class CBUIBooleanEditor {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUIBooleanEditor::URL('CBUIBooleanEditor.js')];
     }
 

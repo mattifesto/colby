@@ -25,7 +25,7 @@ final class CBUISpecPropertyEditor {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUISpecPropertyEditor::URL('CBUISpecPropertyEditor.js')];
     }
 

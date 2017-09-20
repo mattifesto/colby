@@ -31,7 +31,7 @@ final class CBUIImageURLView {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUIImageURLView::URL('CBUIImageURLView.js')];
     }
 

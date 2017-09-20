@@ -5,7 +5,7 @@ final class CBUIOptionArrayEditor {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUIOptionArrayEditor::URL('CBUIOptionArrayEditor.js')];
     }
 

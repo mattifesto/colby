@@ -12,7 +12,7 @@ final class CBUICaptcha {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [
             'https://www.google.com/recaptcha/api.js',
             Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__),

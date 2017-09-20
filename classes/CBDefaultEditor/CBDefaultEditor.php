@@ -12,7 +12,7 @@ final class CBDefaultEditor {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBDefaultEditor::URL('CBDefaultEditor.js')];
     }
 

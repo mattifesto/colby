@@ -12,7 +12,7 @@ final class CBUISpecEditor {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUISpecEditor::URL('CBUISpecEditor.js')];
     }
 

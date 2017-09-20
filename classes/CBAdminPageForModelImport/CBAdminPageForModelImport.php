@@ -103,7 +103,7 @@ final class CBAdminPageForModelImport {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 

@@ -19,7 +19,7 @@ final class CBImageLinkViewEditor {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBImageLinkViewEditor::URL('CBImageLinkViewEditor.js')];
     }
 

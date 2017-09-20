@@ -12,7 +12,7 @@ final class CBUIStringEditor {
     /**
      * @return [string]
      */
-    static function requiredJavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs() {
         return [CBUIStringEditor::URL('CBUIStringEditor.js')];
     }
 
