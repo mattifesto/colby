@@ -97,7 +97,7 @@ class CBAjaxResponse {
 
         if (CBAjaxResponse::$countOfSends > 1) {
             $count = CBAjaxResponse::$countOfSends;
-            throw new Exception("The send count was incremented to {$count} for the output:\n\n{$output}");
+            throw new Exception("The send count was incremented to {$count} for the output: {$output}");
         } else {
             header('Content-type: application/json');
         }
