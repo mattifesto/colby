@@ -326,7 +326,9 @@ final class Colby {
      * should clean up its own mess before handing the failure off to
      * another function.
      *
-     * @return void
+     * @param Throwable $exception
+     *
+     * @return null
      */
     static function handleException($exception) {
 
@@ -369,9 +371,23 @@ final class Colby {
             CBExceptionView::popThrowable();
 
         } catch (Exception $innerException) {
-            $message = CBConvert::throwableToMessage($innerException);
 
-            error_log('Colby::handleException() INNER EXCEPTION: ' . $message);
+            /**
+             * 1. Create message with clear indication that this is an exception
+             * handler inner exception.
+             *
+             * 2. Attempt to log the message.
+             *
+             * 3. Attempt to send the message to slack.
+             */
+
+            $message = CBConvert::throwableToMessage($innerException);
+            $message = "Colby::handleException() INNER EXCEPTION: {$message}";
+            CBLog::addMessage(__METHOD__, 2, $message);
+            CBSlack::sendMessage((object)[
+                'message' => $message,
+            ]);
+
         }
     }
 
@@ -687,7 +703,7 @@ final class Colby {
             ];
             $logMessage = CBConvert::throwableToMessage($exception);
             $URI = $_SERVER['REQUEST_URI'];
-            $link = cbsiteurl() . '/admin/page/?class=CBAdminPageForLogs';
+            $link = cbsiteurl() . '/admin/page/?class=CBLogAdminPage';
 
             /* CBLog::addMessage() never throws an exception */
             CBLog::addMessage(__METHOD__, $severity, $logMessage, $model);
