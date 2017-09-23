@@ -64,7 +64,7 @@ class CBJavaScript {
         }
 
         $message = CBConvert::javaScriptErrorToMessage($errorModel);
-        $link = cbsiteurl() . '/admin/page/?class=CBAdminPageForLogs';
+        $link = cbsiteurl() . '/admin/page/?class=CBLogAdminPage';
 
         if (CBJavaScript::shouldReportToDeveloper($errorModel, $hashes)) {
             CBSlack::sendMessage((object)[
