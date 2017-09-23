@@ -11,7 +11,11 @@ if (isset($_SERVER['REQUEST_URI'])) {
 }
 
 if (isset($_POST['ajax'])) {
-    echo "(ajax)\n";
+    $ajaxModelAsJSON = cb_post_value('ajax');
+    $ajaxModel = json_decode($ajaxModelAsJSON);
+    $ajaxFunctionClassName = CBModel::value($ajaxModel, 'functionClassName', '(unset)');
+    $ajaxFunctionName = CBModel::value($ajaxModel, 'functionName', '(unset)');
+    echo "\nAjax:\n{$ajaxFunctionClassName}\n{$ajaxFunctionName}\n";
 }
 
 echo "\n\n";
