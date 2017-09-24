@@ -208,6 +208,17 @@ var CBTestPage = {
      * @return undefined
      */
     handleRunTests: function (args) {
+
+        /**
+         * IE11 incorrectly fires the changed event on the input element when
+         * its value is reset to null when the tests are complete. This test
+         * makes this function return early if it is called in this situation.
+         */
+
+        if (CBAdminPageForTests.fileInputElementIsResetting) {
+            return;
+        }
+
         var date = new Date();
         args.button.disable();
 
@@ -279,7 +290,9 @@ var CBTestPage = {
 
         function onFinally() {
             args.button.enable();
+            CBAdminPageForTests.fileInputElementIsResetting = true;
             CBAdminPageForTests.fileInputElement.value = null;
+            CBAdminPageForTests.fileInputElementIsResetting = undefined;
         }
     },
 

@@ -1,4 +1,5 @@
 .CBUIRoot {
+    background-color: hsl(0, 0%, 90%); /* IE11, from CBAdminTheme */
     background-color: var(--CBBackgroundColor2);
     flex: 1 0 auto;
 }
@@ -14,9 +15,11 @@
 }
 
 .CBUIButton .button {
+    background-color: hsl(210, 80%, 50%); /* IE11, from equalize.css */
     background-color: var(--CBButtonBackgroundColor);
     border-radius: 5px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    color: hsl(0, 0%, 100%); /* IE11, from equalize.css */
     color: var(--CBButtonTextColor);
     cursor: default;
     padding: 10px 20px;
@@ -28,7 +31,9 @@
 }
 
 .CBUIButton.disabled .button {
+    background-color: hsl(210, 80%, 30%); /* IE11, from equalize.css */
     background-color: var(--CBButtonBackgroundColorDisabled);
+    color: hsla(0, 0, 100%, 0.3); /* IE11, from equalize.css */
     color: var(--CBButtonTextColorDisabled);
 }
 
