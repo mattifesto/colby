@@ -90,9 +90,10 @@ class CBAjaxResponse {
 
         /**
          * There should be no errors after this point so we are free to
-         * increment the send count. This should be the last time the send count
-         * is incremented.
+         * increment the send count. The first time should also be the last time
+         * the send count is incremented.
          */
+
         CBAjaxResponse::$countOfSends += 1;
 
         if (CBAjaxResponse::$countOfSends > 1) {
