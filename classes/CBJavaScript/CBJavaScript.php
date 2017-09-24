@@ -6,9 +6,7 @@ class CBJavaScript {
      * @return null
      */
     static function CBAjax_reportError(stdClass $args) {
-        $response = new CBAjaxResponse();
         $errorModel = CBModel::valueAsObject($args, 'errorModel');
-        //$errorModel = (object)[];
         $pMessage = CBModel::value($errorModel, 'message');
         $pPageURL = CBModel::value($errorModel, 'pageURL');
         $pSourceURL = CBModel::value($errorModel, 'sourceURL');
@@ -75,9 +73,6 @@ class CBJavaScript {
         CBLog::addMessage(__METHOD__, 3, $message, (object)[
             'text' => implode("\n", $messages),
         ]);
-
-        $response->wasSuccessful = true;
-        $response->send();
     }
 
     /**
