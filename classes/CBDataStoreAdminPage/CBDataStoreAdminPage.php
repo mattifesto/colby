@@ -78,6 +78,10 @@ final class CBDataStoreAdminPage {
      * @return null
      */
     static function renderArchiveInformation($ID) {
+        if (!class_exists('ColbyArchive')) {
+            return;
+        }
+
         $filepath = CBDataStore::flexpath($ID, 'archive.data', cbsitedir());
 
         if (!is_file($filepath)) {
