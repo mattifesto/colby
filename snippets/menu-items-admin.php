@@ -12,13 +12,20 @@ $generalMenu->logs = newMenuItem('Logs', '/admin/page/?class=CBLogAdminPage');
 $generalMenu->users = newMenuItem('Users', '/admin/page/?class=CBAdminPageForUsers');
 $CBAdminMenu->general = newMenuItem('General', '/admin/', $generalMenu);
 
+/* Pages */
 
 $pagesMenu = new stdClass();
 $pagesMenu->create = newMenuItem('Create', '/admin/pages/edit/');
 $pagesMenu->find = newMenuItem('Find', '/admin/page/?class=CBAdminPageForPagesFind');
 $pagesMenu->trash = newMenuItem('Trash', '/admin/page?class=CBAdminPageForPagesTrash');
+
+if (ColbyUser::current()->isOneOfThe('Developers')) {
+    $pagesMenu->develop = newMenuItem('Develop', '/admin/page/?class=CBPagesDevelopmentAdminPage');
+}
+
 $CBAdminMenu->pages = newMenuItem('Pages', '/admin/page/?class=CBAdminPageForPagesFind', $pagesMenu);
 
+/* Models */
 
 $modelsMenu = (object)[
     'directory' => newMenuItem('Directory', '/admin/models/directory/'),
@@ -60,7 +67,6 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
     $developMenu->images        = newMenuItem('Images', '/admin/page/?class=CBImagesAdminPage');
     $developMenu->php           = newMenuItem('PHP', '/admin/develop/php/');
     $developMenu->update        = newMenuItem('Update', '/admin/page/?class=CBAdminPageForUpdate');
-    $developMenu->pages         = newMenuItem('Pages', '/admin/page/?class=CBPagesDevelopmentAdminPage');
     $developMenu->mysql         = newMenuItem('MySQL', '/developer/mysql/');
 
     $CBAdminMenu->develop = newMenuItem('Develop', '/admin/develop/php/', $developMenu);

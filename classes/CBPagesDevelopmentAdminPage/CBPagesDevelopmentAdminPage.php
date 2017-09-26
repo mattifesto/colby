@@ -6,7 +6,7 @@ final class CBPagesDevelopmentAdminPage {
      * @return [string]
      */
     static function adminPageMenuNamePath() {
-        return ['develop', 'pages'];
+        return ['pages', 'develop'];
     }
 
     /**
