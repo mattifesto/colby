@@ -5,7 +5,7 @@ $CBAdminMenu = new stdClass();
 
 $CBAdminMenu->home = newMenuItem('Home', '/');
 
-$generalMenu            = new stdClass();
+$generalMenu = new stdClass();
 $generalMenu->status = newMenuItem('Status', '/admin/');
 $generalMenu->tasks = newMenuItem('Tasks', '/admin/page/?class=CBTasks2AdminPage');
 $generalMenu->logs = newMenuItem('Logs', '/admin/page/?class=CBLogAdminPage');
@@ -21,6 +21,12 @@ $pagesMenu->trash = newMenuItem('Trash', '/admin/page?class=CBAdminPageForPagesT
 
 if (ColbyUser::current()->isOneOfThe('Developers')) {
     $pagesMenu->develop = newMenuItem('Develop', '/admin/page/?class=CBPagesDevelopmentAdminPage');
+    $pagesMenu->develop = (object)[
+        'className' => 'CBMenuItem',
+        'name' => 'develop',
+        'text' => 'Develop',
+        'URL' => '/admin/page/?class=CBPagesDevelopmentAdminPage',
+    ];
 }
 
 $CBAdminMenu->pages = newMenuItem('Pages', '/admin/page/?class=CBAdminPageForPagesFind', $pagesMenu);
@@ -34,40 +40,52 @@ $modelsMenu = (object)[
 
 $helpMenu = (object)[
     'markaround-syntax' => (object)[
-        'nameHTML' => 'Markaround',
-        'URI' => '/admin/help/markaround-syntax/'
+        'className' => 'CBMenuItem',
+        'name' => 'markaround-syntax',
+        'text' => 'Markaround',
+        'URL' => '/admin/help/markaround-syntax/'
     ],
     'title-subtitle' => (object)[
-        'nameHTML' => 'Titles &amp; Descriptions',
-        'URI' => '/admin/help/title-subtitle/',
+        'className' => 'CBMenuItem',
+        'name' => 'title-subtitle',
+        'text' => 'Titles & Descriptions',
+        'URL' => '/admin/help/title-subtitle/',
     ],
     'caption-alternative-text' => (object)[
-        'nameHTML' => 'Captions &amp; Alternative Text',
-        'URI' => '/admin/help/caption-alternative-text',
+        'className' => 'CBMenuItem',
+        'name' => 'caption-alternative-text',
+        'text' => 'Captions & Alternative Text',
+        'URL' => '/admin/help/caption-alternative-text',
     ],
     'CBArtworkElement' => (object)[
-        'nameHTML' => 'CBArtworkElement',
-        'URI' => '/admin/page/?class=CBAdminPageForCBArtworkElement',
+        'className' => 'CBMenuItem',
+        'name' => 'CBArtworkElement',
+        'text' => 'CBArtworkElement',
+        'URL' => '/admin/page/?class=CBAdminPageForCBArtworkElement',
     ],
     'api' => (object)[
-        'nameHTML' => 'API',
-        'URI' => '/admin/help/api/',
+        'className' => 'CBMenuItem',
+        'name' => 'api',
+        'text' => 'API',
+        'URL' => '/admin/help/api/',
     ],
     'cssvariables' => (object)[
-        'nameHTML' => 'CSS Variables',
-        'URI' => '/admin/page/?class=CBAdminPageForCSSVariables'
+        'className' => 'CBMenuItem',
+        'name' => 'cssvariables',
+        'text' => 'CSS Variables',
+        'URL' => '/admin/page/?class=CBAdminPageForCSSVariables'
     ],
 ];
 
 $CBAdminMenu->help = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
 
 if (ColbyUser::current()->isOneOfThe('Developers')) {
-    $developMenu                = new stdClass();
-    $developMenu->datastores    = newMenuItem('Data Stores', '/admin/page/?class=CBDataStoresAdminPage');
-    $developMenu->images        = newMenuItem('Images', '/admin/page/?class=CBImagesAdminPage');
-    $developMenu->php           = newMenuItem('PHP', '/admin/develop/php/');
-    $developMenu->update        = newMenuItem('Update', '/admin/page/?class=CBAdminPageForUpdate');
-    $developMenu->mysql         = newMenuItem('MySQL', '/developer/mysql/');
+    $developMenu = new stdClass();
+    $developMenu->datastores = newMenuItem('Data Stores', '/admin/page/?class=CBDataStoresAdminPage');
+    $developMenu->images = newMenuItem('Images', '/admin/page/?class=CBImagesAdminPage');
+    $developMenu->php = newMenuItem('PHP', '/admin/develop/php/');
+    $developMenu->update = newMenuItem('Update', '/admin/page/?class=CBAdminPageForUpdate');
+    $developMenu->mysql = newMenuItem('MySQL', '/developer/mysql/');
 
     $CBAdminMenu->develop = newMenuItem('Develop', '/admin/develop/php/', $developMenu);
 
@@ -83,14 +101,12 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
 $CBAdminMenu->models = newMenuItem('Models', '/admin/models/directory/', $modelsMenu);
 
 /**
- * @return stdClass
+ * @return object
  */
-function newMenuItem($nameHTML, $URI, $submenu = null)
-{
-    $menuItem           = new stdClass();
-    $menuItem->nameHTML = $nameHTML;
-    $menuItem->URI      = $URI;
-    $menuItem->submenu  = $submenu;
-
-    return $menuItem;
+function newMenuItem($text, $URL, $submenu = null) {
+    return (object)[
+        'text' => $text,
+        'URL' => $URL,
+        'submenu' => $submenu,
+    ];
 }

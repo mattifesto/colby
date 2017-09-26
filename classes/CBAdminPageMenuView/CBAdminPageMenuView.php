@@ -7,37 +7,43 @@
 final class CBAdminPageMenuView {
 
     /**
-     * @return void
+     * @return null
      */
     static function renderMenu($menu, $selectedMenuItemName, $class) {
-
         ?>
 
         <nav class="<?= $class ?>">
             <div class="toggle"><a onclick="this.parentElement.parentElement.classList.toggle('expanded');">menu</a></div>
             <ul>
 
+                <?php
+
+                foreach ($menu as $menuItemName => $menuItem) {
+                    $classAttribute = '';
+
+                    if ($menuItemName == $selectedMenuItemName) {
+                        $classAttribute = ' class="selected"';
+                    }
+
+                    ?>
+
+                    <li <?= $classAttribute ?>>
+                         <a href="<?= cbhtml($menuItem->URL) ?>"><?= cbhtml($menuItem->text) ?></a>
+                    </li>
+
+                    <?php
+                }
+
+                ?>
+
+            </ul>
+        </nav>
+
         <?php
-
-        foreach ($menu as $menuItemName => $menuItem)
-        {
-            $classAttribute = '';
-
-            if ($menuItemName == $selectedMenuItemName)
-            {
-                $classAttribute = ' class="selected"';
-            }
-
-            echo "<li{$classAttribute}>",
-                 "<a href=\"{$menuItem->URI}\">{$menuItem->nameHTML}</a>",
-                 "</li>";
-        }
-
-        echo "</ul></nav>\n\n";
     }
 
     /**
-     * @param stdClass? $model
+     * @param object? $model
      * @param string? $model->selectedMenuItemName
      * @param string? $model->selectedSubmenuItemName
      *
@@ -92,21 +98,19 @@ final class CBAdminPageMenuView {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
-     * @param stdClass $spec
+     * @param object $spec
      *
-     * @return stdClass
+     * @return object
      */
-    static function CBModel_toModel(stdClass $spec = null) {
-        $model                          = CBView::modelWithClassName(__CLASS__);
-        $model->selectedMenuItemName    = isset($spec->selectedMenuItemName) ?
-                                            (string)$spec->selectedMenuItemName : '';
-        $model->selectedSubmenuItemName = isset($spec->selectedSubmenuItemName) ?
-                                            (string)$spec->selectedSubmenuItemName : '';
-
-        return $model;
+    static function CBModel_toModel(stdClass $spec) {
+        return (object)[
+            'className' => __CLASS__,
+            'selectedMenuItemName' => CBModel::value($spec, 'selectedMenuItemName', '', 'strval'),
+            'selectedSubmenuItemName' => CBModel::value($spec, 'selectedSubmenuItemName', '', 'strval'),
+        ];
     }
 }
