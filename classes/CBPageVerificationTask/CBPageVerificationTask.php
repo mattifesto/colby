@@ -287,20 +287,15 @@ EOT;
     /**
      * @return null
      */
-    static function startForAllPagesForAjax() {
-        $response = new CBAjaxResponse();
-
+    static function CBAjax_startForAllPages() {
         CBPageVerificationTask::startForAllPages();
-
-        $response->wasSuccessful = true;
-        $response->send();
     }
 
     /**
-     * @return object
+     * @return string
      */
-    static function startForAllPagesForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function CBAjax_startForAllPages_group() {
+        return 'Administrators';
     }
 
     /**
@@ -325,20 +320,15 @@ EOT;
     /**
      * @return null
      */
-    static function startForNewPagesForAjax() {
-        $response = new CBAjaxResponse();
-
+    static function CBAjax_startForNewPages() {
         CBPageVerificationTask::startForNewPages();
-
-        $response->wasSuccessful = true;
-        $response->send();
     }
 
     /**
-     * @return object
+     * @return string
      */
-    static function startForNewPagesForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function CBAjax_startForNewPages_group() {
+        return 'Administrators';
     }
 
     /**
