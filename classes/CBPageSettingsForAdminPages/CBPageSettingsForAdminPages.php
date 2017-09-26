@@ -65,6 +65,7 @@ final class CBPageSettingsForAdminPages {
                 --CBTextColor: hsla(0, 0%, 0%, 0.8);
                 --CBTextColor2: hsla(0, 0%, 0%, 0.6);
                 --CBTextColorForHeadings: hsla(0, 0%, 0%, 1.0);
+                --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
                 background-color: var(--CBBackgroundColor);
                 color: var(--CBTextColor);
