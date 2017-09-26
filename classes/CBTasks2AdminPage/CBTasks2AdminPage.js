@@ -1,5 +1,7 @@
-"use strict"; /* jshint strict: global */  /* jshint esversion: 6 */
-/* globals
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* global
     CBUI,
     CBUIExpander,
     Colby */
@@ -17,16 +19,6 @@ var CBTasks2AdminPage = {
 
         var statusElement = CBTasks2AdminPage.createStatusElement();
         element.appendChild(statusElement);
-
-        buttonsElement.appendChild(CBUI.createButton({
-            callback: CBTasks2AdminPage.startVerificationForAllPages,
-            text: "Start Verification for All Pages",
-        }).element);
-
-        buttonsElement.appendChild(CBUI.createButton({
-            callback: CBTasks2AdminPage.startVerificationForNewPages,
-            text: "Start Verification for New Pages",
-        }).element);
 
         buttonsElement.appendChild(CBUI.createButton({
             callback: function() {
@@ -230,24 +222,6 @@ var CBTasks2AdminPage = {
     scheduleATask: function () {
         Colby.fetchAjaxResponse("/api/?class=CBTasks2AdminPage&function=scheduleATask")
             .then(function () { Colby.alert("A task was scheduled."); })
-            .catch(Colby.displayError);
-    },
-
-    /**
-     * @return undefined
-     */
-    startVerificationForAllPages: function () {
-        CBTasks2AdminPage.restartVerificationForAllPagesPromise =
-             Colby.fetchAjaxResponse("/api/?class=CBPageVerificationTask&function=startForAllPages")
-            .catch(Colby.displayError);
-    },
-
-    /**
-     * @return undefined
-     */
-    startVerificationForNewPages: function () {
-        CBTasks2AdminPage.restartVerificationForNewPagesPromise =
-             Colby.fetchAjaxResponse("/api/?class=CBPageVerificationTask&function=startForNewPages")
             .catch(Colby.displayError);
     },
 };
