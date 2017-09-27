@@ -16,16 +16,53 @@ var CBUI = {
      * @return object
      *
      *      {
+     *          disable: function
      *          element: Element
+     *          enable: function
+     *          updateCallback: function
      *          updateText: function
      *      }
      */
     createButton: function (args) {
-        var callback = args.callback;
+        var callback;
         var element = document.createElement("div");
         element.className = "CBUIButton";
         var buttonElement = document.createElement("div");
         buttonElement.className = "button";
+
+        element.appendChild(buttonElement);
+
+        buttonElement.addEventListener("click", function () {
+            if (!element.classList.contains("disabled") && typeof callback === "function") {
+                callback();
+            }
+        });
+
+        updateCallback(args.callback);
+        updateText(args.text);
+
+        return {
+            disable: disable,
+            element: element,
+            enable: enable,
+            updateCallback: updateCallback,
+            updateText: updateText,
+        };
+
+        function disable() {
+            element.classList.add("disabled");
+        }
+
+        function enable() {
+            element.classList.remove("disabled");
+        }
+
+        function updateCallback(newCallback) {
+            var previousCallback = callback;
+            callback = newCallback;
+
+            return previousCallback;
+        }
 
         function updateText(value) {
             var previousValue = buttonElement.textContent;
@@ -33,28 +70,6 @@ var CBUI = {
 
             return previousValue;
         }
-
-        updateText(args.text);
-        enable();
-
-        element.appendChild(buttonElement);
-
-        function disable() {
-            element.classList.add("disabled");
-            element.removeEventListener("click", callback);
-        }
-
-        function enable() {
-            element.classList.remove("disabled");
-            element.addEventListener("click", callback);
-        }
-
-        return {
-            disable: disable,
-            element: element,
-            enable: enable,
-            updateText: updateText,
-        };
     },
 
     /**

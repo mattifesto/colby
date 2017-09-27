@@ -46,9 +46,27 @@ var CBTasks2AdminPage = {
             text: "Schedule a Task",
         }).element);
 
-        element.appendChild(buttonsElement);
+        var issuesElement = document.createElement("div");
+        issuesElement.className = "issues";
 
-        var issuesElement = CBTasks2AdminPage.createIssuesElement();
+        var fetchIssuesButton = CBUI.createButton({
+            callback: fetchIssues,
+            text: "Fetch Issues",
+        });
+
+        buttonsElement.appendChild(fetchIssuesButton.element);
+
+        function fetchIssues() {
+            fetchIssuesButton.disable();
+
+            CBTasks2AdminPage.fetchIssues(issuesElement)
+                .catch(Colby.displayAndReportError)
+                .then(function () { fetchIssuesButton.enable(); });
+        }
+
+        fetchIssues();
+
+        element.appendChild(buttonsElement);
         element.appendChild(issuesElement);
 
         return element;
@@ -122,71 +140,43 @@ var CBTasks2AdminPage = {
     },
 
     /**
-     * @return Element
+     * @param issuesElement Element
+     *
+     * @return Promise
      */
-    createIssuesElement: function () {
-        var element = document.createElement("div");
-        element.className = "issues";
-        var issuesElement = document.createElement("div");
-        var button = CBUI.createButton({
-            callback: fetchIssues,
-            text: "Fetch Issues",
-        });
+    fetchIssues: function (issuesElement) {
+        return Colby.callAjaxFunction("CBTasks2AdminPage", "fetchOutputsWithIssues")
+            .then(onFulfilled)
+            .catch(Colby.displayAndReportError);
 
-        element.appendChild(button.element);
-        element.appendChild(issuesElement);
+        function onFulfilled(outputs) {
+            var count = 0;
 
-        fetchIssues();
-
-        return element;
-
-        function fetchIssues() {
             issuesElement.textContent = "";
-            /* TODO: disable button */
 
-            var promise = Colby.callAjaxFunction("CBTasks2AdminPage", "fetchOutputsWithIssues")
-                .then(onFulfilled)
-                .catch(onRejected)
-                .then(onFinally, onFinally);
+            for (let output of outputs) {
+                var message = output.message + "\n\n" + output.taskClassName + "\n" + output.taskID;
 
-            Colby.retain(promise);
-
-            function onFulfilled(outputs) {
-                var count = 0;
-
-                for (let output of outputs) {
-                    var message = output.message + "\n\n" + output.taskClassName + "\n" + output.taskID;
-
-                    if (output.exception) {
-                        message += "\n\n" + output.exception;
-                    }
-
-                    var expander = CBUIExpander.create({
-                        links: output.links,
-                        message: message,
-                        timestamp: output.completed,
-                    });
-
-                    issuesElement.appendChild(expander.element);
-
-                    count += 1;
-
-                    if (count >= 100) {
-                        break;
-                    }
+                if (output.exception) {
+                    message += "\n\n" + output.exception;
                 }
 
-                Colby.updateTimes();
+                var expander = CBUIExpander.create({
+                    links: output.links,
+                    message: message,
+                    timestamp: output.completed,
+                });
+
+                issuesElement.appendChild(expander.element);
+
+                count += 1;
+
+                if (count >= 100) {
+                    break;
+                }
             }
 
-            function onRejected(error) {
-                Colby.report(error);
-                Colby.displayError(error);
-            }
-
-            function onFinally() {
-                Colby.release(promise);
-            }
+            Colby.updateTimes();
         }
     },
 
