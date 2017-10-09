@@ -49,8 +49,8 @@
 .CBTextView2_default pre {
     background-color: var(--CBBackgroundColor2);
     border-radius: 5px;
+    overflow-x: scroll;
     padding: 0.8em 1.0em;
-    white-space: pre-wrap;
 }
 
 .CBTextView2_default pre > code {
