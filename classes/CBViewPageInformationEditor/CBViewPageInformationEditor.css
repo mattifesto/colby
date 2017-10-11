@@ -22,25 +22,17 @@
     padding: 0 10px;
 }
 
-.CBViewPageInformationEditor .actions,
 .CBViewPageInformationEditor .pagelists {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
 }
 
-.CBViewPageInformationEditor .actions > *,
 .CBViewPageInformationEditor .pagelists > * {
     align-items: center;
     display: flex;
     height: 44px;
     padding: 0 10px;
-}
-
-.CBViewPageInformationEditor .actions > * {
-    color: hsl(210, 100%, 50%);
-    cursor: pointer;
-    text-decoration: none;
 }
 
 .CBViewPageInformationEditor .CBStringEditor {

@@ -1,4 +1,5 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
 /* globals
     CBCurrentUserID,
     CBPageClassNamesForKinds,
@@ -7,6 +8,7 @@
     CBPageURIControl,
     CBPublicationControl,
     CBUI,
+    CBUIActionLink,
     CBUIImageChooser,
     CBUISelector,
     CBUISpecPropertyEditor,
@@ -233,22 +235,26 @@ var CBViewPageInformationEditor = {
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
-        var actions = document.createElement("div");
-        actions.className = "actions";
-        preview = document.createElement("a");
-        preview.href = "/admin/pages/preview/?ID=" + args.spec.ID;
-        preview.textContent = "Preview";
-        var useAsFrontPage = document.createElement("div");
-        useAsFrontPage.textContent = "Use as Front Page";
-        useAsFrontPage.addEventListener("click", args.makeFrontPageCallback);
-        actions.appendChild(preview);
-        actions.appendChild(useAsFrontPage);
-        item.appendChild(actions);
+        item.appendChild(CBUIActionLink.create({
+            labelText: "Preview",
+            callback: function () {
+                var name = "preview_" + args.spec.ID;
+                window.open("/admin/pages/preview/?ID=" + args.spec.ID, name);
+            },
+        }).element);
+        section.appendChild(item);
+
+        item = CBUI.createSectionItem();
+        item.appendChild(CBUIActionLink.create({
+            labelText: "Use as Front Page",
+            callback: args.makeFrontPageCallback,
+        }).element);
         section.appendChild(item);
 
         element.appendChild(section);
 
         /* layout */
+
         if (CBPageClassNamesForLayouts.length > 0) {
             element.appendChild(CBUI.createHalfSpace());
 

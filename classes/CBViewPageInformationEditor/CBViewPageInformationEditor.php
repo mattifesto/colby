@@ -26,7 +26,7 @@ final class CBViewPageInformationEditor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIImageChooser', 'CBUISelector',
+        return ['CBUI', 'CBUIActionLink', 'CBUIImageChooser', 'CBUISelector',
                 'CBUISpecPropertyEditor', 'CBUIStringEditor'];
     }
 
