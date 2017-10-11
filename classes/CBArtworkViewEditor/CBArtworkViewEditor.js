@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
 /* globals
     CBUI,
     CBUIImageChooser,
