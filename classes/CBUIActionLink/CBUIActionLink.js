@@ -1,20 +1,27 @@
 "use strict";
+/* jshint strict: global */
 
 var CBUIActionLink = {
 
     /**
-     * @param functon args.callback
-     * @param string args.labelText
+     * @param object args
      *
-     * @return {
-     *  function disableCallback,
-     *  Element element,
-     *  function enableCallback,
-     *  function updateCallbackCallback,
-     *  function updateLabelTextCallback,
-     * }
+     *      {
+     *          callback: function
+     *          labelText: string
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          disableCallback: function
+     *          element: Element
+     *          enableCallback: function
+     *          updateCallbackCallback: function
+     *          updateLabelTextCallback: function
+     *      }
      */
-    create : function (args) {
+    create: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIActionLink";
         element.textContent = args.labelText || "";
