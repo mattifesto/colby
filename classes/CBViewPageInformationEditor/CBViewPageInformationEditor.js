@@ -5,14 +5,14 @@
     CBPageClassNamesForKinds,
     CBPageClassNamesForLayouts,
     CBPageClassNamesForSettings,
-    CBPageURIControl,
-    CBPublicationControl,
     CBUI,
     CBUIActionLink,
+    CBUIBooleanEditor,
     CBUIImageChooser,
     CBUISelector,
     CBUISpecPropertyEditor,
     CBUIStringEditor,
+    CBUIUnixTimestampEditor,
     CBUsersWhoAreAdministrators,
     CBViewPageEditor,
     CBViewPageInformationEditor_mainMenuItemOptions,
@@ -21,19 +21,22 @@
 var CBViewPageInformationEditor = {
 
     /**
-     * @param   {Element}   checkbox
-     * @param   {string}    listClassName
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
      *
-     * @return  {undefined}
+     *      {
+     *          checkbox: Element
+     *          listClassName: string
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
+     *
+     * @return undefined
      */
-    checkboxDidChangeForListClassName : function(args) {
+    checkboxDidChangeForListClassName: function (args) {
         var checkbox        = args.checkbox;
         var listClassName   = args.listClassName;
 
-        if (!args.spec.listClassNames)
-        {
+        if (!args.spec.listClassNames) {
             args.spec.listClassNames = [];
         }
 
@@ -53,49 +56,35 @@ var CBViewPageInformationEditor = {
     },
 
     /**
-     * @param function args.handleTitleChanged
-     * @param function args.makeFrontPageCallback
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
      *
-     * @return  {Element}
+     *      {
+     *          handleTitleChanged: function
+     *          makeFrontPageCallback: function
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
+     *
+     * @return Element
      */
-    createEditor : function(args) {
-        var section, item, preview, classNames;
+    createEditor: function (args) {
+        var section, item, classNames;
         var element = document.createElement("section");
         element.className = "CBViewPageInformationEditor";
-        args.spec.URI = args.spec.URI ? args.spec.URI : CBViewPageInformationEditor.titleToURI({
-            ID : args.spec.ID,
-            title : args.spec.title,
-        });
 
         section = CBUI.createSection();
-
-        var URIControl  = new CBPageURIControl("URI");
-
-        URIControl.setURI(args.spec.URI);
-        URIControl.setIsStatic(args.spec.URIIsStatic);
-        URIControl.setIsDisabled(args.spec.isPublished);
-        URIControl.setAction(undefined, CBViewPageInformationEditor.valuesForURIHaveChanged.bind(undefined, {
-            handleSpecChanged   : args.specChangedCallback,
-            spec                : args.spec
-        }));
-
-        URIControl.rootElement().classList.add("standard");
 
         /* title */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-                labelText : "Title",
-                propertyName : 'title',
-                spec : args.spec,
-                specChangedCallback : CBViewPageInformationEditor.handleTitleChanged.bind(undefined, {
-                    handleSpecChanged : args.specChangedCallback,
-                    handleTitleChanged : args.handleTitleChanged,
-                    spec : args.spec,
-                    URIControl : URIControl,
-                }),
-            }).element);
+            labelText: "Title",
+            propertyName: 'title',
+            spec: args.spec,
+            specChangedCallback: function () {
+                args.handleTitleChanged();
+                args.specChangedCallback();
+            },
+        }).element);
         section.appendChild(item);
 
         /* description */
@@ -108,27 +97,67 @@ var CBViewPageInformationEditor = {
         }).element);
         section.appendChild(item);
 
-        /* uri */
+        /* editors */
+
+        var URIEditor = CBUIStringEditor.createEditor({
+            labelText: "URI",
+            propertyName: "URI",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
+        });
+
+        var publicationDateEditor = CBUIUnixTimestampEditor.create({
+            labelText: "Publication Date",
+            propertyName: "publicationTimeStamp",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
+        });
+
+        /* isPublished */
+
         item = CBUI.createSectionItem();
-        item.appendChild(URIControl.rootElement());
+        item.appendChild(CBUIBooleanEditor.create({
+            labelText: "Published",
+            propertyName: "isPublished",
+            spec: args.spec,
+            specChangedCallback: function () {
+                var URI = args.spec.URI ? args.spec.URI.trim() : "";
+                if (args.spec.isPublished) {
+                    if (URI === "") {
+                        URIEditor.updateValueCallback(Colby.textToURI(args.spec.title));
+                    }
+
+                    if (args.spec.publicationTimeStamp === undefined) {
+                        args.spec.publicationTimeStamp = Math.floor(Date.now() / 1000);
+
+                        publicationDateEditor.refresh();
+                        args.specChangedCallback();
+                    }
+                }
+            },
+        }).element);
         section.appendChild(item);
 
-        /* publication */
+        /* publicationTimeStamp */
+
         item = CBUI.createSectionItem();
-        item.appendChild(CBViewPageInformationEditor.createPublicationControlElement({
-            handleSpecChanged   : args.specChangedCallback,
-            spec                : args.spec,
-            URIControl          : URIControl
-        }));
+        item.appendChild(publicationDateEditor.element);
+        section.appendChild(item);
+
+        /* URI */
+
+        item = CBUI.createSectionItem();
+        item.appendChild(URIEditor.element);
         section.appendChild(item);
 
         /* publishedBy */
+
         if (!args.spec.publishedBy) {
             args.spec.publishedBy = CBCurrentUserID;
         }
 
-        var users = CBUsersWhoAreAdministrators.map(function(user) {
-            return { title : user.name, value : user.ID };
+        var users = CBUsersWhoAreAdministrators.map(function (user) {
+            return { title: user.name, value: user.ID };
         });
 
         item = CBUI.createSectionItem();
@@ -280,28 +309,6 @@ var CBViewPageInformationEditor = {
     },
 
     /**
-     * @param   {function}      handleSpecChanged
-     * @param   {Object}        spec
-     * @param   {URIControl}    URIControl
-     *
-     * @return  {Element}
-     */
-    createPublicationControlElement : function(args) {
-        var control = new CBPublicationControl();
-
-        control.setPublicationTimeStamp(args.spec.publicationTimeStamp);
-        control.setIsPublished(args.spec.isPublished);
-        control.setAction(undefined, CBViewPageInformationEditor.valuesForPublicationHaveChanged.bind(undefined, {
-            handleSpecChanged   : args.handleSpecChanged,
-            spec                : args.spec,
-            URIControl          : args.URIControl
-        }));
-        control.rootElement().classList.add("standard");
-
-        return control.rootElement();
-    },
-
-    /**
      * All this function does is set the uploader thumbnail image. It may be
      * able to be replaced with a bound setImageURL callback. I think it's only
      * called by this file. Also we probably don't have to handle the
@@ -311,7 +318,7 @@ var CBViewPageInformationEditor = {
      * @param object pageArgs.spec
      * @param object pageArgs.image
      */
-    handleThumbnailChanged : function (args, pageArgs) {
+    handleThumbnailChanged: function (args, pageArgs) {
         if (pageArgs.image) {
             args.setImageURLCallback(Colby.imageToURL(pageArgs.image, "rw320"));
         } else if (pageArgs.spec.thumbnailURL) {
@@ -327,7 +334,7 @@ var CBViewPageInformationEditor = {
      *
      * @return undefined
      */
-    handleThumbnailChosen : function (chooserArgs) {
+    handleThumbnailChosen: function (chooserArgs) {
         var formData = new FormData();
         formData.append("image", chooserArgs.file);
 
@@ -343,7 +350,7 @@ var CBViewPageInformationEditor = {
      *
      * @return undefined
      */
-    handleThumbnailChosenDidLoad : function (args) {
+    handleThumbnailChosenDidLoad: function (args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
@@ -356,80 +363,7 @@ var CBViewPageInformationEditor = {
     /**
      * @return undefined
      */
-    handleThumbnailRemoved : function () {
+    handleThumbnailRemoved: function () {
         CBViewPageEditor.setThumbnailImage();
-    },
-
-    /**
-     * @param {function}    handleSpecChanged
-     * @param {function}    handleTitleChanged
-     * @param {Object}      spec
-     * @param {Object}      URIControl
-     *
-     * @return {Element}
-     */
-    handleTitleChanged : function(args) {
-        if (!args.spec.URIIsStatic) {
-            args.URIControl.setURI(CBViewPageInformationEditor.titleToURI({
-                ID      : args.spec.ID,
-                title   : args.spec.title }));
-
-            args.spec.URI = args.URIControl.URI();
-        }
-
-        args.handleTitleChanged.call();
-        args.handleSpecChanged.call();
-    },
-
-    /**
-     * @param hex160 ID
-     * @param string title
-     *
-     * @return string
-     */
-    titleToURI: function (args) {
-        if (args.title !== undefined && args.title.length > 0) {
-            return Colby.textToURI(args.title);
-        } else {
-            return Colby.textToURI(args.ID);
-        }
-    },
-
-    /**
-     * @param   {Object}        args.spec
-     * @param   {function}      args.handleSpecChanged
-     * @param   {URIControl}    args.URIControl
-     * @param   {CBPublicationControl}  sender
-     *
-     * @return  {undefined}
-     */
-    valuesForPublicationHaveChanged : function(args, sender) {
-        args.spec.isPublished = sender.isPublished();
-        args.spec.publicationTimeStamp = sender.publicationTimeStamp();
-
-        if (args.spec.isPublished)
-        {
-            args.spec.URIIsStatic = true;
-
-            args.URIControl.setIsStatic(true);
-        }
-
-        args.URIControl.setIsDisabled(args.spec.isPublished);
-
-        args.handleSpecChanged.call();
-    },
-
-    /**
-     * @param   {Object}        args.spec
-     * @param   {function}      args.handleSpecChanged
-     * @param   {URIControl}    sender
-     *
-     * @return  {undefined}
-     */
-    valuesForURIHaveChanged : function(args, sender) {
-        args.spec.URI           = sender.URI();
-        args.spec.URIIsStatic   = sender.isStatic();
-
-        args.handleSpecChanged.call();
     },
 };

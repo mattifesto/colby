@@ -27,25 +27,15 @@ final class CBViewPageInformationEditor {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return ['CBUI', 'CBUIActionLink', 'CBUIImageChooser', 'CBUISelector',
-                'CBUISpecPropertyEditor', 'CBUIStringEditor'];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+                'CBUISpecPropertyEditor', 'CBUIStringEditor',
+                'CBUIUnixTimestampEditor'];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [
-            cbsysurl() . '/classes/CBViewPageInformationEditor/CBPageURIControl.js',
-            cbsysurl() . '/classes/CBViewPageInformationEditor/CBPublicationControl.js',
-            Colby::flexpath(__CLASS__, 'js', cbsysurl()),
-        ];
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 
     /**
