@@ -1,23 +1,30 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
 
 var CBUIBooleanEditor = {
 
     /**
-     * @param string args.labelText
-     * @param string args.propertyName
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param function? args.valueShouldChangeCallback
-     *      This callback will be called after the user has clicked the button
-     *      but before the value changes. It returns true to proceed with the
-     *      change or false to cancel it.
+     * @param object args
+     *
+     *      {
+     *          labelText: string
+     *          propertyName: string
+     *          spec: object
+     *          specChangedCallback: function
+     *          valueShouldChangeCallback: function
+     *
+     *              This functon will be called after the user has clicked the
+     *              button but before the value changes. It returns true to
+     *              proceed with the change or false to cancel it.
+     *      }
      *
      * @return object
-     *  {
-     *      element: Element
-     *  }
+     *
+     *      {
+     *          element: Element
+     *      }
      */
-    create : function (args) {
+    create: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIBooleanEditor";
         var label = document.createElement("div");
