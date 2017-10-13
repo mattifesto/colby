@@ -954,11 +954,14 @@ Colby.textToHTML = function(text)
 };
 
 /**
- * @param string text
+ * TODO: Reconcile with CBConvert::stringToURI()
+ *
+ * @param string? text
  *
  * @return string
  */
 Colby.textToURI = function (text) {
+    text = (typeof text === "string") ? text.trim() : "";
 
     /**
      * Colby limits URIs to 100 characters, we'll reduce the text to 80
