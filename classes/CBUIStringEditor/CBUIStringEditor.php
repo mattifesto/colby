@@ -6,23 +6,20 @@ final class CBUIStringEditor {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [CBUIStringEditor::URL('CBUIStringEditor.css')];
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBUIStringEditor::URL('CBUIStringEditor.js')];
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 
     /**
-     * @param string $filename
-     *
-     * @return string
+     * @return [string]
      */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['Colby'];
     }
 }

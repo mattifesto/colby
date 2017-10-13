@@ -1,21 +1,37 @@
 "use strict";
+/* jshint strict: global */
+/* global
+    Colby */
 
 var CBUIStringEditor = {
 
     /**
-     * @param string args.labelText
-     * @param string args.propertyName
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param string args.type
+     * @param object args
      *
-     * @return {
-     *  Element element,
-     *  function updateLabelCallback,
-     *  function updateValueCallback,
-     * }
+     *      {
+     *          labelText: string
+     *          placeholderText: string
+     *          propertyName: string
+     *          spec: object
+     *          specChangedCallback: function
+     *          type: string
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *          refresh: function
+     *
+     *              This function tells the editor that the spec has been
+     *              updated and the editor's interface should now be updated to
+     *              match it.
+     *
+     *          updateLabelCallback: function
+     *          updateValueCallback: function
+     *      }
      */
-    createEditor : function(args) {
+    createEditor: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIStringEditor";
         var ID = Colby.random160();
@@ -24,7 +40,7 @@ var CBUIStringEditor = {
         label.textContent = args.labelText || "";
         var input = CBUIStringEditor.createInputElement({ type : args.type });
         input.id = ID;
-        input.value = args.spec[args.propertyName] || "";
+        input.placeholder = args.placeholderText || "";
         var resizeTextAreaCallback;
 
         if (input.tagName === "TEXTAREA") {
@@ -70,11 +86,18 @@ var CBUIStringEditor = {
         window.setTimeout(resizeTextAreaCallback, 0);
         window.setTimeout(resizeTextAreaCallback, 1000);
 
+        refresh();
+
         return {
-            element : element,
-            updateLabelCallback : updateLabelCallback,
-            updateValueCallback : updateValueCallback,
+            element: element,
+            refresh: refresh,
+            updateLabelCallback: updateLabelCallback,
+            updateValueCallback: updateValueCallback,
         };
+
+        function refresh() {
+            input.value = args.spec[args.propertyName] || "";
+        }
     },
 
     /**
