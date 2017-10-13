@@ -286,9 +286,9 @@ final class CBViewPage {
             'selectedMainMenuItemName' => CBModel::value($spec, 'selectedMainMenuItemName', '', 'trim'),
             'title' => CBModel::value($spec, 'title', '', 'trim'),
             'URI' => CBModel::value($spec, 'URI', $ID, function ($value) use ($ID) {
-                $value = trim($value);
+                $value = CBConvert::stringToURI($value);
 
-                if (empty($value)) {
+                if ($value === '') {
                     return $ID;
                 } else {
                     return $value;
