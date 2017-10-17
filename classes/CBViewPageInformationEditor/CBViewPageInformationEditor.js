@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* exported CBViewPageInformationEditor */
 /* globals
     CBCurrentUserID,
     CBPageClassNamesForKinds,
@@ -227,9 +228,11 @@ var CBViewPageInformationEditor = {
         section.appendChild(item);
 
         element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
 
         /* thumbnail */
+
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({text: "Page Thumbnail Image"}));
 
         section = CBUI.createSection();
 
@@ -249,7 +252,6 @@ var CBViewPageInformationEditor = {
         section.appendChild(item);
 
         element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
 
         var imageURL = args.spec.thumbnailURL; /* deprecated */
 
@@ -260,6 +262,9 @@ var CBViewPageInformationEditor = {
         chooser.setImageURLCallback(imageURL);
 
         /* actions */
+
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({text: "Actions"}));
 
         section = CBUI.createSection();
 
