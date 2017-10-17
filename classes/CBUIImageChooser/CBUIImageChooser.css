@@ -1,94 +1,32 @@
-.CBUIImageChooser.full {
+.CBUIImageChooser {
+    box-sizing: border-box;
     min-height: 44px;
     padding: 20px 20px 5px;
 }
 
-.CBUIImageChooser.full img {
+.CBUIImageChooser img {
     margin: 0 auto;
     max-width: 100%;
     padding: 0 0 5px;
 }
 
-.CBUIImageChooser.full .caption {
+.CBUIImageChooser.thumbnail img {
+    max-height: 150px;
+}
+
+.CBUIImageChooser .caption {
     padding: 0 10px 5px;
     text-align: center;
 }
 
-.CBUIImageChooser.full .commands {
+.CBUIImageChooser .commands {
     color: hsl(30, 100%, 50%);
     color: var(--CBTextColorForLinks);
     display: flex;
     justify-content: center;
 }
 
-.CBUIImageChooser.full .commands > * {
+.CBUIImageChooser .commands > * {
     cursor: pointer;
     padding: 0 10px 5px;
-}
-
-.CBUIImageChooser.thumbnail {
-    padding: 10px;
-}
-
-
-.CBUIImageChooser .button {
-    align-items: center;
-    background-color: hsl(0, 0%, 80%);
-    color: hsl(0, 0%, 90%);
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-}
-
-.CBUIImageChooser .button .plus {
-    font-size: 100px;
-    font-weight: bold;
-}
-
-.CBUIImageChooser .button img,
-.CBUIImageChooser .button .remove {
-    display: none;
-}
-
-.CBUIImageChooser .button.image img {
-    display: block;
-    max-height: 100%;
-    max-width: 100%;
-}
-
-.CBUIImageChooser .button.image .plus {
-    display: none;
-}
-
-.CBUIImageChooser .button.image .remove {
-    align-items: center;
-    background-color: white;
-    border-radius: 100px;
-    box-sizing: border-box;
-    box-shadow: 1px 1px 2px hsla(0, 0%, 0%, 0.5);
-    color: black;
-    display: flex;
-    font-size: 20px;
-    font-weight: bold;
-    height: 20px;
-    justify-content: center;
-    opacity: 0.1;
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    width: 20px;
-}
-
-.CBUIImageChooser .button.image .remove:hover {
-    opacity: 0.5;
-}
-
-.CBUIImageChooser.thumbnail .button {
-    height: 140px;
-    width: 140px;
 }

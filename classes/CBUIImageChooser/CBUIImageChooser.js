@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBUIImageChooser */
 
 /**
  * This class provides the user interface for selecting and removing images. To
@@ -92,7 +94,6 @@ var CBUIImageChooser = {
             inputElement.value = null;
         });
 
-
         removeElement.addEventListener("click", function () {
             setImageURI("");
             setCaption("");
@@ -119,111 +120,108 @@ var CBUIImageChooser = {
     },
 
     /**
-     * @param function args.imageChosenCallback
-     * @param function args.imageRemovedCallback
+     * @param object args
      *
-     * @return {
-     *  Element element
-     *  function setImageURLCallback
-     * }
+     *      {
+     *          imageChosenCallback: function
+     *          imageRemovedCallback: function
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *          setCaption: function,
+     *          setImageURI: function,
+     *          setImageURLCallback: function
+     *
+     *              deprecated: use setImageURI
+     *      }
      */
     createThumbnailSizedChooser : function (args) {
         var element = document.createElement("div");
-        element.className = "CBUIImageChooser thumbnail";
-        var buttonElement = document.createElement("div");
-        buttonElement.className = "button";
-        var plusElement = document.createElement("div");
-        plusElement.className = "plus";
-        plusElement.textContent = "+";
+        element.className = "CBUIImageChooser CBDarkTheme thumbnail";
         var imageElement = document.createElement("img");
-        var input = document.createElement("input");
-        input.type = "file";
-        input.style.display = "none";
+        imageElement.style.display = "none";
+        var inputElement = document.createElement("input");
+        inputElement.type = "file";
+        inputElement.style.display = "none";
 
-        var setImageURLCallback = CBUIImageChooser.setImageURL.bind(undefined, {
-            buttonElement : buttonElement,
-            imageElement : imageElement,
-        });
+        var captionElement = document.createElement("div");
+        captionElement.className = "caption";
+        captionElement.style.display = "none";
 
-        buttonElement.appendChild(plusElement);
-        buttonElement.appendChild(imageElement);
+        var commandsElement = document.createElement("div");
+        commandsElement.className = "commands";
+        var chooseElement = document.createElement("div");
+        chooseElement.textContent = "choose";
+        var removeElement = document.createElement("div");
+        removeElement.style.display = "none";
+        removeElement.textContent = "remove";
 
-        if (typeof args.imageRemovedCallback === "function") {
-            var removeElement = document.createElement("div");
-            removeElement.className = "remove";
-            removeElement.textContent = "×";
+        function setCaption(caption) {
+            caption = String(caption);
 
-            removeElement.addEventListener("click", CBUIImageChooser.handleRemoveElementClicked.bind(undefined, {
-                setImageURLCallback : setImageURLCallback,
-                imageRemovedCallback : args.imageRemovedCallback,
-            }));
+            if (caption === "") {
+                captionElement.style.display = "none";
+            } else {
+                captionElement.style.display = "block";
+            }
 
-            buttonElement.appendChild(removeElement);
+            captionElement.textContent = caption;
         }
 
-        element.appendChild(input);
-        element.appendChild(buttonElement);
+        function setImageURI(URI) {
+            if (URI) {
+                imageElement.src = URI;
+                imageElement.style.display = "block";
+                removeElement.style.display = "block";
+            } else {
+                imageElement.src = "";
+                imageElement.style.display = "none";
+                removeElement.style.display = "none";
+            }
+        }
 
-        buttonElement.addEventListener("click", input.click.bind(input));
-        input.addEventListener("change", CBUIImageChooser.handleImageFileChosen.bind(undefined, {
-            imageChosenCallback : args.imageChosenCallback,
-            input : input,
-            setImageURLCallback : setImageURLCallback,
-        }));
+        chooseElement.addEventListener("click", function () {
+            inputElement.click();
+        });
+
+        inputElement.addEventListener("change", function() {
+            if (typeof args.imageChosenCallback === "function") {
+                args.imageChosenCallback.call(undefined, {
+                    file: inputElement.files[0],
+                    setCaptionCallback: setCaption,
+                    setImageURLCallback: setImageURI,
+                });
+            }
+
+            inputElement.value = null;
+        });
+
+        removeElement.addEventListener("click", function () {
+            setImageURI("");
+            setCaption("");
+
+            if (typeof args.imageRemovedCallback === "function") {
+                args.imageRemovedCallback.call(undefined, {
+                    setImageURLCallback: setImageURI,
+                });
+            }
+        });
+
+        element.appendChild(inputElement);
+        element.appendChild(imageElement);
+        element.appendChild(captionElement);
+        commandsElement.appendChild(chooseElement);
+        commandsElement.appendChild(removeElement);
+        element.appendChild(commandsElement);
 
         return {
             element : element,
-            setImageURLCallback : setImageURLCallback,
+            setCaption: setCaption,
+            setImageURI: setImageURI,
+            setImageURLCallback : setImageURI, /* deprecated */
         };
-    },
-
-    /**
-     * @param function args.imageChosenCallback
-     * @param Element args.input
-     * @param function args.setImageURLCallback
-     *
-     * @return undefined
-     */
-    handleImageFileChosen : function (args) {
-        if (typeof args.imageChosenCallback === "function") {
-            args.imageChosenCallback.call(undefined, {
-                file : args.input.files[0],
-                setImageURLCallback : args.setImageURLCallback,
-            });
-        }
-
-        args.input.value = null;
-    },
-
-    /**
-     * @param function args.imageRemovedCallback
-     * @param function args.setImageURLCallback
-     * @param Event event
-     *
-     * @return undefined
-     */
-    handleRemoveElementClicked : function (args, event) {
-        args.imageRemovedCallback.call(undefined, {
-            setImageURLCallback : args.setImageURLCallback,
-        });
-
-        event.stopPropagation();
-    },
-
-    /**
-     * @param Element args.buttonElement
-     * @param Element args.imageElement
-     * @param string URL
-     *
-     * @return undefined
-     */
-    setImageURL : function (args, URL) {
-        if (URL) {
-            args.buttonElement.classList.add("image");
-            args.imageElement.src = URL;
-        } else {
-            args.buttonElement.classList.remove("image");
-            args.imageElement.src = "";
-        }
     },
 };
