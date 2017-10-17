@@ -203,19 +203,23 @@ var CBUI = {
      * Creates a section header with an optional title and description. This is
      * use to add inline context for the user interface.
      *
-     * @param [string]? args.paragraphs
+     * @param object args
      *
-     *      An array of paragraphs providing more description content for the
-     *      header.
+     *      {
+     *          paragraphs: [string]?
      *
-     * @param string? args.text
+     *              An array of paragraphs providing more description content
+     *              for the header.
      *
-     *      The title. This is named "text" because it was originally the only
-     *      supported property.
+     *          text: string?
+     *
+     *              The title. This is named "text" because it was originally
+     *              the only supported property.
+     *      }
      *
      * @return Element
      */
-    createSectionHeader : function (args) {
+    createSectionHeader: function (args) {
         var element = document.createElement("header");
         element.className = "CBUISectionHeader";
 
@@ -225,7 +229,6 @@ var CBUI = {
 
             element.appendChild(title);
         }
-
 
         if (Array.isArray(args.paragraphs)) {
             var description = document.createElement("div");
