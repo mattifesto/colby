@@ -6,15 +6,17 @@ final class CBViewPageTests {
      * @return null
      */
     static function saveTest() {
-        $ID                     = '697f4e4cb46436f5c204e495caff5957d4d62a31';
-        $kind                   = 'CBViewPageTestPages';
+        $ID = '697f4e4cb46436f5c204e495caff5957d4d62a31';
+        $kind = 'CBViewPageTestPages';
+        $specURI = 'CBViewPageTests/super écali fragil isticø expialidociouså';
+        $modelURI = 'cbviewpagetests/super-cali-fragil-istic-expialidocious';
 
         CBModels::deleteByID([$ID]);
 
-        $spec                   = CBViewPage::fetchSpecByID($ID, true);
+        $spec = CBViewPage::fetchSpecByID($ID, true);
         $spec->classNameForKind = $kind;
-        $spec->isPublished      = true;
-        $spec->URI              = 'CBViewPageTests/supercalifragilisticexpialidocious';
+        $spec->isPublished = true;
+        $spec->URI = $specURI;
 
         CBModels::save([$spec]);
 
@@ -32,7 +34,7 @@ final class CBViewPageTests {
 
         $URI = CBDB::SQLToValue("SELECT `URI` FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$ID}')");
 
-        if ($URI != $spec->URI) {
+        if ($URI != $modelURI) {
             $pu = json_encode($URI);
             $su = json_encode($spec->URI);
             throw new Exception("The page URI: {$pu} does not match the spec URI: {$su}.");
