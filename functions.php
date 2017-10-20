@@ -28,12 +28,31 @@ function cbmdhtml($markdown) {
 }
 
 /**
+ * @param callable $callback
+ * @param array $array
+ *
+ * @return bool
+ *
+ *      Returns true if the callback returns a truthy value for any of the array
+ *      items.
+ */
+function cb_array_any(callable $callback, array $array) {
+    foreach ($array as $item) {
+        if (call_user_func($callback, $item)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * This behaves almost exactly like `array_map` except that it passes the key
  * as well as the value to the callback function.
  *
- * @return {array}
+ * @return array
  */
-function cb_array_map_assoc(callable $callback, $array) {
+function cb_array_map_assoc(callable $callback, array $array) {
     $result = [];
 
     foreach ($array as $key => $value) {
