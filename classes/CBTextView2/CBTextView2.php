@@ -45,7 +45,9 @@ final class CBTextView2 {
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
-        if (empty($model->isCustom) && !in_array('custom', $CSSClassNames)) {
+        if (!empty($model->isCustom) || cb_array_any("CBCSS::isCustom", $CSSClassNames)) {
+            // custom
+        } else {
             $CSSClassNames[] = 'CBTextView2_default';
         }
 
