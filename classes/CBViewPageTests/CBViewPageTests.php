@@ -11,9 +11,18 @@ final class CBViewPageTests {
         $specURI = 'CBViewPageTests/super écali fragil isticø expialidociouså';
         $modelURI = 'cbviewpagetests/super-cali-fragil-istic-expialidocious';
 
+        /**
+         * @NOTE The building emoji will cause an error if the table is not
+         * correctly updated. A heart emoji will not cause an error.
+         */
+
+        $title = 'I 🏛 <Websites>!';
+        $titleAsHTMLExpected = 'I 🏛 &lt;Websites&gt;!';
+
         CBModels::deleteByID([$ID]);
 
         $spec = CBViewPage::fetchSpecByID($ID, true);
+        $spec->title = $title;
         $spec->classNameForKind = $kind;
         $spec->isPublished = true;
         $spec->URI = $specURI;
@@ -38,6 +47,12 @@ final class CBViewPageTests {
             $pu = json_encode($URI);
             $su = json_encode($spec->URI);
             throw new Exception("The page URI: {$pu} does not match the spec URI: {$su}.");
+        }
+
+        $titleAsHTML = CBDB::SQLToValue("SELECT `titleHTML` FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$ID}')");
+
+        if ($titleAsHTML !== $titleAsHTMLExpected) {
+            throw new ErrorException("The ColbyPages titleHTML: '{$titleAsHTML}' does not match the expected value: '{$titleAsHTMLExpected}'");
         }
 
         CBModels::deleteByID([$ID]);
