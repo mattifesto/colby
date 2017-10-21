@@ -1,44 +1,10 @@
 <?php
 
 /**
- * 2014.03.27
- *
- * This file is now intended to be included during upgrades as well as
- * installations. It upgrades the system and site version numbers and allows
- * new tables to be added to only this file so that a separate upgrade file is
- * not required.
+ * 2014.03.27 This file should be included during installations and upgrades.
  */
 
-/**
- * This is the current uninstall SQL:
- *
-
-DROP TABLE `CBPagesInTheTrash`;
-DROP TABLE `ColbyPages`;
-DROP TABLE `ColbyUsersWhoAreAdministrators`;
-DROP TABLE `ColbyUsersWhoAreDevelopers`;
-DROP TABLE `ColbyUsers`;
-
- */
-
-
-/**
- * Make sure the database settings are correct.
- *
- * The database should be created with these settings. In the case of hosted
- * MySQL, however, it may not be an option when creating the database.
- */
-
-$SQL = <<<EOT
-
-    ALTER DATABASE
-    DEFAULT CHARSET=utf8
-    COLLATE=utf8_unicode_ci
-
-EOT;
-
-Colby::query($SQL);
-
+CBInstall::install();
 CBDataStoreAdmin::install(); /* deprecated */
 CBDataStores::install();
 CBLog::install();
@@ -81,3 +47,6 @@ CBUpgradesForVersion191::run();
 
 // 2017.06.25
 CBUpgradesForVersion279::run();
+
+// 2017.10.20
+CBUpgradesForVersion346::run();
