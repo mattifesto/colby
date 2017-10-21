@@ -1,6 +1,7 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
+/* exported CBArtworkViewEditor */
 /* globals
     CBUI,
     CBUIImageChooser,
@@ -12,31 +13,27 @@
 var CBArtworkViewEditor = {
 
     /**
-     * @param function args.navigateCallback
-     * @param function args.navigateToItemCallback
-     * @param Object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          navigateCallback: function
+     *          navigateToItemCallback: function
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
      *
      * @return Element
      */
-    createEditor : function (args) {
+    createEditor: function (args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBArtworkViewEditor";
 
         section = CBUI.createSection();
 
-        var imageChosenCallback = CBArtworkViewEditor.handleImageChosen.bind(undefined, {
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        });
-        var imageRemovedCallback = CBArtworkViewEditor.handleImageRemoved.bind(undefined, {
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        });
         var chooser = CBUIImageChooser.createFullSizedChooser({
-            imageChosenCallback : imageChosenCallback,
-            imageRemovedCallback : imageRemovedCallback,
+            imageChosenCallback: handleImageChosen,
+            imageRemovedCallback: handleImageRemoved,
         });
 
         item = CBUI.createSectionItem();
@@ -124,80 +121,44 @@ var CBArtworkViewEditor = {
         }
 
         return element;
-    },
 
-    /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param file chooserArgs.file
-     * @param function chooserArgs.setImageURLCallback
-     *
-     * @return undefined
-     */
-    handleImageChosen : function (args, chooserArgs) {
-        var formData = new FormData();
-        formData.append("image", chooserArgs.file);
+        /* closure */
+        function handleImageChosen(chooserArgs) {
+            var ajaxURI = "/api/?class=CBImages&function=upload";
+            var formData = new FormData();
+            formData.append("image", chooserArgs.file);
 
-        var xhr = new XMLHttpRequest();
-        xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
-        xhr.onload = CBArtworkViewEditor.handleImageChosenDidLoad.bind(undefined, {
-            setImageURLCallback : chooserArgs.setImageURLCallback,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-            xhr : xhr,
-        });
-        xhr.open("POST", "/api/?class=CBImages&function=upload");
-        xhr.send(formData);
-    },
+            Colby.fetchAjaxResponse(ajaxURI, formData)
+                .then(handleImageUploaded)
+                .catch(Colby.displayAndReportError);
 
-    /**
-     * @param function args.setImageURLCallback
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    handleImageChosenDidLoad : function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
+            /* closure */
+            function handleImageUploaded(response) {
+                args.spec.image = response.image;
+                args.specChangedCallback();
+                chooserArgs.setImageURI(Colby.imageToURL(args.spec.image, "rw960"));
+                CBViewPageEditor.suggestThumbnailImage(response.image);
+            }
+        }
 
-        if (response.wasSuccessful) {
-            args.spec.image = response.image;
-
+        /* closure */
+        function handleImageRemoved(chooserArgs) {
+            args.spec.image = undefined;
             args.specChangedCallback();
-
-            // set view editor thumbnail
-            args.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
-
-            // suggest page thumbnail
-            CBViewPageEditor.suggestThumbnailImage(response.image);
-        } else {
-            Colby.displayResponse(response);
         }
     },
 
     /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param function chooserArgs.setImageURLCallback
+     * @param object spec
      *
-     * @return undefined
-     */
-    handleImageRemoved : function (args, chooserArgs) {
-        args.spec.image = undefined;
-
-        args.specChangedCallback();
-
-        chooserArgs.setImageURLCallback();
-    },
-
-    /**
-     * @param string? spec.alternativeText
-     * @param string? spec.captionAsMarkdown
+     *      {
+     *          alternativeText: string?
+     *          captionAsMarkdown: string?
+     *      }
      *
      * @return string|undefined
      */
-    specToDescription : function (spec) {
+    CBUISpec_toDescription: function (spec) {
         if (typeof spec.alternativeText === "string" && spec.alternativeText.trim().length > 0) {
             return spec.alternativeText;
         } else {
