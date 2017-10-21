@@ -32,8 +32,8 @@ final class CBLog {
                 KEY `severity_timestamp` (`severity`, `timestamp`)
             )
             ENGINE=InnoDB
-            DEFAULT CHARSET=utf8
-            COLLATE=utf8_unicode_ci
+            DEFAULT CHARSET=utf8mb4
+            COLLATE=utf8mb4_unicode_520_ci
 
 EOT;
 
