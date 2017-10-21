@@ -113,7 +113,7 @@ class ColbyInstaller {
             throw new Exception($mysqli->connect_error);
         }
 
-        if (!$mysqli->set_charset('utf8')) {
+        if (!$mysqli->set_charset('utf8mb4')) {
             throw new Exception( 'Unable to set the mysqli character set to UTF-8.');
         }
 
