@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBArrayEditor */
 /* globals
     CBUI,
     CBUIActionLink,
