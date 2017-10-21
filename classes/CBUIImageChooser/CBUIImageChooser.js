@@ -10,7 +10,7 @@
  * sets a value to a spec property.
  *
  * Because this control does not upload the image the using code must call
- * setImageURLCallback once an image URL is available for the chosen image.
+ * setImageURI once an image URL is available for the chosen image.
  *
  * Instructions:
  *
@@ -24,14 +24,21 @@
 var CBUIImageChooser = {
 
     /**
-     * @param function args.imageChosenCallback
-     * @param function args.imageRemovedCallback
+     * @param object args
      *
-     * @return  {
-     *              element: Element
-     *              setCaptionCallback: function
-     *              setImageURLCallback: function
-     *          }
+     *      {
+     *          imageChosenCallback: function
+     *          imageRemovedCallback: function
+     *      }
+     *
+     * @return  object
+     *
+     *      {
+     *          element: Element
+     *          setCaptionCallback: function
+     *          setImageURI: function
+     *          setImageURLCallback: function (deprecated)
+     *      }
      */
     createFullSizedChooser: function (args) {
         var element = document.createElement("div");
@@ -87,7 +94,8 @@ var CBUIImageChooser = {
                 args.imageChosenCallback.call(undefined, {
                     file: inputElement.files[0],
                     setCaptionCallback: setCaption,
-                    setImageURLCallback: setImageURI,
+                    setImageURI: setImageURI,
+                    setImageURLCallback: setImageURI, /* deprecated */
                 });
             }
 
@@ -100,7 +108,8 @@ var CBUIImageChooser = {
 
             if (typeof args.imageRemovedCallback === "function") {
                 args.imageRemovedCallback.call(undefined, {
-                    setImageURLCallback: setImageURI,
+                    setImageURI: setImageURI,
+                    setImageURLCallback: setImageURI, /* deprecated */
                 });
             }
         });
@@ -115,7 +124,8 @@ var CBUIImageChooser = {
         return {
             element: element,
             setCaptionCallback: setCaption,
-            setImageURLCallback: setImageURI,
+            setImageURI: setImageURI,
+            setImageURLCallback: setImageURI, /* deprecated */
         };
     },
 
@@ -133,9 +143,7 @@ var CBUIImageChooser = {
      *          element: Element
      *          setCaption: function,
      *          setImageURI: function,
-     *          setImageURLCallback: function
-     *
-     *              deprecated: use setImageURI
+     *          setImageURLCallback: function (deprecated)
      *      }
      */
     createThumbnailSizedChooser : function (args) {
@@ -192,7 +200,8 @@ var CBUIImageChooser = {
                 args.imageChosenCallback.call(undefined, {
                     file: inputElement.files[0],
                     setCaptionCallback: setCaption,
-                    setImageURLCallback: setImageURI,
+                    setImageURI: setImageURI,
+                    setImageURLCallback: setImageURI, /* deprecated */
                 });
             }
 
@@ -205,7 +214,8 @@ var CBUIImageChooser = {
 
             if (typeof args.imageRemovedCallback === "function") {
                 args.imageRemovedCallback.call(undefined, {
-                    setImageURLCallback: setImageURI,
+                    setImageURI: setImageURI,
+                    setImageURLCallback: setImageURI, /* deprecated */
                 });
             }
         });
@@ -221,7 +231,7 @@ var CBUIImageChooser = {
             element : element,
             setCaption: setCaption,
             setImageURI: setImageURI,
-            setImageURLCallback : setImageURI, /* deprecated */
+            setImageURLCallback: setImageURI, /* deprecated */
         };
     },
 };
