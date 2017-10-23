@@ -1,5 +1,7 @@
-"use strict"; /* jshint strict: global */
-/* globals
+"use strict";
+/* jshint strict: global */
+/* exported CBHideByUserGroupViewEditor */
+/* global
     CBArrayEditor,
     CBHideByUserGroupViewEditorAddableViews,
     CBHideByUserGroupViewEditorGroupNames,
@@ -10,7 +12,6 @@
 var CBHideByUserGroupViewEditor = {
 
     /**
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
@@ -37,7 +38,6 @@ var CBHideByUserGroupViewEditor = {
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText: "User Group",
-            navigateCallback: args.navigateCallback,
             navigateToItemCallback: args.navigateToItemCallback,
             propertyName: "groupName",
             spec: args.spec,
@@ -76,7 +76,6 @@ var CBHideByUserGroupViewEditor = {
             array : args.spec.subviews,
             arrayChangedCallback : args.specChangedCallback,
             classNames : CBHideByUserGroupViewEditorAddableViews,
-            navigateCallback : args.navigateCallback,
             navigateToItemCallback : args.navigateToItemCallback,
         }));
 
