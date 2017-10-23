@@ -9,6 +9,38 @@
 final class CBDataStores {
 
     /**
+     * @param [hex160]|hex160 $IDs
+     *
+     * @return null
+     */
+    static function deleteByID($IDs) {
+        if (empty($IDs)) {
+            return;
+        }
+
+        if (!is_array($IDs)) {
+            $IDs = [$IDs];
+        }
+
+        $values = CBHex160::toSQL($IDs);
+        $SQL = <<<EOT
+
+            DELETE FROM `CBDataStores`
+            WHERE `ID` IN ($values)
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
+     * Table columns:
+     *
+     *      ID: The 160-bit ID of the data store.
+     *
+     *      timestamp: The most recent time the row was updated. This column is
+     *      not terribly important, but may help identify zombied rows.
+     *
      * @return null
      */
     static function install() {
@@ -23,6 +55,48 @@ final class CBDataStores {
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
+     * Creates or updates a row in the CBDataStores table.
+     *
+     * @param [hex160]|hex160 $IDs
+     *
+     * @return null
+     */
+    static function update($IDs, $timestamp = null) {
+        if (empty($IDs)) {
+            return;
+        }
+
+        if (!is_array($IDs)) {
+            $IDs = [$IDs];
+        }
+
+        if (empty($timestamp)) {
+            $timestamp = time();
+        } else {
+            $timestamp = intval($timestamp);
+        }
+
+        $values = array_map(function ($ID) use ($timestamp) {
+            $IDAsSQL = CBHex160::toSQL($ID);
+            return "({$IDAsSQL}, {$timestamp})";
+        }, $IDs);
+        $values = implode(',', $values);
+
+        $SQL = <<<EOT
+
+            INSERT INTO `CBDataStores`
+                (`ID`, `timestamp`)
+            VALUES
+                {$values}
+            ON DUPLICATE KEY UPDATE
+                `timestamp` = {$timestamp}
 
 EOT;
 
