@@ -18,7 +18,6 @@ var CBArrayEditor = {
      *          array: [object]
      *          arrayChangedCallback: function
      *          classNames: [string]
-     *          navigateCallback: function
      *          navigateToItemCallback: function
      *          sectionElement: Element
      *      }
@@ -32,7 +31,6 @@ var CBArrayEditor = {
             array: args.array,
             arrayChangedCallback: args.arrayChangedCallback,
             classNames: args.classNames,
-            navigateCallback: args.navigateCallback,
             navigateToItemCallback: args.navigateToItemCallback,
             sectionElement: args.sectionElement,
             spec: spec,
@@ -48,13 +46,12 @@ var CBArrayEditor = {
      * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      *
      * @return  undefined
      */
-    appendFromClipboardWasClicked : function (args) {
+    appendFromClipboardWasClicked: function (args) {
         var specAsJSON = localStorage.getItem("specClipboard");
 
         if (specAsJSON === null) { return; }
@@ -68,26 +65,24 @@ var CBArrayEditor = {
      * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      *
      * @return  undefined
      */
-    appendSelectedModel : function (args) {
+    appendSelectedModel: function (args) {
         var requestModelClassName = CBArrayEditor.requestModelClassName;
         var requestArgs = {
-            classNames : args.classNames,
-            navigateToItemCallback : args.navigateToItemCallback,
+            classNames: args.classNames,
+            navigateToItemCallback: args.navigateToItemCallback,
         };
         var classNameToModel = CBArrayEditor.classNameToModel;
         var appendModel = CBArrayEditor.append.bind(undefined, {
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            classNames : args.classNames,
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            sectionElement : args.sectionElement,
+            array: args.array,
+            arrayChangedCallback: args.arrayChangedCallback,
+            classNames: args.classNames,
+            navigateToItemCallback: args.navigateToItemCallback,
+            sectionElement: args.sectionElement,
         });
 
         requestModelClassName(requestArgs).then(classNameToModel).then(appendModel);
@@ -100,7 +95,7 @@ var CBArrayEditor = {
      */
     classNameToModel: function (className) {
         return {
-            className : className,
+            className: className,
         };
     },
 
@@ -108,12 +103,11 @@ var CBArrayEditor = {
      * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      *
      * @return Element
      */
-    createEditor : function (args) {
+    createEditor: function (args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBArrayEditor";
@@ -123,13 +117,12 @@ var CBArrayEditor = {
 
         args.array.forEach(function (spec) {
             var element = CBArrayEditor.createSectionItemElement2({
-                array : args.array,
-                arrayChangedCallback : args.arrayChangedCallback,
-                classNames : args.classNames,
-                navigateCallback : args.navigateCallback,
-                navigateToItemCallback : args.navigateToItemCallback,
-                sectionElement : section,
-                spec : spec,
+                array: args.array,
+                arrayChangedCallback: args.arrayChangedCallback,
+                classNames: args.classNames,
+                navigateToItemCallback: args.navigateToItemCallback,
+                sectionElement: section,
+                spec: spec,
             });
 
             section.appendChild(element);
@@ -138,30 +131,28 @@ var CBArrayEditor = {
         /* append */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIActionLink.create({
-            callback : CBArrayEditor.appendSelectedModel.bind(undefined, {
-                array : args.array,
-                arrayChangedCallback : args.arrayChangedCallback,
-                classNames : args.classNames,
-                navigateCallback : args.navigateCallback,
-                navigateToItemCallback : args.navigateToItemCallback,
-                sectionElement : section,
+            callback: CBArrayEditor.appendSelectedModel.bind(undefined, {
+                array: args.array,
+                arrayChangedCallback: args.arrayChangedCallback,
+                classNames: args.classNames,
+                navigateToItemCallback: args.navigateToItemCallback,
+                sectionElement: section,
             }),
-            labelText : "Append New...",
+            labelText: "Append New...",
         }).element);
         section.appendChild(item);
 
         /* append from clipboard */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIActionLink.create({
-            callback : CBArrayEditor.appendFromClipboardWasClicked.bind(undefined, {
-                array : args.array,
-                arrayChangedCallback : args.arrayChangedCallback,
-                classNames : args.classNames,
-                navigateCallback : args.navigateCallback,
-                navigateToItemCallback : args.navigateToItemCallback,
-                sectionElement : section,
+            callback: CBArrayEditor.appendFromClipboardWasClicked.bind(undefined, {
+                array: args.array,
+                arrayChangedCallback: args.arrayChangedCallback,
+                classNames: args.classNames,
+                navigateToItemCallback: args.navigateToItemCallback,
+                sectionElement: section,
             }),
-            labelText : "Append From Clipboard...",
+            labelText: "Append From Clipboard...",
         }).element);
         section.appendChild(item);
 
@@ -174,14 +165,13 @@ var CBArrayEditor = {
      * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      * @param object args.spec
      *
      * @return Element
      */
-    createSectionItemElement2 : function (args) {
+    createSectionItemElement2: function (args) {
         var item = CBUI.createSectionItem2();
 
         var typeElement = document.createElement("div");
@@ -215,10 +205,9 @@ var CBArrayEditor = {
         /* edit */
 
         var editSpecCallback = CBArrayEditor.editSpec.bind(undefined, {
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            spec : args.spec,
-            specChangedCallback : specChangedCallback,
+            navigateToItemCallback: args.navigateToItemCallback,
+            spec: args.spec,
+            specChangedCallback: specChangedCallback,
         });
 
         item.titleElement.addEventListener("click", editSpecCallback);
@@ -229,10 +218,10 @@ var CBArrayEditor = {
         upCommand.className = "command arrange up";
         upCommand.textContent = "Up";
         upCommand.addEventListener("click", CBArrayEditor.handleMoveUpWasClicked.bind(undefined, {
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            sectionElement : args.sectionElement,
-            spec : args.spec,
+            array: args.array,
+            arrayChangedCallback: args.arrayChangedCallback,
+            sectionElement: args.sectionElement,
+            spec: args.spec,
         }));
         item.commandsElement.appendChild(upCommand);
 
@@ -240,10 +229,10 @@ var CBArrayEditor = {
         downCommand.className = "command arrange down optional";
         downCommand.textContent = "Down";
         downCommand.addEventListener("click", CBArrayEditor.handleMoveDownWasClicked.bind(undefined, {
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            sectionElement : args.sectionElement,
-            spec : args.spec,
+            array: args.array,
+            arrayChangedCallback: args.arrayChangedCallback,
+            sectionElement: args.sectionElement,
+            spec: args.spec,
         }));
         item.commandsElement.appendChild(downCommand);
 
@@ -251,10 +240,10 @@ var CBArrayEditor = {
         cutCommand.className = "command edit cut";
         cutCommand.textContent = "Cut";
         cutCommand.addEventListener("click", CBArrayEditor.handleCutWasClicked.bind(undefined, {
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            sectionElement : args.sectionElement,
-            spec : args.spec,
+            array: args.array,
+            arrayChangedCallback: args.arrayChangedCallback,
+            sectionElement: args.sectionElement,
+            spec: args.spec,
         }));
         item.commandsElement.appendChild(cutCommand);
 
@@ -262,7 +251,7 @@ var CBArrayEditor = {
         copyCommand.className = "command edit copy optional";
         copyCommand.textContent = "Copy";
         copyCommand.addEventListener("click", CBArrayEditor.handleCopyWasClicked.bind(undefined, {
-            spec : args.spec,
+            spec: args.spec,
         }));
         item.commandsElement.appendChild(copyCommand);
 
@@ -270,13 +259,12 @@ var CBArrayEditor = {
         pasteCommand.className = "command edit paste";
         pasteCommand.textContent = "Paste";
         pasteCommand.addEventListener("click", CBArrayEditor.handlePasteWasClicked.bind(undefined, {
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            classNames : args.classNames,
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            sectionElement : args.sectionElement,
-            specToInsertBefore : args.spec,
+            array: args.array,
+            arrayChangedCallback: args.arrayChangedCallback,
+            classNames: args.classNames,
+            navigateToItemCallback: args.navigateToItemCallback,
+            sectionElement: args.sectionElement,
+            specToInsertBefore: args.spec,
         }));
         item.commandsElement.appendChild(pasteCommand);
 
@@ -284,13 +272,12 @@ var CBArrayEditor = {
         insertCommand.className = "command insert";
         insertCommand.textContent = "Insert";
         insertCommand.addEventListener("click", CBArrayEditor.insertSelectedModel.bind(undefined, {
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            classNames : args.classNames,
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            sectionElement : args.sectionElement,
-            specToInsertBefore : args.spec,
+            array: args.array,
+            arrayChangedCallback: args.arrayChangedCallback,
+            classNames: args.classNames,
+            navigateToItemCallback: args.navigateToItemCallback,
+            sectionElement: args.sectionElement,
+            specToInsertBefore: args.spec,
         }));
         item.commandsElement.appendChild(insertCommand);
 
@@ -298,7 +285,6 @@ var CBArrayEditor = {
     },
 
     /**
-     * @param function args.navigateCallback (deprecated)
      * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
@@ -308,10 +294,9 @@ var CBArrayEditor = {
     editSpec: function (args) {
         var element = document.createElement("div");
         var editor = CBUISpecEditor.create({
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            navigateToItemCallback: args.navigateToItemCallback,
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         });
 
         element.appendChild(CBUI.createHalfSpace());
@@ -319,8 +304,8 @@ var CBArrayEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         args.navigateToItemCallback({
-            element : element,
-            title : args.spec.className || "Unknown",
+            element: element,
+            title: args.spec.className || "Unknown",
         });
     },
 
@@ -329,7 +314,7 @@ var CBArrayEditor = {
      *
      * @return undefined
      */
-    handleCopyWasClicked : function (args) {
+    handleCopyWasClicked: function (args) {
         var specAsJSON = JSON.stringify(args.spec);
         localStorage.setItem("specClipboard", specAsJSON);
     },
@@ -342,7 +327,7 @@ var CBArrayEditor = {
      *
      * @return undefined
      */
-    handleCutWasClicked : function (args) {
+    handleCutWasClicked: function (args) {
         if (confirm("Are you sure you want to remove this item?")) {
             var index = args.array.indexOf(args.spec);
             var itemElement = args.sectionElement.children.item(index);
@@ -365,7 +350,7 @@ var CBArrayEditor = {
      *
      * @return undefined
      */
-    handleMoveDownWasClicked : function (args) {
+    handleMoveDownWasClicked: function (args) {
         var index = args.array.indexOf(args.spec);
 
         if (index < (args.array.length - 1)) {
@@ -390,7 +375,7 @@ var CBArrayEditor = {
      *
      * @return undefined
      */
-    handleMoveUpWasClicked : function (args) {
+    handleMoveUpWasClicked: function (args) {
         var index = args.array.indexOf(args.spec);
 
         if (index > 0) {
@@ -411,14 +396,13 @@ var CBArrayEditor = {
      * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      * @param object args.specToInsertBefore
      *
      * @return  undefined
      */
-    handlePasteWasClicked : function (args) {
+    handlePasteWasClicked: function (args) {
         var specAsJSON = localStorage.getItem("specClipboard");
 
         if (specAsJSON === null) { return; }
@@ -432,7 +416,6 @@ var CBArrayEditor = {
      * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param function args.classNames
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      * @param object args.specToInsertBefore
@@ -440,17 +423,16 @@ var CBArrayEditor = {
      *
      * @return  undefined
      */
-    insert : function (args, spec) {
+    insert: function (args, spec) {
         var indexToInsertBefore = args.array.indexOf(args.specToInsertBefore);
         var elementToInsertBefore = args.sectionElement.children.item(indexToInsertBefore);
         var sectionItemElement = CBArrayEditor.createSectionItemElement2({
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            classNames : args.classNames,
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            sectionElement : args.sectionElement,
-            spec : spec,
+            array: args.array,
+            arrayChangedCallback: args.arrayChangedCallback,
+            classNames: args.classNames,
+            navigateToItemCallback: args.navigateToItemCallback,
+            sectionElement: args.sectionElement,
+            spec: spec,
         });
 
         args.array.splice(indexToInsertBefore, 0, spec);
@@ -463,28 +445,26 @@ var CBArrayEditor = {
      * @param [object] args.array
      * @param function args.arrayChangedCallback
      * @param [string] args.classNames
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param Element args.sectionElement
      * @param object args.specToInsertBefore
      *
      * @return  undefined
      */
-    insertSelectedModel : function (args) {
+    insertSelectedModel: function (args) {
         var requestModelClassName = CBArrayEditor.requestModelClassName;
         var requestArgs = {
-            classNames : args.classNames,
-            navigateToItemCallback : args.navigateToItemCallback,
+            classNames: args.classNames,
+            navigateToItemCallback: args.navigateToItemCallback,
         };
         var classNameToModel = CBArrayEditor.classNameToModel;
         var insertModel = CBArrayEditor.insert.bind(undefined, {
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            classNames : args.classNames,
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            sectionElement : args.sectionElement,
-            specToInsertBefore : args.specToInsertBefore,
+            array: args.array,
+            arrayChangedCallback: args.arrayChangedCallback,
+            classNames: args.classNames,
+            navigateToItemCallback: args.navigateToItemCallback,
+            sectionElement: args.sectionElement,
+            specToInsertBefore: args.specToInsertBefore,
         });
 
         requestModelClassName(requestArgs).then(classNameToModel).then(insertModel);
@@ -505,17 +485,17 @@ var CBArrayEditor = {
 
             var options = args.classNames.map(function (className) {
                 return {
-                    title : className,
-                    value : className,
+                    title: className,
+                    value: className,
                 };
             });
 
             CBUISelector.showSelector({
-                callback : resolve,
-                navigateToItemCallback : args.navigateToItemCallback,
-                options : options,
-                selectedValue : undefined,
-                title : "Select a View",
+                callback: resolve,
+                navigateToItemCallback: args.navigateToItemCallback,
+                options: options,
+                selectedValue: undefined,
+                title: "Select a View",
             });
         });
     },
