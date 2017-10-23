@@ -1,4 +1,7 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBMenuViewEditor */
 /* global
     CBUI,
     CBMenuViewEditor_menuItemOptionsByMenuID,
@@ -8,6 +11,15 @@
 
 var CBMenuViewEditor = {
 
+    /**
+     * @param object args
+     *
+     *      {
+     *          navigateToItemCallback: function
+     *      }
+     *
+     * @return Element
+     */
     createEditor: function (args) {
         var section, item;
         var element = document.createElement("div");
@@ -17,7 +29,7 @@ var CBMenuViewEditor = {
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText: "Menu",
-            navigateCallback: args.navigateCallback,
+            navigateToItemCallback: args.navigateToItemCallback,
             options: CBMenuViewEditor_menuOptions,
             propertyName: "menuID",
             spec: args.spec,
@@ -31,7 +43,7 @@ var CBMenuViewEditor = {
         item = CBUI.createSectionItem();
         var menuItemSelector = CBUISelector.create({
             labelText: "Selected Item",
-            navigateCallback: args.navigateCallback,
+            navigateToItemCallback: args.navigateToItemCallback,
             propertyName: "selectedItemName",
             spec: args.spec,
             specChangedCallback: args.specChangedCallback,
