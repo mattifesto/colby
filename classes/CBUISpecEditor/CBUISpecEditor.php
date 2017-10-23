@@ -5,7 +5,7 @@ final class CBUISpecEditor {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames() {
         return ['CBDefaultEditor'];
     }
 
@@ -13,14 +13,6 @@ final class CBUISpecEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBUISpecEditor::URL('CBUISpecEditor.js')];
-    }
-
-    /**
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 }

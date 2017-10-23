@@ -1,4 +1,8 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBUISpecEditor */
+/* global
+    CBDefaultEditor */
 
 var CBUISpecEditor = {
 
@@ -9,27 +13,33 @@ var CBUISpecEditor = {
      * It's uncertain if this function should live in this file or have its own
      * class.
      *
-     * @param function args.navigateCallback (deprecated)
-     * @param function args.navigateToItemCallback
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
      *
-     * @return {
-     *  Element element,
-     * }
+     *      {
+     *          navigateCallback: function (deprecated)
+     *          navigateToItemCallback: function
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *      }
      */
-    create : function (args) {
+    create: function (args) {
         var spec = args.spec;
         var editorFactory = window[spec.className + "Editor"] ||
                             window[spec.className + "EditorFactory"] ||
                             CBDefaultEditor;
 
         return {
-            element : editorFactory.createEditor({
-                navigateCallback : args.navigateCallback, /* deprecated */
-                navigateToItemCallback : args.navigateToItemCallback,
-                spec : spec,
-                specChangedCallback : args.specChangedCallback,
+            element: editorFactory.createEditor({
+                navigateCallback: args.navigateCallback, /* deprecated */
+                navigateToItemCallback: args.navigateToItemCallback,
+                spec: spec,
+                specChangedCallback: args.specChangedCallback,
             }),
         };
     },
