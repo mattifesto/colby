@@ -16,7 +16,6 @@ var CBUISpecEditor = {
      * @param object args
      *
      *      {
-     *          navigateCallback: function (deprecated)
      *          navigateToItemCallback: function
      *          spec: object
      *          specChangedCallback: function
@@ -36,7 +35,6 @@ var CBUISpecEditor = {
 
         return {
             element: editorFactory.createEditor({
-                navigateCallback: args.navigateCallback, /* deprecated */
                 navigateToItemCallback: args.navigateToItemCallback,
                 spec: spec,
                 specChangedCallback: args.specChangedCallback,
