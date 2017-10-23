@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBAdminPageForPagesFind */
 /* globals
     CBPageKindsOptions,
     CBUI,
@@ -43,7 +45,6 @@ var CBAdminPageForPagesFind = {
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText : "Kind",
-            navigateCallback : navigationView.navigateToSpecCallback,
             navigateToItemCallback : navigationView.navigateToItemCallback,
             propertyName : "classNameForKind",
             spec : parameters,
@@ -56,7 +57,6 @@ var CBAdminPageForPagesFind = {
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText : "Published",
-            navigateCallback : navigationView.navigateToSpecCallback,
             navigateToItemCallback : navigationView.navigateToItemCallback,
             propertyName : "published",
             spec : parameters,
@@ -73,7 +73,6 @@ var CBAdminPageForPagesFind = {
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText : "Sorting",
-            navigateCallback : navigationView.navigateToSpecCallback,
             navigateToItemCallback : navigationView.navigateToItemCallback,
             propertyName : "sorting",
             spec : parameters,
