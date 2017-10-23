@@ -1,4 +1,7 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBContainerViewEditor */
 /* globals
     CBArrayEditor,
     CBContainerViewAddableViews,
@@ -12,7 +15,6 @@
 var CBContainerViewEditor = {
 
     /**
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
@@ -57,7 +59,6 @@ var CBContainerViewEditor = {
         ];
         item.appendChild(CBUISelector.create({
             labelText : "Type",
-            navigateCallback : args.navigateCallback,
             navigateToItemCallback : args.navigateToItemCallback,
             options : options,
             propertyName : "tagName",
@@ -97,7 +98,6 @@ var CBContainerViewEditor = {
             array : args.spec.subviews,
             arrayChangedCallback : args.specChangedCallback,
             classNames : CBContainerViewAddableViews,
-            navigateCallback : args.navigateCallback,
             navigateToItemCallback : args.navigateToItemCallback,
         }));
 
