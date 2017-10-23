@@ -1,11 +1,15 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBUIThemeSelector */
+/* global
+    CBUISelector,
+    Colby */
 
 var CBUIThemeSelector = {
 
     /**
      * @param string args.classNameForKind
      * @param string args.labelText
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param string args.propertyName
      * @param object args.spec
@@ -16,7 +20,6 @@ var CBUIThemeSelector = {
     create : function (args) {
         var selector = CBUISelector.create({
             labelText : args.labelText,
-            navigateCallback : args.navigateCallback,
             navigateToItemCallback : args.navigateToItemCallback,
             propertyName : args.propertyName,
             spec : args.spec,
