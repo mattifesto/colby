@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBMenuEditor */
 /* global
     CBArrayEditor,
     CBUI,
@@ -7,7 +9,6 @@
 var CBMenuEditor = {
 
     /**
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param Object args.spec
      * @param function args.specChangedCallback
@@ -58,7 +59,6 @@ var CBMenuEditor = {
             array : args.spec.items,
             arrayChangedCallback : args.specChangedCallback,
             classNames : ["CBMenuItem"],
-            navigateCallback : args.navigateCallback,
             navigateToItemCallback : args.navigateToItemCallback,
         }));
 
