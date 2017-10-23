@@ -122,28 +122,14 @@ EOT;
 
         $timestamp = time();
 
-        if (!empty($IDs)) {
-            $values = array_map(function ($ID) use ($timestamp) {
-                $IDAsSQL = CBHex160::toSQL($ID);
-                return "({$IDAsSQL}, {$timestamp})";
-            }, $IDs);
-            $values = implode(',', $values);
-
-            $SQL = <<<EOT
-
-                INSERT INTO `CBDataStores`
-                    (`ID`, `timestamp`)
-                VALUES
-                    {$values}
-                ON DUPLICATE KEY UPDATE
-                    `timestamp` = {$timestamp}
-
-EOT;
-
-            Colby::query($SQL);
-        }
+        CBDataStores::update($IDs, $timestamp);
 
         /**
+         * @NOTE Delete the rows of data stores that no longer have a data store
+         * directory. I'm not sure this should occur, at least there should be a
+         * notification because if a data store directory has been removed and
+         * the row in the CBDataStores table hasn't, an error has occurred.
+         *
          * CONCAT has three parts:
          *
          *  '\\\\'
