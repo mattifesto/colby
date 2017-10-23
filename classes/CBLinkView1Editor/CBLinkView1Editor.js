@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBLinkView1Editor */
 /* globals
     CBUI,
     CBUIImageChooser,
@@ -67,7 +69,6 @@ var CBLinkView1Editor = {
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText : "Size",
-            navigateCallback: args.navigateCallback,
             navigateToItemCallback: args.navigateToItemCallback,
             options: [
                 {title: "Small", value: "small"},
