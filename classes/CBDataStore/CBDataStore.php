@@ -15,15 +15,32 @@
 final class CBDataStore {
 
     /**
+     * This function has "create if not exists" semantics.
+     *
+     * @return null
+     */
+    static function create($ID) {
+        $directory = self::directoryForID($ID);
+
+        if (!is_dir($directory)) {
+            mkdir($directory, /* mode: */ 0777, /* recursive: */ true);
+        }
+
+        CBDataStores::update($ID);
+    }
+
+    /**
      * Deletes a data store with "delete if exists" semantics.
      *
      * This method does not attempt to remove any intermediate and potentially
      * shared directories that may exist in its path.
      *
-     * @param {hex160} $ID
-     *  Because of the "delete if exists" semantics, this function will throw
-     *  an exception if the ID is not a hex160 value to avoid situations where
-     *  incorrect code believes something has been deleted when it hasn't.
+     * @param hex160 $ID
+     *
+     *      Because of the "delete if exists" semantics, this function will
+     *      throw an exception if the ID is not a hex160 value to avoid
+     *      situations where incorrect code believes something has been deleted
+     *      when it hasn't.
      *
      * @return null
      */
@@ -52,6 +69,8 @@ final class CBDataStore {
         }
 
         rmdir($directory);
+
+        CBDataStores::deleteByID($ID);
     }
 
     /**
@@ -104,6 +123,7 @@ final class CBDataStore {
      * @param hex160 $ID
      * @param string? $basename
      * @param string? $flexdir
+     *
      *      This will usually be either CBSiteDirectory or CBSitePreferences::siteURL().
      *
      * @return string
@@ -123,16 +143,12 @@ final class CBDataStore {
     }
 
     /**
-     * This function has "create if not exists" semantics.
+     * @deprecated use CBDataStore::create()
      *
      * @return null
      */
     static function makeDirectoryForID($ID) {
-        $directory = self::directoryForID($ID);
-
-        if (!is_dir($directory)) {
-            mkdir($directory, /* mode: */ 0777, /* recursive: */ true);
-        }
+        CBDataStore::create($ID);
     }
 
     /**
