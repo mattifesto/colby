@@ -1,5 +1,8 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
-/* globals
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBViewPageEditor */
+/* global
     CBArrayEditor,
     CBPageEditorAvailableViewClassNames,
     CBPageTemplateDescriptors,
@@ -23,23 +26,23 @@ var CBViewPageEditor = {
     /**
      * @deprecated use CBViewPageEditor.spec
      */
-    model : undefined,
+    model: undefined,
 
     /**
      * This variable will be set to the spec as soon as the spec is loaded or
      * a page template is selected.
      */
-    spec : undefined,
+    spec: undefined,
 
     /**
      * This will be set to a function by the CBViewPageInformationEditor.
      */
-    thumbnailChangedCallback : undefined,
+    thumbnailChangedCallback: undefined,
 
     /**
      * @return void
      */
-    appendPageTemplateOption : function (template) {
+    appendPageTemplateOption: function (template) {
         if (!CBViewPageEditor.pageTemplatesSection) {
             var mainElement = document.getElementsByTagName("main")[0];
             var pageTemplatesSection = document.createElement("section");
@@ -74,14 +77,13 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param function args.navigateCallback (deprecated)
      * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
      *
      * @return undefined
      */
-    createEditor : function (args) {
+    createEditor: function (args) {
         var editorContainer = document.createElement("div");
         editorContainer.classList.add("CBViewPageEditor");
 
@@ -90,27 +92,25 @@ var CBViewPageEditor = {
          */
 
         editorContainer.appendChild(CBViewPageInformationEditor.createEditor({
-            handleTitleChanged : CBViewPageEditor.handleTitleChanged.bind(undefined, { spec : args.spec }),
-            makeFrontPageCallback : CBViewPageEditor.makeFrontPage.bind(undefined, { ID : args.spec.ID }),
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            handleTitleChanged: CBViewPageEditor.handleTitleChanged.bind(undefined, { spec: args.spec }),
+            makeFrontPageCallback: CBViewPageEditor.makeFrontPage.bind(undefined, { ID: args.spec.ID }),
+            navigateToItemCallback: args.navigateToItemCallback,
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }));
         editorContainer.appendChild(CBUI.createHalfSpace());
-        editorContainer.appendChild(CBUI.createSectionHeader({ text : "Views" }));
+        editorContainer.appendChild(CBUI.createSectionHeader({ text: "Views" }));
 
         if (args.spec.sections === undefined) { args.spec.sections = []; }
 
         editorContainer.appendChild(CBArrayEditor.createEditor({
-            array : args.spec.sections,
-            arrayChangedCallback : args.specChangedCallback,
-            classNames : CBPageEditorAvailableViewClassNames,
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
+            array: args.spec.sections,
+            arrayChangedCallback: args.specChangedCallback,
+            classNames: CBPageEditorAvailableViewClassNames,
+            navigateToItemCallback: args.navigateToItemCallback,
         }));
 
-        CBViewPageEditor.handleTitleChanged({spec : args.spec});
+        CBViewPageEditor.handleTitleChanged({spec: args.spec});
 
         editorContainer.appendChild(CBUI.createHalfSpace());
 
@@ -159,7 +159,7 @@ var CBViewPageEditor = {
      *
      * @return undefined
      */
-    displayEditorForPageSpec : function (spec) {
+    displayEditorForPageSpec: function (spec) {
         CBViewPageEditor.model = spec;
         CBViewPageEditor.spec = spec;
 
@@ -175,19 +175,18 @@ var CBViewPageEditor = {
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
         var navigationView = CBUINavigationView.create({
-            defaultSpecChangedCallback : CBViewPageEditor.specChangedCallback,
-            rootItem : {
-                element : element,
-                title : "Page Editor",
+            defaultSpecChangedCallback: CBViewPageEditor.specChangedCallback,
+            rootItem: {
+                element: element,
+                title: "Page Editor",
             },
         });
 
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUISpecEditor.create({
-            navigateCallback : navigationView.navigateToSpecCallback,
-            navigateToItemCallback : navigationView.navigateToItemCallback,
-            spec : spec,
-            specChangedCallback : CBViewPageEditor.specChangedCallback,
+            navigateToItemCallback: navigationView.navigateToItemCallback,
+            spec: spec,
+            specChangedCallback: CBViewPageEditor.specChangedCallback,
         }).element);
         element.appendChild(CBUI.createHalfSpace());
 
@@ -197,7 +196,7 @@ var CBViewPageEditor = {
     /**
      * @return undefined
      */
-    displayPageTemplateChooser : function () {
+    displayPageTemplateChooser: function () {
         var mainElement = document.getElementsByTagName("main")[0];
         mainElement.textContent = null;
 
@@ -211,10 +210,10 @@ var CBViewPageEditor = {
      *
      * @return  undefined
      */
-    handleTitleChanged : function(args) {
+    handleTitleChanged: function(args) {
         var title = args.spec.title || "";
         title = title.trim();
-        title = (title.length > 0) ? ": " + title : "";
+        title = (title.length > 0) ? ": " + title: "";
         document.title = "Page Editor" + title;
     },
 
@@ -223,14 +222,14 @@ var CBViewPageEditor = {
      *
      * @return undefined
      */
-    makeFrontPage : function (args) {
+    makeFrontPage: function (args) {
         if (window.confirm("Are you sure you want to use this page as the front page?")) {
             var data = new FormData();
             data.append("ID", args.ID);
 
             var xhr = new XMLHttpRequest();
-            xhr.onerror = Colby.displayXHRError.bind(undefined, { xhr : xhr });
-            xhr.onload = CBViewPageEditor.makeFrontPageDidLoad.bind(undefined, { xhr : xhr });
+            xhr.onerror = Colby.displayXHRError.bind(undefined, { xhr: xhr });
+            xhr.onload = CBViewPageEditor.makeFrontPageDidLoad.bind(undefined, { xhr: xhr });
             xhr.open("POST", "/api/?class=CBSitePreferences&function=setFrontPageID", true);
             xhr.send(data);
         }
@@ -241,7 +240,7 @@ var CBViewPageEditor = {
      *
      * @return undefined
      */
-    makeFrontPageDidLoad : function (args) {
+    makeFrontPageDidLoad: function (args) {
         Colby.displayResponse(Colby.responseFromXMLHttpRequest(args.xhr));
     },
 
@@ -276,7 +275,7 @@ var CBViewPageEditor = {
      *
      * @return undefined
      */
-    setThumbnail : function (image) {
+    setThumbnail: function (image) {
         CBViewPageEditor.setThumbnailImage(image);
     },
 
@@ -289,7 +288,7 @@ var CBViewPageEditor = {
      *
      * @return undefined
      */
-    setThumbnailImage : function (image) {
+    setThumbnailImage: function (image) {
         var spec = CBViewPageEditor.spec;
 
         if (spec === undefined) {
@@ -318,7 +317,7 @@ var CBViewPageEditor = {
      *
      * @return undefined
      */
-    suggestThumbnailImage : function (image) {
+    suggestThumbnailImage: function (image) {
         var spec = CBViewPageEditor.spec;
 
         if (spec && !spec.image && !spec.thumbnailURL) {
@@ -349,7 +348,7 @@ CBViewPageEditor.fetchModel = function() {
 
     var xhr = new XMLHttpRequest();
     xhr.onload = CBViewPageEditor.fetchModelDidLoad.bind(undefined, {
-        xhr : xhr
+        xhr: xhr
     });
     xhr.open("POST", "/api/?class=CBViewPage&function=fetchSpec");
     xhr.send(formData);
