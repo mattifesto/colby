@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBBackgroundViewEditor */
 /* global
     CBUI,
     CBArrayEditor,
@@ -12,7 +14,6 @@
 var CBBackgroundViewEditor = {
 
     /**
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param Object args.spec
      * @param function args.specChangedCallback
@@ -82,7 +83,6 @@ var CBBackgroundViewEditor = {
             array : args.spec.children,
             arrayChangedCallback : args.specChangedCallback,
             classNames : CBBackgroundViewAddableViews,
-            navigateCallback : args.navigateCallback,
             navigateToItemCallback : args.navigateToItemCallback,
         }));
 
