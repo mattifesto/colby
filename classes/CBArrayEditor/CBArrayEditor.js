@@ -1,7 +1,7 @@
 "use strict";
 /* jshint strict: global */
 /* exported CBArrayEditor */
-/* globals
+/* global
     CBUI,
     CBUIActionLink,
     CBUISelector,
@@ -12,25 +12,30 @@
 var CBArrayEditor = {
 
     /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param [string] args.classNames
-     * @param function args.navigateCallback
-     * @param function args.navigateToItemCallback
-     * @param Element args.sectionElement
+     * @param object args
+     *
+     *      {
+     *          array: [object]
+     *          arrayChangedCallback: function
+     *          classNames: [string]
+     *          navigateCallback: function
+     *          navigateToItemCallback: function
+     *          sectionElement: Element
+     *      }
+     *
      * @param object spec
      *
-     * @return  undefined
+     * @return undefined
      */
-    append : function (args, spec) {
+    append: function (args, spec) {
         var element = CBArrayEditor.createSectionItemElement2({
-            array : args.array,
-            arrayChangedCallback : args.arrayChangedCallback,
-            classNames : args.classNames,
-            navigateCallback : args.navigateCallback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            sectionElement : args.sectionElement,
-            spec : spec,
+            array: args.array,
+            arrayChangedCallback: args.arrayChangedCallback,
+            classNames: args.classNames,
+            navigateCallback: args.navigateCallback,
+            navigateToItemCallback: args.navigateToItemCallback,
+            sectionElement: args.sectionElement,
+            spec: spec,
         });
 
         args.array.push(spec);
