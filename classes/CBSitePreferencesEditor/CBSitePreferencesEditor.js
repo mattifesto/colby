@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBSitePreferencesEditor */
 /* globals
     CBArrayEditor,
     CBUI,
@@ -11,7 +13,6 @@
 var CBSitePreferencesEditor = {
 
     /**
-     * @param function args.navigateCallback
      * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
@@ -244,7 +245,6 @@ var CBSitePreferencesEditor = {
             array : args.spec.custom,
             arrayChangedCallback : args.specChangedCallback,
             classNames : ['CBKeyValuePair'],
-            navigateCallback : args.navigateCallback,
             navigateToItemCallback : args.navigateToItemCallback,
         }));
 
