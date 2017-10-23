@@ -1,5 +1,8 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
-/* globals
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBAdminPageForEditingModels */
+/* global
     CBAdminPageForEditingModels_modelClassInfo,
     CBAdminPageForEditingModels_modelClassName,
     CBAdminPageForEditingModels_modelID,
@@ -17,7 +20,7 @@ var CBAdminPageForEditingModels = {
      *
      * @return  {Element}
      */
-    createEditor : function(args) {
+    createEditor: function(args) {
         var element = document.createElement("pre");
         element.textContent = JSON.stringify(args.spec, null, 4);
 
@@ -29,7 +32,7 @@ var CBAdminPageForEditingModels = {
      *
      * @return {Element}
      */
-    createHeader : function(args) {
+    createHeader: function(args) {
         var element = document.createElement("div");
         element.className = "CBUIHeader";
         var left = document.createElement("div");
@@ -50,7 +53,7 @@ var CBAdminPageForEditingModels = {
     /**
      * @return  undefined
      */
-    handleDOMContentLoaded : function() {
+    handleDOMContentLoaded: function() {
         if (window.CBAdminPageForEditingModelsAuthorizationFailed) {
             return;
         }
@@ -61,7 +64,7 @@ var CBAdminPageForEditingModels = {
 
         var xhr = new XMLHttpRequest();
         xhr.onload = CBAdminPageForEditingModels.handleModelLoaded.bind(undefined, {
-            xhr : xhr
+            xhr: xhr
         });
         xhr.onerror = function() {
             alert('An error occured when trying to retreive the data.');
@@ -76,11 +79,11 @@ var CBAdminPageForEditingModels = {
      *
      * @return undefined
      */
-    handleModelLoaded : function(args) {
+    handleModelLoaded: function(args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            var spec = response.spec || { ID : CBAdminPageForEditingModels_modelID, className : CBAdminPageForEditingModels_modelClassName };
+            var spec = response.spec || { ID: CBAdminPageForEditingModels_modelID, className: CBAdminPageForEditingModels_modelClassName };
             CBAdminPageForEditingModels.renderEditorForSpec(spec);
         } else {
             Colby.displayResponse(response);
@@ -92,7 +95,7 @@ var CBAdminPageForEditingModels = {
      *
      * @return undefined
      */
-    renderEditorForSpec : function (spec) {
+    renderEditorForSpec: function (spec) {
         var element = document.createElement("div");
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
@@ -102,21 +105,20 @@ var CBAdminPageForEditingModels = {
         });
         var specChangedCallback = specSaver.specChangedCallback;
         var navigationView = CBUINavigationView.create({
-            defaultSpecChangedCallback : specChangedCallback,
+            defaultSpecChangedCallback: specChangedCallback,
         });
 
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUISpecEditor.create({
-            navigateCallback : navigationView.navigateToSpecCallback,
-            navigateToItemCallback : navigationView.navigateToItemCallback,
-            spec : spec,
-            specChangedCallback : specChangedCallback,
+            navigateToItemCallback: navigationView.navigateToItemCallback,
+            spec: spec,
+            specChangedCallback: specChangedCallback,
         }).element);
         element.appendChild(CBUI.createHalfSpace());
 
         navigationView.navigateToItemCallback.call(undefined, {
-            element : element,
-            title : spec.className + " Editor",
+            element: element,
+            title: spec.className + " Editor",
         });
 
         main.appendChild(navigationView.element);
