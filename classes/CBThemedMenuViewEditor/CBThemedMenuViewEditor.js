@@ -1,9 +1,16 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBThemedMenuViewEditor */
+/* global
+    CBUI,
+    CBUISelector,
+    CBUIThemeSelector,
+    Colby */
 
 var CBThemedMenuViewEditor = {
 
     /**
-     * @param function args.navigateCallback
+     * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
      *
@@ -16,7 +23,7 @@ var CBThemedMenuViewEditor = {
 
         var menuItemSelector = CBUISelector.create({
             labelText : "Selected Item",
-            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             propertyName : "selectedItemName",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
@@ -38,7 +45,7 @@ var CBThemedMenuViewEditor = {
         item = CBUI.createSectionItem();
         var menuSelector = CBUISelector.create({
             labelText : "Menu",
-            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             propertyName : "menuID",
             spec : args.spec,
             specChangedCallback : menuChangedCallback,
@@ -59,7 +66,7 @@ var CBThemedMenuViewEditor = {
         item.appendChild(CBUIThemeSelector.create({
             classNameForKind : "CBMenuView",
             labelText : "Theme",
-            navigateCallback : args.navigateCallback,
+            navigateToItemCallback : args.navigateToItemCallback,
             propertyName : "themeID",
             spec : args.spec,
             specChangedCallback : args.specChangedCallback,
