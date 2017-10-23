@@ -1,13 +1,19 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBDefaultEditor */
 
 var CBDefaultEditor = {
 
     /**
-     * @param object args.spec
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *      }
      *
      * @return Element
      */
-    createEditor : function (args) {
+    createEditor: function (args) {
         var element = document.createElement("div");
         element.className = "CBDefaultEditor";
         var pre = document.createElement("pre");
