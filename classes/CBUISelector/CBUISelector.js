@@ -1,4 +1,7 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBUISelector */
 /* global
     CBUI */
 
@@ -6,7 +9,6 @@ var CBUISelector = {
 
     /**
      * @param string? args.labelText
-     * @param function? args.navigateCallback (deprecated)
      * @param function? args.navigateToItemCallback
      * @param string? args.propertyName
      * @param object? args.spec
@@ -89,15 +91,6 @@ var CBUISelector = {
             });
 
             element.addEventListener("click", clickedCallback);
-        } else if (args.navigateCallback) {
-            element.addEventListener("click", args.navigateCallback.bind(undefined, {
-                className : "CBUISelectorValue",
-                propertyName : propertyName,
-                spec : spec,
-                state : state,
-                title : labelText,
-                updateValueCallback : updateValueCallback,
-            }));
         }
 
         return {
