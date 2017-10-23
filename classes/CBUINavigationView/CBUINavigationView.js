@@ -1,32 +1,38 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBUINavigationView */
+/* global
+    CBUI */
 
 var CBUINavigationView = {
 
     /**
+     * @param object item
+     *
      * @return Element
      */
-    containerFromItem : function (item) {
+    containerFromItem: function (item) {
         var leftElements, rightElements, titleElement;
         var container = document.createElement("div");
         container.className = "container";
 
         if (typeof item.title === "string") {
             titleElement = CBUI.createHeaderTitle({
-                text : item.title,
+                text: item.title,
             });
         }
 
         if (typeof item.left === "string") {
             leftElements = [CBUI.createHeaderButtonItem({
-                callback : window.history.back.bind(window.history),
-                text : "< " + item.left,
+                callback: window.history.back.bind(window.history),
+                text: "< " + item.left,
             })];
         }
 
         var header = CBUI.createHeader({
-            centerElement : titleElement,
-            leftElements : leftElements,
-            rightElements : rightElements,
+            centerElement: titleElement,
+            leftElements: leftElements,
+            rightElements: rightElements,
         });
 
         container.appendChild(header);
@@ -36,28 +42,32 @@ var CBUINavigationView = {
     },
 
     /**
-     * @param function args.defaultSpecChangedCallback (deprecated)
-     * @param object? args.rootItem
-     *  Specifying a rootItem argument is exactly the same as calling this
-     *  function followed by a call to navigateToItemCallback().
+     * @param object args
      *
-     * @return {
-     *  Element element,
-     *  function navigateToItemCallback,
-     *  function navigateToSpecCallback, (deprecated)
-     * }
+     *      {
+     *          rootItem: object?
+     *
+     *              Specifying a rootItem argument is exactly the same as
+     *              calling this function followed by a call to
+     *              navigateToItemCallback().
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *          navigateToItemCallback: function
+     *      }
      */
-    create : function (args) {
+    create: function (args) {
         var element = document.createElement("div");
         element.className = "CBUINavigationView";
         var state = {
-            element : element,
-            items : [],
+            element: element,
+            items: [],
         };
 
         var navigateToItemCallback = CBUINavigationView.navigateToItem.bind(undefined, state);
-        var navigateToSpecCallback = CBUINavigationView.navigateToSpec.bind(undefined,
-            args.defaultSpecChangedCallback, navigateToItemCallback);
 
         window.addEventListener("popstate", CBUINavigationView.handlePopState.bind(undefined, state));
 
@@ -66,9 +76,8 @@ var CBUINavigationView = {
         }
 
         return {
-            element : element,
-            navigateToItemCallback : navigateToItemCallback,
-            navigateToSpecCallback : navigateToSpecCallback,
+            element: element,
+            navigateToItemCallback: navigateToItemCallback,
         };
     },
 
@@ -77,7 +86,7 @@ var CBUINavigationView = {
      *
      * @return undefined
      */
-    handlePopState : function (state, event) {
+    handlePopState: function (state, event) {
         if (state.items.length < 2) { return; }
 
         /* var from = */ state.items.pop();
@@ -89,18 +98,22 @@ var CBUINavigationView = {
 
     /**
      * @param object state
-     * @param Element item.element
-     * @param string item.title
+     * @param object item
+     *
+     *      {
+     *          element: Element
+     *          title: string
+     *      }
      *
      * @return undefined
      */
-    navigateToItem : function (state, item) {
+    navigateToItem: function (state, item) {
         var fromItem;
         var toItem = {
-            element : item.element,
-            left : item.left,
-            right : item.right,
-            title : item.title,
+            element: item.element,
+            left: item.left,
+            right: item.right,
+            title: item.title,
         };
 
         if (state.items.length > 0) {
@@ -124,35 +137,5 @@ var CBUINavigationView = {
         }
 
         window.scrollTo(0, 0);
-    },
-
-    /**
-     * @deprecated use CBUINavigationView.navigateToItem
-     *
-     * @param function args.defaultSpecChangedCallback
-     * @param function args.navigateToItemCallback
-     * @param object spec
-     *
-     * @return undefined
-     */
-    navigateToSpec : function (defaultSpecChangedCallback, navigateToItemCallback, spec) {
-        var element = document.createElement("div");
-        var navigateToSpecCallback = CBUINavigationView.navigateToSpec.bind(undefined,
-            defaultSpecChangedCallback, navigateToItemCallback);
-        var editor = CBUISpecEditor.create({
-            navigateCallback : navigateToSpecCallback,
-            navigateToItemCallback : navigateToItemCallback,
-            spec : spec,
-            specChangedCallback : defaultSpecChangedCallback,
-        });
-
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(editor.element);
-        element.appendChild(CBUI.createHalfSpace());
-
-        navigateToItemCallback({
-            element : element,
-            title : spec.title || spec.className || "Unknown",
-        });
     },
 };
