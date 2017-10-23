@@ -1,4 +1,7 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBContainerView2Editor */
 /* globals
     CBArrayEditor,
     CBContainerView2EditorAddableViews,
@@ -60,7 +63,6 @@ var CBContainerView2Editor = {
             array : args.spec.subviews,
             arrayChangedCallback : args.specChangedCallback,
             classNames : CBContainerView2EditorAddableViews,
-            navigateCallback : args.navigateCallback,
             navigateToItemCallback : args.navigateToItemCallback,
         }));
 
