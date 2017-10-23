@@ -5,6 +5,58 @@ class CBDataStoreTests {
     /**
      * @return null
      */
+    private static function confirmDeleted($ID) {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $count = CBDB::SQLToValue("SELECT COUNT(*) FROM `CBDataStores` WHERE `ID` = {$IDAsSQL}");
+
+        if ($count != 0) {
+            throw new Exception("A CBDataStores row exists for the ID: {$ID}");
+        }
+
+        $directory = CBDataStore::flexpath($ID, null, cbsitedir());
+
+        if (is_dir($directory)) {
+            throw new Exception("A data store directory exists for the ID: {$ID}");
+        }
+    }
+
+    /**
+     * @return null
+     */
+    private static function confirmExists($ID) {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $count = CBDB::SQLToValue("SELECT COUNT(*) FROM `CBDataStores` WHERE `ID` = {$IDAsSQL}");
+
+        if ($count != 1) {
+            throw new Exception("A CBDataStores row does not exist for the ID: {$ID}");
+        }
+
+        $directory = CBDataStore::flexpath($ID, null, cbsitedir());
+
+        if (!is_dir($directory)) {
+            throw new Exception("A data store directory does not exist for the ID: {$ID}");
+        }
+    }
+
+    /**
+     * @return null
+     */
+    static function createAndDeleteTest() {
+        $ID = 'de7c294f327940e6c18fc3b7e6020c8c7046c95b';
+
+        CBDataStore::deleteByID($ID);
+        CBDataStoreTests::confirmDeleted($ID);
+
+        CBDataStore::create($ID);
+        CBDataStoreTests::confirmExists($ID);
+
+        CBDataStore::deleteByID($ID);
+        CBDataStoreTests::confirmDeleted($ID);
+    }
+
+    /**
+     * @return null
+     */
     static function directoryNameFromDocumentRootTest() {
         $IDs[]      = 'ee06b609529f624ad6491c5b83fd6daa1387dc7c';
         $IDs[]      = '4F122d0cb0504937a60111f370a06E2b9306fb9D';

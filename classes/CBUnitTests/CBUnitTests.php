@@ -9,6 +9,7 @@ class CBUnitTests {
         $response = new CBAjaxResponse();
         $response->tests = [
             ['CBConvert',               'textToStub'],
+            ['CBDataStore',             'createAndDelete'],
             ['CBDataStore',             'directoryNameFromDocumentRoot'],
             ['CBDataStore',             'toURL'],
             ['CBDataStore',             'URIToID'],
