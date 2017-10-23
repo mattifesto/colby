@@ -164,7 +164,6 @@ var CBViewPageInformationEditor = {
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText : "Published By",
-            navigateCallback : args.navigateCallback,
             navigateToItemCallback : args.navigateToItemCallback,
             propertyName : "publishedBy",
             spec : args.spec,
@@ -184,7 +183,6 @@ var CBViewPageInformationEditor = {
             item = CBUI.createSectionItem();
             item.appendChild(CBUISelector.create({
                 labelText : "Page Settings",
-                navigateCallback : args.navigateCallback,
                 navigateToItemCallback : args.navigateToItemCallback,
                 propertyName : "classNameForSettings",
                 spec : args.spec,
@@ -205,7 +203,6 @@ var CBViewPageInformationEditor = {
             item = CBUI.createSectionItem();
             item.appendChild(CBUISelector.create({
                 labelText : "Page Kind",
-                navigateCallback : args.navigateCallback,
                 navigateToItemCallback : args.navigateToItemCallback,
                 propertyName : "classNameForKind",
                 spec : args.spec,
@@ -219,7 +216,7 @@ var CBViewPageInformationEditor = {
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText: "Selected Main Menu Item",
-            navigateCallback: args.navigateCallback,
+            navigateToItemCallback: args.navigateToItemCallback,
             options: CBViewPageInformationEditor_mainMenuItemOptions,
             propertyName: "selectedMainMenuItemName",
             spec: args.spec,
