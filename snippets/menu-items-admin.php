@@ -5,11 +5,33 @@ $CBAdminMenu = new stdClass();
 
 $CBAdminMenu->home = newMenuItem('Home', '/');
 
-$generalMenu = new stdClass();
-$generalMenu->status = newMenuItem('Status', '/admin/');
-$generalMenu->tasks = newMenuItem('Tasks', '/admin/page/?class=CBTasks2AdminPage');
-$generalMenu->logs = newMenuItem('Logs', '/admin/page/?class=CBLogAdminPage');
-$generalMenu->users = newMenuItem('Users', '/admin/page/?class=CBAdminPageForUsers');
+$generalMenu = [
+    'status' => (object)[
+        'className' => 'CBMenuItem',
+        'name' => 'status',
+        'text' => 'Status',
+        'URL' => '/admin/',
+    ],
+    'tasks' => (object)[
+        'className' => 'CBMenuItem',
+        'name' => 'tasks',
+        'text' => 'Tasks',
+        'URL' => '/admin/page/?class=CBTasks2AdminPage',
+    ],
+    'logs' => (object)[
+        'className' => 'CBMenuItem',
+        'name' => 'logs',
+        'text' => 'Logs',
+        'URL' => '/admin/page/?class=CBLogAdminPage',
+    ],
+    'users' => (object)[
+        'className' => 'CBMenuItem',
+        'name' => 'users',
+        'text' => 'Users',
+        'URL' => '/admin/page/?class=CBAdminPageForUsers',
+    ],
+];
+
 $CBAdminMenu->general = newMenuItem('General', '/admin/', $generalMenu);
 
 /* Pages */
