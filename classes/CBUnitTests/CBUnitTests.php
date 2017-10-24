@@ -19,6 +19,7 @@ class CBUnitTests {
             ['CBDB',                    'SQLToAssociativeArray'],
             ['CBDB',                    'SQLToValue'],
             ['CBImages',                'resize'],
+            ['CBMarkaround',            'paragraphToHTML'],
             ['CBModel',                 'toModel'],
             ['CBModel',                 'toModelMinimalImplementation'],
             ['CBModelCache'],
@@ -63,7 +64,6 @@ class CBUnitTests {
 
         // Old style
 
-        CBUnitTestsForCBMarkaround::runAll();           // move to CBMarkaroundTests
         CBUnitTestsForColbyConvert::runAll();           // move to CBConvertTests
         CBUnitTestsForColbyMarkaroundParser::runAll();  // move to CBMarkaroundParserTests
     }

@@ -1,18 +1,11 @@
 <?php
 
-class CBUnitTestsForCBMarkaround {
+class CBMarkaroundTests {
 
     /**
-     * @return void
+     * @return null
      */
-    static function runAll() {
-        self::runTestForParagraphToHTML();
-    }
-
-    /**
-     * @return void
-     */
-    static function runTestForParagraphToHTML() {
+    static function paragraphToHTMLTest() {
         $tests[]    = array('Hello \\\\ world!',
                             'Hello \\ world!',
                             'Hello \\ world!');
