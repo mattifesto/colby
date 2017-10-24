@@ -69,19 +69,3 @@ class CBUnitTests {
         CBUnitTestsForColbyMarkaroundParser::runAll();  // move to CBMarkaroundParserTests
     }
 }
-
-/**
- * This function is intended to be used with scalar values.
- *
- * @return null
- */
-function CBCompareAnActualTestResultToAnExpectedTestResult($actualTestResult, $expectedTestResult)
-{
-    if ($actualTestResult !== $expectedTestResult)
-    {
-        $actualForDisplay = ColbyConvert::textToTextWithVisibleWhitespace($actualTestResult);
-        $expectedForDisplay = ColbyConvert::textToTextWithVisibleWhitespace($expectedTestResult);
-
-        throw new RuntimeException("actual: \"{$actualForDisplay}\", expected: \"{$expectedForDisplay}\"");
-    }
-}
