@@ -60,6 +60,8 @@ CBHTMLOutput::setDescriptionHTML('You are not authorized to view this page.');
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer-2.php';
+CBView::render((object)[
+    'className' => 'CBAdminPageFooterView',
+]);
 
 CBHTMLOutput::render();

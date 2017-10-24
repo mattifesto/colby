@@ -70,6 +70,8 @@ CBView::render((object)[
 
 <?php
 
-include CBSystemDirectory . '/sections/admin-page-footer-2.php';
+CBView::render((object)[
+    'className' => 'CBAdminPageFooterView',
+]);
 
 CBHTMLOutput::render();
