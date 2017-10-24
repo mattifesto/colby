@@ -294,7 +294,7 @@ final class Colby {
                 $intraSitePattern = $pattern;
             }
 
-            $libraryFilenames = glob(COLBY_SITE_DIRECTORY . "/{$intraSitePattern}");
+            $libraryFilenames = glob(cbsitedir() . "/{$intraSitePattern}");
             $filenames = array_merge($filenames, $libraryFilenames);
         }
 
