@@ -8,6 +8,8 @@ class CBUnitTests {
     static function getListOfTestsForAjax() {
         $response = new CBAjaxResponse();
         $response->tests = [
+            ['CBConvert',               'linesToParagraphs'],
+            ['CBConvert',               'textToLines'],
             ['CBConvert',               'textToStub'],
             ['CBDataStore',             'createAndDelete'],
             ['CBDataStore',             'directoryNameFromDocumentRoot'],
@@ -64,7 +66,6 @@ class CBUnitTests {
 
         // Old style
 
-        CBUnitTestsForColbyConvert::runAll();           // move to CBConvertTests
         CBUnitTestsForColbyMarkaroundParser::runAll();  // move to CBMarkaroundParserTests
     }
 }
