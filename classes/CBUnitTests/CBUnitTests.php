@@ -33,11 +33,13 @@ class CBUnitTests {
             ['CBProjection'],
             ['CBSitePreferences'],
             ['CBTestPage'],
-            ['CBUnit'],
             ['CBViewPage',              'save'],
             ['CBPageVerificationTask',  'importThumbnailURLToImage'],
             ['CBPageVerificationTask',  'upgradeThumbnailURLToImage'],
             ['Colby',                   'encryption'],
+            ['ColbyMarkaroundParser',   'orderedList'],
+            ['ColbyMarkaroundParser',   'paragraph'],
+            ['ColbyMarkaroundParser',   'unorderedList'],
         ];
 
         if (is_callable($function = 'CBTests::tests')) {
@@ -53,19 +55,5 @@ class CBUnitTests {
      */
     static function getListOfTestsForAjaxPermissions() {
         return (object)['group' => 'Developers'];
-    }
-
-    /**
-     * This test runs the oldest test left in their deprecated test running
-     * methods. All tests run in this function should be updated so this
-     * function can be removed.
-     *
-     * @return null
-     */
-    static function test() {
-
-        // Old style
-
-        CBUnitTestsForColbyMarkaroundParser::runAll();  // move to CBMarkaroundParserTests
     }
 }

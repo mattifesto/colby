@@ -1,21 +1,11 @@
 <?php
 
-class CBUnitTestsForColbyMarkaroundParser {
+class ColbyMarkaroundParserTests {
 
     /**
-     * @return void
+     * @return null
      */
-    static function runAll() {
-        self::orderedListTest();
-        self::paragraphTest();
-        self::unorderedListTest();
-    }
-
-    /**
-     * @return void
-     */
-    static function orderedListTest()
-    {
+    static function orderedListTest() {
         $markaround = "17.5\" by 21.5\"";
         $expected   = "<p>17.5&quot; by 21.5&quot;\n";
         $actual     = CBMarkaround::markaroundToHTML($markaround);
@@ -30,10 +20,9 @@ class CBUnitTestsForColbyMarkaroundParser {
     }
 
     /**
-     * @return void
+     * @return null
      */
-    static function paragraphTest()
-    {
+    static function paragraphTest() {
         $markaround = "Hello *world!*";
         $expected   = "<p>Hello <b>world!</b>\n";
         $actual     = CBMarkaround::markaroundToHTML($markaround);
@@ -42,10 +31,9 @@ class CBUnitTestsForColbyMarkaroundParser {
     }
 
     /**
-     * @return void
+     * @return null
      */
-    static function unorderedListTest()
-    {
+    static function unorderedListTest() {
         $markaround = "-Hello";
         $expected   = "<ul>\n<li><p>Hello\n</ul>\n";
         $actual     = CBMarkaround::markaroundToHTML($markaround);
@@ -54,12 +42,10 @@ class CBUnitTestsForColbyMarkaroundParser {
     }
 
     /**
-     * @return void
+     * @return null
      */
-    static function verifyActualStringIsExpected($actual, $expected)
-    {
-        if ($actual != $expected)
-        {
+    static function verifyActualStringIsExpected($actual, $expected) {
+        if ($actual != $expected) {
             $expected2  = ColbyConvert::textToTextWithVisibleWhitespace($expected);
             $actual2    = ColbyConvert::textToTextWithVisibleWhitespace($actual);
 
