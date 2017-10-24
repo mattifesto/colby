@@ -463,7 +463,7 @@ EOT;
         $cookie = (object)[
             'userHash' => $userIdentity->hash,
             'userId' => $userIdentity->ID,
-            'expirationTimestamp' => time() + (60 * 60 * 4), /* 4 hours from now */
+            'expirationTimestamp' => time() + (60 * 60 * 24), /* 24 hours from now */
         ];
         $encryptedCookie = Colby::encrypt($cookie);
 
