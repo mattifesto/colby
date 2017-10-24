@@ -3,7 +3,11 @@
 final class CBSlack {
 
     /**
-     * @param string $args->message
+     * @param object $args
+     *
+     *      {
+     *          message: string
+     *      }
      *
      * @return null
      */
@@ -15,7 +19,17 @@ final class CBSlack {
         }
 
         $username = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : CBSitePreferences::siteName();
-        $message = CBModel::value($args, 'message', '', 'strval');
+        $message = CBModel::value($args, 'message', '', function ($value) {
+            $message = strval($value);
+
+            if (($length = mb_strlen($message)) > 2000) {
+                return trim(mb_substr($message, 0, 1000)) .
+                    "\n\n> The original message was {$length} characters long and the middle characters were removed.\n\n" .
+                    trim(mb_substr($message, -1000, 1000));
+            } else {
+                return $message;
+            }
+        });
         $payload = (object)[
             'channel' => '#errors',
             'username' => $username,
