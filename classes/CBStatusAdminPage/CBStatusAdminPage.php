@@ -1,6 +1,9 @@
 <?php
 
-final class CBAdminPageForGeneral {
+/**
+ * This class is used to help render the /admin/ page.
+ */
+final class CBStatusAdminPage {
 
     /**
      * @return null
@@ -29,7 +32,7 @@ EOT;
                 <?php
 
                 foreach ($URIs as $URI) {
-                    CBAdminPageForGeneral::renderDuplicatePublishedURIWarningForURI($URI);
+                    CBStatusAdminPage::renderDuplicatePublishedURIWarningForURI($URI);
                 }
 
                 ?>
