@@ -34,6 +34,7 @@ class CBUnitTests {
             ['CBViewPage',              'save'],
             ['CBPageVerificationTask',  'importThumbnailURLToImage'],
             ['CBPageVerificationTask',  'upgradeThumbnailURLToImage'],
+            ['Colby',                   'encryption'],
         ];
 
         if (is_callable($function = 'CBTests::tests')) {
@@ -60,13 +61,7 @@ class CBUnitTests {
      */
     static function test() {
 
-        // Oldest style
-
-        $testDirectory = CBSystemDirectory . '/snippets/tests';
-
-        include "{$testDirectory}/Test,Colby,decrypt,encrypt.php"; // move to ColbyTests
-
-        // Older style
+        // Old style
 
         CBUnitTestsForCBDataStore::runAll();            // move to CBDataStoreTests
         CBUnitTestsForCBMarkaround::runAll();           // move to CBMarkaroundTests
