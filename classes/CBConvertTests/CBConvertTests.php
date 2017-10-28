@@ -13,7 +13,7 @@ final class CBConvertTests {
 
         if ($diff) {
             $JSON = json_encode($diff);
-            throw new RuntimeException("runTestForLineArrayToParagraphArray: The array returned does not match the expected array with these differences: {$JSON}.");
+            throw new Exception("runTestForLineArrayToParagraphArray: The array returned does not match the expected array with these differences: {$JSON}.");
         }
     }
 
@@ -29,7 +29,7 @@ final class CBConvertTests {
 
         if ($diff) {
             $JSON = json_encode($diff);
-            throw new RuntimeException("runTestForTextToLineArray: The array returned does not match the expected array with these differences: {$JSON}.");
+            throw new Exception("runTestForTextToLineArray: The array returned does not match the expected array with these differences: {$JSON}.");
         }
     }
 
@@ -42,6 +42,39 @@ final class CBConvertTests {
 
         if ($stub !== '') {
             throw new Exception('Test failed');
+        }
+    }
+
+    /**
+     * @return null
+     */
+    static function valueAsIntTest() {
+        $tests = [
+            [0, 0],
+            [5, 5],
+            [5.0, 5],
+            [5.1, null],
+            ["5", 5],
+            [" 5 ", 5],
+            ["5.0", 5],
+            ["5.1", null],
+            ["five", null],
+            [null, null],
+            [true, null],
+            [false, null],
+            [[], null],
+            [(object)[], null],
+        ];
+
+        foreach ($tests as $test) {
+            $result = CBConvert::valueAsInt($test[0]);
+
+            if ($result !== $test[1]) {
+                $inputAsJSON = json_encode($test[0]);
+                $actualResultAsJSON = json_encode($result);
+                $expectedResultAsJSON = json_encode($test[1]);
+                throw new Exception("The tested input: {$inputAsJSON} produced: {$actualResultAsJSON} instead of: {$expectedResultAsJSON}");
+            }
         }
     }
 }
