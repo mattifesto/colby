@@ -11,6 +11,7 @@ class CBUnitTests {
             ['CBConvert',               'linesToParagraphs'],
             ['CBConvert',               'textToLines'],
             ['CBConvert',               'textToStub'],
+            ['CBConvert',               'valueAsInt'],
             ['CBDataStore',             'createAndDelete'],
             ['CBDataStore',             'directoryNameFromDocumentRoot'],
             ['CBDataStore',             'toURL'],
