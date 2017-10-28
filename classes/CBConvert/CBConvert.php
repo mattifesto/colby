@@ -244,6 +244,42 @@ final class CBConvert {
     }
 
     /**
+     * This function returns an integer if the $value parameter is practically
+     * intended to represent an  integer.
+     *
+     * The function name uses "as" because we are returning the same value, but
+     * as an integer instead of the original value type.
+     *
+     * @param mixed $value
+     *
+     *      5       => 5
+     *      5.0     => 5
+     *      5.1     => null
+     *      "5"     => 5
+     *      " 5 "   => 5
+     *      "5.0"   => 5
+     *      "5.1"   => null
+     *      "five"  => null
+     *
+     * @return int|null
+     */
+    static function valueAsInt($value) {
+        if (is_string($value)) {
+            $value = trim($value);
+        }
+
+        if (is_numeric($value)) {
+            $intValue = intval($value);
+
+            if ($intValue == $value) {
+                return $intValue;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param mixed $value
      *
      * @return string|null
