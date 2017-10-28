@@ -668,15 +668,15 @@ EOT;
             $model = CBModel::toModel($spec);
 
             if ($model === null) {
-                throw new Exception('A spec being saved generated a null model.');
+                throw new Exception("A {$spec->className} spec being saved generated a null model.");
             }
 
             if (empty($model->ID)) {
-                throw new Exception('A spec being saved generated a model without an ID.');
+                throw new Exception("A {$spec->className} spec being saved generated a model without an ID.");
             }
 
             if ($model->className !== $sharedClassName) {
-                throw new Exception('All specs must have the same className.');
+                throw new Exception('All specs being saved must have the same className.');
             }
 
             return (object)[
