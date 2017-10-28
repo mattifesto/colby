@@ -245,7 +245,7 @@ final class CBConvert {
 
     /**
      * This function returns an integer if the $value parameter is practically
-     * intended to represent an  integer.
+     * intended to represent an integer.
      *
      * The function name uses "as" because we are returning the same value, but
      * as an integer instead of the original value type.
