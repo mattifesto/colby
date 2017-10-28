@@ -17,10 +17,10 @@ final class CBModel {
      *      when saving the model.
      *
      *      @NOTE
-     *      If the model generates an ID, it must be deterministic so that the *
+     *      If the model generates an ID, it must be deterministic so that the
      *      same ID will be produced from another call to CBModel_toModel().
-     *      Good * candidates for this are specs with unique string properties
-     *      such as * `productCode`.
+     *      Good candidates for this are specs with unique string properties
+     *      such as `productCode` or `serialNumber`.
      *
      *      @NOTE
      *      A model is allowed to have a different className than the spec. This
