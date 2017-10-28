@@ -1,12 +1,11 @@
 <?php
 
-class ColbyConvert
-{
+final class ColbyConvert {
+
     /**
      * @return string
      */
-    static function centsIntToDollarsString($amountInCents)
-    {
+    static function centsIntToDollarsString($amountInCents) {
         $amountInCents = (int)$amountInCents;
 
         /**
@@ -56,8 +55,7 @@ class ColbyConvert
      *
      * @return int
      */
-    static function dollarsToCentsInt($amountInDollars)
-    {
+    static function dollarsToCentsInt($amountInDollars) {
         $amountInDollars = (string)$amountInDollars;
 
         /**
@@ -212,8 +210,7 @@ class ColbyConvert
      * @return string
      *  The $text parameter escaped for use in SQL.
      */
-    static function textToSQL($text)
-    {
+    static function textToSQL($text) {
         return Colby::mysqli()->escape_string($text);
     }
 
@@ -242,50 +239,43 @@ class ColbyConvert
      *
      * @return string
      */
-    static function textToTextWithVisibleWhitespace($text)
-    {
+    static function textToTextWithVisibleWhitespace($text) {
         return addcslashes($text, "\\\n\r\t");
     }
 
     /**
      * @return string
      */
-    static function timestampToFriendlyTime($timestamp)
-    {
+    static function timestampToFriendlyTime($timestamp) {
         $delta = time() - $timestamp;
 
         // Less than a minute ago
 
-        if ($delta < 60)
-        {
+        if ($delta < 60) {
             return 'less than a minute ago';
         }
 
         // One minute ago
 
-        if ($delta < 120)
-        {
+        if ($delta < 120) {
             return 'one minute ago';
         }
 
         // Less than an hour ago
 
-        if ($delta < 3600)
-        {
+        if ($delta < 3600) {
             return intval(($delta / 60)) . ' minutes ago';
         }
 
         // One hour ago (between 1 and 2 hours ago)
 
-        if ($delta < 7200)
-        {
+        if ($delta < 7200) {
             return 'one hour ago';
         }
 
         // Less than 24 hours ago
 
-        if ($delta < 86400)
-        {
+        if ($delta < 86400) {
             return intval(($delta / 3600)) . ' hours ago';
         }
 
@@ -295,12 +285,9 @@ class ColbyConvert
         // they use a cached time for the old timezone, it's dumb
         // (this is why one should only store utc times in a database)
 
-        if ($userRow = ColbyUser::userRow())
-        {
+        if ($userRow = ColbyUser::userRow()) {
             $gmtOffset = intval($userRow->facebookTimeZone) * 3600;
-        }
-        else
-        {
+        } else {
             $gmtOffset = 0;
         }
 
@@ -312,8 +299,7 @@ class ColbyConvert
         // BUGBUG: using date does timezone conversions
         //         instead use DateTime conversions as show below
 
-        if ($delta < 518400)
-        {
+        if ($delta < 518400) {
             return date('l', $localTimeStamp) .
                 ' at ' .
                 date(get_option('time_format'), $localTimeStamp);
@@ -368,12 +354,10 @@ class ColbyConvert
      *
      * @return string
      */
-    static function timestampToLocalUserTime($timestamp)
-    {
+    static function timestampToLocalUserTime($timestamp) {
         $date = new DateTime("@{$timestamp}", new DateTimeZone('UTC'));
 
-        if ($userRow = ColbyUser::userRow())
-        {
+        if ($userRow = ColbyUser::userRow()) {
             $timeZoneName = timezone_name_from_abbr('', $userRow->facebookTimeZone * 3600, false);
 
             $timeZone = new DateTimeZone($timeZoneName);
@@ -397,8 +381,7 @@ class ColbyConvert
      *
      * @returns string
      */
-    static function timestampToOldBrowserReadableTime($timestamp)
-    {
+    static function timestampToOldBrowserReadableTime($timestamp) {
         /**
          * The `date` function will convert the timespan to the server's time
          * zone, which is probably more useful than UTC.
@@ -425,8 +408,7 @@ class ColbyConvert
     /**
      * @return string
      */
-    static function timestampToRFC3339($timestamp)
-    {
+    static function timestampToRFC3339($timestamp) {
         return gmdate(DateTime::RFC3339, $timestamp);
     }
 
@@ -440,14 +422,10 @@ class ColbyConvert
      *
      * @return string
      */
-    static function timestampToSQLDateTime($timestamp)
-    {
-        if (!$timestamp)
-        {
+    static function timestampToSQLDateTime($timestamp) {
+        if (!$timestamp) {
             return 'NULL';
-        }
-        else
-        {
+        } else {
             $value = gmdate('Y-m-d H:i:s', $timestamp);
 
             // return value in single quotes because it should be ready
@@ -460,8 +438,7 @@ class ColbyConvert
     /**
      * @return string
      */
-    static function timestampToYearMonth($timestamp)
-    {
+    static function timestampToYearMonth($timestamp) {
         return gmdate('Ym', $timestamp);
     }
 }
