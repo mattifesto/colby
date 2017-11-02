@@ -210,19 +210,17 @@ final class CBModel {
     }
 
     /**
+     * @deprecated use:
+     *
+     *      CBModel::value($model, '<keypath>', null, 'CBConvert::valueAsHex160');
+     *
      * @param object? $model
      * @param string $keyPath
      *
      * @return hex160|null
      */
     static function valueAsID($model, $keyPath) {
-        $ID = CBModel::value($model, $keyPath);
-
-        if (CBHex160::is($ID)) {
-            return $ID;
-        } else {
-            return null;
-        }
+        return CBModel::value($model, $keyPath, null, 'CBConvert::valueAsHex160');
     }
 
     /**
