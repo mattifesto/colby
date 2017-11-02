@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* exported CBUIActionLink */
 
 var CBUIActionLink = {
 
@@ -8,108 +9,81 @@ var CBUIActionLink = {
      *
      *      {
      *          callback: function
-     *          labelText: string
+     *          labelText: string (deprecated use textContent)
+     *          textContent: string
      *      }
      *
      * @return object
      *
      *      {
-     *          disableCallback: function
+     *          callback: function (getter, setter)
+     *          disable: function
+     *          disableCallback: function (deprecated use disable)
      *          element: Element
-     *          enableCallback: function
-     *          updateCallbackCallback: function
-     *          updateLabelTextCallback: function
+     *          enable: function
+     *          enableCallback: function (deprecated use enable)
+     *          textContent: string (getter, setter)
+     *          updateCallbackCallback: function (deprecated use callback property)
+     *          updateLabelTextCallback: function (deprecated use textContent property)
      *      }
      */
     create: function (args) {
+        var callback = args.callback;
+        var isDisabled = false;
         var element = document.createElement("div");
         element.className = "CBUIActionLink";
-        element.textContent = args.labelText || "";
-        var state = { callback : args.callback };
+        element.textContent = args.textContent || args.labelText || "";
 
-        element.addEventListener("click", CBUIActionLink.handleLinkWasClicked.bind(undefined, {
-            state : state,
-        }));
-
-        var enableCallback = CBUIActionLink.enable.bind(undefined, {
-            element : element,
-            state : state,
+        element.addEventListener("click", function() {
+            if (!isDisabled && (typeof callback === "function")) {
+                callback.call();
+            }
         });
 
-        var disableCallback = CBUIActionLink.disable.bind(undefined, {
-            element : element,
-            state : state,
-        });
-
-        var updateLabelTextCallback = CBUIActionLink.updateLabelText.bind(undefined, {
-            element : element,
-        });
-
-        var updateCallbackCallback = CBUIActionLink.updateCallback.bind(undefined, {
-            state : state,
-        });
-
-        enableCallback();
+        enable();
 
         return {
-            disableCallback : disableCallback,
-            element : element,
-            enableCallback : enableCallback,
-            updateCallbackCallback : updateCallbackCallback,
-            updateLabelTextCallback : updateLabelTextCallback,
+            get callback() {
+                return callback;
+            },
+            set callback(value) {
+                callback = value;
+            },
+            disable: disable,
+            disableCallback: disable, /* deprecated use disable */
+            element: element,
+            enable: enable,
+            enableCallback: enable, /* deprecated use enable */
+            get textContent() {
+                return element.testContent;
+            },
+            set textContent(value) {
+                element.textContent = value;
+            },
+            updateCallbackCallback: updateCallback, /* deprecated use callback */
+            updateLabelTextCallback: updateLabel /* deprecated use textContent */,
         };
-    },
 
-    /**
-     * @param Element args.element
-     * @param object args.state
-     *
-     * @return undefined
-     */
-    disable : function (args) {
-        args.state.disabled = true;
-        args.element.classList.add("disabled");
-    },
-
-    /**
-     * @param Element args.element
-     * @param object args.state
-     *
-     * @return undefined
-     */
-    enable : function (args) {
-        args.state.disabled = undefined;
-        args.element.classList.remove("disabled");
-    },
-
-    /**
-     * @param object args.state
-     *
-     * @return undefined
-     */
-    handleLinkWasClicked : function (args) {
-        if (args.state.disabled !== true && args.state.callback !== undefined) {
-            args.state.callback.call();
+        /* closure */
+        function disable() {
+            isDisabled = true;
+            element.classList.add("disabled");
         }
-    },
 
-    /**
-     * @param Element args.element
-     * @param string labelText
-     *
-     * @return undefined
-     */
-    updateLabelText : function (args, labelText) {
-        args.element.textContent = labelText;
-    },
+        /* closure */
+        function enable() {
+            isDisabled = false;
+            element.classList.remove("disabled");
+        }
 
-    /**
-     * @param object args.state
-     * @param function callback
-     *
-     * @return undefined
-     */
-    updateCallback : function(args, callback) {
-        args.state.callback = callback;
+        /* closure deprecated */
+        function updateCallback(value) {
+            callback = value;
+        }
+
+        /* closure deprecated */
+        function updateLabel(value) {
+            element.textContent = value;
+        }
     },
 };
