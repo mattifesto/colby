@@ -66,6 +66,7 @@
 
 .CBUIExpander .message {
     white-space: pre-line;
+    overflow-y: scroll;
 }
 
 .CBUIExpander .pre {
