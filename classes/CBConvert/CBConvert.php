@@ -244,6 +244,19 @@ final class CBConvert {
     }
 
     /**
+     * @param mixed $value
+     *
+     * @return hex160|null
+     */
+    static function valueAsHex160($value) {
+        if (CBHex160::is($value)) {
+            return $value;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * This function returns an integer if the $value parameter is practically
      * intended to represent an integer.
      *
