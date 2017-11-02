@@ -7,6 +7,8 @@ final class CBHex160 {
      * 40 hexadecimal characters). They are required to be lowercase so that
      * they can be compared for equality.
      *
+     * @param string $value
+     *
      * @return bool
      *      Returns true if the value is a hex160; otherwise false.
      */
@@ -15,7 +17,7 @@ final class CBHex160 {
     }
 
     /**
-     * @return {hex160}
+     * @return hex160
      */
     static function random() {
         $bytes = openssl_random_pseudo_bytes(20);
@@ -24,9 +26,11 @@ final class CBHex160 {
 
     /**
      * @param hex160 | [hex160]
+     *
      *      A single value or an array of 160-bit hexadecimal strings.
      *
      * @return string
+     *
      *      "UNHEX('<hex160>')" | "UNHEX('<hex160>'),UNHEX('<hex160>'),..."
      */
     static function toSQL($values) {
@@ -44,7 +48,9 @@ final class CBHex160 {
 
                 throw new RuntimeException($message);
             }
+
             $value = ColbyConvert::textToSQL($value);
+
             return "UNHEX('{$value}')";
         }, $values);
 
