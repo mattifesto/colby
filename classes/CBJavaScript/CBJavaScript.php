@@ -55,24 +55,22 @@ class CBJavaScript {
         $hashes[$key]               = $hash;
 
         $messages = [];
+        $messages[] = CBConvert::javaScriptErrorToMessage($errorModel);
 
         foreach ($attributes as $key => $value) {
             $hash = $hashes[$key];
-            $messages[] = "*{$key}*\n{$value}\n$hash\n";
+            $messages[] = "*{$key}*\n{$value}\n$hash";
         }
 
-        $message = CBConvert::javaScriptErrorToMessage($errorModel);
         $link = cbsiteurl() . '/admin/page/?class=CBLogAdminPage';
 
         if (CBJavaScript::shouldReportToDeveloper($errorModel, $hashes)) {
             CBSlack::sendMessage((object)[
-                'message' => "{$message} <{$link}|link>",
+                'message' => "{$messages[0]} <{$link}|link>",
             ]);
         }
 
-        CBLog::addMessage(__METHOD__, 3, $message, (object)[
-            'text' => implode("\n", $messages),
-        ]);
+        CBLog::addMessage(__METHOD__, 3, implode("\n\n", $messages));
     }
 
     /**
