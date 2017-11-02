@@ -12,7 +12,7 @@
  *
  * The class is automatically added to the list of required classes which also
  * makes the functions used by required classes optional:
- *  requiredClassNames()
+ *  CBHTMLOutput_requiredClassNames()
  *  CBHTMLOutput_CSSURLs()
  *  CBHTMLOutput_JavaScriptURLs()
  */
@@ -39,7 +39,7 @@ if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
 
         CBView::render($menuModel);
 
-        ?><main class="CBUIRoot <?= $class ?>" style="flex: 1 0 auto;"><?php
+        ?><main class="CBUIRoot <?= $class ?>"><?php
         if (is_callable($function = "{$class}::adminPageRenderContent")) {
             call_user_func($function);
         }
