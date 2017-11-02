@@ -1048,6 +1048,7 @@ Colby.CBTasks2DispatchDelay = 5000;
 Colby.afterDOMContentLoaded(function () {
     dispatch();
 
+    /* closure */
     function dispatch() {
 
         /**
@@ -1060,17 +1061,18 @@ Colby.afterDOMContentLoaded(function () {
         Colby.callAjaxFunction("CBTasks2", "dispatchNextTask")
             .then(onFulfilled)
             .catch(Colby.reportError);
-    }
 
-    function onFulfilled(value) {
+        /* closure */
+        function onFulfilled(value) {
 
-        /**
-         * If a task was dispatched, try to dispatch another after a short
-         * time out.
-         */
+            /**
+             * If a task was dispatched, try to dispatch another after a short
+             * time out.
+             */
 
-        if (Colby.CBTasks2DispatchAlways || value.taskWasDispatched) {
-            setTimeout(dispatch, Colby.CBTasks2DispatchDelay);
+            if (Colby.CBTasks2DispatchAlways || value.taskWasDispatched) {
+                setTimeout(dispatch, Colby.CBTasks2DispatchDelay);
+            }
         }
     }
 });
