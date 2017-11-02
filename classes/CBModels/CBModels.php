@@ -726,7 +726,7 @@ EOT;
             }, $tuples);
 
             call_user_func($function, $models);
-        } else if (is_callable($function = "{$sharedClassName}::modelsWillSave")) {
+        } else if (is_callable($function = "{$sharedClassName}::modelsWillSave")) { /* deprecated */
             call_user_func($function, $tuples);
         }
 
