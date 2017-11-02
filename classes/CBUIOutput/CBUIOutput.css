@@ -1,0 +1,26 @@
+.CBUIOutput {
+    position: relative;
+    overflow-y: hidden;
+}
+
+.CBUIOutput .container {
+ /* bottom: set in JavaScript */
+    position: absolute;
+    left: 0;
+ /* top: set in JavaScript */
+    width: 100%;
+}
+
+
+.CBUIOutput .item {
+    align-items: center;
+    border-bottom: 1px solid var(--CBLineColor);
+    box-sizing: border-box;
+    display: flex;
+    flex: none;
+ /* height: set in JavaScript */
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding: 5px 10px;
+    white-space: pre-wrap;
+}
