@@ -697,30 +697,27 @@ final class Colby {
      */
     static function reportException(/* Throwable */ $exception, $severity = 3) {
         try {
+            $messages = [];
             $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
-            $model = (object)[
-                'exceptionStackTrace' => Colby::exceptionStackTrace($exception),
-            ];
-            $logMessage = CBConvert::throwableToMessage($exception);
+            $messages[] = CBConvert::throwableToMessage($exception);
+            $messages[] = Colby::exceptionStackTrace($exception);
             $URI = $_SERVER['REQUEST_URI'];
             $link = cbsiteurl() . '/admin/page/?class=CBLogAdminPage';
 
             /* CBLog::addMessage() never throws an exception */
-            CBLog::addMessage(__METHOD__, $severity, $logMessage, $model);
+            CBLog::addMessage(__METHOD__, $severity, implode("\n\n", $messages));
 
             /* CBSlack::sendMessage() can throw an exception, so it called last */
             CBSlack::sendMessage((object)[
-                'message' => "{$logMessage} <{$link}|link>",
+                'message' => "{$messages[0]} <{$link}|link>",
             ]);
         } catch (Exception $innerException) {
             try {
-                $model = (object)[
-                    'exceptionStackTrace' => Colby::exceptionStackTrace($innerException),
-                ];
-                $innerExceptionMessage = 'Inner exception: ' .
-                    CBConvert::throwableToMessage($innerException);
+                $messages = [];
+                $messages[] = 'Inner exception: ' . CBConvert::throwableToMessage($innerException);
+                $messages[] = Colby::exceptionStackTrace($innerException);
 
-                CBLog::addMessage(__METHOD__, 2, $innerExceptionMessage, $model);
+                CBLog::addMessage(__METHOD__, 2, implode("\n\n", $messages));
             } catch (Exception $ignoredException) {
                 // At this point we're three exceptions deep so we just try to
                 // get an error log message written if possible.
