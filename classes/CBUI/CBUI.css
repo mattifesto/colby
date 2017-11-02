@@ -1,6 +1,7 @@
 .CBUIRoot {
     background-color: hsl(0, 0%, 90%); /* IE11, from CBAdminTheme */
     background-color: var(--CBBackgroundColor2);
+    /* can grow, cannot shrink, therefore can fill a flexible container */
     flex: 1 0 auto;
 }
 
@@ -120,8 +121,9 @@
     border-width: 1px 0;
     box-sizing: border-box;
     margin: 0 auto;
-    max-width: 640px;
+    max-width: 100%;
     overflow: hidden;
+    width: 640px;
 }
 
 .CBUISectionHeader {
@@ -130,8 +132,9 @@
     font-size: 14px;
     font-weight: normal;
     margin: 0 auto;
-    max-width: 640px;
+    max-width: 100%;
     padding: 5px 10px;
+    width: 640px;
 }
 
 .CBUISectionHeader > h1 {
