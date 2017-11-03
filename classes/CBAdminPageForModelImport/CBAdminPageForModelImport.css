@@ -1,0 +1,8 @@
+main.CBAdminPageForModelImport {
+    display: flex;
+    flex-direction: column;
+}
+
+.CBAdminPageForModelImport .CBUIProcessStatus {
+    flex: 1 0 auto;
+}

@@ -24,6 +24,27 @@ final class CBAdminPageForModelImport {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUI', 'CBUIActionLink', 'CBUIProcessStatus'];
+    }
+
+    /**
      * @return null
      */
     static function importJSONForAjax() {
@@ -94,20 +115,6 @@ final class CBAdminPageForModelImport {
     }
 
     /**
-     * @return [string]
-     */
-    static function requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink'];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
-    }
-
-    /**
      * @return null
      */
     static function uploadDataFileForAjax() {
@@ -139,13 +146,15 @@ final class CBAdminPageForModelImport {
                 }
             }
 
-            CBTasks2::groupIDPush(CBHex160::random());
+            $processID = CBHex160::random();
+
+            CBProcess::setID($processID);
 
             CBDB::transaction(function () use ($specs) {
                 CBModels::save($specs, /* force: */ true);
             });
 
-            CBTasks2::groupIDPop();
+            CBProcess::clearID();
 
             fclose($handle);
         }
@@ -154,6 +163,7 @@ final class CBAdminPageForModelImport {
 
         $response->message = "Data file uploaded successfully";
         $response->wasSuccessful = true;
+        $response->processID = $processID;
         $response->send();
     }
 
