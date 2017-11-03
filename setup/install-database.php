@@ -10,8 +10,6 @@ CBDataStores::install();
 CBLog::install();
 CBTasks::install(); /* deprecated */
 CBTasks2::install();
-CBDataStoresFinderTask::install();
-CBLogMaintenanceTask::install();
 CBUsers::install();
 CBModels::install();
 CBModelAssociations::install();
@@ -23,12 +21,6 @@ CBImages::install();
 CBWellKnownMenuForMain::install();
 CBWellKnownPageForTestingCBTextView2::install();
 CBWellKnownPageForTestingPageTitleAndBodyText::install();
-
-/**
- * These functions are also called from CBRemoteAdministration::ping()
- */
-CBImageVerificationTask::startForNewImages();
-CBPageVerificationTask::startForNewPages();
 
 // 2015.10.26
 CBUpgradesForVersion172::run();
@@ -50,3 +42,19 @@ CBUpgradesForVersion279::run();
 
 // 2017.10.20
 CBUpgradesForVersion346::run();
+
+// 2017.10.27
+CBUpgradesForVersion351::run();
+
+/**
+ * Tasks that can only be run after tables are created properly.
+ */
+
+CBDataStoresFinderTask::install();
+CBLogMaintenanceTask::install();
+
+/**
+ * These functions are also called from CBRemoteAdministration::ping()
+ */
+CBImageVerificationTask::startForNewImages();
+CBPageVerificationTask::startForNewPages();
