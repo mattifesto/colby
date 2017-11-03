@@ -1,0 +1,17 @@
+.CBUIProcessStatus {
+    display: flex;
+    flex-direction: column;
+}
+
+.CBUIProcessStatus .overview {
+    align-items: center;
+    background-color: var(--CBBackgroundColor2);
+    box-sizing: border-box;
+    display: flex;
+    min-height: 44px;
+    padding: 5px;
+}
+
+.CBUIProcessStatus .CBUIOutput {
+    flex: 1 1 auto;
+}
