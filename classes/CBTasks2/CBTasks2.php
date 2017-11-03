@@ -13,17 +13,31 @@ final class CBTasks2 {
      */
     const defaultSeverity = 8;
 
-    private static $groupIDStack = [];
-
     /**
+     * @param object $args
+     *
+     *      {
+     *          processID: hex160?
+     *      }
+     *
      * @return int
      */
-    static function countOfAvailableTasks() {
+    static function countOfAvailableTasks($args = null) {
+        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+
+        if (empty($processID)) {
+            $andProcessID = '';
+        } else {
+            $processIDAsSQL = CBHex160::toSQL($processID);
+            $andProcessID = "AND `processID` = {$processIDAsSQL}";
+        }
+
         $SQL = <<<EOT
 
             SELECT  COUNT(*)
             FROM    `CBTasks2`
             WHERE   `started` IS NULL
+                    {$andProcessID}
 
 EOT;
 
@@ -31,15 +45,67 @@ EOT;
     }
 
     /**
-     * @return int
+     * Returns a count of completed tasks in the CBTasks2 table.
+     *
+     * @param object $args
+     *
+     *      {
+     *          afterTimestamp: int?
+     *          processID: hex160?
+     *      }
+     *
+     * @return int (is it an int or a string?)
      */
-    static function countOfScheduledTasks() {
+    static function countOfCompletedTasks($args = null) {
+        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+
+        if (empty($processID)) {
+            $andProcessID = '';
+        } else {
+            $processIDAsSQL = CBHex160::toSQL($processID);
+            $andProcessID = "AND `processID` = {$processIDAsSQL}";
+        }
+
+        $SQL = <<<EOT
+
+            SELECT  COUNT(*)
+            FROM    `CBTasks2`
+            WHERE   `completed` IS NOT NULL
+                    {$andProcessID}
+
+EOT;
+
+        return CBDB::SQLToValue($SQL);
+    }
+
+    /**
+     * Returns a count of scheduled tasks in the CBTasks2 table.
+     *
+     * @param object $args
+     *
+     *      {
+     *          processID: hex160?
+     *      }
+     *
+     * @return int (is it an int or a string?)
+     */
+    static function countOfScheduledTasks($args = null) {
+        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+
+        if (empty($processID)) {
+            $andProcessID = '';
+        } else {
+            $processIDAsSQL = CBHex160::toSQL($processID);
+            $andProcessID = "AND `processID` = {$processIDAsSQL}";
+        }
+
         $SQL = <<<EOT
 
             SELECT  COUNT(*)
             FROM    `CBTasks2`
             WHERE   `scheduled` IS NOT NULL AND
                     `started` IS NOT NULL
+                    {$andProcessID}
 
 EOT;
 
@@ -47,6 +113,42 @@ EOT;
     }
 
     /**
+     * Returns a count of tasks in the CBTasks2 table.
+     *
+     * @param object $args
+     *
+     *      {
+     *          processID: hex160?
+     *      }
+     *
+     * @return int (is it an int or a string?)
+     */
+    static function countOfTasks($args = null) {
+        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+
+        if (empty($processID)) {
+            $andProcessID = '';
+        } else {
+            $processIDAsSQL = CBHex160::toSQL($processID);
+            $andProcessID = "AND `processID` = {$processIDAsSQL}";
+        }
+
+        $SQL = <<<EOT
+
+            SELECT  COUNT(*)
+            FROM    `CBTasks2`
+            WHERE   TRUE
+                    {$andProcessID}
+
+EOT;
+
+        return CBDB::SQLToValue($SQL);
+    }
+
+    /**
+     * @NOTE This function counts tasks completed in log history, not completed
+     * tasks in the CBTasks2 table.
+     *
      * @return int
      */
     static function countOfTasksCompletedSince($timestamp) {
@@ -64,15 +166,74 @@ EOT;
     }
 
     /**
-     *  @NOTE The `IDForGroup` is used to associate related tasks with each
-     *        other.
+     * @param object $args
      *
-     *      Issue: This column is not part of the primary key and it's possible
-     *      to reassign the group of a task that was part of another group.
+     *      {
+     *          processID: hex160?
+     *      }
      *
-     * @NOTE The `output` column should hold JSON.
+     *  @return object
      *
-     * @NOTE Task States:
+     *      {
+     *          available: int
+     *          completed: int
+     *          scheduled: int
+     *          total: int
+     *      }
+     */
+    static function fetchStatus($args) {
+        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+
+        $fnArgs = (object)[
+            'processID' => $processID,
+        ];
+
+        return (object)[
+            'avalailable' => CBTasks2::countOfAvailableTasks($fnArgs),
+            'completed' => CBTasks2::countOfCompletedTasks($fnArgs),
+            'scheduled' => CBTasks2::countOfScheduledTasks($fnArgs),
+            'total' => CBTasks2::countOfTasks($fnArgs),
+        ];
+    }
+
+    /**
+     * @param object $args
+     *
+     *      {
+     *          processID: hex160?
+     *      }
+     *
+     *  @return object
+     *
+     *      {
+     *          available: int
+     *          completed: int
+     *          scheduled: int
+     *          total: int
+     *      }
+     */
+    static function CBAjax_fetchStatus($args) {
+        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+
+        return CBTasks2::fetchStatus((object)[
+            'processID' => $processID,
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_fetchStatus_group() {
+        return 'Administrators';
+    }
+
+    /**
+     *  The `processID` column is used to associate related tasks with each
+     *  other.
+     *
+     *  The `output` column should hold JSON.
+     *
+     *  Task States:
      *
      *      Available: `started` IS NULL
      *      Scheduled: `scheduled` IS NOT NULL AND `started` IS NOT NULL
@@ -88,7 +249,7 @@ EOT;
             CREATE TABLE IF NOT EXISTS `CBTasks2` (
                 `className` VARCHAR(80) NOT NULL,
                 `ID` BINARY(20) NOT NULL,
-                `IDForGroup` BINARY(20),
+                `processID` BINARY(20),
 
                 `priority` TINYINT UNSIGNED NOT NULL DEFAULT {$defaultPriority},
                 `scheduled` BIGINT,
@@ -103,12 +264,11 @@ EOT;
                 PRIMARY KEY (`className`, `ID`),
 
                 KEY `started_priority` (`started`, `priority`),
-                KEY `group_started_priority` (`IDForGroup`, `started`, `priority`),
-
+                KEY `processID_started_priority` (`processID`, `started`, `priority`),
                 KEY `scheduled` (`scheduled`),
 
                 KEY `completed` (`completed`),
-                KEY `group_completed` (`IDForGroup`, `completed`)
+                KEY `processID_completed` (`processID`, `completed`)
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
@@ -120,10 +280,26 @@ EOT;
     }
 
     /**
+     * @param object $args
+     *
+     *      {
+     *          processID: hex160?
+     *      }
+     *
      * @return bool
+     *
      *      Returns true if a task is completed; otherwise false.
      */
-    static function dispatchNextTask() {
+    static function dispatchNextTask($args) {
+        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+
+        if (!empty($processID)) {
+            $processIDAsSQL = CBHex160::toSQL($processID);
+            $andProcessID = "AND `processID` = {$processIDAsSQL}";
+        } else {
+            $andProcessID = '';
+        }
+
         $started = time();
         $starter = CBHex160::random();
         $starterAsSQL = CBHex160::toSQL($starter);
@@ -132,6 +308,7 @@ EOT;
             UPDATE      `CBTasks2`
             SET         `started` = {$started}, `starter` = {$starterAsSQL}
             WHERE       `started` IS NULL
+                        {$andProcessID}
             ORDER BY    `priority`
             LIMIT       1
 
@@ -150,12 +327,23 @@ EOT;
      * This ajax function will dispatch the next task if one exists. If one
      * doesn't exist it will attempt to wake any scheduled tasks.
      *
-     * @return  {
-     *              taskWasDispatched: bool
-     *          }
+     * @param object $args
+     *
+     *      {
+     *          processID: hex160?
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          taskWasDispatched: bool
+     *      }
      */
-    static function CBAjax_dispatchNextTask() {
-        $taskWasDispatched = CBTasks2::dispatchNextTask();
+    static function CBAjax_dispatchNextTask($args) {
+        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+        $taskWasDispatched = CBTasks2::dispatchNextTask((object)[
+            'processID' => $processID,
+        ]);
 
         if (!$taskWasDispatched) {
             CBTasks2::wakeScheduledTasks();
@@ -227,7 +415,11 @@ EOT;
         $starterAsSQL = CBHex160::toSQL($starter);
         $SQL = <<<EOT
 
-            SELECT  `className`, LOWER(HEX(`ID`)) AS `ID`, `priority`, `started`
+            SELECT  `className`,
+                    LOWER(HEX(`ID`)) AS `ID`,
+                    LOWER(HEX(`processID`)) as `processID`,
+                    `priority`,
+                    `started`
             FROM    `CBTasks2`
             WHERE   `starter` = {$starterAsSQL}
 
@@ -241,6 +433,10 @@ EOT;
 
         if ($task === false) {
             return false;
+        }
+
+        if ($task->processID !== null) {
+            CBProcess::setID($task->processID);
         }
 
         $output = (object)[
@@ -261,25 +457,23 @@ EOT;
 
         try {
 
-            if (is_callable($function = "{$task->className}::CBTasks2_Execute")) {
+            if (is_callable($function = "{$task->className}::CBTasks2_execute")) {
+                $status = call_user_func($function, $task->ID);
+            } else if (is_callable($function = "{$task->className}::CBTasks2_Execute")) { /* deprecated */
                 $status = call_user_func($function, $task->ID);
             } else {
-                throw new Exception("The function {$function}() requested by task ({$task->className}, {$task->ID}) is not callable.");
+                throw new Exception("The function {$task->className}::CBTasks2_execute() requested by task ({$task->className}, {$task->ID}) is not callable.");
             }
 
             $output->links = CBModel::valueAsArray($status, 'links');
-            $message = CBModel::value($status, 'message', '', 'strval');
-            $hint = CBModel::value($status, 'hint', '', 'strval');
-            if ($hint) { $hint = " ({$hint})"; }
-            $output->message = "{$task->className} Completed{$hint}\n{$task->ID}\n\n{$message}";
+            $output->message = CBModel::value($status, 'message', '', 'strval');
             $output->scheduled = CBModel::value($status, 'scheduled', null, 'intval');
             $output->severity = CBModel::value($status, 'severity', CBTasks2::defaultSeverity, 'intval');
 
-        } catch (Exception $exception) {
+        } catch (Throwable $throwable) {
 
-            $output->exception = Colby::exceptionStackTrace($exception);
-            $message = $exception->getMessage();
-            $output->message = "{$task->className} Failed\n{$task->ID}\n\n{$message}";
+            $output->exception = Colby::exceptionStackTrace($throwable);
+            $output->message = CBConvert::throwableToMessage($throwable);
             $output->severity = 3;
 
         }
@@ -316,33 +510,19 @@ EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
 
-        CBLog::addMessage('CBTasks2_TaskCompleted', 7, "{$output->message}", $output);
+        $affectedRows = Colby::mysqli()->affected_rows;
 
-        if (Colby::mysqli()->affected_rows === 1) {
+        CBLog::addMessage("CBTasks2_TaskCompleted_{$task->className}", 7, "{$output->message}", $output);
+
+        if ($task->processID !== null) {
+            CBProcess::clearID();
+        }
+
+        if ($affectedRows === 1) {
             return true;
         } else {
             return false;
         }
-    }
-
-    /**
-     * @param hex160 $groupID
-     *
-     * @return int
-     */
-    static function groupIDPush($groupID) {
-        if (CBHex160::is($groupID)) {
-            return array_push(CBTasks2::$groupIDStack, $groupID);
-        } else {
-            throw new InvalidArgumentException('$groupID');
-        }
-    }
-
-    /**
-     * @return hex160|null
-     */
-    static function groupIDPop() {
-        array_pop(CBTasks2::$groupIDStack);
     }
 
     /**
@@ -358,8 +538,8 @@ EOT;
     /**
      * See updateTasks
      */
-    static function updateTask($className, $ID, $IDForGroup = null, $priority = null, $scheduled = null) {
-        return CBTasks2::updateTasks($className, [$ID], $IDForGroup, $priority, $scheduled);
+    static function updateTask($className, $ID, $processID = null, $priority = null, $scheduled = null) {
+        return CBTasks2::updateTasks($className, [$ID], $processID, $priority, $scheduled);
     }
 
     /**
@@ -368,7 +548,7 @@ EOT;
      * @param string $className
      *
      *      This is the class name of the class that implements the
-     *      CBTasks2_Execute() function which will be called to perform the
+     *      CBTasks2_execute() function which will be called to perform the
      *      task.
      *
      * @param hex160 $ID
@@ -378,13 +558,14 @@ EOT;
      *      a model would use a model ID. A task that operates as a singleton
      *      would usually use CBHex160::zero() for this value.
      *
-     * @param hex160 $IDForGroup
+     * @param hex160 $processID
      *
-     *      This is used to identify a group of related tasks. For instance when
-     *      performing a spreadsheet import, all rows of the spreadsheet would
-     *      be turned into tasks and all of those tasks and generated subtasks
-     *      would be given the same $IDForGroup. This allows you to track the
-     *      status of the spreadsheet import or cancel it if necessary.
+     *      This is used to identify a process of related tasks. For instance
+     *      when performing a spreadsheet import, all rows of the spreadsheet
+     *      would be turned into tasks and all of those tasks and generated
+     *      subtasks would be given the same process ID. This allows you to
+     *      track the status of the spreadsheet import or cancel it if
+     *      necessary.
      *
      *      When this is specified, it will usually be a random ID.
      *
@@ -404,16 +585,16 @@ EOT;
      *
      * @return null
      */
-    static function updateTasks($className, array $IDs, $IDForGroup = null, $priority = null, $scheduled = null) {
+    static function updateTasks($className, array $IDs, $processID = null, $priority = null, $scheduled = null) {
         $classNameAsSQL = CBDB::stringToSQL($className);
         $IDsAsSQL = array_map('CBHex160::toSQL', $IDs);
         $updates = [];
 
-        if (($value = $IDForGroup) || ($value = end(CBTasks2::$groupIDStack))) {
-            $IDForGroupAsSQL = CBHex160::toSQL($value);
-            $updates[] = "`IDForGroup` = {$IDForGroupAsSQL}";
+        if (($value = $processID) || ($value = CBProcess::ID())) {
+            $processIDAsSQL = CBHex160::toSQL($value);
+            $updates[] = "`processID` = {$processIDAsSQL}";
         } else {
-            $IDForGroupAsSQL = 'NULL';
+            $processIDAsSQL = 'NULL';
         }
 
         if ($priority !== null) {
@@ -423,15 +604,40 @@ EOT;
             $priorityAsSQL = CBTasks2::defaultPriority;
         }
 
+        /**
+         * @NOTE 2017.11.01
+         *
+         *      Before today tasks were allowed to be both available and
+         *      completed at the same time. This was a very clever way of saying
+         *      that a task had been completed in the past, but was now either
+         *      available or scheduled to be completed again in the future.
+         *
+         *      This created two concepts: tasks that had ever been completed,
+         *      and tasks that were not available or scheduled that had been
+         *      completed. This was complicated and non-obvious in situations
+         *      where you needed to know the difference.
+         *
+         *      A change was made today so that if a task is available or
+         *      scheduled it is marked as not completed. This means if a task
+         *      completes and reschedules itself, it will not show as completed.
+         *      This is okay because apparently the ask is actually not fully
+         *      completed.
+         *
+         *      The truth is, some tasks run regularly but never truly complete.
+         *      Other tasks run a number of times then complete.
+         */
+
         if ($scheduled !== null) {
             $scheduledAsSQL = intval($scheduled);
 
             if ($scheduledAsSQL <= time()) {
-                /* remove scheduled and make the task available */
+                /* remove completed, scheduled, and started */
+                $updates[] = "`completed` = NULL";
                 $updates[] = "`scheduled` = NULL";
                 $updates[] = "`started` = NULL";
             } else {
-                /* replace scheduled and make the task unavailable */
+                /* remove completed, replace scheduled and make the task unavailable */
+                $updates[] = "`completed` = NULL";
                 $updates[] = "`scheduled` = {$scheduledAsSQL}";
                 $updates[] = "`started` = 0";
             }
@@ -448,7 +654,7 @@ EOT;
         $values = [];
 
         foreach ($IDsAsSQL as $IDAsSQL) {
-            $values[] = "({$classNameAsSQL}, {$IDAsSQL}, {$IDForGroupAsSQL}, NULL, {$priorityAsSQL}, {$scheduledAsSQL})";
+            $values[] = "({$classNameAsSQL}, {$IDAsSQL}, {$processIDAsSQL}, NULL, {$priorityAsSQL}, {$scheduledAsSQL})";
         }
 
         $values = implode(',', $values);
@@ -462,7 +668,7 @@ EOT;
         $SQL = <<<EOT
 
             INSERT INTO `CBTasks2`
-            (`className`, `ID`, `IDForGroup`, `output`, `priority`, `scheduled`)
+            (`className`, `ID`, `processID`, `output`, `priority`, `scheduled`)
             VALUES
             {$values}
             ON DUPLICATE KEY UPDATE
