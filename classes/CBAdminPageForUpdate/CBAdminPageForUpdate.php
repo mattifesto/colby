@@ -91,7 +91,7 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink'];
+        return ['CBUI', 'CBUIActionLink', 'CBUIOutput'];
     }
 
     /**

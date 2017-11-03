@@ -1,3 +1,13 @@
+main.CBAdminPageForUpdate {
+    display: flex;
+    flex-direction: column;
+}
+
+.CBAdminPageForUpdate .CBUIOutput {
+    flex: 1 0 auto;
+    height: 200px;
+}
+
 .CSULogEntry {
     padding: 5px 10px;
 }
