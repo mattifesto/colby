@@ -20,16 +20,15 @@ final class CBLog {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `CBLog` (
-                `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
                 `category` VARCHAR(80) NOT NULL,
+                `processID` BINARY(20),
                 `message` TEXT NOT NULL,
-                `modelAsJSON` LONGTEXT,
+                `serial` SERIAL,
                 `severity` TINYINT NOT NULL,
                 `timestamp` BIGINT NOT NULL,
-                PRIMARY KEY (`ID`),
-                KEY `timestamp` (`timestamp`),
-                KEY `category_timestamp` (`category`, `timestamp`),
-                KEY `severity_timestamp` (`severity`, `timestamp`)
+                KEY `category_serial` (`category`, `serial`),
+                KEY `processID_serial` (`processID`, `serial`),
+                KEY `severity_serial` (`severity`, `serial`)
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
@@ -38,24 +37,6 @@ final class CBLog {
 EOT;
 
         Colby::query($SQL);
-
-        /**
-         * @NOTE Upgrade 2017.07.01
-         *
-         *      Add the `modelAsJSON` column
-         */
-
-        if (!CBDBA::tableHasColumnNamed('CBLog', 'modelAsJSON')) {
-            $SQL = <<<EOT
-
-                ALTER TABLE `CBLog`
-                ADD COLUMN  `modelAsJSON` LONGTEXT
-                AFTER       `message`
-
-EOT;
-
-            Colby::query($SQL);
-        }
     }
 
     /**
@@ -83,14 +64,8 @@ EOT;
      *  error_log().
      *
      * @param string $message
-     * @param object? $model (The exact properties are under consideration)
-     *
-     *      {
-     *          exceptionStackTrace: string
-     *          text: string
-     *      }
      */
-    static function addMessage($category, $severity, $message, stdClass $model = null) {
+    static function addMessage($category, $severity, $message) {
         try {
             if ($severity < 4) {
                 try {
@@ -101,28 +76,24 @@ EOT;
             }
 
             $categoryAsSQL = CBDB::stringToSQL($category);
+            $processID = CBProcess::ID();
+            $processIDAsSQL = ($processID === null) ? 'NULL' : CBHex160::toSQL($processID);
             $messageAsSQL = CBDB::stringToSQL($message);
             $severityAsSQL = (int)$severity;
             $timestampAsSQL = time();
-
-            if ($model) {
-                $modelAsJSONAsSQL = CBDB::stringToSQL(json_encode($model));
-            } else {
-                $modelAsJSONAsSQL = 'NULL';
-            }
 
             $SQL = <<<EOT
 
                 INSERT INTO `CBLog` (
                     `category`,
+                    `processID`,
                     `message`,
-                    `modelAsJSON`,
                     `severity`,
                     `timestamp`
                 ) VALUES (
                     {$categoryAsSQL},
+                    {$processIDAsSQL},
                     {$messageAsSQL},
-                    {$modelAsJSONAsSQL},
                     {$severityAsSQL},
                     {$timestampAsSQL}
                 )
@@ -141,30 +112,77 @@ EOT;
     }
 
     /**
-     * @param int $args->sinceTimestamp
-     * @param int $args->minSeverity
+     * @param object $args
      *
-     * @return  {
-     *              category: string
-     *              message: string
-     *              model: object
-     *              severity: int
-     *              timestamp: int
-     *          }
+     *      See CBLog::entries()
+     *
+     * @return [object]
+     */
+    static function CBAjax_fetchEntries($args) {
+        return CBLog::entries($args);
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_fetchEntries_group() {
+        return 'Administrators';
+    }
+
+    /**
+     * @param object $args
+     *
+     *      {
+     *          afterSerial: int?
+     *
+     *              If specified, will only fetch log entries with a serial
+     *              greater than afterSerial. This allows callers to request
+     *              only new entries since the last time they asked.
+     *
+     *          afterTimestamp: int?
+     *
+     *              If specified, will only fetch log entires with a timestamp
+     *              greater than afterTimestamp. This allows callers to request
+     *              only new entries since the last tiime they asked.
+     *
+     *          mostRecentDescending: bool?
+     *
+     *          processID: hex160?
+     *
+     *              If specified, will only fetch log entries made for this
+     *              process ID.
+     *      }
+     *
+     * @return [object]
+     *
+     *      {
+     *          category: string
+     *          message: string
+     *          serial: int
+     *          severity: int
+     *          timestamp: int
+     *      }
      */
     static function entries($args = null) {
         $whereAsSQL = [];
 
-        if (isset($args->sinceTimestamp)) {
-            $sinceTimestampAsSQL = (int)$args->sinceTimestamp;
-            $whereAsSQL[] = "`timestamp` > {$sinceTimestampAsSQL}";
+        $afterSerial = CBModel::value($args, 'afterSerial', null, 'CBConvert::valueAsInt');
+
+        if ($afterSerial !== null) {
+            $whereAsSQL[] = "`serial` > {$afterSerial}";
         }
 
-        if (isset($args->minSeverity)) {
-            $minSeverityAsSQL = (int)$args->minSeverity;
-            $whereAsSQL[] = "`severity` <= {$minSeverityAsSQL}";
-        } else if (isset($args->category)) {
+        $afterTimestamp = CBModel::value($args, 'afterTimestamp', null, 'CBConvert::valueAsInt');
 
+        if ($afterTimestamp !== null) {
+            $whereAsSQL[] = "`timestamp` > {$afterTimestamp}";
+        }
+
+        $processID = CBModel::valueAsID($args, 'processID');
+
+        if ($processID !== null) {
+            $processIDAsSQL = CBHex160::toSQL($processID);
+            $whereAsSQL[] = "`processID` = {$processIDAsSQL}";
         }
 
         if (empty($whereAsSQL)) {
@@ -173,25 +191,20 @@ EOT;
             $whereAsSQL = 'WHERE ' . implode(' AND ', $whereAsSQL);
         }
 
+        $mostRecentDescending = CBModel::value($args, 'mostRecentDescending', false, 'boolval');
+        $descAsSQL = $mostRecentDescending ? 'DESC' : '';
+
         $SQL = <<<EOT
 
-            SELECT `category`, `message`, `modelAsJSON` AS `model`, `severity`, `timestamp`
+            SELECT `category`, `message`, `serial`, `severity`, `timestamp`
             FROM `CBLog`
             {$whereAsSQL}
-            ORDER BY `ID` DESC
+            ORDER BY `serial` {$descAsSQL}
             LIMIT 500
 
 EOT;
 
-        $entries = CBDB::SQLToObjects($SQL);
-
-        foreach ($entries as $entry) {
-            if (!empty($entry->model)) {
-                $entry->model = json_decode($entry->model);
-            }
-        }
-
-        return $entries;
+        return CBDB::SQLToObjects($SQL);
     }
 
     /**
