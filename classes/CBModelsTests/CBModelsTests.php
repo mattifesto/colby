@@ -98,12 +98,14 @@ final class CBModelsTests {
     }
 
     /**
-     * CBModel::toModel() is allowed to return null in rare cases where a spec
-     * doesn't have required properties. In general, spec shouldn't have
-     * required properties, but in cases like CBImage they do. This function
-     * tests the behavior of saving a spec that will generate a null model.
+     * CBModel::toModel() is allowed to return null when a spec doesn't have
+     * required properties. In general, spec shouldn't have required properties,
+     * but in cases like CBImage they do. This function tests the behavior of
+     * saving a spec that will generate a null model.
      */
     static function saveNullableModelTest() {
+        $exceptionWasThrown = false;
+
         try {
             Colby::query('START TRANSACTION');
 
@@ -118,11 +120,17 @@ final class CBModelsTests {
         } catch (Throwable $throwable) {
             Colby::query('ROLLBACK');
 
-            $message = $throwable->getMessage();
+            $exceptionWasThrown = true;
+            $expectedMessage = 'A CBImage spec being saved generated a null model.';
+            $actualMessage = $throwable->getMessage();
 
-            if ($message !== 'A spec being saved generated a null model.') {
-                throw $throwable;
+            if ($actualMessage !== $expectedMessage) {
+                throw new Exception("The exception thrown had the message: \"{$actualMessage}\", but the following message was expected: \"{$expectedMessage}\"");
             }
+        }
+
+        if (!$exceptionWasThrown) {
+            throw new Exception('This test expects an exception to be thrown.');
         }
     }
 
@@ -131,6 +139,8 @@ final class CBModelsTests {
      * these models cannot be saved.
      */
     static function saveSpecWithoutIDTest() {
+        $exceptionWasThrown = false;
+
         try {
             Colby::query('START TRANSACTION');
 
@@ -144,11 +154,17 @@ final class CBModelsTests {
         } catch (Throwable $throwable) {
             Colby::query('ROLLBACK');
 
-            $message = $throwable->getMessage();
+            $exceptionWasThrown = true;
+            $expectedMessage = 'A CBViewPage spec being saved generated a model without an ID.';
+            $actualMessage = $throwable->getMessage();
 
-            if ($message !== 'A spec being saved generated a model without an ID.') {
-                throw $throwable;
+            if ($actualMessage !== $expectedMessage) {
+                throw new Exception("The exception thrown had the message: \"{$actualMessage}\", but the following message was expected: \"{$expectedMessage}\"");
             }
+        }
+
+        if (!$exceptionWasThrown) {
+            throw new Exception('This test expects an exception to be thrown.');
         }
     }
 }
