@@ -1,4 +1,7 @@
-"use strict"; /* jshint strict: global */  /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBLogAdminPage */
 /* globals
     CBUIExpander,
     Colby */
@@ -12,9 +15,9 @@ var CBLogAdminPage = {
         var element = document.createElement("div");
         element.className = "entries";
 
-        Colby.callAjaxFunction("CBLogAdminPage", "fetchEntries")
+        Colby.callAjaxFunction("CBLog", "fetchEntries", {mostRecentDescending: true})
             .then(onFulfilled)
-            .catch(Colby.reportAndDisplayError);
+            .catch(Colby.displayAndReportError);
 
         return element;
 
@@ -23,14 +26,6 @@ var CBLogAdminPage = {
 
             for (let entry of entries) {
                 var message = entry.message;
-
-                if (entry.model && entry.model.exceptionStackTrace) {
-                    message += "\n\n" + entry.model.exceptionStackTrace;
-                }
-
-                if (entry.model && entry.model.text) {
-                    message += "\n\n" + entry.model.text;
-                }
 
                 element.appendChild(CBUIExpander.create({
                     message: message,
