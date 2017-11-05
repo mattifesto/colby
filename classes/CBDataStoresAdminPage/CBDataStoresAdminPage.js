@@ -1,4 +1,7 @@
-"use strict"; /* jshint strict: global */ /* jshint esnext: true */
+"use strict";
+/* jshint strict: global */
+/* jshint esnext: true */
+/* exported CBDataStoreAdminPage */
 /* global
     CBUI,
     CBUINavigationView,
@@ -40,7 +43,9 @@ var CBDataStoresAdminPage = {
             classNames.add(value.className);
         });
 
-        var options = [];
+        var options = [{
+            title: "None",
+        }];
 
         classNames.forEach(function (className) {
             var title = className;
