@@ -1,6 +1,7 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
+/* exported Colby */
 
 var Colby = {
     intervalId:     null,
@@ -1039,17 +1040,17 @@ Colby.afterDOMContentLoaded(function () {
 });
 
 /**
- * CBTasks2 dispatch
+ * CBTasks2 run tasks
  */
 
-Colby.CBTasks2DispatchAlways = false;
-Colby.CBTasks2DispatchDelay = 5000;
+Colby.CBTasks2RunAlways = false;
+Colby.CBTasks2Delay = 5000;
 
 Colby.afterDOMContentLoaded(function () {
-    dispatch();
+    runNextTask();
 
     /* closure */
-    function dispatch() {
+    function runNextTask() {
 
         /**
          * Errors occuring during this process are likely to be server side
@@ -1058,7 +1059,7 @@ Colby.afterDOMContentLoaded(function () {
          * with the end user.
          */
 
-        Colby.callAjaxFunction("CBTasks2", "dispatchNextTask")
+        Colby.callAjaxFunction("CBTasks2", "runNextTask")
             .then(onFulfilled)
             .catch(Colby.reportError);
 
@@ -1066,12 +1067,11 @@ Colby.afterDOMContentLoaded(function () {
         function onFulfilled(value) {
 
             /**
-             * If a task was dispatched, try to dispatch another after a short
-             * time out.
+             * If a task was run, try to run another after a short time out.
              */
 
-            if (Colby.CBTasks2DispatchAlways || value.taskWasDispatched) {
-                setTimeout(dispatch, Colby.CBTasks2DispatchDelay);
+            if (Colby.CBTasks2RunAlways || value.taskWasRun) {
+                setTimeout(runNextTask, Colby.CBTasks2Delay);
             }
         }
     }
