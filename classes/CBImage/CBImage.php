@@ -15,11 +15,11 @@ final class CBImage {
      * @return object|null
      */
     static function CBModel_toModel(stdClass $spec) {
+        $specIssues = [];
         $extension = CBModel::value($spec, 'extension');
 
         if (empty($extension)) {
-            CBLog::addMessage(__METHOD__, 4, "The spec `extension` property is empty.");
-            return null;
+            $specIssues[] = "The spec `extension` property is empty.";
         }
 
         $filename = CBModel::value($spec, 'filename');
@@ -30,28 +30,41 @@ final class CBImage {
         }
 
         if (empty($filename)) {
-            CBLog::addMessage(__METHOD__, 4, "The spec `filename` property is empty.");
-            return null;
+            $specIssues[] = "The spec `filename` property is empty.";
         }
 
         $height = CBModel::value($spec, 'height', 0, 'intval');
 
         if ($height < 1) {
-            CBLog::addMessage(__METHOD__, 4, "The spec `height` property is invalid.");
-            return null;
+            $specIssues[] = "The spec `height` property is invalid.";
         }
 
         $ID = CBModel::valueAsID($spec, 'ID');
 
         if (empty($ID)) {
-            CBLog::addMessage(__METHOD__, 4, "The spec `ID` property is invalid.");
-            return null;
+            $specIssues[] = "The spec `ID` property is invalid.";
         }
 
         $width = CBModel::value($spec, 'width', 0, 'intval');
 
         if ($width < 1) {
-            CBLog::addMessage(__METHOD__, 4, "The spec `width` property is invalid.");
+            $specIssues[] = "The spec `width` property is invalid.";
+        }
+
+        if (!empty($specIssues)) {
+            $message = __METHOD__ .
+                ' returned null because the spec had issues.' .
+                "\n\nIssues:\n" .
+                implode("\n", $specIssues) .
+                "\n\nspec: " .
+                json_encode($spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => $message,
+                'severity' => 4,
+            ]);
+
             return null;
         }
 
