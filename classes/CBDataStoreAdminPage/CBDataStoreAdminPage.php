@@ -89,12 +89,13 @@ final class CBDataStoreAdminPage {
         }
 
         $archive = ColbyArchive::open($ID);
-        $message = cbhtml(json_encode("Archive"));
-        $pre = cbhtml(json_encode(var_export($archive->data(), true)));
+        $message = "Archive\n\n" .
+            var_export($archive->data(), true);
+        $message = cbhtml(json_encode($message));
 
         ?>
 
-        <div class="CBUIExpander_builder" data-message="<?= $message ?>" data-pre="<?= $pre ?>"></div>
+        <div class="CBUIExpander_builder" data-message="<?= $message ?>"></div>
 
         <?php
     }
@@ -113,12 +114,13 @@ final class CBDataStoreAdminPage {
 EOT;
 
         if ($row = CBDB::SQLToObject($SQL)) {
-            $message = cbhtml(json_encode("CBImages Row"));
-            $pre = cbhtml(json_encode(json_encode($row, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)));
+            $message = "CBImages Row\n\n" .
+                json_encode($row, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $message = cbhtml(json_encode($message));
 
             ?>
 
-            <div class="CBUIExpander_builder" data-message="<?= $message ?>" data-pre="<?= $pre ?>"></div>
+            <div class="CBUIExpander_builder" data-message="<?= $message ?>"></div>
 
             <?php
         }
@@ -139,21 +141,23 @@ EOT;
             return;
         }
 
-        $message = cbhtml(json_encode("CBModels Spec"));
-        $pre = cbhtml(json_encode(json_encode($data->spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)));
+        $message = "CBModels Spec\n\n" .
+            json_encode($data->spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $message = cbhtml(json_encode($message));
 
         ?>
 
-        <div class="CBUIExpander_builder" data-message="<?= $message ?>" data-pre="<?= $pre ?>"></div>
+        <div class="CBUIExpander_builder" data-message="<?= $message ?>"></div>
 
         <?php
 
-        $message = cbhtml(json_encode("CBModels Model"));
-        $pre = cbhtml(json_encode(json_encode($data->model, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)));
+        $message = "CBModels Model\n\n" .
+            json_encode($data->model, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $message = cbhtml(json_encode($message));
 
         ?>
 
-        <div class="CBUIExpander_builder" data-message="<?= $message ?>" data-pre="<?= $pre ?>"></div>
+        <div class="CBUIExpander_builder" data-message="<?= $message ?>"></div>
 
         <?php
     }
@@ -188,12 +192,13 @@ EOT;
 EOT;
 
         if ($row = CBDB::SQLToObject($SQL)) {
-            $message = cbhtml(json_encode("ColbyPages Row"));
-            $pre = cbhtml(json_encode(json_encode($row, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)));
+            $message = "ColbyPages Row\n\n" .
+                json_encode($row, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $message = cbhtml(json_encode($message));
 
             ?>
 
-            <div class="CBUIExpander_builder" data-message="<?= $message ?>" data-pre="<?= $pre ?>"></div>
+            <div class="CBUIExpander_builder" data-message="<?= $message ?>"></div>
 
             <?php
         }
@@ -227,12 +232,17 @@ EOT;
         }
 
         if (!empty($links)) {
-            $message = cbhtml(json_encode("Data Store Files"));
-            $links = cbhtml(json_encode($links));
+            $links = array_map(function ($link) {
+                return "{$link->text}\n{$link->URI}";
+            }, $links);
+
+            $message = "Data Store Files\n\n" .
+                implode("\n\n", $links);
+            $message = cbhtml(json_encode($message));
 
             ?>
 
-            <div class="CBUIExpander_builder" data-links="<?= $links ?>" data-message="<?= $message ?>"></div>
+            <div class="CBUIExpander_builder" data-message="<?= $message ?>"></div>
 
             <?php
         }
