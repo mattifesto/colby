@@ -1,7 +1,9 @@
 <?php
 
 /**
- * 2017.10.27 Simplify the CBLog table and add group support.
+ * 2017.10.27 Large changes and simplifications to both the CBLog and CBTasks2
+ * tables. The method of upgrade is drastic, but the changes are so significant
+ * that attemps to migrate the data would not be world the time.
  */
 final class CBUpgradesForVersion351 {
 
@@ -30,25 +32,13 @@ EOT;
             FROM    information_schema.COLUMNS
             WHERE   TABLE_SCHEMA = DATABASE() AND
                     TABLE_NAME = 'CBTasks2' AND
-                    COLUMN_NAME = 'processID'
+                    COLUMN_NAME = 'state'
 
 EOT;
 
         if (CBDB::SQLToValue($SQL) == 0) {
-
-            $SQL = <<<EOT
-
-                ALTER TABLE `CBTasks2`
-                DROP INDEX `group_started_priority`,
-                DROP INDEX `group_completed`,
-                DROP COLUMN `IDForGroup`,
-                ADD COLUMN `processID` BINARY(20) AFTER `ID`,
-                ADD INDEX `processID_started_priority` (`processID`, `started`, `priority`),
-                ADD INDEX `processID_completed` (`processID`, `completed`)
-
-EOT;
-
-            Colby::query($SQL);
+            Colby::query('DROP TABLE IF EXISTS `CBTasks2`');
+            CBTasks2::install();
         }
     }
 }
