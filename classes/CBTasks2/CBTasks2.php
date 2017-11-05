@@ -7,12 +7,6 @@ final class CBTasks2 {
      */
     const defaultPriority = 100;
 
-    /* A severity value between 0 and 7 means that an issue was noted during
-     * execution with the indicated RFC3164 level of severity. Values 8-255 mean
-     * that no issue occurred and all have equal meaning.
-     */
-    const defaultSeverity = 8;
-
     /**
      * @param object $args
      *
@@ -20,179 +14,46 @@ final class CBTasks2 {
      *          processID: hex160?
      *      }
      *
-     * @return int
-     */
-    static function countOfAvailableTasks($args = null) {
-        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
-
-        if (empty($processID)) {
-            $andProcessID = '';
-        } else {
-            $processIDAsSQL = CBHex160::toSQL($processID);
-            $andProcessID = "AND `processID` = {$processIDAsSQL}";
-        }
-
-        $SQL = <<<EOT
-
-            SELECT  COUNT(*)
-            FROM    `CBTasks2`
-            WHERE   `started` IS NULL
-                    {$andProcessID}
-
-EOT;
-
-        return CBDB::SQLToValue($SQL);
-    }
-
-    /**
-     * Returns a count of completed tasks in the CBTasks2 table.
-     *
-     * @param object $args
+     *  @return [int => object]
      *
      *      {
-     *          afterTimestamp: int?
-     *          processID: hex160?
-     *      }
-     *
-     * @return int (is it an int or a string?)
-     */
-    static function countOfCompletedTasks($args = null) {
-        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
-
-        if (empty($processID)) {
-            $andProcessID = '';
-        } else {
-            $processIDAsSQL = CBHex160::toSQL($processID);
-            $andProcessID = "AND `processID` = {$processIDAsSQL}";
-        }
-
-        $SQL = <<<EOT
-
-            SELECT  COUNT(*)
-            FROM    `CBTasks2`
-            WHERE   `completed` IS NOT NULL
-                    {$andProcessID}
-
-EOT;
-
-        return CBDB::SQLToValue($SQL);
-    }
-
-    /**
-     * Returns a count of scheduled tasks in the CBTasks2 table.
-     *
-     * @param object $args
-     *
-     *      {
-     *          processID: hex160?
-     *      }
-     *
-     * @return int (is it an int or a string?)
-     */
-    static function countOfScheduledTasks($args = null) {
-        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
-
-        if (empty($processID)) {
-            $andProcessID = '';
-        } else {
-            $processIDAsSQL = CBHex160::toSQL($processID);
-            $andProcessID = "AND `processID` = {$processIDAsSQL}";
-        }
-
-        $SQL = <<<EOT
-
-            SELECT  COUNT(*)
-            FROM    `CBTasks2`
-            WHERE   `scheduled` IS NOT NULL AND
-                    `started` IS NOT NULL
-                    {$andProcessID}
-
-EOT;
-
-        return CBDB::SQLToValue($SQL);
-    }
-
-    /**
-     * Returns a count of tasks in the CBTasks2 table.
-     *
-     * @param object $args
-     *
-     *      {
-     *          processID: hex160?
-     *      }
-     *
-     * @return int (is it an int or a string?)
-     */
-    static function countOfTasks($args = null) {
-        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
-
-        if (empty($processID)) {
-            $andProcessID = '';
-        } else {
-            $processIDAsSQL = CBHex160::toSQL($processID);
-            $andProcessID = "AND `processID` = {$processIDAsSQL}";
-        }
-
-        $SQL = <<<EOT
-
-            SELECT  COUNT(*)
-            FROM    `CBTasks2`
-            WHERE   TRUE
-                    {$andProcessID}
-
-EOT;
-
-        return CBDB::SQLToValue($SQL);
-    }
-
-    /**
-     * @NOTE This function counts tasks completed in log history, not completed
-     * tasks in the CBTasks2 table.
-     *
-     * @return int
-     */
-    static function countOfTasksCompletedSince($timestamp) {
-        $timestampAsSQL = intval($timestamp);
-        $SQL = <<<EOT
-
-            SELECT  COUNT(*)
-            FROM    `CBLog`
-            WHERE   `category` = 'CBTasks2_TaskCompleted' AND
-                    `timestamp` > {$timestampAsSQL}
-
-EOT;
-
-        return CBDB::SQLToValue($SQL);
-    }
-
-    /**
-     * @param object $args
-     *
-     *      {
-     *          processID: hex160?
-     *      }
-     *
-     *  @return object
-     *
-     *      {
-     *          available: int
-     *          completed: int
-     *          scheduled: int
-     *          total: int
+     *          state: int
+     *          count: int
      *      }
      */
     static function fetchStatus($args) {
         $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
 
-        $fnArgs = (object)[
-            'processID' => $processID,
-        ];
+        if ($processID !== null) {
+            $processIDAsSQL = CBHex160::toSQL($processID);
+            $where = "WHERE `processID` = {$processIDAsSQL}";
+        } else {
+            $where = '';
+        }
+
+        $SQL = <<<EOT
+
+            SELECT      `state`, COUNT(*) AS `count`
+            FROM        `CBTasks2`
+            {$where}
+            GROUP BY    `state`
+
+EOT;
+
+        $states = CBDB::SQLToObjects($SQL, ['keyField' => 'state']);
+        $scheduled = isset($states[0]) ? intval($states[0]->count) : 0;
+        $ready = isset($states[1]) ? intval($states[1]->count) : 0;
+        $running = isset($states[2]) ? intval($states[2]->count) : 0;
+        $complete = isset($states[3]) ? intval($states[3]->count) : 0;
+        $failed = isset($states[4]) ? intval($states[4]->count) : 0;
 
         return (object)[
-            'avalailable' => CBTasks2::countOfAvailableTasks($fnArgs),
-            'completed' => CBTasks2::countOfCompletedTasks($fnArgs),
-            'scheduled' => CBTasks2::countOfScheduledTasks($fnArgs),
-            'total' => CBTasks2::countOfTasks($fnArgs),
+            'scheduled' => $scheduled,
+            'ready' => $ready,
+            'running' => $running,
+            'complete' => $complete,
+            'failed' => $failed,
+            'total' => $scheduled + $ready + $running + $complete + $failed,
         ];
     }
 
@@ -203,21 +64,15 @@ EOT;
      *          processID: hex160?
      *      }
      *
-     *  @return object
+     *  @return [int => object]
      *
      *      {
-     *          available: int
-     *          completed: int
-     *          scheduled: int
-     *          total: int
+     *          state: int
+     *          count: int
      *      }
      */
     static function CBAjax_fetchStatus($args) {
-        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
-
-        return CBTasks2::fetchStatus((object)[
-            'processID' => $processID,
-        ]);
+        return CBTasks2::fetchStatus($args);
     }
 
     /**
@@ -228,47 +83,92 @@ EOT;
     }
 
     /**
-     *  The `processID` column is used to associate related tasks with each
-     *  other.
+     * Table columns:
      *
-     *  The `output` column should hold JSON.
+     *      `className`
      *
-     *  Task States:
+     *          Class name of the class that runs the task.
      *
-     *      Available: `started` IS NULL
-     *      Scheduled: `scheduled` IS NOT NULL AND `started` IS NOT NULL
-     *      Completed: `completed` IS NOT NULL
+     *      `ID`
+     *
+     *          ID associated with the task or NULL
+     *
+     *      `priority`
+     *
+     *          0-255 with lower numbers representing higher priority.
+     *
+     *          default: 100
+     *
+     *      `state`
+     *
+     *          0: scheduled
+     *          1: ready
+     *          2: running
+     *          3: complete
+     *          4: failed
+     *
+     *      `timestamp`
+     *
+     *          state 0: time running scheduled to start
+     *          state 1: time made ready to start
+     *          state 2: time running started
+     *          state 3: time running finished
+     *          state 4: time failure occurred
+     *
+     *      `processID`
+     *
+     *          Used to associate related tasks with each other. Use the
+     *          CBProcess class to set.
+     *
+     *      `starterID`
+     *
+     *          Used by the class when running tasks.
+     *
+     * Table indexes:
+     *
+     *      `className`, `ID`
+     *
+     *          Primary key. Only one task can exist per className and ID. If
+     *          the task needs to be run again, restart it.
+     *
+     *      `state`, `priority`
+     *
+     *          Used to find the next of all tasks to run.
+     *
+     *      `processID`, `state`, `priority`
+     *
+     *          Used to find the next of the tasks in a process to run.
+     *
+     *      `state`, `timestamp`
+     *
+     *          Used to find scheduled tasks that can be moved to the ready
+     *          state.
+     *
+     *      `starterID`
+     *
+     *          Used by the class when running tasks.
      *
      * @return null
      */
     static function install() {
         $defaultPriority = CBTasks2::defaultPriority;
-        $defaultSeverity = CBTasks2::defaultSeverity;
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `CBTasks2` (
                 `className` VARCHAR(80) NOT NULL,
-                `ID` BINARY(20) NOT NULL,
+                `ID`        BINARY(20) NOT NULL,
+                `priority`  TINYINT UNSIGNED NOT NULL DEFAULT {$defaultPriority},
+                `state`     TINYINT UNSIGNED NOT NULL,
+                `timestamp` BIGINT NOT NULL,
+
                 `processID` BINARY(20),
-
-                `priority` TINYINT UNSIGNED NOT NULL DEFAULT {$defaultPriority},
-                `scheduled` BIGINT,
-
-                `started` BIGINT,
-                `starter` BINARY(20),
-                `completed` BIGINT,
-
-                `output` LONGTEXT,
-                `severity` TINYINT UNSIGNED NOT NULL DEFAULT {$defaultSeverity},
+                `starterID` BINARY(20),
 
                 PRIMARY KEY (`className`, `ID`),
-
-                KEY `started_priority` (`started`, `priority`),
-                KEY `processID_started_priority` (`processID`, `started`, `priority`),
-                KEY `scheduled` (`scheduled`),
-
-                KEY `completed` (`completed`),
-                KEY `processID_completed` (`processID`, `completed`)
+                KEY `state_priority` (`state`, `priority`),
+                KEY `processID_state_priority` (`processID`, `state`, `priority`),
+                KEY `state_timestamp` (`state`, `timestamp`),
+                KEY `starterID` (`starterID`)
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
@@ -288,9 +188,9 @@ EOT;
      *
      * @return bool
      *
-     *      Returns true if a task is completed; otherwise false.
+     *      Returns true if a task is run; otherwise false.
      */
-    static function dispatchNextTask($args) {
+    static function runNextTask($args) {
         $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
 
         if (!empty($processID)) {
@@ -300,14 +200,16 @@ EOT;
             $andProcessID = '';
         }
 
-        $started = time();
-        $starter = CBHex160::random();
-        $starterAsSQL = CBHex160::toSQL($starter);
+        $timestamp = time();
+        $starterID = CBHex160::random();
+        $starterIDAsSQL = CBHex160::toSQL($starterID);
         $SQL = <<<EOT
 
             UPDATE      `CBTasks2`
-            SET         `started` = {$started}, `starter` = {$starterAsSQL}
-            WHERE       `started` IS NULL
+            SET         `state` = 2,
+                        `timestamp` = {$timestamp},
+                        `starterID` = {$starterIDAsSQL}
+            WHERE       `state` = 1
                         {$andProcessID}
             ORDER BY    `priority`
             LIMIT       1
@@ -317,14 +219,14 @@ EOT;
         Colby::query($SQL, /* retryOnDeadlock */ true);
 
         if (Colby::mysqli()->affected_rows === 1) {
-            return CBTasks2::executeTaskForStarter($starter);
+            return CBTasks2::runTaskForStarter($starterID);
         } else {
             return false;
         }
     }
 
     /**
-     * This ajax function will dispatch the next task if one exists. If one
+     * This ajax function will run the next ready task if one exists. If one
      * doesn't exist it will attempt to wake any scheduled tasks.
      *
      * @param object $args
@@ -336,28 +238,28 @@ EOT;
      * @return object
      *
      *      {
-     *          taskWasDispatched: bool
+     *          taskWasRun: bool
      *      }
      */
-    static function CBAjax_dispatchNextTask($args) {
+    static function CBAjax_runNextTask($args) {
         $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
-        $taskWasDispatched = CBTasks2::dispatchNextTask((object)[
+        $taskWasRun = CBTasks2::runNextTask((object)[
             'processID' => $processID,
         ]);
 
-        if (!$taskWasDispatched) {
+        if (!$taskWasRun) {
             CBTasks2::wakeScheduledTasks();
         }
 
         return (object)[
-            'taskWasDispatched' => $taskWasDispatched,
+            'taskWasRun' => $taskWasRun,
         ];
     }
 
     /**
      * @return string
      */
-    static function CBAjax_dispatchNextTask_group() {
+    static function CBAjax_runNextTask_group() {
         return 'Public';
     }
 
@@ -366,69 +268,74 @@ EOT;
      * @param hex160 $ID
      *
      * @return bool
-     *      Returns true if the task is completed; otherwise false.
+     *
+     *      Returns true if the task is run; otherwise false.
      */
-    static function dispatchTask($className, $ID) {
+    static function runSpecificTask($className, $ID) {
         $classNameAsSQL = CBDB::stringToSQL($className);
         $IDAsSQL = CBHex160::toSQL($ID);
-        $started = time();
-        $starter = CBHex160::random();
-        $starterAsSQL = CBHex160::toSQL($starter);
+        $timestamp = time();
+        $state = 2; // running
+        $starterID = CBHex160::random();
+        $starterIDAsSQL = CBHex160::toSQL($starterID);
+
+        /**
+         * BUG: Avoid running if task is already running.
+         */
+
         $SQL = <<<EOT
 
             INSERT INTO `CBTasks2`
-            (`className`, `ID`, `started`, `starter`)
+            (`className`, `ID`, `starterID`, `state`, `timestamp`)
             VALUES
-            ({$classNameAsSQL}, {$IDAsSQL}, {$started}, {$starterAsSQL})
+            ({$classNameAsSQL}, {$IDAsSQL}, {$starterIDAsSQL}, {$state}, {$timestamp})
             ON DUPLICATE KEY UPDATE
-                `started`   = {$started},
-                `starter`   = {$starterAsSQL},
-                `output`    = NULL,
-                `completed` = NULL
+                `starterID` = {$starterIDAsSQL},
+                `state` = {$state},
+                `timestamp` = {$timestamp}
 
 EOT;
 
         Colby::query($SQL);
 
         if (Colby::mysqli()->affected_rows > 0) {
-            return CBTasks2::executeTaskForStarter($starter);
+            return CBTasks2::runTaskForStarter($starterID);
         } else {
             return false;
         }
     }
 
     /**
-     * Executes a task started by the provided starter. There are situations in
+     * Runs a task started by the provided starter. There are situations in
      * which a task can be pulled away from a starter and in those cases the
-     * task will not be completed by that starter and this function will return
+     * task will not be run by that starter and this function will return
      * false.
      *
      * The situations are rare race conditions and potentially a very closely
-     * timed calls to dispatchNextTask() and dispatchTask().
+     * timed calls to runNextTask() and runSpecificTask().
      *
-     * @param hex160 $starter
+     * @param hex160 $starterID
      *
      * @return bool
-     *      Returns true if the task is completed; otherwise false.
+     *
+     *      Returns true if the task is run; otherwise false.
      */
-    static function executeTaskForStarter($starter) {
-        $starterAsSQL = CBHex160::toSQL($starter);
+    static function runTaskForStarter($starterID) {
+        $starterIDAsSQL = CBHex160::toSQL($starterID);
         $SQL = <<<EOT
 
             SELECT  `className`,
                     LOWER(HEX(`ID`)) AS `ID`,
-                    LOWER(HEX(`processID`)) as `processID`,
-                    `priority`,
-                    `started`
+                    LOWER(HEX(`processID`)) as `processID`
             FROM    `CBTasks2`
-            WHERE   `starter` = {$starterAsSQL}
+            WHERE   `starterID` = {$starterIDAsSQL}
 
 EOT;
 
         $task = CBDB::SQLToObject($SQL, /* retryOnDeadlock */ true);
 
         /**
-         * If someone deleted or manually dispatched the task return false.
+         * If someone deleted or manually ran the task return false.
          */
 
         if ($task === false) {
@@ -439,80 +346,73 @@ EOT;
             CBProcess::setID($task->processID);
         }
 
-        $output = (object)[
-            'className' => 'CBTask2Output',
-            'ID' => CBTasks2::modelID($task->className, $task->ID),
-            'taskClassName' => $task->className,
-            'taskID' => $task->ID,
-            'priority' => $task->priority,
-            'scheduled' => null,
-            'started' => $task->started,
-        ];
-
-        // Task execution
-        //
-        // Any errors occuring in this phase will be considered a failure of the
-        // selected task. The task will be marked as completed no matter what
-        // happens. Sudden database failures may still ghost the task.
-
         try {
 
-            if (is_callable($function = "{$task->className}::CBTasks2_execute")) {
+            if (is_callable($function = "{$task->className}::CBTasks2_run")) {
                 $status = call_user_func($function, $task->ID);
             } else if (is_callable($function = "{$task->className}::CBTasks2_Execute")) { /* deprecated */
                 $status = call_user_func($function, $task->ID);
             } else {
-                throw new Exception("The function {$task->className}::CBTasks2_execute() requested by task ({$task->className}, {$task->ID}) is not callable.");
+                throw new Exception("The function {$task->className}::CBTasks2_run() requested by task ({$task->className}, {$task->ID}) is not callable.");
             }
 
-            $output->links = CBModel::valueAsArray($status, 'links');
-            $output->message = CBModel::value($status, 'message', '', 'strval');
-            $output->scheduled = CBModel::value($status, 'scheduled', null, 'intval');
-            $output->severity = CBModel::value($status, 'severity', CBTasks2::defaultSeverity, 'intval');
+            $scheduled = CBModel::value($status, 'scheduled', null, 'CBConvert::valueAsInt');
+
+            // Log a debug level entry that a task has run.
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => "CBTasks2 ran {$task->className} for ID {$task->ID}",
+                'severity' => 7,
+            ]);
+
+            $state = 3; /* complete */
 
         } catch (Throwable $throwable) {
 
-            $output->exception = Colby::exceptionStackTrace($throwable);
-            $output->message = CBConvert::throwableToMessage($throwable);
-            $output->severity = 3;
+            $message = CBConvert::throwableToMessage($throwable) .
+                       "\n\n" .
+                       Colby::exceptionStackTrace($throwable);
 
+            CBLog::log((object)[
+                'className' => $task->className,
+                'ID' => $task->ID,
+                'message' => $message,
+                'severity' => 3,
+            ]);
+
+            $state = 4; /* failed */
         }
 
-        $output->completed = time();
-        $startedAsSQL = '`started`';
+        $now = time();
 
-        if ($output->scheduled === null) {
-            $scheduledAsSQL = 'NULL';
-        } else if ($output->scheduled <= $output->completed) {
-            $scheduledAsSQL = 'NULL';
-            $startedAsSQL = 'NULL';
+        if ($scheduled === null) {
+            // state will already be 3 or 4 depending on failure status
+            $timestamp = $now;
+        } else if ($scheduled <= $now) {
+            $state = 1; /* ready */
+            $timestamp = $now;
         } else {
-            $scheduledAsSQL = $output->scheduled;
+            $state = 0; /* scheduled */
+            $timestamp = $scheduled;
         }
 
         $classNameAsSQL = CBDB::stringToSQL($task->className);
         $IDAsSQL = CBHex160::toSQL($task->ID);
-        $outputAsSQL = CBDB::stringToSQL(json_encode($output));
-
         $SQL = <<<EOT
 
             UPDATE  `CBTasks2`
-            SET     `completed` = {$output->completed},
-                    `output` = {$outputAsSQL},
-                    `scheduled` = {$scheduledAsSQL},
-                    `severity` = {$output->severity},
-                    `started` = {$startedAsSQL}
+            SET     `state` = {$state},
+                    `timestamp` = {$timestamp}
             WHERE   `className` = {$classNameAsSQL} AND
                     `ID` = {$IDAsSQL} AND
-                    `starter` = {$starterAsSQL}
+                    `starterID` = {$starterIDAsSQL}
 
 EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
 
         $affectedRows = Colby::mysqli()->affected_rows;
-
-        CBLog::addMessage("CBTasks2_TaskCompleted_{$task->className}", 7, "{$output->message}", $output);
 
         if ($task->processID !== null) {
             CBProcess::clearID();
@@ -548,7 +448,7 @@ EOT;
      * @param string $className
      *
      *      This is the class name of the class that implements the
-     *      CBTasks2_execute() function which will be called to perform the
+     *      CBTasks2_run() function which will be called to perform the
      *      task.
      *
      * @param hex160 $ID
@@ -577,15 +477,18 @@ EOT;
      * @param int (timestamp) $scheduled
      *
      *      If a value is provided that's less than or equal to time() then the
-     *      task will be made available. This is how you restart a task. If the
+     *      task will be made ready. This is how you restart a task. If the
      *      value is greater than time() the task will be scheduled.
      *
-     *      A null value will make a new task available and will have no effect
+     *      A null value will make a new task ready and will have no effect
      *      on an existing task's availability.
      *
      * @return null
      */
     static function updateTasks($className, array $IDs, $processID = null, $priority = null, $scheduled = null) {
+        $priority = CBConvert::valueAsInt($priority);
+        $scheduled = CBConvert::valueAsInt($scheduled);
+        $now = time();
         $classNameAsSQL = CBDB::stringToSQL($className);
         $IDsAsSQL = array_map('CBHex160::toSQL', $IDs);
         $updates = [];
@@ -598,51 +501,20 @@ EOT;
         }
 
         if ($priority !== null) {
-            $priorityAsSQL = intval($priority);
-            $updates[] = "`priority` = {$priorityAsSQL}";
+            $updates[] = "`priority` = {$priority}";
         } else {
-            $priorityAsSQL = CBTasks2::defaultPriority;
+            $priority = CBTasks2::defaultPriority;
         }
 
-        /**
-         * @NOTE 2017.11.01
-         *
-         *      Before today tasks were allowed to be both available and
-         *      completed at the same time. This was a very clever way of saying
-         *      that a task had been completed in the past, but was now either
-         *      available or scheduled to be completed again in the future.
-         *
-         *      This created two concepts: tasks that had ever been completed,
-         *      and tasks that were not available or scheduled that had been
-         *      completed. This was complicated and non-obvious in situations
-         *      where you needed to know the difference.
-         *
-         *      A change was made today so that if a task is available or
-         *      scheduled it is marked as not completed. This means if a task
-         *      completes and reschedules itself, it will not show as completed.
-         *      This is okay because apparently the ask is actually not fully
-         *      completed.
-         *
-         *      The truth is, some tasks run regularly but never truly complete.
-         *      Other tasks run a number of times then complete.
-         */
-
         if ($scheduled !== null) {
-            $scheduledAsSQL = intval($scheduled);
-
-            if ($scheduledAsSQL <= time()) {
-                /* remove completed, scheduled, and started */
-                $updates[] = "`completed` = NULL";
-                $updates[] = "`scheduled` = NULL";
-                $updates[] = "`started` = NULL";
+            if ($scheduled <= time()) {
+                $state = 1; /* ready */
+                $updates[] = "`timestamp` = {$now}";
             } else {
-                /* remove completed, replace scheduled and make the task unavailable */
-                $updates[] = "`completed` = NULL";
-                $updates[] = "`scheduled` = {$scheduledAsSQL}";
-                $updates[] = "`started` = 0";
+                $state = 0; /* scheduled */
+                $updates[] = "`timestamp` = {$scheduled}";
             }
-        } else {
-            $scheduledAsSQL = 'NULL';
+            $updates[] = "`state` = {$state}";
         }
 
         if (empty($updates)) {
@@ -650,14 +522,14 @@ EOT;
             $updates[] = '`priority` = `priority`';
         }
 
-        $updates = implode(',', $updates);
+        $updates = implode(', ', $updates);
         $values = [];
 
         foreach ($IDsAsSQL as $IDAsSQL) {
-            $values[] = "({$classNameAsSQL}, {$IDAsSQL}, {$processIDAsSQL}, NULL, {$priorityAsSQL}, {$scheduledAsSQL})";
+            $values[] = "({$classNameAsSQL}, {$IDAsSQL}, {$priority}, 1, {$now}, {$processIDAsSQL})";
         }
 
-        $values = implode(',', $values);
+        $values = implode(', ', $values);
 
         /**
          * INSERT ON DUPLICATE KEY UPDATE can be used here because `CBTasks2`
@@ -667,12 +539,17 @@ EOT;
 
         $SQL = <<<EOT
 
-            INSERT INTO `CBTasks2`
-            (`className`, `ID`, `processID`, `output`, `priority`, `scheduled`)
-            VALUES
-            {$values}
+            INSERT INTO `CBTasks2` (
+                `className`,
+                `ID`,
+                `priority`,
+                `state`,
+                `timestamp`,
+                `processID`
+            ) VALUES
+                {$values}
             ON DUPLICATE KEY UPDATE
-            {$updates}
+                {$updates}
 
 EOT;
 
@@ -687,11 +564,10 @@ EOT;
         $SQL = <<<EOT
 
             UPDATE  `CBTasks2`
-            SET     `started` = NULL,
-                    `scheduled` = NULL
-            WHERE   `scheduled` IS NOT NULL AND
-                    `scheduled` < {$now} AND
-                    `started` IS NOT NULL
+            SET     `state` = 1,
+                    `timestamp` = {$now}
+            WHERE   `state` = 0 AND
+                    `timestamp` < {$now}
 
 EOT;
 
