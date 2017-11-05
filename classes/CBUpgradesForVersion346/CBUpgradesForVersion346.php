@@ -25,7 +25,7 @@ final class CBUpgradesForVersion346 {
             SELECT  COUNT(*)
             FROM    information_schema.TABLES
             WHERE   TABLE_SCHEMA = DATABASE() AND
-                    TABLE_NAME = 'CBDataStores' AND
+                    TABLE_NAME = 'ColbyPages' AND
                     TABLE_COLLATION = 'utf8_unicode_ci';
 
 EOT;
@@ -93,22 +93,12 @@ EOT;
                     ],
                 ],
             ],
-            (object)[
-                'name' => 'CBLog',
-                'columns' => [
-                    (object)[
-                        'pre' => '`category` VARCHAR(80)',
-                        'post' => 'NOT NULL',
-                    ],
-                    (object)[
-                        'pre' => '`message` TEXT',
-                        'post' => 'NOT NULL',
-                    ],
-                    (object)[
-                        'pre' => '`modelAsJSON` LONGTEXT',
-                    ],
-                ],
-            ],
+
+            /**
+             * CBLog updates are left out because CBUpgradesForVersion351
+             * drops and re-creates the table.
+             */
+
             (object)[
                 'name' => 'CBModelAssociations',
                 'columns' => [
@@ -176,18 +166,12 @@ EOT;
                     ],
                 ],
             ],
-            (object)[
-                'name' => 'CBTasks2',
-                'columns' => [
-                    (object)[
-                        'pre' => '`className` VARCHAR(80)',
-                        'post' => 'NOT NULL',
-                    ],
-                    (object)[
-                        'pre' => '`output` LONGTEXT',
-                    ],
-                ],
-            ],
+
+            /**
+             * CBTasks2 updates are left out because CBUpgradesForVersion351
+             * drops and re-creates the table.
+             */
+
             (object)[
                 'name' => 'ColbyPages',
                 'columns' => [

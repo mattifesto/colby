@@ -84,7 +84,7 @@ final class CBRequest {
             $parts = explode('?', $_SERVER['REQUEST_URI'], 2);
             $message .= "URI: $parts[0]\n";
             if (isset($parts[1])) {
-                $message .= "Query String: $parts[2]\n";
+                $message .= "Query String: $parts[1]\n";
             }
             $message .= "\n";
         }
