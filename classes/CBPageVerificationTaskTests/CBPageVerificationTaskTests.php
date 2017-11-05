@@ -31,7 +31,7 @@ final class CBPageVerificationTaskTests {
         CBModels::save([$initialPageSspec]);
         Colby::query('COMMIT');
 
-        CBTasks2::dispatchTask('CBPageVerificationTask', $pageID);
+        CBTasks2::runSpecificTask('CBPageVerificationTask', $pageID);
 
         $updatedPageSpec = CBModels::fetchSpecByID($pageID);
 
@@ -86,7 +86,7 @@ final class CBPageVerificationTaskTests {
         CBModels::save([$initialPageSspec]);
         Colby::query('COMMIT');
 
-        CBTasks2::dispatchTask('CBPageVerificationTask', $pageID);
+        CBTasks2::runSpecificTask('CBPageVerificationTask', $pageID);
 
         $updatedPageSpec = CBModels::fetchSpecByID($pageID);
 
