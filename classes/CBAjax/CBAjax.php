@@ -37,7 +37,15 @@ final class CBAjax {
                 $response->userMustLogIn = false;
             }
         } else {
-            CBLog::addMessage(__METHOD__, 5, "A request was made to call the ajax function {$className}::{$functionName} which is not implemented.");
+            $message = "A request was made to call the ajax function {$className}::{$functionName} which is not implemented.";
+            $message = "{$message}\n" . CBRequest::requestInformationAsMessage();
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => $message,
+                'severity' => 5,
+            ]);
+
             $response->message = 'You do not have permission to call a requested Ajax function.';
         }
 
