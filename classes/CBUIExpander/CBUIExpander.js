@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* exported CBUIExpander */
 /* global
     Colby */
 
@@ -9,12 +10,12 @@ var CBUIExpander = {
      * @return undefined
      */
     build: function (args) {
-        var links, message, pre;
+        var message;
         var elements = document.getElementsByClassName("CBUIExpander_builder");
 
         for (var i = 0; i < elements.length; i++) {
             var element = elements[i];
-            links = message = pre = undefined;
+            message = undefined;
 
             if (!element.classList.contains("built")) {
 
@@ -22,26 +23,12 @@ var CBUIExpander = {
                     message = JSON.parse(element.dataset.message);
                 } catch (error) {}
 
-                try {
-                    pre = JSON.parse(element.dataset.pre);
-                } catch (error) {}
-
-                try {
-                    links = JSON.parse(element.dataset.links);
-                } catch (error) {}
-
                 if (typeof message !== "string") {
                     message = "Cannot parse message";
                 }
 
-                if (typeof pre !== "string") {
-                    pre = undefined;
-                }
-
                 var expander = CBUIExpander.create({
-                    links: links,
                     message: message,
-                    pre: pre,
                 });
 
                 element.appendChild(expander.element);
@@ -52,9 +39,12 @@ var CBUIExpander = {
     },
 
     /**
-     * @param [{text: string, URI: string}] args.links
-     * @param string args.message
-     * @param string args.pre
+     * @param object args
+     *
+     *      {
+     *          message: string
+     *          severity: int
+     *      }
      *
      * @return object
      */
@@ -83,28 +73,6 @@ var CBUIExpander = {
         messageElement.className = "message";
         messageElement.textContent = args.message;
         contentElement.appendChild(messageElement);
-
-        if (typeof args.pre === "string") {
-            var preElement = document.createElement("div");
-            preElement.className = "pre";
-            preElement.textContent = args.pre;
-            contentElement.appendChild(preElement);
-        }
-
-        if (Array.isArray(args.links)) {
-            var linksElement = document.createElement("div");
-            linksElement.className = "links";
-
-            args.links.forEach(function (link) {
-                var a = document.createElement("a");
-                a.textContent = link.text;
-                a.href = link.URI;
-
-                linksElement.appendChild(a);
-            });
-
-            contentElement.appendChild(linksElement);
-        }
 
         toggleElement.addEventListener("click", function () {
             element.classList.toggle("expanded");
