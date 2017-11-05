@@ -2,6 +2,7 @@
 
 final class CBLog {
 
+    /* RFC3164 */
     static $severityDescriptions = [
         'Emergency',        // 0
         'Alert',            // 1
@@ -14,19 +15,91 @@ final class CBLog {
     ];
 
     /**
+     * @deprecated use CBLog::log()
+     */
+    static function addMessage($category, $severity, $message) {
+        CBLog::log((object)[
+            'className' => $category,
+            'message' => $message,
+            'severity' => $severity,
+        ]);
+    }
+
+    /**
+     * Table columns:
+     *
+     *      `className`
+     *
+     *      The name of the class that created the log entry. This may be the
+     *      class name of a task that is currently executing.
+     *
+     *      `ID`
+     *
+     *      One of:
+     *          - The ID of a specific model associated with the log entry.
+     *          - The ID of the task that created the log entry.
+     *          - NULL if neither of the above is applicable.
+     *
+     *      `processID`
+     *
+     *      This is automatically set if a process ID has been set when the log
+     *      entry is created.
+     *
+     *      `message`
+     *
+     *      The message of the log entry. The very first line should provide a
+     *      short understandable summary of the entire log message.
+     *
+     *          Bad first lines:
+     *          <empty>
+     *          Done
+     *          1/15
+     *
+     *          Good first lines:
+     *          The page "My Blog Post" was checked for deprecated views.
+     *          The data directory "data/a5/23" was checked for files.
+     *          The log table was cleared of 35 very old entries.
+     *
+     *      `serial`
+     *
+     *      An automatically incremented number to establish an exact order of
+     *      log entries.
+     *
+     *      `severity`
+     *
+     *      A number 0-7 indicating the severity of the log message.
+     *
+     *          RFC3164 Severity Codes
+     *          https://tools.ietf.org/html/rfc3164
+     *
+     *          0  Emergency: system is unusable
+     *          1  Alert: action must be taken immediately
+     *          2  Critical: critical conditions
+     *          3  Error: error conditions
+     *          4  Warning: warning conditions
+     *          5  Notice: normal but significant condition
+     *          6  Informational: informational messages
+     *          7  Debug: debug-level messages
+     *
+     *      `timestamp`
+     *
+     *      The timestamp the log entry was created.
+     *
      * @return null
      */
     static function install() {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `CBLog` (
-                `category` VARCHAR(80) NOT NULL,
+                `className` VARCHAR(80) NOT NULL,
+                `ID`        BINARY(20),
                 `processID` BINARY(20),
-                `message` TEXT NOT NULL,
-                `serial` SERIAL,
-                `severity` TINYINT NOT NULL,
+                `message`   TEXT NOT NULL,
+                `serial`    SERIAL,
+                `severity`  TINYINT NOT NULL,
                 `timestamp` BIGINT NOT NULL,
-                KEY `category_serial` (`category`, `serial`),
+                KEY `className_serial` (`className`, `serial`),
+                KEY `className_ID_serial` (`className`, `ID`, `serial`),
                 KEY `processID_serial` (`processID`, `serial`),
                 KEY `severity_serial` (`severity`, `serial`)
             )
@@ -37,78 +110,6 @@ final class CBLog {
 EOT;
 
         Colby::query($SQL);
-    }
-
-    /**
-     * Adds a message to the CBLog table.
-     *
-     * This function will never throw an exception so it can be called without
-     * fear of recursive exceptions.
-     *
-     * @param string $category
-     * @param string $severity
-     *
-     *  RFC3164 Severity Codes
-     *  https://tools.ietf.org/html/rfc3164
-     *
-     *  0  Emergency: system is unusable
-     *  1  Alert: action must be taken immediately
-     *  2  Critical: critical conditions
-     *  3  Error: error conditions
-     *  4  Warning: warning conditions
-     *  5  Notice: normal but significant condition
-     *  6  Informational: informational messages
-     *  7  Debug: debug-level messages
-     *
-     *  If the severity is less than 4, the message will also be sent to
-     *  error_log().
-     *
-     * @param string $message
-     */
-    static function addMessage($category, $severity, $message) {
-        try {
-            if ($severity < 4) {
-                try {
-                    error_log(__METHOD__ . ', source: ' . $category . ', ' . $message);
-                } catch (Exception $ignoredException) {
-                    // We can't do much if error_log() fails.
-                }
-            }
-
-            $categoryAsSQL = CBDB::stringToSQL($category);
-            $processID = CBProcess::ID();
-            $processIDAsSQL = ($processID === null) ? 'NULL' : CBHex160::toSQL($processID);
-            $messageAsSQL = CBDB::stringToSQL($message);
-            $severityAsSQL = (int)$severity;
-            $timestampAsSQL = time();
-
-            $SQL = <<<EOT
-
-                INSERT INTO `CBLog` (
-                    `category`,
-                    `processID`,
-                    `message`,
-                    `severity`,
-                    `timestamp`
-                ) VALUES (
-                    {$categoryAsSQL},
-                    {$processIDAsSQL},
-                    {$messageAsSQL},
-                    {$severityAsSQL},
-                    {$timestampAsSQL}
-                )
-
-EOT;
-
-            Colby::query($SQL);
-        } catch (Exception $innerException) {
-            try {
-                $message = CBConvert::throwableToMessage($innerException);
-                error_log(__METHOD__ . " inner exception: {$message}");
-            } catch (Exception $ignoredException) {
-                error_log(__METHOD__ . ' ignored exception');
-            }
-        }
     }
 
     /**
@@ -156,7 +157,8 @@ EOT;
      * @return [object]
      *
      *      {
-     *          category: string
+     *          className: string
+     *          ID: hex160?
      *          message: string
      *          serial: int
      *          severity: int
@@ -196,8 +198,13 @@ EOT;
 
         $SQL = <<<EOT
 
-            SELECT `category`, `message`, `serial`, `severity`, `timestamp`
-            FROM `CBLog`
+            SELECT  `className`,
+                    LOWER(HEX(`ID`)) AS `ID`,
+                    `message`,
+                    `serial`,
+                    `severity`,
+                    `timestamp`
+            FROM    `CBLog`
             {$whereAsSQL}
             ORDER BY `serial` {$descAsSQL}
             LIMIT 500
@@ -205,6 +212,119 @@ EOT;
 EOT;
 
         return CBDB::SQLToObjects($SQL);
+    }
+
+    /**
+     * Create a log entry.
+     *
+     * This function will never throw an exception so it can be called without
+     * fear of recursive exceptions.
+     *
+     * See CBLog::install() for detailed descriptions of the CBLog table
+     * columns.
+     *
+     * @param object $args
+     *
+     *      {
+     *          className: string
+     *
+     *              The name of the class most associated with the message. This
+     *              is often the class calling the function, but sometimes
+     *              classes or functions log messages related to something that
+     *              occurred regarding another class.
+     *
+     *          ID: hex160?
+     *
+     *              The ID of a specific model or the ID of a task or null.
+     *
+     *          message: string
+     *
+     *              The message must have a length greater than 0.
+     *
+     *          severity: int?
+     *
+     *              The severity of the log entry. Entries with a severity less
+     *              than 4 will also be sent to error_log().
+     *
+     *              default: 6 (Informational)
+     *      }
+     *
+     * @return null
+     */
+    static function log($args) {
+        $className = CBModel::value($args, 'className', '', 'trim');
+        $ID = CBModel::value($args, 'ID', null, 'CBConvert::valueAsHex160');
+        $message = CBModel::value($args, 'message', '', 'trim');
+        $severity = CBModel::value($args, 'severity', 6, 'CBConvert::valueAsInt');
+
+        /**
+         * If an empty message or className was specified, transition the the
+         * message to an error message.
+         */
+        if (empty($message) || empty($className)) {
+            $severity = min($severity, 3);
+            $notes = [];
+
+            if (empty($className)) {
+                $className = __CLASS__;
+                $notes[] = "An invalid `className` argument was specified for this log entry.";
+            }
+
+            if (empty($message)) {
+                $notes[] = "An invalid `message` argument was specified for this log entry.";
+            }
+
+            $notes[] = CBConvert::traceToString(debug_backtrace());
+
+            $message = implode("\n\n", $notes);
+        }
+
+        try {
+            if ($severity < 4) {
+                try {
+                    error_log(__METHOD__ . "() for className: {$className} ID: {$ID} message: {$message}");
+                } catch (Exception $ignoredException) {
+                    // We can't do much if error_log() fails.
+                }
+            }
+
+            $classNameAsSQL = CBDB::stringToSQL($className);
+            $IDAsSQL = ($ID === null) ? 'NULL' : CBHex160::toSQL($ID);
+            $processID = CBProcess::ID();
+            $processIDAsSQL = ($processID === null) ? 'NULL' : CBHex160::toSQL($processID);
+            $messageAsSQL = CBDB::stringToSQL($message);
+            $severityAsSQL = (int)$severity;
+            $timestampAsSQL = time();
+
+            $SQL = <<<EOT
+
+                INSERT INTO `CBLog` (
+                    `className`,
+                    `ID`,
+                    `processID`,
+                    `message`,
+                    `severity`,
+                    `timestamp`
+                ) VALUES (
+                    {$classNameAsSQL},
+                    {$IDAsSQL},
+                    {$processIDAsSQL},
+                    {$messageAsSQL},
+                    {$severityAsSQL},
+                    {$timestampAsSQL}
+                )
+
+EOT;
+
+            Colby::query($SQL);
+        } catch (Exception $innerException) {
+            try {
+                $message = CBConvert::throwableToMessage($innerException);
+                error_log(__METHOD__ . " inner exception: {$message}");
+            } catch (Exception $ignoredException) {
+                error_log(__METHOD__ . ' ignored exception');
+            }
+        }
     }
 
     /**
@@ -225,7 +345,11 @@ EOT;
 
         $count = Colby::mysqli()->affected_rows;
 
-        CBLog::addMessage(__METHOD__, 6, "Removed {$count} expired entries from the CBLog table.");
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'message' => "CBLog::removeExpiredEntries() removed {$count} entries from the CBLog table.",
+            'severity' => 7,
+        ]);
 
         return $count;
     }
