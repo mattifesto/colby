@@ -33,8 +33,7 @@ final class CBPageVerificationTask {
      *
      * @return object
      */
-    static function CBTasks2_Execute($ID) {
-        $hint = '';
+    static function CBTasks2_run($ID) {
         $messages = [];
         $resave = false;
         $severity = 8;
@@ -95,9 +94,10 @@ final class CBPageVerificationTask {
             goto done;
         }
 
+        // first line of message
+
         $pageTitle = CBModel::value($data, 'model.title', '', 'strval');
-        $hint = "\"{$pageTitle}\"";
-        $messages[] = "Page Title: {$pageTitle}";
+        $messages[] = __CLASS__ . " verified the page \"{$pageTitle}\"";
 
         /**
          * Page image issues addressed:
@@ -207,12 +207,12 @@ final class CBPageVerificationTask {
 
         done:
 
-        return (object)[
-            'hint' => $hint,
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'ID' => $ID,
             'message' => implode("\n\n", $messages),
             'severity' => $severity,
-            'links' => $links,
-        ];
+        ]);
     }
 
     /**
@@ -252,19 +252,18 @@ EOT;
      * Start or restart the page verification task for all existing pages.
      */
     static function startForAllPages() {
+        $now = time();
         $SQL = <<<EOT
 
             INSERT IGNORE INTO `CBTasks2`
-            (`className`, `ID`)
-            SELECT 'CBPageVerificationTask', p.archiveID
+            (`className`, `ID`, `state`, `timestamp`)
+            SELECT 'CBPageVerificationTask', p.archiveID, 1, {$now}
             FROM `ColbyPages` AS `p`
             LEFT JOIN `CBTasks2` as `t`
                 ON `p`.`archiveID` = `t`.`ID` AND `t`.`className` = 'CBPageVerificationTask'
             ON DUPLICATE KEY UPDATE
-                `completed` = NULL,
-                `output` = NULL,
-                `started` = NULL,
-                `severity` = 8
+                `state` = 1,
+                `timestamp` = {$now}
 
 EOT;
 
@@ -302,11 +301,12 @@ EOT;
      * Start or restart the page verification task for new pages.
      */
     static function startForNewPages() {
+        $now = time();
         $SQL = <<<EOT
 
             INSERT INTO `CBTasks2`
-            (`className`, `ID`)
-            SELECT 'CBPageVerificationTask', p.archiveID
+            (`className`, `ID`, `state`, `timestamp`)
+            SELECT 'CBPageVerificationTask', p.archiveID, 1, {$now}
             FROM `ColbyPages` AS `p`
             LEFT JOIN `CBTasks2` as `t`
                 ON `p`.`archiveID` = `t`.`ID` AND `t`.`className` = 'CBPageVerificationTask'
