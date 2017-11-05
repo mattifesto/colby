@@ -33,14 +33,11 @@ final class CBImageVerificationTask {
     /**
      * @param hex160 $ID
      *
-     * @return  {
-     *              message: string
-     *              severity: int
-     *          }
+     * @return null
      */
-    static function CBTasks2_Execute($ID) {
+    static function CBTasks2_run($ID) {
         $severity = 8;
-        $messages = [];
+        $messages = ['Image Verification Task'];
         $IDAsSQL = CBHex160::toSQL($ID);
         $rowExtension = CBDB::SQLToValue("SELECT `extension` FROM `CBImages` WHERE `ID` = {$IDAsSQL}");
 
@@ -86,29 +83,30 @@ final class CBImageVerificationTask {
             }
         }
 
-        return (object)[
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'ID' => $ID,
             'message' => implode("\n\n", $messages),
             'severity' => $severity,
-        ];
+        ]);
     }
 
     /**
      * Start or restart the image verification task for all existing images.
      */
     static function startForAllImages() {
+        $now = time();
         $SQL = <<<EOT
 
             INSERT IGNORE INTO `CBTasks2`
-            (`className`, `ID`)
-            SELECT 'CBImageVerificationTask', `i`.`ID`
+            (`className`, `ID`, `state`, `timestamp`)
+            SELECT 'CBImageVerificationTask', `i`.`ID`, 1, {$now}
             FROM `CBImages` AS `i`
             LEFT JOIN `CBTasks2` as `t`
                 ON `i`.`ID` = `t`.`ID` AND `t`.`className` = 'CBImageVerificationTask'
             ON DUPLICATE KEY UPDATE
-                `completed` = NULL,
-                `output` = NULL,
-                `started` = NULL,
-                `severity` = 8
+                `state` = 1,
+                `timestamp` = {$now}
 
 EOT;
 
@@ -132,11 +130,12 @@ EOT;
      * Start the image verification task for new pages.
      */
     static function startForNewImages() {
+        $now = time();
         $SQL = <<<EOT
 
             INSERT INTO `CBTasks2`
-            (`className`, `ID`)
-            SELECT 'CBImageVerificationTask', `i`.`ID`
+            (`className`, `ID`, `state`, `timestamp`)
+            SELECT 'CBImageVerificationTask', `i`.`ID`, 1, {$now}
             FROM `CBImages` AS `i`
             LEFT JOIN `CBTasks2` as `t`
                 ON `i`.`ID` = `t`.`ID` AND `t`.`className` = 'CBImageVerificationTask'
