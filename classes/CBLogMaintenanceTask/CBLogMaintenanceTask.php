@@ -24,6 +24,12 @@ final class CBLogMaintenanceTask {
 
         CBLog::removeExpiredEntries();
 
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'message' => 'CBLogMaintenanceTask performed log maintenance.',
+            'severity' => 6,
+        ]);
+
         return (object)[
             'scheduled' => time() + (60 * 60 * 24), /* 24 hours from now */
         ];
