@@ -191,26 +191,10 @@ final class CBConvert {
             $basename = basename($throwable->getFile());
             $line = $throwable->getLine();
 
-            $lines[] = "{$class}\n\"{$message}\"\n{$basename}\nline {$line}";
+            $firstLine = "{$class}\n\"{$message}\"\n{$basename}\nline {$line}";
+            $traceAsString = CBConvert::traceToString($trace);
 
-            foreach ($trace as $item) {
-                $file = empty($item['file']) ? '(unspecified)' : $item['file'];
-                $basename = basename($file);
-                $function = empty($item['function']) ? '(unspecified)' : $item['function'];
-                $line = empty($item['line']) ? '(unspecified)' : $item['line'];
-                $class = '';
-                $type = '';
-
-                if (mb_substr($function, 0, 1) !== '{') {
-                    $class = empty($item['class']) ? '' : $item['class'];
-                    $type = empty($item['type']) ? '' : $item['type'];
-                    $function = "{$function}()";
-                }
-
-                $lines[] = "{$class}{$type}{$function}\n{$basename}\nline {$line}";
-            }
-
-            return implode("\n\n", $lines);
+            return "{$firstLine}\n\n{$traceAsString}";
         } catch (Throwable $throwable) {
             return 'INNER EXCEPTION "' .
                 $throwable->getMessage() .
@@ -219,6 +203,32 @@ final class CBConvert {
                 "()\n\n" .
                 $throwable->getTraceAsString();
         }
+    }
+
+    /**
+     * @param array $trace
+     *
+     * @return string
+     */
+    static function traceToString(array $trace) {
+        foreach ($trace as $item) {
+            $file = empty($item['file']) ? '(unspecified)' : $item['file'];
+            $basename = basename($file);
+            $function = empty($item['function']) ? '(unspecified)' : $item['function'];
+            $line = empty($item['line']) ? '(unspecified)' : $item['line'];
+            $class = '';
+            $type = '';
+
+            if (mb_substr($function, 0, 1) !== '{') {
+                $class = empty($item['class']) ? '' : $item['class'];
+                $type = empty($item['type']) ? '' : $item['type'];
+                $function = "{$function}()";
+            }
+
+            $lines[] = "{$class}{$type}{$function}\n{$basename}\nline {$line}";
+        }
+
+        return implode("\n\n", $lines);
     }
 
     /**
