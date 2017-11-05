@@ -91,19 +91,19 @@ var CBAdminPageForModelImport = {
                 actionLink.enableCallback();
 
                 return new Promise(function (resolve, reject) {
-                    dispatch();
+                    runNextTask();
 
                     /* closure */
-                    function dispatch() {
-                        Colby.callAjaxFunction("CBTasks2", "dispatchNextTask", {processID: response.processID})
-                            .then(dispatchFulfilled)
+                    function runNextTask() {
+                        Colby.callAjaxFunction("CBTasks2", "runNextTask", {processID: response.processID})
+                            .then(runNextTaskFulfilled)
                             .catch(reject);
                     }
 
                     /* closure */
-                    function dispatchFulfilled(dispatchResponse) {
-                        if (dispatchResponse.taskWasDispatched) {
-                            setTimeout(dispatch, 0);
+                    function runNextTaskFulfilled(value) {
+                        if (value.taskWasRun) {
+                            setTimeout(runNextTask, 0);
                         } else {
                             resolve();
                         }
