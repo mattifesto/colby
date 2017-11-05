@@ -57,7 +57,7 @@ final class CBDataStoresFinderTask {
      *
      * @return object
      */
-    static function CBTasks2_Execute($ID) {
+    static function CBTasks2_run($ID) {
         if ($ID !== CBDataStoresFinderTask::ID()) {
             throw new InvalidArgumentException('ID');
         }
@@ -89,13 +89,13 @@ final class CBDataStoresFinderTask {
             CBModels::save([$spec]);
         });
 
-        $message = <<<EOT
-Part index: {$partIndex} (0x{$partIndexHex})
-EOT;
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'ID' => $ID,
+            'message' => "CBDataStoresFinderTask searched the directory data/{$partIndexHex} for data stores. ($partIndex/255)"
+        ]);
 
         return (object)[
-            'hint' => "{$partIndex}/255",
-            'message' => $message,
             'scheduled' => $scheduled,
         ];
     }
