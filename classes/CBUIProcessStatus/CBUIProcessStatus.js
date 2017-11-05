@@ -72,7 +72,24 @@ var CBUIProcessStatus = {
 
             /* closure */
             function onFetchTaskStatusFulfilled(status) {
-                overviewElement.textContent = "Completed " + status.completed + " of " + status.total + " tasks";
+                var text = status.complete + " / " + status.total;
+
+                if (status.scheduled > 0) {
+                    text += " Scheduled: " + status.scheduled;
+                }
+
+                if (status.ready > 0) {
+                    text += " Ready: " + status.ready;
+                }
+
+                if (status.running > 0) {
+                    text += " Running: " + status.running;
+                }
+                if (status.failed > 0) {
+                    text += " Failed: " + status.failed;
+                }
+
+                overviewElement.textContent = text;
             }
 
             /* closure */
