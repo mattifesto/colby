@@ -11,7 +11,18 @@ final class CBUser {
         $userID = CBModel::value($spec, 'userID', null, 'intval');
 
         if (empty($userID)) {
-            CBLog::addMessage(__METHOD__, 4, "The spec `userID` property is empty.");
+            $message = __METHOD__ .
+                '() returned null because the spec has no `userID` value.' .
+                "\n\n" .
+                'spec: ' .
+                json_encode($spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => $message,
+                'severity' => 4,
+            ]);
+
             return null;
         }
 
