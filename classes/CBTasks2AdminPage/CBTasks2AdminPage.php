@@ -25,56 +25,6 @@ final class CBTasks2AdminPage {
     }
 
     /**
-     * @return [object]
-     */
-    static function CBAjax_fetchOutputsWithIssues() {
-        $SQL = <<<EOT
-
-            SELECT      `output`
-            FROM        `CBTasks2`
-            WHERE       `completed` IS NOT NULL AND
-                        `severity` < 8
-            ORDER BY    `severity`
-
-EOT;
-
-        return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_fetchOutputsWithIssues_group() {
-        return 'Administrators';
-    }
-
-    /**
-     * @return  {
-     *              countOfAvailableTasks: int
-     *              countOfScheduledTasks: int
-     *              countOfTasksCompletedInTheLastMinute: int
-     *              countOfTasksCompletedInTheLastHour: int
-     *              countOfTasksCompletedInTheLast24Hours: int
-     *          }
-     */
-    static function CBAjax_fetchStatus() {
-        return (object)[
-            'countOfAvailableTasks' => CBTasks2::countOfAvailableTasks(),
-            'countOfScheduledTasks' => CBTasks2::countOfScheduledTasks(),
-            'countOfTasksCompletedInTheLastMinute' => CBTasks2::countOfTasksCompletedSince(time() - 60),
-            'countOfTasksCompletedInTheLastHour' => CBTasks2::countOfTasksCompletedSince(time() - (60 * 60)),
-            'countOfTasksCompletedInTheLast24Hours' => CBTasks2::countOfTasksCompletedSince(time() - (60 * 60 * 24)),
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_fetchStatus_group() {
-        return 'Administrators';
-    }
-
-    /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
@@ -92,15 +42,13 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUIExpander'];
+        return ['CBUI'];
     }
 
     /**
      * @return null
      */
-    static function scheduleATaskForAjax() {
-        $response = new CBAjaxResponse();
-
+    static function CBAjax_scheduleATask() {
         $SQL = <<<EOT
 
             SELECT      LOWER(HEX(`archiveID`))
@@ -113,15 +61,12 @@ EOT;
         $ID = CBDB::SQLToValue($SQL);
 
         CBTasks2::updateTask('CBPageVerificationTask', $ID, null, null, time() + 5);
-
-        $response->wasSuccessful = true;
-        $response->send();
     }
 
     /**
-     * @return object
+     * @return string
      */
-    static function scheduleATaskForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function CBAjax_scheduleATask_group() {
+        return 'Administrators';
     }
 }

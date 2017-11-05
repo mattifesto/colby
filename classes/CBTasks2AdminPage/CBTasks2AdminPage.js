@@ -1,9 +1,9 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
+/* exported CBTasks2AdminPage */
 /* global
     CBUI,
-    CBUIExpander,
     Colby */
 
 var CBTasks2AdminPage = {
@@ -24,7 +24,7 @@ var CBTasks2AdminPage = {
             callback: function() {
                 var promise = Colby.callAjaxFunction("CBTestTask", "start")
                     .then(onFulfilled)
-                    .catch(Colby.displayError)
+                    .catch(Colby.displayAndReportError)
                     .then(onFinally, onFinally);
 
                 Colby.retain(promise);
@@ -46,28 +46,7 @@ var CBTasks2AdminPage = {
             text: "Schedule a Task",
         }).element);
 
-        var issuesElement = document.createElement("div");
-        issuesElement.className = "issues";
-
-        var fetchIssuesButton = CBUI.createButton({
-            callback: fetchIssues,
-            text: "Fetch Issues",
-        });
-
-        buttonsElement.appendChild(fetchIssuesButton.element);
-
-        function fetchIssues() {
-            fetchIssuesButton.disable();
-
-            CBTasks2AdminPage.fetchIssues(issuesElement)
-                .catch(Colby.displayAndReportError)
-                .then(function () { fetchIssuesButton.enable(); });
-        }
-
-        fetchIssues();
-
         element.appendChild(buttonsElement);
-        element.appendChild(issuesElement);
 
         return element;
     },
@@ -94,25 +73,26 @@ var CBTasks2AdminPage = {
     },
 
     /**
-     * @param object response
+     * @param object status
      *
      * @return Element
      */
-    createStatusContent: function (response) {
+    createStatusContent: function (status) {
         var element = document.createElement("div");
 
-        element.appendChild(create("Available Tasks", response.countOfAvailableTasks));
-        element.appendChild(create("Scheduled Tasks", response.countOfScheduledTasks));
-        element.appendChild(create("Last Minute", response.countOfTasksCompletedInTheLastMinute));
-        element.appendChild(create("Last Hour", response.countOfTasksCompletedInTheLastHour));
-        element.appendChild(create("Last 24 Hours", response.countOfTasksCompletedInTheLast24Hours));
-        element.appendChild(create("CBTasks2DispatchDelay", Colby.CBTasks2DispatchDelay));
+        element.appendChild(create("Scheduled Tasks", status.scheduled));
+        element.appendChild(create("Ready Tasks", status.ready));
+        element.appendChild(create("Running Tasks", status.running));
+        element.appendChild(create("Complete Tasks", status.complete));
+        element.appendChild(create("Failed Tasks", status.failed));
+        element.appendChild(create("CBTasks2Delay", Colby.CBTasks2Delay));
 
         return element;
 
+        /* closure */
         function create(text, value) {
-            var textvalue = document.createElement("div");
-            textvalue.className = "textvalue";
+            var textAndValueElement = document.createElement("div");
+            textAndValueElement.className = "textvalue";
             var textElement = document.createElement("div");
             textElement.className = "text";
             textElement.textContent = text;
@@ -120,10 +100,10 @@ var CBTasks2AdminPage = {
             valueElement.className = "value";
             valueElement.textContent = value;
 
-            textvalue.appendChild(textElement);
-            textvalue.appendChild(valueElement);
+            textAndValueElement.appendChild(textElement);
+            textAndValueElement.appendChild(valueElement);
 
-            return textvalue;
+            return textAndValueElement;
         }
     },
 
@@ -140,66 +120,25 @@ var CBTasks2AdminPage = {
     },
 
     /**
-     * @param issuesElement Element
-     *
-     * @return Promise
-     */
-    fetchIssues: function (issuesElement) {
-        return Colby.callAjaxFunction("CBTasks2AdminPage", "fetchOutputsWithIssues")
-            .then(onFulfilled)
-            .catch(Colby.displayAndReportError);
-
-        function onFulfilled(outputs) {
-            var count = 0;
-
-            issuesElement.textContent = "";
-
-            for (let output of outputs) {
-                var message = output.message + "\n\n" + output.taskClassName + "\n" + output.taskID;
-
-                if (output.exception) {
-                    message += "\n\n" + output.exception;
-                }
-
-                var expander = CBUIExpander.create({
-                    links: output.links,
-                    message: message,
-                    timestamp: output.completed,
-                });
-
-                issuesElement.appendChild(expander.element);
-
-                count += 1;
-
-                if (count >= 100) {
-                    break;
-                }
-            }
-
-            Colby.updateTimes();
-        }
-    },
-
-    /**
      * @return undefined
      */
     startFetchingStatus: function (element) {
         fetchStatus();
 
         function fetchStatus() {
-            Colby.callAjaxFunction("CBTasks2AdminPage", "fetchStatus")
+            Colby.callAjaxFunction("CBTasks2", "fetchStatus")
                 .then(onFulfilled)
-                .catch(Colby.displayError);
+                .catch(Colby.displayAndReportError);
         }
 
-        function onFulfilled(response) {
+        function onFulfilled(value) {
             element.textContent = "";
-            element.appendChild(CBTasks2AdminPage.createStatusContent(response));
+            element.appendChild(CBTasks2AdminPage.createStatusContent(value));
 
-            if (response.countOfAvailableTasks > 0) {
-                Colby.CBTasks2DispatchDelay = 1; // 1 millisecond
+            if (value.countOfAvailableTasks > 0) {
+                Colby.CBTasks2Delay = 1; // 1 millisecond
             } else {
-                Colby.CBTasks2DispatchDelay = 2000; // 2 seconds
+                Colby.CBTasks2Delay = 2000; // 2 seconds
             }
 
             setTimeout(fetchStatus, 1000);
@@ -210,14 +149,14 @@ var CBTasks2AdminPage = {
      * @return undefined
      */
     scheduleATask: function () {
-        Colby.fetchAjaxResponse("/api/?class=CBTasks2AdminPage&function=scheduleATask")
-            .then(function () { Colby.alert("A task was scheduled."); })
-            .catch(Colby.displayError);
+        Colby.callAjaxFunction("CBTasks2AdminPage", "scheduleATask")
+            .then(() => Colby.alert("A task was scheduled."))
+            .catch(Colby.displayAndReportError);
     },
 };
 
 Colby.afterDOMContentLoaded(function () {
-    Colby.CBTasks2DispatchAlways = true;
+    Colby.CBTasks2RunAlways = true;
     var main = document.getElementsByTagName("main")[0];
     main.appendChild(CBTasks2AdminPage.create());
 });
