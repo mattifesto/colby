@@ -55,7 +55,7 @@ class CBJavaScript {
         $hashes[$key]               = $hash;
 
         $messages = [];
-        $messages[] = CBConvert::javaScriptErrorToMessage($errorModel);
+        $firstLine = CBConvert::javaScriptErrorToMessage($errorModel);
 
         foreach ($attributes as $key => $value) {
             $hash = $hashes[$key];
@@ -70,7 +70,11 @@ class CBJavaScript {
             ]);
         }
 
-        CBLog::addMessage(__METHOD__, 3, implode("\n\n", $messages));
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'message' => "{$firstLine}\n\n--- pre\n" . implode("\n\n", $messages) . "\n---",
+            'severity' => 3,
+        ]);
     }
 
     /**
