@@ -89,8 +89,9 @@ final class CBDataStoreAdminPage {
         }
 
         $archive = ColbyArchive::open($ID);
-        $message = "Archive\n\n" .
-            var_export($archive->data(), true);
+        $message = "Archive\n\n--- pre\n" .
+            var_export($archive->data(), true) .
+            "\n---";
         $message = cbhtml(json_encode($message));
 
         ?>
@@ -114,8 +115,9 @@ final class CBDataStoreAdminPage {
 EOT;
 
         if ($row = CBDB::SQLToObject($SQL)) {
-            $message = "CBImages Row\n\n" .
-                json_encode($row, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $message = "CBImages Row\n\n--- pre\n" .
+                json_encode($row, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .
+                "\n---";
             $message = cbhtml(json_encode($message));
 
             ?>
@@ -141,8 +143,9 @@ EOT;
             return;
         }
 
-        $message = "CBModels Spec\n\n" .
-            json_encode($data->spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $message = "CBModels Spec\n\n--- pre\n" .
+            json_encode($data->spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .
+            "\n---";
         $message = cbhtml(json_encode($message));
 
         ?>
@@ -151,8 +154,9 @@ EOT;
 
         <?php
 
-        $message = "CBModels Model\n\n" .
-            json_encode($data->model, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $message = "CBModels Model\n\n--- pre\n" .
+            json_encode($data->model, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .
+            "\n---";
         $message = cbhtml(json_encode($message));
 
         ?>
@@ -192,8 +196,9 @@ EOT;
 EOT;
 
         if ($row = CBDB::SQLToObject($SQL)) {
-            $message = "ColbyPages Row\n\n" .
-                json_encode($row, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $message = "ColbyPages Row\n\n--- pre\n" .
+                json_encode($row, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .
+                "\n---";
             $message = cbhtml(json_encode($message));
 
             ?>
@@ -233,7 +238,7 @@ EOT;
 
         if (!empty($links)) {
             $links = array_map(function ($link) {
-                return "{$link->text}\n{$link->URI}";
+                return "{a: {$link->text} href: {$link->URI}}";
             }, $links);
 
             $message = "Data Store Files\n\n" .
