@@ -1,0 +1,68 @@
+.CBContentStyleSheet .preformatted {
+    white-space: pre-wrap; /* pre-line collapses white space characters */
+}
+
+.CBContentStyleSheet h1 {
+    font-size: 1.5em;
+}
+
+.CBContentStyleSheet h2 {
+    font-size: 1.2em;
+}
+
+.CBContentStyleSheet h3 {
+    font-size: 1em;
+    font-weight: normal;
+}
+
+.CBContentStyleSheet blockquote {
+    margin: 2em 3em;
+}
+
+.CBContentStyleSheet cite {
+    font-style: italic;
+}
+
+.CBContentStyleSheet dd {
+    padding: 0 3em;
+}
+
+.CBContentStyleSheet dd,
+.CBContentStyleSheet dt,
+.CBContentStyleSheet dd p {
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+}
+
+.CBContentStyleSheet b cite,
+.CBContentStyleSheet b i,
+.CBContentStyleSheet cite b,
+.CBContentStyleSheet cite i,
+.CBContentStyleSheet i b,
+.CBContentStyleSheet i cite {
+    font-style: inherit;
+    font-weight: inherit;
+}
+
+/* The following elements always have whitespace on top to emphasize their block. */
+.CBContentStyleSheet dl,
+.CBContentStyleSheet ol,
+.CBContentStyleSheet pre,
+.CBContentStyleSheet ul {
+    margin-top: 1.5em;
+}
+
+.CBContentStyleSheet li,
+.CBContentStyleSheet li p {
+    margin-bottom: 0.75em;
+    margin-top: 0.75em;
+}
+
+.CBContentStyleSheet blockquote + *,
+.CBContentStyleSheet dl + *,
+.CBContentStyleSheet ol + *,
+.CBContentStyleSheet p + *,
+.CBContentStyleSheet pre + *,
+.CBContentStyleSheet ul + * {
+    margin-top: 1.5em;
+}
