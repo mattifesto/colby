@@ -49,41 +49,38 @@ var CBUIExpander = {
      * @return object
      */
     create: function (args) {
+        var message = args.message;
         var element = document.createElement("div");
         element.className = "CBUIExpander";
         var panelElement = document.createElement("div");
         panelElement.className = "panel";
         var toggleElement = document.createElement("div");
         toggleElement.className = "toggle";
-        var timeElement;
-
-        if (args.timestamp !== undefined) {
-            timeElement = Colby.unixTimestampToElement(args.timestamp);
-            timeElement.classList.add("compact");
-        }
-
         var summaryElement = document.createElement("div");
         summaryElement.className = "summary";
-        summaryElement.textContent = /\s*(.*)\n?/m.exec(args.message)[1];
-
-        var contentElement = document.createElement("div");
-        contentElement.className = "content";
-
+        summaryElement.textContent = /\s*(.*)\n?/m.exec(message)[1];
         var messageElement = document.createElement("div");
-        messageElement.className = "message";
-        messageElement.textContent = args.message;
-        contentElement.appendChild(messageElement);
+        messageElement.className = "message CBContentStyleSheet";
 
         toggleElement.addEventListener("click", function () {
+            if (!element.classList.contains("populated")) {
+                messageElement.innerHTML = CBMessageMarkup.convert(message);
+                element.classList.add("populated");
+            }
+
             element.classList.toggle("expanded");
         });
 
         panelElement.appendChild(toggleElement);
-        if (timeElement) {
+
+        if (args.timestamp !== undefined) {
+            var timeElement = Colby.unixTimestampToElement(args.timestamp);
+            timeElement.classList.add("compact");
             panelElement.appendChild(timeElement);
         }
+
         panelElement.appendChild(summaryElement);
-        panelElement.appendChild(contentElement);
+        panelElement.appendChild(messageElement);
         element.appendChild(panelElement);
 
         return {
