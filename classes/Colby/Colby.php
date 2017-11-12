@@ -697,27 +697,33 @@ final class Colby {
      */
     static function reportException(/* Throwable */ $exception, $severity = 3) {
         try {
-            $messages = [];
             $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
-            $messages[] = CBConvert::throwableToMessage($exception);
-            $messages[] = Colby::exceptionStackTrace($exception);
+            $firstLine = CBConvert::throwableToMessage($exception);
+            $stackTrace = Colby::exceptionStackTrace($exception);
             $URI = $_SERVER['REQUEST_URI'];
             $link = cbsiteurl() . '/admin/page/?class=CBLogAdminPage';
 
-            /* CBLog::addMessage() never throws an exception */
-            CBLog::addMessage(__METHOD__, $severity, implode("\n\n", $messages));
+            /* CBLog::log() never throws an exception */
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => "{$firstLine}\n\n--- pre\n{$stackTrace}\n---\n",
+                'severity' => $severity,
+            ]);
 
             /* CBSlack::sendMessage() can throw an exception, so it called last */
             CBSlack::sendMessage((object)[
-                'message' => "{$messages[0]} <{$link}|link>",
+                'message' => "{$firstLine} <{$link}|link>",
             ]);
         } catch (Exception $innerException) {
             try {
-                $messages = [];
-                $messages[] = 'Inner exception: ' . CBConvert::throwableToMessage($innerException);
-                $messages[] = Colby::exceptionStackTrace($innerException);
+                $firstLine = 'Inner exception: ' . CBConvert::throwableToMessage($innerException);
+                $stackTrace = Colby::exceptionStackTrace($innerException);
 
-                CBLog::addMessage(__METHOD__, 2, implode("\n\n", $messages));
+                CBLog::log((object)[
+                    'className' => __CLASS__,
+                    'message' => "{$firstLine}\n\n--- pre\n{$stackTrace}\n---\n",
+                    'severity' => 2,
+                ]);
             } catch (Exception $ignoredException) {
                 // At this point we're three exceptions deep so we just try to
                 // get an error log message written if possible.
@@ -730,14 +736,14 @@ final class Colby {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', CBSystemURL)];
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', CBSystemURL)];
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 
     /**

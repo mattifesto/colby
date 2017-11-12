@@ -485,6 +485,23 @@ var Colby = {
     },
 
     /**
+     * @param string text
+     *
+     * @return string
+     */
+    textToHTML: function (text) {
+        var map = {
+           '&': '&amp;',
+           '<': '&lt;',
+           '>': '&gt;',
+           '"': '&quot;',
+           "'": '&#039;'
+         };
+
+         return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    },
+
+    /**
      * @param int unixTimestamp
      * @param string defaultTextContent
      *
@@ -936,22 +953,6 @@ Colby.showPanel = function() {
     if (!Colby.panel.parentNode) {
         document.body.appendChild(Colby.panel);
     }
-};
-
-/**
- * @return string
- */
-Colby.textToHTML = function(text)
-{
-    var html = String(text);
-
-    html = html.replace(/&/g, "&amp;");
-    html = html.replace(/</g, "&lt;");
-    html = html.replace(/>/g, "&gt;");
-    html = html.replace(/"/g, "&quot;");
-    html = html.replace(/'/g, "&#039;");
-
-    return html;
 };
 
 /**
