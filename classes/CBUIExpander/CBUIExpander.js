@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* exported CBUIExpander */
 /* global
+    CBMessageMarkup,
     Colby */
 
 var CBUIExpander = {
