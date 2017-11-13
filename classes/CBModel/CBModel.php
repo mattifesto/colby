@@ -224,6 +224,10 @@ final class CBModel {
     }
 
     /**
+     * @deprecated use:
+     *
+     *      CBModel::value($model, $keyPath, [], 'CBConvert::stringToCSSClassNames');
+     *
      * This function parses a string value into an array of names. This is used
      * for class names style properties.
      *
@@ -234,20 +238,8 @@ final class CBModel {
      *
      * @return [string]
      */
-    static function valueAsNames($model, $keyPath) {
-        $value = CBModel::value($model, $keyPath, '');
-
-        if (!is_string($value)) {
-            return [];
-        }
-
-        $names = preg_split('/[\s,]+/', $value, null, PREG_SPLIT_NO_EMPTY);
-
-        if ($names === false) {
-            throw new RuntimeException("preg_split() returned false");
-        }
-
-        return $names;
+    static function valueAsNames($model, $keyPath): array {
+        return CBModel::value($model, $keyPath, [], 'CBConvert::stringToCSSClassNames');
     }
 
     /**
