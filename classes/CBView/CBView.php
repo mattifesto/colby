@@ -3,6 +3,18 @@
 final class CBView {
 
     /**
+     * @param string $CSSTemplate
+     * @param string $uniqueCSSClassName
+     *
+     * @return string
+     */
+    static function CSSTemplateToCSS(string $CSSTemplate, string $uniqueCSSClassName): string {
+        return CBView::localCSSTemplateToLocalCSS($CSSTemplate, 'view', ".{$uniqueCSSClassName}");
+    }
+
+    /**
+     * @deprecated use CBView::CSSTemplateToCSS()
+     *
      * @param string $keyword
      *
      *      The keyword used in the template to refer to the local element.
