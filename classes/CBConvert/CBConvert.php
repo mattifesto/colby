@@ -46,6 +46,34 @@ final class CBConvert {
     }
 
     /**
+     * Converts an string of space and comma delimited CSS class names into an
+     * array of CSS class names.
+     *
+     * @param mixed $string
+     *
+     *      Example: "right bold, red h&ck"
+     *
+     * @return [string]
+     *
+     *      Example: ["right", "bold", "red", "h&amp;ck"]
+     *
+     *      The returned class names will be escaped for HTML. Valid CSS class
+     *      names shouldn't need to be escaped for HTML, but rather than try to
+     *      validate the class names this function just guaratees they are safe
+     *      for use in HTML.
+     */
+    static function stringToCSSClassNames($string): array {
+        $string = cbhtml(trim($string));
+        $classNames = preg_split('/[\s,]+/', $string, null, PREG_SPLIT_NO_EMPTY);
+
+        if ($classNames === false) {
+            throw new RuntimeException("preg_split() returned false");
+        }
+
+        return $classNames;
+    }
+
+    /**
      * Determines whether a string is a CSS color. If it is then it is sanitized
      * and returned; if not then null is returned.
      *
@@ -105,7 +133,7 @@ final class CBConvert {
      *
      * common example: 'Piñata Örtega' --> 'piata-rtega'
      *
-     * @param string $string
+     * @param mixed $string
      *
      * @return string
      */
