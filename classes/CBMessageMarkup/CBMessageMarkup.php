@@ -10,11 +10,17 @@ final class CBMessageMarkup {
     }
 
     /**
+     * @deprecate use CBMessageMarkup::markupToHTML()
+     */
+    static function convert(string $markup): string {
+        return CBMessageMarkup::markupToHTML($markup);
+    }
+    /**
      * @param string $message
      *
      * @return string
      */
-    static function convert(string $message): string {
+    static function markupToHTML(string $message): string {
         $content = null;
         $lines = preg_split("/\r\n|\n|\r/", $message);
         $stack = [];
