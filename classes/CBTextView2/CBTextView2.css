@@ -2,6 +2,7 @@
     box-sizing: border-box;
     display: flex;
     justify-content: center;
+    line-height: 1.5;
     max-width: 100%;
     padding: 20px;
 }
@@ -31,10 +32,6 @@
 
 .CBTextView2_default.right {
     text-align: right;
-}
-
-.CBTextView2_default {
-    line-height: 1.5;
 }
 
 /**
