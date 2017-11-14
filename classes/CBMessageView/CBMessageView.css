@@ -1,0 +1,13 @@
+.CBMessageView_default {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+    max-width: 100%;
+    padding: 20px;
+}
+
+.CBMessageView_default .content {
+    max-width: 100%;
+    width: 36em;
+}
