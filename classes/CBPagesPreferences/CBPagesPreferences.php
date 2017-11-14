@@ -20,6 +20,7 @@ final class CBPagesPreferences {
         'CBCustomView',
         'CBLinkView1',
         'CBMenuView',
+        'CBMessageView',
         'CBPageListView2',
         'CBPageTitleAndDescriptionView',
         'CBTextView2',
