@@ -1,6 +1,9 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
 /* jshint esnext: true */
+/* exported CBAdminPageForTests */
 /* globals
+    CBAdminPageForTests_javaScriptTests,
     CBUI,
     Colby */
 
@@ -40,6 +43,13 @@ var CBAdminPageForTests = {
     },
 
     /**
+     * @return Promise
+     */
+    fetchServerTests: function () {
+        return Colby.fetchAjaxResponse("/api/?class=CBUnitTests&function=getListOfTests");
+    },
+
+    /**
      * @param string URI
      *
      * @return Promise
@@ -58,6 +68,110 @@ var CBAdminPageForTests = {
                     resolve(false); // The image has been deleted, as expected.
                 } else {
                     reject(new Error("verifyURIExistence() request returned an unexpected status: " + xhr.status));
+                }
+            }
+        });
+    },
+
+    /**
+     * @return Promise
+     */
+    runJavaScriptTests: function () {
+        return new Promise(function (resolve, reject) {
+            var index = 0;
+
+            next();
+
+            /* closure */
+            function run() {
+                var test = CBAdminPageForTests_javaScriptTests[index];
+                var className = test[0];
+                var functionName = test[1];
+                var obj = window[className];
+
+                CBAdminPageForTests.status.append("JavaScript Test: " +
+                                                  className +
+                                                  " - " +
+                                                  functionName);
+
+                if (typeof obj !== "object") {
+                    throw new Error("The " + className + " object does not exist.");
+                }
+
+                var runTestFunction = obj[functionName + "Test"];
+
+                if (typeof runTestFunction !== "function") {
+                    throw new Error("The " + functionName + " function does not exist.");
+                }
+
+                Promise.resolve()
+                    .then(runTestFunction)
+                    .then(onFulfilled)
+                    .then(next)
+                    .catch(reject);
+            }
+
+            /* closure */
+            function next() {
+                if (index < CBAdminPageForTests_javaScriptTests.length) {
+                    run();
+                    index += 1;
+                } else {
+                    resolve();
+                }
+            }
+
+            /* closure */
+            function onFulfilled(value) {
+                var message = "Succeeded";
+
+                if (value && value.message) {
+                    message = value.message;
+                }
+
+                CBAdminPageForTests.status.append(message, "success");
+            }
+        });
+    },
+
+    /**
+     * @return Promise
+     */
+    runServerTests: function (fetchServerTestsResponse) {
+        return new Promise(function (resolve, reject) {
+            var i = 0;
+
+            next();
+
+            function run(test) {
+                var className = test[0];
+                var functionName = test[1];
+
+                var URI = "/test/?class=" + className;
+
+                if (functionName !== undefined) {
+                    URI += "&function=" + functionName;
+                }
+
+                CBAdminPageForTests.status.append("Server Test: " + className + (functionName ? " - " + functionName : ''));
+
+                Colby.fetchAjaxResponse(URI)
+                    .then(reportTestSuccess)
+                    .then(next)
+                    .catch(reject);
+
+                function reportTestSuccess(response) {
+                    CBAdminPageForTests.status.append(response.message || "Succeeded", "success");
+                }
+            }
+
+            /* closure */
+            function next() {
+                if (i < fetchServerTestsResponse.tests.length) {
+                    run(fetchServerTestsResponse.tests[i]);
+                    i += 1;
+                } else {
+                    resolve();
                 }
             }
         });
@@ -230,62 +344,26 @@ var CBTestPage = {
         CBAdminPageForTests.status.append("\u00A0");
 
         Promise.resolve()
+            .then(CBAdminPageForTests.runJavaScriptTests)
+
+            /**
+             * @NOTE 2017.11.14 Move the following tests into runJavaScriptTests
+             * format.
+             */
+
             .then(CBTestPage.runJavaScriptTests)
             .then(CBAdminPageForTests.runTestForClassCBImagesFunctionDeleteByID)
             .then(CBAdminPageForTests.runTestForClassCBImagesFunctionUpload)
-            .then(fetchTests)
-            .then(runTests)
+
+
+            .then(CBAdminPageForTests.fetchServerTests)
+            .then(CBAdminPageForTests.runServerTests)
             .catch(report)
             .then(onFinally, onFinally);
 
-        function fetchTests() {
-            return Colby.fetchAjaxResponse("/api/?class=CBUnitTests&function=getListOfTests");
-        }
-
-        function runTests(response) {
-            return new Promise(function (resolve, reject) {
-                var i = 0;
-
-                next();
-
-                function run(test) {
-                    var className = test[0];
-                    var functionName = test[1];
-
-                    var URI = "/test/?class=" + className;
-
-                    if (functionName !== undefined) {
-                        URI += "&function=" + functionName;
-                    }
-
-                    CBAdminPageForTests.status.append("Test: " + className + (functionName ? " - " + functionName : ''));
-
-                    Colby.fetchAjaxResponse(URI)
-                        .then(reportTestSuccess, reportTestFailure)
-                        .then(next, next);
-
-                    function reportTestSuccess(response) {
-                        CBAdminPageForTests.status.append(response.message || "Succeeded", "success");
-                    }
-
-                    function reportTestFailure(error) {
-                        CBAdminPageForTests.status.append(error.message || "Failed", "failure");
-                    }
-                }
-
-                function next() {
-                    if (i < response.tests.length) {
-                        run(response.tests[i]);
-                        i += 1;
-                    } else {
-                        resolve();
-                    }
-                }
-            });
-        }
-
         function report(error) {
             CBAdminPageForTests.status.append("Failed: " + error.message, "failure");
+            Colby.reportError(error);
         }
 
         function onFinally() {

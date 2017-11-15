@@ -32,6 +32,51 @@ final class CBAdminPageForTests {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+    }
+
+    /**
+     * @return [[string (name), string (value)]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables() {
+        return [
+            ['CBAdminPageForTests_javaScriptTests', CBAdminPageForTests::javaScriptTests()],
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        $classNames = array_map(function ($element) {
+            return $element[0];
+        }, CBAdminPageForTests::javaScriptTests());
+
+        $classNames[] = 'CBUI';
+
+        return array_values(array_unique($classNames));
+    }
+
+    /**
+     * @return [[string (className), string (testName)]]
+     */
+    static function javaScriptTests(): array {
+        return [
+            ['CBMessageMarkupTests', 'markupToHTML'],
+        ];
+    }
+
+    /**
      * The data store ID for the old image data store.
      *
      * @return hex160
@@ -80,27 +125,6 @@ final class CBAdminPageForTests {
     static function removeOldStyleImageDataStore() {
         CBModels::deleteByID(CBAdminPageForTests::oldStyleImageDataStoreID());
         CBModels::deleteByID(CBAdminPageForTests::testImageID());
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI'];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
     }
 
     /**
