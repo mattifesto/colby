@@ -23,6 +23,7 @@ class CBUnitTests {
             ['CBDB',                    'SQLToValue'],
             ['CBImages',                'resize'],
             ['CBMarkaround',            'paragraphToHTML'],
+            ['CBMessageMarkup',         'markupToHTML'],
             ['CBModel',                 'toModel'],
             ['CBModel',                 'toModelMinimalImplementation'],
             ['CBModelCache'],
