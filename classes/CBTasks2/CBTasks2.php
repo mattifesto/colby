@@ -381,6 +381,7 @@ EOT;
                 'severity' => 3,
             ]);
 
+            $scheduled = null;
             $state = 4; /* failed */
         }
 
