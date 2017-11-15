@@ -59,7 +59,7 @@ final class CBAdminPageForTests {
      */
     static function CBHTMLOutput_requiredClassNames() {
         $classNames = array_map(function ($element) {
-            return $element[0];
+            return $element[0] . "Tests";
         }, CBAdminPageForTests::javaScriptTests());
 
         $classNames[] = 'CBUI';
@@ -72,7 +72,11 @@ final class CBAdminPageForTests {
      */
     static function javaScriptTests(): array {
         return [
-            ['CBMessageMarkupTests', 'markupToHTML'],
+            ['CBImages',        'deleteByID'],
+            ['CBImages',        'upload'],
+            ['CBMessageMarkup', 'markupToHTML'],
+            ['Colby',           'centsToDollars'],
+            ['Colby',           'dateToString'],
         ];
     }
 
