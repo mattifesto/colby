@@ -3,6 +3,13 @@
 final class CBImagesTests {
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+    }
+
+    /**
      * When a request is made to reduce an image to a size larger than the
      * original, the original file should just be copied to the new filename and
      * the files should be exactly the same.
