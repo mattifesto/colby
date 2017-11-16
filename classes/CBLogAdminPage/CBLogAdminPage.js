@@ -14,8 +14,12 @@ var CBLogAdminPage = {
     create: function () {
         var element = document.createElement("div");
         element.className = "entries";
+        var args = {
+            lowestSeverity: 6,
+            mostRecentDescending: true,
+        };
 
-        Colby.callAjaxFunction("CBLog", "fetchEntries", {mostRecentDescending: true})
+        Colby.callAjaxFunction("CBLog", "fetchEntries", args)
             .then(onFulfilled)
             .catch(Colby.displayAndReportError);
 
@@ -29,6 +33,7 @@ var CBLogAdminPage = {
 
                 element.appendChild(CBUIExpander.create({
                     message: message,
+                    severity: entry.severity,
                     timestamp: entry.timestamp,
                 }).element);
 
