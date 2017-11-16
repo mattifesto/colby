@@ -146,6 +146,12 @@ EOT;
      *              greater than afterTimestamp. This allows callers to request
      *              only new entries since the last tiime they asked.
      *
+     *          lowestSeverity: int?
+     *
+     *              If specified, will only fetch log entries with the specified
+     *              severity or greater severity. Note: Severity becomes greater
+     *              as the severity integer gets lower.
+     *
      *          mostRecentDescending: bool?
      *
      *          processID: hex160?
@@ -178,6 +184,12 @@ EOT;
 
         if ($afterTimestamp !== null) {
             $whereAsSQL[] = "`timestamp` > {$afterTimestamp}";
+        }
+
+        $lowestSeverity = CBModel::value($args, 'lowestSeverity', null, 'CBConvert::valueAsInt');
+
+        if ($lowestSeverity !== null) {
+            $whereAsSQL[] = "`severity` <= {$lowestSeverity}";
         }
 
         $processID = CBModel::valueAsID($args, 'processID');
