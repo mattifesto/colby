@@ -283,7 +283,7 @@ final class CBConvert {
                 $function = "{$function}()";
             }
 
-            $lines[] = "{$class}{$type}{$function}\n{$basename}\nline {$line}";
+            $lines[] = "{$class}{$type}{$function}\nwas called from\n{$basename}\non line {$line}";
         }
 
         return implode("\n\n", $lines);
