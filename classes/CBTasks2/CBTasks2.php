@@ -371,8 +371,9 @@ EOT;
         } catch (Throwable $throwable) {
 
             $message = CBConvert::throwableToMessage($throwable) .
-                       "\n\n" .
-                       Colby::exceptionStackTrace($throwable);
+                       "\n\n--- pre\n" .
+                       Colby::exceptionStackTrace($throwable) .
+                       "\n---";
 
             CBLog::log((object)[
                 'className' => $task->className,
