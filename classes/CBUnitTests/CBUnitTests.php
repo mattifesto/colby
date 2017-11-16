@@ -22,6 +22,8 @@ class CBUnitTests {
             ['CBDB',                    'SQLToAssociativeArray'],
             ['CBDB',                    'SQLToValue'],
             ['CBImages',                'resize'],
+            ['CBLog',                   'noClassName'],
+            ['CBLog',                   'noMessage'],
             ['CBMarkaround',            'paragraphToHTML'],
             ['CBMessageMarkup',         'markupToHTML'],
             ['CBModel',                 'toModel'],
