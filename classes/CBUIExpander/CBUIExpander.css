@@ -26,6 +26,26 @@
     -webkit-user-select: none;
 }
 
+.CBUIExpander.severity4 .toggle {
+    background-color: orange;
+}
+
+.CBUIExpander.severity3 .toggle {
+    background-color: red;
+}
+
+.CBUIExpander.severity2 .toggle {
+    background-color: hsl(300, 50%, 50%);
+}
+
+.CBUIExpander.severity1 .toggle {
+    background-color: hsl(300, 50%, 25%);
+}
+
+.CBUIExpander.severity0 .toggle {
+    background-color: hsl(0, 0%, 0%);
+}
+
 .CBUIExpander .toggle::before {
     content: "Show";
 }
@@ -36,7 +56,7 @@
 
 .CBUIExpander time {
     display: inline-block;
-    color: var(--CBTextColo2);
+    color: var(--CBTextColor2);
     font-size: 80%;
     padding: 5px 10px;
 }

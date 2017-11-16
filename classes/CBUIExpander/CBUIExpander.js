@@ -44,7 +44,8 @@ var CBUIExpander = {
      *
      *      {
      *          message: string
-     *          severity: int
+     *          severity: int?
+     *          timestamp: int?
      *      }
      *
      * @return object
@@ -62,6 +63,10 @@ var CBUIExpander = {
         summaryElement.textContent = /\s*(.*)\n?/m.exec(message)[1];
         var messageElement = document.createElement("div");
         messageElement.className = "message CBContentStyleSheet";
+
+        if (args.severity) {
+            element.classList.add("severity" + args.severity);
+        }
 
         toggleElement.addEventListener("click", function () {
             if (!element.classList.contains("populated")) {
