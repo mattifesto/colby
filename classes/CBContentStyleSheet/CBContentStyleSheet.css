@@ -1,7 +1,3 @@
-.CBContentStyleSheet .preformatted {
-    white-space: pre-wrap; /* pre-line collapses white space characters */
-}
-
 .CBContentStyleSheet h1 {
     font-size: 1.5em;
 }
@@ -65,4 +61,8 @@
 .CBContentStyleSheet pre + *,
 .CBContentStyleSheet ul + * {
     margin-top: 1.5em;
+}
+
+.CBContentStyleSheet .prewrap {
+    white-space: pre-wrap;
 }
