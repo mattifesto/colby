@@ -249,37 +249,65 @@ EOT;
      *              default: 6 (Informational)
      *      }
      *
-     * @return null
+     * @return int
+     *
+     *      The serial number for the log entry.
      */
-    static function log($args) {
-        $className = CBModel::value($args, 'className', '', 'trim');
-        $ID = CBModel::value($args, 'ID', null, 'CBConvert::valueAsHex160');
-        $message = CBModel::value($args, 'message', '', 'trim');
-        $severity = CBModel::value($args, 'severity', 6, 'CBConvert::valueAsInt');
+    static function log(stdClass $args) {
+        try {
 
-        /**
-         * If an empty message or className was specified, transition the the
-         * message to an error message.
-         */
-        if (empty($message) || empty($className)) {
-            $severity = min($severity, 3);
-            $notes = [];
-
-            if (empty($className)) {
-                $className = __CLASS__;
-                $notes[] = "An invalid `className` argument was specified for this log entry.";
-            }
+            $hasIssues = false;
+            $className = CBModel::value($args, 'className', '', 'trim');
+            $ID = CBModel::value($args, 'ID', null, 'CBConvert::valueAsHex160');
+            $message = CBModel::value($args, 'message', '', 'trim');
+            $severity = CBModel::value($args, 'severity', 6, 'CBConvert::valueAsInt');
 
             if (empty($message)) {
-                $notes[] = "An invalid `message` argument was specified for this log entry.";
+                $hasIssues = true;
+                $severity = min($severity, 3);
+                $message = 'No message'; /* first line */
+                $message .= <<<EOT
+
+
+                    {strong: Log issue:}
+
+                    No message was specified for this log entry.
+
+EOT;
             }
 
-            $notes[] = CBConvert::traceToString(debug_backtrace());
+            if (empty($className)) {
+                $hasIssues = true;
+                $severity = min($severity, 4);
+                $message .= <<<EOT
 
-            $message = implode("\n\n", $notes);
-        }
 
-        try {
+                    {strong: Log issue:}
+
+                    No className was specified for this log entry.
+
+EOT;
+            }
+
+            if ($hasIssues) {
+                $argumentsAsJSON = json_encode($args, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                $stackTrace = CBConvert::traceToString(debug_backtrace());
+                $message .= <<<EOT
+
+
+                    {strong: Log arguments:}
+
+                    --- pre prewrap\n{$argumentsAsJSON}
+                    ---
+
+                    {strong: Stack trace:}
+
+                    --- pre prewrap\n{$stackTrace}
+                    ---
+
+EOT;
+            }
+
             if ($severity < 4) {
                 try {
                     error_log(__METHOD__ . "() for className: {$className} ID: {$ID} message: {$message}");
@@ -317,12 +345,17 @@ EOT;
 EOT;
 
             Colby::query($SQL);
-        } catch (Exception $innerException) {
+
+            return Colby::mysqli()->insert_id;
+        } catch (Throwable $innerException) {
             try {
                 $message = CBConvert::throwableToMessage($innerException);
-                error_log(__METHOD__ . " inner exception: {$message}");
-            } catch (Exception $ignoredException) {
-                error_log(__METHOD__ . ' ignored exception');
+                error_log(__METHOD__ . " INNER EXCEPTON: {$message}");
+                CBSlack::sendMessage((object)[
+                    'message' => $message,
+                ]);
+            } catch (Throwable $secondInnerException) {
+                error_log(__METHOD__ . ' SECOND INNER EXCEPTION');
             }
         }
     }
