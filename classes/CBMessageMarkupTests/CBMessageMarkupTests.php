@@ -130,4 +130,30 @@ EOT;
             throw new Exception('The result has more lines than were expected.');
         }
     }
+
+    static function stringToMarkupTest() {
+        $string = <<<EOT
+--- div
+--- hi
+    ---
+{strong: hi}
+{ \{ \\{ \\\{
+} \} \\} \\\}
+EOT;
+
+        $expected = <<<EOT
+\--- div
+\--- hi
+    \---
+\{strong: hi\}
+\{ \\\{ \\\{ \\\\\{
+\} \\\} \\\} \\\\\}
+EOT;
+
+        $result = CBMessageMarkup::stringToMarkup($string);
+
+        if ($result !== $expected) {
+            throw new Exception('The result was not what was expected.');
+        }
+    }
 }

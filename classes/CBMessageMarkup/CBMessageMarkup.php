@@ -512,4 +512,27 @@ final class CBMessageMarkup {
             "ul",
         ]);
     }
+
+    /**
+     * This function converts a string to markup representing that string as
+     * plain text. This function is the `htmlspecialchars` of message markup.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    static function stringToMarkup(string $string): string {
+        $patterns = [
+            '/^(\s*)---/m',
+            '/{/',
+            '/}/',
+        ];
+        $replacements = [
+            '$1\---',
+            '\{',
+            '\}',
+        ];
+
+        return preg_replace($patterns, $replacements, $string);
+    }
 }
