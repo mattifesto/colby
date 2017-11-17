@@ -642,19 +642,27 @@ EOT;
      *      It's a goal to move these properties off the spec and model objects
      *      to a meta object eventually.
      *
-     * @param [{stdClass}] $specs
+     * @param [object]|object $specs
+     *
      *  All of the specs must have the same class name. For specs of different
      *  classes make multiple calls.
      *
      * @param bool $force
+     *
      *  Use this to disable version checking and force the model save. This
      *  should be used rarely and cautiously. Model import from CSV uses it.
      *  CBModels::revert() also uses it.
      *
      * @return null
      */
-    static function save(array $specs, $force = false) {
-        if (empty($specs)) { return; }
+    static function save($specs, $force = false) {
+        if (empty($specs)) {
+            return; // TODO: Why are we okay with this being empty? Document.
+        }
+
+        if (!is_array($specs)) {
+            $specs = [$specs];
+        }
 
         if (empty($specs[0]->className)) {
             throw new Exception('The first spec does not have its `className` propery set.');
