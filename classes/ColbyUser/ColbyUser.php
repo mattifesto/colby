@@ -204,6 +204,7 @@ EOT;
         $cookieCipherData = $_COOKIE[CBUserCookieName];
 
         try {
+
             $cookie = Colby::decrypt($cookieCipherData);
 
             if (time() > $cookie->expirationTimestamp) {
@@ -215,10 +216,13 @@ EOT;
 
             self::$currentUserHash = $cookie->userHash;
             self::$currentUserId = $cookie->userId;
-        } catch (Exception $exception) {
+
+        } catch (Throwable $exception) {
+
             Colby::reportException($exception);
             ColbyUser::removeUserCookie();
             return;
+
         }
     }
 
@@ -264,7 +268,7 @@ EOT;
 
         try {
             $isMember = CBDB::SQLToValue($SQL) > 0;
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             return false;
         }
 
