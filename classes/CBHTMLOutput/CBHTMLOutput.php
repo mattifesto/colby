@@ -187,9 +187,13 @@ final class CBHTMLOutput {
 
         if (is_callable($function = "{$classNameForPageSettings}::renderPageForException")) {
             try {
+
                 call_user_func($function, $exception);
+
                 Colby::reportException($exception);
-            } catch (Exception $innerException) {
+
+            } catch (Throwable $innerException) {
+
                 // Partial page may have been rendered, clear output buffer
                 CBHTMLOutput::reset();
 
@@ -199,6 +203,7 @@ final class CBHTMLOutput {
                 // Revert to the bare bones Colby exception handler for the
                 // original exception
                 Colby::handleException($exception);
+
             }
         } else {
             Colby::handleException($exception);
