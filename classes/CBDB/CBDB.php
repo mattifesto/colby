@@ -182,12 +182,12 @@ final class CBDB {
             Colby::query('COMMIT');
 
             CBDB::$transactionIsActive = false;
-        } catch (Exception $exception) {
+        } catch (Throwable $throwable) {
             Colby::query('ROLLBACK');
 
             CBDB::$transactionIsActive = false;
 
-            throw $exception;
+            throw $throwable;
         }
     }
 
