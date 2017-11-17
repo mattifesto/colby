@@ -775,12 +775,18 @@ EOT;
             Colby::query('START TRANSACTION');
 
             try {
+
                 CBModels::save([$spec]);
                 Colby::query('COMMIT');
+
                 $response->wasSuccessful = true;
-            } catch (Exception $exception) {
+
+            } catch (Throwable $exception) {
+
                 Colby::query('ROLLBACK');
+
                 throw $exception;
+
             }
         } else {
             // Unlike fetchSpecForAjax, an unsuccessful save does mark the
