@@ -108,7 +108,7 @@ EOT;
             Colby::query('START TRANSACTION');
             CBModels::save([$spec]);
             Colby::query('COMMIT');
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             Colby::query('ROLLBACK');
 
             if ($exception instanceof CBModelVersionMismatchException) {
