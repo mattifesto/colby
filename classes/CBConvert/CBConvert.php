@@ -226,12 +226,12 @@ final class CBConvert {
      *
      * @return string
      */
-    static function throwableToMessage(/* Throwable */ $throwable) {
+    static function throwableToMessage(Throwable $throwable) {
         $message = $throwable->getMessage();
         $basename = basename($throwable->getFile());
         $line = $throwable->getLine();
 
-        return "\"{$message}\" in {$basename} line {$line}";
+        return "Error: \"{$message}\" in {$basename} line {$line}";
     }
 
     /**
