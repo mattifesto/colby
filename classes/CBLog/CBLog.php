@@ -359,16 +359,25 @@ EOT;
             Colby::query($SQL);
 
             return Colby::mysqli()->insert_id;
+
         } catch (Throwable $innerException) {
+
             try {
-                $message = CBConvert::throwableToMessage($innerException);
-                error_log(__METHOD__ . " INNER EXCEPTON: {$message}");
+
+                $message = 'INNER EXCEPTION: ' . CBConvert::throwableToMessage($innerException);
+
+                error_log($message);
+
                 CBSlack::sendMessage((object)[
                     'message' => $message,
                 ]);
+
             } catch (Throwable $secondInnerException) {
-                error_log(__METHOD__ . ' SECOND INNER EXCEPTION');
+
+                error_log('SECOND INNER EXCEPTION: ' . __METHOD__ . '()');
+
             }
+
         }
     }
 
