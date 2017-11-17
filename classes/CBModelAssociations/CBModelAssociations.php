@@ -134,12 +134,19 @@ EOT;
         $className = $_POST['className'];
 
         try {
+
             Colby::query('START TRANSACTION');
+
             $spec = CBModelAssociations::makeSpec($ID, $className);
+
             Colby::query('COMMIT');
-        } catch (Exception $exception) {
+
+        } catch (Throwable $exception) {
+
             Colby::query('ROLLBACK');
+
             throw $exception;
+
         }
 
         if (CBModels::currentUserCanRead($spec)) {
