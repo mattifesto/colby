@@ -370,7 +370,7 @@ final class Colby {
 
             CBExceptionView::popThrowable();
 
-        } catch (Exception $innerException) {
+        } catch (Throwable $innerException) {
 
             /**
              * Colby::handleException() is an exception free function. Exception
