@@ -224,6 +224,9 @@ final class CBConvert {
      * This function needs to be very stable because it will be called from
      * error handlers.
      *
+     * The caller should prepend this message with "Error", "INNER ERROR", or
+     * "SECOND INNER ERROR" as appropriate for the situation.
+     *
      * @return string
      */
     static function throwableToMessage(Throwable $throwable) {
@@ -231,7 +234,7 @@ final class CBConvert {
         $basename = basename($throwable->getFile());
         $line = $throwable->getLine();
 
-        return "Error: \"{$message}\" in {$basename} line {$line}";
+        return "\"{$message}\" in {$basename} line {$line}";
     }
 
     /**

@@ -44,16 +44,22 @@ class CBAjaxResponse {
             Colby::reportException($exception);
 
             $this->classNameForException = get_class($exception);
-            $this->message = $exception->getMessage();
+            $this->message = 'Error ' . CBConvert::throwableToMessage($exception);
             $this->stackTrace = Colby::exceptionStackTrace($exception);
             $this->wasSuccessful = false;
             $this->send();
 
         } catch (Throwable $innerException) {
 
+            /**
+             * CBAjaxResponse::handleException() is an exception free function.
+             * Exception free functions must handle inner errors and second
+             * inner errors.
+             */
+
             try {
 
-                $message = 'INNER EXCEPTION: ' . CBConvert::throwableToMessage($innerException);
+                $message = 'INNER ERROR ' . CBConvert::throwableToMessage($innerException);
 
                 error_log($message);
 
@@ -73,7 +79,7 @@ class CBAjaxResponse {
 
             } catch (Throwable $secondInnerException) {
 
-                error_log('SECOND INNER EXCEPTION: ' . __METHOD__ . '()');
+                error_log('SECOND INNER ERROR ' . __METHOD__ . '()');
 
             }
 

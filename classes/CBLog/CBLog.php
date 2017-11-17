@@ -362,9 +362,14 @@ EOT;
 
         } catch (Throwable $innerException) {
 
+            /**
+             * CBLog::log() is an exception free function. Exception free
+             * functions must handle inner errors and second inner errors.
+             */
+
             try {
 
-                $message = 'INNER EXCEPTION: ' . CBConvert::throwableToMessage($innerException);
+                $message = 'INNER ERROR ' . CBConvert::throwableToMessage($innerException);
 
                 error_log($message);
 
@@ -374,7 +379,7 @@ EOT;
 
             } catch (Throwable $secondInnerException) {
 
-                error_log('SECOND INNER EXCEPTION: ' . __METHOD__ . '()');
+                error_log('SECOND INNER ERROR ' . __METHOD__ . '()');
 
             }
 

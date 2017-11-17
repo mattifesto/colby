@@ -330,7 +330,7 @@ final class Colby {
      *
      * @return null
      */
-    static function handleException($exception) {
+    static function handleException(Throwable $exception) {
 
         /**
          * Exception handlers should never throw exceptions because if they
@@ -373,20 +373,25 @@ final class Colby {
         } catch (Exception $innerException) {
 
             /**
-             * 1. Create message with clear indication that this is an exception
-             * handler inner exception.
-             *
-             * 2. Attempt to log the message.
-             *
-             * 3. Attempt to send the message to slack.
+             * Colby::handleException() is an exception free function. Exception
+             * free functions must handle inner errors and second inner errors.
              */
 
-            $message = CBConvert::throwableToMessage($innerException);
-            $message = "Colby::handleException() INNER EXCEPTION: {$message}";
-            CBLog::addMessage(__METHOD__, 2, $message);
-            CBSlack::sendMessage((object)[
-                'message' => $message,
-            ]);
+            try {
+
+                $message = 'INNER ERROR ' . CBConvert::throwableToMessage($innerException);
+
+                error_log($message);
+
+                CBSlack::sendMessage((object)[
+                    'message' => $message,
+                ]);
+
+            } catch (Throwable $secondInnerException) {
+
+                error_log('SECOND INNER ERROR ' . __METHOD__ . '()');
+
+            }
 
         }
     }
@@ -689,16 +694,18 @@ final class Colby {
      * is useful when code catches an exception it wants to report but doesn't
      * want to re-throw.
      *
-     * @param Exception $exception
+     * @param Throwable $exception
      * @param int $severity
-     *  An RFC3164 severity code. See CBLog::addMessage().
+     *
+     *      An RFC3164 severity code. See CBLog::addMessage().
      *
      * @return null
      */
-    static function reportException(/* Throwable */ $exception, $severity = 3) {
+    static function reportException(Throwable $exception, $severity = 3) {
         try {
+
             $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
-            $firstLine = CBConvert::throwableToMessage($exception);
+            $firstLine = 'Error ' . CBConvert::throwableToMessage($exception);
             $stackTrace = Colby::exceptionStackTrace($exception);
             $URI = $_SERVER['REQUEST_URI'];
             $link = cbsiteurl() . '/admin/page/?class=CBLogAdminPage';
@@ -714,21 +721,30 @@ final class Colby {
             CBSlack::sendMessage((object)[
                 'message' => "{$firstLine} <{$link}|link>",
             ]);
-        } catch (Exception $innerException) {
-            try {
-                $firstLine = 'Inner exception: ' . CBConvert::throwableToMessage($innerException);
-                $stackTrace = Colby::exceptionStackTrace($innerException);
 
-                CBLog::log((object)[
-                    'className' => __CLASS__,
-                    'message' => "{$firstLine}\n\n--- pre\n{$stackTrace}\n---\n",
-                    'severity' => 2,
+        } catch (Throwable $innerException) {
+
+            /**
+             * Colby::reportException() is an exception free function. Exception
+             * free functions must handle inner errors and second inner errors.
+             */
+
+            try {
+
+                $message = 'INNER ERROR ' . CBConvert::throwableToMessage($innerException);
+
+                error_log($message);
+
+                CBSlack::sendMessage((object)[
+                    'message' => $message,
                 ]);
-            } catch (Exception $ignoredException) {
-                // At this point we're three exceptions deep so we just try to
-                // get an error log message written if possible.
-                error_log('Source: ' . __METHOD__ . '(), Ignored exception: ' . CBConvert::throwableToMessage($ignoredException));
+
+            } catch (Throwable $secondInnerException) {
+
+                error_log('SECOND INNER ERROR ' . __METHOD__ . '()');
+
             }
+
         }
     }
 
