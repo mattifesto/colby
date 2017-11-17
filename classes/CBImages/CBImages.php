@@ -107,6 +107,7 @@ class CBImages {
         Colby::query('START TRANSACTION');
 
         try {
+
             $timestamp = time();
             $extension = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
             $ID = sha1_file($filepath);
@@ -126,9 +127,13 @@ class CBImages {
             CBDataStore::makeDirectoryForID($ID);
             copy($filepath, $destinationFilepath);
             Colby::query('COMMIT');
-        } catch (Exception $exception) {
+
+        } catch (Throwable $exception) {
+
             Colby::query('ROLLBACK');
+
             throw $exception;
+
         }
 
         return $spec;
@@ -498,6 +503,7 @@ EOT;
         Colby::query('START TRANSACTION');
 
         try {
+
             $timestamp = isset($_POST['timestamp']) ? $_POST['timestamp'] : time();
             $extension = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
             $ID = sha1_file($temporaryFilepath);
@@ -517,9 +523,13 @@ EOT;
             CBDataStore::makeDirectoryForID($ID);
             move_uploaded_file($temporaryFilepath, $permanentFilepath);
             Colby::query('COMMIT');
-        } catch (Exception $exception) {
+
+        } catch (Throwable $exception) {
+
             Colby::query('ROLLBACK');
+
             throw $exception;
+
         }
 
         return $spec;
