@@ -38,7 +38,7 @@ class CBAjaxResponse {
      *
      * @return null
      */
-    public function handleException($exception) {
+    public function handleException(Throwable $exception) {
         try {
 
             Colby::reportException($exception);
@@ -49,23 +49,33 @@ class CBAjaxResponse {
             $this->wasSuccessful = false;
             $this->send();
 
-        } catch (Exception $innerException) {
+        } catch (Throwable $innerException) {
 
-            /**
-             * 1. Create message with clear indication that this is an exception
-             * handler inner exception.
-             *
-             * 2. Attempt to log the message.
-             *
-             * 3. Attempt to send the message to slack.
-             */
+            try {
 
-            $message = CBConvert::throwableToMessage($innerException);
-            $message = "CBAjaxResponse::handleException() INNER EXCEPTION: {$message}";
-            CBLog::addMessage(__METHOD__, 2, $message);
-            CBSlack::sendMessage((object)[
-                'message' => $message,
-            ]);
+                $message = 'INNER EXCEPTION: ' . CBConvert::throwableToMessage($innerException);
+
+                error_log($message);
+
+                CBSlack::sendMessage((object)[
+                    'message' => $message,
+                ]);
+
+                /* attempt to send a valid Ajax response */
+
+                header('Content-type: application/json');
+
+                echo json_encode([
+                    'className' => 'CBAjaxResponse',
+                    'message' => $message,
+                    'wasSuccessful' => false,
+                ]);
+
+            } catch (Throwable $secondInnerException) {
+
+                error_log('SECOND INNER EXCEPTION: ' . __METHOD__ . '()');
+
+            }
 
         }
     }
