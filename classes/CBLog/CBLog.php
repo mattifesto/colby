@@ -322,8 +322,8 @@ EOT;
 
             if ($severity < 4) {
                 try {
-                    error_log(__METHOD__ . "() for className: {$className} ID: {$ID} message: {$message}");
-                } catch (Exception $ignoredException) {
+                    error_log("Severity {$severity} CBLog entry, {$message} for className {$className} and ID {$ID}");
+                } catch (Throwable $ignoredException) {
                     // We can't do much if error_log() fails.
                 }
             }
