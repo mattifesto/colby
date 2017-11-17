@@ -45,11 +45,15 @@ done:
  */
 
 try {
+
     $state = json_decode($_COOKIE[CBFacebook::loginStateCookieName]);
     $location = $state->colby_redirect_uri;
-} catch (Exception $exception) {
+
+} catch (Throwable $exception) {
+
     Colby::reportException($exception, 5);
     $location = '/';
+
 }
 
 header('Location: ' . $location);
