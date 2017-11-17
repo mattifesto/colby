@@ -18,7 +18,7 @@ final class CBDBTests {
 
         try {
             CBDB::hex160ToSQL('a');
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $passed = true;
         }
 
@@ -30,7 +30,7 @@ final class CBDBTests {
 
         try {
             CBDB::hex160ToSQL('z8ae5c11bcb70f15a3ec446cc9144ada7e6e2838');
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $passed = true;
         }
 
