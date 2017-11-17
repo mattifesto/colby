@@ -125,32 +125,33 @@ final class CBPageLayout {
      */
     static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
-            'className' => __CLASS__,
+            'CSSClassNames' => CBModel::value($spec, 'CSSClassNames', [], 'CBConvert::stringToCSSClassNames'),
             'customLayoutClassName' => CBModel::value($spec, 'customLayoutClassName', '', 'trim'),
             'customLayoutProperties' => CBModel::value($spec, 'customLayoutProperties', (object)[]),
             'isArticle' => CBModel::value($spec, 'isArticle', false, 'boolval'),
         ];
 
-        // CSS class names
+        /**
+         * Using local styles.
+         *
+         * Step 1: Create a globally unique CSS class name for the view.
+         */
+        $uniqueCSSClassName = 'ID_' . CBHex160::random();
 
-        $CSSClassNames = CBModel::value($spec, 'CSSClassNames', '');
-        $CSSClassNames = preg_split('/[\s,]+/', $CSSClassNames, null, PREG_SPLIT_NO_EMPTY);
+        /**
+         * Step 2: Add the unique class name to the view's CSS class names.
+         */
+        $model->CSSClassNames[] = $uniqueCSSClassName;
 
-        if ($CSSClassNames === false) {
-            throw new RuntimeException("preg_split() returned false");
-        }
+        /**
+         * Step 3: Get the CSS template.
+         */
+        $CSSTemplate = CBModel::value($spec, 'localCSSTemplate', '', 'trim');
 
-        $model->CSSClassNames = $CSSClassNames;
-
-        // local CSS
-
-        $localCSSTemplate = CBModel::value($spec, 'localCSSTemplate', '', 'trim');
-
-        if (!empty($localCSSTemplate)) {
-            $localCSSClassName = 'ID_' . CBHex160::random();
-            $model->CSSClassNames[] = $localCSSClassName;
-            $model->localCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
-        }
+        /**
+         * Step 4: Generate the view CSS.
+         */
+        $model->localCSS = CBView::CSSTemplateToCSS($CSSTemplate, $uniqueCSSClassName);
 
         return $model;
     }
