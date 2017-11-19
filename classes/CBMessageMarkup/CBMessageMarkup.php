@@ -2,8 +2,8 @@
 
 final class CBMessageMarkup {
 
-    const encodedOpenBrace = 'f5a6328bda8575b25bbc5f0ece0181df57e54ed1';
-    const encodedCloseBrace = 'edc679d4ac06a45884a23160030c4cb2d4b2ebf1';
+    const encodedOpenBracket = 'f5a6328bda8575b25bbc5f0ece0181df57e54ed1';
+    const encodedCloseBracket = 'edc679d4ac06a45884a23160030c4cb2d4b2ebf1';
     const encodedCommand = '4605702366f1f3d132e1a76a25165e2c0b6b352c';
 
     /**
@@ -61,18 +61,18 @@ final class CBMessageMarkup {
      * @return string
      */
     static function decodeEncodedCharacters(string $markup): string {
-        $encodedOpenBrace = CBMessageMarkup::encodedOpenBrace;
-        $encodedCloseBrace = CBMessageMarkup::encodedCloseBrace;
+        $encodedOpenBracket = CBMessageMarkup::encodedOpenBracket;
+        $encodedCloseBracket = CBMessageMarkup::encodedCloseBracket;
         $encodedCommand = CBMessageMarkup::encodedCommand;
 
         $patterns = [
-            "/{$encodedOpenBrace}/",
-            "/{$encodedCloseBrace}/",
+            "/{$encodedOpenBracket}/",
+            "/{$encodedCloseBracket}/",
             "/{$encodedCommand}/",
         ];
         $replacements = [
-            '{',
-            '}',
+            '(',
+            ')',
             '---',
         ];
 
@@ -136,18 +136,18 @@ final class CBMessageMarkup {
      * @return string
      */
     static function encodeEscapedCharacters(string $markup): string {
-        $escapedOpenBraceExpression = '/\\\\\\{/';
-        $escapedCloseBraceExpression = '/\\\\\\}/';
+        $escapedOpenBracketExpression = '/\\\\\\(/';
+        $escapedCloseBracketExpression = '/\\\\\\)/';
         $escapedCommandExpression = '/\\\\---/';
 
         $patterns = [
-            $escapedOpenBraceExpression,
-            $escapedCloseBraceExpression,
+            $escapedOpenBracketExpression,
+            $escapedCloseBracketExpression,
             $escapedCommandExpression,
         ];
         $replacements = [
-            CBMessageMarkup::encodedOpenBrace,
-            CBMessageMarkup::encodedCloseBrace,
+            CBMessageMarkup::encodedOpenBracket,
+            CBMessageMarkup::encodedCloseBracket,
             CBMessageMarkup::encodedCommand,
         ];
 
@@ -157,27 +157,29 @@ final class CBMessageMarkup {
     /**
      * @param string $matches[0]
      *
-     *      "{stong: Extra!}"
-     *      "{a Wikipedia href: https://www.wikipedia.org}"
-     *      "{br:}"
+     *      "(Extra! (strong))"
+     *      "(Wikipedia (a https://www.wikipedia.org))"
+     *      "((br))"
      *
      * @param string $matches[1]
      *
-     *      "strong"
-     *      "a"
-     *      "br"
+     *      "Extra! "
+     *      "Wikipedia "
+     *      ""
      *
      * @param string? $matches[2]
      *
-     *      "Extra!"
-     *      "Wikipedia href: https://www.wikipedia.org"
-     *      unset
+     *      "strong"
+     *      "a https://www.wikipedia.org"
+     *      "br"
      *
      * @return string
      */
     static function inlineElementToHTML(array $matches) {
-        $inlineTagName = $matches[1];
-        $inlineContent = $matches[2] ?? '';
+        $inlineContent = trim($matches[1]);
+        $inlineTagData = preg_split('/\s+/', $matches[2], 2, PREG_SPLIT_NO_EMPTY);
+        $inlineTagName = $inlineTagData[0];
+        $inlineTagAttributeValue = isset($inlineTagData[1]) ? trim($inlineTagData[1]) : '';
 
         switch ($inlineTagName) {
             case 'br':
@@ -185,17 +187,24 @@ final class CBMessageMarkup {
                 return "<{$inlineTagName}>";
                 break;
             case 'a':
-                if (1 === preg_match('/(.+)\shref:\s+(.+)/s', $inlineContent, $submatches)) {
-                    $text = trim($submatches[1]);
-                    $href = trim($submatches[2]);
-
-                    return "<a href=\"{$href}\">{$text}</a>";
-                }
-
+                return "<a href=\"{$inlineTagAttributeValue}\">{$inlineContent}</a>";
                 break;
+            case 'abbr':
+                return "<abbr title=\"{$inlineTagAttributeValue}\">{$inlineContent}</abbr>";
+                break;
+            case 'bdo':
+                return "<bdo dir=\"{$inlineTagAttributeValue}\">{$inlineContent}</bdo>";
+                break;
+            case 'data':
+                return "<data value=\"{$inlineTagAttributeValue}\">{$inlineContent}</data>";
+                break;
+            case 'time':
+                return "<time datetime=\"{$inlineTagAttributeValue}\">{$inlineContent}</time>";
             case 'b':
+            case 'bdi':
             case 'cite':
             case 'code':
+            case 'dfn':
             case 'em':
             case 'i':
             case 'kbd':
@@ -212,14 +221,14 @@ final class CBMessageMarkup {
             case 'strong':
             case 'sub':
             case 'sup':
-            case 'time':
             case 'u':
             case 'var':
                 return "<{$inlineTagName}>{$inlineContent}</{$inlineTagName}>";
                 break;
+            default:
+                return "<span class=\"{$inlineTagName}\">{$inlineContent}</span>";
+                break;
         }
-
-        return "<span class=\"{$inlineTagName}\">{$inlineContent}</span>";
     }
 
     /**
@@ -441,8 +450,12 @@ final class CBMessageMarkup {
     static function paragraphToHTML(string $markup): string {
         $content = cbhtml($markup);
 
+        $openBracket = '\\(';
+        $closeBracket = '\\)';
+        $notBracket = '[^\\(\\)]';
+
         // No 'g' modifier in php because preg_replace always does all.
-        $inlineElementExpression = '/\\{([a-z]+):(?:\s+([^\\{\\}]+))?\\}/';
+        $inlineElementExpression = "/{$openBracket}({$notBracket}*){$openBracket}({$notBracket}+){$closeBracket}\s*{$closeBracket}/";
 
         do {
             $content = preg_replace_callback($inlineElementExpression, 'CBMessageMarkup::inlineElementToHTML', $content, -1, $count);

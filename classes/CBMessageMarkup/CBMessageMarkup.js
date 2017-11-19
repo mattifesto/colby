@@ -55,8 +55,8 @@ var CBMessageMarkup = {
      * @return string
      */
     decodeEncodedCharacters: function (markup) {
-        return markup.replace(new RegExp(CBMessageMarkup.encodedOpenBrace, "g"), "{")
-                     .replace(new RegExp(CBMessageMarkup.encodedCloseBrace, "g"), "}")
+        return markup.replace(new RegExp(CBMessageMarkup.encodedOpenBracket, "g"), "(")
+                     .replace(new RegExp(CBMessageMarkup.encodedCloseBracket, "g"), ")")
                      .replace(new RegExp(CBMessageMarkup.encodedCommand, "g"), "---");
     },
 
@@ -122,16 +122,16 @@ var CBMessageMarkup = {
      * @return string
      */
     encodeEscapedCharacters: function (markup) {
-        return markup.replace(/\\\{/g, CBMessageMarkup.encodedOpenBrace)
-                     .replace(/\\\}/g, CBMessageMarkup.encodedCloseBrace)
+        return markup.replace(/\\\(/g, CBMessageMarkup.encodedOpenBracket)
+                     .replace(/\\\)/g, CBMessageMarkup.encodedCloseBracket)
                      .replace(/\\---/g, CBMessageMarkup.encodedCommand);
     },
 
-    get encodedOpenBrace() {
+    get encodedOpenBracket() {
         return "f5a6328bda8575b25bbc5f0ece0181df57e54ed1";
     },
 
-    get encodedCloseBrace() {
+    get encodedCloseBracket() {
         return "edc679d4ac06a45884a23160030c4cb2d4b2ebf1";
     },
 
@@ -140,28 +140,31 @@ var CBMessageMarkup = {
     },
 
     /**
-     * @param string original
+     * @param string match0
      *
-     *      "{stong: Extra!}"
-     *      "{a Wikipedia href: https://www.wikipedia.org}"
-     *      "{br:}"
+     *      "( Extra! ( strong))"
+     *      "(Wikipedia ( a   https://www.wikipedia.org ))"
+     *      "((  br  ))"
      *
-     * @param string inlineTagName
+     * @param string match1
      *
-     *      "strong"
-     *      "a"
-     *      "br"
+     *      " Extra! "
+     *      "Wikipedia "
+     *      ""
      *
-     * @param string? inlineContent
+     * @param string match2
      *
-     *      "Extra!"
-     *      "Wikipedia href: https://www.wikipedia.org"
-     *      unset
+     *      " strong"
+     *      " a   https://www.wikipedia.org "
+     *      "  br  "
      *
      * @return string
      */
-    inlineElementToHTML: function (original, inlineTagName, inlineContent) {
-        var matches, text;
+    inlineElementToHTML: function (match0, match1, match2) {
+        var inlineContent = match1.trim();
+        var inlineTagData = match2.match(/^\s*(\S*)\s*(.*)/);
+        var inlineTagName = inlineTagData[1];
+        var inlineTagAttributeValue = inlineTagData[2] ? inlineTagData[2].trim() : "";
 
         CBMessageMarkup.replacementCount += 1;
 
@@ -170,30 +173,20 @@ var CBMessageMarkup = {
             case "wbr":
                 return "<" + inlineTagName + ">";
             case "a":
-                matches = inlineContent.match(/([\s\S]*)\shref:\s([\s\S]*)/);
-
-                if (matches) {
-                    text = matches[1].trim();
-                    var href = matches[2].trim();
-
-                    return '<a href="' + href + '">' + text + '</a>';
-                }
-
-                break;
+                return "<a href=\"" + inlineTagAttributeValue + "\">" + inlineContent + "</a>";
             case "abbr":
-                matches = inlineContent.match(/([\s\S]*)\stitle:\s([\s\S]*)/);
-
-                if (matches) {
-                    text = matches[1].trim();
-                    var title = matches[2].trim();
-
-                    return '<abbr title="' + title + '">' + text + '</abbr>';
-                }
-
-                break;
+                return "<abbr title=\"" + inlineTagAttributeValue + "\">" + inlineContent + "</abbr>";
+            case "bdo":
+                return "<bdo dir=\"" + inlineTagAttributeValue + "\">" + inlineContent + "</bdo>";
+            case "data":
+                return "<data value=\"" + inlineTagAttributeValue + "\">" + inlineContent + "</data>";
+            case "time":
+                return "<time datetime=\"" + inlineTagAttributeValue + "\">" + inlineContent + "</time>";
             case "b":
+            case "bdi":
             case "cite":
             case "code":
+            case "dfn":
             case "em":
             case "i":
             case "kbd":
@@ -210,13 +203,12 @@ var CBMessageMarkup = {
             case "strong":
             case "sub":
             case "sup":
-            case "time":
             case "u":
             case "var":
                 return "<" + inlineTagName + ">" + inlineContent + "</" + inlineTagName + ">";
+            default:
+                return "<span class=\"" + inlineTagName + "\">" + inlineContent + "</span>";
         }
-
-        return "<span class=\"" + inlineTagName + "\">" + inlineContent + "</span>";
     },
 
     /**
@@ -462,10 +454,15 @@ var CBMessageMarkup = {
      */
     paragraphToHTML: function (markup) {
         var content = Colby.textToHTML(markup);
+        var openBracket = "\\(";
+        var closeBracket = "\\)";
+        var notBracket = "[^\\(\\)]";
+
+        var inlineElementExpression = new RegExp(openBracket + "(" + notBracket + "*)" + openBracket + "(" + notBracket + "+)" + closeBracket + "\\s*" + closeBracket, "g");
 
         do {
             CBMessageMarkup.replacementCount = 0;
-            content = content.replace(/\{([a-z]+):(?:\s+([^\{\}]+))?\}/g, CBMessageMarkup.inlineElementToHTML);
+            content = content.replace(inlineElementExpression, CBMessageMarkup.inlineElementToHTML);
         } while (CBMessageMarkup.replacementCount);
 
         return content;
