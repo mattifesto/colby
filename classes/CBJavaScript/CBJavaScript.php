@@ -55,24 +55,26 @@ class CBJavaScript {
         $hashes[$key]               = $hash;
 
         $messages = [];
-        $firstLine = CBConvert::javaScriptErrorToMessage($errorModel);
+        $firstLine = 'Error ' . CBConvert::javaScriptErrorToMessage($errorModel);
 
         foreach ($attributes as $key => $value) {
-            $hash = $hashes[$key];
-            $messages[] = "*{$key}*\n{$value}\n$hash";
+            $keyAsMarkup = CBMessageMarkup::stringToMarkup($key);
+            $valueAsMarkup = CBMessageMarkup::stringToMarkup($value);
+            $hashAsMarkup = CBMessageMarkup::stringToMarkup($hashes[$key]);
+            $messages[] = "({$keyAsMarkup} (strong))((br)){$valueAsMarkup}((br))$hashAsMarkup";
         }
 
         $link = cbsiteurl() . '/admin/page/?class=CBLogAdminPage';
 
         if (CBJavaScript::shouldReportToDeveloper($errorModel, $hashes)) {
             CBSlack::sendMessage((object)[
-                'message' => "{$messages[0]} <{$link}|link>",
+                'message' => "{$firstLine} <{$link}|link>",
             ]);
         }
 
         CBLog::log((object)[
             'className' => __CLASS__,
-            'message' => "{$firstLine}\n\n--- pre\n" . implode("\n\n", $messages) . "\n---",
+            'message' => CBMessageMarkup::stringToMarkup($firstLine) . "\n\n" . implode("\n\n", $messages),
             'severity' => 3,
         ]);
     }
