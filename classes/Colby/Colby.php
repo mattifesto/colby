@@ -705,10 +705,11 @@ final class Colby {
         try {
 
             $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
-            $firstLine = 'Error ' . CBConvert::throwableToMessage($exception);
-            $stackTrace = Colby::exceptionStackTrace($exception);
+            $firstLine = 'Error ' . CBMessageMarkup::stringToMarkup(CBConvert::throwableToMessage($exception));
+            $stackTrace = CBMessageMarkup::stringToMarkup(Colby::exceptionStackTrace($exception));
             $URI = $_SERVER['REQUEST_URI'];
             $link = cbsiteurl() . '/admin/page/?class=CBLogAdminPage';
+
 
             /* CBLog::log() never throws an exception */
             CBLog::log((object)[
