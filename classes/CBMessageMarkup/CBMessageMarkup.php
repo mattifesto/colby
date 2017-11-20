@@ -164,21 +164,21 @@ final class CBMessageMarkup {
     /**
      * @param string $matches[0]
      *
-     *      "(Extra! (strong))"
-     *      "(Wikipedia (a https://www.wikipedia.org))"
-     *      "((br))"
+     *      "( Extra! ( strong))"
+     *      "(Wikipedia ( a   https://www.wikipedia.org ))"
+     *      "((  br  ))"
      *
      * @param string $matches[1]
      *
-     *      "Extra! "
+     *      " Extra! "
      *      "Wikipedia "
      *      ""
      *
      * @param string? $matches[2]
      *
-     *      "strong"
-     *      "a https://www.wikipedia.org"
-     *      "br"
+     *      " strong"
+     *      " a   https://www.wikipedia.org "
+     *      "  br  "
      *
      * @return string
      */
@@ -242,21 +242,21 @@ final class CBMessageMarkup {
     /**
      * @param string $matches[0]
      *
-     *      "{stong: Extra!}"
-     *      "{a Wikipedia href: https://www.wikipedia.org}"
-     *      "{br:}"
+     *      "( Extra! ( strong))"
+     *      "(Wikipedia ( a   https://www.wikipedia.org ))"
+     *      "((  br  ))"
      *
      * @param string $matches[1]
      *
-     *      "strong"
-     *      "a"
-     *      "br"
+     *      " Extra! "
+     *      "Wikipedia "
+     *      ""
      *
      * @param string? $matches[2]
      *
-     *      "Extra!"
-     *      "Wikipedia href: https://www.wikipedia.org"
-     *      unset
+     *      " strong"
+     *      " a   https://www.wikipedia.org "
+     *      "  br  "
      *
      * @return string
      */
