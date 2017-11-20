@@ -89,9 +89,17 @@ final class CBDataStoreAdminPage {
         }
 
         $archive = ColbyArchive::open($ID);
-        $message = "Archive\n\n--- pre\n" .
-            var_export($archive->data(), true) .
-            "\n---";
+        $archiveAsExport = CBMessageMarkup::stringToMarkup(var_export($archive->data(), true));
+        $message = <<<EOT
+
+            Archive
+
+            --- pre
+{$archiveAsExport}
+            ---
+
+EOT;
+
         $message = cbhtml(json_encode($message));
 
         ?>
@@ -115,9 +123,17 @@ final class CBDataStoreAdminPage {
 EOT;
 
         if ($row = CBDB::SQLToObject($SQL)) {
-            $message = "CBImages Row\n\n--- pre\n" .
-                json_encode($row, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .
-                "\n---";
+            $rowAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($row));
+            $message = <<<EOT
+
+                CBImages Row
+
+                --- pre
+{$rowAsJSON}
+                ---
+
+EOT;
+
             $message = cbhtml(json_encode($message));
 
             ?>
@@ -143,9 +159,17 @@ EOT;
             return;
         }
 
-        $message = "CBModels Spec\n\n--- pre\n" .
-            json_encode($data->spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .
-            "\n---";
+        $specAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($data->spec));
+        $message = <<<EOT
+
+            CBModels Spec
+
+            --- pre
+{$specAsJSON}
+            ---
+
+EOT;
+
         $message = cbhtml(json_encode($message));
 
         ?>
@@ -154,9 +178,17 @@ EOT;
 
         <?php
 
-        $message = "CBModels Model\n\n--- pre\n" .
-            json_encode($data->model, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .
-            "\n---";
+        $modelAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($data->model));
+        $message = <<<EOT
+
+            CBModels Model
+
+            --- pre
+{$specAsJSON}
+            ---
+
+EOT;
+
         $message = cbhtml(json_encode($message));
 
         ?>
@@ -196,9 +228,17 @@ EOT;
 EOT;
 
         if ($row = CBDB::SQLToObject($SQL)) {
-            $message = "ColbyPages Row\n\n--- pre\n" .
-                json_encode($row, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .
-                "\n---";
+            $rowAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($row));
+            $message = <<<EOT
+
+                ColbyPages Row
+
+                --- pre
+{$rowAsJSON}
+                ---
+
+EOT;
+
             $message = cbhtml(json_encode($message));
 
             ?>
@@ -238,11 +278,22 @@ EOT;
 
         if (!empty($links)) {
             $links = array_map(function ($link) {
-                return "{a: {$link->text} href: {$link->URI}}";
+                $textAsMarkup = CBMessageMarkup::stringToMarkup($link->text);
+                $URIAsMarkup = CBMessageMarkup::stringToMarkup($link->URI);
+                return "({$textAsMarkup} (a {$URIAsMarkup}))";
             }, $links);
+            $links = implode("\n\n", $links);
 
-            $message = "Data Store Files\n\n" .
-                implode("\n\n", $links);
+            $message = <<<EOT
+
+                Data Store Files
+
+                --- ul
+                {$links}
+                ---
+
+EOT;
+
             $message = cbhtml(json_encode($message));
 
             ?>
