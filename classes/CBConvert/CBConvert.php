@@ -29,7 +29,6 @@ final class CBConvert {
         }
 
         return "\"{$message}\" in {$basename} at line {$line}";
-
     }
 
     /**
@@ -371,5 +370,14 @@ final class CBConvert {
     static function valueToOptionalTrimmedString($value) {
         $string = trim($value);
         return ($string === '') ? null : $string;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return string
+     */
+    static function valueToPrettyJSON($value): string {
+        return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
 }
