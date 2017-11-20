@@ -26,6 +26,7 @@ class CBUnitTests {
             ['CBLog',                   'noMessage'],
             ['CBMarkaround',            'paragraphToHTML'],
             ['CBMessageMarkup',         'markupToHTML'],
+            ['CBMessageMarkup',         'markupToText'],
             ['CBMessageMarkup',         'stringToMarkup'],
             ['CBModel',                 'toModel'],
             ['CBModel',                 'toModelMinimalImplementation'],

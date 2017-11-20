@@ -75,6 +75,7 @@ final class CBAdminPageForTests {
             ['CBImages',        'deleteByID'],
             ['CBImages',        'upload'],
             ['CBMessageMarkup', 'markupToHTML'],
+            ['CBMessageMarkup', 'markupToText'],
             ['Colby',           'centsToDollars'],
             ['Colby',           'dateToString'],
         ];

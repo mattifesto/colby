@@ -16,6 +16,7 @@ final class CBMessageMarkupTests {
         return [
             ['CBMessageMarkupTests_html1', CBMessageMarkupTests::html1()],
             ['CBMessageMarkupTests_markup1', CBMessageMarkupTests::markup1()],
+            ['CBMessageMarkupTests_text1', CBMessageMarkupTests::text1()],
         ];
     }
 
@@ -27,9 +28,36 @@ final class CBMessageMarkupTests {
     }
 
     /**
+     * @param string $string 1
+     * @param string $string 2
+     *
+     * @return void
+     */
+    static function compareStringsLineByLine(string $string1, string $string2): void {
+        $string1Lines = CBConvert::stringToLines($string1);
+        $string2Lines = CBConvert::stringToLines($string2);
+
+        array_walk($string1Lines, function ($string1Line, $index) use ($string2Lines) {
+            if (!isset($string2Lines[$index])) {
+                throw new Exception("Line {$index} of string 1 is \"{$string1Line}\" but doesn't exist in string 2.");
+            }
+
+            $string2Line = $string2Lines[$index];
+
+            if ($string1Line !== $string2Line) {
+                throw new Exception("String 1 line {$index} is \"{$string1Line}\" which does't match string 2 line {$index} of \"{$string2Line}\"");
+            }
+        });
+
+        if (count($string2Lines) > count($string1Lines)) {
+            throw new Exception('String 2 has more lines than string 1');
+        }
+    }
+
+    /**
      * @return string
      */
-    static function html1() {
+    static function html1(): string {
         return <<<EOT
 <h1>
 <p>            This is the Title
@@ -139,7 +167,7 @@ EOT;
     /**
      * @return string
      */
-    static function markup1() {
+    static function markup1(): string {
         return <<<EOT
 
             --- h1
@@ -228,53 +256,125 @@ EOT;
     }
 
     /**
-     * @return null
+     * @return void
      */
-    static function markupToHTMLTest() {
-        $html1 = CBMessageMarkup::markupToHTML(CBMessageMarkupTests::markup1());
-        $expectedLines = CBConvert::stringToLines(CBMessageMarkupTests::html1());
-        $resultLines = CBConvert::stringToLines($html1);
+    static function markupToHTMLTest(): void {
+        $expected = CBMessageMarkupTests::html1();
+        $result = CBMessageMarkup::markupToHTML(CBMessageMarkupTests::markup1());
 
-        array_walk($expectedLines, function ($expectedLine, $index) use ($resultLines) {
-            if (!isset($resultLines[$index])) {
-                throw new Exception("The result does not have the expected line number {$index}");
-            }
-
-            $resultLine = $resultLines[$index];
-
-            if ($expectedLine !== $resultLine) {
-                throw new Exception("Line {$index} was expected to be \"{$expectedLine}\" but is actually \"{$resultLine}\"");
-            }
-        });
-
-        if (count($resultLines) > count($expectedLines)) {
-            throw new Exception('The result has more lines than were expected.');
-        }
+        CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
     }
 
-    static function stringToMarkupTest() {
+    /**
+     * @return void
+     */
+    static function markupToTextTest(): void {
+        $expected = CBMessageMarkupTests::text1();
+        $result = CBMessageMarkup::markupToText(CBMessageMarkupTests::markup1());
+
+        CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
+    }
+
+    /**
+     * @return void
+     */
+    static function stringToMarkupTest(): void {
         $string = <<<EOT
 --- div
 --- hi
     ---
-{strong: hi}
-{ \{ \\{ \\\{
-} \} \\} \\\}
+(hi (strong))
+( \( \\( \\\(
+) \) \\) \\\)
 EOT;
 
         $expected = <<<EOT
-\--- div
-\--- hi
-    \---
-\{strong: hi\}
-\{ \\\{ \\\{ \\\\\{
-\} \\\} \\\} \\\\\}
+\-\-\- div
+\-\-\- hi
+    \-\-\-
+\(hi \(strong\)\)
+\( \\\( \\\( \\\\\(
+\) \\\) \\\) \\\\\)
 EOT;
 
         $result = CBMessageMarkup::stringToMarkup($string);
 
-        if ($result !== $expected) {
-            throw new Exception('The result was not what was expected.');
-        }
+        CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
+    }
+
+    static function text1(): string {
+        return <<<EOT
+            This is the Title
+
+            This is an
+            introductory paragraph.
+
+                This is the first list item.
+
+                This is the second list item.
+
+                    This is the third list item.
+
+Product             Price
+-------------- ----------
+Socks                2.99
+Latte                5.98
+Strawberry Jam      14.32
+
+                    Prices may vary.
+
+            A sunny day
+            A rainy day
+            It doesn't matter anyway
+
+            Inline Tests
+
+            The linked word.
+
+            The YOLO abbreviation.
+
+            The bold word.
+
+            The إيان name.
+
+            The right to left phrase.
+
+            The poetry  line break.
+
+            The Good Dog, Carl citation.
+
+            The printf("Hello, world!") code.
+
+            The product code for Teddy Ruxpin.
+
+            The emphasized word.
+
+            The italicized word.
+
+            The Control + C copy.
+
+            The highlighted word.
+
+            The Four score and seven years ago quotation.
+
+            The striking strikethrough.
+
+            The computer asked me, Would you like to play a game?
+
+            It was hidden in the small text.
+
+            The strong word.
+
+            I said, take a drink of H2O.
+
+            He proposed that E=mc2.
+
+            He was born on March 14, 1879.
+
+            The he wrote The Meaning of Relativity.
+
+            I proposed that pizza = dough + love.
+
+EOT;
     }
 }
