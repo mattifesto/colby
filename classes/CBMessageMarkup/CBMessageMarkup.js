@@ -55,9 +55,10 @@ var CBMessageMarkup = {
      * @return string
      */
     decodeEncodedCharacters: function (markup) {
-        return markup.replace(new RegExp(CBMessageMarkup.encodedOpenBracket, "g"), "(")
+        return markup.replace(new RegExp(CBMessageMarkup.encodedBackslash, "g"), "\\")
+                     .replace(new RegExp(CBMessageMarkup.encodedOpenBracket, "g"), "(")
                      .replace(new RegExp(CBMessageMarkup.encodedCloseBracket, "g"), ")")
-                     .replace(new RegExp(CBMessageMarkup.encodedCommand, "g"), "---");
+                     .replace(new RegExp(CBMessageMarkup.encodedHyphen, "g"), "-");
     },
 
     /**
@@ -122,9 +123,14 @@ var CBMessageMarkup = {
      * @return string
      */
     encodeEscapedCharacters: function (markup) {
-        return markup.replace(/\\\(/g, CBMessageMarkup.encodedOpenBracket)
-                     .replace(/\\\)/g, CBMessageMarkup.encodedCloseBracket)
-                     .replace(/\\---/g, CBMessageMarkup.encodedCommand);
+        return markup.replace(/\\\\/g, CBMessageMarkup.encodedBackslash)    /* double backslash */
+                     .replace(/\\\(/g, CBMessageMarkup.encodedOpenBracket)  /* backslash, open bracket */
+                     .replace(/\\\)/g, CBMessageMarkup.encodedCloseBracket) /* backslash, close bracket */
+                     .replace(/\\-/g, CBMessageMarkup.encodedHyphen);       /* backslash, hyphen */
+    },
+
+    get encodedBackslash() {
+        return "836f784bf25aa0e5663779c36899c61efbaa114e";
     },
 
     get encodedOpenBracket() {
@@ -135,7 +141,7 @@ var CBMessageMarkup = {
         return "edc679d4ac06a45884a23160030c4cb2d4b2ebf1";
     },
 
-    get encodedCommand() {
+    get encodedHyphen() {
         return "4605702366f1f3d132e1a76a25165e2c0b6b352c";
     },
 
@@ -212,28 +218,31 @@ var CBMessageMarkup = {
     },
 
     /**
-     * @param string original
+     * @param string match0
      *
-     *      "{stong: Extra!}"
-     *      "{a Wikipedia href: https://www.wikipedia.org}"
-     *      "{br:}"
+     *      "( Extra! ( strong))"
+     *      "(Wikipedia ( a   https://www.wikipedia.org ))"
+     *      "((  br  ))"
      *
-     * @param string inlineTagName
+     * @param string match1
      *
-     *      "strong"
-     *      "a"
-     *      "br"
+     *      " Extra! "
+     *      "Wikipedia "
+     *      ""
      *
-     * @param string? inlineContent
+     * @param string match2
      *
-     *      "Extra!"
-     *      "Wikipedia href: https://www.wikipedia.org"
-     *      unset
+     *      " strong"
+     *      " a   https://www.wikipedia.org "
+     *      "  br  "
      *
      * @return string
      */
-    inlineElementToText: function (original, inlineTagName, inlineContent) {
-        var matches, text;
+    inlineElementToText: function (match0, match1, match2) {
+        var inlineContent = match1.trim();
+        var inlineTagData = match2.match(/^\s*(\S*)\s*(.*)/);
+        var inlineTagName = inlineTagData[1];
+        var inlineTagAttributeValue = inlineTagData[2] ? inlineTagData[2].trim() : "";
 
         CBMessageMarkup.replacementCount += 1;
 
@@ -241,29 +250,9 @@ var CBMessageMarkup = {
             case "br":
             case "wbr":
                 return "";
-            case "a":
-                matches = inlineContent.match(/([\s\S]*)\shref:\s([\s\S]*)/);
-
-                if (matches) {
-                    text = matches[1].trim();
-
-                    return text;
-                }
-
-                break;
-            case "abbr":
-                matches = inlineContent.match(/([\s\S]*)\stitle:\s([\s\S]*)/);
-
-                if (matches) {
-                    text = matches[1].trim();
-
-                    return text;
-                }
-
-                break;
+            default:
+                return inlineContent;
         }
-
-        return inlineContent;
     },
 
     /**
@@ -425,8 +414,6 @@ var CBMessageMarkup = {
             if (command !== false || line.trim() === "") {
                 if (paragraph !== undefined) {
                     paragraph = CBMessageMarkup.paragraphToText(paragraph);
-                    paragraph = paragraph.trim();
-                    paragraph = paragraph.replace(/\s+/g, " ");
 
                     paragraphs.push(paragraph);
 
@@ -441,7 +428,7 @@ var CBMessageMarkup = {
             }
         }
 
-        var text = paragraphs.join("\n\n");
+        var text = paragraphs.join("\n");
         text = CBMessageMarkup.decodeEncodedCharacters(text);
 
         return text;
@@ -475,11 +462,18 @@ var CBMessageMarkup = {
      */
     paragraphToText: function (markup) {
         var content = markup;
+        var openBracket = "\\(";
+        var closeBracket = "\\)";
+        var notBracket = "[^\\(\\)]";
+
+        var inlineElementExpression = new RegExp(openBracket + "(" + notBracket + "*)" + openBracket + "(" + notBracket + "+)" + closeBracket + "\\s*" + closeBracket, "g");
 
         do {
             CBMessageMarkup.replacementCount = 0;
-            content = content.replace(/\{([a-z]+):(?:\s+([^\{\}]+))?\}/g, CBMessageMarkup.inlineElementToText);
+            content = content.replace(inlineElementExpression, CBMessageMarkup.inlineElementToText);
         } while (CBMessageMarkup.replacementCount);
+
+        content = content.replace(/[ \t]+$/gm, '');
 
         return content;
     },

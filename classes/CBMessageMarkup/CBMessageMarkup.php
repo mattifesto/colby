@@ -2,9 +2,10 @@
 
 final class CBMessageMarkup {
 
+    const encodedBackslash = '836f784bf25aa0e5663779c36899c61efbaa114e';
     const encodedOpenBracket = 'f5a6328bda8575b25bbc5f0ece0181df57e54ed1';
     const encodedCloseBracket = 'edc679d4ac06a45884a23160030c4cb2d4b2ebf1';
-    const encodedCommand = '4605702366f1f3d132e1a76a25165e2c0b6b352c';
+    const encodedHyphen = '4605702366f1f3d132e1a76a25165e2c0b6b352c';
 
     /**
      * @return string
@@ -61,19 +62,22 @@ final class CBMessageMarkup {
      * @return string
      */
     static function decodeEncodedCharacters(string $markup): string {
+        $encodedBackslash = CBMessageMarkup::encodedBackslash;
         $encodedOpenBracket = CBMessageMarkup::encodedOpenBracket;
         $encodedCloseBracket = CBMessageMarkup::encodedCloseBracket;
-        $encodedCommand = CBMessageMarkup::encodedCommand;
+        $encodedHyphen = CBMessageMarkup::encodedHyphen;
 
         $patterns = [
+            "/{$encodedBackslash}/",
             "/{$encodedOpenBracket}/",
             "/{$encodedCloseBracket}/",
-            "/{$encodedCommand}/",
+            "/{$encodedHyphen}/",
         ];
         $replacements = [
+            '\\',
             '(',
             ')',
-            '---',
+            '-',
         ];
 
         return preg_replace($patterns, $replacements, $markup);
@@ -136,19 +140,22 @@ final class CBMessageMarkup {
      * @return string
      */
     static function encodeEscapedCharacters(string $markup): string {
-        $escapedOpenBracketExpression = '/\\\\\\(/';
-        $escapedCloseBracketExpression = '/\\\\\\)/';
-        $escapedCommandExpression = '/\\\\---/';
+        $escapedBackslashExpression = '/\\\\\\\\/' ;    /* double backslash */
+        $escapedOpenBracketExpression = '/\\\\\\(/';    /* backslash, open bracket */
+        $escapedCloseBracketExpression = '/\\\\\\)/';   /* backslash, close bracket */
+        $escapedCommandExpression = '/\\\\-/';          /* backslash, hyphen */
 
         $patterns = [
+            $escapedBackslashExpression,
             $escapedOpenBracketExpression,
             $escapedCloseBracketExpression,
             $escapedCommandExpression,
         ];
         $replacements = [
+            CBMessageMarkup::encodedBackslash,
             CBMessageMarkup::encodedOpenBracket,
             CBMessageMarkup::encodedCloseBracket,
-            CBMessageMarkup::encodedCommand,
+            CBMessageMarkup::encodedHyphen,
         ];
 
         return preg_replace($patterns, $replacements, $markup);
@@ -175,7 +182,7 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function inlineElementToHTML(array $matches) {
+    static function inlineElementToHTML(array $matches): string {
         $inlineContent = trim($matches[1]);
         $inlineTagData = preg_split('/\s+/', $matches[2], 2, PREG_SPLIT_NO_EMPTY);
         $inlineTagName = $inlineTagData[0];
@@ -200,6 +207,7 @@ final class CBMessageMarkup {
                 break;
             case 'time':
                 return "<time datetime=\"{$inlineTagAttributeValue}\">{$inlineContent}</time>";
+                break;
             case 'b':
             case 'bdi':
             case 'cite':
@@ -252,27 +260,21 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function inlineElementToText(array $matches) {
-        $inlineTagName = $matches[1];
-        $inlineContent = $matches[2] ?? '';
+    static function inlineElementToText(array $matches): string {
+        $inlineContent = trim($matches[1]);
+        $inlineTagData = preg_split('/\s+/', $matches[2], 2, PREG_SPLIT_NO_EMPTY);
+        $inlineTagName = $inlineTagData[0];
+        $inlineTagAttributeValue = isset($inlineTagData[1]) ? trim($inlineTagData[1]) : '';
 
         switch ($inlineTagName) {
             case 'br':
             case 'wbr':
                 return '';
                 break;
-            case 'a':
-                if (1 === preg_match('/(.+)\shref:\s+(.+)/s', $inlineContent, $submatches)) {
-                    $text = trim($submatches[1]);
-                    $href = trim($submatches[2]);
-
-                    return $text;
-                }
-
+            default:
+                return $inlineContent;
                 break;
         }
-
-        return $inlineContent;
     }
 
     /**
@@ -420,8 +422,6 @@ final class CBMessageMarkup {
             if ($command !== null || trim($line) === '') {
                 if ($paragraph !== null) {
                     $paragraph = CBMessageMarkup::paragraphToText($paragraph);
-                    $paragraph = trim($paragraph);
-                    $paragraph = preg_replace('/\s+/', ' ', $paragraph);
 
                     $paragraphs[] = $paragraph;
 
@@ -436,7 +436,7 @@ final class CBMessageMarkup {
             }
         }
 
-        $text = implode("\n\n", $paragraphs);
+        $text = implode("\n", $paragraphs);
         $text = CBMessageMarkup::decodeEncodedCharacters($text);
 
         return $text;
@@ -472,12 +472,18 @@ final class CBMessageMarkup {
     static function paragraphToText(string $markup) {
         $content = $markup;
 
+        $openBracket = '\\(';
+        $closeBracket = '\\)';
+        $notBracket = '[^\\(\\)]';
+
         // No 'g' modifier in php because preg_replace always does all.
-        $inlineElementExpression = '/\\{([a-z]+):(?:\s+([^\\{\\}]+))?\\}/';
+        $inlineElementExpression = "/{$openBracket}({$notBracket}*){$openBracket}({$notBracket}+){$closeBracket}\s*{$closeBracket}/";
 
         do {
             $content = preg_replace_callback($inlineElementExpression, 'CBMessageMarkup::inlineElementToText', $content, -1, $count);
         } while ($count > 0);
+
+        $content = preg_replace('/[ \t]+$/m', '', $content);
 
         return $content;
     }
@@ -530,20 +536,30 @@ final class CBMessageMarkup {
      * This function converts a string to markup representing that string as
      * plain text. This function is the `htmlspecialchars` of message markup.
      *
+     * Conversions:
+     *
+     *     single backslash -> double backslash
+     *     hyphen -> backslash hyphen
+     *     open bracket -> backslash, open bracket
+     *     close bracket -> backslash, close bracket
+     *
+     *
      * @param string $string
      *
      * @return string
      */
     static function stringToMarkup(string $string): string {
         $patterns = [
-            '/^(\s*)---/m',
-            '/{/',
-            '/}/',
+            '/\\\\/',   /* single backslack */
+            '/-/',      /* hyphen */
+            '/\(/',     /* open bracket */
+            '/\)/',     /* close bracket */
         ];
         $replacements = [
-            '$1\---',
-            '\{',
-            '\}',
+            '\\\\',     /* double backslash */
+            '\-',       /* backslash hyphen */
+            '\(',       /* backslash open bracket */
+            '\)',       /* backslash close bracket */
         ];
 
         return preg_replace($patterns, $replacements, $string);
