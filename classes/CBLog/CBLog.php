@@ -277,11 +277,11 @@ EOT;
             if (empty($message)) {
                 $hasIssues = true;
                 $severity = min($severity, 3);
-                $message = 'No message'; /* first line */
+                $message = 'Error: A CBLog entry was created with no message.'; /* first line */
                 $message .= <<<EOT
 
 
-                    {strong: Log issue:}
+                    (Log issue: (strong))
 
                     No message was specified for this log entry.
 
@@ -294,7 +294,7 @@ EOT;
                 $message .= <<<EOT
 
 
-                    {strong: Log issue:}
+                    (Log issue: (strong))
 
                     No className was specified for this log entry.
 
@@ -302,19 +302,21 @@ EOT;
             }
 
             if ($hasIssues) {
-                $argumentsAsJSON = json_encode($args, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-                $stackTrace = CBConvert::traceToString(debug_backtrace());
+                $argumentsAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($args));
+                $stackTrace = CBMessageMarkup::stringToMarkup(CBConvert::traceToString(debug_backtrace()));
                 $message .= <<<EOT
 
 
-                    {strong: Log arguments:}
+                    (Log arguments: (strong))
 
-                    --- pre prewrap\n{$argumentsAsJSON}
+                    --- pre prewrap
+{$argumentsAsJSON}
                     ---
 
-                    {strong: Stack trace:}
+                    (Stack trace: (strong))
 
-                    --- pre prewrap\n{$stackTrace}
+                    --- pre prewrap
+{$stackTrace}
                     ---
 
 EOT;
