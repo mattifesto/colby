@@ -4,7 +4,7 @@ final class CBLogTests {
 
     static function noClassNameTest() {
         $serialNumber = CBLog::log((object)[
-            'message' => 'Test',
+            'message' => 'This is a CBLogsTests log entry with no class name.',
             'severity' => 7,
         ]);
 
