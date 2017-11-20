@@ -242,7 +242,6 @@ var CBMessageMarkup = {
         var inlineContent = match1.trim();
         var inlineTagData = match2.match(/^\s*(\S*)\s*(.*)/);
         var inlineTagName = inlineTagData[1];
-        var inlineTagAttributeValue = inlineTagData[2] ? inlineTagData[2].trim() : "";
 
         CBMessageMarkup.replacementCount += 1;
 
