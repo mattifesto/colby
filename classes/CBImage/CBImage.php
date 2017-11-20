@@ -52,12 +52,28 @@ final class CBImage {
         }
 
         if (!empty($specIssues)) {
-            $message = __METHOD__ .
-                ' returned null because the spec had issues.' .
-                "\n\nIssues:\n" .
-                implode("\n", $specIssues) .
-                "\n\nspec: " .
-                json_encode($spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $method = __METHOD__ . '()';
+            $specAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($spec));
+            $specIssues = implode("\n\n", $specIssues);
+            $message = <<<EOT
+
+                {$method} returned null because of spec issues.
+
+                (Issues: (strong))
+
+                --- ul
+
+                {$specIssues}
+
+                ---
+
+                (Spec: (strong))
+
+                --- pre
+{$specAsJSON}
+                ---
+
+EOT;
 
             CBLog::log((object)[
                 'className' => __CLASS__,
