@@ -11,11 +11,19 @@ final class CBUser {
         $userID = CBModel::value($spec, 'userID', null, 'intval');
 
         if (empty($userID)) {
-            $message = __METHOD__ .
-                '() returned null because the spec has no `userID` value.' .
-                "\n\n" .
-                'spec: ' .
-                json_encode($spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $method = __METHOD__ . '()';
+            $specAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($spec));
+            $message = <<<EOT
+
+                {$method} returned null because the spec has no `userID` value.
+
+                (Spec: (strong))
+
+                --- pre
+{$specAsJSON}
+                ---
+
+EOT;
 
             CBLog::log((object)[
                 'className' => __CLASS__,
