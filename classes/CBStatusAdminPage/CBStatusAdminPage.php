@@ -183,6 +183,12 @@ EOT;
             }
         }
 
+        /* 2017.11.20 Warn if the site .htaccess is different from the Colby
+          .htaccess */
+        if (sha1_file(cbsitedir() . '/.htaccess') !== sha1_file(cbsysdir() . '/setup/htaccess.template.data')) {
+            CBUI::renderKeyValueSectionItem('.htaccess', 'The .htaccess file is different from the suggested Colby .htaccess file.');
+        }
+
         $content = ob_get_clean();
 
         if (!empty($content)) {
