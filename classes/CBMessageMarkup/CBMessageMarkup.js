@@ -257,7 +257,7 @@ var CBMessageMarkup = {
     /**
      * @param string line
      *
-     * @return object|false
+     * @return object|null
      */
     lineToCommand: function (line) {
         var tagName, classNames;
@@ -265,7 +265,7 @@ var CBMessageMarkup = {
         var matches = line.match(r, line);
 
         if (matches === null) {
-            return false;
+            return null;
         }
 
         classNames = matches[1] ? matches[1].trim() : "";
@@ -275,7 +275,17 @@ var CBMessageMarkup = {
             tagName = "";
         } else {
             classNames = classNames.split(/\s+/);
-            tagName = classNames.shift();
+
+            /**
+             * The first word will be used as the tag name if it is a valid tag
+             * name. otherwise the tag name will be "div".
+             */
+
+            if (CBMessageMarkup.tagNameIsAllowedBlockElement(classNames[0])) {
+                tagName = classNames.shift();
+            } else {
+                tagName = "div";
+            }
         }
 
         return {
@@ -303,11 +313,10 @@ var CBMessageMarkup = {
             line = lines[index];
             var command = CBMessageMarkup.lineToCommand(line);
 
-            if (command) {
+            if (command !== null) {
                 var parentAllows = CBMessageMarkup.tagNameAllowsBlockChildren(current.tagName);
-                var childAllowed = CBMessageMarkup.tagNameIsAllowedBlockElement(command.tagName);
 
-                if (parentAllows && childAllowed) {
+                if (parentAllows && command.tagName !== '') {
                     if (content !== undefined) {
                         current.children.push(content);
                         content = undefined;
@@ -410,7 +419,7 @@ var CBMessageMarkup = {
              * TODO: Add support for recognizing preformatted elements.
              */
 
-            if (command !== false || line.trim() === "") {
+            if (command !== null || line.trim() === "") {
                 if (paragraph !== undefined) {
                     paragraph = CBMessageMarkup.paragraphToText(paragraph);
 

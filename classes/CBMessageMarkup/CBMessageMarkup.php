@@ -280,7 +280,12 @@ final class CBMessageMarkup {
     /**
      * @param string $line
      *
-     * @return object|false
+     * @return object|null
+     *
+     *      {
+     *          classNames: [string]
+     *          tagName: string
+     *      }
      */
     private static function lineToCommand(string $line): ?stdClass {
         $properties = (object)[];
@@ -289,20 +294,30 @@ final class CBMessageMarkup {
             return null;
         }
 
-        if (isset($matches[1]) && ($classNames = trim($matches[1])) !== '') {
-            $classNames = preg_split('/\s+/', $classNames);
-            $tagName = array_shift($classNames);
-        } else {
+        $classNames = isset($matches[1]) ? trim($matches[1]) : '';
+
+        if ($classNames === '') {
             $classNames = [];
             $tagName = "";
+        } else {
+            $classNames = preg_split('/\s+/', $classNames);
+
+            /**
+             * The first word will be used as the tag name if it is a valid tag
+             * name. otherwise the tag name will be "div".
+             */
+
+            if (CBMessageMarkup::tagNameIsAllowedBlockElement($classNames[0])) {
+                $tagName = array_shift($classNames);
+            } else {
+                $tagName = 'div';
+            }
         }
 
-        $val = (object)[
+        return (object)[
             'classNames' => $classNames,
             'tagName' => $tagName,
         ];
-
-        return $val;
     }
 
     /**
@@ -327,9 +342,8 @@ final class CBMessageMarkup {
 
             if ($command !== null) {
                 $parentAllows = CBMessageMarkup::tagNameAllowsBlockChildren($currentElement->tagName);
-                $childAllowed = CBMessageMarkup::tagNameIsAllowedBlockElement($command->tagName);
 
-                if ($parentAllows && $childAllowed) {
+                if ($parentAllows && $command->tagName !== '') {
                     if ($content !== null) {
                         $currentElement->children[] = $content;
                         $content = null;
