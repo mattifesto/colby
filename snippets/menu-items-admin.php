@@ -67,11 +67,11 @@ $helpMenu = (object)[
         'text' => 'Markaround',
         'URL' => '/admin/help/markaround-syntax/'
     ],
-    'title-subtitle' => (object)[
+    'title-description' => (object)[
         'className' => 'CBMenuItem',
-        'name' => 'title-subtitle',
+        'name' => 'title-description',
         'text' => 'Titles & Descriptions',
-        'URL' => '/admin/help/title-subtitle/',
+        'URL' => '/admin/help/title-description/',
     ],
     'caption-alternative-text' => (object)[
         'className' => 'CBMenuItem',
