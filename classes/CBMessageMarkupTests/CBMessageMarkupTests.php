@@ -88,6 +88,9 @@ Strawberry Jam      14.32
             A rainy day <br>
             It doesn&#039;t matter anyway
 </blockquote>
+<div class="one two three four">
+<p>            This is an unspecified div.
+</div>
 <p>            <strong>Inline Tests</strong>
 <ul>
 <li>
@@ -201,6 +204,10 @@ Strawberry Jam      14.32
             A sunny day ((br))
             A rainy day ((br))
             It doesn't matter anyway
+            ---
+
+            --- one two three four
+            This is an unspecified div.
             ---
 
             (Inline Tests (strong))
@@ -326,6 +333,8 @@ Strawberry Jam      14.32
             A sunny day
             A rainy day
             It doesn't matter anyway
+
+            This is an unspecified div.
 
             Inline Tests
 
