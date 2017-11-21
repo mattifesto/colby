@@ -26,7 +26,7 @@ var CBAdminPageForUpdate = {
         item = CBUI.createSectionItem();
         var backupPullAndUpdateActionLink = CBUIActionLink.create({
             callback: backupPullAndUpdate,
-            labelText: "Backup, Pull, and Update Site",
+            labelText: "Backup Database, Pull, and Update Site",
         });
         item.appendChild(backupPullAndUpdateActionLink.element);
         section.appendChild(item);
@@ -36,7 +36,7 @@ var CBAdminPageForUpdate = {
         item = CBUI.createSectionItem();
         var backupAndUpdateActionLink = CBUIActionLink.create({
             callback: backupAndUpdate,
-            labelText: "Backup and Update Site",
+            labelText: "Backup Database and Update Site",
         });
         item.appendChild(backupAndUpdateActionLink.element);
         section.appendChild(item);
@@ -53,20 +53,37 @@ var CBAdminPageForUpdate = {
 
         main.appendChild(section);
 
+        /* backup database only */
+
+        item = CBUI.createSectionItem();
+        var backuponlyActionLink = CBUIActionLink.create({
+            callback: backuponly,
+            labelText: "Backup Database",
+        });
+        item.appendChild(backuponlyActionLink.element);
+        section.appendChild(item);
+
+        main.appendChild(section);
+
         /* output */
 
         main.appendChild(CBUI.createHalfSpace());
         main.appendChild(output.element);
 
         /* closure */
-        function backupAndUpdate() {
+        function backuponly() {
             disable();
             output.clear();
 
-            /**
-             * promiseToPullUpdates() is called twice to ensure new submodules
-             * are properly initialized
-             */
+            promiseToBackupDatabase()
+                .catch(Colby.displayAndReportError)
+                .then(enable);
+        }
+
+        /* closure */
+        function backupAndUpdate() {
+            disable();
+            output.clear();
 
             promiseToBackupDatabase()
                 .then(promiseToUpdateSite)
@@ -97,6 +114,7 @@ var CBAdminPageForUpdate = {
             backupAndUpdateActionLink.disable();
             backupPullAndUpdateActionLink.disable();
             updateActionLink.disable();
+            backuponlyActionLink.disable();
         }
 
         /* closure */
@@ -104,6 +122,7 @@ var CBAdminPageForUpdate = {
             backupAndUpdateActionLink.enable();
             backupPullAndUpdateActionLink.enable();
             updateActionLink.enable();
+            backuponlyActionLink.enable();
         }
 
         /* closure */
