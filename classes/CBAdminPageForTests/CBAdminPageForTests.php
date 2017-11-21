@@ -13,7 +13,7 @@ final class CBAdminPageForTests {
      * @return [string]
      */
     static function adminPageMenuNamePath() {
-        return ['test', 'test'];
+        return ['develop', 'test'];
     }
 
     /**

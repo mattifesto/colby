@@ -102,20 +102,40 @@ $helpMenu = (object)[
 $CBAdminMenu->help = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
 
 if (ColbyUser::current()->isOneOfThe('Developers')) {
-    $developMenu = new stdClass();
-    $developMenu->datastores = newMenuItem('Data Stores', '/admin/page/?class=CBDataStoresAdminPage');
-    $developMenu->images = newMenuItem('Images', '/admin/page/?class=CBImagesAdminPage');
-    $developMenu->php = newMenuItem('PHP', '/admin/develop/php/');
-    $developMenu->update = newMenuItem('Update', '/admin/page/?class=CBAdminPageForUpdate');
-    $developMenu->mysql = newMenuItem('MySQL', '/developer/mysql/');
-
-    $CBAdminMenu->develop = newMenuItem('Develop', '/admin/develop/php/', $developMenu);
-
-    $testMenu = (object)[
-        'test' => newMenuItem('Website Tests', '/admin/page/?class=CBAdminPageForTests'),
+    $developMenu = (object)[
+        'datastores' => (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'datastores',
+            'text' => 'Data Stores',
+            'URL' => '/admin/page/?class=CBDataStoresAdminPage',
+        ],
+        'images' => (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'images',
+            'text' => 'Images',
+            'URL' => '/admin/page/?class=CBImagesAdminPage',
+        ],
+        'php' => (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'php',
+            'text' => 'PHP',
+            'URL' => '/admin/develop/php/',
+        ],
+        'test' => (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'test',
+            'text' => 'Test',
+            'URL' => '/admin/page/?class=CBAdminPageForTests',
+        ],
+        'update' => (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'update',
+            'text' => 'Update',
+            'URL' => '/admin/page/?class=CBAdminPageForUpdate',
+        ],
     ];
 
-    $CBAdminMenu->test = newMenuItem('Test', '/admin/page/?class=CBAdminPageForTests', $testMenu);
+    $CBAdminMenu->develop = newMenuItem('Develop', '/admin/page/?class=CBAdminPageForUpdate', $developMenu);
 
     $modelsMenu->inspector = newMenuItem('Inspector', '/admin/page/?class=CBAdminPageForModelInspector');
 }
