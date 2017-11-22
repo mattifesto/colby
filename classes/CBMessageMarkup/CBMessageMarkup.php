@@ -129,7 +129,14 @@ final class CBMessageMarkup {
                 $classAttribute = '';
             }
 
-            $element->html = "<{$element->tagName}{$classAttribute}>\n{$html}</{$element->tagName}>\n";
+            switch ($element->tagName) {
+                case 'p':
+                    $element->html = "<{$element->tagName}{$classAttribute}>{$html}";
+                    break;
+                default:
+                    $element->html = "<{$element->tagName}{$classAttribute}>\n{$html}</{$element->tagName}>\n";
+                    break;
+            }
         }
 
         return end($stack);
@@ -525,15 +532,15 @@ final class CBMessageMarkup {
      */
     static function tagNameAllowsBlockChildren(string $tagName): bool {
         return in_array($tagName, [
-            "blockquote",
-            "dd",
-            "div",
-            "dl",
-            "dt",
-            "li",
-            "ol",
-            "root", // custom
-            "ul",
+            'blockquote',
+            'dd',
+            'div',
+            'dl',
+            'dt',
+            'li',
+            'ol',
+            'root', // custom
+            'ul',
         ]);
     }
 
@@ -544,21 +551,22 @@ final class CBMessageMarkup {
      */
     static function tagNameIsAllowedBlockElement(string $tagName): bool {
         return in_array($tagName, [
-            "blockquote",
-            "dd",
-            "div",
-            "dl",
-            "dt",
-            "h1",
-            "h2",
-            "h3",
-            "h4",
-            "h5",
-            "h6",
-            "li",
-            "pre",
-            "ol",
-            "ul",
+            'blockquote',
+            'dd',
+            'div',
+            'dl',
+            'dt',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'li',
+            'p',
+            'pre',
+            'ol',
+            'ul',
         ]);
     }
 

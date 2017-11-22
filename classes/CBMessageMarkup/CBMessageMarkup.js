@@ -110,9 +110,17 @@ var CBMessageMarkup = {
                 classAttribute = "";
             }
 
-            element.html = "<" + element.tagName + classAttribute + ">\n" +
-                         html +
-                         "</" + element.tagName + ">\n";
+            switch (element.tagName) {
+                case "p":
+                    element.html = "<" + element.tagName + classAttribute + ">" +
+                                   html;
+                    break;
+                default:
+                    element.html = "<" + element.tagName + classAttribute + ">\n" +
+                                   html +
+                                   "</" + element.tagName + ">\n";
+                    break;
+            }
         }
 
         return stack[stack.length - 1];
@@ -541,6 +549,7 @@ var CBMessageMarkup = {
             "h5",
             "h6",
             "li",
+            "p",
             "pre",
             "ol",
             "ul",
