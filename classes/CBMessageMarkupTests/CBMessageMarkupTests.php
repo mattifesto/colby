@@ -60,10 +60,12 @@ final class CBMessageMarkupTests {
     static function html1(): string {
         return <<<EOT
 <h1>
-<p>            This is the Title
+            This is the Title
 </h1>
 <p>            This is an
             introductory paragraph.
+<p>            ( \\( \\\\( ) \\) \\\\)
+<p>            Explicitly declared p
 <ul>
 <li>
 <p>                This is the first list item.
@@ -179,6 +181,12 @@ EOT;
 
             This is an
             introductory paragraph.
+
+            \( \\\\\\( \\\\\\\\\( \) \\\\\) \\\\\\\\\)
+
+            --- p
+            Explicitly declared p
+            ---
 
             --- ul
                 This is the first list item.
@@ -315,6 +323,10 @@ EOT;
 
             This is an
             introductory paragraph.
+
+            ( \( \\\\( ) \) \\\\)
+
+            Explicitly declared p
 
                 This is the first list item.
 
