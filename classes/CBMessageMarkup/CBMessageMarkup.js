@@ -78,16 +78,20 @@ var CBMessageMarkup = {
                     throw new Error("child should be a string");
                 }
 
-                var childHTML = CBMessageMarkup.paragraphToHTML(child);
+                var paragraphAsHTML = CBMessageMarkup.paragraphToHTML(child);
 
-                if (element.isPreformatted) {
-                    html += childHTML;
-                } else if (element.defaultChildTagName) {
-                    html += "<" + element.defaultChildTagName + ">\n" +
-                            "<p>" + childHTML +
-                            "</" + element.defaultChildTagName + ">\n";
-                } else {
-                    html += "<p>" + childHTML;
+                switch (element.defaultChildTagName) {
+                    case "":
+                        html += paragraphAsHTML;
+                        break;
+                    case "p":
+                        html += "<p>" + paragraphAsHTML;
+                        break;
+                    default:
+                        html += "<" + element.defaultChildTagName + ">\n" +
+                                "<p>" + paragraphAsHTML +
+                                "</" + element.defaultChildTagName + ">\n";
+                        break;
                 }
             }
         });
@@ -306,6 +310,7 @@ var CBMessageMarkup = {
         var lines = markup.split(/\r?\n/);
         var stack = [];
         var root = CBMessageMarkup.createElement(stack);
+        root.defaultChildTagName = "p";
         root.tagName = "root";
         var current = root;
 
@@ -326,16 +331,28 @@ var CBMessageMarkup = {
                     current.classNamesAsHTML = Colby.textToHTML(command.classNames.join(" "));
                     current.tagName = command.tagName;
 
-                    if (command.tagName === "pre") {
-                        current.isPreformatted = true;
-                    }
-
-                    if (command.tagName === "ol" || command.tagName === "ul") {
-                        current.defaultChildTagName = "li";
-                    }
-
-                    if (command.tagName === "dl") {
-                        current.defaultChildTagName = "dd";
+                    switch(command.tagName) {
+                        case "dl":
+                            current.defaultChildTagName = "dd";
+                            break;
+                        case "h1":
+                        case "h2":
+                        case "h3":
+                        case "h4":
+                        case "h5":
+                        case "h6":
+                        case "p":
+                            break;
+                        case "ol":
+                        case "ul":
+                            current.defaultChildTagName = "li";
+                            break;
+                        case "pre":
+                            current.isPreformatted = true;
+                            break;
+                        default:
+                            current.defaultChildTagName = "p";
+                            break;
                     }
                 }
 

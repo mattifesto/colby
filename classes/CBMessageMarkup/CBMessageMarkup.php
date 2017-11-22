@@ -101,16 +101,20 @@ final class CBMessageMarkup {
                     throw new RuntimeException('This element child should be a string.');
                 }
 
-                $childHTML = CBMessageMarkup::paragraphToHTML($child);
+                $paragraphAsHTML = CBMessageMarkup::paragraphToHTML($child);
 
-                if ($element->isPreformatted) {
-                    $html .= $childHTML;
-                } else if ($element->defaultChildTagName) {
-                    $html .= "<{$element->defaultChildTagName}>\n" .
-                             "<p>{$childHTML}" .
-                             "</{$element->defaultChildTagName}>\n";
-                } else {
-                    $html .= "<p>{$childHTML}";
+                switch ($element->defaultChildTagName) {
+                    case '':
+                        $html .= $paragraphAsHTML;
+                        break;
+                    case 'p':
+                        $html .= "<p>{$paragraphAsHTML}";
+                        break;
+                    default:
+                        $html .= "<{$element->defaultChildTagName}>\n" .
+                                 "<p>{$paragraphAsHTML}" .
+                                 "</{$element->defaultChildTagName}>\n";
+                        break;
                 }
             }
         }
@@ -331,6 +335,7 @@ final class CBMessageMarkup {
         $lines = preg_split("/\r\n|\n|\r/", $markup);
         $stack = [];
         $rootElement = CBMessageMarkup::createElement($stack);
+        $rootElement->defaultChildTagName = 'p';
         $rootElement->tagName = 'root';
         $currentElement = $rootElement;
 
@@ -354,15 +359,26 @@ final class CBMessageMarkup {
                     $currentElement->tagName = $command->tagName;
 
                     switch ($command->tagName) {
-                        case "pre":
+                        case 'dl':
+                            $currentElement->defaultChildTagName = 'dd';
+                            break;
+                        case 'h1':
+                        case 'h2':
+                        case 'h3':
+                        case 'h4':
+                        case 'h5':
+                        case 'h6':
+                        case 'p':
+                            break;
+                        case 'ol':
+                        case 'ul':
+                            $currentElement->defaultChildTagName = 'li';
+                            break;
+                        case 'pre':
                             $currentElement->isPreformatted = true;
                             break;
-                        case "ol":
-                        case "ul":
-                            $currentElement->defaultChildTagName = "li";
-                            break;
-                        case "dl":
-                            $currentElement->defaultChildTagName = "dd";
+                        default:
+                            $currentElement->defaultChildTagName = 'p';
                             break;
                     }
                 }
