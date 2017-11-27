@@ -89,7 +89,7 @@ $helpMenu = (object)[
         'className' => 'CBMenuItem',
         'name' => 'api',
         'text' => 'API',
-        'URL' => '/admin/help/api/',
+        'URL' => '/admin/?c=CBDocumentation&p=CBPageHelpers',
     ],
     'cssvariables' => (object)[
         'className' => 'CBMenuItem',
