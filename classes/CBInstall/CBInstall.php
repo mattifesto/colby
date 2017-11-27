@@ -17,5 +17,112 @@ final class CBInstall {
 EOT;
 
         Colby::query($SQL);
+
+        CBDataStoreAdmin::install(); /* deprecated */
+        CBDataStores::install();
+        CBLog::install();
+        CBTasks::install(); /* deprecated */
+        CBTasks2::install();
+        CBUsers::install();
+        CBModels::install();
+        CBModelAssociations::install();
+        CBModelsPreferences::install();
+        CBPages::install();
+        CBSitePreferences::install();
+        CBThemedTextView::install(); /* deprecated */
+        CBImages::install();
+        CBWellKnownMenuForMain::install();
+        CBWellKnownPageForTestingCBTextView2::install();
+        CBWellKnownPageForTestingPageTitleAndBodyText::install();
+
+        // 2015.10.26
+        CBUpgradesForVersion172::run();
+
+        // 2015.12.28
+        CBUpgradesForVersion178::run();
+
+        // 2016.02.10
+        CBUpgradesForVersion183::run();
+
+        // 2016.03.15
+        CBUpgradesForVersion188::run();
+
+        // 2016.04.28
+        CBUpgradesForVersion191::run();
+
+        // 2017.06.25
+        CBUpgradesForVersion279::run();
+
+        // 2017.10.20
+        CBUpgradesForVersion346::run();
+
+        // 2017.10.27
+        CBUpgradesForVersion351::run();
+
+        /**
+         * Tasks that can only be run after tables are created properly.
+         */
+
+        CBDataStoresFinderTask::install();
+        CBLogMaintenanceTask::install();
+
+        /**
+         * These functions are also called from CBRemoteAdministration::ping()
+         */
+
+        CBImageVerificationTask::startForNewImages();
+        CBPageVerificationTask::startForNewPages();
+
+        /**
+         * New installation process. This is placed at the end of the install
+         * process at first but will eventually move earlier and become the
+         * entire install process.
+         */
+
+        $allClassNames = CBAdmin::fetchClassNames();
+        $installableClassNames = [];
+
+        foreach ($allClassNames as $className) {
+            CBInstall::addInstallableClassName($className, $installableClassNames);
+        }
+
+        foreach ($installableClassNames as $className) {
+            call_user_func("{$className}::CBInstall_install");
+        }
+    }
+
+    /**
+     * This function resolves and adds the installation dependencies for a class
+     * name and then adds the class name to the list of installable class names
+     * if the class is installable.
+     */
+    static function addInstallableClassName(string $className, array &$installableClassNames): void {
+        if (in_array($className, $installableClassNames)) {
+            return;
+        }
+
+        if (is_callable($function = "{$className}::CBInstall_requiredClassNames")) {
+            $requiredClassNames = call_user_func($function);
+
+            foreach ($requiredClassNames as $requiredClassName) {
+                CBInstall::addInstallableClassName($className, $installableClassNames);
+            }
+        }
+
+        if (is_callable($function = "{$className}::CBInstall_install")) {
+
+            /**
+             * The class name was not in the list of installable class names
+             * when the function began. If it has been added that means some
+             * class this class requires also requires this class. This is a
+             * circular dependency which is impossible to resolve.
+             */
+
+            if (in_array($className, $installableClassNames)) {
+                throw new RuntimeException("{$className} has a circular installation dependency.");
+            }
+
+            $installableClassNames[] = $className;
+        }
     }
 }
