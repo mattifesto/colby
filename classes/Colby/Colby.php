@@ -280,14 +280,23 @@ final class Colby {
     }
 
     /**
+     * Find files in all libraries.
+     *
      * @param string $pattern
      *
-     * @return array
+     *      Example:
+     *      (extra spaces are to avoid ending comment)
+     *
+     *      $filepaths = Colby::globFiles('classes / * / *.mmk');
+     *
+     *      This will find all .mmk file inside a class directory.
+     *
+     * @return [string]
      */
     static function globFiles($pattern) {
         $filenames = array();
 
-        foreach (self::$libraryDirectories as $libraryDirectory) {
+        foreach (Colby::$libraryDirectories as $libraryDirectory) {
             if ($libraryDirectory) {
                 $intraSitePattern = "{$libraryDirectory}/{$pattern}";
             } else {
