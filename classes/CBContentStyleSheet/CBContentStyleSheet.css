@@ -19,6 +19,12 @@
     font-style: italic;
 }
 
+.CBContentStyleSheet code {
+    background-color: var(--CBBackgroundColor2);
+    border-radius: 0.2em;
+    padding: 0.1em 0.3em;
+}
+
 .CBContentStyleSheet dd {
     padding: 0 3em;
 }
