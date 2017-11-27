@@ -8,6 +8,14 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
+$className = $_GET['c'] ?? '';
+$pageStub = $_GET['p'] ?? '';
+
+if (!empty($className)) {
+    CBAdmin::render($className, $pageStub);
+    return 1;
+}
+
 CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::setTitleHTML('Website Status');
