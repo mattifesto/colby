@@ -182,6 +182,10 @@ final class CBModel {
     }
 
     /**
+     * @deprecated use:
+     *
+     *      CBModel::value($model, $keyPath, [], 'CBConvert::valueAsArray');
+     *
      * This function is used to get the value of a model property that is
      * expected to be an array. Unset and non-array values will be returned as
      * and empty array.
@@ -264,6 +268,14 @@ final class CBModel {
     }
 
     /**
+     * @deprecated use:
+     *
+     *      CBModel::value($model, $keyPath, [], 'CBConvert::valueAsArrayOfObjects');
+     *
+     * This function filters the array, but its replacement does not. If
+     * filtering is a common or important feature add another new function to
+     * CBConvert and document the reasons and uses.
+     *
      * @param object? $model
      * @param string $keyPath
      *
