@@ -1,0 +1,26 @@
+.CBAPIStyleSheet {
+    background-color: var(--CBBackgroundColor);
+}
+
+.CBAPIStyleSheet .api {
+    border-top: 1px solid var(--CBLineColor);
+    margin-top: 5em;
+    padding-top: 1em;
+}
+
+.CBAPIStyleSheet .api .description {
+    color: var(--CBTextColor2);
+}
+
+.CBAPIStyleSheet .function {
+    font-family: var(--CBMonospaceFontFamily);
+}
+
+.CBAPIStyleSheet .api.deprecated .function:after {
+    color: red;
+    content: " (deprecated)";
+}
+
+.CBAPIStyleSheet .function .name {
+    color: blue;
+}
