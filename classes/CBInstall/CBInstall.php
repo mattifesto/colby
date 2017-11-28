@@ -67,12 +67,6 @@ EOT;
         CBLogMaintenanceTask::install();
 
         /**
-         * These functions are also called from CBRemoteAdministration::ping()
-         */
-
-        CBImageVerificationTask::startForNewImages();
-
-        /**
          * New installation process. This is placed at the end of the install
          * process at first but will eventually move earlier and become the
          * entire install process.

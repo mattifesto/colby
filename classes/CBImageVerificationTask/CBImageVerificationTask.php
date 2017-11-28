@@ -31,6 +31,21 @@ final class CBImageVerificationTask {
     }
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBImageVerificationTask::startForNewImages();
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBImages', 'CBLog', 'CBModels', 'CBPages', 'CBTasks2'];
+    }
+
+
+    /**
      * @param hex160 $ID
      *
      * @return null
