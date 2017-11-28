@@ -10,7 +10,7 @@ final class CBDefaultPageFooterView {
 
         <footer class="CBDefaultPageFooterView CBDarkTheme">
             <div class="copyright">
-                Copyright &copy; <?= gmdate('Y'), ' ', cbhtml(CBSitePreferences::siteName()); ?>
+                Copyright &copy; <?= gmdate('Y') . ' ' . cbhtml(CBSitePreferences::siteName()) ?>
             </div>
         </footer>
 

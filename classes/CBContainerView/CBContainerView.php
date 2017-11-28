@@ -161,7 +161,7 @@ EOT;
             CBHTMLOutput::addCSS($model->stylesCSS);
         }
 
-        ?><<?= $tagName, $HREF ?> class="<?= $classes ?>"<?= $styles ?>><?php
+        ?><<?= $tagName . $HREF ?> class="<?= $classes ?>"<?= $styles ?>><?php
             array_walk($model->subviews, 'CBView::render');
         ?></<?= $tagName ?>><?php
     }

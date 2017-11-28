@@ -304,7 +304,7 @@ final class CBHTMLOutput {
         ?>
 
         <!doctype html>
-        <html lang="en" class="<?= $classNameForPageSettings, ' ', $defaultThemeClassName ?>">
+        <html lang="en" class="<?= $classNameForPageSettings . ' ' . $defaultThemeClassName ?>">
             <head>
                 <meta charset="UTF-8">
                 <title><?= $titleAsHTML ?></title>
