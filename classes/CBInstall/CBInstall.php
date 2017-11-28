@@ -47,9 +47,6 @@ EOT;
         // 2016.03.15
         CBUpgradesForVersion188::run();
 
-        // 2016.04.28
-        CBUpgradesForVersion191::run();
-
         /**
          * New installation process. This is placed at the end of the install
          * process at first but will eventually move earlier and become the
