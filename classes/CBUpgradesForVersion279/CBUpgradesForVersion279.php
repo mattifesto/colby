@@ -8,9 +8,16 @@
 final class CBUpgradesForVersion279 {
 
     /**
-     * @return null
+     * @return void
      */
-    static function run() {
+    static function CBInstall_install(): void {
         Colby::query('DROP TABLE IF EXISTS `CBDictionary`');
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBUpgradesForVersion191'];
     }
 }
