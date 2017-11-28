@@ -165,9 +165,16 @@ EOT;
     }
 
     /**
-     * @return null
+     * @return void
      */
-    static function install() {
+    static function CBInstall_install(): void {
         CBTasks2::updateTask(__CLASS__, CBDataStoresFinderTask::ID(), null, null, time());
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBLog', 'CBTasks2'];
     }
 }

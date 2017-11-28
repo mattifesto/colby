@@ -60,12 +60,6 @@ EOT;
         CBUpgradesForVersion351::run();
 
         /**
-         * Tasks that can only be run after tables are created properly.
-         */
-
-        CBDataStoresFinderTask::install();
-
-        /**
          * New installation process. This is placed at the end of the install
          * process at first but will eventually move earlier and become the
          * entire install process.
