@@ -27,6 +27,20 @@ final class CBPageVerificationTask {
     }
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBPageVerificationTask::startForNewPages();
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBImages', 'CBLog', 'CBModels', 'CBPages', 'CBTasks2'];
+    }
+
+    /**
      * @param hex160 $ID
      *
      *      The ID (`ColbyPages`.`archiveID`) of the page to verify.

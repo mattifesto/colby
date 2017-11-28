@@ -71,7 +71,6 @@ EOT;
          */
 
         CBImageVerificationTask::startForNewImages();
-        CBPageVerificationTask::startForNewPages();
 
         /**
          * New installation process. This is placed at the end of the install
@@ -105,7 +104,11 @@ EOT;
             $requiredClassNames = call_user_func($function);
 
             foreach ($requiredClassNames as $requiredClassName) {
-                CBInstall::addInstallableClassName($className, $installableClassNames);
+                if (!class_exists($requiredClassName)) {
+                    throw new RuntimeException("{$className} has an installation dependency on the class {$requiredClassName} which doesn't exist.");
+                }
+
+                CBInstall::addInstallableClassName($requiredClassName, $installableClassNames);
             }
         }
 
