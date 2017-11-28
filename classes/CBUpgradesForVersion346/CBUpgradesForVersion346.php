@@ -10,9 +10,9 @@
 final class CBUpgradesForVersion346 {
 
     /**
-     * @return null
+     * @return void
      */
-    static function run() {
+    static function CBInstall_install(): void {
 
         /**
          * Check to see if the CBDataStores table has the old collation. If it
@@ -256,5 +256,12 @@ EOT;
 
             Colby::query($SQL);
         }
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBUpgradesForVersion279'];
     }
 }
