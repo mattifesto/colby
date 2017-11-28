@@ -6,10 +6,17 @@ final class CBLogMaintenanceTask {
      * When we do an install or update schedule this task to run. This is also
      * the time at which the priority of the task can be changed if needed.
      *
-     * @return null
+     * @return void
      */
-    static function install() {
+    static function CBInstall_install(): void {
         CBTasks2::updateTask(__CLASS__, CBHex160::zero());
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBLog', 'CBTasks2'];
     }
 
     /**

@@ -64,7 +64,6 @@ EOT;
          */
 
         CBDataStoresFinderTask::install();
-        CBLogMaintenanceTask::install();
 
         /**
          * New installation process. This is placed at the end of the install
