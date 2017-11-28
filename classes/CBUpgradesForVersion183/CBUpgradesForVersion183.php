@@ -10,7 +10,7 @@
  */
 class CBUpgradesForVersion183 {
 
-    static function run() {
+    static function CBInstall_install(): void {
         $SQL = <<<EOT
 
             SELECT  COUNT(*)
@@ -34,5 +34,12 @@ EOT;
 
         Colby::query('ALTER TABLE `CBPagesInTheTrash` ADD COLUMN `created` BIGINT NOT NULL AFTER `classNameForKind`');
         Colby::query('ALTER TABLE `CBPagesInTheTrash` ADD COLUMN `modified` BIGINT NOT NULL AFTER `iteration`');
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBUpgradesForVersion178'];
     }
 }
