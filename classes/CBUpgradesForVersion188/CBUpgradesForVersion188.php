@@ -10,9 +10,9 @@
 final class CBUpgradesForVersion188 {
 
     /**
-     * @return null
+     * @return void
      */
-    static function run() {
+     static function CBInstall_install(): void {
         $SQL = <<<EOT
 
             UPDATE `ColbyPages`
@@ -22,5 +22,12 @@ final class CBUpgradesForVersion188 {
 EOT;
 
         Colby::query($SQL);
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBUpgradesForVersion183'];
     }
 }
