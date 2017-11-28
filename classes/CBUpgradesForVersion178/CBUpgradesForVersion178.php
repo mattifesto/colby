@@ -57,6 +57,6 @@ EOT;
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBUpgradesForVersion172'];
+        return ['CBModels'];
     }
 }
