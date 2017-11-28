@@ -13,7 +13,10 @@
  */
 class CBUpgradesForVersion172 {
 
-    static function run() {
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
         $SQL = <<<EOT
 
             SELECT  COUNT(*)
@@ -36,5 +39,12 @@ EOT;
         Colby::query('ALTER TABLE `CBPagesInTheTrash` DROP COLUMN `typeID`');
         Colby::query('ALTER TABLE `CBPagesInTheTrash` DROP COLUMN `groupID`');
         Colby::query('ALTER TABLE `CBPagesInTheTrash` CHANGE COLUMN `dataStoreID` `archiveID` BINARY(20) NOT NULL');
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBPages'];
     }
 }

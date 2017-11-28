@@ -35,9 +35,6 @@ EOT;
         CBWellKnownPageForTestingCBTextView2::install();
         CBWellKnownPageForTestingPageTitleAndBodyText::install();
 
-        // 2015.10.26
-        CBUpgradesForVersion172::run();
-
         /**
          * New installation process. This is placed at the end of the install
          * process at first but will eventually move earlier and become the
@@ -53,6 +50,7 @@ EOT;
 
         foreach ($installableClassNames as $className) {
             call_user_func("{$className}::CBInstall_install");
+            error_log("{$className}::CBInstall_install");
         }
     }
 
