@@ -10,7 +10,7 @@ final class CBUpgradesForVersion351 {
     /**
      * @return null
      */
-    static function run() {
+    static function CBInstall_install() {
         $SQL = <<<EOT
 
             SELECT  COUNT(*)
@@ -40,5 +40,12 @@ EOT;
             Colby::query('DROP TABLE IF EXISTS `CBTasks2`');
             CBTasks2::install();
         }
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBUpgradesForVersion346'];
     }
 }
