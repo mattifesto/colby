@@ -60,46 +60,51 @@ $modelsMenu = (object)[
     'import' => newMenuItem('Import', '/admin/page/?class=CBAdminPageForModelImport'),
 ];
 
-$helpMenu = (object)[
-    'markaround-syntax' => (object)[
-        'className' => 'CBMenuItem',
-        'name' => 'markaround-syntax',
-        'text' => 'Markaround',
-        'URL' => '/admin/help/markaround-syntax/'
+$CBAdminHelpMenu = CBModel::toModel((object)[
+    'className' => 'CBMenu',
+    'title' => 'Help',
+    'titleURI' => '/admin/help/title-description/',
+    'items' => [
+        (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'markaround-syntax',
+            'text' => 'Markaround',
+            'URL' => '/admin/help/markaround-syntax/'
+        ],
+        'title-description' => (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'title-description',
+            'text' => 'Titles & Descriptions',
+            'URL' => '/admin/help/title-description/',
+        ],
+        'caption-alternative-text' => (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'caption-alternative-text',
+            'text' => 'Captions & Alternative Text',
+            'URL' => '/admin/help/caption-alternative-text',
+        ],
+        'CBArtworkElement' => (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'CBArtworkElement',
+            'text' => 'CBArtworkElement',
+            'URL' => '/admin/page/?class=CBAdminPageForCBArtworkElement',
+        ],
+        'api' => (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'api',
+            'text' => 'API',
+            'URL' => '/admin/?c=CBDocumentation&p=CBPageHelpers',
+        ],
+        'cssvariables' => (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'cssvariables',
+            'text' => 'CSS Variables',
+            'URL' => '/admin/page/?class=CBAdminPageForCSSVariables'
+        ],
     ],
-    'title-description' => (object)[
-        'className' => 'CBMenuItem',
-        'name' => 'title-description',
-        'text' => 'Titles & Descriptions',
-        'URL' => '/admin/help/title-description/',
-    ],
-    'caption-alternative-text' => (object)[
-        'className' => 'CBMenuItem',
-        'name' => 'caption-alternative-text',
-        'text' => 'Captions & Alternative Text',
-        'URL' => '/admin/help/caption-alternative-text',
-    ],
-    'CBArtworkElement' => (object)[
-        'className' => 'CBMenuItem',
-        'name' => 'CBArtworkElement',
-        'text' => 'CBArtworkElement',
-        'URL' => '/admin/page/?class=CBAdminPageForCBArtworkElement',
-    ],
-    'api' => (object)[
-        'className' => 'CBMenuItem',
-        'name' => 'api',
-        'text' => 'API',
-        'URL' => '/admin/?c=CBDocumentation&p=CBPageHelpers',
-    ],
-    'cssvariables' => (object)[
-        'className' => 'CBMenuItem',
-        'name' => 'cssvariables',
-        'text' => 'CSS Variables',
-        'URL' => '/admin/page/?class=CBAdminPageForCSSVariables'
-    ],
-];
+]);
 
-$CBAdminMenu->help = newMenuItem('Help', '/admin/help/markaround-syntax/', $helpMenu);
+$CBAdminMenu->help = newMenuItem('Help', '/admin/help/markaround-syntax/');
 
 if (ColbyUser::current()->isOneOfThe('Developers')) {
     $developMenu = (object)[
