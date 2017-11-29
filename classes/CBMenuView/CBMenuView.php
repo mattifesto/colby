@@ -3,14 +3,19 @@
 final class CBMenuView {
 
     /**
-     * @param string $model->CSSClassNames
-     * @param object $model->menu
+     * @param object $model
      *
-     *      This parameter is used by direct callers that dynamically construct
-     *      a menu. It takes higher priority than menuID. This parameter will
-     *      not be preserved by CBModel_toModel().
+     *      {
+     *          CSSClassNames: [string]
+     *          menu: object
      *
-     * @param hex160 $model->menuID
+     *              This parameter is used by direct callers that dynamically
+     *              construct a menu. It takes higher priority than menuID. This
+     *              parameter will not be preserved by CBModel_toModel().
+     *
+     *          menuID: hex160
+     *          selectedItemName: string
+     *      }
      *
      * @return null
      */
@@ -33,7 +38,7 @@ final class CBMenuView {
             return;
         }
 
-        $selectedItemName = CBModel::value($model, 'selectedItemName');
+        $selectedItemName = CBModel::value($model, 'selectedItemName', '', 'ColbyConvert::textToStub');
         $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
