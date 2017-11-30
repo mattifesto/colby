@@ -25,16 +25,28 @@
     padding: 0.1em 0.3em;
 }
 
-.CBContentStyleSheet dd {
-    padding: 0 3em;
-}
-
-.CBContentStyleSheet dd,
-.CBContentStyleSheet dt,
-.CBContentStyleSheet dd p {
+.CBContentStyleSheet dt {
     margin-bottom: 0.5em;
     margin-top: 0.5em;
 }
+
+/**
+ * 2017.11.30 A rare use of left an right margins because the border box should
+ * be inset relative to the parent element. This allows the dd element to look
+ * like a sub-element of its preceding dt element.
+ */
+.CBContentStyleSheet dd {
+    margin: 0.5em 3.0em;
+}
+
+/**
+ * 2017.11.30 Today I found a rule here that applied a top and bottom margin of
+ * 0.5em to p elements inside of dd elements. I do not know why this rule was
+ * here but it was incorrect because as soon as you place a border on the dd
+ * element, the first and last p elements add an awkward whitespace inside the
+ * border. I'm leaving this comment for reference in case the original
+ * motivation for the rule comes up again.
+ */
 
 .CBContentStyleSheet b cite,
 .CBContentStyleSheet b i,
