@@ -26,12 +26,6 @@ final class CBAdminPageMenuView {
         $helpMenuSpec->items = [
             (object)[
                 'className' => 'CBMenuItem',
-                'name' => 'markaround-syntax',
-                'text' => 'Markaround',
-                'URL' => '/admin/help/markaround-syntax/'
-            ],
-            (object)[
-                'className' => 'CBMenuItem',
                 'name' => 'title-description',
                 'text' => 'Titles & Descriptions',
                 'URL' => '/admin/help/title-description/',

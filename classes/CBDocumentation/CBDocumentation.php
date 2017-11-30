@@ -16,6 +16,15 @@ final class CBDocumentation {
                     'URL' => '/admin/?c=CBDocumentation&p=CBPageHelpers',
                 ],
             ],
+            (object)[
+                'mainMenuItemName' => 'help',
+                'menuItem' => (object)[
+                    'className' => 'CBMenuItem',
+                    'name' => 'Markaround',
+                    'text' => 'Markaround',
+                    'URL' => '/admin/?c=CBDocumentation&p=Markaround',
+                ],
+            ],
         ];
     }
 
@@ -28,6 +37,9 @@ final class CBDocumentation {
         switch ($pageStub) {
             case 'CBPageHelpers':
                 return ['help', 'CBPageHelpers'];
+
+            case 'Markaround':
+                return ['help', 'Markaround'];
 
             default:
                 return ['help'];
@@ -46,6 +58,20 @@ final class CBDocumentation {
                     'className' => 'CBMessageView',
                     'CSSClassNames' => 'CBAPIStyleSheet',
                     'markup' => file_get_contents(__DIR__ . '/CBPageHelpers_documentation.mmk'),
+                ]);
+                break;
+
+            case 'Markaround':
+                CBView::renderSpec((object)[
+                    'className' => 'CBThemedTextView',
+                    'contentAsMarkaround' => file_get_contents(__DIR__ . '/Markaround_documentation.markaround'),
+                    'stylesTemplate' => <<<EOT
+
+                        view {
+                            background-color: var(--CBBackgroundColor);
+                        }
+
+EOT
                 ]);
                 break;
 
