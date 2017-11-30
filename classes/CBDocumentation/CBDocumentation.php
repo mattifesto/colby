@@ -3,6 +3,23 @@
 final class CBDocumentation {
 
     /**
+     * @return [object]
+     */
+    static function CBAdmin_menuItems(): array {
+        return [
+            (object)[
+                'mainMenuItemName' => 'help',
+                'menuItem' => (object)[
+                    'className' => 'CBMenuItem',
+                    'name' => 'CBPageHelpers',
+                    'text' => 'CBPageHelpers',
+                    'URL' => '/admin/?c=CBDocumentation&p=CBPageHelpers',
+                ],
+            ],
+        ];
+    }
+
+    /**
      * @param string $pageStub
      *
      * @return [string]
@@ -10,7 +27,7 @@ final class CBDocumentation {
     static function CBAdmin_menuNamePath(string $pageStub) {
         switch ($pageStub) {
             case 'CBPageHelpers':
-                return ['help', 'api'];
+                return ['help', 'CBPageHelpers'];
 
             default:
                 return ['help'];
