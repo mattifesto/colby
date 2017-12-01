@@ -36,6 +36,8 @@ final class CBAdminPageForCBArtworkElement {
             }
 
             .content {
+                border-left: 1px dashed var(--CBLineColor);
+                border-right: 1px dashed var(--CBLineColor);
                 line-height: 1.6;
                 margin: 0 auto;
                 max-width: 640px;
