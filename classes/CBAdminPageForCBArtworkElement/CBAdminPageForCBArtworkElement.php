@@ -23,14 +23,11 @@ final class CBAdminPageForCBArtworkElement {
         CBHTMLOutput::setTitleHTML('CBArtworkElement');
         CBHTMLOutput::setDescriptionHTML('Description and examples of CBArtworkElement functionality.');
 
-        $URL = CBDataStore::flexpath(CBAdminPageForTests::imageID, 'rw320.jpeg', CBSitePreferences::siteURL());
+        $URL = '/colby/classes/CBAdminPageForTests/2017.02.02.TestImage.jpg';
+        $CSS = <<<EOT
 
-        ?>
-
-        <style>
-
-            main {
-                background-color: hsl(0, 0%, 80%);
+            main.CBUIRoot {
+                background-color: var(--CBBackgroundColor);
             }
 
             .CBArtworkElement {
@@ -39,7 +36,6 @@ final class CBAdminPageForCBArtworkElement {
             }
 
             .content {
-                background-color: white;
                 line-height: 1.6;
                 margin: 0 auto;
                 max-width: 640px;
@@ -50,15 +46,18 @@ final class CBAdminPageForCBArtworkElement {
                 margin-top: 10px;
             }
 
-        </style>
+EOT;
+
+        CBHTMLOutput::addCSS($CSS);
+
+        ?>
+
         <div class="content">
             <div>
-                Below is the text image used on this page. It's the rw320 size of
-                the system test image. The original image is 1600x900, but this
-                image is 320x180.
+                Below is the test image used on this page, which is 1600px by 900px.
             </div>
             <div style="margin-bottom: 50px; text-align: center">
-                <img src="<?= $URL ?>">
+                <img src="<?= $URL ?>" style="width: 320px">
             </div>
             <div>
                 Below is an artwork element with an aspect ratio of 16 x 9 and
