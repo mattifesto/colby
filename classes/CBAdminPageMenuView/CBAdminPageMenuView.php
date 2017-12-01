@@ -22,14 +22,8 @@ final class CBAdminPageMenuView {
 
         $helpMenuSpec->className = 'CBMenu';
         $helpMenuSpec->title = 'Help';
-        $helpMenuSpec->titleURI = '/admin/help/title-description/';
+        $helpMenuSpec->titleURI = '/admin/?c=CBDocumentation&p=TitlesAndDescriptions';
         $helpMenuSpec->items = [
-            (object)[
-                'className' => 'CBMenuItem',
-                'name' => 'title-description',
-                'text' => 'Titles & Descriptions',
-                'URL' => '/admin/help/title-description/',
-            ],
             (object)[
                 'className' => 'CBMenuItem',
                 'name' => 'caption-alternative-text',

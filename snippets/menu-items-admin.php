@@ -60,7 +60,7 @@ $modelsMenu = (object)[
     'import' => newMenuItem('Import', '/admin/page/?class=CBAdminPageForModelImport'),
 ];
 
-$CBAdminMenu->help = newMenuItem('Help', '/admin/help/title-description/');
+$CBAdminMenu->help = newMenuItem('Help', '/admin/?c=CBDocumentation&p=TitlesAndDescriptions');
 
 if (ColbyUser::current()->isOneOfThe('Developers')) {
     $developMenu = (object)[
