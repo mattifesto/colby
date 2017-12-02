@@ -4,7 +4,6 @@
 /* globals
     CBArrayEditor,
     CBUI,
-    CBUIActionLink,
     CBUIBooleanEditor,
     CBUIImageChooser,
     CBUIStringEditor,
@@ -48,7 +47,6 @@ var CBSitePreferencesEditor = {
 
         /* imageForIcon */
 
-        element.appendChild(CBUI.createHalfSpace());
         section = CBUI.createSection();
 
         var chooser = CBUIImageChooser.createFullSizedChooser({
@@ -78,33 +76,8 @@ var CBSitePreferencesEditor = {
         item.appendChild(chooser.element);
         section.appendChild(item);
 
-        element.appendChild(section);
-
-        /* error tests */
-
         element.appendChild(CBUI.createHalfSpace());
-        section = CBUI.createSection();
-
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIActionLink.create({
-            callback : function () {
-                Colby.callAjaxFunction("CBSitePreferencesEditor", "errorTest");
-            },
-            labelText : "PHP Error Test",
-        }).element);
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIActionLink.create({
-            callback : function () {
-                throw new Error("Sample JavaScript Error");
-            },
-            labelText : "JavaScript Error Test",
-        }).element);
-        section.appendChild(item);
-
         element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
 
@@ -153,14 +126,10 @@ var CBSitePreferencesEditor = {
         }).element);
         section.appendChild(item);
 
+        element.appendChild(CBUI.createHalfSpace());
         element.appendChild(section);
 
         /* Slack */
-
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            text : "Slack",
-        }));
 
         section = CBUI.createSection();
 
@@ -172,14 +141,14 @@ var CBSitePreferencesEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-        element.appendChild(section);
-
-        /* Social */
 
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({
-            text : "Social",
+            text : "Slack",
         }));
+        element.appendChild(section);
+
+        /* Social */
 
         section = CBUI.createSection();
 
@@ -201,14 +170,13 @@ var CBSitePreferencesEditor = {
         }).element);
         section.appendChild(item);
 
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({
+            text : "Social",
+        }));
         element.appendChild(section);
 
         /* Google reCAPTCHA */
-
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            text : "Google reCAPTCHA",
-        }));
 
         section = CBUI.createSection();
 
@@ -230,6 +198,10 @@ var CBSitePreferencesEditor = {
         }).element);
         section.appendChild(item);
 
+        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(CBUI.createSectionHeader({
+            text : "Google reCAPTCHA",
+        }));
         element.appendChild(section);
 
         /* custom values */
