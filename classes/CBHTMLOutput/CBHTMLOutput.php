@@ -197,7 +197,7 @@ final class CBHTMLOutput {
                 // Partial page may have been rendered, clear output buffer
                 CBHTMLOutput::reset();
 
-                // Report the exception that occured in the try block
+                // Report the exception that occurred in the try block
                 Colby::reportException($innerException);
 
                 // Revert to the bare bones Colby exception handler for the
