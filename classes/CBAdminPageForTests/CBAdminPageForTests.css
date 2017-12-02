@@ -11,6 +11,11 @@
     padding: 10px;
 }
 
+.CBAdminPageForTests .buttonsContainer {
+    display: flex;
+    justify-content: center;
+}
+
 .CBAdminPageForTests img {
     height: 90px;
     margin-bottom: 5px;

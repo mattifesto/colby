@@ -50,6 +50,9 @@ var CBAdminPageForTests = {
         element.className = "CBTestUI";
         var containerElement = document.createElement("div");
         containerElement.className = "container";
+        var buttonsContainerElement = document.createElement("div");
+        buttonsContainerElement.className = "buttonsContainer";
+
         var img = document.createElement("img");
         img.src = "/colby/classes/CBAdminPageForTests/2017.02.02.TestImage.jpg";
         var input = document.createElement("input");
@@ -71,9 +74,30 @@ var CBAdminPageForTests = {
             button: button,
         }));
 
+        buttonsContainerElement.appendChild(button.element);
+        buttonsContainerElement.appendChild(CBUI.createButton({
+            callback: function () {
+                window.open('/admin/?c=CBUnitTests&p=AdminPageException');
+            },
+            text: "Admin Page Exception Test",
+        }).element);
+        buttonsContainerElement.appendChild(CBUI.createButton({
+            callback: function () {
+                Colby.callAjaxFunction("CBUnitTests", "errorTest")
+                    .catch(Colby.displayAndReportError);
+            },
+            text: "Call Ajax Function PHP Error Test",
+        }).element);
+        buttonsContainerElement.appendChild(CBUI.createButton({
+            callback: function () {
+                throw new Error("Sample JavaScript Error");
+            },
+            text: "JavaScript Error Test",
+        }).element);
+
         containerElement.appendChild(input);
         containerElement.appendChild(img);
-        containerElement.appendChild(button.element);
+        containerElement.appendChild(buttonsContainerElement);
         element.appendChild(containerElement);
         element.appendChild(status.element);
 

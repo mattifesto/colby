@@ -3,6 +3,52 @@
 class CBUnitTests {
 
     /**
+     * @param string $pageStub
+     *
+     * @return [string]
+     */
+    static function CBAdmin_menuNamePath(string $pageStub) {
+        switch ($pageStub) {
+            case 'AdminPageException':
+                return ['develop', 'test'];
+
+            default:
+                return ['develop'];
+        }
+    }
+
+    /**
+     * @param string $pageStub
+     *
+     * @return void
+     */
+    static function CBAdmin_render(string $pageStub): void {
+        switch ($pageStub) {
+            case 'AdminPageException':
+                throw new RuntimeException('Admin Page Exception Test');
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    /**
+     * @return null
+     */
+    static function CBAjax_errorTest() {
+        //throw new RuntimeException(str_repeat("This is a test of a long message. ", 1000));
+        throw new RuntimeException("Call Ajax Function PHP Test Error");
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_errorTest_group() {
+        return 'Developers';
+    }
+
+    /**
      * @return null
      */
     static function getListOfTestsForAjax() {
