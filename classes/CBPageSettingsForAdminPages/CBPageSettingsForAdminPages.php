@@ -14,7 +14,7 @@ final class CBPageSettingsForAdminPages {
      *
      * @return null
      */
-    static function renderPageForException(/* Throwable */ $exception) {
+    static function renderPageForException(Throwable $exception) {
          $model = (object)[
              'className' => 'CBViewPage',
              'classNameForSettings' => 'CBPageSettingsForAdminPages',
