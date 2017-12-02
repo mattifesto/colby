@@ -54,7 +54,7 @@ $command    = "{$command} -h {$host} -u {$user} --password={$password} --databas
 exec($command, $output, $result);
 
 if ($result) {
-    $response->message = "An error occured: {$result}\n\n" .
+    $response->message = "An error occurred: {$result}\n\n" .
                          "Output:\n" .
                          implode("\n", $output);
     $response->send();
