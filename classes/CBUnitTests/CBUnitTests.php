@@ -38,7 +38,7 @@ class CBUnitTests {
      */
     static function CBAjax_errorTest() {
         //throw new RuntimeException(str_repeat("This is a test of a long message. ", 1000));
-        throw new RuntimeException("Call Ajax Function PHP Test Error");
+        throw new RuntimeException('Test exception thrown inside the PHP implementation of CBUnitTests::CBAjax_errorTest()');
     }
 
     /**
