@@ -79,7 +79,7 @@ var CBAdminPageForTests = {
             callback: function () {
                 window.open('/admin/?c=CBUnitTests&p=AdminPageException');
             },
-            text: "Admin Page Exception Test",
+            text: "Test CBPageSettingsForAdminPages::renderPageForException()",
         }).element);
         buttonsContainerElement.appendChild(CBUI.createButton({
             callback: function () {

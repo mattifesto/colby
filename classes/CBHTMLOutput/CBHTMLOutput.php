@@ -186,13 +186,13 @@ final class CBHTMLOutput {
         CBErrorHandler::report($throwable);
 
         try {
+            $classNameForPageSettings = CBHTMLOutput::$classNameForSettings;
+
             /**
              * A page may have already been partially rendered so reset
              * CBHTMLOutput to clear the output buffer.
              */
             CBHTMLOutput::reset();
-
-            $classNameForPageSettings = CBHTMLOutput::$classNameForSettings;
 
             if (is_callable($function = "{$classNameForPageSettings}::renderPageForException")) {
                 call_user_func($function, $throwable);
