@@ -9,5 +9,5 @@
  */
 
 if (ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
-    throw new Exception("The /colby/test-default-exception-handler/ page was viewed");
+    throw new Exception('The /colby/test-default-exception-handler/ page was viewed. This is a test of the Colby default exception handler.');
 }
