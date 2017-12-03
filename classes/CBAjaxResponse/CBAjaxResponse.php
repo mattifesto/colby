@@ -26,63 +26,24 @@ class CBAjaxResponse {
     }
 
     /**
-     * @see Colby::handleException()
+     * 2017.12.03 This function was updated to comply with the custom exception
+     * handler documentation in the CBErrorHandler::handle() comments.
      *
-     *      This exception handler places all of its code in a try block. If
-     *      anything goes wrong it will result in an inner exception which we
-     *      attempt to note in the error log. An inner exception in an exception
-     *      handler is a unrecoverable dead end which generally only occurs
-     *      during development on the exception handler itself.
-     *
-     * @param Throwable $exception
+     * @param Throwable $throwable
      *
      * @return null
      */
-    public function handleException(Throwable $exception) {
+    public function handleException(Throwable $throwable) {
+        CBErrorHandler::report($throwable);
+
         try {
-
-            Colby::reportException($exception);
-
-            $this->classNameForException = get_class($exception);
-            $this->message = 'Error ' . CBConvert::throwableToMessage($exception);
-            $this->stackTrace = Colby::exceptionStackTrace($exception);
+            $this->classNameForException = get_class($throwable);
+            $this->message = 'Error ' . CBConvert::throwableToMessage($throwable);
+            $this->stackTrace = Colby::exceptionStackTrace($throwable);
             $this->wasSuccessful = false;
             $this->send();
-
-        } catch (Throwable $innerException) {
-
-            /**
-             * CBAjaxResponse::handleException() is an exception free function.
-             * Exception free functions must handle inner errors and second
-             * inner errors.
-             */
-
-            try {
-
-                $message = 'INNER ERROR ' . CBConvert::throwableToMessage($innerException);
-
-                error_log($message);
-
-                CBSlack::sendMessage((object)[
-                    'message' => $message,
-                ]);
-
-                /* attempt to send a valid Ajax response */
-
-                header('Content-type: application/json');
-
-                echo json_encode([
-                    'className' => 'CBAjaxResponse',
-                    'message' => $message,
-                    'wasSuccessful' => false,
-                ]);
-
-            } catch (Throwable $secondInnerException) {
-
-                error_log('SECOND INNER ERROR ' . __METHOD__ . '()');
-
-            }
-
+        } catch (Throwable $innerThrowable) {
+            CBErrorHandler::report($innerThrowable);
         }
     }
 

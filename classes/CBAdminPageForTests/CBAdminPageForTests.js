@@ -98,7 +98,7 @@ var CBAdminPageForTests = {
                 Colby.callAjaxFunction("CBUnitTests", "errorTest")
                     .catch(Colby.displayAndReportError);
             },
-            text: "Call Ajax Function PHP Error Test",
+            text: "Test the CBAjaxResponse Custom Exception Handler",
         }).element);
         buttonsContainerElement.appendChild(CBUI.createButton({
             callback: function () {
