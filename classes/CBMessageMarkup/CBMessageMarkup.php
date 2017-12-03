@@ -473,6 +473,13 @@ final class CBMessageMarkup {
             }
         }
 
+        // After processing every line
+
+        if ($paragraph !== null) {
+            $paragraphs[] = $paragraph;
+            $paragraph = null;
+        }
+
         $text = implode("\n", $paragraphs);
         $text = CBMessageMarkup::decodeEncodedCharacters($text);
 

@@ -461,6 +461,13 @@ var CBMessageMarkup = {
             }
         }
 
+        // After processing every line
+
+        if (paragraph !== undefined) {
+            paragraphs.push(paragraph);
+            paragraph = undefined;
+        }
+
         var text = paragraphs.join("\n");
         text = CBMessageMarkup.decodeEncodedCharacters(text);
 
