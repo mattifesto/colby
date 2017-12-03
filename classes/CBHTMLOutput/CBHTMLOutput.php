@@ -175,38 +175,32 @@ final class CBHTMLOutput {
     }
 
     /**
-     * @param Exception $exception
+     * 2017.12.03 This function was updated to comply with the custom exception
+     * handler documentation in the CBErrorHandler::handle() comments.
+     *
+     * @param Throwable $exception
      *
      * @return null
      */
-    static function handleException($exception) {
-        $classNameForPageSettings = CBHTMLOutput::$classNameForSettings;
+    static function handleException(Throwable $throwable) {
+        CBErrorHandler::report($throwable);
 
-        // Partial page may have been rendered, clear output buffer
-        CBHTMLOutput::reset();
+        try {
+            /**
+             * A page may have already been partially rendered so reset
+             * CBHTMLOutput to clear the output buffer.
+             */
+            CBHTMLOutput::reset();
 
-        if (is_callable($function = "{$classNameForPageSettings}::renderPageForException")) {
-            try {
+            $classNameForPageSettings = CBHTMLOutput::$classNameForSettings;
 
-                call_user_func($function, $exception);
-
-                Colby::reportException($exception);
-
-            } catch (Throwable $innerException) {
-
-                // Partial page may have been rendered, clear output buffer
-                CBHTMLOutput::reset();
-
-                // Report the exception that occurred in the try block
-                Colby::reportException($innerException);
-
-                // Revert to the bare bones Colby exception handler for the
-                // original exception
-                Colby::handleException($exception);
-
+            if (is_callable($function = "{$classNameForPageSettings}::renderPageForException")) {
+                call_user_func($function, $throwable);
+            } else {
+                CBErrorHandler::renderErrorReportPage($throwable);
             }
-        } else {
-            Colby::handleException($exception);
+        } catch (Throwable $innerThrowable) {
+            CBErrorHandler::report($innerThrowable);
         }
     }
 
@@ -244,10 +238,10 @@ final class CBHTMLOutput {
     /**
      * NOTE: 2017.01.01, 2017.09.05
      *
-     *      This function include a polyfill for Promise right after the body
+     *      This function includes a polyfill for Promise right after the body
      *      content before JavaScript dependencies will be included. Colby makes
      *      frequent use of Promises. The only browser that doesn't support
-     *      promise that we support is IE11.
+     *      promises that Colby supports is IE11.
      *
      * @return null
      */

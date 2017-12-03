@@ -319,97 +319,10 @@ final class Colby {
     }
 
     /**
-     * This function is the final stop for an exception. Once this function is
-     * complete, execution will end. The explicit goal of this function is to
-     * report the  exception that occurred one way or another so that a
-     * developer can resolve the issue.
-     *
-     * This function catches all inner exceptions and will report as much of
-     * what happend as possible. The function will attempt  deluxe reporting at
-     * first and will lower the reporting level each time  an inner exception
-     * occurs.
-     *
-     * @NOTE
-     *
-     * Every URL handler needs to buffer its output and set its own exception
-     * handler so that when an exception is thrown the handler discards its
-     * own output buffer and restores the previous exception handler. After
-     * that, it can either simply call this function or even rethrow the
-     * exception since this is the default exception handler.
-     *
-     * This process is automated by the CBHTMLOutput class, which most URL
-     * handlers use.
-     *
-     * This function assumes there is no output buffer active and that no
-     * content has been output thus far to the global buffer. If there is,
-     * it is the URL handler's bug and the URL handler should be fixed.
-     *
-     * Rule: If a function tries to do something and fails, that function should
-     * clean up its own mess before handing the failure off to another function.
-     *
-     * @param Throwable $exception
-     *
-     * @return null
+     * @deprecated use CBErrorHandler::handle()
      */
-    static function handleException(Throwable $exception) {
-
-        /**
-         * Exception handlers should never throw exceptions because if they
-         * do, it's very difficult to debug. While working on major system
-         * changes sometimes exceptions get thrown from inside this
-         * exception handler. Since errors are converted to exceptions in
-         * Colby, even though this exception handler doesn't throw
-         * exceptions explicitly, exceptions can occur. To make sure there
-         * is always a record of the exception, this exception handler
-         * wraps all of its code in a try-catch block. If an exception
-         * occurs, it uses error_log as a last resort to create a record
-         * of what went wrong.
-         *
-         * However, this will most likely only occur while this function is
-         * being actively worked on.
-         */
-
-        try {
-            Colby::reportException($exception);
-        } catch (Throwable $innerException) {
-            try {
-                $message = CBConvert::throwableToMessage($exception) .
-                           ', Colby::handleException() INNER ERROR ' .
-                           CBConvert::throwableToMessage($innerException);
-
-                error_log($message);
-
-                CBSlack::sendMessage((object)[
-                    'message' => $message,
-                ]);
-            } catch (Throwable $secondInnerException) {
-                $message .= ', Colby::handleException() SECOND INNER ERROR';
-
-                error_log($message);
-            }
-        }
-
-        try {
-            CBExceptionView::pushThrowable($exception);
-
-            CBPage::renderSpec((object)[
-                'className' => 'CBViewPage',
-                'title' => 'Something has gone wrong',
-                'layout' => (object)[
-                    'className' => 'CBPageLayout',
-                    'CSSClassNames' => 'center',
-                ],
-                'sections' => [
-                    (object)[
-                        'className' => 'CBExceptionView',
-                    ],
-                ],
-            ]);
-
-            CBExceptionView::popThrowable();
-        } catch (Throwable $throwable) {
-            Colby::reportException($throwable);
-        }
+    static function handleException(Throwable $throwable) {
+        CBErrorHandler::handle($throwable);
     }
 
     /**
@@ -420,7 +333,7 @@ final class Colby {
      * returned by the `error_get_last` function below so we won't accidentally
      * over-report non-fatal errors.
      *
-     * @return void
+     * @return null
      */
     static function handleShutdown() {
         $error = error_get_last();
@@ -434,7 +347,7 @@ final class Colby {
 
             $exception  = new ErrorException($message, $number, $severity, $filename, $line);
 
-            Colby::reportException($exception, $severity);
+            CBErrorHandler::report($exception, $severity);
         }
     }
 
@@ -482,32 +395,32 @@ final class Colby {
         Colby::$libraryDirectories[] = 'colby';
 
         /**
-         * Once the first library directories are configured, we can set up
-         * error handling.
-         */
-
-        set_error_handler('Colby::handleError');
-        set_exception_handler('Colby::handleException');
-        register_shutdown_function('Colby::handleShutdown');
-
-        /**
-         * Set up auto loading. Auto loading is used by error handling. Colby
-         * used to try to make sure error handling used no other files, but when
-         * things are working well, more advanced functionaly is required to log
-         * a report errors to system administrators.
+         * Set up autoloading. Autoloading is used by error handling. Colby used
+         * to try to make sure error handling used no other files, but when
+         * things are working well, more advanced functionality is desired to
+         * log a report errors to system administrators.
          *
          * After this call, autoloadng will be enabled for the site library and
          * the Colby library. More libraries will be added when
          * site-configuration.php is included below.
          *
          * @NOTE This comment replaces earlier comments about how this must be
-         * the last autoloader because it can throw an excetion. However, after
+         * the last autoloader because it can throw an exception. However, after
          * studying Colby::autoload() this doesn't appear to be explicitly true.
          * The earlier comment was written poorly. If you find there are
          * limitations in this area, document them clearly and explicity here.
          */
 
         spl_autoload_register('Colby::autoload');
+
+        /**
+         * Once the first library directories are configured and autoloading
+         * is started, we can set up error handling.
+         */
+
+        set_error_handler('Colby::handleError');
+        set_exception_handler('CBErrorHandler::handle');
+        register_shutdown_function('Colby::handleShutdown');
 
         /**
          * Once error handling is enabled, the local configuration file can be
@@ -697,88 +610,12 @@ final class Colby {
     }
 
     /**
-     * This function:
-     *
-     *      - Makes the best record and notification of an exception as it can.
-     *      - Should be the only function called to report exceptions.
-     *      - Will never throw another exception.
-     *      - Does nothing to react to an exception.
-     *
-     * This function is responsible for reporting an exception in various ways
-     * if they are available. For instance if emails services are available and
-     * the system is set up to email exceptions to an administrator, this
-     * function will send that email.
-     *
-     * This function can be called from anywhere to report an exception which
-     * is useful when code catches an exception it wants to report but doesn't
-     * want to re-throw.
-     *
-     * NOTE:
-     *
-     *      This function has been revised many times. It is the only official
-     *      non-exception throwing function in Colby. It is engineered with
-     *      great effort to communicate as much as possible while still being
-     *      resistent to even the most harsh of critical web server situations.
-     *
-     *      Changes to this function should be well thought out and documented.
-     *
-     * To test this function insert exceptions and errors in its code and the
-     * code of the functions it calls.
-     *
-     * @param Throwable $exception
-     * @param int $severity
-     *
-     *      An RFC3164 severity code. See CBLog::log().
+     * @deprecated use CBErrorHandler::report()
      *
      * @return null
      */
     static function reportException(Throwable $throwable, $severity = 3) {
-        try {
-            try {
-                $firstLine = 'Error ' . CBConvert::throwableToMessage($throwable);
-                $firstLineAsMarkup = CBMessageMarkup::stringToMarkup($firstLine);
-                $stackTraceAsMarkup = CBMessageMarkup::stringToMarkup(Colby::exceptionStackTrace($throwable));
-                $messageAsMarkup = "{$firstLineAsMarkup}\n\n--- pre\n{$stackTraceAsMarkup}\n---\n";
-            } catch (Throwable $innerThrowable) {
-                $message = $innerThrowable->getMessage();
-                $firstLine = "INNER ERROR \"{$message}\" occurred when Colby::reportException() attempted to generate a message";
-                $messageAsMarkup = $firstLine;
-            }
-
-            try {
-                $serialNumber = CBLog::log((object)[
-                    'className' => __CLASS__,
-                    'message' => $messageAsMarkup,
-                    'severity' => $severity,
-                ]);
-            } catch (Throwable $innerThrowable) {
-                $serialNumber = '';
-                $message = $innerThrowable->getMessage();
-                error_log("INNER ERROR \"{$message}\" occurred when Colby::reportException() attempted to create a log entry AFTER {$firstLine}");
-            }
-
-            try {
-                $link = cbsiteurl() . "/admin/page/?class=CBLogAdminPage&serialNumber={$serialNumber}";
-
-                CBSlack::sendMessage((object)[
-                    'message' => "{$firstLine} <{$link}|link>",
-                ]);
-            } catch (Throwable $innerThrowable) {
-                $message = $innerThrowable->getMessage();
-                error_log("INNER ERROR \"{$message}\" occurred when Colby::reportException() attempted to send a Slack message AFTER {$firstLine}");
-            }
-        } catch (Throwable $innerThrowable) {
-            try {
-                $message = $innerThrowable->getMessage();
-                error_log("INNER ERROR \"{$message}\" occurred inside Colby::reportException()");
-            } catch (Throwable $secondInnerThrowable) {
-                /**
-                 * Things are really bad if this point is reached. This catch is
-                 * just a guarantee that this function will not throw another
-                 * exception.
-                 */
-            }
-        }
+        CBErrorHandler::report($throwable);
     }
 
     /**
