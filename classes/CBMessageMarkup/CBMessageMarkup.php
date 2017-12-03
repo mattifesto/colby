@@ -15,7 +15,7 @@ final class CBMessageMarkup {
     }
 
     /**
-     * @deprecate use CBMessageMarkup::markupToHTML()
+     * @deprecated use CBMessageMarkup::markupToHTML()
      */
     static function convert(string $markup): string {
         return CBMessageMarkup::markupToHTML($markup);
