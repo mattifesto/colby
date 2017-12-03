@@ -45,15 +45,19 @@ done:
  */
 
 try {
-
     $state = json_decode($_COOKIE[CBFacebook::loginStateCookieName]);
     $location = $state->colby_redirect_uri;
+} catch (Throwable $throwable) {
+    /**
+     * 2017.12.03 Previously this exception was marked as severity 5. The new
+     * report() function does not allow the caller to specify severity. The
+     * attempt to lower the severity of the exception may mean that this
+     * situation is really not that important and should not throw an exception.
+     * Document further changes to this code.
+     */
 
-} catch (Throwable $exception) {
-
-    Colby::reportException($exception, 5);
+    CBErrorHandler::report($throwable);
     $location = '/';
-
 }
 
 header('Location: ' . $location);
