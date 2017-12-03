@@ -135,7 +135,7 @@ var CBTasks2AdminPage = {
             element.textContent = "";
             element.appendChild(CBTasks2AdminPage.createStatusContent(value));
 
-            if (value.countOfAvailableTasks > 0) {
+            if (value.ready > 0) {
                 Colby.CBTasks2Delay = 1; // 1 millisecond
             } else {
                 Colby.CBTasks2Delay = 2000; // 2 seconds
