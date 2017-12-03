@@ -51,16 +51,15 @@ final class CBPageVerificationTask {
         $messages = [];
         $resave = false;
         $severity = 8;
-        $links = [
-            (object)[
-                'URI' => "/admin/page/?class=CBDataStoreAdminPage&ID={$ID}",
-                'text' => 'data store information',
-            ],
-            (object)[
-                'URI' => "/admin/pages/preview/?ID={$ID}",
-                'text' => 'preview',
-            ],
-        ];
+        $messages[] = <<<EOT
+
+            --- ul
+            (Data Store Inspector (a /admin/page/?class=CBDataStoreAdminPage&ID={$ID}))
+
+            (Page Preview (a /admin/pages/preview/?ID={$ID}))
+            ---
+
+EOT;
 
         if (!CBPageVerificationTask::fetchPageDoesExist($ID)) {
             $messages[] = '(5) This page no longer exists';
@@ -76,10 +75,13 @@ final class CBPageVerificationTask {
             $severity = min(3, $severity);
             goto done;
         } else if ($className === 'CBViewPage') {
-            $links[] = (object)[
-                'URI' => "/admin/pages/edit/?data-store-id={$ID}",
-                'text' => 'edit',
-            ];
+            $messages[] = <<<EOT
+
+                --- ul
+                (Edit Page (a /admin/pages/edit/?data-store-id={$ID}))
+                ---
+
+EOT;
         }
 
         $data = CBModels::fetchSpecAndModelByID($ID);
@@ -111,7 +113,8 @@ final class CBPageVerificationTask {
         // first line of message
 
         $pageTitle = CBModel::value($data, 'model.title', '', 'strval');
-        $messages[] = __CLASS__ . " verified the page \"{$pageTitle}\"";
+        $firstLine = __CLASS__ . " verified the page \"{$pageTitle}\"";
+        array_unshift($messages, $firstLine);
 
         /**
          * Page image issues addressed:
@@ -183,7 +186,17 @@ final class CBPageVerificationTask {
         array_walk($views, 'CBPageVerificationTask::verifyView');
 
         if (!empty(CBPageVerificationTask::$messageContext)) {
-            $messages[] = "View issues:\n" . implode("\n", CBPageVerificationTask::$messageContext);
+            $issues = implode("\n\n", CBPageVerificationTask::$messageContext);
+            $messages[] = <<<EOT
+
+                View issues:
+
+                --- ul
+                {$issues}
+                ---
+
+EOT;
+
             $severity = min(4, $severity);
         }
 
@@ -195,9 +208,19 @@ final class CBPageVerificationTask {
             ob_end_clean();
         } catch (Throwable $throwable) {
             ob_end_clean();
-            $message = CBConvert::throwableToMessage($throwable);
-            $trace = $throwable->getTraceAsString();
-            $messages[] = "Rendering error: {$message}\n{$trace}";
+            $messageAsMarkup = CBMessageMarkup::stringToMarkup(CBConvert::throwableToMessage($throwable));
+            $stackTraceAsMarkup = CBMessageMarkup::stringToMarkup(CBConvert::throwableToStackTrace($throwable));
+            $messages[] = <<<EOT
+
+                An error occurred when trying to render the page:
+
+                --- blockquote
+                {$messageAsMarkup}
+                ---
+
+                --- pre\n{$stackTraceAsMarkup}\n---
+
+EOT;
             $severity = min(3, $severity);
         }
 
