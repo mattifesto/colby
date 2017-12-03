@@ -13,6 +13,7 @@
 
 .CBAdminPageForTests .buttonsContainer {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 }
 

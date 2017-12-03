@@ -83,6 +83,12 @@ var CBAdminPageForTests = {
         }).element);
         buttonsContainerElement.appendChild(CBUI.createButton({
             callback: function () {
+                window.open('/colby/test-default-exception-handler/');
+            },
+            text: "Test Default Exception Handler",
+        }).element);
+        buttonsContainerElement.appendChild(CBUI.createButton({
+            callback: function () {
                 Colby.callAjaxFunction("CBUnitTests", "errorTest")
                     .catch(Colby.displayAndReportError);
             },
