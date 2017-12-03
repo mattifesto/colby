@@ -202,27 +202,17 @@ EOT;
 
         /* test rendering */
 
+        ob_start();
+
         try {
-            ob_start();
             CBPage::render($data->model);
-            ob_end_clean();
         } catch (Throwable $throwable) {
             ob_end_clean();
-            $messageAsMarkup = CBMessageMarkup::stringToMarkup(CBConvert::throwableToMessage($throwable));
-            $stackTraceAsMarkup = CBMessageMarkup::stringToMarkup(CBConvert::throwableToStackTrace($throwable));
-            $messages[] = <<<EOT
 
-                An error occurred when trying to render the page:
-
-                --- blockquote
-                {$messageAsMarkup}
-                ---
-
-                --- pre\n{$stackTraceAsMarkup}\n---
-
-EOT;
-            $severity = min(3, $severity);
+            throw $throwable;
         }
+
+        ob_end_clean();
 
         /* check for many old versions */
 
