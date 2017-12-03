@@ -229,9 +229,6 @@ EOT;
     /**
      * Create a log entry.
      *
-     * This function will never throw an exception so it can be called without
-     * fear of recursive exceptions.
-     *
      * See CBLog::install() for detailed descriptions of the CBLog table
      * columns.
      *
@@ -266,126 +263,91 @@ EOT;
      *      The serial number for the log entry.
      */
     static function log(stdClass $args) {
-        try {
+        $hasIssues = false;
+        $className = CBModel::value($args, 'className', '', 'trim');
+        $ID = CBModel::value($args, 'ID', null, 'CBConvert::valueAsHex160');
+        $message = CBModel::value($args, 'message', '', 'trim');
+        $severity = CBModel::value($args, 'severity', 6, 'CBConvert::valueAsInt');
 
-            $hasIssues = false;
-            $className = CBModel::value($args, 'className', '', 'trim');
-            $ID = CBModel::value($args, 'ID', null, 'CBConvert::valueAsHex160');
-            $message = CBModel::value($args, 'message', '', 'trim');
-            $severity = CBModel::value($args, 'severity', 6, 'CBConvert::valueAsInt');
-
-            if (empty($message)) {
-                $hasIssues = true;
-                $severity = min($severity, 3);
-                $message = 'Error: A CBLog entry was created with no message.'; /* first line */
-                $message .= <<<EOT
+        if (empty($message)) {
+            $hasIssues = true;
+            $severity = min($severity, 3);
+            $message = 'Error: A CBLog entry was created with no message.'; /* first line */
+            $message .= <<<EOT
 
 
-                    (Log issue: (strong))
+                (Log issue: (strong))
 
-                    No message was specified for this log entry.
+                No message was specified for this log entry.
 
 EOT;
-            }
-
-            if (empty($className)) {
-                $hasIssues = true;
-                $severity = min($severity, 4);
-                $message .= <<<EOT
-
-
-                    (Log issue: (strong))
-
-                    No className was specified for this log entry.
-
-EOT;
-            }
-
-            if ($hasIssues) {
-                $argumentsAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($args));
-                $stackTrace = CBMessageMarkup::stringToMarkup(CBConvert::traceToString(debug_backtrace()));
-                $message .= <<<EOT
-
-
-                    (Log arguments: (strong))
-
-                    --- pre prewrap
-{$argumentsAsJSON}
-                    ---
-
-                    (Stack trace: (strong))
-
-                    --- pre prewrap
-{$stackTrace}
-                    ---
-
-EOT;
-            }
-
-            if ($severity < 4) {
-                try {
-                    error_log("Severity {$severity} CBLog entry, {$message} for className {$className} and ID {$ID}");
-                } catch (Throwable $ignoredException) {
-                    // We can't do much if error_log() fails.
-                }
-            }
-
-            $classNameAsSQL = CBDB::stringToSQL($className);
-            $IDAsSQL = ($ID === null) ? 'NULL' : CBHex160::toSQL($ID);
-            $processID = CBProcess::ID();
-            $processIDAsSQL = ($processID === null) ? 'NULL' : CBHex160::toSQL($processID);
-            $messageAsSQL = CBDB::stringToSQL($message);
-            $severityAsSQL = (int)$severity;
-            $timestampAsSQL = time();
-
-            $SQL = <<<EOT
-
-                INSERT INTO `CBLog` (
-                    `className`,
-                    `ID`,
-                    `processID`,
-                    `message`,
-                    `severity`,
-                    `timestamp`
-                ) VALUES (
-                    {$classNameAsSQL},
-                    {$IDAsSQL},
-                    {$processIDAsSQL},
-                    {$messageAsSQL},
-                    {$severityAsSQL},
-                    {$timestampAsSQL}
-                )
-
-EOT;
-
-            Colby::query($SQL);
-
-            return Colby::mysqli()->insert_id;
-
-        } catch (Throwable $innerException) {
-
-            /**
-             * CBLog::log() is an exception free function. Exception free
-             * functions must handle inner errors and second inner errors.
-             */
-
-            try {
-
-                $message = 'INNER ERROR ' . CBConvert::throwableToMessage($innerException);
-
-                error_log($message);
-
-                CBSlack::sendMessage((object)[
-                    'message' => $message,
-                ]);
-
-            } catch (Throwable $secondInnerException) {
-
-                error_log('SECOND INNER ERROR ' . __METHOD__ . '()');
-
-            }
-
         }
+
+        if (empty($className)) {
+            $hasIssues = true;
+            $severity = min($severity, 4);
+            $message .= <<<EOT
+
+
+                (Log issue: (strong))
+
+                No className was specified for this log entry.
+
+EOT;
+        }
+
+        if ($hasIssues) {
+            $argumentsAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($args));
+            $stackTrace = CBMessageMarkup::stringToMarkup(CBConvert::traceToString(debug_backtrace()));
+            $message .= <<<EOT
+
+
+                (Log arguments: (strong))
+
+                --- pre prewrap
+{$argumentsAsJSON}
+                ---
+
+                (Stack trace: (strong))
+
+                --- pre prewrap
+{$stackTrace}
+                ---
+
+EOT;
+        }
+
+        $classNameAsSQL = CBDB::stringToSQL($className);
+        $IDAsSQL = ($ID === null) ? 'NULL' : CBHex160::toSQL($ID);
+        $processID = CBProcess::ID();
+        $processIDAsSQL = ($processID === null) ? 'NULL' : CBHex160::toSQL($processID);
+        $messageAsSQL = CBDB::stringToSQL($message);
+        $severityAsSQL = (int)$severity;
+        $timestampAsSQL = time();
+
+        $SQL = <<<EOT
+
+            INSERT INTO `CBLog` (
+                `className`,
+                `ID`,
+                `processID`,
+                `message`,
+                `severity`,
+                `timestamp`
+            ) VALUES (
+                {$classNameAsSQL},
+                {$IDAsSQL},
+                {$processIDAsSQL},
+                {$messageAsSQL},
+                {$severityAsSQL},
+                {$timestampAsSQL}
+            )
+
+EOT;
+
+        Colby::query($SQL);
+
+        return Colby::mysqli()->insert_id;
     }
 
     /**
