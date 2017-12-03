@@ -319,21 +319,33 @@ final class Colby {
     }
 
     /**
-     * Every handler needs to buffer its output and set its own exception
+     * This function is the final stop for an exception. Once this function is
+     * complete, execution will end. The explicit goal of this function is to
+     * report the  exception that occurred one way or another so that a
+     * developer can resolve the issue.
+     *
+     * This function catches all inner exceptions and will report as much of
+     * what happend as possible. The function will attempt  deluxe reporting at
+     * first and will lower the reporting level each time  an inner exception
+     * occurs.
+     *
+     * @NOTE
+     *
+     * Every URL handler needs to buffer its output and set its own exception
      * handler so that when an exception is thrown the handler discards its
      * own output buffer and restores the previous exception handler. After
      * that, it can either simply call this function or even rethrow the
      * exception since this is the default exception handler.
      *
-     * This process is automated by the `CBHTMLOutput` class, which
-     * most handlers use, although use of the class is not strictly necessary.
+     * This process is automated by the CBHTMLOutput class, which most URL
+     * handlers use.
      *
      * This function assumes there is no output buffer active and that no
      * content has been output thus far to the global buffer. If there is,
-     * it is the handler's fault and the handler should be fixed. The rule
-     * is that if a process tries to do something and fails, that process
-     * should clean up its own mess before handing the failure off to
-     * another function.
+     * it is the URL handler's bug and the URL handler should be fixed.
+     *
+     * Rule: If a function tries to do something and fails, that function should
+     * clean up its own mess before handing the failure off to another function.
      *
      * @param Throwable $exception
      *
@@ -358,9 +370,26 @@ final class Colby {
          */
 
         try {
-
             Colby::reportException($exception);
+        } catch (Throwable $innerException) {
+            try {
+                $message = CBConvert::throwableToMessage($exception) .
+                           ', Colby::handleException() INNER ERROR ' .
+                           CBConvert::throwableToMessage($innerException);
 
+                error_log($message);
+
+                CBSlack::sendMessage((object)[
+                    'message' => $message,
+                ]);
+            } catch (Throwable $secondInnerException) {
+                $message .= ', Colby::handleException() SECOND INNER ERROR';
+
+                error_log($message);
+            }
+        }
+
+        try {
             CBExceptionView::pushThrowable($exception);
 
             CBPage::renderSpec((object)[
@@ -378,30 +407,8 @@ final class Colby {
             ]);
 
             CBExceptionView::popThrowable();
-
-        } catch (Throwable $innerException) {
-
-            /**
-             * Colby::handleException() is an exception free function. Exception
-             * free functions must handle inner errors and second inner errors.
-             */
-
-            try {
-
-                $message = 'INNER ERROR ' . CBConvert::throwableToMessage($innerException);
-
-                error_log($message);
-
-                CBSlack::sendMessage((object)[
-                    'message' => $message,
-                ]);
-
-            } catch (Throwable $secondInnerException) {
-
-                error_log('SECOND INNER ERROR ' . __METHOD__ . '()');
-
-            }
-
+        } catch (Throwable $throwable) {
+            Colby::reportException($throwable);
         }
     }
 
@@ -690,71 +697,87 @@ final class Colby {
     }
 
     /**
+     * This function:
+     *
+     *      - Makes the best record and notification of an exception as it can.
+     *      - Should be the only function called to report exceptions.
+     *      - Will never throw another exception.
+     *      - Does nothing to react to an exception.
+     *
      * This function is responsible for reporting an exception in various ways
-     * if they are available. For instance if emails services is available and
+     * if they are available. For instance if emails services are available and
      * the system is set up to email exceptions to an administrator, this
      * function will send that email.
      *
-     * This function will not throw an exception itself. If it experiences an
-     * exception it will output messages for both the original exception and
-     * the exception that was thrown within to the error log.
-     *
-     * This function can be called form anywhere to report an exception which
+     * This function can be called from anywhere to report an exception which
      * is useful when code catches an exception it wants to report but doesn't
      * want to re-throw.
+     *
+     * NOTE:
+     *
+     *      This function has been revised many times. It is the only official
+     *      non-exception throwing function in Colby. It is engineered with
+     *      great effort to communicate as much as possible while still being
+     *      resistent to even the most harsh of critical web server situations.
+     *
+     *      Changes to this function should be well thought out and documented.
+     *
+     * To test this function insert exceptions and errors in its code and the
+     * code of the functions it calls.
      *
      * @param Throwable $exception
      * @param int $severity
      *
-     *      An RFC3164 severity code. See CBLog::addMessage().
+     *      An RFC3164 severity code. See CBLog::log().
      *
      * @return null
      */
-    static function reportException(Throwable $exception, $severity = 3) {
+    static function reportException(Throwable $throwable, $severity = 3) {
         try {
-
-            $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'Unknown server name';
-            $firstLine = 'Error ' . CBMessageMarkup::stringToMarkup(CBConvert::throwableToMessage($exception));
-            $stackTrace = CBMessageMarkup::stringToMarkup(Colby::exceptionStackTrace($exception));
-            $URI = $_SERVER['REQUEST_URI'];
-            $link = cbsiteurl() . '/admin/page/?class=CBLogAdminPage';
-
-
-            /* CBLog::log() never throws an exception */
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => "{$firstLine}\n\n--- pre\n{$stackTrace}\n---\n",
-                'severity' => $severity,
-            ]);
-
-            /* CBSlack::sendMessage() can throw an exception, so it called last */
-            CBSlack::sendMessage((object)[
-                'message' => "{$firstLine} <{$link}|link>",
-            ]);
-
-        } catch (Throwable $innerException) {
-
-            /**
-             * Colby::reportException() is an exception free function. Exception
-             * free functions must handle inner errors and second inner errors.
-             */
-
             try {
-
-                $message = 'INNER ERROR ' . CBConvert::throwableToMessage($innerException);
-
-                error_log($message);
-
-                CBSlack::sendMessage((object)[
-                    'message' => $message,
-                ]);
-
-            } catch (Throwable $secondInnerException) {
-
-                error_log('SECOND INNER ERROR ' . __METHOD__ . '()');
-
+                $firstLine = 'Error ' . CBConvert::throwableToMessage($throwable);
+                $firstLineAsMarkup = CBMessageMarkup::stringToMarkup($firstLine);
+                $stackTraceAsMarkup = CBMessageMarkup::stringToMarkup(Colby::exceptionStackTrace($throwable));
+                $messageAsMarkup = "{$firstLineAsMarkup}\n\n--- pre\n{$stackTraceAsMarkup}\n---\n";
+            } catch (Throwable $innerThrowable) {
+                $message = $innerThrowable->getMessage();
+                $firstLine = "INNER ERROR \"{$message}\" occurred when Colby::reportException() attempted to generate a message";
+                $messageAsMarkup = $firstLine;
             }
 
+            try {
+                $serialNumber = CBLog::log((object)[
+                    'className' => __CLASS__,
+                    'message' => $messageAsMarkup,
+                    'severity' => $severity,
+                ]);
+            } catch (Throwable $innerThrowable) {
+                $serialNumber = '';
+                $message = $innerThrowable->getMessage();
+                error_log("INNER ERROR \"{$message}\" occurred when Colby::reportException() attempted to create a log entry AFTER {$firstLine}");
+            }
+
+            try {
+                $link = cbsiteurl() . "/admin/page/?class=CBLogAdminPage&serialNumber={$serialNumber}";
+
+                CBSlack::sendMessage((object)[
+                    'message' => "{$firstLine} <{$link}|link>",
+                ]);
+            } catch (Throwable $innerThrowable) {
+                $message = $innerThrowable->getMessage();
+                error_log("INNER ERROR \"{$message}\" occurred when Colby::reportException() attempted to send a Slack message AFTER {$firstLine}");
+            }
+        } catch (Throwable $innerThrowable) {
+            try {
+                $message = $innerThrowable->getMessage();
+                error_log("INNER ERROR \"{$message}\" occurred inside Colby::reportException()");
+            } catch (Throwable $secondInnerThrowable) {
+                /**
+                 * Things are really bad if this point is reached. This catch is
+                 * just a guarantee that this function will not throw another
+                 * exception.
+                 */
+            }
         }
     }
 
