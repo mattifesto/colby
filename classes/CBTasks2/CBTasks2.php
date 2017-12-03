@@ -2,7 +2,8 @@
 
 final class CBTasks2 {
 
-    /* Priority values are between 0 and 255 with lower numbers representing
+    /**
+     * Priority values are between 0 and 255 with lower numbers representing
      * higher priority.
      */
     const defaultPriority = 100;
@@ -347,7 +348,6 @@ EOT;
         }
 
         try {
-
             if (is_callable($function = "{$task->className}::CBTasks2_run")) {
                 $status = call_user_func($function, $task->ID);
             } else if (is_callable($function = "{$task->className}::CBTasks2_Execute")) { /* deprecated */
@@ -367,20 +367,8 @@ EOT;
             ]);
 
             $state = 3; /* complete */
-
         } catch (Throwable $throwable) {
-
-            $message = CBConvert::throwableToMessage($throwable) .
-                       "\n\n--- pre\n" .
-                       Colby::exceptionStackTrace($throwable) .
-                       "\n---";
-
-            CBLog::log((object)[
-                'className' => $task->className,
-                'ID' => $task->ID,
-                'message' => $message,
-                'severity' => 3,
-            ]);
+            Colby::reportException($throwable);
 
             $scheduled = null;
             $state = 4; /* failed */
