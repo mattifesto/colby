@@ -4,7 +4,7 @@ if (CBAdminPageForUpdate::installationIsRequired()) {
     CBAdminPageForUpdate::update();
 }
 
-if (!ColbyUser::current()->isOneOfThe('Administrators')) {
+if (!ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
