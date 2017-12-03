@@ -60,7 +60,9 @@ var CBUIExpander = {
         toggleElement.className = "toggle";
         var summaryElement = document.createElement("div");
         summaryElement.className = "summary";
-        summaryElement.textContent = /\s*(.*)\n?/m.exec(message)[1];
+        var summaryAsMarkup = /\s*(.*)\n?/m.exec(message)[1];
+        var summaryAsText = CBMessageMarkup.markupToText(summaryAsMarkup);
+        summaryElement.textContent = summaryAsText;
         var messageElement = document.createElement("div");
         messageElement.className = "message CBContentStyleSheet";
 
