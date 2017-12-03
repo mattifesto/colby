@@ -73,6 +73,7 @@ class CBUnitTests {
             ['CBMarkaround',            'paragraphToHTML'],
             ['CBMessageMarkup',         'markupToHTML'],
             ['CBMessageMarkup',         'markupToText'],
+            ['CBMessageMarkup',         'singleLineMarkupToText'],
             ['CBMessageMarkup',         'stringToMarkup'],
             ['CBModel',                 'toModel'],
             ['CBModel',                 'toModelMinimalImplementation'],

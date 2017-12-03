@@ -10,64 +10,77 @@
 var CBMessageMarkupTests = {
 
     /**
+     * @param string string1
+     * @param string string2
+     *
      * @return undefined
      */
-    markupToHTMLTest: function () {
-        var html1 = CBMessageMarkup.markupToHTML(CBMessageMarkupTests_markup1);
-        var expectedLines = CBMessageMarkupTests_html1.split(/\r?\n/);
-        var resultLines = html1.split(/\r?\n/);
+    compareStringsLineByLine: function(string1, string2) {
+        var string1Lines = string1.split(/\r?\n/);
+        var string2Lines = string2.split(/\r?\n/);
 
-        expectedLines.forEach(function (expectedLine, index) {
-            if (resultLines.length < index + 1) {
-                throw new Error("The result does not have the expected line number " + index);
-            }
-
-            var resultLine = resultLines[index];
-
-            if (expectedLine !== resultLine) {
+        string1Lines.forEach(function (string1Line, index) {
+            if (string2Lines.length < index + 1) {
                 throw new Error("Line " +
                                 index +
-                                " was expected to be \"" +
-                                expectedLine +
-                                "\" but is actually: \"" +
-                                resultLine +
+                                " of string 1 is " +
+                                string1Line +
+                                " but doesn't exist in string 2");
+            }
+
+            var string2Line = string2Lines[index];
+
+            if (string1Line !== string2Line) {
+                throw new Error("String 1 line " +
+                                index +
+                                " is \"" +
+                                string1Line +
+                                "\" which doesn't match string 2 line " +
+                                index +
+                                " of \"" +
+                                string2Line +
                                 "\"");
             }
         });
 
-        if (resultLines.length > expectedLines.length) {
-            throw new Error("The result has more lines than were expected");
+        if (string2Lines.length > string1Lines.length) {
+            throw new Error("String 2 has more lines than string 1");
         }
     },
 
     /**
      * @return undefined
      */
+    markupToHTMLTest: function () {
+        var expected = CBMessageMarkupTests_html1;
+        var result = CBMessageMarkup.markupToHTML(CBMessageMarkupTests_markup1);
+
+        CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+    },
+
+    /**
+     * @return undefined
+     */
     markupToTextTest: function () {
-        var expectedLines = CBMessageMarkupTests_text1.split(/\r?\n/);
+        var expected = CBMessageMarkupTests_text1;
         var result = CBMessageMarkup.markupToText(CBMessageMarkupTests_markup1);
-        var resultLines = result.split(/\r?\n/);
 
-        expectedLines.forEach(function (expectedLine, index) {
-            if (resultLines.length < index + 1) {
-                throw new Error("The result does not have the expected line number " + index);
-            }
+        CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+    },
 
-            var resultLine = resultLines[index];
+    /**
+     * @NOTE
+     *
+     *      CBMessageMarkup.markupToText() always puts a new line at the end of
+     *      the last line whether one was originally there or not.
+     *
+     * @return undefined
+     */
+    singleLineMarkupToTextTest: function () {
+        var singleLineMarkup = "This \(is \- the - result)!";
+        var expected = "This (is - the - result)!\n";
+        var result = CBMessageMarkup.markupToText(singleLineMarkup);
 
-            if (expectedLine !== resultLine) {
-                throw new Error("Line " +
-                                index +
-                                " was expected to be \"" +
-                                expectedLine +
-                                "\" but is actually: \"" +
-                                resultLine +
-                                "\"");
-            }
-        });
-
-        if (resultLines.length > expectedLines.length) {
-            throw new Error("The result has more lines than were expected");
-        }
+        CBMessageMarkupTests.compareStringsLineByLine(expected, result);
     },
 };

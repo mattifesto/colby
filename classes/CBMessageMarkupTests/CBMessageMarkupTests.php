@@ -291,6 +291,22 @@ EOT;
     }
 
     /**
+     * @NOTE
+     *
+     *      CBMessageMarkup::markupToText() always puts a new line at the end of
+     *      the last line whether one was originally there or not.
+     *
+     * @return void
+     */
+    static function singleLineMarkupToTextTest(): void {
+        $singleLineMarkup = 'This \(is \- the - result)!';
+        $expected = "This (is - the - result)!\n";
+        $result = CBMessageMarkup::markupToText($singleLineMarkup);
+
+        CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
+    }
+
+    /**
      * @return void
      */
     static function stringToMarkupTest(): void {
