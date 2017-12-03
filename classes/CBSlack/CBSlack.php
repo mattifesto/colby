@@ -56,9 +56,9 @@ final class CBSlack {
         $result = curl_exec($ch);
 
         if ($result === false) {
-            CBLog::addMessage(__METHOD__, 3, 'Curl error: ' . curl_error($ch));
+            throw new RuntimeException('Curl error: ' . curl_error($ch));
         } else if (($code = curl_getinfo($ch, CURLINFO_RESPONSE_CODE)) != 200) {
-            CBLog::addMessage(__METHOD__, 3, "Slack error: {$code} {$result}");
+            throw new RuntimeException("Slack error: {$code} {$result}");
         }
 
         curl_close($ch);
