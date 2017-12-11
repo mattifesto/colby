@@ -114,6 +114,15 @@ var CBViewPageEditor = {
 
         editorContainer.appendChild(CBUI.createHalfSpace());
 
+        var modelInspectorButton = CBUI.createButton({
+            text: "Go to Inspector",
+            callback: function () {
+                window.location = "/admin/page/?class=CBDataStoreAdminPage&ID=" + args.spec.ID;
+            },
+        });
+
+        editorContainer.appendChild(modelInspectorButton.element);
+
         var moveToTrashButton = CBUI.createButton({
             text: 'Move to Trash',
             callback: function () {
