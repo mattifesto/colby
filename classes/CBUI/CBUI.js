@@ -24,7 +24,7 @@ var CBUI = {
      *      }
      */
     createButton: function (args) {
-        var callback;
+        var callback = args.callback;
         var element = document.createElement("div");
         element.className = "CBUIButton";
         var buttonElement = document.createElement("div");
@@ -38,14 +38,19 @@ var CBUI = {
             }
         });
 
-        updateCallback(args.callback);
         updateText(args.text);
 
         return {
+            get callback() {
+                return callback;
+            },
+            set callback(value) {
+                callback = value;
+            },
             disable: disable,
             element: element,
             enable: enable,
-            updateCallback: updateCallback,
+            updateCallback: updateCallback, /* deprecated use callback */
             updateText: updateText,
         };
 
@@ -57,6 +62,7 @@ var CBUI = {
             element.classList.remove("disabled");
         }
 
+        /* deprecated */
         function updateCallback(newCallback) {
             var previousCallback = callback;
             callback = newCallback;
