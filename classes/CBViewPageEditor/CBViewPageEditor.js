@@ -114,42 +114,35 @@ var CBViewPageEditor = {
 
         editorContainer.appendChild(CBUI.createHalfSpace());
 
-        (function () {
-            var promise;
+        var moveToTrashButton = CBUI.createButton({
+            text: 'Move to Trash',
+            callback: function () {
+                if (window.confirm('Are you sure you want to move this page to the trash?')) {
+                    moveToTrash();
+                }
+            },
+        });
 
-            editorContainer.appendChild(CBUI.createButton({
-                text: 'Move to Trash',
-                callback: function () {
-                    if (promise !== undefined) {
-                        return;
-                    }
+        editorContainer.appendChild(moveToTrashButton.element);
 
-                    if (window.confirm('Are you sure you want to move this page to the trash?')) {
-                        moveToTrash();
-                    }
-                },
-            }).element);
+        function moveToTrash() {
+            moveToTrashButton.disable();
 
-            function moveToTrash() {
-                promise = Colby.callAjaxFunction("CBPages", "moveToTrash", { ID: args.spec.ID })
-                    .then(onFulfilled)
-                    .catch(Colby.displayError)
-                    .then(onFinally, onFinally);
+            Colby.callAjaxFunction("CBPages", "moveToTrash", { ID: args.spec.ID })
+                .then(moveToTrashFulfilled)
+                .catch(Colby.displayAndReportError)
+                .then(moveToTrashFinally);
+        }
 
-                Colby.retain(promise);
-            }
+        function moveToTrashFulfilled() {
+            alert('The page is the trash. You will be redirected to pages administration.');
 
-            function onFulfilled(value) {
-                alert('The page is the trash. You will be redirected to pages administration.');
+            window.location = "/admin/page/?class=CBAdminPageForPagesFind";
+        }
 
-                window.location = "/admin/page/?class=CBAdminPageForPagesFind";
-            }
-
-            function onFinally() {
-                Colby.release(promise);
-                promise = undefined;
-            }
-        })();
+        function moveToTrashFinally() {
+            moveToTrashButton.enable();
+        }
 
         return editorContainer;
     },
