@@ -30,7 +30,7 @@ final class CBPageVerificationTask {
      * @return void
      */
     static function CBInstall_install(): void {
-        CBPageVerificationTask::startForNewPages();
+        CBPageVerificationTask::startForAllPages();
     }
 
     /**
