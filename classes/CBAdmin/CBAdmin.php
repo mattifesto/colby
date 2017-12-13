@@ -12,6 +12,7 @@ final class CBAdmin {
         CBHTMLOutput::begin();
         CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
         CBHTMLOutput::requireClassName('CBUI');
+        CBHTMLOutput::requireClassName($className);
 
         $menuViewModel = (object)[
             'className' => 'CBAdminPageMenuView',
@@ -33,6 +34,8 @@ final class CBAdmin {
 
             if (is_callable($function = "{$className}::CBAdmin_render")) {
                 call_user_func($function, $pageStub);
+            } else {
+                CBHTMLOutput::render404();
             }
 
             ?>
