@@ -38,9 +38,10 @@ EOT;
                 ?>
 
             </div>
-            <div class="CBUIHalfSpace"></div>
 
             <?php
+
+            CBUI::renderHalfSpace();
         }
     }
 
@@ -79,7 +80,6 @@ EOT;
         $now = time();
         $spec = CBModels::fetchSpecByID(CBRemoteAdministration::pingModelID());
 
-        CBUI::renderHalfSpace();
         CBUI::renderSectionStart();
 
         if ($spec === false) {
@@ -96,6 +96,7 @@ EOT;
 
         CBUI::renderKeyValueSectionItem('Ping Status', $message);
         CBUI::renderSectionEnd();
+        CBUI::renderHalfSpace();
     }
 
     /**
@@ -192,13 +193,13 @@ EOT;
         $content = ob_get_clean();
 
         if (!empty($content)) {
-            CBUI::renderHalfSpace();
             CBUI::renderSectionHeader('Site Configuration Issues');
             CBUI::renderSectionStart();
 
             echo $content;
 
             CBUI::renderSectionEnd();
+            CBUI::renderHalfSpace();
         }
     }
 }
