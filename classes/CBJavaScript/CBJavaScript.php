@@ -59,7 +59,7 @@ class CBJavaScript {
 
         foreach ($attributes as $key => $value) {
             $keyAsMarkup = CBMessageMarkup::stringToMarkup($key);
-            $valueAsMarkup = CBMessageMarkup::stringToMarkup($value);
+            $valueAsMarkup = CBMessageMarkup::stringToMarkup(strval($value));
             $hashAsMarkup = CBMessageMarkup::stringToMarkup($hashes[$key]);
             $messages[] = "({$keyAsMarkup} (strong))((br)){$valueAsMarkup}((br))$hashAsMarkup";
         }
