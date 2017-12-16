@@ -98,7 +98,7 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
 
     $CBAdminMenu->develop = newMenuItem('Develop', '/admin/page/?class=CBAdminPageForUpdate', $developMenu);
 
-    $modelsMenu->inspector = newMenuItem('Inspector', '/admin/page/?class=CBAdminPageForModelInspector');
+    $modelsMenu->inspector = newMenuItem('Inspector', '/admin/?c=CBModelInspector');
 }
 
 $CBAdminMenu->models = newMenuItem('Models', '/admin/models/directory/', $modelsMenu);
