@@ -1,23 +1,23 @@
 "use strict"; /* jshint strict: global */
 /* global
-    CBAdminPageForModelInspector_modelID,
+    CBModelInspector_modelID,
     CBUI,
     CBUIStringEditor,
     Colby */
 
-var CBAdminPageForModelInspector = {
+var CBModelInspector = {
 
     /**
      * @return undefined
      */
-    DOMContentDidLoad: function () {
+    init: function () {
         var section, item;
         var spec = {
-            ID: CBAdminPageForModelInspector_modelID,
+            ID: CBModelInspector_modelID,
         };
         var main = document.getElementsByTagName("main")[0];
         var container = document.createElement("div");
-        var IDDidChangeCallback = CBAdminPageForModelInspector.IDDidChange.bind(undefined, {
+        var IDDidChangeCallback = CBModelInspector.IDDidChange.bind(undefined, {
             spec: spec,
             container: container,
         });
@@ -170,4 +170,4 @@ var CBAdminPageForModelInspector = {
     },
 };
 
-document.addEventListener("DOMContentLoaded", CBAdminPageForModelInspector.DOMContentDidLoad);
+Colby.afterDOMContentLoaded(CBModelInspector.init);

@@ -1,6 +1,6 @@
 <?php
 
-final class CBAdminPageForModelInspector {
+final class CBModelInspector {
 
     /**
      * @return [string]
@@ -10,7 +10,7 @@ final class CBAdminPageForModelInspector {
     }
 
     /**
-     * @return stdClass
+     * @return object
      */
     static function adminPagePermissions() {
         return (object)['group' => 'Developers'];
@@ -35,7 +35,7 @@ final class CBAdminPageForModelInspector {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
     }
 
     /**
@@ -44,7 +44,7 @@ final class CBAdminPageForModelInspector {
     static function requiredJavaScriptVariables() {
         $ID = cb_query_string_value('ID');
         return [
-            ['CBAdminPageForModelInspector_modelID', $ID],
+            ['CBModelInspector_modelID', $ID],
         ];
     }
 }
