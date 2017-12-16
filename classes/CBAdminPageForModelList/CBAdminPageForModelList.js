@@ -58,7 +58,7 @@ var CBAdminPageForModelList = {
                 inspectCommandElement.textContent = "Inspect";
 
                 inspectCommandElement.addEventListener("click", function () {
-                    window.location = "/admin/page/?class=CBAdminPageForModelInspector&ID=" +
+                    window.location = "/admin/?c=CBModelInspector&ID=" +
                                       encodeURIComponent(model.ID);
                 });
 
