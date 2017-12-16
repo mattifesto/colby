@@ -5,21 +5,14 @@ final class CBModelInspector {
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
+    static function CBAdmin_menuNamePath() {
         return ['models', 'inspector'];
     }
 
     /**
-     * @return object
+     * @return void
      */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Developers'];
-    }
-
-    /**
-     * @return null
-     */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::setTitleHTML('Model Inspector');
         CBHTMLOutput::setDescriptionHTML('View information about a model.');
     }
@@ -27,7 +20,7 @@ final class CBModelInspector {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames() {
         return ['CBUI', 'CBUIStringEditor'];
     }
 
@@ -41,7 +34,7 @@ final class CBModelInspector {
     /**
      * @return [[key, value]]
      */
-    static function requiredJavaScriptVariables() {
+    static function CBHTMLOutput_JavaScriptVariables() {
         $ID = cb_query_string_value('ID');
         return [
             ['CBModelInspector_modelID', $ID],
