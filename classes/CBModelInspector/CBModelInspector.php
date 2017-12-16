@@ -18,6 +18,48 @@ final class CBModelInspector {
     }
 
     /**
+     * @param object $args
+     *
+     *      {
+     *          ID: hex160
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          versions: [object]
+     *      }
+     */
+    static function CBAjax_fetchModelData(stdClass $args) {
+        $ID = CBModel::value($args, 'ID', null, 'CBConvert::valueAsHex160');
+
+        if (empty($ID)) {
+            throw new InvalidArgumentException('ID');
+        }
+
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $SQL = <<<EOT
+
+            SELECT      `version`, `timestamp`, `specAsJSON`, `modelAsJSON`
+            FROM        `CBModelVersions`
+            WHERE       `ID` = {$IDAsSQL}
+            ORDER BY    `version` DESC
+
+EOT;
+
+        return (object)[
+            'versions' => CBDB::SQLToObjects($SQL),
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_fetchModelData_group() {
+        return 'Administrators';
+    }
+
+    /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {

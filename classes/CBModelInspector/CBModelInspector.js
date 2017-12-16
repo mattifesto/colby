@@ -53,13 +53,9 @@ var CBModelInspector = {
      */
     IDDidChange: function (args) {
         if (/^[0-9a-f]{40}$/.test(args.spec.ID)) {
-            var data = new FormData();
-            data.append("ID", args.spec.ID);
-
-            Colby.fetchAjaxResponse("/api/?class=CBModels&function=fetchModelVersionsByID", data)
+            Colby.callAjaxFunction("CBModelInspector", "fetchModelData", {ID: args.spec.ID})
                  .then(resolved)
-                 .catch(Colby.report)
-                 .catch(Colby.displayError);
+                 .catch(Colby.displayAndReportError);
         }
 
         function resolved(response) {
