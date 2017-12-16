@@ -264,45 +264,6 @@ EOT;
     }
 
     /**
-     * @param hex160 $ID
-     *
-     * @return stdClass
-     */
-    static function fetchModelVersionsByID($ID) {
-        $IDAsSQL = CBHex160::toSQL($ID);
-        $SQL = <<<EOT
-
-            SELECT      `version`, `timestamp`, `specAsJSON`, `modelAsJSON`
-            FROM        `CBModelVersions`
-            WHERE       `ID` = {$IDAsSQL}
-            ORDER BY    `version` DESC
-
-EOT;
-
-        return CBDB::SQLToObjects($SQL);
-    }
-
-    /**
-     * @param hex160 $_POST['ID']
-     *
-     * @return null
-     */
-    static function fetchModelVersionsByIDForAjax() {
-        $response = new CBAjaxResponse();
-        $ID = $_POST['ID'];
-        $response->versions = CBModels::fetchModelVersionsByID($ID);
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return object
-     */
-    static function fetchModelVersionsByIDForAjaxPermissions() {
-        return (object)['group' => 'Developers'];
-    }
-
-    /**
      * Fetches the spec and model for use in tasks that analyze both.
      *
      * @param hex160 $ID
