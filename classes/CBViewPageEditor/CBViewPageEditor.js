@@ -117,7 +117,7 @@ var CBViewPageEditor = {
         var modelInspectorButton = CBUI.createButton({
             text: "Go to Inspector",
             callback: function () {
-                window.location = "/admin/page/?class=CBDataStoreAdminPage&ID=" + args.spec.ID;
+                window.location = "/admin/?c=CBModelInspector&ID=" + args.spec.ID;
             },
         });
 

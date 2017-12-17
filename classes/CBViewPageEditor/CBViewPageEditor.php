@@ -26,14 +26,14 @@ final class CBViewPageEditor {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
     }
 
     /**
