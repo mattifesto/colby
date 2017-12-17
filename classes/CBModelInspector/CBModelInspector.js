@@ -117,76 +117,77 @@ var CBModelInspector = {
             }
 
             args.container.appendChild(section);
-
             args.container.appendChild(CBUI.createHalfSpace());
 
-            section = CBUI.createSection();
+            if (response.modelVersions.length > 0) {
+                section = CBUI.createSection();
 
-            response.modelVersions.forEach(function (version) {
-                var item = CBUI.createSectionItem2();
+                response.modelVersions.forEach(function (version) {
+                    var item = CBUI.createSectionItem2();
 
-                var time = document.createElement("time");
-                time.className = "time";
-                time.dataset.timestamp = version.timestamp * 1000;
-                item.titleElement.appendChild(time);
+                    var time = document.createElement("time");
+                    time.className = "time";
+                    time.dataset.timestamp = version.timestamp * 1000;
+                    item.titleElement.appendChild(time);
 
-                var specCommand = document.createElement("div");
-                specCommand.className = "command";
-                specCommand.textContent = "Spec";
-                specCommand.addEventListener("click", showSpec);
+                    var specCommand = document.createElement("div");
+                    specCommand.className = "command";
+                    specCommand.textContent = "Spec";
+                    specCommand.addEventListener("click", showSpec);
 
-                item.commandsElement.appendChild(specCommand);
+                    item.commandsElement.appendChild(specCommand);
 
-                var modelCommand = document.createElement("div");
-                modelCommand.className = "command";
-                modelCommand.textContent = "Model";
-                modelCommand.addEventListener("click", showModel);
+                    var modelCommand = document.createElement("div");
+                    modelCommand.className = "command";
+                    modelCommand.textContent = "Model";
+                    modelCommand.addEventListener("click", showModel);
 
-                item.commandsElement.appendChild(modelCommand);
+                    item.commandsElement.appendChild(modelCommand);
 
-                var revertCommand = document.createElement("div");
-                revertCommand.className = "command";
-                revertCommand.textContent = "Revert";
-                revertCommand.addEventListener("click", revert);
+                    var revertCommand = document.createElement("div");
+                    revertCommand.className = "command";
+                    revertCommand.textContent = "Revert";
+                    revertCommand.addEventListener("click", revert);
 
-                item.commandsElement.appendChild(revertCommand);
+                    item.commandsElement.appendChild(revertCommand);
 
-                section.appendChild(item.element);
+                    section.appendChild(item.element);
 
-                function showModel() {
-                    var pre = document.createElement("div");
-                    pre.textContent = JSON.stringify(JSON.parse(version.modelAsJSON), undefined, 2);
-                    pre.style.whiteSpace = "pre-wrap";
+                    function showModel() {
+                        var pre = document.createElement("div");
+                        pre.textContent = JSON.stringify(JSON.parse(version.modelAsJSON), undefined, 2);
+                        pre.style.whiteSpace = "pre-wrap";
 
-                    Colby.setPanelElement(pre);
-                    Colby.showPanel();
-                }
-
-                function showSpec() {
-                    var pre = document.createElement("div");
-                    pre.textContent = JSON.stringify(JSON.parse(version.specAsJSON), undefined, 2);
-                    pre.style.whiteSpace = "pre-wrap";
-
-                    Colby.setPanelElement(pre);
-                    Colby.showPanel();
-                }
-
-                function revert() {
-                    var data = new FormData();
-                    data.append("ID", args.spec.ID);
-                    data.append("version", version.version);
-
-                    Colby.fetchAjaxResponse("/api/?class=CBModels&function=revert", data)
-                         .then(resolved)
-                         .catch(Colby.report);
-
-                    function resolved(response) {
-                        location.reload(true);
+                        Colby.setPanelElement(pre);
+                        Colby.showPanel();
                     }
-                }
-            });
 
-            args.container.appendChild(section);
+                    function showSpec() {
+                        var pre = document.createElement("div");
+                        pre.textContent = JSON.stringify(JSON.parse(version.specAsJSON), undefined, 2);
+                        pre.style.whiteSpace = "pre-wrap";
+
+                        Colby.setPanelElement(pre);
+                        Colby.showPanel();
+                    }
+
+                    function revert() {
+                        var data = new FormData();
+                        data.append("ID", args.spec.ID);
+                        data.append("version", version.version);
+
+                        Colby.fetchAjaxResponse("/api/?class=CBModels&function=revert", data)
+                             .then(resolved)
+                             .catch(Colby.report);
+
+                        function resolved(response) {
+                            location.reload(true);
+                        }
+                    }
+                });
+
+                args.container.appendChild(section);
+            }
 
             if (response.rowFromColbyPages) {
                 args.container.appendChild(CBUIExpander.create({
