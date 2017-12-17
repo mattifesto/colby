@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* global
     CBMessageMarkup,
     CBModelInspector_modelID,
@@ -183,6 +184,22 @@ var CBModelInspector = {
                 args.container.appendChild(CBUIExpander.create({
                     message: "CBImages Row\n\n--- pre\n" +
                              CBMessageMarkup.stringToMarkup(JSON.stringify(response.rowFromCBImages, undefined, 2)) +
+                             "\n---",
+                }).element);
+            }
+
+            if (response.dataStoreFiles.length > 0) {
+                let links = response.dataStoreFiles.map(function (file) {
+                    let text = CBMessageMarkup.stringToMarkup(file.text);
+                    let URL = CBMessageMarkup.stringToMarkup(file.URL);
+
+                    return `(${text} (a ${URL}))`;
+                });
+
+                args.container.appendChild(CBUI.createHalfSpace());
+                args.container.appendChild(CBUIExpander.create({
+                    message: "Data Store Files\n\n--- ul\n" +
+                             links.join("\n\n") +
                              "\n---",
                 }).element);
             }

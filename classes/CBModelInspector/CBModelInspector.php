@@ -41,6 +41,7 @@ final class CBModelInspector {
             'className' => 'CBModelInspector_fetchModelData',
         ];
 
+        $object->dataStoreFiles = CBModelInspector::fetchDataStoreFiles($ID);
         $object->modelVersions = CBModelInspector::fetchModelVersions($ID);
         $object->rowFromCBImages = CBModelInspector::fetchRowFromCBImages($ID);
         $object->rowFromColbyPages = CBModelInspector::fetchRowFromColbyPages($ID);
@@ -77,6 +78,33 @@ final class CBModelInspector {
         return [
             ['CBModelInspector_modelID', $ID],
         ];
+    }
+
+    /**
+     * @param hex160 $ID
+     *
+     * @return [object]
+     */
+    private static function fetchDataStoreFiles(string $ID): array {
+        $directory = CBDataStore::directoryForID($ID);
+        $files = [];
+        $iterator = new RecursiveDirectoryIterator($directory);
+
+        while ($iterator->valid()) {
+            if ($iterator->isFile()) {
+              $subpathname = $iterator->getSubPathname();
+              $URL = CBDataStore::flexpath($ID, $subpathname, cbsiteurl());
+
+              $files[] = (object)[
+                  'text' => $subpathname,
+                  'URL' => $URL,
+              ];
+            }
+
+            $iterator->next();
+        }
+
+        return $files;
     }
 
     /**
