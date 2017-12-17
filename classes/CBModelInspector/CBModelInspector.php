@@ -27,25 +27,25 @@ final class CBModelInspector {
      * @return object
      *
      *      {
+     *          className: "CBModelInspector_modelData"
      *          versions: [object]
      *      }
      */
     static function CBAjax_fetchModelData(stdClass $args) {
         $ID = CBModel::value($args, 'ID', null, 'CBConvert::valueAsHex160');
 
-        if (empty($ID)) {
+        if (!CBHex160::is($ID)) {
             throw new InvalidArgumentException('ID');
         }
 
         $IDAsSQL = CBHex160::toSQL($ID);
-        $SQL = <<<EOT
+        $object = (object)[
+            'className' => 'CBModelInspector_fetchModelData',
+        ];
 
-            SELECT      `version`, `timestamp`, `specAsJSON`, `modelAsJSON`
-            FROM        `CBModelVersions`
-            WHERE       `ID` = {$IDAsSQL}
-            ORDER BY    `version` DESC
-
-EOT;
+        if (($result = CBModelInspector::fetchModelVersions($ID)) !== null) {
+            $object->versions = $result;
+        }
 
         $rowSQL = <<<EOT
 
@@ -72,10 +72,9 @@ EOT;
         $row = CBDB::SQLToObject($rowSQL);
         $row->keyValueData = json_decode($row->keyValueData);
 
-        return (object)[
-            'versions' => CBDB::SQLToObjects($SQL),
-            'row' => $row,
-        ];
+        $object->row = $row;
+
+        return $object;
     }
 
     /**
@@ -107,5 +106,24 @@ EOT;
         return [
             ['CBModelInspector_modelID', $ID],
         ];
+    }
+
+    /**
+     * @param hex160 $ID
+     *
+     * @return [object]
+     */
+    private static function fetchModelVersions(string $ID): array {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $SQL = <<<EOT
+
+            SELECT      `version`, `timestamp`, `specAsJSON`, `modelAsJSON`
+            FROM        `CBModelVersions`
+            WHERE       `ID` = {$IDAsSQL}
+            ORDER BY    `version` DESC
+
+EOT;
+
+        return CBDB::SQLToObjects($SQL);
     }
 }
