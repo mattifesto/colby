@@ -77,6 +77,7 @@ final class CBAdminPageForTests {
             ['CBMessageMarkup', 'markupToHTML'],
             ['CBMessageMarkup', 'markupToText'],
             ['CBMessageMarkup', 'singleLineMarkupToText'],
+            ['CBMessageMarkup', 'stringToMarkup'],
             ['Colby',           'centsToDollars'],
             ['Colby',           'dateToString'],
         ];
