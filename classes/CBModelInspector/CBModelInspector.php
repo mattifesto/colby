@@ -47,8 +47,34 @@ final class CBModelInspector {
 
 EOT;
 
+        $rowSQL = <<<EOT
+
+            SELECT  `id`,
+                    LOWER(HEX(`archiveID`)) as `archiveID`,
+                    `className`,
+                    `classNameForKind`,
+                    `created`,
+                    `iteration`,
+                    `modified`,
+                    `URI`,
+                    `titleHTML`,
+                    `subtitleHTML`,
+                    `thumbnailURL`,
+                    `searchText`,
+                    `published`,
+                    `publishedBy`,
+                    `keyValueData`
+            FROM    `ColbyPages`
+            WHERE   `archiveId` = {$IDAsSQL}
+
+EOT;
+
+        $row = CBDB::SQLToObject($rowSQL);
+        $row->keyValueData = json_decode($row->keyValueData);
+
         return (object)[
             'versions' => CBDB::SQLToObjects($SQL),
+            'row' => $row,
         ];
     }
 
@@ -63,7 +89,7 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor'];
+        return ['CBMessageMarkup', 'CBUI', 'CBUIExpander', 'CBUIStringEditor'];
     }
 
     /**

@@ -160,6 +160,13 @@ var CBModelInspector = {
             });
 
             args.container.appendChild(section);
+            args.container.appendChild(CBUI.createHalfSpace());
+
+            args.container.appendChild(CBUIExpander.create({
+                message: "ColbyPages Row\n\n--- pre\n" +
+                         CBMessageMarkup.stringToMarkup(JSON.stringify(response.row, undefined, 2)) +
+                         "\n---",
+            }).element);
 
             Colby.updateTimes();
         }
