@@ -25,6 +25,13 @@ final class CBAdminPageForPagesTrash {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
+    }
+
+    /**
      * @return null
      */
     static function fetchPageSummaryModelsForAjax() {
@@ -72,12 +79,5 @@ final class CBAdminPageForPagesTrash {
      */
     static function requiredClassNames() {
         return ['CBUI'];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 }

@@ -63,7 +63,7 @@ var CBAdminPageForPagesTrash = {
                 sectionItem.titleElement.textContent = model.title;
 
                 sectionItem.titleElement.addEventListener("click", function() {
-                    window.location = "/admin/page/?class=CBDataStoreAdminPage&ID=" + model.ID;
+                    window.location = "/admin/?c=CBModelInspector&ID=" + model.ID;
                 });
 
                 args.section.appendChild(sectionItem.element);
