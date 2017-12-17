@@ -204,6 +204,15 @@ var CBModelInspector = {
                 }).element);
             }
 
+            if (response.archive.length > 0) {
+                args.container.appendChild(CBUI.createHalfSpace());
+                args.container.appendChild(CBUIExpander.create({
+                    message: "Archive\n\n--- pre\n" +
+                             CBMessageMarkup.stringToMarkup(response.archive) +
+                             "\n---",
+                }).element);
+            }
+
             Colby.updateTimes();
         }
     },
