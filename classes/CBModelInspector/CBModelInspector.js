@@ -65,13 +65,13 @@ var CBModelInspector = {
 
             section = CBUI.createSection();
 
-            if (response.versions.length === 0) {
+            if (response.modelVersions.length === 0) {
                 section.appendChild(CBUI.createKeyValueSectionItem({
                     key: "Notice",
                     value: "This ID has no model."
                 }).element);
             } else {
-                var model = JSON.parse(response.versions[0].modelAsJSON);
+                var model = JSON.parse(response.modelVersions[0].modelAsJSON);
 
                 section.appendChild(CBUI.createKeyValueSectionItem({
                     key: "Class Name",
@@ -95,7 +95,7 @@ var CBModelInspector = {
 
             section = CBUI.createSection();
 
-            response.versions.forEach(function (version) {
+            response.modelVersions.forEach(function (version) {
                 var item = CBUI.createSectionItem2();
 
                 var time = document.createElement("time");
@@ -164,7 +164,7 @@ var CBModelInspector = {
 
             args.container.appendChild(CBUIExpander.create({
                 message: "ColbyPages Row\n\n--- pre\n" +
-                         CBMessageMarkup.stringToMarkup(JSON.stringify(response.row, undefined, 2)) +
+                         CBMessageMarkup.stringToMarkup(JSON.stringify(response.rowFromColbyPages, undefined, 2)) +
                          "\n---",
             }).element);
 

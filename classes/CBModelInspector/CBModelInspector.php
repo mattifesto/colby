@@ -38,41 +38,12 @@ final class CBModelInspector {
             throw new InvalidArgumentException('ID');
         }
 
-        $IDAsSQL = CBHex160::toSQL($ID);
         $object = (object)[
             'className' => 'CBModelInspector_fetchModelData',
         ];
 
-        if (($result = CBModelInspector::fetchModelVersions($ID)) !== null) {
-            $object->versions = $result;
-        }
-
-        $rowSQL = <<<EOT
-
-            SELECT  `id`,
-                    LOWER(HEX(`archiveID`)) as `archiveID`,
-                    `className`,
-                    `classNameForKind`,
-                    `created`,
-                    `iteration`,
-                    `modified`,
-                    `URI`,
-                    `titleHTML`,
-                    `subtitleHTML`,
-                    `thumbnailURL`,
-                    `searchText`,
-                    `published`,
-                    `publishedBy`,
-                    `keyValueData`
-            FROM    `ColbyPages`
-            WHERE   `archiveId` = {$IDAsSQL}
-
-EOT;
-
-        $row = CBDB::SQLToObject($rowSQL);
-        $row->keyValueData = json_decode($row->keyValueData);
-
-        $object->row = $row;
+        $object->modelVersions = CBModelInspector::fetchModelVersions($ID);
+        $object->rowFromColbyPages = CBModelInspector::fetchRowFromColbyPages($ID);
 
         return $object;
     }
@@ -125,5 +96,44 @@ EOT;
 EOT;
 
         return CBDB::SQLToObjects($SQL);
+    }
+
+    /**
+     * @param hex160 $ID
+     *
+     * @return ?stdClass
+     */
+    private static function fetchRowFromColbyPages(string $ID): ?stdClass {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $SQL = <<<EOT
+
+            SELECT  `id`,
+                    LOWER(HEX(`archiveID`)) as `archiveID`,
+                    `className`,
+                    `classNameForKind`,
+                    `created`,
+                    `iteration`,
+                    `modified`,
+                    `URI`,
+                    `titleHTML`,
+                    `subtitleHTML`,
+                    `thumbnailURL`,
+                    `searchText`,
+                    `published`,
+                    `publishedBy`,
+                    `keyValueData`
+            FROM    `ColbyPages`
+            WHERE   `archiveId` = {$IDAsSQL}
+
+EOT;
+
+        $result = CBDB::SQLToObject($SQL);
+
+        if ($result === false) {
+            return null;
+        } else {
+            $result->keyValueData = json_decode($result->keyValueData);
+            return $result;
+        }
     }
 }
