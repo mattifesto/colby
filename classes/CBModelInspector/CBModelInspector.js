@@ -1,7 +1,10 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
 /* global
+    CBMessageMarkup,
     CBModelInspector_modelID,
     CBUI,
+    CBUIExpander,
     CBUIStringEditor,
     Colby */
 
@@ -56,6 +59,8 @@ var CBModelInspector = {
             Colby.callAjaxFunction("CBModelInspector", "fetchModelData", {ID: args.spec.ID})
                  .then(resolved)
                  .catch(Colby.displayAndReportError);
+        } else {
+            document.title = "Inspector: Invalid ID";
         }
 
         function resolved(response) {
@@ -66,12 +71,15 @@ var CBModelInspector = {
             section = CBUI.createSection();
 
             if (response.modelVersions.length === 0) {
+                document.title = "Inspector: " + args.spec.ID;
                 section.appendChild(CBUI.createKeyValueSectionItem({
                     key: "Notice",
                     value: "This ID has no model."
                 }).element);
             } else {
                 var model = JSON.parse(response.modelVersions[0].modelAsJSON);
+
+                document.title = "Inspector: " + (model.title ? model.title.trim() : model.className);
 
                 section.appendChild(CBUI.createKeyValueSectionItem({
                     key: "Class Name",
