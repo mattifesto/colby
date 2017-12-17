@@ -13,8 +13,7 @@ final class CBModelInspector {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::setTitleHTML('Model Inspector');
-        CBHTMLOutput::setDescriptionHTML('View information about a model.');
+        CBHTMLOutput::setTitleHTML('Inspector');
     }
 
     /**
@@ -43,6 +42,7 @@ final class CBModelInspector {
         ];
 
         $object->modelVersions = CBModelInspector::fetchModelVersions($ID);
+        $object->rowFromCBImages = CBModelInspector::fetchRowFromCBImages($ID);
         $object->rowFromColbyPages = CBModelInspector::fetchRowFromColbyPages($ID);
 
         return $object;
@@ -96,6 +96,30 @@ final class CBModelInspector {
 EOT;
 
         return CBDB::SQLToObjects($SQL);
+    }
+
+    /**
+     * @param hex160 $ID
+     *
+     * @return ?stdClass
+     */
+    private static function fetchRowFromCBImages(string $ID): ?stdClass {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $SQL = <<<EOT
+
+            SELECT  `created`, `modified`, `extension`
+            FROM    `CBImages`
+            WHERE   `ID` = {$IDAsSQL}
+
+EOT;
+
+        $result = CBDB::SQLToObject($SQL);
+
+        if ($result === false) {
+            return null;
+        } else {
+            return $result;
+        }
     }
 
     /**
