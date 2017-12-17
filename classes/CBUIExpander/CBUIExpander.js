@@ -49,6 +49,10 @@ var CBUIExpander = {
      *      }
      *
      * @return object
+     *
+     *      {
+     *          element: Element
+     *      }
      */
     create: function (args) {
         var message = args.message;
