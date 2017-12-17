@@ -101,7 +101,7 @@ var CBDataStoresAdminPage = {
 
                     item.element.style.cursor = "pointer";
                     item.element.addEventListener("click", function () {
-                        window.location = "/admin/page/?class=CBDataStoreAdminPage&ID=" + value.ID;
+                        window.location = "/admin/?c=CBModelInspector&ID=" + value.ID;
                     });
                     dataStoresSection.appendChild(item.element);
                 }
