@@ -64,7 +64,7 @@ var CBImagesAdminPage = {
         link.textContent = ">";
 
         link.addEventListener("click", function () {
-            window.location = "/admin/page/?class=CBDataStoreAdminPage&ID=" + args.ID;
+            window.location = "/admin/?c=CBModelInspector&ID=" + args.ID;
         });
 
         element.appendChild(img);
