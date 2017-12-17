@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBArtworkElement,
     CBMessageMarkup,
     CBModelInspector_modelID,
     CBUI,
@@ -31,7 +32,7 @@ var CBModelInspector = {
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-                labelText: "Model ID",
+                labelText: "ID",
                 propertyName: "ID",
                 spec: spec,
                 specChangedCallback: IDDidChangeCallback,
@@ -81,6 +82,23 @@ var CBModelInspector = {
                 var model = JSON.parse(response.modelVersions[0].modelAsJSON);
 
                 document.title = "Inspector: " + (model.title ? model.title.trim() : model.className);
+
+                if (model.className === "CBImage") {
+                    let container = document.createElement("div");
+                    container.style.display = "flex";
+                    container.style.padding = "0 20px";
+                    container.style.justifyContent = "center";
+
+                    let image = CBArtworkElement.create({
+                        filename: "rw1600",
+                        image: model,
+                        width: "800px"
+                    });
+
+                    container.appendChild(image);
+                    args.container.appendChild(container);
+                    args.container.appendChild(CBUI.createHalfSpace());
+                }
 
                 section.appendChild(CBUI.createKeyValueSectionItem({
                     key: "Class Name",

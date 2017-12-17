@@ -61,7 +61,7 @@ final class CBModelInspector {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBMessageMarkup', 'CBUI', 'CBUIExpander', 'CBUIStringEditor'];
+        return ['CBArtworkElement', 'CBMessageMarkup', 'CBUI', 'CBUIExpander', 'CBUIStringEditor'];
     }
 
     /**
