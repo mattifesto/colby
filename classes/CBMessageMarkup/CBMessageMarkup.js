@@ -519,7 +519,44 @@ var CBMessageMarkup = {
     },
 
     /**
-     * @param string $tagName
+     * This function converts a string to markup representing that string as
+     * plain text. This function is the `htmlspecialchars` of message markup.
+     *
+     * Conversions:
+     *
+     *     single backslash -> double backslash
+     *     hyphen -> backslash hyphen
+     *     open bracket -> backslash, open bracket
+     *     close bracket -> backslash, close bracket
+     *
+     *
+     * @param string string
+     *
+     * @return string
+     */
+    stringToMarkup: function (string) {
+        var patterns = [
+            /\\/g,      /* single backslack */
+            /-/g,       /* hyphen */
+            /\(/g,      /* open bracket */
+            /\)/g,      /* close bracket */
+        ];
+        var replacements = [
+            '\\\\',      /* double backslash */
+            '\\-',       /* backslash hyphen */
+            '\\(',       /* backslash open bracket */
+            '\\)',       /* backslash close bracket */
+        ];
+
+        patterns.forEach(function (pattern, index) {
+            string = string.replace(pattern, replacements[index]);
+        });
+
+        return string;
+    },
+
+    /**
+     * @param string tagName
      *
      * @return bool
      */
