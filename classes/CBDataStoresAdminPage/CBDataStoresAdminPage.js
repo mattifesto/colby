@@ -1,7 +1,7 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esnext: true */
-/* exported CBDataStoreAdminPage */
+/* exported CBDataStoresAdminPage */
 /* global
     CBUI,
     CBUINavigationView,
