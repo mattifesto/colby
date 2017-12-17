@@ -110,6 +110,11 @@ final class CBModelInspector {
     private static function fetchDataStoreFiles(string $ID): array {
         $directory = CBDataStore::directoryForID($ID);
         $files = [];
+
+        if (!is_dir($directory)) {
+            return $files;
+        }
+
         $iterator = new RecursiveDirectoryIterator($directory);
 
         while ($iterator->valid()) {
