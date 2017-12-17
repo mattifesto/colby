@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBMessageMarkupTests */
 /* globals
     CBMessageMarkup,
@@ -83,4 +84,31 @@ var CBMessageMarkupTests = {
 
         CBMessageMarkupTests.compareStringsLineByLine(expected, result);
     },
+
+    /**
+     * @return undefined
+     */
+    stringToMarkupTest: function () {
+        var string = `
+--- div
+--- hi
+    ---
+(hi (strong))
+( \\( \\\\(
+) \\) \\\\)
+`;
+
+        var expected = `
+\\-\\-\\- div
+\\-\\-\\- hi
+    \\-\\-\\-
+\\(hi \\(strong\\)\\)
+\\( \\\\\\( \\\\\\\\\\(
+\\) \\\\\\) \\\\\\\\\\)
+`;
+
+        var result = CBMessageMarkup.stringToMarkup(string);
+
+        CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+    }
 };

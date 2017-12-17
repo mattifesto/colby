@@ -6,7 +6,7 @@ final class CBMessageMarkupTests {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
     }
 
     /**
@@ -315,17 +315,17 @@ EOT;
 --- hi
     ---
 (hi (strong))
-( \( \\( \\\(
-) \) \\) \\\)
+( \\( \\\\(
+) \\) \\\\)
 EOT;
 
         $expected = <<<EOT
-\-\-\- div
-\-\-\- hi
-    \-\-\-
-\(hi \(strong\)\)
-\( \\\( \\\( \\\\\(
-\) \\\) \\\) \\\\\)
+\\-\\-\\- div
+\\-\\-\\- hi
+    \\-\\-\\-
+\\(hi \\(strong\\)\\)
+\\( \\\\\\( \\\\\\\\\\(
+\\) \\\\\\) \\\\\\\\\\)
 EOT;
 
         $result = CBMessageMarkup::stringToMarkup($string);
