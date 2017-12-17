@@ -52,23 +52,40 @@ final class CBPagesDevelopmentAdminPage {
 
         $SQL = <<< EOT
 
-            SELECT  LOWER(HEX(`archiveID`)) as `ID`
+            SELECT  LOWER(HEX(`archiveID`)) as `ID`, `titleHTML`
             FROM    `ColbyPages`
             WHERE   `className` IS NULL
 
 EOT;
 
-        $IDs = CBDB::SQLToArray($SQL);
+        $rows = CBDB::SQLToObjects($SQL);
 
-        if (count($IDs) > 0) {
-            echo '<section><h1>ColbyPages Rows with a NULL `className`</h1><div>';
+        if (count($rows) > 0) {
+            $links = array_map(function ($row) {
+                $title = (trim($row->titleHTML) === '') ? $row->ID : $row->titleHTML;
+                $text = CBMessageMarkup::stringToMarkup($title);
+                $URL = CBMessageMarkup::stringToMarkup(cbsiteurl() . "/admin/?c=CBModelInspector&ID={$row->ID}");
 
-            foreach ($IDs as $ID) {
-                $href = cbsiteurl() . "/admin/page/?class=CBDataStoreAdminPage&ID={$ID}";
+                return "({$text} (a $URL))";
+            }, $rows);
+
+            $message = "ColbyPages rows where `className` is NULL\n\n--- ul\n" .
+                       implode("\n\n", $links) .
+                       "\n---";
+
+            $message = cbhtml(json_encode($message));
+
+            ?>
+
+            <div class="CBUIExpander_builder" data-message="<?= $message ?>"></div>
+
+            <?php
+
+            /*foreach ($IDs as $ID) {
+                $href = cbsiteurl() . "/admin/?c=CBModelInspector&ID={$ID}";
                 echo "<a href=\"{$href}\"><span class=\"hash\">{$ID}</span></a>\n";
-            }
+            }*/
 
-            echo '</div></section>';
         }
     }
 
@@ -84,5 +101,12 @@ EOT;
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUIExpander'];
     }
 }
