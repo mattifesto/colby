@@ -171,7 +171,6 @@ var CBModelInspector = {
             args.container.appendChild(section);
 
             if (response.rowFromColbyPages) {
-                args.container.appendChild(CBUI.createHalfSpace());
                 args.container.appendChild(CBUIExpander.create({
                     message: "ColbyPages Row\n\n--- pre\n" +
                              CBMessageMarkup.stringToMarkup(JSON.stringify(response.rowFromColbyPages, undefined, 2)) +
@@ -180,7 +179,6 @@ var CBModelInspector = {
             }
 
             if (response.rowFromCBImages) {
-                args.container.appendChild(CBUI.createHalfSpace());
                 args.container.appendChild(CBUIExpander.create({
                     message: "CBImages Row\n\n--- pre\n" +
                              CBMessageMarkup.stringToMarkup(JSON.stringify(response.rowFromCBImages, undefined, 2)) +
@@ -196,7 +194,6 @@ var CBModelInspector = {
                     return `(${text} (a ${URL}))`;
                 });
 
-                args.container.appendChild(CBUI.createHalfSpace());
                 args.container.appendChild(CBUIExpander.create({
                     message: "Data Store Files\n\n--- ul\n" +
                              links.join("\n\n") +
@@ -205,7 +202,6 @@ var CBModelInspector = {
             }
 
             if (response.archive.length > 0) {
-                args.container.appendChild(CBUI.createHalfSpace());
                 args.container.appendChild(CBUIExpander.create({
                     message: "Archive\n\n--- pre\n" +
                              CBMessageMarkup.stringToMarkup(response.archive) +
