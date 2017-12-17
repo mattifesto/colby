@@ -54,7 +54,7 @@ final class CBPageVerificationTask {
         $messages[] = <<<EOT
 
             --- ul
-            (Data Store Inspector (a /admin/page/?class=CBDataStoreAdminPage&ID={$ID}))
+            (Inspector (a /admin/?c=CBModelInspector&ID={$ID}))
 
             (Page Preview (a /admin/pages/preview/?ID={$ID}))
             ---
