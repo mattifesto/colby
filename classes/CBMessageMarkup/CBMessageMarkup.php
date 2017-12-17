@@ -11,7 +11,7 @@ final class CBMessageMarkup {
      * @return string
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
     }
 
     /**
@@ -533,6 +533,43 @@ final class CBMessageMarkup {
     }
 
     /**
+     * This function converts a string to markup representing that string as
+     * plain text. This function is the `htmlspecialchars` of message markup.
+     *
+     * Conversions:
+     *
+     *     single backslash -> double backslash
+     *     hyphen -> backslash hyphen
+     *     open bracket -> backslash, open bracket
+     *     close bracket -> backslash, close bracket
+     *
+     * @NOTE
+     *
+     *      A single backslash in a regular expression or a preg_replace
+     *      replacement is represented by four backslashes.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    static function stringToMarkup(string $string): string {
+        $patterns = [
+            '/\\\\/',   /* single backslack */
+            '/-/',      /* hyphen */
+            '/\(/',     /* open bracket */
+            '/\)/',     /* close bracket */
+        ];
+        $replacements = [
+            '\\\\\\\\', /* double backslash */
+            '\\\\-',    /* backslash hyphen */
+            '\\\\(',    /* backslash open bracket */
+            '\\\\)',    /* backslash close bracket */
+        ];
+
+        return preg_replace($patterns, $replacements, $string);
+    }
+
+    /**
      * @param string $tagName
      *
      * @return bool
@@ -575,38 +612,5 @@ final class CBMessageMarkup {
             'ol',
             'ul',
         ]);
-    }
-
-    /**
-     * This function converts a string to markup representing that string as
-     * plain text. This function is the `htmlspecialchars` of message markup.
-     *
-     * Conversions:
-     *
-     *     single backslash -> double backslash
-     *     hyphen -> backslash hyphen
-     *     open bracket -> backslash, open bracket
-     *     close bracket -> backslash, close bracket
-     *
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    static function stringToMarkup(string $string): string {
-        $patterns = [
-            '/\\\\/',   /* single backslack */
-            '/-/',      /* hyphen */
-            '/\(/',     /* open bracket */
-            '/\)/',     /* close bracket */
-        ];
-        $replacements = [
-            '\\\\',     /* double backslash */
-            '\-',       /* backslash hyphen */
-            '\(',       /* backslash open bracket */
-            '\)',       /* backslash close bracket */
-        ];
-
-        return preg_replace($patterns, $replacements, $string);
     }
 }
