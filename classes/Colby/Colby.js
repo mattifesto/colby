@@ -161,7 +161,7 @@ var Colby = {
         if (error.ajaxResponse) {
             Colby.displayResponse(error.ajaxResponse);
         } else {
-            Colby.alert(error.message || "No error message was provided.");
+            Colby.alert(Colby.errorToMessage(error));
         }
     },
 
@@ -269,6 +269,19 @@ var Colby = {
             pageURL: location.href,
             sourceURL: error.sourceURL,
         };
+    },
+
+    /**
+     * @param Error error
+     *
+     * @return string
+     */
+    errorToMessage: function (error) {
+        var message = error.message || "(no message)";
+        var basename = error.sourceURL ? error.sourceURL.split(/[\\/]/).pop() : "(no sourceURL)";
+        var line = error.line || "(no line)";
+
+        return "\"" + message + "\" in " + basename + " line " + line;
     },
 
     /**

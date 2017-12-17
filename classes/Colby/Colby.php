@@ -63,6 +63,20 @@ final class Colby {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'v357.css', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
+    }
+
+    /**
      * If the site is marked as being debugged this function will send a message
      * to the PHP error log. If the site isn't being debugged it will do
      * nothing.
@@ -616,20 +630,6 @@ final class Colby {
      */
     static function reportException(Throwable $throwable, $severity = 3) {
         CBErrorHandler::report($throwable);
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v357.css', cbsysurl())];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v357.js', cbsysurl())];
     }
 
     /**
