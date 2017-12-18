@@ -131,6 +131,10 @@ final class CBModelInspector {
             $iterator->next();
         }
 
+        usort($files, function ($file1, $file2) {
+            return $file1->text <=> $file2->text;
+        });
+
         return $files;
     }
 
