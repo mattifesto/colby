@@ -105,7 +105,7 @@ final class CBMenuView {
                             $textAsHTML = CBModel::value($item, 'text', '');
                             $URLAsHTML = CBModel::value($item, 'URL', '', 'cbhtml');
 
-                            if ($name === $selectedItemName) {
+                            if (!empty($selectedItemName) && $name === $selectedItemName) {
                                 ?>
 
                                 <li class="selected"><a href="<?= $URLAsHTML ?>"><span><?= $textAsHTML ?></span></a></li>
