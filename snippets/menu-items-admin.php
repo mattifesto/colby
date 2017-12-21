@@ -56,7 +56,7 @@ $CBAdminMenu->pages = newMenuItem('Pages', '/admin/page/?class=CBAdminPageForPag
 /* Models */
 
 $modelsMenu = (object)[
-    'directory' => newMenuItem('Directory', '/admin/models/directory/'),
+    'directory' => newMenuItem('Directory', '/admin/?c=CBModelsAdmin'),
     'import' => newMenuItem('Import', '/admin/page/?class=CBAdminPageForModelImport'),
 ];
 
@@ -101,7 +101,7 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
     $modelsMenu->inspector = newMenuItem('Inspector', '/admin/?c=CBModelInspector');
 }
 
-$CBAdminMenu->models = newMenuItem('Models', '/admin/models/directory/', $modelsMenu);
+$CBAdminMenu->models = newMenuItem('Models', '/admin/?c=CBModelsAdmin', $modelsMenu);
 
 /**
  * @return object
