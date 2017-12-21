@@ -126,10 +126,9 @@ var CBAdminPageForPagesFind = {
         data.append("parametersAsJSON", JSON.stringify(args.parameters));
 
         var promise = Colby.fetchAjaxResponse("/api/?class=CBPages&function=fetchPageList", data)
-            .then(onResolve, onReject)
+            .then(onResolve)
+            .catch(Colby.displayAndReportError)
             .then(onFinally, onFinally);
-
-        Colby.retain(promise);
 
         function onResolve(response) {
             var pages = response.pages;
@@ -137,11 +136,6 @@ var CBAdminPageForPagesFind = {
 
             args.element.textContent = null;
             args.element.appendChild(list);
-        }
-
-        function onReject(error) {
-            Colby.report(error);
-            Colby.displayError(error);
         }
 
         function onFinally() {
@@ -153,8 +147,6 @@ var CBAdminPageForPagesFind = {
 
                 CBAdminPageForPagesFind.fetchPages(argsForNextRequest);
             }
-
-            Colby.release(promise);
         }
     },
 };
@@ -171,7 +163,7 @@ var CBPageList = {
      */
     createElement: function(pages) {
         var element = document.createElement("div");
-        element.className = "CBPageListView";
+        element.className = "CBAdminPageForPagesFind_pageListView";
 
         var section = CBUI.createSection();
 
@@ -194,17 +186,16 @@ var CBPageList = {
     createPageSectionItem: function (page) {
         var item = CBUI.createSectionItem2();
 
-        /* description */
-        var descriptionElement = document.createElement("div");
-        descriptionElement.className = "title";
-        descriptionElement.textContent = page.keyValueData.title;
+        /**
+         * ellipsisTextContainer and ellipsisText are classes suppored by CBUI
+         */
+        item.titleElement.classList.add("ellipsisTextContainer");
+        var titleTextElement = document.createElement("div");
+        titleTextElement.className = "ellipsisText";
+        titleTextElement.textContent = page.keyValueData.title;
 
-        item.titleElement.appendChild(descriptionElement);
-
-        item.titleElement.addEventListener("click", CBPageList.handlePageElementEditWasClicked.bind(undefined, {
-            className: page.className,
-            ID: page.ID,
-        }));
+        item.titleElement.appendChild(titleTextElement);
+        item.titleElement.addEventListener("click", titleWasClicked);
 
         /* copy */
         var copyCommandElement = document.createElement("div");
@@ -230,6 +221,15 @@ var CBPageList = {
         }));
 
         return item.element;
+
+        /* closure */
+        function titleWasClicked() {
+            if (page.className === "CBViewPage") {
+                location.href = "/admin/pages/edit/?data-store-id=" + page.ID;
+            } else {
+                location.href = "/admin/page/?class=CBAdminPageForEditingModels&ID=" + page.ID;
+            }
+        }
     },
 
     /**
@@ -249,14 +249,14 @@ var CBPageList = {
      * @param hex160 args.ID
      *
      * @return undefined
-     */
+     *
     handlePageElementEditWasClicked : function (args) {
         if (args.className === "CBViewPage") {
             location.href = "/admin/pages/edit/?data-store-id=" + args.ID;
         } else {
             location.href = "/admin/page/?class=CBAdminPageForEditingModels&ID=" + args.ID;
         }
-    },
+    },*/
 
     /**
      * @param Element args.element
@@ -265,19 +265,12 @@ var CBPageList = {
      * @return undefined
      */
     handlePageElementTrashWasClicked: function(args) {
-        var promise = Colby.callAjaxFunction("CBPages", "moveToTrash", { ID: args.ID })
+        Colby.callAjaxFunction("CBPages", "moveToTrash", { ID: args.ID })
             .then(onFulfilled)
-            .catch(Colby.displayError)
-            .then(onFinally, onFinally);
-
-        Colby.retain(promise);
+            .catch(Colby.displayAndReportError);
 
         function onFulfilled(value) {
             args.element.parentElement.removeChild(args.element);
-        }
-
-        function onFinally() {
-            Colby.release(promise);
         }
     },
 };
