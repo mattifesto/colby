@@ -154,12 +154,12 @@
 }
 
 .CBUISectionItem {
-    background-color: white;
+    background-color: var(--CBBackgroundColor);
     min-height: 44px;
 }
 
 .CBUISectionItem a {
-    color: hsl(210, 100%, 50%);
+    color: var(--CBTextColorForLinks);
     text-decoration: none;
 }
 
@@ -171,15 +171,17 @@
     display: flex;
 }
 
+.CBUINavigationArrowSectionItemPart,
 .CBUISectionItem.components .arrow {
     align-items: center;
-    color: var(--CBTextColor2);
+    color: var(--CBLineColor);
     display: flex;
     flex: none;
     justify-content: center;
     width: 30px;
 }
 
+.CBUINavigationArrowSectionItemPart::after,
 .CBUISectionItem.components .arrow::after {
     content: ">";
 }
@@ -295,4 +297,46 @@
     justify-content: center;
     min-width: 50px;
     padding: 5px 10px;
+}
+
+.CBUISectionItem3 {
+    background-color: var(--CBBackgroundColor);
+    cursor: pointer;
+    display: flex;
+    min-height: 44px;
+
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.CBUISectionItem3 + .CBUISectionItem3 {
+    border-top: 1px solid var(--CBLineColor);
+}
+
+.CBUITitleAndDescriptionSectionItemPart {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+
+    /**
+     * The min-width: 0; declaration must be specified on the flex container if
+     * a flex item wants to use text-overflow: ellipsis;
+     */
+    min-width: 0;
+    padding: 5px 10px;
+}
+
+.CBUITitleAndDescriptionSectionItemPart > * {
+    /* ellipsis */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.CBUITitleAndDescriptionSectionItemPart .description {
+    color: var(--CBTextColor2);
+    font-size: 80%;
 }

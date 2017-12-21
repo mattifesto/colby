@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* exported CBUI */
 /* global
     CBUIDropdown */
 
@@ -171,9 +172,11 @@ var CBUI = {
      * @param string? args.key
      * @param string? args.value
      *
-     * @return {
-     *      Element element,
-     * }
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *      }
      */
     createKeyValueSectionItem: function (args) {
         var item = CBUI.createSectionItem();
@@ -192,6 +195,22 @@ var CBUI = {
 
         return {
             element: item,
+        };
+    },
+
+    /**
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *      }
+     */
+    createNavigationArrowSectionItemPart: function() {
+        var element = document.createElement("div");
+        element.className = "CBUINavigationArrowSectionItemPart";
+
+        return {
+            element: element,
         };
     },
 
@@ -312,6 +331,97 @@ var CBUI = {
             titleElement: titleElement,
             commandsElement: dropdown.menuElement,
             setThumbnailURI: setThumbnailURI,
+        };
+    },
+
+    /**
+     * A CBUISectionItem3 can have an optional callback that will be called when
+     * it is clicked. The section item should have no other interactive user
+     * interface elements.
+     *
+     * CBUISectionItem3 elements are composed of parts that are arranged
+     * horizontally. No part should have interactive UI elements because the
+     * CBUISectionItem3 itself responds to the click event. Parts are added via
+     * the appendPart() function on the returned object.
+     *
+     * In the future, a CBUISectionItem3 may have a command mode which will show
+     * command buttons underneath the item and disable the callback while in
+     * command mode.
+     *
+     * @param object args?
+     *
+     *      {
+     *          callback: function?
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          appendPart: function
+     *          element: Element
+     *          callback: (getter, setter)
+     *      }
+     */
+    createSectionItem3: function (args) {
+        args = args || {};
+        var callback = args.callback;
+        var element = document.createElement("div");
+        element.className = "CBUISectionItem3";
+
+        element.addEventListener("click", function() {
+            if (typeof callback === "function") {
+                callback.call();
+            }
+        });
+
+        return {
+            element: element,
+            appendPart: function (part) {
+                element.appendChild(part.element);
+            },
+            set callback(value) {
+                callback = value;
+            },
+            get callback() {
+                return callback;
+            },
+        };
+    },
+
+    /**
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *          description: (setter, getter)
+     *          title: (setter, getter)
+     *      }
+     */
+    createTitleAndDescriptionSectionItemPart: function() {
+        var element = document.createElement("div");
+        element.className = "CBUITitleAndDescriptionSectionItemPart";
+        var titleElement = document.createElement("div");
+        titleElement.className = "title";
+        var descriptionElement = document.createElement("div");
+        descriptionElement.className = "description";
+
+        element.appendChild(titleElement);
+        element.appendChild(descriptionElement);
+
+        return {
+            element: element,
+            set description(value) {
+                descriptionElement.textContent = value;
+            },
+            get description() {
+                return descriptionElement.textContent;
+            },
+            set title(value) {
+                titleElement.textContent = value;
+            },
+            get title() {
+                return titleElement.textContent;
+            },
         };
     },
 };
