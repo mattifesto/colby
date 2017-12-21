@@ -39,16 +39,28 @@ var CBModelsAdmin = {
             var section = CBUI.createSection();
 
             CBModelsAdmin_modelList.forEach(function (model) {
-                var item = CBUI.createSectionItem2();
+                var sectionItem = CBUI.createSectionItem3();
 
-                item.titleElement.textContent = model.title;
-
-                item.titleElement.addEventListener("click", function () {
+                sectionItem.callback = function () {
                     window.location = "/admin/page/?class=CBAdminPageForEditingModels&ID=" +
                                       encodeURIComponent(model.ID);
-                });
+                };
 
-                /* export */
+                var titleAndDescriptionPart = CBUI.createTitleAndDescriptionSectionItemPart();
+                var title = model.title ? model.title.trim() : '';
+
+                if (title === "") {
+                    title = CBModelsAdmin_modelClassName + " (no title)";
+                }
+
+                titleAndDescriptionPart.title = title;
+                titleAndDescriptionPart.description = model.ID;
+
+                sectionItem.appendPart(titleAndDescriptionPart);
+
+                sectionItem.appendPart(CBUI.createNavigationArrowSectionItemPart());
+
+                /* export
                 var exportCommandElement = document.createElement("div");
                 exportCommandElement.className = "command";
                 exportCommandElement.textContent = "Export";
@@ -60,7 +72,7 @@ var CBModelsAdmin = {
 
                 item.commandsElement.appendChild(exportCommandElement);
 
-                /* inspect */
+                /* inspect
                 var inspectCommandElement = document.createElement("div");
                 inspectCommandElement.className = "command";
                 inspectCommandElement.textContent = "Inspect";
@@ -71,8 +83,9 @@ var CBModelsAdmin = {
                 });
 
                 item.commandsElement.appendChild(inspectCommandElement);
+                */
 
-                section.appendChild(item.element);
+                section.appendChild(sectionItem.element);
             });
 
             mainElement.appendChild(section);
