@@ -15,14 +15,16 @@ final class CBModelsAdmin {
     static function CBAdmin_render(): void {
         CBHTMLOutput::setTitleHTML('Models Directory');
 
-        $items = [];
+        $classNames = CBDB::SQLToArray('SELECT DISTINCT `className` FROM `CBModels`');
+        $classNames = array_merge($classNames, CBModelsPreferences::classNamesOfEditableModels());
+        $classNames = array_values(array_unique($classNames));
 
-        foreach (CBModelsPreferences::classNamesOfEditableModels() as $className) {
-            if (!class_exists($className)) {
-                continue;
-            }
-
-            $item = new stdClass();
+        sort($classNames);
+        
+        $items = array_map(function ($className) {
+            $item = (object)[
+                'titleAsHTML' => cbhtml($className),
+            ];
 
             if (defined("{$className}::ID")) {
                 $ID = constant("{$className}::ID");
@@ -31,9 +33,8 @@ final class CBModelsAdmin {
                 $item->href = "/admin/page/?class=CBAdminPageForModelList&modelClassName={$className}";
             }
 
-            $item->titleAsHTML = $className;
-            $items[$className] = $item;
-        }
+            return $item;
+        }, $classNames);
 
         CBUI::renderHalfSpace();
 
