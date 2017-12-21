@@ -125,7 +125,7 @@ var CBAdminPageForPagesFind = {
         var data = new FormData();
         data.append("parametersAsJSON", JSON.stringify(args.parameters));
 
-        var promise = Colby.fetchAjaxResponse("/api/?class=CBPages&function=fetchPageList", data)
+        Colby.fetchAjaxResponse("/api/?class=CBPages&function=fetchPageList", data)
             .then(onResolve)
             .catch(Colby.displayAndReportError)
             .then(onFinally, onFinally);
