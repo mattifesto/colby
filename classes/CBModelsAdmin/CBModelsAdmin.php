@@ -2,13 +2,21 @@
 
 final class CBModelsAdmin {
 
+    static $page = '';
+
+    static function CBAdmin_initialize(): void {
+        CBModelsAdmin::$page = cb_query_string_value('p', '');
+        error_log(CBModelsAdmin::$page);
+    }
+
     /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        $page = cb_query_string_value('page', '');
+        switch (CBModelsAdmin::$page) {
+            case 'list':
+                return ['models'];
 
-        switch ($page) {
             default:
                 return ['models', 'directory'];
         }
@@ -18,13 +26,65 @@ final class CBModelsAdmin {
      * @return void
      */
     static function CBAdmin_render(): void {
-        $page = cb_query_string_value('page', '');
+        switch (CBModelsAdmin::$page) {
+            case 'list':
+                break;
 
-        switch ($page) {
             default:
                 CBModelsAdmin::renderDirectory();
                 break;
         }
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUI'];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
+    }
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables() {
+        $variables = [
+            ['CBModelsAdmin_page', CBModelsAdmin::$page],
+        ];
+
+        switch (CBModelsAdmin::$page) {
+            case 'list':
+                $variables[] = ['CBModelsAdmin_modelClassName', cb_query_string_value('modelClassName')];
+                $variables[] = ['CBModelsAdmin_modelList', CBModelsAdmin::fetchModelList()];
+                break;
+
+            default:
+                break;
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @return [object]
+     */
+    private static function fetchModelList() {
+        $modelClassNameAsSQL = CBDB::stringToSQL(cb_query_string_value('modelClassName'));
+        $SQL = <<<EOT
+
+            SELECT  LOWER(HEX(`ID`)) AS `ID`, `title`
+            FROM    `CBModels`
+            WHERE   `className` = {$modelClassNameAsSQL}
+
+EOT;
+
+        return CBDB::SQLToObjects($SQL);
     }
 
     /**
@@ -48,7 +108,7 @@ final class CBModelsAdmin {
                 $ID = constant("{$className}::ID");
                 $item->href = "/admin/page/?class=CBAdminPageForEditingModels&ID={$ID}";
             } else {
-                $item->href = "/admin/page/?class=CBAdminPageForModelList&modelClassName={$className}";
+                $item->href = "/admin/?c=CBModelsAdmin&p=list&modelClassName={$className}";
             }
 
             return $item;

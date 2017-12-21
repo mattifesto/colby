@@ -1,23 +1,31 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBModelsAdmin */
 /* globals
     CBUI,
-    CBAdminPageForModelList_modelClassName,
-    CBAdminPageForModelList_modelList */
+    CBModelsAdmin_modelClassName,
+    CBModelsAdmin_modelList,
+    CBModelsAdmin_page,
+    Colby */
 
-var CBAdminPageForModelList = {
+var CBModelsAdmin = {
 
     /**
      * @return undefined
      */
-    DOMContentDidLoad: function () {
+    initialize: function () {
+        if (CBModelsAdmin_page !== "list") {
+            return;
+        }
+
         var mainElement = document.getElementsByTagName("main")[0];
         var titleElement = document.createElement("div");
-        titleElement.textContent = CBAdminPageForModelList_modelClassName + " Models";
+        titleElement.textContent = CBModelsAdmin_modelClassName + " Models";
         var newElement = document.createElement("div");
 
         newElement.addEventListener("click", function () {
             window.location = "/admin/page/?class=CBAdminPageForEditingModels&className=" +
-                              encodeURIComponent(CBAdminPageForModelList_modelClassName);
+                              encodeURIComponent(CBModelsAdmin_modelClassName);
         });
 
         mainElement.appendChild(CBUI.createHeader({
@@ -27,10 +35,10 @@ var CBAdminPageForModelList = {
 
         mainElement.appendChild(CBUI.createHalfSpace());
 
-        if (CBAdminPageForModelList_modelList.length > 0) {
+        if (CBModelsAdmin_modelList.length > 0) {
             var section = CBUI.createSection();
 
-            CBAdminPageForModelList_modelList.forEach(function (model) {
+            CBModelsAdmin_modelList.forEach(function (model) {
                 var item = CBUI.createSectionItem2();
 
                 item.titleElement.textContent = model.title;
@@ -73,4 +81,4 @@ var CBAdminPageForModelList = {
     },
 };
 
-document.addEventListener("DOMContentLoaded", CBAdminPageForModelList.DOMContentDidLoad);
+Colby.afterDOMContentLoaded(CBModelsAdmin.initialize);
