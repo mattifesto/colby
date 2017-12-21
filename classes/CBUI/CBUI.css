@@ -167,6 +167,49 @@
     text-decoration: underline;
 }
 
+.CBUISectionItem.components {
+    display: flex;
+}
+
+.CBUISectionItem.components .arrow {
+    align-items: center;
+    color: var(--CBTextColor2);
+    display: flex;
+    flex: none;
+    justify-content: center;
+    width: 30px;
+}
+
+.CBUISectionItem.components .arrow::after {
+    content: ">";
+}
+
+/**
+ * 2017.12.20 Getting ellipsis to work reliably in flexible boxes has been
+ * difficult. The results can even change depending on the number of levels of
+ * flex container hierarchy. The solution is this min-width: 0; declaration.
+ * It's less important to use these specific selectors than it is to draw
+ * attention to the solution.
+ */
+.CBUISectionItem .ellipsisTextContainer {
+    align-items: center;
+    display: flex;
+    flex: 1 1 auto;
+
+    /**
+     * The min-width: 0; declaration must be specified on the flex container if
+     * a flex item wants to use text-overflow: ellipsis;
+     */
+    min-width: 0;
+    padding: 5px 10px;
+}
+
+.CBUISectionItem .ellipsisText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .CBUISection > .CBUISectionItem + .CBUISectionItem {
     border-top: 1px solid hsl(0, 0%, 80%);
 }
