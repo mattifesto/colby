@@ -6,13 +6,31 @@ final class CBModelsAdmin {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['models', 'directory'];
+        $page = cb_query_string_value('page', '');
+
+        switch ($page) {
+            default:
+                return ['models', 'directory'];
+        }
     }
 
     /**
      * @return void
      */
     static function CBAdmin_render(): void {
+        $page = cb_query_string_value('page', '');
+
+        switch ($page) {
+            default:
+                CBModelsAdmin::renderDirectory();
+                break;
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private static function renderDirectory(): void {
         CBHTMLOutput::setTitleHTML('Models Directory');
 
         $classNames = CBDB::SQLToArray('SELECT DISTINCT `className` FROM `CBModels`');
@@ -20,7 +38,7 @@ final class CBModelsAdmin {
         $classNames = array_values(array_unique($classNames));
 
         sort($classNames);
-        
+
         $items = array_map(function ($className) {
             $item = (object)[
                 'titleAsHTML' => cbhtml($className),
