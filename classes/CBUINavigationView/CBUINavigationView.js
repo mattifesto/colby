@@ -9,10 +9,30 @@ var CBUINavigationView = {
     /**
      * @param object item
      *
+     *      {
+     *          element: Element
+     *
+     *              The element being navigated to.
+     *
+     *          left: string
+     *
+     *              String representing the element being navigated from. This
+     *              is the "navigate back" text.
+     *
+     *          rightElements: [Element]
+     *
+     *              The elements are usually created using the
+     *              CBUI.createHeaderButtonItem() function.
+     *
+     *          title: string
+     *
+     *              A title for the element being navigated to.
+     *      }
+     *
      * @return Element
      */
     containerFromItem: function (item) {
-        var leftElements, rightElements, titleElement;
+        var leftElements, titleElement;
         var container = document.createElement("div");
         container.className = "container";
 
@@ -32,7 +52,7 @@ var CBUINavigationView = {
         var header = CBUI.createHeader({
             centerElement: titleElement,
             leftElements: leftElements,
-            rightElements: rightElements,
+            rightElements: item.rightElements,
         });
 
         container.appendChild(header);
@@ -101,7 +121,9 @@ var CBUINavigationView = {
      * @param object item
      *
      *      {
+     *          left: string
      *          element: Element
+     *          rightElements: [Elements]
      *          title: string
      *      }
      *
@@ -112,7 +134,7 @@ var CBUINavigationView = {
         var toItem = {
             element: item.element,
             left: item.left,
-            right: item.right,
+            rightElements: item.rightElements,
             title: item.title,
         };
 
