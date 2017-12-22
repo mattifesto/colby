@@ -16,11 +16,11 @@
 var CBAdminPageForEditingModels = {
 
     /**
-     * @param   {Object} spec
+     * @param object spec
      *
-     * @return  {Element}
+     * @return Element
      */
-    createEditor: function(args) {
+    createEditor: function (args) {
         var element = document.createElement("pre");
         element.textContent = JSON.stringify(args.spec, null, 4);
 
@@ -28,11 +28,15 @@ var CBAdminPageForEditingModels = {
     },
 
     /**
-     * @param {Object} args.spec
+     * @param object args
      *
-     * @return {Element}
+     *      {
+     *          spec: object
+     *      }
+     *
+     * @return Element
      */
-    createHeader: function(args) {
+    createHeader: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIHeader";
         var left = document.createElement("div");
@@ -51,9 +55,9 @@ var CBAdminPageForEditingModels = {
     },
 
     /**
-     * @return  undefined
+     * @return undefined
      */
-    handleDOMContentLoaded: function() {
+    handleDOMContentLoaded: function () {
         if (window.CBAdminPageForEditingModelsAuthorizationFailed) {
             return;
         }
@@ -75,11 +79,15 @@ var CBAdminPageForEditingModels = {
     },
 
     /**
-     * @param XMLHttpRequest args.xhr
+     * @param object args
+     *
+     *      {
+     *          xhr: XMLHttpRequest
+     *      }
      *
      * @return undefined
      */
-    handleModelLoaded: function(args) {
+    handleModelLoaded: function (args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
@@ -140,4 +148,4 @@ var CBAdminPageForEditingModels = {
     },
 };
 
-document.addEventListener("DOMContentLoaded", CBAdminPageForEditingModels.handleDOMContentLoaded);
+Colby.afterDOMContentLoaded(CBAdminPageForEditingModels.handleDOMContentLoaded);
