@@ -44,10 +44,6 @@ class CBAdminPageForEditingModels {
         CBHTMLOutput::exportVariable('CBAdminPageForEditingModels_modelID', $args->ID);
         CBHTMLOutput::exportVariable('CBAdminPageForEditingModels_modelClassName', $args->className);
 
-        if (is_callable($function = "{$args->className}::info")) {
-            CBHTMLOutput::exportVariable('CBAdminPageForEditingModels_modelClassInfo', call_user_func($function));
-        }
-
         if (class_exists($editorClassName = "{$args->className}Editor")) {
             CBHTMLOutput::requireClassName($editorClassName);
         }
@@ -94,6 +90,6 @@ class CBAdminPageForEditingModels {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
     }
 }

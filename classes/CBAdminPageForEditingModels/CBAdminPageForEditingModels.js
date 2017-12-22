@@ -3,7 +3,6 @@
 /* jshint esversion: 6 */
 /* exported CBAdminPageForEditingModels */
 /* global
-    CBAdminPageForEditingModels_modelClassInfo,
     CBAdminPageForEditingModels_modelClassName,
     CBAdminPageForEditingModels_modelID,
     Colby,
@@ -11,7 +10,6 @@
     CBUINavigationView,
     CBUISpecEditor,
     CBUISpecSaver */
-
 
 var CBAdminPageForEditingModels = {
 
@@ -97,8 +95,16 @@ var CBAdminPageForEditingModels = {
         }).element);
         element.appendChild(CBUI.createHalfSpace());
 
+        var inspectHeaderButtonItem = CBUI.createHeaderButtonItem({
+            callback: function () {
+                window.location = "/admin/?c=CBModelInspector&ID=" + spec.ID;
+            },
+            text: "Inspect",
+        });
+
         navigationView.navigateToItemCallback.call(undefined, {
             element: element,
+            rightElements: [inspectHeaderButtonItem],
             title: spec.className + " Editor",
         });
 
