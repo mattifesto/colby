@@ -90,21 +90,34 @@ var CBUI = {
     },
 
     /**
-     * @param Element args.centerElement
-     * @param Element args.leftElement (deprecated)
-     * @param [Element] args.leftElements
-     * @param Element args.rightElement (deprecated)
-     * @param [Element] args.rightElements
+     * @param object args
+     *
+     *      {
+     *          centerElement: Element
+     *
+     *              This element is usually created using the
+     *              CBUI.createHeaderTitle() function.
+     *
+     *          leftElements: [Element]
+     *          rightElements: [Element]
+     *
+     *              The elements are usually created using the
+     *              CBUI.createHeaderButtonItem() function.
+     *
+     *          leftElement: Element (deprecated)
+     *          rightElement: Element (deprecated)
+     *      }
      *
      * @return Element
      */
-    createHeader : function (args) {
+    createHeader: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIHeader";
 
         /* left */
         var left = document.createElement("div");
         left.className = "left";
+
         if (args.leftElements) {
             args.leftElements.forEach(function (element) {
                 left.appendChild(element);
@@ -112,19 +125,23 @@ var CBUI = {
         } else if (args.leftElement) {
             left.appendChild(args.leftElement);
         }
+
         element.appendChild(left);
 
         /* center */
         var center = document.createElement("div");
         center.className = "center";
+
         if (args.centerElement) {
             center.appendChild(args.centerElement);
         }
+
         element.appendChild(center);
 
         /* right */
         var right = document.createElement("div");
         right.className = "right";
+
         if (args.rightElements) {
             args.rightElements.forEach(function (element) {
                 right.appendChild(element);
@@ -132,6 +149,7 @@ var CBUI = {
         } else if (args.rightElement) {
             right.appendChild(args.rightElement);
         }
+
         element.appendChild(right);
 
         return element;

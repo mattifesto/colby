@@ -82,7 +82,7 @@
     color: hsl(210, 100%, 50%);
     cursor: pointer;
     overflow: hidden;
-    padding: 0 5px;
+    padding: 0 10px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
