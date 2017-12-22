@@ -28,33 +28,6 @@ var CBAdminPageForEditingModels = {
     },
 
     /**
-     * @param object args
-     *
-     *      {
-     *          spec: object
-     *      }
-     *
-     * @return Element
-     */
-    createHeader: function (args) {
-        var element = document.createElement("div");
-        element.className = "CBUIHeader";
-        var left = document.createElement("div");
-        left.className = "left";
-        var center = document.createElement("div");
-        center.className = "center";
-        center.textContent = (window.CBAdminPageForEditingModels_modelClassInfo ? CBAdminPageForEditingModels_modelClassInfo.singularTitle : args.spec.className) + " Editor";
-        var right = document.createElement("div");
-        right.className = "right";
-
-        element.appendChild(left);
-        element.appendChild(center);
-        element.appendChild(right);
-
-        return element;
-    },
-
-    /**
      * @return undefined
      */
     handleDOMContentLoaded: function () {
