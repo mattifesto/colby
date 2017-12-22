@@ -81,7 +81,7 @@ var CBViewPageEditor = {
      * @param object args.spec
      * @param function args.specChangedCallback
      *
-     * @return undefined
+     * @return Element
      */
     createEditor: function (args) {
         var editorContainer = document.createElement("div");
@@ -176,10 +176,19 @@ var CBViewPageEditor = {
         var element = document.createElement("div");
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
+
+        var inspectHeaderButtonItem = CBUI.createHeaderButtonItem({
+            callback: function () {
+                window.location = "/admin/?c=CBModelInspector&ID=" + spec.ID;
+            },
+            text: "Inspect",
+        });
+
         var navigationView = CBUINavigationView.create({
             defaultSpecChangedCallback: CBViewPageEditor.specChangedCallback,
             rootItem: {
                 element: element,
+                rightElements: [inspectHeaderButtonItem],
                 title: "Page Editor",
             },
         });
