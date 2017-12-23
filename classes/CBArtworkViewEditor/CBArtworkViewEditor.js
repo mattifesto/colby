@@ -28,6 +28,8 @@ var CBArtworkViewEditor = {
         var element = document.createElement("div");
         element.className = "CBArtworkViewEditor";
 
+        element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
 
         var chooser = CBUIImageChooser.createFullSizedChooser({
@@ -109,8 +111,9 @@ var CBArtworkViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         /* set thumnail */
 
