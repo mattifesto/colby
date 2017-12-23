@@ -27,6 +27,8 @@ var CBBackgroundViewEditor = {
         var element = document.createElement("div");
         element.className = "CBBackgroundViewEditor";
 
+        element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
@@ -146,6 +148,8 @@ var CBBackgroundViewEditor = {
         item.appendChild(chooser.element);
         section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
