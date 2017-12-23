@@ -23,6 +23,8 @@ var CBSitePreferencesEditor = {
         var element = document.createElement("div");
         element.className = "CBSitePreferencesEditor";
 
+        element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
@@ -219,6 +221,8 @@ var CBSitePreferencesEditor = {
             classNames : ['CBKeyValuePair'],
             navigateToItemCallback : args.navigateToItemCallback,
         }));
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },

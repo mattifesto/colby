@@ -21,6 +21,6 @@ final class CBSitePreferencesEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
     }
 }
