@@ -24,6 +24,8 @@ var CBMessageViewEditor = {
         var element = document.createElement("div");
         element.className = "CBMessageViewEditor";
 
+        element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
@@ -89,8 +91,9 @@ var CBMessageViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
