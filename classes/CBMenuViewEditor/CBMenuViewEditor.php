@@ -2,6 +2,30 @@
 
 final class CBMenuViewEditor {
 
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUI', 'CBUISelector', 'CBUIStringEditor'];
+    }
+
+    /**
+     * @return string
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+    }
+
+    /**
+     * @return [[string, any]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables() {
+        return [
+            ['CBMenuViewEditor_menuOptions', CBMenuViewEditor::fetchMenuOptions()],
+            ['CBMenuViewEditor_menuItemOptionsByMenuID', CBMenuViewEditor::fetchMenuItemOptionsByMenuID()],
+        ];
+    }
+
     static function fetchMenuItemOptionsByMenuID() {
         $SQL = <<<EOT
 
@@ -53,29 +77,5 @@ EOT;
         ]);
 
         return $options;
-    }
-
-    /**
-     * @return [string]
-     */
-    static function requiredClassNames() {
-        return ['CBUI', 'CBUISelector', 'CBUIStringEditor'];
-    }
-
-    /**
-     * @return string
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
-    }
-
-    /**
-     * @return [[string, any]]
-     */
-    static function requiredJavaScriptVariables() {
-        return [
-            ['CBMenuViewEditor_menuOptions', CBMenuViewEditor::fetchMenuOptions()],
-            ['CBMenuViewEditor_menuItemOptionsByMenuID', CBMenuViewEditor::fetchMenuItemOptionsByMenuID()],
-        ];
     }
 }

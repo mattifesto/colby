@@ -25,6 +25,8 @@ var CBMenuViewEditor = {
         var element = document.createElement("div");
         element.className = "CBMenuViewEditor";
 
+        element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
@@ -84,6 +86,8 @@ var CBMenuViewEditor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         updateMenuItemSelectorOptions();
 
