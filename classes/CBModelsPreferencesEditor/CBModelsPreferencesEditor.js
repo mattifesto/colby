@@ -1,4 +1,9 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBModelsPreferencesEditor */
+/* global
+    CBUI,
+    CBUIStringEditor */
 
 var CBModelsPreferencesEditor = {
 
@@ -11,6 +16,9 @@ var CBModelsPreferencesEditor = {
     createEditor : function(args) {
         var element = document.createElement("section");
         element.className = "CBModelsPreferencesEditor";
+
+        element.appendChild(CBUI.createHalfSpace());
+
         var section = CBUI.createSection();
 
         /* classNamesOfEditableModels */
@@ -23,8 +31,9 @@ var CBModelsPreferencesEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
