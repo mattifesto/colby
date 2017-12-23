@@ -17,8 +17,8 @@ var CBMenuEditor = {
      */
     createEditor : function(args) {
         var section, item;
-        var element         = document.createElement("div");
-        element.className   = "CBMenuEditor";
+        var element = document.createElement("div");
+        element.className = "CBMenuEditor";
 
         if (!args.spec.items) {
             args.spec.items = [];
@@ -28,7 +28,6 @@ var CBMenuEditor = {
 
         /* title */
 
-        element.appendChild(CBUI.createHalfSpace());
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
