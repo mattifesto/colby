@@ -21,6 +21,8 @@ var CBLinkView1Editor = {
         var element = document.createElement("div");
         element.className = "CBLinkView1Editor";
 
+        element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
 
         var chooser = CBUIImageChooser.createFullSizedChooser({
@@ -80,8 +82,9 @@ var CBLinkView1Editor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
 
