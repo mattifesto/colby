@@ -19,6 +19,8 @@ var CBThemedTextViewEditor = {
         var element = document.createElement("div");
         element.className = "CBThemedTextViewEditor";
 
+        element.appendChild(CBUI.createHalfSpace());
+
         element.appendChild(CBUI.createButton({
             text: "Convert to CBTextView2",
             callback: function () {
@@ -152,6 +154,8 @@ var CBThemedTextViewEditor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
