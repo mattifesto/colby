@@ -1,4 +1,7 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBPageLayoutEditor */
 /* global
     CBUI,
     CBUIBooleanEditor,
@@ -16,6 +19,8 @@ var CBPageLayoutEditor = {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBPageLayoutEditor";
+
+        element.appendChild(CBUI.createHalfSpace());
 
         element.appendChild(CBUI.createSectionHeader({
             paragraphs: [
@@ -110,6 +115,8 @@ var CBPageLayoutEditor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
