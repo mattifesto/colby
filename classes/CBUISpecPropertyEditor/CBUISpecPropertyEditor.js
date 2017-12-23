@@ -20,11 +20,11 @@ var CBUISpecPropertyEditor = {
      *
      * @return object
      */
-    classNameToSpec : function (className) {
+    classNameToSpec: function (className) {
         if (className === undefined) {
             return undefined;
         } else {
-            return { className : className };
+            return { className: className };
         }
     },
 
@@ -63,13 +63,13 @@ var CBUISpecPropertyEditor = {
      *          element: Element
      *      }
      */
-    create : function (args) {
+    create: function (args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBUISpecPropertyEditor";
 
         element.appendChild(CBUI.createSectionHeader({
-            text : args.labelText,
+            text: args.labelText,
         }));
 
         section = CBUI.createSection();
@@ -79,47 +79,47 @@ var CBUISpecPropertyEditor = {
         section.appendChild(specItem);
 
         var editLayoutPreferencesCallback = CBUISpecPropertyEditor.handleEditLayoutPreferences.bind(undefined, {
-            navigateToItemCallback : args.navigateToItemCallback,
-            propertyName : args.propertyName,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            navigateToItemCallback: args.navigateToItemCallback,
+            propertyName: args.propertyName,
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         });
 
         specItem.addEventListener("click", editLayoutPreferencesCallback);
 
         var updateDisplayCallback = CBUISpecPropertyEditor.updateDisplay.bind(undefined, {
-            propertyName : args.propertyName,
-            spec : args.spec,
-            specItemElement : specItem,
+            propertyName: args.propertyName,
+            spec: args.spec,
+            specItemElement: specItem,
         });
 
         updateDisplayCallback();
 
         var updateValueCallback = CBUISpecPropertyEditor.updateValue.bind(undefined, {
-            propertyName : args.propertyName,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-            updateDisplayCallback : updateDisplayCallback,
+            propertyName: args.propertyName,
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
+            updateDisplayCallback: updateDisplayCallback,
         });
 
         var selectClassCallback = CBUISpecPropertyEditor.selectClass.bind(undefined, {
-            navigateToItemCallback : args.navigateToItemCallback,
-            options : args.options,
-            updateValueCallback : updateValueCallback,
+            navigateToItemCallback: args.navigateToItemCallback,
+            options: args.options,
+            updateValueCallback: updateValueCallback,
         });
 
         /* change */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIActionLink.create({
-            callback : selectClassCallback,
-            labelText : "Select...",
+            callback: selectClassCallback,
+            labelText: "Select...",
         }).element);
         section.appendChild(item);
 
         element.appendChild(section);
 
         return {
-            element : element,
+            element: element,
         };
     },
 
@@ -131,8 +131,7 @@ var CBUISpecPropertyEditor = {
      *
      * @return undefined
      */
-    handleEditLayoutPreferences : function (args) {
-        var element = document.createElement("div");
+    handleEditLayoutPreferences: function (args) {
         var layoutSpec = args.spec[args.propertyName];
 
         if (layoutSpec === undefined) {
@@ -140,18 +139,14 @@ var CBUISpecPropertyEditor = {
         }
 
         var editor = CBUISpecEditor.create({
-            navigateToItemCallback : args.navigateToItemCallback,
-            spec : args.spec[args.propertyName],
-            specChangedCallback : args.specChangedCallback,
+            navigateToItemCallback: args.navigateToItemCallback,
+            spec: args.spec[args.propertyName],
+            specChangedCallback: args.specChangedCallback,
         });
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(editor.element);
-        element.appendChild(CBUI.createHalfSpace());
-
         args.navigateToItemCallback({
-            element : element,
-            title : args.spec.className || "Unknown",
+            element: editor.element,
+            title: args.spec.className || "Unknown",
         });
     },
 
@@ -162,10 +157,10 @@ var CBUISpecPropertyEditor = {
      *
      * @return undefined
      */
-    selectClass : function (args) {
+    selectClass: function (args) {
         CBUISelector.selectValue({
-            navigateToItemCallback : args.navigateToItemCallback,
-            options : args.options,
+            navigateToItemCallback: args.navigateToItemCallback,
+            options: args.options,
         })
         .then(CBUISpecPropertyEditor.classNameToSpec)
         .then(args.updateValueCallback);
@@ -178,7 +173,7 @@ var CBUISpecPropertyEditor = {
      *
      * @return undefined
      */
-    updateDisplay : function (args) {
+    updateDisplay: function (args) {
         var nonBreakingSpace = "\u00A0";
         var spec = args.spec[args.propertyName];
         var titleText = "None";
@@ -211,7 +206,7 @@ var CBUISpecPropertyEditor = {
      *
      * @return undefined
      */
-    updateValue : function (args, value) {
+    updateValue: function (args, value) {
         args.spec[args.propertyName] = value;
         args.updateDisplayCallback.call();
         args.specChangedCallback.call();

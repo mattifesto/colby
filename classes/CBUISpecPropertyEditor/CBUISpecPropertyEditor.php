@@ -19,23 +19,13 @@ final class CBUISpecPropertyEditor {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [CBUISpecPropertyEditor::URL('CBUISpecPropertyEditor.css')];
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBUISpecPropertyEditor::URL('CBUISpecPropertyEditor.js')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
     }
 }
