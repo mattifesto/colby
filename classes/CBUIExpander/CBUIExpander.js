@@ -43,7 +43,7 @@ var CBUIExpander = {
      * @param object args
      *
      *      {
-     *          message: string
+     *          message: string (message markup)
      *          severity: int?
      *          timestamp: int?
      *      }
