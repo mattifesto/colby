@@ -1,4 +1,7 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBCustomViewEditor */
 /* global
     CBUI,
     CBUIStringEditor */
@@ -15,6 +18,8 @@ var CBCustomViewEditor = {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBCustomViewEditor";
+
+        element.appendChild(CBUI.createHalfSpace());
 
         /* custom view class name */
 
@@ -59,6 +64,8 @@ var CBCustomViewEditor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },

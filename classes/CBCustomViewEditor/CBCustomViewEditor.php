@@ -5,7 +5,7 @@ final class CBCustomViewEditor {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames() {
         return ['CBUI', 'CBUIStringEditor'];
     }
 
@@ -13,6 +13,6 @@ final class CBCustomViewEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
     }
 }
