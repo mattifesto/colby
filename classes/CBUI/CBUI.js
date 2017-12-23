@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* exported CBUI */
 /* global
+    CBMessageMarkup,
     CBUIDropdown */
 
 var CBUI = {
@@ -187,8 +188,12 @@ var CBUI = {
     },
 
     /**
-     * @param string? args.key
-     * @param string? args.value
+     * @param object args
+     *
+     *      {
+     *          key: string?
+     *          value: string?
+     *      }
      *
      * @return object
      *
@@ -217,6 +222,29 @@ var CBUI = {
     },
 
     /**
+     * @param object args
+     *
+     *      {
+     *          message: string? (message markup)
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *      }
+     */
+    createMessageSectionItemPart: function (args) {
+        var element = document.createElement("div");
+        element.className = "CBUIMessageSectionItemPart";
+        element.innerHTML = CBMessageMarkup.convert(args.message || "");
+
+        return {
+            element: element,
+        };
+    },
+
+    /**
      * @return object
      *
      *      {
@@ -235,7 +263,7 @@ var CBUI = {
     /**
      * @return Element
      */
-    createSection : function () {
+    createSection: function () {
         var element = document.createElement("div");
         element.className = "CBUISection";
 

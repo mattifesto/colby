@@ -115,6 +115,11 @@
     width: 100%;
 }
 
+.CBUIMessageSectionItemPart {
+    flex: 1 1 auto;
+    padding: 20px;
+}
+
 .CBUISection {
     border-color: hsl(0, 0%, 80%);
     border-style: solid;
