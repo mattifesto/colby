@@ -36,6 +36,8 @@ var CBContainerViewEditor = {
 
         tagNameChangedCallback();
 
+        element.appendChild(CBUI.createHalfSpace());
+
         /* section */
         section = CBUI.createSection();
 
@@ -232,6 +234,8 @@ var CBContainerViewEditor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
