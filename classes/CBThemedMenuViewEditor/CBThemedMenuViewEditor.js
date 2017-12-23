@@ -21,6 +21,8 @@ var CBThemedMenuViewEditor = {
         var element = document.createElement("div");
         element.className = "CBThemedMenuViewEditor";
 
+        element.appendChild(CBUI.createHalfSpace());
+
         var menuItemSelector = CBUISelector.create({
             labelText : "Selected Item",
             navigateToItemCallback : args.navigateToItemCallback,
@@ -72,8 +74,9 @@ var CBThemedMenuViewEditor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         updateMenuItemsCallback();
 
