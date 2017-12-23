@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBIconLinkViewEditor */
 /* globals
     CBUI,
     CBUIBooleanEditor,
@@ -18,6 +20,8 @@ var CBIconLinkViewEditor = {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBIconLinkViewEditor";
+
+        element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
@@ -90,6 +94,8 @@ var CBIconLinkViewEditor = {
         item.appendChild(chooser.element);
         section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
 
