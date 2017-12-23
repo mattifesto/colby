@@ -1,19 +1,37 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBUIOptionArrayEditor */
 
+/**
+ * This class is used to create many different user interface elements each of
+ * which toggles a single value in an array. So if you had an array property
+ * that could contain all, some, or none of the values "1", "2", and "3" you
+ * would create three CBUIOptionArrayEditor elements each of which would toggle
+ * one of those values presence in the array.
+ *
+ * For example, you could show ten products and ask the user to "Click the
+ * products you are interested in." Then send the array of products in an email.
+ */
 var CBUIOptionArrayEditor = {
 
     /**
-     * @param string args.propertyName
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param var args.value
+     * @param object args
      *
-     * @return {
-     *  Element element,
-     *  function updateValueCallback,
-     * }
+     *      {
+     *          propertyName: string
+     *          spec: object
+     *          specChangedCallback: function
+     *          value: mixed
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          Element element,
+     *          function updateValueCallback,
+     *      }
      */
-    createEditor : function (args) {
+    createEditor: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIOptionArrayEditor";
 
@@ -37,11 +55,20 @@ var CBUIOptionArrayEditor = {
     },
 
     /**
-     * @param Element args.element
-     * @param string args.propertyName
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param var args.value
+     * @NOTE 2017.12.23
+     *
+     *      This function should probably be a closure inside the createEditor
+     *      function.
+     *
+     * @param object args
+     *
+     *      {
+     *          element: Element
+     *          propertyName: string
+     *          spec: object
+     *          specChangedCallback: function
+     *          value: mixed
+     *      }
      */
     handleElementClicked : function (args) {
         var array = args.spec[args.propertyName];
