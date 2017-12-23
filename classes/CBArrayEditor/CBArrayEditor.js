@@ -299,9 +299,7 @@ var CBArrayEditor = {
             specChangedCallback: args.specChangedCallback,
         });
 
-        element.appendChild(CBUI.createHalfSpace());
         element.appendChild(editor.element);
-        element.appendChild(CBUI.createHalfSpace());
 
         args.navigateToItemCallback({
             element: element,
