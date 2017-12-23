@@ -1,4 +1,7 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBPageTitleAndDescriptionViewEditor */
 /* globals
     CBUI,
     CBUIBooleanEditor,
@@ -16,6 +19,8 @@ var CBPageTitleAndDescriptionViewEditor = {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBPageTitleAndDescriptionViewEditor";
+
+        element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
 
@@ -71,6 +76,8 @@ var CBPageTitleAndDescriptionViewEditor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
