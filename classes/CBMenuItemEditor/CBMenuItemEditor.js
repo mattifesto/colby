@@ -1,4 +1,9 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBMenuItemEditor */
+/* global
+    CBUI,
+    CBUIStringEditor */
 
 var CBMenuItemEditor = {
 
@@ -16,7 +21,6 @@ var CBMenuItemEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
-
         item = CBUI.createSectionItem();
 
         item.appendChild(CBUIStringEditor.createEditor({
@@ -50,6 +54,7 @@ var CBMenuItemEditor = {
 
         section.appendChild(item);
         element.appendChild(section);
+
         element.appendChild(CBUI.createHalfSpace());
 
         return element;
