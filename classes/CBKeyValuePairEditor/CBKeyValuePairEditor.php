@@ -5,7 +5,7 @@ final class CBKeyValuePairEditor {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames() {
         return ['CBUI', 'CBUIStringEditor'];
     }
 
@@ -13,16 +13,6 @@ final class CBKeyValuePairEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBKeyValuePairEditor::URL('CBKeyValuePairEditor.js')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
     }
 }
