@@ -1,4 +1,9 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBThemeEditor */
+/* global
+    CBUI,
+    CBUIStringEditor */
 
 var CBThemeEditor = {
 
