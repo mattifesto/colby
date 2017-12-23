@@ -33,6 +33,8 @@ var CBHideByUserGroupViewEditor = {
             });
         });
 
+        element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
@@ -78,6 +80,8 @@ var CBHideByUserGroupViewEditor = {
             classNames : CBHideByUserGroupViewEditorAddableViews,
             navigateToItemCallback : args.navigateToItemCallback,
         }));
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
