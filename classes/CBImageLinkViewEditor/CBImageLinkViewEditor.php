@@ -6,30 +6,21 @@ final class CBImageLinkViewEditor {
      * @return [string]
      */
     static function requiredClassNames() {
-        return ['CBUI', 'CBUIBooleanEditor', 'CBUIImageUploader', 'CBUIImageURLView', 'CBUIStringEditor'];
+        return ['CBUI', 'CBUIBooleanEditor', 'CBUIImageUploader',
+                'CBUIImageURLView', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [CBImageLinkViewEditor::URL('CBImageLinkViewEditor.css')];
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBImageLinkViewEditor::URL('CBImageLinkViewEditor.js')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
     }
 }

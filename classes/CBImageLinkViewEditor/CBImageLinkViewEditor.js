@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBImageLinkViewEditor */
 /* global
     CBUI,
     CBUIBooleanEditor,
@@ -10,17 +12,21 @@
 var CBImageLinkViewEditor = {
 
     /**
-     * @param   {Object}    spec
-     * @param   {function}  specChangedCallback
+     * @param object args
      *
-     * @return  {Element}
+     *      {
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
+     *
+     * @return  Element
      */
-    createEditor : function(args) {
+    createEditor: function (args) {
         var section, item;
-        var element             = document.createElement("div");
-        element.className       = "CBImageLinkViewEditor";
-        var dimensions          = document.createElement("div");
-        dimensions.className    = "dimensions";
+        var element = document.createElement("div");
+        element.className = "CBImageLinkViewEditor";
+        var dimensions = document.createElement("div");
+        dimensions.className = "dimensions";
 
         /* upgrade spec */
         if (args.spec.density !== undefined) {
@@ -28,13 +34,15 @@ var CBImageLinkViewEditor = {
             args.spec.density = undefined;
         }
 
+        element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
 
         /* image view */
         item = CBUI.createSectionItem();
         var imageView = CBUIImageURLView.create({
-            propertyName : "URL",
-            spec : args.spec,
+            propertyName: "URL",
+            spec: args.spec,
         });
         item.appendChild(imageView.element);
         section.appendChild(item);
@@ -49,19 +57,19 @@ var CBImageLinkViewEditor = {
         var specWithImage = {};
 
         var transferImagePropertiesCallback = CBImageLinkViewEditor.transferImageProperties.bind(undefined, {
-            spec : args.spec,
-            specWithImage : specWithImage,
+            spec: args.spec,
+            specWithImage: specWithImage,
         });
 
         var updateDimensionsCallback = CBImageLinkViewEditor.updateDimensions.bind(undefined, {
-            dimensionsElement : dimensions,
-            spec : args.spec,
+            dimensionsElement: dimensions,
+            spec: args.spec,
         });
 
         updateDimensionsCallback();
 
         var handleImageUploadedCallback = CBImageLinkViewEditor.handleImageUploaded.bind(undefined, {
-            callbacks : [
+            callbacks: [
                 transferImagePropertiesCallback,
                 imageView.imageChangedCallback,
                 updateDimensionsCallback,
@@ -71,43 +79,44 @@ var CBImageLinkViewEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIImageUploader.create({
-            propertyName : "image",
-            spec : specWithImage,
-            specChangedCallback : handleImageUploadedCallback,
+            propertyName: "image",
+            spec: specWithImage,
+            specChangedCallback: handleImageUploadedCallback,
         }).element);
         section.appendChild(item);
 
         /* retina */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Retina",
-            propertyName : "retina",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Retina",
+            propertyName: "retina",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         /* alternative text */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Alternative Text",
-            propertyName : "alt",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Alternative Text",
+            propertyName: "alt",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         /* link href */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Link HREF",
-            propertyName : "HREF",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Link HREF",
+            propertyName: "HREF",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
@@ -115,7 +124,7 @@ var CBImageLinkViewEditor = {
     /**
      * @param [function] callbacks
      */
-    handleImageUploaded : function (args) {
+    handleImageUploaded: function (args) {
         args.callbacks.forEach(function (callback) { callback(); });
     },
 
@@ -125,7 +134,7 @@ var CBImageLinkViewEditor = {
      *
      * @return string|undefined
      */
-    specToDescription : function (spec) {
+    specToDescription: function (spec) {
         return spec.alt;
     },
 
@@ -134,7 +143,7 @@ var CBImageLinkViewEditor = {
      *
      * @return string
      */
-    specToDimensionsText : function (spec) {
+    specToDimensionsText: function (spec) {
         if (spec.URL === undefined) {
             return "no image";
         } else {
@@ -150,7 +159,7 @@ var CBImageLinkViewEditor = {
      *
      * @return undefined
      */
-    transferImageProperties : function (args) {
+    transferImageProperties: function (args) {
         var spec = args.spec;
         var image = args.specWithImage.image;
         spec.height = image.height;
@@ -164,7 +173,7 @@ var CBImageLinkViewEditor = {
      *
      * @return undefined
      */
-    updateDimensions : function (args) {
+    updateDimensions: function (args) {
         args.dimensionsElement.textContent = CBImageLinkViewEditor.specToDimensionsText(args.spec);
     },
 };
