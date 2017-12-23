@@ -1,4 +1,7 @@
-"use strict"; /* jshint strict: global */ /* jshint esversion: 6 */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBPageListView2Editor */
 /* global
     CBUI,
     CBUIStringEditor */
@@ -15,6 +18,8 @@ var CBPageListView2Editor = {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBPageListView2Editor";
+
+        element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
 
@@ -53,6 +58,8 @@ var CBPageListView2Editor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
