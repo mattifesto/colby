@@ -1,5 +1,18 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBUISpecPropertyEditor */
+/* global
+    CBUI,
+    CBUIActionLink,
+    CBUISelector,
+    CBUISpec,
+    CBUISpecEditor */
 
+/**
+ * This editor edits a property value that contains a spec. It allows the user
+ * to change the spec to a different class. It is used by
+ * CBViewPageInformationEditor to edit the layout property of a CBViewPage.
+ */
 var CBUISpecPropertyEditor = {
 
     /**
@@ -16,17 +29,39 @@ var CBUISpecPropertyEditor = {
     },
 
     /**
-     * @param string args.labelText
-     * @param function args.navigateToItemCallback
-     * @param [object] args.options
-     *  option = { string title, string? description, mixed? value }
-     * @param string args.propertyName
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
      *
-     * @return {
-     *  Element element,
-     * }
+     *      {
+     *          labelText: string
+     *          navigateToItemCallback: function
+     *          options: [object]
+     *
+     *              [{
+     *                  title: string
+     *                  description: string?
+     *                  value: mixed?
+     *
+     *                      In this case, the value should be a layout model
+     *                      class name.
+     *              }]
+     *
+     *          propertyName: string
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
+     *
+     * @NOTE 2017.12.23
+     *
+     *      This editor has awkward behavior when you select a new class name.
+     *      It completely obliterates the previous spec and replaces it with a
+     *      new empth sped. Maybe it can just keep the old spec but change the
+     *      class name or it should at least warn the user.
+     *
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *      }
      */
     create : function (args) {
         var section, item;
