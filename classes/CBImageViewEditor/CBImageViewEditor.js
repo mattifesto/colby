@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBImageViewEditor */
 /* global
     CBUI */
 
@@ -7,7 +9,7 @@ var CBImageViewEditor = {
     /**
      * @return Element
      */
-    createEditor : function(args) {
+    createEditor: function (args) {
          var section, item;
          var element = document.createElement("div");
          element.className = "CBImageViewEditor";
@@ -32,7 +34,7 @@ var CBImageViewEditor = {
      *
      * @return string|undefined
      */
-    specToDescription : function (spec) {
+    specToDescription: function (spec) {
         if (spec.alternativeTextViewModel) {
             return spec.alternativeTextViewModel.text;
         } else {
