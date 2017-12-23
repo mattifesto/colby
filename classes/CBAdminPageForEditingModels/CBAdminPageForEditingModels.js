@@ -87,13 +87,11 @@ var CBAdminPageForEditingModels = {
             defaultSpecChangedCallback: specChangedCallback,
         });
 
-        element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUISpecEditor.create({
             navigateToItemCallback: navigationView.navigateToItemCallback,
             spec: spec,
             specChangedCallback: specChangedCallback,
         }).element);
-        element.appendChild(CBUI.createHalfSpace());
 
         var inspectHeaderButtonItem = CBUI.createHeaderButtonItem({
             callback: function () {

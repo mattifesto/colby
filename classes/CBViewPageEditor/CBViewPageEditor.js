@@ -87,6 +87,8 @@ var CBViewPageEditor = {
         var editorContainer = document.createElement("div");
         editorContainer.classList.add("CBViewPageEditor");
 
+        editorContainer.appendChild(CBUI.createHalfSpace());
+
         /**
          * Page information
          */
@@ -153,6 +155,8 @@ var CBViewPageEditor = {
             moveToTrashButton.enable();
         }
 
+        editorContainer.appendChild(CBUI.createHalfSpace());
+
         return editorContainer;
     },
 
@@ -193,13 +197,11 @@ var CBViewPageEditor = {
             },
         });
 
-        element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUISpecEditor.create({
             navigateToItemCallback: navigationView.navigateToItemCallback,
             spec: spec,
             specChangedCallback: CBViewPageEditor.specChangedCallback,
         }).element);
-        element.appendChild(CBUI.createHalfSpace());
 
         main.appendChild(navigationView.element);
     },
