@@ -23,6 +23,8 @@ var CBContainerView2Editor = {
         var element = document.createElement("div");
         element.className = "CBContainerView2Editor";
 
+        element.appendChild(CBUI.createHalfSpace());
+
         section = CBUI.createSection();
 
         var chooser = CBUIImageChooser.createFullSizedChooser({
@@ -114,8 +116,9 @@ var CBContainerView2Editor = {
             specChangedCallback : args.specChangedCallback,
         }).element);
         section.appendChild(item);
-
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
 
