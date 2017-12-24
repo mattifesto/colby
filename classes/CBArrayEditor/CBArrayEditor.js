@@ -262,13 +262,26 @@ var CBArrayEditor = {
         var downCommand = document.createElement("div");
         downCommand.className = "command arrange down optional";
         downCommand.textContent = "Down";
-        downCommand.addEventListener("click", CBArrayEditor.handleMoveDownWasClicked.bind(undefined, {
-            array: args.array,
-            arrayChangedCallback: args.arrayChangedCallback,
-            sectionElement: args.sectionElement,
-            spec: spec,
-        }));
+        downCommand.addEventListener("click", moveDown);
         item.commandsElement.appendChild(downCommand);
+
+        /* closure */
+        function moveDown() {
+            var index = array.indexOf(spec);
+
+            if (index < (array.length - 1)) {
+                var itemElement = sectionElement.children.item(index);
+                var nextItemElement = itemElement.nextSibling;
+
+                array.splice(index, 1); // remove at index
+                array.splice(index + 1, 0, spec); // insert after next spec
+
+                sectionElement.removeChild(itemElement);
+                sectionElement.insertBefore(itemElement, nextItemElement.nextSibling);
+
+                arrayChangedCallback();
+            }
+        }
 
         var cutCommand = document.createElement("div");
         cutCommand.className = "command edit cut";
@@ -346,31 +359,6 @@ var CBArrayEditor = {
 
             var specAsJSON = JSON.stringify(args.spec);
             localStorage.setItem("specClipboard", specAsJSON);
-
-            args.arrayChangedCallback();
-        }
-    },
-
-    /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param Element args.sectionElement
-     * @param object args.spec
-     *
-     * @return undefined
-     */
-    handleMoveDownWasClicked: function (args) {
-        var index = args.array.indexOf(args.spec);
-
-        if (index < (args.array.length - 1)) {
-            var itemElement = args.sectionElement.children.item(index);
-            var nextItemElement = itemElement.nextSibling;
-
-            args.array.splice(index, 1); // remove at index
-            args.array.splice(index + 1, 0, args.spec); // insert after next spec
-
-            args.sectionElement.removeChild(itemElement);
-            args.sectionElement.insertBefore(itemElement, nextItemElement.nextSibling);
 
             args.arrayChangedCallback();
         }
