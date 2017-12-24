@@ -308,10 +308,14 @@ var CBArrayEditor = {
         var copyCommand = document.createElement("div");
         copyCommand.className = "command edit copy optional";
         copyCommand.textContent = "Copy";
-        copyCommand.addEventListener("click", CBArrayEditor.handleCopyWasClicked.bind(undefined, {
-            spec: spec,
-        }));
+        copyCommand.addEventListener("click", copy);
         item.commandsElement.appendChild(copyCommand);
+
+        /* closure */
+        function copy() {
+            var specAsJSON = JSON.stringify(spec);
+            localStorage.setItem("specClipboard", specAsJSON);
+        }
 
         var pasteCommand = document.createElement("div");
         pasteCommand.className = "command edit paste";
@@ -340,16 +344,6 @@ var CBArrayEditor = {
         item.commandsElement.appendChild(insertCommand);
 
         return item.element;
-    },
-
-    /**
-     * @param object args.spec
-     *
-     * @return undefined
-     */
-    handleCopyWasClicked: function (args) {
-        var specAsJSON = JSON.stringify(args.spec);
-        localStorage.setItem("specClipboard", specAsJSON);
     },
 
     /**
