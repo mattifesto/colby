@@ -176,6 +176,9 @@ var CBArrayEditor = {
      * @return Element
      */
     createSectionItemElement2: function (args) {
+        var array = args.array;
+        var arrayChangedCallback = args.arrayChangedCallback;
+        var sectionElement = args.sectionElement;
         var spec = args.spec;
         var navigateToItem = args.navigateToItemCallback;
 
@@ -235,13 +238,26 @@ var CBArrayEditor = {
         var upCommand = document.createElement("div");
         upCommand.className = "command arrange up";
         upCommand.textContent = "Up";
-        upCommand.addEventListener("click", CBArrayEditor.handleMoveUpWasClicked.bind(undefined, {
-            array: args.array,
-            arrayChangedCallback: args.arrayChangedCallback,
-            sectionElement: args.sectionElement,
-            spec: spec,
-        }));
+        upCommand.addEventListener("click", moveUp);
         item.commandsElement.appendChild(upCommand);
+
+        /* closure */
+        function moveUp() {
+            var index = array.indexOf(spec);
+
+            if (index > 0) {
+                var itemElement = sectionElement.children.item(index);
+                var previousItemElement = itemElement.previousSibling;
+
+                array.splice(index, 1); // remove at index
+                array.splice(index - 1, 0, spec); // insert before previous spec
+
+                sectionElement.removeChild(itemElement);
+                sectionElement.insertBefore(itemElement, previousItemElement);
+
+                arrayChangedCallback();
+            }
+        }
 
         var downCommand = document.createElement("div");
         downCommand.className = "command arrange down optional";
@@ -355,31 +371,6 @@ var CBArrayEditor = {
 
             args.sectionElement.removeChild(itemElement);
             args.sectionElement.insertBefore(itemElement, nextItemElement.nextSibling);
-
-            args.arrayChangedCallback();
-        }
-    },
-
-    /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param Element args.sectionElement
-     * @param object args.spec
-     *
-     * @return undefined
-     */
-    handleMoveUpWasClicked: function (args) {
-        var index = args.array.indexOf(args.spec);
-
-        if (index > 0) {
-            var itemElement = args.sectionElement.children.item(index);
-            var previousItemElement = itemElement.previousSibling;
-
-            args.array.splice(index, 1); // remove at index
-            args.array.splice(index - 1, 0, args.spec); // insert before previous spec
-
-            args.sectionElement.removeChild(itemElement);
-            args.sectionElement.insertBefore(itemElement, previousItemElement);
 
             args.arrayChangedCallback();
         }
