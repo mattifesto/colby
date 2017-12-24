@@ -172,12 +172,8 @@
     text-decoration: underline;
 }
 
-.CBUISectionItem.components {
-    display: flex;
-}
 
-.CBUINavigationArrowSectionItemPart,
-.CBUISectionItem.components .arrow {
+.CBUINavigationArrowSectionItemPart {
     align-items: center;
     color: var(--CBLineColor);
     display: flex;
@@ -186,8 +182,7 @@
     width: 30px;
 }
 
-.CBUINavigationArrowSectionItemPart::after,
-.CBUISectionItem.components .arrow::after {
+.CBUINavigationArrowSectionItemPart::after {
     content: ">";
 }
 

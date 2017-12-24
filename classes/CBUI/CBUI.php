@@ -65,6 +65,15 @@ final class CBUI {
     }
 
     /**
+     * @return void
+     */
+    static function renderNavigationArrowSectionItemPart(): void {
+        ?>
+        <div class="CBUINavigationArrowSectionItemPart"></div>
+        <?php
+    }
+
+    /**
      * @return null
      */
     static function renderSectionStart() {
@@ -102,5 +111,32 @@ final class CBUI {
      */
     static function renderSectionItemEnd() {
         ?></div><?php
+    }
+
+    /**
+     * @param object args
+     *
+     *      {
+     *          title: string?
+     *          description: string?
+     *      }
+     *
+     * @return void
+     */
+    static function renderTitleAndDescriptionSectionItemPart(stdClass $args): void {
+        $title = CBModel::value($args, 'title', '', 'strval');
+        $description = CBModel::value($args, 'description', '', 'strval');
+
+        echo '<div class="CBUITitleAndDescriptionSectionItemPart">';
+
+        if (!empty($title)) {
+            echo '<div class="title">', cbhtml($title), '</div>';
+        }
+
+        if (!empty($description)) {
+            echo '<div class="description">', cbhtml($description), '</div>';
+        }
+
+        echo '</div>';
     }
 }
