@@ -101,7 +101,7 @@ EOT;
 
         $items = array_map(function ($className) {
             $item = (object)[
-                'titleAsHTML' => cbhtml($className),
+                'className' => $className,
             ];
 
             if (defined("{$className}::ID")) {
@@ -120,15 +120,15 @@ EOT;
 
         <div class="CBUISection">
             <?php foreach ($items as $item) { ?>
-                <div class="CBUISectionItem components"
-                     onclick="window.location = '<?= $item->href ?>';">
-                    <div class="ellipsisTextContainer">
-                        <div class="ellipsisText">
-                            <?= $item->titleAsHTML ?>
-                        </div>
-                    </div>
-                    <div class="arrow">
-                    </div>
+                <div class="CBUISectionItem3" onclick="window.location = '<?= $item->href ?>';">
+                    <?php
+
+                    CBUI::renderTitleAndDescriptionSectionItemPart((object)[
+                        'title' => $item->className
+                    ]);
+                    CBUI::renderNavigationArrowSectionItemPart();
+
+                    ?>
                 </div>
             <?php } ?>
         </div>
