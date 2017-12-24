@@ -196,6 +196,7 @@ var CBArrayEditor = {
 
         updateDescriptionElement();
 
+        /* closure */
         function specChangedCallback() {
             updateThumbnail();
             updateDescriptionElement();
@@ -204,13 +205,21 @@ var CBArrayEditor = {
 
         /* edit */
 
-        var editSpecCallback = CBArrayEditor.editSpec.bind(undefined, {
-            navigateToItemCallback: args.navigateToItemCallback,
-            spec: args.spec,
-            specChangedCallback: specChangedCallback,
-        });
+        item.titleElement.addEventListener("click", edit);
 
-        item.titleElement.addEventListener("click", editSpecCallback);
+        /* closure */
+        function edit() {
+            var editor = CBUISpecEditor.create({
+                navigateToItemCallback: args.navigateToItemCallback,
+                spec: args.spec,
+                specChangedCallback: specChangedCallback,
+            });
+
+            args.navigateToItemCallback({
+                element: editor.element,
+                title: args.spec.className || "Unknown",
+            });
+        }
 
         /* commands */
 
@@ -282,29 +291,6 @@ var CBArrayEditor = {
         item.commandsElement.appendChild(insertCommand);
 
         return item.element;
-    },
-
-    /**
-     * @param function args.navigateToItemCallback
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     *
-     * @return undefined
-     */
-    editSpec: function (args) {
-        var element = document.createElement("div");
-        var editor = CBUISpecEditor.create({
-            navigateToItemCallback: args.navigateToItemCallback,
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        });
-
-        element.appendChild(editor.element);
-
-        args.navigateToItemCallback({
-            element: element,
-            title: args.spec.className || "Unknown",
-        });
     },
 
     /**
