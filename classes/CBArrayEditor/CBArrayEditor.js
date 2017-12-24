@@ -162,36 +162,45 @@ var CBArrayEditor = {
     },
 
     /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param [string] args.classNames
-     * @param function args.navigateToItemCallback
-     * @param Element args.sectionElement
-     * @param object args.spec
+     * @param object args
+     *
+     *      {
+     *          array: [object]
+     *          arrayChangedCallback: function
+     *          classNames: [string]
+     *          navigateToItemCallback: function
+     *          sectionElement: Element
+     *          spec: object
+     *      }
      *
      * @return Element
      */
     createSectionItemElement2: function (args) {
+        var spec = args.spec;
+        var navigateToItem = args.navigateToItemCallback;
+
         var item = CBUI.createSectionItem2();
 
         var typeElement = document.createElement("div");
         typeElement.className = "type";
-        typeElement.textContent = args.spec.className;
+        typeElement.textContent = spec.className;
         item.titleElement.appendChild(typeElement);
 
         var descriptionElement = document.createElement("div");
         descriptionElement.className = "description";
         item.titleElement.appendChild(descriptionElement);
 
+        /* closure */
         function updateThumbnail() {
-            item.setThumbnailURI(CBUISpec.specToThumbnailURI(args.spec));
+            item.setThumbnailURI(CBUISpec.specToThumbnailURI(spec));
         }
 
         updateThumbnail();
 
+        /* closure */
         function updateDescriptionElement() {
             var nonBreakingSpace = "\u00A0";
-            descriptionElement.textContent = CBUISpec.specToDescription(args.spec) || nonBreakingSpace;
+            descriptionElement.textContent = CBUISpec.specToDescription(spec) || nonBreakingSpace;
         }
 
         updateDescriptionElement();
@@ -210,14 +219,14 @@ var CBArrayEditor = {
         /* closure */
         function edit() {
             var editor = CBUISpecEditor.create({
-                navigateToItemCallback: args.navigateToItemCallback,
-                spec: args.spec,
+                navigateToItemCallback: navigateToItem,
+                spec: spec,
                 specChangedCallback: specChangedCallback,
             });
 
-            args.navigateToItemCallback({
+            navigateToItem({
                 element: editor.element,
-                title: args.spec.className || "Unknown",
+                title: spec.className || "Unknown",
             });
         }
 
@@ -230,7 +239,7 @@ var CBArrayEditor = {
             array: args.array,
             arrayChangedCallback: args.arrayChangedCallback,
             sectionElement: args.sectionElement,
-            spec: args.spec,
+            spec: spec,
         }));
         item.commandsElement.appendChild(upCommand);
 
@@ -241,7 +250,7 @@ var CBArrayEditor = {
             array: args.array,
             arrayChangedCallback: args.arrayChangedCallback,
             sectionElement: args.sectionElement,
-            spec: args.spec,
+            spec: spec,
         }));
         item.commandsElement.appendChild(downCommand);
 
@@ -252,7 +261,7 @@ var CBArrayEditor = {
             array: args.array,
             arrayChangedCallback: args.arrayChangedCallback,
             sectionElement: args.sectionElement,
-            spec: args.spec,
+            spec: spec,
         }));
         item.commandsElement.appendChild(cutCommand);
 
@@ -260,7 +269,7 @@ var CBArrayEditor = {
         copyCommand.className = "command edit copy optional";
         copyCommand.textContent = "Copy";
         copyCommand.addEventListener("click", CBArrayEditor.handleCopyWasClicked.bind(undefined, {
-            spec: args.spec,
+            spec: spec,
         }));
         item.commandsElement.appendChild(copyCommand);
 
@@ -271,9 +280,9 @@ var CBArrayEditor = {
             array: args.array,
             arrayChangedCallback: args.arrayChangedCallback,
             classNames: args.classNames,
-            navigateToItemCallback: args.navigateToItemCallback,
+            navigateToItemCallback: navigateToItem,
             sectionElement: args.sectionElement,
-            specToInsertBefore: args.spec,
+            specToInsertBefore: spec,
         }));
         item.commandsElement.appendChild(pasteCommand);
 
@@ -284,9 +293,9 @@ var CBArrayEditor = {
             array: args.array,
             arrayChangedCallback: args.arrayChangedCallback,
             classNames: args.classNames,
-            navigateToItemCallback: args.navigateToItemCallback,
+            navigateToItemCallback: navigateToItem,
             sectionElement: args.sectionElement,
-            specToInsertBefore: args.spec,
+            specToInsertBefore: spec,
         }));
         item.commandsElement.appendChild(insertCommand);
 
