@@ -20,7 +20,7 @@ final class CBUI {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBMessageMarkup', 'CBUIDropdown'];
+        return ['CBContentStyleSheet', 'CBMessageMarkup', 'CBUIDropdown'];
     }
 
     /**

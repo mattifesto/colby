@@ -236,7 +236,7 @@ var CBUI = {
      */
     createMessageSectionItemPart: function (args) {
         var element = document.createElement("div");
-        element.className = "CBUIMessageSectionItemPart";
+        element.className = "CBUIMessageSectionItemPart CBContentStyleSheet";
         element.innerHTML = CBMessageMarkup.convert(args.message || "");
 
         return {
