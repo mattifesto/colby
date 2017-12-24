@@ -1,10 +1,19 @@
 "use strict";
+/* jshint strict: global */
+/* exported CBPagesPreferencesEditor */
+/* global
+    CBUI,
+    CBUIStringEditor */
 
-var CBPagesPreferencesEditorFactory = {
+var CBPagesPreferencesEditor = {
 
     /**
-     * @param object spec
-     * @param function specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
      *
      * @return Element
      */
@@ -12,6 +21,9 @@ var CBPagesPreferencesEditorFactory = {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBPagesPreferencesEditor";
+
+        element.appendChild(CBUI.createHalfSpace());
+
         var properties = [
             { name : "supportedViewClassNames", labelText : "Supported View Class Names" },
             { name : "deprecatedViewClassNames", labelText : "Deprecated View Class Name" },
@@ -34,6 +46,8 @@ var CBPagesPreferencesEditorFactory = {
         });
 
         element.appendChild(section);
+
+        element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },

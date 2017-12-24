@@ -5,24 +5,14 @@ final class CBPagesPreferencesEditor {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor'];
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBPagesPreferencesEditor::URL('CBPagesPreferencesEditorFactory.js')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUI', 'CBUIStringEditor'];
     }
 }
