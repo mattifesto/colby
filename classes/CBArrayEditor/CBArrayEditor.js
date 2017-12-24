@@ -286,13 +286,24 @@ var CBArrayEditor = {
         var cutCommand = document.createElement("div");
         cutCommand.className = "command edit cut";
         cutCommand.textContent = "Cut";
-        cutCommand.addEventListener("click", CBArrayEditor.handleCutWasClicked.bind(undefined, {
-            array: args.array,
-            arrayChangedCallback: args.arrayChangedCallback,
-            sectionElement: args.sectionElement,
-            spec: spec,
-        }));
+        cutCommand.addEventListener("click", cut);
         item.commandsElement.appendChild(cutCommand);
+
+        /* closure */
+        function cut() {
+            if (confirm("Are you sure you want to remove this item?")) {
+                var index = array.indexOf(spec);
+                var itemElement = sectionElement.children.item(index);
+
+                array.splice(index, 1); // remove at index
+                sectionElement.removeChild(itemElement);
+
+                var specAsJSON = JSON.stringify(spec);
+                localStorage.setItem("specClipboard", specAsJSON);
+
+                arrayChangedCallback();
+            }
+        }
 
         var copyCommand = document.createElement("div");
         copyCommand.className = "command edit copy optional";
@@ -339,29 +350,6 @@ var CBArrayEditor = {
     handleCopyWasClicked: function (args) {
         var specAsJSON = JSON.stringify(args.spec);
         localStorage.setItem("specClipboard", specAsJSON);
-    },
-
-    /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param Element args.sectionElement
-     * @param object args.spec
-     *
-     * @return undefined
-     */
-    handleCutWasClicked: function (args) {
-        if (confirm("Are you sure you want to remove this item?")) {
-            var index = args.array.indexOf(args.spec);
-            var itemElement = args.sectionElement.children.item(index);
-
-            args.array.splice(index, 1); // remove at index
-            args.sectionElement.removeChild(itemElement);
-
-            var specAsJSON = JSON.stringify(args.spec);
-            localStorage.setItem("specClipboard", specAsJSON);
-
-            args.arrayChangedCallback();
-        }
     },
 
     /**
