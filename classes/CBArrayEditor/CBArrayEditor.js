@@ -178,6 +178,7 @@ var CBArrayEditor = {
     createSectionItemElement2: function (args) {
         var array = args.array;
         var arrayChangedCallback = args.arrayChangedCallback;
+        var classNames = args.classNames;
         var sectionElement = args.sectionElement;
         var spec = args.spec;
         var navigateToItem = args.navigateToItemCallback;
@@ -320,15 +321,31 @@ var CBArrayEditor = {
         var pasteCommand = document.createElement("div");
         pasteCommand.className = "command edit paste";
         pasteCommand.textContent = "Paste";
-        pasteCommand.addEventListener("click", CBArrayEditor.handlePasteWasClicked.bind(undefined, {
-            array: args.array,
-            arrayChangedCallback: args.arrayChangedCallback,
-            classNames: args.classNames,
-            navigateToItemCallback: navigateToItem,
-            sectionElement: args.sectionElement,
-            specToInsertBefore: spec,
-        }));
+        pasteCommand.addEventListener("click", paste);
         item.commandsElement.appendChild(pasteCommand);
+
+        function paste() {
+            var specAsJSON = localStorage.getItem("specClipboard");
+
+            if (specAsJSON === null) { return; }
+
+            var specToPaste = JSON.parse(specAsJSON);
+            var indexToInsertBefore = array.indexOf(spec);
+            var elementToInsertBefore = sectionElement.children.item(indexToInsertBefore);
+            var sectionItemElement = CBArrayEditor.createSectionItemElement2({
+                array: array,
+                arrayChangedCallback: arrayChangedCallback,
+                classNames: classNames,
+                navigateToItemCallback: navigateToItem,
+                sectionElement: sectionElement,
+                spec: specToPaste,
+            });
+
+            array.splice(indexToInsertBefore, 0, specToPaste);
+            sectionElement.insertBefore(sectionItemElement, elementToInsertBefore);
+
+            arrayChangedCallback();
+        }
 
         var insertCommand = document.createElement("div");
         insertCommand.className = "command insert";
@@ -344,26 +361,6 @@ var CBArrayEditor = {
         item.commandsElement.appendChild(insertCommand);
 
         return item.element;
-    },
-
-    /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param [string] args.classNames
-     * @param function args.navigateToItemCallback
-     * @param Element args.sectionElement
-     * @param object args.specToInsertBefore
-     *
-     * @return  undefined
-     */
-    handlePasteWasClicked: function (args) {
-        var specAsJSON = localStorage.getItem("specClipboard");
-
-        if (specAsJSON === null) { return; }
-
-        var spec = JSON.parse(specAsJSON);
-
-        CBArrayEditor.insert(args, spec);
     },
 
     /**
