@@ -63,17 +63,6 @@ var CBArrayEditor = {
     },
 
     /**
-     * @param string className
-     *
-     * @return object
-     */
-    classNameToModel: function (className) {
-        return {
-            className: className,
-        };
-    },
-
-    /**
      * @param object args
      *
      *      {
