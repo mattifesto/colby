@@ -101,10 +101,21 @@ var CBArrayEditor = {
     },
 
     /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param [string] args.classNames
-     * @param function args.navigateToItemCallback
+     * @param object args
+     *
+     *      {
+     *          array: [object]
+     *
+     *              The array of specs that will be edited by this editor
+     *
+     *          arrayChangedCallback: function
+     *          classNames: [string]
+     *
+     *              The class names of specs that are allows to be added to the
+     *              array
+     *
+     *          navigateToItemCallback: function
+     *      }
      *
      * @return Element
      */
