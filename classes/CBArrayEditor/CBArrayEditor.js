@@ -63,33 +63,6 @@ var CBArrayEditor = {
     },
 
     /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param [string] args.classNames
-     * @param function args.navigateToItemCallback
-     * @param Element args.sectionElement
-     *
-     * @return  undefined
-     */
-    appendSelectedModel: function (args) {
-        var requestModelClassName = CBArrayEditor.requestModelClassName;
-        var requestArgs = {
-            classNames: args.classNames,
-            navigateToItemCallback: args.navigateToItemCallback,
-        };
-        var classNameToModel = CBArrayEditor.classNameToModel;
-        var appendModel = CBArrayEditor.append.bind(undefined, {
-            array: args.array,
-            arrayChangedCallback: args.arrayChangedCallback,
-            classNames: args.classNames,
-            navigateToItemCallback: args.navigateToItemCallback,
-            sectionElement: args.sectionElement,
-        });
-
-        requestModelClassName(requestArgs).then(classNameToModel).then(appendModel);
-    },
-
-    /**
      * @param string className
      *
      * @return object
@@ -120,55 +93,87 @@ var CBArrayEditor = {
      * @return Element
      */
     createEditor: function (args) {
-        var section, item;
+        var item;
+        var array = args.array;
+        var arrayChangedCallback = args.arrayChangedCallback;
+        var classNames = args.classNames;
+        var navigateToItem = args.navigateToItemCallback;
         var element = document.createElement("div");
         element.className = "CBArrayEditor";
 
-        section = document.createElement("div");
-        section.className = "CBUISection";
+        var sectionElement = document.createElement("div");
+        sectionElement.className = "CBUISection";
 
         args.array.forEach(function (spec) {
             var element = CBArrayEditor.createSectionItemElement2({
-                array: args.array,
-                arrayChangedCallback: args.arrayChangedCallback,
-                classNames: args.classNames,
-                navigateToItemCallback: args.navigateToItemCallback,
-                sectionElement: section,
+                array: array,
+                arrayChangedCallback: arrayChangedCallback,
+                classNames: classNames,
+                navigateToItemCallback: navigateToItem,
+                sectionElement: sectionElement,
                 spec: spec,
             });
 
-            section.appendChild(element);
+            sectionElement.appendChild(element);
         });
 
         /* append */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIActionLink.create({
-            callback: CBArrayEditor.appendSelectedModel.bind(undefined, {
-                array: args.array,
-                arrayChangedCallback: args.arrayChangedCallback,
-                classNames: args.classNames,
-                navigateToItemCallback: args.navigateToItemCallback,
-                sectionElement: section,
-            }),
+            callback: appendNew,
             labelText: "Append New...",
         }).element);
-        section.appendChild(item);
+        sectionElement.appendChild(item);
+
+        /* closure */
+        function appendNew() {
+            requestClassName()
+                .then(append)
+                .catch(Colby.displayAndReportError);
+
+            function requestClassName() {
+                return CBArrayEditor.requestModelClassName({
+                    classNames: classNames,
+                    navigateToItemCallback: navigateToItem,
+                });
+            }
+
+            function append(className) {
+                var newSpec = {
+                    className: className,
+                };
+
+                var sectionItemElement = CBArrayEditor.createSectionItemElement2({
+                    array: array,
+                    arrayChangedCallback: arrayChangedCallback,
+                    classNames: classNames,
+                    navigateToItemCallback: navigateToItem,
+                    sectionElement: sectionElement,
+                    spec: newSpec,
+                });
+
+                array.push(newSpec);
+                /* insert before the second to the last child (two action links) */
+                sectionElement.insertBefore(sectionItemElement, sectionElement.lastElementChild.previousSibling);
+
+                arrayChangedCallback.call();
+            }
+        }
 
         /* append from clipboard */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIActionLink.create({
             callback: CBArrayEditor.appendFromClipboardWasClicked.bind(undefined, {
-                array: args.array,
-                arrayChangedCallback: args.arrayChangedCallback,
-                classNames: args.classNames,
-                navigateToItemCallback: args.navigateToItemCallback,
-                sectionElement: section,
+                array: array,
+                arrayChangedCallback: arrayChangedCallback,
+                classNames: classNames,
+                navigateToItemCallback: navigateToItem,
+                sectionElement: sectionElement,
             }),
             labelText: "Append From Clipboard...",
         }).element);
-        section.appendChild(item);
-
-        element.appendChild(section);
+        sectionElement.appendChild(item);
+        element.appendChild(sectionElement);
 
         return element;
     },
