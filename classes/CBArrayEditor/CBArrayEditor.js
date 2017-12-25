@@ -17,56 +17,6 @@ var CBArrayEditor = {
      *
      *      {
      *          array: [object]
-     *          arrayChangedCallback: function
-     *          classNames: [string]
-     *          navigateToItemCallback: function
-     *          sectionElement: Element
-     *      }
-     *
-     * @param object spec
-     *
-     * @return undefined
-     */
-    append: function (args, spec) {
-        var element = CBArrayEditor.createSectionItemElement2({
-            array: args.array,
-            arrayChangedCallback: args.arrayChangedCallback,
-            classNames: args.classNames,
-            navigateToItemCallback: args.navigateToItemCallback,
-            sectionElement: args.sectionElement,
-            spec: spec,
-        });
-
-        args.array.push(spec);
-        args.sectionElement.insertBefore(element, args.sectionElement.lastElementChild.previousSibling);
-
-        args.arrayChangedCallback.call();
-    },
-
-    /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param [string] args.classNames
-     * @param function args.navigateToItemCallback
-     * @param Element args.sectionElement
-     *
-     * @return  undefined
-     */
-    appendFromClipboardWasClicked: function (args) {
-        var specAsJSON = localStorage.getItem("specClipboard");
-
-        if (specAsJSON === null) { return; }
-
-        var spec = JSON.parse(specAsJSON);
-
-        CBArrayEditor.append(args, spec);
-    },
-
-    /**
-     * @param object args
-     *
-     *      {
-     *          array: [object]
      *
      *              The array of specs that will be edited by this editor
      *
@@ -144,25 +94,40 @@ var CBArrayEditor = {
                 array.push(newSpec);
                 /* insert before the second to the last child (two action links) */
                 sectionElement.insertBefore(sectionItemElement, sectionElement.lastElementChild.previousSibling);
-
-                arrayChangedCallback.call();
+                arrayChangedCallback();
             }
         }
 
         /* append from clipboard */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIActionLink.create({
-            callback: CBArrayEditor.appendFromClipboardWasClicked.bind(undefined, {
+            callback: appendFromClipboard,
+            labelText: "Append From Clipboard...",
+        }).element);
+        sectionElement.appendChild(item);
+        element.appendChild(sectionElement);
+
+        /* closure */
+        function appendFromClipboard() {
+            var specAsJSON = localStorage.getItem("specClipboard");
+
+            if (specAsJSON === null) { return; }
+
+            var newSpec = JSON.parse(specAsJSON);
+            var sectionItemElement = CBArrayEditor.createSectionItemElement2({
                 array: array,
                 arrayChangedCallback: arrayChangedCallback,
                 classNames: classNames,
                 navigateToItemCallback: navigateToItem,
                 sectionElement: sectionElement,
-            }),
-            labelText: "Append From Clipboard...",
-        }).element);
-        sectionElement.appendChild(item);
-        element.appendChild(sectionElement);
+                spec: newSpec,
+            });
+
+            array.push(newSpec);
+            /* insert before the second to the last child (two action links) */
+            sectionElement.insertBefore(sectionItemElement, sectionElement.lastElementChild.previousSibling);
+            arrayChangedCallback();
+        }
 
         return element;
     },
@@ -219,7 +184,7 @@ var CBArrayEditor = {
         function specChangedCallback() {
             updateThumbnail();
             updateDescriptionElement();
-            args.arrayChangedCallback();
+            arrayChangedCallback();
         }
 
         /* edit */
@@ -261,7 +226,6 @@ var CBArrayEditor = {
 
                 sectionElement.removeChild(itemElement);
                 sectionElement.insertBefore(itemElement, previousItemElement);
-
                 arrayChangedCallback();
             }
         }
@@ -285,7 +249,6 @@ var CBArrayEditor = {
 
                 sectionElement.removeChild(itemElement);
                 sectionElement.insertBefore(itemElement, nextItemElement.nextSibling);
-
                 arrayChangedCallback();
             }
         }
@@ -307,7 +270,6 @@ var CBArrayEditor = {
 
                 var specAsJSON = JSON.stringify(spec);
                 localStorage.setItem("specClipboard", specAsJSON);
-
                 arrayChangedCallback();
             }
         }
@@ -349,7 +311,6 @@ var CBArrayEditor = {
 
             array.splice(indexToInsertBefore, 0, newSpec);
             sectionElement.insertBefore(sectionItemElement, elementToInsertBefore);
-
             arrayChangedCallback();
         }
 
@@ -390,41 +351,11 @@ var CBArrayEditor = {
 
                 array.splice(indexToInsertBefore, 0, newSpec);
                 sectionElement.insertBefore(sectionItemElement, elementToInsertBefore);
-
                 arrayChangedCallback();
             }
         }
 
         return item.element;
-    },
-
-    /**
-     * @param [object] args.array
-     * @param function args.arrayChangedCallback
-     * @param function args.classNames
-     * @param function args.navigateToItemCallback
-     * @param Element args.sectionElement
-     * @param object args.specToInsertBefore
-     * @param object spec
-     *
-     * @return  undefined
-     */
-    insert: function (args, spec) {
-        var indexToInsertBefore = args.array.indexOf(args.specToInsertBefore);
-        var elementToInsertBefore = args.sectionElement.children.item(indexToInsertBefore);
-        var sectionItemElement = CBArrayEditor.createSectionItemElement2({
-            array: args.array,
-            arrayChangedCallback: args.arrayChangedCallback,
-            classNames: args.classNames,
-            navigateToItemCallback: args.navigateToItemCallback,
-            sectionElement: args.sectionElement,
-            spec: spec,
-        });
-
-        args.array.splice(indexToInsertBefore, 0, spec);
-        args.sectionElement.insertBefore(sectionItemElement, elementToInsertBefore);
-
-        args.arrayChangedCallback();
     },
 
     /**
