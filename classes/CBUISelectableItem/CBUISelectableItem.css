@@ -1,0 +1,24 @@
+.CBUISelectableItem {
+    display: flex;
+}
+
+.CBUISelectableItem > .parts {
+    flex: 1 1 auto;
+}
+
+.CBUISelectableItem > .selector {
+    align-items: center;
+    color: transparent;
+    display: none;
+    flex: none;
+    min-height: 44px;
+    padding: 0 10px;
+}
+
+.CBUISelectableItem.selected > .selector {
+    color: red;
+}
+
+.CBUISelectableItem.selectable > .selector {
+    display: flex;
+}
