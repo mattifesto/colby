@@ -32,7 +32,7 @@ var CBUISelectableItem = {
 
         var selectorElement = document.createElement("div");
         selectorElement.className = "selector";
-        selectorElement.textContent = "x";
+        selectorElement.textContent = "✔";
 
         element.appendChild(selectorElement);
 

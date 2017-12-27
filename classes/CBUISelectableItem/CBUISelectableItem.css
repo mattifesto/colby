@@ -16,7 +16,7 @@
 }
 
 .CBUISelectableItem.selected > .selector {
-    color: red;
+    color: var(--CBTextColorForLinks);
 }
 
 .CBUISelectableItem.selectable > .selector {
