@@ -4,5 +4,10 @@
     flex-direction: column;
     justify-content: center;
     min-height: 44px;
-    padding: 0 10px;
+    padding: 3px 10px;
+}
+
+.CBUITitleAndDescriptionPart > .description {
+    color: var(--CBTextColor2);
+    font-size: 80%;
 }
