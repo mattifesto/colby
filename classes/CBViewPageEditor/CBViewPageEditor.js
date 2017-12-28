@@ -3,13 +3,13 @@
 /* jshint esversion: 6 */
 /* exported CBViewPageEditor */
 /* global
-    CBArrayEditor,
-    CBPageEditorAvailableViewClassNames,
     CBPageTemplateDescriptors,
     CBUI,
     CBUINavigationView,
+    CBUISpecArrayEditor,
     CBUISpecEditor,
     CBUISpecSaver,
+    CBViewPageEditor_addableClassNames,
     CBViewPageEditor_specID,
     CBViewPageEditor_specIDToCopy,
     CBViewPageInformationEditor,
@@ -101,16 +101,17 @@ var CBViewPageEditor = {
             specChangedCallback: args.specChangedCallback,
         }));
         editorContainer.appendChild(CBUI.createHalfSpace());
-        editorContainer.appendChild(CBUI.createSectionHeader({ text: "Views" }));
 
         if (args.spec.sections === undefined) { args.spec.sections = []; }
 
-        editorContainer.appendChild(CBArrayEditor.createEditor({
-            array: args.spec.sections,
-            arrayChangedCallback: args.specChangedCallback,
-            classNames: CBPageEditorAvailableViewClassNames,
+        /* new views editor */
+        editorContainer.appendChild(CBUISpecArrayEditor.create({
+            specs: args.spec.sections,
+            specsChangedCallback: args.specChangedCallback,
+            addableClassNames: CBViewPageEditor_addableClassNames,
             navigateToItemCallback: args.navigateToItemCallback,
-        }));
+        }).element);
+        editorContainer.appendChild(CBUI.createHalfSpace());
 
         CBViewPageEditor.handleTitleChanged({spec: args.spec});
 
@@ -231,6 +232,16 @@ var CBViewPageEditor = {
     },
 
     /**
+     * @return undefined
+     */
+    init: function () {
+        if (window.CBAdminPageForEditingModels_modelID === undefined) {
+            // if we're not using the model editor
+            CBViewPageEditor.fetchModel();
+        }
+    },
+
+    /**
      * @param hex160 args.ID
      *
      * @return undefined
@@ -340,15 +351,6 @@ var CBViewPageEditor = {
 };
 
 /**
- * @return undefined
- */
-CBViewPageEditor.DOMContentDidLoad = function() {
-    if (window.CBAdminPageForEditingModels_modelID === undefined) { // if we're not using the model editor
-        CBViewPageEditor.fetchModel();
-    }
-};
-
-/**
  * @return void
  */
 CBViewPageEditor.fetchModel = function() {
@@ -393,4 +395,4 @@ CBViewPageEditor.fetchModelDidLoad = function(args) {
     }
 };
 
-document.addEventListener("DOMContentLoaded", CBViewPageEditor.DOMContentDidLoad);
+Colby.afterDOMContentLoaded(CBViewPageEditor.init);
