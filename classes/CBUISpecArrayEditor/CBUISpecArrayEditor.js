@@ -34,6 +34,7 @@ var CBUISpecArrayEditor = {
         element.className = "CBUISpecArrayEditor";
 
         let selectableItemContainer = CBUISelectableItemContainer.create();
+        selectableItemContainer.selectionChangedCallback = selectionChanged;
 
         let addCommand = CBUICommandPart.create();
         addCommand.title = "Add";
@@ -221,6 +222,8 @@ var CBUISpecArrayEditor = {
             }
         };
 
+        selectionChanged();
+
         return o;
 
         /**
@@ -274,6 +277,23 @@ var CBUISpecArrayEditor = {
                     });
                 }
             });
+        }
+
+        /**
+         * @return undefined
+         */
+        function selectionChanged() {
+            if (selectableItemContainer.selectable) {
+                copyCommand.disabled = false;
+                cutCommand.disabled = false;
+                downCommand.disabled = false;
+                upCommand.disabled = false;
+            } else {
+                copyCommand.disabled = true;
+                cutCommand.disabled = true;
+                downCommand.disabled = true;
+                upCommand.disabled = true;
+            }
         }
 
         /**
