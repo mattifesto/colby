@@ -14,7 +14,7 @@ final class CBUISpecArrayEditor {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return ['CBUICommandPart', 'CBUISelectableItem',
-                'CBUISelectableItemContainer', 'CBUISelector',
+                'CBUISelectableItemContainer', 'CBUISelector', 'CBUISpec',
                 'CBUISpecClipboard', 'CBUISpecEditor',
                 'CBUITitleAndDescriptionPart'];
     }

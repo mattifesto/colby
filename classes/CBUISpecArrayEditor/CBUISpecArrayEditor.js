@@ -7,6 +7,7 @@
     CBUISelectableItem,
     CBUISelectableItemContainer,
     CBUISelector,
+    CBUISpec,
     CBUISpecClipboard,
     CBUISpecEditor,
     CBUITitleAndDescriptionPart,
@@ -307,7 +308,7 @@ var CBUISpecArrayEditor = {
                 let editor = CBUISpecEditor.create({
                     navigateToItemCallback: navigateToItemCallback,
                     spec: spec,
-                    specChangedCallback: specsChangedCallback,
+                    specChangedCallback: specChangedCallback,
                 });
 
                 navigateToItemCallback({
@@ -316,11 +317,24 @@ var CBUISpecArrayEditor = {
                 });
             };
 
-            let part = CBUITitleAndDescriptionPart.create();
-            part.title = spec.className;
-            selectableItem.push(part);
+            let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
+            titleAndDescriptionPart.title = spec.className;
+            selectableItem.push(titleAndDescriptionPart);
+
+            updateDescription();
 
             return selectableItem;
+
+            function specChangedCallback() {
+                updateDescription();
+                //updateThumbnail();
+                specsChangedCallback();
+            }
+
+            function updateDescription() {
+                let nonBreakingSpace = "\u00A0";
+                titleAndDescriptionPart.description = CBUISpec.specToDescription(spec) || nonBreakingSpace;
+            }
         }
     },
 };
