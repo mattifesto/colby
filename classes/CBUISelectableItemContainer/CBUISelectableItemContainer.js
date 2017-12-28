@@ -31,19 +31,54 @@ var CBUISelectableItemContainer = {
 
         headerElement.appendChild(titlePart.element);
 
+        var headerCommandsElement = document.createElement("div");
+        headerCommandsElement.className = "commands";
+
+        headerElement.appendChild(headerCommandsElement);
+
+        var selectAllCommand = CBUICommandPart.create();
+        selectAllCommand.disabled = true;
+        selectAllCommand.title = "All";
+        selectAllCommand.callback = function () {
+            let length = itemsElement.children.length;
+
+            for (let i = 0; i < length; i++) {
+                itemsElement.children[i].CBUISelectableItem.selected = true;
+            }
+        };
+
+        headerCommandsElement.appendChild(selectAllCommand.element);
+
+        var selectNoneCommand = CBUICommandPart.create();
+        selectNoneCommand.disabled = true;
+        selectNoneCommand.title = "None";
+        selectNoneCommand.callback = function () {
+            let length = itemsElement.children.length;
+
+            for (let i = 0; i < length; i++) {
+                itemsElement.children[i].CBUISelectableItem.selected = false;
+            }
+        };
+
+        headerCommandsElement.appendChild(selectNoneCommand.element);
+
         var editCommand = CBUICommandPart.create();
         editCommand.title = "Edit";
         editCommand.callback = function () {
             if (selectable) {
                 editCommand.title = "Edit";
+                selectAllCommand.disabled = true;
+                selectNoneCommand.disabled = true;
                 o.selectable = false;
             } else {
                 editCommand.title = "Done";
+                selectAllCommand.disabled = false;
+                selectNoneCommand.disabled = false;
                 o.selectable = true;
             }
         };
 
-        headerElement.appendChild(editCommand.element);
+        headerCommandsElement.appendChild(editCommand.element);
 
         var itemsElement = document.createElement("div");
         itemsElement.className = "items";

@@ -29,6 +29,14 @@
     z-index: 500;
 }
 
+.CBUISelectableItemContainer > .container > .header > .commands {
+    display: flex;
+}
+
+.CBUISelectableItemContainer > .container > .header > .commands > .disabled {
+    display: none;
+}
+
 .CBUISelectableItemContainer > .container > .items {
     background-color: var(--CBBackgroundColor);
     border-color: var(--CBUIBorderColor);
