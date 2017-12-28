@@ -6,6 +6,7 @@
     CBUICommandPart,
     CBUISelectableItem,
     CBUISelectableItemContainer,
+    CBUISelector,
     CBUISpecClipboard,
     CBUISpecEditor,
     CBUITitleAndDescriptionPart,
@@ -17,12 +18,14 @@ var CBUISpecArrayEditor = {
      * @param object args
      *
      *      {
+                addableClassNames: [string]
      *          navigateToItemCallback: function
      *          specs: [object]
      *          specsChangedCallback: function
      *      }
      */
     create: function (args) {
+        var addableClassNames = args.addableClassNames;
         var specs = args.specs;
         var specsChangedCallback = args.specsChangedCallback;
         var navigateToItemCallback = args.navigateToItemCallback;
@@ -34,6 +37,39 @@ var CBUISpecArrayEditor = {
 
         let addCommand = CBUICommandPart.create();
         addCommand.title = "Add";
+        addCommand.callback = function () {
+            requestClassName()
+                .then(add)
+                .catch(Colby.displayAndReportError);
+
+            function add(className) {
+                if (className === undefined) {
+                    return;
+                }
+
+                let length = selectableItemContainer.length;
+                let pasteIndex = length;
+
+                for (let i = 0; i < length; i++) {
+                    let selectableItem = selectableItemContainer.item(i);
+
+                    if (selectableItem.selected) {
+                        pasteIndex = i;
+                        break;
+                    }
+                }
+
+                let spec = {
+                    className: className,
+                };
+                let selectableItem = specToSelectableItem(spec);
+
+                selectableItemContainer.splice(pasteIndex, 0, selectableItem);
+                specs.splice(pasteIndex, 0, spec);
+
+                specsChangedCallback();
+            }
+        };
 
         selectableItemContainer.commands.push(addCommand);
 
@@ -210,6 +246,34 @@ var CBUISpecArrayEditor = {
             CBUISpecClipboard.specs = selectedSpecs;
 
             return selectedSpecs.length;
+        }
+
+        /**
+         * @return Promise -> string?
+         */
+        function requestClassName() {
+            return new Promise(function (resolve, reject) {
+                if (!Array.isArray(addableClassNames) || addableClassNames.length === 0) {
+                    resolve(undefined);
+                } else if (addableClassNames.length === 1) {
+                    resolve(addableClassNames[0]);
+                } else {
+                    let options = addableClassNames.map(function (className) {
+                        return {
+                            title: className,
+                            value: className,
+                        };
+                    });
+
+                    CBUISelector.showSelector({
+                        callback: resolve,
+                        navigateToItemCallback: navigateToItemCallback,
+                        options: options,
+                        selectedValue: undefined,
+                        title: "Select a View",
+                    });
+                }
+            });
         }
 
         /**
