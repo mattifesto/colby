@@ -17,6 +17,7 @@ var CBUISelectableItemContainer = {
      */
     create: function () {
         var selectable = false;
+        var selectionChangedCallback;
         var element = document.createElement("div");
         element.className = "CBUISelectableItemContainer";
         var containerElement = document.createElement("div");
@@ -30,19 +31,19 @@ var CBUISelectableItemContainer = {
 
         headerElement.appendChild(titlePart.element);
 
-        var selectCommand = CBUICommandPart.create();
-        selectCommand.title = "Edit";
-        selectCommand.callback = function () {
+        var editCommand = CBUICommandPart.create();
+        editCommand.title = "Edit";
+        editCommand.callback = function () {
             if (selectable) {
-                selectCommand.title = "Edit";
+                editCommand.title = "Edit";
                 o.selectable = false;
             } else {
-                selectCommand.title = "Done";
+                editCommand.title = "Done";
                 o.selectable = true;
             }
         };
 
-        headerElement.appendChild(selectCommand.element);
+        headerElement.appendChild(editCommand.element);
 
         var itemsElement = document.createElement("div");
         itemsElement.className = "items";
@@ -64,8 +65,6 @@ var CBUISelectableItemContainer = {
                  * @return undefined
                  */
                 push: function (commandPart) {
-                    commandPart.disabled = !selectable;
-
                     footerElement.appendChild(commandPart.element);
                 }
             },
@@ -120,10 +119,6 @@ var CBUISelectableItemContainer = {
                         itemsElement.children[i].CBUISelectableItem.selectable = true;
                     }
 
-                    for (let i = 0; i < footerElement.children.length; i++) {
-                        footerElement.children[i].CBUICommandPart.disabled = false;
-                    }
-
                     selectable = true;
                 } else {
                     element.classList.remove("selectable");
@@ -132,11 +127,36 @@ var CBUISelectableItemContainer = {
                         itemsElement.children[i].CBUISelectableItem.selectable = false;
                     }
 
-                    for (let i = 0; i < footerElement.children.length; i++) {
-                        footerElement.children[i].CBUICommandPart.disabled = true;
-                    }
-
                     selectable = false;
+                }
+
+                if (selectionChangedCallback !== undefined) {
+                    selectionChangedCallback();
+                }
+            },
+
+            /**
+             * @return function
+             */
+            get selectionChangedCallback() {
+                return selectionChangedCallback;
+            },
+
+            /**
+             * @param function callback
+             *
+             *      Selection changed is not guranteed. This callback will be
+             *      called at times when the actual selection hasn't changed.
+             *
+             *      For instance, when the container is switched to edit mode
+             *      it will be called even though the actual selected items
+             *      haven't changed.
+             */
+            set selectionChangedCallback(callback) {
+                if (typeof callback === "function") {
+                    selectionChangedCallback = callback;
+                } else {
+                    selectionChangedCallback = undefined;
                 }
             },
 
