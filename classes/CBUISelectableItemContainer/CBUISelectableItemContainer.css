@@ -1,0 +1,55 @@
+.CBUISelectableItemContainer {
+    cursor: default;
+    display: flex;
+    justify-content: center;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.CBUISelectableItemContainer .container {
+    max-width: 100%;
+    width: 640px;
+}
+
+.CBUISelectableItemContainer > .container > .header {
+    background-color: hsl(0, 0%, 95%);
+    border-color: var(--CBUIBorderColor);
+    border-radius: 10px 10px 0 0;
+    border-style: solid;
+    border-width: 1px;
+    display: flex;
+    justify-content: space-between;
+    min-height: 44px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 500;
+}
+
+.CBUISelectableItemContainer > .container > .items {
+    background-color: var(--CBBackgroundColor);
+    border-color: var(--CBUIBorderColor);
+    border-style: solid;
+    border-width: 0 1px;
+}
+
+.CBUISelectableItemContainer > .container > .items > * + * {
+    border-top: 1px solid var(--CBUIBorderColor);
+}
+
+.CBUISelectableItemContainer > .container > .footer {
+    background-color: hsl(0, 0%, 95%);
+    border-color: var(--CBUIBorderColor);
+    border-radius: 0 0 10px 10px;
+    border-style: solid;
+    border-width: 1px;
+    display: flex;
+    justify-content: space-around;
+    min-height: 44px;
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+}
