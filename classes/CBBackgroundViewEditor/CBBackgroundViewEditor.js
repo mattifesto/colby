@@ -3,11 +3,11 @@
 /* exported CBBackgroundViewEditor */
 /* global
     CBUI,
-    CBArrayEditor,
-    CBBackgroundViewAddableViews,
+    CBBackgroundViewEditor_addableClassNames,
     CBUIBooleanEditor,
     CBUIImageChooser,
     CBUISpec,
+    CBUISpecArrayEditor,
     CBUIStringEditor,
     Colby */
 
@@ -80,13 +80,12 @@ var CBBackgroundViewEditor = {
 
         element.appendChild(CBUI.createHalfSpace());
 
-        element.appendChild(CBUI.createSectionHeader({ text : "Subviews" }));
-        element.appendChild(CBArrayEditor.createEditor({
-            array : args.spec.children,
-            arrayChangedCallback : args.specChangedCallback,
-            classNames : CBBackgroundViewAddableViews,
-            navigateToItemCallback : args.navigateToItemCallback,
-        }));
+        element.appendChild(CBUISpecArrayEditor.create({
+            addableClassNames: CBBackgroundViewEditor_addableClassNames,
+            navigateToItemCallback: args.navigateToItemCallback,
+            specs: args.spec.children,
+            specsChangedCallback: args.specChangedCallback,
+        }).element);
 
         /* image */
 

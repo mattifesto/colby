@@ -6,8 +6,9 @@ final class CBBackgroundViewEditor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBArrayEditor', 'CBUI', 'CBUIActionLink', 'CBUIBooleanEditor',
-                'CBUIImageChooser', 'CBUISpec', 'CBUIStringEditor'];
+        return ['CBUI', 'CBUIActionLink', 'CBUIBooleanEditor',
+                'CBUIImageChooser', 'CBUISpec', 'CBUISpecArrayEditor',
+                'CBUIStringEditor'];
     }
 
     /**
@@ -21,7 +22,7 @@ final class CBBackgroundViewEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v361.js', cbsysurl())];
     }
 
     /**
@@ -29,7 +30,7 @@ final class CBBackgroundViewEditor {
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
-            ['CBBackgroundViewAddableViews', CBPagesPreferences::classNamesForAddableViews()]
+            ['CBBackgroundViewEditor_addableClassNames', CBPagesPreferences::classNamesForAddableViews()]
         ];
     }
 }
