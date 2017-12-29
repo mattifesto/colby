@@ -3,12 +3,12 @@
 /* jshint esversion: 6 */
 /* exported CBContainerViewEditor */
 /* globals
-    CBArrayEditor,
-    CBContainerViewAddableViews,
+    CBContainerViewEditor_addableClassNames,
     CBUI,
     CBUIImageChooser,
     CBUISelector,
     CBUISpec,
+    CBUISpecArrayEditor,
     CBUIStringEditor,
     Colby */
 
@@ -92,16 +92,15 @@ var CBContainerViewEditor = {
 
         /* subviews */
         element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({ text : "Subviews" }));
 
         if (args.spec.subviews === undefined) { args.spec.subviews = []; }
 
-        element.appendChild(CBArrayEditor.createEditor({
-            array : args.spec.subviews,
-            arrayChangedCallback : args.specChangedCallback,
-            classNames : CBContainerViewAddableViews,
-            navigateToItemCallback : args.navigateToItemCallback,
-        }));
+        element.appendChild(CBUISpecArrayEditor.create({
+            addableClassNames: CBContainerViewEditor_addableClassNames,
+            navigateToItemCallback: args.navigateToItemCallback,
+            specs: args.spec.subviews,
+            specsChangedCallback: args.specChangedCallback,
+        }).element);
 
         /**
          * image properties

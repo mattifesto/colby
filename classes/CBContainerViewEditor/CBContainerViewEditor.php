@@ -6,15 +6,15 @@ final class CBContainerViewEditor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBArrayEditor', 'CBUI', 'CBUIImageChooser', 'CBUISelector',
-                'CBUISpec', 'CBUIStringEditor'];
+        return ['CBUI', 'CBUIImageChooser', 'CBUISelector', 'CBUISpec',
+                'CBUISpecArrayEditor', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v361.js', cbsysurl())];
     }
 
     /**
@@ -22,7 +22,7 @@ final class CBContainerViewEditor {
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
-            ['CBContainerViewAddableViews', CBPagesPreferences::classNamesForAddableViews()]
+            ['CBContainerViewEditor_addableClassNames', CBPagesPreferences::classNamesForAddableViews()]
         ];
     }
 }
