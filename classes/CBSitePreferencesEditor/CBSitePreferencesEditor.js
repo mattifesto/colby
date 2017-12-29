@@ -1,11 +1,12 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBSitePreferencesEditor */
 /* globals
-    CBArrayEditor,
     CBUI,
     CBUIBooleanEditor,
     CBUIImageChooser,
+    CBUISpecArrayEditor,
     CBUIStringEditor,
     Colby */
 
@@ -205,24 +206,26 @@ var CBSitePreferencesEditor = {
             text : "Google reCAPTCHA",
         }));
         element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
 
         /* custom values */
+        {
+            if (args.spec.custom === undefined) {
+                args.spec.custom = [];
+            }
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            text : "Custom",
-        }));
+            let editor = CBUISpecArrayEditor.create({
+                addableClassNames: ["CBKeyValuePair"],
+                navigateToItemCallback: args.navigateToItemCallback,
+                specs: args.spec.custom,
+                specsChangedCallback: args.specChangedCallback,
+            });
 
-        if (args.spec.custom === undefined) { args.spec.custom = []; }
+            editor.title = "Custom Values";
 
-        element.appendChild(CBArrayEditor.createEditor({
-            array : args.spec.custom,
-            arrayChangedCallback : args.specChangedCallback,
-            classNames : ['CBKeyValuePair'],
-            navigateToItemCallback : args.navigateToItemCallback,
-        }));
-
-        element.appendChild(CBUI.createHalfSpace());
+            element.appendChild(editor.element);
+            element.appendChild(CBUI.createHalfSpace());
+        }
 
         return element;
     },

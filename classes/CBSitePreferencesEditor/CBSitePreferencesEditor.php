@@ -6,8 +6,8 @@ final class CBSitePreferencesEditor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBArrayEditor', 'CBKeyValuePairEditor', 'CBUI',
-                'CBUIBooleanEditor', 'CBUIImageChooser', 'CBUIStringEditor'];
+        return ['CBKeyValuePairEditor', 'CBUI', 'CBUIBooleanEditor',
+                'CBUIImageChooser', 'CBUISpecArrayEditor','CBUIStringEditor'];
     }
 
     /**
@@ -21,6 +21,6 @@ final class CBSitePreferencesEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v361.js', cbsysurl())];
     }
 }
