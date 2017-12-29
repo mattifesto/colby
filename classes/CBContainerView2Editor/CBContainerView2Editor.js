@@ -53,24 +53,28 @@ var CBContainerView2Editor = {
         section.appendChild(item);
 
         element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
 
         /* subviews */
+        {
+            if (args.spec.subviews === undefined) {
+                args.spec.subviews = [];
+            }
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({ text : "Subviews" }));
+            let editor = CBUISpecArrayEditor.create({
+                addableClassNames: CBContainerView2Editor_addableClassNames,
+                navigateToItemCallback: args.navigateToItemCallback,
+                specs: args.spec.subviews,
+                specsChangedCallback: args.specChangedCallback,
+            });
 
-        if (args.spec.subviews === undefined) { args.spec.subviews = []; }
+            editor.title = "Views";
 
-        element.appendChild(CBUISpecArrayEditor.create({
-            addableClassNames: CBContainerView2Editor_addableClassNames,
-            navigateToItemCallback: args.navigateToItemCallback,
-            specs: args.spec.subviews,
-            specsChangedCallback: args.specChangedCallback,
-        }).element);
+            element.appendChild(editor.element);
+            element.appendChild(CBUI.createHalfSpace());
+        }
 
         /* CSSClassNames */
-
-        element.appendChild(CBUI.createHalfSpace());
 
         element.appendChild(CBUI.createSectionHeader({
             paragraphs: [
