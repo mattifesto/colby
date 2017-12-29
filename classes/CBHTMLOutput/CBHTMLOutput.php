@@ -269,9 +269,29 @@ final class CBHTMLOutput {
 
         CBHTMLOutput::processRequiredClassNames();
 
-        if (is_callable($function = "{$classNameForPageSettings}::renderHeadContent")) {
+        /* head content */
+        {
             ob_start();
-            call_user_func($function);
+
+            /**
+             * There is no dependency system for head class names. You must
+             * explicitly name each head class name in the appropriate order in
+             * your page settings class.
+             */
+
+            if (is_callable($function = "{$classNameForPageSettings}::CBHTMLOutput_requiredHeadClassNames")) {
+                $classNames = call_user_func($function);
+
+                foreach ($classNames as $className) {
+                    if (is_callable($function = "{$className}::CBHTMLOutput_renderHeadContent")) {
+                        call_user_func($function);
+                    }
+                }
+            }
+
+            if (is_callable($function = "{$classNameForPageSettings}::CBHTMLOutput_renderHeadContent") || is_callable($function = "{$classNameForPageSettings}::renderHeadContent")) {
+                call_user_func($function);
+            }
 
             $settingsHeadContent = ob_get_clean();
         }
