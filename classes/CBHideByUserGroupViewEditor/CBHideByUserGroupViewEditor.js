@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBHideByUserGroupViewEditor */
 /* global
     CBHideByUserGroupViewEditor_addableClassNames,
@@ -70,18 +71,23 @@ var CBHideByUserGroupViewEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         /* subviews */
-        element.appendChild(CBUI.createSectionHeader({ text : "Subviews" }));
+        {
+            if (args.spec.subviews === undefined) {
+                args.spec.subviews = [];
+            }
 
-        if (args.spec.subviews === undefined) { args.spec.subviews = []; }
+            let editor = CBUISpecArrayEditor.create({
+                addableClassNames: CBHideByUserGroupViewEditor_addableClassNames,
+                navigateToItemCallback: args.navigateToItemCallback,
+                specs: args.spec.subviews,
+                specsChangedCallback: args.specChangedCallback,
+            });
 
-        element.appendChild(CBUISpecArrayEditor.create({
-            addableClassNames: CBHideByUserGroupViewEditor_addableClassNames,
-            navigateToItemCallback: args.navigateToItemCallback,
-            specs: args.spec.subviews,
-            specsChangedCallback: args.specChangedCallback,
-        }).element);
+            editor.title = "Views";
 
-        element.appendChild(CBUI.createHalfSpace());
+            element.appendChild(editor.element);
+            element.appendChild(CBUI.createHalfSpace());
+        }
 
         return element;
     },
