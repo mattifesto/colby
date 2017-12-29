@@ -1,9 +1,10 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBMenuEditor */
 /* global
-    CBArrayEditor,
     CBUI,
+    CBUISpecArrayEditor,
     CBUIStringEditor */
 
 var CBMenuEditor = {
@@ -19,10 +20,6 @@ var CBMenuEditor = {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBMenuEditor";
-
-        if (!args.spec.items) {
-            args.spec.items = [];
-        }
 
         element.appendChild(CBUI.createHalfSpace());
 
@@ -47,21 +44,26 @@ var CBMenuEditor = {
         }).element);
         section.appendChild(item);
         element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
 
         /* menu items */
+        {
+            if (!args.spec.items) {
+                args.spec.items = [];
+            }
 
-        element.appendChild(CBUI.createHalfSpace());
+            let editor = CBUISpecArrayEditor.create({
+                addableClassNames: ["CBMenuItem"],
+                navigateToItemCallback: args.navigateToItemCallback,
+                specs: args.spec.items,
+                specsChangedCallback: args.specChangedCallback,
+            });
 
-        element.appendChild(CBUI.createSectionHeader({text : "Menu Items"}));
+            editor.title = "Menu Items";
 
-        element.appendChild(CBArrayEditor.createEditor({
-            array : args.spec.items,
-            arrayChangedCallback : args.specChangedCallback,
-            classNames : ["CBMenuItem"],
-            navigateToItemCallback : args.navigateToItemCallback,
-        }));
-
-        element.appendChild(CBUI.createHalfSpace());
+            element.appendChild(editor.element);
+            element.appendChild(CBUI.createHalfSpace());
+        }
 
         return element;
     },
