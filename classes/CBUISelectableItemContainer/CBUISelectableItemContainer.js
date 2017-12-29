@@ -12,7 +12,20 @@ var CBUISelectableItemContainer = {
      * @return object
      *
      *      {
+     *          commands: {
+     *              push(CBUICommandPart commandPart)
+     *          }
      *          element: Element
+     *          item(int index) -> CBUISelectableItem
+     *          length: int (readonly)
+     *          push(CBUISelectableItem selectableItem)
+     *          selectable: bool
+     *
+     *              Changes the container from normal mode to selectable mode.
+     *
+     *          selectionChangedCallback: function
+     *          splice(int startIndex, int deleteCount, CBUISelectableItem selectableItem1) -> [CBUISelectableItem]
+     *          title: string
      *      }
      */
     create: function () {
@@ -27,7 +40,6 @@ var CBUISelectableItemContainer = {
         headerElement.className = "header";
 
         var titlePart = CBUITitleAndDescriptionPart.create();
-        titlePart.title = "Views";
 
         headerElement.appendChild(titlePart.element);
 
@@ -230,6 +242,20 @@ var CBUISelectableItemContainer = {
                 }
 
                 return removedElements.map(element => element.CBUISelectableItem);
+            },
+
+            /**
+             * @return string
+             */
+            get title() {
+                return titlePart.title;
+            },
+
+            /**
+             * @param string value
+             */
+            set title(value) {
+                titlePart.title = value;
             },
         };
 
