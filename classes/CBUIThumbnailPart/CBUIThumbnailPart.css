@@ -1,0 +1,20 @@
+.CBUIThumbnailPart {
+    align-items: center;
+    display: flex;
+    flex: none;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 5px;
+    width: 38px;
+}
+
+.CBUIThumbnailPart img {
+    display: none;
+    height: 38px; /* 44 - 3 - 3 */
+    object-fit: cover;
+    width: 38px;
+}
+
+.CBUIThumbnailPart.show img {
+    display: block;
+}
