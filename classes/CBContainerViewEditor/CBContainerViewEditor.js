@@ -95,12 +95,18 @@ var CBContainerViewEditor = {
 
         if (args.spec.subviews === undefined) { args.spec.subviews = []; }
 
-        element.appendChild(CBUISpecArrayEditor.create({
-            addableClassNames: CBContainerViewEditor_addableClassNames,
-            navigateToItemCallback: args.navigateToItemCallback,
-            specs: args.spec.subviews,
-            specsChangedCallback: args.specChangedCallback,
-        }).element);
+        {
+            let editor = CBUISpecArrayEditor.create({
+                addableClassNames: CBContainerViewEditor_addableClassNames,
+                navigateToItemCallback: args.navigateToItemCallback,
+                specs: args.spec.subviews,
+                specsChangedCallback: args.specChangedCallback,
+            });
+
+            editor.title = "Views";
+
+            element.appendChild(editor.element);
+        }
 
         /**
          * image properties
