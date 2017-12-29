@@ -25,6 +25,13 @@ var CBUISpecArrayEditor = {
      *          specs: [object]
      *          specsChangedCallback: function
      *      }
+     *
+     * @return object
+     *
+     *      {
+     *          element: Element (readonly)
+     *          title: string
+     *      }
      */
     create: function (args) {
         var addableClassNames = args.addableClassNames;
@@ -219,8 +226,26 @@ var CBUISpecArrayEditor = {
         }
 
         var o = {
+
+            /**
+             * @return Element
+             */
             get element() {
                 return element;
+            },
+
+            /**
+             * @return string
+             */
+            get title() {
+                return selectableItemContainer.title;
+            },
+
+            /**
+             * @param string value
+             */
+            set title(value) {
+                selectableItemContainer.title = value;
             }
         };
 
