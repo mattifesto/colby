@@ -102,20 +102,26 @@ var CBViewPageEditor = {
         }));
         editorContainer.appendChild(CBUI.createHalfSpace());
 
-        if (args.spec.sections === undefined) { args.spec.sections = []; }
+        /* views */
+        {
+            if (args.spec.sections === undefined) {
+                args.spec.sections = [];
+            }
 
-        /* new views editor */
-        editorContainer.appendChild(CBUISpecArrayEditor.create({
-            specs: args.spec.sections,
-            specsChangedCallback: args.specChangedCallback,
-            addableClassNames: CBViewPageEditor_addableClassNames,
-            navigateToItemCallback: args.navigateToItemCallback,
-        }).element);
-        editorContainer.appendChild(CBUI.createHalfSpace());
+            let editor = CBUISpecArrayEditor.create({
+                specs: args.spec.sections,
+                specsChangedCallback: args.specChangedCallback,
+                addableClassNames: CBViewPageEditor_addableClassNames,
+                navigateToItemCallback: args.navigateToItemCallback,
+            });
+
+            editor.title = "Views";
+
+            editorContainer.appendChild(editor.element);
+            editorContainer.appendChild(CBUI.createHalfSpace());
+        }
 
         CBViewPageEditor.handleTitleChanged({spec: args.spec});
-
-        editorContainer.appendChild(CBUI.createHalfSpace());
 
         var modelInspectorButton = CBUI.createButton({
             text: "Go to Inspector",
