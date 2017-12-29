@@ -4,7 +4,19 @@
     flex-direction: column;
     justify-content: center;
     min-height: 44px;
-    padding: 3px 10px;
+    padding: 3px 5px;
+
+    /**
+     * The min-width: 0; declaration must be specified on the flex container if
+     * a flex item wants to use text-overflow: ellipsis;
+     */
+    min-width: 0;
+}
+
+.CBUITitleAndDescriptionPart > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .CBUITitleAndDescriptionPart > .description {
