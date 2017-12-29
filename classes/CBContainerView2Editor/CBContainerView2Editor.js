@@ -3,10 +3,10 @@
 /* jshint esversion: 6 */
 /* exported CBContainerView2Editor */
 /* globals
-    CBArrayEditor,
-    CBContainerView2EditorAddableViews,
+    CBContainerView2Editor_addableClassNames,
     CBUI,
     CBUIImageChooser,
+    CBUISpecArrayEditor,
     CBUIStringEditor,
     Colby */
 
@@ -61,12 +61,12 @@ var CBContainerView2Editor = {
 
         if (args.spec.subviews === undefined) { args.spec.subviews = []; }
 
-        element.appendChild(CBArrayEditor.createEditor({
-            array : args.spec.subviews,
-            arrayChangedCallback : args.specChangedCallback,
-            classNames : CBContainerView2EditorAddableViews,
-            navigateToItemCallback : args.navigateToItemCallback,
-        }));
+        element.appendChild(CBUISpecArrayEditor.create({
+            addableClassNames: CBContainerView2Editor_addableClassNames,
+            navigateToItemCallback: args.navigateToItemCallback,
+            specs: args.spec.subviews,
+            specsChangedCallback: args.specChangedCallback,
+        }).element);
 
         /* CSSClassNames */
 

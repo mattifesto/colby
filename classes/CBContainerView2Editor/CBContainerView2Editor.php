@@ -6,7 +6,7 @@ final class CBContainerView2Editor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUIImageChooser', 'CBUIStringEditor'];
+        return ['CBUIImageChooser', 'CBUISpecArrayEditor', 'CBUIStringEditor'];
     }
 
     /**
@@ -21,7 +21,7 @@ final class CBContainerView2Editor {
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
-            ['CBContainerView2EditorAddableViews', CBPagesPreferences::classNamesForAddableViews()]
+            ['CBContainerView2Editor_addableClassNames', CBPagesPreferences::classNamesForAddableViews()]
         ];
     }
 }
