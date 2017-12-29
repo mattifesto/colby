@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBBackgroundViewEditor */
 /* global
     CBUI,
@@ -80,16 +81,21 @@ var CBBackgroundViewEditor = {
 
         element.appendChild(CBUI.createHalfSpace());
 
-        element.appendChild(CBUISpecArrayEditor.create({
-            addableClassNames: CBBackgroundViewEditor_addableClassNames,
-            navigateToItemCallback: args.navigateToItemCallback,
-            specs: args.spec.children,
-            specsChangedCallback: args.specChangedCallback,
-        }).element);
+        {
+            let editor = CBUISpecArrayEditor.create({
+                addableClassNames: CBBackgroundViewEditor_addableClassNames,
+                navigateToItemCallback: args.navigateToItemCallback,
+                specs: args.spec.children,
+                specsChangedCallback: args.specChangedCallback,
+            });
+
+            editor.title = "Views";
+
+            element.appendChild(editor.element);
+            element.appendChild(CBUI.createHalfSpace());
+        }
 
         /* image */
-
-        element.appendChild(CBUI.createHalfSpace());
 
         element.appendChild(CBUI.createSectionHeader({
             text: "Background Image"
