@@ -6,7 +6,8 @@ final class CBHideByUserGroupViewEditor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBArrayEditor', 'CBUI', 'CBUIBooleanEditor', 'CBUISelector'];
+        return ['CBUI', 'CBUIBooleanEditor', 'CBUISelector',
+                'CBUISpecArrayEditor'];
     }
 
     /**
@@ -21,8 +22,8 @@ final class CBHideByUserGroupViewEditor {
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
-            ['CBHideByUserGroupViewEditorAddableViews', CBPagesPreferences::classNamesForAddableViews()],
-            ['CBHideByUserGroupViewEditorGroupNames', ColbyUser::fetchGroupNames()]
+            ['CBHideByUserGroupViewEditor_addableClassNames', CBPagesPreferences::classNamesForAddableViews()],
+            ['CBHideByUserGroupViewEditor_groupNames', ColbyUser::fetchGroupNames()]
         ];
     }
 }

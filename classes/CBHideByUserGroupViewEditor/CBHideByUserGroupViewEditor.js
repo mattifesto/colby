@@ -2,12 +2,12 @@
 /* jshint strict: global */
 /* exported CBHideByUserGroupViewEditor */
 /* global
-    CBArrayEditor,
-    CBHideByUserGroupViewEditorAddableViews,
-    CBHideByUserGroupViewEditorGroupNames,
+    CBHideByUserGroupViewEditor_addableClassNames,
+    CBHideByUserGroupViewEditor_groupNames,
     CBUI,
     CBUIBooleanEditor,
-    CBUISelector */
+    CBUISelector,
+    CBUISpecArrayEditor */
 
 var CBHideByUserGroupViewEditor = {
 
@@ -26,7 +26,7 @@ var CBHideByUserGroupViewEditor = {
             {title: "All Visitors", description: "Every visitor, logged in or out, is a member of this group.", value: undefined},
         ];
 
-        CBHideByUserGroupViewEditorGroupNames.forEach(function (groupName) {
+        CBHideByUserGroupViewEditor_groupNames.forEach(function (groupName) {
             groupOptions.push({
                 title: groupName,
                 value: groupName,
@@ -74,12 +74,12 @@ var CBHideByUserGroupViewEditor = {
 
         if (args.spec.subviews === undefined) { args.spec.subviews = []; }
 
-        element.appendChild(CBArrayEditor.createEditor({
-            array : args.spec.subviews,
-            arrayChangedCallback : args.specChangedCallback,
-            classNames : CBHideByUserGroupViewEditorAddableViews,
-            navigateToItemCallback : args.navigateToItemCallback,
-        }));
+        element.appendChild(CBUISpecArrayEditor.create({
+            addableClassNames: CBHideByUserGroupViewEditor_addableClassNames,
+            navigateToItemCallback: args.navigateToItemCallback,
+            specs: args.spec.subviews,
+            specsChangedCallback: args.specChangedCallback,
+        }).element);
 
         element.appendChild(CBUI.createHalfSpace());
 
