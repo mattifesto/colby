@@ -23,10 +23,18 @@
     display: flex;
     justify-content: space-between;
     min-height: 44px;
+    padding: 0 5px;
     position: -webkit-sticky;
     position: sticky;
     top: 0;
     z-index: 500;
+}
+
+@media (max-width: 640px) {
+    .CBUISelectableItemContainer > .container > .header {
+        border-radius: 0;
+        border-width: 1px 0;
+    }
 }
 
 .CBUISelectableItemContainer > .container > .header > .commands {
@@ -45,6 +53,12 @@
     min-height: 44px;
 }
 
+@media (max-width: 640px) {
+    .CBUISelectableItemContainer > .container > .items {
+        border-width: 0;
+    }
+}
+
 .CBUISelectableItemContainer > .container > .items > * + * {
     border-top: 1px solid var(--CBUIBorderColor);
 }
@@ -61,4 +75,11 @@
     position: -webkit-sticky;
     position: sticky;
     bottom: 0;
+}
+
+@media (max-width: 640px) {
+    .CBUISelectableItemContainer > .container > .footer {
+        border-radius: 0;
+        border-width: 1px 0;
+    }
 }
