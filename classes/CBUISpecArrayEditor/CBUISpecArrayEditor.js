@@ -4,6 +4,7 @@
 /* exported CBUISpecArrayEditor */
 /* global
     CBUICommandPart,
+    CBUINavigationArrowPart,
     CBUISelectableItem,
     CBUISelectableItemContainer,
     CBUISelector,
@@ -349,6 +350,12 @@ var CBUISpecArrayEditor = {
             let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
             titleAndDescriptionPart.title = spec.className;
             selectableItem.push(titleAndDescriptionPart);
+
+            {
+                let arrowPart = CBUINavigationArrowPart.create();
+
+                selectableItem.push(arrowPart);
+            }
 
             updateThumbnail();
             updateDescription();
