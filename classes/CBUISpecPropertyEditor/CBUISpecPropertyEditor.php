@@ -3,8 +3,8 @@
 /**
  * This class edits a property that holds a spec.
  *
- * It is similar to the CBArrayEditor class which does the same thing but for an
- * array of specs.
+ * It is similar to the CBSpecArrayEditor class which does the same thing but
+ * for an array of specs.
  */
 final class CBUISpecPropertyEditor {
 
