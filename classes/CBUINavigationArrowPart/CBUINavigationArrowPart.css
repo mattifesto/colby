@@ -1,0 +1,12 @@
+.CBUINavigationArrowPart {
+    align-items: center;
+    color: var(--CBLineColor);
+    display: flex;
+    flex: none;
+    min-height: 44px;
+    padding: 0 10px;
+}
+
+.CBUINavigationArrowPart::after {
+    content: ">";
+}
