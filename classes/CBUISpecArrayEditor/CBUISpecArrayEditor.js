@@ -10,6 +10,7 @@
     CBUISpec,
     CBUISpecClipboard,
     CBUISpecEditor,
+    CBUIThumbnailPart,
     CBUITitleAndDescriptionPart,
     Colby */
 
@@ -317,23 +318,31 @@ var CBUISpecArrayEditor = {
                 });
             };
 
+            let thumbnailPart = CBUIThumbnailPart.create();
+            selectableItem.push(thumbnailPart);
+
             let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
             titleAndDescriptionPart.title = spec.className;
             selectableItem.push(titleAndDescriptionPart);
 
+            updateThumbnail();
             updateDescription();
 
             return selectableItem;
 
             function specChangedCallback() {
                 updateDescription();
-                //updateThumbnail();
+                updateThumbnail();
                 specsChangedCallback();
             }
 
             function updateDescription() {
                 let nonBreakingSpace = "\u00A0";
                 titleAndDescriptionPart.description = CBUISpec.specToDescription(spec) || nonBreakingSpace;
+            }
+
+            function updateThumbnail() {
+                thumbnailPart.src = CBUISpec.specToThumbnailURI(spec);
             }
         }
     },
