@@ -1,24 +1,39 @@
 .CBUISelectableItem {
     display: flex;
+    max-width: 100%;
 }
 
 .CBUISelectableItem > .parts {
+    display: flex;
     flex: 1 1 auto;
+
+    min-width: 0;
 }
 
-.CBUISelectableItem > .selector {
+.CBUISelectableItem > .selectorPart {
     align-items: center;
     color: transparent;
     display: none;
     flex: none;
     min-height: 44px;
-    padding: 0 10px;
+    padding: 0 5px;
 }
 
-.CBUISelectableItem.selected > .selector {
+.CBUISelectableItem > .selectorPart > .box {
+    align-items: center;
+    border: 2px solid var(--CBLineColor);
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    height: 20px;
+    width: 20px;
+}
+.CBUISelectableItem.selected > .selectorPart {
     color: var(--CBTextColorForLinks);
 }
 
-.CBUISelectableItem.selectable > .selector {
+.CBUISelectableItem.selectable > .selectorPart {
     display: flex;
 }
+
+.cbu

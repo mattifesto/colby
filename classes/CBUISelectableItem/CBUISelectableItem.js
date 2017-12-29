@@ -30,12 +30,17 @@ var CBUISelectableItem = {
             }
         });
 
-        var selectorElement = document.createElement("div");
-        selectorElement.className = "selector";
-        selectorElement.textContent = "✔";
+        var selectorPart = document.createElement("div");
+        selectorPart.className = "selectorPart";
 
-        element.appendChild(selectorElement);
+        element.appendChild(selectorPart);
 
+        var selectorBox = document.createElement("div");
+        selectorBox.className = "box";
+        selectorBox.textContent = "✔";
+
+        selectorPart.appendChild(selectorBox);
+        
         var partsElement = document.createElement("div");
         partsElement.className = "parts";
 
