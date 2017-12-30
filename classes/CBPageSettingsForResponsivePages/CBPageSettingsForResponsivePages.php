@@ -11,7 +11,7 @@ final class CBPageSettingsForResponsivePages {
     /**
      * @return  null
      */
-    static function renderHeadContent() { ?>
+    static function CBHTMLOutput_renderHeadContent() { ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400' rel='stylesheet'>
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic' rel='stylesheet'>
