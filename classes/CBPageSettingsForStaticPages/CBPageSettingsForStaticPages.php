@@ -11,7 +11,7 @@ final class CBPageSettingsForStaticPages {
     /**
      * @return  null
      */
-    static function renderHeadContent() { ?>
+    static function CBHTMLOutput_renderHeadContent() { ?>
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400' rel='stylesheet'>
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic' rel='stylesheet'>
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:600' rel='stylesheet'>
