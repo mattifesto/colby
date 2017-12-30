@@ -6,8 +6,8 @@ final class CBEqualize {
      * @return void
      */
     static function CBHTMLOutput_renderHeadContent(): void { ?>
-        <script src="<?= CBSystemURL ?>/javascript/html5shiv.v362.js"></script>
-        <script src="<?= CBSystemURL ?>/javascript/ColbyEqualize.v362.js"></script>
-        <link rel="stylesheet" href="<?= CBSystemURL ?>/css/equalize.v362.css">
+        <script src="<?= cbsysurl() . '/classes/CBEqualize/html5shiv.v362.js' ?>"></script>
+        <script src="<?= Colby::flexpath(__CLASS__, 'v362.js', cbsysurl()) ?>"></script>
+        <link rel="stylesheet" href="<?= Colby::flexpath(__CLASS__, 'v362.css', cbsysurl()) ?>">
     <?php }
 }
