@@ -236,13 +236,6 @@ final class CBHTMLOutput {
     }
 
     /**
-     * NOTE: 2017.01.01, 2017.09.05
-     *
-     *      This function includes a polyfill for Promise right after the body
-     *      content before JavaScript dependencies will be included. Colby makes
-     *      frequent use of Promises. The only browser that doesn't support
-     *      promises that Colby supports is IE11.
-     *
      * @return null
      */
     static function render() {
@@ -358,7 +351,6 @@ final class CBHTMLOutput {
             <body>
                 <?= $settingsStartOfBodyContent ?>
                 <?php echo $bodyContent; $bodyContent = null; ?>
-                <script src="<?= CBSystemURL ?>/javascript/es6-promise.auto.min.js"></script>
                 <?= $settingsEndOfBodyContent ?>
                 <?php CBHTMLOutput::renderJavaScript(); ?>
             </body>
