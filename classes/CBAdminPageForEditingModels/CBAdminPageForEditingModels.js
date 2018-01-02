@@ -95,7 +95,7 @@ var CBAdminPageForEditingModels = {
 
         var inspectHeaderButtonItem = CBUI.createHeaderButtonItem({
             callback: function () {
-                window.location = "/admin/?c=CBModelInspector&ID=" + spec.ID;
+                window.location = "/admin/?c=CBModelInspector&ID=" + CBAdminPageForEditingModels_modelID;
             },
             text: "Inspect",
         });
