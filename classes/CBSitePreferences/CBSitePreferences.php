@@ -368,13 +368,8 @@ final class CBSitePreferences {
      */
     static function siteName() {
         $model = CBSitePreferences::model();
-        $siteName = CBModel::value($model, 'siteName', '');
 
-        if (empty($siteName) && defined('CBSiteName')) { // @deprecated
-            return CBSiteName;
-        } else {
-            return $siteName;
-        }
+        return CBModel::value($model, 'siteName', '');
     }
 
     /**
