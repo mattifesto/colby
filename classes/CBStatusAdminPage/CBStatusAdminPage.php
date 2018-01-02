@@ -286,6 +286,11 @@ EOT;
             CBUI::renderKeyValueSectionItem('.htaccess', 'The .htaccess file is different from the suggested Colby .htaccess file.');
         }
 
+        /* 2018.01.01 Warn if the site name has not been set. */
+        if (trim(CBSitePreferences::siteName()) === '') {
+            CBUI::renderKeyValueSectionItem('Site Name', 'This site has no site name. Set one in site preferences.');
+        }
+
         $content = ob_get_clean();
 
         if (!empty($content)) {
