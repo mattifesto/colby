@@ -23,6 +23,13 @@ final class CBProcess {
     }
 
     /**
+     * @NOTE
+     *
+     *      After setting a process ID for the first time, which essentially
+     *      creates the process, code should immediately call CBLog::log() with
+     *      a message describing the process. The first log entry for a process
+     *      acts as the representative entry for that process.
+     *
      * @param hex160 $processID
      *
      * @return null
