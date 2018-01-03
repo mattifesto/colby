@@ -634,14 +634,16 @@ EOT;
         $modified = time();
 
         $tuples = array_map(function ($spec) use ($sharedClassName) {
+            $ID = CBModel::value($spec, 'ID', null, 'CBConvert::valueAsHex160');
+
+            if ($ID === null) {
+                throw new Exception("A {$spec->className} spec being saved does not have an ID.");
+            }
+
             $model = CBModel::toModel($spec);
 
             if ($model === null) {
                 throw new Exception("A {$spec->className} spec being saved generated a null model.");
-            }
-
-            if (empty($model->ID)) {
-                throw new Exception("A {$spec->className} spec being saved generated a model without an ID.");
             }
 
             if ($model->className !== $sharedClassName) {
