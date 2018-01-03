@@ -151,9 +151,9 @@ final class CBAdminPageForModelImport {
                     }
 
                     if (empty($spec->ID)) {
-                        $spec->ID = CBModel::toID($spec);
+                        $ID = CBModel::toID($spec);
 
-                        if ($spec->ID === null) {
+                        if ($ID === null) {
                             CBLog::log((object)[
                                 'className' => __CLASS__,
                                 'message' => "A imported spec was unable to generate its own ID\n\n" .
@@ -164,6 +164,8 @@ final class CBAdminPageForModelImport {
                             ]);
 
                             continue;
+                        } else {
+                            $spec->ID = $ID;
                         }
                     }
 
