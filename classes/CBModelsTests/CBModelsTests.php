@@ -155,7 +155,7 @@ final class CBModelsTests {
             Colby::query('ROLLBACK');
 
             $exceptionWasThrown = true;
-            $expectedMessage = 'A CBViewPage spec being saved generated a model without an ID.';
+            $expectedMessage = 'A CBViewPage spec being saved does not have an ID.';
             $actualMessage = $throwable->getMessage();
 
             if ($actualMessage !== $expectedMessage) {
