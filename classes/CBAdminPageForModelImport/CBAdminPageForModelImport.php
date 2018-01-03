@@ -34,7 +34,7 @@ final class CBAdminPageForModelImport {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v363.js', cbsysurl())];
     }
 
     /**
@@ -119,6 +119,9 @@ final class CBAdminPageForModelImport {
      */
     static function uploadDataFileForAjax() {
         $response = new CBAjaxResponse();
+        $processID = CBHex160::random();
+
+        CBProcess::setID($processID);
 
         if (strtolower(pathinfo($_FILES['dataFile']['name'], PATHINFO_EXTENSION)) !== 'csv') {
             throw new Exception('The data file should be a "csv" file.');
@@ -142,19 +145,30 @@ final class CBAdminPageForModelImport {
                         continue;
                     }
 
+                    if (empty($spec->ID)) {
+                        $spec->ID = CBModel::toID($spec);
+
+                        if ($spec->ID === null) {
+                            CBLog::log((object)[
+                                'className' => __CLASS__,
+                                'message' => "A imported spec was unable to generate its own ID\n\n" .
+                                             "--- pre\n" .
+                                             json_encode($spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES, 2) .
+                                             "\n---",
+                                'severity' => 3,
+                            ]);
+
+                            continue;
+                        }
+                    }
+
                     $specs[] = $spec;
                 }
             }
 
-            $processID = CBHex160::random();
-
-            CBProcess::setID($processID);
-
             CBDB::transaction(function () use ($specs) {
                 CBModels::save($specs, /* force: */ true);
             });
-
-            CBProcess::clearID();
 
             fclose($handle);
         }
@@ -164,6 +178,9 @@ final class CBAdminPageForModelImport {
         $response->message = "Data file uploaded successfully";
         $response->wasSuccessful = true;
         $response->processID = $processID;
+
+        CBProcess::clearID();
+
         $response->send();
     }
 
