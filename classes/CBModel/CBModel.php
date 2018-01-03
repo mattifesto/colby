@@ -3,6 +3,22 @@
 final class CBModel {
 
     /**
+     * This function can be used to generate IDs for specs imported from CSV
+     * files.
+     *
+     * @param object $spec
+     *
+     * @return hex160|null
+     */
+    static function toID(stdClass $spec): ?string {
+        if (is_callable($function = "{$spec->className}::CBModel_toID")) {
+            return call_user_func($function, $spec);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * This is the official way to convert a spec to a model.
      *
      * Reading this function will help developers understand the exact
