@@ -141,7 +141,12 @@ final class CBAdminPageForModelImport {
 
                 if ($spec !== null) {
                     if (empty($spec->className)) {
-                        CBLog::addMessage('CBAdminPageForModelImport', 3, 'A spec row with other data specified did not specify a className.');
+                        CBLog::log((object)[
+                            'className' => __CLASS__,
+                            'message' => 'A spec row with other data specified did not specify a className',
+                            'severity' => 3,
+                        ]);
+
                         continue;
                     }
 
@@ -173,7 +178,11 @@ final class CBAdminPageForModelImport {
             fclose($handle);
         }
 
-        CBLog::addMessage('CBAdminPageForModelImport', 5, 'A data file was imported.');
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'message' => 'Data file upload completed',
+            'severity' => 5,
+        ]);
 
         $response->message = "Data file uploaded successfully";
         $response->wasSuccessful = true;
