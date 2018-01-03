@@ -123,6 +123,12 @@ final class CBAdminPageForModelImport {
 
         CBProcess::setID($processID);
 
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'message' => 'A data file upload process has begun',
+            'severity' => 6,
+        ]);
+
         if (strtolower(pathinfo($_FILES['dataFile']['name'], PATHINFO_EXTENSION)) !== 'csv') {
             throw new Exception('The data file should be a "csv" file.');
         }
@@ -135,11 +141,15 @@ final class CBAdminPageForModelImport {
             }
 
             $specs = [];
+            $countOfSpecsInDataFile = 0;
+            $countOfSpecsSaved = 0;
 
             while (($data = fgetcsv($handle)) !== false) {
                 $spec = CBAdminPageForModelImport::objectFromCSVRowData($data, $columns);
 
                 if ($spec !== null) {
+                    $countOfSpecsInDataFile += 1;
+
                     if (empty($spec->className)) {
                         CBLog::log((object)[
                             'className' => __CLASS__,
@@ -156,7 +166,7 @@ final class CBAdminPageForModelImport {
                         if ($ID === null) {
                             CBLog::log((object)[
                                 'className' => __CLASS__,
-                                'message' => "A imported spec was unable to generate its own ID\n\n" .
+                                'message' => "An imported spec was unable to generate its own ID\n\n" .
                                              "--- pre\n" .
                                              CBConvert::valueToPrettyJSON($spec) .
                                              "\n---",
@@ -169,6 +179,7 @@ final class CBAdminPageForModelImport {
                         }
                     }
 
+                    $countOfSpecsSaved += 1;
                     $specs[] = $spec;
                 }
             }
@@ -182,7 +193,7 @@ final class CBAdminPageForModelImport {
 
         CBLog::log((object)[
             'className' => __CLASS__,
-            'message' => 'Data file upload completed',
+            'message' => "{$countOfSpecsSaved} of {$countOfSpecsInDataFile} specs found in the data file were saved",
             'severity' => 5,
         ]);
 
