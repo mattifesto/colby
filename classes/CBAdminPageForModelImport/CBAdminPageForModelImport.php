@@ -158,7 +158,7 @@ final class CBAdminPageForModelImport {
                                 'className' => __CLASS__,
                                 'message' => "A imported spec was unable to generate its own ID\n\n" .
                                              "--- pre\n" .
-                                             json_encode($spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES, 2) .
+                                             CBConvert::valueToPrettyJSON($spec) .
                                              "\n---",
                                 'severity' => 3,
                             ]);
