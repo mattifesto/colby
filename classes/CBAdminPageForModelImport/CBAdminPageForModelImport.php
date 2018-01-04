@@ -123,81 +123,93 @@ final class CBAdminPageForModelImport {
 
         CBProcess::setID($processID);
 
-        CBLog::log((object)[
-            'className' => __CLASS__,
-            'message' => 'A data file upload process has begun',
-            'severity' => 6,
-        ]);
+        /**
+         * Because any error that occurs will be associated with the process ID,
+         * we use a try catch block to ensure that in all but the most extreme
+         * of situations this Ajax request will succeed and return the process
+         * ID which the caller can use to get further reporting information.
+         */
 
-        if (strtolower(pathinfo($_FILES['dataFile']['name'], PATHINFO_EXTENSION)) !== 'csv') {
-            throw new Exception('The data file should be a "csv" file.');
-        }
+        try {
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => 'A data file upload process has begun',
+                'severity' => 6,
+            ]);
 
-        if ($handle = fopen($_FILES['dataFile']['tmp_name'], 'r')) {
-            $columns = fgetcsv($handle);
-
-            if ($columns === false) {
-                throw new RuntimeException("The data file provided is empty");
+            if (strtolower(pathinfo($_FILES['dataFile']['name'], PATHINFO_EXTENSION)) !== 'csv') {
+                throw new Exception('The data file should be a "csv" file.');
             }
 
-            $specs = [];
-            $countOfSpecsInDataFile = 0;
-            $countOfSpecsSaved = 0;
+            if ($handle = fopen($_FILES['dataFile']['tmp_name'], 'r')) {
+                $columns = fgetcsv($handle);
 
-            while (($data = fgetcsv($handle)) !== false) {
-                $spec = CBAdminPageForModelImport::objectFromCSVRowData($data, $columns);
+                if ($columns === false) {
+                    throw new RuntimeException("The data file provided is empty");
+                }
 
-                if ($spec !== null) {
-                    $countOfSpecsInDataFile += 1;
+                $specs = [];
+                $countOfSpecsInDataFile = 0;
+                $countOfSpecsSaved = 0;
 
-                    if (empty($spec->className)) {
-                        CBLog::log((object)[
-                            'className' => __CLASS__,
-                            'message' => 'A spec row with other data specified did not specify a className',
-                            'severity' => 3,
-                        ]);
+                while (($data = fgetcsv($handle)) !== false) {
+                    $spec = CBAdminPageForModelImport::objectFromCSVRowData($data, $columns);
 
-                        continue;
-                    }
+                    if ($spec !== null) {
+                        $countOfSpecsInDataFile += 1;
 
-                    if (empty($spec->ID)) {
-                        $ID = CBModel::toID($spec);
-
-                        if ($ID === null) {
+                        if (empty($spec->className)) {
                             CBLog::log((object)[
                                 'className' => __CLASS__,
-                                'message' => "An imported spec was unable to generate its own ID\n\n" .
-                                             "--- pre\n" .
-                                             CBConvert::valueToPrettyJSON($spec) .
-                                             "\n---",
+                                'message' => 'A spec row with other data specified did not specify a className',
                                 'severity' => 3,
                             ]);
 
                             continue;
-                        } else {
-                            $spec->ID = $ID;
                         }
-                    }
 
-                    $countOfSpecsSaved += 1;
-                    $specs[] = $spec;
+                        if (empty($spec->ID)) {
+                            $ID = CBModel::toID($spec);
+
+                            if ($ID === null) {
+                                CBLog::log((object)[
+                                    'className' => __CLASS__,
+                                    'message' => "An imported spec was unable to generate its own ID\n\n" .
+                                                 "--- pre\n" .
+                                                 CBConvert::valueToPrettyJSON($spec) .
+                                                 "\n---",
+                                    'severity' => 3,
+                                ]);
+
+                                continue;
+                            } else {
+                                $spec->ID = $ID;
+                            }
+                        }
+
+                        $countOfSpecsSaved += 1;
+                        $specs[] = $spec;
+                    }
                 }
+
+                CBDB::transaction(function () use ($specs) {
+                    CBModels::save($specs, /* force: */ true);
+                });
+
+                fclose($handle);
             }
 
-            CBDB::transaction(function () use ($specs) {
-                CBModels::save($specs, /* force: */ true);
-            });
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => "{$countOfSpecsSaved} of {$countOfSpecsInDataFile} specs found in the data file were saved",
+                'severity' => 5,
+            ]);
 
-            fclose($handle);
+            $response->message = "Data file uploaded successfully";
+        } catch (Throwable $throwable) {
+            CBErrorHandler::report($throwable);
         }
 
-        CBLog::log((object)[
-            'className' => __CLASS__,
-            'message' => "{$countOfSpecsSaved} of {$countOfSpecsInDataFile} specs found in the data file were saved",
-            'severity' => 5,
-        ]);
-
-        $response->message = "Data file uploaded successfully";
         $response->wasSuccessful = true;
         $response->processID = $processID;
 
