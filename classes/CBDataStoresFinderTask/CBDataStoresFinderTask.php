@@ -92,7 +92,8 @@ final class CBDataStoresFinderTask {
         CBLog::log((object)[
             'className' => __CLASS__,
             'ID' => $ID,
-            'message' => "CBDataStoresFinderTask searched the directory data/{$partIndexHex} for data stores. ($partIndex/255)"
+            'message' => "CBDataStoresFinderTask searched the directory data/{$partIndexHex} for data stores. ($partIndex/255)",
+            'severity' => 7,
         ]);
 
         return (object)[
