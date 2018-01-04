@@ -8,22 +8,35 @@
 var CBUISelector = {
 
     /**
-     * @param string? args.labelText
-     * @param function? args.navigateToItemCallback
-     * @param string? args.propertyName
-     * @param object? args.spec
-     * @param function? args.specChangedCallback
-     * @param [{string title, string description, mixed value}]? args.options
-     * @param function? args.valueChangedCallback
+     * @param object args
      *
-     *      This is an alternative to the spec and specChangedCallback
-     *      parameters when a spec isn't explicitly needed.
+     *      {
+     *          labelText: string?
+     *          navigateToItemCallback: function?
+     *          propertyName: string?
+     *          spec: object?
+     *          specChangedCallback: function?
+     *          options: [object]
      *
-     * @return  {
-     *              element: Element
-     *              updateOptionsCallback: function
-     *              updateValueCallback: function
-     *          }
+     *              {
+     *                  title: string
+     *                  description: string?
+     *                  value: mixed
+     *              }
+     *
+     *          valueChangedCallback: function?
+     *
+     *              This is an alternative to the spec and specChangedCallback
+     *              parameters when a spec isn't explicitly needed.
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *          updateOptionsCallback: function
+     *          updateValueCallback: function
+     *      }
      */
     create: function (args) {
 

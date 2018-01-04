@@ -13,23 +13,13 @@ final class CBUISelector {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [CBUISelector::URL('CBUISelector.css')];
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBUISelector::URL('CBUISelector.js')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+        return [Colby::flexpath(__CLASS__, 'v364.js', cbsysurl())];
     }
 }
