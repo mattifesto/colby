@@ -28,13 +28,13 @@ final class CBLogAdminPage {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUIExpander'];
+        return ['CBUI', 'CBUIExpander', 'CBUINavigationView', 'CBUISelector'];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v364.js', cbsysurl())];
     }
 }
