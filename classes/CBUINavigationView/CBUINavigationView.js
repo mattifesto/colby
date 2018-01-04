@@ -62,7 +62,7 @@ var CBUINavigationView = {
     },
 
     /**
-     * @param object args
+     * @param object? args
      *
      *      {
      *          rootItem: object?
@@ -75,7 +75,7 @@ var CBUINavigationView = {
      * @return object
      *
      *      {
-     *          element: Element
+     *          element: Element (readonly)
      *          navigateToItemCallback: function
      *      }
      */
@@ -91,12 +91,14 @@ var CBUINavigationView = {
 
         window.addEventListener("popstate", CBUINavigationView.handlePopState.bind(undefined, state));
 
-        if (args.rootItem !== undefined) {
+        if (args !== undefined && args.rootItem !== undefined) {
             navigateToItemCallback(args.rootItem);
         }
 
         return {
-            element: element,
+            get element() {
+                return element;
+            },
             navigateToItemCallback: navigateToItemCallback,
         };
     },
