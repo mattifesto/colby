@@ -1,8 +1,9 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBUIProcessStatus */
 /* global
-    CBUIOutput,
+    CBUIExpander,
     Colby */
 
 var CBUIProcessStatus = {
@@ -21,18 +22,26 @@ var CBUIProcessStatus = {
         element.className = "CBUIProcessStatus CBDarkTheme";
         var overviewElement = document.createElement("div");
         overviewElement.className = "overview";
-        var output = CBUIOutput.create();
+        var entriesElement = document.createElement("div");
+        entriesElement.className = "entries";
 
         element.appendChild(overviewElement);
-        element.appendChild(output.element);
+        element.appendChild(entriesElement);
 
         return {
-            element: element,
+            get element() {
+                return element;
+            },
             set processID(value) {
                 processID = value;
-                overviewElement.textContent = undefined;
-                output.clear();
-                output.append("Process ID: " + processID);
+                overviewElement.textContent = "";
+                entriesElement.textContent = "";
+
+                let expander = CBUIExpander.create({
+                    message: "Process ID: " + processID,
+                });
+
+                entriesElement.appendChild(expander.element);
 
                 fetchStatus();
             },
@@ -60,7 +69,8 @@ var CBUIProcessStatus = {
                     afterSerial = entries[entries.length - 1].serial;
 
                     entries.forEach(function (entry) {
-                        output.append(entry.message);
+                        let expander = CBUIExpander.create(entry);
+                        entriesElement.appendChild(expander.element);
                     });
                 }
             }
