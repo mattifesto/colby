@@ -76,14 +76,11 @@ var CBAdminPageForModelImport = {
         input.addEventListener("change", function() {
             actionLink.disableCallback();
 
-            var formData = new FormData();
-            formData.append("dataFile", input.files[0]);
-
-            input.value = null;
-
-            Colby.fetchAjaxResponse("/api/?class=CBAdminPageForModelImport&function=uploadDataFile", formData)
+            Colby.callAjaxFunction("CBAdminPageForModelImport", "uploadDataFile", undefined, input.files[0])
                 .then(uploadFulfilled)
                 .catch(Colby.displayAndReportError);
+
+            input.value = null;
 
             /* closure */
             function uploadFulfilled(response) {

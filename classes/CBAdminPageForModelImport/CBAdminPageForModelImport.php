@@ -34,7 +34,7 @@ final class CBAdminPageForModelImport {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v363.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v365.js', cbsysurl())];
     }
 
     /**
@@ -117,11 +117,12 @@ final class CBAdminPageForModelImport {
     /**
      * @return null
      */
-    static function uploadDataFileForAjax() {
-        $response = new CBAjaxResponse();
-        $processID = CBHex160::random();
+    static function CBAjax_uploadDataFile() {
+        $response = (object)[
+            'processID' => CBHex160::random(),
+        ];
 
-        CBProcess::setID($processID);
+        CBProcess::setID($response->processID);
 
         /**
          * Because any error that occurs will be associated with the process ID,
@@ -137,11 +138,11 @@ final class CBAdminPageForModelImport {
                 'severity' => 6,
             ]);
 
-            if (strtolower(pathinfo($_FILES['dataFile']['name'], PATHINFO_EXTENSION)) !== 'csv') {
+            if (strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION)) !== 'csv') {
                 throw new Exception('The data file should be a "csv" file.');
             }
 
-            if ($handle = fopen($_FILES['dataFile']['tmp_name'], 'r')) {
+            if ($handle = fopen($_FILES['file']['tmp_name'], 'r')) {
                 $columns = fgetcsv($handle);
 
                 if ($columns === false) {
@@ -204,24 +205,19 @@ final class CBAdminPageForModelImport {
                 'message' => "{$countOfSpecsSaved} of {$countOfSpecsInDataFile} specs found in the data file were saved",
                 'severity' => 5,
             ]);
-
-            $response->message = "Data file uploaded successfully";
         } catch (Throwable $throwable) {
             CBErrorHandler::report($throwable);
         }
 
-        $response->wasSuccessful = true;
-        $response->processID = $processID;
-
         CBProcess::clearID();
 
-        $response->send();
+        return $response;
     }
 
     /**
      * @return null
      */
-    static function uploadDataFileForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function CBAjax_uploadDataFile_group() {
+        return 'Administrators';
     }
 }
