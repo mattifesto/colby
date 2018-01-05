@@ -211,16 +211,38 @@ EOT;
                             }
                         }
 
-                        $countOfSpecsSaved += 1;
                         $specs[] = $spec;
                     }
                 }
 
-                CBDB::transaction(function () use ($specs) {
-                    CBModels::save($specs, /* force: */ true);
-                });
-
                 fclose($handle);
+
+                $specsByClass = array_reduce($specs, function(&$specsByClass, $spec) {
+                    if (empty($specsByClass[$spec->className])) {
+                        $specsByClass[$spec->className] = [];
+                    }
+
+                    $specsByClass[$spec->className][] = $spec;
+
+                    return $specsByClass;
+                }, []);
+
+                foreach ($specsByClass as $className => $specs) {
+                    if (is_callable("$className::CBModel_toModel")) {
+                        CBDB::transaction(function () use ($specs) {
+                            CBModels::save($specs, /* force: */ true);
+                        });
+
+                        $countOfSpecsSaved += count($specs);
+                    } else {
+                        CBLog::log((object)[
+                            'className' => __CLASS__,
+                            'message' => "The CBModel_toModel interface must be implemented by the {$className} class so that {$className} specs can be saved",
+                            'severity' => 3,
+                        ]);
+                    }
+                }
+
             }
 
             CBLog::log((object)[
