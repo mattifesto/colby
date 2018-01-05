@@ -587,9 +587,14 @@ var Colby = {
     },
 
     /**
+     * Call this function after adding elements created with
+     * Colby.unixTimestampToElement() to the DOM tree. If you don't, such
+     * elements may experience a significant lag before they display the proper
+     * time.
+     *
      * @return undefined
      */
-    updateTimes : function () {
+    updateTimes: function () {
         if (Colby.intervalId && Colby.intervalCount > 90) {
             // We only do updates every second for the first 90 seconds. It's 90 instead of 60 in case the server clock and the client clock are way off.
 
