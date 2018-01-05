@@ -183,12 +183,25 @@ EOT;
                             $ID = CBModel::toID($spec);
 
                             if ($ID === null) {
+                                $specAsMessage = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($spec));
+                                $message = "An imported {$spec->className} spec was unable to generate its own ID";
+
+                                if (!is_callable("{$spec->className}::CBModel_toID")) {
+                                    $message .= " and the CBModel_toID interface is not implemented by the {$spec->className} class";
+                                }
+
+                                $message = <<<EOT
+
+                                    {$message}
+
+                                    --- pre\n{$specAsMessage}
+                                    ---
+
+EOT;
+
                                 CBLog::log((object)[
                                     'className' => __CLASS__,
-                                    'message' => "An imported spec was unable to generate its own ID\n\n" .
-                                                 "--- pre\n" .
-                                                 CBConvert::valueToPrettyJSON($spec) .
-                                                 "\n---",
+                                    'message' => $message,
                                     'severity' => 3,
                                 ]);
 
