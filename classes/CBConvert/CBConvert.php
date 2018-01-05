@@ -390,8 +390,10 @@ final class CBConvert {
     }
 
     /**
-     * This function returns an integer if the $value parameter is practically
-     * intended to represent an integer.
+     * This function returns an integer if the $value parameter can reasonably
+     * be interpreted to represent an integer. This is different than a cast to
+     * int or the intval() function because it will not truncate floating point
+     * values.
      *
      * The function name uses "as" because we are returning the same value, but
      * as an integer instead of the original value type.
