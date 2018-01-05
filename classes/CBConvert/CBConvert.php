@@ -341,44 +341,6 @@ final class CBConvert {
     /**
      * @param mixed $value
      *
-     * @return [mixed]
-     *
-     *      If the $value parameter is an array it is returned; otherwise an
-     *      empty array is returned.
-     */
-    static function valueAsArray($value): array {
-        if (is_array($value)) {
-            return $value;
-        }
-
-        return [];
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return [object]
-     *
-     *      If the $value parameter is an array of objects it is returned;
-     *      otherwise and empty array is returned.
-     */
-    static function valueAsArrayOfObjects($value): array {
-        if (is_array($value)) {
-            foreach ($value as $item) {
-                if (!is_object($item)) {
-                    return [];
-                }
-            }
-
-            return $value;
-        }
-
-        return [];
-    }
-
-    /**
-     * @param mixed $value
-     *
      * @return hex160|null
      */
     static function valueAsHex160($value) {
@@ -441,6 +403,44 @@ final class CBConvert {
         } else {
             return null;
         }
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return [mixed]
+     *
+     *      If the $value parameter is an array it is returned; otherwise an
+     *      empty array is returned.
+     */
+    static function valueToArray($value): array {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        return [];
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return [object]
+     *
+     *      If the $value parameter is an array of objects it is returned;
+     *      otherwise and empty array is returned.
+     */
+    static function valueToArrayOfObjects($value): array {
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if (!is_object($item)) {
+                    return [];
+                }
+            }
+
+            return $value;
+        }
+
+        return [];
     }
 
     /**
