@@ -160,9 +160,19 @@ final class CBAdminPageForModelImport {
                         $countOfSpecsInDataFile += 1;
 
                         if (empty($spec->className)) {
+                            $specAsMessage = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($spec));
+                            $message = <<<EOT
+
+                                An imported spec with other fields specified did not specify a className
+
+                                --- pre\n{$specAsMessage}
+                                ---
+
+EOT;
+
                             CBLog::log((object)[
                                 'className' => __CLASS__,
-                                'message' => 'A spec row with other data specified did not specify a className',
+                                'message' => $message,
                                 'severity' => 3,
                             ]);
 
