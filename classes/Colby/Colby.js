@@ -48,17 +48,26 @@ var Colby = {
     /**
      * @param string className
      * @param string functionName
-     * @param object args
+     * @param object? args
+     * @param File? file
+     *
+     *      A File usually retrieved from an input element.
+     *
+     *      https://developer.mozilla.org/en-US/docs/Web/API/File
      *
      * @return Promise
      */
-    callAjaxFunction: function (functionClassName, functionName, args) {
+    callAjaxFunction: function (functionClassName, functionName, args, file) {
         var formData = new FormData();
         formData.append("ajax", JSON.stringify({
             functionClassName: functionClassName,
             functionName: functionName,
             args: args,
         }));
+
+        if (file !== undefined) {
+            formData.append("file", file);
+        }
 
         return Colby.fetchAjaxResponse("/", formData)
             .then(onFulfilled);
