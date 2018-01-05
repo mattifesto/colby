@@ -313,6 +313,31 @@ final class CBConvert {
         return $value;
     }
 
+
+    /**
+     * @NOTE
+     *
+     *      The "valueAs" and "valueTo" functions are used as parameter
+     *      validation and sometimes conversion functions.
+     *
+     *      A "valueAs" function checks to see if the parameter is the requested
+     *      type or can be reasonably interpreted to be the requested type. If
+     *      so, the function returns the approprate value of the requested type.
+     *      If the parameter can not reasonably be interpreted to be the
+     *      requested type then null is returned.
+     *
+     *      A "valueTo" function does basically the same thing as a "valueAs"
+     *      function, but if the value can't reasonably be interpreted to be a
+     *      value of the requested type, it returns an empty value of the
+     *      requested type.
+     *
+     *      Objects and arrays are the most common types of "valueTo" functions.
+     *      A function named "valueToInt" would be odd because its difficult to
+     *      determine the value of an "empty" integer that would be useful to
+     *      all callers.
+     */
+
+
     /**
      * @param mixed $value
      *
@@ -398,6 +423,38 @@ final class CBConvert {
         }
 
         return null;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return object|null
+     *
+     *      If $value is an object, it will be returned; otherwise null will be
+     *      returned.
+     */
+    static function valueAsObject($value): ?stdClass {
+        if (is_object($value)) {
+            return $value;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return object
+     *
+     *      If $value is an object, it will be returned; otherwise an empty
+     *      object will be returned.
+     */
+    static function valueToObject($value): stdClass {
+        if (is_object($value)) {
+            return $value;
+        } else {
+            return (object)[];
+        }
     }
 
     /**
