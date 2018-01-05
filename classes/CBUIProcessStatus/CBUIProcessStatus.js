@@ -72,6 +72,8 @@ var CBUIProcessStatus = {
                         let expander = CBUIExpander.create(entry);
                         entriesElement.appendChild(expander.element);
                     });
+
+                    Colby.updateTimes();
                 }
             }
 
