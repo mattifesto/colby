@@ -460,6 +460,11 @@ final class CBConvert {
     }
 
     /**
+     * NOTE 2018.01.06
+     *
+     *      This is an odd function. Callers should be investigated and a more
+     *      sensible and straightforward solution should be found.
+     *
      * @param mixed $value
      *
      * @return string|null
