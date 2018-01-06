@@ -17,7 +17,7 @@ var CBUIProcessStatus = {
      *      }
      */
     create: function (args) {
-        var processID, afterSerial;
+        var afterSerial, isFetching, shouldFetchNextQuickly, processID, timeoutID;
         var element = document.createElement("div");
         element.className = "CBUIProcessStatus CBDarkTheme";
         var overviewElement = document.createElement("div");
@@ -52,9 +52,17 @@ var CBUIProcessStatus = {
 
         /* closure */
         function fetchStatus() {
-            if (processID === undefined) { // TODO remove, we can do status of "all"
+            if (isFetching) {
+                shouldFetchNextQuickly = true;
                 return;
             }
+
+            if (timeoutID !== undefined) {
+                clearTimeout(timeoutID);
+                timeoutID = undefined;
+            }
+
+            isFetching = true;
 
             Colby.callAjaxFunction("CBLog", "fetchEntries", {afterSerial: afterSerial, processID: processID})
                 .then(onFetchLogEntriesFulfilled)
@@ -106,7 +114,19 @@ var CBUIProcessStatus = {
 
             /* closure */
             function reschedule() {
-                setTimeout(fetchStatus, 1000);
+                if (timeoutID === undefined) {
+                    let delay = 1000;
+
+                    if (shouldFetchNextQuickly) {
+                        delay = 0;
+                        shouldFetchNextQuickly = undefined;
+                    }
+
+                    timeoutID = setTimeout(fetchStatus, delay);
+                    isFetching = undefined;
+                } else {
+                    throw new Error("CBUIProcessStatus.create() closure reschedule() is being called too often.");
+                }
             }
         }
     },
