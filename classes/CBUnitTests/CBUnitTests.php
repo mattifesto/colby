@@ -82,6 +82,7 @@ class CBUnitTests {
             ['CBModels',                'fetchModelsByID'],
             ['CBModels',                'saveNullableModel'],
             ['CBModels',                'saveSpecWithoutID'],
+            ['CBPageLayout',            'CBModel_toModel'],
             ['CBPages',                 'stringToDencodedURIPath'],
             ['CBProjection'],
             ['CBSitePreferences'],
