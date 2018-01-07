@@ -18,7 +18,7 @@ var CBContainerView2Editor = {
      *
      * @return string|undefined
      */
-    CBUISpec_toDescription: function(spec) {
+    CBUISpec_toDescription: function (spec) {
         if (typeof spec.title === "string" && spec.title.trim() !== "") {
             return spec.title.trim();
         } else {
@@ -28,6 +28,27 @@ var CBContainerView2Editor = {
 
                     if (description) {
                         return description;
+                    }
+                }
+            }
+        }
+    },
+
+    /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    CBUISpec_toThumbnailURI: function (spec) {
+        if (spec.image) {
+            return Colby.imageToURL(spec.image, 'rw320');
+        } else {
+            if (Array.isArray(spec.subviews)) {
+                for (let i = 0; i < spec.subviews.length; i++) {
+                    let thumbnailURI = CBUISpec.specToThumbnailURI(spec.subviews[i]);
+
+                    if (thumbnailURI) {
+                        return thumbnailURI;
                     }
                 }
             }
