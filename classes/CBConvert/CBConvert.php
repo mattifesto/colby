@@ -482,4 +482,26 @@ final class CBConvert {
     static function valueToPrettyJSON($value): string {
         return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
+
+    /**
+     * This function exists because PHP will complain at various levels when
+     * attempting to convert some values, such as objects and arrays, to
+     * strings.
+     *
+     * It's reasonable for PHP to complain, but when retreiving values from
+     * models we don't care about such issues. And the "ToString" name means if
+     * the value can't be reasonably converted to a string, return an empty
+     * string.
+     *
+     * @param mixed $value
+     *
+     * @return string
+     */
+    static function valueToString($value): string {
+        try {
+            return (string)$value;
+        } catch (Throwable $throwable) {
+            return '';
+        }
+    }
 }
