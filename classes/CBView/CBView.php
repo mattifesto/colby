@@ -3,6 +3,25 @@
 final class CBView {
 
     /**
+     * CSS Template Documentation
+     *
+     *      1. Get the trimmed CSS template string from the spec
+     *      2. If it's not empty, create a unique CSS class name
+     *      3. Add the unique CSS class name to the list of class names stored
+     *         with the model
+     *      4. Generate the local CSS using this function and store it with the
+     *         model
+     *
+     * Sample code:
+     *
+     *      $CSSTemplate = trim(CBConvert::valueToString(CBModel::value($spec, 'CSSTemplate')));
+     *
+     *      if ($CSSTemplate !== '') {
+     *          $uniqueCSSClassName = 'ID_' . CBHex160::random();
+     *          $model->CSSClassNames[] = $uniqueCSSClassName;
+     *          $model->CSS = CBView::CSSTemplateToCSS($CSSTemplate, $uniqueCSSClassName);
+     *      }
+     *
      * @param string $CSSTemplate
      * @param string $uniqueCSSClassName
      *
