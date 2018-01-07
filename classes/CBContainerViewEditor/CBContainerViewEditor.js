@@ -15,6 +15,27 @@
 var CBContainerViewEditor = {
 
     /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    CBUISpec_toDescription: function (spec) {
+        if (typeof spec.title === "string" && spec.title.trim() !== "") {
+            return spec.title.trim();
+        } else {
+            if (Array.isArray(spec.subviews)) {
+                for (let i = 0; i < spec.subviews.length; i++) {
+                    let description = CBUISpec.specToDescription(spec.subviews[i]);
+
+                    if (description) {
+                        return description;
+                    }
+                }
+            }
+        }
+    },
+
+    /**
      * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
@@ -260,26 +281,5 @@ var CBContainerViewEditor = {
         }
 
         args.specChangedCallback.call();
-    },
-
-    /**
-     * @param object spec
-     * @param array? spec.children
-     *
-     * @return string|undefined
-     */
-    specToDescription : function (spec) {
-        if (spec.title) { return spec.title; }
-
-        var description;
-        var subviews = spec.subviews;
-
-        if (Array.isArray(subviews)) {
-            for (var i = 0; i < subviews.length && !description; i++) {
-                description = CBUISpec.specToDescription(subviews[i]);
-            }
-        }
-
-        return description;
     },
 };
