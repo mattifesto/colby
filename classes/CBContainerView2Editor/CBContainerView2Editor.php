@@ -6,14 +6,14 @@ final class CBContainerView2Editor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUIImageChooser', 'CBUISpecArrayEditor', 'CBUIStringEditor'];
+        return ['CBUIImageChooser', 'CBUISpec', 'CBUISpecArrayEditor', 'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v361.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v366.js', cbsysurl())];
     }
 
     /**

@@ -6,11 +6,33 @@
     CBContainerView2Editor_addableClassNames,
     CBUI,
     CBUIImageChooser,
+    CBUISpec,
     CBUISpecArrayEditor,
     CBUIStringEditor,
     Colby */
 
 var CBContainerView2Editor = {
+
+    /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    CBUISpec_toDescription: function(spec) {
+        if (typeof spec.title === "string" && spec.title.trim() !== "") {
+            return spec.title.trim();
+        } else {
+            if (Array.isArray(spec.subviews)) {
+                for (let i = 0; i < spec.subviews.length; i++) {
+                    let description = CBUISpec.specToDescription(spec.subviews[i]);
+
+                    if (description) {
+                        return description;
+                    }
+                }
+            }
+        }
+    },
 
     /**
      * @param object args.spec
