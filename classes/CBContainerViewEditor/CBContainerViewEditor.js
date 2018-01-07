@@ -36,6 +36,29 @@ var CBContainerViewEditor = {
     },
 
     /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    CBUISpec_toThumbnailURI: function (spec) {
+        let image = spec.smallImage || spec.mediumImage || spec.largeImage;
+
+        if (image) {
+            return Colby.imageToURL(image, 'rw320');
+        } else {
+            if (Array.isArray(spec.subviews)) {
+                for (let i = 0; i < spec.subviews.length; i++) {
+                    let thumbnailURI = CBUISpec.specToThumbnailURI(spec.subviews[i]);
+
+                    if (thumbnailURI) {
+                        return thumbnailURI;
+                    }
+                }
+            }
+        }
+    },
+
+    /**
      * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
