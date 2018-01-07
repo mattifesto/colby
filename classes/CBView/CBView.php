@@ -32,6 +32,47 @@ final class CBView {
     }
 
     /**
+     * Finds a subview in an object that may have subviews.
+     *
+     * NOTE
+     *
+     *      This function is intended to be used where there is likely to be at
+     *      most one subview matching the criteria. It is not intended to find
+     *      all subviews with the given criteria.
+     *
+     * @param object $model
+     *
+     *      This can be a model or a spec. This object is not checked for the
+     *      search criteria because it may be a page model which therefore is
+     *      not a subview.
+     *
+     * @param string $key
+     * @param mixed $value
+     *
+     *      The $value parameter is compared against the model property value
+     *      with the equal comparison operator (==).
+     *
+     * @return object|null
+     */
+    static function findSubview($model, $key, $value): ?stdClass {
+        $subviews = CBView::toSubviews($model);
+
+        foreach ($subviews as $view) {
+            if (isset($view->{$key}) && $view->{$key} == $value) {
+                return $view;
+            }
+
+            $result = CBView::findSubview($view, $key, $value);
+
+            if ($result !== null) {
+                return $result;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @deprecated use CBView::CSSTemplateToCSS()
      *
      * @param string $keyword
