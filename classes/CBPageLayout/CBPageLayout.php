@@ -125,33 +125,24 @@ final class CBPageLayout {
      */
     static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
-            'CSSClassNames' => CBModel::value($spec, 'CSSClassNames', [], 'CBConvert::stringToCSSClassNames'),
-            'customLayoutClassName' => CBModel::value($spec, 'customLayoutClassName', '', 'trim'),
-            'customLayoutProperties' => CBModel::value($spec, 'customLayoutProperties', (object)[]),
-            'isArticle' => CBModel::value($spec, 'isArticle', false, 'boolval'),
+            'CSSClassNames' => CBConvert::stringToCSSClassNames(CBConvert::valueToString(CBModel::value($spec, 'CSSClassNames'))),
+            'customLayoutClassName' => trim(CBModel::value($spec, 'customLayoutClassName')),
+            'customLayoutProperties' => CBConvert::valueToObject(CBModel::value($spec, 'customLayoutProperties')),
+            'isArticle' => (bool)CBModel::value($spec, 'isArticle'),
         ];
 
         /**
-         * Using local styles.
-         *
-         * Step 1: Create a globally unique CSS class name for the view.
+         * Local CSS Template
+         * See CBView::CSSTemplateToCSS for documentation.
          */
-        $uniqueCSSClassName = 'ID_' . CBHex160::random();
 
-        /**
-         * Step 2: Add the unique class name to the view's CSS class names.
-         */
-        $model->CSSClassNames[] = $uniqueCSSClassName;
+         $CSSTemplate = trim(CBConvert::valueToString(CBModel::value($spec, 'localCSSTemplate')));
 
-        /**
-         * Step 3: Get the CSS template.
-         */
-        $CSSTemplate = CBModel::value($spec, 'localCSSTemplate', '', 'trim');
-
-        /**
-         * Step 4: Generate the view CSS.
-         */
-        $model->localCSS = CBView::CSSTemplateToCSS($CSSTemplate, $uniqueCSSClassName);
+         if ($CSSTemplate !== '') {
+             $uniqueCSSClassName = 'ID_' . CBHex160::random();
+             $model->CSSClassNames[] = $uniqueCSSClassName;
+             $model->localCSS = CBView::CSSTemplateToCSS($CSSTemplate, $uniqueCSSClassName);
+         }
 
         return $model;
     }
