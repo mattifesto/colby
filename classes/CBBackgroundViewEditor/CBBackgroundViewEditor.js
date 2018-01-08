@@ -15,6 +15,27 @@
 var CBBackgroundViewEditor = {
 
     /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    CBUISpec_toDescription: function (spec) {
+        if (typeof spec.title === "string" && spec.title.trim() !== "") {
+            return spec.title.trim();
+        } else {
+            if (Array.isArray(spec.children)) {
+                for (let i = 0; i < spec.children.length; i++) {
+                    let description = CBUISpec.specToDescription(spec.children[i]);
+
+                    if (description) {
+                        return description;
+                    }
+                }
+            }
+        }
+    },
+
+    /**
      * @param function args.navigateToItemCallback
      * @param Object args.spec
      * @param function args.specChangedCallback
@@ -170,27 +191,6 @@ var CBBackgroundViewEditor = {
         if (spec.minimumViewHeightIsImageHeight === undefined) {
             spec.minimumViewHeightIsImageHeight = true;
         }
-    },
-
-    /**
-     * @param object spec
-     * @param array? spec.children
-     *
-     * @return string|undefined
-     */
-    specToDescription: function (spec) {
-        if (spec.title) { return spec.title; }
-
-        var description;
-        var children = spec.children;
-
-        if (Array.isArray(children)) {
-            for (var i = 0; i < children.length && !description; i++) {
-                description = CBUISpec.specToDescription(children[i]);
-            }
-        }
-
-        return description;
     },
 
     /**
