@@ -36,6 +36,29 @@ var CBBackgroundViewEditor = {
     },
 
     /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    CBUISpec_toThumbnailURI: function (spec) {
+        if (spec.image) {
+            return Colby.imageToURL(spec.image, 'rw320');
+        } else if (spec.imageURL) {
+            return spec.imageURL;
+        } else {
+            if (Array.isArray(spec.children)) {
+                for (let i = 0; i < spec.children.length; i++) {
+                    let thumbnailURI = CBUISpec.specToThumbnailURI(spec.children[i]);
+
+                    if (thumbnailURI) {
+                        return thumbnailURI;
+                    }
+                }
+            }
+        }
+    },
+
+    /**
      * @param function args.navigateToItemCallback
      * @param Object args.spec
      * @param function args.specChangedCallback
@@ -190,21 +213,6 @@ var CBBackgroundViewEditor = {
 
         if (spec.minimumViewHeightIsImageHeight === undefined) {
             spec.minimumViewHeightIsImageHeight = true;
-        }
-    },
-
-    /**
-     * @param object spec
-     *
-     * @return string|undefined
-     */
-    specToThumbnailURI: function (spec) {
-        if (spec.image) {
-            return Colby.imageToURL(spec.image, 'rw320');
-        } else if (spec.imageURL) {
-            return spec.imageURL;
-        } else {
-            return undefined;
         }
     },
 };
