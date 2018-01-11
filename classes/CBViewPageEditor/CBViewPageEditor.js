@@ -226,9 +226,13 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param   {Object}    spec
+     * @param object args
      *
-     * @return  undefined
+     *      {
+     *          spec: object
+     *      }
+     *
+     * @return undefined
      */
     handleTitleChanged: function(args) {
         var title = args.spec.title || "";
