@@ -33,39 +33,22 @@ var CBModelEditor = {
             return;
         }
 
-        var formData = new FormData();
-        formData.append("className", CBModelEditor_modelClassName);
-        formData.append("ID", CBModelEditor_modelID);
+        Colby.callAjaxFunction("CBModels", "fetchSpec", {ID: CBModelEditor_modelID})
+            .then(onFulfilled)
+            .catch(Colby.displayAndReportError);
 
-        var xhr = new XMLHttpRequest();
-        xhr.onload = CBModelEditor.handleModelLoaded.bind(undefined, {
-            xhr: xhr
-        });
-        xhr.onerror = function() {
-            alert('An error occured when trying to retreive the data.');
-        };
+        /* closure */
+        function onFulfilled(value) {
+            let spec =  value.spec;
 
-        xhr.open("POST", "/api/?class=CBModels&function=fetchSpec");
-        xhr.send(formData);
-    },
+            if (spec === undefined) {
+                spec = {
+                    className: CBModelEditor_modelClassName,
+                    ID: CBModelEditor_modelID,
+                };
+            }
 
-    /**
-     * @param object args
-     *
-     *      {
-     *          xhr: XMLHttpRequest
-     *      }
-     *
-     * @return undefined
-     */
-    handleModelLoaded: function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            var spec = response.spec || { ID: CBModelEditor_modelID, className: CBModelEditor_modelClassName };
             CBModelEditor.renderEditorForSpec(spec);
-        } else {
-            Colby.displayResponse(response);
         }
     },
 
