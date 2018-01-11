@@ -42,16 +42,15 @@ final class CBStatusAdminPage {
 
                         ?>
 
-                        <section class="widget">
-                            <header><h1><?= cbhtml($data[0]) ?></h1></header>
-
-                            <div class="version-numbers">
-                                <section class="version-number">
-                                    <h1><?= cbhtml($data[1]) ?></h1>
+                        <div class="CBStatusWidget">
+                            <div class="card">
+                                <div class="border">
+                                    <h1><?= cbhtml($data[0]) ?></h1>
+                                    <h2><?= cbhtml($data[1]) ?></h2>
                                     <div class="number"><?= cbhtml($data[2]) ?></div>
-                                </section>
+                                </div>
                             </div>
-                        </section>
+                        </div>
 
                         <?php
                     }
