@@ -241,7 +241,7 @@ var CBViewPageEditor = {
      * @return undefined
      */
     init: function () {
-        if (window.CBAdminPageForEditingModels_modelID === undefined) {
+        if (window.CBModelEditor_modelID === undefined) {
             // if we're not using the model editor
             CBViewPageEditor.fetchModel();
         }
