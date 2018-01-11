@@ -24,7 +24,7 @@ var CBModelsAdmin = {
         var newElement = document.createElement("div");
 
         newElement.addEventListener("click", function () {
-            window.location = "/admin/page/?class=CBAdminPageForEditingModels&className=" +
+            window.location = "/admin/?c=CBModelEditor&className=" +
                               encodeURIComponent(CBModelsAdmin_modelClassName);
         });
 
@@ -42,7 +42,7 @@ var CBModelsAdmin = {
                 var sectionItem = CBUI.createSectionItem3();
 
                 sectionItem.callback = function () {
-                    window.location = "/admin/page/?class=CBAdminPageForEditingModels&ID=" +
+                    window.location = "/admin/?c=CBModelEditor&ID=" +
                                       encodeURIComponent(model.ID);
                 };
 

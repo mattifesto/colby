@@ -47,7 +47,7 @@ final class CBModelsAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v367.js', cbsysurl())];
     }
 
     /**
@@ -106,7 +106,7 @@ EOT;
 
             if (defined("{$className}::ID")) {
                 $ID = constant("{$className}::ID");
-                $item->href = "/admin/page/?class=CBAdminPageForEditingModels&ID={$ID}";
+                $item->href = "/admin/?c=CBModelEditor&ID={$ID}";
             } else {
                 $item->href = "/admin/?c=CBModelsAdmin&p=list&modelClassName={$className}";
             }
