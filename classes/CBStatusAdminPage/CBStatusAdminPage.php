@@ -97,7 +97,7 @@ final class CBStatusAdminPage {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v358.css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v367.css', cbsysurl())];
     }
 
     /**
