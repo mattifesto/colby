@@ -1,17 +1,17 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
-/* exported CBAdminPageForEditingModels */
+/* exported CBModelEditor */
 /* global
-    CBAdminPageForEditingModels_modelClassName,
-    CBAdminPageForEditingModels_modelID,
+    CBModelEditor_modelClassName,
+    CBModelEditor_modelID,
     Colby,
     CBUI,
     CBUINavigationView,
     CBUISpecEditor,
     CBUISpecSaver */
 
-var CBAdminPageForEditingModels = {
+var CBModelEditor = {
 
     /**
      * @param object spec
@@ -29,16 +29,16 @@ var CBAdminPageForEditingModels = {
      * @return undefined
      */
     handleDOMContentLoaded: function () {
-        if (window.CBAdminPageForEditingModelsAuthorizationFailed) {
+        if (window.CBModelEditorAuthorizationFailed) {
             return;
         }
 
         var formData = new FormData();
-        formData.append("className", CBAdminPageForEditingModels_modelClassName);
-        formData.append("ID", CBAdminPageForEditingModels_modelID);
+        formData.append("className", CBModelEditor_modelClassName);
+        formData.append("ID", CBModelEditor_modelID);
 
         var xhr = new XMLHttpRequest();
-        xhr.onload = CBAdminPageForEditingModels.handleModelLoaded.bind(undefined, {
+        xhr.onload = CBModelEditor.handleModelLoaded.bind(undefined, {
             xhr: xhr
         });
         xhr.onerror = function() {
@@ -62,8 +62,8 @@ var CBAdminPageForEditingModels = {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            var spec = response.spec || { ID: CBAdminPageForEditingModels_modelID, className: CBAdminPageForEditingModels_modelClassName };
-            CBAdminPageForEditingModels.renderEditorForSpec(spec);
+            var spec = response.spec || { ID: CBModelEditor_modelID, className: CBModelEditor_modelClassName };
+            CBModelEditor.renderEditorForSpec(spec);
         } else {
             Colby.displayResponse(response);
         }
@@ -79,7 +79,7 @@ var CBAdminPageForEditingModels = {
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
         var specSaver = CBUISpecSaver.create({
-            rejectedCallback: CBAdminPageForEditingModels.saveWasRejected,
+            rejectedCallback: CBModelEditor.saveWasRejected,
             spec: spec,
         });
         var specChangedCallback = specSaver.specChangedCallback;
@@ -95,7 +95,7 @@ var CBAdminPageForEditingModels = {
 
         var inspectHeaderButtonItem = CBUI.createHeaderButtonItem({
             callback: function () {
-                window.location = "/admin/?c=CBModelInspector&ID=" + CBAdminPageForEditingModels_modelID;
+                window.location = "/admin/?c=CBModelInspector&ID=" + CBModelEditor_modelID;
             },
             text: "Inspect",
         });
@@ -118,11 +118,11 @@ var CBAdminPageForEditingModels = {
         if (error.ajaxResponse) {
             Colby.displayResponse(error.ajaxResponse);
         } else {
-            Colby.alert(error.message || "CBAdminPageForEditingModels.saveWasRejected(): No error message was provided.");
+            Colby.alert(error.message || "CBModelEditor.saveWasRejected(): No error message was provided.");
         }
 
         return Promise.reject(error);
     },
 };
 
-Colby.afterDOMContentLoaded(CBAdminPageForEditingModels.handleDOMContentLoaded);
+Colby.afterDOMContentLoaded(CBModelEditor.handleDOMContentLoaded);

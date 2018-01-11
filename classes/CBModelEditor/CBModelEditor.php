@@ -1,34 +1,27 @@
 <?php
 
-class CBAdminPageForEditingModels {
+class CBModelEditor {
 
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
+    static function CBAdmin_menuNamePath() {
         return ['models'];
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Administrators'];
     }
 
     /**
      * @return void
      */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render() {
         CBHTMLOutput::setTitleHTML('Edit Model');
         CBHTMLOutput::setDescriptionHTML('Tools a model.');
 
-        $args = CBAdminPageForEditingModels::fetchArguments();
+        $args = CBModelEditor::fetchArguments();
 
         if (is_callable($function = "{$args->className}::editorGroup")) {
             $group = call_user_func($function);
             if (!ColbyUser::current()->isOneOfThe($group)) {
-                CBHTMLOutput::exportVariable('CBAdminPageForEditingModelsAuthorizationFailed', true);
+                CBHTMLOutput::exportVariable('CBModelEditorAuthorizationFailed', true);
 
                 ?>
 
@@ -41,8 +34,8 @@ class CBAdminPageForEditingModels {
             }
         }
 
-        CBHTMLOutput::exportVariable('CBAdminPageForEditingModels_modelID', $args->ID);
-        CBHTMLOutput::exportVariable('CBAdminPageForEditingModels_modelClassName', $args->className);
+        CBHTMLOutput::exportVariable('CBModelEditor_modelID', $args->ID);
+        CBHTMLOutput::exportVariable('CBModelEditor_modelClassName', $args->className);
 
         if (class_exists($editorClassName = "{$args->className}Editor")) {
             CBHTMLOutput::requireClassName($editorClassName);
@@ -53,19 +46,19 @@ class CBAdminPageForEditingModels {
      * @return {stdClass} | exit
      */
     private static function fetchArguments() {
-        $args       = new stdClass();
-        $className  = isset($_GET['className']) ? $_GET['className'] : null;
-        $ID         = isset($_GET['ID']) ? $_GET['ID'] : null;
+        $args = new stdClass();
+        $className = isset($_GET['className']) ? $_GET['className'] : null;
+        $ID = isset($_GET['ID']) ? $_GET['ID'] : null;
 
         if ($ID === null && $className === null) {
             throw new InvalidArgumentException('Either `ID` or `className` must be specified.');
         } else if ($ID === null) {
             $ID = CBHex160::random();
-            header("Location: /admin/page/?class=CBAdminPageForEditingModels&ID={$ID}&className={$className}");
+            header("Location: /admin/page/?class=CBModelEditor&ID={$ID}&className={$className}");
             exit();
         } else {
-            $args->ID   = $ID;
-            $spec       = CBModels::fetchSpecByID($ID);
+            $args->ID = $ID;
+            $spec = CBModels::fetchSpecByID($ID);
 
             if ($spec) {
                 $args->className = $spec->className;
@@ -90,6 +83,6 @@ class CBAdminPageForEditingModels {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v363.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v367.js', cbsysurl())];
     }
 }
