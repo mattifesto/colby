@@ -231,7 +231,7 @@ var CBPageList = {
             if (page.className === "CBViewPage") {
                 location.href = "/admin/pages/edit/?data-store-id=" + page.ID;
             } else {
-                location.href = "/admin/page/?class=CBAdminPageForEditingModels&ID=" + page.ID;
+                location.href = "/admin/page/?class=CBModelEditor&ID=" + page.ID;
             }
         }
     },
@@ -258,7 +258,7 @@ var CBPageList = {
         if (args.className === "CBViewPage") {
             location.href = "/admin/pages/edit/?data-store-id=" + args.ID;
         } else {
-            location.href = "/admin/page/?class=CBAdminPageForEditingModels&ID=" + args.ID;
+            location.href = "/admin/page/?class=CBModelEditor&ID=" + args.ID;
         }
     },*/
 
