@@ -352,17 +352,6 @@ EOT;
     /**
      * Fetches a spec by ID.
      *
-     * @param hex160 $_POST['ID']
-     *
-     * @return null
-     *
-     *      Ajax response properties:
-     *
-     *      object? spec
-     *          The spec property will be set to the spec if the spec exists and
-     *          the current user has read permissions; otherwise it will not be
-     *          set.
-     *
      *      Ajax errors:
      *
      *      If the spec exists but user does not have permission to read the it,
@@ -372,36 +361,50 @@ EOT;
      *      If the spec doesn't exist but the user wouldn't have permission to
      *      read it, there is no error from this API. If an app needs to predict
      *      permissions it should use another API.
+     *
+     * @param object $args
+     *
+     *      {
+     *          ID: hex160
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          spec: object?
+     *
+     *              The spec property will be set to the spec if the spec exists
+     *              and the current user has read permissions; otherwise it will
+     *              not be set.
+     *      }
      */
-    static function fetchSpecForAjax() {
-        $response = new CBAjaxResponse();
-        $ID = $_POST['ID'];
+    static function CBAjax_fetchSpec(stdClass $args) {
+        $ID = CBConvert::valueAsHex160(CBModel::value($args, 'ID'));
+
+        if ($ID === null) {
+            return (object)[];
+        }
+
         $spec = CBModels::fetchSpecByID($ID);
 
         if (empty($spec)) {
-            $response->message = "A spec was not found with ID: {$ID}.";
-            $response->wasSuccessful = true;
-            goto done;
+            return (object)[];
         }
 
         if (CBModels::currentUserCanRead($spec)) {
-            $response->spec = $spec;
-            $response->wasSuccessful = true;
+            return (object)[
+                'spec' => $spec,
+            ];
         } else {
-            $response->message = "You do not have permission to read the spec with ID: {$ID}.";
-            $response->wasSuccessful = false;
+            return (object)[];
         }
-
-        done:
-
-        $response->send();
     }
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function fetchSpecForAjaxPermissions() {
-        return (object)['group' => 'Public'];
+    static function CBAjax_fetchSpec_group() {
+        return 'Public';
     }
 
     /**
