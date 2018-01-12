@@ -1,5 +1,5 @@
 <?php
 
-echo CBRequest::requestInformationAsMessage();
+echo CBRequest::requestInformation();
 echo "\n\n";
 echo CBConvert::throwableToStackTrace($exception);
