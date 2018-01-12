@@ -77,12 +77,12 @@ final class CBRequest {
         $message = '';
 
         if (isset($_SERVER['SERVER_NAME'])) {
-            $message .= "Host: " . $_SERVER['SERVER_NAME'] . "\n";
+            $message .= "host: " . $_SERVER['SERVER_NAME'] . "\n";
         }
 
         if (isset($_SERVER['REQUEST_URI'])) {
             $parts = explode('?', $_SERVER['REQUEST_URI'], 2);
-            $message .= "URI: $parts[0]\n";
+            $message .= " URI: $parts[0]\n";
             if (isset($parts[1])) {
                 $message .= "Query String: $parts[1]\n";
             }
@@ -94,10 +94,10 @@ final class CBRequest {
             $ajaxModel = json_decode($ajaxModelAsJSON);
             $ajaxFunctionClassName = CBModel::value($ajaxModel, 'functionClassName', '(unset)');
             $ajaxFunctionName = CBModel::value($ajaxModel, 'functionName', '(unset)');
-            $message .= "Ajax:\nclassName: {$ajaxFunctionClassName}\nfunction: {$ajaxFunctionName}\n";
+            $message .= "Ajax\nclassName: {$ajaxFunctionClassName}\n function: {$ajaxFunctionName}\n";
             $args = CBModel::valueAsObject($ajaxModel, 'args');
             if (!empty($args)) {
-                $message .= "Arguments: " . json_encode($args, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES). "\n";
+                $message .= "arguments: " . json_encode($args, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES). "\n";
             }
         }
 
