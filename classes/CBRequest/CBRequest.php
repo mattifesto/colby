@@ -72,8 +72,20 @@ final class CBRequest {
 
     /**
      * @return string
+     *
+     *      The function returns peformated text like the following:
+     *
+     *      host: example.com
+     *       URI: /
+     *
+     *      Ajax
+     *      className: CBModels
+     *       function: fetchSpec
+     *      arguments: {
+     *          "ID": "81a1dff50b2673d003f6f65ae2e7a99bcad2a1de"
+     *      }
      */
-    static function requestInformationAsMessage() {
+    static function requestInformation() {
         $message = '';
 
         if (isset($_SERVER['SERVER_NAME'])) {
