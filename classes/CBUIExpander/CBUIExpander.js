@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBUIExpander */
 /* global
     CBMessageMarkup,
@@ -64,8 +65,8 @@ var CBUIExpander = {
         toggleElement.className = "toggle";
         var summaryElement = document.createElement("div");
         summaryElement.className = "summary";
-        var summaryAsMarkup = /\s*(.*)\n?/m.exec(message)[1];
-        var summaryAsText = CBMessageMarkup.markupToText(summaryAsMarkup);
+        let messageAsText = CBMessageMarkup.markupToText(message);
+        let summaryAsText = messageAsText.split("\n\n", 1)[0];
         summaryElement.textContent = summaryAsText;
         var messageElement = document.createElement("div");
         messageElement.className = "message CBContentStyleSheet";
