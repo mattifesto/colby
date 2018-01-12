@@ -181,7 +181,9 @@ final class Colby {
     static function exceptionStackTrace($exception) {
         ob_start();
 
-        include(cbsysdir() . '/snippets/exception-stack-trace.php');
+        echo CBRequest::requestInformation();
+        echo "\n\n";
+        echo CBConvert::throwableToStackTrace($exception);
 
         return ob_get_clean();
     }
