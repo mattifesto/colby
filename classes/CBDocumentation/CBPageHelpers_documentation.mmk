@@ -45,21 +45,6 @@ as customization occurs, CBPageHelpers functions will become useful.
 
 --- div api
 
-(static function (classNamesForPageTemplates (name)): string (function))
-
-    --- description
-    This function should return a list of class names that generate new page
-    specs. Each class name will produce an option for the create page menu of the
-    admin area.
-
-    If this function is not implememented, the value of the
-    (classNamesForPageTemplatesDefault (code)) function on the (CBPagesPreferences (code)) class
-    will be used.
-    ---
----
-
---- div api
-
 (static function (renderDefaultPageFooter (name)): string (function))
 
     --- description
