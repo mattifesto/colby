@@ -5,7 +5,7 @@ final class CBStandardPageTemplate {
     /**
      * @return object
      */
-    static function model() {
+    static function CBModelTemplate_spec() {
         $spec = (object)[
             'className' => 'CBViewPage',
             'layout' => (object)[
@@ -13,10 +13,6 @@ final class CBStandardPageTemplate {
                 'CSSClassNames' => 'endContentWithWhiteSpace',
             ],
         ];
-
-        if (is_callable($function = 'CBPageHelpers::classNameForPageSettings')) {
-            $spec->classNameForSettings = call_user_func($function);
-        }
 
         $spec->sections[] = (object)[
             'className' => 'CBPageTitleAndDescriptionView',
@@ -26,7 +22,6 @@ final class CBStandardPageTemplate {
             'className' => 'CBArtworkView',
         ];
 
-        // text
         $spec->sections[] = (object)[
             'className' => 'CBMessageView',
         ];
@@ -37,7 +32,7 @@ final class CBStandardPageTemplate {
     /**
      * @return string
      */
-    static function title() {
+    static function CBModelTemplate_title() {
         return 'Standard Page';
     }
 }
