@@ -295,7 +295,7 @@ EOT;
             CBUI::renderKeyValueSectionItem('Page Templates', 'Implement the CBPageTemplates class and remove the implementation of CBPageHelpers::classNamesForPageTemplates().');
         }
 
-        /* 2018.01.12 Transition to CBPageTemplates */
+        /* 2018.01.12 Unused function */
         if (is_callable('CBPageHelpers::classNameForPageSettings')) {
             CBUI::renderKeyValueSectionItem('CBPageHelpers', 'The function CBPageHelpers::classNameForPageSettings() has been removed with no replacement.');
         }
