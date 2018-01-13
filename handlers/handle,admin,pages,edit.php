@@ -34,22 +34,20 @@ CBHTMLOutput::requireClassName('CBViewPageEditor');
 $templateclassNames = CBPageTemplates::templateClassNames();
 
 foreach ($templateclassNames as $templateClassName) {
-    if (is_callable($function = "{$templateClassName}::model")) {
-        $modelJSON = json_encode(call_user_func($function));
+    $modelJSON = json_encode(call_user_func("{$templateClassName}::CBModelTemplate_spec"));
 
-        if (is_callable($function = "{$templateClassName}::title")) {
-            $title = call_user_func($function);
-        } else {
-            $title = 'Unnamed Template';
-        }
-
-        $descriptor = (object)[
-            'modelJSON' => $modelJSON,
-            'title' => $title,
-        ];
-
-        CBHTMLOutput::exportListItem('CBPageTemplateDescriptors', $templateClassName, $descriptor);
+    if (is_callable($function = "{$templateClassName}::CBModelTemplate_title")) {
+        $title = call_user_func($function);
+    } else {
+        $title = 'Unnamed Template';
     }
+
+    $descriptor = (object)[
+        'modelJSON' => $modelJSON,
+        'title' => $title,
+    ];
+
+    CBHTMLOutput::exportListItem('CBPageTemplateDescriptors', $templateClassName, $descriptor);
 }
 
 CBView::render((object)[
