@@ -6,16 +6,18 @@
 class CBEmptyPageTemplate {
 
     /**
-     * @return stdClass
+     * @return object
      */
-    static function model() {
-        return (object)['className' => 'CBViewPage'];
+    static function CBModelTemplate_spec() {
+        return (object)[
+            'className' => 'CBViewPage'
+        ];
     }
 
     /**
      * @return string
      */
-    static function title() {
+    static function CBModelTemplate_title() {
         return 'Empty Page';
     }
 }
