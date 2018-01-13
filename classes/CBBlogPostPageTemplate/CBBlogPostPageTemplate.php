@@ -9,12 +9,29 @@ final class CBBlogPostPageTemplate {
     /**
      * @return object
      */
-    static function model($classNameForPageKind = 'CBBlogPostPageKind') {
-        $spec = CBStandardPageTemplate::model();
+    static function CBModelTemplate_spec() {
+        $spec = (object)[
+            'className' => 'CBViewPage',
+            'classNameForKind' => 'CBBlogPostPageKind',
+            'layout' => (object)[
+                'className' => 'CBPageLayout',
+                'CSSClassNames' => 'endContentWithWhiteSpace',
+                'isArticle' => true,
+            ],
+        ];
 
-        $spec->classNameForKind = $classNameForPageKind;
-        $spec->layout->isArticle = true;
-        $spec->sections[0]->showPublicationDate = true;
+        $spec->sections[] = (object)[
+            'className' => 'CBPageTitleAndDescriptionView',
+            'showPublicationDate' => true,
+        ];
+
+        $spec->sections[] = (object)[
+            'className' => 'CBArtworkView',
+        ];
+
+        $spec->sections[] = (object)[
+            'className' => 'CBMessageView',
+        ];
 
         return $spec;
     }
@@ -22,7 +39,7 @@ final class CBBlogPostPageTemplate {
     /**
      * @return string
      */
-    static function title() {
+    static function CBModelTemplate_title() {
         return 'Blog Post';
     }
 }
