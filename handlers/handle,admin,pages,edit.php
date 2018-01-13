@@ -34,7 +34,7 @@ CBHTMLOutput::requireClassName('CBViewPageEditor');
 $templateclassNames = CBPageTemplates::templateClassNames();
 
 foreach ($templateclassNames as $templateClassName) {
-    $modelJSON = json_encode(call_user_func("{$templateClassName}::CBModelTemplate_spec"));
+    $specAsJSON = json_encode(call_user_func("{$templateClassName}::CBModelTemplate_spec"));
 
     if (is_callable($function = "{$templateClassName}::CBModelTemplate_title")) {
         $title = call_user_func($function);
@@ -43,7 +43,7 @@ foreach ($templateclassNames as $templateClassName) {
     }
 
     $descriptor = (object)[
-        'modelJSON' => $modelJSON,
+        'specAsJSON' => $specAsJSON,
         'title' => $title,
     ];
 

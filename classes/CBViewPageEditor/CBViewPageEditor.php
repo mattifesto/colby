@@ -17,8 +17,9 @@ final class CBViewPageEditor {
 
         return array_merge(
             $classNamesForEditors,
-            ['CBUI', 'CBUINavigationView', 'CBUISpecArrayEditor',
-             'CBUISpecEditor', 'CBUISpecSaver', 'CBViewPageInformationEditor']
+            ['CBUI', 'CBUINavigationArrowPart', 'CBUINavigationView',
+             'CBUISpecArrayEditor', 'CBUISpecEditor', 'CBUISpecSaver',
+             'CBUITitleAndDescriptionPart', 'CBViewPageInformationEditor']
         );
     }
 

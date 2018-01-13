@@ -5,10 +5,12 @@
 /* global
     CBPageTemplateDescriptors,
     CBUI,
+    CBUINavigationArrowPart,
     CBUINavigationView,
     CBUISpecArrayEditor,
     CBUISpecEditor,
     CBUISpecSaver,
+    CBUITitleAndDescriptionPart,
     CBViewPageEditor_addableClassNames,
     CBViewPageEditor_specID,
     CBViewPageEditor_specIDToCopy,
@@ -38,43 +40,6 @@ var CBViewPageEditor = {
      * This will be set to a function by the CBViewPageInformationEditor.
      */
     thumbnailChangedCallback: undefined,
-
-    /**
-     * @return void
-     */
-    appendPageTemplateOption: function (template) {
-        if (!CBViewPageEditor.pageTemplatesSection) {
-            var mainElement = document.getElementsByTagName("main")[0];
-            var pageTemplatesSection = document.createElement("section");
-            pageTemplatesSection.classList.add("CBPageTemplates");
-            mainElement.appendChild(pageTemplatesSection);
-
-            CBViewPageEditor.pageTemplatesSection = pageTemplatesSection;
-        }
-
-        var pageTemplateOption = document.createElement("div");
-        var pageTemplateOptionCell = document.createElement("div");
-        pageTemplateOptionCell.textContent = template.title;
-        pageTemplateOption.classList.add("CBPageTemplateOption");
-        pageTemplateOption.appendChild(pageTemplateOptionCell);
-        CBViewPageEditor.pageTemplatesSection.appendChild(pageTemplateOption);
-
-        var handler = function () {
-            /**
-             * The template model will have a unique data store ID but it is
-             * replaced here because the editor page has been assigned a data store
-             * ID so that a reload will reload the same page instance. There may
-             * be opportunity to improve clarity of this process.
-             */
-
-            var spec = JSON.parse(template.modelJSON);
-            spec.ID = CBViewPageEditor_specID;
-
-            CBViewPageEditor.displayEditorForPageSpec(spec);
-        };
-
-        pageTemplateOption.addEventListener("click", handler, false);
-    },
 
     /**
      * @param function args.navigateToItemCallback
@@ -217,12 +182,37 @@ var CBViewPageEditor = {
      * @return undefined
      */
     displayPageTemplateChooser: function () {
-        var mainElement = document.getElementsByTagName("main")[0];
+        let mainElement = document.getElementsByTagName("main")[0];
         mainElement.textContent = null;
 
+        mainElement.appendChild(CBUI.createHalfSpace());
+
+        let sectionElement = CBUI.createSection();
+
         Object.keys(CBPageTemplateDescriptors).forEach(function (key) {
-            CBViewPageEditor.appendPageTemplateOption(CBPageTemplateDescriptors[key]);
+            let descriptor = CBPageTemplateDescriptors[key];
+            let sectionItem = CBUI.createSectionItem3();
+            let titlePart = CBUITitleAndDescriptionPart.create();
+            titlePart.title = descriptor.title;
+            let arrowPart = CBUINavigationArrowPart.create();
+
+            sectionItem.appendPart(titlePart);
+            sectionItem.appendPart(arrowPart);
+            sectionItem.callback = edit;
+
+            sectionElement.appendChild(sectionItem.element);
+
+            function edit() {
+                let spec = JSON.parse(descriptor.specAsJSON);
+                spec.ID = CBViewPageEditor_specID;
+
+                CBViewPageEditor.displayEditorForPageSpec(spec);
+            }
         });
+
+        mainElement.appendChild(sectionElement);
+
+        mainElement.appendChild(CBUI.createHalfSpace());
     },
 
     /**
