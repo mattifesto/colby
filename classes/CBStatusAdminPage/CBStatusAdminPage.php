@@ -290,6 +290,11 @@ EOT;
             CBUI::renderKeyValueSectionItem('Site Name', 'This site has no site name. Set one in site preferences.');
         }
 
+        /* 2018.01.12 Transition to CBPageTemplates */
+        if (is_callable('CBPageHelpers::classNamesForPageTemplates')) {
+            CBUI::renderKeyValueSectionItem('Page Templates', 'Implement the CBPageTemplates class and remove the implementation of CBPageHelpers::classNamesForPageTemplates().');
+        }
+
         $content = ob_get_clean();
 
         if (!empty($content)) {
