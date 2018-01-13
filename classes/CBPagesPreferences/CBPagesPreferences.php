@@ -6,13 +6,6 @@ final class CBPagesPreferences {
     const defaultClassNamesForLayouts = [
         'CBPageLayout',
     ];
-    /**
-     * @deprecated use CBPagesPreferences::classNamesForPageTemplatesDefault()
-     */
-    const defaultClassNamesForPageTemplates = [
-        'CBStandardPageTemplate',
-        'CBEmptyPageTemplate',
-    ];
     const defaultClassNamesForSupportedViews = [
         'CBArtworkView',
         'CBContainerView',
@@ -150,26 +143,6 @@ final class CBPagesPreferences {
      */
     static function classNamesForPageKindsDefault() {
         return ['CBFrontPageKind'];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function classNamesForPageTemplates() {
-        if (is_callable($function = "CBPageHelpers::classNamesForPageTemplates")) {
-            return call_user_func($function);
-        } else {
-            return CBPagesPreferences::classNamesForPageTemplatesDefault();
-        }
-    }
-
-    /**
-     * The default value for CBPagesPreferences::classNamesForPageTemplates()
-     *
-     * @return [string]
-     */
-    static function classNamesForPageTemplatesDefault() {
-        return ['CBStandardPageTemplate', 'CBEmptyPageTemplate'];
     }
 
     /**
