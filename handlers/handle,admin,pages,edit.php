@@ -31,30 +31,24 @@ CBHTMLOutput::requireClassName('CBViewPageEditor');
  * Export page templates
  */
 
-global $CBPageEditorAvailablePageTemplateClassNames;
+$templateclassNames = CBPageTemplates::templateClassNames();
 
-if ($CBPageEditorAvailablePageTemplateClassNames || class_exists('CBPageTemplateList') || class_exists('CBViewPageTemplates')) {
-    throw new Exception('This website needs to be updated to use the CBPageHelpers::classNamesForPageTemplates().');
-} else {
-    $classNames = CBPagesPreferences::classNamesForPageTemplates();
+foreach ($templateclassNames as $templateClassName) {
+    if (is_callable($function = "{$templateClassName}::model")) {
+        $modelJSON = json_encode(call_user_func($function));
 
-    foreach ($classNames as $pageTemplateClassName) {
-        if (is_callable($function = "{$pageTemplateClassName}::model")) {
-            $modelJSON = json_encode(call_user_func($function));
-
-            if (is_callable($function = "{$pageTemplateClassName}::title")) {
-                $title = call_user_func($function);
-            } else {
-                $title = 'Unnamed Template';
-            }
-
-            $descriptor = (object)[
-                'modelJSON' => $modelJSON,
-                'title' => $title,
-            ];
-
-            CBHTMLOutput::exportListItem('CBPageTemplateDescriptors', $pageTemplateClassName, $descriptor);
+        if (is_callable($function = "{$templateClassName}::title")) {
+            $title = call_user_func($function);
+        } else {
+            $title = 'Unnamed Template';
         }
+
+        $descriptor = (object)[
+            'modelJSON' => $modelJSON,
+            'title' => $title,
+        ];
+
+        CBHTMLOutput::exportListItem('CBPageTemplateDescriptors', $templateClassName, $descriptor);
     }
 }
 
