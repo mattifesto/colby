@@ -14,7 +14,7 @@ var CBModelsAdmin = {
      * @return undefined
      */
     initialize: function () {
-        if (CBModelsAdmin_page !== "list") {
+        if (CBModelsAdmin_page !== "modelList") {
             return;
         }
 
@@ -58,7 +58,7 @@ var CBModelsAdmin = {
 
                 sectionItem.appendPart(titleAndDescriptionPart);
 
-                sectionItem.appendPart(CBUI.createNavigationArrowSectionItemPart());
+                sectionItem.appendPart(CBUINavigationArrowPart.create());
 
                 /* export
                 var exportCommandElement = document.createElement("div");

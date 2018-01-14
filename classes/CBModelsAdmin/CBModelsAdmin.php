@@ -5,7 +5,7 @@ final class CBModelsAdmin {
     static $page = '';
 
     static function CBAdmin_initialize(): void {
-        CBModelsAdmin::$page = cb_query_string_value('p', '');
+        CBModelsAdmin::$page = cb_query_string_value('p', 'classNameList');
         error_log(CBModelsAdmin::$page);
     }
 
@@ -14,7 +14,7 @@ final class CBModelsAdmin {
      */
     static function CBAdmin_menuNamePath(): array {
         switch (CBModelsAdmin::$page) {
-            case 'list':
+            case 'modelList':
                 return ['models'];
 
             default:
@@ -27,7 +27,7 @@ final class CBModelsAdmin {
      */
     static function CBAdmin_render(): void {
         switch (CBModelsAdmin::$page) {
-            case 'list':
+            case 'modelList':
                 break;
 
             default:
@@ -40,14 +40,15 @@ final class CBModelsAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI'];
+        return ['CBUI', 'CBUINavigationArrowPart',
+                'CBUITitleAndDescriptionPart'];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v367.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
     }
 
     /**
@@ -59,7 +60,7 @@ final class CBModelsAdmin {
         ];
 
         switch (CBModelsAdmin::$page) {
-            case 'list':
+            case 'modelList':
                 $variables[] = ['CBModelsAdmin_modelClassName', cb_query_string_value('modelClassName')];
                 $variables[] = ['CBModelsAdmin_modelList', CBModelsAdmin::fetchModelList()];
                 break;
@@ -108,7 +109,7 @@ EOT;
                 $ID = constant("{$className}::ID");
                 $item->href = "/admin/?c=CBModelEditor&ID={$ID}";
             } else {
-                $item->href = "/admin/?c=CBModelsAdmin&p=list&modelClassName={$className}";
+                $item->href = "/admin/?c=CBModelsAdmin&p=modelList&modelClassName={$className}";
             }
 
             return $item;
@@ -126,9 +127,9 @@ EOT;
                     CBUI::renderTitleAndDescriptionSectionItemPart((object)[
                         'title' => $item->className
                     ]);
-                    CBUI::renderNavigationArrowSectionItemPart();
 
                     ?>
+                    <div class="CBUINavigationArrowPart"></div>
                 </div>
             <?php } ?>
         </div>
