@@ -4,7 +4,7 @@
     display: flex;
     flex: none;
     min-height: 44px;
-    padding: 0 10px;
+    padding: 0 5px;
 }
 
 .CBUINavigationArrowPart::after {
