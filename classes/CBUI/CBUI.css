@@ -172,20 +172,6 @@
     text-decoration: underline;
 }
 
-
-.CBUINavigationArrowSectionItemPart {
-    align-items: center;
-    color: var(--CBLineColor);
-    display: flex;
-    flex: none;
-    justify-content: center;
-    width: 30px;
-}
-
-.CBUINavigationArrowSectionItemPart::after {
-    content: ">";
-}
-
 /**
  * 2017.12.20 Getting ellipsis to work reliably in flexible boxes has been
  * difficult. The results can even change depending on the number of levels of

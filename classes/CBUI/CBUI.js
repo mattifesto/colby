@@ -245,22 +245,6 @@ var CBUI = {
     },
 
     /**
-     * @return object
-     *
-     *      {
-     *          element: Element
-     *      }
-     */
-    createNavigationArrowSectionItemPart: function() {
-        var element = document.createElement("div");
-        element.className = "CBUINavigationArrowSectionItemPart";
-
-        return {
-            element: element,
-        };
-    },
-
-    /**
      * @return Element
      */
     createSection: function () {

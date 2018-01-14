@@ -13,7 +13,7 @@ final class CBUI {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
     }
 
     /**
@@ -62,15 +62,6 @@ final class CBUI {
         </a>
         <?php
         CBUI::renderSectionItemEnd();
-    }
-
-    /**
-     * @return void
-     */
-    static function renderNavigationArrowSectionItemPart(): void {
-        ?>
-        <div class="CBUINavigationArrowSectionItemPart"></div>
-        <?php
     }
 
     /**
