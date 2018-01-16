@@ -417,41 +417,4 @@ var CBUI = {
             },
         };
     },
-
-    /**
-     * @return object
-     *
-     *      {
-     *          element: Element
-     *          description: (setter, getter)
-     *          title: (setter, getter)
-     *      }
-     */
-    createTitleAndDescriptionSectionItemPart: function() {
-        var element = document.createElement("div");
-        element.className = "CBUITitleAndDescriptionSectionItemPart";
-        var titleElement = document.createElement("div");
-        titleElement.className = "title";
-        var descriptionElement = document.createElement("div");
-        descriptionElement.className = "description";
-
-        element.appendChild(titleElement);
-        element.appendChild(descriptionElement);
-
-        return {
-            element: element,
-            set description(value) {
-                descriptionElement.textContent = value;
-            },
-            get description() {
-                return descriptionElement.textContent;
-            },
-            set title(value) {
-                titleElement.textContent = value;
-            },
-            get title() {
-                return titleElement.textContent;
-            },
-        };
-    },
 };
