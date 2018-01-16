@@ -190,8 +190,8 @@ var CBPageList = {
          * ellipsisTextContainer and ellipsisText are classes supported by CBUI
          *
          * TODO: Convert this to use CBUISectionItem3 and the use
-         * CBUI.createTitleAndDescriptionSectionItemPart(). Then ellipsisText
-         * class names can be removed.
+         * CBUITitleAndDescriptionPart. Then ellipsisText class names can be
+         * removed.
          */
         item.titleElement.classList.add("ellipsisTextContainer");
         var titleTextElement = document.createElement("div");
