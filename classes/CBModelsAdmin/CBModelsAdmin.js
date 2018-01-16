@@ -6,6 +6,8 @@
     CBModelsAdmin_modelClassName,
     CBModelsAdmin_modelList,
     CBModelsAdmin_page,
+    CBUINavigationArrowPart,
+    CBUITitleAndDescriptionPart,
     Colby */
 
 var CBModelsAdmin = {
@@ -46,7 +48,7 @@ var CBModelsAdmin = {
                                       encodeURIComponent(model.ID);
                 };
 
-                var titleAndDescriptionPart = CBUI.createTitleAndDescriptionSectionItemPart();
+                var titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
                 var title = model.title ? model.title.trim() : '';
 
                 if (title === "") {

@@ -122,13 +122,9 @@ EOT;
         <div class="CBUISection">
             <?php foreach ($items as $item) { ?>
                 <div class="CBUISectionItem3" onclick="window.location = '<?= $item->href ?>';">
-                    <?php
-
-                    CBUI::renderTitleAndDescriptionSectionItemPart((object)[
-                        'title' => $item->className
-                    ]);
-
-                    ?>
+                    <div class="CBUITitleAndDescriptionPart">
+                        <div class="title"><?= $item->className ?></div>
+                    </div>
                     <div class="CBUINavigationArrowPart"></div>
                 </div>
             <?php } ?>
