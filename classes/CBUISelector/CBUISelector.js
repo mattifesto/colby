@@ -102,11 +102,26 @@ var CBUISelector = {
         };
 
         /* closure */
-        function updateInterface() {
-            titleAndDescriptionPart.description = CBUISelector.valueToTitle({
-                options: state.options,
-                value: spec[propertyName],
+        function currentValueToTitle() {
+            var options = state.options || [];
+            var selectedOption = options.find(function (option) {
+                return spec[propertyName] == option.value; /* allow string to int equality */
             });
+
+            if (selectedOption) {
+                return selectedOption.title;
+            } else {
+                if (spec[propertyName]) {
+                    return spec[propertyName] + ' (Unknown Option)';
+                } else {
+                    return 'None';
+                }
+            }
+        }
+
+        /* closure */
+        function updateInterface() {
+            titleAndDescriptionPart.description = currentValueToTitle();
         }
     },
 
@@ -248,27 +263,6 @@ var CBUISelector = {
             selectedValue: args.spec[args.propertyName],
             title: args.labelText,
         });
-    },
-
-    /**
-     * @param [object] args.options
-     * @param mixed args.value
-     */
-    valueToTitle: function (args) {
-        var options = args.options || [];
-        var selectedOption = options.find(function (option) {
-            return args.value == option.value; /* allow string to int equality */
-        });
-
-        if (selectedOption) {
-            return selectedOption.title;
-        } else {
-            if (args.value) {
-                return args.value + ' (Unknown Option)';
-            } else {
-                return 'None';
-            }
-        }
     },
 
     /**
