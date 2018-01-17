@@ -66,6 +66,8 @@ final class CBModelsAdmin {
                 break;
 
             default:
+                $modelClassNames = CBDB::SQLToArray('SELECT DISTINCT `className` FROM `CBModels`');
+                $variables[] = ['CBModelsAdmin_modelClassNames', $modelClassNames];
                 break;
         }
 

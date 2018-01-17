@@ -16,10 +16,27 @@ var CBModelsAdmin = {
      * @return undefined
      */
     initialize: function () {
-        if (CBModelsAdmin_page !== "modelList") {
-            return;
+        switch (CBModelsAdmin_page) {
+            case "modelList":
+                CBModelsAdmin.renderModelList();
+                break;
+            default:
+                CBModelsAdmin.renderClassNameList();
+                break;
         }
+    },
 
+    /**
+     * @return undefined
+     */
+    renderClassNameList: function () {
+
+    },
+
+    /**
+     * @return undefined
+     */
+    renderModelList: function () {
         var mainElement = document.getElementsByTagName("main")[0];
         var titleElement = document.createElement("div");
         titleElement.textContent = CBModelsAdmin_modelClassName + " Models";
