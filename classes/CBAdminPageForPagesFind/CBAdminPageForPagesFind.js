@@ -42,8 +42,7 @@ var CBAdminPageForPagesFind = {
         section = CBUI.createSection();
 
         /* classNameForKind */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUISelector.create({
+        section.appendChild(CBUISelector.create({
             labelText : "Kind",
             navigateToItemCallback : navigationView.navigateToItemCallback,
             propertyName : "classNameForKind",
@@ -51,11 +50,9 @@ var CBAdminPageForPagesFind = {
             specChangedCallback : fetchPagesCallback,
             options : CBPageKindsOptions,
         }).element);
-        section.appendChild(item);
 
         /* published */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUISelector.create({
+        section.appendChild(CBUISelector.create({
             labelText : "Published",
             navigateToItemCallback : navigationView.navigateToItemCallback,
             propertyName : "published",
@@ -67,11 +64,9 @@ var CBAdminPageForPagesFind = {
                 { title : "Unpublished", value : false },
             ],
         }).element);
-        section.appendChild(item);
 
         /* sorting */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUISelector.create({
+        section.appendChild(CBUISelector.create({
             labelText : "Sorting",
             navigateToItemCallback : navigationView.navigateToItemCallback,
             propertyName : "sorting",
@@ -84,7 +79,6 @@ var CBAdminPageForPagesFind = {
                 { title : "Created (most recent last)", value : "createdAscending" },
             ],
         }).element);
-        section.appendChild(item);
 
         /* search */
         item = CBUI.createSectionItem();
