@@ -160,17 +160,6 @@ var CBUISelector = {
     },
 
     /**
-     * @param function callback
-     * @param mixed value
-     *
-     * @return undefined
-     */
-    handleOptionSelected: function (callback, value) {
-        callback.call(undefined, value);
-        history.back();
-    },
-
-    /**
      * @param function args.navigateToItemCallback
      * @param [object] args.options
      *  object = { string title, string? description, mixed value }
@@ -209,9 +198,8 @@ var CBUISelector = {
      * @return undefined
      */
     showSelector: function (args) {
-        var optionSelectedCallback = CBUISelector.handleOptionSelected.bind(undefined, args.callback);
         var selector = CBUISelector.createSelector({
-            callback: optionSelectedCallback,
+            callback: valueSelected,
             options: args.options,
             selectedValue: args.selectedValue,
         });
@@ -220,6 +208,11 @@ var CBUISelector = {
             element: selector,
             title: args.title,
         });
+
+        function valueSelected(value) {
+            args.callback(value);
+            history.back();
+        }
     },
 
     /**
