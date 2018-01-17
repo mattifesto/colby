@@ -25,7 +25,7 @@ html {
     --CBMonospaceFontFamily: 'Menlo', 'Courier New', 'Courier', monospace;
 
     /**
-     * cbuibordercolor is not translucent because it needs to be the same color
+     * CBUIBorderColor is not translucent because it needs to be the same color
      * over any background color
      */
     --CBUIBorderColor: hsl(0, 0%, 80%);
