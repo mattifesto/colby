@@ -7,6 +7,7 @@
     CBUI,
     CBUINavigationArrowPart,
     CBUINavigationView,
+    CBUISectionItem4,
     CBUISpecArrayEditor,
     CBUISpecEditor,
     CBUISpecSaver,
@@ -191,7 +192,7 @@ var CBViewPageEditor = {
 
         Object.keys(CBPageTemplateDescriptors).forEach(function (key) {
             let descriptor = CBPageTemplateDescriptors[key];
-            let sectionItem = CBUI.createSectionItem3();
+            let sectionItem = CBUISectionItem4.create();
             let titlePart = CBUITitleAndDescriptionPart.create();
             titlePart.title = descriptor.title;
             let arrowPart = CBUINavigationArrowPart.create();

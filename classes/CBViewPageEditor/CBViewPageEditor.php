@@ -18,8 +18,9 @@ final class CBViewPageEditor {
         return array_merge(
             $classNamesForEditors,
             ['CBUI', 'CBUINavigationArrowPart', 'CBUINavigationView',
-             'CBUISpecArrayEditor', 'CBUISpecEditor', 'CBUISpecSaver',
-             'CBUITitleAndDescriptionPart', 'CBViewPageInformationEditor']
+             'CBUISectionItem4', 'CBUISpecArrayEditor', 'CBUISpecEditor',
+             'CBUISpecSaver', 'CBUITitleAndDescriptionPart',
+             'CBViewPageInformationEditor']
         );
     }
 
@@ -27,7 +28,7 @@ final class CBViewPageEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v367.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
     }
 
     /**
