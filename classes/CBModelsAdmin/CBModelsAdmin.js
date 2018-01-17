@@ -1,12 +1,15 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBModelsAdmin */
 /* globals
     CBUI,
     CBModelsAdmin_modelClassName,
+    CBModelsAdmin_modelClassNames,
     CBModelsAdmin_modelList,
     CBModelsAdmin_page,
     CBUINavigationArrowPart,
+    CBUISectionItem4,
     CBUITitleAndDescriptionPart,
     Colby */
 
@@ -30,7 +33,27 @@ var CBModelsAdmin = {
      * @return undefined
      */
     renderClassNameList: function () {
+        var mainElement = document.getElementsByTagName("main")[0];
+        mainElement.appendChild(CBUI.createHalfSpace());
 
+        let sectionElement = CBUI.createSection();
+
+        CBModelsAdmin_modelClassNames.forEach(function (className) {
+            let sectionItem = CBUISectionItem4.create();
+            let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
+            titleAndDescriptionPart.title = className;
+
+            sectionItem.callback = function () {
+                window.location = "/admin/?c=CBModelsAdmin&p=modelList&modelClassName=" + className;
+            };
+
+            sectionItem.appendPart(titleAndDescriptionPart);
+            sectionItem.appendPart(CBUINavigationArrowPart.create());
+            sectionElement.appendChild(sectionItem.element);
+        });
+
+        mainElement.appendChild(sectionElement);
+        mainElement.appendChild(CBUI.createHalfSpace());
     },
 
     /**

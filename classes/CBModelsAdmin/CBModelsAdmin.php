@@ -26,21 +26,14 @@ final class CBModelsAdmin {
      * @return void
      */
     static function CBAdmin_render(): void {
-        switch (CBModelsAdmin::$page) {
-            case 'modelList':
-                break;
 
-            default:
-                CBModelsAdmin::renderDirectory();
-                break;
-        }
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUINavigationArrowPart',
+        return ['CBUI', 'CBUINavigationArrowPart', 'CBUISectionItem4',
                 'CBUITitleAndDescriptionPart'];
     }
 
@@ -88,52 +81,5 @@ final class CBModelsAdmin {
 EOT;
 
         return CBDB::SQLToObjects($SQL);
-    }
-
-    /**
-     * @return void
-     */
-    private static function renderDirectory(): void {
-        CBHTMLOutput::setTitleHTML('Models Directory');
-
-        $classNames = CBDB::SQLToArray('SELECT DISTINCT `className` FROM `CBModels`');
-        $classNames = array_merge($classNames, CBModelsPreferences::classNamesOfEditableModels());
-        $classNames = array_values(array_unique($classNames));
-
-        sort($classNames);
-
-        $items = array_map(function ($className) {
-            $item = (object)[
-                'className' => $className,
-            ];
-
-            if (defined("{$className}::ID")) {
-                $ID = constant("{$className}::ID");
-                $item->href = "/admin/?c=CBModelEditor&ID={$ID}";
-            } else {
-                $item->href = "/admin/?c=CBModelsAdmin&p=modelList&modelClassName={$className}";
-            }
-
-            return $item;
-        }, $classNames);
-
-        CBUI::renderHalfSpace();
-
-        ?>
-
-        <div class="CBUISection">
-            <?php foreach ($items as $item) { ?>
-                <div class="CBUISectionItem3" onclick="window.location = '<?= $item->href ?>';">
-                    <div class="CBUITitleAndDescriptionPart">
-                        <div class="title"><?= $item->className ?></div>
-                    </div>
-                    <div class="CBUINavigationArrowPart"></div>
-                </div>
-            <?php } ?>
-        </div>
-
-        <?php
-
-        CBUI::renderHalfSpace();
     }
 }
