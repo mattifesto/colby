@@ -10,7 +10,3 @@
     -ms-user-select: none;
     -webkit-user-select: none;
 }
-
-.CBUISectionItem4 + .CBUISectionItem4 {
-    border-top: 1px solid var(--CBUIBorderColor);
-}
