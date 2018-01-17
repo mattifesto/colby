@@ -67,23 +67,16 @@ var CBUISelector = {
 
         var state = { options: undefined };
 
-        var updateInterfaceCallback = CBUISelector.updateInterface.bind(undefined, {
-            propertyName: propertyName,
-            titleAndDescriptionPart: titleAndDescriptionPart,
-            spec: spec,
-            state: state,
-        });
-
         var updateOptionsCallback = CBUISelector.updateOptions.bind(undefined, {
             state: state,
-            updateInterfaceCallback: updateInterfaceCallback,
+            updateInterfaceCallback: updateInterface,
         });
 
         var updateValueCallback = CBUISelector.updateValue.bind(undefined, {
             propertyName: propertyName,
             spec: spec,
             specChangedCallback: args.specChangedCallback,
-            updateInterfaceCallback: updateInterfaceCallback,
+            updateInterfaceCallback: updateInterface,
             valueChangedCallback: args.valueChangedCallback,
         });
 
@@ -107,6 +100,14 @@ var CBUISelector = {
             updateOptionsCallback: updateOptionsCallback,
             updateValueCallback: updateValueCallback,
         };
+
+        /* closure */
+        function updateInterface() {
+            titleAndDescriptionPart.description = CBUISelector.valueToTitle({
+                options: state.options,
+                value: spec[propertyName],
+            });
+        }
     },
 
     /**
@@ -268,21 +269,6 @@ var CBUISelector = {
                 return 'None';
             }
         }
-    },
-
-    /**
-     * @param string args.propertyName
-     * @param Element args.titleAndDescriptionPart
-     * @param string args.spec
-     * @param object args.state
-     *
-     * @return undefined
-     */
-    updateInterface: function (args) {
-        args.titleAndDescriptionPart.description = CBUISelector.valueToTitle({
-            options: args.state.options,
-            value: args.spec[args.propertyName],
-        });
     },
 
     /**
