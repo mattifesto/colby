@@ -1,0 +1,16 @@
+.CBUISectionItem4 {
+    background-color: var(--CBBackgroundColor);
+    cursor: default;
+    display: flex;
+    min-height: 44px;
+    padding: 0 5px;
+
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.CBUISectionItem4 + .CBUISectionItem4 {
+    border-top: 1px solid var(--CBUIBorderColor);
+}
