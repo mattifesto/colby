@@ -127,33 +127,6 @@ var CBUISelector = {
 
     /**
      * @param function args.callback
-     * @param object args.option
-     *  { string title, string? description, mixed value }
-     * @param mixed? args.selectedValue
-     *
-     * @return Element
-     */
-    createOption: function (args) {
-        var element = document.createElement("div");
-        element.className = "CBUISelectorOption";
-        var title = document.createElement("div");
-        title.className = "title";
-        title.textContent = args.option.title;
-        var description = document.createElement("div");
-        description.className = "description";
-        var nonBreakingSpace = "\u00A0";
-        description.textContent = args.option.description || nonBreakingSpace;
-
-        element.appendChild(title);
-        element.appendChild(description);
-
-        element.addEventListener("click", args.callback.bind(undefined, args.option.value));
-
-        return element;
-    },
-
-    /**
-     * @param function args.callback
      * @param [object] args.options
      *  option = { string title, string? description, mixed value }
      * @param mixed? args.selectedValue
@@ -167,13 +140,17 @@ var CBUISelector = {
         element.appendChild(CBUI.createHalfSpace());
 
         args.options.forEach(function (option) {
-            var item = CBUI.createSectionItem();
-            item.appendChild(CBUISelector.createOption({
-                callback: args.callback,
-                option: option,
-                selectedValue: args.selectedValue,
-            }));
-            section.appendChild(item);
+            let sectionItem = CBUISectionItem4.create();
+            let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
+            titleAndDescriptionPart.title = option.title;
+            titleAndDescriptionPart.description = option.description;
+
+            sectionItem.callback = function () {
+                args.callback(option.value);
+            };
+
+            sectionItem.appendPart(titleAndDescriptionPart);
+            section.appendChild(sectionItem.element);
         });
 
         element.appendChild(section);
