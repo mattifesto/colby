@@ -284,20 +284,3 @@
     min-width: 50px;
     padding: 5px 10px;
 }
-
-.CBUISectionItem3 {
-    background-color: var(--CBBackgroundColor);
-    cursor: pointer;
-    display: flex;
-    min-height: 44px;
-    padding: 0 5px;
-
-    user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-}
-
-.CBUISectionItem3 + .CBUISectionItem3 {
-    border-top: 1px solid var(--CBLineColor);
-}
