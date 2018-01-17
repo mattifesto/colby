@@ -2,7 +2,8 @@
 /* jshint strict: global */
 /* exported CBDefaultEditor */
 /* global
-    CBUI */
+    CBUI,
+    CBUISectionItem4 */
 
 var CBDefaultEditor = {
 
@@ -22,7 +23,7 @@ var CBDefaultEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         var section = CBUI.createSection();
-        var item = CBUI.createSectionItem3();
+        var item = CBUISectionItem4.create();
 
         item.appendPart(CBUI.createMessageSectionItemPart({
             message: "There is no editor available for " +
