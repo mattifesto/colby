@@ -30,7 +30,6 @@ var CBLogAdminPage = {
             containerElement.appendChild(CBUI.createHalfSpace());
 
             let sectionElement = CBUI.createSection();
-            let itemElement = CBUI.createSectionItem();
             let options = [
                 { title: "0: Emergency", value: 0 },
                 { title: "1: Alert", value: 1 },
@@ -50,8 +49,7 @@ var CBLogAdminPage = {
                 specChangedCallback: handleArgsChanged,
             });
 
-            itemElement.appendChild(selector.element);
-            sectionElement.appendChild(itemElement);
+            sectionElement.appendChild(selector.element);
             containerElement.appendChild(sectionElement);
             containerElement.appendChild(CBUI.createHalfSpace());
 
