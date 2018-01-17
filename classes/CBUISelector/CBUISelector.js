@@ -3,7 +3,10 @@
 /* jshint esversion: 6 */
 /* exported CBUISelector */
 /* global
-    CBUI */
+    CBUI,
+    CBUINavigationArrowPart,
+    CBUISectionItem4,
+    CBUITitleAndDescriptionPart */
 
 var CBUISelector = {
 
@@ -33,7 +36,10 @@ var CBUISelector = {
      * @return object
      *
      *      {
-     *          element: Element
+     *          element: Element (readonly)
+     *
+     *              The element represents a CBUISectionItem4.
+     *
      *          updateOptionsCallback: function
      *          updateValueCallback: function
      *      }
@@ -52,41 +58,31 @@ var CBUISelector = {
         var propertyName = args.propertyName || "value";
         var spec = args.spec || {};
 
-        var element = document.createElement("div");
-        element.className = "CBUISelector";
-        var contentElement = document.createElement("div");
-        contentElement.className = "content";
-        var label = document.createElement("div");
-        label.className = "label";
-        label.textContent = labelText;
-        var selectedValueTitle = document.createElement("div");
-        var arrow = document.createElement("div");
-        arrow.className = "arrow";
-        arrow.textContent = ">";
-        var state = { options : undefined };
+        let sectionItem = CBUISectionItem4.create();
+        let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
+        titleAndDescriptionPart.title = labelText;
 
-        contentElement.appendChild(label);
-        contentElement.appendChild(selectedValueTitle);
-        element.appendChild(contentElement);
-        element.appendChild(arrow);
+        sectionItem.appendPart(titleAndDescriptionPart);
+        sectionItem.appendPart(CBUINavigationArrowPart.create());
 
+        var state = { options: undefined };
 
         var updateInterfaceCallback = CBUISelector.updateInterface.bind(undefined, {
-            propertyName : propertyName,
-            selectedValueTitleElement : selectedValueTitle,
-            spec : spec,
-            state : state,
+            propertyName: propertyName,
+            titleAndDescriptionPart: titleAndDescriptionPart,
+            spec: spec,
+            state: state,
         });
 
         var updateOptionsCallback = CBUISelector.updateOptions.bind(undefined, {
-            state : state,
-            updateInterfaceCallback : updateInterfaceCallback,
+            state: state,
+            updateInterfaceCallback: updateInterfaceCallback,
         });
 
         var updateValueCallback = CBUISelector.updateValue.bind(undefined, {
             propertyName: propertyName,
             spec: spec,
-            specChangedCallback : args.specChangedCallback,
+            specChangedCallback: args.specChangedCallback,
             updateInterfaceCallback: updateInterfaceCallback,
             valueChangedCallback: args.valueChangedCallback,
         });
@@ -94,22 +90,22 @@ var CBUISelector = {
         updateOptionsCallback(options);
 
         if (args.navigateToItemCallback) {
-            var clickedCallback = CBUISelector.showSelectorForControl.bind(undefined, {
-                callback : updateValueCallback,
-                labelText : labelText,
-                navigateToItemCallback : args.navigateToItemCallback,
-                propertyName : propertyName,
-                spec : spec,
-                state : state,
+            sectionItem.callback = CBUISelector.showSelectorForControl.bind(undefined, {
+                callback: updateValueCallback,
+                labelText: labelText,
+                navigateToItemCallback: args.navigateToItemCallback,
+                propertyName: propertyName,
+                spec: spec,
+                state: state,
             });
-
-            element.addEventListener("click", clickedCallback);
         }
 
         return {
-            element : element,
-            updateOptionsCallback : updateOptionsCallback,
-            updateValueCallback : updateValueCallback,
+            get element() {
+                return sectionItem.element;
+            },
+            updateOptionsCallback: updateOptionsCallback,
+            updateValueCallback: updateValueCallback,
         };
     },
 
@@ -121,7 +117,7 @@ var CBUISelector = {
      *
      * @return Element
      */
-    createOption : function (args) {
+    createOption: function (args) {
         var element = document.createElement("div");
         element.className = "CBUISelectorOption";
         var title = document.createElement("div");
@@ -148,7 +144,7 @@ var CBUISelector = {
      *
      * @return Element
      */
-    createSelector : function (args) {
+    createSelector: function (args) {
         var element = document.createElement("div");
         var section = CBUI.createSection();
 
@@ -157,9 +153,9 @@ var CBUISelector = {
         args.options.forEach(function (option) {
             var item = CBUI.createSectionItem();
             item.appendChild(CBUISelector.createOption({
-                callback : args.callback,
-                option : option,
-                selectedValue : args.selectedValue,
+                callback: args.callback,
+                option: option,
+                selectedValue: args.selectedValue,
             }));
             section.appendChild(item);
         });
@@ -176,7 +172,7 @@ var CBUISelector = {
      *
      * @return undefined
      */
-    handleOptionSelected : function (callback, value) {
+    handleOptionSelected: function (callback, value) {
         callback.call(undefined, value);
         history.back();
     },
@@ -190,7 +186,7 @@ var CBUISelector = {
      *
      * @return Promise -> mixed
      */
-    selectValue : function (args) {
+    selectValue: function (args) {
         var func = function (resolve, reject) {
             if (args.options.length === 1) {
                 resolve (args.options[0].value);
@@ -198,11 +194,11 @@ var CBUISelector = {
             }
 
             CBUISelector.showSelector({
-                callback : resolve,
-                navigateToItemCallback : args.navigateToItemCallback,
-                options : args.options,
-                selectedValue : args.selectedValue,
-                title : args.title,
+                callback: resolve,
+                navigateToItemCallback: args.navigateToItemCallback,
+                options: args.options,
+                selectedValue: args.selectedValue,
+                title: args.title,
             });
         };
 
@@ -219,17 +215,17 @@ var CBUISelector = {
      *
      * @return undefined
      */
-    showSelector : function (args) {
+    showSelector: function (args) {
         var optionSelectedCallback = CBUISelector.handleOptionSelected.bind(undefined, args.callback);
         var selector = CBUISelector.createSelector({
-            callback : optionSelectedCallback,
-            options : args.options,
-            selectedValue : args.selectedValue,
+            callback: optionSelectedCallback,
+            options: args.options,
+            selectedValue: args.selectedValue,
         });
 
         args.navigateToItemCallback.call(undefined, {
-            element : selector,
-            title : args.title,
+            element: selector,
+            title: args.title,
         });
     },
 
@@ -243,13 +239,13 @@ var CBUISelector = {
      *
      * @return undefined
      */
-    showSelectorForControl : function (args) {
+    showSelectorForControl: function (args) {
         CBUISelector.showSelector({
-            callback : args.callback,
-            navigateToItemCallback : args.navigateToItemCallback,
-            options : args.state.options,
-            selectedValue : args.spec[args.propertyName],
-            title : args.labelText,
+            callback: args.callback,
+            navigateToItemCallback: args.navigateToItemCallback,
+            options: args.state.options,
+            selectedValue: args.spec[args.propertyName],
+            title: args.labelText,
         });
     },
 
@@ -257,7 +253,7 @@ var CBUISelector = {
      * @param [object] args.options
      * @param mixed args.value
      */
-    valueToTitle : function (args) {
+    valueToTitle: function (args) {
         var options = args.options || [];
         var selectedOption = options.find(function (option) {
             return args.value == option.value; /* allow string to int equality */
@@ -276,16 +272,16 @@ var CBUISelector = {
 
     /**
      * @param string args.propertyName
-     * @param Element args.selectedValueTitleElement
+     * @param Element args.titleAndDescriptionPart
      * @param string args.spec
      * @param object args.state
      *
      * @return undefined
      */
-    updateInterface : function (args) {
-        args.selectedValueTitleElement.textContent = CBUISelector.valueToTitle({
-            options : args.state.options,
-            value : args.spec[args.propertyName],
+    updateInterface: function (args) {
+        args.titleAndDescriptionPart.description = CBUISelector.valueToTitle({
+            options: args.state.options,
+            value: args.spec[args.propertyName],
         });
     },
 
@@ -296,7 +292,7 @@ var CBUISelector = {
      *
      * @return undefined
      */
-    updateOptions : function (args, options) {
+    updateOptions: function (args, options) {
         if (Array.isArray(options)) {
             args.state.options = options;
         } else {
@@ -337,7 +333,7 @@ var CBUISelectorValueEditor = {
      *
      * @return undefined
      */
-    acceptValue : function (args) {
+    acceptValue: function (args) {
         args.updateValueCallback(args.value);
         history.back();
     },
@@ -346,7 +342,7 @@ var CBUISelectorValueEditor = {
      * @param object args.spec
      * @param function args.specChangedCallback
      */
-    createEditor : function (args) {
+    createEditor: function (args) {
         var section, item;
         var targetOptions = args.spec.state.options || [];
         var targetUpdateValueCallback = args.spec.updateValueCallback;
@@ -368,8 +364,8 @@ var CBUISelectorValueEditor = {
             item.appendChild(description);
 
             item.addEventListener("click", CBUISelectorValueEditor.acceptValue.bind(undefined, {
-                updateValueCallback : targetUpdateValueCallback,
-                value : option.value,
+                updateValueCallback: targetUpdateValueCallback,
+                value: option.value,
             }));
 
             section.appendChild(item);

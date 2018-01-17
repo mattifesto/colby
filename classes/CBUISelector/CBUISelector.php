@@ -6,7 +6,8 @@ final class CBUISelector {
      * @return [string]
      */
     static function requiredClassNames() {
-        return ['CBUI'];
+        return ['CBUI', 'CBUINavigationArrowPart', 'CBUISectionItem4',
+                'CBUITitleAndDescriptionPart'];
     }
 
     /**
@@ -20,6 +21,6 @@ final class CBUISelector {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v364.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
     }
 }
