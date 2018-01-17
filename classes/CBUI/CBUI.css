@@ -44,7 +44,7 @@
 
 .CBUIHeader {
     background-color: hsl(0, 0%, 95%);
-    border-bottom: 1px solid hsl(0, 0%, 80%);
+    border-bottom: 1px solid var(--CBUIBorderColor);
     display: flex;
     justify-content: space-between;
     min-height: 44px;
@@ -121,7 +121,7 @@
 }
 
 .CBUISection {
-    border-color: hsl(0, 0%, 80%);
+    border-color: var(--CBUIBorderColor);
     border-style: solid;
     border-width: 1px 0;
     box-sizing: border-box;
@@ -198,8 +198,8 @@
     white-space: nowrap;
 }
 
-.CBUISection > .CBUISectionItem + .CBUISectionItem {
-    border-top: 1px solid hsl(0, 0%, 80%);
+.CBUISection > * + * {
+    border-top: 1px solid var(--CBUIBorderColor);
 }
 
 .CBUISectionItem > .information {
@@ -252,7 +252,7 @@
 
 .CBUISectionItem2 > .CBUIDropdown > .button {
     align-items: center;
-    border-left: 1px solid hsl(0, 0%, 80%);
+    border-left: 1px solid var(--CBUIBorderColor);
     box-sizing: border-box;
     display: flex;
     flex: none;
