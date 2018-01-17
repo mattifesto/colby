@@ -81,7 +81,7 @@ var CBModelsAdmin = {
             var section = CBUI.createSection();
 
             CBModelsAdmin_modelList.forEach(function (model) {
-                var sectionItem = CBUI.createSectionItem3();
+                var sectionItem = CBUISectionItem4.create();
 
                 sectionItem.callback = function () {
                     window.location = "/admin/?c=CBModelEditor&ID=" +
