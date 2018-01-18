@@ -80,7 +80,7 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
             'className' => 'CBMenuItem',
             'name' => 'php',
             'text' => 'PHP',
-            'URL' => '/admin/develop/php/',
+            'URL' => '/admin/?c=CBPHPAdmin',
         ],
         'test' => (object)[
             'className' => 'CBMenuItem',
