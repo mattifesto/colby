@@ -18,43 +18,6 @@ var CBAdminPageForModelImport = {
         var main = document.getElementsByTagName("main")[0];
         var status = CBUIProcessStatus.create();
 
-        /* import JSON */
-
-        main.appendChild(CBUI.createHalfSpace());
-        main.appendChild(CBUI.createSectionHeader({
-            paragraphs: ["Import Single Model"],
-        }));
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
-        var jsonInputElement = document.createElement("input");
-        jsonInputElement.type = "file";
-        jsonInputElement.style.display = "none";
-        var jsonActionLink = CBUIActionLink.create({
-            callback: jsonInputElement.click.bind(jsonInputElement),
-            labelText: "Import JSON File...",
-        });
-
-        jsonInputElement.addEventListener("change", function() {
-            var formData = new FormData();
-            formData.append("file", jsonInputElement.files[0]);
-
-            Colby.fetchAjaxResponse("/api/?class=CBAdminPageForModelImport&function=importJSON", formData)
-                .then(onFulfilled)
-                .catch(Colby.displayAndReportError);
-
-            jsonInputElement.value = null;
-
-            function onFulfilled(response) {
-                status.processID = response.processID;
-            }
-        });
-
-        item.appendChild(jsonInputElement);
-        item.appendChild(jsonActionLink.element);
-        section.appendChild(item);
-
-        main.appendChild(section);
-
         /* import CSV */
 
         main.appendChild(CBUI.createHalfSpace());

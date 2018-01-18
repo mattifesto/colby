@@ -34,7 +34,7 @@ final class CBAdminPageForModelImport {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v365.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
     }
 
     /**
@@ -42,47 +42,6 @@ final class CBAdminPageForModelImport {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return ['CBUI', 'CBUIActionLink', 'CBUIProcessStatus'];
-    }
-
-    /**
-     * @return null
-     */
-    static function importJSONForAjax() {
-        $response = new CBAjaxResponse();
-
-        switch ($type = $_FILES['file']['type']) {
-        case 'application/json':
-        case 'text/plain':
-            $spec = json_decode(file_get_contents($_FILES['file']['tmp_name']));
-            break;
-
-        default:
-            $response->message = "This type of the uploaded file is \"{$type}\" which is not an accepted JSON file type.";
-            goto done;
-        }
-
-        /**
-         * TODO: Separate specs into className groups to allow multiple class
-         *       names per file.
-         */
-
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save([$spec], /* force: */ true);
-        });
-
-        $response->message = 'Model imported successfully.';
-        $response->wasSuccessful = true;
-
-        done:
-
-        $response->send();
-    }
-
-    /**
-     * @return object
-     */
-    static function importJSONForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
     }
 
     /**
