@@ -41,7 +41,8 @@ final class CBAdminPageForModelImport {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink', 'CBUIProcessStatus'];
+        return ['CBUI', 'CBUIActionPart', 'CBUIProcessStatus',
+                'CBUISectionItem4'];
     }
 
     /**

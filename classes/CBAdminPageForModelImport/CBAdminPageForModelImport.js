@@ -4,8 +4,9 @@
 /* exported CBAdminPageForModelImport */
 /* global
     CBUI,
-    CBUIActionLink,
+    CBUIActionPart,
     CBUIProcessStatus,
+    CBUISectionItem4,
     Colby */
 
 var CBAdminPageForModelImport = {
@@ -14,30 +15,38 @@ var CBAdminPageForModelImport = {
      * @return undefined
      */
     DOMContentDidLoad: function() {
-        var section, item;
+        let disabled = false;
         var main = document.getElementsByTagName("main")[0];
         var status = CBUIProcessStatus.create();
 
         /* import CSV */
 
-        main.appendChild(CBUI.createHalfSpace());
-        main.appendChild(CBUI.createSectionHeader({
-            paragraphs: ["Import Multiple Models"],
-        }));
-
-        section = CBUI.createSection();
-        var input = document.createElement("input");
+        let input = document.createElement("input");
         input.type = "file";
         input.style.display = "none";
-        section.appendChild(input);
+        document.body.appendChild(input);
 
-        var actionLink = CBUIActionLink.create({
-            "callback" : input.click.bind(input),
-            "labelText" : "Import CSV File...",
-        });
+        main.appendChild(CBUI.createHalfSpace());
+
+        let sectionElement = CBUI.createSection();
+        let sectionItem = CBUISectionItem4.create();
+        sectionItem.callback = function () {
+            if (!disabled) {
+                input.click();
+            }
+        };
+        let actionPart = CBUIActionPart.create();
+        actionPart.title = "Import CSV File...";
+
+        sectionItem.appendPart(actionPart);
+        sectionElement.appendChild(sectionItem.element);
+        main.appendChild(sectionElement);
+        main.appendChild(CBUI.createHalfSpace());
+        main.appendChild(status.element);
 
         input.addEventListener("change", function() {
-            actionLink.disableCallback();
+            disabled = true;
+            actionPart.disabled = true;
 
             Colby.callAjaxFunction("CBAdminPageForModelImport", "uploadDataFile", undefined, input.files[0])
                 .then(uploadFulfilled)
@@ -48,7 +57,8 @@ var CBAdminPageForModelImport = {
             /* closure */
             function uploadFulfilled(response) {
                 status.processID = response.processID;
-                actionLink.enableCallback();
+                disabled = false;
+                actionPart.disabled = false;
 
                 return new Promise(function (resolve, reject) {
                     runNextTask();
@@ -71,15 +81,6 @@ var CBAdminPageForModelImport = {
                 });
             }
         });
-
-        item = CBUI.createSectionItem();
-        item.appendChild(actionLink.element);
-        section.appendChild(item);
-        main.appendChild(section);
-
-        main.appendChild(CBUI.createHalfSpace());
-
-        main.appendChild(status.element);
     },
 };
 
