@@ -4,8 +4,12 @@
 /* exported CBDataStoresAdminPage */
 /* global
     CBUI,
+    CBUIActionPart,
+    CBUINavigationArrowPart,
     CBUINavigationView,
+    CBUISectionItem4,
     CBUISelector,
+    CBUITitleAndDescriptionPart,
     Colby */
 
 var CBDataStoresAdminPage = {
@@ -14,9 +18,7 @@ var CBDataStoresAdminPage = {
      * @return Element
      */
     createElement: function (data) {
-        var section, item;
         var element = document.createElement("div");
-
         var navigationView = CBUINavigationView.create({
             defaultSpecChangedCallback : function () {},
             rootItem : {
@@ -27,15 +29,22 @@ var CBDataStoresAdminPage = {
 
         element.appendChild(CBUI.createHalfSpace());
 
-        element.appendChild(CBUI.createButton({
-            text: "Restart Data Store Finder",
-            callback: function () {
+        {
+            let sectionElement = CBUI.createSection();
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
                 Colby.callAjaxFunction("CBDataStoresFinderTask", "restart")
                     .then(function () { Colby.alert("The data store finder has been restarted."); })
                     .catch(Colby.displayAndReportError);
-            },
-        }).element);
+            };
+            let actionPart = CBUIActionPart.create();
+            actionPart.title = "Restart Data Store Finder";
 
+            sectionItem.appendPart(actionPart);
+            sectionElement.appendChild(sectionItem.element);
+            element.appendChild(sectionElement);
+            element.appendChild(CBUI.createHalfSpace());
+        }
 
         var classNames = new Set();
 
@@ -43,15 +52,13 @@ var CBDataStoresAdminPage = {
             classNames.add(value.className);
         });
 
-        var options = [{
-            title: "None",
-        }];
+        var options = [];
 
         classNames.forEach(function (className) {
             var title = className;
 
             if (!className) {
-                title = "No CBModel";
+                title = "No model";
                 className = undefined;
             }
 
@@ -61,24 +68,25 @@ var CBDataStoresAdminPage = {
             });
         });
 
-        element.appendChild(CBUI.createHalfSpace());
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUISelector.create({
-            labelText: "Class Name",
-            options: options,
-            navigateToItemCallback: navigationView.navigateToItemCallback,
-            propertyName: "className",
-            valueChangedCallback: update,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+        {
+            let sectionElement = CBUI.createSection();
 
-        element.appendChild(CBUI.createHalfSpace());
+            sectionElement.appendChild(CBUISelector.create({
+                labelText: "Class Name",
+                options: options,
+                navigateToItemCallback: navigationView.navigateToItemCallback,
+                propertyName: "className",
+                valueChangedCallback: update,
+            }).element);
+            element.appendChild(sectionElement);
+            element.appendChild(CBUI.createHalfSpace());
+        }
+
         var dataStoresSection = CBUI.createSection();
-        update();
-        element.appendChild(dataStoresSection);
 
+        update();
+
+        element.appendChild(dataStoresSection);
         element.appendChild(CBUI.createHalfSpace());
 
         return navigationView.element;
@@ -94,16 +102,18 @@ var CBDataStoresAdminPage = {
 
             data.forEach(function (value) {
                 if (value.className === className) {
-                    var item = CBUI.createKeyValueSectionItem({
-                        key: value.className || "No CBModels record",
-                        value: value.ID,
-                    });
-
-                    item.element.style.cursor = "pointer";
-                    item.element.addEventListener("click", function () {
+                    let sectionItem = CBUISectionItem4.create();
+                    sectionItem.callback = function () {
                         window.location = "/admin/?c=CBModelInspector&ID=" + value.ID;
-                    });
-                    dataStoresSection.appendChild(item.element);
+                    };
+                    let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
+                    titleAndDescriptionPart.title = value.ID;
+                    titleAndDescriptionPart.description = value.className || "No model";
+
+                    sectionItem.appendPart(titleAndDescriptionPart);
+                    sectionItem.appendPart(CBUINavigationArrowPart.create());
+
+                    dataStoresSection.appendChild(sectionItem.element);
                 }
             });
         }
@@ -112,7 +122,7 @@ var CBDataStoresAdminPage = {
     /**
      * @return undefined
      */
-    init: function() {
+    init: function () {
         Colby.callAjaxFunction("CBDataStoresAdminPage", "fetchData")
             .then(onFulfilled)
             .catch(Colby.displayAndReportError);
@@ -121,7 +131,7 @@ var CBDataStoresAdminPage = {
             var element = CBDataStoresAdminPage.createElement(value);
             document.getElementsByTagName("main")[0].appendChild(element);
         }
-    }
+    },
 };
 
 Colby.afterDOMContentLoaded(CBDataStoresAdminPage.init);

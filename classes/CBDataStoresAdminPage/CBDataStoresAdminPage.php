@@ -52,13 +52,15 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUINavigationView', 'CBUISelector'];
+        return ['CBUI', 'CBUIActionPart', 'CBUINavigationArrowPart',
+                'CBUINavigationView', 'CBUISectionItem4', 'CBUISelector',
+                'CBUITitleAndDescriptionPart'];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
     }
 }
