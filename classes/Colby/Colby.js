@@ -376,7 +376,7 @@ var Colby = {
     /**
      * @return bool
      */
-    localStorageIsSupported : function () {
+    localStorageIsSupported: function () {
         if (Colby.cachedLocalStorageIsSupported === undefined) {
             var value = "value";
 
@@ -390,6 +390,13 @@ var Colby = {
         }
 
         return Colby.cachedLocalStorageIsSupported;
+    },
+
+    /**
+     * @return string
+     */
+    get nonBreakingSpace() {
+        return "\u00A0";
     },
 
     /**
