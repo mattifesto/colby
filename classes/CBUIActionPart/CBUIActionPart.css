@@ -1,0 +1,23 @@
+.CBUIActionPart {
+    align-items: center;
+    color: var(--CBTextColorForLinks);
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+
+    /* ellipsis */
+    min-width: 0;
+}
+
+.CBUIActionPart.disabled {
+    color: var(--CBTextColor2);
+}
+
+.CBUIActionPart > * {
+    padding: 0 5px;
+
+    /* ellipsis */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
