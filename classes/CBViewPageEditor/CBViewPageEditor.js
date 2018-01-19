@@ -356,7 +356,7 @@ var CBViewPageEditor = {
  */
 CBViewPageEditor.fetchModel = function() {
     var formData = new FormData();
-    formData.append("id", CBViewPageEditor_specID);
+    formData.append("ID", CBViewPageEditor_specID);
 
     if (CBViewPageEditor_specIDToCopy) {
         formData.append("id-to-copy", CBViewPageEditor_specIDToCopy);
