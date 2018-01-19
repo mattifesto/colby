@@ -50,14 +50,17 @@ final class CBViewPage {
     }
 
     /**
-     * The current behavior of this function is to set the modelJSON response
-     * if the spec exists and to not set it if it doesn't.
+     * @param object $args
      *
-     * @return null
+     *      {
+     *          ID: hex160
+     *          IDToCopy: hex160?
+     *      }
+     *
+     * @return object|false
      */
-    static function fetchSpecForAjax() {
-        $response = new CBAjaxResponse();
-        $ID = cb_post_value('ID');
+    static function CBAjax_fetchSpec($args) {
+        $ID = CBModel::value($args, 'ID');
 
         if (!CBHex160::is($ID)) {
             throw new InvalidArgumentException("The value \"{$ID}\" provided as the ID argument is not a valid 160-bit hexadecimal value.");
@@ -66,8 +69,9 @@ final class CBViewPage {
         $spec = CBViewPage::fetchSpecByID($ID);
 
         if ($spec === false) {
-            if (isset($_POST['id-to-copy'])) {
-                $IDToCopy = $_POST['id-to-copy'];
+            $IDToCopy = CBModel::value($args, 'IDToCopy');
+
+            if (CBHex160::is($IDToCopy)) {
                 $spec = CBViewPage::fetchSpecByID($IDToCopy);
 
                 if ($spec === false) {
@@ -88,19 +92,14 @@ final class CBViewPage {
             }
         }
 
-        if ($spec) {
-            $response->modelJSON = json_encode($spec);
-        }
-
-        $response->wasSuccessful = true;
-        $response->send();
+        return $spec;
     }
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function fetchSpecForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function CBAjax_fetchSpec_group() {
+        return 'Administrators';
     }
 
     /**
