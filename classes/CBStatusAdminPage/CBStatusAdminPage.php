@@ -82,8 +82,6 @@ final class CBStatusAdminPage {
 
             <?php
 
-            CBStatusAdminPage::renderDuplicatePublishedURIWarnings();
-            CBStatusAdminPage::renderSiteConfigurationIssuesView();
             CBStatusAdminPage::renderPingStatus();
 
             ?>
@@ -101,9 +99,134 @@ final class CBStatusAdminPage {
     }
 
     /**
-     * @return null
+     * @return [string]
      */
-    static function renderDuplicatePublishedURIWarnings() {
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
+    }
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables() {
+        $issues = [];
+        $duplicateURIMessages = CBStatusAdminPage::fetchDuplicateURIMessages();
+
+        if (ColbyUser::current()->isOneOfThe('Developers')) {
+            define('CBSiteIsBeingDebugged', true);
+
+            /**
+             * Deprecated constant strings are broken up to avoid false positives
+             * when searching for them with tools.
+             */
+            $deprecatedConstants = [
+                ['CB'.'SiteIsBeingDebugged', 'Use site preferences.'],
+                ['CB'.'SiteIsBeingDubugged', 'Use site preferences.'],
+                ['COLBY'.'_SITE_IS_BEING_DEBUGGED', 'Use site preferences.'],
+                ['CB'.'ShouldDisallowRobots', 'Use site preferences.'],
+                ['CB'.'GoogleAnalyticsID', 'Use site preferences'],
+                ['GOOGLE'.'_UNIVERSAL_ANALYTICS_TRACKING_ID', 'Use site preferences'],
+                ['CB'.'SiteConfiguration::defaultClassNameForPageSettings', 'Use site preferences.'],
+                ['CB'.'FacebookFirstVerifiedUserID', 'Remove it.'],
+                ['COLBY'.'_FACEBOOK_FIRST_VERIFIED_USER_ID', 'Remove it.'],
+                ['COLBY'.'_SITE_ERRORS_SEND_EMAILS', 'Use CBSiteDoesSendEmailErrorReports instead.'],
+                ['COLBY'.'_SITE_NAME', 'Remove it and use site preferences.'], // 2017.03.17
+                ['CB'.'SiteName', 'Remove it and use site preferences.'], // 2017.03.17
+                ['CB'.'SiteNameHTML', 'Remove it and use site preferences.'], // 2017.03.17
+                ['COLBY'.'_SITE_URL', 'Remove it and use site preferences.'], // 2017.03.19
+                ['CB'.'SiteAdministratorEmail', 'Remove it and use site preferences.'], // 2017.03.22
+                ['COLBY'.'_SITE_ADMINISTRATOR', 'Remove it and use site preferences.'], // 2017.03.22
+                ['COLBY_FACEBOOK_APP_ID', 'Use CBFacebookAppID instead.'], // 2017.07.08
+                ['COLBY_FACEBOOK_APP_SECRET', 'Use CBFacebookAppSecret instead.'], // 2017.07.08
+                ['COLBY_MYSQL_HOST', 'Use CBMySQLHost instead.'], // 2017.07.08
+                ['COLBY_MYSQL_USER', 'Use CBMySQLUser instead.'], // 2017.07.08
+                ['COLBY_MYSQL_PASSWORD', 'Use CBMySQLPassword instead.'], // 2017.07.08
+                ['COLBY_MYSQL_DATABASE', 'Use CBMySQLDatabase instead.'], // 2017.07.08
+            ];
+
+            foreach ($deprecatedConstants as $constant) {
+                if (defined($constant[0])) {
+                    $issues[] = [$constant[0], 'This constant has been deprecated. ' . $constant[1]];
+                }
+            }
+
+            /* 2017.07.15 The classNamesForKinds property on the CBPagesPreferences
+               model has beed deprecated. */
+            $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
+            $kinds = CBModel::value($model, 'classNamesForKinds', []);
+
+            if (!empty($kinds)) {
+                $issues[] = ['CBPagesPreferences::classNamesForKinds', 'Implement CBPageHelpers::classNamesForPageKinds() instead of the CBPagesPreferences model.'];
+            }
+
+            /* 2017.07.17 The classNameForPageSettings property on the
+               CBSitePreferences model has been deprecated. */
+            $model = CBSitePreferences::model();
+            $className = CBModel::value($model, 'defaultClassNameForPageSettings');
+
+            if (!empty($className)) {
+                $issues[] = ['CBSitePreferences::classNameForPageSettings', 'Implement CBPageHelpers::classNameForUnsetPageSettings() instead of the CBSitePreferences model.'];
+            }
+
+            /* 2017.08.17 The slackWebhookURL propery on the CBSitePreferences model
+               is not technically required, but it is effectively required because
+               an admin should be tracking site errors. */
+            $slackWebhookURL = CBModel::value($model, 'slackWebhookURL');
+
+            if (empty($slackWebhookURL)) {
+                $issues[] = ['Slack Webhook URL', 'Enter a Slack Webhook URL in site preferences to receive error notifications.'];
+            }
+
+            /* 2017.08.17 Search for use of deprecated `colby/Colby.php` file. */
+            if (is_file($filepath = cbsitedir() . '/index.php')) {
+                $text = file_get_contents($filepath);
+
+                if (preg_match('/Colby\.php/', $text)) {
+                    $issues[] = ['colby/Colby.php', 'The "index.php" file for this site references the deprecated "colby/Colby.php" file. Replace this with a reference to the "colby/init.php" file.'];
+                }
+            }
+
+            /* 2017.11.20 Warn if the site .htaccess is different from the Colby
+              .htaccess */
+            if (sha1_file(cbsitedir() . '/.htaccess') !== sha1_file(cbsysdir() . '/setup/htaccess.template.data')) {
+                $issues[] = ['.htaccess', 'The .htaccess file is different from the suggested Colby .htaccess file.'];
+            }
+
+            /* 2018.01.01 Warn if the site name has not been set. */
+            if (trim(CBSitePreferences::siteName()) === '') {
+                $issues[] = ['Site Name', 'This site has no site name. Set one in site preferences.'];
+            }
+
+            /* 2018.01.12 Transition to CBPageTemplates */
+            if (is_callable('CBPageHelpers::classNamesForPageTemplates')) {
+                $issues[] = ['Page Templates', 'Implement the CBPageTemplates class and remove the implementation of CBPageHelpers::classNamesForPageTemplates().'];
+            }
+
+            /* 2018.01.12 Unused function */
+            if (is_callable('CBPageHelpers::classNameForPageSettings')) {
+                $issues[] = ['CBPageHelpers', 'The function CBPageHelpers::classNameForPageSettings() has been removed with no replacement.'];
+            }
+        }
+
+        return [
+            ['CBStatusAdminPage_duplicateURIMessages', $duplicateURIMessages],
+            ['CBStatusAdminPage_issues', $issues],
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUI', 'CBUIMessagePart', 'CBUISectionItem4',
+                'CBUITitleAndDescriptionPart'];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function fetchDuplicateURIMessages() {
+        $messages = [];
         $SQL = <<<EOT
 
             SELECT      `URI`
@@ -118,54 +241,47 @@ EOT;
         $URIs = CBDB::SQLToArray($SQL);
 
         if (!empty($URIs)) {
-            ?>
-
-            <div class="CBUIHalfSpace"></div>
-            <h1 class="CBUISectionHeader">Duplicate URI Warnings</h1>
-            <div class="CBUISection">
-
-                <?php
-
-                foreach ($URIs as $URI) {
-                    CBStatusAdminPage::renderDuplicatePublishedURIWarningForURI($URI);
-                }
-
-                ?>
-
-            </div>
-
-            <?php
-
-            CBUI::renderHalfSpace();
+            foreach ($URIs as $URI) {
+                $messages[] = CBStatusAdminPage::duplicateURIToMessage($URI);
+            }
         }
+
+        return $messages;
     }
 
     /**
-     * @return null
+     * @return string
      */
-    static function renderDuplicatePublishedURIWarningForURI($URI) {
+    static function duplicateURIToMessage($URI) {
+        $message = '';
         $URIAsSQL = CBDB::stringToSQL($URI);
         $SQL = <<<EOT
 
-            SELECT      `keyValueData`
-            FROM        `ColbyPages`
+            SELECT      LOWER(HEX(`CBModels`.`ID`)) AS ID,
+                        `title`
+            FROM        `CBModels`
+            JOIN        `ColbyPages` ON `CBModels`.`ID` = `ColbyPages`.`archiveID`
             WHERE       `URI` = {$URIAsSQL} AND
                         `published` IS NOT NULL
             ORDER BY    `published` ASC
 
 EOT;
 
-        $data = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-
-        echo '<div class="CBUISectionItem CBURIItem">';
-        echo '<div class="URI">URI: ', ColbyConvert::textToHTML($data[0]->URI), '</div>';
+        $data = CBDB::SQLToObjects($SQL);
 
         foreach ($data as $datum) {
-            $editURL = CBSitePreferences::siteURL() . "/admin/pages/edit/?data-store-id={$datum->dataStoreID}";
-            echo "<div>{$datum->titleHTML} <a href=\"{$editURL}\">edit</a></div>";
+            $editURL = CBSitePreferences::siteURL() . "/admin/pages/edit/?data-store-id={$datum->ID}";
+            $message .= "\"{$datum->title}\" (edit (a {$editURL}))\n\n";
         }
 
-        echo '</div>';
+        $message = <<<EOT
+
+            /{$URI}/
+
+            {$message}
+EOT;
+
+        return $message;
     }
 
     /**
@@ -192,124 +308,5 @@ EOT;
         CBUI::renderKeyValueSectionItem('Ping Status', $message);
         CBUI::renderSectionEnd();
         CBUI::renderHalfSpace();
-    }
-
-    /**
-     * @return null
-     */
-    static function renderSiteConfigurationIssuesView() {
-        echo '<!-- Site Configuration Issues -->';
-
-        if (!ColbyUser::current()->isOneOfThe('Developers')) {
-            return;
-        }
-
-        /**
-         * Deprecated constant strings are broken up to avoid false positives
-         * when searching for them with tools.
-         */
-        $deprecatedConstants = [
-            ['CB'.'SiteIsBeingDebugged', 'Use site preferences.'],
-            ['CB'.'SiteIsBeingDubugged', 'Use site preferences.'],
-            ['COLBY'.'_SITE_IS_BEING_DEBUGGED', 'Use site preferences.'],
-            ['CB'.'ShouldDisallowRobots', 'Use site preferences.'],
-            ['CB'.'GoogleAnalyticsID', 'Use site preferences'],
-            ['GOOGLE'.'_UNIVERSAL_ANALYTICS_TRACKING_ID', 'Use site preferences'],
-            ['CB'.'SiteConfiguration::defaultClassNameForPageSettings', 'Use site preferences.'],
-            ['CB'.'FacebookFirstVerifiedUserID', 'Remove it.'],
-            ['COLBY'.'_FACEBOOK_FIRST_VERIFIED_USER_ID', 'Remove it.'],
-            ['COLBY'.'_SITE_ERRORS_SEND_EMAILS', 'Use CBSiteDoesSendEmailErrorReports instead.'],
-            ['COLBY'.'_SITE_NAME', 'Remove it and use site preferences.'], // 2017.03.17
-            ['CB'.'SiteName', 'Remove it and use site preferences.'], // 2017.03.17
-            ['CB'.'SiteNameHTML', 'Remove it and use site preferences.'], // 2017.03.17
-            ['COLBY'.'_SITE_URL', 'Remove it and use site preferences.'], // 2017.03.19
-            ['CB'.'SiteAdministratorEmail', 'Remove it and use site preferences.'], // 2017.03.22
-            ['COLBY'.'_SITE_ADMINISTRATOR', 'Remove it and use site preferences.'], // 2017.03.22
-            ['COLBY_FACEBOOK_APP_ID', 'Use CBFacebookAppID instead.'], // 2017.07.08
-            ['COLBY_FACEBOOK_APP_SECRET', 'Use CBFacebookAppSecret instead.'], // 2017.07.08
-            ['COLBY_MYSQL_HOST', 'Use CBMySQLHost instead.'], // 2017.07.08
-            ['COLBY_MYSQL_USER', 'Use CBMySQLUser instead.'], // 2017.07.08
-            ['COLBY_MYSQL_PASSWORD', 'Use CBMySQLPassword instead.'], // 2017.07.08
-            ['COLBY_MYSQL_DATABASE', 'Use CBMySQLDatabase instead.'], // 2017.07.08
-        ];
-
-        $hasContent = false;
-
-        ob_start();
-
-        foreach ($deprecatedConstants as $constant) {
-            if (defined($constant[0])) {
-                CBUI::renderKeyValueSectionItem($constant[0], 'This constant has been deprecated. ' . $constant[1]);
-            }
-        }
-
-        /* 2017.07.15 The classNamesForKinds property on the CBPagesPreferences
-           model has beed deprecated. */
-        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        $kinds = CBModel::value($model, 'classNamesForKinds', []);
-
-        if (!empty($kinds)) {
-            CBUI::renderKeyValueSectionItem('CBPagesPreferences::classNamesForKinds', 'Implement CBPageHelpers::classNamesForPageKinds() instead of the CBPagesPreferences model.');
-        }
-
-        /* 2017.07.17 The classNameForPageSettings property on the
-           CBSitePreferences model has been deprecated. */
-        $model = CBSitePreferences::model();
-        $className = CBModel::value($model, 'defaultClassNameForPageSettings');
-
-        if (!empty($className)) {
-            CBUI::renderKeyValueSectionItem('CBSitePreferences::classNameForPageSettings', 'Implement CBPageHelpers::classNameForUnsetPageSettings() instead of the CBSitePreferences model.');
-        }
-
-        /* 2017.08.17 The slackWebhookURL propery on the CBSitePreferences model
-           is not technically required, but it is effectively required because
-           an admin should be tracking site errors. */
-        $slackWebhookURL = CBModel::value($model, 'slackWebhookURL');
-
-        if (empty($slackWebhookURL)) {
-            CBUI::renderKeyValueSectionItem('Slack Webhook URL', 'Enter a Slack Webhook URL in site preferences to receive error notifications.');
-        }
-
-        /* 2017.08.17 Search for use of deprecated `colby/Colby.php` file. */
-        if (is_file($filepath = cbsitedir() . '/index.php')) {
-            $text = file_get_contents($filepath);
-
-            if (preg_match('/Colby\.php/', $text)) {
-                CBUI::renderKeyValueSectionItem('colby/Colby.php', 'The "index.php" file for this site references the deprecated "colby/Colby.php" file. Replace this with a reference to the "colby/init.php" file.');
-            }
-        }
-
-        /* 2017.11.20 Warn if the site .htaccess is different from the Colby
-          .htaccess */
-        if (sha1_file(cbsitedir() . '/.htaccess') !== sha1_file(cbsysdir() . '/setup/htaccess.template.data')) {
-            CBUI::renderKeyValueSectionItem('.htaccess', 'The .htaccess file is different from the suggested Colby .htaccess file.');
-        }
-
-        /* 2018.01.01 Warn if the site name has not been set. */
-        if (trim(CBSitePreferences::siteName()) === '') {
-            CBUI::renderKeyValueSectionItem('Site Name', 'This site has no site name. Set one in site preferences.');
-        }
-
-        /* 2018.01.12 Transition to CBPageTemplates */
-        if (is_callable('CBPageHelpers::classNamesForPageTemplates')) {
-            CBUI::renderKeyValueSectionItem('Page Templates', 'Implement the CBPageTemplates class and remove the implementation of CBPageHelpers::classNamesForPageTemplates().');
-        }
-
-        /* 2018.01.12 Unused function */
-        if (is_callable('CBPageHelpers::classNameForPageSettings')) {
-            CBUI::renderKeyValueSectionItem('CBPageHelpers', 'The function CBPageHelpers::classNameForPageSettings() has been removed with no replacement.');
-        }
-
-        $content = ob_get_clean();
-
-        if (!empty($content)) {
-            CBUI::renderSectionHeader('Site Configuration Issues');
-            CBUI::renderSectionStart();
-
-            echo $content;
-
-            CBUI::renderSectionEnd();
-            CBUI::renderHalfSpace();
-        }
     }
 }
