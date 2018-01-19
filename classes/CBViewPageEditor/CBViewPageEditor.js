@@ -363,36 +363,32 @@ CBViewPageEditor.fetchModel = function() {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.onload = CBViewPageEditor.fetchModelDidLoad.bind(undefined, {
-        xhr: xhr
-    });
+    xhr.onload = fetchModelDidLoad;
     xhr.open("POST", "/api/?class=CBViewPage&function=fetchSpec");
     xhr.send(formData);
-};
 
-/**
- * @return undefined
- */
-CBViewPageEditor.fetchModelDidLoad = function(args) {
-    var response = Colby.responseFromXMLHttpRequest(args.xhr);
+    /* closure */
+    function fetchModelDidLoad() {
+        var response = Colby.responseFromXMLHttpRequest(xhr);
 
-    if (response.wasSuccessful) {
-        if ("modelJSON" in response) {
-            var spec = JSON.parse(response.modelJSON);
+        if (response.wasSuccessful) {
+            if ("modelJSON" in response) {
+                var spec = JSON.parse(response.modelJSON);
 
-            /* Before 2016.01.21 specs did not have their className property
-               set. Now the className property must be set for the page to be
-               edited properly. */
-            if (spec.className === undefined) {
-                spec.className = "CBViewPage";
+                /* Before 2016.01.21 specs did not have their className property
+                   set. Now the className property must be set for the page to be
+                   edited properly. */
+                if (spec.className === undefined) {
+                    spec.className = "CBViewPage";
+                }
+
+                CBViewPageEditor.displayEditorForPageSpec(spec);
+            } else {
+                CBViewPageEditor.displayPageTemplateChooser();
             }
-
-            CBViewPageEditor.displayEditorForPageSpec(spec);
         } else {
-            CBViewPageEditor.displayPageTemplateChooser();
+            Colby.displayResponse(response);
         }
-    } else {
-        Colby.displayResponse(response);
     }
 };
 
