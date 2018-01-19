@@ -57,7 +57,12 @@ final class CBViewPage {
      */
     static function fetchSpecForAjax() {
         $response = new CBAjaxResponse();
-        $ID = $_POST['id'];
+        $ID = cb_post_value('ID');
+
+        if (!CBHex160::is($ID)) {
+            throw new InvalidArgumentException("The value \"{$ID}\" provided as the ID argument is not a valid 160-bit hexadecimal value.");
+        }
+
         $spec = CBViewPage::fetchSpecByID($ID);
 
         if ($spec === false) {
