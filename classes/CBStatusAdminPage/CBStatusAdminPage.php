@@ -15,11 +15,9 @@ final class CBStatusAdminPage {
     }
 
     /**
-     * @param string $pageStub
-     *
      * @return void
      */
-    static function CBAdmin_render($pageStub) {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::setTitleHTML('Website Status');
         CBHTMLOutput::setDescriptionHTML('The status of the website');
 
@@ -79,13 +77,6 @@ final class CBStatusAdminPage {
 
                 ?>
             </div>
-
-            <?php
-
-            CBStatusAdminPage::renderPingStatus();
-
-            ?>
-
         </main>
 
         <?php
@@ -113,7 +104,21 @@ final class CBStatusAdminPage {
         $duplicateURIMessages = CBStatusAdminPage::fetchDuplicateURIMessages();
 
         if (ColbyUser::current()->isOneOfThe('Developers')) {
-            define('CBSiteIsBeingDebugged', true);
+
+            {
+                $now = time();
+                $spec = CBModels::fetchSpecByID(CBRemoteAdministration::pingModelID());
+
+                if ($spec === false) {
+                    $issues[] = ["Ping", "This site has never been pinged."];
+                } else {
+                    $pinged = CBModel::value($spec, 'pinged', 0, 'intval');
+
+                    if ($pinged < ($now - (60 * 15))) {
+                        $issues[] = ["Ping", "This site has not been pinged for over 15 minutes."];
+                    }
+                }
+            }
 
             /**
              * Deprecated constant strings are broken up to avoid false positives
@@ -282,31 +287,5 @@ EOT;
 EOT;
 
         return $message;
-    }
-
-    /**
-     * @return null
-     */
-    static function renderPingStatus() {
-        $now = time();
-        $spec = CBModels::fetchSpecByID(CBRemoteAdministration::pingModelID());
-
-        CBUI::renderSectionStart();
-
-        if ($spec === false) {
-            $message = "Alert: This site has never been pinged.";
-        } else {
-            $pinged = CBModel::value($spec, 'pinged', 0, 'intval');
-
-            if ($pinged < ($now - (60 * 15))) {
-                $message = "Alert: This site has not been pinged for over 15 minutes.";
-            } else {
-                $message = "Healthy";
-            }
-        }
-
-        CBUI::renderKeyValueSectionItem('Ping Status', $message);
-        CBUI::renderSectionEnd();
-        CBUI::renderHalfSpace();
     }
 }
