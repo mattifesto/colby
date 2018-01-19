@@ -217,6 +217,47 @@ var CBViewPageEditor = {
     },
 
     /**
+     * @return undefined
+     */
+    fetchModel: function () {
+        var formData = new FormData();
+        formData.append("ID", CBViewPageEditor_specID);
+
+        if (CBViewPageEditor_specIDToCopy) {
+            formData.append("id-to-copy", CBViewPageEditor_specIDToCopy);
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.onload = fetchModelDidLoad;
+        xhr.open("POST", "/api/?class=CBViewPage&function=fetchSpec");
+        xhr.send(formData);
+
+        /* closure */
+        function fetchModelDidLoad() {
+            var response = Colby.responseFromXMLHttpRequest(xhr);
+
+            if (response.wasSuccessful) {
+                if ("modelJSON" in response) {
+                    var spec = JSON.parse(response.modelJSON);
+
+                    /* Before 2016.01.21 specs did not have their className property
+                       set. Now the className property must be set for the page to be
+                       edited properly. */
+                    if (spec.className === undefined) {
+                        spec.className = "CBViewPage";
+                    }
+
+                    CBViewPageEditor.displayEditorForPageSpec(spec);
+                } else {
+                    CBViewPageEditor.displayPageTemplateChooser();
+                }
+            } else {
+                Colby.displayResponse(response);
+            }
+        }
+    },
+
+    /**
      * @param object args
      *
      *      {
@@ -349,47 +390,6 @@ var CBViewPageEditor = {
             CBViewPageEditor.setThumbnailImage(image);
         }
     },
-};
-
-/**
- * @return void
- */
-CBViewPageEditor.fetchModel = function() {
-    var formData = new FormData();
-    formData.append("ID", CBViewPageEditor_specID);
-
-    if (CBViewPageEditor_specIDToCopy) {
-        formData.append("id-to-copy", CBViewPageEditor_specIDToCopy);
-    }
-
-    var xhr = new XMLHttpRequest();
-    xhr.onload = fetchModelDidLoad;
-    xhr.open("POST", "/api/?class=CBViewPage&function=fetchSpec");
-    xhr.send(formData);
-
-    /* closure */
-    function fetchModelDidLoad() {
-        var response = Colby.responseFromXMLHttpRequest(xhr);
-
-        if (response.wasSuccessful) {
-            if ("modelJSON" in response) {
-                var spec = JSON.parse(response.modelJSON);
-
-                /* Before 2016.01.21 specs did not have their className property
-                   set. Now the className property must be set for the page to be
-                   edited properly. */
-                if (spec.className === undefined) {
-                    spec.className = "CBViewPage";
-                }
-
-                CBViewPageEditor.displayEditorForPageSpec(spec);
-            } else {
-                CBViewPageEditor.displayPageTemplateChooser();
-            }
-        } else {
-            Colby.displayResponse(response);
-        }
-    }
 };
 
 Colby.afterDOMContentLoaded(CBViewPageEditor.init);
