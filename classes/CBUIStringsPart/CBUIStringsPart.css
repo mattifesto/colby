@@ -16,23 +16,23 @@
     padding: 0 5px;
 }
 
-.CBUIStringsPart.key-value > .string1 {
+.CBUIStringsPart.keyvalue > .string1 {
     color: var(--CBTextColor2);
 }
 
-.CBUIStringsPart.side-by-side {
+.CBUIStringsPart.sidebyside {
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.CBUIStringsPart.title-description > .string2 {
+.CBUIStringsPart.titledescription > .string2 {
     color: var(--CBTextColor2);
     font-size: 80%;
 }
 
-.CBUIStringsPart.side-by-side > *,
-.CBUIStringsPart.title-description > * {
+.CBUIStringsPart.sidebyside > *,
+.CBUIStringsPart.titledescription > * {
     /* ellipsis */
     overflow: hidden;
     text-overflow: ellipsis;
