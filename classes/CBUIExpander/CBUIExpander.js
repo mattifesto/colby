@@ -52,11 +52,15 @@ var CBUIExpander = {
      * @return object
      *
      *      {
-     *          element: Element
+     *          element: Element (readonly)
+     *          message: string (get, set)
+     *          severity: int (get, set)
      *      }
      */
     create: function (args) {
-        var message = args.message;
+        let message = '';
+        let severity;
+
         var element = document.createElement("div");
         element.className = "CBUIExpander";
         var panelElement = document.createElement("div");
@@ -65,22 +69,10 @@ var CBUIExpander = {
         toggleElement.className = "toggle";
         var summaryElement = document.createElement("div");
         summaryElement.className = "summary";
-        let messageAsText = CBMessageMarkup.markupToText(message);
-        let summaryAsText = messageAsText.split("\n\n", 1)[0];
-        summaryElement.textContent = summaryAsText;
         var messageElement = document.createElement("div");
         messageElement.className = "message CBContentStyleSheet";
 
-        if (args.severity) {
-            element.classList.add("severity" + args.severity);
-        }
-
         toggleElement.addEventListener("click", function () {
-            if (!element.classList.contains("populated")) {
-                messageElement.innerHTML = CBMessageMarkup.convert(message);
-                element.classList.add("populated");
-            }
-
             element.classList.toggle("expanded");
         });
 
@@ -96,9 +88,38 @@ var CBUIExpander = {
         panelElement.appendChild(messageElement);
         element.appendChild(panelElement);
 
-        return {
-            element: element
+        let o = {
+            get element() {
+                return element;
+            },
+            get message() {
+                return message;
+            },
+            set message(value) {
+                message = String(value);
+                summaryElement.textContent = CBMessageMarkup.markupToText(message).split("\n\n", 1)[0];
+                messageElement.innerHTML = CBMessageMarkup.convert(message);
+            },
+            get severity() {
+                return severity;
+            },
+            set severity(value) {
+                let newSeverity = Number.parseInt(value);
+
+                if (Number.isNaN(newSeverity)) {
+                    return;
+                }
+
+                element.classList.remove("severity" + severity);
+                severity = newSeverity;
+                element.classList.add("severity" + severity);
+            },
         };
+
+        o.message = args.message;
+        o.severity = args.severity;
+
+        return o;
     },
 };
 
