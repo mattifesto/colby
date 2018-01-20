@@ -2,18 +2,21 @@
     padding: 10px 15px;
 }
 
-.CBUIExpander .panel {
+.CBUIExpander .container {
     background-color: var(--CBBackgroundColor);
     border: 1px solid var(--CBLineColor);
     border-radius: 5px;
     overflow: hidden;
 }
 
+.CBUIExpander .header {
+    display: flex;
+}
+
 .CBUIExpander .toggle {
     background-color: var(--CBButtonBackgroundColor);
     border-bottom-right-radius: 5px;
     color: var(--CBButtonTextColor);
-    display: inline-block;
     font-size: 80%;
     padding: 5px 10px;
     text-align: center;
@@ -55,7 +58,6 @@
 }
 
 .CBUIExpander time {
-    display: inline-block;
     color: var(--CBTextColor2);
     font-size: 80%;
     padding: 5px 10px;

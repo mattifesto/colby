@@ -58,15 +58,20 @@ var CBUIExpander = {
      *      }
      */
     create: function (args) {
+        args = args || {};
         let message = '';
         let severity;
+        let timestamp;
 
         var element = document.createElement("div");
         element.className = "CBUIExpander";
-        var panelElement = document.createElement("div");
-        panelElement.className = "panel";
+        let containerElement = document.createElement("div");
+        containerElement.className = "container";
+        var headerElement = document.createElement("div");
+        headerElement.className = "header";
         var toggleElement = document.createElement("div");
         toggleElement.className = "toggle";
+        let timeContainerElement = document.createElement("div");
         var summaryElement = document.createElement("div");
         summaryElement.className = "summary";
         var messageElement = document.createElement("div");
@@ -76,48 +81,94 @@ var CBUIExpander = {
             element.classList.toggle("expanded");
         });
 
-        panelElement.appendChild(toggleElement);
-
-        if (args.timestamp !== undefined) {
-            var timeElement = Colby.unixTimestampToElement(args.timestamp);
-            timeElement.classList.add("compact");
-            panelElement.appendChild(timeElement);
-        }
-
-        panelElement.appendChild(summaryElement);
-        panelElement.appendChild(messageElement);
-        element.appendChild(panelElement);
+        headerElement.appendChild(toggleElement);
+        headerElement.appendChild(timeContainerElement);
+        containerElement.appendChild(headerElement);
+        containerElement.appendChild(summaryElement);
+        containerElement.appendChild(messageElement);
+        element.appendChild(containerElement);
 
         let o = {
+
+            /**
+             * @return Element
+             */
             get element() {
                 return element;
             },
+
+            /**
+             * @return string
+             */
             get message() {
                 return message;
             },
+
+            /**
+             * @param string? value
+             */
             set message(value) {
                 message = String(value);
                 summaryElement.textContent = CBMessageMarkup.markupToText(message).split("\n\n", 1)[0];
                 messageElement.innerHTML = CBMessageMarkup.convert(message);
             },
+
+            /**
+             * @return int?
+             */
             get severity() {
                 return severity;
             },
+
+            /**
+             * @param int? value
+             */
             set severity(value) {
                 let newSeverity = Number.parseInt(value);
 
-                if (Number.isNaN(newSeverity)) {
-                    return;
-                }
-
                 element.classList.remove("severity" + severity);
-                severity = newSeverity;
-                element.classList.add("severity" + severity);
+
+                if (Number.isNaN(newSeverity)) {
+                    severity = undefined;
+                } else {
+                    severity = newSeverity;
+                    element.classList.add("severity" + severity);
+                }
+            },
+
+            /**
+             * @return int?
+             */
+            get timestamp() {
+                return timestamp;
+            },
+
+            /**
+             * @param int? value
+             *
+             * Remember to call Colby.updateTimes() after calling this function
+             * after the expander is added to the DOM to ensure that the new
+             * time element is updated.
+             */
+            set timestamp(value) {
+                let newTimestamp = Number.parseInt(value);
+
+                timeContainerElement.textContent = undefined;
+
+                if (Number.isNaN(newTimestamp)) {
+                    timestamp = undefined;
+                } else {
+                    timestamp = newTimestamp;
+                    let timeElement = Colby.unixTimestampToElement(timestamp);
+                    timeElement.classList.add("compact");
+                    timeContainerElement.appendChild(timeElement);
+                }
             },
         };
 
         o.message = args.message;
         o.severity = args.severity;
+        o.timestamp = args.timestamp;
 
         return o;
     },
