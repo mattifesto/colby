@@ -1,0 +1,40 @@
+.CBUIStringsPart {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 44px;
+    padding: 3px 0;
+
+    /* ellipsis */
+    min-width: 0;
+}
+
+.CBUIStringsPart > .string1,
+.CBUIStringsPart > .string2 {
+    padding: 0 5px;
+}
+
+.CBUIStringsPart.key-value > .string1 {
+    color: var(--CBTextColor2);
+}
+
+.CBUIStringsPart.side-by-side {
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.CBUIStringsPart.title-description > .string2 {
+    color: var(--CBTextColor2);
+    font-size: 80%;
+}
+
+.CBUIStringsPart.side-by-side > *,
+.CBUIStringsPart.title-description > * {
+    /* ellipsis */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
