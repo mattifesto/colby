@@ -33,27 +33,6 @@ final class CBUI {
     /**
      * @return null
      */
-    static function renderKeyValue($key = '', $value = '') {
-        ?>
-        <div class="CBUIKeyValue">
-            <div class="key"><?= cbhtml($key) ?></div>
-            <div class="value"><?= cbhtml($value) ?></div>
-        </div>
-        <?php
-    }
-
-    /**
-     * @return null
-     */
-    static function renderKeyValueSectionItem($key = '', $value = '') {
-        CBUI::renderSectionItemStart();
-        CBUI::renderKeyValue($key, $value);
-        CBUI::renderSectionItemEnd();
-    }
-
-    /**
-     * @return null
-     */
     static function renderLinkSectionItem($href, $text) {
         CBUI::renderSectionItemStart();
         ?>
