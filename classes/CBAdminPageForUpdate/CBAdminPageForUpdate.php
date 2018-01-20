@@ -91,21 +91,21 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink', 'CBUIOutput'];
+        return ['CBUI', 'CBUIActionLink', 'CBUIExpander'];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'v370.css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'v370.js', cbsysurl())];
     }
 
     /**

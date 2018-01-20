@@ -4,7 +4,7 @@
 /* globals
     CBUI,
     CBUIActionLink,
-    CBUIOutput,
+    CBUIExpander,
     Colby */
 
 var CBAdminPageForUpdate = {
@@ -15,7 +15,8 @@ var CBAdminPageForUpdate = {
     init: function() {
         var section, item;
         var main = document.getElementsByTagName("main")[0];
-        var output = CBUIOutput.create();
+        var outputElement = document.createElement("div");
+        outputElement.className = "output";
 
         main.appendChild(CBUI.createHalfSpace());
 
@@ -68,12 +69,12 @@ var CBAdminPageForUpdate = {
         /* output */
 
         main.appendChild(CBUI.createHalfSpace());
-        main.appendChild(output.element);
+        main.appendChild(outputElement);
 
         /* closure */
         function backuponly() {
             disable();
-            output.clear();
+            outputElement.textContent = undefined;
 
             promiseToBackupDatabase()
                 .catch(Colby.displayAndReportError)
@@ -83,7 +84,7 @@ var CBAdminPageForUpdate = {
         /* closure */
         function backupAndUpdate() {
             disable();
-            output.clear();
+            outputElement.textContent = undefined;
 
             promiseToBackupDatabase()
                 .then(promiseToUpdateSite)
@@ -94,7 +95,7 @@ var CBAdminPageForUpdate = {
         /* closure */
         function backupPullAndUpdate() {
             disable();
-            output.clear();
+            outputElement.textContent = undefined;
 
             /**
              * promiseToPullUpdates() is called twice to ensure new submodules
@@ -127,32 +128,65 @@ var CBAdminPageForUpdate = {
 
         /* closure */
         function promiseToBackupDatabase() {
-            output.append("Starting database backup.");
+            let expander = CBUIExpander.create();
+            expander.message = "Starting database backup.";
+            expander.timestamp = Date.now() / 1000;
+
+            outputElement.appendChild(expander.element);
+            Colby.updateTimes();
 
             return Colby.fetchAjaxResponse("/developer/mysql/ajax/backup-database/")
-                .then(() => output.append("Database backup completed."));
+                .then(onFulfilled);
+
+            function onFulfilled() {
+                expander.message = "Database backup completed.";
+                expander.timestamp = Date.now() / 1000;
+                Colby.updateTimes();
+            }
         }
 
         /* closure */
         function promiseToPullUpdates() {
-            output.append("Starting Git pull.");
+            let expander = CBUIExpander.create();
+            expander.message = "Starting Git pull.";
+            expander.timestamp = Date.now() / 1000;
+
+            outputElement.appendChild(expander.element);
+            Colby.updateTimes();
 
             return Colby.fetchAjaxResponse("/api/?class=CBAdminPageForUpdate&function=pullUpdates")
-                .then(() => output.append("Git pull completed."));
+                .then(onFulfilled);
+
+            function onFulfilled() {
+                expander.message = "Git pull completed.";
+                expander.timestamp = Date.now() / 1000;
+                Colby.updateTimes();
+            }
         }
 
         /* closure */
         function promiseToUpdateSite() {
-            output.append("Starting website update.");
+            let expander = CBUIExpander.create();
+            expander.message = "Starting website update.";
+            expander.timestamp = Date.now() / 1000;
+
+            outputElement.appendChild(expander.element);
+            Colby.updateTimes();
 
             return Colby.fetchAjaxResponse("/api/?class=CBAdminPageForUpdate&function=update")
-                .then(() => output.append("Website update completed."));
+                .then(onFulfilled);
+
+            function onFulfilled() {
+                expander.message = "Website update completed.";
+                expander.timestamp = Date.now() / 1000;
+                Colby.updateTimes();
+            }
         }
 
         /* closure */
         function update() {
             disable();
-            output.clear();
+            outputElement.textContent = undefined;
 
             promiseToUpdateSite()
                 .catch(Colby.displayAndReportError)
