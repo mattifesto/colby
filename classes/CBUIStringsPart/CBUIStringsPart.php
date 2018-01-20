@@ -16,7 +16,14 @@ final class CBUIStringsPart {
         return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
     }
 
-    static function render($string1 = '', $string2 = '', $classNames = '') {
+    /**
+     * @param string? $string1
+     * @param string? $string2
+     * @param string? $classNames
+     *
+     * @return void
+     */
+    static function render($string1 = '', $string2 = '', $classNames = ''): void {
         ?>
         <div class="CBUIStringsPart <?= $classNames ?>">
             <div class="string1"><?= cbhtml($string1) ?></div>
