@@ -21,72 +21,50 @@ final class CBStatusAdminPage {
         CBHTMLOutput::setTitleHTML('Website Status');
         CBHTMLOutput::setDescriptionHTML('The status of the website');
 
-        ?>
+        CBUI::renderHalfSpace();
+        CBUI::renderSectionHeader('Versions');
+        CBUI::renderSectionStart();
 
-        <main class="CBUIRoot">
-            <div class="CBLibraryListView">
-                <?php
+        $statusWidgetFilepaths = Colby::globFiles('classes/CBStatusWidgetFor*');
+        $statusWidgetClassNames = array_map(function ($filepath) {
+            return basename($filepath, '.php');
+        }, $statusWidgetFilepaths);
 
-                $statusWidgetFilepaths = Colby::globFiles('classes/CBStatusWidgetFor*');
-                $statusWidgetClassNames = array_map(function ($filepath) {
-                    return basename($filepath, '.php');
-                }, $statusWidgetFilepaths);
+        sort($statusWidgetClassNames);
 
-                sort($statusWidgetClassNames);
+        array_walk($statusWidgetClassNames, function($className) {
+            if (is_callable($function = "{$className}::CBStatusAdminPage_data")) {
+                $data = call_user_func($function);
+                
+                CBUISectionItem4::renderOpen();
+                CBUIStringsPart::render($data[0], $data[2], 'keyvalue sidebyside');
+                CBUISectionItem4::renderClose();
+            }
+        });
 
-                array_walk($statusWidgetClassNames, function($className) {
-                    if (is_callable($function = "{$className}::CBStatusAdminPage_data")) {
-                        $data = call_user_func($function);
+        /* deprecated: use status widget classes */
+        $widgetClassNames = Colby::globFiles('classes/*AdminWidgetFor*');
+        $widgetClassNames = array_map(function ($className) {
+            return basename($className, '.php');
+        }, $widgetClassNames);
 
-                        ?>
+        sort($widgetClassNames);
 
-                        <div class="CBStatusWidget">
-                            <div class="card">
-                                <div class="border">
-                                    <h1><?= cbhtml($data[0]) ?></h1>
-                                    <h2><?= cbhtml($data[1]) ?></h2>
-                                    <div class="number"><?= cbhtml($data[2]) ?></div>
-                                </div>
-                            </div>
-                        </div>
+        array_walk($widgetClassNames, function($className) {
+            if (is_callable($function = "{$className}::render")) {
+                call_user_func($function);
+            }
+        });
 
-                        <?php
-                    }
-                });
+        /* deprecated: use status widget classes */
+        $adminWidgetFilenames = Colby::globFiles('snippets/admin-widget-*.php');
 
-                /* deprecated: use status widget classes */
-                $widgetClassNames = Colby::globFiles('classes/*AdminWidgetFor*');
-                $widgetClassNames = array_map(function ($className) {
-                    return basename($className, '.php');
-                }, $widgetClassNames);
+        foreach ($adminWidgetFilenames as $adminWidgetFilename) {
+            include $adminWidgetFilename;
+        }
 
-                sort($widgetClassNames);
-
-                array_walk($widgetClassNames, function($className) {
-                    if (is_callable($function = "{$className}::render")) {
-                        call_user_func($function);
-                    }
-                });
-
-                /* deprecated: use status widget classes */
-                $adminWidgetFilenames = Colby::globFiles('snippets/admin-widget-*.php');
-
-                foreach ($adminWidgetFilenames as $adminWidgetFilename) {
-                    include $adminWidgetFilename;
-                }
-
-                ?>
-            </div>
-        </main>
-
-        <?php
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v367.css', cbsysurl())];
+        CBUI::renderSectionEnd();
+        CBUI::renderHalfSpace();
     }
 
     /**
