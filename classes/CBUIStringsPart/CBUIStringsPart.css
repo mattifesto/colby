@@ -31,7 +31,11 @@
     font-size: 80%;
 }
 
+/* the key string in keyvalue is truncated */
+.CBUIStringsPart.keyvalue > .string1,
+/* both strings in sidebyside are truncated */
 .CBUIStringsPart.sidebyside > *,
+/* both strings in titledescription are truncated */
 .CBUIStringsPart.titledescription > * {
     /* ellipsis */
     overflow: hidden;

@@ -13,7 +13,7 @@ final class CBUIStringsPart {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v371.js', cbsysurl())];
     }
 
     /**
