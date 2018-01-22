@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @deprecated use CBUIStringsPart
+ */
 final class CBUITitleAndDescriptionPart {
 
     /**

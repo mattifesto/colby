@@ -2,6 +2,9 @@
 /* jshint strict: global */
 /* exported CBUITitleAndDescriptionPart */
 
+/**
+ * @deprecated use CBUIStringsPart
+ */
 var CBUITitleAndDescriptionPart = {
 
     /**
