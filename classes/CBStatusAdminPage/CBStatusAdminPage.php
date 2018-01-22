@@ -93,7 +93,7 @@ final class CBStatusAdminPage {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v371.js', cbsysurl())];
     }
 
     /**
@@ -224,7 +224,7 @@ final class CBStatusAdminPage {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return ['CBUI', 'CBUIMessagePart', 'CBUISectionItem4',
-                'CBUITitleAndDescriptionPart'];
+                'CBUIStringsPart'];
     }
 
     /**
