@@ -4,7 +4,7 @@
 /* exported CBUISelectableItemContainer */
 /* global
     CBUICommandPart,
-    CBUITitleAndDescriptionPart */
+    CBUIStringsPart */
 
 var CBUISelectableItemContainer = {
 
@@ -39,9 +39,9 @@ var CBUISelectableItemContainer = {
         var headerElement = document.createElement("div");
         headerElement.className = "header";
 
-        var titlePart = CBUITitleAndDescriptionPart.create();
+        let stringsPart = CBUIStringsPart.create();
 
-        headerElement.appendChild(titlePart.element);
+        headerElement.appendChild(stringsPart.element);
 
         var headerCommandsElement = document.createElement("div");
         headerCommandsElement.className = "commands";
@@ -248,14 +248,14 @@ var CBUISelectableItemContainer = {
              * @return string
              */
             get title() {
-                return titlePart.title;
+                return stringsPart.string1;
             },
 
             /**
              * @param string value
              */
             set title(value) {
-                titlePart.title = value;
+                stringsPart.string1 = value;
             },
         };
 

@@ -13,13 +13,13 @@ final class CBUISelectableItemContainer {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v361.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v371.js', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUICommandPart', 'CBUITitleAndDescriptionPart'];
+        return ['CBUICommandPart', 'CBUIStringsPart'];
     }
 }
