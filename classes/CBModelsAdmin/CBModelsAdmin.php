@@ -6,7 +6,6 @@ final class CBModelsAdmin {
 
     static function CBAdmin_initialize(): void {
         CBModelsAdmin::$page = cb_query_string_value('p', 'classNameList');
-        error_log(CBModelsAdmin::$page);
     }
 
     /**
