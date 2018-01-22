@@ -1,8 +1,13 @@
 <?php
 
-define('CBSiteDirectory', $_SERVER['DOCUMENT_ROOT']);
+/**
+ * @return string
+ */
+function cbsitedir(): string {
+    return $_SERVER['DOCUMENT_ROOT'];
+}
 
-include CBSiteDirectory . '/colby/functions.php';
+include cbsitedir() . '/colby/functions.php';
 
 ColbyInstaller::initialize();
 
@@ -36,20 +41,26 @@ class ColbyInstaller {
             return;
         }
 
+        if (!is_file(cbsitedir() . '/colby/classes/Parsedown/Parsedown.php')) {
+            ColbyInstaller::renderSubmoduleWarning();
+
+            return;
+        }
+
         ColbyInstaller::initializeProperties();
 
-        self::$dataDirectory                = CBSiteDirectory . '/data';
-        self::$tmpDirectory                 = CBSiteDirectory . '/tmp';
+        self::$dataDirectory                = cbsitedir() . '/data';
+        self::$tmpDirectory                 = cbsitedir() . '/tmp';
 
-        self::$colbyConfigurationFilename   = CBSiteDirectory . '/colby-configuration.php';
-        self::$colbyFilename                = CBSiteDirectory . '/colby.php';
-        self::$faviconGifFilename           = CBSiteDirectory . '/favicon.gif';
-        self::$faviconIcoFilename           = CBSiteDirectory . '/favicon.ico';
-        self::$gitignoreFilename            = CBSiteDirectory . '/.gitignore';
-        self::$HTAccessFilename             = CBSiteDirectory . '/.htaccess';
-        self::$indexFilename                = CBSiteDirectory . '/index.php';
-        self::$siteConfigurationFilename    = CBSiteDirectory . '/site-configuration.php';
-        self::$versionFilename              = CBSiteDirectory . '/version.php';
+        self::$colbyConfigurationFilename   = cbsitedir() . '/colby-configuration.php';
+        self::$colbyFilename                = cbsitedir() . '/colby.php';
+        self::$faviconGifFilename           = cbsitedir() . '/favicon.gif';
+        self::$faviconIcoFilename           = cbsitedir() . '/favicon.ico';
+        self::$gitignoreFilename            = cbsitedir() . '/.gitignore';
+        self::$HTAccessFilename             = cbsitedir() . '/.htaccess';
+        self::$indexFilename                = cbsitedir() . '/index.php';
+        self::$siteConfigurationFilename    = cbsitedir() . '/site-configuration.php';
+        self::$versionFilename              = cbsitedir() . '/version.php';
 
 
         if (ColbyInstaller::$propertiesAreAllSet) {
@@ -256,6 +267,32 @@ class ColbyInstaller {
         <p>Either replace the http:// in this URL with https:// in your browser
            and reload this page or reload with the link below:
         <p><a href="<?= $link ?>"><?= $link ?></a>
+
+        <?php
+
+        ColbyInstaller::renderPageEnd();
+    }
+
+    /**
+     * This function is called if the Colby submodule has not been propertly
+     * initialized.
+     */
+    static function renderSubmoduleWarning() {
+        ColbyInstaller::renderPageBegin();
+
+        ?>
+
+        <h1>
+        Colby submodule initialization
+        </h1>
+
+        <p>
+        The Colby submodule has not been fully initialized. In a terminal type
+        the following line in the <code><?= cbsitedir() ?></code> directory and
+        reload this page.
+
+        <p>
+        <code>git submodule update --init --recursive</code>
 
         <?php
 
