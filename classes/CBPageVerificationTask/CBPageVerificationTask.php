@@ -279,35 +279,9 @@ EOT;
      * Start or restart the page verification task for all existing pages.
      */
     static function startForAllPages() {
-        $now = time();
-        $SQL = <<<EOT
+        $IDs = CBDB::SQLToArray('SELECT LOWER(HEX(archiveID)) FROM ColbyPages');
 
-            INSERT IGNORE INTO `CBTasks2`
-            (`className`, `ID`, `state`, `timestamp`)
-            SELECT 'CBPageVerificationTask', p.archiveID, 1, {$now}
-            FROM `ColbyPages` AS `p`
-            LEFT JOIN `CBTasks2` as `t`
-                ON `p`.`archiveID` = `t`.`ID` AND `t`.`className` = 'CBPageVerificationTask'
-            ON DUPLICATE KEY UPDATE
-                `state` = 1,
-                `timestamp` = {$now}
-
-EOT;
-
-        Colby::query($SQL);
-
-        $SQL = <<<EOT
-
-            DELETE      `CBTasks2`
-            FROM        `CBTasks2`
-            LEFT JOIN   `ColbyPages`
-            ON          `CBTasks2`.`ID` = `ColbyPages`.`archiveID`
-            WHERE       `CBTasks2`.`className` = 'CBPageVerificationTask' AND
-                        `ColbyPages`.`archiveID` IS NULL
-
-EOT;
-
-        Colby::query($SQL);
+        CBTasks2::restart(__CLASS__, $IDs, /* priority: */ 101);
     }
 
     /**
@@ -321,40 +295,6 @@ EOT;
      * @return string
      */
     static function CBAjax_startForAllPages_group() {
-        return 'Administrators';
-    }
-
-    /**
-     * Start or restart the page verification task for new pages.
-     */
-    static function startForNewPages() {
-        $now = time();
-        $SQL = <<<EOT
-
-            INSERT INTO `CBTasks2`
-            (`className`, `ID`, `state`, `timestamp`)
-            SELECT 'CBPageVerificationTask', p.archiveID, 1, {$now}
-            FROM `ColbyPages` AS `p`
-            LEFT JOIN `CBTasks2` as `t`
-                ON `p`.`archiveID` = `t`.`ID` AND `t`.`className` = 'CBPageVerificationTask'
-            WHERE `t`.`ID` IS NULL
-
-EOT;
-
-        Colby::query($SQL);
-    }
-
-    /**
-     * @return null
-     */
-    static function CBAjax_startForNewPages() {
-        CBPageVerificationTask::startForNewPages();
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_startForNewPages_group() {
         return 'Administrators';
     }
 
