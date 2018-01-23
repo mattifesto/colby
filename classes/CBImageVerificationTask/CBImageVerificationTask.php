@@ -17,24 +17,10 @@ final class CBImageVerificationTask {
     }
 
     /**
-     * @return null
-     */
-    static function CBAjax_startForNewImages() {
-        CBImageVerificationTask::startForNewImages();
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_startForNewImages_group() {
-        return 'Developers';
-    }
-
-    /**
      * @return void
      */
     static function CBInstall_install(): void {
-        CBImageVerificationTask::startForNewImages();
+        CBImageVerificationTask::startForAllImages();
     }
 
     /**
@@ -51,8 +37,11 @@ final class CBImageVerificationTask {
      * @return null
      */
     static function CBTasks2_run($ID) {
-        $severity = 8;
-        $messages = ['Image Verification Task'];
+        $severity = 7;
+        $messages = [
+            "Image {$ID} verified",
+            "(inspect (a /admin/?c=CBModelEditor&ID={$ID}))",
+        ];
         $IDAsSQL = CBHex160::toSQL($ID);
         $rowExtension = CBDB::SQLToValue("SELECT `extension` FROM `CBImages` WHERE `ID` = {$IDAsSQL}");
 
@@ -78,24 +67,23 @@ final class CBImageVerificationTask {
         $spec = CBModels::fetchSpecByID($ID);
 
         if ($spec === false) {
-            if ($severity === 8) {
-                $imagesize = CBImage::getimagesize($originalFilenames[0]);
-                $spec = (object)[
-                    'ID' => $ID,
-                    'className' => 'CBImage',
-                    'filename' => 'original',
-                    'height' => $imagesize[1],
-                    'extension' => $rowExtension,
-                    'width' => $imagesize[0],
-                ];
+            $severity = min(6, $severity);
+            $imagesize = CBImage::getimagesize($originalFilenames[0]);
+            $spec = (object)[
+                'ID' => $ID,
+                'className' => 'CBImage',
+                'filename' => 'original',
+                'height' => $imagesize[1],
+                'extension' => $rowExtension,
+                'width' => $imagesize[0],
+            ];
 
-                CBDB::transaction(function () use ($spec) {
-                    CBModels::save([$spec]);
-                });
+            CBDB::transaction(function () use ($spec) {
+                CBModels::save([$spec]);
+            });
 
-                $message = 'The model was saved for the first time.';
-                $messages[] = $message;
-            }
+            $message = 'The model was saved for the first time.';
+            $messages[] = $message;
         }
 
         CBLog::log((object)[
@@ -110,54 +98,15 @@ final class CBImageVerificationTask {
      * Start or restart the image verification task for all existing images.
      */
     static function startForAllImages() {
-        $now = time();
         $SQL = <<<EOT
 
-            INSERT IGNORE INTO `CBTasks2`
-            (`className`, `ID`, `state`, `timestamp`)
-            SELECT 'CBImageVerificationTask', `i`.`ID`, 1, {$now}
-            FROM `CBImages` AS `i`
-            LEFT JOIN `CBTasks2` as `t`
-                ON `i`.`ID` = `t`.`ID` AND `t`.`className` = 'CBImageVerificationTask'
-            ON DUPLICATE KEY UPDATE
-                `state` = 1,
-                `timestamp` = {$now}
+            SELECT LOWER(HEX(CBImages.ID)) as ID
+            FROM CBImages
 
 EOT;
 
-        Colby::query($SQL);
+        $IDs = CBDB::SQLToArray($SQL);
 
-        $SQL = <<<EOT
-
-            DELETE      `CBTasks2`
-            FROM        `CBTasks2`
-            LEFT JOIN   `CBImages`
-            ON          `CBTasks2`.`ID` = `CBImages`.`ID`
-            WHERE       `CBTasks2`.`className` = 'CBImageVerificationTask' AND
-                        `CBImages`.`ID` IS NULL
-
-EOT;
-
-        Colby::query($SQL);
-    }
-
-    /**
-     * Start the image verification task for new pages.
-     */
-    static function startForNewImages() {
-        $now = time();
-        $SQL = <<<EOT
-
-            INSERT INTO `CBTasks2`
-            (`className`, `ID`, `state`, `timestamp`)
-            SELECT 'CBImageVerificationTask', `i`.`ID`, 1, {$now}
-            FROM `CBImages` AS `i`
-            LEFT JOIN `CBTasks2` as `t`
-                ON `i`.`ID` = `t`.`ID` AND `t`.`className` = 'CBImageVerificationTask'
-            WHERE `t`.`ID` IS NULL
-
-EOT;
-
-        Colby::query($SQL);
+        CBTasks2::restart(__CLASS__, $IDs, 101);
     }
 }
