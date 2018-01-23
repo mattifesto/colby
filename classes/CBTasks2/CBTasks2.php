@@ -416,16 +416,6 @@ EOT;
     }
 
     /**
-     * @param string $className
-     * @param hex160 $ID
-     *
-     * @return hex160
-     */
-    static function modelID($className, $ID) {
-        return sha1("CBTasks2 task with className: {$className} and ID: {$ID}");
-    }
-
-    /**
      * See updateTasks
      */
     static function updateTask($className, $ID, $processID = null, $priority = null, $scheduled = null) {
