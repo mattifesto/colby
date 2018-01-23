@@ -23,7 +23,7 @@ final class CBAdminPageForCBArtworkElement {
         CBHTMLOutput::setTitleHTML('CBArtworkElement');
         CBHTMLOutput::setDescriptionHTML('Description and examples of CBArtworkElement functionality.');
 
-        $URL = '/colby/classes/CBAdminPageForTests/2017.02.02.TestImage.jpg';
+        $URL = CBTestAdmin::testImageURL();
         $CSS = <<<EOT
 
             main.CBUIRoot {
