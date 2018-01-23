@@ -9,6 +9,8 @@ final class CBRemoteAdministration {
      * @return null
      */
     static function CBInstall_install() {
-        CBModels::deleteByID('9893b4a401686ac0e85707b6c19a01405481cc38');
+        CBDB::transaction(function () {
+            CBModels::deleteByID('9893b4a401686ac0e85707b6c19a01405481cc38');
+        });
     }
 }
