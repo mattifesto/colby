@@ -5,7 +5,7 @@ if (CBAdminPageForUpdate::installationIsRequired()) {
 }
 
 if (!ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
-    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
+    return include cbsysdir() . '/handlers/handle-authorization-failed.php';
 }
 
 $className = $_GET['c'] ?? 'CBStatusAdminPage';
