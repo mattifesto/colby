@@ -30,7 +30,6 @@ final class CBImageVerificationTask {
         return ['CBImages', 'CBLog', 'CBModels', 'CBPages', 'CBTasks2'];
     }
 
-
     /**
      * @param hex160 $ID
      *
