@@ -22,6 +22,31 @@ final class CBTasks2 {
      *          count: int
      *      }
      */
+    static function CBAjax_fetchStatus($args) {
+        return CBTasks2::fetchStatus($args);
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_fetchStatus_group() {
+        return 'Administrators';
+    }
+
+    /**
+     * @param object $args
+     *
+     *      {
+     *          processID: hex160?
+     *      }
+     *
+     *  @return [int => object]
+     *
+     *      {
+     *          state: int
+     *          count: int
+     *      }
+     */
     static function fetchStatus($args) {
         $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
 
@@ -56,31 +81,6 @@ EOT;
             'failed' => $failed,
             'total' => $scheduled + $ready + $running + $complete + $failed,
         ];
-    }
-
-    /**
-     * @param object $args
-     *
-     *      {
-     *          processID: hex160?
-     *      }
-     *
-     *  @return [int => object]
-     *
-     *      {
-     *          state: int
-     *          count: int
-     *      }
-     */
-    static function CBAjax_fetchStatus($args) {
-        return CBTasks2::fetchStatus($args);
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_fetchStatus_group() {
-        return 'Administrators';
     }
 
     /**
