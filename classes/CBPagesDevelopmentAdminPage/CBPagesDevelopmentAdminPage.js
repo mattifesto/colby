@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* exported CBPagesDevelopmentAdminPage */
 /* global
     CBUI,
     Colby */
@@ -21,15 +22,6 @@ var CBPagesDevelopmentAdminPage = {
                     .catch(Colby.displayAndReportError);
             },
             text: "Start Verification for All Pages",
-        }).element);
-
-        buttonsElement.appendChild(CBUI.createButton({
-            callback: function () {
-                Colby.callAjaxFunction("CBPageVerificationTask", "startForNewPages")
-                    .then(function () { Colby.alert("Verification has been started for all new pages."); })
-                    .catch(Colby.displayAndReportError);
-            },
-            text: "Start Verification for New Pages",
         }).element);
 
         element.appendChild(CBUI.createHalfSpace());
