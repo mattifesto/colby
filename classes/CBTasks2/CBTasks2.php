@@ -34,6 +34,44 @@ final class CBTasks2 {
     }
 
     /**
+     * This ajax function will run the next ready task if one exists. If one
+     * doesn't exist it will attempt to wake any scheduled tasks.
+     *
+     * @param object $args
+     *
+     *      {
+     *          processID: hex160?
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          taskWasRun: bool
+     *      }
+     */
+    static function CBAjax_runNextTask($args) {
+        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+        $taskWasRun = CBTasks2::runNextTask((object)[
+            'processID' => $processID,
+        ]);
+
+        if (!$taskWasRun) {
+            CBTasks2::wakeScheduledTasks();
+        }
+
+        return (object)[
+            'taskWasRun' => $taskWasRun,
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_runNextTask_group() {
+        return 'Public';
+    }
+
+    /**
      * @param object $args
      *
      *      {
@@ -224,44 +262,6 @@ EOT;
         } else {
             return false;
         }
-    }
-
-    /**
-     * This ajax function will run the next ready task if one exists. If one
-     * doesn't exist it will attempt to wake any scheduled tasks.
-     *
-     * @param object $args
-     *
-     *      {
-     *          processID: hex160?
-     *      }
-     *
-     * @return object
-     *
-     *      {
-     *          taskWasRun: bool
-     *      }
-     */
-    static function CBAjax_runNextTask($args) {
-        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
-        $taskWasRun = CBTasks2::runNextTask((object)[
-            'processID' => $processID,
-        ]);
-
-        if (!$taskWasRun) {
-            CBTasks2::wakeScheduledTasks();
-        }
-
-        return (object)[
-            'taskWasRun' => $taskWasRun,
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_runNextTask_group() {
-        return 'Public';
     }
 
     /**
