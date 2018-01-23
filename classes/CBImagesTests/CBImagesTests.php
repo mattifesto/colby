@@ -6,7 +6,7 @@ final class CBImagesTests {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v372.js', cbsysurl())];
     }
 
     /**
@@ -20,10 +20,10 @@ final class CBImagesTests {
      * @return null
      */
     static function resizeTest() {
-        CBImages::reduceImage(CBAdminPageForTests::imageID, 'jpeg', 'rw5000rh5000');
+        CBImages::reduceImage(CBTestAdmin::testImageID(), 'jpeg', 'rw5000rh5000');
 
-        $filepath1 = CBDataStore::flexpath(CBAdminPageForTests::imageID, 'original.jpeg', CBSiteDirectory);
-        $filepath2 = CBDataStore::flexpath(CBAdminPageForTests::imageID, 'rw5000rh5000.jpeg', CBSiteDirectory);
+        $filepath1 = CBDataStore::flexpath(CBTestAdmin::testImageID(), 'original.jpeg', CBSiteDirectory);
+        $filepath2 = CBDataStore::flexpath(CBTestAdmin::testImageID(), 'rw5000rh5000.jpeg', CBSiteDirectory);
 
         $sha1 = sha1_file($filepath1);
         $sha2 = sha1_file($filepath2);

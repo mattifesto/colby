@@ -3,13 +3,13 @@
 /* jshint esnext: true */
 /* exported CBImagesTests */
 /* global
-    CBAdminPageForTests,
+    CBTestAdmin,
     Colby */
 
 /**
  * @NOTE 2017.11.14
  *
- * These test were transplanted from CBAdminPageForTests. They are verified to
+ * These test were transplanted from CBTestAdmin. They are verified to
  * work, but the cross object accesses are a bit odd. Consider improving in the
  * future.
  */
@@ -21,12 +21,12 @@ var CBImagesTests = {
      * @return Promise
      */
     deleteByIDTest: function () {
-        return Colby.callAjaxFunction("CBModels", "deleteByID", { ID: CBAdminPageForTests.testImageID })
+        return Colby.callAjaxFunction("CBModels", "deleteByID", { ID: CBTestAdmin.testImageID })
                     .then(report1)
                     .then(report2);
 
         function report1(response) {
-            var imageURI = "/" + Colby.dataStoreFlexpath(CBAdminPageForTests.testImageID, "original.jpeg");
+            var imageURI = "/" + Colby.dataStoreFlexpath(CBTestAdmin.testImageID, "original.jpeg");
 
             return CBImagesTests.fetchURIDoesExist(imageURI);
         }
@@ -75,7 +75,7 @@ var CBImagesTests = {
          * However, it does work so think of a better way later if necessary.
          */
 
-        data.append("image", CBAdminPageForTests.fileInputElement.files[0]);
+        data.append("image", CBTestAdmin.fileInputElement.files[0]);
 
         return Colby.fetchAjaxResponse(URL, data)
                     .then(report1)
@@ -88,10 +88,10 @@ var CBImagesTests = {
             if (image.extension === "jpeg" &&
                 image.filename === "original" &&
                 image.height === 900 &&
-                image.ID === CBAdminPageForTests.testImageID &&
+                image.ID === CBTestAdmin.testImageID &&
                 image.width === 1600)
             {
-                var imageURI = "/" + Colby.dataStoreFlexpath(CBAdminPageForTests.testImageID, "original.jpeg");
+                var imageURI = "/" + Colby.dataStoreFlexpath(CBTestAdmin.testImageID, "original.jpeg");
 
                 return CBImagesTests.fetchURIDoesExist(imageURI);
             } else {
@@ -101,7 +101,7 @@ var CBImagesTests = {
 
         function report2(doesExist) {
             if (doesExist) {
-                var imageURI = "/" + Colby.dataStoreFlexpath(CBAdminPageForTests.testImageID, "rw640.jpeg");
+                var imageURI = "/" + Colby.dataStoreFlexpath(CBTestAdmin.testImageID, "rw640.jpeg");
 
                 return CBImagesTests.fetchURIDoesExist(imageURI);
             } else {
