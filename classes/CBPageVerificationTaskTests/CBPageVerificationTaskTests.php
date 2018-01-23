@@ -13,7 +13,7 @@ final class CBPageVerificationTaskTests {
     static function importThumbnailURLToImageTest() {
         $pageID = '4a7bc517a928056f9518d839881cc9f49ea10c0a';
 
-        CBAdminPageForTests::prepareOldStyleImageDataStore();
+        CBTestAdmin::prepareOldStyleImageDataStore();
 
         Colby::query('START TRANSACTION');
         CBModels::deleteByID([$pageID]);
@@ -24,7 +24,7 @@ final class CBPageVerificationTaskTests {
             'className' => 'CBViewPage',
             'ID' => $pageID,
             'title' => 'Test Page for ' . __METHOD__ . '()',
-            'thumbnailURL' => CBDataStore::flexpath(CBAdminPageForTests::oldStyleImageDataStoreID(), 'thumbnail.jpeg', CBSitePreferences::siteURL()),
+            'thumbnailURL' => CBDataStore::flexpath(CBTestAdmin::oldStyleImageDataStoreID(), 'thumbnail.jpeg', CBSitePreferences::siteURL()),
         ];
 
         Colby::query('START TRANSACTION');
@@ -45,7 +45,7 @@ final class CBPageVerificationTaskTests {
 
         $imageID = CBModel::value($updatedPageSpec, 'image.ID');
 
-        if ($imageID !== CBAdminPageForTests::testImageID()) {
+        if ($imageID !== CBTestAdmin::testImageID()) {
             $v = json_encode($imageID);
             throw new Exception("The `image`.`ID` property has an incorrect value '{$v}' on the page spec.");
         }
@@ -53,7 +53,7 @@ final class CBPageVerificationTaskTests {
         // clean up
 
         CBModels::deleteByID($pageID);
-        CBAdminPageForTests::removeOldStyleImageDataStore();
+        CBTestAdmin::removeOldStyleImageDataStore();
     }
 
     /**
@@ -67,8 +67,8 @@ final class CBPageVerificationTaskTests {
     static function upgradeThumbnailURLToImageTest() {
         $pageID = '4a7bc517a928056f9518d839881cc9f49ea10c0a';
 
-        CBAdminPageForTests::prepareOldStyleImageDataStore();
-        CBImages::importOldStyleImageDataStore(CBAdminPageForTests::oldStyleImageDataStoreID());
+        CBTestAdmin::prepareOldStyleImageDataStore();
+        CBImages::importOldStyleImageDataStore(CBTestAdmin::oldStyleImageDataStoreID());
 
         Colby::query('START TRANSACTION');
         CBModels::deleteByID([$pageID]);
@@ -79,7 +79,7 @@ final class CBPageVerificationTaskTests {
             'className' => 'CBViewPage',
             'ID' => $pageID,
             'title' => 'Test Page for ' . __METHOD__ . '()',
-            'thumbnailURL' => CBDataStore::flexpath(CBAdminPageForTests::testImageID(), 'rw640.jpeg', CBSitePreferences::siteURL()),
+            'thumbnailURL' => CBDataStore::flexpath(CBTestAdmin::testImageID(), 'rw640.jpeg', CBSitePreferences::siteURL()),
         ];
 
         Colby::query('START TRANSACTION');
@@ -100,7 +100,7 @@ final class CBPageVerificationTaskTests {
 
         $imageID = CBModel::value($updatedPageSpec, 'image.ID');
 
-        if ($imageID !== CBAdminPageForTests::testImageID()) {
+        if ($imageID !== CBTestAdmin::testImageID()) {
             $v = json_encode($imageID);
             throw new Exception("The `image`.`ID` property has an incorrect value '{$v}' on the page spec.");
         }
@@ -108,6 +108,6 @@ final class CBPageVerificationTaskTests {
         // clean up
 
         CBModels::deleteByID($pageID);
-        CBAdminPageForTests::removeOldStyleImageDataStore();
+        CBTestAdmin::removeOldStyleImageDataStore();
     }
 }
