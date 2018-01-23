@@ -31,7 +31,7 @@ final class CBDataStoresFinderTask {
             CBModels::save([$spec]);
         });
 
-        CBTasks2::updateTask(__CLASS__, CBDataStoresFinderTask::ID(), null, null, time());
+        CBTasks2::restart(__CLASS__, CBDataStoresFinderTask::ID(), /* priority: */ 101);
     }
 
     /**
@@ -169,7 +169,7 @@ EOT;
      * @return void
      */
     static function CBInstall_install(): void {
-        CBTasks2::updateTask(__CLASS__, CBDataStoresFinderTask::ID(), null, null, time());
+        CBTasks2::restart(__CLASS__, CBDataStoresFinderTask::ID(), /* priority: */ 101);
     }
 
     /**
