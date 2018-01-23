@@ -40,6 +40,15 @@ final class CBAdmin {
      * @return void
      */
     static function render(string $className, string $pageStub): void {
+        if (is_callable($function = "{$className}::CBAdmin_group")) {
+            $group = call_user_func($function);
+
+            if (!ColbyUser::currentUserIsMemberOfGroup($group)) {
+                include cbsysdir() . '/handlers/handle-authorization-failed.php';
+                return;
+            }
+        }
+
         CBHTMLOutput::begin();
         CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
         CBHTMLOutput::requireClassName('CBUI');
@@ -63,7 +72,7 @@ final class CBAdmin {
 
         ?>
 
-        <main class="CBUIRoot">
+        <main class="CBUIRoot <?= $className ?>">
 
             <?php
 
