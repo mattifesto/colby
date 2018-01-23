@@ -1,4 +1,6 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* exported CBImagesAdminPage */
 /* global
     CBUI,
     Colby */
@@ -23,15 +25,6 @@ var CBImagesAdminPage = {
                     .catch(Colby.displayAndReportError);
             },
             text: "Start Verification for All Images",
-        }).element);
-
-        buttonsElement.appendChild(CBUI.createButton({
-            callback: function () {
-                Colby.callAjaxFunction("CBImageVerificationTask", "startForNewImages")
-                    .then(function () { Colby.alert("Verification for all images started."); })
-                    .catch(Colby.displayAndReportError);
-            },
-            text: "Start Verification for New Images",
         }).element);
 
         CBImagesAdminPage.fetchImages({
