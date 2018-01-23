@@ -219,6 +219,21 @@ EOT;
     }
 
     /**
+     * @param string $className
+     * @param [hex160]|hex160 $IDs
+     * @param int? $priority
+     *
+     * @return void
+     */
+    static function restart($className, $IDs, $priority = null): void {
+        if (!is_array($IDs)) {
+            $IDs = [$IDs];
+        }
+
+        CBTasks2::updateTasks($className, $IDs, null, $priority, time());
+    }
+
+    /**
      * @param object $args
      *
      *      {
