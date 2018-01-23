@@ -86,7 +86,7 @@ if (ColbyUser::current()->isOneOfThe('Developers')) {
             'className' => 'CBMenuItem',
             'name' => 'test',
             'text' => 'Test',
-            'URL' => '/admin/page/?class=CBAdminPageForTests',
+            'URL' => '/admin/?c=CBTestAdmin',
         ],
         'update' => (object)[
             'className' => 'CBMenuItem',

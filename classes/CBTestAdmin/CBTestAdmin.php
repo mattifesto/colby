@@ -3,23 +3,23 @@
 final class CBTestAdmin {
 
     /**
+     * @return string
+     */
+    static function CBAdmin_group() {
+        return 'Developers';
+    }
+
+    /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
+    static function CBAdmin_menuNamePath(): array {
         return ['develop', 'test'];
     }
 
     /**
-     * @return stdClass
+     * @return void
      */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Developers'];
-    }
-
-    /**
-     * @return null
-     */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::setTitleHTML('Tests');
         CBHTMLOutput::setDescriptionHTML('Run website unit tests.');
     }
