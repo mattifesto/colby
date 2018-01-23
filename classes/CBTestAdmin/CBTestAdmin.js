@@ -1,13 +1,13 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esnext: true */
-/* exported CBAdminPageForTests */
+/* exported CBTestAdmin */
 /* global
-    CBAdminPageForTests_javaScriptTests,
+    CBTestAdmin_javaScriptTests,
     CBUI,
     Colby */
 
-var CBAdminPageForTests = {
+var CBTestAdmin = {
 
     testImageID: "3dd8e721048bbe8ea5f0c043fab73277a0b0044c",
 
@@ -54,7 +54,7 @@ var CBAdminPageForTests = {
         buttonsContainerElement.className = "buttonsContainer";
 
         var img = document.createElement("img");
-        img.src = "/colby/classes/CBAdminPageForTests/2017.02.02.TestImage.jpg";
+        img.src = "/colby/classes/CBTestAdmin/2017.02.02.TestImage.jpg";
         var input = document.createElement("input");
         input.type = "file";
         input.style.display = "none";
@@ -64,13 +64,13 @@ var CBAdminPageForTests = {
             text: "Run Tests",
         });
 
-        var status = CBAdminPageForTests.createStatus();
+        var status = CBTestAdmin.createStatus();
 
-        CBAdminPageForTests.status = status;
+        CBTestAdmin.status = status;
 
-        CBAdminPageForTests.fileInputElement = input;
+        CBTestAdmin.fileInputElement = input;
 
-        input.addEventListener("change", CBAdminPageForTests.handleRunTests.bind(undefined, {
+        input.addEventListener("change", CBTestAdmin.handleRunTests.bind(undefined, {
             button: button,
         }));
 
@@ -122,7 +122,7 @@ var CBAdminPageForTests = {
     DOMContentDidLoad: function() {
         var main = document.getElementsByTagName("main")[0];
 
-        main.appendChild(CBAdminPageForTests.createTestUI());
+        main.appendChild(CBTestAdmin.createTestUI());
     },
 
     /**
@@ -145,30 +145,30 @@ var CBAdminPageForTests = {
          * makes this function return early if it is called in this situation.
          */
 
-        if (CBAdminPageForTests.fileInputElementIsResetting) {
+        if (CBTestAdmin.fileInputElementIsResetting) {
             return;
         }
 
         var date = new Date();
         args.button.disable();
 
-        CBAdminPageForTests.status.clear();
-        CBAdminPageForTests.status.append("Tests Started - " +
+        CBTestAdmin.status.clear();
+        CBTestAdmin.status.append("Tests Started - " +
             date.toLocaleDateString() +
             " " +
             date.toLocaleTimeString());
-        CBAdminPageForTests.status.append("\u00A0");
+        CBTestAdmin.status.append("\u00A0");
 
         Promise.resolve()
-            .then(CBAdminPageForTests.runJavaScriptTests)
-            .then(CBAdminPageForTests.fetchServerTests)
-            .then(CBAdminPageForTests.runServerTests)
+            .then(CBTestAdmin.runJavaScriptTests)
+            .then(CBTestAdmin.fetchServerTests)
+            .then(CBTestAdmin.runServerTests)
             .catch(report)
             .then(onFinally, onFinally);
 
         function report(error) {
             var message = "Failed: " + error.message;
-            CBAdminPageForTests.status.append(message, "failure");
+            CBTestAdmin.status.append(message, "failure");
             Colby.reportError(error);
 
             Colby.alert(message);
@@ -176,9 +176,9 @@ var CBAdminPageForTests = {
 
         function onFinally() {
             args.button.enable();
-            CBAdminPageForTests.fileInputElementIsResetting = true;
-            CBAdminPageForTests.fileInputElement.value = null;
-            CBAdminPageForTests.fileInputElementIsResetting = undefined;
+            CBTestAdmin.fileInputElementIsResetting = true;
+            CBTestAdmin.fileInputElement.value = null;
+            CBTestAdmin.fileInputElementIsResetting = undefined;
         }
     },
 
@@ -193,12 +193,12 @@ var CBAdminPageForTests = {
 
             /* closure */
             function run() {
-                var test = CBAdminPageForTests_javaScriptTests[index];
+                var test = CBTestAdmin_javaScriptTests[index];
                 var className = test[0] + "Tests";
                 var functionName = test[1] + "Test";
                 var obj = window[className];
 
-                CBAdminPageForTests.status.append("JavaScript Test: " +
+                CBTestAdmin.status.append("JavaScript Test: " +
                                                   className +
                                                   " - " +
                                                   functionName);
@@ -222,7 +222,7 @@ var CBAdminPageForTests = {
 
             /* closure */
             function next() {
-                if (index < CBAdminPageForTests_javaScriptTests.length) {
+                if (index < CBTestAdmin_javaScriptTests.length) {
                     run();
                     index += 1;
                 } else {
@@ -238,7 +238,7 @@ var CBAdminPageForTests = {
                     message = value.message;
                 }
 
-                CBAdminPageForTests.status.append(message, "success");
+                CBTestAdmin.status.append(message, "success");
             }
         });
     },
@@ -262,7 +262,7 @@ var CBAdminPageForTests = {
                     URI += "&function=" + functionName;
                 }
 
-                CBAdminPageForTests.status.append("Server Test: " + className + (functionName ? " - " + functionName : ''));
+                CBTestAdmin.status.append("Server Test: " + className + (functionName ? " - " + functionName : ''));
 
                 Colby.fetchAjaxResponse(URI)
                     .then(reportTestSuccess)
@@ -270,7 +270,7 @@ var CBAdminPageForTests = {
                     .catch(reject);
 
                 function reportTestSuccess(response) {
-                    CBAdminPageForTests.status.append(response.message || "Succeeded", "success");
+                    CBTestAdmin.status.append(response.message || "Succeeded", "success");
                 }
             }
 
@@ -288,4 +288,4 @@ var CBAdminPageForTests = {
 
 };
 
-Colby.afterDOMContentLoaded(CBAdminPageForTests.DOMContentDidLoad);
+Colby.afterDOMContentLoaded(CBTestAdmin.DOMContentDidLoad);

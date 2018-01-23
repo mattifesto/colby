@@ -1,13 +1,6 @@
 <?php
 
-final class CBAdminPageForTests {
-
-    /**
-     * @deprecated use CBAdminPageForTests::testImageID() instead.
-     *
-     * The data store ID of the test image.
-     */
-    const imageID = '3dd8e721048bbe8ea5f0c043fab73277a0b0044c';
+final class CBTestAdmin {
 
     /**
      * @return [string]
@@ -35,14 +28,14 @@ final class CBAdminPageForTests {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v372.css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v372.js', cbsysurl())];
     }
 
     /**
@@ -50,7 +43,7 @@ final class CBAdminPageForTests {
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
-            ['CBAdminPageForTests_javaScriptTests', CBAdminPageForTests::javaScriptTests()],
+            ['CBTestAdmin_javaScriptTests', CBTestAdmin::javaScriptTests()],
         ];
     }
 
@@ -60,7 +53,7 @@ final class CBAdminPageForTests {
     static function CBHTMLOutput_requiredClassNames() {
         $classNames = array_map(function ($element) {
             return $element[0] . "Tests";
-        }, CBAdminPageForTests::javaScriptTests());
+        }, CBTestAdmin::javaScriptTests());
 
         $classNames[] = 'CBUI';
 
@@ -99,18 +92,18 @@ final class CBAdminPageForTests {
      *
      * One you are done using this data store, remove it by calling:
      *
-     *      CBAdminPageForTests::removeOldStyleImageDataStore();
+     *      CBTestAdmin::removeOldStyleImageDataStore();
      *
      * @return null
      */
     static function prepareOldStyleImageDataStore() {
-        CBAdminPageForTests::removeOldStyleImageDataStore();
+        CBTestAdmin::removeOldStyleImageDataStore();
 
-        $ID = CBAdminPageForTests::oldStyleImageDataStoreID();
+        $ID = CBTestAdmin::oldStyleImageDataStoreID();
 
         CBDataStore::makeDirectoryForID($ID);
 
-        $originalFilepath = CBAdminPageForTests::testImageFilepath();
+        $originalFilepath = CBTestAdmin::testImageFilepath();
         $largeFilepath = CBDataStore::flexpath($ID, 'large.jpeg', cbsitedir());
         $mediumFilepath = CBDataStore::flexpath($ID, 'medium.jpeg', cbsitedir());
         $thumbnailFilepath = CBDataStore::flexpath($ID, 'thumbnail.jpeg', cbsitedir());
@@ -130,8 +123,8 @@ final class CBAdminPageForTests {
      * @return null
      */
     static function removeOldStyleImageDataStore() {
-        CBModels::deleteByID(CBAdminPageForTests::oldStyleImageDataStoreID());
-        CBModels::deleteByID(CBAdminPageForTests::testImageID());
+        CBModels::deleteByID(CBTestAdmin::oldStyleImageDataStoreID());
+        CBModels::deleteByID(CBTestAdmin::testImageID());
     }
 
     /**
@@ -144,11 +137,18 @@ final class CBAdminPageForTests {
     }
 
     /**
+     * @return string
+     */
+    static function testImageURL() {
+        return cbsysurl() . '/classes/' . __CLASS__ . '/2017.02.02.TestImage.jpg';
+    }
+
+    /**
      * If the test image is imported as a CBImage this will be its image ID.
      *
      * @return hex160
      */
     static function testImageID() {
-        return CBAdminPageForTests::imageID;
+        return '3dd8e721048bbe8ea5f0c043fab73277a0b0044c';
     }
 }

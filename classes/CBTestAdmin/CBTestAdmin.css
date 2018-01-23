@@ -1,43 +1,43 @@
-.CBAdminPageForTests {
+.CBTestAdmin {
     background-color: hsl(0, 0%, 20%);
     color: hsl(0, 0%, 80%);
     flex: 1 1 auto;
 }
 
-.CBAdminPageForTests .container {
+.CBTestAdmin .container {
     align-items: center;
     display: flex;
     flex-direction: column;
     padding: 10px;
 }
 
-.CBAdminPageForTests .buttonsContainer {
+.CBTestAdmin .buttonsContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-.CBAdminPageForTests img {
+.CBTestAdmin img {
     height: 90px;
     margin-bottom: 5px;
     width: 160px;
 }
 
-.CBAdminPageForTests .status {
+.CBTestAdmin .status {
     padding: 10px;
 }
 
-.CBAdminPageForTests .line.error {
+.CBTestAdmin .line.error {
     color: hsl(30, 50%, 50%);
     padding: 0 10px;
 }
 
-.CBAdminPageForTests .line.failure {
+.CBTestAdmin .line.failure {
     color: hsl(0, 50%, 50%);
     padding-bottom: 5px;
 }
 
-.CBAdminPageForTests .line.success {
+.CBTestAdmin .line.success {
     color: hsl(120, 50%, 50%);
     padding-bottom: 5px;
 }
