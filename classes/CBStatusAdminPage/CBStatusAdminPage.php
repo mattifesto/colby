@@ -35,7 +35,7 @@ final class CBStatusAdminPage {
         array_walk($statusWidgetClassNames, function($className) {
             if (is_callable($function = "{$className}::CBStatusAdminPage_data")) {
                 $data = call_user_func($function);
-                
+
                 CBUISectionItem4::renderOpen();
                 CBUIStringsPart::render($data[0], $data[2], 'keyvalue sidebyside');
                 CBUISectionItem4::renderClose();
@@ -82,21 +82,6 @@ final class CBStatusAdminPage {
         $duplicateURIMessages = CBStatusAdminPage::fetchDuplicateURIMessages();
 
         if (ColbyUser::current()->isOneOfThe('Developers')) {
-
-            {
-                $now = time();
-                $spec = CBModels::fetchSpecByID(CBRemoteAdministration::pingModelID());
-
-                if ($spec === false) {
-                    $issues[] = ["Ping", "This site has never been pinged."];
-                } else {
-                    $pinged = CBModel::value($spec, 'pinged', 0, 'intval');
-
-                    if ($pinged < ($now - (60 * 15))) {
-                        $issues[] = ["Ping", "This site has not been pinged for over 15 minutes."];
-                    }
-                }
-            }
 
             /**
              * Deprecated constant strings are broken up to avoid false positives
