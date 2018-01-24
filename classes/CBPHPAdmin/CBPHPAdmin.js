@@ -6,7 +6,7 @@
     CBPHPAdmin_iniValues,
     CBUI,
     CBUISectionItem4,
-    CBUITitleAndDescriptionPart,
+    CBUIStringsPart,
     Colby */
 
 var CBPHPAdmin = {
@@ -22,11 +22,13 @@ var CBPHPAdmin = {
 
         Object.keys(CBPHPAdmin_iniValues).forEach(function (key) {
             let sectionItem = CBUISectionItem4.create();
-            let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
-            titleAndDescriptionPart.title = key;
-            titleAndDescriptionPart.description = CBPHPAdmin_iniValues[key] || Colby.nonBreakingSpace;
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = key;
+            stringsPart.string2 = CBPHPAdmin_iniValues[key] || Colby.nonBreakingSpace;
+            stringsPart.element.classList.add("keyvalue");
+            stringsPart.element.classList.add("selectable");
 
-            sectionItem.appendPart(titleAndDescriptionPart);
+            sectionItem.appendPart(stringsPart);
             sectionElement.appendChild(sectionItem.element);
         });
 

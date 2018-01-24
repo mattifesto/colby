@@ -20,7 +20,7 @@ final class CBPHPAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v374.js', cbsysurl())];
     }
 
     /**
@@ -36,6 +36,6 @@ final class CBPHPAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUISectionItem4', 'CBUITitleAndDescriptionPart'];
+        return ['CBUI', 'CBUISectionItem4', 'CBUIStringsPart'];
     }
 }
