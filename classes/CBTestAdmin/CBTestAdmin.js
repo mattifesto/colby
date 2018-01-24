@@ -1,9 +1,12 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esnext: true */
+/* jshint esversion: 6 */
 /* exported CBTestAdmin */
 /* global
     CBTestAdmin_javaScriptTests,
+    CBUI,
+    CBUISectionItem4,
+    CBUIStringsPart,
     CBUI,
     Colby */
 
@@ -55,26 +58,40 @@ var CBTestAdmin = {
 
         var img = document.createElement("img");
         img.src = "/colby/classes/CBTestAdmin/2017.02.02.TestImage.jpg";
+
+        containerElement.appendChild(img);
+        containerElement.appendChild(CBUI.createHalfSpace());
+
         var input = document.createElement("input");
         input.type = "file";
         input.style.display = "none";
-
-        var button = CBUI.createButton({
-            callback: input.click.bind(input),
-            text: "Run Tests",
-        });
-
-        var status = CBTestAdmin.createStatus();
-
-        CBTestAdmin.status = status;
-
         CBTestAdmin.fileInputElement = input;
 
-        input.addEventListener("change", CBTestAdmin.handleRunTests.bind(undefined, {
-            button: button,
-        }));
+        input.addEventListener("change", CBTestAdmin.handleRunTests);
 
-        buttonsContainerElement.appendChild(button.element);
+        containerElement.appendChild(input);
+
+        {
+            let sectionElement = CBUI.createSection();
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                input.click();
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Run Tests";
+
+            stringsPart.element.classList.add("action");
+
+            sectionItem.appendPart(stringsPart);
+            sectionElement.appendChild(sectionItem.element);
+            containerElement.appendChild(sectionElement);
+            containerElement.appendChild(CBUI.createHalfSpace());
+        }
+
+        var status = CBTestAdmin.createStatus();
+        CBTestAdmin.status = status;
+
         buttonsContainerElement.appendChild(CBUI.createButton({
             callback: function () {
                 window.open('/admin/?c=CBUnitTests&p=AdminPageException');
@@ -107,8 +124,6 @@ var CBTestAdmin = {
             text: "JavaScript Error Test",
         }).element);
 
-        containerElement.appendChild(input);
-        containerElement.appendChild(img);
         containerElement.appendChild(buttonsContainerElement);
         element.appendChild(containerElement);
         element.appendChild(status.element);
@@ -133,11 +148,9 @@ var CBTestAdmin = {
     },
 
     /**
-     * @param object args.button
-     *
      * @return undefined
      */
-    handleRunTests: function (args) {
+    handleRunTests: function () {
 
         /**
          * IE11 incorrectly fires the changed event on the input element when
@@ -150,7 +163,6 @@ var CBTestAdmin = {
         }
 
         var date = new Date();
-        args.button.disable();
 
         CBTestAdmin.status.clear();
         CBTestAdmin.status.append("Tests Started - " +
@@ -175,7 +187,6 @@ var CBTestAdmin = {
         }
 
         function onFinally() {
-            args.button.enable();
             CBTestAdmin.fileInputElementIsResetting = true;
             CBTestAdmin.fileInputElement.value = null;
             CBTestAdmin.fileInputElementIsResetting = undefined;

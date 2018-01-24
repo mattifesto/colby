@@ -35,7 +35,7 @@ final class CBTestAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v372.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v374.js', cbsysurl())];
     }
 
     /**
@@ -56,6 +56,8 @@ final class CBTestAdmin {
         }, CBTestAdmin::javaScriptTests());
 
         $classNames[] = 'CBUI';
+        $classNames[] = 'CBUISectionItem4';
+        $classNames[] = 'CBUIStringsPart';
 
         return array_values(array_unique($classNames));
     }
