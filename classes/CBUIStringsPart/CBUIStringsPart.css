@@ -31,6 +31,14 @@
     font-size: 80%;
 }
 
+.CBUIStringsPart.action {
+    text-align: center;
+}
+
+.CBUIStringsPart.action > .string1 {
+    color: var(--CBTextColorForLinks);
+}
+
 /* the key string in keyvalue is truncated */
 .CBUIStringsPart.keyvalue > .string1,
 /* both strings in sidebyside are truncated */
