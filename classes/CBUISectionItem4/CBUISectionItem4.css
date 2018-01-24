@@ -10,3 +10,14 @@
     -ms-user-select: none;
     -webkit-user-select: none;
 }
+
+/**
+ * TODO: 2018.01.24 change "auto" to "contain" once contain works
+ */
+.CBUISectionItem4 .selectable {
+    cursor: auto;
+    user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    -webkit-user-select: auto;
+}
