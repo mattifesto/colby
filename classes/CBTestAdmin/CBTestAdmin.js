@@ -32,8 +32,6 @@ var CBTestAdmin = {
         element.className = "CBTestUI";
         var containerElement = document.createElement("div");
         containerElement.className = "container";
-        var buttonsContainerElement = document.createElement("div");
-        buttonsContainerElement.className = "buttonsContainer";
 
         var img = document.createElement("img");
         img.src = "/colby/classes/CBTestAdmin/2017.02.02.TestImage.jpg";
@@ -50,8 +48,9 @@ var CBTestAdmin = {
 
         containerElement.appendChild(input);
 
+        let sectionElement = CBUI.createSection();
+
         {
-            let sectionElement = CBUI.createSection();
             let sectionItem = CBUISectionItem4.create();
             sectionItem.callback = function () {
                 input.click();
@@ -64,46 +63,90 @@ var CBTestAdmin = {
 
             sectionItem.appendPart(stringsPart);
             sectionElement.appendChild(sectionItem.element);
-            containerElement.appendChild(sectionElement);
-            containerElement.appendChild(CBUI.createHalfSpace());
         }
+
+        {
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                window.open('/admin/?c=CBUnitTests&p=AdminPageException');
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Test CBPageSettingsForAdminPages::renderPageForException()";
+
+            stringsPart.element.classList.add("action");
+
+            sectionItem.appendPart(stringsPart);
+            sectionElement.appendChild(sectionItem.element);
+        }
+
+        {
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                window.open('/colby/test-default-exception-handler/');
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Test the Colby Default Exception Handler";
+
+            stringsPart.element.classList.add("action");
+
+            sectionItem.appendPart(stringsPart);
+            sectionElement.appendChild(sectionItem.element);
+        }
+
+        {
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                window.open('/colby/test-cbhtmloutput-exception-handler/');
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Test the CBHTMLOutput Custom Exception Handler";
+
+            stringsPart.element.classList.add("action");
+
+            sectionItem.appendPart(stringsPart);
+            sectionElement.appendChild(sectionItem.element);
+        }
+
+        {
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                Colby.callAjaxFunction("CBUnitTests", "errorTest")
+                    .catch(Colby.displayAndReportError);
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Test the CBAjaxResponse Custom Exception Handler";
+
+            stringsPart.element.classList.add("action");
+
+            sectionItem.appendPart(stringsPart);
+            sectionElement.appendChild(sectionItem.element);
+        }
+
+        {
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                throw new Error("Sample JavaScript Error");
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "JavaScript Error Test";
+
+            stringsPart.element.classList.add("action");
+
+            sectionItem.appendPart(stringsPart);
+            sectionElement.appendChild(sectionItem.element);
+        }
+
+        containerElement.appendChild(sectionElement);
+        containerElement.appendChild(CBUI.createHalfSpace());
 
         var status = CBTestAdmin.createStatus();
         CBTestAdmin.status = status;
 
-        buttonsContainerElement.appendChild(CBUI.createButton({
-            callback: function () {
-                window.open('/admin/?c=CBUnitTests&p=AdminPageException');
-            },
-            text: "Test CBPageSettingsForAdminPages::renderPageForException()",
-        }).element);
-        buttonsContainerElement.appendChild(CBUI.createButton({
-            callback: function () {
-                window.open('/colby/test-default-exception-handler/');
-            },
-            text: "Test the Colby Default Exception Handler",
-        }).element);
-        buttonsContainerElement.appendChild(CBUI.createButton({
-            callback: function () {
-                window.open('/colby/test-cbhtmloutput-exception-handler/');
-            },
-            text: "Test the CBHTMLOutput Custom Exception Handler",
-        }).element);
-        buttonsContainerElement.appendChild(CBUI.createButton({
-            callback: function () {
-                Colby.callAjaxFunction("CBUnitTests", "errorTest")
-                    .catch(Colby.displayAndReportError);
-            },
-            text: "Test the CBAjaxResponse Custom Exception Handler",
-        }).element);
-        buttonsContainerElement.appendChild(CBUI.createButton({
-            callback: function () {
-                throw new Error("Sample JavaScript Error");
-            },
-            text: "JavaScript Error Test",
-        }).element);
-
-        containerElement.appendChild(buttonsContainerElement);
         element.appendChild(containerElement);
         element.appendChild(status.element);
 
