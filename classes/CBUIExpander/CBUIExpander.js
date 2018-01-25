@@ -108,7 +108,7 @@ var CBUIExpander = {
              * @param string? value
              */
             set message(value) {
-                message = String(value);
+                message = value || "";
                 summaryElement.textContent = CBMessageMarkup.markupToText(message).split("\n\n", 1)[0];
                 messageElement.innerHTML = CBMessageMarkup.convert(message);
             },

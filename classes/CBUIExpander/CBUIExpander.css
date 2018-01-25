@@ -1,19 +1,21 @@
 .CBUIExpander {
+    box-sizing: border-box;
+    max-width: 100%;
     padding: 10px 15px;
 }
 
-.CBUIExpander .container {
+.CBUIExpander > .container {
     background-color: var(--CBBackgroundColor);
     border: 1px solid var(--CBLineColor);
     border-radius: 5px;
     overflow: hidden;
 }
 
-.CBUIExpander .header {
+.CBUIExpander > .container > .header {
     display: flex;
 }
 
-.CBUIExpander .toggle {
+.CBUIExpander > .container > .header > .toggle {
     background-color: var(--CBButtonBackgroundColor);
     border-bottom-right-radius: 5px;
     color: var(--CBButtonTextColor);
@@ -29,57 +31,57 @@
     -webkit-user-select: none;
 }
 
-.CBUIExpander.severity4 .toggle {
+.CBUIExpander.severity4 > .container > .header > .toggle {
     background-color: orange;
 }
 
-.CBUIExpander.severity3 .toggle {
+.CBUIExpander.severity3 > .container > .header > .toggle {
     background-color: red;
 }
 
-.CBUIExpander.severity2 .toggle {
+.CBUIExpander.severity2 > .container > .header > .toggle {
     background-color: hsl(300, 50%, 50%);
 }
 
-.CBUIExpander.severity1 .toggle {
+.CBUIExpander.severity1 > .container > .header > .toggle {
     background-color: hsl(300, 50%, 25%);
 }
 
-.CBUIExpander.severity0 .toggle {
+.CBUIExpander.severity0 > .container > .header > .toggle {
     background-color: hsl(0, 0%, 0%);
 }
 
-.CBUIExpander .toggle::before {
+.CBUIExpander > .container > .header > .toggle::before {
     content: "Show";
 }
 
-.CBUIExpander.expanded .toggle::before {
+.CBUIExpander.expanded > .container > .header > .toggle::before {
     content: "Hide";
 }
 
-.CBUIExpander time {
+.CBUIExpander > .container > .header > time {
     color: var(--CBTextColor2);
     font-size: 80%;
     padding: 5px 10px;
 }
 
-.CBUIExpander .summary {
+.CBUIExpander > .container > .summary {
     overflow: hidden;
     padding: 10px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.CBUIExpander.expanded .summary {
+.CBUIExpander.expanded > .container > .summary {
     display: none;
 }
 
-.CBUIExpander .message {
+.CBUIExpander > .container > .message {
     display: none;
     overflow-y: scroll;
     padding: 10px;
 }
 
-.CBUIExpander.expanded .message {
+.CBUIExpander.expanded > .container > .message {
     display: block;
 }
