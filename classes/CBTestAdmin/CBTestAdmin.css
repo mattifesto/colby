@@ -1,10 +1,3 @@
-.CBTestAdmin .container {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-}
-
 .CBTestAdmin .buttonsContainer {
     display: flex;
     flex-wrap: wrap;
@@ -12,30 +5,8 @@
 }
 
 .CBTestAdmin img {
+    display: block;
     height: 90px;
-    margin-bottom: 5px;
+    margin: 5px auto;
     width: 160px;
-}
-
-.CBTestAdmin .status {
-    padding: 10px;
-}
-
-.CBTestAdmin .line.error {
-    color: hsl(30, 50%, 50%);
-    padding: 0 10px;
-}
-
-.CBTestAdmin .line.failure {
-    color: hsl(0, 50%, 50%);
-    padding-bottom: 5px;
-}
-
-.CBTestAdmin .line.success {
-    color: hsl(120, 50%, 50%);
-    padding-bottom: 5px;
-}
-
-main + .flex-fill {
-    display: none;
 }

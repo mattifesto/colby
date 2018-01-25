@@ -28,7 +28,7 @@ final class CBTestAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v372.css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
     }
 
     /**
@@ -56,6 +56,7 @@ final class CBTestAdmin {
         }, CBTestAdmin::javaScriptTests());
 
         $classNames[] = 'CBUI';
+        $classNames[] = 'CBUIExpander';
         $classNames[] = 'CBUISectionItem4';
         $classNames[] = 'CBUIStringsPart';
 

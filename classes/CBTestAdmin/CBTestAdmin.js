@@ -5,6 +5,7 @@
 /* global
     CBTestAdmin_javaScriptTests,
     CBUI,
+    CBUIExpander,
     CBUISectionItem4,
     CBUIStringsPart,
     CBUI,
@@ -18,29 +19,7 @@ var CBTestAdmin = {
         var element = document.createElement("div");
         element.className = "status";
 
-        function append(message, className) {
-            var lineElement = document.createElement("div");
-            lineElement.className = "line";
-            lineElement.textContent = message;
-
-            if (className !== undefined) {
-                try {
-                    lineElement.classList.add(className);
-                } catch (error) {
-                    Colby.report(error);
-                }
-            }
-
-            element.appendChild(lineElement);
-        }
-
-        function clear() {
-            element.textContent = null;
-        }
-
         return {
-            append: append,
-            clear: clear,
             element: element,
         };
     },
@@ -162,28 +141,26 @@ var CBTestAdmin = {
             return;
         }
 
-        var date = new Date();
-
-        CBTestAdmin.status.clear();
-        CBTestAdmin.status.append("Tests Started - " +
-            date.toLocaleDateString() +
-            " " +
-            date.toLocaleTimeString());
-        CBTestAdmin.status.append("\u00A0");
+        CBTestAdmin.status.element.textContent = undefined;
 
         Promise.resolve()
             .then(CBTestAdmin.runJavaScriptTests)
             .then(CBTestAdmin.fetchServerTests)
             .then(CBTestAdmin.runServerTests)
-            .catch(report)
+            .then(onFulfilled)
+            .catch(onRejected)
             .then(onFinally, onFinally);
 
-        function report(error) {
-            var message = "Failed: " + error.message;
-            CBTestAdmin.status.append(message, "failure");
-            Colby.reportError(error);
+        function onFulfilled() {
+            let expander = CBUIExpander.create();
+            expander.message = "All tests completed successfully";
 
-            Colby.alert(message);
+            CBTestAdmin.status.element.appendChild(expander.element);
+            expander.element.scrollIntoView();
+        }
+
+        function onRejected(error) {
+            Colby.reportError(error);
         }
 
         function onFinally() {
@@ -209,10 +186,12 @@ var CBTestAdmin = {
                 var functionName = test[1] + "Test";
                 var obj = window[className];
 
-                CBTestAdmin.status.append("JavaScript Test: " +
-                                                  className +
-                                                  " - " +
-                                                  functionName);
+                let title = "JavaScript Test: " + className + " - " + functionName;
+                let expander = CBUIExpander.create();
+                expander.message = title + " (running)";
+
+                CBTestAdmin.status.element.appendChild(expander.element);
+                expander.element.scrollIntoView();
 
                 if (typeof obj !== "object") {
                     throw new Error("The " + className + " object does not exist.");
@@ -228,7 +207,25 @@ var CBTestAdmin = {
                     .then(runTestFunction)
                     .then(onFulfilled)
                     .then(next)
-                    .catch(reject);
+                    .catch(onRejected);
+
+                /* closure */
+                function onFulfilled(value) {
+                    var message = "succeeded";
+
+                    if (value && value.message) {
+                        message = value.message;
+                    }
+
+                    expander.message = `${title} (${message})`;
+                }
+
+                function onRejected(error) {
+                    expander.severity = 3;
+                    expander.message = `${title} (failed: ${error.message})`;
+
+                    reject(error);
+                }
             }
 
             /* closure */
@@ -239,17 +236,6 @@ var CBTestAdmin = {
                 } else {
                     resolve();
                 }
-            }
-
-            /* closure */
-            function onFulfilled(value) {
-                var message = "Succeeded";
-
-                if (value && value.message) {
-                    message = value.message;
-                }
-
-                CBTestAdmin.status.append(message, "success");
             }
         });
     },
@@ -273,15 +259,27 @@ var CBTestAdmin = {
                     URI += "&function=" + functionName;
                 }
 
-                CBTestAdmin.status.append("Server Test: " + className + (functionName ? " - " + functionName : ''));
+                let title = "Server Test: " + className + (functionName ? " - " + functionName : '');
+                let expander = CBUIExpander.create();
+                expander.message = title + " (running)";
+
+                CBTestAdmin.status.element.appendChild(expander.element);
+                expander.element.scrollIntoView();
 
                 Colby.fetchAjaxResponse(URI)
-                    .then(reportTestSuccess)
+                    .then(onFulfilled)
                     .then(next)
-                    .catch(reject);
+                    .catch(onRejected);
 
-                function reportTestSuccess(response) {
-                    CBTestAdmin.status.append(response.message || "Succeeded", "success");
+                function onFulfilled(response) {
+                    expander.message = title + " (succeeded)";
+                }
+
+                function onRejected(error) {
+                    expander.severity = 3;
+                    expander.message = `${title} (failed: ${error.message})`;
+
+                    reject(error);
                 }
             }
 
