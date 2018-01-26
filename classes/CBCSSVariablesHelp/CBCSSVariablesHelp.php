@@ -3,23 +3,23 @@
 final class CBCSSVariablesHelp {
 
     /**
+     * @return string
+     */
+    static function CBAdmin_group() {
+        return 'Developers';
+    }
+
+    /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
+    static function CBAdmin_menuNamePath(): array {
         return ['help', 'cssvariables'];
     }
 
     /**
-     * @return stdClass
+     * @return void
      */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Developers'];
-    }
-
-    /**
-     * @return null
-     */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::setTitleHTML('CSS Variables');
 
         CBView::renderSpec((object)[
@@ -56,7 +56,7 @@ final class CBCSSVariablesHelp {
             'className' => 'CBMenuItem',
             'name' => 'cssvariables',
             'text' => 'CSS Variables',
-            'URL' => '/admin/page/?class=CBCSSVariablesHelp'
+            'URL' => '/admin/?c=CBCSSVariablesHelp'
         ];
 
         CBDB::transaction(function () use ($spec) {
