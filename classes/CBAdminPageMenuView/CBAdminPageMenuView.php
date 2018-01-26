@@ -6,12 +6,11 @@
  */
 final class CBAdminPageMenuView {
 
-    const helpMenuID = '62eeeabc11366b92bf22017903bffb1fead31764';
-
     /**
      * @return void
      */
     static function CBInstall_install(): void {
+        /*
         $helpMenuSpec = CBModels::fetchSpecByID(CBAdminPageMenuView::helpMenuID);
 
         if ($helpMenuSpec === false) {
@@ -66,124 +65,14 @@ final class CBAdminPageMenuView {
         CBDB::transaction(function () use ($helpMenuSpec) {
             CBModels::save($helpMenuSpec);
         });
+        */
     }
 
     /**
      * @return [string]
      */
-    static function CBInstall_requireClassNames(): array {
+    static function CBInstall_requiredClassNames(): array {
         return ['CBModels'];
-    }
-
-    /**
-     * @return null
-     */
-    static function renderMenu($menu, $selectedMenuItemName, $class) {
-        ?>
-
-        <nav class="<?= $class ?>">
-            <div class="toggle"><a onclick="this.parentElement.parentElement.classList.toggle('expanded');">menu</a></div>
-            <ul>
-
-                <?php
-
-                foreach ($menu as $menuItemName => $menuItem) {
-                    $classAttribute = '';
-
-                    if ($menuItemName == $selectedMenuItemName) {
-                        $classAttribute = ' class="selected"';
-                    }
-
-                    ?>
-
-                    <li <?= $classAttribute ?>>
-                         <a href="<?= cbhtml($menuItem->URL) ?>"><?= cbhtml($menuItem->text) ?></a>
-                    </li>
-
-                    <?php
-                }
-
-                ?>
-
-            </ul>
-        </nav>
-
-        <?php
-    }
-
-    /**
-     * @param object? $model
-     * @param string? $model->selectedMenuItemName
-     * @param string? $model->selectedSubmenuItemName
-     *
-     * @return null
-     */
-    static function CBView_render(stdClass $model = null) {
-
-        /**
-         * The `Colby::findFile` function is used so that the website can
-         * override the file to include its own administrative menu options.
-         */
-
-        include_once Colby::findFile('snippets/menu-items-admin.php');
-
-        /**
-         * 2015.03.18
-         * While moving this view to the latest API paradigm I notice that the
-         * use of a global variable here is somewhat clunky. This will need to
-         * be changed eventually.
-         */
-
-        global $CBAdminMenu;
-        $menuModel = $CBAdminMenu;
-
-        ?>
-
-        <section class="CBAdminPageMenuView">
-
-            <?php
-
-            $selectedMenuItemName = CBModel::value($model, 'selectedMenuItemName');
-
-            self::renderMenu($menuModel, $selectedMenuItemName, 'CBMenu');
-
-            if (!empty($selectedMenuItemName)) {
-                $selectedSubmenuItemName = CBModel::value($model, 'selectedSubmenuItemName');
-
-                switch ($selectedMenuItemName) {
-                    case 'help':
-                        CBView::render((object)[
-                            'className' => 'CBMenuView',
-                            'menuID' => CBAdminPageMenuView::helpMenuID,
-                            'selectedItemName' => $selectedSubmenuItemName,
-                        ]);
-
-                        break;
-
-                    default:
-                        if (isset($menuModel->{$selectedMenuItemName}->submenu)) {
-                            $submenu = $menuModel->{$selectedMenuItemName}->submenu;
-
-                            self::renderMenu($submenu, $selectedSubmenuItemName, 'CBSubmenu');
-                        }
-
-                        break;
-                }
-
-            }
-
-            ?>
-
-        </section>
-
-        <?php
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
@@ -197,5 +86,64 @@ final class CBAdminPageMenuView {
             'selectedMenuItemName' => CBModel::value($spec, 'selectedMenuItemName', '', 'strval'),
             'selectedSubmenuItemName' => CBModel::value($spec, 'selectedSubmenuItemName', '', 'strval'),
         ];
+    }
+
+    /**
+     * @param object $model
+     *
+     *      {
+     *          selectedMenuItemName: string?
+     *          selectedSubmenuItemName: string?
+     *      }
+     *
+     * @return void
+     */
+    static function CBView_render(stdClass $model): void {
+        echo '<div class="CBAdminPageMenuView">';
+
+        $selectedMenuItemName = CBModel::value($model, 'selectedMenuItemName');
+
+        CBView::render((object)[
+            'className' => 'CBMenuView',
+            'CSSClassNames' => ['CBDarkTheme'],
+            'menuID' => CBAdminMenu::ID,
+            'selectedItemName' => $selectedMenuItemName,
+        ]);
+
+        switch ($selectedMenuItemName) {
+            case 'develop':
+                $submenuID = CBDevelopAdminMenu::ID;
+                break;
+            case 'general':
+                $submenuID = CBGeneralAdminMenu::ID;
+                break;
+            case 'help':
+                $submenuID = CBHelpAdminMenu::ID;
+                break;
+            case 'models':
+                $submenuID = CBModelsAdminMenu::ID;
+                break;
+            case 'pages':
+                $submenuID = CBPagesAdminMenu::ID;
+                break;
+            default:
+                $submenuID = null;
+                break;
+        }
+
+        if ($submenuID) {
+            $selectedSubmenuItemName = CBModel::value($model, 'selectedSubmenuItemName');
+
+            CBView::render((object)[
+                'className' => 'CBMenuView',
+                'CSSClassNames' => ['CBLightTheme'],
+                'menuID' => $submenuID,
+                'selectedItemName' => $selectedSubmenuItemName,
+            ]);
+        }
+
+        echo '</div>';
+
+        return;
     }
 }
