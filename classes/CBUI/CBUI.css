@@ -1,5 +1,4 @@
 .CBUIRoot {
-    background-color: hsl(0, 0%, 90%); /* IE11, from CBAdminTheme */
     background-color: var(--CBBackgroundColor2);
     /* can grow, cannot shrink, therefore can fill a flexible container */
     flex: 1 0 auto;
