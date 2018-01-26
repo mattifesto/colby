@@ -1,23 +1,26 @@
-.CBCSSVariablesHelp .b2 {
-    background-color: var(--CBBackgroundColor2);
+.CBCSSVariablesHelp_test {
+    padding-top: 100px !important;
+    padding-bottom: 100px !important;
 }
 
-.CBCSSVariablesHelp .panel {
+.CBCSSVariablesHelp_test h1,
+.CBCSSVariablesHelp_test .description {
+    text-align: center;
+}
+
+.CBCSSVariablesHelp_test .line {
     display: flex;
     justify-content: center;
-    padding: 20px 20px 40px;
+    padding: 40px 0 80px;
 }
 
-.CBCSSVariablesHelp .panel > div {
-    border: 1px solid var(--CBLineColor);
-    border-radius: 5px;
-    max-width: 100%;
+.CBCSSVariablesHelp_test .line > .inner {
+    border-bottom: 1px solid var(--CBLineColor);
+    width: 150px;
 }
 
-.CBCSSVariablesHelp .panel1 > div {
-    background-color: var(--CBBackgroundColor2);
-}
-
-.CBCSSVariablesHelp .panel2 > div {
-    background-color: var(--CBBackgroundColor);
+.CBCSSVariablesHelp_test .description {
+    color: var(--CBTextColor2);
+    padding: 10px 0 0;
+    font-style: italic;
 }

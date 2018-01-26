@@ -22,42 +22,21 @@ final class CBCSSVariablesHelp {
     static function adminPageRenderContent() {
         CBHTMLOutput::setTitleHTML('CSS Variables');
 
-        ?>
-        <div class="CBLightTheme">
-            <?php
-            CBView::renderSpec((object)[
-                'className' => 'CBTextView2',
-                'contentAsCommonMark' => '# CBLightTheme',
-                'CSSClassNames' => 'center',
-            ]);
-
-            CBCSSVariablesHelp::render();
-            ?>
-        </div>
-        <div class="CBDarkTheme">
-            <?php
-            CBView::renderSpec((object)[
-                'className' => 'CBTextView2',
-                'contentAsCommonMark' => '# CBDarkTheme',
-                'CSSClassNames' => 'center',
-            ]);
-
-            CBCSSVariablesHelp::render();
-            ?>
-        </div>
-        <div class="CBAdminTheme">
-            <?php
-            CBView::renderSpec((object)[
-                'className' => 'CBTextView2',
-                'contentAsCommonMark' => '# CBAdminTheme',
-                'CSSClassNames' => 'center',
-            ]);
-
-            CBCSSVariablesHelp::render();
-            ?>
-        </div>
-
-        <?php
+        CBView::renderSpec((object)[
+            'className' => 'CBMessageView',
+            'CSSClassNames' => 'CBLightTheme CBCSSVariablesHelp_test',
+            'markup' => CBCSSVariablesHelp::markup('CBLightTheme'),
+        ]);
+        CBView::renderSpec((object)[
+            'className' => 'CBMessageView',
+            'CSSClassNames' => 'CBDarkTheme CBCSSVariablesHelp_test',
+            'markup' => CBCSSVariablesHelp::markup('CBDarkTheme'),
+        ]);
+        CBView::renderSpec((object)[
+            'className' => 'CBMessageView',
+            'CSSClassNames' => 'CBAdminTheme CBCSSVariablesHelp_test',
+            'markup' => CBCSSVariablesHelp::markup('CBAdminTheme'),
+        ]);
     }
 
     /**
@@ -92,60 +71,32 @@ final class CBCSSVariablesHelp {
         return ['CBHelpAdminMenu'];
     }
 
-    static function render() {
-        ?>
+    /**
+     * @return string
+     */
+    static function markup($title): string {
+        return <<<EOT
 
-        <div class="b">
-            <?php
-            CBCSSVariablesHelp::renderText();
-            CBCSSVariablesHelp::renderPanel('panel1');
-            ?>
-        </div>
-        <div class="b b2">
-            <?php
-                CBCSSVariablesHelp::renderText();
-                CBCSSVariablesHelp::renderPanel('panel2');
-             ?>
-        </div>
+            --- h1
+            {$title}
+            ---
+            --- description
+            Easy themes using CSS variables.
+            ---
 
-        <?php
+            --- line
+            --- inner
+            ---
+            ---
+
+            The primary use of the a theme is presenting (CBTextColor (i)) text
+            on top of a (CBBackgroundColor (i)) background.
+
+            (CBTextColor2 (i)) will render lighter text like the description
+            above.
+
+            (CBLineColor (i)) will render a light line like the line above.
+
+EOT;
     }
-
-    static function renderText() {
-        CBView::renderSpec((object)[
-            'className' => 'CBTextView2',
-            'contentAsCommonMark' => <<<EOT
-# Text Content
-
-Text content should look good on top of CBBackgroundColor and
-CBBackgroundColor2. The background colors can be alternated to create clear
-borders between sections on a page.
-
-EOT
-        ]);
-    }
-
-    static function renderPanel($className) {
-        ?>
-        <div class="panel <?= cbhtml($className) ?>">
-            <div>
-                <?php CBCSSVariablesHelp::renderPanelText(); ?>
-            </div>
-        </div>
-        <?php
-    }
-
-    static function renderPanelText() {
-        CBView::renderSpec((object)[
-            'className' => 'CBTextView2',
-            'contentAsCommonMark' => <<<EOT
-# Panel
-
-A panel is a rectangle with the alternate background color and a CBLineColor
-border. Panels are used when rendering lists such as a list of blog posts.
-
-EOT
-        ]);
-    }
-
 }
