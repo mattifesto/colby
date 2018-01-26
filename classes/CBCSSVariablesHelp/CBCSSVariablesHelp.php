@@ -1,6 +1,6 @@
 <?php
 
-final class CBAdminPageForCSSVariables {
+final class CBCSSVariablesHelp {
 
     /**
      * @return [string]
@@ -31,7 +31,7 @@ final class CBAdminPageForCSSVariables {
                 'CSSClassNames' => 'center',
             ]);
 
-            CBAdminPageForCSSVariables::render();
+            CBCSSVariablesHelp::render();
             ?>
         </div>
         <div class="CBDarkTheme">
@@ -42,7 +42,7 @@ final class CBAdminPageForCSSVariables {
                 'CSSClassNames' => 'center',
             ]);
 
-            CBAdminPageForCSSVariables::render();
+            CBCSSVariablesHelp::render();
             ?>
         </div>
         <div class="CBAdminTheme">
@@ -53,15 +53,43 @@ final class CBAdminPageForCSSVariables {
                 'CSSClassNames' => 'center',
             ]);
 
-            CBAdminPageForCSSVariables::render();
+            CBCSSVariablesHelp::render();
             ?>
         </div>
 
         <?php
     }
 
+    /**
+     * @return [string]
+     */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
+    }
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBHelpAdminMenu::ID);
+
+        $spec->items[] = (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'cssvariables',
+            'text' => 'CSS Variables',
+            'URL' => '/admin/page/?class=CBCSSVariablesHelp'
+        ];
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBHelpAdminMenu'];
     }
 
     static function render() {
@@ -69,14 +97,14 @@ final class CBAdminPageForCSSVariables {
 
         <div class="b">
             <?php
-            CBAdminPageForCSSVariables::renderText();
-            CBAdminPageForCSSVariables::renderPanel('panel1');
+            CBCSSVariablesHelp::renderText();
+            CBCSSVariablesHelp::renderPanel('panel1');
             ?>
         </div>
         <div class="b b2">
             <?php
-                CBAdminPageForCSSVariables::renderText();
-                CBAdminPageForCSSVariables::renderPanel('panel2');
+                CBCSSVariablesHelp::renderText();
+                CBCSSVariablesHelp::renderPanel('panel2');
              ?>
         </div>
 
@@ -101,7 +129,7 @@ EOT
         ?>
         <div class="panel <?= cbhtml($className) ?>">
             <div>
-                <?php CBAdminPageForCSSVariables::renderPanelText(); ?>
+                <?php CBCSSVariablesHelp::renderPanelText(); ?>
             </div>
         </div>
         <?php

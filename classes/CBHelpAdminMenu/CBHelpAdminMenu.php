@@ -35,12 +35,6 @@ final class CBHelpAdminMenu {
                     'text' => 'CBArtworkElement',
                     'URL' => '/admin/page/?class=CBAdminPageForCBArtworkElement',
                 ],
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'cssvariables',
-                    'text' => 'CSS Variables',
-                    'URL' => '/admin/page/?class=CBAdminPageForCSSVariables'
-                ],
             ],
         ];
 

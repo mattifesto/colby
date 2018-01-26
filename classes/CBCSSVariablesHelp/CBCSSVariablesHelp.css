@@ -1,23 +1,23 @@
-.CBAdminPageForCSSVariables .b2 {
+.CBCSSVariablesHelp .b2 {
     background-color: var(--CBBackgroundColor2);
 }
 
-.CBAdminPageForCSSVariables .panel {
+.CBCSSVariablesHelp .panel {
     display: flex;
     justify-content: center;
     padding: 20px 20px 40px;
 }
 
-.CBAdminPageForCSSVariables .panel > div {
+.CBCSSVariablesHelp .panel > div {
     border: 1px solid var(--CBLineColor);
     border-radius: 5px;
     max-width: 100%;
 }
 
-.CBAdminPageForCSSVariables .panel1 > div {
+.CBCSSVariablesHelp .panel1 > div {
     background-color: var(--CBBackgroundColor2);
 }
 
-.CBAdminPageForCSSVariables .panel2 > div {
+.CBCSSVariablesHelp .panel2 > div {
     background-color: var(--CBBackgroundColor);
 }
