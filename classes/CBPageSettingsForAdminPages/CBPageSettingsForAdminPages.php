@@ -56,12 +56,12 @@ final class CBPageSettingsForAdminPages {
             }
             .CBAdminTheme {
                 --CBBackgroundColor: hsl(0, 0%, 100%);
-                --CBBackgroundColor2: hsl(0, 0%, 90%);
+                --CBBackgroundColor2: hsl(0, 0%, 95%);
                 --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
                 --CBLineColor: hsla(0, 0%, 0%, 0.2);
-                --CBTextColor: hsla(0, 0%, 0%, 0.8);
+                --CBTextColor: hsla(0, 0%, 0%, 0.9);
                 --CBTextColor2: hsla(0, 0%, 0%, 0.6);
-                --CBTextColorForHeadings: hsla(0, 0%, 0%, 1.0);
+                --CBTextColorForHeadings: hsla(0, 0%, 0%, 0.9);
                 --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
                 background-color: var(--CBBackgroundColor);
