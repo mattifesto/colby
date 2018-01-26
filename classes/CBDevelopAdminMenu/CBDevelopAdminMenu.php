@@ -13,7 +13,7 @@ final class CBDevelopAdminMenu {
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'develop',
-            'text' => 'Develop!!!',
+            'text' => 'Develop',
             'URL' => '/admin/page/?class=CBAdminPageForUpdate',
         ];
 
