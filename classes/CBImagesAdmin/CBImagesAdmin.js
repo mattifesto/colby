@@ -41,7 +41,7 @@ var CBImagesAdmin = {
         }
 
         var imagesElement = document.createElement("div");
-        imagesElement.className = "images";
+        imagesElement.className = "CBImagesAdmin_imageList";
 
         CBImagesAdmin.fetchImages({
             element: imagesElement
@@ -52,29 +52,44 @@ var CBImagesAdmin = {
     },
 
     /**
-     * @param object args
-     *
-     *      {
-     *          ID: hex160
-     *          thumbnailURL: string
-     *      }
+     * @param object (CBImage) image
      *
      * @return Element
      */
-    createThumbnailElement: function (args) {
+    createImageElement: function (image) {
         var element = document.createElement("div");
-        element.className = "thumbnail";
-        var img = document.createElement("img");
-        img.src = args.thumbnailURL;
-        var link = document.createElement("a");
-        link.textContent = ">";
+        element.className = "CBImagesAdmin_image";
 
-        link.addEventListener("click", function () {
-            window.location = "/admin/?c=CBModelInspector&ID=" + args.ID;
-        });
+        var sectionElement = document.createElement("div");
+        sectionElement.className = "section";
 
-        element.appendChild(img);
-        element.appendChild(link);
+        {
+            let sectionItemElement = document.createElement("div");
+            sectionItemElement.className = "thumbnail";
+
+            let img = document.createElement("img");
+            img.src = Colby.imageToURL(image, "rw320");
+
+            sectionItemElement.appendChild(img);
+            sectionElement.appendChild(sectionItemElement);
+        }
+
+        {
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                window.location = "/admin/?c=CBModelInspector&ID=" + image.ID;
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Inspect";
+
+            stringsPart.element.classList.add("action");
+
+            sectionItem.appendPart(stringsPart);
+            sectionElement.appendChild(sectionItem.element);
+        }
+
+        element.appendChild(sectionElement);
 
         return element;
     },
@@ -95,7 +110,8 @@ var CBImagesAdmin = {
 
         function onFulfilled(images) {
             for (var i = 0; i < images.length; i++) {
-                args.element.appendChild(CBImagesAdmin.createThumbnailElement(images[i]));
+                let imageElement = CBImagesAdmin.createImageElement(images[i]);
+                args.element.appendChild(imageElement);
             }
         }
     },

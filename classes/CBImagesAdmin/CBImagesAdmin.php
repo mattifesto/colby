@@ -37,20 +37,30 @@ class CBImagesAdmin {
      *
      */
     static function CBAjax_fetchImages() {
+
+        /**
+         * @NOTE 2018.01.28
+         *
+         * This SQL was copied from the CBModels class and customized. A query
+         * like this belongs in the CBModels class but it is unclear how to
+         * generalize it since "get models by class name" functionality isn't
+         * needed very often.
+         */
+
         $SQL = <<<EOT
 
-            SELECT LOWER(HEX(`ID`)) as `ID`, `created`, `extension`, `modified`
-            FROM `CBImages`
-            ORDER BY `modified` DESC
-            LIMIT 500
+            SELECT      v.modelAsJSON
+            FROM        CBModels AS m
+            JOIN        CBModelVersions AS v ON
+                        m.ID = v.ID AND
+                        m.version = v.version
+            WHERE       m.className = 'CBImage'
+            ORDER BY    m.modified DESC
+            LIMIT       500
 
 EOT;
 
-        $images = CBDB::SQLToObjects($SQL);
-
-        foreach ($images as $image) {
-            $image->thumbnailURL = CBDataStore::flexpath($image->ID, "rw320.{$image->extension}", cbsiteurl());
-        }
+        return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
 
         return $images;
     }

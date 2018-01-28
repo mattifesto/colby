@@ -1,10 +1,4 @@
-.CBImagesAdmin .buttons {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-}
-
-.CBImagesAdmin .images {
+.CBImagesAdmin_imageList {
     align-items: flex-start;
     display: flex;
     flex: 1 1 auto;
@@ -12,28 +6,47 @@
     justify-content: center;
 }
 
-.CBImagesAdmin .thumbnail {
+/**
+ * CBImagesAdmin_image is a constant sized element that has sub-elements whose
+ * sizes are also constant. Notes on the calculations of those sizes are
+ * included below. Making changes to width would required all sizes be
+ * recalculated.
+ */
+
+.CBImagesAdmin_image {
     box-sizing: border-box;
     padding: 5px;
+    width: 160px;
 }
 
-.CBImagesAdmin .thumbnail > img {
-    background-color: hsl(0, 0%, 20%);
-    display: block;
-    height: 150px;
-    object-fit: contain;
-    width: 150px;
+/* based on CBUISection */
+.CBImagesAdmin_image .section {
+    background-color: var(--CBBackgroundColor);
+    border-color: var(--CBUIBorderColor);
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow: hidden;
 }
 
-.CBImagesAdmin .thumbnail > a {
+.CBImagesAdmin_image .section > * + * {
+    border-top: 1px solid var(--CBUIBorderColor);
+}
+
+/* thumbnail will have a width of 148px */
+.CBImagesAdmin_image .thumbnail {
     align-items: center;
-    background-color: hsl(0, 0%, 25%);
-    color: hsl(0, 0%, 35%);
     display: flex;
-    height: 44px;
     justify-content: center;
+    padding: 10px 0;
 }
 
-.CBImagesAdmin .thumbnail > a:hover {
-    background-color: hsl(0, 0%, 22%);
+/* 10px padding + 128px img + 10px padding = 148px */
+.CBImagesAdmin_image img {
+    display: block;
+    height: 128px;
+    object-fit: contain;
+    width: 128px;
 }
