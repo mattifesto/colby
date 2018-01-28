@@ -1,5 +1,5 @@
 .CBUIRoot {
-    background-color: var(--CBBackgroundColor2);
+    background-color: var(--CBUIBackgroundColor);
     /* can grow, cannot shrink, therefore can fill a flexible container */
     flex: 1 0 auto;
 }
@@ -42,7 +42,7 @@
 }
 
 .CBUIHeader {
-    background-color: hsl(0, 0%, 95%);
+    background-color: var(--CBBackgroundColor);
     border-bottom: 1px solid var(--CBUIBorderColor);
     display: flex;
     justify-content: space-between;
@@ -120,6 +120,7 @@
 }
 
 .CBUISection {
+    background-color: var(--CBBackgroundColor);
     border-color: var(--CBUIBorderColor);
     border-style: solid;
     border-width: 1px 0;
