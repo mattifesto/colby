@@ -6,7 +6,7 @@ final class CBPageSettingsForAdminPages {
      * @return string
      */
     static function defaultThemeClassName() {
-        return 'CBAdminTheme';
+        return 'CBLightTheme';
     }
 
     /**
@@ -47,25 +47,11 @@ final class CBPageSettingsForAdminPages {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:700">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:600">
         <style>
             html {
-                color: hsl(0, 0%, 20%);
-                font-family: "Open Sans";
-                line-height: 1.4;
-            }
-            .CBAdminTheme {
-                --CBBackgroundColor: hsl(0, 0%, 100%);
-                --CBBackgroundColor2: hsl(0, 0%, 95%);
-                --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
-                --CBLineColor: hsla(0, 0%, 0%, 0.2);
-                --CBTextColor: hsla(0, 0%, 0%, 0.9);
-                --CBTextColor2: hsla(0, 0%, 0%, 0.6);
-                --CBTextColorForHeadings: hsla(0, 0%, 0%, 0.9);
-                --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
-
-                background-color: var(--CBBackgroundColor);
-                color: var(--CBTextColor);
+                font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+                font-size: 16px;
             }
         </style>
     <?php }
