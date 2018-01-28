@@ -31,12 +31,6 @@ final class CBDevelopAdminMenu {
                 ],
                 (object)[
                     'className' => 'CBMenuItem',
-                    'name' => 'images',
-                    'text' => 'Images',
-                    'URL' => '/admin/page/?class=CBImagesAdminPage',
-                ],
-                (object)[
-                    'className' => 'CBMenuItem',
                     'name' => 'php',
                     'text' => 'PHP',
                     'URL' => '/admin/?c=CBPHPAdmin',

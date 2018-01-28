@@ -92,4 +92,29 @@ EOT;
     static function CBHTMLOutput_requiredClassNames() {
         return ['CBUI', 'CBUISectionItem4', 'CBUIStringsPart'];
     }
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBDevelopAdminMenu::ID);
+
+        $spec->items[] = (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'images',
+            'text' => 'Images',
+            'URL' => '/admin/?c=CBImagesAdmin',
+        ];
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBDevelopAdminMenu'];
+    }
 }
