@@ -28,9 +28,10 @@ html {
 .CBDarkTheme {
     --CBBackgroundColor: hsl(0, 0%, 10%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.05);
-    --CBLineColor: hsla(0, 0%, 100%, 0.3);
     --CBTextColor: hsla(0, 0%, 100%, 0.9);
     --CBTextColor2: hsla(0, 0%, 100%, 0.6);
+    --CBTextColor3: hsla(0, 0%, 100%, 0.3);
+    --CBLineColor: hsla(0, 0%, 100%, 0.3); /* @deprecated use CBTextColors */
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
     /**
@@ -50,9 +51,10 @@ html {
 .CBLightTheme {
     --CBBackgroundColor: hsl(0, 0%, 100%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
-    --CBLineColor: hsla(20, 30%, 50%, 0.2);
     --CBTextColor: hsla(0, 0%, 0%, 0.9);
     --CBTextColor2: hsla(0, 0%, 0%, 0.6);
+    --CBTextColor3: hsla(0, 0%, 0%, 0.3);
+    --CBLineColor: hsla(0, 0%, 0%, 0.3); /* @deprecated use CBTextColors */
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
     /**
