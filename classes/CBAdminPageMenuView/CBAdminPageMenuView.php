@@ -7,75 +7,6 @@
 final class CBAdminPageMenuView {
 
     /**
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        /*
-        $helpMenuSpec = CBModels::fetchSpecByID(CBAdminPageMenuView::helpMenuID);
-
-        if ($helpMenuSpec === false) {
-            $helpMenuSpec = (object)[
-                'ID' => CBAdminPageMenuView::helpMenuID,
-            ];
-        }
-
-        $helpMenuSpec->className = 'CBMenu';
-        $helpMenuSpec->title = 'Help';
-        $helpMenuSpec->titleURI = '/admin/?c=CBDocumentation&p=TitlesAndDescriptions';
-        $helpMenuSpec->items = [
-            (object)[
-                'className' => 'CBMenuItem',
-                'name' => 'caption-alternative-text',
-                'text' => 'Captions & Alternative Text',
-                'URL' => '/admin/help/caption-alternative-text',
-            ],
-            (object)[
-                'className' => 'CBMenuItem',
-                'name' => 'CBArtworkElement',
-                'text' => 'CBArtworkElement',
-                'URL' => '/admin/page/?class=CBAdminPageForCBArtworkElement',
-            ],
-            (object)[
-                'className' => 'CBMenuItem',
-                'name' => 'cssvariables',
-                'text' => 'CSS Variables',
-                'URL' => '/admin/page/?class=CBAdminPageForCSSVariables'
-            ],
-        ];
-
-        $allClassNames = CBAdmin::fetchClassNames();
-
-        foreach ($allClassNames as $className) {
-            if (is_callable($function = "{$className}::CBAdmin_menuItems")) {
-                $menuItemData = call_user_func($function);
-
-                foreach ($menuItemData as $menuItemDatum) {
-                    switch ($menuItemDatum->mainMenuItemName) {
-                        case 'help':
-                            $helpMenuSpec->items[] = $menuItemDatum->menuItem;
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-
-        CBDB::transaction(function () use ($helpMenuSpec) {
-            CBModels::save($helpMenuSpec);
-        });
-        */
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBInstall_requiredClassNames(): array {
-        return ['CBModels'];
-    }
-
-    /**
      * @param object $spec
      *
      * @return object
@@ -136,7 +67,7 @@ final class CBAdminPageMenuView {
 
             CBView::render((object)[
                 'className' => 'CBMenuView',
-                'CSSClassNames' => ['CBLightTheme'],
+                /* 'CSSClassNames' => ['CBLightTheme'], */
                 'menuID' => $submenuID,
                 'selectedItemName' => $selectedSubmenuItemName,
             ]);
