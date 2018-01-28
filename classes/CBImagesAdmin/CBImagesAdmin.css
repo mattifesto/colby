@@ -1,12 +1,9 @@
-.CBImagesAdmin {
-    background-color: hsl(0, 0%, 30%);
-}
-
 .CBImagesAdmin .buttons {
     display: flex;
     justify-content: center;
     padding: 20px;
 }
+
 .CBImagesAdmin .images {
     align-items: flex-start;
     display: flex;

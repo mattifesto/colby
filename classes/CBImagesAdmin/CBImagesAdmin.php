@@ -66,20 +66,20 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v373.css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v373.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v374.js', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI'];
+        return ['CBUI', 'CBUISectionItem4', 'CBUIStringsPart'];
     }
 }

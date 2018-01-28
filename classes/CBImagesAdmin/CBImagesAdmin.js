@@ -1,41 +1,54 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBImagesAdmin */
 /* global
     CBUI,
+    CBUISectionItem4,
+    CBUIStringsPart,
     Colby */
 
 var CBImagesAdmin = {
 
     /**
-     * @return Element
+     * @return undefined
      */
-    createElement: function() {
-        var element = document.createElement("div");
-        element.className = "CBImagesAdmin";
-        var buttonsElement = document.createElement("div");
-        buttonsElement.className = "buttons";
-        var imagesElement = document.createElement("div");
-        imagesElement.className = "images";
+    init: function() {
+        var mainElement = document.getElementsByTagName("main")[0];
 
-        buttonsElement.appendChild(CBUI.createButton({
-            callback: function () {
+        mainElement.classList.add("CBDarkTheme");
+
+        mainElement.appendChild(CBUI.createHalfSpace());
+
+        {
+            let sectionElement = CBUI.createSection();
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
                 Colby.callAjaxFunction("CBImageVerificationTask", "startForAllImages")
                     .then(function () { Colby.alert("Verification for all images started."); })
                     .catch(Colby.displayAndReportError);
-            },
-            text: "Start Verification for All Images",
-        }).element);
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Start Verification for All Images";
+
+            stringsPart.element.classList.add("action");
+
+            sectionItem.appendPart(stringsPart);
+            sectionElement.appendChild(sectionItem.element);
+            mainElement.appendChild(sectionElement);
+            mainElement.appendChild(CBUI.createHalfSpace());
+        }
+
+        var imagesElement = document.createElement("div");
+        imagesElement.className = "images";
 
         CBImagesAdmin.fetchImages({
             element: imagesElement
         });
 
-        element.appendChild(buttonsElement);
-        element.appendChild(imagesElement);
-        element.appendChild(CBUI.createHalfSpace());
-
-        return element;
+        mainElement.appendChild(imagesElement);
+        mainElement.appendChild(CBUI.createHalfSpace());
     },
 
     /**
@@ -88,8 +101,4 @@ var CBImagesAdmin = {
     },
 };
 
-Colby.afterDOMContentLoaded(function() {
-    var main = document.getElementsByTagName("main")[0];
-
-    main.appendChild(CBImagesAdmin.createElement());
-});
+Colby.afterDOMContentLoaded(CBImagesAdmin.init);
