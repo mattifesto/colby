@@ -1,18 +1,18 @@
 "use strict";
 /* jshint strict: global */
-/* exported CBImagesAdminPage */
+/* exported CBImagesAdmin */
 /* global
     CBUI,
     Colby */
 
-var CBImagesAdminPage = {
+var CBImagesAdmin = {
 
     /**
      * @return Element
      */
     createElement: function() {
         var element = document.createElement("div");
-        element.className = "CBImagesAdminPage";
+        element.className = "CBImagesAdmin";
         var buttonsElement = document.createElement("div");
         buttonsElement.className = "buttons";
         var imagesElement = document.createElement("div");
@@ -27,7 +27,7 @@ var CBImagesAdminPage = {
             text: "Start Verification for All Images",
         }).element);
 
-        CBImagesAdminPage.fetchImages({
+        CBImagesAdmin.fetchImages({
             element: imagesElement
         });
 
@@ -76,13 +76,13 @@ var CBImagesAdminPage = {
      * @return undefined
      */
     fetchImages: function (args) {
-        Colby.callAjaxFunction("CBImagesAdminPage", "fetchImages")
+        Colby.callAjaxFunction("CBImagesAdmin", "fetchImages")
             .then(onFulfilled)
             .catch(Colby.displayAndReportError);
 
         function onFulfilled(images) {
             for (var i = 0; i < images.length; i++) {
-                args.element.appendChild(CBImagesAdminPage.createThumbnailElement(images[i]));
+                args.element.appendChild(CBImagesAdmin.createThumbnailElement(images[i]));
             }
         }
     },
@@ -91,5 +91,5 @@ var CBImagesAdminPage = {
 Colby.afterDOMContentLoaded(function() {
     var main = document.getElementsByTagName("main")[0];
 
-    main.appendChild(CBImagesAdminPage.createElement());
+    main.appendChild(CBImagesAdmin.createElement());
 });

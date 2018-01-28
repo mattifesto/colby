@@ -1,13 +1,13 @@
-.CBImagesAdminPage {
+.CBImagesAdmin {
     background-color: hsl(0, 0%, 30%);
 }
 
-.CBImagesAdminPage .buttons {
+.CBImagesAdmin .buttons {
     display: flex;
     justify-content: center;
     padding: 20px;
 }
-.CBImagesAdminPage .images {
+.CBImagesAdmin .images {
     align-items: flex-start;
     display: flex;
     flex: 1 1 auto;
@@ -15,12 +15,12 @@
     justify-content: center;
 }
 
-.CBImagesAdminPage .thumbnail {
+.CBImagesAdmin .thumbnail {
     box-sizing: border-box;
     padding: 5px;
 }
 
-.CBImagesAdminPage .thumbnail > img {
+.CBImagesAdmin .thumbnail > img {
     background-color: hsl(0, 0%, 20%);
     display: block;
     height: 150px;
@@ -28,7 +28,7 @@
     width: 150px;
 }
 
-.CBImagesAdminPage .thumbnail > a {
+.CBImagesAdmin .thumbnail > a {
     align-items: center;
     background-color: hsl(0, 0%, 25%);
     color: hsl(0, 0%, 35%);
@@ -37,6 +37,6 @@
     justify-content: center;
 }
 
-.CBImagesAdminPage .thumbnail > a:hover {
+.CBImagesAdmin .thumbnail > a:hover {
     background-color: hsl(0, 0%, 22%);
 }
