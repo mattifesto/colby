@@ -1,6 +1,6 @@
 .CBUIProcessStatus .overview {
     align-items: center;
-    background-color: var(--CBBackgroundColor2);
+    background-color: var(--CBUIBackgroundColor);
     box-sizing: border-box;
     display: flex;
     min-height: 44px;
