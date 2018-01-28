@@ -23,52 +23,54 @@ html {
     --CBButtonTextColor: hsl(0, 0%, 100%);
     --CBButtonTextColorDisabled: hsla(0, 0, 100%, 0.3);
     --CBMonospaceFontFamily: 'Menlo', 'Courier New', 'Courier', monospace;
+}
+
+.CBDarkTheme {
+    --CBBackgroundColor: hsl(0, 0%, 10%);
+    --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.05);
+    --CBLineColor: hsla(0, 0%, 100%, 0.3);
+    --CBTextColor: hsla(0, 0%, 100%, 0.9);
+    --CBTextColor2: hsla(0, 0%, 100%, 0.6);
+    --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
     /**
      * CBUIBorderColor is not translucent because it needs to be the same color
      * over any background color
      */
-    --CBUIBorderColor: hsl(0, 0%, 80%);
-}
+    --CBBackgroundColor2: hsl(0, 0%, 15%); /* @deprecated use CBUIBackgroundColor */
+    --CBUIBackgroundColor: hsl(0, 0%, 15%);
+    --CBUIBorderColor: hsl(0, 0%, 25%);
 
-.CBDarkTheme {
-    --CBBackgroundColor: hsl(0, 0%, 10%);
-    --CBBackgroundColor2: hsl(0, 0%, 15%);
-    --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.05);
-    --CBLineColor: hsla(0, 0%, 100%, 0.3);
-    --CBTextColor: hsla(0, 0%, 100%, 0.9);
-    --CBTextColor2: hsla(0, 0%, 100%, 0.6);
-    --CBTextColorForHeadings: hsla(0, 0%, 100%, 0.9);
-    --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
-
-    background-color: hsl(0, 0%, 10%); /* for older browsers */
+    background-color: hsl(0, 0%, 10%); /* IE11s */
     background-color: var(--CBBackgroundColor);
-    color: hsla(0, 0%, 100%, 0.7); /* for older browsers */
+    color: hsla(0, 0%, 100%, 0.7); /* IE11 */
     color: var(--CBTextColor);
 }
 
 .CBLightTheme {
     --CBBackgroundColor: hsl(0, 0%, 100%);
-    --CBBackgroundColor2: hsl(20, 30%, 95%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
     --CBLineColor: hsla(20, 30%, 50%, 0.2);
     --CBTextColor: hsla(0, 0%, 0%, 0.9);
     --CBTextColor2: hsla(0, 0%, 0%, 0.6);
-    --CBTextColorForHeadings: hsla(0, 0%, 0%, 0.9);
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
-    background-color: hsl(0, 0%, 100%); /* for older browsers */
+    /**
+     * CBUIBorderColor is not translucent because it needs to be the same color
+     * over any background color
+     */
+    --CBBackgroundColor2: hsl(0, 0%, 95%); /* @deprecated use CBUIBackgroundColor */
+    --CBUIBackgroundColor: hsl(0, 0%, 95%);
+    --CBUIBorderColor: hsl(0, 0%, 80%);
+
+    background-color: hsl(0, 0%, 100%); /* IE11 */
     background-color: var(--CBBackgroundColor);
-    color: hsla(0, 0%, 0%, 0.9); /* for older browsers */
+    color: hsla(0, 0%, 0%, 0.9); /* IE11 */
     color: var(--CBTextColor);
 }
 
 a {
     color: var(--CBTextColorForLinks);
-}
-
-h1, h2, h3, h4, h5, h6 {
-    color: var(--CBTextColorForHeadings);
 }
 
 body {
@@ -180,7 +182,9 @@ Footnotes
 
 *:
 
-1.  The default margins are not generally helpful, especially on the `body` element. In the past the padding has also been removed but it turns out that much of the default padding is useful.
+1.  The default margins are not generally helpful, especially on the `body`
+element. In the past the padding has also been removed but it turns out that
+much of the default padding is useful.
 
 
 html:
@@ -235,47 +239,75 @@ bother trying to fix it. IE10 started being deprecated as of this issue.
 
 main:
 
-1.  The `main` element is supported in newer browsers but is not yet a `block` element by default. Remove this rule as soon as new browsers define it as a `block` element in the default stylesheet. (2013.05.20)
+1.  The `main` element is supported in newer browsers but is not yet a `block`
+element by default. Remove this rule as soon as new browsers define it as a
+`block` element in the default stylesheet. (2013.05.20)
 
 
 button, input, select, textarea:
 
-1.  This rule allows form elements to be set to `100%` wide and properly fill that width. Without it, the element border widths make it slightly larger.
-    Note: Any other attempts to equalize the form elements is most likely counterproductive. Most browsers degrade the appearance of these elements as soon as any visible property is applied. Views involving form elements should be designed to withstand slight appearance differences between browsers.
+1.  This rule allows form elements to be set to `100%` wide and properly fill
+that width. Without it, the element border widths make it slightly larger.
+
+Note: Any other attempts to equalize the form elements is most likely
+counterproductive. Most browsers degrade the appearance of these elements as
+soon as any visible property is applied. Views involving form elements should be
+designed to withstand slight appearance differences between browsers.
 
 
 input, textarea:
 
-1.  In apparently all browsers the the default colors for the input and textarea elements are different. This color closely resembles the default color for the input element.
+1.  In apparently all browsers the the default colors for the input and textarea
+elements are different. This color closely resembles the default color for the
+input element.
 
 
 table:
 
-1.  This property is almost universally set on tables. The `normalize.css` file also has this style.
+1.  This property is almost universally set on tables. The `normalize.css` file
+also has this style.
 
 
 td, th:
 
 1.  The default padding on table cells is not generally helpful.
 
-2.  The rule `vertical-align: baseline;` is confirmed to be correct here. It places the text at the top of the cell except when there are situations that affect the baseline (mixed text sizes, form fields) and then it places the baseline as close to the top as possible.
+2.  The rule `vertical-align: baseline;` is confirmed to be correct here. It
+places the text at the top of the cell except when there are situations that
+affect the baseline (mixed text sizes, form fields) and then it places the
+baseline as close to the top as possible.
 
 
 ul:
 
-1.  Horizontal lists are used on almost every website and the elements and styles used are always the same so it makes sense to have them here.
+1.  Horizontal lists are used on almost every website and the elements and
+styles used are always the same so it makes sense to have them here.
 
-2.  This will make horizontal list items will look pleasantly spaced inside an element that doesn't have padding of its own. Experience has shown that this is the best default. There are certainly theoretical cases where this is not the best and thoses cases should not use this style.
+2.  This will make horizontal list items will look pleasantly spaced inside an
+element that doesn't have padding of its own. Experience has shown that this is
+the best default. There are certainly theoretical cases where this is not the
+best and thoses cases should not use this style.
 
 
 File History
 ------------
 
-2014.02.22
-    This file was changed because moving to a "sectioned page" model means that each of those sections should have no default styles applied but these. So I spent some time making sure these are good common defaults. In the future, when making changes keep an eye on the `normalize.css` file available on the internet. It's a good resource that I'm not yet comfortable using because it keeps the default margins, but it's very helpful.
+2014.02.22 This file was changed because moving to a "sectioned page" model
+means that each of those sections should have no default styles applied but
+these. So I spent some time making sure these are good common defaults. In the
+future, when making changes keep an eye on the `normalize.css` file available on
+the internet. It's a good resource that I'm not yet comfortable using because it
+keeps the default margins, but it's very helpful.
 
-2015.05.23
-    The nature of the `html` and `body` element layout changed to support using flexible boxes to place the footer at the bottom of the viewport for short pages. The `body` now becomes the lowest level element relative to which child elements can be can be placed absolutely. This negatively affects sites using layout methods that added padding to the `body`. Sites that use those methods should be migrated to the flexible box method because it's the correct way to do it and is now available on all supported browsers.
-    I also removed some historical comments that were not entirely pertinent anymore. If you have a question about the reasoning or history behind a particular style look at previous versions of this file.
+2015.05.23 The nature of the `html` and `body` element layout changed to support
+using flexible boxes to place the footer at the bottom of the viewport for short
+pages. The `body` now becomes the lowest level element relative to which child
+elements can be can be placed absolutely. This negatively affects sites using
+layout methods that added padding to the `body`. Sites that use those methods
+should be migrated to the flexible box method because it's the correct way to do
+it and is now available on all supported browsers. I also removed some
+historical comments that were not entirely pertinent anymore. If you have a
+question about the reasoning or history behind a particular style look at
+previous versions of this file.
 
 */
