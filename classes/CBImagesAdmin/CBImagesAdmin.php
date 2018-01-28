@@ -3,23 +3,23 @@
 class CBImagesAdmin {
 
     /**
-     * @return [string]
+     * @return string
      */
-    static function adminPageMenuNamePath() {
-        return ['develop', 'images'];
+    static function CBAdmin_group() {
+        return 'Developers';
     }
 
     /**
-     * @return stdClass
+     * @return [string]
      */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Developers'];
+    static function CBAdmin_menuNamePath(): array {
+        return ['develop', 'images'];
     }
 
     /**
      * @return void
      */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render() {
         CBHTMLOutput::setTitleHTML('Images Administration');
         CBHTMLOutput::setDescriptionHTML('Tools to administer website images.');
     }
