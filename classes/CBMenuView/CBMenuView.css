@@ -1,11 +1,18 @@
+.CBMenuView li {
+    padding: 0 5px;
+
+    /* ellipsis */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 /**
  * CBMenuView_default
  */
 
 .CBMenuView_default {
-    background-color: var(--CBBackgroundColor2);
+    background-color: var(--CBBackgroundColor);
     box-sizing: border-box;
-    color: var(--CBTextColorForHeadings);
     max-width: 100%;
 
     -webkit-user-select: none;
@@ -40,7 +47,7 @@
 
 
 .CBMenuView_default .selected {
-    color: var(--CBTextColorForLinks);
+    color: var(--CBTextColor2);
 }
 
 .CBMenuView_default a {
