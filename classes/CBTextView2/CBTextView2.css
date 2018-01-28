@@ -39,12 +39,11 @@
  */
 
 .CBTextView2_default code {
-    background-color: var(--CBBackgroundColor2);
     padding: 0.2em 0.5em 0.3em;
 }
 
 .CBTextView2_default pre {
-    background-color: var(--CBBackgroundColor2);
+    border: 1px solid var(--CBTextColor3);
     border-radius: 5px;
     overflow-x: scroll;
     padding: 0.8em 1.0em;
