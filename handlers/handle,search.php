@@ -39,8 +39,8 @@ CBPageLayout::renderPageHeader();
 
         form.search-page.has-query > div {
             padding: 20px 50px;
-            background-color: var(--CBBackgroundColor2);
-            border-bottom: 1px solid var(--CBLineColor);
+            background-color: hsl(0, 0%, 90%);
+            border-bottom: 1px solid hsl(0, 0%, 80%);
         }
 
         form.search-page.has-query input[type=text] {
@@ -51,12 +51,6 @@ CBPageLayout::renderPageHeader();
         form.search-page.has-query input[type=submit] {
             position: relative;
             top: -3px;
-            xbackground-color: #5555ff;
-            xcolor: white;
-        }
-
-        form.search-page.has-query input[type=submit]:hover {
-            xborder: 1px solid #5555aa;
         }
 
         form.search-page.no-query {
