@@ -3,8 +3,8 @@
     text-align: center;
 }
 
-.CBPageListView2_default > *:nth-child(even) {
-    background-color: var(--CBBackgroundColor2);
+.CBPageListView2_default > * + * {
+    border-top: 1px dashed var(--CBTextColor3);
 }
 
 .CBPageListView2_default a {
