@@ -32,7 +32,7 @@
 }
 
 .CBArtworkView .social {
-    border-top: 0.5px solid var(--CBLineColor);
+    border-top: 0.5px solid var(--CBTextColor3);
     box-sizing: border-box;
     font-size: 80%;
     margin-top: 20px;
