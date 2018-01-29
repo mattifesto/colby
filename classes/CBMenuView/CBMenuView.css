@@ -179,7 +179,7 @@
     }
 
     .CBMenuView_submenu1 .container {
-        border-bottom: 1px solid var(--CBLineColor);
+        border-bottom: 1px solid var(--CBTextColor3);
         display: flex;
         justify-content: space-between;
         max-width: 100%;
@@ -211,7 +211,7 @@
 
 @media (max-width: 736px) {
     .CBMenuView_submenu1 {
-        border-bottom: 1px solid var(--CBLineColor);
+        border-bottom: 1px solid var(--CBTextColor3);
     }
 
     .CBMenuView_submenu1 > .menu_header {
