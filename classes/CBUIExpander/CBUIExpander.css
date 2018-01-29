@@ -6,7 +6,7 @@
 
 .CBUIExpander > .container {
     background-color: var(--CBBackgroundColor);
-    border: 1px solid var(--CBLineColor);
+    border: 1px solid var(--CBUIBorderColor);
     border-radius: 5px;
     overflow: hidden;
 }
