@@ -3,11 +3,16 @@
 final class CBPagesTableSummaryView {
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
+    }
+
+    /**
      * @return void
      */
     static function CBView_render(stdClass $model = null) {
-        CBHTMLOutput::addCSSURL(CBPagesTableSummaryView::URL('CBPagesTableSummaryView.css'));
-
         $publishedClause = ($model->type === 'published') ?
             '`published` IS NOT NULL' : '`published` IS NULL';
         $titleAsHTML = ($model->type === 'published') ?
@@ -60,13 +65,5 @@ EOT;
         </div>
 
         <?php
-    }
-
-    /**
-     * @return {string}
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
     }
 }
