@@ -15,7 +15,7 @@
 }
 
 .CBCSSVariablesHelp_test .line > .inner {
-    border-bottom: 1px solid var(--CBLineColor);
+    border-bottom: 1px solid var(--CBTextColor3);
     width: 150px;
 }
 
@@ -23,4 +23,14 @@
     color: var(--CBTextColor2);
     padding: 10px 0 0;
     font-style: italic;
+}
+
+.CBDarkTheme.navy {
+    --CBBackgroundColor: hsl(240, 50%, 20%);
+    --CBTextColor: hsla(40, 100%, 60%, 0.9);
+}
+
+.CBLightTheme.yellow {
+    --CBBackgroundColor: hsl(60, 100%, 95%);
+    --CBTextColor: hsla(0, 0%, 0%, 0.8);
 }

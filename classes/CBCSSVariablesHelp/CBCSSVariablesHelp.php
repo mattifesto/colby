@@ -25,17 +25,27 @@ final class CBCSSVariablesHelp {
         CBView::renderSpec((object)[
             'className' => 'CBMessageView',
             'CSSClassNames' => 'CBLightTheme CBCSSVariablesHelp_test',
-            'markup' => CBCSSVariablesHelp::markup('CBLightTheme'),
+            'markup' => CBCSSVariablesHelp::markup(),
         ]);
         CBView::renderSpec((object)[
             'className' => 'CBMessageView',
-            'CSSClassNames' => 'CBDarkTheme CBCSSVariablesHelp_test',
-            'markup' => CBCSSVariablesHelp::markup('CBDarkTheme'),
+            'CSSClassNames' => 'CBDarkTheme',
+            'markup' => CBCSSVariablesHelp::sample(),
         ]);
         CBView::renderSpec((object)[
             'className' => 'CBMessageView',
-            'CSSClassNames' => 'CBAdminTheme CBCSSVariablesHelp_test',
-            'markup' => CBCSSVariablesHelp::markup('CBAdminTheme'),
+            'CSSClassNames' => 'CBLightTheme',
+            'markup' => CBCSSVariablesHelp::sample(),
+        ]);
+        CBView::renderSpec((object)[
+            'className' => 'CBMessageView',
+            'CSSClassNames' => 'CBDarkTheme navy',
+            'markup' => CBCSSVariablesHelp::sample(),
+        ]);
+        CBView::renderSpec((object)[
+            'className' => 'CBMessageView',
+            'CSSClassNames' => 'CBLightTheme yellow',
+            'markup' => CBCSSVariablesHelp::sample(),
         ]);
     }
 
@@ -74,14 +84,14 @@ final class CBCSSVariablesHelp {
     /**
      * @return string
      */
-    static function markup($title): string {
+    static function markup(): string {
         return <<<EOT
 
             --- h1
-            {$title}
+            Colby CSS Variables
             ---
             --- description
-            Easy themes using CSS variables.
+            Simple theming using CSS variables.
             ---
 
             --- line
@@ -89,14 +99,81 @@ final class CBCSSVariablesHelp {
             ---
             ---
 
-            The primary use of the a theme is presenting (CBTextColor (i)) text
-            on top of a (CBBackgroundColor (i)) background.
+            --- dl
+                --- dt
+                CBBackgroundColor
+                ---
 
-            (CBTextColor2 (i)) will render lighter text like the description
-            above.
+                This color represents the standard background color for the
+                theme. The themes are created with the understanding that they
+                may be used with custom background colors that will be considered
+                either light or dark.
 
-            (CBLineColor (i)) will render a light line like the line above.
+                For CBLightTheme CBBackgroundColor is white. A white background
+                is very comfortable and expected for users.
 
+                For CBDarkTheme it is hsl(0, 0%, 10%) because pure black feels too
+                strong for comfortable reading. This value has evolved over the
+                life of CBDarkTheme because while it's pretty easy to say that black is
+                not right color. The correct color is subject to individual situations and emotions
+                of the designer. Shades of dark black look visibly different
+                even in slightly different layouts.
+
+                --- dt
+                CBTextColor
+                ---
+
+                CBTextColor is meant to be the color that looks best for the main
+                text color. For CBLightTheme it is black with and opacity of 0.9. For
+                CBDarkTheme is is white with an opacity of 0.9.
+
+                Pure white or black text is so strong that it can feel awkward. Using opacity
+                to mellow the color allows the color to work with elements that have a custom
+                background color specified.
+
+                --- dt
+                CBTextColor2
+                ---
+
+                CBTextColor2 is meant to be used for text that has a reduced
+                emphasis compared to other text it is near. It is often used for
+                descriptions adjecent to titles, for dates or captions.
+
+                The use of CBTextColor2 is left mostly to the designer, because
+                different layouts and views will dictate whether it is appropriate or not.
+
+                --- dt
+                CBTextColor3
+                ---
+
+                CBTextColor3 is the lightest text color and also appripriate for
+                drawing lines.
+
+            ---
+
+EOT;
+    }
+
+    static function sample() {
+        return <<<EOT
+
+            --- h1
+            Welcome!
+            ---
+
+            This is a sample to show you what content will look like with various themes.
+            By look at the style sheets associated with this page you can also
+            see how to create your own customized version of the themes.
+
+            This is useful for:
+
+            --- ul
+            designers
+
+            advanced content creators
+
+            artistic developers
+            ---
 EOT;
     }
 }
