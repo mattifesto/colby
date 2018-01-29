@@ -1,6 +1,6 @@
 .CBUINavigationArrowPart {
     align-items: center;
-    color: var(--CBLineColor);
+    color: var(--CBTextColor3);
     display: flex;
     flex: none;
     min-height: 44px;
