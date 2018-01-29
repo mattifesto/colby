@@ -9,13 +9,13 @@ var CBAdminPageForPagesTrash = {
     /**
      * @return undefined
      */
-    createElement : function () {
+    createElement: function () {
         var element = document.createElement("div");
         element.className = "CBAdminPageForPagesTrash";
 
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({
-            text : "Pages in the trash",
+            text: "Pages in the trash",
         }));
 
         var section = CBUI.createSection();
@@ -24,7 +24,7 @@ var CBAdminPageForPagesTrash = {
         element.appendChild(CBUI.createHalfSpace());
 
         CBAdminPageForPagesTrash.fetchPages({
-            section : section,
+            section: section,
         });
 
         return element;
@@ -35,12 +35,12 @@ var CBAdminPageForPagesTrash = {
      *
      * @return undefined
      */
-    fetchPages : function (args) {
+    fetchPages: function (args) {
         var xhr = new XMLHttpRequest();
         xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
         xhr.onload = CBAdminPageForPagesTrash.fetchPagesDidLoad.bind(undefined, {
-            section : args.section,
-            xhr : xhr,
+            section: args.section,
+            xhr: xhr,
         });
         xhr.open("POST", "/api/?class=CBAdminPageForPagesTrash&function=fetchPageSummaryModels");
         xhr.send();
@@ -52,11 +52,11 @@ var CBAdminPageForPagesTrash = {
      *
      * @return undefined
      */
-    fetchPagesDidLoad : function (args) {
+    fetchPagesDidLoad: function (args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
-            args.section.textContent = undefined;
+            args.section.textContent = "";
 
             response.models.forEach(function (model) {
                 var sectionItem = CBUI.createSectionItem2();
@@ -72,8 +72,8 @@ var CBAdminPageForPagesTrash = {
                 recoverCommand.className = "command";
                 recoverCommand.textContent = "Recover";
                 recoverCommand.addEventListener("click", CBAdminPageForPagesTrash.recoverPage.bind(undefined, {
-                    ID : model.ID,
-                    sectionItemElement : sectionItem.element,
+                    ID: model.ID,
+                    sectionItemElement: sectionItem.element,
                 }));
 
                 sectionItem.commandsElement.appendChild(recoverCommand);
@@ -105,15 +105,15 @@ var CBAdminPageForPagesTrash = {
      *
      * @return undefined
      */
-    recoverPage : function (args) {
+    recoverPage: function (args) {
         var formData = new FormData();
         formData.append("ID", args.ID);
 
         var xhr = new XMLHttpRequest();
         xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
         xhr.onload = CBAdminPageForPagesTrash.recoverPageDidLoad.bind(undefined, {
-            sectionItemElement : args.sectionItemElement,
-            xhr : xhr,
+            sectionItemElement: args.sectionItemElement,
+            xhr: xhr,
         });
         xhr.open("POST", "/api/?class=CBAdminPageForPagesTrash&function=recoverPage");
         xhr.send(formData);
@@ -125,7 +125,7 @@ var CBAdminPageForPagesTrash = {
      *
      * @return undefined
      */
-    recoverPageDidLoad : function (args) {
+    recoverPageDidLoad: function (args) {
         var response = Colby.responseFromXMLHttpRequest(args.xhr);
 
         if (response.wasSuccessful) {
