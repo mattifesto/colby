@@ -1,6 +1,6 @@
 <?php
 
-final class CBAdminPageForPagesTrash {
+final class CBPagesTrashAdmin {
 
     /**
      * @return [string]

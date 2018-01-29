@@ -1,17 +1,18 @@
 "use strict";
 /* jshint strict: global */
+/* exported CBPagesTrashAdmin */
 /* global
     CBUI,
     Colby */
 
-var CBAdminPageForPagesTrash = {
+var CBPagesTrashAdmin = {
 
     /**
      * @return undefined
      */
     createElement: function () {
         var element = document.createElement("div");
-        element.className = "CBAdminPageForPagesTrash";
+        element.className = "CBPagesTrashAdmin";
 
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({
@@ -23,7 +24,7 @@ var CBAdminPageForPagesTrash = {
         element.appendChild(section);
         element.appendChild(CBUI.createHalfSpace());
 
-        CBAdminPageForPagesTrash.fetchPages({
+        CBPagesTrashAdmin.fetchPages({
             section: section,
         });
 
@@ -38,11 +39,11 @@ var CBAdminPageForPagesTrash = {
     fetchPages: function (args) {
         var xhr = new XMLHttpRequest();
         xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
-        xhr.onload = CBAdminPageForPagesTrash.fetchPagesDidLoad.bind(undefined, {
+        xhr.onload = CBPagesTrashAdmin.fetchPagesDidLoad.bind(undefined, {
             section: args.section,
             xhr: xhr,
         });
-        xhr.open("POST", "/api/?class=CBAdminPageForPagesTrash&function=fetchPageSummaryModels");
+        xhr.open("POST", "/api/?class=CBPagesTrashAdmin&function=fetchPageSummaryModels");
         xhr.send();
     },
 
@@ -71,7 +72,7 @@ var CBAdminPageForPagesTrash = {
                 var recoverCommand = document.createElement("div");
                 recoverCommand.className = "command";
                 recoverCommand.textContent = "Recover";
-                recoverCommand.addEventListener("click", CBAdminPageForPagesTrash.recoverPage.bind(undefined, {
+                recoverCommand.addEventListener("click", CBPagesTrashAdmin.recoverPage.bind(undefined, {
                     ID: model.ID,
                     sectionItemElement: sectionItem.element,
                 }));
@@ -111,11 +112,11 @@ var CBAdminPageForPagesTrash = {
 
         var xhr = new XMLHttpRequest();
         xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
-        xhr.onload = CBAdminPageForPagesTrash.recoverPageDidLoad.bind(undefined, {
+        xhr.onload = CBPagesTrashAdmin.recoverPageDidLoad.bind(undefined, {
             sectionItemElement: args.sectionItemElement,
             xhr: xhr,
         });
-        xhr.open("POST", "/api/?class=CBAdminPageForPagesTrash&function=recoverPage");
+        xhr.open("POST", "/api/?class=CBPagesTrashAdmin&function=recoverPage");
         xhr.send(formData);
     },
 
@@ -136,7 +137,7 @@ var CBAdminPageForPagesTrash = {
     },
 };
 
-document.addEventListener("DOMContentLoaded", function () {
+Colby.afterDOMContentLoaded(function () {
     var main = document.getElementsByTagName("main")[0];
-    main.appendChild(CBAdminPageForPagesTrash.createElement());
+    main.appendChild(CBPagesTrashAdmin.createElement());
 });
