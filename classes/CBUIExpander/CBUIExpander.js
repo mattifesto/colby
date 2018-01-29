@@ -153,7 +153,7 @@ var CBUIExpander = {
             set timestamp(value) {
                 let newTimestamp = Number.parseInt(value);
 
-                timeContainerElement.textContent = undefined;
+                timeContainerElement.textContent = "";
 
                 if (Number.isNaN(newTimestamp)) {
                     timestamp = undefined;
