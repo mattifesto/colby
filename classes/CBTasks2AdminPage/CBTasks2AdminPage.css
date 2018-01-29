@@ -22,7 +22,7 @@
 
 .CBTasks2AdminPage .status .textvalue {
     background-color: var(--CBBackgroundColor);
-    border: 1px solid var(--CBLineColor);
+    border: 1px solid var(--CBTextColor3);
     border-radius: 5px;
     margin: 5px;
     padding: 2px;
