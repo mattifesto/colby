@@ -63,7 +63,7 @@ html {
      */
     --CBBackgroundColor2: hsl(0, 0%, 95%); /* @deprecated use CBUIBackgroundColor */
     --CBUIBackgroundColor: hsl(0, 0%, 95%);
-    --CBUIBorderColor: hsl(0, 0%, 80%);
+    --CBUIBorderColor: hsl(0, 0%, 85%);
 
     background-color: hsl(0, 0%, 100%); /* IE11 */
     background-color: var(--CBBackgroundColor);
