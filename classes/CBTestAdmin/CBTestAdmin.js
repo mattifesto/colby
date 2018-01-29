@@ -184,7 +184,7 @@ var CBTestAdmin = {
             return;
         }
 
-        CBTestAdmin.status.element.textContent = undefined;
+        CBTestAdmin.status.element.textContent = "";
 
         Promise.resolve()
             .then(CBTestAdmin.runJavaScriptTests)
