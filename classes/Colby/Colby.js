@@ -666,6 +666,20 @@ var Colby = {
             };
         }
     },
+
+    warnOlderBrowsers: function () {
+        if (window.CSS) {
+            if (window.CSS.supports) {
+                if (window.CSS.supports('color', 'var(--color1)')) {
+                    return;
+                }
+            }
+        }
+
+        Colby.alert("Warning: You are using an older browser. Upgrade to a " +
+                    "recent version of Chrome, Edge, Firefox, or Safari. Even " +
+                    "on an older operation system these browsers will work fine.");
+    }
 };
 
 /**
