@@ -130,7 +130,7 @@
 }
 
 .CBTextView2StandardLayout pre {
-    border-left: 0.2em solid var(--CBLineColor);
+    border-left: 0.2em solid var(--CBTextColor3);
     padding-left: 1em;
     white-space: pre-wrap;
 }
