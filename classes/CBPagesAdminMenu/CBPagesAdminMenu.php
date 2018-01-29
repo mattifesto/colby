@@ -37,12 +37,6 @@ final class CBPagesAdminMenu {
                 ],
                 (object)[
                     'className' => 'CBMenuItem',
-                    'name' => 'trash',
-                    'text' => 'Trash',
-                    'URL' => '/admin/page?class=CBAdminPageForPagesTrash',
-                ],
-                (object)[
-                    'className' => 'CBMenuItem',
                     'name' => 'develop',
                     'text' => 'Develop',
                     'URL' => '/admin/page/?class=CBPagesDevelopmentAdminPage',
