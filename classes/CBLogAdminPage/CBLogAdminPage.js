@@ -57,6 +57,7 @@ var CBLogAdminPage = {
 
             navigator.navigateToItemCallback({
                 element: containerElement,
+                title: "Log",
             });
         }
 
