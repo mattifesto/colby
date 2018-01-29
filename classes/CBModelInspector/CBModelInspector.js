@@ -68,7 +68,7 @@ var CBModelInspector = {
         function resolved(response) {
             var section;
 
-            args.container.textContent = undefined;
+            args.container.textContent = "";
 
             section = CBUI.createSection();
 

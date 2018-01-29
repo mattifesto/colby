@@ -61,14 +61,15 @@ final class CBModelInspector {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBArtworkElement', 'CBMessageMarkup', 'CBUI', 'CBUIExpander', 'CBUIStringEditor'];
+        return ['CBArtworkElement', 'CBMessageMarkup', 'CBUI', 'CBUIExpander',
+                'CBUIStringEditor'];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v374.js', cbsysurl())];
     }
 
     /**
