@@ -149,15 +149,26 @@ var CBUIImageChooser = {
     createThumbnailSizedChooser : function (args) {
         var element = document.createElement("div");
         element.className = "CBUIImageChooser CBDarkTheme thumbnail";
-        var imageElement = document.createElement("img");
-        imageElement.style.display = "none";
+
         var inputElement = document.createElement("input");
         inputElement.type = "file";
         inputElement.style.display = "none";
 
+        element.appendChild(inputElement);
+
+        var imageContainerElement = document.createElement("div");
+        imageContainerElement.className = "container";
+        var imageElement = document.createElement("img");
+        imageElement.style.display = "none";
+
+        imageContainerElement.appendChild(imageElement);
+        element.appendChild(imageContainerElement);
+
         var captionElement = document.createElement("div");
         captionElement.className = "caption";
         captionElement.style.display = "none";
+
+        element.appendChild(captionElement);
 
         var commandsElement = document.createElement("div");
         commandsElement.className = "commands";
@@ -166,6 +177,10 @@ var CBUIImageChooser = {
         var removeElement = document.createElement("div");
         removeElement.style.display = "none";
         removeElement.textContent = "remove";
+
+        commandsElement.appendChild(chooseElement);
+        commandsElement.appendChild(removeElement);
+        element.appendChild(commandsElement);
 
         function setCaption(caption) {
             caption = String(caption);
@@ -219,13 +234,6 @@ var CBUIImageChooser = {
                 });
             }
         });
-
-        element.appendChild(inputElement);
-        element.appendChild(imageElement);
-        element.appendChild(captionElement);
-        commandsElement.appendChild(chooseElement);
-        commandsElement.appendChild(removeElement);
-        element.appendChild(commandsElement);
 
         return {
             element : element,

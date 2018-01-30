@@ -1,21 +1,33 @@
 .CBUIImageChooser {
     box-sizing: border-box;
-    min-height: 44px;
-    padding: 20px 20px 5px;
+    max-width: 100%;
+}
+
+.CBUIImageChooser > .container {
+    display: flex;
+    justify-content: center;
+    height: 240px;
+    padding: 10px 5px 5px;
+}
+
+.CBUIImageChooser.thumbnail > .container {
+    height: 120px;
 }
 
 .CBUIImageChooser img {
-    margin: 0 auto;
-    max-width: 100%;
-    padding: 0 0 5px;
+    display: block;
+    object-fit: contain;
+    height: 240px;
+    width: 100%;
 }
 
 .CBUIImageChooser.thumbnail img {
-    max-height: 150px;
+    height: 120px;
+    width: 120px;
 }
 
 .CBUIImageChooser .caption {
-    padding: 0 10px 5px;
+    padding: 5px 10px;
     text-align: center;
 }
 
@@ -28,5 +40,5 @@
 
 .CBUIImageChooser .commands > * {
     cursor: pointer;
-    padding: 0 10px 5px;
+    padding: 5px 10px;
 }
