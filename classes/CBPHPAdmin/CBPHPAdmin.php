@@ -13,7 +13,7 @@ final class CBPHPAdmin {
      * @return void
      */
     static function CBAdmin_render(): void {
-
+        CBHTMLOutput::setTitleHTML('PHP Administration');
     }
 
     /**
