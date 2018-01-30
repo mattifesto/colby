@@ -113,7 +113,12 @@ final class CBAdmin {
         $classNames = [];
 
         foreach (Colby::$libraryDirectories as $libraryDirectory) {
-            $libraryClassesDirectory = $libraryDirectory . '/classes';
+            if ($libraryDirectory === '') {
+                $libraryClassesDirectory = cbsitedir() . '/classes';
+            } else {
+                $libraryClassesDirectory = cbsitedir() . "/{$libraryDirectory}/classes";
+            }
+
             $libraryClassDirectories = glob("{$libraryClassesDirectory}/*" , GLOB_ONLYDIR);
             $libraryClassNames = array_map('basename', $libraryClassDirectories);
 
