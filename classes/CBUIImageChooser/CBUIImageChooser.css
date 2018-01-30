@@ -7,11 +7,12 @@
     display: flex;
     justify-content: center;
     height: 240px;
-    padding: 10px 5px 5px;
+    padding: 10px 20px;
 }
 
 .CBUIImageChooser.thumbnail > .container {
     height: 120px;
+    padding: 10px;
 }
 
 .CBUIImageChooser img {
@@ -23,7 +24,6 @@
 
 .CBUIImageChooser.thumbnail img {
     height: 120px;
-    width: 120px;
 }
 
 .CBUIImageChooser .caption {
