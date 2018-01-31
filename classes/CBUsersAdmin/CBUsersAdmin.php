@@ -1,6 +1,6 @@
 <?php
 
-final class CBAdminPageForUsers {
+final class CBUsersAdmin {
 
     /**
      * @return [string]
@@ -23,7 +23,7 @@ final class CBAdminPageForUsers {
         CBHTMLOutput::setTitleHTML('Users');
         CBHTMLOutput::setDescriptionHTML('Tools for viewing and editing site users.');
 
-        $users = CBAdminPageForUsers::fetchUsers();
+        $users = CBUsersAdmin::fetchUsers();
 
         ?><div class="list"><?php
 
@@ -61,6 +61,6 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'v377.css', cbsysurl())];
     }
 }

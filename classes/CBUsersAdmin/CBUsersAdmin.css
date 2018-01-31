@@ -1,9 +1,9 @@
-.CBAdminPageForUsers .list {
+.CBUsersAdmin .list {
     column-width: 240px;
     padding: 10px 0;
 }
 
-.CBAdminPageForUsers .user {
+.CBUsersAdmin .user {
     break-inside: avoid;
     padding: 10px 20px;
 }
