@@ -9,6 +9,6 @@ final class CBEqualize {
         <script src="<?= cbsysurl() . '/classes/CBEqualize/html5shiv.v362.js' ?>"></script>
         <script src="<?= cbsysurl() . '/classes/CBEqualize/es6-promise.auto.min.v362.js' ?>"></script>
         <script src="<?= Colby::flexpath(__CLASS__, 'v362.js', cbsysurl()) ?>"></script>
-        <link rel="stylesheet" href="<?= Colby::flexpath(__CLASS__, 'v362.css', cbsysurl()) ?>">
+        <link rel="stylesheet" href="<?= Colby::flexpath(__CLASS__, 'v375.css', cbsysurl()) ?>">
     <?php }
 }
