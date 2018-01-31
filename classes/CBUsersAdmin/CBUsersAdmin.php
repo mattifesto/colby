@@ -5,21 +5,14 @@ final class CBUsersAdmin {
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
+    static function CBAdmin_menuNamePath(): array {
         return ['general', 'users'];
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Administrators'];
     }
 
     /**
      * @return void
      */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::setTitleHTML('Users');
         CBHTMLOutput::setDescriptionHTML('Tools for viewing and editing site users.');
 
