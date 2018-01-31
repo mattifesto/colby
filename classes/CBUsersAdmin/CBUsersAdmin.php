@@ -36,6 +36,13 @@ final class CBUsersAdmin {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'v376.css', cbsysurl())];
+    }
+
+    /**
      * @return [stdClass]
      */
     private static function fetchUsers() {
@@ -48,12 +55,5 @@ final class CBUsersAdmin {
 EOT;
 
         return CBDB::SQLToObjects($SQL);
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v377.css', cbsysurl())];
     }
 }
