@@ -3,6 +3,34 @@
 final class CBMenuView {
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
+    }
+
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function CBModel_toModel(stdClass $spec) {
+        return (object)[
+            'className' => __CLASS__,
+            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
+            'menuID' => CBModel::value($spec, 'menuID'),
+            'selectedItemName' => CBModel::value($spec, 'selectedItemName'),
+        ];
+    }
+
+    /**
      * @param object $model
      *
      *      {
@@ -127,33 +155,5 @@ final class CBMenuView {
         </nav>
 
         <?php
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
-    }
-
-    /**
-     * @param object $spec
-     *
-     * @return object
-     */
-    static function CBModel_toModel(stdClass $spec) {
-        return (object)[
-            'className' => __CLASS__,
-            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
-            'menuID' => CBModel::value($spec, 'menuID'),
-            'selectedItemName' => CBModel::value($spec, 'selectedItemName'),
-        ];
     }
 }
