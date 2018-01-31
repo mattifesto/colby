@@ -43,6 +43,31 @@ final class CBUsersAdmin {
     }
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBGeneralAdminMenu::ID);
+
+        $spec->items[] = (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'users',
+            'text' => 'Users',
+            'URL' => '/admin/?c=CBUsersAdmin',
+        ];
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBGeneralAdminMenu'];
+    }
+
+    /**
      * @return [stdClass]
      */
     private static function fetchUsers() {

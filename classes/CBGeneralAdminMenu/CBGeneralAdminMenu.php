@@ -41,12 +41,6 @@ final class CBGeneralAdminMenu {
                     'text' => 'Log',
                     'URL' => '/admin/page/?class=CBLogAdminPage',
                 ],
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'users',
-                    'text' => 'Users',
-                    'URL' => '/admin/page/?class=CBAdminPageForUsers',
-                ],
             ],
         ];
 
