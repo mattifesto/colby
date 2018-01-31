@@ -6,7 +6,7 @@ final class CBLogAdminPage {
      * @return [string]
      */
     static function adminPageMenuNamePath() {
-        return ['general', 'logs'];
+        return ['general', 'log'];
     }
 
     /**
@@ -20,8 +20,7 @@ final class CBLogAdminPage {
      * @return null
      */
     static function adminPageRenderContent() {
-        CBHTMLOutput::setTitleHTML('Logs');
-        CBHTMLOutput::setDescriptionHTML('View logs');
+        CBHTMLOutput::setTitleHTML('Log');
     }
 
     /**
