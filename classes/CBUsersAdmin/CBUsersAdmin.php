@@ -14,32 +14,30 @@ final class CBUsersAdmin {
      */
     static function CBAdmin_render(): void {
         CBHTMLOutput::setTitleHTML('Users');
-        CBHTMLOutput::setDescriptionHTML('Tools for viewing and editing site users.');
-
-        $users = CBUsersAdmin::fetchUsers();
-
-        ?><div class="list"><?php
-
-            foreach ($users as $user) {
-                $userPageURI = "/admin/page/?class=CBAdminPageForUserSettings&amp;hash={$user->hash}";
-
-                ?>
-
-                <div class="user">
-                    <a href="<?= $userPageURI ?>"><?= $user->facebookName ?></a>
-                </div>
-
-                <?php
-            }
-
-        ?></div><?php
     }
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v376.css', cbsysurl())];
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v376.js', cbsysurl())];
+    }
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables(): array {
+        return [
+            ['CBUsersAdmin_users', CBUsersAdmin::fetchUsers()],
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return ['CBUI', 'CBUINavigationArrowPart', 'CBUISectionItem4',
+                'CBUIStringsPart'];
     }
 
     /**
