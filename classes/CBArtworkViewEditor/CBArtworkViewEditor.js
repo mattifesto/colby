@@ -115,7 +115,7 @@ var CBArtworkViewEditor = {
 
         element.appendChild(CBUI.createHalfSpace());
 
-        /* set thumnail */
+        /* set thumbnail */
 
         if (args.spec.image) {
             chooser.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
