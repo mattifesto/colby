@@ -478,9 +478,13 @@ EOT;
      *      A null value will make a new task ready and will have no effect
      *      on an existing task's availability.
      *
-     * @return null
+     * @return void
      */
-    static function updateTasks($className, array $IDs, $processID = null, $priority = null, $scheduled = null) {
+    static function updateTasks($className, array $IDs, $processID = null, $priority = null, $scheduled = null): void {
+        if (empty($IDs)) {
+            return;
+        }
+
         $priority = CBConvert::valueAsInt($priority);
         $scheduled = CBConvert::valueAsInt($scheduled);
         $now = time();
