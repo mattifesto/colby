@@ -45,17 +45,6 @@ final class CBAdminPageMenuView {
         $selectedMenuItem = CBMenu::selectedMenuItem($adminMenu, $selectedMenuItemName);
         $submenuID = CBConvert::valueAsHex160(CBModel::value($selectedMenuItem, 'submenuID'));
 
-        if (empty($submenuID)) {
-            switch ($selectedMenuItemName) {
-                case 'pages':
-                    $submenuID = CBPagesAdminMenu::ID;
-                    break;
-                default:
-                    $submenuID = null;
-                    break;
-            }
-        }
-
         if ($submenuID) {
             $selectedSubmenuItemName = CBModel::value($model, 'selectedSubmenuItemName');
 

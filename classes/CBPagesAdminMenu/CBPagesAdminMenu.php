@@ -13,6 +13,7 @@ final class CBPagesAdminMenu {
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'pages',
+            'submenuID' => CBPagesAdminMenu::ID,
             'text' => 'Pages',
             'URL' => '/admin/page/?class=CBAdminPageForPagesFind',
         ];
