@@ -3,16 +3,21 @@
 final class CBMenuItem {
 
     /**
-     * @param string? $spec->name
-     * @param string? $spec->text
-     * @param string? $spec->URL
+     * @param object $spec
+     *
+     *      {
+     *          name: string?
+     *          submenuID: hex160?
+     *          text: string?
+     *          URL: string?
+     *      }
      *
      * @return object
      */
     static function CBModel_toModel(stdClass $spec) {
         $model = (object)[
-            'className' => __CLASS__,
             'name' => CBModel::value($spec, 'name', '', 'ColbyConvert::textToStub'),
+            'submenuID' => CBConvert::valueAsHex160(CBModel::value($spec, 'submenuID')),
             'text' => CBModel::value($spec, 'text', '', 'strval'),
             'URL' => CBModel::value($spec, 'URL', '', 'trim'),
         ];
