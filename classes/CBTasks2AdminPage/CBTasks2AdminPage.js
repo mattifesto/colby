@@ -14,39 +14,9 @@ var CBTasks2AdminPage = {
     create: function () {
         var element = document.createElement("div");
         element.className = "CBTasks2AdminPage";
-        var buttonsElement = document.createElement("div");
-        buttonsElement.className = "buttons";
 
         var statusElement = CBTasks2AdminPage.createStatusElement();
         element.appendChild(statusElement);
-
-        buttonsElement.appendChild(CBUI.createButton({
-            callback: function() {
-                var promise = Colby.callAjaxFunction("CBTestTask", "start")
-                    .then(onFulfilled)
-                    .catch(Colby.displayAndReportError)
-                    .then(onFinally, onFinally);
-
-                Colby.retain(promise);
-
-                function onFulfilled() {
-                    Colby.alert("CBTestTask started");
-                }
-
-                function onFinally() {
-                    Colby.release(promise);
-                }
-
-            },
-            text: "Start CBTestTask",
-        }).element);
-
-        buttonsElement.appendChild(CBUI.createButton({
-            callback: CBTasks2AdminPage.scheduleATask,
-            text: "Schedule a Task",
-        }).element);
-
-        element.appendChild(buttonsElement);
 
         return element;
     },

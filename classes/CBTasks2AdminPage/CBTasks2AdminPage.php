@@ -35,7 +35,7 @@ final class CBTasks2AdminPage {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v378.js', cbsysurl())];
     }
 
     /**
