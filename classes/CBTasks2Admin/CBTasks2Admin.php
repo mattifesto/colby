@@ -1,6 +1,6 @@
 <?php
 
-final class CBTasks2AdminPage {
+final class CBTasks2Admin {
 
     /**
      * @return [string]
@@ -22,13 +22,6 @@ final class CBTasks2AdminPage {
     static function adminPageRenderContent() {
         CBHTMLOutput::setTitleHTML('Tasks');
         CBHTMLOutput::setDescriptionHTML('View tasks');
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
     }
 
     /**

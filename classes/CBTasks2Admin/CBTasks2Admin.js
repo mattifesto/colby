@@ -1,14 +1,14 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
-/* exported CBTasks2AdminPage */
+/* exported CBTasks2Admin */
 /* global
     CBUI,
     CBUISectionItem4,
     CBUIStringsPart,
     Colby */
 
-var CBTasks2AdminPage = {
+var CBTasks2Admin = {
 
     sectionElement: undefined,
 
@@ -19,13 +19,13 @@ var CBTasks2AdminPage = {
         Colby.CBTasks2RunAlways = true;
 
         var mainElement = document.getElementsByTagName("main")[0];
-        CBTasks2AdminPage.sectionElement = CBUI.createSection();
+        CBTasks2Admin.sectionElement = CBUI.createSection();
 
         mainElement.appendChild(CBUI.createHalfSpace());
-        mainElement.appendChild(CBTasks2AdminPage.sectionElement);
+        mainElement.appendChild(CBTasks2Admin.sectionElement);
         mainElement.appendChild(CBUI.createHalfSpace());
 
-        CBTasks2AdminPage.startFetchingStatus();
+        CBTasks2Admin.startFetchingStatus();
     },
 
     /**
@@ -34,7 +34,7 @@ var CBTasks2AdminPage = {
      * @return Element
      */
     updateStatus: function (status) {
-        let sectionElement = CBTasks2AdminPage.sectionElement;
+        let sectionElement = CBTasks2Admin.sectionElement;
         sectionElement.textContent = "";
 
         sectionElement.appendChild(create("Scheduled Tasks", status.scheduled));
@@ -73,7 +73,7 @@ var CBTasks2AdminPage = {
         }
 
         function onFulfilled(value) {
-            CBTasks2AdminPage.updateStatus(value);
+            CBTasks2Admin.updateStatus(value);
 
             if (value.ready > 0) {
                 Colby.CBTasks2Delay = 1; // 1 millisecond
@@ -86,4 +86,4 @@ var CBTasks2AdminPage = {
     },
 };
 
-Colby.afterDOMContentLoaded(CBTasks2AdminPage.init);
+Colby.afterDOMContentLoaded(CBTasks2Admin.init);
