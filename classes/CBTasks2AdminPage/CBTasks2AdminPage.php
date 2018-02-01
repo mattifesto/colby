@@ -44,29 +44,4 @@ final class CBTasks2AdminPage {
     static function CBHTMLOutput_requiredClassNames() {
         return ['CBUI'];
     }
-
-    /**
-     * @return null
-     */
-    static function CBAjax_scheduleATask() {
-        $SQL = <<<EOT
-
-            SELECT      LOWER(HEX(`archiveID`))
-            FROM        `ColbyPages`
-            ORDER BY    RAND()
-            LIMIT       1
-
-EOT;
-
-        $ID = CBDB::SQLToValue($SQL);
-
-        CBTasks2::updateTask('CBPageVerificationTask', $ID, null, null, time() + 5);
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_scheduleATask_group() {
-        return 'Administrators';
-    }
 }
