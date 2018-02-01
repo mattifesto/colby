@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBViewPageInformationEditor */
 /* globals
     CBCurrentUserID,
@@ -10,9 +11,11 @@
     CBUIActionLink,
     CBUIBooleanEditor,
     CBUIImageChooser,
+    CBUISectionItem4,
     CBUISelector,
     CBUISpecPropertyEditor,
     CBUIStringEditor,
+    CBUIStringsPart,
     CBUIUnixTimestampEditor,
     CBUsersWhoAreAdministrators,
     CBViewPageEditor,
@@ -281,6 +284,29 @@ var CBViewPageInformationEditor = {
             callback: args.makeFrontPageCallback,
         }).element);
         section.appendChild(item);
+
+        {
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                if (window.confirm('Are you sure you want to move this page to the trash?')) {
+                    Colby.callAjaxFunction("CBPages", "moveToTrash", { ID: args.spec.ID })
+                        .then(onFulfilled)
+                        .catch(Colby.displayAndReportError);
+                }
+
+                function onFulfilled() {
+                    alert('The page is the trash. You will be redirected to pages administration.');
+                    window.location = "/admin/page/?class=CBAdminPageForPagesFind";
+                }
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Move to Trash";
+
+            stringsPart.element.classList.add("action");
+            sectionItem.appendPart(stringsPart);
+            section.appendChild(sectionItem.element);
+        }
 
         element.appendChild(section);
 

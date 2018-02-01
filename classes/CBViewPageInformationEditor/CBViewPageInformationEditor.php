@@ -26,8 +26,9 @@ final class CBViewPageInformationEditor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink', 'CBUIImageChooser', 'CBUISelector',
-                'CBUISpecPropertyEditor', 'CBUIStringEditor',
+        return ['CBUI', 'CBUIActionLink', 'CBUIImageChooser',
+                'CBUISectionItem4', 'CBUISelector', 'CBUISpecPropertyEditor',
+                'CBUIStringEditor', 'CBUIStringsPart',
                 'CBUIUnixTimestampEditor'];
     }
 
@@ -35,7 +36,7 @@ final class CBViewPageInformationEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v379.js', cbsysurl())];
     }
 
     /**
