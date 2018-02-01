@@ -21,6 +21,9 @@ var CBTasks2Admin = {
         var mainElement = document.getElementsByTagName("main")[0];
         CBTasks2Admin.sectionElement = CBUI.createSection();
 
+        mainElement.appendChild(CBUI.createHeader({
+            centerElement: CBUI.createHeaderTitle({text: "Tasks"}),
+        }));
         mainElement.appendChild(CBUI.createHalfSpace());
         mainElement.appendChild(CBTasks2Admin.sectionElement);
         mainElement.appendChild(CBUI.createHalfSpace());
