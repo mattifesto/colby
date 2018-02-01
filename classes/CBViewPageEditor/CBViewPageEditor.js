@@ -89,36 +89,6 @@ var CBViewPageEditor = {
 
         CBViewPageEditor.handleTitleChanged({spec: args.spec});
 
-        var moveToTrashButton = CBUI.createButton({
-            text: 'Move to Trash',
-            callback: function () {
-                if (window.confirm('Are you sure you want to move this page to the trash?')) {
-                    moveToTrash();
-                }
-            },
-        });
-
-        editorContainer.appendChild(moveToTrashButton.element);
-
-        function moveToTrash() {
-            moveToTrashButton.disable();
-
-            Colby.callAjaxFunction("CBPages", "moveToTrash", { ID: args.spec.ID })
-                .then(moveToTrashFulfilled)
-                .catch(Colby.displayAndReportError)
-                .then(moveToTrashFinally);
-        }
-
-        function moveToTrashFulfilled() {
-            alert('The page is the trash. You will be redirected to pages administration.');
-
-            window.location = "/admin/page/?class=CBAdminPageForPagesFind";
-        }
-
-        function moveToTrashFinally() {
-            moveToTrashButton.enable();
-        }
-
         editorContainer.appendChild(CBUI.createHalfSpace());
 
         return editorContainer;
