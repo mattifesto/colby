@@ -89,15 +89,6 @@ var CBViewPageEditor = {
 
         CBViewPageEditor.handleTitleChanged({spec: args.spec});
 
-        var modelInspectorButton = CBUI.createButton({
-            text: "Go to Inspector",
-            callback: function () {
-                window.location = "/admin/?c=CBModelInspector&ID=" + args.spec.ID;
-            },
-        });
-
-        editorContainer.appendChild(modelInspectorButton.element);
-
         var moveToTrashButton = CBUI.createButton({
             text: 'Move to Trash',
             callback: function () {
