@@ -19,4 +19,24 @@ final class CBMenu {
 
         return $model;
     }
+
+    /**
+     * @param mixed $model
+     * @param string $selectedMenuItemName
+     *
+     * @return object|null
+     */
+    static function selectedMenuItem($model, $selectedMenuItemName): ?stdClass {
+        $items = CBConvert::valueToArray(CBModel::value($model, 'items'));
+
+        foreach ($items as $item) {
+            $name = CBConvert::valueToString(CBModel::value($item, 'name'));
+
+            if ($name === $selectedMenuItemName) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
 }
