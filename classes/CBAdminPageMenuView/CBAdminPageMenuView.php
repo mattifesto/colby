@@ -33,33 +33,39 @@ final class CBAdminPageMenuView {
         echo '<div class="CBAdminPageMenuView">';
 
         $selectedMenuItemName = CBModel::value($model, 'selectedMenuItemName');
+        $adminMenu = CBModels::fetchModelByID(CBAdminMenu::ID);
 
         CBView::render((object)[
             'className' => 'CBMenuView',
             'CSSClassNames' => ['CBDarkTheme'],
-            'menuID' => CBAdminMenu::ID,
+            'menu' => $adminMenu,
             'selectedItemName' => $selectedMenuItemName,
         ]);
 
-        switch ($selectedMenuItemName) {
-            case 'develop':
-                $submenuID = CBDevelopAdminMenu::ID;
-                break;
-            case 'general':
-                $submenuID = CBGeneralAdminMenu::ID;
-                break;
-            case 'help':
-                $submenuID = CBHelpAdminMenu::ID;
-                break;
-            case 'models':
-                $submenuID = CBModelsAdminMenu::ID;
-                break;
-            case 'pages':
-                $submenuID = CBPagesAdminMenu::ID;
-                break;
-            default:
-                $submenuID = null;
-                break;
+        $selectedMenuItem = CBMenu::selectedMenuItem($adminMenu, $selectedMenuItemName);
+        $submenuID = CBConvert::valueAsHex160(CBModel::value($selectedMenuItem, 'submenuID'));
+
+        if (empty($submenuID)) {
+            switch ($selectedMenuItemName) {
+                case 'develop':
+                    $submenuID = CBDevelopAdminMenu::ID;
+                    break;
+                case 'general':
+                    $submenuID = CBGeneralAdminMenu::ID;
+                    break;
+                case 'help':
+                    $submenuID = CBHelpAdminMenu::ID;
+                    break;
+                case 'models':
+                    $submenuID = CBModelsAdminMenu::ID;
+                    break;
+                case 'pages':
+                    $submenuID = CBPagesAdminMenu::ID;
+                    break;
+                default:
+                    $submenuID = null;
+                    break;
+            }
         }
 
         if ($submenuID) {
