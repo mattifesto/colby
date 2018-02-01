@@ -42,6 +42,6 @@ final class CBTasks2AdminPage {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI'];
+        return ['CBUI', 'CBUISectionItem4', 'CBUIStringsPart'];
     }
 }
