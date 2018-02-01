@@ -13,6 +13,7 @@ final class CBModelsAdminMenu {
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'models',
+            'submenuID' => CBModelsAdminMenu::ID,
             'text' => 'Models',
             'URL' => '/admin/?c=CBModelsAdmin',
         ];
