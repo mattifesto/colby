@@ -5,36 +5,28 @@ final class CBTasks2Admin {
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
+    static function CBAdmin_menuNamePath(): array {
         return ['general', 'tasks'];
     }
 
     /**
-     * @return stdClass
+     * @return void
      */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Administrators'];
-    }
-
-    /**
-     * @return null
-     */
-    static function adminPageRenderContent() {
-        CBHTMLOutput::setTitleHTML('Tasks');
-        CBHTMLOutput::setDescriptionHTML('View tasks');
+    static function CBAdmin_render(): void {
+        CBHTMLOutput::setTitleHTML('Tasks Administration');
     }
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs(): array {
         return [Colby::flexpath(__CLASS__, 'v378.js', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames(): array {
         return ['CBUI', 'CBUISectionItem4', 'CBUIStringsPart'];
     }
 }
