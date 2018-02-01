@@ -47,9 +47,6 @@ final class CBAdminPageMenuView {
 
         if (empty($submenuID)) {
             switch ($selectedMenuItemName) {
-                case 'help':
-                    $submenuID = CBHelpAdminMenu::ID;
-                    break;
                 case 'models':
                     $submenuID = CBModelsAdminMenu::ID;
                     break;
