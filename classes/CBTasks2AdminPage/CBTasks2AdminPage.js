@@ -11,14 +11,13 @@ var CBTasks2AdminPage = {
     /**
      * @return Element
      */
-    create: function () {
-        var element = document.createElement("div");
-        element.className = "CBTasks2AdminPage";
+    init: function () {
+        Colby.CBTasks2RunAlways = true;
 
+        var mainElement = document.getElementsByTagName("main")[0];
         var statusElement = CBTasks2AdminPage.createStatusElement();
-        element.appendChild(statusElement);
 
-        return element;
+        mainElement.appendChild(statusElement);
     },
 
     /**
@@ -125,8 +124,4 @@ var CBTasks2AdminPage = {
     },
 };
 
-Colby.afterDOMContentLoaded(function () {
-    Colby.CBTasks2RunAlways = true;
-    var main = document.getElementsByTagName("main")[0];
-    main.appendChild(CBTasks2AdminPage.create());
-});
+Colby.afterDOMContentLoaded(CBTasks2AdminPage.init);
