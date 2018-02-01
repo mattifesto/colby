@@ -29,4 +29,29 @@ final class CBTasks2Admin {
     static function CBHTMLOutput_requiredClassNames(): array {
         return ['CBUI', 'CBUISectionItem4', 'CBUIStringsPart'];
     }
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBGeneralAdminMenu::ID);
+
+        $spec->items[] = (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'tasks',
+            'text' => 'Tasks',
+            'URL' => '/admin/?c=CBTasks2Admin',
+        ];
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBGeneralAdminMenu'];
+    }
 }

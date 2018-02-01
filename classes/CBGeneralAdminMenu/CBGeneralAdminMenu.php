@@ -32,12 +32,6 @@ final class CBGeneralAdminMenu {
                 ],
                 (object)[
                     'className' => 'CBMenuItem',
-                    'name' => 'tasks',
-                    'text' => 'Tasks',
-                    'URL' => '/admin/page/?class=CBTasks2AdminPage',
-                ],
-                (object)[
-                    'className' => 'CBMenuItem',
                     'name' => 'log',
                     'text' => 'Log',
                     'URL' => '/admin/page/?class=CBLogAdminPage',
