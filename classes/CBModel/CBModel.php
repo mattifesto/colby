@@ -159,7 +159,7 @@ final class CBModel {
     }
 
     /**
-     * @param stdClass? $model
+     * @param mixed $model
      *
      *  The $model parameter is generally expected to be a stdClass instance or
      *  `null`, but it can be any value such as `42`. If it is not stdClass this
