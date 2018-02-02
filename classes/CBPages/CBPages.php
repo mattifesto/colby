@@ -20,11 +20,9 @@ class CBPages {
         }
 
         $options = $temporary ? 'TEMPORARY' : '';
-        $constraint = $temporary ? '' : ",CONSTRAINT `{$name}_publishedBy` FOREIGN KEY (`publishedBy`) REFERENCES `ColbyUsers` (`id`)";
         $SQL = <<<EOT
 
             CREATE {$options} TABLE IF NOT EXISTS `{$name}` (
-                `ID`                    BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
                 `archiveID`             BINARY(20) NOT NULL,
                 `keyValueData`          LONGTEXT NOT NULL,
                 `className`             VARCHAR(80),
@@ -40,8 +38,7 @@ class CBPages {
                 `published`             BIGINT,
                 `publishedBy`           BIGINT UNSIGNED,
                 `publishedMonth`        MEDIUMINT,
-                PRIMARY KEY     (`ID`),
-                UNIQUE KEY      `archiveID` (`archiveID`),
+                PRIMARY KEY     (archiveID),
                 KEY             `URI_published` (`URI`, `published`),
                 KEY             `classNameForKind_publishedMonth_published` (`classNameForKind`, `publishedMonth`, `published`),
 
@@ -50,8 +47,6 @@ class CBPages {
                 KEY             `modified` (`modified`),
                 KEY             `classNameForKind_created` (`classNameForKind`, `created`),
                 KEY             `classNameForKind_modified` (`classNameForKind`, `modified`)
-
-                {$constraint}
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
