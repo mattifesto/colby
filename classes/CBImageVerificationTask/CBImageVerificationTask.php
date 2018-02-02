@@ -39,7 +39,7 @@ final class CBImageVerificationTask {
         $severity = 7;
         $messages = [
             "Image {$ID} verified",
-            "(inspect (a /admin/?c=CBModelEditor&ID={$ID}))",
+            "(inspect > (a /admin/?c=CBModelInspector&ID={$ID}))",
         ];
         $IDAsSQL = CBHex160::toSQL($ID);
         $rowExtension = CBDB::SQLToValue("SELECT `extension` FROM `CBImages` WHERE `ID` = {$IDAsSQL}");
@@ -77,12 +77,31 @@ final class CBImageVerificationTask {
                 'width' => $imagesize[0],
             ];
 
-            CBDB::transaction(function () use ($spec) {
-                CBModels::save([$spec]);
-            });
+            try {
+                CBDB::transaction(function () use ($spec) {
+                    CBModels::save([$spec]);
+                });
 
-            $message = 'The model was saved for the first time.';
-            $messages[] = $message;
+                $message = 'The model was saved for the first time.';
+                $messages[] = $message;
+            } catch (Throwable $throwable) {
+                $errorMessage = CBConvert::throwableToMessage($throwable);
+                $stackTrace = CBConvert::throwabletoStackTrace($throwable);
+                $severity = min(3, $severity);
+                $messages[] = <<<EOT
+
+                    --- h1
+                    CBModels::save(\$spec) Failed
+                    ---
+
+                    {$errorMessage}
+
+                    --- pre preline
+                    {$stackTrace}
+                    ---
+
+EOT;
+            }
         }
 
         CBLog::log((object)[
