@@ -5,6 +5,7 @@
 /* global
     CBPagesDevelopmentAdminPage_pages,
     CBUI,
+    CBUINavigationArrowPart,
     CBUISectionItem4,
     CBUIStringsPart,
     Colby */
@@ -51,6 +52,8 @@ var CBPagesDevelopmentAdminPage = {
             pagesByCategory[category].push(page);
         });
 
+        let nonstandardPages = [];
+
         {
             let sectionElement = CBUI.createSection();
 
@@ -69,8 +72,46 @@ var CBPagesDevelopmentAdminPage = {
 
                 sectionItem.appendPart(stringsPart);
                 sectionElement.appendChild(sectionItem.element);
+
+                if (first.className !== "CBViewPage") {
+                    nonstandardPages = nonstandardPages.concat(pages);
+                }
             });
 
+            mainElement.appendChild(CBUI.createSectionHeader({
+                text: "Page Counts",
+            }));
+            mainElement.appendChild(sectionElement);
+            mainElement.appendChild(CBUI.createHalfSpace());
+        }
+
+        if (nonstandardPages.length > 0) {
+            let sectionElement = CBUI.createSection();
+
+            nonstandardPages.forEach(function (page) {
+                let sectionItem = CBUISectionItem4.create();
+                sectionItem.callback = function () {
+                    window.location = `/admin/?c=CBModelInspector&ID=${page.ID}`;
+                };
+
+                let stringsPart = CBUIStringsPart.create();
+
+                if (page.className === null) {
+                    stringsPart.string1 = "No Model";
+                } else {
+                    stringsPart.string1 = page.className +
+                        " " +
+                        (page.title === null ? "(no title)" : `(${page.title})`);
+                }
+
+                sectionItem.appendPart(stringsPart);
+                sectionItem.appendPart(CBUINavigationArrowPart.create());
+                sectionElement.appendChild(sectionItem.element);
+            });
+
+            mainElement.appendChild(CBUI.createSectionHeader({
+                text: "Nonstandard Pages",
+            }));
             mainElement.appendChild(sectionElement);
             mainElement.appendChild(CBUI.createHalfSpace());
         }

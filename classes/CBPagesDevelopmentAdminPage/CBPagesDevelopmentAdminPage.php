@@ -61,6 +61,7 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIExpander', 'CBUISectionItem4', 'CBUIStringsPart'];
+        return ['CBUI', 'CBUIExpander', 'CBUINavigationArrowPart',
+                'CBUISectionItem4', 'CBUIStringsPart'];
     }
 }
