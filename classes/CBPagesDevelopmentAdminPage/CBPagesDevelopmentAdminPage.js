@@ -39,23 +39,23 @@ var CBPagesDevelopmentAdminPage = {
             mainElement.appendChild(CBUI.createHalfSpace());
         }
 
-        let counts = {};
+        let pagesByCategory = {};
 
         CBPagesDevelopmentAdminPage_pages.forEach(function (page) {
-            let name = CBPagesDevelopmentAdminPage.pageToName(page);
+            let category = CBPagesDevelopmentAdminPage.pageToCategory(page);
 
-            if (counts[name] === undefined) {
-                counts[name] = [];
+            if (pagesByCategory[category] === undefined) {
+                pagesByCategory[category] = [];
             }
 
-            counts[name].push(page);
+            pagesByCategory[category].push(page);
         });
 
         {
             let sectionElement = CBUI.createSection();
 
-            Object.keys(counts).forEach(function (key) {
-                let pages = counts[key];
+            Object.keys(pagesByCategory).forEach(function (key) {
+                let pages = pagesByCategory[key];
                 let first = pages[0];
                 let title = (first.published === null ? "Unpublished" : "Published") +
                     ` ${first.className} (${first.classNameForKind})`;
@@ -76,7 +76,7 @@ var CBPagesDevelopmentAdminPage = {
         }
     },
 
-    pageToName: function (page) {
+    pageToCategory: function (page) {
         let name = "";
 
         if (page.published === null) {
