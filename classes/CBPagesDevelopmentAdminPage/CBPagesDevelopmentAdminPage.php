@@ -20,93 +20,47 @@ final class CBPagesDevelopmentAdminPage {
      * @return null
      */
     static function adminPageRenderContent() {
-        CBHTMLOutput::setTitleHTML('CBPages Development Information');
-        CBHTMLOutput::setDescriptionHTML('Pages that are in the ColbyPages table.');
-
-        ?>
-
-        <div class="CBPagesDevelopmentAdminPage_content"></div>
-        <div class="summaryLists">
-
-            <?php
-
-            CBView::render((object)[
-                'className' => 'CBPagesTableSummaryView',
-                'type' => 'published'
-            ]);
-
-            CBView::render((object)[
-                'className' => 'CBPagesTableSummaryView',
-                'type' => 'unpublished'
-            ]);
-
-            ?>
-
-        </div>
-
-        <?php
-
-        CBView::render((object)[
-            'className' => 'UnpublishedPagesWithURIsView',
-        ]);
-
-        $SQL = <<< EOT
-
-            SELECT  LOWER(HEX(`archiveID`)) as `ID`, `titleHTML`
-            FROM    `ColbyPages`
-            WHERE   `className` IS NULL
-
-EOT;
-
-        $rows = CBDB::SQLToObjects($SQL);
-
-        if (count($rows) > 0) {
-            $links = array_map(function ($row) {
-                $title = (trim($row->titleHTML) === '') ? $row->ID : $row->titleHTML;
-                $text = CBMessageMarkup::stringToMarkup($title);
-                $URL = CBMessageMarkup::stringToMarkup(cbsiteurl() . "/admin/?c=CBModelInspector&ID={$row->ID}");
-
-                return "({$text} (a $URL))";
-            }, $rows);
-
-            $message = "ColbyPages rows where `className` is NULL\n\n--- ul\n" .
-                       implode("\n\n", $links) .
-                       "\n---";
-
-            $message = cbhtml(json_encode($message));
-
-            ?>
-
-            <div class="CBUIExpander_builder" data-message="<?= $message ?>"></div>
-
-            <?php
-
-            /*foreach ($IDs as $ID) {
-                $href = cbsiteurl() . "/admin/?c=CBModelInspector&ID={$ID}";
-                echo "<a href=\"{$href}\"><span class=\"hash\">{$ID}</span></a>\n";
-            }*/
-
-        }
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+        CBHTMLOutput::setTitleHTML('Pages Development Admimistration');
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v373.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v380.js', cbsysurl())];
+    }
+
+    /**
+     * Get a list of all of the pages. This code is written with the
+     * understanding that all pages should have a model. We will warn the
+     * administrator of pages that don't have a model.
+     *
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables() {
+        $SQL = <<< EOT
+
+            SELECT      LOWER(HEX(ColbyPages.archiveID)) as ID,
+                        CBModels.className as className,
+                        ColbyPages.classNameForKind as classNameForKind,
+                        ColbyPages.published as published,
+                        CBModels.title as title
+            FROM        ColbyPages
+            LEFT JOIN   CBModels ON
+                        ColbyPages.archiveID = CBModels.ID
+            ORDER BY    ISNULL(published), className, classNameForKind, title
+
+EOT;
+
+        return [
+            ['CBPagesDevelopmentAdminPage_pages', CBDB::SQLToObjects($SQL)],
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUIExpander'];
+        return ['CBUI', 'CBUIExpander', 'CBUISectionItem4', 'CBUIStringsPart'];
     }
 }
