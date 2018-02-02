@@ -5,21 +5,21 @@ final class CBPagesDevelopmentAdmin {
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
+    static function CBAdmin_menuNamePath(): array {
         return ['pages', 'develop'];
     }
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Developers'];
+    static function CBAdmin_group() {
+        return 'Developers';
     }
 
     /**
-     * @return null
+     * @return void
      */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::setTitleHTML('Pages Development Admimistration');
     }
 
