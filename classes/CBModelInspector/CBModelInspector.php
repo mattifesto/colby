@@ -191,8 +191,7 @@ EOT;
         $IDAsSQL = CBHex160::toSQL($ID);
         $SQL = <<<EOT
 
-            SELECT  `id`,
-                    LOWER(HEX(`archiveID`)) as `archiveID`,
+            SELECT  LOWER(HEX(`archiveID`)) as `archiveID`,
                     `className`,
                     `classNameForKind`,
                     `created`,
