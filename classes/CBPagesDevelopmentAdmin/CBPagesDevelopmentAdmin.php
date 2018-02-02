@@ -1,6 +1,6 @@
 <?php
 
-final class CBPagesDevelopmentAdminPage {
+final class CBPagesDevelopmentAdmin {
 
     /**
      * @return [string]
@@ -53,7 +53,7 @@ final class CBPagesDevelopmentAdminPage {
 EOT;
 
         return [
-            ['CBPagesDevelopmentAdminPage_pages', CBDB::SQLToObjects($SQL)],
+            ['CBPagesDevelopmentAdmin_pages', CBDB::SQLToObjects($SQL)],
         ];
     }
 

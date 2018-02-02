@@ -1,16 +1,16 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
-/* exported CBPagesDevelopmentAdminPage */
+/* exported CBPagesDevelopmentAdmin */
 /* global
-    CBPagesDevelopmentAdminPage_pages,
+    CBPagesDevelopmentAdmin_pages,
     CBUI,
     CBUINavigationArrowPart,
     CBUISectionItem4,
     CBUIStringsPart,
     Colby */
 
-var CBPagesDevelopmentAdminPage = {
+var CBPagesDevelopmentAdmin = {
 
     /**
      * @return undefined
@@ -42,8 +42,8 @@ var CBPagesDevelopmentAdminPage = {
 
         let pagesByCategory = {};
 
-        CBPagesDevelopmentAdminPage_pages.forEach(function (page) {
-            let category = CBPagesDevelopmentAdminPage.pageToCategory(page);
+        CBPagesDevelopmentAdmin_pages.forEach(function (page) {
+            let category = CBPagesDevelopmentAdmin.pageToCategory(page);
 
             if (pagesByCategory[category] === undefined) {
                 pagesByCategory[category] = [];
@@ -142,4 +142,4 @@ var CBPagesDevelopmentAdminPage = {
     },
 };
 
-Colby.afterDOMContentLoaded(CBPagesDevelopmentAdminPage.init);
+Colby.afterDOMContentLoaded(CBPagesDevelopmentAdmin.init);
