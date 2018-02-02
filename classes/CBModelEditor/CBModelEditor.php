@@ -65,7 +65,12 @@ class CBModelEditor {
             } else if ($className) {
                 $args->className = $className;
             } else {
-                throw new InvalidArgumentException('A `className` must be specified for a new model.');
+                /**
+                 * There is no model or class name so just redirect to the
+                 * inspector.
+                 */
+                header("Location: /admin/?c=CBModelInspector&ID={$ID}");
+                exit();
             }
 
             return $args;
