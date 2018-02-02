@@ -287,7 +287,6 @@ EOT;
         $sql = <<<EOT
 
             INSERT INTO `CBPagesInTheTrash` (
-                `ID`,
                 `archiveID`,
                 `keyValueData`,
                 `className`,
@@ -323,7 +322,6 @@ EOT;
         $SQL = <<<EOT
 
             INSERT INTO `ColbyPages` (
-                `ID`,
                 `archiveID`,
                 `keyValueData`,
                 `className`,
