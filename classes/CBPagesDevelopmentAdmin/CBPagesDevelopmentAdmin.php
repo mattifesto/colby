@@ -64,4 +64,28 @@ EOT;
         return ['CBUI', 'CBUIExpander', 'CBUINavigationArrowPart',
                 'CBUISectionItem4', 'CBUIStringsPart'];
     }
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBPagesAdminMenu::ID);
+        $spec->items[] = (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'develop',
+            'text' => 'Develop',
+            'URL' => '/admin/?c=CBPagesDevelopmentAdmin',
+        ];
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBPagesAdminMenu'];
+    }
 }

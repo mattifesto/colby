@@ -36,12 +36,6 @@ final class CBPagesAdminMenu {
                     'text' => 'Find',
                     'URL' => '/admin/page/?class=CBAdminPageForPagesFind',
                 ],
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'develop',
-                    'text' => 'Develop',
-                    'URL' => '/admin/page/?class=CBPagesDevelopmentAdminPage',
-                ],
             ],
         ];
 
