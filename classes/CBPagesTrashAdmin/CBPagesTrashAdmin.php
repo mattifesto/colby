@@ -13,15 +13,14 @@ final class CBPagesTrashAdmin {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::setTitleHTML('Pages Trash');
-        CBHTMLOutput::setDescriptionHTML('Management of pages that are in the trash.');
+        CBHTMLOutput::setTitleHTML('Pages in the Trash Administration');
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v381.js', cbsysurl())];
     }
 
     /**
@@ -52,21 +51,24 @@ final class CBPagesTrashAdmin {
     /**
      * @return null
      */
-    static function fetchPageSummaryModelsForAjax() {
-        $response = new CBAjaxResponse();
-        $response->models = CBDB::SQLToArray(
-            'SELECT `keyValueData` FROM `CBPagesInTheTrash`',
-            ['valueIsJSON' => true]
-        );
-        $response->wasSuccessful = true;
-        $response->send();
+    static function CBAjax_fetchPages() {
+        $SQL = <<<EOT
+
+            SELECT      LOWER(HEX(trash.archiveID)) AS ID, model.title AS title
+            FROM        CBPagesInTheTrash AS trash
+            LEFT JOIN   CBModels AS model ON
+                        trash.archiveID = model.ID
+
+EOT;
+
+        return CBDB::SQLToObjects($SQL);
     }
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function fetchPageSummaryModelsForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function CBAjax_fetchPages_group() {
+        return 'Administrators';
     }
 
     /**

@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBPagesTrashAdmin */
 /* global
     CBUI,
@@ -10,70 +11,40 @@ var CBPagesTrashAdmin = {
     /**
      * @return undefined
      */
-    createElement: function () {
-        var element = document.createElement("div");
-        element.className = "CBPagesTrashAdmin";
+    init: function () {
+        let mainElement = document.getElementsByTagName("main")[0];
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
+        mainElement.appendChild(CBUI.createHalfSpace());
+        mainElement.appendChild(CBUI.createSectionHeader({
             text: "Pages in the trash",
         }));
 
-        var section = CBUI.createSection();
+        let sectionElement = CBUI.createSection();
 
-        element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
+        mainElement.appendChild(sectionElement);
+        mainElement.appendChild(CBUI.createHalfSpace());
 
-        CBPagesTrashAdmin.fetchPages({
-            section: section,
-        });
+        Colby.callAjaxFunction("CBPagesTrashAdmin", "fetchPages")
+            .then(onFulfilled)
+            .catch(Colby.displayAndReportError);
 
-        return element;
-    },
-
-    /**
-     * @param Element args.section
-     *
-     * @return undefined
-     */
-    fetchPages: function (args) {
-        var xhr = new XMLHttpRequest();
-        xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr:xhr});
-        xhr.onload = CBPagesTrashAdmin.fetchPagesDidLoad.bind(undefined, {
-            section: args.section,
-            xhr: xhr,
-        });
-        xhr.open("POST", "/api/?class=CBPagesTrashAdmin&function=fetchPageSummaryModels");
-        xhr.send();
-    },
-
-    /**
-     * @param Element args.section
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    fetchPagesDidLoad: function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            args.section.textContent = "";
-
-            response.models.forEach(function (model) {
+        /* closure */
+        function onFulfilled(pages) {
+            pages.forEach(function (page) {
                 var sectionItem = CBUI.createSectionItem2();
-                sectionItem.titleElement.textContent = model.title;
+                sectionItem.titleElement.textContent = page.title;
 
                 sectionItem.titleElement.addEventListener("click", function() {
-                    window.location = "/admin/?c=CBModelInspector&ID=" + model.ID;
+                    window.location = "/admin/?c=CBModelInspector&ID=" + page.ID;
                 });
 
-                args.section.appendChild(sectionItem.element);
+                sectionElement.appendChild(sectionItem.element);
 
                 var recoverCommand = document.createElement("div");
                 recoverCommand.className = "command";
                 recoverCommand.textContent = "Recover";
                 recoverCommand.addEventListener("click", CBPagesTrashAdmin.recoverPage.bind(undefined, {
-                    ID: model.ID,
+                    ID: page.ID,
                     sectionItemElement: sectionItem.element,
                 }));
 
@@ -83,7 +54,7 @@ var CBPagesTrashAdmin = {
                 deleteCommand.className = "command";
                 deleteCommand.textContent = "Delete";
                 deleteCommand.addEventListener("click", function () {
-                    Colby.callAjaxFunction("CBModels", "deleteByID", { ID: model.ID })
+                    Colby.callAjaxFunction("CBModels", "deleteByID", { ID: page.ID })
                         .then(onDeleteFulfilled)
                         .catch(Colby.displayAndReportError);
                 });
@@ -95,8 +66,6 @@ var CBPagesTrashAdmin = {
 
                 sectionItem.commandsElement.appendChild(deleteCommand);
             });
-        } else {
-            Colby.displayResponse(response);
         }
     },
 
@@ -137,7 +106,4 @@ var CBPagesTrashAdmin = {
     },
 };
 
-Colby.afterDOMContentLoaded(function () {
-    var main = document.getElementsByTagName("main")[0];
-    main.appendChild(CBPagesTrashAdmin.createElement());
-});
+Colby.afterDOMContentLoaded(CBPagesTrashAdmin.init);
