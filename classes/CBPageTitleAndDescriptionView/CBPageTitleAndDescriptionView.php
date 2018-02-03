@@ -37,22 +37,22 @@ final class CBPageTitleAndDescriptionView {
         $CSSClassNames = implode(' ', $CSSClassNames);
 
         ?><header class="CBPageTitleAndDescriptionView <?= $CSSClassNames ?>"><div><?php
-            if (!empty($context->titleAsHTML)) {
+            if (!empty($context->title)) {
                 if (empty($model->titleColor)) {
                     $style = '';
                 } else {
                     $style = "style='color: {$model->titleColor}'";
                 }
-                echo "<h1 class='title' {$style}>{$context->titleAsHTML}</h1>";
+                echo "<h1 class='title' {$style}>" . cbhtml($context->title) . '</h1>';
             }
 
-            if (!empty($context->descriptionAsHTML) && empty($model->hideDescription)) {
+            if (!empty($context->description) && empty($model->hideDescription)) {
                 if (empty($model->descriptionColor)) {
                     $style = '';
                 } else {
                     $style = " style='color: {$model->descriptionColor}'";
                 }
-                echo "<div class='description'{$style}>{$context->descriptionAsHTML}</div>";
+                echo "<div class='description'{$style}>" . cbhtml($context->description) . '</div>';
             }
 
             if (!empty($model->showPublicationDate)) {
