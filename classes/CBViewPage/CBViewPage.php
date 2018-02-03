@@ -154,10 +154,9 @@ final class CBViewPage {
      * @return string
      */
     static function CBModel_toSearchText($model) {
-        $strings = [
-            CBModel::value($model, 'title'),
-            CBModel::value($model, 'description'),
-        ];
+        $title = CBConvert::valueToString(CBModel::value($model, 'title'));
+        $description = CBConvert::valueToString(CBModel::value($model, 'description'));
+        $strings = [$title, $description];
 
         if ($layout = CBModel::valueAsObject($model, 'layout')) {
             $strings[] = CBModel::toSearchText($layout);
@@ -166,10 +165,12 @@ final class CBViewPage {
         $publicationTimeStamp = CBModel::value($model, 'publicationTimeStamp');
 
         CBPageContext::push([
-            'descriptionAsHTML' => $model->descriptionHTML,
+            'description' => $description,
+            'descriptionAsHTML' => cbhtml($description), /* deprecated */
             'ID' => $model->ID,
             'publishedTimestamp' => empty($model->isPublished) ? null : $publicationTimeStamp,
-            'titleAsHTML' => $model->titleHTML,
+            'title' => $title,
+            'titleAsHTML' => cbhtml($title), /* deprecated */
         ]);
 
         $views = CBModel::valueAsObjects($model, 'sections');
@@ -202,14 +203,18 @@ final class CBViewPage {
         }
 
         $publicationTimeStamp = CBModel::value($model, 'publicationTimeStamp');
+        $title = CBConvert::valueToString(CBModel::value($model, 'title'));
+        $description = CBConvert::valueToString(CBModel::value($model, 'description'));
 
         CBPageContext::push([
-            'descriptionAsHTML' => CBModel::value($model, 'descriptionHTML', ''),
+            'description' => $description,
+            'descriptionAsHTML' => cbhtml($description), /* deprecated */
             'ID' => CBModel::value($model, 'ID', ''),
             'imageURL' => CBViewPage::modelToImageURL($model),
             'publishedTimestamp' => empty($model->isPublished) ? null : $publicationTimeStamp,
             'selectedMainMenuItemName' => CBModel::value($model, 'selectedMainMenuItemName'),
-            'titleAsHTML' => CBModel::value($model, 'titleHTML', ''),
+            'title' => $title,
+            'titleAsHTML' => cbhtml($title), /* deprecated */
         ]);
 
         CBHTMLOutput::begin();

@@ -20,31 +20,38 @@ final class CBPageContext {
     }
 
     /**
-     * @param string descriptionAsHTML
-     * @param hex160 ID
-     * @param string? imageURL
+     * @param [name => value] $args
      *
-     *      The image URL should be safe for HTML.
-     *
-     * @param int publishedTimestamp
-     * @param string? selectedMainMenuItemName
-     * @param string titleAsHTML
+     *      [
+     *          description: string?
+     *          descriptionAsHTML: string? (deprecated)
+     *          ID: hex160?
+     *          imageURL: string?
+     *          publishedTimestamp: int?
+     *          selectedMainMenuItemName: string?
+     *          title: string?
+     *          titleAsHTML: string? (deprecated)
+     *      ]
      *
      * @return null
      */
     static function push($args) {
-        $descriptionAsHTML = $ID = $imageURL = $publishedTimestamp
-        = $selectedMainMenuItemName = $titleAsHTML = $URI = null;
+        $description = $descriptionAsHTML = $ID = $imageURL =
+        $selectedMainMenuItemName = $title = $titleAsHTML = '';
+
+        $publishedTimestamp = null;
 
         extract($args, EXTR_IF_EXISTS);
 
         array_push(self::$contexts, (object)[
-            'descriptionAsHTML' => $descriptionAsHTML,
+            'description' => $description,
+            'descriptionAsHTML' => $descriptionAsHTML, /* deprecated */
             'ID' => $ID,
             'imageURL' => $imageURL,
             'publishedTimestamp' => $publishedTimestamp,
             'selectedMainMenuItemName' => $selectedMainMenuItemName,
-            'titleAsHTML' => $titleAsHTML,
+            'title' => $title,
+            'titleAsHTML' => $titleAsHTML, /* deprecated */
         ]);
     }
 
