@@ -305,8 +305,8 @@ final class CBHTMLOutput {
 
         ob_start();
 
-        $titleAsHTML = empty($pageContext->titleAsHTML) ? CBHTMLOutput::$titleHTML : $pageContext->titleAsHTML;
-        $descriptionAsHTML = empty($pageContext->descriptionAsHTML) ? CBHTMLOutput::$descriptionHTML : $pageContext->descriptionAsHTML;
+        $titleAsHTML = empty($pageContext->title) ? CBHTMLOutput::$titleHTML : cbhtml($pageContext->title);
+        $descriptionAsHTML = empty($pageContext->description) ? CBHTMLOutput::$descriptionHTML : cbhtml($pageContext->description);
 
         ?>
 
