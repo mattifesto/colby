@@ -2,8 +2,6 @@
 
 final class CBViewPage {
 
-    private static $modelContext;
-
     /**
      * @param object $model
      *
@@ -118,15 +116,6 @@ final class CBViewPage {
     }
 
     /**
-     * @deprecated use CBPageContext::current()
-     *
-     * @return stdClass|null
-     */
-    static function modelContext() {
-        return self::$modelContext;
-    }
-
-    /**
      * @param [hex160] $IDs
      *
      * @return null
@@ -174,8 +163,6 @@ final class CBViewPage {
             $strings[] = CBModel::toSearchText($layout);
         }
 
-        CBViewPage::$modelContext = $model; /* deprecated */
-
         $publicationTimeStamp = CBModel::value($model, 'publicationTimeStamp');
 
         CBPageContext::push([
@@ -189,8 +176,6 @@ final class CBViewPage {
         $strings = array_merge($strings, array_map('CBModel::toSearchText', $views));
 
         CBPageContext::pop();
-
-        CBViewPage::$modelContext = null; /* deprecated */
 
         $strings = array_filter($strings);
         return implode(' ', $strings);
@@ -215,8 +200,6 @@ final class CBViewPage {
             include Colby::findHandler('handle-default.php');
             return;
         }
-
-        CBViewPage::$modelContext = $model; /* deprecated */
 
         $publicationTimeStamp = CBModel::value($model, 'publicationTimeStamp');
 
@@ -253,8 +236,6 @@ final class CBViewPage {
         CBHTMLOutput::render();
 
         CBPageContext::pop();
-
-        CBViewPage::$modelContext = null; /* deprecated */
     }
 
     /**
