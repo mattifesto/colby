@@ -20,8 +20,7 @@ class CBImagesAdmin {
      * @return void
      */
     static function CBAdmin_render() {
-        CBHTMLOutput::setTitleHTML('Images Administration');
-        CBHTMLOutput::setDescriptionHTML('Tools to administer website images.');
+        CBHTMLOutput::pageInformation()->title = 'Images Administration';
     }
 
     /**
