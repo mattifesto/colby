@@ -22,7 +22,7 @@ if (!isset($_GET['data-store-id'])) {
 
 CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
-CBHTMLOutput::setTitleHTML('Page Editor');
+CBHTMLOutput::pageInformation()->title = 'Page Editor';
 CBHTMLOutput::setDescriptionHTML('This is an app for editing pages.');
 CBHTMLOutput::requireClassName('CBDefaultEditor');
 CBHTMLOutput::requireClassName('CBViewPageEditor');
