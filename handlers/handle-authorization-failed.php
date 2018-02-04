@@ -1,12 +1,12 @@
 <?php
 
-$currentUserIsLoggedIn  = ColbyUser::current()->isLoggedIn();
-$titleHTML              = $currentUserIsLoggedIn ? 'Authorization Failed' : 'Please Log In';
+$currentUserIsLoggedIn = ColbyUser::current()->isLoggedIn();
+$title = $currentUserIsLoggedIn ? 'Authorization Failed' : 'Please Log In';
 
 CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
-CBHTMLOutput::pageInformation()->title = $titleHTML;
-CBHTMLOutput::setDescriptionHTML('You are not authorized to view this page.');
+CBHTMLOutput::pageInformation()->title = $title;
+CBHTMLOutput::pageInformation()->description = 'You are not authorized to view this page.';
 
 ?>
 
