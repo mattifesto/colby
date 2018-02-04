@@ -20,7 +20,7 @@ final class CBAdminPageForModelImport {
      * @return null
      */
     static function adminPageRenderContent() {
-        CBHTMLOutput::setTitleHTML('Model Import');
+        CBHTMLOutput::pageInformation()->title = 'Model Administration: Import';
     }
 
     /**
