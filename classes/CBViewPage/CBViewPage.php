@@ -164,21 +164,16 @@ final class CBViewPage {
 
         $publicationTimeStamp = CBModel::value($model, 'publicationTimeStamp');
 
-        CBPageContext::push([
-            'description' => $description,
-            'descriptionAsHTML' => cbhtml($description), /* deprecated */
-            'ID' => $model->ID,
-            'publishedTimestamp' => empty($model->isPublished) ? null : $publicationTimeStamp,
-            'title' => $title,
-            'titleAsHTML' => cbhtml($title), /* deprecated */
-        ]);
+        $info = CBHTMLOutput::pageInformation();
+        $info->description = $description;
+        $info->ID = $model->ID;
+        $info->publishedTimestamp = empty($model->isPublished) ? null : $publicationTimeStamp;
+        $info->title = $title;
 
         $views = CBModel::valueAsObjects($model, 'sections');
         $strings = array_merge($strings, array_map('CBModel::toSearchText', $views));
-
-        CBPageContext::pop();
-
         $strings = array_filter($strings);
+
         return implode(' ', $strings);
     }
 
@@ -206,16 +201,13 @@ final class CBViewPage {
         $title = CBConvert::valueToString(CBModel::value($model, 'title'));
         $description = CBConvert::valueToString(CBModel::value($model, 'description'));
 
-        CBPageContext::push([
-            'description' => $description,
-            'descriptionAsHTML' => cbhtml($description), /* deprecated */
-            'ID' => CBModel::value($model, 'ID', ''),
-            'imageURL' => CBViewPage::modelToImageURL($model),
-            'publishedTimestamp' => empty($model->isPublished) ? null : $publicationTimeStamp,
-            'selectedMainMenuItemName' => CBModel::value($model, 'selectedMainMenuItemName'),
-            'title' => $title,
-            'titleAsHTML' => cbhtml($title), /* deprecated */
-        ]);
+        $info = CBHTMLOutput::pageInformation();
+        $info->description = $description;
+        $info->ID = CBModel::value($model, 'ID', '');
+        $info->imageURL = CBViewPage::modelToImageURL($model);
+        $info->publishedTimestamp = empty($model->isPublished) ? null : $publicationTimeStamp;
+        $info->selectedMainMenuItemName = CBModel::value($model, 'selectedMainMenuItemName');
+        $info->title = $title;
 
         CBHTMLOutput::begin();
 
@@ -239,8 +231,6 @@ final class CBViewPage {
         }
 
         CBHTMLOutput::render();
-
-        CBPageContext::pop();
     }
 
     /**
