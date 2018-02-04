@@ -5,7 +5,7 @@ $titleHTML              = $currentUserIsLoggedIn ? 'Authorization Failed' : 'Ple
 
 CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
-CBHTMLOutput::setTitleHTML($titleHTML);
+CBHTMLOutput::pageInformation()->title = $titleHTML;
 CBHTMLOutput::setDescriptionHTML('You are not authorized to view this page.');
 
 ?>
