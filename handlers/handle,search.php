@@ -23,7 +23,7 @@ if ($searchQueryHTML) {
 
 CBHTMLOutput::begin();
 CBHTMLOutput::pageInformation()->title = $title;
-CBHTMLOutput::setDescriptionHTML('Search for site content.');
+CBHTMLOutput::pageInformation()->description = 'Search for site content.';
 
 CBPageLayout::renderPageHeader();
 
