@@ -46,7 +46,6 @@ final class CBHTMLOutput {
     public static $classNameForSettings;
 
     private static $CSSURLs;
-    private static $descriptionHTML; /* deprecated */
     private static $exportedLists;
     private static $exportedVariables;
     private static $isActive = false;
@@ -316,7 +315,7 @@ final class CBHTMLOutput {
 
         $info = CBHTMLOutput::$pageInformation;
         $titleAsHTML = CBConvert::valueToString(CBModel::value($info, 'title'));
-        $descriptionAsHTML = empty($info->description) ? CBHTMLOutput::$descriptionHTML : cbhtml($info->description);
+        $descriptionAsHTML = CBConvert::valueToString(CBModel::value($info, 'description'));
 
         ?>
 
@@ -497,7 +496,6 @@ final class CBHTMLOutput {
 
         CBHTMLOutput::$classNameForSettings = null;
         CBHTMLOutput::$CSSURLs = array();
-        CBHTMLOutput::$descriptionHTML = '';
         CBHTMLOutput::$exportedLists = array();
         CBHTMLOutput::$exportedVariables = array();
         CBHTMLOutput::$isActive = false;
@@ -518,15 +516,6 @@ final class CBHTMLOutput {
          */
 
         CBHTMLOutput::requireClassName('Colby');
-    }
-
-    /**
-     * @deprecated use CBHTMLOutput::pageInformation()->description
-     *
-     * @return null
-     */
-    static function setDescriptionHTML($descriptionHTML) {
-        CBHTMLOutput::$descriptionHTML = $descriptionHTML;
     }
 }
 
