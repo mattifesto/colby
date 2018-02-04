@@ -12,17 +12,17 @@
 
 global $searchQueryHTML;
 
-$searchQuery        = isset($_GET['search-for']) ? $_GET['search-for'] : '';
-$searchQueryHTML    = ColbyConvert::textToHTML($searchQuery);
-$formClass          = empty($searchQuery) ? 'class="search-page no-query"' : 'class="search-page has-query"';
-$titleHTML          = 'Search';
+$searchQuery = isset($_GET['search-for']) ? $_GET['search-for'] : '';
+$searchQueryHTML = cbhtml($searchQuery);
+$formClass = empty($searchQuery) ? 'class="search-page no-query"' : 'class="search-page has-query"';
+$title = 'Search';
 
 if ($searchQueryHTML) {
-    $titleHTML = "{$titleHTML}: {$searchQueryHTML}";
+    $title = "{$title}: {$searchQuery}";
 }
 
 CBHTMLOutput::begin();
-CBHTMLOutput::setTitleHTML($titleHTML);
+CBHTMLOutput::pageInformation()->title = $title;
 CBHTMLOutput::setDescriptionHTML('Search for site content.');
 
 CBPageLayout::renderPageHeader();
