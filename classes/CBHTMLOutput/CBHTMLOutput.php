@@ -57,7 +57,6 @@ final class CBHTMLOutput {
     private static $pageInformation;
     private static $requiredClassNames;
     private static $styleSheets;
-    private static $titleHTML; /* deprecated */
 
     /**
      * @param string|empty $CSSURL
@@ -316,7 +315,7 @@ final class CBHTMLOutput {
         ob_start();
 
         $info = CBHTMLOutput::$pageInformation;
-        $titleAsHTML = empty($info->title) ? CBHTMLOutput::$titleHTML : cbhtml($info->title);
+        $titleAsHTML = CBConvert::valueToString(CBModel::value($info, 'title'));
         $descriptionAsHTML = empty($info->description) ? CBHTMLOutput::$descriptionHTML : cbhtml($info->description);
 
         ?>
@@ -509,7 +508,6 @@ final class CBHTMLOutput {
         CBHTMLOutput::$pageInformation = (object)[];
         CBHTMLOutput::$requiredClassNames = [];
         CBHTMLOutput::$styleSheets = [];
-        CBHTMLOutput::$titleHTML = '';
 
         /**
          * @NOTE 2017.08.02 Colby was added by default to requiredClassNames to
@@ -520,15 +518,6 @@ final class CBHTMLOutput {
          */
 
         CBHTMLOutput::requireClassName('Colby');
-    }
-
-    /**
-     * @deprecated use CBHTMLOutput::pageInformation()->title
-     *
-     * @return null
-     */
-    static function setTitleHTML($titleHTML) {
-        CBHTMLOutput::$titleHTML = $titleHTML;
     }
 
     /**
