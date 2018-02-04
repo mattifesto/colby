@@ -23,8 +23,7 @@ final class CBAdminPageForUserSettings {
         $userHash = $_GET['hash'];
         $userData = ColbyUser::fetchUserDataByHash($userHash);
 
-        CBHTMLOutput::setTitleHTML('User');
-        CBHTMLOutput::setDescriptionHTML('Tools for viewing and editing a user\'s settings.');
+        CBHTMLOutput::pageInformation()->title = "User Administration ({$userData->facebookName})";
 
         $userPhotoURL = CBFacebook::userImageURL($userData->facebookId);
 
