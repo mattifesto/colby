@@ -13,7 +13,7 @@ final class CBUsersAdmin {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::setTitleHTML('Users');
+        CBHTMLOutput::pageInformation()->title = 'Users Administration';
     }
 
     /**
