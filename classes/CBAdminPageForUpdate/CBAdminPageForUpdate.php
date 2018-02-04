@@ -20,8 +20,7 @@ final class CBAdminPageForUpdate {
      * @return void
      */
     static function adminPageRenderContent() {
-        CBHTMLOutput::setTitleHTML('Update');
-        CBHTMLOutput::setDescriptionHTML('Tools to perform site version updates.');
+        CBHTMLOutput::pageInformation()->title = 'Update Website';
     }
 
     /**
