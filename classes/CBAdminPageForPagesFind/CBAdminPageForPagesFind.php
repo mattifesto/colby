@@ -20,8 +20,7 @@ final class CBAdminPageForPagesFind {
      * @return null
      */
     static function adminPageRenderContent() {
-        CBHTMLOutput::setTitleHTML('Find Pages');
-        CBHTMLOutput::setDescriptionHTML('Find pages to edit, copy, or delete.');
+        CBHTMLOutput::pageInformation()->title = 'Pages Administration: Find';
     }
 
     /**
