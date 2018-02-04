@@ -6,7 +6,7 @@ final class CBDefaultPageHeaderView {
      * @return null
      */
     static function CBView_render(stdClass $model) {
-        $selectedMainMenuItemName = CBModel::value(CBPageContext::current(), 'selectedMainMenuItemName');
+        $selectedMainMenuItemName = CBModel::value(CBHTMLOutput::pageInformation(), 'selectedMainMenuItemName');
 
         ?>
 
