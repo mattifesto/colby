@@ -18,8 +18,7 @@ final class CBStatusAdminPage {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::setTitleHTML('Website Status');
-        CBHTMLOutput::setDescriptionHTML('The status of the website');
+        CBHTMLOutput::pageInformation()->title = 'Website Status';
 
         CBUI::renderHalfSpace();
         CBUI::renderSectionHeader('Versions');
