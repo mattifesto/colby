@@ -13,7 +13,7 @@ final class CBPagesTrashAdmin {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::setTitleHTML('Pages in the Trash Administration');
+        CBHTMLOutput::pageInformation()->title = 'Pages in the Trash Administration';
     }
 
     /**
