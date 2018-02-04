@@ -20,7 +20,7 @@ final class CBCSSVariablesHelp {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::setTitleHTML('CSS Variables');
+        CBHTMLOutput::pageInformation()->title = 'CSS Variables Help';
 
         CBView::renderSpec((object)[
             'className' => 'CBMessageView',
