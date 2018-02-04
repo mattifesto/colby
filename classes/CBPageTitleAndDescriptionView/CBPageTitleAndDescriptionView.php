@@ -32,27 +32,27 @@ final class CBPageTitleAndDescriptionView {
             CBHTMLOutput::addCSS($model->stylesCSS);
         }
 
-        $context = CBPageContext::current();
+        $info = CBHTMLOutput::pageInformation();
 
         $CSSClassNames = implode(' ', $CSSClassNames);
 
         ?><header class="CBPageTitleAndDescriptionView <?= $CSSClassNames ?>"><div><?php
-            if (!empty($context->title)) {
+            if (!empty($info->title)) {
                 if (empty($model->titleColor)) {
                     $style = '';
                 } else {
                     $style = "style='color: {$model->titleColor}'";
                 }
-                echo "<h1 class='title' {$style}>" . cbhtml($context->title) . '</h1>';
+                echo "<h1 class='title' {$style}>" . cbhtml($info->title) . '</h1>';
             }
 
-            if (!empty($context->description) && empty($model->hideDescription)) {
+            if (!empty($info->description) && empty($model->hideDescription)) {
                 if (empty($model->descriptionColor)) {
                     $style = '';
                 } else {
                     $style = " style='color: {$model->descriptionColor}'";
                 }
-                echo "<div class='description'{$style}>" . cbhtml($context->description) . '</div>';
+                echo "<div class='description'{$style}>" . cbhtml($info->description) . '</div>';
             }
 
             if (!empty($model->showPublicationDate)) {
@@ -62,7 +62,7 @@ final class CBPageTitleAndDescriptionView {
                     $style = " style='color: {$model->publishedColor}'";
                 }
 
-                $publishedAsHTML = ColbyConvert::timestampToHTML($context->publishedTimestamp, 'Unpublished');
+                $publishedAsHTML = ColbyConvert::timestampToHTML($info->publishedTimestamp, 'Unpublished');
 
                 echo "<div class='published'{$style}>{$publishedAsHTML}</div>";
             }
