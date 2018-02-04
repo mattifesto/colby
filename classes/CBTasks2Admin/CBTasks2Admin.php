@@ -13,7 +13,7 @@ final class CBTasks2Admin {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::setTitleHTML('Tasks Administration');
+        CBHTMLOutput::pageInformation()->title = 'Tasks Administration';
     }
 
     /**
