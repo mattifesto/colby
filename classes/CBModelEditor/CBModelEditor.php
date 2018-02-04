@@ -13,8 +13,7 @@ class CBModelEditor {
      * @return void
      */
     static function CBAdmin_render() {
-        CBHTMLOutput::setTitleHTML('Edit Model');
-        CBHTMLOutput::setDescriptionHTML('Tools a model.');
+        CBHTMLOutput::pageInformation()->title = 'Edit Model';
 
         $args = CBModelEditor::fetchArguments();
 
