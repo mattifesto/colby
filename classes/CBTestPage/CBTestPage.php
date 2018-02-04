@@ -33,7 +33,7 @@ final class CBTestPage {
     }
 
     /**
-     * @param stdClass $model
+     * @param model $model
      *
      * @return string
      */
@@ -42,20 +42,20 @@ final class CBTestPage {
     }
 
     /**
-     * @param stdClass $model
+     * @param model $model
      *
      * @return null
      */
     static function CBPage_render(stdClass $model) {
-        $titleAsHTML = CBModel::value($model, 'title', '', 'cbhtml');
+        $title = CBConvert::valueToString(CBModel::value($model, 'title'));
 
         CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForResponsivePages';
         CBHTMLOutput::begin();
-        CBHTMLOutput::setTitleHTML($titleAsHTML);
+        CBHTMLOutput::pageInformation()->title = $title;
 
         ?>
 
-        <h1 style="padding: 100px; text-align: center;"><?= $titleAsHTML ?></h1>
+        <h1 style="padding: 100px; text-align: center;"><?= cbhtml($title) ?></h1>
 
         <?php
 
@@ -63,9 +63,9 @@ final class CBTestPage {
     }
 
     /**
-     * @param stdClass $spec
+     * @param model $spec
      *
-     * @return stdClass
+     * @return model
      */
     static function CBModel_toModel(stdClass $spec) {
         return (object)[
