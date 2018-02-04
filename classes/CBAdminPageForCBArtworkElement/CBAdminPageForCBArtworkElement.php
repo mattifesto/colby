@@ -20,8 +20,7 @@ final class CBAdminPageForCBArtworkElement {
      * @return null
      */
     static function adminPageRenderContent() {
-        CBHTMLOutput::setTitleHTML('CBArtworkElement');
-        CBHTMLOutput::setDescriptionHTML('Description and examples of CBArtworkElement functionality.');
+        CBHTMLOutput::pageInformation()->title = 'CBArtworkElement Help';
 
         $URL = CBTestAdmin::testImageURL();
         $CSS = <<<EOT
