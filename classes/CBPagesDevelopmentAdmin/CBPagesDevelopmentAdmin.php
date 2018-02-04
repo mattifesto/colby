@@ -20,7 +20,7 @@ final class CBPagesDevelopmentAdmin {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::setTitleHTML('Pages Development Admimistration');
+        CBHTMLOutput::pageInformation()->title = 'Pages Development Admimistration';
     }
 
     /**
