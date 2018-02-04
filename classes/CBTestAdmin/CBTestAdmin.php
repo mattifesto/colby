@@ -20,8 +20,7 @@ final class CBTestAdmin {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::setTitleHTML('Tests');
-        CBHTMLOutput::setDescriptionHTML('Run website unit tests.');
+        CBHTMLOutput::pageInformation()->title = 'Test Administration';
     }
 
     /**
