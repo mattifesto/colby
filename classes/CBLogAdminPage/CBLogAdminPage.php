@@ -20,7 +20,7 @@ final class CBLogAdminPage {
      * @return null
      */
     static function adminPageRenderContent() {
-        CBPageContext::push(['title' => 'Log']);
+        CBHTMLOutput::pageInformation()->title = 'Website Log';
     }
 
     /**
