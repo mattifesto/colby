@@ -13,7 +13,7 @@ final class CBModelInspector {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::setTitleHTML('Inspector');
+        CBHTMLOutput::pageInformation()->title = 'Model Inspector';
     }
 
     /**
