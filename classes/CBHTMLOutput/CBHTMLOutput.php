@@ -54,8 +54,9 @@ final class CBHTMLOutput {
     private static $javaScriptSnippetStrings;
     private static $javaScriptURLs;
     private static $javaScriptURLsForRequiredClasses;
+    private static $pageInformation;
     private static $requiredClassNames;
-    private static $styleSheets = [];
+    private static $styleSheets;
     private static $titleHTML; /* deprecated */
 
     /**
@@ -205,6 +206,16 @@ final class CBHTMLOutput {
     }
 
     /**
+     * Set properties on this object to be shared by render participants of a
+     * page.
+     *
+     * @return object
+     */
+    static function pageInformation() {
+        return CBHTMLOutput::$pageInformation;
+    }
+
+    /**
      * @return null
      */
     private static function processRequiredClassNames() {
@@ -240,7 +251,6 @@ final class CBHTMLOutput {
      */
     static function render() {
         $bodyContent = ob_get_clean();
-        $pageContext = CBPageContext::current();
         $settingsHeadContent = '';
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent = '';
@@ -305,8 +315,9 @@ final class CBHTMLOutput {
 
         ob_start();
 
-        $titleAsHTML = empty($pageContext->title) ? CBHTMLOutput::$titleHTML : cbhtml($pageContext->title);
-        $descriptionAsHTML = empty($pageContext->description) ? CBHTMLOutput::$descriptionHTML : cbhtml($pageContext->description);
+        $info = CBHTMLOutput::$pageInformation;
+        $titleAsHTML = empty($info->title) ? CBHTMLOutput::$titleHTML : cbhtml($info->title);
+        $descriptionAsHTML = empty($info->description) ? CBHTMLOutput::$descriptionHTML : cbhtml($info->description);
 
         ?>
 
@@ -323,9 +334,9 @@ final class CBHTMLOutput {
 
                 <?php
 
-                if (!empty($pageContext->imageURL)) {
+                if (!empty($info->imageURL)) {
                     ?>
-                    <meta property="og:image" content="<?= $pageContext->imageURL ?>">
+                    <meta property="og:image" content="<?= $info->imageURL ?>">
                     <?php
                 }
 
@@ -495,6 +506,7 @@ final class CBHTMLOutput {
         CBHTMLOutput::$javaScriptSnippetStrings = array();
         CBHTMLOutput::$javaScriptURLs = [];
         CBHTMLOutput::$javaScriptURLsForRequiredClasses = [];
+        CBHTMLOutput::$pageInformation = (object)[];
         CBHTMLOutput::$requiredClassNames = [];
         CBHTMLOutput::$styleSheets = [];
         CBHTMLOutput::$titleHTML = '';
@@ -511,7 +523,7 @@ final class CBHTMLOutput {
     }
 
     /**
-     * @deprecated use CBPageContext
+     * @deprecated use CBHTMLOutput::pageInformation()->title
      *
      * @return null
      */
@@ -520,7 +532,7 @@ final class CBHTMLOutput {
     }
 
     /**
-     * @deprecated use CBPageContext
+     * @deprecated use CBHTMLOutput::pageInformation()->description
      *
      * @return null
      */
