@@ -121,13 +121,13 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'v383.css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'v383.js', cbsysurl())];
     }
 }

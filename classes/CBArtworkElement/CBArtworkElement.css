@@ -9,7 +9,21 @@
 
 .CBArtworkElement > div > img {
     left: 0;
+    height: 100%;
+    object-fit: contain;
     position: absolute;
     top: 0;
     width: 100%;
+}
+
+/* IE10+ CSS styles go here */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    /*
+    2018.02.05 IE doesn't support object-fit so setting the height back to auto
+    avoids stretching the image. I'm just about to stop supporting IE11 with a
+    suggestion to use another browser but am not completely ready to stop today.
+    */
+    .CBArtworkElement > div > img {
+        height: auto;
+    }
 }
