@@ -4,13 +4,11 @@ if (!ColbyUser::current()->isOneOfThe('Administrators')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
 }
 
-$parsedown = new Parsedown();
 $contentAsCommonMark = file_get_contents(__DIR__ . '/handle,admin,help,caption-alternative-text.md');
-$contentAsHTML = $parsedown->text($contentAsCommonMark);
-$model = (object)[
+$spec = (object)[
     'className' => 'CBViewPage',
     'classNameForSettings' => 'CBPageSettingsForAdminPages',
-    'titleHTML' => 'Captions and Alternative Text Help',
+    'title' => 'Captions and Alternative Text Help',
     'layout' => (object)[
         'className' => 'CBPageLayout',
         'customLayoutClassName' => 'CBAdminPageLayout',
@@ -22,9 +20,9 @@ $model = (object)[
     'sections' => [
         (object)[
             'className' => 'CBTextView2',
-            'contentAsHTML' => $contentAsHTML,
+            'contentAsCommonMark' => $contentAsCommonMark,
         ],
     ],
 ];
 
-CBPage::render($model);
+CBPage::renderSpec($spec);
