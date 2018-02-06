@@ -1,0 +1,49 @@
+.CBPageSearchResultsView {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.CBPageSearchResultsView .result {
+    box-sizing: border-box;
+    padding: 20px;
+    width: 480px;
+}
+
+@media (min-width: 640px) and (max-width: 960px) {
+    .CBPageSearchResultsView .result {
+        max-width: 50%;
+    }
+}
+
+.CBPageSearchResultsView .CBArtworkElement {
+    float: right;
+    margin: 0 0 5px 10px;
+}
+
+.CBPageSearchResultsView .CBArtworkElement img {
+    object-fit: cover;
+}
+
+.CBPageSearchResultsView .result h1 {
+    font-size: inherit;
+}
+
+form.search > div {
+    align-items: center;
+    border-bottom: 1px solid var(--CBTextColor3);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 20px;
+}
+
+form.search input[type=text] {
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: inherit;
+    margin-bottom: 20px;
+    max-width: 480px;
+    padding: 5px;
+    width: 100%;
+}
