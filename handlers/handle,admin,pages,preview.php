@@ -16,26 +16,32 @@ if (empty($version)) {
 $IDAsHTML = cbhtml($ID);
 
 if ($model === false) {
-    $HTML = <<<EOT
+    $message = <<<EOT
 
-        <p>There is no model in the CBModels table for a page with this ID:
-        <pre>{$IDAsHTML}</pre>
-        <p>It's possible that this is an older page that hasn't yet moved
-           its model to CBModels.
+        There is no model in the CBModels table for a page with this ID:
+
+        --- pre preline
+        {$IDAsHTML}
+        ---
+
+        It's possible that this is an older page that hasn't yet moved its model
+        to CBModels.
 
 EOT;
 
-    CBPage::render((object)[
+    CBPage::renderSpec((object)[
         'className' => 'CBViewPage',
-        'titleHTML' => 'Page Preview Error',
+        'title' => 'Page Preview Error',
+        'layout' => (object)[
+            'className' => 'CBPageLayout',
+        ],
         'sections' => [
             (object)[
                 'className' => 'CBPageTitleAndDescriptionView',
             ],
             (object)[
-                'className' => 'CBTextView2',
-                'contentAsHTML' => $HTML,
-                'CSSClassNames' => ['center'],
+                'className' => 'CBMessageView',
+                'markup' => $message,
             ],
         ]
 
