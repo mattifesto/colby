@@ -126,6 +126,7 @@ var CBViewPageInformationEditor = {
             spec: args.spec,
             specChangedCallback: function () {
                 var URI = args.spec.URI ? args.spec.URI.trim() : "";
+
                 if (args.spec.isPublished) {
                     if (URI === "") {
                         URIEditor.updateValueCallback(Colby.textToURI(args.spec.title));
@@ -135,9 +136,10 @@ var CBViewPageInformationEditor = {
                         args.spec.publicationTimeStamp = Math.floor(Date.now() / 1000);
 
                         publicationDateEditor.refresh();
-                        args.specChangedCallback();
                     }
                 }
+
+                args.specChangedCallback();
             },
         }).element);
         section.appendChild(item);
