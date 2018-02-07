@@ -34,35 +34,104 @@ final class CBErrorHandler {
         try {
             CBErrorHandler::renderErrorReportPage($throwable);
         } catch (Throwable $innerThrowable) {
-            Colby::reportException($innerThrowable);
+            CBErrorHandler::report($innerThrowable);
         }
     }
 
     /**
-     * This function renders a standard HTML page to report an error.
+     * This function renders an HTML page to display an error message. It is
+     * meant to be called only by an exception handler. This function may throw
+     * an exception.
+     *
+     * See CBErrorHandler::handle() for additional documentation.
+     *
+     * This function makes two attempts to render an error message to make life
+     * easier for developers. The first attempt uses a CBViewPage to render the
+     * message on a page that looks similar to other pages on the site.
+     *
+     * While a developer is workig on the code for the site the first attempt
+     * may fail, for instance if there is currently an issue with rendering the
+     * site header or the site footer. In response to an inner exception this
+     * function will make a second attempt to render a page to report the inner
+     * exception using fewer code paths.
+     *
+     * If this second attempt to render fails, the second inner exception will
+     * be thrown back to the exception handler that called this function and
+     * that exception will be logged. In this case no page will be rendered.
      *
      * @param Throwable $throwable
      *
      * @return void
      */
     static function renderErrorReportPage(Throwable $throwable): void {
-        CBExceptionView::pushThrowable($throwable);
+        try {
+            CBExceptionView::pushThrowable($throwable);
 
-        CBPage::renderSpec((object)[
-            'className' => 'CBViewPage',
-            'title' => 'Something has gone wrong',
-            'layout' => (object)[
-                'className' => 'CBPageLayout',
-                'CSSClassNames' => 'center',
-            ],
-            'sections' => [
-                (object)[
-                    'className' => 'CBExceptionView',
+            CBPage::renderSpec((object)[
+                'className' => 'CBViewPage',
+                'title' => 'Error',
+                'layout' => (object)[
+                    'className' => 'CBPageLayout',
+                    'CSSClassNames' => 'center',
                 ],
-            ],
-        ]);
+                'sections' => [
+                    (object)[
+                        'className' => 'CBExceptionView',
+                    ],
+                ],
+            ]);
 
-        CBExceptionView::popThrowable();
+            CBExceptionView::popThrowable();
+        } catch (Throwable $throwable) {
+            if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+                $message = 'INNER ERROR: ' . CBConvert::throwableToMessage($throwable);
+                $stackTrace = CBConvert::throwableToStackTrace($throwable);
+            } else {
+                $message = 'Sorry, something has gone wrong. An error ' .
+                    'occurred on this page and our administrators have been ' .
+                    'notified.';
+                $stackTrace = '';
+            }
+
+            $CSS = <<<EOT
+
+                body {
+                    align-items: center;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+
+                body > * {
+                    box-sizing: border-box;
+                    max-width: 100%;
+                    padding: 20px;
+                }
+
+                .stack {
+                    overflow-x: auto;
+                    white-space: pre-line;
+                }
+
+EOT;
+
+            CBHTMLOutput::reset();
+            CBHTMLOutput::addCSS($CSS);
+            CBHTMLOutput::begin();
+
+            $info = CBHTMLOutput::pageInformation();
+            $info->classNameForPageSettings = 'CBPageSettingsForResponsivePages';
+            $info->title = "Error";
+
+            ?>
+
+            <div><?= cbhtml($message); ?></div>
+            <div class="stack"><?= cbhtml($stackTrace) ?></div>
+
+            <?php
+
+            CBHTMLOutput::render();
+        }
     }
 
     /**
