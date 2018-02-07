@@ -178,15 +178,15 @@ final class CBViewPage {
     }
 
     /**
-     * @param string? $model->titleHTML
+     * @param model $model
      *
-     *      This should be safe for HTML, but not contain actual HTML tags.
+     *      {
+     *          sections: [model]?
+     *      }
      *
-     * @param [object]? $model->sections
-     *
-     * @return null
+     * @return void
      */
-    static function CBPage_render($model) {
+    static function CBPage_render($model): void {
         $model = CBViewPage::upgradeRenderModel($model);
 
         // The `upgradeRenderModel` function will return `false` when the query
@@ -299,9 +299,7 @@ final class CBViewPage {
          * Computed values
          */
 
-        $model->descriptionHTML = ColbyConvert::textToHTML($model->description);
         $model->thumbnailURLAsHTML = ColbyConvert::textToHTML($model->thumbnailURL);
-        $model->titleHTML = ColbyConvert::textToHTML($model->title);
         $model->URIAsHTML = ColbyConvert::textToHTML($model->URI);
 
         return $model;
