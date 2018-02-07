@@ -82,7 +82,6 @@ EOT;
 
                     if (!empty($model)) {
                         $model->title = CBSitePreferences::siteName();
-                        $model->titleHTML = cbhtml($model->title);
                         CBPage::render($model);
                         return 1;
                     }
