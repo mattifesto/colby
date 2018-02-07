@@ -31,8 +31,6 @@ class CBPages {
                 `iteration`             BIGINT UNSIGNED NOT NULL DEFAULT 1,
                 `modified`              BIGINT NOT NULL,
                 `URI`                   VARCHAR(100),
-                `titleHTML`             TEXT NOT NULL,
-                `subtitleHTML`          TEXT NOT NULL,
                 `thumbnailURL`          VARCHAR(200),
                 `searchText`            LONGTEXT,
                 `published`             BIGINT,
@@ -266,9 +264,6 @@ EOT;
             $publishedMonthAsSQL = 'NULL';
         }
 
-        $titleHTMLAsSQL = CBDB::stringToSQL(CBModel::value($model, 'title', '', 'cbhtml'));
-        $subtitleHTMLAsSQL = CBDB::stringToSQL(CBModel::value($model, 'description', '', 'cbhtml'));
-
         $thumbnailURLAsSQL = CBDB::stringToSQL(CBModel::value($model, 'thumbnailURL', '', 'cbhtml'));
         $URIAsSQL = CBDB::stringToSQL(CBModel::value($model, 'URI', ''));
 
@@ -276,7 +271,7 @@ EOT;
         $keyValueDataAsSQL = CBDB::stringToSQL(json_encode($pageSummaryModel));
         $searchTextAsSQL = CBDB::stringToSQL(CBModel::toSearchText($model));
 
-        return "($IDAsSQL, $keyValueDataAsSQL, $classNameAsSQL, $classNameForKindAsSQL, $createdAsSQL, $iterationAsSQL, $modifiedAsSQL, $URIAsSQL, $titleHTMLAsSQL, $subtitleHTMLAsSQL, $thumbnailURLAsSQL, $searchTextAsSQL, $publishedAsSQL, $publishedByAsSQL, $publishedMonthAsSQL)";
+        return "($IDAsSQL, $keyValueDataAsSQL, $classNameAsSQL, $classNameForKindAsSQL, $createdAsSQL, $iterationAsSQL, $modifiedAsSQL, $URIAsSQL, $thumbnailURLAsSQL, $searchTextAsSQL, $publishedAsSQL, $publishedByAsSQL, $publishedMonthAsSQL)";
     }
 
     /**
@@ -295,8 +290,6 @@ EOT;
                 `iteration`,
                 `modified`,
                 `URI`,
-                `titleHTML`,
-                `subtitleHTML`,
                 `thumbnailURL`,
                 `searchText`,
                 `published`,
@@ -330,8 +323,6 @@ EOT;
                 `iteration`,
                 `modified`,
                 `URI`,
-                `titleHTML`,
-                `subtitleHTML`,
                 `thumbnailURL`,
                 `searchText`,
                 `published`,
@@ -393,8 +384,6 @@ EOT;
                     `iteration`,
                     `modified`,
                     `URI`,
-                    `titleHTML`,
-                    `subtitleHTML`,
                     `thumbnailURL`,
                     `searchText`,
                     `published`,
@@ -418,8 +407,6 @@ EOT;
                         `p`.`iteration`         = `t`.`iteration`,
                         `p`.`modified`          = `t`.`modified`,
                         `p`.`URI`               = `t`.`URI`,
-                        `p`.`titleHTML`         = `t`.`titleHTML`,
-                        `p`.`subtitleHTML`      = `t`.`subtitleHTML`,
                         `p`.`thumbnailURL`      = `t`.`thumbnailURL`,
                         `p`.`searchText`        = `t`.`searchText`,
                         `p`.`published`         = `t`.`published`,
@@ -441,8 +428,6 @@ EOT;
                 `iteration`,
                 `modified`,
                 `URI`,
-                `titleHTML`,
-                `subtitleHTML`,
                 `thumbnailURL`,
                 `searchText`,
                 `published`,
@@ -458,8 +443,6 @@ EOT;
                 `t`.`iteration`,
                 `t`.`modified`,
                 `t`.`URI`,
-                `t`.`titleHTML`,
-                `t`.`subtitleHTML`,
                 `t`.`thumbnailURL`,
                 `t`.`searchText`,
                 `t`.`published`,
