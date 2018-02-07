@@ -11,19 +11,12 @@
  *      ID: hex160
  *      created: int (timestamp)
  *      description: string
- *      descriptionHTML: string
  *      image: CBImage model
  *      isPublished: bool
  *      publicationTimeStamp: int (timestamp)
  *      title: string
- *      titleHTML: string
- *      thumbnailURL: string (deprecated, use `image`)
  *      updated: int (timestamp)
  *      URI: string
- *
- * 2016.10.27 TODO
- * The schema of this model will be updated by adding tasks which will verify
- * that all page models are in compliance change or notify of those that aren't.
  *
  * 2015.10.29 TODO
  * This class is a work in progress. Many, if not most, of the properties are
@@ -32,6 +25,14 @@
  * through the rows of the `ColbyPages` table and regenerate the `keyValueData`.
  * Because this class is already in heavy use as of this writing the properties
  * are staying the same for now.
+ *
+ * 2016.10.27 TODO
+ * The schema of this model will be updated by adding tasks which will verify
+ * that all page models are in compliance change or notify of those that aren't.
+ *
+ * 2018.02.06 TODO
+ * A near future update to this class should be to remove the titleHTML,
+ * descriptionHTML, and thumbnailURL properties.
  */
 final class CBPageSummaryView {
 
