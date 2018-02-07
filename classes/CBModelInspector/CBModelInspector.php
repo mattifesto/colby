@@ -198,8 +198,6 @@ EOT;
                     `iteration`,
                     `modified`,
                     `URI`,
-                    `titleHTML`,
-                    `subtitleHTML`,
                     `thumbnailURL`,
                     `searchText`,
                     `published`,
