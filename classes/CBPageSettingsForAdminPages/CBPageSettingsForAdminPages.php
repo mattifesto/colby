@@ -10,28 +10,29 @@ final class CBPageSettingsForAdminPages {
     }
 
     /**
-     * @param Throwable $exception
+     * @param Throwable $throwable
      *
-     * @return null
+     * @return void
      */
-    static function renderPageForException(Throwable $exception) {
-         $model = (object)[
-             'className' => 'CBViewPage',
-             'classNameForSettings' => 'CBPageSettingsForAdminPages',
-             'titleHTML' => 'Exception',
-             'layout' => (object)[
-                 'className' => 'CBPageLayout',
-                 'customLayoutClassName' => 'CBAdminPageLayout',
-             ],
-             'sections' => [
-                 (object)[
-                     'className' => 'CBExceptionView',
-                     'exception' => $exception,
-                 ],
-             ],
-         ];
+    static function renderPageForException(Throwable $throwable): void {
+        $spec = (object)[
+            'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBPageSettingsForAdminPages',
+            'title' => 'Exception',
+            'layout' => (object)[
+                'className' => 'CBPageLayout',
+                'customLayoutClassName' => 'CBAdminPageLayout',
+            ],
+            'sections' => [
+                (object)[
+                    'className' => 'CBExceptionView',
+                ],
+            ],
+        ];
 
-         CBPage::render($model);
+        CBExceptionView::pushThrowable($throwable);
+        CBPage::renderSpec($spec);
+        CBExceptionView::popThrowable();
     }
 
     /**
