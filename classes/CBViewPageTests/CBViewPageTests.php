@@ -17,7 +17,6 @@ final class CBViewPageTests {
          */
 
         $title = 'I 🏛 <Websites>!';
-        $titleAsHTMLExpected = 'I 🏛 &lt;Websites&gt;!';
 
         CBModels::deleteByID([$ID]);
 
@@ -47,12 +46,6 @@ final class CBViewPageTests {
             $pu = json_encode($URI);
             $su = json_encode($spec->URI);
             throw new Exception("The page URI: {$pu} does not match the spec URI: {$su}.");
-        }
-
-        $titleAsHTML = CBDB::SQLToValue("SELECT `titleHTML` FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$ID}')");
-
-        if ($titleAsHTML !== $titleAsHTMLExpected) {
-            throw new ErrorException("The ColbyPages titleHTML: '{$titleAsHTML}' does not match the expected value: '{$titleAsHTMLExpected}'");
         }
 
         CBModels::deleteByID([$ID]);
