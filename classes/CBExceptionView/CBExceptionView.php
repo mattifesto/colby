@@ -40,17 +40,20 @@ final class CBExceptionView {
 
                 <?php
             } else {
-                $md = <<<EOT
+                $message = <<<EOT
 
-# Sorry, something has gone wrong.
+                    --- h1
+                    Sorry, something has gone wrong.
+                    ---
 
-An error occurred on this page and our administrators have been notified.
+                    An error occurred on this page and our administrators have
+                    been notified.
 
 EOT;
 
                 CBView::renderSpec((object)[
-                    'className' => 'CBTextView2',
-                    'contentAsCommonMark' => $md,
+                    'className' => 'CBMessageView',
+                    'markup' => $message,
                 ]);
             }
 
@@ -65,7 +68,7 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'v385.css', cbsysurl())];
     }
 
     /**
