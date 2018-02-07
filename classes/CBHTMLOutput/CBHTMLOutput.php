@@ -43,6 +43,15 @@ final class CBHTMLOutput {
     const JSInHeadElement   = 2; // 1 << 1
     const JSDefer           = 4; // 1 << 2
 
+    /**
+     * @deprecated
+     *
+     * Set:
+     *  CBHTMLOutput::pageInformation()->classNameForPageSettings = 'MyClass';
+     *
+     * Get:
+     *  CBHTMLOutput::classNameForPageSettings();
+     */
     public static $classNameForSettings;
 
     private static $CSSURLs;
@@ -144,6 +153,28 @@ final class CBHTMLOutput {
     }
 
     /**
+     * This function calculates the current class name of the class to be used
+     * for page settings.
+     *
+     * @return string?
+     */
+    static function classNameForPageSettings() {
+        $className = CBHTMLOutput::$classNameForSettings; // @deprecated
+
+        if (empty($className)) {
+            $className = CBConvert::valueToString(
+                CBModel::value(CBHTMLOutput::$pageInformation, 'classNameForPageSettings')
+            );
+        }
+
+        if (empty($className)) {
+            $className = CBPagesPreferences::classNameForUnsetPageSettings();
+        }
+
+        return $className;
+    }
+
+    /**
      * @return null
      */
     static function exportConstant($name) {
@@ -185,7 +216,7 @@ final class CBHTMLOutput {
         CBErrorHandler::report($throwable);
 
         try {
-            $classNameForPageSettings = CBHTMLOutput::$classNameForSettings;
+            $classNameForPageSettings = CBHTMLOutput::classNameForPageSettings();
 
             /**
              * A page may have already been partially rendered so reset
@@ -252,12 +283,8 @@ final class CBHTMLOutput {
         $settingsHeadContent = '';
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent = '';
-        $classNameForPageSettings = CBHTMLOutput::$classNameForSettings;
+        $classNameForPageSettings = CBHTMLOutput::classNameForPageSettings();
         $defaultThemeClassName = 'CBLightTheme';
-
-        if (empty($classNameForPageSettings)) {
-            $classNameForPageSettings = CBPagesPreferences::classNameForUnsetPageSettings();
-        }
 
         if (!empty($classNameForPageSettings)) {
             CBHTMLOutput::requireClassName($classNameForPageSettings);
@@ -494,7 +521,7 @@ final class CBHTMLOutput {
             ob_end_clean();
         }
 
-        CBHTMLOutput::$classNameForSettings = null;
+        CBHTMLOutput::$classNameForSettings = null; // @deprecated
         CBHTMLOutput::$CSSURLs = array();
         CBHTMLOutput::$exportedLists = array();
         CBHTMLOutput::$exportedVariables = array();
