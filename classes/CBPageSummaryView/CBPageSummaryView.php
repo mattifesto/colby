@@ -31,8 +31,7 @@
  * that all page models are in compliance change or notify of those that aren't.
  *
  * 2018.02.06 TODO
- * A near future update to this class should be to remove the titleHTML,
- * descriptionHTML, and thumbnailURL properties.
+ * A near future update to this class should remove the thumbnailURL property.
  */
 final class CBPageSummaryView {
 
@@ -48,14 +47,12 @@ final class CBPageSummaryView {
             'created' => CBModel::value($pageModel, 'created', 0, 'intval'),
             'dataStoreID' => CBModel::value($pageModel, 'ID'),
             'description' => CBModel::value($pageModel, 'description', ''),
-            'descriptionHTML' => CBModel::value($pageModel, 'description', '', 'cbhtml'),
             'image' => CBModel::value($pageModel, 'image'),
             'isPublished' => CBModel::value($pageModel, 'isPublished'),
             'publicationTimeStamp' => CBModel::value($pageModel, 'publicationTimeStamp'),
             'publishedBy' => CBModel::value($pageModel, 'publishedBy'),
             'thumbnailURL' => CBModel::value($pageModel, 'thumbnailURL'),
             'title' => CBModel::value($pageModel, 'title'),
-            'titleHTML' => CBModel::value($pageModel, 'title', '', 'cbhtml'),
             'updated' => CBModel::value($pageModel, 'modified'),
             'URI' => CBModel::value($pageModel, 'URI'),
         ];
