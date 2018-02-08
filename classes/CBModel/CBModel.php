@@ -236,9 +236,9 @@ final class CBModel {
     }
 
     /**
-     * @deprecated use:
+     * This is a convenience function for:
      *
-     *      CBModel::value($model, '<keypath>', null, 'CBConvert::valueAsHex160');
+     *      CBConvert::valueAsHex160(CBModel::value(...))
      *
      * @param object? $model
      * @param string $keyPath
@@ -246,7 +246,7 @@ final class CBModel {
      * @return hex160|null
      */
     static function valueAsID($model, $keyPath) {
-        return CBModel::value($model, $keyPath, null, 'CBConvert::valueAsHex160');
+        return CBConvert::valueAsHex160(CBModel::value($model, $keyPath));
     }
 
     /**
@@ -416,5 +416,16 @@ final class CBModel {
         }
 
         return $models;
+    }
+
+    /**
+     * This is a convenience function for:
+     *
+     *      CBConvert::valueToString(CBModel::value(...));
+     *
+     * @return string
+     */
+    static function valueToString($model, $keyPath) {
+        return CBConvert::valueToString(CBModel::value($model, $keyPath));
     }
 }
