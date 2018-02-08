@@ -3,6 +3,33 @@
 final class CBViewPage {
 
     /**
+     * @param model $model
+     *
+     * @return object
+     */
+    static function CBPage_toSummary(stdClass $model): stdClass {
+        return (object)[
+            'description' => CBModel::value($model, 'description', ''),
+            'URI' => CBModel::value($model, 'URI'),
+
+            'created' => CBModel::value($model, 'created', 0, 'intval'),
+            'updated' => CBModel::value($model, 'modified'),
+
+            'isPublished' => CBModel::value($model, 'isPublished'),
+            'publicationTimeStamp' => CBModel::value($model, 'publicationTimeStamp'),
+
+            'image' => CBModel::value($model, 'image'),
+            'thumbnailURL' => CBModel::value($model, 'thumbnailURL'),
+
+            /* deprecated? is an int, should be a hex160 */
+            'publishedBy' => CBModel::value($model, 'publishedBy'),
+
+            /* deprecated */
+            'dataStoreID' => CBModel::value($model, 'ID'),
+        ];
+    }
+
+    /**
      * @param object $model
      *
      * @return [object]
@@ -234,29 +261,22 @@ final class CBViewPage {
     }
 
     /**
-     * @param object? $spec->image
+     * @param model $spec
      *
-     *      An image that represents the page, to be used for thumbnails and
-     *      other images to represent the page. Must be a valid CBImage. If this
-     *      is specifiect, `thumbnailURL` will be ignored.
+     *      {
+     *          image: model?
+     *          thumbnailURL: string?
      *
-     * @param string? $spec->thumbnailURL
+     *              See the documentation for image and thumbnailURL on the
+     *              CBPage::toSummary() function.
+     *      }
      *
-     *      This image that represents the page. This property should only be
-     *      specified if the image's location is non-standard, such as on
-     *      another website. This is inferior to `image` but is not deprecated
-     *      because it's the only solution for images in non-standard locations.
-     *
-     *      While it's not deprecated, its use should be avoided because it
-     *      most likely will be deprecated at some point in the future.
-     *
-     * @return object
+     * @return model
      */
     static function CBModel_toModel($spec) {
         $ID = CBModel::value($spec, 'ID', '');
         $time = time();
         $model = (object)[
-            'className' => __CLASS__,
             'classNameForKind' => CBModel::value($spec, 'classNameForKind', '', 'trim'),
             'classNameForSettings' => CBModel::value($spec, 'classNameForSettings', '', 'trim'),
             'description' => CBModel::value($spec, 'description', '', 'strval'),
