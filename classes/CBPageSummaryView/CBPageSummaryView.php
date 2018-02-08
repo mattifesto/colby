@@ -1,22 +1,50 @@
 <?php
 
 /**
- * The data stored in the `keyValueData` column of the `ColbyPages` table is
- * a JSON encoded model usually created by this class.
+ * A CBPageSummary object is a summary of a model that represents a page. These
+ * objects are use to create lists of pages. This object will be stored in the
+ * ColbyPages table. The object is not technically a model because:
  *
- * Here is a list of the recommended properties for `keyValueData` models. Like
- * many modern models an unset value is also valid, especially due to the
- * historically changing nature of this schema.
+ *      - its ID is the ID of an already existing model
+ *      - its class does not implement any of the CBModel interfaces
+ *
+ * Here is a list of the recommended properties for CBPageSummary. Like models,
+ * an unset value is valid.
  *
  *      ID: hex160
- *      created: int (timestamp)
+ *
+ *      title: string
  *      description: string
- *      image: CBImage model
+ *      URI: string
+ *
+ *      created: int (timestamp)
+ *      updated: int (timestamp)
+ *
  *      isPublished: bool
  *      publicationTimeStamp: int (timestamp)
- *      title: string
- *      updated: int (timestamp)
- *      URI: string
+ *
+ *      image: model (CBImage)
+ *      thumbnailURL: string
+ *
+ * "image" and "thumbnailURL"
+ *
+ *      The "image" and "thumbnailURL" properties work together to specify an
+ *      image that represents a page. Most of the time, "image" is used. But a
+ *      CBImage model can only represent a local Colby image. If a site needs
+ *      to represent the page with an image on another site, then "thumbnailURL"
+ *      will be set to the URL for that image.
+ *
+ *      Only one of the two properties should ever be set but if both are set,
+ *      "image" takes priority.
+ *
+ *      The functionality of CBImage is much greater and more flexible that an
+ *      image URL. The end goal is to move all images to CBImage. In the future,
+ *      CBImage may be able to specify a site where the image resides.
+ *      Alternatively, all uses of thumbnailURL may be removed. In either case,
+ *      at that point, thumbnailURL should be removed.
+ *
+ *      This is the official documentation location for the concept of "image"
+ *      and "thumbnailURL".
  *
  * 2015.10.29 TODO
  * This class is a work in progress. Many, if not most, of the properties are
@@ -29,14 +57,11 @@
  * 2016.10.27 TODO
  * The schema of this model will be updated by adding tasks which will verify
  * that all page models are in compliance change or notify of those that aren't.
- *
- * 2018.02.06 TODO
- * A near future update to this class should remove the thumbnailURL property.
  */
 final class CBPageSummaryView {
 
     /**
-     * @param object $pageModel
+     * @param model $pageModel
      *
      * @return object
      */
@@ -44,17 +69,25 @@ final class CBPageSummaryView {
         return (object)[
             'className' => __CLASS__,
             'ID' => CBModel::value($pageModel, 'ID'),
-            'created' => CBModel::value($pageModel, 'created', 0, 'intval'),
-            'dataStoreID' => CBModel::value($pageModel, 'ID'),
+
+            'title' => CBModel::value($pageModel, 'title'),
             'description' => CBModel::value($pageModel, 'description', ''),
-            'image' => CBModel::value($pageModel, 'image'),
+            'URI' => CBModel::value($pageModel, 'URI'),
+
+            'created' => CBModel::value($pageModel, 'created', 0, 'intval'),
+            'updated' => CBModel::value($pageModel, 'modified'),
+
             'isPublished' => CBModel::value($pageModel, 'isPublished'),
             'publicationTimeStamp' => CBModel::value($pageModel, 'publicationTimeStamp'),
-            'publishedBy' => CBModel::value($pageModel, 'publishedBy'),
+
+            'image' => CBModel::value($pageModel, 'image'),
             'thumbnailURL' => CBModel::value($pageModel, 'thumbnailURL'),
-            'title' => CBModel::value($pageModel, 'title'),
-            'updated' => CBModel::value($pageModel, 'modified'),
-            'URI' => CBModel::value($pageModel, 'URI'),
+
+            /* deprecated? is an int, should be a hex160 */
+            'publishedBy' => CBModel::value($pageModel, 'publishedBy'),
+
+            /* deprecated */
+            'dataStoreID' => CBModel::value($pageModel, 'ID'),
         ];
     }
 }
