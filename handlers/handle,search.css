@@ -1,3 +1,7 @@
+main {
+    flex: 1 1 auto;
+}
+
 .CBPageSearchResultsView {
     display: flex;
     flex-wrap: wrap;
@@ -29,7 +33,7 @@
     font-size: inherit;
 }
 
-form.search > div {
+.CBSearch form.search > div {
     align-items: center;
     border-bottom: 1px solid var(--CBTextColor3);
     box-sizing: border-box;
@@ -38,7 +42,7 @@ form.search > div {
     padding: 40px 20px;
 }
 
-form.search input[type=text] {
+.CBSearch form.search input[type=text] {
     box-sizing: border-box;
     font-family: inherit;
     font-size: inherit;

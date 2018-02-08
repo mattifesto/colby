@@ -13,7 +13,7 @@ if ($searchQueryHTML) {
 CBHTMLOutput::begin();
 CBHTMLOutput::pageInformation()->title = $title;
 CBHTMLOutput::pageInformation()->description = 'Search for site content.';
-CBHTMLOutput::addCSSURL(cbsysurl() . '/handlers/handle,search.css');
+CBHTMLOutput::addCSSURL(cbsysurl() . '/handlers/handle,search.v386.css');
 
 CBPageLayout::renderPageHeader();
 
@@ -21,7 +21,7 @@ $formClass = empty($searchQuery) ? 'no-query' : 'has-query';
 
 ?>
 
-<main style="flex: 1 1 auto;">
+<main class="CBSearch">
 <form action="<?= cbsiteurl() ?>/search/" class="search <?= $formClass ?>">
     <div>
         <input type="text" name="search-for" value="<?php echo $searchQueryHTML; ?>">
@@ -45,24 +45,27 @@ if (empty($searchQuery)) {
     $searchQueryAsSQL = "'%$searchQueryAsSQL%'";
     $SQL = <<<END
 
-        SELECT      LOWER(HEX(`archiveId`))
-        FROM        `ColbyPages`
-        WHERE       `published` IS NOT NULL AND
-                    `searchText` LIKE {$searchQueryAsSQL}
-        ORDER BY    `published`
+        SELECT      keyValueData
+        FROM        ColbyPages
+        WHERE       published IS NOT NULL AND
+                    searchText LIKE {$searchQueryAsSQL}
+        ORDER BY    published
 
 END;
 
-    $IDs = CBDB::SQLToArray($SQL);
-    $models = CBModels::fetchModelsByID($IDs);
+    $summaries = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
 
-    if (count($models) > 0) {
-        foreach ($models as $model) {
+    if (count($summaries) > 0) {
+        foreach ($summaries as $model) {
             $URI = CBConvert::valueToString(CBModel::value($model, 'URI'));
             $URL = CBSitePreferences::siteURL() . "/{$URI}/";
-            $imageURL = CBImage::valueToFlexpath($model, 'image', 'rw320', cbsiteurl());
             $title = CBConvert::valueToString(CBModel::value($model, 'title'));
             $description = CBConvert::valueToString(CBModel::value($model, 'description'));
+            $imageURL = CBImage::valueToFlexpath($model, 'image', 'rw320', cbsiteurl());
+
+            if (empty($imageURL)) {
+                $imageURL = CBModel::value($model, 'thumbnailURL');
+            }
 
             ?>
 
