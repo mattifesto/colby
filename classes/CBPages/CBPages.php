@@ -267,8 +267,7 @@ EOT;
         $thumbnailURLAsSQL = CBDB::stringToSQL(CBModel::value($model, 'thumbnailURL', '', 'cbhtml'));
         $URIAsSQL = CBDB::stringToSQL(CBModel::value($model, 'URI', ''));
 
-        $pageSummaryModel = CBPageSummaryView::viewPageModelToModel($model);
-        $keyValueDataAsSQL = CBDB::stringToSQL(json_encode($pageSummaryModel));
+        $keyValueDataAsSQL = CBDB::stringToSQL(json_encode(CBPage::toSummary($model)));
         $searchTextAsSQL = CBDB::stringToSQL(CBModel::toSearchText($model));
 
         return "($IDAsSQL, $keyValueDataAsSQL, $classNameAsSQL, $classNameForKindAsSQL, $createdAsSQL, $iterationAsSQL, $modifiedAsSQL, $URIAsSQL, $thumbnailURLAsSQL, $searchTextAsSQL, $publishedAsSQL, $publishedByAsSQL, $publishedMonthAsSQL)";
