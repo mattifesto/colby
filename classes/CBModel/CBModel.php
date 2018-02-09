@@ -104,8 +104,6 @@ final class CBModel {
 
         if (is_callable($function = "{$className}::CBModel_toModel")) {
             $model = call_user_func($function, $spec);
-        } else if (is_callable($function = "{$className}::specToModel")) { // deprecated
-            $model = call_user_func($function, $spec);
         }
 
         if (!is_object($model)) {
@@ -127,19 +125,6 @@ final class CBModel {
         }
 
         return $model;
-    }
-
-    /**
-     * @deprecated use CBModel::toModel()
-     */
-    static function specToModel(stdClass $spec) {
-        $className = CBModel::value($spec, 'className', '');
-
-        if ($className != 'CBModel') {
-            return CBModel::toModel($spec);
-        } else {
-            return null;
-        }
     }
 
     /**
