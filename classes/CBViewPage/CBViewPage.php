@@ -9,23 +9,23 @@ final class CBViewPage {
      */
     static function CBPage_toSummary(stdClass $model): stdClass {
         return (object)[
-            'description' => CBModel::value($model, 'description', ''),
-            'URI' => CBModel::value($model, 'URI'),
+            'description' => CBModel::valueToString($model, 'description'),
+            'URI' => CBModel::valueToString($model, 'URI'),
 
-            'created' => CBModel::value($model, 'created', 0, 'intval'),
-            'updated' => CBModel::value($model, 'modified'),
+            'created' => CBModel::valueAsInt($model, 'created'),
+            'updated' => CBModel::valueAsInt($model, 'modified'),
 
-            'isPublished' => CBModel::value($model, 'isPublished'),
-            'publicationTimeStamp' => CBModel::value($model, 'publicationTimeStamp'),
+            'isPublished' => (bool)CBModel::value($model, 'isPublished'),
+            'publicationTimeStamp' => CBModel::valueAsInt($model, 'publicationTimeStamp'),
 
-            'image' => CBModel::value($model, 'image'),
-            'thumbnailURL' => CBModel::value($model, 'thumbnailURL'),
+            'image' => CBModel::valueAsModel($model, 'image', ['CBImage']),
+            'thumbnailURL' => CBModel::valueToString($model, 'thumbnailURL'),
 
             /* deprecated? is an int, should be a hex160 */
-            'publishedBy' => CBModel::value($model, 'publishedBy'),
+            'publishedBy' => CBModel::valueAsInt($model, 'publishedBy'),
 
             /* deprecated */
-            'dataStoreID' => CBModel::value($model, 'ID'),
+            'dataStoreID' => CBModel::valueAsID($model, 'ID'),
         ];
     }
 
