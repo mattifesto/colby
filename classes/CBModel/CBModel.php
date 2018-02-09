@@ -250,6 +250,20 @@ final class CBModel {
     }
 
     /**
+     * This is a convenience function for:
+     *
+     *      CBConvert::valueAsInt(CBModel::value(...))
+     *
+     * @param object? $model
+     * @param string $keyPath
+     *
+     * @return ?int
+     */
+    static function valueAsInt($model, $keyPath): ?int {
+        return CBConvert::valueAsInt(CBModel::value($model, $keyPath));
+    }
+
+    /**
      * @deprecated use:
      *
      *      CBModel::value($model, $keyPath, [], 'CBConvert::stringToCSSClassNames');
