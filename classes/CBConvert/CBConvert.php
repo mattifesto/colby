@@ -189,7 +189,7 @@ final class CBConvert {
      *
      * @return string
      */
-    static function stringToURI($string) {
+    static function stringToURI($string): string {
         $stubs = preg_split('/\//', $string, /* limit: */ -1, PREG_SPLIT_NO_EMPTY);
         $stubs = array_map('CBConvert::stringToStub', $stubs);
         $stubs = array_filter($stubs, function ($value) { return $value !== ''; });
