@@ -371,9 +371,9 @@ final class CBConvert {
      *      "5.1"   => null
      *      "five"  => null
      *
-     * @return int|null
+     * @return ?int
      */
-    static function valueAsInt($value) {
+    static function valueAsInt($value): ?int {
         if (is_string($value)) {
             $value = trim($value);
         }
@@ -387,6 +387,39 @@ final class CBConvert {
         }
 
         return null;
+    }
+
+    /**
+     * @param mixed $value
+     * @param [string] $classNames
+     *
+     *      If this parameter is empty all models will be returned. If not, only
+     *      models with a class name matching one of the class names in the
+     *      array will be returned.
+     *
+     * @return ?model
+     *
+     *      If $value is an object with a non-empty class name it will be
+     *      returned; otherwise null.
+     */
+    static function valueAsModel($value, array $classNames = []): ?stdClass {
+        $object = CBConvert::valueAsObject($value);
+
+        if ($object === null) {
+            return null;
+        }
+
+        $className = CBModel::valueToString($object, 'className');
+
+        if ($className === "") {
+            return null;
+        }
+
+        if (empty($classNames) || in_array($className, $classNames)) {
+            return $object;
+        } else {
+            return null;
+        }
     }
 
     /**
