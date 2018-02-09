@@ -240,12 +240,12 @@ final class CBModel {
      *
      *      CBConvert::valueAsHex160(CBModel::value(...))
      *
-     * @param object? $model
+     * @param mixed $model
      * @param string $keyPath
      *
      * @return hex160|null
      */
-    static function valueAsID($model, $keyPath) {
+    static function valueAsID($model, string $keyPath): ?string {
         return CBConvert::valueAsHex160(CBModel::value($model, $keyPath));
     }
 
@@ -254,13 +254,27 @@ final class CBModel {
      *
      *      CBConvert::valueAsInt(CBModel::value(...))
      *
-     * @param object? $model
+     * @param mixed $model
      * @param string $keyPath
      *
      * @return ?int
      */
-    static function valueAsInt($model, $keyPath): ?int {
+    static function valueAsInt($model, string $keyPath): ?int {
         return CBConvert::valueAsInt(CBModel::value($model, $keyPath));
+    }
+
+    /**
+     * This is a convenience function for:
+     *
+     *      CBConvert::valueAsModel(CBModel::value(...))
+     *
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return ?model
+     */
+    static function valueAsModel($model, string $keyPath, array $classNames = []): ?stdClass {
+        return CBConvert::valueAsModel(CBModel::value($model, $keyPath), $classNames);
     }
 
     /**
