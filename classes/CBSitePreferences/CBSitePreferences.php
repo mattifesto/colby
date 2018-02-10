@@ -387,11 +387,11 @@ final class CBSitePreferences {
     }
 
     /**
-     * @param $spec stdClass
+     * @param model $spec
      *
-     * @return stdClass
+     * @return model
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
             'administratorEmails' => CBModel::value($spec, 'administratorEmails', [], function ($value) {
@@ -406,9 +406,9 @@ final class CBSitePreferences {
                     return [];
                 }
             }),
-            'imageForIcon' => CBModel::valueAsSpecToModel($spec, 'imageForIcon', 'CBImage'),
-            'siteName' => CBModel::value($spec, 'siteName', '', 'trim'),
-            'slackWebhookURL' => CBModel::value($spec, 'slackWebhookURL', '', 'trim'),
+            'imageForIcon' => CBModel::build(CBModel::valueAsModel($spec, 'imageForIcon', ['CBImage'])),
+            'siteName' => trim(CBModel::valueToString($spec, 'siteName')),
+            'slackWebhookURL' => trim(CBModel::valueToString($spec, 'slackWebhookURL')),
         ];
 
         $model->debug = isset($spec->debug) ? !!$spec->debug : false;
