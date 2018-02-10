@@ -273,54 +273,66 @@ final class CBViewPage {
      *
      * @return model
      */
-    static function CBModel_toModel($spec) {
+    static function CBModel_build($spec) {
         $ID = CBModel::value($spec, 'ID', '');
         $time = time();
         $model = (object)[
-            'classNameForKind' => CBModel::value($spec, 'classNameForKind', '', 'trim'),
-            'classNameForSettings' => CBModel::value($spec, 'classNameForSettings', '', 'trim'),
-            'description' => CBModel::value($spec, 'description', '', 'strval'),
-            'isPublished' => CBModel::value($spec, 'isPublished', false, 'boolval'),
+            'classNameForKind' => CBModel::valueToString($spec, 'classNameForKind'),
+            'classNameForSettings' => CBModel::valueToString($spec, 'classNameForSettings'),
+            'description' => trim(CBModel::valueToString($spec, 'description')),
+            'isPublished' => (bool)CBModel::value($spec, 'isPublished'),
             'iteration' => 0, /* deprecated */
-            'publishedBy' => CBModel::value($spec, 'publishedBy', null, 'intval'),
-            'selectedMainMenuItemName' => CBModel::value($spec, 'selectedMainMenuItemName', '', 'trim'),
-            'title' => CBModel::value($spec, 'title', '', 'trim'),
-            'URI' => CBModel::value($spec, 'URI', $ID, function ($value) use ($ID) {
-                $value = CBConvert::stringToURI($value);
-
-                if ($value === '') {
-                    return $ID;
-                } else {
-                    return $value;
-                }
-            }),
+            'publishedBy' => CBModel::valueAsInt($spec, 'publishedBy'),
+            'selectedMainMenuItemName' => CBModel::valueToString($spec, 'selectedMainMenuItemName'),
+            'title' => trim(CBModel::valueToString($spec, 'title')),
         ];
 
-        $model->publicationTimeStamp = isset($spec->publicationTimeStamp) ? (int)$spec->publicationTimeStamp : ($model->isPublished ? $time : null);
+        // URI
 
-        /**
-         * Page image
-         */
+        $model->URI = CBConvert::stringToURI(CBModel::valueToString($spec, 'URI'));
 
-        $model->image = CBModel::valueAsSpecToModel($spec, 'image', 'CBImage');
+        if ($model->URI === '') {
+            $model->URI = $ID;
+        }
+
+        // publicationTimeStamp
+
+        $model->publicationTimeStamp = CBModel::valueAsInt($spec, 'publicationTimeStamp');
+
+        if ($model->publicationTimeStamp === null && $model->isPublished) {
+            $model->publicationTimeStamp = $time;
+        }
+
+        // image
+
+        $imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage']);
+
+        if ($imageSpec) {
+            $model->image = CBModel::build($imageSpec);
+        }
 
         if (empty($model->image)) {
-            $model->thumbnailURL = CBModel::value($spec, 'thumbnailURL');
+            $model->thumbnailURL = CBModel::valueToString($spec, 'thumbnailURL');
         } else {
             // The preference is not to set null properties but we set this one
             // for backward compatability.
             $model->thumbnailURL = null;
         }
 
-        $model->layout = CBModel::valueToModel($spec, 'layout');
-        $model->sections = CBModel::valueToModels($spec, 'sections');
+        $model->layout = CBModel::build(CBModel::valueAsModel($spec, 'layout'));
+
+        $items = CBModel::valueToArray($spec, 'sections');
+        $model->sections = array_map(function ($item) {
+            $spec = CBConvert::valueAsModel($item);
+            return CBModel::build($spec);
+        }, $items);
 
         /**
          * Computed values
          */
 
-        $model->thumbnailURLAsHTML = ColbyConvert::textToHTML($model->thumbnailURL);
-        $model->URIAsHTML = ColbyConvert::textToHTML($model->URI);
+        $model->thumbnailURLAsHTML = cbhtml($model->thumbnailURL);
+        $model->URIAsHTML = cbhtml($model->URI);
 
         return $model;
     }
