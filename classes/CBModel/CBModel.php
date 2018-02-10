@@ -93,7 +93,7 @@ final class CBModel {
      *      number of specific spec requirements. However, most classes can
      *      build a model from a completely empty spec.
      */
-    static function toModel(stdClass $spec) {
+    static function build(stdClass $spec) {
         $className = CBModel::value($spec, 'className', '');
 
         if (empty($className)) {
@@ -101,8 +101,10 @@ final class CBModel {
         }
 
         $model = null;
-
-        if (is_callable($function = "{$className}::CBModel_toModel")) {
+        
+        if (is_callable($function = "{$className}::CBModel_build")) {
+            $model = call_user_func($function, $spec);
+        } else if (is_callable($function = "{$className}::CBModel_toModel")) {
             $model = call_user_func($function, $spec);
         }
 
@@ -125,6 +127,13 @@ final class CBModel {
         }
 
         return $model;
+    }
+
+    /**
+     * @deprecated use CBModel::build()
+     */
+    static function toModel(stdClass $spec) {
+        return CBModel::build($spec);
     }
 
     /**
