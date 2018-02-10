@@ -226,7 +226,12 @@ final class CBModel {
     /**
      * @deprecated use:
      *
-     *      CBModel::value($model, $keyPath, [], 'CBConvert::valueToArray');
+     *      CBConvert::valueToArray(CBModel::value($model, $keyPath));
+     *
+     * @NOTE
+     *
+     *      This function is misnamed because "valueAs" functions are supposed
+     *      to be able to return null.
      *
      * This function is used to get the value of a model property that is
      * expected to be an array. Unset and non-array values will be returned as
