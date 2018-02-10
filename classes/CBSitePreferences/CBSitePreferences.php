@@ -422,16 +422,9 @@ final class CBSitePreferences {
         $model->reCAPTCHASiteKey = CBModel::value($spec, 'reCAPTCHASiteKey', null, 'trim');
         $model->twitterURL = CBModel::value($spec, 'twitterURL', '', 'trim');
 
-        if (isset($spec->custom) && is_array($spec->custom)) {
-            $model->custom = new stdClass();
-            $keyValueModels = array_filter($spec->custom, function ($spec) { return $spec->className === 'CBKeyValuePair'; });
-            $keyValueModels = array_map('CBModel::specToOptionalModel', $keyValueModels);
-            $keyValueModels = array_filter($keyValueModels, function ($model) { return !empty($model->key); });
+        /* custom values */
 
-            foreach ($keyValueModels as $keyValueModel) {
-                $model->custom->{$keyValueModel->key} = $keyValueModel->value;
-            }
-        }
+        $model->custom = CBKeyValuePair::valueToObject($spec, 'custom');
 
         return $model;
     }
