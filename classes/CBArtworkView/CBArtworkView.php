@@ -179,15 +179,15 @@ final class CBArtworkView {
      *
      *      rw320|rw640|rw960|rw1280|rw1600|rw1920|rw2560|original|page
      *
-     * @return stdClass
+     * @return model
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec) {
         $model = (object)[
             'className' => __CLASS__,
             'alternativeText' => CBModel::value($spec, 'alternativeText', '', 'trim'),
             'captionAsMarkdown' => CBModel::value($spec, 'captionAsMarkdown', ''),
             'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
-            'image' => CBModel::valueAsSpecToModel($spec, 'image', 'CBImage'),
+            'image' => CBModel::build(CBModel::valueAsModel($spec, 'image', ['CBImage'])),
             'size' => CBModel::value($spec, 'size', 'default', 'trim'),
         ];
 
