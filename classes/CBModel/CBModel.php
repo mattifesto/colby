@@ -80,12 +80,19 @@ final class CBModel {
      *      perform a basic transfer of title from the spec to the model if the
      *      model produced doesn't have a title set.
      *
-     * @param model $spec
+     * @param mixed $spec
      *
      *      For this function to successfully build a model, the spec's class
      *      must exist and have the CBModel_toModel() interface implemented.
      *
-     * @return model|null
+     *      The $spec parameter is not typed so that you can do somthing like:
+     *
+     *          $model = CBModel::build(CBModel::value($spec, 'image'));
+     *
+     *      If the value returned by CBModel::value() is not an object
+     *      CBModel::build() will return null.
+     *
+     * @return ?model
      *
      *      This function will return null if the CBModel_toModel() interface is
      *      not implemented. That function may return null for specs that don't
@@ -93,8 +100,8 @@ final class CBModel {
      *      number of specific spec requirements. However, most classes can
      *      build a model from a completely empty spec.
      */
-    static function build(stdClass $spec) {
-        $className = CBModel::value($spec, 'className', '');
+    static function build($spec): ?stdClass {
+        $className = CBModel::valueToString($spec, 'className');
 
         if (empty($className)) {
             return null;
