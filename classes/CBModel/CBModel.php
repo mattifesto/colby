@@ -101,7 +101,7 @@ final class CBModel {
         }
 
         $model = null;
-        
+
         if (is_callable($function = "{$className}::CBModel_build")) {
             $model = call_user_func($function, $spec);
         } else if (is_callable($function = "{$className}::CBModel_toModel")) {
@@ -394,6 +394,20 @@ final class CBModel {
         $value = CBModel::value($model, $keyPath);
 
         return CBModel::specToOptionalModel($value, $expectedClassName);
+    }
+
+    /**
+     * This is a convenience function for:
+     *
+     *      CBConvert::valueToArray(CBModel::value(...))
+     *
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return [mixed]
+     */
+    static function valueToArray($model, string $keyPath): array {
+        return CBConvert::valueToArray(CBModel::value($model, $keyPath));
     }
 
     /**
