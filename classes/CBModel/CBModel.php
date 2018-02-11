@@ -269,7 +269,7 @@ EOT;
     /**
      * @deprecated use:
      *
-     *      CBConvert::valueToArray(CBModel::value($model, $keyPath));
+     *      CBModel::valueToArray();
      *
      * @NOTE
      *
