@@ -375,7 +375,7 @@ EOT;
      * @return ?object
      */
     static function valueAsObject($model, string $keyPath): ?stdClass {
-        return CBConvert::valueAsObject($model, $keyPath);
+        return CBConvert::valueAsObject(CBModel::value($model, $keyPath));
     }
 
     /**
