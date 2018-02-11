@@ -384,26 +384,6 @@ final class CBModel {
     }
 
     /**
-     * @deprecated use CBModel::valueToModel()
-     *
-     * This function uses the $expectedClassName parameter in a deprecated way.
-     * If the spec doesn't have a className set it will use $expectedClassName
-     * as its className. If you have a scenario where you need this type of
-     * functionality, this a scenario that needs a bug fix.
-     *
-     * The known case of this is some old CBImage specs that didn't have a class
-     * name which has been fixed for the future, but not for some past specs.
-     * Those cases should be handled locally.
-     *
-     * @return object|null
-     */
-    static function valueAsSpecToModel($model, $keyPath, $expectedClassName = null) {
-        $value = CBModel::value($model, $keyPath);
-
-        return CBModel::specToOptionalModel($value, $expectedClassName);
-    }
-
-    /**
      * This is a convenience function for:
      *
      *      CBConvert::valueToArray(CBModel::value(...))
