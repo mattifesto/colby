@@ -513,6 +513,20 @@ EOT;
     /**
      * This is a convenience function for:
      *
+     *      CBConvert::valueToObject(CBModel::value(...));
+     *
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return object
+     */
+    static function valueToObject($model, string $keyPath): stdClass {
+        return CBConvert::valueToObject(CBModel::value($model, $keyPath));
+    }
+
+    /**
+     * This is a convenience function for:
+     *
      *      CBConvert::valueToString(CBModel::value(...));
      *
      * @return string
