@@ -24,6 +24,22 @@
 final class CBModel {
 
     /**
+     * This function performs a deep clone of a model by serializing it to JSON
+     * and then unserializing it. Since models are always serialized to JSON
+     * this method of cloning is will always produce a valid clone.
+     *
+     * @param object $model
+     *
+     *      This parameter does not technically have to be a model. That is, it
+     *      does not need to have className property or a valid ID.
+     *
+     * @return object
+     */
+    static function clone(stdClass $model): stdClass {
+        return json_decode(json_encode($model));
+    }
+
+    /**
      * This function can be used to generate IDs for specs, such as specs
      * imported from CSV files.
      *
