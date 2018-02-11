@@ -174,16 +174,15 @@ EOT;
     }
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?model
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
-            'className' => __CLASS__,
-            'largeImage' => CBModel::valueAsSpecToModel($spec, 'largeImage', 'CBImage'),
-            'mediumImage' => CBModel::valueAsSpecToModel($spec, 'mediumImage', 'CBImage'),
-            'smallImage' => CBModel::valueAsSpecToModel($spec, 'smallImage', 'CBImage'),
+            'largeImage' => CBModel::build(CBModel::valueAsModel($spec, 'largeImage', ['CBImage'])),
+            'mediumImage' => CBModel::build(CBModel::valueAsModel($spec, 'mediumImage', ['CBImage'])),
+            'smallImage' => CBModel::build(CBModel::valueAsModel($spec, 'smallImage', ['CBImage'])),
             'subviews' => CBModel::valueToModels($spec, 'subviews'),
         ];
         $model->backgroundColor = CBModel::value($spec, 'backgroundColor', null, 'CBConvert::stringToCSSColor');
