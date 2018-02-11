@@ -177,6 +177,51 @@ final class CBModel {
     }
 
     /**
+     * @param model $spec
+     *
+     * @return model
+     *
+     *      The returned model will always be a different object than the object
+     *      passed as the $spec argument. However the returned value may be
+     *      equal to the $spec argument object. You can compare the $spec object
+     *      to the returned value using == to determine if any changes were made
+     *      during the upgrade.
+     */
+    static function upgrade(stdClass $spec): stdClass {
+        $className = CBModel::valueToString($spec, 'className');
+        $upgradedSpec = CBModel::clone($spec);
+
+        if (is_callable($function = "{$className}::CBModel_upgrade")) {
+            call_user_func($function, $upgradedSpec);
+
+            $ID = CBModel::valueAsID($spec, 'ID');
+            $upgradedID = CBModel::value($upgradedSpec, 'ID');
+
+            if ($upgradedID != $ID) {
+                $message = <<<EOT
+
+                    When the {$className} model with the ID "{$ID}"
+                    was upgraded using CBModel::upgrade(), the ID was
+                    altered which is not allowed.
+
+                    The upgrade was cancelled.
+
+EOT;
+
+                CBLog::log((object)[
+                    'className' => __CLASS__,
+                    'message' => $message,
+                    'severity' => 3,
+                ]);
+
+                return CBModel::clone($spec);
+            }
+        }
+
+        return $upgradedSpec;
+    }
+
+    /**
      * @param mixed $model
      *
      *  The $model parameter is generally expected to be a stdClass instance or
