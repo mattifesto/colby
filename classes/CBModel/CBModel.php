@@ -365,27 +365,17 @@ EOT;
     }
 
     /**
-     * @deprecated use:
+     * This is a convenience function for:
      *
-     *      CBModel::value($model, $keyPath, (object)[], 'CBConvert::valueToObject');
+     *      CBConvert::valueAsObject(CBModel::value(...));
      *
-     * This function is used when you expect a model property to contain an
-     * object. If the property does contain an object, it will be returned. If
-     * not, an empty object will be returned. A non-object property value is
-     * ignored.
-     *
-     * @NOTE
-     *
-     *      This function is misnamed. Since it always returns an object it
-     *      should have been naned "valueToObject".
-     *
-     * @param object? $model
+     * @param mixed $model
      * @param string $keyPath
      *
-     * @return object
+     * @return ?object
      */
-    static function valueAsObject($model, $keyPath): stdClass {
-        return CBModel::value($model, $keyPath, (object)[], 'CBConvert::valueToObject');
+    static function valueAsObject($model, string $keyPath): ?stdClass {
+        return CBConvert::valueAsObject($model, $keyPath);
     }
 
     /**
