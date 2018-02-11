@@ -529,9 +529,12 @@ EOT;
      *
      *      CBConvert::valueToString(CBModel::value(...));
      *
+     * @param mixed $model
+     * @param string $keyPath
+     *
      * @return string
      */
-    static function valueToString($model, $keyPath) {
+    static function valueToString($model, string $keyPath): string {
         return CBConvert::valueToString(CBModel::value($model, $keyPath));
     }
 }
