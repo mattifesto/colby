@@ -15,6 +15,26 @@ final class CBContainerView2 {
     }
 
     /**
+     * @param model $spec
+     *
+     * @return void
+     */
+    static function CBModel_upgrade(stdClass $spec): void {
+        if ($image = CBModel::valueAsObject($spec, 'image')) {
+            $spec->image = CBImage::fixAndUpgrade($image);
+        }
+
+        $subviews = CBModel::valueToArray($spec, 'subviews');
+        $spec->subviews = [];
+
+        foreach ($subviews as $subview) {
+            if ($subview = CBConvert::valueAsModel($subview)) {
+                $spec->subviews[] = CBModel::upgrade($subview);
+            }
+        }
+    }
+
+    /**
      * @param object $model
      *
      * @return null
@@ -69,15 +89,30 @@ EOT;
      *
      * @return object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec) {
         $model = (object)[
-            'className' => __CLASS__,
             'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
-            'image' => CBModel::valueToModel($spec, 'image', 'CBImage'),
-            'subviews' => CBModel::valueToModels($spec, 'subviews'),
         ];
 
-        // localCSS
+        /* image */
+
+        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+            $model->image = CBModel::build($imageSpec);
+        }
+
+        /* subviews */
+
+        $model->subviews = [];
+        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
+
+        foreach($subviewSpecs as $subviewSpec) {
+            if ($subviewModel = CBModel::build($subviewSpec)) {
+                $model->subviews[] = $subviewModel;
+            }
+        }
+
+        /* localCSS */
+
         $localCSSTemplate = CBModel::value($spec, 'localCSSTemplate', '', 'trim');
 
         if (!empty($localCSSTemplate)) {
