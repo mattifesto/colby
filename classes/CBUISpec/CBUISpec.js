@@ -19,12 +19,12 @@ var CBUISpec = {
     },
 
     /**
-     * @param object? spec
+     * @param model? spec
      *
      * @return string|undefined
      */
     specToDescription: function (spec) {
-        if (spec === undefined) { return undefined; }
+        if (typeof spec !== "object" || spec === null) { return undefined; }
 
         var editor = window[spec.className + "Editor"];
 

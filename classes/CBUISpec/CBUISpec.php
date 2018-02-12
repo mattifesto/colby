@@ -9,16 +9,6 @@ final class CBUISpec {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBUISpec::URL('CBUISpec.js')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+        return [Colby::flexpath(__CLASS__, 'v387.js', cbsysurl())];
     }
 }
