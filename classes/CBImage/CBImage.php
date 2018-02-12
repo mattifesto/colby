@@ -14,7 +14,7 @@ final class CBImage {
      *
      * @return object|null
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec) {
         $specIssues = [];
         $extension = CBModel::value($spec, 'extension');
 
@@ -95,6 +95,18 @@ EOT;
     }
 
     /**
+     * @param model $spec
+     *
+     * @return void
+     */
+    static function CBModel_upgrade(stdClass $spec): void {
+        if (empty($spec->filename) && !empty($spec->base)) {
+            $spec->filename = $spec->base;
+            unset($spec->base);
+        }
+    }
+
+    /**
      * Deleting images is a process that should rarely happen. Images should be
      * kept forever even if they are no longer used. However there are various
      * development and administrative reasons to delete images.
@@ -134,6 +146,24 @@ EOT;
         } catch (Throwable $throwable) {
             return false;
         }
+    }
+
+    /**
+     * Early CBImage specs did not have a className so this special function is
+     * designed to ensure a spec does have a className and then upgrade the
+     * spec.
+     *
+     * @param model $spec
+     *
+     * @return model
+     */
+    static function fixAndUpgrade(stdClass $spec): stdClass {
+        if (empty($spec->className)) {
+            $spec = CBModel::clone($spec);
+            $spec->className = 'CBImage';
+        }
+
+        return CBModel::upgrade($spec);
     }
 
     /**
