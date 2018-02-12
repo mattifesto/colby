@@ -385,6 +385,24 @@ EOT;
         } catch (Throwable $throwable) {
             Colby::reportException($throwable);
 
+            $message = CBMessageMarkup::stringToMarkup(
+                CBConvert::throwableToMessage($throwable)
+            );
+
+            $message = <<<EOT
+
+                {$task->className} Error {$message}
+
+                ID: {$task->ID}
+
+EOT;
+
+            CBLog::log((object)[
+                'className' => $task->className,
+                'message' => $message,
+                'severity' => 3,
+            ]);
+
             $scheduled = null;
             $state = 4; /* failed */
         }
