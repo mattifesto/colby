@@ -20,16 +20,16 @@ final class CBContainerView2 {
      * @return void
      */
     static function CBModel_upgrade(stdClass $spec): void {
-        if ($image = CBModel::valueAsObject($spec, 'image')) {
-            $spec->image = CBImage::fixAndUpgrade($image);
+        if ($imageSpec = CBModel::valueAsObject($spec, 'image')) {
+            $spec->image = CBImage::fixAndUpgrade($imageSpec);
         }
 
-        $subviews = CBModel::valueToArray($spec, 'subviews');
+        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
         $spec->subviews = [];
 
-        foreach ($subviews as $subview) {
-            if ($subview = CBConvert::valueAsModel($subview)) {
-                $spec->subviews[] = CBModel::upgrade($subview);
+        foreach ($subviewSpecs as $subviewSpec) {
+            if ($subviewSpec = CBConvert::valueAsModel($subviewSpec)) {
+                $spec->subviews[] = CBModel::upgrade($subviewSpec);
             }
         }
     }
