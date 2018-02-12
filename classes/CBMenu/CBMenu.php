@@ -9,13 +9,22 @@ final class CBMenu {
      *
      * @return object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec) {
         $model = (object)[
-            'className' => __CLASS__,
-            'items' => CBModel::valueToModels($spec, 'items'),
-            'title' => CBModel::value($spec, 'title', '', 'trim'),
-            'titleURI' => CBModel::value($spec, 'titleURI', '', 'trim'),
+            'title' => trim(CBModel::valueToString($spec, 'title')),
+            'titleURI' => trim(CBModel::valueToString($spec, 'titleURI')),
         ];
+
+        /* items */
+
+        $model->items = [];
+        $itemSpecs = CBModel::valueToArray($spec, 'items');
+
+        foreach ($itemSpecs as $itemSpec) {
+            if ($itemModel = CBModel::build($itemSpec)) {
+                $model->items[] = $itemModel;
+            }
+        }
 
         return $model;
     }
