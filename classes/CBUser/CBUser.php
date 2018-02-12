@@ -7,7 +7,7 @@ final class CBUser {
      *
      * @return object|null
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec) {
         $userID = CBModel::value($spec, 'userID', null, 'intval');
 
         if (empty($userID)) {
@@ -35,9 +35,8 @@ EOT;
         }
 
         return (object)[
-            'className' => __CLASS__,
             'description' => CBModel::value($spec, 'description', '', 'trim'),
-            'facebook' => clone CBModel::valueAsObject($spec, 'facebook'),
+            'facebook' => CBModel::clone(CBModel::valueToObject($spec, 'facebook')),
             'lastLoggedIn' => CBModel::value($spec, 'lastLoggedIn', 0, 'intval'),
             'title' => CBModel::value($spec, 'title', '', 'trim'),
             'userID' => $userID,
