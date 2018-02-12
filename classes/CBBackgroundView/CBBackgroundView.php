@@ -3,6 +3,47 @@
 final class CBBackgroundView {
 
     /**
+     * @param model $spec
+     *
+     * @return ?model
+     */
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        $model = (object)[];
+
+        $model->color = isset($spec->color) ? $spec->color : null;
+        $model->colorHTML = ColbyConvert::textToHTML($model->color);
+        $model->imageHeight = isset($spec->imageHeight) ? $spec->imageHeight : null;
+        $model->imageShouldRepeatHorizontally = isset($spec->imageShouldRepeatHorizontally) ?
+                                                    $spec->imageShouldRepeatHorizontally : false;
+        $model->imageShouldRepeatVertically = isset($spec->imageShouldRepeatVertically) ?
+                                                    $spec->imageShouldRepeatVertically : false;
+        $model->imageURL = isset($spec->imageURL) ? $spec->imageURL : null;
+        $model->imageURLHTML = ColbyConvert::textToHTML($model->imageURL);
+        $model->imageWidth = isset($spec->imageWidth) ? $spec->imageWidth : null;
+        $model->minimumViewHeightIsImageHeight = isset($spec->minimumViewHeightIsImageHeight) ?
+                                                    $spec->minimumViewHeightIsImageHeight : true;
+
+        /* image (added 2017.09.12) */
+
+        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+            $model->image = CBModel::build($imageSpec);
+        }
+
+        /* children */
+
+        $model->children = [];
+        $subviewSpecs = CBModel::valueToArray($spec, 'children');
+
+        foreach($subviewSpecs as $subviewSpec) {
+            if ($subviewModel = CBModel::build($subviewSpec)) {
+                $model->children[] = $subviewModel;
+            }
+        }
+
+        return $model;
+    }
+
+    /**
      * @param object $model
      *
      * @return string
@@ -61,47 +102,6 @@ final class CBBackgroundView {
         </div>
 
         <?php
-    }
-
-    /**
-     * @param model $spec
-     *
-     * @return ?model
-     */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $model = (object)[];
-
-        $model->color = isset($spec->color) ? $spec->color : null;
-        $model->colorHTML = ColbyConvert::textToHTML($model->color);
-        $model->imageHeight = isset($spec->imageHeight) ? $spec->imageHeight : null;
-        $model->imageShouldRepeatHorizontally = isset($spec->imageShouldRepeatHorizontally) ?
-                                                    $spec->imageShouldRepeatHorizontally : false;
-        $model->imageShouldRepeatVertically = isset($spec->imageShouldRepeatVertically) ?
-                                                    $spec->imageShouldRepeatVertically : false;
-        $model->imageURL = isset($spec->imageURL) ? $spec->imageURL : null;
-        $model->imageURLHTML = ColbyConvert::textToHTML($model->imageURL);
-        $model->imageWidth = isset($spec->imageWidth) ? $spec->imageWidth : null;
-        $model->minimumViewHeightIsImageHeight = isset($spec->minimumViewHeightIsImageHeight) ?
-                                                    $spec->minimumViewHeightIsImageHeight : true;
-
-        /* image (added 2017.09.12) */
-
-        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
-            $model->image = CBModel::build($imageSpec);
-        }
-
-        /* children */
-
-        $model->children = [];
-        $subviewSpecs = CBModel::valueToArray($spec, 'children');
-
-        foreach($subviewSpecs as $subviewSpec) {
-            if ($subviewModel = CBModel::build($subviewSpec)) {
-                $model->children[] = $subviewModel;
-            }
-        }
-
-        return $model;
     }
 
     /**
