@@ -145,7 +145,7 @@ final class CBModel {
             }
         }
 
-        if (!isset($model->title)) {
+        if (!isset($model->title) && isset($spec->title)) {
             $model->title = trim(CBModel::valueToString($spec, 'title'));
         }
 
