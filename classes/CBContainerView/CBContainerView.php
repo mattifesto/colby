@@ -17,6 +17,28 @@
 final class CBContainerView {
 
     /**
+     * @param model $spec
+     *
+     * @return void
+     */
+    static function CBModel_upgrade(stdClass $spec): void {
+        foreach(['smallImage', 'mediumImage', 'largeImage'] as $name) {
+            if ($imageSpec = CBModel::valueAsObject($spec, $name)) {
+                $spec->{$name} = CBImage::fixAndUpgrade($imageSpec);
+            }
+        }
+
+        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
+        $spec->subviews = [];
+
+        foreach ($subviewSpecs as $subviewSpec) {
+            if ($subviewSpec = CBConvert::valueAsModel($subviewSpec)) {
+                $spec->subviews[] = CBModel::upgrade($subviewSpec);
+            }
+        }
+    }
+
+    /**
      * @deprecated use CBContainerView::modelToImageCSS()
      *
      * @param hex160 $imageThemeID
@@ -183,7 +205,6 @@ EOT;
             'largeImage' => CBModel::build(CBModel::valueAsModel($spec, 'largeImage', ['CBImage'])),
             'mediumImage' => CBModel::build(CBModel::valueAsModel($spec, 'mediumImage', ['CBImage'])),
             'smallImage' => CBModel::build(CBModel::valueAsModel($spec, 'smallImage', ['CBImage'])),
-            'subviews' => CBModel::valueToModels($spec, 'subviews'),
         ];
         $model->backgroundColor = CBModel::value($spec, 'backgroundColor', null, 'CBConvert::stringToCSSColor');
         $model->HREF = CBModel::value($spec, 'HREF');
@@ -198,6 +219,17 @@ EOT;
             default:
                 unset($model->tagName);
                 break;
+        }
+
+        /* subviews */
+
+        $model->subviews = [];
+        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
+
+        foreach($subviewSpecs as $subviewSpec) {
+            if ($subviewModel = CBModel::build($subviewSpec)) {
+                $model->subviews[] = $subviewModel;
+            }
         }
 
         /* CSS class names */
