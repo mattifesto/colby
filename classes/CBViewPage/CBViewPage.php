@@ -3,6 +3,32 @@
 final class CBViewPage {
 
     /**
+     * @param model $spec
+     *
+     * @return void
+     */
+    static function CBModel_upgrade(stdClass $spec): void {
+        if ($image = CBModel::valueAsObject($spec, 'image')) {
+            $spec->image = CBImage::fixAndUpgrade($image);
+        }
+
+        if ($layout = CBModel::valueAsModel($spec, 'layout')) {
+            $spec->layout = CBModel::upgrade($layout);
+        } else {
+            unset($spec->layout);
+        }
+
+        $sections = CBModel::valueToArray($spec, 'sections');
+        $spec->sections = [];
+
+        foreach($sections as $section) {
+            if ($section = CBConvert::valueAsModel($section)) {
+                $spec->sections[] = CBModel::upgrade($section);
+            }
+        }
+    }
+
+    /**
      * @param model $model
      *
      * @return object
@@ -243,7 +269,7 @@ final class CBViewPage {
         }
 
         $renderContentCallback = function () use ($model) {
-            $sections = CBModel::valueAsArray($model, 'sections');
+            $sections = CBModel::valueToArray($model, 'sections');
             array_walk($sections, 'CBView::render');
         };
 
@@ -321,11 +347,13 @@ final class CBViewPage {
 
         $model->layout = CBModel::build(CBModel::valueAsModel($spec, 'layout'));
 
-        $items = CBModel::valueToArray($spec, 'sections');
-        $model->sections = array_map(function ($item) {
-            $spec = CBConvert::valueAsModel($item);
-            return CBModel::build($spec);
-        }, $items);
+        $model->sections = [];
+        $sectionSpecs = CBModel::valueToArray($spec, 'sections');
+        foreach ($sectionSpecs as $sectionSpec) {
+            if ($sectionModel = CBModel::build($sectionSpec)) {
+                $model->sections[] = $sectionModel;
+            }
+        }
 
         /**
          * Computed values
