@@ -67,6 +67,7 @@ class CBUnitTests {
             ['CBDB',                    'SQLToArray'],
             ['CBDB',                    'SQLToAssociativeArray'],
             ['CBDB',                    'SQLToValue'],
+            ['CBImage',                 'upgrade'],
             ['CBImages',                'resize'],
             ['CBLog',                   'noClassName'],
             ['CBLog',                   'noMessage'],
