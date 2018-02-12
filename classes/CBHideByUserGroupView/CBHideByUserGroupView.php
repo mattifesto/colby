@@ -46,20 +46,35 @@ final class CBHideByUserGroupView {
     }
 
     /**
-     * @param bool? $spec->hideFromMembers
-     * @param bool? $spec->hideFromNonmembers
-     * @param string? $spec->groupName
-     * @param [stdClass]? $spec->subviews
+     * @param model $spec
      *
-     * @return stdClass
+     *      {
+     *          hideFromMembers: ?bool
+     *          hideFromNonmembers: ?bool
+     *          groupName: ?string
+     *          subviews: ?[model]
+     *      }
+     *
+     * @return ?model
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         return (object)[
-            'className' => __CLASS__,
             'hideFromMembers' => CBModel::value($spec, 'hideFromMembers', false, 'boolval'),
             'hideFromNonmembers' => CBModel::value($spec, 'hideFromNonmembers', false, 'boolval'),
-            'groupName' => CBModel::value($spec, 'groupName', '', 'trim'),
-            'subviews' => CBModel::valueToModels($spec, 'subviews'),
+            'groupName' => trim(CBModel::valueToString($spec, 'groupName')),
         ];
+
+        /* subviews */
+
+        $model->subviews = [];
+        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
+
+        foreach($subviewSpecs as $subviewSpec) {
+            if ($subviewModel = CBModel::build($subviewSpec)) {
+                $model->subviews[] = $subviewModel;
+            }
+        }
+
+        return $model;
     }
 }
