@@ -64,15 +64,12 @@ final class CBBackgroundView {
     }
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?model
      */
-    static function CBModel_toModel(stdClass $spec) {
-        $model = (object)[
-            'className' => __CLASS__,
-            'image' => CBModel::valueToModel($spec, 'image', 'CBImage'), // Added 2017.09.12
-        ];
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        $model = (object)[];
 
         $model->color = isset($spec->color) ? $spec->color : null;
         $model->colorHTML = ColbyConvert::textToHTML($model->color);
@@ -87,7 +84,22 @@ final class CBBackgroundView {
         $model->minimumViewHeightIsImageHeight = isset($spec->minimumViewHeightIsImageHeight) ?
                                                     $spec->minimumViewHeightIsImageHeight : true;
 
-        $model->children = CBModel::valueToModels($spec, 'children');
+        /* image (added 2017.09.12) */
+
+        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+            $model->image = CBModel::build($imageSpec);
+        }
+
+        /* children */
+
+        $model->children = [];
+        $subviewSpecs = CBModel::valueToArray($spec, 'children');
+
+        foreach($subviewSpecs as $subviewSpec) {
+            if ($subviewModel = CBModel::build($subviewSpec)) {
+                $model->children[] = $subviewModel;
+            }
+        }
 
         return $model;
     }
