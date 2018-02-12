@@ -22,7 +22,7 @@ final class CBPageLayout {
         }
 
         $customLayoutClassName = CBModel::value($layoutModel, 'customLayoutClassName', '');
-        $customLayoutProperties = CBModel::valueAsObject($layoutModel, 'customLayoutProperties');
+        $customLayoutProperties = CBModel::valueToObject($layoutModel, 'customLayoutProperties');
 
         CBPageLayout::renderPageHeader($customLayoutClassName, $customLayoutProperties);
 
