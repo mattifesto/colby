@@ -56,6 +56,26 @@ final class CBBackgroundView {
     }
 
     /**
+     * @param model $spec
+     *
+     * @return void
+     */
+    static function CBModel_upgrade(stdClass $spec): void {
+        if ($imageSpec = CBModel::valueAsObject($spec, 'image')) {
+            $spec->image = CBImage::fixAndUpgrade($imageSpec);
+        }
+
+        $subviewSpecs = CBModel::valueToArray($spec, 'children');
+        $spec->children = [];
+
+        foreach ($subviewSpecs as $subviewSpec) {
+            if ($subviewSpec = CBConvert::valueAsModel($subviewSpec)) {
+                $spec->children[] = CBModel::upgrade($subviewSpec);
+            }
+        }
+    }
+
+    /**
      * @param object $model
      *
      * @return null
