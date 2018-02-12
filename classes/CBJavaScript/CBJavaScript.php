@@ -6,7 +6,7 @@ class CBJavaScript {
      * @return null
      */
     static function CBAjax_reportError(stdClass $args) {
-        $errorModel = CBModel::valueAsObject($args, 'errorModel');
+        $errorModel = CBModel::valueToObject($args, 'errorModel');
         $pMessage = CBModel::value($errorModel, 'message');
         $pPageURL = CBModel::value($errorModel, 'pageURL');
         $pSourceURL = CBModel::value($errorModel, 'sourceURL');
