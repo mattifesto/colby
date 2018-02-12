@@ -48,6 +48,22 @@ final class CBHideByUserGroupView {
     }
 
     /**
+     * @param model $spec
+     *
+     * @return void
+     */
+    static function CBModel_upgrade(stdClass $spec): void {
+        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
+        $spec->subviews = [];
+
+        foreach ($subviewSpecs as $subviewSpec) {
+            if ($subviewSpec = CBConvert::valueAsModel($subviewSpec)) {
+                $spec->subviews[] = CBModel::upgrade($subviewSpec);
+            }
+        }
+    }
+
+    /**
      * @param bool? $spec->hideFromMembers
      * @param bool? $spec->hideFromNonmembers
      * @param string? $model->groupName
