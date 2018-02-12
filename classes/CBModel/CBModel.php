@@ -492,25 +492,6 @@ EOT;
     }
 
     /**
-     * @NOTE The name "valueTo" instead of "valueAs" indicates that the original
-     *       property value may be undergoing conversion.
-     *
-     * @return [object]
-     */
-    static function valueToModels($model, $keyPath) {
-        $models = [];
-        $specs = CBModel::valueAsArray($model, $keyPath);
-
-        foreach ($specs as $spec) {
-            if (is_object($spec) && ($model = CBModel::toModel($spec))) {
-                $models[] = $model;
-            }
-        }
-
-        return $models;
-    }
-
-    /**
      * This is a convenience function for:
      *
      *      CBConvert::valueToObject(CBModel::value(...));
