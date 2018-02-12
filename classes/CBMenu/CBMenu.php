@@ -3,13 +3,17 @@
 final class CBMenu {
 
     /**
-     * @param array? $spec->items
-     * @param string? $spec->title
-     * @param string? $spec->titleURI
+     * @param model $spec
      *
-     * @return object
+     *      {
+     *          items: ?[model]
+     *          title: ?string
+     *          titleURI: ?string
+     *      }
+     *
+     * @return ?model
      */
-    static function CBModel_build(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
             'title' => trim(CBModel::valueToString($spec, 'title')),
             'titleURI' => trim(CBModel::valueToString($spec, 'titleURI')),
@@ -27,6 +31,22 @@ final class CBMenu {
         }
 
         return $model;
+    }
+
+    /**
+     * @param model $spec
+     *
+     * @return void
+     */
+    static function CBModel_upgrade(stdClass $spec): void {
+        $itemSpecs = CBModel::valueToArray($spec, 'items');
+        $spec->items = [];
+
+        foreach ($itemSpecs as $itemSpec) {
+            if ($itemSpec = CBConvert::valueAsModel($itemSpec)) {
+                $spec->items[] = CBModel::upgrade($itemSpec);
+            }
+        }
     }
 
     /**
