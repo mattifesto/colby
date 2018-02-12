@@ -31,7 +31,7 @@ final class CBDataStoresFinderTask {
             CBModels::save([$spec]);
         });
 
-        CBTasks2::restart(__CLASS__, CBDataStoresFinderTask::ID(), /* priority: */ 101);
+        CBTasks2::restart(__CLASS__, CBDataStoresFinderTask::ID(), /* priority: */ 200);
     }
 
     /**
@@ -42,14 +42,12 @@ final class CBDataStoresFinderTask {
     }
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?model
      */
-    static function CBModel_toModel(stdClass $spec) {
-        return (object)[
-            'className' => __CLASS__,
-        ];
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        return (object)[];
     }
 
     /**
@@ -169,7 +167,7 @@ EOT;
      * @return void
      */
     static function CBInstall_install(): void {
-        CBTasks2::restart(__CLASS__, CBDataStoresFinderTask::ID(), /* priority: */ 101);
+        CBTasks2::restart(__CLASS__, CBDataStoresFinderTask::ID(), /* priority: */ 200);
     }
 
     /**
