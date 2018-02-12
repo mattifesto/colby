@@ -17,9 +17,9 @@ final class CBImagesTests {
      * The test image should have been uploaded by earlier tests in the overall
      * testing process.
      *
-     * @return null
+     * @return void
      */
-    static function resizeTest() {
+    static function resizeTest(): void {
         CBImages::reduceImage(CBTestAdmin::testImageID(), 'jpeg', 'rw5000rh5000');
 
         $filepath1 = CBDataStore::flexpath(CBTestAdmin::testImageID(), 'original.jpeg', CBSiteDirectory);
