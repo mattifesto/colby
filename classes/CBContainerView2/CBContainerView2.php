@@ -3,6 +3,46 @@
 final class CBContainerView2 {
 
     /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function CBModel_build(stdClass $spec) {
+        $model = (object)[
+            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
+        ];
+
+        /* image */
+
+        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+            $model->image = CBModel::build($imageSpec);
+        }
+
+        /* subviews */
+
+        $model->subviews = [];
+        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
+
+        foreach($subviewSpecs as $subviewSpec) {
+            if ($subviewModel = CBModel::build($subviewSpec)) {
+                $model->subviews[] = $subviewModel;
+            }
+        }
+
+        /* localCSS */
+
+        $localCSSTemplate = CBModel::value($spec, 'localCSSTemplate', '', 'trim');
+
+        if (!empty($localCSSTemplate)) {
+            $localCSSClassName = 'ID_' . CBHex160::random();
+            $model->CSSClassNames[] = $localCSSClassName;
+            $model->localCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
+        }
+
+        return $model;
+    }
+
+    /**
      * @param object $model
      *
      * @return string
@@ -82,45 +122,5 @@ EOT;
      */
     static function CBHTMLOutput_CSSURLs() {
         return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
-    }
-
-    /**
-     * @param object $spec
-     *
-     * @return object
-     */
-    static function CBModel_build(stdClass $spec) {
-        $model = (object)[
-            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
-        ];
-
-        /* image */
-
-        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
-            $model->image = CBModel::build($imageSpec);
-        }
-
-        /* subviews */
-
-        $model->subviews = [];
-        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
-
-        foreach($subviewSpecs as $subviewSpec) {
-            if ($subviewModel = CBModel::build($subviewSpec)) {
-                $model->subviews[] = $subviewModel;
-            }
-        }
-
-        /* localCSS */
-
-        $localCSSTemplate = CBModel::value($spec, 'localCSSTemplate', '', 'trim');
-
-        if (!empty($localCSSTemplate)) {
-            $localCSSClassName = 'ID_' . CBHex160::random();
-            $model->CSSClassNames[] = $localCSSClassName;
-            $model->localCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
-        }
-
-        return $model;
     }
 }
