@@ -8,7 +8,7 @@ final class CBCustomView {
      * @return string|null
      */
     static function CBModel_toSearchText(stdClass $model) {
-        $customModel = CBModel::valueAsObject($model, 'properties');
+        $customModel = CBModel::valueToObject($model, 'properties');
         $customViewClassName = CBModel::value($model, 'customViewClassName', '', 'trim');
 
         if (!empty($customViewClassName)) {
@@ -39,7 +39,7 @@ final class CBCustomView {
      * @return null
      */
     static function CBView_render(stdClass $model) {
-        $customModel = CBModel::valueAsObject($model, 'properties');
+        $customModel = CBModel::valueToObject($model, 'properties');
         $customViewClassName = CBModel::value($model, 'customViewClassName', '', 'trim');
 
         if (!empty($customViewClassName)) {
@@ -50,17 +50,25 @@ final class CBCustomView {
     }
 
     /**
-     * @param string? $spec->customViewClassName
-     *      The class name of the custom view to render.
-     * @param stdClass? $spec->properties
+     * @param model $spec
      *
-     * @return stdClass
+     *      {
+     *          customViewClassName: ?string
+     *
+     *              The class name of the custom view to render.
+     *
+     *          properties: ?[model]
+     *
+     *              This should be named "customViewSpec", but it is not
+     *              required to have its className property set.
+     *      }
+     *
+     * @return ?model
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         return (object)[
-            'className' => __CLASS__,
             'customViewClassName' => CBModel::value($spec, 'customViewClassName', '', 'trim'),
-            'properties' => CBModel::value($spec, 'properties', (object)[]),
+            'properties' => CBModel::valueToObject($spec, 'properties'),
         ];
     }
 }
