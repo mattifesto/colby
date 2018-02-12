@@ -3,6 +3,39 @@
 final class CBHideByUserGroupView {
 
     /**
+     * @param model $spec
+     *
+     *      {
+     *          hideFromMembers: ?bool
+     *          hideFromNonmembers: ?bool
+     *          groupName: ?string
+     *          subviews: ?[model]
+     *      }
+     *
+     * @return ?model
+     */
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        return (object)[
+            'hideFromMembers' => CBModel::value($spec, 'hideFromMembers', false, 'boolval'),
+            'hideFromNonmembers' => CBModel::value($spec, 'hideFromNonmembers', false, 'boolval'),
+            'groupName' => trim(CBModel::valueToString($spec, 'groupName')),
+        ];
+
+        /* subviews */
+
+        $model->subviews = [];
+        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
+
+        foreach($subviewSpecs as $subviewSpec) {
+            if ($subviewModel = CBModel::build($subviewSpec)) {
+                $model->subviews[] = $subviewModel;
+            }
+        }
+
+        return $model;
+    }
+
+    /**
      * @param object $model
      *
      * @return string
@@ -43,38 +76,5 @@ final class CBHideByUserGroupView {
         }
 
         array_walk($model->subviews, 'CBView::render');
-    }
-
-    /**
-     * @param model $spec
-     *
-     *      {
-     *          hideFromMembers: ?bool
-     *          hideFromNonmembers: ?bool
-     *          groupName: ?string
-     *          subviews: ?[model]
-     *      }
-     *
-     * @return ?model
-     */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        return (object)[
-            'hideFromMembers' => CBModel::value($spec, 'hideFromMembers', false, 'boolval'),
-            'hideFromNonmembers' => CBModel::value($spec, 'hideFromNonmembers', false, 'boolval'),
-            'groupName' => trim(CBModel::valueToString($spec, 'groupName')),
-        ];
-
-        /* subviews */
-
-        $model->subviews = [];
-        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
-
-        foreach($subviewSpecs as $subviewSpec) {
-            if ($subviewModel = CBModel::build($subviewSpec)) {
-                $model->subviews[] = $subviewModel;
-            }
-        }
-
-        return $model;
     }
 }
