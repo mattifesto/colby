@@ -14,6 +14,21 @@
 final class CBTestPage {
 
     /**
+     * @param model $model
+     *
+     * @return string
+     */
+    static function CBModel_toSearchText(stdClass $model): string {
+        return implode(
+            ' ',
+            [
+                CBModel::valueToString($model, 'title'),
+                CBModel::valueToString($model, 'description'),
+            ]
+        );
+    }
+
+    /**
      * @param [stdClass] $tuples
      *
      * @return null
@@ -30,21 +45,6 @@ final class CBTestPage {
      */
     static function modelsWillDelete(array $IDs) {
         CBPages::deletePagesByID($IDs);
-    }
-
-    /**
-     * @param model $model
-     *
-     * @return string
-     */
-    static function CBModel_toSearchText(stdClass $model): string {
-        return implode(
-            ' ',
-            [
-                CBModel::valueToString($model, 'title'),
-                CBModel::valueToString($model, 'description'),
-            ]
-        );
     }
 
     /**
