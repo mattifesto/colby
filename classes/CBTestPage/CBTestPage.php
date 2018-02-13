@@ -37,8 +37,14 @@ final class CBTestPage {
      *
      * @return string
      */
-    static function CBModel_toSearchText(stdClass $model) {
-        return "{$model->title} {$model->description}";
+    static function CBModel_toSearchText(stdClass $model): string {
+        return implode(
+            ' ',
+            [
+                CBModel::valueToString($model, 'title'),
+                CBModel::valueToString($model, 'description'),
+            ]
+        );
     }
 
     /**
