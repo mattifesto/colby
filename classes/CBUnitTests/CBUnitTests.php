@@ -54,6 +54,7 @@ class CBUnitTests {
     static function getListOfTestsForAjax() {
         $response = new CBAjaxResponse();
         $response->tests = [
+            ['CBContainerView',         'upgrade'],
             ['CBConvert',               'linesToParagraphs'],
             ['CBConvert',               'textToLines'],
             ['CBConvert',               'textToStub'],
