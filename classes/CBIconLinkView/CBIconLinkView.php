@@ -40,6 +40,17 @@ final class CBIconLinkView {
     }
 
     /**
+     * @param model $spec
+     *
+     * @return void
+     */
+    static function CBModel_upgrade(stdClass $spec): void {
+        if ($imageSpec = CBModel::valueAsObject($spec, 'image')) {
+            $spec->image = CBImage::fixAndUpgrade($imageSpec);
+        }
+    }
+
+    /**
      * @param string? $model->URLAsHTML
      * @param string? $model->textColor
      *
