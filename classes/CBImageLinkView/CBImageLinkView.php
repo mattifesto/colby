@@ -23,10 +23,12 @@ final class CBImageLinkView {
     }
 
     /**
-     * @return string|null
+     * @param model $model
+     *
+     * @return string
      */
-    static function CBModel_toSearchText(stdClass $model) {
-        return $model->alt;
+    static function CBModel_toSearchText(stdClass $model): string {
+        return CBModel::valueToString($model, 'alt');
     }
 
     /**
