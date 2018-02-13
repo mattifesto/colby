@@ -12,7 +12,7 @@
  * determined are useful.
  *
  * Classes often build one model from another model by implementing the
- * CBModel_toModel() interface which is called by the CBModel::toModel()
+ * CBModel_build() interface which is called by the CBModel::build()
  * function. In the context of buiding models, we refer to the source model as a
  * spec. The spec is still a model, but the word spec is used in this context to
  * indicate that this model is the source model.
@@ -72,7 +72,7 @@ final class CBModel {
      *      class name, but this was never used. Allowing this to occur presents
      *      the dilemma of which class name should be used in the CBModels
      *      table. Model transitions may need to take place, but the transition
-     *      should not occur during CBModel::toModel().
+     *      should not occur during CBModel::build().
      *
      *      @NOTE
      *      If a model needs an ID, for example because it's going to be saved,
@@ -99,7 +99,7 @@ final class CBModel {
      * @param mixed $spec
      *
      *      For this function to successfully build a model, the spec's class
-     *      must exist and have the CBModel_toModel() interface implemented.
+     *      must exist and have the CBModel_build() interface implemented.
      *
      *      The $spec parameter is not typed so that you can do somthing like:
      *
@@ -110,7 +110,7 @@ final class CBModel {
      *
      * @return ?model
      *
-     *      This function will return null if the CBModel_toModel() interface is
+     *      This function will return null if the CBModel_build() interface is
      *      not implemented. That function may return null for specs that don't
      *      meet its basic requirements. The CBImage class, for example, has a
      *      number of specific spec requirements. However, most classes can
@@ -488,7 +488,7 @@ EOT;
             return null;
         }
 
-        return CBModel::toModel($spec);
+        return CBModel::build($spec);
     }
 
     /**
