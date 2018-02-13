@@ -116,15 +116,18 @@ EOT;
     }
 
     /**
-     * @param object $model
+     * @param model $model
      *
      * @return string
      */
-    static function CBModel_toSearchText(stdClass $model) {
-        $subviews = CBModel::valueAsObjects($model, 'subviews');
-        $strings = array_map('CBModel::toSearchText', $subviews);
-        $strings = array_filter($strings);
-        return implode(' ', $strings);
+    static function CBModel_toSearchText(stdClass $model): string {
+        return implode(
+            ' ',
+            array_map(
+                'CBModel::toSearchText',
+                CBModel::valueToArray($model, 'subviews')
+            )
+        );
     }
 
     /**
