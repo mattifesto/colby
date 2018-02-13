@@ -3,6 +3,85 @@
 final class CBViewPage {
 
     /**
+     * @param model $spec
+     *
+     *      {
+     *          image: model?
+     *          thumbnailURL: string?
+     *
+     *              See the documentation for image and thumbnailURL on the
+     *              CBPage::toSummary() function.
+     *      }
+     *
+     * @return model
+     */
+    static function CBModel_build($spec) {
+        $ID = CBModel::value($spec, 'ID', '');
+        $time = time();
+        $model = (object)[
+            'classNameForKind' => CBModel::valueToString($spec, 'classNameForKind'),
+            'classNameForSettings' => CBModel::valueToString($spec, 'classNameForSettings'),
+            'description' => trim(CBModel::valueToString($spec, 'description')),
+            'isPublished' => (bool)CBModel::value($spec, 'isPublished'),
+            'iteration' => 0, /* deprecated */
+            'publishedBy' => CBModel::valueAsInt($spec, 'publishedBy'),
+            'selectedMainMenuItemName' => CBModel::valueToString($spec, 'selectedMainMenuItemName'),
+            'title' => trim(CBModel::valueToString($spec, 'title')),
+        ];
+
+        // URI
+
+        $model->URI = CBConvert::stringToURI(CBModel::valueToString($spec, 'URI'));
+
+        if ($model->URI === '') {
+            $model->URI = $ID;
+        }
+
+        // publicationTimeStamp
+
+        $model->publicationTimeStamp = CBModel::valueAsInt($spec, 'publicationTimeStamp');
+
+        if ($model->publicationTimeStamp === null && $model->isPublished) {
+            $model->publicationTimeStamp = $time;
+        }
+
+        // image
+
+        $imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage']);
+
+        if ($imageSpec) {
+            $model->image = CBModel::build($imageSpec);
+        }
+
+        if (empty($model->image)) {
+            $model->thumbnailURL = CBModel::valueToString($spec, 'thumbnailURL');
+        } else {
+            // The preference is not to set null properties but we set this one
+            // for backward compatability.
+            $model->thumbnailURL = null;
+        }
+
+        $model->layout = CBModel::build(CBModel::valueAsModel($spec, 'layout'));
+
+        $model->sections = [];
+        $sectionSpecs = CBModel::valueToArray($spec, 'sections');
+        foreach ($sectionSpecs as $sectionSpec) {
+            if ($sectionModel = CBModel::build($sectionSpec)) {
+                $model->sections[] = $sectionModel;
+            }
+        }
+
+        /**
+         * Computed values
+         */
+
+        $model->thumbnailURLAsHTML = cbhtml($model->thumbnailURL);
+        $model->URIAsHTML = cbhtml($model->URI);
+
+        return $model;
+    }
+
+    /**
      * @param model $model
      *
      * @return string
@@ -290,85 +369,6 @@ final class CBViewPage {
         }
 
         CBHTMLOutput::render();
-    }
-
-    /**
-     * @param model $spec
-     *
-     *      {
-     *          image: model?
-     *          thumbnailURL: string?
-     *
-     *              See the documentation for image and thumbnailURL on the
-     *              CBPage::toSummary() function.
-     *      }
-     *
-     * @return model
-     */
-    static function CBModel_build($spec) {
-        $ID = CBModel::value($spec, 'ID', '');
-        $time = time();
-        $model = (object)[
-            'classNameForKind' => CBModel::valueToString($spec, 'classNameForKind'),
-            'classNameForSettings' => CBModel::valueToString($spec, 'classNameForSettings'),
-            'description' => trim(CBModel::valueToString($spec, 'description')),
-            'isPublished' => (bool)CBModel::value($spec, 'isPublished'),
-            'iteration' => 0, /* deprecated */
-            'publishedBy' => CBModel::valueAsInt($spec, 'publishedBy'),
-            'selectedMainMenuItemName' => CBModel::valueToString($spec, 'selectedMainMenuItemName'),
-            'title' => trim(CBModel::valueToString($spec, 'title')),
-        ];
-
-        // URI
-
-        $model->URI = CBConvert::stringToURI(CBModel::valueToString($spec, 'URI'));
-
-        if ($model->URI === '') {
-            $model->URI = $ID;
-        }
-
-        // publicationTimeStamp
-
-        $model->publicationTimeStamp = CBModel::valueAsInt($spec, 'publicationTimeStamp');
-
-        if ($model->publicationTimeStamp === null && $model->isPublished) {
-            $model->publicationTimeStamp = $time;
-        }
-
-        // image
-
-        $imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage']);
-
-        if ($imageSpec) {
-            $model->image = CBModel::build($imageSpec);
-        }
-
-        if (empty($model->image)) {
-            $model->thumbnailURL = CBModel::valueToString($spec, 'thumbnailURL');
-        } else {
-            // The preference is not to set null properties but we set this one
-            // for backward compatability.
-            $model->thumbnailURL = null;
-        }
-
-        $model->layout = CBModel::build(CBModel::valueAsModel($spec, 'layout'));
-
-        $model->sections = [];
-        $sectionSpecs = CBModel::valueToArray($spec, 'sections');
-        foreach ($sectionSpecs as $sectionSpec) {
-            if ($sectionModel = CBModel::build($sectionSpec)) {
-                $model->sections[] = $sectionModel;
-            }
-        }
-
-        /**
-         * Computed values
-         */
-
-        $model->thumbnailURLAsHTML = cbhtml($model->thumbnailURL);
-        $model->URIAsHTML = cbhtml($model->URI);
-
-        return $model;
     }
 
     /**
