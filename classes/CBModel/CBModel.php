@@ -160,11 +160,22 @@ final class CBModel {
     }
 
     /**
-     * @return string|null
+     * @param mixed $model
+     *
+     *      This $model parameter is untyped so that this function can be used
+     *      with array_map without having to guarantee that all items in the
+     *      array are objects.
+     *
+     * @return string
      */
-    static function toSearchText(stdClass $model) {
-        $className = CBModel::value($model, 'className', '');
-        $ID = CBModel::value($model, 'ID', '');
+    static function toSearchText($model): string {
+        $className = CBModel::valueToString($model, 'className');
+
+        if (empty($className)) {
+            return '';
+        }
+
+        $ID = CBModel::valueAsID($model, 'ID');
         $text = '';
 
         if (is_callable($function = "{$className}::CBModel_toSearchText")) {
