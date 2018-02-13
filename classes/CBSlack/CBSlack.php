@@ -36,7 +36,7 @@ final class CBSlack {
             'text' =>  $message,
         ];
 
-        $payload->attachments = CBModel::valueAsObjects($args, 'attachments');
+        $payload->attachments = CBModel::valueToArray($args, 'attachments');
 
         /**
          * It's very important that the $data passed as the CURLOPT_POSTFIELDS
