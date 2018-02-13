@@ -202,32 +202,38 @@ final class CBViewPage {
     }
 
     /**
-     * @param stdClass $model
+     * @param model $model
      *
      * @return string
      */
-    static function CBModel_toSearchText($model) {
-        $title = CBConvert::valueToString(CBModel::value($model, 'title'));
-        $description = CBConvert::valueToString(CBModel::value($model, 'description'));
-        $strings = [$title, $description];
+    static function CBModel_toSearchText(stdClass $model): string {
+        $title = CBModel::valueToString($model, 'title');
+        $description = CBModel::valueToString($model, 'description');
 
-        if ($layout = CBModel::valueAsObject($model, 'layout')) {
-            $strings[] = CBModel::toSearchText($layout);
-        }
+        $strings = [
+            $title,
+            $description,
+            CBModel::toSearchText(CBModel::value($model, 'layout')),
+        ];
 
-        $publicationTimeStamp = CBModel::value($model, 'publicationTimeStamp');
+        $publicationTimeStamp = CBModel::valueAsInt($model, 'publicationTimeStamp');
 
         $info = CBHTMLOutput::pageInformation();
         $info->description = $description;
-        $info->ID = $model->ID;
+        $info->ID = CBModel::valueAsID($model, 'ID');
         $info->publishedTimestamp = empty($model->isPublished) ? null : $publicationTimeStamp;
         $info->title = $title;
 
-        $views = CBModel::valueAsObjects($model, 'sections');
-        $strings = array_merge($strings, array_map('CBModel::toSearchText', $views));
-        $strings = array_filter($strings);
-
-        return implode(' ', $strings);
+        return implode(
+            ' ',
+            array_merge(
+                $strings,
+                array_map(
+                    'CBModel::toSearchText',
+                    CBModel::valueToArray($model, 'sections')
+                )
+            )
+        );
     }
 
     /**
