@@ -128,11 +128,11 @@ EOT;
     }
 
     /**
-     * @param object $model
+     * @param model $model
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
         $classes = ['CBContainerView'];
         $tagName = empty($model->tagName) ? 'div' : $model->tagName;
 
@@ -142,13 +142,13 @@ EOT;
             $HREF = null;
         }
 
-        if (empty($model->imageThemeID)) {
+        if ($imageThemeID = CBModel::valueAsID($model, 'imageThemeID')) {
+            CBHTMLOutput::addCSSURL(CBContainerView::imageThemeIDToStyleSheetURL($model->imageThemeID));
+            $classes[] = "T{$imageThemeID} useImageHeight";
+        } else {
             $CSSClassName = 'ID_' . CBHex160::random();
             CBHTMLOutput::addCSS(CBContainerView::modelToImageCSS($model, $CSSClassName));
             $classes[] = $CSSClassName;
-        } else {
-            CBHTMLOutput::addCSSURL(CBContainerView::imageThemeIDToStyleSheetURL($model->imageThemeID));
-            $classes[] = "T{$model->imageThemeID} useImageHeight";
         }
 
         /**
@@ -160,39 +160,55 @@ EOT;
          * the new method.
          */
 
-        if (!empty($model->stylesID)) {
-            $classes[] = "T{$model->stylesID}";
+        if ($stylesID = CBModel::valueAsID($model, 'stylesID')) {
+            $classes[] = "T{$stylesID}";
         }
 
         /* CSS class names */
 
-        if (!empty($model->CSSClassNames) && is_array($model->CSSClassNames)) {
-            array_walk($model->CSSClassNames, 'CBHTMLOutput::requireClassName');
+        if ($CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames')) {
+            array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
-            $classes = array_unique(array_merge($classes, $model->CSSClassNames));
+            $classes = array_unique(array_merge($classes, $CSSClassNames));
         }
 
         /* render */
 
         $classes = implode(' ', $classes);
         $styles = [];
-        if (!empty($model->backgroundColor)) { $styles[] = "background-color: {$model->backgroundColor}"; }
-        $styles = empty($styles) ? '' : ' style="' . implode('; ', $styles) . '"';
 
-        if (!empty($model->stylesCSS)) {
-            CBHTMLOutput::addCSS($model->stylesCSS);
+        if ($backgroundColor = CBModel::valueToString($model, 'backgroundColor')) {
+            $styles[] = "background-color: {$backgroundColor}";
         }
 
-        ?><<?= $tagName . $HREF ?> class="<?= $classes ?>"<?= $styles ?>><?php
-            array_walk($model->subviews, 'CBView::render');
-        ?></<?= $tagName ?>><?php
+        $styles = implode('; ', $styles);
+
+        if ($stylesCSS = CBModel::valueToString($model, 'stylesCSS')) {
+            CBHTMLOutput::addCSS($stylesCSS);
+        }
+
+        ?>
+
+        <<?= $tagName . $HREF ?> class="<?= $classes ?>" style="<?= $styles ?>">
+
+            <?php
+
+            $subviewModels = CBModel::valueToArray($model, 'subviews');
+
+            array_walk($subviewModels, 'CBView::render');
+
+            ?>
+
+        </<?= $tagName ?>>
+
+        <?php
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 
     /**
