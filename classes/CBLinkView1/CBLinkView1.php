@@ -76,18 +76,24 @@ final class CBLinkView1 {
     }
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?model
      */
-    static function CBModel_toModel(stdClass $spec) {
-        return (object)[
-            'className' => __CLASS__,
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        $model = (object)[
             'description' => CBModel::value($spec, 'description', '', 'trim'),
-            'image' => CBModel::valueToModel($spec, 'image', 'CBImage'),
             'size' => CBModel::value($spec, 'size', '', 'trim'),
             'title' => CBModel::value($spec, 'title', '', 'trim'),
             'URL' => CBModel::value($spec, 'URL', '', 'trim'),
         ];
+
+        /* image */
+
+        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+            $model->image = CBModel::build($imageSpec);
+        }
+
+        return $model;
     }
 }
