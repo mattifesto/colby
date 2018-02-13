@@ -23,52 +23,6 @@ final class CBImageLinkView {
     }
 
     /**
-     * @param model $model
-     *
-     * @return string
-     */
-    static function CBModel_toSearchText(stdClass $model): string {
-        return CBModel::valueToString($model, 'alt');
-    }
-
-    /**
-     * @param object $model
-     *
-     * @return null
-     */
-    static function CBView_render(stdClass $model) {
-        switch ($model->density) {
-            case '2x':
-                $height = ceil($model->height / 2);
-                $width = ceil($model->width / 2);
-                break;
-
-            default:
-                $height = $model->height;
-                $width = $model->width;
-                break;
-        }
-
-        $styles = "height: {$height}px; width: {$width}px;";
-
-        if (empty($model->HREF)) {
-            $tag = 'div';
-            $href = '';
-        } else {
-            $tag = 'a';
-            $href = 'href="' . $model->HREF . '"';
-        }
-
-        ?>
-
-        <<?= $tag ?> class="CBImageLinkView" <?= $href ?>>
-            <img src="<?= $model->URLAsHTML ?>" alt="<?= $model->altAsHTML ?>" style="<?= $styles ?>">
-        </<?= $tag ?>>
-
-        <?php
-    }
-
-    /**
      * @param model $spec
      *
      *      {
@@ -114,5 +68,51 @@ final class CBImageLinkView {
         $model->width = isset($spec->width) ? (int)$spec->width : null;
 
         return $model;
+    }
+
+    /**
+     * @param model $model
+     *
+     * @return string
+     */
+    static function CBModel_toSearchText(stdClass $model): string {
+        return CBModel::valueToString($model, 'alt');
+    }
+
+    /**
+     * @param object $model
+     *
+     * @return null
+     */
+    static function CBView_render(stdClass $model) {
+        switch ($model->density) {
+            case '2x':
+                $height = ceil($model->height / 2);
+                $width = ceil($model->width / 2);
+                break;
+
+            default:
+                $height = $model->height;
+                $width = $model->width;
+                break;
+        }
+
+        $styles = "height: {$height}px; width: {$width}px;";
+
+        if (empty($model->HREF)) {
+            $tag = 'div';
+            $href = '';
+        } else {
+            $tag = 'a';
+            $href = 'href="' . $model->HREF . '"';
+        }
+
+        ?>
+
+        <<?= $tag ?> class="CBImageLinkView" <?= $href ?>>
+            <img src="<?= $model->URLAsHTML ?>" alt="<?= $model->altAsHTML ?>" style="<?= $styles ?>">
+        </<?= $tag ?>>
+
+        <?php
     }
 }
