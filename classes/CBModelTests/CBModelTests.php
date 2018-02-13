@@ -43,6 +43,21 @@ final class CBModelTests {
     /**
      * This test runs a CBModel::upgrade() test for all known classes.
      */
+    static function toSearchTextTest() {
+        $classNames = CBAdmin::fetchClassNames();
+
+        foreach ($classNames as $className) {
+            $spec = (object)[
+                'className' => $className,
+            ];
+
+            $searchText = CBModel::toSearchText($spec);
+        }
+    }
+
+    /**
+     * This test runs a CBModel::upgrade() test for all known classes.
+     */
     static function upgradeTest() {
         $classNames = CBAdmin::fetchClassNames();
 
