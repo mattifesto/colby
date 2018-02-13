@@ -54,20 +54,15 @@ final class CBImageLinkView {
      * @return ?model
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
-        $model = (object)[];
-
-        $model->alt = isset($spec->alt) ? (string)$spec->alt : null;
-        $model->altAsHTML = ColbyConvert::textToHTML($model->alt);
-        $retina = CBModel::value($spec, 'retina', false);
-        $model->density = $retina ? '2x' : '1x';
-        $model->height = isset($spec->height) ? (int)$spec->height : null;
-        $model->HREF = CBModel::value($spec, 'HREF', null, 'trim');
-        $model->HREFAsHTML = cbhtml($model->HREF);
-        $model->URL = isset($spec->URL) ? (string)$spec->URL : null;
-        $model->URLAsHTML = ColbyConvert::textToHTML($model->URL);
-        $model->width = isset($spec->width) ? (int)$spec->width : null;
-
-        return $model;
+        return (object)[
+            'alt' => CBModel::valueToString($spec, 'alt'),
+            'retina' => !empty($spec->retina),
+            'density' => empty($spec->retina) ? '1x' : '2x',
+            'height' => CBModel::valueAsInt($spec, 'height'),
+            'HREF' => CBModel::valueToString($spec, 'HREF'),
+            'URL' => CBModel::valueToString($spec, 'URL'),
+            'width' => CBModel::valueAsInt($spec, 'width'),
+        ];
     }
 
     /**
@@ -80,37 +75,47 @@ final class CBImageLinkView {
     }
 
     /**
-     * @param object $model
+     * @param model $model
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
-        switch ($model->density) {
+    static function CBView_render(stdClass $model): void {
+        $height = CBModel::valueAsInt($model, 'height');
+        $width = CBModel::valueAsInt($model, 'width');
+
+        if ($height === null || $width === null) {
+            return;
+        }
+
+        $density = CBModel::valueToString($model, 'density');
+
+        switch ($density) {
             case '2x':
-                $height = ceil($model->height / 2);
-                $width = ceil($model->width / 2);
+                $height = ceil($height / 2);
+                $width = ceil($width / 2);
                 break;
 
             default:
-                $height = $model->height;
-                $width = $model->width;
                 break;
         }
 
         $styles = "height: {$height}px; width: {$width}px;";
 
-        if (empty($model->HREF)) {
+        if ($HREF = CBModel::valueToString($model, 'HREF')) {
+            $tag = 'a';
+            $href = 'href="' . cbhtml($HREF) . '"';
+        } else {
             $tag = 'div';
             $href = '';
-        } else {
-            $tag = 'a';
-            $href = 'href="' . $model->HREF . '"';
         }
+
+        $URL = CBModel::valueToString($model, 'URL');
+        $alt = CBModel::valueToString($model, 'alt');
 
         ?>
 
         <<?= $tag ?> class="CBImageLinkView" <?= $href ?>>
-            <img src="<?= $model->URLAsHTML ?>" alt="<?= $model->altAsHTML ?>" style="<?= $styles ?>">
+            <img src="<?= cbhtml($URL) ?>" alt="<?= cbhtml($alt) ?>" style="<?= $styles ?>">
         </<?= $tag ?>>
 
         <?php
