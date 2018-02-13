@@ -130,9 +130,9 @@ final class CBView {
      *
      * @param object? $model
      *
-     * @return null
+     * @return void
      */
-    static function render(stdClass $model) {
+    static function render(stdClass $model): void {
         $className = CBModel::value($model, 'className', '');
 
         if (empty($className)) {
@@ -142,9 +142,9 @@ final class CBView {
         CBHTMLOutput::requireClassName($className);
 
         if (is_callable($function = "{$className}::CBView_render")) {
-            return call_user_func($function, $model);
+            call_user_func($function, $model);
         } else if (is_callable($function = "{$className}::renderModelAsHTML")) { // deprecated
-            return call_user_func($function, $model);
+            call_user_func($function, $model);
         } else if (CBSitePreferences::debug()) {
             $classNameAsComment = ': ' . str_replace('--', ' - - ', $className);
 
