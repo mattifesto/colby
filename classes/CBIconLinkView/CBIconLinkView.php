@@ -109,21 +109,27 @@ final class CBIconLinkView {
     }
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?model
      */
-    static function CBModel_toModel(stdClass $spec) {
-        return (object)[
-            'className' => __CLASS__,
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        $model = (object)[
             'alternativeText' => CBModel::value($spec, 'alternativeText', 'strval'),
             'disableRoundedCorners' => CBModel::value($spec, 'disableRoundedCorners', false, 'boolval'),
-            'image' => CBModel::valueToModel($spec, 'image', 'CBImage'),
             'text' => ($text = CBModel::value($spec, 'text', '', 'trim')),
             'textAsHTML' => cbhtml($text),
             'textColor' => CBModel::value($spec, 'textColor', null, 'CBConvert::stringToCSSColor'),
             'URL' => ($URL = CBModel::value($spec, 'URL', '', 'trim')),
             'URLAsHTML' => cbhtml($URL),
         ];
+
+        /* image */
+
+        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+            $model->image = CBModel::build($imageSpec);
+        }
+
+        return $model;
     }
 }
