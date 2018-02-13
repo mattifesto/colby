@@ -3,6 +3,28 @@
 final class CBLinkView1 {
 
     /**
+     * @param model $spec
+     *
+     * @return ?model
+     */
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        $model = (object)[
+            'description' => CBModel::value($spec, 'description', '', 'trim'),
+            'size' => CBModel::value($spec, 'size', '', 'trim'),
+            'title' => CBModel::value($spec, 'title', '', 'trim'),
+            'URL' => CBModel::value($spec, 'URL', '', 'trim'),
+        ];
+
+        /* image */
+
+        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+            $model->image = CBModel::build($imageSpec);
+        }
+
+        return $model;
+    }
+
+    /**
      * @param object $model
      *
      * @return null
@@ -73,27 +95,5 @@ final class CBLinkView1 {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
-    }
-
-    /**
-     * @param model $spec
-     *
-     * @return ?model
-     */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $model = (object)[
-            'description' => CBModel::value($spec, 'description', '', 'trim'),
-            'size' => CBModel::value($spec, 'size', '', 'trim'),
-            'title' => CBModel::value($spec, 'title', '', 'trim'),
-            'URL' => CBModel::value($spec, 'URL', '', 'trim'),
-        ];
-
-        /* image */
-
-        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
-            $model->image = CBModel::build($imageSpec);
-        }
-
-        return $model;
     }
 }
