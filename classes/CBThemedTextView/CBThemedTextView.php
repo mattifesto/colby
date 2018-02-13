@@ -23,12 +23,18 @@ final class CBThemedTextView {
     }
 
     /**
-     * @param stdClass $model
+     * @param model $model
      *
      * @return string
      */
-    static function CBModel_toSearchText(stdClass $model) {
-        return "{$model->title} {$model->contentAsMarkaround}";
+    static function CBModel_toSearchText(stdClass $model): string {
+        return implode(
+            ' ',
+            [
+                CBModel::valueToString($model, 'title'),
+                CBModel::valueToString($model, 'contentAsMarkaround'),
+            ]
+        );
     }
 
     /**
