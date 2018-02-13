@@ -26,7 +26,31 @@ final class CBImageTests {
         $upgradedSpec = CBImage::fixAndUpgrade($originalSpec);
 
         if ($upgradedSpec != $expectedSpec) {
-            throw new Exception("The upgraded CBImage spec does not match what was excpected.");
+            $expectedJSON = CBConvert::valueToPrettyJSON($expectedSpec);
+            $upgradedJSON = CBConvert::valueToPrettyJSON($upgradedSpec);
+            $message = <<<EOT
+
+                CBImageTests::upgradeTest() failed
+
+                Upgraded:
+
+                --- pre\n{$upgradedJSON}
+                ---
+
+                Expected:
+
+                --- pre\n{$expectedJSON}
+                ---
+
+EOT;
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => $message,
+                'severity' => 3,
+            ]);
+
+            throw new Exception("The upgraded CBImage spec does not match what was expected. See log entry for details.");
         }
     }
 }
