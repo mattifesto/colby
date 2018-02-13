@@ -8,20 +8,15 @@ final class CBBackgroundView {
      * @return ?model
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
-        $model = (object)[];
-
-        $model->color = isset($spec->color) ? $spec->color : null;
-        $model->colorHTML = ColbyConvert::textToHTML($model->color);
-        $model->imageHeight = isset($spec->imageHeight) ? $spec->imageHeight : null;
-        $model->imageShouldRepeatHorizontally = isset($spec->imageShouldRepeatHorizontally) ?
-                                                    $spec->imageShouldRepeatHorizontally : false;
-        $model->imageShouldRepeatVertically = isset($spec->imageShouldRepeatVertically) ?
-                                                    $spec->imageShouldRepeatVertically : false;
-        $model->imageURL = isset($spec->imageURL) ? $spec->imageURL : null;
-        $model->imageURLHTML = ColbyConvert::textToHTML($model->imageURL);
-        $model->imageWidth = isset($spec->imageWidth) ? $spec->imageWidth : null;
-        $model->minimumViewHeightIsImageHeight = isset($spec->minimumViewHeightIsImageHeight) ?
-                                                    $spec->minimumViewHeightIsImageHeight : true;
+        $model = (object)[
+            'color' => CBModel::valueToString($spec, 'color'),
+            'imageHeight' => CBModel::valueAsInt($spec, 'imageHeight'),
+            'imageWidth' => CBModel::valueAsInt($spec, 'imageWidth'),
+            'imageURL' => CBModel::valueToString($spec, 'imageURL'),
+            'imageShouldRepeatHorizontally' => !empty($spec->imageShouldRepeatHorizontally),
+            'imageShouldRepeatVertically' => !empty($spec->imageShouldRepeatVertically),
+            'minimumViewHeightIsImageHeight' => !empty($spec->minimumViewHeightIsImageHeight),
+        ];
 
         /* image (added 2017.09.12) */
 
@@ -76,27 +71,27 @@ final class CBBackgroundView {
     }
 
     /**
-     * @param object $model
+     * @param model $model
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
         $styles = [];
-        $styles[] = "display: flex; display: -ms-flexbox; display: -webkit-flex;";
-        $styles[] = "justify-content: center; -ms-flex-pack: center; -webkit-justify-content: center;";
-        $styles[] = "flex-wrap: wrap; -ms-flex-wrap: wrap; -webkit-flex-wrap: wrap;";
+        $styles[] = "display: flex;";
+        $styles[] = "justify-content: center;";
+        $styles[] = "flex-wrap: wrap;";
 
-        if ($model->imageURL) {
-            $styles[] = "background-image: url({$model->imageURLHTML});";
+        if ($imageURL = CBModel::valueToString($model, 'imageURL')) {
+            $styles[] = "background-image: url(" . cbhtml($imageURL) . ");";
             $styles[] = "background-position: center top;";
 
-            if ($model->imageShouldRepeatVertically) {
-                if ($model->imageShouldRepeatHorizontally) {
+            if (!empty($model->imageShouldRepeatVertically)) {
+                if (!empty($model->imageShouldRepeatHorizontally)) {
                     $repeat = "repeat";
                 } else {
                     $repeat = "repeat-y";
                 }
-            } else if ($model->imageShouldRepeatHorizontally) {
+            } else if (!empty($model->imageShouldRepeatHorizontally)) {
                 $repeat = "repeat-x";
             } else {
                 $repeat = "no-repeat";
@@ -105,20 +100,28 @@ final class CBBackgroundView {
             $styles[] = "background-repeat: {$repeat};";
         }
 
-        if (!empty($model->color)) {
-            $styles[] = "background-color: {$model->colorHTML};";
+        if ($color = CBModel::valueToString($model, 'color')) {
+            $styles[] = "background-color: " . cbhtml($color). ";";
         }
 
-        if ($model->minimumViewHeightIsImageHeight) {
-            $styles[] = "min-height: {$model->imageHeight}px;";
+        if (!empty($model->minimumViewHeightIsImageHeight)) {
+            if ($imageHeight = CBModel::valueAsInt($model, 'imageHeight')) {
+                $styles[] = "min-height: {$imageHeight}px;";
+            }
         }
 
         $styles = implode(' ', $styles);
 
         ?>
 
-        <div class="CBBackgroundView" style="<?= $styles; ?>">
-            <?php array_walk($model->children, 'CBView::render'); ?>
+        <div class="CBBackgroundView" style="<?= $styles ?>">
+            <?php
+
+            $subviewModels = CBModel::valueToArray($model, 'children');
+
+            array_walk($subviewModels, 'CBView::render');
+
+            ?>
         </div>
 
         <?php
