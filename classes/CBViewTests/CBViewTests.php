@@ -19,14 +19,14 @@ final class CBViewTests {
         $classNames = CBAdmin::fetchClassNames();
 
         foreach ($classNames as $className) {
-            $spec = (object)[
+            $model = (object)[
                 'className' => $className,
             ];
 
             try {
                 ob_start();
 
-                $model = CBView::render($spec);
+                CBView::render($model);
 
                 ob_end_clean();
             } catch (Throwable $throwable) {
