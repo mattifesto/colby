@@ -3,6 +3,41 @@
 final class CBViewPage {
 
     /**
+     * @param model $model
+     *
+     * @return string
+     */
+    static function CBModel_toSearchText(stdClass $model): string {
+        $title = CBModel::valueToString($model, 'title');
+        $description = CBModel::valueToString($model, 'description');
+
+        $strings = [
+            $title,
+            $description,
+            CBModel::toSearchText(CBModel::value($model, 'layout')),
+        ];
+
+        $publicationTimeStamp = CBModel::valueAsInt($model, 'publicationTimeStamp');
+
+        $info = CBHTMLOutput::pageInformation();
+        $info->description = $description;
+        $info->ID = CBModel::valueAsID($model, 'ID');
+        $info->publishedTimestamp = empty($model->isPublished) ? null : $publicationTimeStamp;
+        $info->title = $title;
+
+        return implode(
+            ' ',
+            array_merge(
+                $strings,
+                array_map(
+                    'CBModel::toSearchText',
+                    CBModel::valueToArray($model, 'sections')
+                )
+            )
+        );
+    }
+
+    /**
      * @param model $spec
      *
      * @return void
@@ -199,41 +234,6 @@ final class CBViewPage {
         } else {
             return '';
         }
-    }
-
-    /**
-     * @param model $model
-     *
-     * @return string
-     */
-    static function CBModel_toSearchText(stdClass $model): string {
-        $title = CBModel::valueToString($model, 'title');
-        $description = CBModel::valueToString($model, 'description');
-
-        $strings = [
-            $title,
-            $description,
-            CBModel::toSearchText(CBModel::value($model, 'layout')),
-        ];
-
-        $publicationTimeStamp = CBModel::valueAsInt($model, 'publicationTimeStamp');
-
-        $info = CBHTMLOutput::pageInformation();
-        $info->description = $description;
-        $info->ID = CBModel::valueAsID($model, 'ID');
-        $info->publishedTimestamp = empty($model->isPublished) ? null : $publicationTimeStamp;
-        $info->title = $title;
-
-        return implode(
-            ' ',
-            array_merge(
-                $strings,
-                array_map(
-                    'CBModel::toSearchText',
-                    CBModel::valueToArray($model, 'sections')
-                )
-            )
-        );
     }
 
     /**
