@@ -69,20 +69,39 @@ final class CBImageLinkView {
     }
 
     /**
-     * Spec properties:
-     *  {string}    alt     The alternative text for the image
-     *  {string}    density The pixel density of the image ('1x'|'2x')
-     *  {int}       height  The height of the image in pixels
-     *  {string}    HREF    The link HREF
-     *  {string}    URL     The image URL
-     *  {int}       width   The width of the image in pixels
+     * @param model $spec
      *
-     * @return object
+     *      {
+     *          alt: string
+     *
+     *              The alternative text for the image
+     *
+     *          density: string
+     *
+     *              The pixel density of the image ('1x'|'2x')
+     *
+     *          height: int
+     *
+     *              The height of the image in pixels
+     *
+     *          HREF: string
+     *
+     *              The link HREF
+     *
+     *          URL: string
+     *
+     *              The image URL
+     *
+     *          width: int
+     *
+     *              The width of the image in pixels
+     *      }
+     *
+     * @return ?model
      */
-    static function CBModel_toModel(stdClass $spec) {
-        $model = (object)[
-            'className' => __CLASS__,
-        ];
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        $model = (object)[];
+
         $model->alt = isset($spec->alt) ? (string)$spec->alt : null;
         $model->altAsHTML = ColbyConvert::textToHTML($model->alt);
         $retina = CBModel::value($spec, 'retina', false);
