@@ -390,28 +390,6 @@ EOT;
     }
 
     /**
-     * @deprecated use:
-     *
-     *      CBModel::value($model, $keyPath, [], 'CBConvert::valueToArrayOfObjects');
-     *
-     * This function filters the array, but its replacement does not. If
-     * filtering is a common or important feature add another new function to
-     * CBConvert and document the reasons and uses.
-     *
-     * @param object? $model
-     * @param string $keyPath
-     *
-     * @return [object]
-     */
-    static function valueAsObjects($model, $keyPath) {
-        $array = CBModel::valueAsArray($model, $keyPath);
-
-        return array_values(array_filter($array, function($item) {
-            return is_object($item);
-        }));
-    }
-
-    /**
      * This is a convenience function for:
      *
      *      CBConvert::valueToArray(CBModel::value(...))
