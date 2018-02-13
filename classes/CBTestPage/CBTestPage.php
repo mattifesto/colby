@@ -14,6 +14,21 @@
 final class CBTestPage {
 
     /**
+     * @param model $spec
+     *
+     * @return ?model
+     */
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        return (object)[
+            'title' => CBModel::value($spec, 'title', ''),
+            'description' => CBModel::value($spec, 'description', ''),
+            'isPublished' => CBModel::value($spec, 'isPublished'),
+            'publicationTimeStamp' => CBModel::value($spec, 'publicationTimeStamp'),
+            'URI' => CBModel::value($spec, 'URI'),
+        ];
+    }
+
+    /**
      * @param model $model
      *
      * @return string
@@ -66,21 +81,5 @@ final class CBTestPage {
         <?php
 
         CBHTMLOutput::render();
-    }
-
-    /**
-     * @param model $spec
-     *
-     * @return model
-     */
-    static function CBModel_toModel(stdClass $spec) {
-        return (object)[
-            'className' => __CLASS__,
-            'title' => CBModel::value($spec, 'title', ''),
-            'description' => CBModel::value($spec, 'description', ''),
-            'isPublished' => CBModel::value($spec, 'isPublished'),
-            'publicationTimeStamp' => CBModel::value($spec, 'publicationTimeStamp'),
-            'URI' => CBModel::value($spec, 'URI'),
-        ];
     }
 }
