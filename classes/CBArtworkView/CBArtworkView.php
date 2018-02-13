@@ -5,6 +5,17 @@ final class CBArtworkView {
     /**
      * @param model $spec
      *
+     * @return void
+     */
+    static function CBModel_upgrade(stdClass $spec): void {
+        if ($imageSpec = CBModel::valueAsObject($spec, 'image')) {
+            $spec->image = CBImage::fixAndUpgrade($imageSpec);
+        }
+    }
+
+    /**
+     * @param model $spec
+     *
      *      {
      *          alternativeText: ?string
      *          captionAsMarkdown: ?string
