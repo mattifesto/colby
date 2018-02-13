@@ -39,6 +39,21 @@ final class CBModelTests {
             throw new Exception('The model differs from the expected model.');
         }
     }
+
+    /**
+     * This test runs a CBModel::upgrade() test for all known classes.
+     */
+    static function upgradeTest() {
+        $classNames = CBAdmin::fetchClassNames();
+
+        foreach ($classNames as $className) {
+            $spec = (object)[
+                'className' => $className,
+            ];
+
+            $upgradedSpec = CBModel::upgrade($spec);
+        }
+    }
 }
 
 

@@ -79,6 +79,7 @@ class CBUnitTests {
             ['CBMessageMarkup',         'stringToMarkup'],
             ['CBModel',                 'build'],
             ['CBModel',                 'buildMinimalImplementation'],
+            ['CBModel',                 'upgrade'],
             ['CBModelCache'],
             ['CBModels',                'fetchModelByID'],
             ['CBModels',                'fetchModelsByID'],
