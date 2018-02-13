@@ -3,9 +3,9 @@
 final class CBModelTests {
 
     /**
-     * This test runs a CBModel::toModel test for all known classes.
+     * This test runs a CBModel::build() test for all known classes.
      */
-    static function toModelTest() {
+    static function buildTest() {
         $classNames = CBAdmin::fetchClassNames();
 
         foreach ($classNames as $className) {
@@ -13,22 +13,22 @@ final class CBModelTests {
                 'className' => $className,
             ];
 
-            $model = CBModel::toModel($spec);
+            $model = CBModel::build($spec);
         }
     }
 
     /**
-     * This test checks the result to CBModel::toModel() when the converstion
+     * This test checks the result to CBModel::build() when the converstion
      * function does the minimum amount of work.
      */
-    static function toModelMinimalImplementationTest() {
+    static function buildMinimalImplementationTest() {
         $spec = (object)[
             'className' => 'CBModelTests_TestClass1',
             'ID' => 'c4247a40d9d85524607e6e87cc1d138806765d59',
             'title' => 'Test Title',
         ];
 
-        $model = CBModel::toModel($spec);
+        $model = CBModel::build($spec);
         $expectedModel = (object)[
             'className' => 'CBModelTests_TestClass1',
             'ID' => 'c4247a40d9d85524607e6e87cc1d138806765d59',
@@ -49,7 +49,7 @@ final class CBModelTests_TestClass1 {
      *
      * @return object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec) {
         return (object)[];
     }
 }
