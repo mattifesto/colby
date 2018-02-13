@@ -166,30 +166,38 @@ final class CBArtworkView {
     }
 
     /**
-     * @param string? $spec->alternativeText
-     * @param string? $spec->captionAsMarkdown
+     * @param model $spec
      *
-     *      The markdown format is CommonMark.
+     *      {
+     *          alternativeText: ?string
+     *          captionAsMarkdown: ?string
      *
-     * @param object? (CBImage) $spec->image
-     * @param string? $model->size
+     *              The markdown format is CommonMark.
      *
-     *      The maximum width of the image in retina pixels. rw1600 (800pt) is
-     *      the default.
+     *          image: ?model
+     *          size: ?string
      *
-     *      rw320|rw640|rw960|rw1280|rw1600|rw1920|rw2560|original|page
+     *              The maximum width of the image in retina pixels. rw1600
+     *              (800pt) is the default.
      *
-     * @return model
+     *              rw320|rw640|rw960|rw1280|rw1600|rw1920|rw2560|original|page
+     *      }
+     *
+     * @return ?model
      */
-    static function CBModel_build(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
-            'className' => __CLASS__,
             'alternativeText' => CBModel::value($spec, 'alternativeText', '', 'trim'),
             'captionAsMarkdown' => CBModel::value($spec, 'captionAsMarkdown', ''),
             'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
-            'image' => CBModel::build(CBModel::valueAsModel($spec, 'image', ['CBImage'])),
             'size' => CBModel::value($spec, 'size', 'default', 'trim'),
         ];
+
+        /* image */
+
+        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+            $model->image = CBModel::build($imageSpec);
+        }
 
         $parsedown = new Parsedown();
         $model->captionAsHTML = $parsedown->text($model->captionAsMarkdown);
