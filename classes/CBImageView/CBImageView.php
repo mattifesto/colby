@@ -26,15 +26,28 @@ final class CBImageView {
      * @return string
      */
     static function CBModel_toSearchText(stdClass $model) {
-        return CBModel::value($model, 'alternativeTextViewModel.text', '', 'trim');
+        return CBModel::valueToString($model, 'alternativeTextViewModel.text');
     }
 
     /**
-     * @param object $model
+     * @param model $model
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
+        $URL = CBModel::valueToString($model, 'URL');
+
+        if (empty($URL)) {
+            return;
+        }
+
+        /**
+         * @NOTE 2018.02.13
+         *
+         *      Technically there should be better property access below but
+         *      because this view is rarely or maybe never used it can wait.
+         */
+
         $styles = array();
 
         if ($model->displayHeight || $model->displayWidth) {
@@ -68,7 +81,7 @@ final class CBImageView {
         ?>
 
         <img alt="<?= $model->alternativeTextViewModel->HTML ?>"
-             src="<?= $model->URLForHTML ?>"
+             src="<?= cbhtml($URL) ?>"
              style="<?= $styles ?>">
 
         <?php
@@ -79,10 +92,8 @@ final class CBImageView {
      *
      * @return object
      */
-    static function CBModel_toModel(stdClass $spec) {
-        $model = (object)[
-            'className' => __CLASS__,
-        ];
+    static function CBModel_build(stdClass $spec) {
+        $model = (object)[];
         $model->actualHeight = isset($spec->actualHeight) ? $spec->actualHeight : null;
         $model->actualWidth = isset($spec->actualWidth) ? $spec->actualWidth : null;
         $model->displayHeight = isset($spec->displayHeight) ? $spec->displayHeight : null;
@@ -91,7 +102,6 @@ final class CBImageView {
         $model->maxHeight = isset($spec->maxHeight) ? $spec->maxHeight : null;
         $model->maxWidth = isset($spec->maxWidth) ? $spec->maxWidth : null;
         $model->URL = isset($spec->URL) ? $spec->URL : null;
-        $model->URLForHTML = ColbyConvert::textToHTML($model->URL);
         $altTextSpec = isset($spec->alternativeTextViewModel) ? $spec->alternativeTextViewModel : null;
 
         $textViewSpecToModel = function (stdClass $spec = null) {
