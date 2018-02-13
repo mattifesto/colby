@@ -3,6 +3,46 @@
 final class CBArtworkView {
 
     /**
+     * @param model $spec
+     *
+     *      {
+     *          alternativeText: ?string
+     *          captionAsMarkdown: ?string
+     *
+     *              The markdown format is CommonMark.
+     *
+     *          image: ?model
+     *          size: ?string
+     *
+     *              The maximum width of the image in retina pixels. rw1600
+     *              (800pt) is the default.
+     *
+     *              rw320|rw640|rw960|rw1280|rw1600|rw1920|rw2560|original|page
+     *      }
+     *
+     * @return ?model
+     */
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        $model = (object)[
+            'alternativeText' => CBModel::value($spec, 'alternativeText', '', 'trim'),
+            'captionAsMarkdown' => CBModel::value($spec, 'captionAsMarkdown', ''),
+            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
+            'size' => CBModel::value($spec, 'size', 'default', 'trim'),
+        ];
+
+        /* image */
+
+        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+            $model->image = CBModel::build($imageSpec);
+        }
+
+        $parsedown = new Parsedown();
+        $model->captionAsHTML = $parsedown->text($model->captionAsMarkdown);
+
+        return $model;
+    }
+
+    /**
      * @param string? $model->alternativeText
      * @param string? $model->captionAsMarkdown
      *
@@ -163,45 +203,5 @@ final class CBArtworkView {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
-    }
-
-    /**
-     * @param model $spec
-     *
-     *      {
-     *          alternativeText: ?string
-     *          captionAsMarkdown: ?string
-     *
-     *              The markdown format is CommonMark.
-     *
-     *          image: ?model
-     *          size: ?string
-     *
-     *              The maximum width of the image in retina pixels. rw1600
-     *              (800pt) is the default.
-     *
-     *              rw320|rw640|rw960|rw1280|rw1600|rw1920|rw2560|original|page
-     *      }
-     *
-     * @return ?model
-     */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $model = (object)[
-            'alternativeText' => CBModel::value($spec, 'alternativeText', '', 'trim'),
-            'captionAsMarkdown' => CBModel::value($spec, 'captionAsMarkdown', ''),
-            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
-            'size' => CBModel::value($spec, 'size', 'default', 'trim'),
-        ];
-
-        /* image */
-
-        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
-            $model->image = CBModel::build($imageSpec);
-        }
-
-        $parsedown = new Parsedown();
-        $model->captionAsHTML = $parsedown->text($model->captionAsMarkdown);
-
-        return $model;
     }
 }
