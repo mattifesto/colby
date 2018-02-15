@@ -284,16 +284,21 @@ final class CBHTMLOutput {
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent = '';
         $classNameForPageSettings = CBHTMLOutput::classNameForPageSettings();
-        $defaultThemeClassName = 'CBLightTheme';
+        $htmlClassNames = ['CBLightTheme'];
 
         if (!empty($classNameForPageSettings)) {
-            CBHTMLOutput::requireClassName($classNameForPageSettings);
-
-            if (is_callable($function = "{$classNameForPageSettings}::defaultThemeClassName")) {
-                $defaultThemeClassName = call_user_func($function);
-                CBHTMLOutput::requireClassName($defaultThemeClassName);
+            if (is_callable($function = "{$classNameForPageSettings}::CBHTMLOutput_htmlClassNames")) {
+                $htmlClassNames = call_user_func($function);
+            } else if (is_callable($function = "{$classNameForPageSettings}::defaultThemeClassName")) {
+                /* @deprecated */
+                $htmlClassNames = [call_user_func($function)];
             }
+
+            array_unshift($htmlClassNames, $classNameForPageSettings);
         }
+
+        array_walk($htmlClassNames, 'CBHTMLOutput::requireClassName');
+        $htmlClassNames = implode(' ', $htmlClassNames);
 
         CBHTMLOutput::processRequiredClassNames();
 
@@ -341,21 +346,21 @@ final class CBHTMLOutput {
         ob_start();
 
         $info = CBHTMLOutput::$pageInformation;
-        $titleAsHTML = CBConvert::valueToString(CBModel::value($info, 'title'));
-        $descriptionAsHTML = CBConvert::valueToString(CBModel::value($info, 'description'));
+        $title = CBModel::valueToString($info, 'title');
+        $description = CBModel::valueToString($info, 'description');
 
         ?>
 
         <!doctype html>
-        <html lang="en" class="<?= $classNameForPageSettings . ' ' . $defaultThemeClassName ?>">
+        <html lang="en" class="<?= cbhtml($htmlClassNames) ?>">
             <head>
                 <meta charset="UTF-8">
-                <title><?= $titleAsHTML ?></title>
-                <meta name="description" content="<?= $descriptionAsHTML ?>">
+                <title><?= cbhtml($title) ?></title>
+                <meta name="description" content="<?= cbhtml($description) ?>">
 
                 <meta property="fb:app_id" content="<?= CBFacebookAppID ?>">
-                <meta property="og:title" content="<?= $titleAsHTML ?>">
-                <meta property="og:description" content="<?= $descriptionAsHTML ?>">
+                <meta property="og:title" content="<?= cbhtml($title) ?>">
+                <meta property="og:description" content="<?= cbhtml($description) ?>">
 
                 <?php
 
