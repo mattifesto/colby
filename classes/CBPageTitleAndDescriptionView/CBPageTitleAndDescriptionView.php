@@ -62,7 +62,10 @@ final class CBPageTitleAndDescriptionView {
                     $style = " style='color: {$model->publishedColor}'";
                 }
 
-                $publishedAsHTML = ColbyConvert::timestampToHTML($info->publishedTimestamp, 'Unpublished');
+                $publishedAsHTML = ColbyConvert::timestampToHTML(
+                    CBModel::valueAsInt($info, 'publishedTimestamp'),
+                    'Unpublished'
+                );
 
                 echo "<div class='published'{$style}>{$publishedAsHTML}</div>";
             }
