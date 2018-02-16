@@ -54,6 +54,7 @@ class CBUnitTests {
     static function getListOfTestsForAjax() {
         $response = new CBAjaxResponse();
         $response->tests = [
+            ['CB',                      'class'],
             ['CBContainerView',         'upgrade'],
             ['CBConvert',               'linesToParagraphs'],
             ['CBConvert',               'textToLines'],
@@ -101,8 +102,12 @@ class CBUnitTests {
             ['ColbyMarkaroundParser',   'unorderedList'],
         ];
 
-        if (is_callable($function = 'CBTests::tests')) {
-            $response->tests = array_merge($response->tests, call_user_func($function));
+        $classNames = CBAdmin::fetchClassNames();
+
+        foreach ($classNames as $className) {
+            if (is_callable($function = "{$className}::CBUnitTests_tests")) {
+                $response->tests = array_merge($response->tests, call_user_func($function));
+            }
         }
 
         $response->wasSuccessful = true;
