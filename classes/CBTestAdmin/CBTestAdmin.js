@@ -194,9 +194,15 @@ var CBTestAdmin = {
             .catch(onRejected)
             .then(onFinally, onFinally);
 
-        function onFulfilled() {
+        function onFulfilled(errorCount) {
             let expander = CBUIExpander.create();
-            expander.message = "All tests completed successfully";
+
+            if (errorCount > 0) {
+                expander.severity = 3;
+                expander.message = `Finished running tests, ${errorCount} failed`;
+            } else {
+                expander.message = "All tests completed successfully";
+            }
 
             CBTestAdmin.status.element.appendChild(expander.element);
             expander.element.scrollIntoView();
@@ -288,7 +294,8 @@ var CBTestAdmin = {
      */
     runServerTests: function (fetchServerTestsResponse) {
         return new Promise(function (resolve, reject) {
-            var i = 0;
+            let i = 0;
+            let errorCount = 0;
 
             next();
 
@@ -302,7 +309,7 @@ var CBTestAdmin = {
                     URI += "&function=" + functionName;
                 }
 
-                let title = "Server Test: " + className + (functionName ? " - " + functionName : '');
+                let title = "Server Test: " + className + (functionName ? "::" + functionName : '');
                 let expander = CBUIExpander.create();
                 expander.message = title + " (running)";
 
@@ -311,11 +318,20 @@ var CBTestAdmin = {
 
                 Colby.fetchAjaxResponse(URI)
                     .then(onFulfilled)
-                    .then(next)
                     .catch(onRejected);
 
                 function onFulfilled(response) {
-                    expander.message = title + " (succeeded)";
+                    let status = response.value.succeeded ? "succeeded" : "failed";
+                    let message = `${title} ${status}\n\n${response.value.message}`;
+
+                    expander.severity = response.value.succeeded ? 6 : 3;
+                    expander.message = message;
+
+                    if (!response.value.succeeded) {
+                        errorCount += 1;
+                    }
+
+                    next();
                 }
 
                 function onRejected(error) {
@@ -332,7 +348,7 @@ var CBTestAdmin = {
                     run(fetchServerTestsResponse.tests[i]);
                     i += 1;
                 } else {
-                    resolve();
+                    resolve(errorCount);
                 }
             }
         });
