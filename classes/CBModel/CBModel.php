@@ -20,6 +20,24 @@
  * As an example, classes implementing the CBView_render() interface use model
  * data to render HTML content. Those classes usually also use model data to
  * generate search text and build models from specs.
+ *
+ * Array Function Safety
+ *
+ * The functions of CBModel are designed to be safe for array functions. They
+ * take a mixed-type first parameter and return a nullable value. In most cases
+ * the parameter is expected to be a model, if it is not a model, null is
+ * returned from the function.
+ *
+ * This enables the functions to be used with functions like array_map() without
+ * having to verify beforehand that every item in the array is a model. Adding a
+ * call to array_filter() will remove the null values so these functions work to
+ * remove non-model values from arrays.
+ *
+ * This self-cleaning behavior is better than a strongly typed behavior because
+ * while a notification of a non-model value might be nice, that notification
+ * would come in the form of an exception and the process of later removing a
+ * non-model value would be difficult. Non-model values in this context will not
+ * be a common situation.
  */
 final class CBModel {
 
