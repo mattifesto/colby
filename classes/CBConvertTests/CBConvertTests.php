@@ -77,4 +77,76 @@ final class CBConvertTests {
             }
         }
     }
+
+    /**
+     * @return ?stdClass
+     */
+    static function valueAsModelTest(): ?stdClass {
+        $validModels = [
+            (object)[
+                'className' => 'CBViewPage',
+            ],
+        ];
+
+        foreach($validModels as $model) {
+            if (CBConvert::valueAsModel($model) === null) {
+                $modelAsJSON = CBConvert::valueToPrettyJSON($model);
+                $message = <<<EOT
+
+                    The following object is a valid model but not considered
+                    so by CBConvert::valueAsModel():
+
+                    --- pre\n{$modelAsJSON}
+                    ---
+
+EOT;
+
+                return (object)[
+                    'failed' => true,
+                    'message' => $message,
+                ];
+            }
+        }
+
+        $invalidModels = [
+            2,
+            5.5,
+            "hello",
+            [],
+            (object)[
+                'className' => '',
+            ],
+            (object)[
+                'className' => ' ',
+            ],
+            (object)[
+                'className' => ' CBViewPage',
+            ],
+            (object)[
+                'className' => 'CBViewPage ',
+            ],
+        ];
+
+        foreach($invalidModels as $model) {
+            if (CBConvert::valueAsModel($model) !== null) {
+                $modelAsJSON = CBConvert::valueToPrettyJSON($model);
+                $message = <<<EOT
+
+                    The following object is an invalid model but not considered
+                    so by CBConvert::valueAsModel():
+
+                    --- pre\n{$modelAsJSON}
+                    ---
+
+EOT;
+
+                return (object)[
+                    'failed' => true,
+                    'message' => $message,
+                ];
+            }
+        }
+
+        return null;
+    }
 }
