@@ -3,6 +3,38 @@
 final class CBConvertTests {
 
     /**
+     * @param mixed $result
+     * @param mixed $expected
+     *
+     * @return string
+     */
+    static function resultAndExpectedToMessage($result, $expected): string {
+        $resultAsJSON = CBMessageMarkup::stringToMarkup(
+            CBConvert::valueToPrettyJSON($result)
+        );
+
+        $expectedAsJSON = CBMessageMarkup::stringToMarkup(
+            CBConvert::valueToPrettyJSON($expected)
+        );
+
+        $message = <<<EOT
+
+            (result (strong))
+
+            --- pre\n{$resultAsJSON}
+            ---
+
+            (expected (strong))
+
+            --- pre\n{$expectedAsJSON}
+            ---
+
+EOT;
+
+        return $message;
+    }
+
+    /**
      * return void
      */
     static function linesToParagraphsTest() {
