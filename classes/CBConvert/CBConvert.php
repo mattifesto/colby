@@ -411,7 +411,8 @@ final class CBConvert {
 
         $className = CBModel::valueToString($object, 'className');
 
-        if ($className === "") {
+
+        if ($className === '' || preg_match('/\s/', $className)) {
             return null;
         }
 
