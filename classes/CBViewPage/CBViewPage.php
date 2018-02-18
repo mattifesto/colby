@@ -106,22 +106,22 @@ final class CBViewPage {
 
         return implode(
             ' ',
-            array_merge(
+            array_values(array_filter(array_merge(
                 $strings,
                 array_map(
                     'CBModel::toSearchText',
                     CBModel::valueToArray($model, 'sections')
                 )
-            )
+            )))
         );
     }
 
     /**
      * @param model $spec
      *
-     * @return void
+     * @return model
      */
-    static function CBModel_upgrade(stdClass $spec): void {
+    static function CBModel_upgrade(stdClass $spec): stdClass {
         if ($image = CBModel::valueAsObject($spec, 'image')) {
             $spec->image = CBImage::fixAndUpgrade($image);
         }
@@ -132,14 +132,12 @@ final class CBViewPage {
             unset($spec->layout);
         }
 
-        $sections = CBModel::valueToArray($spec, 'sections');
-        $spec->sections = [];
+        $spec->sections = array_values(array_filter(array_map(
+            'CBModel::upgrade',
+            CBModel::valueToArray($spec, 'sections')
+        )));
 
-        foreach($sections as $section) {
-            if ($section = CBConvert::valueAsModel($section)) {
-                $spec->sections[] = CBModel::upgrade($section);
-            }
-        }
+        return $spec;
     }
 
     /**
