@@ -19,20 +19,11 @@ final class CBHideByUserGroupView {
             'hideFromMembers' => CBModel::value($spec, 'hideFromMembers', false, 'boolval'),
             'hideFromNonmembers' => CBModel::value($spec, 'hideFromNonmembers', false, 'boolval'),
             'groupName' => trim(CBModel::valueToString($spec, 'groupName')),
+            'subviews' => array_values(array_filter(array_map(
+                'CBModel::build',
+                CBModel::valueToArray($spec, 'subviews')
+            ))),
         ];
-
-        /* subviews */
-
-        $model->subviews = [];
-        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
-
-        foreach($subviewSpecs as $subviewSpec) {
-            if ($subviewModel = CBModel::build($subviewSpec)) {
-                $model->subviews[] = $subviewModel;
-            }
-        }
-
-        return $model;
     }
 
     /**
@@ -53,17 +44,15 @@ final class CBHideByUserGroupView {
     /**
      * @param model $spec
      *
-     * @return void
+     * @return model
      */
-    static function CBModel_upgrade(stdClass $spec): void {
-        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
-        $spec->subviews = [];
+    static function CBModel_upgrade(stdClass $spec): stdClass {
+        $spec->subviews = array_values(array_filter(array_map(
+            'CBModel::upgrade',
+            CBModel::valueToArray($spec, 'subviews')
+        )));
 
-        foreach ($subviewSpecs as $subviewSpec) {
-            if ($subviewSpec = CBConvert::valueAsModel($subviewSpec)) {
-                $spec->subviews[] = CBModel::upgrade($subviewSpec);
-            }
-        }
+        return $spec;
     }
 
     /**
