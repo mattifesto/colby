@@ -2,6 +2,83 @@
 
 final class CBViewPageTests {
 
+    static function CBTests_classTest() {
+        $spec = (object)[
+            'className' => 'CBViewPage',
+            'image' => (object)[
+                /* testing deprecated missing class name */
+                'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
+                'base' => 'original',
+                'extension' => 'jpeg',
+                'height' => 700,
+                'width' => 900,
+            ],
+            'sections' => CBViewTests::testSubviewSpecs(),
+        ];
+
+        $expectedModel = (object)[
+            'className' => 'CBViewPage',
+            'classNameForKind' => '',
+            'classNameForSettings' => '',
+            'description' => '',
+            'isPublished' => false,
+            'iteration' => 0,
+            'publishedBy' => null,
+            'selectedMainMenuItemName' => '',
+            'title' => '',
+            'URI' => '',
+            'publicationTimeStamp' => null,
+            'thumbnailURL' => '',
+            'layout' => null,
+            'sections' => CBViewTests::testSubviewModels(),
+            'thumbnailURLAsHTML' => '',
+            'URIAsHTML' => '',
+        ];
+
+        $model = CBModel::build($spec);
+
+        if ($model != $expectedModel) {
+            return (object)[
+                'message' =>
+                    "The result built model does not match the expected built model.\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($model, $expectedModel),
+            ];
+        }
+
+        $searchText = CBModel::toSearchText($model);
+        $expectedSearchText = CBViewTests::testSubviewSearchText() . ' CBViewPage';
+
+        if ($searchText !== $expectedSearchText) {
+            return (object)[
+                'message' =>
+                    "The result search text does not match the expected search text.\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($searchText, $expectedSearchText),
+            ];
+        }
+
+        $upgradedSpec = CBModel::upgrade($spec);
+        $expectedUpgradedSpec = (object)[
+            'className' => 'CBViewPage',
+            'image' => (object)[
+                'className' => 'CBImage',
+                'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
+                'filename' => 'original',
+                'extension' => 'jpeg',
+                'height' => 700,
+                'width' => 900,
+            ],
+            'sections' => CBViewTests::testSubviewUpgradedSpecs(),
+        ];
+
+        if ($upgradedSpec != $expectedUpgradedSpec) {
+            return (object)[
+                'message' =>
+                    "The result upgraded spec does not match the expected upgraded spec.\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($upgradedSpec, $expectedUpgradedSpec),
+            ];
+        }
+    }
+
     /**
      * @return null
      */
