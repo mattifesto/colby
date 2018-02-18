@@ -19,23 +19,21 @@ final class CBContainerView {
     /**
      * @param model $spec
      *
-     * @return void
+     * @return model
      */
-    static function CBModel_upgrade(stdClass $spec): void {
+    static function CBModel_upgrade(stdClass $spec): stdClass {
         foreach(['smallImage', 'mediumImage', 'largeImage'] as $name) {
             if ($imageSpec = CBModel::valueAsObject($spec, $name)) {
                 $spec->{$name} = CBImage::fixAndUpgrade($imageSpec);
             }
         }
 
-        $subviewSpecs = CBModel::valueToArray($spec, 'subviews');
-        $spec->subviews = [];
+        $spec->subviews = array_values(array_filter(array_map(
+            'CBModel::upgrade',
+            CBModel::valueToArray($spec, 'subviews')
+        )));
 
-        foreach ($subviewSpecs as $subviewSpec) {
-            if ($subviewSpec = CBConvert::valueAsModel($subviewSpec)) {
-                $spec->subviews[] = CBModel::upgrade($subviewSpec);
-            }
-        }
+        return $spec;
     }
 
     /**
