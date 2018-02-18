@@ -9,10 +9,9 @@ final class CBLinkView1 {
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
-            'description' => CBModel::value($spec, 'description', '', 'trim'),
-            'size' => CBModel::value($spec, 'size', '', 'trim'),
-            'title' => CBModel::value($spec, 'title', '', 'trim'),
-            'URL' => CBModel::value($spec, 'URL', '', 'trim'),
+            'description' => CBModel::valueToString($spec, 'description'),
+            'size' => trim(CBModel::valueToString($spec, 'size')),
+            'URL' => trim(CBModel::valueToString($spec, 'URL')),
         ];
 
         /* image */
@@ -27,12 +26,14 @@ final class CBLinkView1 {
     /**
      * @param model $spec
      *
-     * @return void
+     * @return model
      */
-    static function CBModel_upgrade(stdClass $spec): void {
+    static function CBModel_upgrade(stdClass $spec): stdClass {
         if ($imageSpec = CBModel::valueAsObject($spec, 'image')) {
             $spec->image = CBImage::fixAndUpgrade($imageSpec);
         }
+
+        return $spec;
     }
 
     /**
@@ -48,7 +49,7 @@ final class CBLinkView1 {
 
         $description = CBModel::value($model, 'description', '');
         $image = $model->image;
-        $title = CBModel::value($model, 'title', '');
+        $title = CBModel::valueToString($model, 'title');
         $size = CBModel::value($model, 'size');
         $URL = CBModel::value($model, 'URL', '');
 
