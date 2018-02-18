@@ -9,7 +9,7 @@ final class CBIconLinkView {
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
-            'alternativeText' => CBModel::value($spec, 'alternativeText', 'strval'),
+            'alternativeText' => CBModel::valueToString($spec, 'alternativeText'),
             'disableRoundedCorners' => CBModel::value($spec, 'disableRoundedCorners', false, 'boolval'),
             'text' => ($text = CBModel::value($spec, 'text', '', 'trim')),
             'textAsHTML' => cbhtml($text),
@@ -42,12 +42,14 @@ final class CBIconLinkView {
     /**
      * @param model $spec
      *
-     * @return void
+     * @return model
      */
-    static function CBModel_upgrade(stdClass $spec): void {
+    static function CBModel_upgrade(stdClass $spec): stdClass {
         if ($imageSpec = CBModel::valueAsObject($spec, 'image')) {
             $spec->image = CBImage::fixAndUpgrade($imageSpec);
         }
+
+        return $spec;
     }
 
     /**
