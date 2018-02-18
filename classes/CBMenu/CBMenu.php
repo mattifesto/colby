@@ -36,17 +36,15 @@ final class CBMenu {
     /**
      * @param model $spec
      *
-     * @return void
+     * @return model
      */
-    static function CBModel_upgrade(stdClass $spec): void {
-        $itemSpecs = CBModel::valueToArray($spec, 'items');
-        $spec->items = [];
+    static function CBModel_upgrade(stdClass $spec): stdClass {
+        $spec->items = array_values(array_filter(array_map(
+            'CBModel::upgrade',
+            CBModel::valueToArray($spec, 'items')
+        )));
 
-        foreach ($itemSpecs as $itemSpec) {
-            if ($itemSpec = CBConvert::valueAsModel($itemSpec)) {
-                $spec->items[] = CBModel::upgrade($itemSpec);
-            }
-        }
+        return $spec;
     }
 
     /**
