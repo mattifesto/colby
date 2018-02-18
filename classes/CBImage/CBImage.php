@@ -97,13 +97,15 @@ EOT;
     /**
      * @param model $spec
      *
-     * @return void
+     * @return model
      */
-    static function CBModel_upgrade(stdClass $spec): void {
+    static function CBModel_upgrade(stdClass $spec): stdClass {
         if (empty($spec->filename) && !empty($spec->base)) {
             $spec->filename = $spec->base;
             unset($spec->base);
         }
+
+        return $spec;
     }
 
     /**
