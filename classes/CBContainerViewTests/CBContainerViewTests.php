@@ -2,43 +2,45 @@
 
 final class CBContainerViewTests {
 
-    /**
-     * @return void
-     */
-    static function upgradeTest(): void {
-        $originalSpec = (object)[
+    static function CBTests_classTest() {
+        $spec = (object)[
             'className' => 'CBContainerView',
-            'mediumImage' => (object)[
+            'subviews' => CBViewTests::testSubviewSpecs(),
+            'smallImage' => (object)[
+                'className' => 'CBImage',
                 'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
                 'base' => 'original',
                 'extension' => 'jpeg',
                 'height' => 600,
                 'width' => 800,
             ],
-            'subviews' => [
-
-                (object)[
-                    'className' => 'CBNotAView',
-                ],
-
-                2,
-
-                (object)[
-                    'className' => 'CBContainerView',
-                    'largeImage' => (object)[
-                        'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
-                        'base' => 'original',
-                        'extension' => 'jpeg',
-                        'height' => 600,
-                        'width' => 800,
-                    ],
-                ],
+            'mediumImage' => (object)[
+                /* testing deprecated missing class name */
+                'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
+                'base' => 'original',
+                'extension' => 'jpeg',
+                'height' => 700,
+                'width' => 900,
+            ],
+            'largeImage' => (object)[
+                /* testing deprecated missing class name */
+                'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
+                'base' => 'original',
+                'extension' => 'jpeg',
+                'height' => 800,
+                'width' => 1000,
             ],
         ];
 
-        $expectedSpec = (object)[
+        $expectedModel = (object)[
             'className' => 'CBContainerView',
-            'mediumImage' => (object)[
+            'backgroundColor' => null,
+            'CSSClassNames' => [],
+            'HREF' =>'',
+            'HREFAsHTML' => '',
+            'largeImage' => null,
+            'mediumImage' => null,
+            'smallImage' => (object)[
                 'className' => 'CBImage',
                 'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
                 'filename' => 'original',
@@ -46,55 +48,66 @@ final class CBContainerViewTests {
                 'height' => 600,
                 'width' => 800,
             ],
-            'subviews' => [
+            'subviews' => CBViewTests::testSubviewModels(),
+        ];
 
-                (object)[
-                    'className' => 'CBNotAView',
-                ],
+        $model = CBModel::build($spec);
 
-                (object)[
-                    'className' => 'CBContainerView',
-                    'largeImage' => (object)[
-                        'className' => 'CBImage',
-                        'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
-                        'filename' => 'original',
-                        'extension' => 'jpeg',
-                        'height' => 600,
-                        'width' => 800,
-                    ],
-                    'subviews' => [],
-                ],
+        if ($model != $expectedModel) {
+            return (object)[
+                'message' =>
+                    "The result built model does not match the expected built model.\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($model, $expectedModel),
+            ];
+        }
+
+        $searchText = CBModel::toSearchText($model);
+        $expectedSearchText = CBViewTests::testSubviewSearchText() . ' CBContainerView';
+
+        if ($searchText !== $expectedSearchText) {
+            return (object)[
+                'message' =>
+                    "The result search text does not match the expected search text.\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($searchText, $expectedSearchText),
+            ];
+        }
+
+        $upgradedSpec = CBModel::upgrade($spec);
+        $expectedUpgradedSpec = (object)[
+            'className' => 'CBContainerView',
+            'subviews' => CBViewTests::testSubviewUpgradedSpecs(),
+            'smallImage' => (object)[
+                'className' => 'CBImage',
+                'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
+                'filename' => 'original',
+                'extension' => 'jpeg',
+                'height' => 600,
+                'width' => 800,
+            ],
+            'mediumImage' => (object)[
+                'className' => 'CBImage',
+                'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
+                'filename' => 'original',
+                'extension' => 'jpeg',
+                'height' => 700,
+                'width' => 900,
+            ],
+            'largeImage' => (object)[
+                'className' => 'CBImage',
+                'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
+                'filename' => 'original',
+                'extension' => 'jpeg',
+                'height' => 800,
+                'width' => 1000,
             ],
         ];
 
-        $upgradedSpec = CBModel::upgrade($originalSpec);
-
-        if ($upgradedSpec != $expectedSpec) {
-            $expectedJSON = CBConvert::valueToPrettyJSON($expectedSpec);
-            $upgradedJSON = CBConvert::valueToPrettyJSON($upgradedSpec);
-            $message = <<<EOT
-
-                CBContainerViewTests::upgradeTest() failed
-
-                Upgraded:
-
-                --- pre\n{$upgradedJSON}
-                ---
-
-                Expected:
-
-                --- pre\n{$expectedJSON}
-                ---
-
-EOT;
-
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => $message,
-                'severity' => 3,
-            ]);
-
-            throw new Exception("The upgraded CBContainerView spec does not match what was expected. See log entry for details.");
+        if ($upgradedSpec != $expectedUpgradedSpec) {
+            return (object)[
+                'message' =>
+                    "The result upgraded spec does not match the expected upgraded spec.\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($upgradedSpec, $expectedUpgradedSpec),
+            ];
         }
     }
 }

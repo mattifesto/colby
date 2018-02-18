@@ -55,7 +55,6 @@ class CBUnitTests {
         $response = new CBAjaxResponse();
         $response->tests = [
             ['CB',                      'class'],
-            ['CBContainerView',         'upgrade'],
             ['CBConvert',               'linesToParagraphs'],
             ['CBConvert',               'textToLines'],
             ['CBConvert',               'textToStub'],
