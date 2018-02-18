@@ -48,8 +48,8 @@ final class CBModel {
      *
      * @param object $model
      *
-     *      This parameter does not technically have to be a model. That is, it
-     *      does not need to have className property or a valid ID.
+     *      This parameter does not technically have to be a model. It does not
+     *      need to have className property or a valid ID.
      *
      * @return object
      */
@@ -62,6 +62,9 @@ final class CBModel {
      * imported from CSV files.
      *
      * @param mixed $spec
+     *
+     *      This function takes a mixed parameter to make it "array function
+     *      safe".
      *
      * @return ?hex160
      */
@@ -117,6 +120,9 @@ final class CBModel {
      *      model produced doesn't have a title set.
      *
      * @param mixed $spec
+     *
+     *      This function takes a mixed parameter to make it "array function
+     *      safe".
      *
      *      For this function to successfully build a model, the spec's class
      *      must exist and have the CBModel_build() interface implemented.
@@ -182,9 +188,8 @@ final class CBModel {
     /**
      * @param mixed $model
      *
-     *      This $model parameter is untyped so that this function can be used
-     *      with array_map without having to guarantee that all items in the
-     *      array are objects.
+     *      This function takes a mixed parameter to make it "array function
+     *      safe".
      *
      * @return string
      */
@@ -208,25 +213,47 @@ final class CBModel {
     }
 
     /**
-     * @param model $spec
+     * This function returns an upgraded version of the $spec parameter.
      *
-     * @return model
+     * Model specs are upgraded by model classes that implement the
+     * CBModel_upgrade() interface. The interface will be passed a clone of the
+     * spec to be upgraded. The interface can return that object with or without
+     * modifications, or it can return an entirely different object. The
+     * interface must return a valid model.
      *
-     *      The returned model will always be a different object than the object
-     *      passed as the $spec argument. However the returned value may be
-     *      equal to the $spec argument object. You can compare the $spec object
-     *      to the returned value using == to determine if any changes were made
-     *      during the upgrade.
+     * @param mixed $spec
+     *
+     *      This function takes a mixed parameter to make it "array function
+     *      safe".
+     *
+     * @return ?model
+     *
+     *      If the $spec parameter is not a model, this function will return
+     *      null. Otherwise, this function will always return another model.
+     *
+     *      The returned model will always be a different object than $spec
+     *      argument. However the returned model may be equal to the $spec
+     *      argument. You can compare the $spec argument to the returned model
+     *      using == to determine if any changes were made during the upgrade.
      */
-    static function upgrade(stdClass $spec): stdClass {
-        $className = CBModel::valueToString($spec, 'className');
+    static function upgrade($spec): ?stdClass {
+        $spec = CBConvert::valueAsModel($spec);
+
+        if ($spec === null) {
+            return null;
+        }
+
         $upgradedSpec = CBModel::clone($spec);
 
-        if (is_callable($function = "{$className}::CBModel_upgrade")) {
-            call_user_func($function, $upgradedSpec);
+        if (is_callable($function = "{$spec->className}::CBModel_upgrade")) {
+            $upgradedSpec = CBConvert::valueAsModel(call_user_func($function, $upgradedSpec));
+
+            if ($upgradedSpec === null) {
+                throw new Exception("{$function}() returned an invalid model");
+            }
 
             $ID = CBModel::valueAsID($spec, 'ID');
-            $upgradedID = CBModel::value($upgradedSpec, 'ID');
+            $upgradedID = CBModel::valueAsID($upgradedSpec, 'ID');
 
             if ($upgradedID != $ID) {
                 $message = <<<EOT
@@ -255,14 +282,18 @@ EOT;
     /**
      * @param mixed $model
      *
-     *  The $model parameter is generally expected to be a stdClass instance or
-     *  `null`, but it can be any value such as `42`. If it is not stdClass this
-     *  function will treat is as `null` and return the default value.
+     *      This function takes a mixed parameter to make it "array function
+     *      safe".
      *
-     *  This behavior reduces the amount of validation code required in many
-     *  cases. For instance, it allows code to fetch a model and not validate
-     *  that the model exists (the model value may be `false` in this case)
-     *  before checking to see if a value is set.
+     *      The $model parameter is generally expected to be a stdClass instance
+     *      or `null`, but it can be any value such as `42`. If it is not
+     *      stdClass this function will treat is as `null` and return the
+     *      default value.
+     *
+     *      This behavior reduces the amount of validation code required in many
+     *      cases. For instance, it allows code to fetch a model and not
+     *      validate that the model exists (the model value may be `false` in
+     *      this case) before checking to see if a value is set.
      *
      * @param string $keyPath
      *
