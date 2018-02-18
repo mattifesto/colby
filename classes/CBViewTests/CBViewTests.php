@@ -36,4 +36,55 @@ final class CBViewTests {
             }
         }
     }
+
+    /**
+     * @return [model]
+     */
+    static function testSubviewModels(): array {
+        return [
+            (object)[
+                'className' => 'CBTestView',
+                'value' => 42,
+            ]
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    static function testSubviewSearchText(): string {
+        return '42 CBTestView';
+    }
+
+    /**
+     * @return [mixed]
+     */
+    static function testSubviewSpecs(): array {
+        return [
+            null,
+            2,
+            (object)[
+                'className' => 'CBTestView',
+                'value' => 42,
+            ],
+            (object)[
+                'className' => 'jdkflskdljsdkfd',
+            ],
+        ];
+    }
+
+    /**
+     * @return [model]
+     */
+    static function testSubviewUpgradedSpecs(): array {
+        return [
+            (object)[
+                'className' => 'CBTestView',
+                'value' => 42,
+            ],
+            (object)[
+                'className' => 'jdkflskdljsdkfd',
+            ],
+        ];
+    }
 }
