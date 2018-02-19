@@ -3,13 +3,13 @@
 final class CBPageLayout {
 
     /**
-     * @return null
+     * @return void
      */
-    static function render(stdClass $layoutModel, callable $renderContentCallback) {
+    static function render(stdClass $layoutModel, callable $renderContentCallback): void {
 
         /* CSS class names */
 
-        $CSSClassNames = CBModel::valueAsArray($layoutModel, 'CSSClassNames');
+        $CSSClassNames = CBModel::valueToArray($layoutModel, 'CSSClassNames');
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
