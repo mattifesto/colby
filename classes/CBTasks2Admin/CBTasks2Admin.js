@@ -16,7 +16,8 @@ var CBTasks2Admin = {
      * @return Element
      */
     init: function () {
-        Colby.CBTasks2RunAlways = true;
+        Colby.CBTasks2_runAlways = true;
+        Colby.CBTasks2_runFast = true;
 
         var mainElement = document.getElementsByTagName("main")[0];
         CBTasks2Admin.sectionElement = CBUI.createSection();
@@ -34,7 +35,7 @@ var CBTasks2Admin = {
     /**
      * @param object status
      *
-     * @return Element
+     * @return undefined
      */
     updateStatus: function (status) {
         let sectionElement = CBTasks2Admin.sectionElement;
@@ -45,7 +46,9 @@ var CBTasks2Admin = {
         sectionElement.appendChild(create("Running Tasks", status.running));
         sectionElement.appendChild(create("Complete Tasks", status.complete));
         sectionElement.appendChild(create("Failed Tasks", status.failed));
-        sectionElement.appendChild(create("CBTasks2Delay", Colby.CBTasks2Delay));
+        sectionElement.appendChild(create("CBTasks2_delay", Colby.CBTasks2_delay));
+        sectionElement.appendChild(create("Tasks Requested", Colby.CBTasks2_countOfTasksRequested));
+        sectionElement.appendChild(create("Tasks Run", Colby.CBTasks2_countOfTasksRun));
 
         /* closure */
         function create(text, value) {
@@ -69,22 +72,18 @@ var CBTasks2Admin = {
     startFetchingStatus: function (element) {
         fetchStatus();
 
+        /* closure */
         function fetchStatus() {
             Colby.callAjaxFunction("CBTasks2", "fetchStatus")
                 .then(onFulfilled)
                 .catch(Colby.displayAndReportError);
         }
 
+        /* closure */
         function onFulfilled(value) {
             CBTasks2Admin.updateStatus(value);
 
-            if (value.ready > 0) {
-                Colby.CBTasks2Delay = 1; // 1 millisecond
-            } else {
-                Colby.CBTasks2Delay = 2000; // 2 seconds
-            }
-
-            setTimeout(fetchStatus, 1000);
+            setTimeout(fetchStatus, 500);
         }
     },
 };
