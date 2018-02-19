@@ -203,7 +203,7 @@ final class CBView {
             if (is_callable($function = "{$className}::CBView_toSubviews")) {
                 return call_user_func($function, $model);
             } else {
-                return CBModel::valueAsArray($model, 'subviews');
+                return CBModel::valueToArray($model, 'subviews');
             }
         } else {
             return [];
