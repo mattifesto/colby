@@ -88,15 +88,15 @@ final class CBArtworkView {
      *
      *      rw320|rw640|rw960|rw1280|rw1600|rw1920|rw2560|original|page
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
         if (empty($model->image)) {
             echo '<!-- CBArtworkView without an image. -->';
             return;
         }
 
-        $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
+        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
