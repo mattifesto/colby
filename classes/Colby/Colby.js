@@ -1063,8 +1063,11 @@ Colby.afterDOMContentLoaded(function () {
  * CBTasks2 run tasks
  */
 
-Colby.CBTasks2RunAlways = false;
-Colby.CBTasks2Delay = 5000;
+Colby.CBTasks2_runAlways = false;
+Colby.CBTasks2_runFast = false;
+Colby.CBTasks2_countOfTasksRequested = 0;
+Colby.CBTasks2_countOfTasksRun = 0;
+Colby.CBTasks2_delay = 5000;
 
 Colby.afterDOMContentLoaded(function () {
     runNextTask();
@@ -1083,16 +1086,21 @@ Colby.afterDOMContentLoaded(function () {
             .then(onFulfilled)
             .catch(Colby.reportError);
 
-        /* closure */
-        function onFulfilled(value) {
+        Colby.CBTasks2_countOfTasksRequested += 1;
+    }
 
-            /**
-             * If a task was run, try to run another after a short time out.
-             */
+    /* closure */
+    function onFulfilled(value) {
+        if (value.taskWasRun) {
+            Colby.CBTasks2_countOfTasksRun += 1;
 
-            if (Colby.CBTasks2RunAlways || value.taskWasRun) {
-                setTimeout(runNextTask, Colby.CBTasks2Delay);
+            if (Colby.CBTasks2_runFast) {
+                runNextTask();
+            } else {
+                setTimeout(runNextTask, Colby.CBTasks2_delay);
             }
+        } else if (Colby.CBTasks2_runAlways) {
+            setTimeout(runNextTask, Colby.CBTasks2_delay);
         }
     }
 });
