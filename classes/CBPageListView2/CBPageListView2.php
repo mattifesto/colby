@@ -47,15 +47,15 @@ EOT;
      * @param string $model->classNameForKind
      * @param [string]? $model->CSSClassNames
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
         if (empty($model->classNameForKind)) {
             echo '<!-- CBPageListView2 with no classNameForKind -->';
             return;
         }
 
-        $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
+        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
 
         if (!in_array('custom', $CSSClassNames)) {
                 $CSSClassNames[] = 'CBPageListView2_default';
