@@ -76,12 +76,12 @@ final class CBContainerView2 {
     }
 
     /**
-     * @param object $model
+     * @param model $model
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
-        $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
+    static function CBView_render(stdClass $model): void {
+        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
@@ -95,7 +95,7 @@ final class CBContainerView2 {
             $backgroundImageDeclaration = "background-image: url('{$imageURLAsHTML}')";
         }
 
-        $subviews = CBModel::valueAsArray($model, 'subviews');
+        $subviews = CBModel::valueToArray($model, 'subviews');
 
         if (!empty($model->localCSS)) {
             $styleSheet = <<<EOT
@@ -122,6 +122,6 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
     }
 }
