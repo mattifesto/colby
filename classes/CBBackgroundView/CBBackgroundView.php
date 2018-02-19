@@ -129,11 +129,11 @@ final class CBBackgroundView {
     }
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return [object]
+     * @return [model]
      */
-    static function CBView_toSubviews(stdClass $spec) {
-        return CBModel::valueAsArray($spec, 'children');
+    static function CBView_toSubviews(stdClass $spec): array {
+        return CBModel::valueToArray($spec, 'children');
     }
 }
