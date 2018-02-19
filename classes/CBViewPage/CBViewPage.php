@@ -168,12 +168,12 @@ final class CBViewPage {
     }
 
     /**
-     * @param object $model
+     * @param model $model
      *
      * @return [object]
      */
-    static function CBView_toSubviews(stdClass $model) {
-        return CBModel::valueAsArray($model, 'sections');
+    static function CBView_toSubviews(stdClass $model): array {
+        return CBModel::valueToArray($model, 'sections');
     }
 
     /**
