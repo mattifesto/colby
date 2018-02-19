@@ -10,10 +10,10 @@ final class CBPageTitleAndDescriptionView {
      * @param string? $model->titleColor @deprecated use CSS
      * @param bool? $model->useLightTextColors @deprecated use CSS
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model = null) {
-        $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
+    static function CBView_render(stdClass $model): void {
+        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
 
         if (!in_array('custom', $CSSClassNames)) {
             $CSSClassNames[] = 'CBPageTitleAndDescriptionView_default';
