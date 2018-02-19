@@ -60,17 +60,17 @@ final class CBMessageView {
     }
 
     /**
-     * @param object $model
+     * @param model $model
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
         if (empty($model->html)) {
             echo '<!-- CBMessageView with no content. -->';
             return;
         }
 
-        $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
+        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
 
         if (!in_array('custom', $CSSClassNames)) {
             $CSSClassNames[] = 'CBMessageView_default';
