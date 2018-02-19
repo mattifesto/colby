@@ -31,7 +31,7 @@ final class CBMenuView {
     }
 
     /**
-     * @param object $model
+     * @param model $model
      *
      *      {
      *          CSSClassNames: [string]
@@ -45,9 +45,9 @@ final class CBMenuView {
      *          selectedItemName: string
      *      }
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
         $menu = CBModel::value($model, 'menu');
 
         if (!is_object($menu)) {
@@ -67,7 +67,7 @@ final class CBMenuView {
         }
 
         $selectedItemName = CBModel::value($model, 'selectedItemName', '', 'ColbyConvert::textToStub');
-        $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
+        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
@@ -126,7 +126,7 @@ final class CBMenuView {
 
                         <?php
 
-                        $items = CBModel::valueAsArray($menu, 'items');
+                        $items = CBModel::valueToArray($menu, 'items');
 
                         array_walk($items, function ($item) use ($selectedItemName) {
                             $name = CBModel::value($item, 'name', '');
