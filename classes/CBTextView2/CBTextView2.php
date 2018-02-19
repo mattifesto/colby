@@ -33,15 +33,15 @@ final class CBTextView2 {
      *      by a distinct local CSS class name that must also be included in the
      *      $model->CSSClassNames parameter.
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
         if (empty($model->contentAsHTML)) {
             echo '<!-- CBTextView2 with no content -->';
             return;
         }
 
-        $CSSClassNames = CBModel::valueAsArray($model, 'CSSClassNames');
+        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
