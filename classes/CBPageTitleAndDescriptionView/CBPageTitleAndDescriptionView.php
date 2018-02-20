@@ -80,18 +80,17 @@ final class CBPageTitleAndDescriptionView {
     }
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         $colorForProperty = function ($propertyName) use ($spec) {
             return CBModel::value($spec, $propertyName, null, 'CBConvert::stringToCSSColor');
         };
 
         $model = (object)[
-            'className' => __CLASS__,
-            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
+            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
             'showPublicationDate' => CBModel::value($spec, 'showPublicationDate', false, 'boolval'),
 
             /* the following properties are all deprecated */
