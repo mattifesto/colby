@@ -371,25 +371,6 @@ EOT;
     }
 
     /**
-     * @deprecated use:
-     *
-     *      CBModel::value($model, $keyPath, [], 'CBConvert::stringToCSSClassNames');
-     *
-     * This function parses a string value into an array of names. This is used
-     * for class names style properties.
-     *
-     * "one, , two    three" => ['one', 'two', 'three']
-     *
-     * @param object? $model
-     * @param string $keyPath
-     *
-     * @return [string]
-     */
-    static function valueAsNames($model, $keyPath): array {
-        return CBModel::value($model, $keyPath, [], 'CBConvert::valueToNames');
-    }
-
-    /**
      * This is a convenience function for:
      *
      *      CBConvert::valueAsObject(CBModel::value(...));
