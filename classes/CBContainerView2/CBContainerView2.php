@@ -3,13 +3,13 @@
 final class CBContainerView2 {
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?object
      */
-    static function CBModel_build(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
-            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
+            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
         ];
 
         /* image */
