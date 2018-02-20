@@ -87,4 +87,19 @@ final class CBViewTests {
             ],
         ];
     }
+
+    /**
+     * @return void
+     */
+    static function toSubviewsTest(): void {
+        $classNames = CBAdmin::fetchClassNames();
+
+        foreach ($classNames as $className) {
+            $model = (object)[
+                'className' => $className,
+            ];
+
+            $result = CBView::toSubviews($model);
+        }
+    }
 }

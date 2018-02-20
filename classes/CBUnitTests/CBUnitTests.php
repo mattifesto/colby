@@ -93,6 +93,7 @@ class CBUnitTests {
             ['CBSitePreferences'],
             ['CBTestPage'],
             ['CBView',                  'render'],
+            ['CBView',                  'toSubviews'],
             ['CBViewPage',              'save'],
             ['CBPageVerificationTask',  'importThumbnailURLToImage'],
             ['CBPageVerificationTask',  'upgradeThumbnailURLToImage'],
