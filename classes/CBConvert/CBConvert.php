@@ -45,34 +45,6 @@ final class CBConvert {
     }
 
     /**
-     * Converts an string of space and comma delimited CSS class names into an
-     * array of CSS class names.
-     *
-     * @param mixed $string
-     *
-     *      Example: "right bold, red h&ck"
-     *
-     * @return [string]
-     *
-     *      Example: ["right", "bold", "red", "h&amp;ck"]
-     *
-     *      The returned class names will be escaped for HTML. Valid CSS class
-     *      names shouldn't need to be escaped for HTML, but rather than try to
-     *      validate the class names this function just guaratees they are safe
-     *      for use in HTML.
-     */
-    static function stringToCSSClassNames($string): array {
-        $string = cbhtml(trim($string));
-        $classNames = preg_split('/[\s,]+/', $string, null, PREG_SPLIT_NO_EMPTY);
-
-        if ($classNames === false) {
-            throw new RuntimeException("preg_split() returned false");
-        }
-
-        return $classNames;
-    }
-
-    /**
      * Determines whether a string is a CSS color. If it is then it is sanitized
      * and returned; if not then null is returned.
      *
@@ -475,6 +447,29 @@ final class CBConvert {
         }
 
         return [];
+    }
+
+    /**
+     * Split a value into an array of names.
+     *
+     * In the past the concept of "name" has been specialized to mean CSS names
+     * or PHP class names. This function simplifies a name to be a string of
+     * [A-Za-z0-9_] characters. Trying to get more specific than this is a task
+     * that results in wasted time for a yet another imperfect solution.
+     *
+     * @param mixed $value
+     *
+     * @return [string]
+     */
+    static function valueToNames($value): array {
+        $value = CBConvert::valueToString($value);
+        $names = preg_split('/[^A-Za-z0-9_]+/', $value, null, PREG_SPLIT_NO_EMPTY);
+
+        if ($names === false) {
+            return [];
+        }
+
+        return $names;
     }
 
     /**
