@@ -10,15 +10,15 @@ final class CBMessageView {
     }
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec): ?stdClass {
         $model = (object)[
-            'html' => CBModel::value($spec, 'markup', '', 'CBMessageMarkup::markupToHTML'),
-            'markup' => CBModel::value($spec, 'markup', '', 'trim'),
-            'CSSClassNames' => CBModel::value($spec, 'CSSClassNames', [], 'CBConvert::stringToCSSClassNames'),
+            'html' => CBMessageMarkup::markupToHTML(CBModel::valueToString($spec, 'markup')),
+            'markup' => CBModel::valueToString($spec, 'markup'),
+            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
         ];
 
         /**
