@@ -121,13 +121,13 @@ final class CBPageLayout {
      * @param bool? $spec->isArticle
      * @param string? $spec->localCSSTemplate
      *
-     * @return stdClass
+     * @return ?object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec): ?stdClass {
         $model = (object)[
-            'CSSClassNames' => CBConvert::stringToCSSClassNames(CBConvert::valueToString(CBModel::value($spec, 'CSSClassNames'))),
-            'customLayoutClassName' => trim(CBModel::value($spec, 'customLayoutClassName')),
-            'customLayoutProperties' => CBConvert::valueToObject(CBModel::value($spec, 'customLayoutProperties')),
+            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
+            'customLayoutClassName' => trim(CBModel::valueToString($spec, 'customLayoutClassName')),
+            'customLayoutProperties' => CBModel::valueToObject($spec, 'customLayoutProperties'),
             'isArticle' => (bool)CBModel::value($spec, 'isArticle'),
         ];
 
@@ -136,7 +136,7 @@ final class CBPageLayout {
          * See CBView::CSSTemplateToCSS for documentation.
          */
 
-         $CSSTemplate = trim(CBConvert::valueToString(CBModel::value($spec, 'localCSSTemplate')));
+         $CSSTemplate = trim(CBModel::valueToString($spec, 'localCSSTemplate'));
 
          if ($CSSTemplate !== '') {
              $uniqueCSSClassName = 'ID_' . CBHex160::random();
