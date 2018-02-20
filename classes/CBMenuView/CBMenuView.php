@@ -17,16 +17,15 @@ final class CBMenuView {
     }
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         return (object)[
-            'className' => __CLASS__,
-            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
-            'menuID' => CBModel::value($spec, 'menuID'),
-            'selectedItemName' => CBModel::value($spec, 'selectedItemName'),
+            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
+            'menuID' => CBModel::valueAsID($spec, 'menuID'),
+            'selectedItemName' => CBModel::valueToString($spec, 'selectedItemName'),
         ];
     }
 
@@ -51,7 +50,7 @@ final class CBMenuView {
         $menu = CBModel::value($model, 'menu');
 
         if (!is_object($menu)) {
-            $menuID = CBModel::value($model, 'menuID');
+            $menuID = CBModel::valueAsID($model, 'menuID');
 
             if (empty($menuID)) {
                 echo '<!-- CBMenuView: no menu ID -->';
