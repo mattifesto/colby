@@ -95,15 +95,14 @@ EOT;
     }
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         return (object)[
-            'className' => __CLASS__,
             'classNameForKind' => CBModel::value($spec, 'classNameForKind', '', 'trim'),
-            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
+            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
         ];
     }
 }
