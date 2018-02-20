@@ -85,13 +85,12 @@ final class CBTextView2 {
      * @param bool? $spec->isCustom
      * @param string? $spec->localCSSTemplate
      *
-     * @return stdClass
+     * @return ?object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_toModel(stdClass $spec): ?stdClass {
         $model = (object)[
-            'className' => __CLASS__,
-            'contentAsCommonMark' => CBModel::value($spec, 'contentAsCommonMark', ''),
-            'CSSClassNames' => CBModel::valueAsNames($spec, 'CSSClassNames'),
+            'contentAsCommonMark' => CBModel::valueToString($spec, 'contentAsCommonMark'),
+            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
             'isCustom' => CBModel::value($spec, 'isCustom', false, 'boolval'),
         ];
 
