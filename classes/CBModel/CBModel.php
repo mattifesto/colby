@@ -386,7 +386,7 @@ EOT;
      * @return [string]
      */
     static function valueAsNames($model, $keyPath): array {
-        return CBModel::value($model, $keyPath, [], 'CBConvert::stringToCSSClassNames');
+        return CBModel::value($model, $keyPath, [], 'CBConvert::valueToNames');
     }
 
     /**
@@ -429,6 +429,20 @@ EOT;
      */
     static function valueToObject($model, string $keyPath): stdClass {
         return CBConvert::valueToObject(CBModel::value($model, $keyPath));
+    }
+
+    /**
+     * This is a convenience function for:
+     *
+     *      CBConvert::valueToNames(CBModel::value(...));
+     *
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return [string]
+     */
+    static function valueToNames($model, string $keyPath): array {
+        return CBConvert::valueToNames(CBModel::value($model, $keyPath));
     }
 
     /**
