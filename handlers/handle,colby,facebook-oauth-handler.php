@@ -2,7 +2,7 @@
 
 /**
  * After the browser is sent to the Facebook login page, the browser will be
- * redirected to this page by Facebook. Regardless of the succes of Facebook
+ * redirected to this page by Facebook. Regardless of the success of Facebook
  * authentication the browser will be redirected to the redirect URI specified
  * when the process began. If they are not logged in, they will not see the
  * page.
