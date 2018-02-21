@@ -45,6 +45,9 @@ var CBUISelector = {
      *      }
      */
     create: function (args) {
+        if (args === undefined) {
+            args = {};
+        }
 
         /**
          * These default parameter values make it easier to get started with
