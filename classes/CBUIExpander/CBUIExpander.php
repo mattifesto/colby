@@ -13,7 +13,7 @@ final class CBUIExpander {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v393.js', cbsysurl())];
     }
 
     /**
