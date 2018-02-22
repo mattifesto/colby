@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBUINavigationView */
 /* global
     CBUI */
@@ -109,12 +110,14 @@ var CBUINavigationView = {
             navigateToItemCallback(args.rootItem);
         }
 
-        return {
+        let api = {
             get element() {
                 return element;
             },
             navigateToItemCallback: navigateToItemCallback,
         };
+
+        return api;
     },
 
     /**
