@@ -20,6 +20,6 @@ final class CBUINavigationView {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v364.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v393.js', cbsysurl())];
     }
 }

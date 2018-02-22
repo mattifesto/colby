@@ -4,6 +4,20 @@
 /* global
     CBUI */
 
+/**
+ * A navigator is a user interface control that navigates between panels of user
+ * interface, each panel contained in an element, to enable responsive user
+ * interfaces. A navigator is composed of a navigation bar and a content area.
+ * Some user interface controls, such as CBUISelector, will not work unless they
+ * are presented inside a navigator.
+ *
+ * The only way to change the content of a navigator is to navigate to a panel
+ * which is contained in an element. After creating a navigator, create an
+ * element containing your user interface and the pass it to the navigate()
+ * function.
+ *
+ * Adding content directly to the navigator element will break the navigator.
+ */
 var CBUINavigationView = {
 
     /**
