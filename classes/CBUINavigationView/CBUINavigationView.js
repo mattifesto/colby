@@ -93,18 +93,18 @@ var CBUINavigationView = {
      * @param object? args
      *
      *      {
-     *          rootItem: object?
+     *          rootItem: object? (deprecated)
      *
      *              Specifying a rootItem argument is exactly the same as
-     *              calling this function followed by a call to
-     *              navigateToItemCallback().
+     *              calling this function followed by a call to navigate().
      *      }
      *
      * @return object
      *
      *      {
      *          element: Element (readonly)
-     *          navigateToItemCallback: function
+     *          navigate: function
+     *          navigateToItemCallback: function (deprecated)
      *      }
      */
     create: function (args) {
@@ -115,19 +115,20 @@ var CBUINavigationView = {
             items: [],
         };
 
-        var navigateToItemCallback = CBUINavigationView.navigateToItem.bind(undefined, state);
+        var navigate = CBUINavigationView.navigateToItem.bind(undefined, state);
 
         window.addEventListener("popstate", CBUINavigationView.handlePopState.bind(undefined, state));
 
         if (args !== undefined && args.rootItem !== undefined) {
-            navigateToItemCallback(args.rootItem);
+            navigate(args.rootItem);
         }
 
         let api = {
             get element() {
                 return element;
             },
-            navigateToItemCallback: navigateToItemCallback,
+            navigate: navigate,
+            navigateToItemCallback: navigate, /* deprecated */
         };
 
         CBUINavigationView.context = api;
