@@ -22,6 +22,19 @@
 var CBUINavigationView = {
 
     /**
+     * The context is set each time a new navigator is created, which is usually
+     * only once per page, but can be more. This context is used by user
+     * interface controls that use navigation to access navigation functionality
+     * without the developer having to specify the navigation parameters
+     * explicitly.
+     *
+     * The context is used only at user interface creation time. A developer
+     * using multiple navigators can set the context to the navigator of their
+     * choice when building user interfaces.
+     */
+    context: undefined,
+
+    /**
      * @param object item
      *
      *      {
@@ -116,6 +129,8 @@ var CBUINavigationView = {
             },
             navigateToItemCallback: navigateToItemCallback,
         };
+
+        CBUINavigationView.context = api;
 
         return api;
     },
