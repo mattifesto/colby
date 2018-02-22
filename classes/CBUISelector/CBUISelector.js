@@ -70,11 +70,6 @@ var CBUISelector = {
 
         var state = { options: undefined };
 
-        var updateOptionsCallback = CBUISelector.updateOptions.bind(undefined, {
-            state: state,
-            updateInterfaceCallback: updateInterface,
-        });
-
         var updateValueCallback = CBUISelector.updateValue.bind(undefined, {
             propertyName: propertyName,
             spec: spec,
@@ -83,7 +78,7 @@ var CBUISelector = {
             valueChangedCallback: args.valueChangedCallback,
         });
 
-        updateOptionsCallback(options);
+        updateOptions(options);
 
         if (args.navigateToItemCallback) {
             sectionItem.callback = CBUISelector.showSelectorForControl.bind(undefined, {
@@ -100,7 +95,7 @@ var CBUISelector = {
             get element() {
                 return sectionItem.element;
             },
-            updateOptionsCallback: updateOptionsCallback,
+            updateOptionsCallback: updateOptions,
             updateValueCallback: updateValueCallback,
         };
 
@@ -125,6 +120,27 @@ var CBUISelector = {
         /* closure */
         function updateInterface() {
             titleAndDescriptionPart.description = currentValueToTitle();
+        }
+
+        /**
+         * closure
+         *
+         * @param [object] options
+         *
+         *      {
+         *          title: string
+         *          description: string
+         *          value: mixed
+         *      }
+         */
+        function updateOptions(options) {
+            if (Array.isArray(options)) {
+                state.options = options;
+            } else {
+                state.options = undefined;
+            }
+
+            updateInterface();
         }
     },
 
@@ -236,23 +252,6 @@ var CBUISelector = {
             selectedValue: args.spec[args.propertyName],
             title: args.labelText,
         });
-    },
-
-    /**
-     * @param object args.state
-     * @param function args.updateInterfaceCallback
-     * @param [object] options
-     *
-     * @return undefined
-     */
-    updateOptions: function (args, options) {
-        if (Array.isArray(options)) {
-            args.state.options = options;
-        } else {
-            args.state.options = undefined;
-        }
-
-        args.updateInterfaceCallback();
     },
 
     /**

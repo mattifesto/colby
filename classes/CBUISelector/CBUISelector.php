@@ -5,9 +5,9 @@ final class CBUISelector {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
-        return ['CBUI', 'CBUINavigationArrowPart', 'CBUISectionItem4',
-                'CBUITitleAndDescriptionPart'];
+    static function CBHTMLOutput_requiredClassNames() {
+        return ['CBUI', 'CBUINavigationArrowPart', 'CBUINavigationView',
+                'CBUISectionItem4', 'CBUITitleAndDescriptionPart'];
     }
 
     /**
