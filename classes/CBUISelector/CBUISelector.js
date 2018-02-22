@@ -63,6 +63,8 @@ var CBUISelector = {
         var options = args.options || [{ title: "Default Option" }];
         var propertyName = args.propertyName || "value";
         var spec = args.spec || {};
+        var specChangedCallback = args.specChangedCallback;
+        var valueChangedCallback = args.valueChangedCallback;
 
         let sectionItem = CBUISectionItem4.create();
         let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
@@ -72,14 +74,6 @@ var CBUISelector = {
         sectionItem.appendPart(CBUINavigationArrowPart.create());
 
         var state = { options: undefined };
-
-        var updateValueCallback = CBUISelector.updateValue.bind(undefined, {
-            propertyName: propertyName,
-            spec: spec,
-            specChangedCallback: args.specChangedCallback,
-            updateInterfaceCallback: updateInterface,
-            valueChangedCallback: args.valueChangedCallback,
-        });
 
         updateOptions(options);
 
@@ -94,7 +88,7 @@ var CBUISelector = {
         }
 
         sectionItem.callback = CBUISelector.showSelectorForControl.bind(undefined, {
-            callback: updateValueCallback,
+            callback: updateValue,
             labelText: labelText,
             navigateToItemCallback: navigate,
             propertyName: propertyName,
@@ -112,8 +106,14 @@ var CBUISelector = {
             set options(value) {
                 updateOptions(value);
             },
+            get value() {
+                return spec[propertyName];
+            },
+            set value(value) {
+                updateValue(value);
+            },
             updateOptionsCallback: updateOptions, /* deprecated */
-            updateValueCallback: updateValueCallback,
+            updateValueCallback: updateValue, /* deprecated */
         };
 
         /* closure */
@@ -158,6 +158,21 @@ var CBUISelector = {
             }
 
             updateInterface();
+        }
+
+        /* closure */
+        function updateValue(value) {
+            spec[propertyName] = value;
+
+            updateInterface();
+
+            if (typeof specChangedCallback === "function") {
+                specChangedCallback();
+            }
+
+            if (typeof valueChangedCallback === "function") {
+                valueChangedCallback(value);
+            }
         }
     },
 
@@ -269,28 +284,6 @@ var CBUISelector = {
             selectedValue: args.spec[args.propertyName],
             title: args.labelText,
         });
-    },
-
-    /**
-     * @param string args.propertyName
-     * @param object args.spec
-     * @param function args.specChangedCallback
-     * @param function args.updateInterfaceCallback
-     * @param function? args.valueChangedCallback
-     *
-     * @return undefined
-     */
-    updateValue: function (args, value) {
-        args.spec[args.propertyName] = value;
-        args.updateInterfaceCallback();
-
-        if (typeof args.specChangedCallback === "function") {
-            args.specChangedCallback();
-        }
-
-        if (typeof args.valueChangedCallback === "function") {
-            args.valueChangedCallback(value);
-        }
     },
 };
 
