@@ -42,7 +42,8 @@ var CBUISelector = {
      *
      *              The element represents a CBUISectionItem4.
      *
-     *          updateOptionsCallback: function
+     *          options: [object] (get, set)
+     *          updateOptionsCallback: function (deprecated)
      *          updateValueCallback: function
      *      }
      */
@@ -105,7 +106,13 @@ var CBUISelector = {
             get element() {
                 return sectionItem.element;
             },
-            updateOptionsCallback: updateOptions,
+            get options() {
+                return JSON.parse(JSON.stringify(state.options));
+            },
+            set options(value) {
+                updateOptions(value);
+            },
+            updateOptionsCallback: updateOptions, /* deprecated */
             updateValueCallback: updateValueCallback,
         };
 
