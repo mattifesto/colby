@@ -5,8 +5,10 @@
 /* global
     CBUI,
     CBUINavigationArrowPart,
+    CBUINavigationView,
     CBUISectionItem4,
-    CBUITitleAndDescriptionPart */
+    CBUITitleAndDescriptionPart,
+    Colby */
 
 var CBUISelector = {
 
@@ -80,16 +82,24 @@ var CBUISelector = {
 
         updateOptions(options);
 
-        if (args.navigateToItemCallback) {
-            sectionItem.callback = CBUISelector.showSelectorForControl.bind(undefined, {
-                callback: updateValueCallback,
-                labelText: labelText,
-                navigateToItemCallback: args.navigateToItemCallback,
-                propertyName: propertyName,
-                spec: spec,
-                state: state,
-            });
+        let navigate = args.navigateToItemCallback;
+
+        if (navigate === undefined) {
+            if (typeof CBUINavigationView === "object" && CBUINavigationView.context) {
+                navigate = CBUINavigationView.context.navigate;
+            } else {
+                Colby.alert("CBUISelector requires the use of CBUINavigationView");
+            }
         }
+
+        sectionItem.callback = CBUISelector.showSelectorForControl.bind(undefined, {
+            callback: updateValueCallback,
+            labelText: labelText,
+            navigateToItemCallback: navigate,
+            propertyName: propertyName,
+            spec: spec,
+            state: state,
+        });
 
         return {
             get element() {
