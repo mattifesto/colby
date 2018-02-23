@@ -43,7 +43,7 @@ final class CBAdminPageMenuView {
         ]);
 
         $selectedMenuItem = CBMenu::selectedMenuItem($adminMenu, $selectedMenuItemName);
-        $submenuID = CBConvert::valueAsHex160(CBModel::value($selectedMenuItem, 'submenuID'));
+        $submenuID = CBModel::valueAsID($selectedMenuItem, 'submenuID');
 
         if ($submenuID) {
             $selectedSubmenuItemName = CBModel::value($model, 'selectedSubmenuItemName');
