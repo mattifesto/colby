@@ -42,6 +42,7 @@ var CBUISelector = {
      *
      *              The element represents a CBUISectionItem4.
      *
+     *          onchange: function (get, set)
      *          options: [object] (get, set)
      *          updateOptionsCallback: function (deprecated)
      *          updateValueCallback: function
@@ -63,7 +64,7 @@ var CBUISelector = {
         var options = args.options || [{ title: "Default Option" }];
         var propertyName = args.propertyName || "value";
         var spec = args.spec || {};
-        var specChangedCallback = args.specChangedCallback;
+        var onchangeCallback = args.specChangedCallback;
         var valueChangedCallback = args.valueChangedCallback;
 
         let sectionItem = CBUISectionItem4.create();
@@ -99,6 +100,12 @@ var CBUISelector = {
         return {
             get element() {
                 return sectionItem.element;
+            },
+            get onchange() {
+                return onchangeCallback;
+            },
+            set onchange(value) {
+                onchangeCallback = value;
             },
             get options() {
                 return JSON.parse(JSON.stringify(state.options));
@@ -166,8 +173,8 @@ var CBUISelector = {
 
             updateInterface();
 
-            if (typeof specChangedCallback === "function") {
-                specChangedCallback();
+            if (typeof onchangeCallback === "function") {
+                onchangeCallback();
             }
 
             if (typeof valueChangedCallback === "function") {
