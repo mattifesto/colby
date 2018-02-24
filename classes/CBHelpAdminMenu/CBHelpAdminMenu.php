@@ -24,12 +24,6 @@ final class CBHelpAdminMenu {
             'items' => [
                 (object)[
                     'className' => 'CBMenuItem',
-                    'name' => 'caption-alternative-text',
-                    'text' => 'Captions & Alternative Text',
-                    'URL' => '/admin/help/caption-alternative-text',
-                ],
-                (object)[
-                    'className' => 'CBMenuItem',
                     'name' => 'CBArtworkElement',
                     'text' => 'CBArtworkElement',
                     'URL' => '/admin/page/?class=CBAdminPageForCBArtworkElement',
