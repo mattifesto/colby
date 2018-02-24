@@ -60,7 +60,7 @@ final class CBCSSVariablesHelp {
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBHelpAdminMenu::ID);
+        $spec = CBModels::fetchSpecByID(CBHelpAdminMenu::ID());
 
         $spec->items[] = (object)[
             'className' => 'CBMenuItem',
