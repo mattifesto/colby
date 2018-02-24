@@ -11,15 +11,6 @@ final class CBDocumentation {
                 'mainMenuItemName' => 'help',
                 'menuItem' => (object)[
                     'className' => 'CBMenuItem',
-                    'name' => 'TitlesAndDescriptions',
-                    'text' => 'Titles & Descriptions',
-                    'URL' => '/admin/?c=CBDocumentation&p=TitlesAndDescriptions',
-                ],
-            ],
-            (object)[
-                'mainMenuItemName' => 'help',
-                'menuItem' => (object)[
-                    'className' => 'CBMenuItem',
                     'name' => 'CBPageHelpers',
                     'text' => 'CBPageHelpers',
                     'URL' => '/admin/?c=CBDocumentation&p=CBPageHelpers',
@@ -84,14 +75,6 @@ final class CBDocumentation {
                         }
 
 EOT
-                ]);
-                break;
-
-            case 'TitlesAndDescriptions':
-                CBView::renderSpec((object)[
-                    'className' => 'CBMessageView',
-                    'CSSClassNames' => 'CBLightTheme',
-                    'markup' => file_get_contents(__DIR__ . '/TitlesAndDescriptions_documentation.mmk'),
                 ]);
                 break;
 
