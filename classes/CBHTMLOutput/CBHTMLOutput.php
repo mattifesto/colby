@@ -167,6 +167,18 @@ final class CBHTMLOutput {
             );
         }
 
+        /**
+         * @TODO 2018.02.26
+         *
+         *      This setting should come from a function because it is shared by
+         *      all instances of a site.
+         *
+         *      This is a good example an undefined property value having a
+         *      meaning. You should question this before making further changes.
+         *
+         *      What do you do if you want to have no page settings?
+         */
+
         if (empty($className)) {
             $className = CBPagesPreferences::classNameForUnsetPageSettings();
         }
