@@ -1,33 +1,35 @@
 <?php
 
+/**
+ * @deprecated 2018.02.26
+ *
+ *      This class no longer creates static width pages. This class will be
+ *      removed as soon as removal is known to not cause issues.
+ */
 final class CBPageSettingsForStaticPages {
 
     /**
-     * @return  null
+     * @return [string]
      */
-    static function renderEndOfBodyContent() {
+    static function CBHTMLOutput_htmlClassNames(): array {
+        return ['CBLightTheme', 'CBStyleSheet'];
     }
 
     /**
-     * @return  null
+     * @return void
      */
-    static function CBHTMLOutput_renderHeadContent() { ?>
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400' rel='stylesheet'>
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic' rel='stylesheet'>
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans:600' rel='stylesheet'>
-        <style>
-            html {
-                font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-                font-size: 18px;
-                min-width: 980px;
-            }
-        </style>
-    <?php }
+    static function CBHTMLOutput_renderHeadContent(): void {
+        ?>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <?php
+    }
 
     /**
-     * @return  null
+     * @return void
      */
-    static function renderStartOfBodyContent() {
+    static function renderStartOfBodyContent(): void {
         $googleTagManagerID = CBSitePreferences::googleTagManagerID();
 
         if ($googleTagManagerID !== '') { ?>
@@ -46,7 +48,7 @@ final class CBPageSettingsForStaticPages {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredHeadClassNames() {
+    static function CBHTMLOutput_requiredHeadClassNames(): array {
         return ['CBEqualize'];
     }
 }
