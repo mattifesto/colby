@@ -3,10 +3,10 @@
 final class CBPageSettingsForAdminPages {
 
     /**
-     * @return string
+     * @return [string]
      */
-    static function defaultThemeClassName() {
-        return 'CBLightTheme';
+    static function CBHTMLOutput_htmlClassNames(): array {
+        return ['CBLightTheme', 'CBStyleSheet'];
     }
 
     /**
@@ -36,31 +36,20 @@ final class CBPageSettingsForAdminPages {
     }
 
     /**
-     * @return  null
+     * @return void
      */
-    static function renderEndOfBodyContent() {
-    }
+    static function CBHTMLOutput_renderHeadContent(): void {
+        ?>
 
-    /**
-     * @return  null
-     */
-    static function CBHTMLOutput_renderHeadContent() { ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:600">
-        <style>
-            html {
-                font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-                font-size: 16px;
-            }
-        </style>
-    <?php }
+
+        <?php
+    }
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredHeadClassNames() {
+    static function CBHTMLOutput_requiredHeadClassNames(): array {
         return ['CBEqualize'];
     }
 }
