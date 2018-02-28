@@ -294,15 +294,22 @@ final class CBHTMLOutput {
     }
 
     /**
-     * @return null
+     * @return void
      */
-    static function render() {
+    static function render(): void {
         $bodyContent = ob_get_clean();
         $settingsHeadContent = '';
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent = '';
-        $classNameForPageSettings = CBHTMLOutput::classNameForPageSettings();
+        $classNameForPageSettings = ''; /* deprecated */
         $htmlElementClassNames = [];
+
+        if ($className = CBHTMLOutput::classNameForPageSettings()) {
+            $classNameForPageSettings = $className; /* deprecated */
+            $pageSettingsClassNames = CBPageSettings::requiredClassNames([$className]);
+        } else {
+            $pageSettingsClassNames = [];
+        }
 
         if (!empty($classNameForPageSettings)) {
             $htmlElementClassNames = CBPageSettings::htmlElementClassNames([$classNameForPageSettings]);
