@@ -302,21 +302,20 @@ final class CBHTMLOutput {
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent = '';
         $classNameForPageSettings = CBHTMLOutput::classNameForPageSettings();
-        $htmlClassNames = ['CBLightTheme'];
+        $htmlElementClassNames = ['CBLightTheme'];
 
         if (!empty($classNameForPageSettings)) {
             if (is_callable($function = "{$classNameForPageSettings}::CBHTMLOutput_htmlClassNames")) {
-                $htmlClassNames = call_user_func($function);
+                $htmlElementClassNames = call_user_func($function);
             } else if (is_callable($function = "{$classNameForPageSettings}::defaultThemeClassName")) {
                 /* @deprecated */
-                $htmlClassNames = [call_user_func($function)];
+                $htmlElementClassNames = [call_user_func($function)];
             }
 
-            array_unshift($htmlClassNames, $classNameForPageSettings);
+            array_unshift($htmlElementClassNames, $classNameForPageSettings);
         }
 
-        array_walk($htmlClassNames, 'CBHTMLOutput::requireClassName');
-        $htmlClassNames = implode(' ', $htmlClassNames);
+        array_walk($htmlElementClassNames, 'CBHTMLOutput::requireClassName');
 
         CBHTMLOutput::processRequiredClassNames();
 
@@ -370,7 +369,7 @@ final class CBHTMLOutput {
         ?>
 
         <!doctype html>
-        <html lang="en" class="<?= cbhtml($htmlClassNames) ?>">
+        <html lang="en" class="<?= cbhtml(implode(' ',$htmlElementClassNames)) ?>">
             <head>
                 <meta charset="UTF-8">
                 <title><?= cbhtml($title) ?></title>
