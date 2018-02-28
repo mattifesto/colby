@@ -27,7 +27,7 @@ final class CBPageSettings {
      */
     static function renderHeadElementHTML($pageSettingsClassNames): void {
         foreach ($pageSettingsClassNames as $className) {
-            if (is_callable($function = "{$className}::CBHTMLOutput_renderHeadContent")) {
+            if (is_callable($function = "{$className}::CBPageSettings_renderHeadElementHTML")) {
                 call_user_func($function);
             }
         }
