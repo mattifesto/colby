@@ -143,9 +143,15 @@ var CBUIImageChooser = {
                 return imageElement.src;
             },
             set src(value) {
+                if (value === undefined) {
+                    value = "";
+                } else {
+                    value = String(value);
+                }
+
                 imageElement.src = value;
 
-                if (value) {
+                if (value !== "") {
                     imageElement.style.display = "block";
                     removeElement.style.display = "block";
                 } else {
