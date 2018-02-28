@@ -38,7 +38,7 @@ final class CBPageSettingsForAdminPages {
     /**
      * @return void
      */
-    static function CBHTMLOutput_renderHeadContent(): void {
+    static function CBPageSettings_renderHeadElementHTML(): void {
         ?>
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
