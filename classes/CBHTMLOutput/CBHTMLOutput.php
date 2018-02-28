@@ -261,7 +261,13 @@ final class CBHTMLOutput {
      */
     private static function processRequiredClassNames() {
         $requiredClassNames = array_keys(CBHTMLOutput::$requiredClassNames);
-        $resolvedClassNames = CBRequiredClassNamesResolver::resolveRequiredClassNames($requiredClassNames);
+        $resolvedClassNames = CBRequiredClassNamesResolver::resolveRequiredClassNames(
+            $requiredClassNames,
+            [
+                'CBHTMLOutput_requiredClassNames',
+                'requiredClassNames', /* deprecated */
+            ]
+        );
 
         foreach ($resolvedClassNames as $className) {
             if (is_callable($function = "{$className}::CBHTMLOutput_CSSURLs") || is_callable($function = "{$className}::requiredCSSURLs")) {

@@ -18,9 +18,9 @@ final class CBRequiredClassNamesResolver {
     /**
      * @param [string] $classNames
      *
-     * @return null
+     * @return void
      */
-    private function resolve(array $classNames) {
+    private function resolve(array $classNames, array $functionNames): void {
         foreach ($classNames as $className) {
 
             /**
@@ -49,8 +49,12 @@ final class CBRequiredClassNamesResolver {
             /**
              * Resolve this class name's dependencies.
              */
-            if (is_callable($function = "{$className}::CBHTMLOutput_requiredClassNames") || is_callable($function = "{$className}::requiredClassNames")) {
-                $this->resolve(call_user_func($function));
+            foreach($functionNames as $functionName) {
+                if (is_callable($function = "{$className}::{$functionName}")) {
+                    $requiredClassNames = call_user_func($function);
+                    $this->resolve($requiredClassNames, $functionNames);
+                    break;
+                }
             }
 
             /**
@@ -71,9 +75,9 @@ final class CBRequiredClassNamesResolver {
      *
      * @return [string]
      */
-    static function resolveRequiredClassNames(array $classNames) {
+    static function resolveRequiredClassNames(array $classNames, array $functionNames): array {
         $resolver = new CBRequiredClassNamesResolver();
-        $resolver->resolve($classNames);
+        $resolver->resolve($classNames, $functionNames);
 
         return $resolver->resolvedClassNames;
     }
