@@ -311,9 +311,7 @@ final class CBHTMLOutput {
             $pageSettingsClassNames = [];
         }
 
-        if (!empty($classNameForPageSettings)) {
-            $htmlElementClassNames = CBPageSettings::htmlElementClassNames([$classNameForPageSettings]);
-        }
+        $htmlElementClassNames = CBPageSettings::htmlElementClassNames($pageSettingsClassNames);
 
         array_walk($htmlElementClassNames, 'CBHTMLOutput::requireClassName');
 
