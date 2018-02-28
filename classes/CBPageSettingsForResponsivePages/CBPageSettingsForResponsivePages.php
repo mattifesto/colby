@@ -42,7 +42,7 @@ final class CBPageSettingsForResponsivePages {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredHeadClassNames(): array {
+    static function CBPageSettings_requiredClassNames(): array {
         return ['CBEqualize'];
     }
 }
