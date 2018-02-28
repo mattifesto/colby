@@ -3,6 +3,8 @@
 final class CBPageSettings {
 
     /**
+     * @param [string] $pageSettingsClassNames
+     *
      * @return [string]
      */
     static function htmlElementClassNames(array $pageSettingsClassNames): array {
@@ -16,5 +18,22 @@ final class CBPageSettings {
         }
 
         return array_values(array_unique($htmlElementClassNames));
+    }
+
+    /**
+     * @param [string] $rootPageSettingsClassNames
+     *
+     *      An array of root level page settings class names. Often this array
+     *      will only contain one root page settings class name.
+     *
+     * @return [string]
+     *
+     *      The full array of page settings class names in dependency order.
+     */
+    static function requiredClassNames(array $rootPageSettingsClassNames): array {
+        return CBRequiredClassNamesResolver::resolveRequiredClassNames(
+            $rootPageSettingsClassNames,
+            ['CBPageSettings_requiredClassNames']
+        );
     }
 }
