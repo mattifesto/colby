@@ -5,7 +5,7 @@ final class CBEqualize {
     /**
      * @return void
      */
-    static function CBHTMLOutput_renderHeadContent(): void { ?>
+    static function CBPageSettings_renderHeadElementHTML(): void { ?>
         <script src="<?= cbsysurl() . '/classes/CBEqualize/html5shiv.v362.js' ?>"></script>
         <script src="<?= cbsysurl() . '/classes/CBEqualize/es6-promise.auto.min.v362.js' ?>"></script>
         <script src="<?= Colby::flexpath(__CLASS__, 'v362.js', cbsysurl()) ?>"></script>
