@@ -302,7 +302,7 @@ final class CBHTMLOutput {
         $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent = '';
         $classNameForPageSettings = CBHTMLOutput::classNameForPageSettings();
-        $htmlElementClassNames = ['CBLightTheme'];
+        $htmlElementClassNames = [];
 
         if (!empty($classNameForPageSettings)) {
             if (is_callable($function = "{$classNameForPageSettings}::CBHTMLOutput_htmlClassNames")) {
