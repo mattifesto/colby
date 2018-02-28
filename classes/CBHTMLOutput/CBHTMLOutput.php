@@ -308,8 +308,6 @@ final class CBHTMLOutput {
             if (is_callable($function = "{$classNameForPageSettings}::CBHTMLOutput_htmlClassNames")) {
                 $htmlElementClassNames = call_user_func($function);
             }
-
-            array_unshift($htmlElementClassNames, $classNameForPageSettings);
         }
 
         array_walk($htmlElementClassNames, 'CBHTMLOutput::requireClassName');
