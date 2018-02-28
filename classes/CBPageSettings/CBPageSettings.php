@@ -21,6 +21,19 @@ final class CBPageSettings {
     }
 
     /**
+     * @param [string] $pageSettingsClassNames
+     *
+     * @return void
+     */
+    static function renderHeadElementHTML($pageSettingsClassNames): void {
+        foreach ($pageSettingsClassNames as $className) {
+            if (is_callable($function = "{$className}::CBHTMLOutput_renderHeadContent")) {
+                call_user_func($function);
+            }
+        }
+    }
+
+    /**
      * @param [string] $rootPageSettingsClassNames
      *
      *      An array of root level page settings class names. Often this array
