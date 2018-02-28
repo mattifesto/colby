@@ -11,7 +11,7 @@ final class CBPageSettingsForStaticPages {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_htmlClassNames(): array {
+    static function CBPageSettings_htmlElementClassNames(): array {
         return ['CBLightTheme', 'CBStyleSheet'];
     }
 
