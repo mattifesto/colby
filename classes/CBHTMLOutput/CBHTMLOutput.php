@@ -316,9 +316,10 @@ final class CBHTMLOutput {
 
         CBHTMLOutput::processRequiredClassNames();
 
-        if (is_callable($function = "{$classNameForPageSettings}::renderStartOfBodyContent")) {
+        {
             ob_start();
-            call_user_func($function);
+
+            CBPageSettings::renderStartOfBodyElementHTML($pageSettingsClassNames);
 
             $settingsStartOfBodyContent = ob_get_clean();
         }
