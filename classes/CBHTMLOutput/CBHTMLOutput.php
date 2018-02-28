@@ -298,7 +298,6 @@ final class CBHTMLOutput {
      */
     static function render(): void {
         $bodyContent = ob_get_clean();
-        $settingsStartOfBodyContent = '';
         $settingsEndOfBodyContent = '';
         $classNameForPageSettings = ''; /* deprecated */
         $htmlElementClassNames = [];
@@ -315,14 +314,6 @@ final class CBHTMLOutput {
         array_walk($htmlElementClassNames, 'CBHTMLOutput::requireClassName');
 
         CBHTMLOutput::processRequiredClassNames();
-
-        {
-            ob_start();
-
-            CBPageSettings::renderStartOfBodyElementHTML($pageSettingsClassNames);
-
-            $settingsStartOfBodyContent = ob_get_clean();
-        }
 
         if (is_callable($function = "{$classNameForPageSettings}::renderEndOfBodyContent")) {
             ob_start();
@@ -378,7 +369,7 @@ final class CBHTMLOutput {
                 ?>
             </head>
             <body>
-                <?= $settingsStartOfBodyContent ?>
+                <?php CBPageSettings::renderStartOfBodyElementHTML($pageSettingsClassNames) ?>
                 <?php echo $bodyContent; $bodyContent = null; ?>
                 <?= $settingsEndOfBodyContent ?>
                 <?php CBHTMLOutput::renderJavaScript(); ?>
