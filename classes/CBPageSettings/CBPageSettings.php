@@ -45,7 +45,7 @@ final class CBPageSettings {
      */
     static function renderPreContentHTML($pageSettingsClassNames): void {
         foreach ($pageSettingsClassNames as $className) {
-            if (is_callable($function = "{$className}::renderStartOfBodyContent")) {
+            if (is_callable($function = "{$className}::CBPageSettings_renderPreContentHTML")) {
                 call_user_func($function);
             }
         }
