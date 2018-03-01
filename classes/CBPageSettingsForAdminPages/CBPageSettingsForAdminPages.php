@@ -14,7 +14,7 @@ final class CBPageSettingsForAdminPages {
      *
      * @return void
      */
-    static function renderPageForException(Throwable $throwable): void {
+    static function CBPageSettings_renderErrorPage(Throwable $throwable): void {
         $spec = (object)[
             'className' => 'CBViewPage',
             'classNameForSettings' => 'CBPageSettingsForAdminPages',
