@@ -29,7 +29,7 @@ final class CBPageSettingsForStaticPages {
     /**
      * @return void
      */
-    static function renderStartOfBodyContent(): void {
+    static function CBPageSettings_renderPreContentHTML(): void {
         $googleTagManagerID = CBSitePreferences::googleTagManagerID();
 
         if ($googleTagManagerID !== '') { ?>
