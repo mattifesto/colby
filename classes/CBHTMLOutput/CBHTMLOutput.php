@@ -369,7 +369,7 @@ final class CBHTMLOutput {
                 ?>
             </head>
             <body>
-                <?php CBPageSettings::renderStartOfBodyElementHTML($pageSettingsClassNames) ?>
+                <?php CBPageSettings::renderPreContentHTML($pageSettingsClassNames) ?>
                 <?php echo $bodyContent; $bodyContent = null; ?>
                 <?= $settingsEndOfBodyContent ?>
                 <?php CBHTMLOutput::renderJavaScript(); ?>
