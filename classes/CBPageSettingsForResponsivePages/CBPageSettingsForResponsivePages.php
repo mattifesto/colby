@@ -32,6 +32,6 @@ final class CBPageSettingsForResponsivePages {
      * @return [string]
      */
     static function CBPageSettings_requiredClassNames(): array {
-        return ['CBEqualize', 'CBResponsiveViewportPageSettingsPart'];
+        return ['CBEqualizePageSettingsPart', 'CBResponsiveViewportPageSettingsPart'];
     }
 }
