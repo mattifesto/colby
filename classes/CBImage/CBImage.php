@@ -3,6 +3,45 @@
 final class CBImage {
 
     /**
+     * @param model $image
+     * @param string $filename
+     *
+     *      If not specified, the filename from the $image model will be used.
+     *
+     *      Examples: 'original', 'rw320', 'rw1280'
+     *
+     * @param string $flexdir
+     *
+     * @return ?string
+     *
+     *      This function will return null if the required properties are not
+     *      available.
+     */
+    static function asFlexpath(stdClass $image, string $filename = '', string $flexdir = ''): ?string {
+        $ID = CBModel::valueAsID($image, 'ID');
+
+        if (empty($ID)) {
+            return null;
+        }
+
+        $extension = CBModel::valueToString($image, 'extension');
+
+        if (empty($extension)) {
+            return null;
+        }
+
+        if (empty($filename)) {
+            $filename = CBModel::valueToString($image, 'filename');
+
+            if (empty($filename)) {
+                return null;
+            }
+        }
+
+        return CBDataStore::flexpath($ID, "{$filename}.{$extension}", $flexdir);
+    }
+
+    /**
      * This model is validated more than most models because all of the
      * properties are required for the model to be valid.
      *
@@ -195,6 +234,12 @@ EOT;
 
     /**
      * This function is similar to the CBModel::value... functions.
+     *
+     * @TODO 2018.03.01
+     *
+     *      1. Rename to valueAsFlexpath and return ?string instead of false
+     *      2. Rename $operation parameter to $filename
+     *      3. Use CBImage::asFlexpath()
      *
      * @param object $model
      * @param string $keyPath
