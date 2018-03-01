@@ -315,9 +315,10 @@ final class CBHTMLOutput {
 
         CBHTMLOutput::processRequiredClassNames();
 
-        if (is_callable($function = "{$classNameForPageSettings}::renderEndOfBodyContent")) {
+        {
             ob_start();
-            call_user_func($function);
+
+            CBPageSettings::renderPostContentHTML($pageSettingsClassNames);
 
             $settingsEndOfBodyContent = ob_get_clean();
         }
