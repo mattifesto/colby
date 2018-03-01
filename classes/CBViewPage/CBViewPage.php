@@ -300,20 +300,6 @@ final class CBViewPage {
     }
 
     /**
-     * @return string
-     *  An empty string will be returned if no image is available.
-     */
-    private static function modelToImageURL($model) {
-        if (!empty($model->image)) {
-            return CBDataStore::flexpath($model->image->ID, "rw1280.{$model->image->extension}", CBSitePreferences::siteURL());
-        } else if (!empty($model->thumbnailURL)) {
-            return $model->thumbnailURL;
-        } else {
-            return '';
-        }
-    }
-
-    /**
      * @param model $model
      *
      *      {
@@ -340,7 +326,8 @@ final class CBViewPage {
         $info = CBHTMLOutput::pageInformation();
         $info->description = $description;
         $info->ID = CBModel::value($model, 'ID', '');
-        $info->imageURL = CBViewPage::modelToImageURL($model);
+        $info->image = CBModel::valueAsModel($model, 'image', ['CBImage']);
+        $info->imageURL = CBModel::valueToString($model, 'thumbnailURL');
         $info->publishedTimestamp = empty($model->isPublished) ? null : $publicationTimeStamp;
         $info->selectedMainMenuItemName = CBModel::value($model, 'selectedMainMenuItemName');
         $info->title = $title;
