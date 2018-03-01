@@ -12,17 +12,6 @@ final class CBPageSettingsForResponsivePages {
     /**
      * @return void
      */
-    static function CBPageSettings_renderHeadElementHTML(): void {
-        ?>
-
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <?php
-    }
-
-    /**
-     * @return void
-     */
     static function CBPageSettings_renderPreContentHTML(): void {
         $googleTagManagerID = CBSitePreferences::googleTagManagerID();
 
@@ -43,6 +32,6 @@ final class CBPageSettingsForResponsivePages {
      * @return [string]
      */
     static function CBPageSettings_requiredClassNames(): array {
-        return ['CBEqualize'];
+        return ['CBEqualize', 'CBResponsiveViewportPageSettingsPart'];
     }
 }
