@@ -23,6 +23,7 @@ final class CBPageSettingsForStaticPages {
             'CBEqualizePageSettingsPart',
             'CBResponsiveViewportPageSettingsPart',
             'CBGoogleTagManagerPageSettingsPart',
+            'CBFacebookPageSettingsPart',
         ];
     }
 }
