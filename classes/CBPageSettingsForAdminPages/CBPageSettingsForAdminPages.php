@@ -36,20 +36,9 @@ final class CBPageSettingsForAdminPages {
     }
 
     /**
-     * @return void
-     */
-    static function CBPageSettings_renderHeadElementHTML(): void {
-        ?>
-
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <?php
-    }
-
-    /**
      * @return [string]
      */
     static function CBPageSettings_requiredClassNames(): array {
-        return ['CBEqualize'];
+        return ['CBEqualize', 'CBResponsiveViewportPageSettingsPart'];
     }
 }
