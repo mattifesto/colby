@@ -45,7 +45,7 @@ final class CBPageSettings {
      */
     static function renderPostContentHTML($pageSettingsClassNames): void {
         foreach ($pageSettingsClassNames as $className) {
-            if (is_callable($function = "{$className}::renderEndOfBodyContent")) {
+            if (is_callable($function = "{$className}::CBPageSettings_renderPostContentHTML")) {
                 call_user_func($function);
             }
         }
