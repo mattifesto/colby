@@ -39,6 +39,9 @@ final class CBPageSettingsForAdminPages {
      * @return [string]
      */
     static function CBPageSettings_requiredClassNames(): array {
-        return ['CBEqualizePageSettingsPart', 'CBResponsiveViewportPageSettingsPart'];
+        return [
+            'CBEqualizePageSettingsPart',
+            'CBResponsiveViewportPageSettingsPart',
+        ];
     }
 }
