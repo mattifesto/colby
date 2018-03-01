@@ -42,7 +42,7 @@ final class CBPageSettings {
      *      Returns true if a page was rendered; otherwise false.
      */
     static function renderErrorPage($pageSettingsClassName, $throwable): bool {
-        if (is_callable($function = "{$pageSettingsClassName}::renderPageForException")) {
+        if (is_callable($function = "{$pageSettingsClassName}::CBPageSettings_renderErrorPage")) {
             call_user_func($function, $throwable);
             return true;
         } else {
