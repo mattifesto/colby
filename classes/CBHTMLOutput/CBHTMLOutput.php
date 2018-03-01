@@ -236,9 +236,7 @@ final class CBHTMLOutput {
              */
             CBHTMLOutput::reset();
 
-            if (is_callable($function = "{$classNameForPageSettings}::renderPageForException")) {
-                call_user_func($function, $throwable);
-            } else {
+            if (!CBPageSettings::renderErrorPage($classNameForPageSettings, $throwable)) {
                 CBErrorHandler::renderErrorReportPage($throwable);
             }
         } catch (Throwable $innerThrowable) {
