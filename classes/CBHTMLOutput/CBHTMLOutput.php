@@ -298,11 +298,8 @@ final class CBHTMLOutput {
      */
     static function render(): void {
         $bodyContent = ob_get_clean();
-        $classNameForPageSettings = ''; /* deprecated */
-        $htmlElementClassNames = [];
 
         if ($className = CBHTMLOutput::classNameForPageSettings()) {
-            $classNameForPageSettings = $className; /* deprecated */
             $pageSettingsClassNames = CBPageSettings::requiredClassNames([$className]);
         } else {
             $pageSettingsClassNames = [];
