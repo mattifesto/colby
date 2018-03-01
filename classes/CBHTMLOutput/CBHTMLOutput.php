@@ -324,17 +324,7 @@ final class CBHTMLOutput {
                 <title><?= cbhtml($title) ?></title>
                 <meta name="description" content="<?= cbhtml($description) ?>">
 
-                <meta property="fb:app_id" content="<?= CBFacebookAppID ?>">
-                <meta property="og:title" content="<?= cbhtml($title) ?>">
-                <meta property="og:description" content="<?= cbhtml($description) ?>">
-
                 <?php
-
-                if (!empty($info->imageURL)) {
-                    ?>
-                    <meta property="og:image" content="<?= $info->imageURL ?>">
-                    <?php
-                }
 
                 $imageForIcon = CBSitePreferences::imageForIcon();
 
