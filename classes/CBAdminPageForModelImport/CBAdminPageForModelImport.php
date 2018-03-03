@@ -174,12 +174,30 @@ EOT;
                         }
                     }
 
-                    $specs[] = $spec;
+                    $specs[$spec->ID] = $spec;
                 }
 
                 fclose($handle);
 
-                $specsByClass = array_reduce($specs, function(&$specsByClass, $spec) {
+                $originalSpecs = CBModels::fetchSpecsByID(array_keys($specs));
+                $updatedSpecs = [];
+
+                foreach ($specs as $ID => $specUpdates) {
+                    if (empty($originalSpecs[$ID])) {
+                        $updatedSpecs[$ID] = $specUpdates;
+                    } else {
+                        $originalSpec = $originalSpecs[$ID];
+                        $updatedSpec = CBModel::clone($originalSpec);
+
+                        CBModel::merge($updatedSpec, $specUpdates);
+
+                        if ($updatedSpec != $originalSpec) {
+                            $updatedSpecs[$ID] = $updatedSpec;
+                        }
+                    }
+                }
+
+                $specsByClass = array_reduce($updatedSpecs, function(&$specsByClass, $spec) {
                     if (empty($specsByClass[$spec->className])) {
                         $specsByClass[$spec->className] = [];
                     }
@@ -209,8 +227,14 @@ EOT;
 
             CBLog::log((object)[
                 'className' => __CLASS__,
-                'message' => "{$countOfSpecsSaved} of {$countOfSpecsInDataFile} specs found in the data file were saved",
-                'severity' => 5,
+                'message' => "{$countOfSpecsInDataFile} of the data file rows contained model information.",
+                'severity' => 6,
+            ]);
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => "{$countOfSpecsSaved} of the data file rows provided changes to models that were saved.",
+                'severity' => 6,
             ]);
         } catch (Throwable $throwable) {
             CBErrorHandler::report($throwable);
