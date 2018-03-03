@@ -320,9 +320,15 @@ EOT;
      * Scenarios:       Fetch the spec for a web page
      * Usage Frequency: Occasionally
      *
-     * @return [<hex160> => {stdClass}, ...]
+     * @return [model]
+     *
+     *      [
+     *          hex160 => model,
+     *          hex160 => model,
+     *          ...
+     *      ]
      */
-    static function fetchSpecsByID(array $IDs, $args = []) {
+    static function fetchSpecsByID(array $IDs, $args = []): array {
         if (empty($IDs)) { return []; }
 
         $createSpecForIDCallback = null;
