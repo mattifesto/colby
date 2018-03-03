@@ -3,6 +3,20 @@
 class CBImages {
 
     /**
+     * @return ?model (CBImage)
+     */
+    static function CBAjax_upload(): ?stdClass {
+        return CBImages::uploadImageWithName('file');
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_upload_group(): string {
+        return 'Administrators';
+    }
+
+    /**
      * This function is called by CBImage::CBModels_willDelete() and shouldn't
      * be called otherwise. To delete an image call
      *
