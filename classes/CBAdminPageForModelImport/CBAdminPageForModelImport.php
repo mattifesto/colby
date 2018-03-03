@@ -220,9 +220,9 @@ EOT;
     }
 
     /**
-     * @return null
+     * @return string
      */
-    static function CBAjax_uploadDataFile_group() {
+    static function CBAjax_uploadDataFile_group(): string {
         return 'Administrators';
     }
 }
