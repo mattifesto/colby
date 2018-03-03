@@ -179,6 +179,24 @@ final class CBModel {
     }
 
     /**
+     * Transfer the first level property values of object 2 onto object 1.
+     * Object 1 may be altered, object 2 will not be altered.
+     *
+     * This function is meant to be used with models, but there is no reason it
+     * can't be used with objects that aren't technically models.
+     *
+     * @param object $object1
+     * @param object $object2
+     *
+     * @return void
+     */
+    static function merge(stdClass $object1, stdClass $object2): void {
+        foreach ($object2 as $key => $value) {
+            $object1->{$key} = $value;
+        }
+    }
+
+    /**
      * @deprecated use CBModel::build()
      */
     static function toModel(stdClass $spec) {
