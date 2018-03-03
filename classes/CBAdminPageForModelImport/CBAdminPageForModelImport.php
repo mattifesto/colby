@@ -46,29 +46,45 @@ final class CBAdminPageForModelImport {
     }
 
     /**
-     * @param [string] $rowData
-     * @param [string] $columnData
+     * @param [string] $values
+     * @param [string] $keys
      *
-     * @return stdClass|null
+     * @return ?model
      */
-    static function objectFromCSVRowData($rowData, $columnData) {
-        $fieldIndex = 0;
+    static function valuesAsModel(array $values, array $keys): ?stdClass {
+        $index = 0;
         $object = null;
 
-        while (isset($rowData[$fieldIndex])) {
-            $value = trim($rowData[$fieldIndex]);
+        while (isset($values[$index])) {
+            $value = $values[$index];
 
-            if ($value !== '' && isset($columnData[$fieldIndex])) {
-                $key = trim($columnData[$fieldIndex]);
+            if (!empty($keys[$index])) {
+                $key = $keys[$index];
 
-                if ($key !== '') {
-                    if ($object === null) { $object = new stdClass(); }
+                /**
+                 * It's a rule to not trim values during this stage, leaving
+                 * that decision to build, but we do process and validate the
+                 * className and ID values.
+                 */
 
-                    $object->{$key} = $value;
+                if ($key === 'className') {
+                    $value = trim($value);
+
+                    if ($value === '') {
+                        return null;
+                    }
+                } else if ($key === 'ID') {
+                    $value = CBConvert::valueAsHex160(trim($value));
                 }
+
+                if ($object === null) {
+                    $object = new stdClass();
+                }
+
+                $object->{$key} = $value;
             }
 
-            $fieldIndex += 1;
+            $index += 1;
         }
 
         return $object;
@@ -103,27 +119,43 @@ final class CBAdminPageForModelImport {
             }
 
             if ($handle = fopen($_FILES['file']['tmp_name'], 'r')) {
-                $columns = fgetcsv($handle);
+                $keys = fgetcsv($handle);
 
-                if ($columns === false) {
+                if ($keys === false) {
                     throw new RuntimeException("The data file provided is empty");
                 }
+
+                $keys = array_map(function ($key) {
+                    return trim($key);
+                }, $keys);
 
                 $specs = [];
                 $countOfSpecsInDataFile = 0;
                 $countOfSpecsSaved = 0;
 
-                while (($data = fgetcsv($handle)) !== false) {
-                    $spec = CBAdminPageForModelImport::objectFromCSVRowData($data, $columns);
+                while (($values = fgetcsv($handle)) !== false) {
+                    $spec = CBAdminPageForModelImport::valuesAsModel($values, $keys);
 
-                    if ($spec !== null) {
-                        $countOfSpecsInDataFile += 1;
+                    if ($spec === null) {
+                        continue;
+                    }
 
-                        if (empty($spec->className)) {
+                    $countOfSpecsInDataFile += 1;
+
+                    if (empty($spec->ID)) {
+                        $ID = CBModel::toID($spec);
+
+                        if ($ID === null) {
                             $specAsMessage = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($spec));
+                            $message = "An imported {$spec->className} spec was unable to generate its own ID";
+
+                            if (!is_callable("{$spec->className}::CBModel_toID")) {
+                                $message .= " and the CBModel_toID interface is not implemented by the {$spec->className} class";
+                            }
+
                             $message = <<<EOT
 
-                                An imported spec with other fields specified did not specify a className
+                                {$message}
 
                                 --- pre\n{$specAsMessage}
                                 ---
@@ -137,42 +169,12 @@ EOT;
                             ]);
 
                             continue;
+                        } else {
+                            $spec->ID = $ID;
                         }
-
-                        if (empty($spec->ID)) {
-                            $ID = CBModel::toID($spec);
-
-                            if ($ID === null) {
-                                $specAsMessage = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($spec));
-                                $message = "An imported {$spec->className} spec was unable to generate its own ID";
-
-                                if (!is_callable("{$spec->className}::CBModel_toID")) {
-                                    $message .= " and the CBModel_toID interface is not implemented by the {$spec->className} class";
-                                }
-
-                                $message = <<<EOT
-
-                                    {$message}
-
-                                    --- pre\n{$specAsMessage}
-                                    ---
-
-EOT;
-
-                                CBLog::log((object)[
-                                    'className' => __CLASS__,
-                                    'message' => $message,
-                                    'severity' => 3,
-                                ]);
-
-                                continue;
-                            } else {
-                                $spec->ID = $ID;
-                            }
-                        }
-
-                        $specs[] = $spec;
                     }
+
+                    $specs[] = $spec;
                 }
 
                 fclose($handle);
