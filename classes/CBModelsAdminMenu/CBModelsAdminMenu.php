@@ -2,8 +2,6 @@
 
 final class CBModelsAdminMenu {
 
-    const ID = 'f6a893489fb3ea4bfbc4af9f8cb3f052f8add349';
-
     /**
      * @return void
      */
@@ -13,14 +11,14 @@ final class CBModelsAdminMenu {
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'models',
-            'submenuID' => CBModelsAdminMenu::ID,
+            'submenuID' => CBModelsAdminMenu::ID(),
             'text' => 'Models',
             'URL' => '/admin/?c=CBModelsAdmin',
         ];
 
         $spec = (object)[
             'className' => 'CBMenu',
-            'ID' => CBModelsAdminMenu::ID,
+            'ID' => CBModelsAdminMenu::ID(),
             'title' => 'Models',
             'titleURI' => '/admin/?c=CBModelsAdmin',
             'items' => [
@@ -29,12 +27,6 @@ final class CBModelsAdminMenu {
                     'name' => 'directory',
                     'text' => 'Directory',
                     'URL' => '/admin/?c=CBModelsAdmin',
-                ],
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'import',
-                    'text' => 'Import',
-                    'URL' => '/admin/page/?class=CBAdminPageForModelImport',
                 ],
                 (object)[
                     'className' => 'CBMenuItem',
@@ -47,7 +39,7 @@ final class CBModelsAdminMenu {
 
         CBDB::transaction(function () use ($adminMenuSpec, $spec) {
             CBModels::save($adminMenuSpec);
-            CBModels::deleteByID(CBModelsAdminMenu::ID);
+            CBModels::deleteByID(CBModelsAdminMenu::ID());
             CBModels::save($spec);
         });
     }
@@ -57,5 +49,12 @@ final class CBModelsAdminMenu {
      */
     static function CBInstall_requiredClassNames(): array {
         return ['CBDevelopAdminMenu'];
+    }
+
+    /**
+     * @return hex160
+     */
+    static function ID(): string {
+        return 'f6a893489fb3ea4bfbc4af9f8cb3f052f8add349';
     }
 }
