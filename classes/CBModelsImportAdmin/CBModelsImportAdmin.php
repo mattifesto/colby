@@ -39,6 +39,32 @@ final class CBModelsImportAdmin {
     }
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBModelsAdminMenu::ID());
+
+        $spec->items[] = (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'import',
+            'text' => 'Import',
+            'URL' => '/admin/?c=CBModelsImportAdmin',
+        ];
+
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBModelsAdminMenu'];
+    }
+
+    /**
      * @param [string] $values
      * @param [string] $keys
      *
