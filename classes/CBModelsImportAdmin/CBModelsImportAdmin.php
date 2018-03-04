@@ -5,21 +5,14 @@ final class CBModelsImportAdmin {
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
+    static function CBAdmin_menuNamePath(): array {
         return ['models', 'import'];
     }
 
     /**
-     * @return stdClass
+     * @return void
      */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Administrators'];
-    }
-
-    /**
-     * @return null
-     */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Model Administration: Import';
     }
 
