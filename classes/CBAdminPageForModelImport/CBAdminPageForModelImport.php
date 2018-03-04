@@ -129,35 +129,35 @@ final class CBAdminPageForModelImport {
                     return trim($key);
                 }, $keys);
 
-                $specs = [];
+                $rowSpecs = [];
                 $countOfSpecsInDataFile = 0;
                 $countOfSpecsSaved = 0;
 
                 while (($values = fgetcsv($handle)) !== false) {
-                    $spec = CBAdminPageForModelImport::valuesAsModel($values, $keys);
+                    $rowSpec = CBAdminPageForModelImport::valuesAsModel($values, $keys);
 
-                    if ($spec === null) {
+                    if ($rowSpec === null) {
                         continue;
                     }
 
                     $countOfSpecsInDataFile += 1;
 
-                    if (empty($spec->ID)) {
-                        $ID = CBModel::toID($spec);
+                    if (empty($rowSpec->ID)) {
+                        $ID = CBModel::toID($rowSpec);
 
                         if ($ID === null) {
-                            $specAsMessage = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($spec));
-                            $message = "An imported {$spec->className} spec was unable to generate its own ID";
+                            $rowSpecJSONAsMarkup = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($rowSpec));
+                            $message = "An imported {$rowSpec->className} spec was unable to generate its own ID";
 
-                            if (!is_callable("{$spec->className}::CBModel_toID")) {
-                                $message .= " and the CBModel_toID interface is not implemented by the {$spec->className} class";
+                            if (!is_callable("{$rowSpec->className}::CBModel_toID")) {
+                                $message .= " and the CBModel_toID interface is not implemented by the {$rowSpec->className} class";
                             }
 
                             $message = <<<EOT
 
                                 {$message}
 
-                                --- pre\n{$specAsMessage}
+                                --- pre\n{$rowSpecJSONAsMarkup}
                                 ---
 
 EOT;
@@ -170,26 +170,26 @@ EOT;
 
                             continue;
                         } else {
-                            $spec->ID = $ID;
+                            $rowSpec->ID = $ID;
                         }
                     }
 
-                    $specs[$spec->ID] = $spec;
+                    $rowSpecs[$rowSpec->ID] = $rowSpec;
                 }
 
                 fclose($handle);
 
-                $originalSpecs = CBModels::fetchSpecsByID(array_keys($specs));
+                $originalSpecs = CBModels::fetchSpecsByID(array_keys($rowSpecs));
                 $updatedSpecs = [];
 
-                foreach ($specs as $ID => $specUpdates) {
+                foreach ($rowSpecs as $ID => $rowSpec) {
                     if (empty($originalSpecs[$ID])) {
-                        $updatedSpecs[$ID] = $specUpdates;
+                        $updatedSpecs[$ID] = $rowSpec;
                     } else {
                         $originalSpec = $originalSpecs[$ID];
                         $updatedSpec = CBModel::clone($originalSpec);
 
-                        CBModel::merge($updatedSpec, $specUpdates);
+                        CBModel::merge($updatedSpec, $rowSpec);
 
                         if ($updatedSpec != $originalSpec) {
                             $updatedSpecs[$ID] = $updatedSpec;
