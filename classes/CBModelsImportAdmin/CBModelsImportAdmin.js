@@ -1,7 +1,7 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
-/* exported CBAdminPageForModelImport */
+/* exported CBModelsImportAdmin */
 /* global
     CBUI,
     CBUIActionPart,
@@ -9,7 +9,7 @@
     CBUISectionItem4,
     Colby */
 
-var CBAdminPageForModelImport = {
+var CBModelsImportAdmin = {
 
     /**
      * @return undefined
@@ -48,7 +48,7 @@ var CBAdminPageForModelImport = {
             disabled = true;
             actionPart.disabled = true;
 
-            Colby.callAjaxFunction("CBAdminPageForModelImport", "uploadDataFile", undefined, input.files[0])
+            Colby.callAjaxFunction("CBModelsImportAdmin", "uploadDataFile", undefined, input.files[0])
                 .then(uploadFulfilled)
                 .catch(Colby.displayAndReportError);
 
@@ -84,4 +84,4 @@ var CBAdminPageForModelImport = {
     },
 };
 
-Colby.afterDOMContentLoaded(CBAdminPageForModelImport.DOMContentDidLoad);
+Colby.afterDOMContentLoaded(CBModelsImportAdmin.DOMContentDidLoad);

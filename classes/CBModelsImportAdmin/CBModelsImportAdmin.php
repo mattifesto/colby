@@ -1,6 +1,6 @@
 <?php
 
-final class CBAdminPageForModelImport {
+final class CBModelsImportAdmin {
 
     /**
      * @return [string]
@@ -134,7 +134,7 @@ final class CBAdminPageForModelImport {
                 $countOfSpecsSaved = 0;
 
                 while (($values = fgetcsv($handle)) !== false) {
-                    $rowSpec = CBAdminPageForModelImport::valuesAsModel($values, $keys);
+                    $rowSpec = CBModelsImportAdmin::valuesAsModel($values, $keys);
 
                     if ($rowSpec === null) {
                         continue;
