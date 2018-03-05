@@ -16,7 +16,7 @@ var CBUISelector = {
      * @param object args
      *
      *      {
-     *          labelText: string?
+     *          labelText: string? (deprecated)
      *          navigateToItemCallback: function?
      *          propertyName: string?
      *          spec: object?
@@ -122,7 +122,7 @@ var CBUISelector = {
             updateValueCallback: updateValue, /* deprecated */
         };
 
-        api.title = args.title || "Selection";
+        api.title = args.labelText || "Selection";
 
         return api;
 
