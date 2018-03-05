@@ -87,14 +87,7 @@ var CBUISelector = {
             }
         }
 
-        sectionItem.callback = CBUISelector.showSelectorForControl.bind(undefined, {
-            callback: updateValue,
-            labelText: title,
-            navigateToItemCallback: navigate,
-            propertyName: propertyName,
-            spec: spec,
-            state: state,
-        });
+        sectionItem.callback = showSelector;
 
         let api = {
             get element() {
@@ -149,6 +142,17 @@ var CBUISelector = {
                     return 'None';
                 }
             }
+        }
+
+        /* closure */
+        function showSelector() {
+            CBUISelector.showSelector({
+                callback: updateValue,
+                navigateToItemCallback: navigate,
+                options: state.options,
+                selectValue: api.value,
+                title: title,
+            });
         }
 
         /* closure */
@@ -281,26 +285,6 @@ var CBUISelector = {
             args.callback(value);
             history.back();
         }
-    },
-
-    /**
-     * @param function args.callback
-     * @param string args.labelText
-     * @param function args.navigateToItemCallback
-     * @param string args.propertyName
-     * @param object args.spec
-     * @param object args.state
-     *
-     * @return undefined
-     */
-    showSelectorForControl: function (args) {
-        CBUISelector.showSelector({
-            callback: args.callback,
-            navigateToItemCallback: args.navigateToItemCallback,
-            options: args.state.options,
-            selectedValue: args.spec[args.propertyName],
-            title: args.labelText,
-        });
     },
 };
 
