@@ -232,11 +232,28 @@ var CBUISelector = {
     },
 
     /**
-     * @param function args.navigateToItemCallback
-     * @param [object] args.options
-     *  object = { string title, string? description, mixed value }
-     * @param mixed? args.selectedValue
-     * @param string? args.title
+     * This function will show a selector for a list of options without having
+     * to create a CBUISelector instance. It returns a promise that will have
+     * the eventually selected value.
+     *
+     * This is useful when the user needs to select a value but the state of
+     * that value does not need to be stored or displayed by the user interface.
+     *
+     * @param object args
+     *
+     *      {
+     *          navigateToItemCallback: function
+     *          options: [object]
+     *
+     *              {
+     *                  title: string
+     *                  description: string?
+     *                  value: mixed
+     *              }
+     *
+     *          selectedValue: mixed?
+     *          title: string?
+     *      }
      *
      * @return Promise -> mixed
      */
