@@ -60,7 +60,7 @@ var CBUISelector = {
          * CBUINavigationView for more information.
          */
 
-        var labelText = args.labelText || "Selection";
+        let title = '';
         var options = args.options || [{ title: "Default Option" }];
         var propertyName = args.propertyName || "value";
         var spec = args.spec || {};
@@ -69,7 +69,6 @@ var CBUISelector = {
 
         let sectionItem = CBUISectionItem4.create();
         let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
-        titleAndDescriptionPart.title = labelText;
 
         sectionItem.appendPart(titleAndDescriptionPart);
         sectionItem.appendPart(CBUINavigationArrowPart.create());
@@ -90,14 +89,14 @@ var CBUISelector = {
 
         sectionItem.callback = CBUISelector.showSelectorForControl.bind(undefined, {
             callback: updateValue,
-            labelText: labelText,
+            labelText: title,
             navigateToItemCallback: navigate,
             propertyName: propertyName,
             spec: spec,
             state: state,
         });
 
-        return {
+        let api = {
             get element() {
                 return sectionItem.element;
             },
@@ -113,6 +112,13 @@ var CBUISelector = {
             set options(value) {
                 updateOptions(value);
             },
+            get title() {
+                return title;
+            },
+            set title(value) {
+                title = String(value);
+                titleAndDescriptionPart.title = title;
+            },
             get value() {
                 return spec[propertyName];
             },
@@ -122,6 +128,10 @@ var CBUISelector = {
             updateOptionsCallback: updateOptions, /* deprecated */
             updateValueCallback: updateValue, /* deprecated */
         };
+
+        api.title = args.title || "Selection";
+
+        return api;
 
         /* closure */
         function currentValueToTitle() {
