@@ -44,6 +44,7 @@ var CBGitAdmin = {
                     { title: "November", value: 10 },
                     { title: "December", value: 11 },
                 ];
+                monthSelector.title = "Month";
                 monthSelector.value = new Date().getMonth();
                 monthSelector.onchange = fetch;
                 sectionElement.appendChild(monthSelector.element);
@@ -61,6 +62,7 @@ var CBGitAdmin = {
                 }
 
                 yearSelector.options = options;
+                yearSelector.title = "Year";
                 yearSelector.value = year;
                 yearSelector.onchange = fetch;
 
@@ -77,6 +79,7 @@ var CBGitAdmin = {
                 });
 
                 submoduleSelector.options = options;
+                submoduleSelector.title = "Repository";
                 submoduleSelector.onchange = fetch;
 
                 sectionElement.appendChild(submoduleSelector.element);
