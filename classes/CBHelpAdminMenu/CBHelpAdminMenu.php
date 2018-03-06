@@ -6,20 +6,20 @@ final class CBHelpAdminMenu {
      * @return void
      */
     static function CBInstall_install(): void {
-        $adminMenuSpec = CBModels::fetchSpecByID(CBAdminMenu::ID);
+        $adminMenuSpec = CBModels::fetchSpecByID(CBAdminMenu::ID());
 
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'help',
             'submenuID' => CBHelpAdminMenu::ID(),
             'text' => 'Help',
-            'URL' => '/admin/?c=CBDocumentation&p=TitlesAndDescriptions',
+            'URL' => '/admin/?c=CBTitleAndDescriptionDocumentation',
         ];
 
         $spec = (object)[
             'className' => 'CBMenu',
             'title' => 'Help',
-            'titleURI' => '/admin/?c=CBDocumentation&p=TitlesAndDescriptions',
+            'titleURI' => '/admin/?c=CBTitleAndDescriptionDocumentation',
             'ID' => CBHelpAdminMenu::ID(),
             'items' => [
                 (object)[
