@@ -13,14 +13,14 @@ final class CBGitAdminMenu {
             'name' => 'git',
             'submenuID' => CBGitAdminMenu::ID(),
             'text' => 'Git',
-            'URL' => '/admin/?c=CBGitAdmin',
+            'URL' => '/admin/?c=CBGitHistoryAdmin',
         ];
 
         $spec = (object)[
             'className' => 'CBMenu',
             'ID' => CBGitAdminMenu::ID(),
             'title' => 'Git',
-            'titleURI' => '/admin/?c=CBGitAdmin',
+            'titleURI' => '/admin/?c=CBGitHistoryAdmin',
         ];
 
         CBDB::transaction(function () use ($developAdminMenuSpec, $spec) {
