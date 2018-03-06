@@ -3,10 +3,14 @@
 /* jshint esversion: 6 */
 /* exported CBGitStatusAdmin */
 /* global
+    CBUIExpander,
     Colby */
 
 var CBGitStatusAdmin = {
 
+    /**
+     * @return undefined
+     */
     init: function () {
         var mainElement = document.getElementsByTagName("main")[0];
 
@@ -20,10 +24,16 @@ var CBGitStatusAdmin = {
             function onFulfilled(value) {
                 mainElement.textContent = "";
 
-                let element = document.createElement("div");
-                element.textContent = value;
+                value.forEach(function (status) {
+                    let expander = CBUIExpander.create();
+                    expander.expanded = true;
+                    expander.timestamp = Date.now() / 1000;
+                    expander.message = status.message;
 
-                mainElement.appendChild(element);
+                    mainElement.appendChild(expander.element);
+                });
+
+                Colby.updateTimes(true);
 
                 window.setTimeout(fetchStatus, 30000);
             }

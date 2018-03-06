@@ -29,7 +29,16 @@ final class CBGitStatusAdmin {
      * @return mixed
      */
     static function CBAjax_fetchStatus($args) {
-        return CBHex160::random();
+        $results = [];
+        $submodules = CBGit::submodules();
+
+        array_unshift($submodules, '');
+
+        foreach ($submodules as $submodule) {
+            $results[] = CBGitStatusAdmin::fetchStatus($submodule);
+        }
+
+        return $results;
     }
 
     /**
@@ -37,6 +46,13 @@ final class CBGitStatusAdmin {
      */
     static function CBAjax_fetchStatus_group(): string {
         return 'Developers';
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v397.css', cbsysurl())];
     }
 
     /**
@@ -50,7 +66,7 @@ final class CBGitStatusAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
-        return ['CBUI'];
+        return ['CBUI', 'CBUIExpander'];
     }
 
     /**
@@ -75,6 +91,36 @@ final class CBGitStatusAdmin {
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBGitAdminMenu', 'CBGitAdmin'];
+        return ['CBGitAdminMenu', 'CBGitHistoryAdmin'];
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function fetchStatus(string $directory): stdClass {
+        $message = '';
+
+        chdir(cbsitedir() . "/{$directory}");
+        exec('git status --porcelain', $lines);
+
+        if (!empty($lines)) {
+            $status = implode("\n", $lines);
+            $message = <<<EOT
+
+                --- pre\n{$status}
+                ---
+
+EOT;
+        }
+
+        if (!empty($message)) {
+            $message = (empty($directory) ? 'website' : $directory) .
+                "\n\n{$message}";
+        }
+
+        return (object)[
+            'location' => empty($directory) ? 'website' : $directory,
+            'message' => $message,
+        ];
     }
 }
