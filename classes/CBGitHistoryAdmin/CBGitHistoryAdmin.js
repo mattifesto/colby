@@ -1,16 +1,16 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
-/* exported CBGitAdmin */
+/* exported CBGitHistoryAdmin */
 /* global
-    CBGitAdmin_submodules,
+    CBGitHistoryAdmin_submodules,
     CBUI,
     CBUIExpander,
     CBUINavigationView,
     CBUISelector,
     Colby */
 
-var CBGitAdmin = {
+var CBGitHistoryAdmin = {
 
     init: function () {
         let main = document.getElementsByTagName("main")[0];
@@ -74,7 +74,7 @@ var CBGitAdmin = {
                     { title: "website" }
                 ];
 
-                CBGitAdmin_submodules.forEach(function (name) {
+                CBGitHistoryAdmin_submodules.forEach(function (name) {
                     options.push({ title: name, value: name });
                 });
 
@@ -109,7 +109,7 @@ var CBGitAdmin = {
                 submodule: submoduleSelector.value,
             };
 
-            Colby.callAjaxFunction("CBGitAdmin", "fetch", args)
+            Colby.callAjaxFunction("CBGitHistoryAdmin", "fetch", args)
                 .then(onFulfilled)
                 .catch(Colby.displayAndReportError);
 
@@ -121,4 +121,4 @@ var CBGitAdmin = {
     },
 };
 
-Colby.afterDOMContentLoaded(CBGitAdmin.init);
+Colby.afterDOMContentLoaded(CBGitHistoryAdmin.init);

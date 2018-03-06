@@ -1,6 +1,6 @@
 <?php
 
-final class CBGitAdmin {
+final class CBGitHistoryAdmin {
 
     /**
      * @return [string]
@@ -79,7 +79,7 @@ EOT;
         }, $submodules);
 
         return [
-            ['CBGitAdmin_submodules', $submodules]
+            ['CBGitHistoryAdmin_submodules', $submodules]
         ];
     }
 
@@ -100,7 +100,7 @@ EOT;
             'className' => 'CBMenuItem',
             'name' => 'history',
             'text' => 'History',
-            'URL' => '/admin/?c=CBGitAdmin',
+            'URL' => '/admin/?c=CBGitHistoryAdmin',
         ];
 
         CBDB::transaction(function () use ($spec) {
