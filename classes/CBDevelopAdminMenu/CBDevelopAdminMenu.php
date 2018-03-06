@@ -2,8 +2,6 @@
 
 final class CBDevelopAdminMenu {
 
-    const ID = '8ba9210a82d3ab8f181dd7ac9619e06be65f930d';
-
     /**
      * @return void
      */
@@ -13,14 +11,14 @@ final class CBDevelopAdminMenu {
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'develop',
-            'submenuID' => CBDevelopAdminMenu::ID,
+            'submenuID' => CBDevelopAdminMenu::ID(),
             'text' => 'Develop',
             'URL' => '/admin/page/?class=CBAdminPageForUpdate',
         ];
 
         $spec = (object)[
             'className' => 'CBMenu',
-            'ID' => CBDevelopAdminMenu::ID,
+            'ID' => CBDevelopAdminMenu::ID(),
             'title' => 'Develop',
             'titleURI' => '/admin/page/?class=CBAdminPageForUpdate',
             'items' => [
@@ -53,7 +51,7 @@ final class CBDevelopAdminMenu {
 
         CBDB::transaction(function () use ($adminMenuSpec, $spec) {
             CBModels::save($adminMenuSpec);
-            CBModels::deleteByID(CBDevelopAdminMenu::ID);
+            CBModels::deleteByID(CBDevelopAdminMenu::ID());
             CBModels::save($spec);
         });
     }
@@ -63,5 +61,12 @@ final class CBDevelopAdminMenu {
      */
     static function CBInstall_requiredClassNames(): array {
         return ['CBAdminMenu', 'CBHelpAdminMenu'];
+    }
+
+    /**
+     * @return hex160
+     */
+    static function ID(): string {
+        return '8ba9210a82d3ab8f181dd7ac9619e06be65f930d';
     }
 }
