@@ -12,47 +12,39 @@ final class CBAdminPageMenuView {
      * @return ?model
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
-        return (object)[
-            'selectedMenuItemName' => CBModel::value($spec, 'selectedMenuItemName', '', 'strval'),
-            'selectedSubmenuItemName' => CBModel::value($spec, 'selectedSubmenuItemName', '', 'strval'),
-        ];
+        return (object)[];
     }
 
     /**
-     * @param object $model
-     *
-     *      {
-     *          selectedMenuItemName: string?
-     *          selectedSubmenuItemName: string?
-     *      }
+     * @param model $model
      *
      * @return void
      */
     static function CBView_render(stdClass $model): void {
+        $selectedMenuItemNames = CBModel::valueToArray(
+            CBHTMLOutput::pageInformation(),
+            'selectedMenuItemNames'
+        );
+
         echo '<div class="CBAdminPageMenuView">';
 
-        $selectedMenuItemName = CBModel::value($model, 'selectedMenuItemName');
-        $adminMenu = CBModels::fetchModelByID(CBAdminMenu::ID);
+        $menuIndex = 0;
+        $menuID = CBAdminMenu::ID();
 
-        CBView::render((object)[
-            'className' => 'CBMenuView',
-            'CSSClassNames' => ['CBDarkTheme'],
-            'menu' => $adminMenu,
-            'selectedItemName' => $selectedMenuItemName,
-        ]);
-
-        $selectedMenuItem = CBMenu::selectedMenuItem($adminMenu, $selectedMenuItemName);
-        $submenuID = CBModel::valueAsID($selectedMenuItem, 'submenuID');
-
-        if ($submenuID) {
-            $selectedSubmenuItemName = CBModel::value($model, 'selectedSubmenuItemName');
+        while ($menuID) {
+            $menuModel = CBModelCache::fetchModelByID($menuID);
+            $selectedMenuItemName = $selectedMenuItemNames[$menuIndex] ?? '';
 
             CBView::render((object)[
                 'className' => 'CBMenuView',
-                /* 'CSSClassNames' => ['CBLightTheme'], */
-                'menuID' => $submenuID,
-                'selectedItemName' => $selectedSubmenuItemName,
+                'CSSClassNames' => ($menuIndex == 0) ? ['CBDarkTheme'] : [],
+                'menu' => $menuModel,
+                'selectedItemName' => $selectedMenuItemName,
             ]);
+
+            $selectedMenuItem = CBMenu::selectedMenuItem($menuModel, $selectedMenuItemName);
+            $menuID = CBModel::valueAsID($selectedMenuItem, 'submenuID');
+            $menuIndex += 1;
         }
 
         echo '</div>';
