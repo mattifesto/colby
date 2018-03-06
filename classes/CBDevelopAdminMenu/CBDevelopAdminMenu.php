@@ -8,7 +8,7 @@ final class CBDevelopAdminMenu {
      * @return void
      */
     static function CBInstall_install(): void {
-        $adminMenuSpec = CBModels::fetchSpecByID(CBAdminMenu::ID);
+        $adminMenuSpec = CBModels::fetchSpecByID(CBAdminMenu::ID());
 
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
@@ -62,6 +62,6 @@ final class CBDevelopAdminMenu {
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBHelpAdminMenu'];
+        return ['CBAdminMenu', 'CBHelpAdminMenu'];
     }
 }
