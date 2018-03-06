@@ -88,7 +88,7 @@ var CBUIExpander = {
         containerElement.appendChild(messageElement);
         element.appendChild(containerElement);
 
-        let o = {
+        let api = {
 
             /**
              * @return Element
@@ -166,11 +166,11 @@ var CBUIExpander = {
             },
         };
 
-        o.message = args.message;
-        o.severity = args.severity;
-        o.timestamp = args.timestamp;
+        api.message = args.message;
+        api.severity = args.severity;
+        api.timestamp = args.timestamp;
 
-        return o;
+        return api;
     },
 };
 
