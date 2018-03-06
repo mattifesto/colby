@@ -25,12 +25,14 @@ var CBGitStatusAdmin = {
                 mainElement.textContent = "";
 
                 value.forEach(function (status) {
-                    let expander = CBUIExpander.create();
-                    expander.expanded = true;
-                    expander.timestamp = Date.now() / 1000;
-                    expander.message = status.message;
+                    if (status.message) {
+                        let expander = CBUIExpander.create();
+                        expander.expanded = true;
+                        expander.timestamp = Date.now() / 1000;
+                        expander.message = status.message;
 
-                    mainElement.appendChild(expander.element);
+                        mainElement.appendChild(expander.element);
+                    }
                 });
 
                 Colby.updateTimes(true);
