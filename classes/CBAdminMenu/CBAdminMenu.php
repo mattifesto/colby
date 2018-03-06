@@ -2,8 +2,6 @@
 
 final class CBAdminMenu {
 
-    const ID = '3924c0a0581171f86f0708bfa799a3d8c34bd390';
-
     /**
      * This function resets the main admin menu during install. To add a menu
      * item create a class with an install dependency on this class and in the
@@ -14,7 +12,7 @@ final class CBAdminMenu {
     static function CBInstall_install(): void {
         $spec = (object)[
             'className' => 'CBMenu',
-            'ID' => CBAdminMenu::ID,
+            'ID' => CBAdminMenu::ID(),
             'title' => 'Administration',
             'titleURI' => '/admin/',
             'items' => [
@@ -28,8 +26,15 @@ final class CBAdminMenu {
         ];
 
         CBDB::transaction(function () use ($spec) {
-            CBModels::deleteByID(CBAdminMenu::ID);
+            CBModels::deleteByID(CBAdminMenu::ID());
             CBModels::save($spec);
         });
+    }
+
+    /**
+     * @return hex160
+     */
+    static function ID(): string {
+        return '3924c0a0581171f86f0708bfa799a3d8c34bd390';
     }
 }
