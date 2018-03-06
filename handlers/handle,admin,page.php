@@ -33,8 +33,7 @@ if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
 
         if (is_callable($function = "{$class}::adminPageMenuNamePath")) {
             $names = call_user_func($function);
-            if (!empty($names[0])) { $menuModel->selectedMenuItemName = $names[0]; }
-            if (!empty($names[1])) { $menuModel->selectedSubmenuItemName = $names[1]; }
+            CBHTMLOutput::pageInformation()->selectedMenuItemNames = $names;
         }
 
         CBView::render($menuModel);
