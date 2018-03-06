@@ -4,11 +4,10 @@
 /* exported Colby */
 
 var Colby = {
-    intervalId:     null,
-    intervalCount:  0,
-    monthNames:     ['January', 'February', 'March', 'April', 'May', 'June',
-                     'July', 'August', 'September', 'October', 'November',
-                     'December'],
+    updateTimesTimeoutID: null,
+    updateTimesCount: 0,
+    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+                 'August', 'September', 'October', 'November', 'December'],
 
      /**
       * @param function callback
@@ -31,6 +30,15 @@ var Colby = {
     alert: function (text) {
         Colby.setPanelText(text);
         Colby.showPanel();
+    },
+
+    /**
+     * @deprecated use Colby.updateTimes(true)
+     *
+     * @return undefined
+     */
+    beginUpdatingTimes: function () {
+        Colby.updateTimes(true);
     },
 
     /**
@@ -565,26 +573,23 @@ var Colby = {
     },
 
     /**
-     * Call this function after adding elements created with
-     * Colby.unixTimestampToElement() to the DOM tree. If you don't, such
-     * elements may experience a significant lag before they display the proper
-     * time.
+     * @param bool restart
+     *
+     *      Specify true to restart updates every second after adding new time
+     *      elements the page.
      *
      * @return undefined
      */
-    updateTimes: function () {
-        if (Colby.intervalId && Colby.intervalCount > 90) {
-            // We only do updates every second for the first 90 seconds. It's 90 instead of 60 in case the server clock and the client clock are way off.
-
-            clearInterval(Colby.intervalId);
-            Colby.intervalId = null;
-
-            // In the future only update the times every 15 seconds. We don't need to hold onto the interval id because we're never going to cancel it.
-
-            setInterval(Colby.updateTimes, 15000);
+    updateTimes: function (restart) {
+        if (Colby.updateTimesTimeoutID) {
+            window.clearTimeout(Colby.updateTimesTimeoutID);
         }
 
-        Colby.intervalCount++;
+        if (restart) {
+            Colby.updateTimesCount = 0;
+        } else {
+            Colby.updateTimesCount += 1;
+        }
 
         var args, date, dateString, element, timestamp;
         var elements = document.getElementsByClassName('time');
@@ -613,6 +618,18 @@ var Colby = {
 
             dateString = Colby.dateToRelativeLocaleString(date, now, args);
             element.textContent = dateString;
+        }
+
+        /**
+         * Do updates every second for the first 90 seconds. It's 90 instead of
+         * 60 in for cases where the server clock and the client clock are
+         * different.
+         */
+
+        if (Colby.updateTimesCount < 90) {
+            Colby.updateTimesTimeoutID = window.setTimeout(Colby.updateTimes, 1000);
+        } else {
+            Colby.updateTimesTimeoutID = window.setTimeout(Colby.updateTimes, 15000);
         }
     },
 
@@ -718,21 +735,6 @@ Colby.handleError = function(message, sourceURL, line, column, error) {
  * to catch errors even if they occur later in this file.
  */
 window.onerror = Colby.handleError;
-
-/**
- * @return void
- */
-Colby.beginUpdatingTimes = function()
-{
-    Colby.intervalCount = 0;
-
-    if (!Colby.intervalId)
-    {
-        Colby.intervalId = setInterval(Colby.updateTimes, 1000);
-
-        Colby.updateTimes();
-    }
-};
 
 /**
  * @return null
