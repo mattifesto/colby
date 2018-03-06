@@ -33,15 +33,6 @@ var Colby = {
     },
 
     /**
-     * @deprecated use Colby.updateTimes(true)
-     *
-     * @return undefined
-     */
-    beginUpdatingTimes: function () {
-        Colby.updateTimes(true);
-    },
-
-    /**
      * This function is often used with bind() to create a single callback from
      * multiple callbacks.
      *
@@ -641,7 +632,7 @@ var Colby = {
 
         element.setAttribute('data-timestamp', timestamp);
 
-        Colby.beginUpdatingTimes();
+        Colby.updateTimes(true);
     },
 
     /**
@@ -1052,7 +1043,7 @@ Colby.textToURI = function (text) {
  */
 
 Colby.afterDOMContentLoaded(function () {
-    Colby.beginUpdatingTimes();
+    Colby.updateTimes(true);
 });
 
 /**
