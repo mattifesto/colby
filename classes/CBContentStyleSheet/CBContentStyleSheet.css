@@ -56,11 +56,14 @@
     font-weight: inherit;
 }
 
-/* The following elements always have whitespace on top to emphasize their block. */
-.CBContentStyleSheet dl,
-.CBContentStyleSheet ol,
-.CBContentStyleSheet pre,
-.CBContentStyleSheet ul {
+/**
+ * These elements have whitespace on top if they follow other elements to
+ * emphasize their block.
+ */
+.CBContentStyleSheet * + dl,
+.CBContentStyleSheet * + ol,
+.CBContentStyleSheet * + pre,
+.CBContentStyleSheet * + ul {
     margin-top: 1.5em;
 }
 
