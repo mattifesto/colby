@@ -6,14 +6,14 @@ final class CBGitAdmin {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['develop', 'git'];
+        return ['develop', 'git', 'history'];
     }
 
     /**
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::pageInformation()->title = 'Git Administration';
+        CBHTMLOutput::pageInformation()->title = 'Git History';
     }
 
     static function CBAjax_fetch($args) {
@@ -55,7 +55,7 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v397.js', cbsysurl())];
     }
 
     /**
@@ -85,12 +85,12 @@ EOT;
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBDevelopAdminMenu::ID);
+        $spec = CBModels::fetchSpecByID(CBGitAdminMenu::ID());
 
         $spec->items[] = (object)[
             'className' => 'CBMenuItem',
-            'name' => 'git',
-            'text' => 'Git',
+            'name' => 'history',
+            'text' => 'History',
             'URL' => '/admin/?c=CBGitAdmin',
         ];
 
@@ -103,6 +103,6 @@ EOT;
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBDevelopAdminMenu'];
+        return ['CBGitAdminMenu'];
     }
 }

@@ -96,7 +96,7 @@ var CBGitAdmin = {
 
         navigator.navigate({
             element: element,
-            title: "Git",
+            title: "Git History",
         });
 
         fetch();
