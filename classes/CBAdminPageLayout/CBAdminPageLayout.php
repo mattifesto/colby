@@ -7,25 +7,22 @@
 final class CBAdminPageLayout {
 
     /**
-     * @param string? $properties->selectedMenuItemName
-     * @param string? $properties->selectedSubmenuItemName
+     * @param stdClass $properties
      *
-     * @return null
+     * @return void
      */
-    static function renderPageHeader(stdClass $properties) {
+    static function renderPageHeader(stdClass $properties): void {
         CBView::render((object)[
             'className' => 'CBAdminPageMenuView',
-            'selectedMenuItemName' => CBModel::value($properties, 'selectedMenuItemName'),
-            'selectedSubmenuItemName' => CBModel::value($properties, 'selectedSubmenuItemName'),
         ]);
     }
 
     /**
      * @param stdClass $properties
      *
-     * @return null
+     * @return void
      */
-    static function renderPageFooter(stdClass $properties) {
+    static function renderPageFooter(stdClass $properties): void {
         CBView::render((object)[
             'className' => 'CBAdminPageFooterView',
         ]);
