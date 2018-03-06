@@ -19,10 +19,10 @@ if (!isset($_GET['data-store-id'])) {
     exit;
 }
 
-
 CBHTMLOutput::begin();
 CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
 CBHTMLOutput::pageInformation()->title = 'Page Editor';
+CBHTMLOutput::pageInformation()->selectedMenuItemNames = ['pages'];
 CBHTMLOutput::requireClassName('CBDefaultEditor');
 CBHTMLOutput::requireClassName('CBViewPageEditor');
 
@@ -51,7 +51,6 @@ foreach ($templateclassNames as $templateClassName) {
 
 CBView::render((object)[
     'className' => 'CBAdminPageMenuView',
-    'selectedMenuItemName' => 'pages',
 ]);
 
 ?>
