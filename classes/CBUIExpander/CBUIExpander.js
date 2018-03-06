@@ -98,6 +98,24 @@ var CBUIExpander = {
             },
 
             /**
+             * @return bool
+             */
+            get expanded() {
+                return element.classList.contains("expanded");
+            },
+
+            /**
+             * @param bool value
+             */
+            set expanded(value) {
+                if (value) {
+                    element.classList.add("expanded");
+                } else {
+                    element.classList.remove("expanded");
+                }
+            },
+
+            /**
              * @return string
              */
             get message() {
