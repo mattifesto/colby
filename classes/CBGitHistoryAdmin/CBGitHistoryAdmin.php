@@ -70,16 +70,8 @@ EOT;
      * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables(): array {
-        chdir(cbsitedir());
-        exec('git submodule--helper list', $submodules);
-
-        $submodules = array_map(function ($item) {
-            $columns = preg_split('/\s/', $item);
-            return $columns[3];
-        }, $submodules);
-
         return [
-            ['CBGitHistoryAdmin_submodules', $submodules]
+            ['CBGitHistoryAdmin_submodules', CBGit::submodules()]
         ];
     }
 
