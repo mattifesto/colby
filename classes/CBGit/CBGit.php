@@ -1,7 +1,7 @@
 <?php
 
 final class CBGit {
-    
+
     /**
      * @return {
      *  string output
@@ -23,6 +23,19 @@ final class CBGit {
             'output' => implode("\n", $output),
             'wasSuccessful' => empty($exitcode),
         ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function submodules(): array {
+        chdir(cbsitedir());
+        exec('git submodule--helper list', $submodules);
+
+        return array_map(function ($item) {
+            $columns = preg_split('/\s/', $item);
+            return $columns[3];
+        }, $submodules);
     }
 
     /**
