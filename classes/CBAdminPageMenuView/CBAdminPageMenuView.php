@@ -7,13 +7,12 @@
 final class CBAdminPageMenuView {
 
     /**
-     * @param object $spec
+     * @param model $spec
      *
-     * @return object
+     * @return ?model
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         return (object)[
-            'className' => __CLASS__,
             'selectedMenuItemName' => CBModel::value($spec, 'selectedMenuItemName', '', 'strval'),
             'selectedSubmenuItemName' => CBModel::value($spec, 'selectedSubmenuItemName', '', 'strval'),
         ];
