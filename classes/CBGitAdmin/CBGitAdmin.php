@@ -16,6 +16,11 @@ final class CBGitAdmin {
         CBHTMLOutput::pageInformation()->title = 'Git History';
     }
 
+    /**
+     * @param mixed $args
+     *
+     * @return mixed
+     */
     static function CBAjax_fetch($args) {
         $year = CBModel::valueAsInt($args, 'year');
         $month = CBModel::valueAsInt($args, 'month');
@@ -47,6 +52,9 @@ EOT;
         return $output;
     }
 
+    /**
+     * @return string
+     */
     static function CBAjax_fetch_group(): string {
         return 'Developers';
     }
@@ -74,6 +82,7 @@ EOT;
             ['CBGitAdmin_submodules', $submodules]
         ];
     }
+
     /**
      * @return [string]
      */
