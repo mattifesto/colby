@@ -617,6 +617,17 @@ var Colby = {
     },
 
     /**
+     * @deprecated 2018.03.06
+     */
+    updateTimestampForElementWithId: function (timestamp, id) {
+        var element = document.getElementById(id);
+
+        element.setAttribute('data-timestamp', timestamp);
+
+        Colby.beginUpdatingTimes();
+    },
+
+    /**
      * This code is dangerous because it can provide an image structure for
      * a URI that doesn't represent an image.
      *
@@ -1032,15 +1043,6 @@ Colby.textToURI = function (text) {
     uri = uri.replace(/[\-\ ]+/g, '-');
 
     return uri;
-};
-
-Colby.updateTimestampForElementWithId = function(timestamp, id)
-{
-    var element = document.getElementById(id);
-
-    element.setAttribute('data-timestamp', timestamp);
-
-    Colby.beginUpdatingTimes();
 };
 
 /**
