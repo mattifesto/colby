@@ -66,7 +66,7 @@ final class CBGitStatusAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
-        return ['CBUI', 'CBUIExpander'];
+        return ['CBUI', 'CBUIExpander', 'CBUISectionItem4', 'CBUIStringsPart'];
     }
 
     /**

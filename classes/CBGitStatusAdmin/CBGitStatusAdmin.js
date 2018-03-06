@@ -3,7 +3,10 @@
 /* jshint esversion: 6 */
 /* exported CBGitStatusAdmin */
 /* global
+    CBUI,
     CBUIExpander,
+    CBUISectionItem4,
+    CBUIStringsPart,
     Colby */
 
 var CBGitStatusAdmin = {
@@ -13,16 +16,44 @@ var CBGitStatusAdmin = {
      */
     init: function () {
         var mainElement = document.getElementsByTagName("main")[0];
+        var timeoutID;
+
+        mainElement.appendChild(CBUI.createHalfSpace());
+
+        {
+            let sectionElement = CBUI.createSection();
+            let sectionItem = CBUISectionItem4.create();
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Refresh";
+            stringsPart.element.classList.add("action");
+
+            sectionItem.callback = fetchStatus;
+
+            sectionItem.appendPart(stringsPart);
+            sectionElement.appendChild(sectionItem.element);
+            mainElement.appendChild(sectionElement);
+            mainElement.appendChild(CBUI.createHalfSpace());
+        }
+
+        var container = document.createElement("div");
+        container.className = "statusContainer";
+
+        mainElement.appendChild(container);
 
         fetchStatus();
 
         function fetchStatus() {
+            if (timeoutID) {
+                window.clearTimeout(timeoutID);
+                timeoutID = undefined;
+            }
+
             Colby.callAjaxFunction("CBGitStatusAdmin", "fetchStatus")
                 .then(onFulfilled)
                 .catch(Colby.displayAndReportError);
 
             function onFulfilled(value) {
-                mainElement.textContent = "";
+                container.textContent = "";
 
                 value.forEach(function (status) {
                     if (status.message) {
@@ -31,13 +62,13 @@ var CBGitStatusAdmin = {
                         expander.timestamp = Date.now() / 1000;
                         expander.message = status.message;
 
-                        mainElement.appendChild(expander.element);
+                        container.appendChild(expander.element);
                     }
                 });
 
                 Colby.updateTimes(true);
 
-                window.setTimeout(fetchStatus, 30000);
+                timeoutID = window.setTimeout(fetchStatus, 30000);
             }
         }
     },
