@@ -863,14 +863,6 @@ Colby.dateToRelativeLocaleString = function(date, now, args) {
 /**
  * @return void
  */
-Colby.handleContentLoaded = function()
-{
-    Colby.beginUpdatingTimes();
-};
-
-/**
- * @return void
- */
 Colby.hidePanel = function()
 {
     if (Colby.panel &&
