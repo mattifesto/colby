@@ -96,7 +96,7 @@ EOT;
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBDevelopAdminMenu::ID);
+        $spec = CBModels::fetchSpecByID(CBDevelopAdminMenu::ID());
 
         $spec->items[] = (object)[
             'className' => 'CBMenuItem',
