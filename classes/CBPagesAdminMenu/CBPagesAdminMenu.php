@@ -8,7 +8,7 @@ final class CBPagesAdminMenu {
      * @return void
      */
     static function CBInstall_install(): void {
-        $adminMenuSpec = CBModels::fetchSpecByID(CBAdminMenu::ID);
+        $adminMenuSpec = CBModels::fetchSpecByID(CBAdminMenu::ID());
 
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
