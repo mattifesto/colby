@@ -72,8 +72,7 @@ final class CBAdmin {
 
         if (is_callable($function = "{$className}::CBAdmin_menuNamePath")) {
             $names = call_user_func($function, $pageStub);
-            $menuViewModel->selectedMenuItemName = $names[0] ?? '';
-            $menuViewModel->selectedSubmenuItemName = $names[1] ?? '';
+            CBHTMLOutput::pageInformation()->selectedMenuItemNames = $names;
         }
 
         CBView::render($menuViewModel);
