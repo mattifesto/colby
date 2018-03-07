@@ -7,3 +7,10 @@
 .CBGitStatusAdmin .statusContainer > * {
     flex-grow: 1;
 }
+
+.CBGitStatusAdmin_pre {
+    border-left: 1px solid var(--CBTextColor3);
+    font-size: 12px;
+    line-height: 1.6;
+    padding: 0.5em;
+}

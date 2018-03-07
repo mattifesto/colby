@@ -101,15 +101,29 @@ final class CBGitStatusAdmin {
         $message = '';
 
         chdir(cbsitedir() . "/{$directory}");
+
+        $lines = [];
         exec('git status --porcelain', $lines);
 
         if (!empty($lines)) {
-            $status = implode("\n", $lines);
-            $message = <<<EOT
+            $lines = implode("\n", $lines);
+            $message .= <<<EOT
 
-                --- pre\n{$status}
+                --- pre xCBDarkTheme CBGitStatusAdmin_pre\n{$lines}
                 ---
 
+EOT;
+        }
+
+        $lines = [];
+        exec('git log origin/master..head --oneline --no-decorate --reverse', $lines);
+
+        if (!empty($lines)) {
+            $lines = implode("\n", $lines);
+            $message .= <<< EOT
+
+                --- pre xCBDarkTheme CBGitStatusAdmin_pre\n{$lines}
+                ---
 EOT;
         }
 
