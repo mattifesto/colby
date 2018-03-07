@@ -103,13 +103,26 @@ final class CBGitStatusAdmin {
         chdir(cbsitedir() . "/{$directory}");
 
         $lines = [];
+        exec('git describe', $lines);
+
+        if (!empty($lines)) {
+            $lines = implode("\n", $lines);
+            $message .= <<<EOT
+
+                --- pre CBGitStatusAdmin_pre\n{$lines}
+                ---
+
+EOT;
+        }
+
+        $lines = [];
         exec('git status --porcelain', $lines);
 
         if (!empty($lines)) {
             $lines = implode("\n", $lines);
             $message .= <<<EOT
 
-                --- pre xCBDarkTheme CBGitStatusAdmin_pre\n{$lines}
+                --- pre CBGitStatusAdmin_pre\n{$lines}
                 ---
 
 EOT;
@@ -122,7 +135,7 @@ EOT;
             $lines = implode("\n", $lines);
             $message .= <<< EOT
 
-                --- pre xCBDarkTheme CBGitStatusAdmin_pre\n{$lines}
+                --- pre CBGitStatusAdmin_pre\n{$lines}
                 ---
 EOT;
         }
