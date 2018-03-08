@@ -652,7 +652,13 @@ EOT;
             $model = CBModel::toModel($spec);
 
             if ($model === null) {
-                throw new Exception("A {$spec->className} spec being saved generated a null model.");
+                $message = "A {$spec->className} spec being saved generated a null model.";
+
+                if (!is_callable("{$spec->className}::CBModel_build")) {
+                    $message .= " The CBModel_build() interface is not implemented by the {$spec->className} class.";
+                }
+
+                throw new Exception($message);
             }
 
             if ($model->className !== $sharedClassName) {
