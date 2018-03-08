@@ -36,7 +36,7 @@ var CBUIImageChooser = {
      *      }
      */
     create: function () {
-        var chosen, removed;
+        var chosen, removed, src;
 
         var element = document.createElement("div");
         element.className = "CBUIImageChooser CBDarkTheme";
@@ -75,9 +75,9 @@ var CBUIImageChooser = {
             if (typeof chosen === "function") {
                 chosen({
                     file: inputElement.files[0],
-                    setCaptionCallback: function (value) { obj.caption = value; }, /* deprecated */
-                    setImageURI: function (value) { obj.src = value; }, /* deprecated */
-                    setImageURLCallback: function (value) { obj.src = value; }, /* deprecated */
+                    setCaptionCallback: function (value) { api.caption = value; }, /* deprecated */
+                    setImageURI: function (value) { api.src = value; }, /* deprecated */
+                    setImageURLCallback: function (value) { api.src = value; }, /* deprecated */
                 });
             }
 
@@ -91,16 +91,16 @@ var CBUIImageChooser = {
         removeElement.textContent = "remove";
 
         removeElement.addEventListener("click", function () {
-            obj.caption = "";
-            obj.src = "";
+            api.caption = "";
+            api.src = "";
 
             if (typeof removed === "function") {
                 removed({
                     setImageURI: function (value) { /* deprecated */
-                        obj.src = value;
+                        api.src = value;
                     },
                     setImageURLCallback: function (value) { /* deprecated */
-                        obj.src = value;
+                        api.src = value;
                     },
                 });
             }
@@ -109,7 +109,7 @@ var CBUIImageChooser = {
         commandsElement.appendChild(removeElement);
         element.appendChild(commandsElement);
 
-        let obj = {
+        let api = {
             get caption() {
                 return captionElement.textContent;
             },
@@ -140,18 +140,33 @@ var CBUIImageChooser = {
                 removed = value;
             },
             get src() {
-                return imageElement.src;
+                return src;
             },
             set src(value) {
-                if (value === undefined) {
-                    value = "";
-                } else {
-                    value = String(value);
-                }
+                src = value;
 
-                imageElement.src = value;
+                /**
+                 * @NOTE 2018.03.08
+                 *
+                 *      There is much discussion on the internet about setting
+                 *      the src property of and img element to a falsey value.
+                 *      While modern browsers should handle it properly, it
+                 *      considered an odd thing to do. The idea is that an img
+                 *      element is supposed to have a valid src value and if it
+                 *      doesn't why do you even have an img element and why
+                 *      would you display it?
+                 *
+                 *      For a CBUIImageChooser, if the user sets the src to a
+                 *      falsey value, that has a meaning: there is currently no
+                 *      image chosen. When this happens, the img element src is
+                 *      not changed, but the img element is not displayed. If
+                 *      the user ever sets the src to a non-falsey value the img
+                 *      element's src property will be set an the img element
+                 *      will be displayed again.
+                 */
 
-                if (value !== "") {
+                if (src) {
+                    imageElement.src = src;
                     imageElement.style.display = "block";
                     removeElement.style.display = "block";
                 } else {
@@ -161,7 +176,7 @@ var CBUIImageChooser = {
             },
         };
 
-        return obj;
+        return api;
     },
 
     /**
