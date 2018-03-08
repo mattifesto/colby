@@ -75,6 +75,7 @@ final class CBTestAdmin {
             ['CBMessageMarkup', 'stringToMarkup'],
             ['Colby',           'centsToDollars'],
             ['Colby',           'dateToString'],
+            ['Colby',           'random160'],
         ];
     }
 

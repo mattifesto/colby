@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported ColbyTests */
 /* global
     Colby */
@@ -121,5 +122,31 @@ var ColbyTests = {
                                 "\"");
             }
         });
+    },
+
+    /**
+     * @return undefined
+     */
+    random160Test: function () {
+        let count = 10;
+        let values = [];
+
+        for (let i = 0; i < count; i++) {
+            values.push(Colby.random160());
+        }
+
+        for (let i = 0; i < count; i++) {
+            let value = values[i];
+
+            if (!/[a-f0-9]{40}/.test(value)) {
+                throw new Error(`Value ${i} is not a hex160: "${value}"`);
+            }
+
+            for (let j = i + 1; j < count; j++) {
+                if (value === values[j]) {
+                    throw new Error(`Value ${i} "${value}" is the same as value ${j} "${values[j]}" which is extremely unlikely and probably represents an error.`);
+                }
+            }
+        }
     },
 };
