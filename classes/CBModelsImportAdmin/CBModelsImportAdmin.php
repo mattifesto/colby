@@ -262,19 +262,11 @@ EOT;
                 }, []);
 
                 foreach ($specsByClass as $className => $specs) {
-                    if (is_callable("$className::CBModel_toModel")) {
-                        CBDB::transaction(function () use ($specs) {
-                            CBModels::save($specs, /* force: */ true);
-                        });
+                    CBDB::transaction(function () use ($specs) {
+                        CBModels::save($specs);
+                    });
 
-                        $countOfSpecsSaved += count($specs);
-                    } else {
-                        CBLog::log((object)[
-                            'className' => __CLASS__,
-                            'message' => "The CBModel_toModel interface must be implemented by the {$className} class so that {$className} specs can be saved",
-                            'severity' => 3,
-                        ]);
-                    }
+                    $countOfSpecsSaved += count($specs);
                 }
 
             }
