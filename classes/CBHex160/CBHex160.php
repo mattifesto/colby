@@ -13,8 +13,11 @@ final class CBHex160 {
      *      Returns true if the value is a hex160; otherwise false.
      */
     static function is($value) {
-        $value = CBConvert::valueToString($value);
-        return preg_match('/[a-f0-9]{40}/', $value);
+        if (is_string($value)) {
+            return (bool)preg_match('/[a-f0-9]{40}/', $value);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -41,10 +44,11 @@ final class CBHex160 {
 
         $values = array_map(function($value) {
             if (!CBHex160::is($value)) {
-                if (preg_match('/[a-fA-F0-9]{40}/', $value)) {
+                if (is_string($value) && preg_match('/[a-fA-F0-9]{40}/', $value)) {
                     $message = "The value '{$value}' is not a hex160 value because it contains capital letters.";
                 } else {
-                    $message = "The value '{$value}' is not a 160-bit hexadecimal value.";
+                    $valueAsJSON = json_encode($value);
+                    $message = "The value '{$valueAsJSON}' is not a 160-bit hexadecimal value.";
                 }
 
                 throw new RuntimeException($message);
