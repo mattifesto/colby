@@ -204,7 +204,7 @@ EOT;
                             $message = "An imported {$className} spec was unable to generate its own ID";
 
                             if (!is_callable("{$className}::CBModel_toID")) {
-                                $message .= " and the CBModel_toID interface is not implemented by the {$className} class";
+                                $message .= " because the CBModel_toID() interface is not implemented by the {$className} class";
                             }
 
                             $message = <<<EOT
