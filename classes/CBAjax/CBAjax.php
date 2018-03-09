@@ -18,7 +18,7 @@ final class CBAjax {
         $model = json_decode($modelAsJSON);
         $className = CBModel::value($model, 'functionClassName');
         $functionName = CBModel::value($model, 'functionName');
-        $args = CBModel::value($model, 'args', (object)[], 'CBConvert::valueToObject');
+        $args = CBModel::valueToObject($model, 'args');
 
         $function = "{$className}::CBAjax_{$functionName}";
         $getGroupFunction = "{$function}_group";
