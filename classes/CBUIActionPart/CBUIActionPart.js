@@ -3,6 +3,9 @@
 /* jshint esversion: 6 */
 /* exported CBUIActionPart */
 
+/**
+ * @deprecated 2018.03.09 use CBUIStringsPart with an "action" CSS class name
+ */
 var CBUIActionPart = {
 
     /**

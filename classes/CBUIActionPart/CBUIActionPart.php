@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @deprecated 2018.03.09 use CBUIStringsPart with an "action" CSS class name
+ */
 final class CBUIActionPart {
 
     /**
