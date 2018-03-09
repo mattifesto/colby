@@ -1,0 +1,36 @@
+.CBUIBooleanSwitchPart {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex: none;
+    min-height: 44px;
+    padding: 0px 5px;
+}
+
+.CBUIBooleanSwitchPart .slider {
+    align-items: center;
+    background-color: hsl(0, 0%, 95%);
+    border: 1px solid hsl(0, 0%, 90%);
+    border-radius: 14px;
+    box-sizing: border-box;
+    display: flex;
+    flex: none;
+    height: 28px;
+    padding: 0 1px;
+    width: 46px;
+}
+
+.CBUIBooleanSwitchPart.true .slider {
+    background-color: hsl(120, 50%, 50%);
+    border: none;
+    flex-direction: row-reverse;
+    padding: 0 2px;
+}
+
+.CBUIBooleanSwitchPart .button {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    height: 24px;
+    width: 24px;
+}
