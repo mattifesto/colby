@@ -34,8 +34,8 @@ final class CBModelsImportAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIActionPart', 'CBUIProcessStatus',
-                'CBUISectionItem4'];
+        return ['CBUI', 'CBUIBooleanSwitchPart', 'CBUIProcessStatus',
+                'CBUISectionItem4', 'CBUIStringsPart'];
     }
 
     /**
@@ -50,7 +50,6 @@ final class CBModelsImportAdmin {
             'text' => 'Import',
             'URL' => '/admin/?c=CBModelsImportAdmin',
         ];
-
 
         CBDB::transaction(function () use ($spec) {
             CBModels::save($spec);
@@ -118,14 +117,22 @@ final class CBModelsImportAdmin {
     }
 
     /**
-     * @return null
+     * @param object $args
+     *
+     *      {
+     *          saveUnchangedModels: bool?
+     *      }
+     *
+     * @return object
      */
-    static function CBAjax_uploadDataFile() {
+    static function CBAjax_uploadDataFile(stdClass $args): stdClass {
         $response = (object)[
             'processID' => CBHex160::random(),
         ];
 
         CBProcess::setID($response->processID);
+
+        $saveUnchangedModels = (bool)CBModel::value($args, 'saveUnchangedModels');
 
         /**
          * Because any error that occurs will be associated with the process ID,
@@ -245,7 +252,7 @@ EOT;
 
                         CBModel::merge($updatedSpec, $rowSpec);
 
-                        if ($updatedSpec != $originalSpec) {
+                        if ($saveUnchangedModels || $updatedSpec != $originalSpec) {
                             $updatedSpecs[$ID] = $updatedSpec;
                         }
                     }

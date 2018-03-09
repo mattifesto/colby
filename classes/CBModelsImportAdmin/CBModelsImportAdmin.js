@@ -4,9 +4,10 @@
 /* exported CBModelsImportAdmin */
 /* global
     CBUI,
-    CBUIActionPart,
+    CBUIBooleanSwitchPart,
     CBUIProcessStatus,
     CBUISectionItem4,
+    CBUIStringsPart,
     Colby */
 
 var CBModelsImportAdmin = {
@@ -15,6 +16,7 @@ var CBModelsImportAdmin = {
      * @return undefined
      */
     DOMContentDidLoad: function() {
+        let saveUnchangedModels = false;
         let disabled = false;
         var main = document.getElementsByTagName("main")[0];
         var status = CBUIProcessStatus.create();
@@ -28,37 +30,69 @@ var CBModelsImportAdmin = {
 
         main.appendChild(CBUI.createHalfSpace());
 
-        let sectionElement = CBUI.createSection();
-        let sectionItem = CBUISectionItem4.create();
-        sectionItem.callback = function () {
-            if (!disabled) {
-                input.click();
-            }
-        };
-        let actionPart = CBUIActionPart.create();
-        actionPart.title = "Import CSV File...";
+        let importActionPart = CBUIStringsPart.create();
 
-        sectionItem.appendPart(actionPart);
-        sectionElement.appendChild(sectionItem.element);
-        main.appendChild(sectionElement);
-        main.appendChild(CBUI.createHalfSpace());
+        {
+            let sectionElement = CBUI.createSection();
+
+            {
+                let sectionItem = CBUISectionItem4.create();
+                sectionItem.callback = function () {
+                    if (!disabled) {
+                        input.click();
+                    }
+                };
+
+                importActionPart.string1 = "Import CSV File...";
+                importActionPart.element.classList.add("action");
+
+                sectionItem.appendPart(importActionPart);
+                sectionElement.appendChild(sectionItem.element);
+            }
+
+            {
+                let sectionItem = CBUISectionItem4.create();
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Save Unchanged Models";
+                let switchPart = CBUIBooleanSwitchPart.create();
+                switchPart.changed = function () {
+                    saveUnchangedModels = switchPart.value;
+                };
+                sectionItem.appendPart(stringsPart);
+                sectionItem.appendPart(switchPart);
+                sectionElement.appendChild(sectionItem.element);
+            }
+
+            main.appendChild(sectionElement);
+            main.appendChild(CBUI.createHalfSpace());
+        }
+
         main.appendChild(status.element);
 
         input.addEventListener("change", function() {
             disabled = true;
-            actionPart.disabled = true;
+            importActionPart.element.classList.add("disabled");
 
-            Colby.callAjaxFunction("CBModelsImportAdmin", "uploadDataFile", undefined, input.files[0])
-                .then(uploadFulfilled)
-                .catch(Colby.displayAndReportError);
+            Colby.callAjaxFunction(
+                "CBModelsImportAdmin",
+                "uploadDataFile",
+                {
+                    saveUnchangedModels: saveUnchangedModels,
+                },
+                input.files[0]
+            )
+            .then(uploadFulfilled)
+            .catch(Colby.displayAndReportError);
 
             input.value = null;
 
             /* closure */
             function uploadFulfilled(response) {
                 status.processID = response.processID;
-                disabled = false;
-                actionPart.disabled = false;
+                window.setTimeout(function () {
+                    disabled = false;
+                    importActionPart.element.classList.remove("disabled");
+                }, 2000);
 
                 return new Promise(function (resolve, reject) {
                     runNextTask();
