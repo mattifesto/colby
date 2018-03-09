@@ -27,7 +27,7 @@ final class CBModelsImportAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v400.js', cbsysurl())];
     }
 
     /**
