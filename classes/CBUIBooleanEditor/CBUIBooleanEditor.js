@@ -1,6 +1,9 @@
 "use strict";
 /* jshint strict: global */
 
+/**
+ * @deprecated 2018.03.09 use CBUIStringsPart and CBUIBooleanSwitchPart
+ */
 var CBUIBooleanEditor = {
 
     /**
