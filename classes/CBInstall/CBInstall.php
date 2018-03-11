@@ -23,7 +23,6 @@ EOT;
         CBLog::install();
         CBTasks::install(); /* deprecated */
         CBTasks2::install();
-        CBUsers::install();
 
         /**
          * New installation process. This is placed at the end of the install

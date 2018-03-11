@@ -3,9 +3,9 @@
 final class CBUsers {
 
     /**
-     * @return null
+     * @return void
      */
-    static function install() {
+    static function CBInstall_install(): void {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `ColbyUsers` (
@@ -33,58 +33,20 @@ EOT;
 
         Colby::query($SQL);
 
-        $SQL = <<<EOT
+        CBUsers::installUserGroup('Administrators');
+        CBUsers::installUserGroup('Developers');
 
-            CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreAdministrators` (
-                `userId`    BIGINT UNSIGNED NOT NULL,
-                `added`     DATETIME NOT NULL,
-
-                PRIMARY KEY (`userId`),
-                CONSTRAINT `ColbyUsersWhoAreAdministrators_userId`
-                    FOREIGN KEY (`userId`)
-                    REFERENCES `ColbyUsers` (`id`)
-                    ON DELETE CASCADE
-            )
-            ENGINE=InnoDB
-            DEFAULT CHARSET=utf8mb4
-            COLLATE=utf8mb4_unicode_520_ci
-
-EOT;
-
-        Colby::query($SQL);
-
-        /**
-         *
-         */
-
-        $SQL = <<<EOT
-
-            CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAreDevelopers` (
-                `userId`    BIGINT UNSIGNED NOT NULL,
-                `added`     DATETIME NOT NULL,
-
-                PRIMARY KEY (`userId`),
-                CONSTRAINT `ColbyUsersWhoAreDevelopers_userId`
-                    FOREIGN KEY (`userId`)
-                    REFERENCES `ColbyUsers` (`id`)
-                    ON DELETE CASCADE
-            )
-            ENGINE=InnoDB
-            DEFAULT CHARSET=utf8mb4
-            COLLATE=utf8mb4_unicode_520_ci
-
-EOT;
-
-        Colby::query($SQL);
     }
 
     /**
      * @param string $name
-     *  The name of the group such as 'Administrators' or 'LEWholesaleCustomers'.
      *
-     * @return null
+     *      The name of the group such as 'Administrators' or
+     *      'LEWholesaleCustomers'.
+     *
+     * @return void
      */
-    static function installUserGroup($name) {
+    static function installUserGroup(string $name): void {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAre{$name}` (
