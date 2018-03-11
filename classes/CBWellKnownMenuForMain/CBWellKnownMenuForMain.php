@@ -10,26 +10,34 @@ final class CBWellKnownMenuForMain {
     }
 
     /**
-     * @return null
+     * @return void
      */
-    static function install() {
+    static function CBInstall_install(): void {
         $originalSpec = CBModels::fetchSpecByID(CBWellKnownMenuForMain::ID());
 
         if ($originalSpec === false) {
             $spec = (object)[
                 'ID' => CBWellKnownMenuForMain::ID(),
-                'title' => 'Main Menu',
+                'title' => 'Website',
+                'titleURI' => '/',
             ];
         } else {
-            $spec = clone $originalSpec;
+            $spec = CBModel::clone($originalSpec);
         }
 
         $spec->className = 'CBMenu';
 
         if ($spec != $originalSpec) {
             CBDB::transaction(function () use ($spec) {
-                CBModels::save([$spec]);
+                CBModels::save($spec);
             });
         }
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBModels', 'CBMenu'];
     }
 }
