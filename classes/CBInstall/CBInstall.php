@@ -31,7 +31,6 @@ EOT;
         CBSitePreferences::install();
         CBThemedTextView::install(); /* deprecated */
         CBImages::install();
-        CBWellKnownPageForTestingPageTitleAndBodyText::install();
 
         /**
          * New installation process. This is placed at the end of the install
