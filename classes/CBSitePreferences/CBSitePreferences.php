@@ -31,7 +31,7 @@ final class CBSitePreferences {
      */
     static function administratorEmails() {
         $model = CBSitePreferences::model();
-        $emails = CBModel::value($model, 'administratorEmails', []);
+        $emails = CBModel::valueToArray($model, 'administratorEmails');
 
         if (!empty($emails)) {
             return $emails;
@@ -53,11 +53,7 @@ final class CBSitePreferences {
     static function classNamesForUserSettings() {
         $model = CBSitePreferences::model();
 
-        if (empty($model->classNamesForUserSettings)) {
-            return [];
-        } else {
-            return $model->classNamesForUserSettings;
-        }
+        return CBModel::valueToArray($model, 'classNamesForUserSettings');
     }
 
     /**
@@ -68,11 +64,7 @@ final class CBSitePreferences {
     static function customValueForKey($key) {
         $model = CBSitePreferences::model();
 
-        if (isset($model->custom->{$key})) {
-            return $model->custom->{$key};
-        } else {
-            return null;
-        }
+        return CBModel::value($model, "custom.{$key}");
     }
 
     /**
@@ -88,7 +80,8 @@ final class CBSitePreferences {
      */
     static function debug() {
         $model = CBSitePreferences::model();
-        return isset($model->debug) ? ($model->debug === true) : false;
+
+        return (bool)CBModel::value($model, 'debug');
     }
 
     /**
@@ -105,14 +98,15 @@ final class CBSitePreferences {
      */
     static function disallowRobots() {
         $model = CBSitePreferences::model();
-        return isset($model->disallowRobots) ? ($model->disallowRobots === true) : false;
+
+        return (bool)CBModel::value($model, 'disallowRobots');
     }
 
     /**
      * @return hex160?
      */
-    static function frontPageID() {
-        return CBModel::value(CBSitePreferences::model(), 'frontPageID');
+    static function frontPageID(): ?string {
+        return CBModel::valueAsID(CBSitePreferences::model(), 'frontPageID');
     }
 
     /**
@@ -135,27 +129,6 @@ final class CBSitePreferences {
         } else {
             return $model->imageForIcon;
         }
-    }
-
-    /**
-     * Re-saving these preferences each update ensures that the model always has
-     * valid values for all properties without having to add a new update script
-     * each time the properties change.
-     *
-     * 2016.10.16 The comment above uses deprecated logic. The model should be
-     * valid whether properties are set or not. However this may not yet be
-     * the case.
-     *
-     * @return null
-     */
-    static function install() {
-        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
-
-        if ($spec === false) {
-            $spec = CBModels::modelWithClassName(__CLASS__, ['ID' => CBSitePreferences::ID]);
-        }
-
-        CBModels::save([$spec]);
     }
 
     /**
@@ -369,7 +342,7 @@ final class CBSitePreferences {
     static function siteName() {
         $model = CBSitePreferences::model();
 
-        return CBModel::value($model, 'siteName', '');
+        return CBModel::valueToString($model, 'siteName');
     }
 
     /**
