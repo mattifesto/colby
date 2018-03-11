@@ -31,7 +31,6 @@ EOT;
         CBSitePreferences::install();
         CBThemedTextView::install(); /* deprecated */
         CBImages::install();
-        CBWellKnownPageForTestingCBTextView2::install();
         CBWellKnownPageForTestingPageTitleAndBodyText::install();
 
         /**
