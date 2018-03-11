@@ -368,7 +368,7 @@ EOT;
             } else if (is_callable($function = "{$task->className}::CBTasks2_Execute")) { /* deprecated */
                 $status = call_user_func($function, $task->ID);
             } else {
-                throw new Exception("The function {$task->className}::CBTasks2_run() requested by task ({$task->className}, {$task->ID}) is not callable.");
+                throw new Exception("The CBTasks2_run() interface has not been implemented by the {$task->className} class preventing execution of the task for ID {$task->ID}");
             }
 
             $scheduled = CBModel::value($status, 'scheduled', null, 'CBConvert::valueAsInt');
@@ -383,25 +383,7 @@ EOT;
 
             $state = 3; /* complete */
         } catch (Throwable $throwable) {
-            Colby::reportException($throwable);
-
-            $message = CBMessageMarkup::stringToMarkup(
-                CBConvert::throwableToMessage($throwable)
-            );
-
-            $message = <<<EOT
-
-                {$task->className} Error {$message}
-
-                ID: {$task->ID}
-
-EOT;
-
-            CBLog::log((object)[
-                'className' => $task->className,
-                'message' => $message,
-                'severity' => 3,
-            ]);
+            CBErrorHandler::report($throwable);
 
             $scheduled = null;
             $state = 4; /* failed */
