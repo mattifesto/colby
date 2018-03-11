@@ -29,7 +29,6 @@ EOT;
         CBModelsPreferences::install();
         CBPages::install();
         CBSitePreferences::install();
-        CBThemedTextView::install(); /* deprecated */
         CBImages::install();
 
         /**

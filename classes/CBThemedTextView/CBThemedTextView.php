@@ -3,26 +3,6 @@
 final class CBThemedTextView {
 
     /**
-     * @deprecated
-     *
-     *      2017.08.20 This function removes all well-known themes assocated
-     *      width CBThemedTextView. Once it has been run once on all sites it
-     *      can be deleted.
-     *
-     * @return null
-     */
-    static function install() {
-        CBDB::transaction(function () {
-            $IDs = [
-                '2a5eb6c836914ef8f33b15f0853ac61df554505e', // standard page header theme (pre CBPageTitleAndDescriptionView)
-                '0d1bedea8d5e706950f1878ad3aff961ba36b631', // CBWellKnownThemeForContent
-            ];
-
-            CBModels::deleteByID($IDs);
-        });
-    }
-
-    /**
      * @param model $model
      *
      * @return string
