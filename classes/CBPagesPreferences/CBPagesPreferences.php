@@ -73,7 +73,7 @@ final class CBPagesPreferences {
     static function classNamesForDeprecatedViews() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
 
-        return $model->deprecatedViewClassNames;
+        return CBModel::valueToArray($model, 'deprecatedViewClassNames');
     }
 
     /**
@@ -106,7 +106,7 @@ final class CBPagesPreferences {
      */
     static function classNamesForLayouts() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        $classNamesForLayouts = CBModel::value($model, 'classNamesForLayouts', []);
+        $classNamesForLayouts = CBModel::valueToArray($model, 'classNamesForLayouts');
 
         return array_unique(array_merge(CBPagesPreferences::defaultClassNamesForLayouts, $classNamesForLayouts));
     }
@@ -127,7 +127,7 @@ final class CBPagesPreferences {
 
         // @deprecated
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        $kinds = CBModel::value($model, 'classNamesForKinds', []);
+        $kinds = CBModel::valueToArray($model, 'classNamesForKinds');
 
         if (empty($kinds)) {
             return CBPagesPreferences::classNamesForPageKindsDefault();
@@ -154,7 +154,7 @@ final class CBPagesPreferences {
      */
     static function classNamesForSettings() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        return CBModel::value($model, 'classNamesForSettings', []);
+        return CBModel::valueToArray($model, 'classNamesForSettings');
     }
 
     /**
@@ -165,24 +165,12 @@ final class CBPagesPreferences {
      */
     static function classNamesForSupportedViews() {
         $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        $classNames = array_merge(CBPagesPreferences::defaultClassNamesForSupportedViews, $model->supportedViewClassNames);
+        $supportedViewClassNames = CBModel::valueToArray($model, 'supportedViewClassNames');
+        $classNames = array_merge(CBPagesPreferences::defaultClassNamesForSupportedViews, $supportedViewClassNames);
         $classNames = array_unique($classNames);
         sort($classNames);
 
         return $classNames;
-    }
-
-    /**
-     * @return null
-     */
-    static function install() {
-        $spec = CBModels::fetchSpecByID(CBPagesPreferences::ID);
-
-        if ($spec === false) {
-            $spec = CBModels::modelWithClassName(__CLASS__, [ 'ID' => CBPagesPreferences::ID ]);
-        }
-
-        CBModels::save([$spec]);
     }
 
     /**

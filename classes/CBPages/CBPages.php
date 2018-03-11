@@ -214,7 +214,6 @@ EOT;
     static function install() {
         CBPages::createPagesTable();
         CBPages::createPagesTable(['name' => 'CBPagesInTheTrash']);
-        CBPagesPreferences::install();
     }
 
     /**
