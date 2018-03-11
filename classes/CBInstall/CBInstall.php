@@ -25,7 +25,6 @@ EOT;
         CBTasks2::install();
         CBUsers::install();
         CBModels::install();
-        CBModelAssociations::install();
 
         /**
          * New installation process. This is placed at the end of the install

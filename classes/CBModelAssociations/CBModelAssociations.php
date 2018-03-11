@@ -167,9 +167,9 @@ EOT;
     }
 
     /**
-     * @return null
+     * @return void
      */
-    static function install() {
+    static function CBInstall_install(): void {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `CBModelAssociations` (
