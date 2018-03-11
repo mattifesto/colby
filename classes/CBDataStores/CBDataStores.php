@@ -41,9 +41,9 @@ EOT;
      *      timestamp: The most recent time the row was updated. This column is
      *      not terribly important, but may help identify zombied rows.
      *
-     * @return null
+     * @return void
      */
-    static function install() {
+    static function CBInstall_install(): void {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `CBDataStores`
