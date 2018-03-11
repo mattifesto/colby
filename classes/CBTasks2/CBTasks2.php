@@ -187,9 +187,9 @@ EOT;
      *
      *          Used by the class when running tasks.
      *
-     * @return null
+     * @return void
      */
-    static function install() {
+    static function CBInstall_install(): void {
         $defaultPriority = CBTasks2::defaultPriority;
         $SQL = <<<EOT
 
