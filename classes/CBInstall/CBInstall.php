@@ -24,7 +24,6 @@ EOT;
         CBTasks::install(); /* deprecated */
         CBTasks2::install();
         CBUsers::install();
-        CBModels::install();
 
         /**
          * New installation process. This is placed at the end of the install
