@@ -85,9 +85,9 @@ final class CBLog {
      *
      *      The timestamp the log entry was created.
      *
-     * @return null
+     * @return void
      */
-    static function install() {
+    static function CBInstall_install(): void {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `CBLog` (
