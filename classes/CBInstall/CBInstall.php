@@ -21,7 +21,6 @@ EOT;
         CBDataStoreAdmin::install(); /* deprecated */
         CBDataStores::install();
         CBLog::install();
-        CBTasks::install(); /* deprecated */
 
         /**
          * New installation process. This is placed at the end of the install
