@@ -27,7 +27,6 @@ EOT;
         CBModels::install();
         CBModelAssociations::install();
         CBModelsPreferences::install();
-        CBPages::install();
 
         /**
          * New installation process. This is placed at the end of the install
