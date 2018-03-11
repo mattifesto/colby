@@ -18,8 +18,6 @@ EOT;
 
         Colby::query($SQL);
 
-        CBDataStoreAdmin::install(); /* deprecated */
-
         /**
          * New installation process. This is placed at the end of the install
          * process at first but will eventually move earlier and become the
