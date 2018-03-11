@@ -26,7 +26,6 @@ EOT;
         CBUsers::install();
         CBModels::install();
         CBModelAssociations::install();
-        CBModelsPreferences::install();
 
         /**
          * New installation process. This is placed at the end of the install

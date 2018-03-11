@@ -15,51 +15,23 @@ final class CBModelsPreferences {
     /**
      * @return [string]
      */
-    static function classNamesOfEditableModels() {
+    static function classNamesOfEditableModels(): array {
         $model = CBModelCache::fetchModelByID(CBModelsPreferences::ID);
-        return array_merge(CBModelsPreferences::defaultClassNamesOfEditableModels, $model->classNamesOfEditableModels);
+        $classNamesOfEditableModels = CBModel::valueToArray($model, 'classNamesOfEditableModels');
+
+        return array_merge(CBModelsPreferences::defaultClassNamesOfEditableModels, $classNamesOfEditableModels);
     }
 
     /**
-     * Re-saving these preferences each update ensures that the model always has
-     * valid values for all properties without having to add a new update script
-     * each time the properties change.
+     * @param model $spec
      *
-     * @return null
+     * @return ?model
      */
-    static function install() {
-        $spec = CBModels::fetchSpecByID(CBModelsPreferences::ID);
-
-        if ($spec === false) {
-            $spec = CBModels::modelWithClassName(__CLASS__, ['ID' => CBModelsPreferences::ID]);
-        }
-
-        CBModels::save([$spec]);
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function CBModel_toModel(stdClass $spec) {
-        $model = CBModels::modelWithClassName(__CLASS__);
-
-        if (isset($spec->classNamesOfEditableModels)) {
-            $classes = preg_split('/[,\s]+/', $spec->classNamesOfEditableModels);
-            $model->classNamesOfEditableModels = array_unique($classes);
-        } else {
-            $model->classNamesOfEditableModels = [];
-        }
-
-        return $model;
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        return (object)[
+            'classNamesOfEditableModels' => array_values(array_unique(
+                CBModel::valueToNames($spec, 'classNamesOfEditableModels')
+            )),
+        ];
     }
 }
