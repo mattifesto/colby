@@ -2,6 +2,8 @@
 
 final class CBAdminPageForUpdate {
 
+    private static $installationIsRequired = false;
+
     /**
      * @return [string]
      */
@@ -30,6 +32,10 @@ final class CBAdminPageForUpdate {
      *      false.
      */
     static function installationIsRequired() {
+        if (CBAdminPageForUpdate::$installationIsRequired) {
+            return true;
+        }
+
         $SQL = <<<EOT
 
             SELECT  COUNT(*) AS `count`
@@ -39,9 +45,12 @@ final class CBAdminPageForUpdate {
 
 EOT;
 
-        $count = CBDB::SQLToValue($SQL);
-
-        return $count == 0;
+        if (CBDB::SQLToValue($SQL) == 0) {
+            CBAdminPageForUpdate::$installationIsRequired = true;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -113,6 +122,8 @@ EOT;
     static function update() {
         include Colby::findFile('setup/update.php');
         CBLog::addMessage('System', 5, 'The system was updated.');
+
+        CBAdminPageForUpdate::$installationIsRequired = false;
     }
 
     /**
