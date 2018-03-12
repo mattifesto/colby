@@ -35,7 +35,6 @@ EOT;
 
         CBUsers::installUserGroup('Administrators');
         CBUsers::installUserGroup('Developers');
-
     }
 
     /**
