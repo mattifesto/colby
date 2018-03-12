@@ -33,7 +33,7 @@ EOT;
 
         foreach ($installableClassNames as $className) {
             call_user_func("{$className}::CBInstall_install");
-            error_log("{$className}::CBInstall_install");
+            error_log("{$className}::CBInstall_install()");
         }
     }
 
