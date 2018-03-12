@@ -100,7 +100,13 @@ final class ColbyUser {
         if (isset(ColbyUser::$currentUserGroups[$groupName])) {
             return ColbyUser::$currentUserGroups[$groupName];
         } else {
-            $isMember = ColbyUser::isMemberOfGroup(ColbyUser::$currentUserId, $groupName);
+            if (CBAdminPageForUpdate::installationIsRequired()) {
+                error_log('Permissions granted from ' . __METHOD__ . '() because of first installation.');
+                $isMember = true;
+            } else {
+                $isMember = ColbyUser::isMemberOfGroup(ColbyUser::$currentUserId, $groupName);
+            }
+
             ColbyUser::$currentUserGroups[$groupName] = $isMember;
 
             return $isMember;
