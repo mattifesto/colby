@@ -32,6 +32,13 @@ final class CBAdminMenu {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBModels'];
+    }
+
+    /**
      * @return hex160
      */
     static function ID(): string {
