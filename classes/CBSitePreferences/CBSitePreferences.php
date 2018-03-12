@@ -45,6 +45,29 @@ final class CBSitePreferences {
     }
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
+
+        if (empty($spec)) {
+            CBDB::transaction(function () {
+                CBModels::save((object)[
+                    'className' => 'CBSitePreferences',
+                    'ID' => CBSitePreferences::ID,
+                ]);
+            });
+        }
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBModels'];
+    }
+
+    /**
      * The value of this setting should be changed directly on the spec by
      * adjusting the array value of classNamesForUserSettings.
      *
