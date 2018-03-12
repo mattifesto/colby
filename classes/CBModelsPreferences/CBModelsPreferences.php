@@ -13,6 +13,29 @@ final class CBModelsPreferences {
     ];
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBModelsPreferences::ID);
+
+        if (empty($spec)) {
+            CBDB::transaction(function () {
+                CBModels::save((object)[
+                    'className' => 'CBModelsPreferences',
+                    'ID' => CBModelsPreferences::ID,
+                ]);
+            });
+        }
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBModels'];
+    }
+
+    /**
      * @return [string]
      */
     static function classNamesOfEditableModels(): array {
