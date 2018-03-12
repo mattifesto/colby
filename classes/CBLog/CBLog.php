@@ -271,8 +271,8 @@ EOT;
 
         if (empty($message)) {
             $hasIssues = true;
-            $severity = min($severity, 3);
-            $message = 'Error: A CBLog entry was created with no message.'; /* first line */
+            $severity = min($severity, 4);
+            $message = 'A CBLog entry was created with no message.'; /* first line */
             $message .= <<<EOT
 
 

@@ -39,7 +39,7 @@ EOT;
 
         $row = CBDB::SQLToObject($SQL);
 
-        if ($row->severity != 3) {
+        if ($row->severity != 4) {
             throw new Exception('The severity of the log entry should have been changed to 4.');
         }
     }
