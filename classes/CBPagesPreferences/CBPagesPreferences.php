@@ -20,6 +20,29 @@ final class CBPagesPreferences {
     ];
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBPagesPreferences::ID);
+
+        if (empty($spec)) {
+            CBDB::transaction(function () {
+                CBModels::save((object)[
+                    'className' => 'CBPagesPreferences',
+                    'ID' => CBPagesPreferences::ID,
+                ]);
+            });
+        }
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBModels'];
+    }
+
+    /**
      * This function is used by the `CBHTMLOutput` as the class name for page
      * settings when rendering a page whose model doesn't have a value set for
      * the `classNameForSettings` property. It is recommended that the property
