@@ -156,9 +156,9 @@ final class CBHTMLOutput {
      * This function calculates the current class name of the class to be used
      * for page settings.
      *
-     * @return string?
+     * @return ?string
      */
-    static function classNameForPageSettings() {
+    static function classNameForPageSettings(): ?string {
         $className = CBHTMLOutput::$classNameForSettings; // @deprecated
 
         if (empty($className)) {
@@ -167,19 +167,18 @@ final class CBHTMLOutput {
             );
         }
 
-        /**
-         * @TODO 2018.02.26
-         *
-         *      This setting should come from a function because it is shared by
-         *      all instances of a site.
-         *
-         *      This is a good example an undefined property value having a
-         *      meaning. You should question this before making further changes.
-         *
-         *      What do you do if you want to have no page settings?
-         */
+        if (empty($className)) {
+            $className = CBPageSettings::defaultClassName();
+        }
 
         if (empty($className)) {
+
+            /**
+             * @deprecated 2018.03.15
+             *
+             *      Sites should implement CBPageSettings_defaultClassName::get()
+             */
+
             $className = CBPagesPreferences::classNameForUnsetPageSettings();
         }
 
