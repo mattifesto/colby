@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @deprecated 2018.05.16
+ *
+ *      Use CBPageFrame related classes and functions
+ */
 final class CBPageLayout {
 
     /**
