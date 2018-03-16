@@ -338,19 +338,28 @@ final class CBViewPage {
             CBHTMLOutput::$classNameForSettings = $model->classNameForSettings;
         }
 
-        $renderContentCallback = function () use ($model) {
-            $sections = CBModel::valueToArray($model, 'sections');
-            array_walk($sections, 'CBView::render');
-        };
+        if (empty($model->layout->className)) {
+            $renderContent = function () use ($model) {
+                echo '<main>';
+                $sections = CBModel::valueToArray($model, 'sections');
+                array_walk($sections, 'CBView::render');
+                echo '</main>';
+            };
 
-        if (!empty($model->layout->className)) {
+            $pageFrameClassName = CBPageFrame::defaultClassName();
+
+            CBPageFrame::render($pageFrameClassName, $renderContent);
+        } else {
+            $renderContentCallback = function () use ($model) {
+                $sections = CBModel::valueToArray($model, 'sections');
+                array_walk($sections, 'CBView::render');
+            };
+
             CBHTMLOutput::requireClassName($model->layout->className);
 
             if (is_callable($renderLayout = "{$model->layout->className}::render")) {
                 call_user_func($renderLayout, $model->layout, $renderContentCallback);
             }
-        } else {
-            $renderContentCallback();
         }
 
         CBHTMLOutput::render();
