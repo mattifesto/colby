@@ -3,6 +3,17 @@
 final class CBPageSettings {
 
     /**
+     * @return ?string
+     */
+    static function defaultClassName(): ?string {
+        if (is_callable($function = 'CBPageSettings_defaultClassName::get')) {
+            return call_user_func($function);
+        }
+
+        return null;
+    }
+
+    /**
      * @param [string] $pageSettingsClassNames
      *
      * @return [string]
