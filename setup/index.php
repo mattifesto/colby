@@ -34,7 +34,6 @@ class ColbyInstaller {
      * @return void
      */
     static function initialize() {
-
         if (empty($_SERVER['HTTPS'])) {
             ColbyInstaller::renderSecurityWarning();
 
@@ -108,6 +107,9 @@ class ColbyInstaller {
      * @return null
      */
     static function install() {
+        $sitedir = cbsitedir();
+        $setupdir = __DIR__;
+
         /* Verify MySQL login properties */
 
         $mysqliDriver = new mysqli_driver();
@@ -201,6 +203,41 @@ class ColbyInstaller {
 
         if (!is_file(self::$faviconIcoFilename)) {
             touch(self::$faviconIcoFilename);
+        }
+
+        /* /classes */
+
+        $destdir = "{$sitedir}/classes";
+
+        if (!is_dir($destdir)) {
+            mkdir($destdir);
+        }
+
+        /* class files */
+
+        $classfiles = [
+            ['CBPageFrame_defaultClassName', 'php'],
+            ['CBPageSettings_defaultClassName', 'php'],
+            ['CBXPageFrame', 'php'],
+            ['CBXPageFrame', 'css'],
+            ['CBXPageSettings', 'php'],
+        ];
+
+        foreach ($classfiles as $classfile) {
+            $className = $classfile[0];
+            $extension = $classfile[1];
+            $directory = "{$sitedir}/classes/{$className}";
+
+            if (!is_dir($directory)) {
+                mkdir($directory);
+            }
+
+            $src = "{$setupdir}/{$className}.{$extension}.data";
+            $dest = "{$directory}/{$className}.{$extension}";
+
+            if (!is_file($destfilepath)) {
+                copy($src, $dest);
+            }
         }
 
         header('Location: /admin/');

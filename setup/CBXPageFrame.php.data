@@ -1,0 +1,48 @@
+<?php
+
+final class CBXPageFrame {
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'css', cbsiteurl())];
+    }
+
+    /**
+     * @param function $renderContent
+     *
+     * @return void
+     */
+    static function CBPageFrame_render(callable $renderContent): void {
+        $selectedMainMenuItemName = CBModel::value(CBHTMLOutput::pageInformation(), 'selectedMainMenuItemName');
+
+        ?>
+
+        <header class="CBXPageFrame CBDarkTheme">
+            <?php
+
+            CBView::render((object)[
+                'className' => 'CBMenuView',
+                'menuID' => CBWellKnownMenuForMain::ID(),
+                'selectedItemName' => $selectedMainMenuItemName,
+            ]);
+
+            ?>
+        </header>
+
+        <?php
+
+        call_user_func($renderContent);
+
+        ?>
+
+        <footer class="CBXPageFrame CBDarkTheme">
+            <div class="copyright">
+                Copyright &copy; <?= gmdate('Y') . ' ' . cbhtml(CBSitePreferences::siteName()) ?>
+            </div>
+        </footer>
+
+        <?php
+    }
+}
