@@ -58,6 +58,9 @@ EOT;
      * @return [int]
      */
     static function calculateVersionsToPrune(array $versions): array {
+        if (empty($versions)) {
+            return [];
+        }
 
         /**
          * Always keep a minimum number of versions regardless of age so that if
