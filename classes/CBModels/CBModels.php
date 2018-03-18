@@ -491,68 +491,6 @@ EOT;
     }
 
     /**
-     * Removes the oldest versions, but not the current version, of a model.
-     * This function is used clear out unneeded previous versions of a model.
-     *
-     * @param [hex160] $IDs
-     * @param timestamp $maxTimestamp
-     *      Previous versions of the models with timestamps less than
-     *      $maxTimestamp will be deleted.
-     *
-     * @return null
-     */
-    static function removeOldestVersions($IDs, $maxTimestamp) {
-        $IDsAsSQL = CBHex160::toSQL($IDs);
-        $maxTimestampAsSQL = intval($maxTimestamp);
-
-        $SQL = <<<EOT
-
-            DELETE      `v`
-            FROM        `CBModels` AS `m`
-            INNER JOIN  `CBModelVersions` as `v`
-            ON          `m`.`ID` = `v`.`ID`
-            WHERE       `m`.`ID` IN ({$IDsAsSQL}) AND
-                        `m`.`version` != `v`.`version` AND
-                        `v`.`timestamp` < {$maxTimestampAsSQL}
-
-EOT;
-
-        Colby::query($SQL);
-    }
-
-    /**
-     * Removes previous versions, but not the current version, of a model. This
-     * function is used clear out unneeded previous versions of a model. This is
-     * called at the end of CBModels::save().
-     *
-     * @param [hex160] $IDs
-     * @param timestamp $minTimestamp
-     *      Previous versions of the models with timestamps greater than
-     *      $minTimestamp will be deleted. Passing a value of `0` to this
-     *      parameter will remove all versions except for the current version.
-     *
-     * @return null
-     */
-    static function removePreviousVersions($IDs, $minTimestamp) {
-        $IDsAsSQL = CBHex160::toSQL($IDs);
-        $minTimestampAsSQL = intval($minTimestamp);
-
-        $SQL = <<<EOT
-
-            DELETE      `v`
-            FROM        `CBModels` AS `m`
-            INNER JOIN  `CBModelVersions` as `v`
-            ON          `m`.`ID` = `v`.`ID`
-            WHERE       `m`.`ID` IN ({$IDsAsSQL}) AND
-                        `m`.`version` != `v`.`version` AND
-                        `v`.`timestamp` > {$minTimestampAsSQL}
-
-EOT;
-
-        Colby::query($SQL);
-    }
-
-    /**
      * @param hex160 $ID
      * @param int $version
      *
@@ -736,12 +674,7 @@ EOT;
         }
 
         CBModels::saveToDatabase($tuples);
-
-        /* Remove versions less than 10 minutes old. */
-        CBModels::removePreviousVersions($IDs, $modified - (60 * 10));
-
-        /* Remove versions more than 30 days old */
-        CBModels::removeOldestVersions($IDs, $modified - (60 * 60 * 24 * 30));
+        CBTasks2::restart('CBModelPruneVersionsTask', $IDs);
     }
 
     /**
