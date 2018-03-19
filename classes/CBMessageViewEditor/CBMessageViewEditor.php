@@ -13,6 +13,6 @@ final class CBMessageViewEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v403.js', cbsysurl())];
     }
 }

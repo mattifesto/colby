@@ -46,14 +46,6 @@ var CBMessageViewEditor = {
                 `
                 View Specific CSS Class Names:
                 `,`
-                "center": center the text.
-                `,`
-                "justify": justify the text.
-                `,`
-                "right": align the text to the right.
-                `,`
-                "hero1": large text for marketing presentations.
-                `,`
                 "custom": disable the default view styles.
                 `,`
                 Supported CSS Class Names:
