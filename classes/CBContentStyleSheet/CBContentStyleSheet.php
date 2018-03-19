@@ -6,6 +6,6 @@ final class CBContentStyleSheet {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v397.css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v403.css', cbsysurl())];
     }
 }

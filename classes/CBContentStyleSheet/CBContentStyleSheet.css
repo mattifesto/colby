@@ -90,10 +90,26 @@
     padding: 10px 15px;
 }
 
+.CBContentStyleSheet .center {
+    text-align: center;
+}
+
+.CBContentStyleSheet .justify {
+    text-align: justify;
+}
+
+.CBContentStyleSheet .left {
+    text-align: left;
+}
+
 .CBContentStyleSheet .prewrap {
     white-space: pre-wrap;
 }
 
 .CBContentStyleSheet .preline {
     white-space: pre-line;
+}
+
+.CBContentStyleSheet .right {
+    text-align: right;
 }
