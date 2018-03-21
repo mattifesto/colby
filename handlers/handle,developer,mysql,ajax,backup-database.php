@@ -1,7 +1,6 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Developers'))
-{
+if (!ColbyUser::current()->isOneOfThe('Developers')) {
     return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
 }
 
@@ -12,10 +11,9 @@ $response = new CBAjaxResponse();
  */
 
 $intraSiteDatabaseBackupsDirectory = 'tmp/database-backups';
-$absoluteDatabaseBackupsDirectory = COLBY_SITE_DIRECTORY . "/{$intraSiteDatabaseBackupsDirectory}";
+$absoluteDatabaseBackupsDirectory = cbsitedir() . "/{$intraSiteDatabaseBackupsDirectory}";
 
-if (!is_dir($absoluteDatabaseBackupsDirectory))
-{
+if (!is_dir($absoluteDatabaseBackupsDirectory)) {
     mkdir($absoluteDatabaseBackupsDirectory, 0777, true);
 }
 
@@ -25,7 +23,9 @@ removeOldBackupFiles($absoluteDatabaseBackupsDirectory);
  * Generate a filename for the database backup file.
  */
 
-$filename = $_SERVER['SERVER_NAME'] . '-' . time() . '.sql';
+$time = time();
+$date = gmdate("Y.m.d", $time);
+$filename = $_SERVER['SERVER_NAME'] . "-{$date}.{$time}.sql";
 $intraSiteFilename = "{$intraSiteDatabaseBackupsDirectory}/{$filename}";
 $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
 
