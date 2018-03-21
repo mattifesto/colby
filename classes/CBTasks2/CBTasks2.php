@@ -221,6 +221,31 @@ EOT;
     /**
      * @param string $className
      * @param [hex160]|hex160 $IDs
+     *
+     * @return void
+     */
+    static function remove($className, $IDs): void {
+        if (!is_array($IDs)) {
+            $IDs = [$IDs];
+        }
+
+        $classNameAsSQL = CBDB::stringToSQL($className);
+        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $SQL = <<<EOT
+
+            DELETE
+            FROM    CBTasks2
+            WHERE   className = {$classNameAsSQL} AND
+                    ID IN ($IDsAsSQL)
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
+     * @param string $className
+     * @param [hex160]|hex160 $IDs
      * @param int? $priority
      *
      * @return void
