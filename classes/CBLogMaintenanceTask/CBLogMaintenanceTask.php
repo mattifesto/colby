@@ -9,7 +9,19 @@ final class CBLogMaintenanceTask {
      * @return void
      */
     static function CBInstall_install(): void {
-        CBTasks2::updateTask(__CLASS__, CBHex160::zero());
+
+        /**
+         * This task originally used the zero ID. Singleton tasks must now use
+         * a unique ID. This line can be remove once it has run on all sites.
+         */
+        CBTasks2::remove(__CLASS__, '0000000000000000000000000000000000000000');
+
+        /**
+         * This will make the task ready the first time it is called and not
+         * have any effect after that. The task will already be scheduled to
+         * run.
+         */
+        CBTasks2::updateTask(__CLASS__, CBLogMaintenanceTask::ID());
     }
 
     /**
@@ -22,10 +34,10 @@ final class CBLogMaintenanceTask {
     /**
      * @param hex160 $ID
      *
-     * @return null
+     * @return void
      */
-    static function CBTasks2_Execute($ID) {
-        if ($ID !== CBHex160::zero()) {
+    static function CBTasks2_Execute(string $ID): void {
+        if ($ID !== CBLogMaintenanceTask::ID()) {
             throw new RuntimeException("An invalid ID {$ID} was passed to " . __METHOD__ . '()');
         }
 
@@ -40,5 +52,12 @@ final class CBLogMaintenanceTask {
         return (object)[
             'scheduled' => time() + (60 * 60 * 24), /* 24 hours from now */
         ];
+    }
+
+    /**
+     * @return hex160
+     */
+    static function ID(): string {
+        return '9f70a32600e39cabe7e4f7310d478b5159623929';
     }
 }
