@@ -126,11 +126,21 @@ EOT;
      *
      *      `className`
      *
-     *          Class name of the class that runs the task.
+     *          The class name of the class that runs the task. This class must
+     *          implement the CBTasks2_run() interface.
      *
      *      `ID`
      *
-     *          ID associated with the task or NULL
+     *          This is the ID of the model that is the target of the task. For
+     *          instance and "upgrade model" task would be created for multiple
+     *          models.
+     *
+     *          For singleton tasks, the tasks should declare a unique ID that
+     *          it will always use. If the task needs to store data, it can
+     *          store it in a model with this ID. But a model does not need to
+     *          be created.
+     *
+     *          This ID will be passed to the CBTasks2_run() interface.
      *
      *      `priority`
      *
