@@ -34,6 +34,6 @@ final class CBLogAdminPage {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v405.js', cbsysurl())];
     }
 }

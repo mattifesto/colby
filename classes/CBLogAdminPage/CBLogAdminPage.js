@@ -77,7 +77,20 @@ var CBLogAdminPage = {
             entriesElement.textContent = "";
 
             for (let entry of entries) {
-                var message = entry.message;
+                let message = `
+
+                    ${entry.message}
+
+                    (Log Entry Information (b))
+
+                    --- ul
+                    className: ${entry.className}
+
+                    associated ID: (${entry.ID} (a /admin/?c=CBModelInspector&ID=${entry.ID}))
+
+                    process ID: ${entry.processID}
+                    ---
+                `;
 
                 entriesElement.appendChild(CBUIExpander.create({
                     message: message,
