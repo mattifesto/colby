@@ -166,12 +166,23 @@ EOT;
      *
      *      `processID`
      *
-     *          Used to associate related tasks with each other. Use the
-     *          CBProcess class to set.
+     *          A process ID is used to group related tasks. This allows you to
+     *          track the status of a set of tasks or cancel all of the tasks if
+     *          necessary.
+     *
+     *          For instance, when performing a model import, the import process
+     *          sets a process ID using the CBProcess class. All of the tasks
+     *          created then become part of that process. When a task is run
+     *          that is part of a process, other tasks created during the run
+     *          will also be part of that process.
+     *
+     *          To create a process use the CBProcess class to set the process
+     *          ID to a unique random ID. Then create some tasks and nothing
+     *          needs to be done to maintain the process after that.
      *
      *      `starterID`
      *
-     *          Used by the class when running tasks.
+     *          Used by the this class when running tasks.
      *
      * Table indexes:
      *
@@ -476,39 +487,18 @@ EOT;
      * This function is use to both create and update a task.
      *
      * @param string $className
-     *
-     *      This is the class name of the class that implements the
-     *      CBTasks2_run() function which will be called to perform the
-     *      task.
-     *
      * @param hex160 $ID
-     *
-     *      This is an $ID that is associated with the data of the task. A task
-     *      that operated on a page would use a page ID. A task that operated on
-     *      a model would use a model ID. A task that operates as a singleton
-     *      would usually use CBHex160::zero() for this value.
-     *
-     * @param hex160 $processID
-     *
-     *      This is used to identify a process of related tasks. For instance
-     *      when performing a spreadsheet import, all rows of the spreadsheet
-     *      would be turned into tasks and all of those tasks and generated
-     *      subtasks would be given the same process ID. This allows you to
-     *      track the status of the spreadsheet import or cancel it if
-     *      necessary.
-     *
-     *      When this is specified, it will usually be a random ID.
-     *
+     * @param hex160 $processID (@deprecated use setID() on CBProcess)
      * @param int $priority
      *
-     *      Priority values are between 0 and 255 with lower numbers
-     *      representing higher priority. The default priority is 100.
+     *      See CBInstall_install() on this class for documentation on these
+     *      parameters.
      *
      * @param int (timestamp) $scheduled
      *
      *      If a value is provided that's less than or equal to time() then the
-     *      task will be made ready. This is how you restart a task. If the
-     *      value is greater than time() the task will be scheduled.
+     *      task will be made ready. If the value is greater than time() the
+     *      task will be scheduled.
      *
      *      A null value will make a new task ready and will have no effect
      *      on an existing task's availability.
