@@ -7,7 +7,9 @@
     CBModelInspector_modelID,
     CBUI,
     CBUIExpander,
+    CBUISectionItem4,
     CBUIStringEditor,
+    CBUIStringsPart,
     Colby */
 
 var CBModelInspector = {
@@ -32,10 +34,10 @@ var CBModelInspector = {
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-                labelText: "ID",
-                propertyName: "ID",
-                spec: spec,
-                specChangedCallback: IDDidChangeCallback,
+            labelText: "ID",
+            propertyName: "ID",
+            spec: spec,
+            specChangedCallback: IDDidChangeCallback,
         }).element);
         section.appendChild(item);
 
@@ -114,6 +116,21 @@ var CBModelInspector = {
                     key: "Description",
                     value: model.description,
                 }).element);
+
+                {
+                    let sectionItem = CBUISectionItem4.create();
+                    let stringsPart = CBUIStringsPart.create();
+                    stringsPart.string1 = "Edit Model";
+
+                    stringsPart.element.classList.add("action");
+
+                    sectionItem.callback = function () {
+                        window.location = '/admin/?c=CBModelEditor&ID=' + args.spec.ID;
+                    };
+
+                    sectionItem.appendPart(stringsPart);
+                    section.appendChild(sectionItem.element);
+                }
             }
 
             args.container.appendChild(section);
