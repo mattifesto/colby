@@ -7,6 +7,7 @@
     CBModelInspector_modelID,
     CBUI,
     CBUIExpander,
+    CBUINavigationView,
     CBUISectionItem4,
     CBUIStringEditor,
     CBUIStringsPart,
@@ -18,17 +19,18 @@ var CBModelInspector = {
      * @return undefined
      */
     init: function () {
-        var spec = {
+        let navigator = CBUINavigationView.create();
+        let spec = {
             ID: CBModelInspector_modelID,
         };
-        var main = document.getElementsByTagName("main")[0];
-        var container = document.createElement("div");
-        var IDDidChangeCallback = CBModelInspector.IDDidChange.bind(undefined, {
+        let navigationHomeElement = document.createElement("div");
+        let modelInformationElement = document.createElement("div");
+        let IDDidChangeCallback = CBModelInspector.IDDidChange.bind(undefined, {
             spec: spec,
-            container: container,
+            container: modelInformationElement,
         });
 
-        main.appendChild(CBUI.createHalfSpace());
+        navigationHomeElement.appendChild(CBUI.createHalfSpace());
 
         {
             let sectionElement = CBUI.createSection();
@@ -41,13 +43,20 @@ var CBModelInspector = {
             }).element);
             sectionElement.appendChild(sectionItemElement);
 
-            main.appendChild(sectionElement);
-            main.appendChild(CBUI.createHalfSpace());
+            navigationHomeElement.appendChild(sectionElement);
+            navigationHomeElement.appendChild(CBUI.createHalfSpace());
         }
 
-        main.appendChild(container);
+        navigationHomeElement.appendChild(modelInformationElement);
+        navigationHomeElement.appendChild(CBUI.createHalfSpace());
 
-        main.appendChild(CBUI.createHalfSpace());
+        let mainElement = document.getElementsByTagName("main")[0];
+        mainElement.appendChild(navigator.element);
+
+        navigator.navigate({
+            element: navigationHomeElement,
+            title: "Inspector",
+        });
 
         IDDidChangeCallback();
     },

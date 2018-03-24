@@ -62,7 +62,8 @@ final class CBModelInspector {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return ['CBArtworkElement', 'CBMessageMarkup', 'CBUI', 'CBUIExpander',
-                'CBUISectionItem4', 'CBUIStringEditor', 'CBUIStringsPart'];
+                'CBUINavigationView', 'CBUISectionItem4', 'CBUIStringEditor',
+                'CBUIStringsPart'];
     }
 
     /**
