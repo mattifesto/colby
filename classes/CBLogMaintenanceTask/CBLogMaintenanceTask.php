@@ -21,7 +21,7 @@ final class CBLogMaintenanceTask {
          * have any effect after that. The task will already be scheduled to
          * run.
          */
-        CBTasks2::updateTask(__CLASS__, CBLogMaintenanceTask::ID());
+        CBTasks2::restart(__CLASS__, CBLogMaintenanceTask::ID());
     }
 
     /**
@@ -34,9 +34,9 @@ final class CBLogMaintenanceTask {
     /**
      * @param hex160 $ID
      *
-     * @return void
+     * @return object
      */
-    static function CBTasks2_Execute(string $ID): void {
+    static function CBTasks2_Execute(string $ID): stdClass {
         if ($ID !== CBLogMaintenanceTask::ID()) {
             throw new RuntimeException("An invalid ID {$ID} was passed to " . __METHOD__ . '()');
         }
