@@ -136,6 +136,14 @@ var CBModelInspector = {
             args.container.appendChild(section);
             args.container.appendChild(CBUI.createHalfSpace());
 
+            {
+                let sectionHeaderElement = CBUI.createSectionHeader({
+                    text: "Versions",
+                });
+
+                args.container.appendChild(sectionHeaderElement);
+            }
+
             if (response.modelVersions.length > 0) {
                 section = CBUI.createSection();
 
@@ -205,6 +213,8 @@ var CBModelInspector = {
 
                 args.container.appendChild(section);
             }
+
+            args.container.appendChild(CBUI.createHalfSpace());
 
             if (response.rowFromColbyPages) {
                 args.container.appendChild(CBUIExpander.create({
