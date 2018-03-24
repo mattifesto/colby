@@ -18,7 +18,6 @@ var CBModelInspector = {
      * @return undefined
      */
     init: function () {
-        var section, item;
         var spec = {
             ID: CBModelInspector_modelID,
         };
@@ -31,19 +30,20 @@ var CBModelInspector = {
 
         main.appendChild(CBUI.createHalfSpace());
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "ID",
-            propertyName: "ID",
-            spec: spec,
-            specChangedCallback: IDDidChangeCallback,
-        }).element);
-        section.appendChild(item);
+        {
+            let sectionElement = CBUI.createSection();
+            let sectionItemElement = CBUI.createSectionItem();
+            sectionItemElement.appendChild(CBUIStringEditor.createEditor({
+                labelText: "ID",
+                propertyName: "ID",
+                spec: spec,
+                specChangedCallback: IDDidChangeCallback,
+            }).element);
+            sectionElement.appendChild(sectionItemElement);
 
-        main.appendChild(section);
-
-        main.appendChild(CBUI.createHalfSpace());
+            main.appendChild(sectionElement);
+            main.appendChild(CBUI.createHalfSpace());
+        }
 
         main.appendChild(container);
 
