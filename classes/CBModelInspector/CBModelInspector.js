@@ -62,8 +62,16 @@ var CBModelInspector = {
     },
 
     /**
-     * @param hex160? args.spec.ID
-     * @param Element args.container
+     * @param object args
+     *
+     *      {
+     *          container: Element
+     *          spec: object
+     *
+     *              {
+     *                  ID: string
+     *              }
+     *      }
      *
      * @return undefined
      */
