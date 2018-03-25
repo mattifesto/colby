@@ -7,6 +7,7 @@
     CBModelInspector_modelID,
     CBUI,
     CBUIExpander,
+    CBUINavigationArrowPart,
     CBUINavigationView,
     CBUISectionItem4,
     CBUIStringEditor,
@@ -165,67 +166,100 @@ var CBModelInspector = {
                 section = CBUI.createSection();
 
                 response.modelVersions.forEach(function (version) {
-                    var item = CBUI.createSectionItem2();
+                    let versionCreated = new Date(version.timestamp * 1000);
+                    let sectionItem = CBUISectionItem4.create();
+                    let stringsPart = CBUIStringsPart.create();
+                    stringsPart.string1 = `Version ${version.version}`;
 
-                    var time = document.createElement("time");
-                    time.className = "time";
-                    time.dataset.timestamp = version.timestamp * 1000;
-                    item.titleElement.appendChild(time);
+                    stringsPart.element.classList.add("titledescription");
 
-                    var specCommand = document.createElement("div");
-                    specCommand.className = "command";
-                    specCommand.textContent = "Spec";
-                    specCommand.addEventListener("click", showSpec);
+                    Colby.requestTimeUpdate(function (javascriptTimestamp) {
+                        let now = new Date(javascriptTimestamp);
+                        stringsPart.string2 = Colby.dateToRelativeLocaleString(versionCreated, now);
+                    });
 
-                    item.commandsElement.appendChild(specCommand);
+                    sectionItem.callback = function () {
+                        let element = document.createElement("div");
 
-                    var modelCommand = document.createElement("div");
-                    modelCommand.className = "command";
-                    modelCommand.textContent = "Model";
-                    modelCommand.addEventListener("click", showModel);
+                        element.appendChild(CBUI.createHalfSpace());
 
-                    item.commandsElement.appendChild(modelCommand);
+                        {
+                            let sectionElement = CBUI.createSection();
+                            let sectionItem = CBUISectionItem4.create();
+                            let stringsPart = CBUIStringsPart.create();
+                            stringsPart.string1 = "Revert to This Version";
 
-                    var revertCommand = document.createElement("div");
-                    revertCommand.className = "command";
-                    revertCommand.textContent = "Revert";
-                    revertCommand.addEventListener("click", revert);
+                            stringsPart.element.classList.add("action");
 
-                    item.commandsElement.appendChild(revertCommand);
+                            sectionItem.callback = revert;
 
-                    section.appendChild(item.element);
-
-                    function showModel() {
-                        var pre = document.createElement("div");
-                        pre.textContent = JSON.stringify(JSON.parse(version.modelAsJSON), undefined, 2);
-                        pre.style.whiteSpace = "pre-wrap";
-
-                        Colby.setPanelElement(pre);
-                        Colby.showPanel();
-                    }
-
-                    function showSpec() {
-                        var pre = document.createElement("div");
-                        pre.textContent = JSON.stringify(JSON.parse(version.specAsJSON), undefined, 2);
-                        pre.style.whiteSpace = "pre-wrap";
-
-                        Colby.setPanelElement(pre);
-                        Colby.showPanel();
-                    }
-
-                    function revert() {
-                        var data = new FormData();
-                        data.append("ID", args.spec.ID);
-                        data.append("version", version.version);
-
-                        Colby.fetchAjaxResponse("/api/?class=CBModels&function=revert", data)
-                             .then(resolved)
-                             .catch(Colby.report);
-
-                        function resolved(response) {
-                            location.reload(true);
+                            sectionItem.appendPart(stringsPart);
+                            sectionElement.appendChild(sectionItem.element);
+                            element.appendChild(sectionElement);
+                            element.appendChild(CBUI.createHalfSpace());
                         }
-                    }
+
+                        {
+                            let expander = CBUIExpander.create();
+                            let markup = CBMessageMarkup.stringToMarkup(
+                                JSON.stringify(JSON.parse(version.specAsJSON), undefined, 2)
+                            );
+
+                            expander.message = `
+
+                                Spec
+
+                                --- pre\n${markup}
+                                ---
+
+                            `;
+
+                            element.appendChild(expander.element);
+                            element.appendChild(CBUI.createHalfSpace());
+                        }
+
+                        {
+                            let expander = CBUIExpander.create();
+                            let markup = CBMessageMarkup.stringToMarkup(
+                                JSON.stringify(JSON.parse(version.modelAsJSON), undefined, 2)
+                            );
+
+                            expander.message = `
+
+                                Model
+
+                                --- pre\n${markup}
+                                ---
+
+                            `;
+
+                            element.appendChild(expander.element);
+                            element.appendChild(CBUI.createHalfSpace());
+                        }
+
+                        CBUINavigationView.context.navigate({
+                            element: element,
+                            title: `Version ${version.version}`,
+                        });
+
+                        function revert() {
+                            var data = new FormData();
+                            data.append("ID", args.spec.ID);
+                            data.append("version", version.version);
+
+                            Colby.fetchAjaxResponse("/api/?class=CBModels&function=revert", data)
+                                 .then(resolved)
+                                 .catch(Colby.report);
+
+                            function resolved(response) {
+                                location.reload(true);
+                            }
+                        }
+                    };
+
+                    sectionItem.appendPart(stringsPart);
+                    sectionItem.appendPart(CBUINavigationArrowPart.create());
+                    section.appendChild(sectionItem.element);
                 });
 
                 args.container.appendChild(section);
