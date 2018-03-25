@@ -358,7 +358,7 @@ EOT;
 
 EOT;
 
-        Colby::query($SQL);
+        Colby::query($SQL, /* retryOnDeadlock */ true);
 
         if (Colby::mysqli()->affected_rows > 0) {
             return CBTasks2::runTaskForStarter($starterID);
@@ -577,7 +577,7 @@ EOT;
 
 EOT;
 
-        Colby::query($SQL);
+        Colby::query($SQL, /* retryOnDeadlock */ true);
     }
 
     /**
@@ -595,6 +595,6 @@ EOT;
 
 EOT;
 
-        Colby::query($SQL);
+        Colby::query($SQL, /* retryOnDeadlock */ true);
     }
 }
