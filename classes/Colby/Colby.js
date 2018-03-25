@@ -467,13 +467,45 @@ var Colby = {
     },
 
     /**
-     * @return {
-     *  message: string,
-     *  wasSuccessful: bool,
-     *  xhr: XMLHttpRequest,
-     * }
+     * The requestTimeUpdate() function tells Colby that you have a relative
+     * time value that you wish to update. Using the function is an alternative
+     * to using the unixTimestampToElement() function.
+     *
+     * The use case for this function is when you need to update a time string
+     * but cannot insert an element to do so.
+     *
+     * This function restarts time updates by calling Colby.updateTimes(true).
+     * The comments for that function have a description of the frequency of
+     * updates.
+     *
+     * @param function callback
+     *
+     *      The callback will be passed a single parameter of a JavaScript
+     *      timestamp of the current time that is associated with the update.
+     *
+     * @return undefined
      */
-    responseFromXMLHttpRequest : function (xhr) {
+    requestTimeUpdate: function (callback) {
+        if (typeof callback === "function") {
+            if (Colby.timeUpdateCallbacks === undefined) {
+                Colby.timeUpdateCallbacks = [];
+            }
+
+            Colby.timeUpdateCallbacks.push(callback);
+            Colby.updateTimes(true);
+        }
+    },
+
+    /**
+     * @return object
+     *
+     *      {
+     *          message: string,
+     *          wasSuccessful: bool,
+     *          xhr: XMLHttpRequest,
+     *      }
+     */
+    responseFromXMLHttpRequest: function (xhr) {
         var response;
 
         switch (xhr.status) {
@@ -536,6 +568,9 @@ var Colby = {
     },
 
     /**
+     * If you want to receive the time update callback directly instead of using
+     * the element returned by this function use Colby.requestTimeUpdate().
+     *
      * @param int unixTimestamp
      * @param string defaultTextContent
      *
@@ -604,6 +639,9 @@ var Colby = {
      *      Specify true to restart updates every second after adding new time
      *      elements the page.
      *
+     *      After a restart, times will update once per second for 90 seconds
+     *      and then once every 15 secones after that.
+     *
      * @return undefined
      */
     updateTimes: function (restart) {
@@ -644,6 +682,14 @@ var Colby = {
 
             dateString = Colby.dateToRelativeLocaleString(date, now, args);
             element.textContent = dateString;
+        }
+
+        if (Array.isArray(Colby.timeUpdateCallbacks)) {
+            let javascriptTimestamp = now.getTime();
+
+            Colby.timeUpdateCallbacks.forEach(function (callback) {
+                callback(javascriptTimestamp);
+            });
         }
 
         /**
