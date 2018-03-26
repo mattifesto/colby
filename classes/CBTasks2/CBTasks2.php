@@ -416,6 +416,8 @@ EOT;
             CBProcess::setID($task->processID);
         }
 
+        CBID::push($task->ID);
+
         try {
             if (is_callable($function = "{$task->className}::CBTasks2_run")) {
                 $status = call_user_func($function, $task->ID);
@@ -472,6 +474,8 @@ EOT;
         Colby::query($SQL, /* retryOnDeadlock */ true);
 
         $affectedRows = Colby::mysqli()->affected_rows;
+
+        CBID::pop();
 
         if ($task->processID !== null) {
             CBProcess::clearID();
