@@ -674,7 +674,11 @@ EOT;
         }
 
         CBModels::saveToDatabase($tuples);
-        CBTasks2::restart('CBModelPruneVersionsTask', $IDs);
+
+        $priority = null;
+        $delayInSeconds = 60; /* 1 minute */
+
+        CBTasks2::restart('CBModelPruneVersionsTask', $IDs, $priority, $delayInSeconds);
     }
 
     /**
