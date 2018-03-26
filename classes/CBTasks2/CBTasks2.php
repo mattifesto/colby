@@ -267,16 +267,24 @@ EOT;
     /**
      * @param string $className
      * @param [hex160]|hex160 $IDs
-     * @param int? $priority
+     * @param ?int $priority
+     * @param int $delayInSeconds
      *
      * @return void
      */
-    static function restart($className, $IDs, $priority = null): void {
+    static function restart(string $className, $IDs, ?int $priority = null, int $delayInSeconds = 0): void {
         if (!is_array($IDs)) {
             $IDs = [$IDs];
         }
 
-        CBTasks2::updateTasks($className, $IDs, null, $priority, time());
+        if ($delayInSeconds < 0) {
+            $delayInSeconds = 0;
+        }
+
+        $scheduled = time() + $delayInSeconds;
+        $processID = null;
+
+        CBTasks2::updateTasks($className, $IDs, $processID, $priority, $scheduled);
     }
 
     /**
@@ -505,13 +513,11 @@ EOT;
      *
      * @return void
      */
-    static function updateTasks($className, array $IDs, $processID = null, $priority = null, $scheduled = null): void {
+    static function updateTasks(string $className, array $IDs, ?string $processID = null, ?int $priority = null, ?int $scheduled = null): void {
         if (empty($IDs)) {
             return;
         }
 
-        $priority = CBConvert::valueAsInt($priority);
-        $scheduled = CBConvert::valueAsInt($scheduled);
         $now = time();
         $classNameAsSQL = CBDB::stringToSQL($className);
         $IDsAsSQL = array_map('CBHex160::toSQL', $IDs);
