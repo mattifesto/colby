@@ -70,52 +70,44 @@ EOT;
 
         $minimumVersionCount = 3;
 
+        $now        = time();
         $tenminutes = 60 * 10;
-        $ninetydays = 60 * 60 * 24 * 90;
+        $twohours   = 60 * 60 * 2;
+        $oneday     = 60 * 60 * 24;
+
+        $onedayago      = $now - $oneday;
+        $sevendaysago   = $now - ($oneday * 7);
+        $thirtydaysago  = $now - ($oneday * 30);
+        $ninetydaysago  = $now - ($oneday * 90);
 
         $count = count($versions);
         $versionsToPrune = [];
 
-        $index = 0;
-        $firstTimestamp = $versions[0]->timestamp;
-
-        /**
-         * First delete recent versions that were saved in close proximity to
-         * the most recent version. These versions are unlikely to contain
-         * information that is historically significant.
-         */
+        $nextVersionTimestamp = $versions[0]->timestamp;
 
         for ($index = 1; $index < $count; $index++) {
             if ($count - count($versionsToPrune) <= $minimumVersionCount) {
                 break;
             }
 
-            $timestamp = $versions[$index]->timestamp;
+            $thisVersionNumber = $versions[$index]->version;
+            $thisVersionTimestamp = $versions[$index]->timestamp;
+            $thisVersionAge = $nextVersionTimestamp - $thisVersionTimestamp;
 
-            if ($timestamp > $firstTimestamp - $tenminutes) {
-                $versionsToPrune[] = $versions[$index]->version;
+            if ($thisVersionTimestamp > $onedayago) {
+                $minimumAge = $tenminutes;
+            } else if ($thisVersionTimestamp > $sevendaysago) {
+                $minimumAge = $twohours;
+            } else if ($thisVersionTimestamp > $ninetydaysago) {
+                $minimumAge = $oneday;
             } else {
-                break;
-            }
-        }
-
-        /**
-         * Delete the oldest versions that are old enough to have expired and
-         * are no longer likely to contain information that still remains
-         * significant.
-         */
-
-        for ($index = $count - 1; $index > 0; $index--) {
-            if ($count - count($versionsToPrune) <= $minimumVersionCount) {
-                break;
+                $minimumAge = PHP_INT_MAX;
             }
 
-            $timestamp = $versions[$index]->timestamp;
-
-            if ($timestamp < $firstTimestamp - $ninetydays) {
-                $versionsToPrune[] = $versions[$index]->version;
+            if ($thisVersionAge < $minimumAge) {
+                $versionsToPrune[] = $thisVersionNumber;
             } else {
-                break;
+                $nextVersionTimestamp = $thisVersionTimestamp;
             }
         }
 
