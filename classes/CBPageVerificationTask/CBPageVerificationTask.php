@@ -1,9 +1,15 @@
 <?php
 
 /**
- * This task checks a page for errors and warnings. If it fixes an issue it will
- * log a message to the system log. If it doesn't fix it, it will add a message
- * to the return status and set the severity as appropriate.
+ * @NOTE 2018.03.22
+ *
+ *      This class verifies rows in the ColbyPages table. It should not verify
+ *      properties of a specific page model. That should be done in
+ *      CBModel_upgrade() in the model class.
+ *
+ *      As this class is updated, good code will be moved to the front and code
+ *      that belongs in other classes will be moved out. Comments should
+ *      document each action.
  */
 final class CBPageVerificationTask {
 
@@ -50,7 +56,7 @@ final class CBPageVerificationTask {
     static function CBTasks2_run($ID) {
         $messages = [];
         $resave = false;
-        $severity = 8;
+        $severity = 7;
         $messages[] = <<<EOT
 
             --- ul
@@ -61,6 +67,9 @@ final class CBPageVerificationTask {
 
 EOT;
 
+        /**
+         * If the page no longer exists that task should be removed.
+         */
         if (!CBPageVerificationTask::fetchPageDoesExist($ID)) {
             $messages[] = '(5) This page no longer exists';
             $severity = min(5, $severity);
@@ -196,8 +205,6 @@ EOT;
                 ---
 
 EOT;
-
-            $severity = min(4, $severity);
         }
 
         /* test rendering */
