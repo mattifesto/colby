@@ -264,11 +264,21 @@ EOT;
      */
     static function log(stdClass $args) {
         $hasIssues = false;
-        $className = CBModel::value($args, 'className', '', 'trim');
-        $ID = CBModel::value($args, 'ID', null, 'CBConvert::valueAsHex160');
-        $message = CBModel::value($args, 'message', '', 'trim');
-        $severity = CBModel::value($args, 'severity', 6, 'CBConvert::valueAsInt');
+        $className = CBModel::valueToString($args, 'className');
+        $severity = CBModel::valueAsInt($args, 'severity');
 
+        if (empty($severity)) {
+            $severity = 6; /* informational */
+        }
+
+        $ID = CBModel::valueAsID($args, 'ID');
+
+        if (empty($ID)) {
+            $ID = CBID::peek();
+        }
+
+        $message = CBModel::valueToString($args, 'message');
+        
         if (empty($message)) {
             $hasIssues = true;
             $severity = min($severity, 4);
