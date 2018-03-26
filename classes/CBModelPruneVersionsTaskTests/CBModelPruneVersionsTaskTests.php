@@ -6,7 +6,9 @@ final class CBModelPruneVersionsTaskTests {
      * @return ?object
      */
     static function calculateVersionsToPruneTest(): ?stdClass {
-        $time = time();
+        $time       = time();
+        $now        = time();
+        $oneMinute  = 60;
 
         /* test 1 */
 
@@ -117,7 +119,7 @@ final class CBModelPruneVersionsTaskTests {
         ];
 
         $result = CBModelPruneVersionsTask::calculateVersionsToPrune($versions);
-        $expected = [50, 60];
+        $expected = [80, 70];
 
         if ($result != $expected) {
             return (object)[
@@ -174,13 +176,70 @@ final class CBModelPruneVersionsTaskTests {
         ];
 
         $result = CBModelPruneVersionsTask::calculateVersionsToPrune($versions);
-        $expected = [90, 85, 84, 83, 60, 70, 80];
+        $expected = [90, 85, 84, 83, 80, 70, 60];
 
         if ($result != $expected) {
             return (object)[
                 'failed' => true,
                 'message' =>
                     "Test 5 failed:\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($result, $expected),
+            ];
+        }
+
+        /* test 6 */
+
+        $versions = [
+            (object)[
+                'timestamp' => $now,
+                'version' => 200,
+            ],
+            (object)[
+                'timestamp' => $now - (3 * $oneMinute),
+                'version' => 190,
+            ],
+            (object)[
+                'timestamp' => $now - (6 * $oneMinute),
+                'version' => 180,
+            ],
+            (object)[
+                'timestamp' => $now - (9 * $oneMinute),
+                'version' => 170,
+            ],
+            (object)[
+                'timestamp' => $now - (12 * $oneMinute),
+                'version' => 160,
+            ],
+            (object)[
+                'timestamp' => $now - (15 * $oneMinute),
+                'version' => 150,
+            ],
+            (object)[
+                'timestamp' => $now - (18 * $oneMinute),
+                'version' => 140,
+            ],
+            (object)[
+                'timestamp' => $now - (21 * $oneMinute),
+                'version' => 130,
+            ],
+            (object)[
+                'timestamp' => $now - (24 * $oneMinute),
+                'version' => 120,
+            ],
+            (object)[
+                'timestamp' => $now - (27 * $oneMinute),
+                'version' => 110,
+            ],
+        ];
+
+        $result = CBModelPruneVersionsTask::calculateVersionsToPrune($versions);
+        $expected = [190, 180, 170, 150, 140, 130, 110];
+
+        if ($result != $expected) {
+            return (object)[
+                'failed' => true,
+                'message' =>
+                    "Test 6 failed:\n\n" .
                     CBConvertTests::resultAndExpectedToMessage($result, $expected),
             ];
         }
