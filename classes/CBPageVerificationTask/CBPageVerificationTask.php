@@ -56,106 +56,136 @@ final class CBPageVerificationTask {
     static function CBTasks2_run($ID) {
         $messages = [];
         $resave = false;
-        $severity = 6;
+        $severity = 7;
         $result = CBPageVerificationTask::run($ID);
 
         if (!$result->hasColbyPagesRow) {
+            $severity = min(4, $severity);
             $messages[] = 'No ColbyPages row exists for this ID';
-            $severity = min(4, $severity);
         }
 
-        if (!$result->hasModel) {
+        if (empty($result->model)) {
+            $severity = min(4, $severity);
             $messages[] = 'No model exists for this ID';
-            $severity = min(4, $severity);
-            goto done;
         }
 
+        if (!empty($result->didDeleteRowWithoutModel)) {
+            $severity = min(4, $severity);
+            $messages[] = 'The page row and data store were deleted';
+        }
         // first line of message
 
-        $pageTitle = CBModel::value($result, 'model.title', '', 'strval');
-        $firstLine = __CLASS__ . " verified the page \"{$pageTitle}\"";
+        $pageTitle = CBModel::valueToString($result, 'model.title');
+        $firstLine = "A page with the title \"{$pageTitle}\" was verified";
         array_unshift($messages, $firstLine);
 
-        /**
-         * Page image issues addressed:
-         *
-         *      - Model: If both the `image` and the `thumbnailURL` properties
-         *        are set on the model, re-save the spec. Only one of these two
-         *        properties should be set on a model.
-         *
-         *        History: At one point CBModel_toModel() tried to convert a
-         *        `thumbnailURL` to an `image` and would set both. This process
-         *        created an invalid `image` that would confuse renderers.
-         *
-         *      - Spec: A warning will be emitted if the `image` property on the
-         *        spec is not a valid CBImage. There are no known causes of this
-         *        but many potential causes.
-         *
-         *      - Spec: If only the `thumbnailURL` property is set on the spec
-         *        and the property either refers to a CBImage or can be imported
-         *        to a CBImage, we will import the CBImage, unset `thumbnailURL`
-         *        and set `image`.
-         */
-
-        if (!empty($result->model->image) && !empty($result->model->thumbnailURL)) {
-            CBLog::addMessage(__CLASS__, 6, "The model for CBViewPage {$ID} had both the `image` and `thumbnailURL` properties set, which means it was incorrectly saved. To fix this the spec was re-saved.");
-            $resave = true;
-        }
-
-        if (empty($result->spec->image)) {
+        if (CBModel::valueToString($result, 'model.className') == 'CBViewPage') {
 
             /**
-             * We only process `thumbnailURL` on the spec if `image` is not set.
-             * If `image` is set on the spec `thumbnailURL` will be ignored by
-             * CBViewPage::CBModel_toModel().
+             * Page image issues addressed:
+             *
+             *      Model: If both the `image` and the `thumbnailURL` properties
+             *      are set on the model, re-save the spec. Only one of these
+             *      two properties should be set on a model.
+             *
+             *      History: At one point CBModel_toModel() tried to convert a
+             *      `thumbnailURL` to an `image` and would set both. This
+             *      process created an invalid `image` that would confuse
+             *      renderers.
+             *
+             *      Spec: A warning will be emitted if the `image` property on
+             *      the spec is not a valid CBImage. There are no known causes
+             *      of this but many potential causes.
+             *
+             *      Spec: If only the `thumbnailURL` property is set on the spec
+             *      and the property either refers to a CBImage or can be
+             *      imported to a CBImage, we will import the CBImage, unset
+             *      `thumbnailURL` and set `image`.
              */
 
-            if ($thumbnailURL = CBModel::value($result, 'spec.thumbnailURL')) {
-                if ($thumbnailDataStoreID = CBDataStore::URIToID($thumbnailURL)) {
-                    if (CBImages::isInstance($thumbnailDataStoreID)) {
-                        $result->spec->image = CBImages::makeModelForID($thumbnailDataStoreID);
-                    } else {
-                        $result->spec->image = CBImages::importOldStyleImageDataStore($thumbnailDataStoreID);
+            if (!empty($result->model->image) && !empty($result->model->thumbnailURL)) {
+                $resave = true;
+                $severity = min(6, $severity);
+                $messages[] = <<<EOT
+
+                    A CBViewPage model had both the "image" and "thumbnailURL"
+                    properties set, which means it was incorrectly saved. To fix
+                    this it was re-saved.
+
+EOT;
+            }
+
+            if (empty($result->spec->image)) {
+
+                /**
+                 * We only process `thumbnailURL` on the spec if `image` is not
+                 * set. If `image` is set on the spec `thumbnailURL` will be
+                 * ignored by CBViewPage::CBModel_toModel().
+                 */
+
+                if ($thumbnailURL = CBModel::value($result, 'spec.thumbnailURL')) {
+                    if ($thumbnailDataStoreID = CBDataStore::URIToID($thumbnailURL)) {
+                        if (CBImages::isInstance($thumbnailDataStoreID)) {
+                            $result->spec->image = CBImages::makeModelForID($thumbnailDataStoreID);
+                        } else {
+                            $result->spec->image = CBImages::importOldStyleImageDataStore($thumbnailDataStoreID);
+                        }
+
+                        $result->spec->deprecatedThumbnailURL = $result->spec->thumbnailURL;
+                        unset($result->spec->thumbnailURL);
+
+                        $resave = true;
+                        $severity = min(6, $severity);
+                        $messages[] = <<<EOT
+
+                            A CBViewPage spec upgraded its thumbnailURL
+
+                            {$thumbnailURL}
+
+                            to CBImage
+
+                            {$result->spec->image->ID}
+
+EOT;
                     }
+                }
 
-                    $result->spec->deprecatedThumbnailURL = $result->spec->thumbnailURL;
-                    unset($result->spec->thumbnailURL);
+            } else {
 
-                    $resave = true;
+                /**
+                 * Emit a warning if the `image` on the spec is not a valid CBImage.
+                 */
 
-                    CBLog::addMessage(__CLASS__, 6, "The spec for CBViewPage {$ID} upgraded its `thumbnailURL`: {$thumbnailURL} to CBImage {$result->spec->image->ID}");
+                if (!CBImages::isInstance($result->spec->image->ID)) {
+                    $severity = min(3, $severity);
+                    $messages[] = <<<EOT
+
+                        The "image" property is set on the spec to an image that
+                        is not a valid CBImage instance.
+
+EOT;
                 }
             }
 
-        } else {
+            /* check for deprecated views */
 
-            /**
-             * Emit a warning if the `image` on the spec is not a valid CBImage.
-             */
+            CBPageVerificationTask::$messageContext = [];
+            $views = CBView::toSubviews($result->spec);
+            array_walk($views, 'CBPageVerificationTask::verifyView');
 
-            if (!CBImages::isInstance($result->spec->image->ID)) {
-                $messages[] = '(3) The `image` property is set on the spec to an image that is not a valid CBImage instance.';
-                $severity = min(3, $severity);
-            }
-        }
+            if (!empty(CBPageVerificationTask::$messageContext)) {
+                $issues = implode("\n\n", CBPageVerificationTask::$messageContext);
+                $severity = min(6, $severity);
+                $messages[] = <<<EOT
 
-        /* check for deprecated views */
+                    View issues:
 
-        CBPageVerificationTask::$messageContext = [];
-        $views = CBView::toSubviews($result->spec);
-        array_walk($views, 'CBPageVerificationTask::verifyView');
-
-        if (!empty(CBPageVerificationTask::$messageContext)) {
-            $issues = implode("\n\n", CBPageVerificationTask::$messageContext);
-            $messages[] = <<<EOT
-
-                View issues:
-
-                --- ul
-                {$issues}
-                ---
+                    --- ul
+                    {$issues}
+                    ---
 
 EOT;
+            }
         }
 
         /* test rendering */
@@ -177,25 +207,26 @@ EOT;
         $versionCount = CBPageVerificationTask::fetchCountOfOldVersions($ID);
 
         if ($versionCount > 5) {
-            $resave = true;
+            $inFiveMinutes = 5 * 60;
 
-            CBLog::addMessage(__CLASS__, 6, "The CBViewPage {$ID} was re-saved to remove its {$versionCount} old versions.");
+            CBTasks2::restart('CBModelPruneVersionsTask', $ID, null, $inFiveMinutes);
+
+            $severity = min(6, $severity);
+            $messages[] = <<<EOT
+
+                The CBModelPruneVersionsTask was restarted for this page because
+                it has more than five versions.
+
+EOT;
         }
 
         if ($resave) {
             CBModels::save($result->spec);
         }
 
-        if (empty($messages)) {
-            $messages[] = "This page has no current issues";
-        }
-
-        done:
-
         CBLog::log((object)[
             'className' => __CLASS__,
-            'ID' => $ID,
-            'message' => implode("\n\n", $messages),
+            'message' => implode("\n\n--- hr\n---\n\n", $messages),
             'severity' => $severity,
         ]);
     }
@@ -247,8 +278,6 @@ EOT;
 
         $data = CBModels::fetchSpecAndModelByID($ID);
 
-        $result->hasModel = !empty($data);
-
         if (empty($data)) {
             if ($result->hasColbyPagesRow) {
                 /**
@@ -259,6 +288,8 @@ EOT;
 
                 CBDataStore::deleteByID($ID);
                 CBPages::deletePagesByID([$ID]);
+
+                $result->didDeleteRowWithoutModel = true;
             }
         } else {
             $result->spec = $data->spec;
