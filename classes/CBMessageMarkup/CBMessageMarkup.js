@@ -592,6 +592,7 @@ var CBMessageMarkup = {
             "h4",
             "h5",
             "h6",
+            "hr",
             "li",
             "p",
             "pre",

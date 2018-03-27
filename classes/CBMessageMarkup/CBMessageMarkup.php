@@ -11,7 +11,7 @@ final class CBMessageMarkup {
      * @return string
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v359.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v405.js', cbsysurl())];
     }
 
     /**
@@ -606,6 +606,7 @@ final class CBMessageMarkup {
             'h4',
             'h5',
             'h6',
+            'hr',
             'li',
             'p',
             'pre',
