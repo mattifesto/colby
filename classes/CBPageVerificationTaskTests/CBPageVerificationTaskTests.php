@@ -9,6 +9,7 @@ final class CBPageVerificationTaskTests {
         return [
             ['CBPageVerificationTask', 'hasColbyPagesRow'],
             ['CBPageVerificationTask', 'importThumbnailURLToImage'],
+            ['CBPageVerificationTask', 'rowWithNoModel'],
             ['CBPageVerificationTask', 'upgradeThumbnailURLToImage'],
         ];
     }
@@ -117,6 +118,96 @@ final class CBPageVerificationTaskTests {
 
         CBModels::deleteByID($pageID);
         CBTestAdmin::removeOldStyleImageDataStore();
+    }
+
+    /**
+     * @return ?object
+     */
+    static function rowWithNoModelTest(): ?stdClass {
+        $ID = 'ef58e8d3bf08afdf1c0f7f3d32478855a41aacc4';
+        $now = time();
+
+        $archiveIDAsSQL= CBHex160::toSQL($ID);
+        $keyValueDataAsSQL = CBDB::stringToSQL('');
+        $classNameAsSQL = 'NULL';
+        $classNameForKindAsSQL = 'NULL';
+        $createdAsSQL = $now;
+        $iterationAsSQL = 1;
+        $modifiedAsSQL = $now;
+        $URIAsSQL = 'NULL';
+        $thumbnailURLAsSQL = 'NULL';
+        $searchTextAsSQL = 'NULL';
+        $publishedAsSQL = 'NULL';
+        $publishedByAsSQL = 'NULL';
+        $publishedMonthAsSQL = 'NULL';
+
+        CBDataStore::deleteByID($ID);
+        CBPages::deletePagesByID([$ID]);
+
+        $SQL = <<<EOT
+
+            INSERT INTO ColbyPages
+            VALUES (
+                {$archiveIDAsSQL},
+                {$keyValueDataAsSQL},
+                {$classNameAsSQL},
+                {$classNameForKindAsSQL},
+                {$createdAsSQL},
+                {$iterationAsSQL},
+                {$modifiedAsSQL},
+                {$URIAsSQL},
+                {$thumbnailURLAsSQL},
+                {$searchTextAsSQL},
+                {$publishedAsSQL},
+                {$publishedByAsSQL},
+                {$publishedMonthAsSQL}
+            )
+
+EOT;
+
+        Colby::query($SQL);
+
+        if (!CBDB::SQLToValue("SELECT COUNT(*) FROM ColbyPages where archiveID = {$archiveIDAsSQL}")) {
+            return (object)[
+                'failed' => true,
+                'message' =>
+                    'The ColbyPages row should have been created.'
+            ];
+        }
+
+        CBDataStore::create($ID);
+
+        $filepath = CBDataStore::flexpath($ID, 'tmp.txt', cbsitedir());
+
+        file_put_contents($filepath, __METHOD__ . "()\n");
+
+        if (!is_dir(CBDataStore::directoryForID($ID))) {
+            return (object)[
+                'failed' => true,
+                'message' =>
+                    'The data store directory should have been created.'
+            ];
+        }
+
+        $result = CBPageVerificationTask::run($ID);
+
+        if (CBDB::SQLToValue("SELECT COUNT(*) FROM ColbyPages where archiveID = {$archiveIDAsSQL}")) {
+            return (object)[
+                'failed' => true,
+                'message' =>
+                    'The ColbyPages row should have been deleted.'
+            ];
+        }
+
+        if (is_dir(CBDataStore::directoryForID($ID))) {
+            return (object)[
+                'failed' => true,
+                'message' =>
+                    'The data store directory should have been deleted.'
+            ];
+        }
+
+        return null;
     }
 
     /**
