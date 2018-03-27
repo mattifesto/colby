@@ -57,15 +57,6 @@ final class CBPageVerificationTask {
         $messages = [];
         $resave = false;
         $severity = 7;
-        $messages[] = <<<EOT
-
-            --- ul
-            (Inspector (a /admin/?c=CBModelInspector&ID={$ID}))
-
-            (Page Preview (a /admin/pages/preview/?ID={$ID}))
-            ---
-
-EOT;
 
         /**
          * If the page no longer exists that task should be removed.
@@ -83,14 +74,6 @@ EOT;
             $messages[] = 'This page has no value in the ColbyPages table\'s className column.';
             $severity = min(3, $severity);
             goto done;
-        } else if ($className === 'CBViewPage') {
-            $messages[] = <<<EOT
-
-                --- ul
-                (Edit Page (a /admin/pages/edit/?data-store-id={$ID}))
-                ---
-
-EOT;
         }
 
         $data = CBModels::fetchSpecAndModelByID($ID);
