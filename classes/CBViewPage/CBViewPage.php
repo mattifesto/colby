@@ -177,42 +177,6 @@ final class CBViewPage {
     }
 
     /**
-     * This function loads the spec for a page regardless of whether the latest
-     * spec is saved in the CBModels table or in an older spec file.
-     *
-     * @param hex160 $ID
-     * @param bool $create
-     *      If a spec doesn't already exist for the ID, an empty one will be
-     *      created if this parameter is true. There are enough processes for
-     *      pages that this option has measurable benefits.
-     *
-     * @return stdClass|false
-     */
-    static function fetchSpecByID($ID, $create = false) {
-        $spec = CBModels::fetchSpecByID($ID);
-
-        if (empty($spec)) {
-            $iteration = CBViewPage::iterationForID(['ID' => $ID]);
-
-            if ($iteration !== false) {
-                $spec = CBViewPage::specWithID($ID, $iteration);
-            }
-
-            if (empty($spec) && $create) {
-                $spec = (object)[
-                    'className' => __CLASS__,
-                    'ID' => $ID,
-                ];
-            }
-        } else if ($spec->className !== 'CBViewPage') {
-            throw new RuntimeException("The spec with the following ID is not a CBViewPage: {$ID}");
-        }
-
-
-        return $spec;
-    }
-
-    /**
      * @param object $args
      *
      *      {
@@ -229,13 +193,13 @@ final class CBViewPage {
             throw new InvalidArgumentException("The value \"{$ID}\" provided as the ID argument is not a valid 160-bit hexadecimal value.");
         }
 
-        $spec = CBViewPage::fetchSpecByID($ID);
+        $spec = CBModels::fetchSpecByID($ID);
 
         if ($spec === false) {
             $IDToCopy = CBModel::value($args, 'IDToCopy');
 
             if (CBHex160::is($IDToCopy)) {
-                $spec = CBViewPage::fetchSpecByID($IDToCopy);
+                $spec = CBModels::fetchSpecByID($IDToCopy);
 
                 if ($spec === false) {
                     throw new RuntimeException("No spec was found for the page ID: {$IDToCopy}");
@@ -263,21 +227,6 @@ final class CBViewPage {
      */
     static function CBAjax_fetchSpec_group() {
         return 'Administrators';
-    }
-
-    /**
-     * @deprecated This will not be necessary when all pages are saved as models.
-     *
-     * @return int|false
-     */
-    static function iterationForID($args) {
-        $ID = null;
-        extract($args, EXTR_IF_EXISTS);
-
-        $IDAsSQL = ColbyConvert::textToSQL($ID);
-        $SQL = "SELECT `iteration` FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$IDAsSQL}')";
-
-        return CBDB::SQLToValue($SQL);
     }
 
     /**
@@ -363,50 +312,6 @@ final class CBViewPage {
         }
 
         CBHTMLOutput::render();
-    }
-
-    /**
-     * This function loads older specs for pages that haven't yet been saved
-     * to the CBModels table.
-     *
-     * @return stdClass|false
-     */
-    static function specWithID($ID, $iteration) {
-        $directory = CBDataStore::directoryForID($ID);
-
-        if (is_file($filepath = "{$directory}/spec-{$iteration}.json")) {
-
-            // Pages edited after installing version 137 of Colby will have a
-            // spec file saved for each iteration.
-
-        } else if (is_file($filepath = "{$directory}/spec.json")) {
-
-            // Pages edited for a brief time before version 137 will have a
-            // spec file with this name.
-
-        } else if (is_file($filepath = "{$directory}/model.json")) {
-
-            // Pages that were last edited before the spec/model split use the
-            // model file as the spec file. TODO: It would be nice to
-            // create an update that would go through every view page and
-            // canonicalize this filename so that these final two conditions
-            // can be removed.
-
-        } else {
-            return false;
-        }
-
-        $spec = json_decode(file_get_contents($filepath));
-
-        if (empty($spec->ID)) {
-            $spec->ID = $spec->dataStoreID;
-        }
-
-        if (!isset($spec->iteration)) {
-            $spec->iteration = 1;
-        }
-
-        return $spec;
     }
 
     /**
