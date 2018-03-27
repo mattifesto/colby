@@ -20,7 +20,7 @@ final class CBDataStore {
      * @return null
      */
     static function create($ID) {
-        $directory = self::directoryForID($ID);
+        $directory = CBDataStore::directoryForID($ID);
 
         if (!is_dir($directory)) {
             mkdir($directory, /* mode: */ 0777, /* recursive: */ true);
@@ -79,7 +79,7 @@ final class CBDataStore {
     static function directoryForID($ID) {
         $directoryName = CBDataStore::directoryNameFromDocumentRoot($ID);
 
-        return CBSiteDirectory . "/{$directoryName}";
+        return cbsitedir() . "/{$directoryName}";
     }
 
     /**
