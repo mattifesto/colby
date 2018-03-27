@@ -249,7 +249,18 @@ EOT;
 
         $result->hasModel = !empty($data);
 
-        if (!empty($data)) {
+        if (empty($data)) {
+            if ($result->hasColbyPagesRow) {
+                /**
+                 * If there is a row in the pages table that does not have a model
+                 * then it most likely represents a very old page. The row and the
+                 * data store associated with the ID should be deleted.
+                 */
+
+                CBDataStore::deleteByID($ID);
+                CBPages::deletePagesByID([$ID]);
+            }
+        } else {
             $result->spec = $data->spec;
             $result->model = $data->model;
         }
