@@ -95,8 +95,6 @@ class CBUnitTests {
             ['CBView',                  'render'],
             ['CBView',                  'toSubviews'],
             ['CBViewPage',              'save'],
-            ['CBPageVerificationTask',  'importThumbnailURLToImage'],
-            ['CBPageVerificationTask',  'upgradeThumbnailURLToImage'],
             ['Colby',                   'encryption'],
             ['ColbyMarkaroundParser',   'orderedList'],
             ['ColbyMarkaroundParser',   'paragraph'],
