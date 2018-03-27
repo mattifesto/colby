@@ -44,6 +44,7 @@ var CBUISelector = {
      *
      *          onchange: function (get, set)
      *          options: [object] (get, set)
+     *          title: string (get, set)
      *          updateOptionsCallback: function (deprecated)
      *          updateValueCallback: function
      *      }
