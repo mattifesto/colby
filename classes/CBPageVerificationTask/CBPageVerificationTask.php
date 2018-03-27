@@ -57,24 +57,14 @@ final class CBPageVerificationTask {
         $messages = [];
         $resave = false;
         $severity = 6;
+        $result = CBPageVerificationTask::run($ID);
 
-        /**
-         * If the page no longer exists that task should be removed.
-         */
-        if (!CBPageVerificationTask::fetchPageDoesExist($ID)) {
-            $messages[] = '(5) This page no longer exists';
-            $severity = min(5, $severity);
-            goto done;
+        if (!$result->hasColbyPagesRow) {
+            $messages[] = 'No ColbyPages row exists for this ID';
+            $severity = min(4, $severity);
         }
 
-        $IDAsSQL = CBHex160::toSQL($ID);
-        $className = CBDB::SQLToValue("SELECT `className` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
-
-        if (empty($className)) {
-            $messages[] = 'This page has no value in the ColbyPages table\'s className column.';
-            $severity = min(3, $severity);
-            goto done;
-        }
+        /* check for CBModel */
 
         $data = CBModels::fetchSpecAndModelByID($ID);
 
@@ -97,7 +87,7 @@ final class CBPageVerificationTask {
         }
 
         if ($data === false) {
-            $messages[] = '(4) This page has no spec in the CBModels table';
+            $messages[] = 'No model exists for this ID';
             $severity = min(4, $severity);
             goto done;
         }
@@ -256,13 +246,26 @@ EOT;
     }
 
     /**
-     * @param hex160 $ID
+     * This function performs all the actions of the task but doesn't create any
+     * log entries and returns its results in a simple object. This function
+     * provides clear results which allows the task to be tested.
      *
-     * @return bool
+     * @return object
+     *
+     *      {
+     *          hasColbyPagesRow: bool
+     *      }
      */
-    static function fetchPageDoesExist($ID) {
+    static function run(string $ID) {
+        $result = (object)[];
         $IDAsSQL = CBHex160::toSQL($ID);
-        return boolval(CBDB::SQLToValue("SELECT COUNT(*) FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}"));
+
+        /* check for ColbyPages row */
+
+        $SQL = "SELECT COUNT(*) FROM ColbyPages WHERE archiveID = {$IDAsSQL}";
+        $result->hasColbyPagesRow = !empty(CBDB::SQLToValue($SQL));
+
+        return $result;
     }
 
     /**
