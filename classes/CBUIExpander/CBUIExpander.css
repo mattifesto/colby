@@ -16,9 +16,9 @@
 }
 
 .CBUIExpander > .container > .header > .toggle {
-    background-color: var(--CBButtonBackgroundColor);
+    background-color: hsl(210, 100%, 50%);
     border-bottom-right-radius: 5px;
-    color: var(--CBButtonTextColor);
+    color: hsla(0, 100%, 100%, 0.9);
     font-size: 80%;
     padding: 5px 10px;
     text-align: center;
@@ -29,6 +29,10 @@
     -moz-user-select: none;
     -ms-user-select: none;
     -webkit-user-select: none;
+}
+
+.CBUIExpander.severity7 > .container > .header > .toggle {
+    background-color: hsl(210, 100%, 80%);
 }
 
 .CBUIExpander.severity4 > .container > .header > .toggle {
