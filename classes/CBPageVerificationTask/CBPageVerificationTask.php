@@ -64,29 +64,7 @@ final class CBPageVerificationTask {
             $severity = min(4, $severity);
         }
 
-        /* check for CBModel */
-
-        $data = CBModels::fetchSpecAndModelByID($ID);
-
-        /**
-         * Update an old file based spec to a CBModels spec
-         */
-
-        if ($data === false && $className === 'CBViewPage') {
-            $oldspec = CBViewPage::fetchSpecByID($ID);
-
-            if ($oldspec !== false) {
-                // sometimes this isn't set on old specs
-                $oldspec->className = 'CBViewPage';
-
-                CBModels::save([$oldspec]);
-                CBLog::addMessage(__CLASS__, 6, "The CBViewPage {$ID} was re-saved because it did not yet have a model in the CBModels table.");
-
-                $data = CBModels::fetchSpecAndModelByID($ID);
-            }
-        }
-
-        if ($data === false) {
+        if (!$result->hasModel) {
             $messages[] = 'No model exists for this ID';
             $severity = min(4, $severity);
             goto done;
@@ -94,7 +72,7 @@ final class CBPageVerificationTask {
 
         // first line of message
 
-        $pageTitle = CBModel::value($data, 'model.title', '', 'strval');
+        $pageTitle = CBModel::value($result, 'model.title', '', 'strval');
         $firstLine = __CLASS__ . " verified the page \"{$pageTitle}\"";
         array_unshift($messages, $firstLine);
 
@@ -119,12 +97,12 @@ final class CBPageVerificationTask {
          *        and set `image`.
          */
 
-        if (!empty($data->model->image) && !empty($data->model->thumbnailURL)) {
+        if (!empty($result->model->image) && !empty($result->model->thumbnailURL)) {
             CBLog::addMessage(__CLASS__, 6, "The model for CBViewPage {$ID} had both the `image` and `thumbnailURL` properties set, which means it was incorrectly saved. To fix this the spec was re-saved.");
             $resave = true;
         }
 
-        if (empty($data->spec->image)) {
+        if (empty($result->spec->image)) {
 
             /**
              * We only process `thumbnailURL` on the spec if `image` is not set.
@@ -132,20 +110,20 @@ final class CBPageVerificationTask {
              * CBViewPage::CBModel_toModel().
              */
 
-            if ($thumbnailURL = CBModel::value($data, 'spec.thumbnailURL')) {
+            if ($thumbnailURL = CBModel::value($result, 'spec.thumbnailURL')) {
                 if ($thumbnailDataStoreID = CBDataStore::URIToID($thumbnailURL)) {
                     if (CBImages::isInstance($thumbnailDataStoreID)) {
-                        $data->spec->image = CBImages::makeModelForID($thumbnailDataStoreID);
+                        $result->spec->image = CBImages::makeModelForID($thumbnailDataStoreID);
                     } else {
-                        $data->spec->image = CBImages::importOldStyleImageDataStore($thumbnailDataStoreID);
+                        $result->spec->image = CBImages::importOldStyleImageDataStore($thumbnailDataStoreID);
                     }
 
-                    $data->spec->deprecatedThumbnailURL = $data->spec->thumbnailURL;
-                    unset($data->spec->thumbnailURL);
+                    $result->spec->deprecatedThumbnailURL = $result->spec->thumbnailURL;
+                    unset($result->spec->thumbnailURL);
 
                     $resave = true;
 
-                    CBLog::addMessage(__CLASS__, 6, "The spec for CBViewPage {$ID} upgraded its `thumbnailURL`: {$thumbnailURL} to CBImage {$data->spec->image->ID}");
+                    CBLog::addMessage(__CLASS__, 6, "The spec for CBViewPage {$ID} upgraded its `thumbnailURL`: {$thumbnailURL} to CBImage {$result->spec->image->ID}");
                 }
             }
 
@@ -155,7 +133,7 @@ final class CBPageVerificationTask {
              * Emit a warning if the `image` on the spec is not a valid CBImage.
              */
 
-            if (!CBImages::isInstance($data->spec->image->ID)) {
+            if (!CBImages::isInstance($result->spec->image->ID)) {
                 $messages[] = '(3) The `image` property is set on the spec to an image that is not a valid CBImage instance.';
                 $severity = min(3, $severity);
             }
@@ -164,7 +142,7 @@ final class CBPageVerificationTask {
         /* check for deprecated views */
 
         CBPageVerificationTask::$messageContext = [];
-        $views = CBView::toSubviews($data->spec);
+        $views = CBView::toSubviews($result->spec);
         array_walk($views, 'CBPageVerificationTask::verifyView');
 
         if (!empty(CBPageVerificationTask::$messageContext)) {
@@ -185,7 +163,7 @@ EOT;
         ob_start();
 
         try {
-            CBPage::render($data->model);
+            CBPage::render($result->model);
         } catch (Throwable $throwable) {
             ob_end_clean();
 
@@ -205,7 +183,7 @@ EOT;
         }
 
         if ($resave) {
-            CBModels::save([$data->spec]);
+            CBModels::save($result->spec);
         }
 
         if (empty($messages)) {
@@ -264,6 +242,17 @@ EOT;
 
         $SQL = "SELECT COUNT(*) FROM ColbyPages WHERE archiveID = {$IDAsSQL}";
         $result->hasColbyPagesRow = !empty(CBDB::SQLToValue($SQL));
+
+        /* check for CBModel */
+
+        $data = CBModels::fetchSpecAndModelByID($ID);
+
+        $result->hasModel = !empty($data);
+
+        if (!empty($data)) {
+            $result->spec = $data->spec;
+            $result->model = $data->model;
+        }
 
         return $result;
     }
