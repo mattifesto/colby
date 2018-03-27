@@ -268,10 +268,12 @@ EOT;
      *
      * @param hex160 $ID
      *
-     * @return object
+     * @return object|false
      *
-     *      object ->spec
-     *      object ->model
+     *      {
+     *          spec: object
+     *          model: object
+     *      }
      */
     static function fetchSpecAndModelByID($ID) {
         $IDAsSQL = CBHex160::toSQL($ID);
