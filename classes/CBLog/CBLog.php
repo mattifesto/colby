@@ -142,9 +142,14 @@ EOT;
      *
      *          afterTimestamp: int?
      *
-     *              If specified, will only fetch log entires with a timestamp
+     *              If specified, will only fetch log entries with a timestamp
      *              greater than afterTimestamp. This allows callers to request
      *              only new entries since the last tiime they asked.
+     *
+     *          className: string?
+     *
+     *              If specified, will only fetch log entries with the specified
+     *              class name.
      *
      *          lowestSeverity: int?
      *
@@ -184,6 +189,13 @@ EOT;
 
         if ($afterTimestamp !== null) {
             $whereAsSQL[] = "`timestamp` > {$afterTimestamp}";
+        }
+
+        $className = CBModel::valueToString($args, 'className');
+
+        if (!empty($className)) {
+            $classNameAsSQL = CBDB::stringToSQL($className);
+            $whereAsSQL[] = "`className` = {$classNameAsSQL}";
         }
 
         $lowestSeverity = CBModel::value($args, 'lowestSeverity', null, 'CBConvert::valueAsInt');
@@ -278,7 +290,7 @@ EOT;
         }
 
         $message = CBModel::valueToString($args, 'message');
-        
+
         if (empty($message)) {
             $hasIssues = true;
             $severity = min($severity, 4);
