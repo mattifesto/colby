@@ -56,7 +56,7 @@ final class CBPageVerificationTask {
     static function CBTasks2_run($ID) {
         $messages = [];
         $resave = false;
-        $severity = 7;
+        $severity = 6;
 
         /**
          * If the page no longer exists that task should be removed.
