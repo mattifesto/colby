@@ -5,6 +5,7 @@
 /* globals
     CBUI,
     CBUIExpander,
+    CBLogAdminPage_classNames,
     CBUINavigationView,
     CBUISelector,
     Colby */
@@ -30,26 +31,54 @@ var CBLogAdminPage = {
             containerElement.appendChild(CBUI.createHalfSpace());
 
             let sectionElement = CBUI.createSection();
-            let options = [
-                { title: "0: Emergency", value: 0 },
-                { title: "1: Alert", value: 1 },
-                { title: "2: Critical", value: 2 },
-                { title: "3: Error", value: 3 },
-                { title: "4: Warning", value: 4 },
-                { title: "5: Notice", value: 5 },
-                { title: "6: Informational", value: 6 },
-                { title: "7: Debug", value: 7 },
-            ];
-            let selector = CBUISelector.create({
-                labelText: 'Lowest Severity',
-                navigateToItemCallback: navigator.navigateToItemCallback,
-                options: options,
-                propertyName: "lowestSeverity",
-                spec: args,
-                specChangedCallback: handleArgsChanged,
-            });
 
-            sectionElement.appendChild(selector.element);
+            {
+                let options = CBLogAdminPage_classNames.map(function (className) {
+                    return {
+                        title: className,
+                        value: className,
+                    };
+                });
+
+                options.unshift({
+                    title: "All"
+                });
+
+                let selector = CBUISelector.create();
+                selector.options = options;
+                selector.title = "Class Name";
+                selector.onchange = function () {
+                    args.className = selector.value;
+                    handleArgsChanged();
+                };
+
+                sectionElement.appendChild(selector.element);
+            }
+
+            {
+                let options = [
+                    { title: "0: Emergency", value: 0 },
+                    { title: "1: Alert", value: 1 },
+                    { title: "2: Critical", value: 2 },
+                    { title: "3: Error", value: 3 },
+                    { title: "4: Warning", value: 4 },
+                    { title: "5: Notice", value: 5 },
+                    { title: "6: Informational", value: 6 },
+                    { title: "7: Debug", value: 7 },
+                ];
+
+                let selector = CBUISelector.create();
+                selector.options = options;
+                selector.title = "Lowest Severity";
+                selector.value = args.lowestSeverity;
+                selector.onchange = function () {
+                    args.lowestSeverity = selector.value;
+                    handleArgsChanged();
+                };
+
+                sectionElement.appendChild(selector.element);
+            }
+
             containerElement.appendChild(sectionElement);
             containerElement.appendChild(CBUI.createHalfSpace());
 

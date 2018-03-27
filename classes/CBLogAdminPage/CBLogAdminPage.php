@@ -31,6 +31,26 @@ final class CBLogAdminPage {
     }
 
     /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables() {
+        $SQL = <<<EOT
+
+            SELECT DISTINCT className
+            FROM CBLog
+
+EOT;
+
+        $classNames = array_values(array_filter(
+            CBDB::SQLToArray($SQL)
+        ));
+
+        return [
+            ['CBLogAdminPage_classNames', $classNames],
+        ];
+    }
+
+    /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
