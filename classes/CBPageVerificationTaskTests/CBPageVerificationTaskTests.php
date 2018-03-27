@@ -3,6 +3,69 @@
 final class CBPageVerificationTaskTests {
 
     /**
+     * @return [[<class>, <test>]]
+     */
+    static function CBUnitTests_tests(): array {
+        return [
+            ['CBPageVerificationTask', 'hasColbyPagesRow'],
+            ['CBPageVerificationTask', 'importThumbnailURLToImage'],
+            ['CBPageVerificationTask', 'upgradeThumbnailURLToImage'],
+        ];
+    }
+
+    /**
+     * @return ?object
+     */
+    static function hasColbyPagesRowTest(): ?stdClass {
+        $ID = '722880dadcef3874157d086b4eceeae83194173f';
+        $spec = (object)[
+            'className' => 'CBViewPage',
+            'ID' => $ID,
+            'title' => 'Test Page For ' . __METHOD__ . '()',
+        ];
+
+        CBDB::transaction(function () use ($ID) {
+            CBModels::deleteByID($ID);
+        });
+
+        $result = CBPageVerificationTask::run($ID);
+        $actual = $result->hasColbyPagesRow;
+        $expected = false;
+
+        if ($actual !== $expected) {
+            return (object)[
+                'failed' => true,
+                'message' =>
+                    "Test 1 failed:\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($actual, $expected),
+            ];
+        }
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+
+        $result = CBPageVerificationTask::run($ID);
+        $actual = $result->hasColbyPagesRow;
+        $expected = true;
+
+        if ($actual !== $expected) {
+            return (object)[
+                'failed' => true,
+                'message' =>
+                    "Test 2 failed:\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($actual, $expected),
+            ];
+        }
+
+        CBDB::transaction(function () use ($ID) {
+            CBModels::deleteByID($ID);
+        });
+
+        return null;
+    }
+
+    /**
      * This test creates a page with a `thumbnailURL` referencing an old style
      * image data store and then runs CBPageVerificationTask on it to make sure
      * that the image is imported and the spec is upgraded to use the `image`
