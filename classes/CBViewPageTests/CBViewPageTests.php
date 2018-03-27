@@ -95,15 +95,18 @@ final class CBViewPageTests {
 
         $title = 'I 🏛 <Websites>!';
 
-        CBModels::deleteByID([$ID]);
+        CBModels::deleteByID($ID);
 
-        $spec = CBViewPage::fetchSpecByID($ID, true);
-        $spec->title = $title;
-        $spec->classNameForKind = $kind;
-        $spec->isPublished = true;
-        $spec->URI = $specURI;
+        $spec = (object)[
+            'className' => 'CBViewPage',
+            'ID' => $ID,
+            'title' => $title,
+            'classNameForKind' => $kind,
+            'isPublished' => true,
+            'URI' => $specURI,
+        ];
 
-        CBModels::save([$spec]);
+        CBModels::save($spec);
 
         $count = CBDB::SQLToValue("SELECT COUNT(*) FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$ID}')");
 
