@@ -309,7 +309,9 @@ var CBTestAdmin = {
                     URI += "&function=" + functionName;
                 }
 
-                let title = "Server Test: " + className + (functionName ? "::" + functionName : '');
+                let title = "The server test function " +
+                    (functionName ? functionName + "Test() on " : "for ") +
+                    className + "Test";
                 let expander = CBUIExpander.create();
                 expander.message = title + " (running)";
 
@@ -336,7 +338,13 @@ var CBTestAdmin = {
 
                 function onRejected(error) {
                     expander.severity = 3;
-                    expander.message = `${title} (failed: ${error.message})`;
+                    expander.message = `
+
+                        ${title} failed
+
+                        ${error.message}
+
+                    `;
 
                     reject(error);
                 }
