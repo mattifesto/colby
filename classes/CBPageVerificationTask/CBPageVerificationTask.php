@@ -85,41 +85,6 @@ final class CBPageVerificationTask {
         array_unshift($messages, $firstLine);
 
         if (CBModel::valueToString($result, 'model.className') == 'CBViewPage') {
-
-            /**
-             * Page image issues addressed:
-             *
-             *      Model: If both the `image` and the `thumbnailURL` properties
-             *      are set on the model, re-save the spec. Only one of these
-             *      two properties should be set on a model.
-             *
-             *      History: At one point CBModel_toModel() tried to convert a
-             *      `thumbnailURL` to an `image` and would set both. This
-             *      process created an invalid `image` that would confuse
-             *      renderers.
-             *
-             *      Spec: A warning will be emitted if the `image` property on
-             *      the spec is not a valid CBImage. There are no known causes
-             *      of this but many potential causes.
-             *
-             *      Spec: If only the `thumbnailURL` property is set on the spec
-             *      and the property either refers to a CBImage or can be
-             *      imported to a CBImage, we will import the CBImage, unset
-             *      `thumbnailURL` and set `image`.
-             */
-
-            if (!empty($result->model->image) && !empty($result->model->thumbnailURL)) {
-                $resave = true;
-                $severity = min(6, $severity);
-                $messages[] = <<<EOT
-
-                    A CBViewPage model had both the "image" and "thumbnailURL"
-                    properties set, which means it was incorrectly saved. To fix
-                    this it was re-saved.
-
-EOT;
-            }
-
             if (empty($result->spec->image)) {
 
                 /**
@@ -253,7 +218,11 @@ EOT;
      * @return object
      *
      *      {
+     *          didDeleteRowWithoutModel: bool?
      *          hasColbyPagesRow: bool
+     *          model: model?
+     *          renderError: Throwable?
+     *          spec: model?
      *      }
      */
     static function run(string $ID) {
