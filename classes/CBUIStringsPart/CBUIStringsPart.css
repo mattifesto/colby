@@ -3,7 +3,8 @@
  *
  *      action
  *
- *          String 1 is the color of links and both strings are centered.
+ *          String 1 is the color of links and string 2 is lighter. Both strings
+ *          are centered.
  *
  *      keyvalue
  *
@@ -15,7 +16,7 @@
  *
  *      titledescription
  *
- *          String 1 is the title and string 2 (the description) is ligher.
+ *          String 1 is the title and string 2 (the description) is lighter.
  *
  *      disabled
  *
@@ -51,6 +52,7 @@
     justify-content: space-between;
 }
 
+.CBUIStringsPart.action > .string2,
 .CBUIStringsPart.titledescription > .string2 {
     color: var(--CBTextColor2);
     font-size: 80%;
