@@ -141,6 +141,36 @@ var CBTestAdmin = {
             sectionElement.appendChild(sectionItem.element);
         }
 
+        {
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                Colby.callAjaxFunction("CBTestAdmin", "testPagesRowAndDataStoreWithoutModel")
+                    .then(function (ID) {
+                        Colby.alert(`
+
+                            A row and data store with the ID "${ID}" were
+                            created and a CBPageVerificationTask was restarted.
+
+                        `);
+                    });
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Test Pages Row and Data Store Without Model";
+            stringsPart.string2 = `
+
+                This will create a pages row and data store but no model and a
+                CBPageVerificationTask which should remove the pages row and
+                data store and create a log entry saying so.
+
+            `;
+
+            stringsPart.element.classList.add("action");
+
+            sectionItem.appendPart(stringsPart);
+            sectionElement.appendChild(sectionItem.element);
+        }
+
         containerElement.appendChild(sectionElement);
         containerElement.appendChild(CBUI.createHalfSpace());
 
