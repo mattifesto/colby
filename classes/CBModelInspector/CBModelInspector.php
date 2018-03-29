@@ -70,7 +70,7 @@ final class CBModelInspector {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v405.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v407.js', cbsysurl())];
     }
 
     /**
