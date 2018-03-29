@@ -59,7 +59,7 @@ final class CBPageVerificationTask {
         $severity = 7;
         $result = CBPageVerificationTask::run($ID);
 
-        if (!$result->hasColbyPagesRow) {
+        if (empty($result->hasColbyPagesRow)) {
             $severity = min(4, $severity);
             $messages[] = 'No ColbyPages row exists for this ID';
         }
@@ -73,7 +73,12 @@ final class CBPageVerificationTask {
             $severity = min(4, $severity);
             $messages[] = 'The page row and data store were deleted';
         }
-        // first line of message
+
+        if (!empty($result->renderError)) {
+            CBErrorHandler::report($result->renderError);
+        }
+
+        /* first line of message */
 
         $pageTitle = CBModel::valueToString($result, 'model.title');
         $firstLine = "A page with the title \"{$pageTitle}\" was verified";
@@ -188,20 +193,6 @@ EOT;
             }
         }
 
-        /* test rendering */
-
-        ob_start();
-
-        try {
-            CBPage::render($result->model);
-        } catch (Throwable $throwable) {
-            ob_end_clean();
-
-            throw $throwable;
-        }
-
-        ob_end_clean();
-
         /* check for many old versions */
 
         $versionCount = CBPageVerificationTask::fetchCountOfOldVersions($ID);
@@ -294,6 +285,16 @@ EOT;
         } else {
             $result->spec = $data->spec;
             $result->model = $data->model;
+
+            ob_start();
+
+            try {
+                CBPage::render($result->model);
+            } catch (Throwable $throwable) {
+                $result->renderError = $throwable;
+            }
+
+            ob_end_clean();
         }
 
         return $result;
