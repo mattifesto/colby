@@ -124,6 +124,16 @@ EOT;
     }
 
     /**
+     * When a model is saved a task is created, so CBTasks2 is required for this
+     * class to be fully installed.
+     *
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBTasks2'];
+    }
+
+    /**
      * Creates either the permanent or a temporary CBModels table.
      *
      * @return null
