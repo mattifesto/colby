@@ -240,6 +240,16 @@ EOT;
     }
 
     /**
+     * When a task is run a log entry is made so CBLog is required for this
+     * class to be fully installed.
+     *
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBLog'];
+    }
+
+    /**
      * @param string $className
      * @param [hex160]|hex160 $IDs
      *
