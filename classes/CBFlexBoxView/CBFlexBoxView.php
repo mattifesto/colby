@@ -36,43 +36,25 @@ EOT
             $spec->CSSClassNames = 'flow';
         }
 
+        unset($spec->flexWrap);
+
         return $spec;
     }
 
     /**
+     * @deprecated 2018.04.01
+     *
+     *      This function just deletes a page that used to be a test page for
+     *      this class. Once it has run once on each site install for this class
+     *      can be removed.
+     *
      * @return void
      */
     static function CBInstall_install(): void {
         $pageID = 'b47f423d063d224ff22a415034c0f66b7b9f5abe';
-        $pageSpec = (object)[
-            'className' => 'CBViewPage',
-            'ID' => $pageID,
-            'title' => 'CBFlexBoxView Upgrade Test',
-            'sections' => [
-                (object)[
-                    'className' => 'CBFlexBoxView',
-                    'flexWrap' => 'wrap',
-                    'subviews' => [
-                        (object)[
-                            'className' => 'CBMessageView',
-                            'markup' => 'Hello 1',
-                        ],
-                        (object)[
-                            'className' => 'CBMessageView',
-                            'markup' => 'Hello 2',
-                        ],
-                        (object)[
-                            'className' => 'CBMessageView',
-                            'markup' => 'Hello 3',
-                        ],
-                    ],
-                ],
-            ],
-        ];
 
-        CBDB::transaction(function () use ($pageID, $pageSpec) {
+        CBDB::transaction(function () use ($pageID) {
             CBModels::deleteByID($pageID);
-            CBModels::save($pageSpec);
         });
     }
 
