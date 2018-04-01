@@ -339,27 +339,35 @@ var CBTestAdmin = {
                     URI += "&function=" + functionName;
                 }
 
-                let title = "The server test function " +
-                    (functionName ? functionName + "Test() on " : "for ") +
-                    className + "Test";
+                let title = "The server test " +
+                    (functionName ? `"${functionName}" ` : "") +
+                    "for " +
+                    className;
                 let expander = CBUIExpander.create();
                 expander.message = title + " (running)";
 
                 CBTestAdmin.status.element.appendChild(expander.element);
                 expander.element.scrollIntoView();
 
-                Colby.fetchAjaxResponse(URI)
+                let args = {
+                    className: className,
+                    testName: functionName,
+                };
+
+                Colby.callAjaxFunction("CBTest", "run", args)
                     .then(onFulfilled)
                     .catch(onRejected);
 
-                function onFulfilled(response) {
-                    let status = response.value.succeeded ? "succeeded" : "failed";
-                    let message = `${title} ${status}\n\n${response.value.message}`;
+                function onFulfilled(value) {
+                    let status = value.succeeded ? "succeeded" : "failed";
+                    let message = value.message || "";
+                    message = `${title} ${status}\n\n${message}`;
 
-                    expander.severity = response.value.succeeded ? 6 : 3;
                     expander.message = message;
+                    expander.severity = value.succeeded ? 6 : 3;
+                    expander.timestamp = Date.now() / 1000;
 
-                    if (!response.value.succeeded) {
+                    if (!value.succeeded) {
                         errorCount += 1;
                     }
 
