@@ -30,47 +30,30 @@ final class CBTextView {
 EOT
         ]);
 
-        $textAsMarkup = CBMessageMarkup::stringToMarkup(
+        $spec->className = 'CBMessageView';
+        $spec->markup = CBMessageMarkup::stringToMarkup(
             CBModel::valueToString($spec, 'text')
         );
 
-        $spec->className = 'CBMessageView';
-        $spec->markup = <<<EOT
-
-            {$textAsMarkup}
-
-EOT;
+        unset($spec->text);
 
         return $spec;
     }
 
     /**
+     * @deprecated 2018.03.31
+     *
+     *      This function just deletes a page that used to be a test page for
+     *      this class. Once it has run once on each site install for this class
+     *      can be removed.
+     *
      * @return void
      */
     static function CBInstall_install(): void {
         $pageID = '1814177fa26d544f1cd3cdd264442d03a33a48d6';
-        $pageSpec = (object)[
-            'className' => 'CBViewPage',
-            'ID' => $pageID,
-            'title' => 'CBTextView Upgrade Test',
-            'sections' => [
-                (object)[
-                    'className' => 'CBTextView',
-                    'text' => <<<EOT
 
-                        This is the first paragraph.
-
-                        This is the second paragraph the talks about {The Wind
-                        and the Willows}.
-
-EOT
-                ],
-            ],
-        ];
-
-        CBDB::transaction(function () use ($pageID, $pageSpec) {
+        CBDB::transaction(function () use ($pageID) {
             CBModels::deleteByID($pageID);
-            CBModels::save($pageSpec);
         });
     }
 
