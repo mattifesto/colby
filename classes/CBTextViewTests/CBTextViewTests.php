@@ -12,9 +12,9 @@ final class CBTextViewTests {
     }
 
     /**
-     * @return ?object
+     * @return object
      */
-    static function CBTest_upgrade(): ?stdClass {
+    static function CBTest_upgrade(): stdClass {
         $text = <<<EOT
 
             This is the (first) paragraph.
