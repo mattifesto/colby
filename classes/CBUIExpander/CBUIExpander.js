@@ -55,6 +55,7 @@ var CBUIExpander = {
      *          element: Element (readonly)
      *          message: string (get, set)
      *          severity: int (get, set)
+     *          timestamp: int (get, set)
      *      }
      */
     create: function (args) {
@@ -164,9 +165,8 @@ var CBUIExpander = {
             /**
              * @param int? value
              *
-             * Remember to call Colby.updateTimes() after calling this function
-             * after the expander is added to the DOM to ensure that the new
-             * time element is updated.
+             *      This value should be a Unix timestamp specified in seconds,
+             *      not a JavaScript timestamp specified in milliseconds.
              */
             set timestamp(value) {
                 let newTimestamp = Number.parseInt(value);
@@ -180,6 +180,7 @@ var CBUIExpander = {
                     let timeElement = Colby.unixTimestampToElement(timestamp);
                     timeElement.classList.add("compact");
                     timeContainerElement.appendChild(timeElement);
+                    Colby.updateTimes(true);
                 }
             },
         };
