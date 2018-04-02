@@ -5,88 +5,65 @@ class CBModelEditor {
     /**
      * @return [string]
      */
-    static function CBAdmin_menuNamePath() {
+    static function CBAdmin_menuNamePath(): array {
         return ['models'];
     }
 
     /**
      * @return void
      */
-    static function CBAdmin_render() {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Edit Model';
-
-        $args = CBModelEditor::fetchArguments();
-
-        if (is_callable($function = "{$args->className}::editorGroup")) {
-            $group = call_user_func($function);
-            if (!ColbyUser::current()->isOneOfThe($group)) {
-                CBHTMLOutput::exportVariable('CBModelEditorAuthorizationFailed', true);
-
-                ?>
-
-                <p style="padding: 50px 20px; text-align: center">You do not
-                    have the authorization required to edit this model.
-
-                <?php
-
-                return;
-            }
-        }
-
-        CBHTMLOutput::exportVariable('CBModelEditor_modelID', $args->ID);
-        CBHTMLOutput::exportVariable('CBModelEditor_modelClassName', $args->className);
-
-        if (class_exists($editorClassName = "{$args->className}Editor")) {
-            CBHTMLOutput::requireClassName($editorClassName);
-        }
-    }
-
-    /**
-     * @return {stdClass} | exit
-     */
-    private static function fetchArguments() {
-        $args = new stdClass();
-        $className = isset($_GET['className']) ? $_GET['className'] : null;
-        $ID = isset($_GET['ID']) ? $_GET['ID'] : null;
-
-        if ($ID === null && $className === null) {
-            throw new InvalidArgumentException('Either `ID` or `className` must be specified.');
-        } else if ($ID === null) {
-            $ID = CBHex160::random();
-            header("Location: /admin/page/?class=CBModelEditor&ID={$ID}&className={$className}");
-            exit();
-        } else {
-            $args->ID = $ID;
-            $spec = CBModels::fetchSpecByID($ID);
-
-            if ($spec) {
-                $args->className = $spec->className;
-            } else if ($className) {
-                $args->className = $className;
-            } else {
-                /**
-                 * There is no model or class name so just redirect to the
-                 * inspector.
-                 */
-                header("Location: /admin/?c=CBModelInspector&ID={$ID}");
-                exit();
-            }
-
-            return $args;
-        }
     }
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames(): array {
         return ['CBUI', 'CBUINavigationView', 'CBUISpecSaver'];
     }
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v367.js', cbsysurl())];
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v410.js', cbsysurl())];
+    }
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables(): array {
+        $ID = cb_query_string_value('ID');
+        $templateClassName = cb_query_string_value('templateClassName');
+
+        if (empty($ID)) {
+            $message = "No model ID was specified.";
+            $originalSpec = null;
+        } else {
+            $originalSpec = CBModels::fetchSpecByID($ID);
+
+            if (empty($originalSpec)) {
+                if (empty($templateClassName)) {
+                    $message = "No model exists with the ID {$ID}.";
+                } else  if (is_callable($function = "{$templateClassName}::CBModelTemplate_spec")) {
+                    $originalSpec = call_user_func($function);
+                    $originalSpec->ID = $ID;
+                } else {
+                    $templateClassNameAsMarkup = CBMessageMarkup::stringToMarkup($templateClassName);
+                    $message = "A model template with the class name \"{$templateClassNameAsMarkup}\" does not exist.";
+                }
+            }
+        }
+
+
+        if (!empty($originalSpec)) {
+            CBHTMLOutput::requireClassName("{$originalSpec->className}Editor");
+        }
+
+        return [
+            ['CBModelEditor_originalSpec', $originalSpec],
+            ['CBModelEditor_message', $message],
+        ];
     }
 }

@@ -33,22 +33,10 @@ var CBModelEditor = {
             return;
         }
 
-        Colby.callAjaxFunction("CBModels", "fetchSpec", {ID: CBModelEditor_modelID})
-            .then(onFulfilled)
-            .catch(Colby.displayAndReportError);
-
-        /* closure */
-        function onFulfilled(value) {
-            let spec =  value.spec;
-
-            if (spec === undefined) {
-                spec = {
-                    className: CBModelEditor_modelClassName,
-                    ID: CBModelEditor_modelID,
-                };
-            }
-
-            CBModelEditor.renderEditorForSpec(spec);
+        if (CBModelEditor_originalSpec) {
+            CBModelEditor.renderEditorForSpec(CBModelEditor_originalSpec);
+        } else {
+            Colby.alert(CBModelEditor_message);
         }
     },
 
