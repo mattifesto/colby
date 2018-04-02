@@ -2,6 +2,9 @@
 
 class CBModelEditor {
 
+    private static $originalSpec = null;
+    private static $message = '';
+
     /**
      * @return [string]
      */
@@ -13,29 +16,9 @@ class CBModelEditor {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::pageInformation()->title = 'Edit Model';
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return ['CBUI', 'CBUINavigationView', 'CBUISpecSaver'];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v410.js', cbsysurl())];
-    }
-
-    /**
-     * @return [[<name>, <value>]]
-     */
-    static function CBHTMLOutput_JavaScriptVariables(): array {
         $ID = cb_query_string_value('ID');
         $templateClassName = cb_query_string_value('templateClassName');
+        $message = '';
 
         if (empty($ID)) {
             $message = "No model ID was specified.";
@@ -56,14 +39,42 @@ class CBModelEditor {
             }
         }
 
+        CBModelEditor::$originalSpec = $originalSpec;
+        CBModelEditor::$message = $message;
 
-        if (!empty($originalSpec)) {
-            CBHTMLOutput::requireClassName("{$originalSpec->className}Editor");
-        }
+        CBHTMLOutput::pageInformation()->title = 'Edit Model';
+    }
 
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        $classNames = [
+            'CBUI', 'CBUIMessagePart', 'CBUINavigationView', 'CBUISectionItem4',
+            'CBUISpecSaver'
+        ];
+
+        if (CBModelEditor::$originalSpec) {
+            array_push($classNames, CBModelEditor::$originalSpec->className . 'Editor');
+        };
+
+        return $classNames;
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v410.js', cbsysurl())];
+    }
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables(): array {
         return [
-            ['CBModelEditor_originalSpec', $originalSpec],
-            ['CBModelEditor_message', $message],
+            ['CBModelEditor_originalSpec', CBModelEditor::$originalSpec],
+            ['CBModelEditor_message', CBModelEditor::$message],
         ];
     }
 }

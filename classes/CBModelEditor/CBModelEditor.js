@@ -36,7 +36,20 @@ var CBModelEditor = {
         if (CBModelEditor_originalSpec) {
             CBModelEditor.renderEditorForSpec(CBModelEditor_originalSpec);
         } else {
-            Colby.alert(CBModelEditor_message);
+            var main = document.getElementsByTagName("main")[0];
+
+            main.appendChild(CBUI.createHalfSpace());
+
+            let sectionElement = CBUI.createSection();
+            let sectionItem = CBUISectionItem4.create();
+            let messagePart = CBUIMessagePart.create();
+            messagePart.message = CBModelEditor_message;
+
+            sectionItem.appendPart(messagePart);
+            sectionElement.appendChild(sectionItem.element);
+            main.appendChild(sectionElement);
+
+            main.appendChild(CBUI.createHalfSpace());
         }
     },
 
