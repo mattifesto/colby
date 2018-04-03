@@ -3,15 +3,8 @@
 /* jshint esversion: 6 */
 /* exported CBViewPageEditor */
 /* global
-    CBPageTemplateDescriptors,
     CBUI,
-    CBUINavigationArrowPart,
-    CBUINavigationView,
-    CBUISectionItem4,
     CBUISpecArrayEditor,
-    CBUISpecEditor,
-    CBUISpecSaver,
-    CBUITitleAndDescriptionPart,
     CBViewPageEditor_addableClassNames,
     CBViewPageInformationEditor,
     Colby */
