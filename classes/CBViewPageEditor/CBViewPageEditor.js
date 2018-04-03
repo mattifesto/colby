@@ -27,10 +27,15 @@
 var CBViewPageEditor = {
 
     /**
-     * This variable will be set to the spec as soon as the spec is loaded or
-     * a page template is selected.
+     * This variable will be set to the spec as soon as the editor is created.
      */
     spec: undefined,
+
+    /**
+     * This variable will be set to the specChangedCallback as soon as the
+     * editor is created.
+     */
+    specChangedCallback: undefined,
 
     /**
      * This will be set to a function by the CBViewPageInformationEditor.
@@ -49,7 +54,11 @@ var CBViewPageEditor = {
      * @return Element
      */
     createEditor: function (args) {
+        CBViewPageEditor.spec = args.spec;
+        CBViewPageEditor.specChangedCallback = args.specChangedCallback;
+
         var editorContainer = document.createElement("div");
+
         editorContainer.classList.add("CBViewPageEditor");
 
         editorContainer.appendChild(CBUI.createHalfSpace());
@@ -139,7 +148,7 @@ var CBViewPageEditor = {
     /**
      * @deprecated use setThumbnailImage()
      *
-     * @param object? image
+     * @param model? image
      *
      * @return undefined
      */
@@ -148,11 +157,7 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param object? image
-     *  {
-     *      extension: string,
-     *      ID: hex160,
-     *  }
+     * @param model? image
      *
      * @return undefined
      */
@@ -181,7 +186,7 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param {ID: hex160, extension: string} image
+     * @param model image
      *
      * @return undefined
      */
