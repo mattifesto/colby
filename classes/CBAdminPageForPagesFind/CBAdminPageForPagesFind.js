@@ -1,12 +1,16 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBAdminPageForPagesFind */
 /* globals
     CBPageKindsOptions,
     CBUI,
+    CBUINavigationArrowPart,
     CBUINavigationView,
+    CBUISectionItem4,
     CBUISelector,
     CBUIStringEditor,
+    CBUIStringsPart,
     Colby */
 
 var CBAdminPageForPagesFind = {
@@ -162,45 +166,26 @@ var CBPageList = {
         var section = CBUI.createSection();
 
         pages.forEach(function (page) {
-            section.appendChild(CBPageList.createPageSectionItem(page));
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                let URI = `/admin/?c=CBModelEditor&ID=${page.ID}`;
+                window.location = URI;
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = page.keyValueData.title;
+            stringsPart.string2 = page.keyValueData.description;
+
+            stringsPart.element.classList.add("titledescription");
+
+            sectionItem.appendPart(stringsPart);
+            sectionItem.appendPart(CBUINavigationArrowPart.create());
+            section.appendChild(sectionItem.element);
         });
 
         element.appendChild(section);
 
         return element;
-    },
-
-    /**
-     * @param string page.className
-     * @param hex160 page.ID
-     * @param object page.keyValueData
-     *
-     * @return Element
-     */
-    createPageSectionItem: function (page) {
-        var item = CBUI.createSectionItem2();
-
-        /**
-         * ellipsisTextContainer and ellipsisText are classes supported by CBUI
-         *
-         * TODO: Convert this to use CBUISectionItem3 and the use
-         * CBUITitleAndDescriptionPart. Then ellipsisText class names can be
-         * removed.
-         */
-        item.titleElement.classList.add("ellipsisTextContainer");
-        var titleTextElement = document.createElement("div");
-        titleTextElement.className = "ellipsisText";
-        titleTextElement.textContent = page.keyValueData.title;
-
-        item.titleElement.appendChild(titleTextElement);
-        item.titleElement.addEventListener("click", titleWasClicked);
-
-        return item.element;
-
-        /* closure */
-        function titleWasClicked() {
-            location.href = "/admin/?c=CBModelEditor&ID=" + page.ID;
-        }
     },
 };
 

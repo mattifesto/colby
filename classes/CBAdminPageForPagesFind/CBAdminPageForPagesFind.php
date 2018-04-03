@@ -27,7 +27,9 @@ final class CBAdminPageForPagesFind {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-         return ['CBUI', 'CBUINavigationView', 'CBUISelector', 'CBUIStringEditor'];
+         return ['CBUI', 'CBUINavigationArrowPart', 'CBUINavigationView',
+                 'CBUISectionItem4', 'CBUISelector', 'CBUIStringEditor',
+                 'CBUIStringsPart'];
     }
 
     /**
