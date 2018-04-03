@@ -202,20 +202,6 @@ var CBPageList = {
             location.href = "/admin/?c=CBModelEditor&ID=" + page.ID;
         }
     },
-
-    /**
-     * @param string args.className
-     * @param hex160 args.ID
-     *
-     * @return undefined
-     *
-    handlePageElementEditWasClicked : function (args) {
-        if (args.className === "CBViewPage") {
-            location.href = "/admin/pages/edit/?data-store-id=" + args.ID;
-        } else {
-            location.href = "/admin/page/?class=CBModelEditor&ID=" + args.ID;
-        }
-    },*/
 };
 
 document.addEventListener("DOMContentLoaded", function() {
