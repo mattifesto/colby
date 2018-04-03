@@ -13,8 +13,6 @@
     CBUISpecSaver,
     CBUITitleAndDescriptionPart,
     CBViewPageEditor_addableClassNames,
-    CBViewPageEditor_specID,
-    CBViewPageEditor_specIDToCopy,
     CBViewPageInformationEditor,
     Colby */
 
