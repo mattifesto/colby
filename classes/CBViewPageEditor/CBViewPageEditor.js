@@ -183,16 +183,6 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @return undefined
-     */
-    init: function () {
-        if (window.CBModelEditor_originalSpec === undefined) {
-            // if we're not using the model editor
-            CBViewPageEditor.fetchModel();
-        }
-    },
-
-    /**
      * @param hex160 args.ID
      *
      * @return undefined
@@ -300,5 +290,3 @@ var CBViewPageEditor = {
         }
     },
 };
-
-Colby.afterDOMContentLoaded(CBViewPageEditor.init);
