@@ -220,16 +220,6 @@ final class CBViewPage {
      * @return void
      */
     static function CBPage_render($model): void {
-        $model = CBViewPage::upgradeRenderModel($model);
-
-        // The `upgradeRenderModel` function will return `false` when the query
-        // string has values that are unrecognized and indicate that this page
-        // does not exist.
-        if ($model === false) {
-            include Colby::findHandler('handle-default.php');
-            return;
-        }
-
         $publicationTimeStamp = CBModel::value($model, 'publicationTimeStamp');
         $title = CBConvert::valueToString(CBModel::value($model, 'title'));
         $description = CBConvert::valueToString(CBModel::value($model, 'description'));
@@ -274,33 +264,5 @@ final class CBViewPage {
         }
 
         CBHTMLOutput::render();
-    }
-
-    /**
-     * This function performs a render time transform on a page model. This may
-     * mean upgrading old models, but more likely it means transforming model
-     * properties in response to query variables. This is how a single page can
-     * become multiple pages using the query string and the page kind.
-     *
-     * @return stdClass|false
-     *  Returns the modified model. A false value is returned when the query
-     *  variables lead to a page that does not exist and a 404 page should be
-     *  rendered.
-     */
-    private static function upgradeRenderModel($model) {
-        if (!isset($model->updated)) {
-            $model->updated = time();
-        }
-
-        if (!isset($model->created)) {
-            $model->created = $model->updated;
-        }
-
-        // 2015.09.19 classNameForSettings
-        if (!isset($model->classNameForSettings)) {
-            $model->classNameForSettings = '';
-        }
-
-        return $model;
     }
 }
