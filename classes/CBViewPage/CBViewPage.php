@@ -192,59 +192,6 @@ final class CBViewPage {
     }
 
     /**
-     * @param object $args
-     *
-     *      {
-     *          ID: hex160
-     *          IDToCopy: hex160?
-     *      }
-     *
-     * @return object|false
-     */
-    static function CBAjax_fetchSpec($args) {
-        $ID = CBModel::value($args, 'ID');
-
-        if (!CBHex160::is($ID)) {
-            throw new InvalidArgumentException("The value \"{$ID}\" provided as the ID argument is not a valid 160-bit hexadecimal value.");
-        }
-
-        $spec = CBModels::fetchSpecByID($ID);
-
-        if ($spec === false) {
-            $IDToCopy = CBModel::value($args, 'IDToCopy');
-
-            if (CBHex160::is($IDToCopy)) {
-                $spec = CBModels::fetchSpecByID($IDToCopy);
-
-                if ($spec === false) {
-                    throw new RuntimeException("No spec was found for the page ID: {$IDToCopy}");
-                }
-
-                // Perform the copy
-                $spec->ID = $ID;
-                $spec->title = isset($spec->title) ? "{$spec->title} Copy" : 'Copied Page';
-                unset($spec->dataStoreID);
-                unset($spec->isPublished);
-                unset($spec->iteration);
-                unset($spec->publicationTimeStamp);
-                unset($spec->publishedBy);
-                unset($spec->URI);
-                unset($spec->URIIsStatic);
-                unset($spec->version);
-            }
-        }
-
-        return $spec;
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_fetchSpec_group() {
-        return 'Administrators';
-    }
-
-    /**
      * @param [hex160] $IDs
      *
      * @return null
