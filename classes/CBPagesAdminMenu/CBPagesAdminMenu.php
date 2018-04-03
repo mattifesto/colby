@@ -26,12 +26,6 @@ final class CBPagesAdminMenu {
             'items' => [
                 (object)[
                     'className' => 'CBMenuItem',
-                    'name' => 'create',
-                    'text' => 'Create',
-                    'URL' => '/admin/pages/edit/',
-                ],
-                (object)[
-                    'className' => 'CBMenuItem',
                     'name' => 'find',
                     'text' => 'Find',
                     'URL' => '/admin/page/?class=CBAdminPageForPagesFind',
