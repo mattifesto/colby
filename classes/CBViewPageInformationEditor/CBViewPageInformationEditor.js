@@ -290,6 +290,22 @@ var CBViewPageInformationEditor = {
         {
             let sectionItem = CBUISectionItem4.create();
             sectionItem.callback = function () {
+                let newID = Colby.random160();
+                let URI = `/admin/?c=CBModelEditor&ID=${newID}&copyID=${args.spec.ID}`;
+                window.location = URI;
+            };
+
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Copy";
+
+            stringsPart.element.classList.add("action");
+            sectionItem.appendPart(stringsPart);
+            section.appendChild(sectionItem.element);
+        }
+
+        {
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
                 if (window.confirm('Are you sure you want to move this page to the trash?')) {
                     Colby.callAjaxFunction("CBPages", "moveToTrash", { ID: args.spec.ID })
                         .then(onFulfilled)
