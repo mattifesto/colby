@@ -46,35 +46,40 @@
     border-bottom: 1px solid var(--CBUIBorderColor);
     display: flex;
     justify-content: space-between;
+    padding: 0 5px;
 }
 
 .CBUIHeader > .left {
     display: flex;
-    flex: 1 1 1px;
+    flex: 1 1 100px;
+    min-width: 0;
 }
 
 .CBUIHeader > .center {
+    display: flex;
     flex: 0 1 auto;
-    max-width: 60%;
+    min-width: 0;
 }
 
 .CBUIHeader > .right {
     display: flex;
-    flex: 1 1 1px;
+    flex: 1 1 100px;
     justify-content: flex-end;
+    min-width: 0;
 }
 
 .CBUIHeaderItem {
     align-items: center;
     display: flex;
     min-height: 44px;
+    min-width: 0;
 }
 
 .CBUIHeaderItem > a {
     color: inherit;
     cursor: default;
     font-weight: bold;
-    padding: 0 10px;
+    padding: 0 5px;
     text-decoration: none;
 
     /* ellipsis */
@@ -168,27 +173,33 @@
 }
 
 /**
- * 2017.12.20 Getting ellipsis to work reliably in flexible boxes has been
- * difficult. The results can even change depending on the number of levels of
- * flex container hierarchy. The solution is this min-width: 0; declaration.
- * It's less important to use these specific selectors than it is to draw
- * attention to the solution.
+ * 2018.04.02 minimum width of flex items
+ *
+ * By default, a flexible item cannot be smaller than it's content size along
+ * the main axis. This may prevent multiple flex items from fitting in their
+ * container.
+ *
+ * To remedy this there are some solutions. You can either set:
+ *
+ *      "overflow: hidden;"
+ *
+ *      "min-width: 0;" (or height for vertical flex boxes)
+ *
+ * This is very important for enabling the display of ellipsis. Often the flex
+ * item containing the text uses the overflow method while flexbox parents use
+ * the "min-width" method.
  */
+
 .CBUISectionItem .ellipsisTextContainer {
     align-items: center;
     display: flex;
     flex: 1 1 auto;
-
-    /**
-     * The min-width: 0; declaration must be specified on the flex container if
-     * a flex item wants to use text-overflow: ellipsis;
-     */
-    min-width: 0;
+    min-width: 0; /* min-width method */
     padding: 5px 10px;
 }
 
 .CBUISectionItem .ellipsisText {
-    overflow: hidden;
+    overflow: hidden; /* overflow method */
     text-overflow: ellipsis;
     white-space: nowrap;
 }
