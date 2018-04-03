@@ -17,14 +17,23 @@ class CBModelEditor {
      */
     static function CBAdmin_render(): void {
         $ID = cb_query_string_value('ID');
+        $copyID = cb_query_string_value('copyID');
         $templateClassName = cb_query_string_value('templateClassName');
         $message = '';
 
-        if (empty($ID)) {
+        if (!CBHex160::is($ID)) {
             $message = "No model ID was specified.";
             $originalSpec = null;
         } else {
             $originalSpec = CBModels::fetchSpecByID($ID);
+
+            if (empty($originalSpec) && CBHex160::is($copyID)) {
+                $originalSpec = CBModels::fetchSpecByID($copyID);
+
+                if (!empty($originalSpec)) {
+                    $originalSpec = CBModel::copy($originalSpec, $ID);
+                }
+            }
 
             if (empty($originalSpec)) {
                 if (empty($templateClassName)) {
