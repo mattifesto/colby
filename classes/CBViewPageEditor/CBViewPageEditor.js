@@ -146,17 +146,6 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @deprecated use setThumbnailImage()
-     *
-     * @param model? image
-     *
-     * @return undefined
-     */
-    setThumbnail: function (image) {
-        CBViewPageEditor.setThumbnailImage(image);
-    },
-
-    /**
      * @param model? image
      *
      * @return undefined
