@@ -27,11 +27,6 @@
 var CBViewPageEditor = {
 
     /**
-     * @deprecated use CBViewPageEditor.spec
-     */
-    model: undefined,
-
-    /**
      * This variable will be set to the spec as soon as the spec is loaded or
      * a page template is selected.
      */
