@@ -143,43 +143,6 @@ var CBViewPageEditor = {
     /**
      * @return undefined
      */
-    displayPageTemplateChooser: function () {
-        let mainElement = document.getElementsByTagName("main")[0];
-        mainElement.textContent = null;
-
-        mainElement.appendChild(CBUI.createHalfSpace());
-
-        let sectionElement = CBUI.createSection();
-
-        Object.keys(CBPageTemplateDescriptors).forEach(function (key) {
-            let descriptor = CBPageTemplateDescriptors[key];
-            let sectionItem = CBUISectionItem4.create();
-            let titlePart = CBUITitleAndDescriptionPart.create();
-            titlePart.title = descriptor.title;
-            let arrowPart = CBUINavigationArrowPart.create();
-
-            sectionItem.appendPart(titlePart);
-            sectionItem.appendPart(arrowPart);
-            sectionItem.callback = edit;
-
-            sectionElement.appendChild(sectionItem.element);
-
-            function edit() {
-                let spec = JSON.parse(descriptor.specAsJSON);
-                spec.ID = CBViewPageEditor_specID;
-
-                CBViewPageEditor.displayEditorForPageSpec(spec);
-            }
-        });
-
-        mainElement.appendChild(sectionElement);
-
-        mainElement.appendChild(CBUI.createHalfSpace());
-    },
-
-    /**
-     * @return undefined
-     */
     fetchModel: function () {
         Colby.callAjaxFunction("CBViewPage", "fetchSpec", {
             ID: CBViewPageEditor_specID,
@@ -199,8 +162,6 @@ var CBViewPageEditor = {
                 }
 
                 CBViewPageEditor.displayEditorForPageSpec(spec);
-            } else {
-                CBViewPageEditor.displayPageTemplateChooser();
             }
         }
     },
