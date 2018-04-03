@@ -3,11 +3,13 @@
 /* jshint esversion: 6 */
 /* exported CBModelEditor */
 /* global
-    CBModelEditor_modelClassName,
-    CBModelEditor_modelID,
+    CBModelEditor_message,
+    CBModelEditor_originalSpec,
     Colby,
     CBUI,
+    CBUIMessagePart,
     CBUINavigationView,
+    CBUISectionItem4,
     CBUISpecEditor,
     CBUISpecSaver */
 
@@ -79,7 +81,7 @@ var CBModelEditor = {
 
         var inspectHeaderButtonItem = CBUI.createHeaderButtonItem({
             callback: function () {
-                window.location = "/admin/?c=CBModelInspector&ID=" + CBModelEditor_modelID;
+                window.location = "/admin/?c=CBModelInspector&ID=" + CBModelEditor_originalSpec.ID;
             },
             text: "Inspect",
         });
