@@ -38,9 +38,13 @@ var CBViewPageEditor = {
     thumbnailChangedCallback: undefined,
 
     /**
-     * @param function args.navigateToItemCallback
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          navigateToItemCallback: function
+     *          spec: model
+     *          specChangedCallback: function
+     *      }
      *
      * @return Element
      */
