@@ -42,6 +42,57 @@
 final class CBModel {
 
     /**
+     * This function returns a copy of the $spec parameter.
+     *
+     * Copies of model specs are further processed by model classes that
+     * implement the CBModel_prepareCopy() interface. The interface will be
+     * passed a copy of the spec. The interface can return that object with or
+     * without modifications, or it can return an entirely different object. The
+     * interface must return a valid model.
+     *
+     * The copy preparation usually involves resetting properties that need to
+     * be reset for copied specs. For instance, a copied page spec will be
+     * unpublished.
+     *
+     * @param model $spec
+     *
+     *      The spec to copy.
+     *
+     * @param ID $ID
+     *
+     *      The ID for the copy.
+     *
+     * @return ?model
+     *
+     *      If the $spec parameter is not a model, this function will return
+     *      null. Otherwise, this function will always return another model.
+     *
+     *      The returned model will always be a different object than $spec
+     *      argument.
+     */
+    static function copy(stdClass $spec, string $ID): ?stdClass {
+        $spec = CBConvert::valueAsModel($spec);
+
+        if ($spec === null) {
+            return null;
+        }
+
+        $className = CBModel::valueToString($spec, 'className');
+        $title = trim(CBModel::valueToString($spec, 'title'));
+        $copy = CBModel::clone($spec);
+        $copy->ID = $ID;
+        $copy->title = empty($title) ? 'Copy' : "{$title} Copy";
+
+        unset($copy->version);
+
+        if (is_callable($function = "{$className}::CBModel_prepareCopy")) {
+            $copy = call_user_func($function, $copy);
+        }
+
+        return $copy;
+    }
+
+    /**
      * This function performs a deep clone of a model by serializing it to JSON
      * and then unserializing it. Since models are always serialized to JSON
      * this method of cloning is will always produce a valid clone.
