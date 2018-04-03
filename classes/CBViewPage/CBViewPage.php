@@ -82,6 +82,21 @@ final class CBViewPage {
     }
 
     /**
+     * @param model $spec
+     *
+     * @return model
+     */
+    static function CBModel_prepareCopy(stdClass $spec): stdClass {
+        unset($spec->isPublished);
+        unset($spec->publicationTimeStamp);
+        unset($spec->publishedBy);
+        unset($spec->URI);
+        unset($spec->URIIsStatic);
+
+        return $spec;
+    }
+
+    /**
      * @param model $model
      *
      * @return string
