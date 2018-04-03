@@ -195,17 +195,6 @@ var CBPageList = {
         item.titleElement.appendChild(titleTextElement);
         item.titleElement.addEventListener("click", titleWasClicked);
 
-        /* copy */
-        var copyCommandElement = document.createElement("div");
-        copyCommandElement.className = "command CBPageListCopyButton";
-        copyCommandElement.textContent = "Copy";
-
-        item.commandsElement.appendChild(copyCommandElement);
-
-        copyCommandElement.addEventListener("click", CBPageList.handlePageElementCopyWasClicked.bind(undefined, {
-            IDToCopy: page.ID,
-        }));
-
         /* trash */
         var trashCommandElement = document.createElement("div");
         trashCommandElement.className = "command CBPageListTrashButton";
@@ -224,18 +213,6 @@ var CBPageList = {
         function titleWasClicked() {
             location.href = "/admin/?c=CBModelEditor&ID=" + page.ID;
         }
-    },
-
-    /**
-     * @param {hex160} IDToCopy
-     *
-     * @return undefined
-     */
-    handlePageElementCopyWasClicked : function(args) {
-        location.href = '/admin/pages/edit/?data-store-id=' +
-                        Colby.random160() +
-                        '&id-to-copy=' +
-                        args.IDToCopy;
     },
 
     /**
