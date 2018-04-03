@@ -237,7 +237,7 @@ EOT;
         $data = CBDB::SQLToObjects($SQL);
 
         foreach ($data as $datum) {
-            $editURL = CBSitePreferences::siteURL() . "/admin/pages/edit/?data-store-id={$datum->ID}";
+            $editURL = cbsiteurl() . "/admin/?c=CBModelEditor&ID={$datum->ID}";
             $message .= "\"{$datum->title}\" (edit (a {$editURL}))\n\n";
         }
 
