@@ -95,52 +95,6 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param object spec
-     *
-     * @return undefined
-     */
-    displayEditorForPageSpec: function (spec) {
-        CBViewPageEditor.model = spec;
-        CBViewPageEditor.spec = spec;
-
-        var specSaver = CBUISpecSaver.create({
-            fulfilledCallback: CBViewPageEditor.saveWasFulfilled,
-            rejectedCallback: CBViewPageEditor.saveWasRejected,
-            spec: spec,
-        });
-
-        CBViewPageEditor.specChangedCallback = specSaver.specChangedCallback;
-
-        var element = document.createElement("div");
-        var main = document.getElementsByTagName("main")[0];
-        main.textContent = null;
-
-        var inspectHeaderButtonItem = CBUI.createHeaderButtonItem({
-            callback: function () {
-                window.location = "/admin/?c=CBModelInspector&ID=" + spec.ID;
-            },
-            text: "Inspect",
-        });
-
-        var navigationView = CBUINavigationView.create({
-            defaultSpecChangedCallback: CBViewPageEditor.specChangedCallback,
-            rootItem: {
-                element: element,
-                rightElements: [inspectHeaderButtonItem],
-                title: "Page Editor",
-            },
-        });
-
-        element.appendChild(CBUISpecEditor.create({
-            navigateToItemCallback: navigationView.navigateToItemCallback,
-            spec: spec,
-            specChangedCallback: CBViewPageEditor.specChangedCallback,
-        }).element);
-
-        main.appendChild(navigationView.element);
-    },
-
-    /**
      * @param object args
      *
      *      {
