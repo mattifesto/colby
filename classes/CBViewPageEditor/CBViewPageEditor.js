@@ -141,32 +141,6 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @return undefined
-     */
-    fetchModel: function () {
-        Colby.callAjaxFunction("CBViewPage", "fetchSpec", {
-            ID: CBViewPageEditor_specID,
-            IDToCopy: CBViewPageEditor_specIDToCopy,
-        })
-            .then(onFulfilled)
-            .catch(Colby.displayAndReportError);
-
-        /* closure */
-        function onFulfilled(spec) {
-            if (spec) {
-                /* Before 2016.01.21 specs did not have their className property
-                   set. Now the className property must be set for the page to be
-                   edited properly. */
-                if (spec.className === undefined) {
-                    spec.className = "CBViewPage";
-                }
-
-                CBViewPageEditor.displayEditorForPageSpec(spec);
-            }
-        }
-    },
-
-    /**
      * @param object args
      *
      *      {
