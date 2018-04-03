@@ -195,18 +195,6 @@ var CBPageList = {
         item.titleElement.appendChild(titleTextElement);
         item.titleElement.addEventListener("click", titleWasClicked);
 
-        /* trash */
-        var trashCommandElement = document.createElement("div");
-        trashCommandElement.className = "command CBPageListTrashButton";
-        trashCommandElement.textContent = "Trash";
-
-        item.commandsElement.appendChild(trashCommandElement);
-
-        trashCommandElement.addEventListener("click", CBPageList.handlePageElementTrashWasClicked.bind(undefined, {
-            element: item.element,
-            ID: page.ID,
-        }));
-
         return item.element;
 
         /* closure */
@@ -228,22 +216,6 @@ var CBPageList = {
             location.href = "/admin/page/?class=CBModelEditor&ID=" + args.ID;
         }
     },*/
-
-    /**
-     * @param Element args.element
-     * @param hex160 args.ID
-     *
-     * @return undefined
-     */
-    handlePageElementTrashWasClicked: function(args) {
-        Colby.callAjaxFunction("CBPages", "moveToTrash", { ID: args.ID })
-            .then(onFulfilled)
-            .catch(Colby.displayAndReportError);
-
-        function onFulfilled(value) {
-            args.element.parentElement.removeChild(args.element);
-        }
-    },
 };
 
 document.addEventListener("DOMContentLoaded", function() {
