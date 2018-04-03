@@ -222,11 +222,7 @@ var CBPageList = {
 
         /* closure */
         function titleWasClicked() {
-            if (page.className === "CBViewPage") {
-                location.href = "/admin/pages/edit/?data-store-id=" + page.ID;
-            } else {
-                location.href = "/admin/page/?class=CBModelEditor&ID=" + page.ID;
-            }
+            location.href = "/admin/?c=CBModelEditor&ID=" + page.ID;
         }
     },
 
