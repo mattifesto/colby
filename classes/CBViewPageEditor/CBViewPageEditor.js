@@ -138,15 +138,6 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param object ajaxResponse
-     *
-     * @return object
-     */
-    saveWasFulfilled: function (ajaxResponse) {
-        return ajaxResponse;
-    },
-
-    /**
      * @param Error error
      *
      * @return Promise (rejected)
