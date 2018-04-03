@@ -79,16 +79,13 @@ var CBModelEditor = {
             specChangedCallback: specChangedCallback,
         }).element);
 
-        var inspectHeaderButtonItem = CBUI.createHeaderButtonItem({
-            callback: function () {
-                window.location = "/admin/?c=CBModelInspector&ID=" + CBModelEditor_originalSpec.ID;
-            },
-            text: "Inspect",
-        });
+        let inspectHeaderItem = CBUI.createHeaderItem();
+        inspectHeaderItem.textContent = "Inspect";
+        inspectHeaderItem.href = "/admin/?c=CBModelInspector&ID=" + CBModelEditor_originalSpec.ID;
 
         navigationView.navigateToItemCallback.call(undefined, {
             element: element,
-            rightElements: [inspectHeaderButtonItem],
+            rightElements: [inspectHeaderItem.element],
             title: spec.className + " Editor",
         });
 
