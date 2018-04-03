@@ -46,28 +46,11 @@
     border-bottom: 1px solid var(--CBUIBorderColor);
     display: flex;
     justify-content: space-between;
-    min-height: 44px;
 }
 
-.CBUIHeader > * {
-    box-sizing: border-box;
+.CBUIHeader > .left {
     display: flex;
-}
-
-.CBUIHeader > :matches(.left, .right) {
     flex: 1 1 1px;
-}
-
-/* @deprecated use .CBUIHeaderButtonItem */
-.CBUIHeader :matches(.left, .right) .CBUIHeaderAction {
-    align-items: center;
-    display: flex;
-    color: hsl(210, 100%, 50%);
-    cursor: pointer;
-}
-
-.CBUIHeader > .right {
-    justify-content: flex-end;
 }
 
 .CBUIHeader > .center {
@@ -75,23 +58,35 @@
     max-width: 60%;
 }
 
-.CBUIHeaderButtonItem {
+.CBUIHeader > .right {
+    display: flex;
+    flex: 1 1 1px;
+    justify-content: flex-end;
+}
+
+.CBUIHeaderItem {
     align-items: center;
     display: flex;
-    color: hsl(210, 100%, 50%);
-    cursor: pointer;
-    overflow: hidden;
+    min-height: 44px;
+}
+
+.CBUIHeaderItem > a {
+    color: inherit;
+    cursor: default;
+    font-weight: bold;
     padding: 0 10px;
+    text-decoration: none;
+
+    /* ellipsis */
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.CBUIHeader > .center > *, /* @deprecated transitional until CBUIHeaderTitle is used everywhere */
-.CBUIHeaderTitle {
-    align-items: center;
-    display: flex;
-    font-weight: bold;
-    text-align: center;
+.CBUIHeaderItem.action > a {
+    color: hsl(210, 100%, 50%);
+    cursor: pointer;
+    font-weight: normal;
 }
 
 .CBUIKeyValue {

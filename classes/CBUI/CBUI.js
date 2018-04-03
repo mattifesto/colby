@@ -1,5 +1,6 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBUI */
 /* global
     CBMessageMarkup,
@@ -157,34 +158,113 @@ var CBUI = {
     },
 
     /**
-     * @param function? args.callback
-     * @param string? args.text
+     * @deprecated use createHeaderItem()
+     *
+     * @param object args
+     *
+     *      {
+     *          callback: function?
+     *          text: string?
+     *      }
      *
      * @return Element
      */
-    createHeaderButtonItem : function (args) {
-        var element = document.createElement("div");
-        element.className = "CBUIHeaderButtonItem";
-        element.textContent = args.text || null;
+    createHeaderButtonItem: function (args) {
+        let item = CBUI.createHeaderItem();
+        item.textContent = args.text;
+        item.callback = args.callback;
 
-        if (args.callback) {
-            element.addEventListener("click", args.callback);
-        }
-
-        return element;
+        return item.element;
     },
 
     /**
-     * @param string text
-     *
+    * @deprecated use createHeaderItem()
+    *
+    * @param object args
+    *
+    *      {
+    *          text: string?
+    *      }
+    *
      * @return Element
      */
-    createHeaderTitle : function (args) {
-        var element = document.createElement("div");
-        element.className = "CBUIHeaderTitle";
-        element.textContent = args.text || null;
+    createHeaderTitle: function (args) {
+        let item = CBUI.createHeaderItem();
+        item.textContent = args.text;
 
-        return element;
+        return item.element;
+    },
+
+    /**
+     * @return object
+     *
+     *      {
+     *          callback: function (get, set)
+     *          element: Element (get)
+     *          href: string (get, set)
+     *          textContent: string (get, set)
+     *      }
+     */
+    createHeaderItem: function () {
+        let callback;
+        let element = document.createElement("div");
+        element.className = "CBUIHeaderItem";
+        let content = document.createElement("a");
+
+        element.appendChild(content);
+
+        content.addEventListener("click", function (event) {
+            if (typeof callback === "function") {
+
+                /**
+                 * If there is a callback then don't do what the anchor would
+                 * normally do (navigate to a page).
+                 */
+                event.preventDefault();
+
+                callback();
+            }
+        });
+
+        return {
+            get callback() {
+                return callback;
+            },
+            set callback(value) {
+                content.href = "";
+
+                if (typeof value === "function") {
+                    callback = value;
+                    element.classList.add("action");
+                } else {
+                    callback = undefined;
+                    element.classList.remove("action");
+                }
+            },
+            get element() {
+                return element;
+            },
+            get href() {
+                return content.href;
+            },
+            set href(value) {
+                callback = undefined;
+
+                if (typeof value === "string") {
+                    content.href = value;
+                    element.classList.add("action");
+                } else {
+                    content.href = "";
+                    element.classList.remove("action");
+                }
+            },
+            get textContent() {
+                return content.textContent;
+            },
+            set textContent(value) {
+                content.textContent = value;
+            },
+        };
     },
 
     /**
