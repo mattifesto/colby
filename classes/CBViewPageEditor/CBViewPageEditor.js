@@ -138,21 +138,6 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param Error error
-     *
-     * @return Promise (rejected)
-     */
-    saveWasRejected: function (error) {
-        if (error.ajaxResponse) {
-            Colby.displayResponse(error.ajaxResponse);
-        } else {
-            Colby.alert(error.message || "CBViewPageEditor.saveWasRejected(): No error message was provided.");
-        }
-
-        return Promise.reject(error);
-    },
-
-    /**
      * @deprecated use setThumbnailImage()
      *
      * @param object? image
