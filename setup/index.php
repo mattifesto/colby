@@ -275,7 +275,7 @@ class ColbyInstaller {
                 <link rel="stylesheet" href="/colby/setup/styles.css">
             </head>
             <body class="ColbyInstaller">
-                <div class="main">
+                <main>
         <?php
     }
 
@@ -284,7 +284,7 @@ class ColbyInstaller {
      */
     static function renderPageEnd() {
         ?>
-                </div>
+                </main>
             </body>
         </html>
         <?php
