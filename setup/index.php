@@ -1,5 +1,7 @@
 <?php
 
+set_error_handler('ColbyInstaller::handleError');
+
 /**
  * @return string
  */
@@ -29,6 +31,10 @@ class ColbyInstaller {
     private static $indexFilename;
     private static $siteConfigurationFilename;
     private static $versionFilename;
+
+    static function handleError($severity, $message, $file, $line) {
+        throw new ErrorException($message, 0, $severity, $file, $line);
+    }
 
     /**
      * @return void
@@ -107,137 +113,148 @@ class ColbyInstaller {
      * @return null
      */
     static function install() {
-        $sitedir = cbsitedir();
-        $setupdir = __DIR__;
+        try {
+            $sitedir = cbsitedir();
+            $setupdir = __DIR__;
 
-        /* Verify MySQL login properties */
+            /* Verify MySQL login properties */
 
-        $mysqliDriver = new mysqli_driver();
-        $mysqliDriver->report_mode = MYSQLI_REPORT_STRICT;
+            $mysqliDriver = new mysqli_driver();
+            $mysqliDriver->report_mode = MYSQLI_REPORT_STRICT;
 
-        $mysqli = new mysqli(
-            self::$properties->mysqlHost,
-            self::$properties->mysqlUser,
-            self::$properties->mysqlPassword,
-            self::$properties->mysqlDatabase
-        );
+            $mysqli = new mysqli(
+                self::$properties->mysqlHost,
+                self::$properties->mysqlUser,
+                self::$properties->mysqlPassword,
+                self::$properties->mysqlDatabase
+            );
 
-        if ($mysqli->connect_error) {
-            throw new Exception($mysqli->connect_error);
-        }
-
-        if (!$mysqli->set_charset('utf8mb4')) {
-            throw new Exception( 'Unable to set the mysqli character set to UTF-8.');
-        }
-
-        $mysqli->query('CREATE TABLE `ColbyInstallationTest` (`title` VARCHAR(80))');
-
-        if ($mysqli->error) {
-            throw new Exception("The MySQL account provided is unable to create tables: {$mysqli->error}");
-        }
-
-        $mysqli->query('DROP TABLE `ColbyInstallationTest`');
-
-        if ($mysqli->error) {
-            throw new Exception("The MySQL account provided is unable to drop tables: {$mysqli->error}");
-        }
-
-        $mysqli->close();
-
-        /* Create files and directories */
-
-        if (!is_dir(self::$dataDirectory)) {
-            mkdir(self::$dataDirectory);
-        }
-
-        if (!is_dir(self::$tmpDirectory)) {
-            mkdir(self::$tmpDirectory);
-        }
-
-        ColbyInstaller::writeColbyConfiguration();
-
-        if (!is_file(self::$gitignoreFilename)) {
-            copy(__DIR__ . '/gitignore.template.data', self::$gitignoreFilename);
-        } else {
-            $ignoresOld         = file(self::$gitignoreFilename);
-            $ignoresNew         = file(__DIR__ . '/gitignore.template.data');
-            $ignores            = array_merge($ignoresOld, $ignoresNew);
-            $ignores            = array_unique($ignores);
-
-            sort($ignores);
-
-            $ignores            = implode('', $ignores);
-
-            file_put_contents(self::$gitignoreFilename, $ignores);
-        }
-
-        touch(self::$HTAccessFilename);
-
-        if (self::shouldPerformAFullInstallation()) {
-            $newData = file_get_contents(__DIR__ . '/htaccess.template.data');
-
-            file_put_contents(self::$HTAccessFilename, $newData, FILE_APPEND);
-        } else {
-            $newData = file_get_contents(__DIR__ . '/htaccess.partial.template.data');
-
-            file_put_contents(self::$HTAccessFilename, $newData, FILE_APPEND);
-        }
-
-        if (self::shouldPerformAFullInstallation()) {
-            copy(__DIR__ . '/index.template.data', self::$indexFilename);
-        } else {
-            copy(__DIR__ . '/index.template.data', self::$colbyFilename);
-        }
-
-        if (!is_file(self::$siteConfigurationFilename)) {
-            copy(__DIR__ . '/site-configuration.template.data', self::$siteConfigurationFilename);
-        }
-
-        if (!is_file(self::$versionFilename)) {
-            copy(__DIR__ . '/version.template.data', self::$versionFilename);
-        }
-
-        if (!is_file(self::$faviconGifFilename)) {
-            touch(self::$faviconGifFilename);
-        }
-
-        if (!is_file(self::$faviconIcoFilename)) {
-            touch(self::$faviconIcoFilename);
-        }
-
-        /* /classes */
-
-        $destdir = "{$sitedir}/classes";
-
-        if (!is_dir($destdir)) {
-            mkdir($destdir);
-        }
-
-        /* class files */
-
-        $classfiles = [
-            ['CBPageFrame_defaultClassName', 'php'],
-            ['CBPageSettings_defaultClassName', 'php'],
-            ['CBXPageFrame', 'php'],
-            ['CBXPageFrame', 'css'],
-            ['CBXPageSettings', 'php'],
-        ];
-
-        foreach ($classfiles as $classfile) {
-            $className = $classfile[0];
-            $extension = $classfile[1];
-            $directory = "{$sitedir}/classes/{$className}";
-
-            if (!is_dir($directory)) {
-                mkdir($directory);
+            if ($mysqli->connect_error) {
+                throw new Exception($mysqli->connect_error);
             }
 
-            $src = "{$setupdir}/{$className}.{$extension}.data";
-            $dest = "{$directory}/{$className}.{$extension}";
-
-            if (!is_file($destfilepath)) {
-                copy($src, $dest);
+            if (!$mysqli->set_charset('utf8mb4')) {
+                throw new Exception( 'Unable to set the mysqli character set to UTF-8.');
             }
+
+            $mysqli->query('CREATE TABLE `ColbyInstallationTest` (`title` VARCHAR(80))');
+
+            if ($mysqli->error) {
+                throw new Exception("The MySQL account provided is unable to create tables: {$mysqli->error}");
+            }
+
+            $mysqli->query('DROP TABLE `ColbyInstallationTest`');
+
+            if ($mysqli->error) {
+                throw new Exception("The MySQL account provided is unable to drop tables: {$mysqli->error}");
+            }
+
+            $mysqli->close();
+
+            /* Create files and directories */
+
+            if (!is_dir(self::$dataDirectory)) {
+                mkdir(self::$dataDirectory);
+            }
+
+            if (!is_dir(self::$tmpDirectory)) {
+                mkdir(self::$tmpDirectory);
+            }
+
+            ColbyInstaller::writeColbyConfiguration();
+
+            if (!is_file(self::$gitignoreFilename)) {
+                copy(__DIR__ . '/gitignore.template.data', self::$gitignoreFilename);
+            } else {
+                $ignoresOld         = file(self::$gitignoreFilename);
+                $ignoresNew         = file(__DIR__ . '/gitignore.template.data');
+                $ignores            = array_merge($ignoresOld, $ignoresNew);
+                $ignores            = array_unique($ignores);
+
+                sort($ignores);
+
+                $ignores            = implode('', $ignores);
+
+                file_put_contents(self::$gitignoreFilename, $ignores);
+            }
+
+            touch(self::$HTAccessFilename);
+
+            if (self::shouldPerformAFullInstallation()) {
+                $newData = file_get_contents(__DIR__ . '/htaccess.template.data');
+
+                file_put_contents(self::$HTAccessFilename, $newData, FILE_APPEND);
+            } else {
+                $newData = file_get_contents(__DIR__ . '/htaccess.partial.template.data');
+
+                file_put_contents(self::$HTAccessFilename, $newData, FILE_APPEND);
+            }
+
+            if (self::shouldPerformAFullInstallation()) {
+                copy(__DIR__ . '/index.template.data', self::$indexFilename);
+            } else {
+                copy(__DIR__ . '/index.template.data', self::$colbyFilename);
+            }
+
+            if (!is_file(self::$siteConfigurationFilename)) {
+                copy(__DIR__ . '/site-configuration.template.data', self::$siteConfigurationFilename);
+            }
+
+            if (!is_file(self::$versionFilename)) {
+                copy(__DIR__ . '/version.template.data', self::$versionFilename);
+            }
+
+            if (!is_file(self::$faviconGifFilename)) {
+                touch(self::$faviconGifFilename);
+            }
+
+            if (!is_file(self::$faviconIcoFilename)) {
+                touch(self::$faviconIcoFilename);
+            }
+
+            /* /classes */
+
+            $destdir = "{$sitedir}/classes";
+
+            if (!is_dir($destdir)) {
+                mkdir($destdir);
+            }
+
+            /* class files */
+
+            $classfiles = [
+                ['CBPageFrame_defaultClassName', 'php'],
+                ['CBPageSettings_defaultClassName', 'php'],
+                ['CBXPageFrame', 'php'],
+                ['CBXPageFrame', 'css'],
+                ['CBXPageSettings', 'php'],
+            ];
+
+            foreach ($classfiles as $classfile) {
+                $className = $classfile[0];
+                $extension = $classfile[1];
+                $directory = "{$sitedir}/classes/{$className}";
+
+                if (!is_dir($directory)) {
+                    mkdir($directory);
+                }
+
+                $src = "{$setupdir}/{$className}.{$extension}.data";
+                $dest = "{$directory}/{$className}.{$extension}";
+
+                if (!is_file($dest)) {
+                    copy($src, $dest);
+                }
+            }
+        } catch (Throwable $throwable) {
+            ColbyInstaller::renderPageBegin();
+            echo '<p>An error occurred in the setup script.';
+            echo '<p>' . $throwable->getMessage();
+            echo '<p>in ' . $throwable->getFile();
+            echo '<p>at line ' . $throwable->getLine();
+            ColbyInstaller::renderPageEnd();
+
+            exit;
         }
 
         header('Location: /admin/');
@@ -253,8 +270,6 @@ class ColbyInstaller {
             <head>
                 <meta charset="UTF-8">
                 <title>Colby Installation</title>
-                <meta name="description"
-                      content="This HTML of this page represents a template for all HTML pages.">
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700">
                 <link rel="stylesheet" href="/colby/setup/styles.css">
             </head>
