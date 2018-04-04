@@ -11,6 +11,7 @@
     CBUISelector,
     CBUIStringEditor,
     CBUIStringsPart,
+    CBUIThumbnailPart,
     Colby */
 
 var CBAdminPageForPagesFind = {
@@ -171,6 +172,16 @@ var CBPageList = {
                 let URI = `/admin/?c=CBModelEditor&ID=${page.ID}`;
                 window.location = URI;
             };
+
+            let thumbnailPart = CBUIThumbnailPart.create();
+
+            if (page.keyValueData.image) {
+                thumbnailPart.src = Colby.imageToURL(page.keyValueData.image, "rs200clc200");
+            } else if (page.keyValueData.thumbnailURL) {
+                thumbnailPart.src = page.keyValueData.thumbnailURL;
+            }
+
+            sectionItem.appendPart(thumbnailPart);
 
             let stringsPart = CBUIStringsPart.create();
             stringsPart.string1 = page.keyValueData.title;
