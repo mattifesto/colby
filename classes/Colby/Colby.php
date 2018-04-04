@@ -99,12 +99,13 @@ final class Colby {
     /**
      * @param string $cipherDataString
      *
-     *  This must be a string that was returned by the `encrypt` function.
+     *      This must be a string that was returned by the `encrypt` function.
      *
-     * @return mixed
+     * @return mixed|null
      *
-     *  The data type of the returned data will match the data type that was
-     *  passed into the `encrypt` function.
+     *      The data type of the returned data will match the data type that was
+     *      passed into the `encrypt` function. Will return null if unable to
+     *      decrypt the cipher data string.
      */
     static function decrypt($cipherDataString) {
         $cipherData = unserialize($cipherDataString);
@@ -114,13 +115,13 @@ final class Colby {
         }
 
         $serializedData = openssl_decrypt($cipherData->ciphertext,
-                                          self::encryptionMethod,
+                                          Colby::encryptionMethod,
                                           CBEncryptionPassword,
-                                          self::encryptionOptions,
+                                          Colby::encryptionOptions,
                                           $cipherData->initializationVector);
 
         if (false === $serializedData) {
-            throw new RuntimeException("Unable to decrypt the ciphertext: {$cipherData->ciphertext}");
+            return null;
         }
 
         return unserialize($serializedData);
