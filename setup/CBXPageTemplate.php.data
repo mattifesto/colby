@@ -1,0 +1,34 @@
+<?php
+
+final class CBXPageTemplate {
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBModelTemplates::installTemplate(__CLASS__);
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBModelTemplates'];
+    }
+
+    /**
+     * @return model
+     */
+    static function CBModelTemplate_spec(): stdClass {
+        return (object)[
+            'className' => 'CBViewPage',
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    static function CBModelTemplate_title(): string {
+        return 'Standard Page';
+    }
+}

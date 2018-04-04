@@ -228,6 +228,7 @@ class ColbyInstaller {
                 ['CBXPageFrame', 'php'],
                 ['CBXPageFrame', 'css'],
                 ['CBXPageSettings', 'php'],
+                ['CBXPageTemplate', 'php'],
             ];
 
             foreach ($classfiles as $classfile) {
