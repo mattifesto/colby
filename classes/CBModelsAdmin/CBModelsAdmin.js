@@ -4,6 +4,7 @@
 /* exported CBModelsAdmin */
 /* globals
     CBUI,
+    CBModelsAdmin_classHasTemplates,
     CBModelsAdmin_modelClassName,
     CBModelsAdmin_modelClassNames,
     CBModelsAdmin_modelList,
@@ -61,18 +62,22 @@ var CBModelsAdmin = {
      */
     renderModelList: function () {
         var mainElement = document.getElementsByTagName("main")[0];
-        var titleElement = document.createElement("div");
-        titleElement.textContent = CBModelsAdmin_modelClassName + " Models";
-        var newElement = document.createElement("div");
+        let titleItem = CBUI.createHeaderItem();
+        titleItem.textContent = CBModelsAdmin_modelClassName + " Models";
 
-        newElement.addEventListener("click", function () {
-            window.location = "/admin/?c=CBModelEditor&className=" +
-                              encodeURIComponent(CBModelsAdmin_modelClassName);
-        });
+        let rightElements;
+
+        if (CBModelsAdmin_classHasTemplates) {
+            var createItem = CBUI.createHeaderItem();
+            createItem.textContent = "Create";
+            createItem.href = `/admin/?c=CBModelsAdminTemplateSelector&modelClassName=${CBModelsAdmin_modelClassName}`;
+
+            rightElements = [createItem.element];
+        }
 
         mainElement.appendChild(CBUI.createHeader({
-            centerElement: titleElement,
-            rightElements: [newElement],
+            centerElement: titleItem.element,
+            rightElements: rightElements,
         }));
 
         mainElement.appendChild(CBUI.createHalfSpace());
