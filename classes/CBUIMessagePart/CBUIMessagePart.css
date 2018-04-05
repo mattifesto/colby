@@ -1,3 +1,6 @@
 .CBUIMessagePart {
-    padding: 10px 5px;
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-height: 44px;
+    padding: 20px;
 }
