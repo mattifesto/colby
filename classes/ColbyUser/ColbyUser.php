@@ -210,8 +210,12 @@ EOT;
         $cookieCipherData = $_COOKIE[CBUserCookieName];
 
         try {
-
             $cookie = Colby::decrypt($cookieCipherData);
+
+            if (empty($cookie)) {
+                ColbyUser::removeUserCookie();
+                return;
+            }
 
             if (time() > $cookie->expirationTimestamp) {
                 ColbyUser::removeUserCookie();
@@ -219,16 +223,11 @@ EOT;
             }
 
             /* Success, the user is now logged in. */
-
-            self::$currentUserHash = $cookie->userHash;
-            self::$currentUserId = $cookie->userId;
-
+            ColbyUser::$currentUserHash = $cookie->userHash;
+            ColbyUser::$currentUserId = $cookie->userId;
         } catch (Throwable $exception) {
-
             Colby::reportException($exception);
             ColbyUser::removeUserCookie();
-            return;
-
         }
     }
 
