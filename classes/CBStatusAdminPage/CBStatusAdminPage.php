@@ -164,11 +164,6 @@ final class CBStatusAdminPage {
                 $issues[] = ['Site Name', 'This site has no site name. Set one in site preferences.'];
             }
 
-            /* 2018.01.12 Transition to CBPageTemplates */
-            if (is_callable('CBPageHelpers::classNamesForPageTemplates')) {
-                $issues[] = ['Page Templates', 'Implement the CBPageTemplates class and remove the implementation of CBPageHelpers::classNamesForPageTemplates().'];
-            }
-
             /* 2018.01.12 Unused function */
             if (is_callable('CBPageHelpers::classNameForPageSettings')) {
                 $issues[] = ['CBPageHelpers', 'The function CBPageHelpers::classNameForPageSettings() has been removed with no replacement.'];
