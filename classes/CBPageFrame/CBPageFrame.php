@@ -3,14 +3,14 @@
 final class CBPageFrame {
 
     /**
-     * @param ?string $pageFrameClassName
-     * @param function $renderContent
+     * @param ?string $frameClassName
+     * @param callable $renderContent
      *
      * @return void
      */
-    static function render(?string $pageFrameClassName, callable $renderContent): void {
-        if (is_callable($function = "{$pageFrameClassName}::CBPageFrame_render")) {
-            CBHTMLOutput::requireClassName($pageFrameClassName);
+    static function render(?string $frameClassName, callable $renderContent): void {
+        if (is_callable($function = "{$frameClassName}::CBPageFrame_render")) {
+            CBHTMLOutput::requireClassName($frameClassName);
             call_user_func($function, $renderContent);
         } else {
             call_user_func($renderContent);
