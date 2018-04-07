@@ -22,6 +22,7 @@ final class CBViewPage {
             'classNameForKind' => CBModel::valueToString($spec, 'classNameForKind'),
             'classNameForSettings' => CBModel::valueToString($spec, 'classNameForSettings'),
             'description' => trim(CBModel::valueToString($spec, 'description')),
+            'frameClassName' => CBModel::valueToString($spec, 'frameClassName'),
             'isPublished' => (bool)CBModel::value($spec, 'isPublished'),
             'iteration' => 0, /* deprecated */
             'publishedBy' => CBModel::valueAsInt($spec, 'publishedBy'),
@@ -247,9 +248,9 @@ final class CBViewPage {
                 echo '</main>';
             };
 
-            $pageFrameClassName = CBPageFrame::defaultClassName();
+            $frameClassName = CBModel::valueToString($model, 'frameClassName');
 
-            CBPageFrame::render($pageFrameClassName, $renderContent);
+            CBPageFrame::render($frameClassName, $renderContent);
         } else {
             $renderContentCallback = function () use ($model) {
                 $sections = CBModel::valueToArray($model, 'sections');
