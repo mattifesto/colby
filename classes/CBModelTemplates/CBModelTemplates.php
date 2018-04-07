@@ -3,6 +3,12 @@
 final class CBModelTemplates {
 
     /**
+     * This variable will be set to a substitute ID to by used by
+     * CBModelTemplates while tests are running.
+     */
+    static $testID = null;
+
+    /**
      * @return void
      */
     static function CBInstall_install(): void {
@@ -35,18 +41,14 @@ final class CBModelTemplates {
     static function fetchTemplateClassNames(string $targetClassName): array {
         $model = CBModels::fetchModelByID(CBModelTemplates::ID());
 
-        if (empty($model)) {
-            return [];
-        } else {
-            return CBModel::valueToArray($model, "templates.{$targetClassName}");
-        }
+        return CBModel::valueToArray($model, "templates.{$targetClassName}");
     }
 
     /**
      * @return ID
      */
     static function ID(): string {
-        return CBModelTemplatesTests::$testID ??
+        return CBModelTemplates::$testID ??
             'a50a379457147244325e3c512dadd5fac26daf11';
     }
 

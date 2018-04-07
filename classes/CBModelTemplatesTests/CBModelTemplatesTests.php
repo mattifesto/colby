@@ -3,16 +3,10 @@
 final class CBModelTemplatesTests {
 
     /**
-     * This variable will be set to a substitute ID to by used by
-     * CBModelTemplates while tests are running.
-     */
-    static $testID = null;
-
-    /**
      * @return object
      */
     static function CBTest_test(): stdClass {
-        CBModelTemplatesTests::$testID = '2933b216beb27fe98400106b4d235165b0e12852';
+        CBModelTemplates::$testID = '2933b216beb27fe98400106b4d235165b0e12852';
 
         CBModelTemplates::CBInstall_install();
         CBModelTemplates::installTemplate('CBModelTemplatesTests_template1');
@@ -29,7 +23,7 @@ final class CBModelTemplatesTests {
         if ($templateClassNames != $expectedClassNames) {
             return (object)[
                 'message' =>
-                    "1: The template class names do no match the expected class names.\n\n" .
+                    "1: The template class names do not match the expected class names.\n\n" .
                     CBConvertTests::resultAndExpectedToMessage($templateClassNames, $expectedClassNames),
             ];
         }
@@ -42,7 +36,7 @@ final class CBModelTemplatesTests {
         if ($templateClassNames != $expectedClassNames) {
             return (object)[
                 'message' =>
-                    "2: The template class names do no match the expected class names.\n\n" .
+                    "2: The template class names do not match the expected class names.\n\n" .
                     CBConvertTests::resultAndExpectedToMessage($templateClassNames, $expectedClassNames),
             ];
         }
@@ -53,14 +47,14 @@ final class CBModelTemplatesTests {
         if ($templateClassNames != $expectedClassNames) {
             return (object)[
                 'message' =>
-                    "3: The template class names do no match the expected class names.\n\n" .
+                    "3: The template class names do not match the expected class names.\n\n" .
                     CBConvertTests::resultAndExpectedToMessage($templateClassNames, $expectedClassNames),
             ];
         }
 
-        CBModels::deleteByID(CBModelTemplatesTests::$testID);
+        CBModels::deleteByID(CBModelTemplates::$testID);
 
-        CBModelTemplatesTests::$testID = null;
+        CBModelTemplates::$testID = null;
 
         return (object)[
             'succeeded' => true,
