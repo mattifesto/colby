@@ -3,17 +3,6 @@
 final class CBPageFrame {
 
     /**
-     * @return ?string
-     */
-    static function defaultClassName(): ?string {
-        if (is_callable($function = 'CBPageFrame_defaultClassName::get')) {
-            return call_user_func($function);
-        }
-
-        return null;
-    }
-
-    /**
      * @param ?string $pageFrameClassName
      * @param function $renderContent
      *
