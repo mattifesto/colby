@@ -21,6 +21,7 @@ final class CBViewPageTests {
             'classNameForKind' => '',
             'classNameForSettings' => '',
             'description' => '',
+            'frameClassName' => '',
             'isPublished' => false,
             'iteration' => 0,
             'publishedBy' => null,
