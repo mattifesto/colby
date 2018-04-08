@@ -3,6 +3,13 @@
 final class CBViewPage {
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v414.css', cbsysurl())];
+    }
+
+    /**
      * @param model $spec
      *
      *      {
@@ -241,8 +248,20 @@ final class CBViewPage {
         }
 
         if (empty($model->layout->className)) {
+
+            /**
+             * TODO 2018.04.07
+             *
+             *      The main element is the container of the CBViewPage class.
+             *      The CBViewPage class should allow you to add classes and
+             *      styles to this element. It does not currently allow that, so
+             *      for now the CBViewPage_default class name is added which
+             *      eventually can be removed by specifying the "custom" class
+             *      name manually.
+             */
+
             $renderContent = function () use ($model) {
-                echo '<main>';
+                echo '<main class="CBViewPage CBViewPage_default">';
                 $sections = CBModel::valueToArray($model, 'sections');
                 array_walk($sections, 'CBView::render');
                 echo '</main>';
