@@ -46,7 +46,8 @@ var CBUISelector = {
      *          options: [object] (get, set)
      *          title: string (get, set)
      *          updateOptionsCallback: function (deprecated)
-     *          updateValueCallback: function
+     *          updateValueCallback: function (deprecated)
+     *          value: mixed (get, set)
      *      }
      */
     create: function (args) {
