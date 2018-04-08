@@ -361,7 +361,7 @@ var CBViewPageInformationEditor = {
 
         /* layout */
 
-        if (CBPageClassNamesForLayouts.length > 0) {
+        if (args.spec.layout) {
             element.appendChild(CBUI.createHalfSpace());
 
             var options = CBPageClassNamesForLayouts.map(function(className) {
