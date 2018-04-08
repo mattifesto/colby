@@ -11,6 +11,7 @@ final class CBPage {
         $className = CBModel::value($model, 'className', '');
 
         if (is_callable($function = "{$className}::CBPage_render")) {
+            CBHTMLOutput::requireClassName($className);
             call_user_func($function, $model);
         } else {
             $ID = CBModel::value($model, 'ID', '(no ID)');
