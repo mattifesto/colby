@@ -75,26 +75,48 @@ a {
     color: var(--CBTextColorForLinks);
 }
 
+/**
+ * The body element is rendered by CBHTMLOutput. These styles enable the footer
+ * to be at the bottom of pages with short content.
+ */
+
 body {
- /* align-items:            stretch (default) */    /* 1 */
-    display:                flex;                   /* 2 */
-    display:                -ms-flexbox;
-    display:                -webkit-flex;
-    flex-direction:         column;                 /* 2 */
-    -ms-flex-direction:     column;
-    -webkit-flex-direction: column;
-    min-height:             100vh;                  /* 3 */
-    position:               relative;               /* 4 */
+
+    /* the body must be at least as tall as the viewport */
+    min-height: 100vh;
+
+    /* the body is a vertical flexbox */
+    display: flex;
+    flex-direction: column;
+
+    /* the default value for align-items is stretch */
+    /* align-items: stretch; */
+
+    /* position absolutely positioned elements relative to the body */
+    position: relative;
 }
 
+/**
+ * The body element should usually have 3 children. The header, the main
+ * element, and the footer. By default the children will not flex, but the main
+ * element will probably be allowed to grow. That style should be set by the
+ * page renderer which is responsible for the main element.
+ *
+ * A page frame class can add its own container, in which case the frame class
+ * will document its method of layout.
+ *
+ * The footer element should have the declaration: "margin-top: auto". This will
+ * allow it to move to the bottom of short pages. This declaration should be
+ * made by the style sheet of the footer.
+ */
+
 body > * {
-    flex:                   none;                   /* 5 */
-    -ms-flex:               none;
-    -webkit-flex:           none;
+    flex: none;
 }
 
 main {
-    display: block; /* 1 */
+    /* IE11 */
+    display: block;
 }
 
 a:link, a:active, a:focus, a:hover {
@@ -126,19 +148,9 @@ table {
 }
 
 td, th {
-    padding:        0;          /* 1 */
-    text-align:     left;
+    padding: 0;                 /* 1 */
+    text-align: left;
     vertical-align: baseline;   /* 2 */
-}
-
-ul.horizontal {
-    padding-left:   0px;    /* 1 */
-}
-
-ul.horizontal > li {
-    display:        inline;
-    margin-left:    0.75em; /* 2 */
-    margin-right:   0.75em; /* 2 */
 }
 
 /*
@@ -202,44 +214,6 @@ font ligatures to be used. This behavior might eventually be on by default.
 based on phone heuristics. This generally breaks the layout and degrades the
 experience rather then helping the user.
 
-
-body:
-
-1.  The default value for `align-items` is stretch which closely resembles the
-default behavior of an element outside of a flexbox. Specifying something like
-`center` as the value may be tempting but it will inadvertently horizontally
-collapse some elements causing backgrounds to not fill the full width of the
-viewport. This is much harder to explain to an end user than the fact that
-centering is not the default behavior which they are generally used to.
-
-2.  This makes the body a vertical flexbox which behaves the same as if it
-wasn't except it allows flexible box behaviors such as placing the footer at the
-bottom of the viewport for short pages.
-
-3.  This makes the body at least as tall as the viewport which enables the
-footer to be placed at the bottom of the viewport when the content is small.
-
-4.  By default absolutely positioned elements are positioned relative to the
-`body` element.
-
-5.  This makes children of the body non-flexible by default, which basically
-makes them behave exactly as if they were not in a flexible box container.
-
-6.  Use this class on a child that is allowed to grow to take up extra space
-between other elements. This should be used on an empty element right above the
-page footer. IE10: I think this used to work on IE10, but I know that it's very
-particular about the way the height is specified on the html and body elements.
-At some point I must have changed this and now it doesn't work on IE10. Don't
-bother trying to fix it. IE10 started being deprecated as of this issue.
-
-
-main:
-
-1.  The `main` element is supported in newer browsers but is not yet a `block`
-element by default. Remove this rule as soon as new browsers define it as a
-`block` element in the default stylesheet. (2013.05.20)
-
-
 button, input, select, textarea:
 
 1.  This rule allows form elements to be set to `100%` wide and properly fill
@@ -272,38 +246,5 @@ td, th:
 places the text at the top of the cell except when there are situations that
 affect the baseline (mixed text sizes, form fields) and then it places the
 baseline as close to the top as possible.
-
-
-ul:
-
-1.  Horizontal lists are used on almost every website and the elements and
-styles used are always the same so it makes sense to have them here.
-
-2.  This will make horizontal list items will look pleasantly spaced inside an
-element that doesn't have padding of its own. Experience has shown that this is
-the best default. There are certainly theoretical cases where this is not the
-best and thoses cases should not use this style.
-
-
-File History
-------------
-
-2014.02.22 This file was changed because moving to a "sectioned page" model
-means that each of those sections should have no default styles applied but
-these. So I spent some time making sure these are good common defaults. In the
-future, when making changes keep an eye on the `normalize.css` file available on
-the internet. It's a good resource that I'm not yet comfortable using because it
-keeps the default margins, but it's very helpful.
-
-2015.05.23 The nature of the `html` and `body` element layout changed to support
-using flexible boxes to place the footer at the bottom of the viewport for short
-pages. The `body` now becomes the lowest level element relative to which child
-elements can be can be placed absolutely. This negatively affects sites using
-layout methods that added padding to the `body`. Sites that use those methods
-should be migrated to the flexible box method because it's the correct way to do
-it and is now available on all supported browsers. I also removed some
-historical comments that were not entirely pertinent anymore. If you have a
-question about the reasoning or history behind a particular style look at
-previous versions of this file.
 
 */
