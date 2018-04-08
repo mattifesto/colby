@@ -19,6 +19,7 @@
     CBUIUnixTimestampEditor,
     CBUsersWhoAreAdministrators,
     CBViewPageEditor,
+    CBViewPageInformationEditor_frameClassNames,
     CBViewPageInformationEditor_mainMenuItemOptions,
     Colby */
 
@@ -215,6 +216,36 @@ var CBViewPageInformationEditor = {
                 options : classNames,
             }).element);
             section.appendChild(item);
+        }
+
+        /* frameClassName */
+
+        {
+            let selector = CBUISelector.create();
+            selector.title = "Page Frame";
+            selector.value = args.spec.frameClassName;
+            selector.onchange = function () {
+                args.spec.frameClassName = selector.value;
+                args.specChangedCallback();
+            };
+
+            let options = [
+                {
+                    title: "None",
+                    value: undefined,
+                },
+            ];
+
+            CBViewPageInformationEditor_frameClassNames.forEach(function (frameClassName) {
+                options.push({
+                    title: frameClassName,
+                    value: frameClassName,
+                });
+            });
+
+            selector.options = options;
+
+            section.appendChild(selector.element);
         }
 
         /* selectedMainMenuItemName */
