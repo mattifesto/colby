@@ -10,6 +10,20 @@ final class CBXPageFrame {
     }
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBPageFrames::installFrame(__CLASS__);
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBPageFrames'];
+    }
+
+    /**
      * @param function $renderContent
      *
      * @return void
@@ -19,7 +33,7 @@ final class CBXPageFrame {
 
         ?>
 
-        <header class="CBXPageFrame CBDarkTheme">
+        <header class="CBXPageFrame_header CBDarkTheme">
             <?php
 
             CBView::render((object)[
@@ -33,13 +47,15 @@ final class CBXPageFrame {
 
         <?php
 
-        call_user_func($renderContent);
+        $renderContent();
 
         ?>
 
-        <footer class="CBXPageFrame CBDarkTheme">
+        <footer class="CBXPageFrame_footer CBDarkTheme">
             <div class="copyright">
-                Copyright &copy; <?= gmdate('Y') . ' ' . cbhtml(CBSitePreferences::siteName()) ?>
+                <span>
+                    Copyright &copy; <?= gmdate('Y') . ' ' . cbhtml(CBSitePreferences::siteName()) ?>
+                </span>
             </div>
         </footer>
 

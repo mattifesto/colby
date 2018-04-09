@@ -1,19 +1,12 @@
-body {
+.CBXPageFrame_footer .copyright {
     display: flex;
-    flex-direction: column;
-}
-
-main {
-    flex: 1 1 auto;
-}
-
-footer.CBXPageFrame .copyright {
     align-items: center;
-    box-sizing: border-box;
-    color: var(--CBTextColor2);
-    display: flex;
-    font-size: 80%;
     justify-content: center;
+
+    box-sizing: border-box;
     min-height: 44px;
     padding: 10px;
+
+    color: var(--CBTextColor2);
+    font-size: 80%;
 }
