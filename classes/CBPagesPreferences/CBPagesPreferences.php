@@ -43,6 +43,44 @@ final class CBPagesPreferences {
     }
 
     /**
+     * @param model $spec
+     *
+     * @return ?model
+     */
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        $model = (object)[];
+        $model->deprecatedViewClassNames = [];
+        $model->supportedViewClassNames = [];
+
+        if (!empty($spec->supportedViewClassNames)) {
+            $model->supportedViewClassNames = array_unique(preg_split(
+                '/[\s,]+/', $spec->supportedViewClassNames, null, PREG_SPLIT_NO_EMPTY));
+        }
+
+        if (!empty($spec->deprecatedViewClassNames)) {
+            $model->deprecatedViewClassNames = array_unique(preg_split(
+                '/[\s,]+/', $spec->deprecatedViewClassNames, null, PREG_SPLIT_NO_EMPTY));
+        }
+
+        if (!empty($spec->classNamesForKinds)) {
+            $model->classNamesForKinds = array_unique(preg_split(
+                '/[\s,]+/', $spec->classNamesForKinds, null, PREG_SPLIT_NO_EMPTY));
+        }
+
+        if (!empty($spec->classNamesForLayouts)) {
+            $model->classNamesForLayouts = array_unique(preg_split(
+                '/[\s,]+/', $spec->classNamesForLayouts, null, PREG_SPLIT_NO_EMPTY));
+        }
+
+        if (!empty($spec->classNamesForSettings)) {
+            $model->classNamesForSettings = array_unique(preg_split(
+                '/[\s,]+/', $spec->classNamesForSettings, null, PREG_SPLIT_NO_EMPTY));
+        }
+
+        return $model;
+    }
+
+    /**
      * 2018.03.15
      * @deprecated use CBPageSettings::defaultClassName()
      *
@@ -186,42 +224,6 @@ final class CBPagesPreferences {
         sort($classNames);
 
         return $classNames;
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function CBModel_toModel(stdClass $spec) {
-        $model = (object)['className' => __CLASS__];
-        $model->deprecatedViewClassNames = [];
-        $model->supportedViewClassNames = [];
-
-        if (!empty($spec->supportedViewClassNames)) {
-            $model->supportedViewClassNames = array_unique(preg_split(
-                '/[\s,]+/', $spec->supportedViewClassNames, null, PREG_SPLIT_NO_EMPTY));
-        }
-
-        if (!empty($spec->deprecatedViewClassNames)) {
-            $model->deprecatedViewClassNames = array_unique(preg_split(
-                '/[\s,]+/', $spec->deprecatedViewClassNames, null, PREG_SPLIT_NO_EMPTY));
-        }
-
-        if (!empty($spec->classNamesForKinds)) {
-            $model->classNamesForKinds = array_unique(preg_split(
-                '/[\s,]+/', $spec->classNamesForKinds, null, PREG_SPLIT_NO_EMPTY));
-        }
-
-        if (!empty($spec->classNamesForLayouts)) {
-            $model->classNamesForLayouts = array_unique(preg_split(
-                '/[\s,]+/', $spec->classNamesForLayouts, null, PREG_SPLIT_NO_EMPTY));
-        }
-
-        if (!empty($spec->classNamesForSettings)) {
-            $model->classNamesForSettings = array_unique(preg_split(
-                '/[\s,]+/', $spec->classNamesForSettings, null, PREG_SPLIT_NO_EMPTY));
-        }
-
-        return $model;
     }
 
     /**
