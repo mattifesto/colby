@@ -8,7 +8,6 @@
     CBUI,
     CBUIMessagePart,
     CBUISectionItem4,
-    CBUIStringsPart,
     Colby */
 
 var CBStatusAdminPage = {
@@ -21,14 +20,23 @@ var CBStatusAdminPage = {
 
             let sectionElement = CBUI.createSection();
 
-            CBStatusAdminPage_issues.forEach(function (warning) {
+            CBStatusAdminPage_issues.forEach(function (issue) {
                 let sectionItem = CBUISectionItem4.create();
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = warning[0];
-                stringsPart.string2 = warning[1];
-                stringsPart.element.classList.add('keyvalue');
+                let messagePart = CBUIMessagePart.create();
 
-                sectionItem.appendPart(stringsPart);
+                if (Array.isArray(issue)) {
+                    messagePart.message = `
+
+                        ${issue[0]}
+
+                        ${issue[1]}
+
+                    `;
+                } else {
+                    messagePart.message = issue;
+                }
+
+                sectionItem.appendPart(messagePart);
                 sectionElement.appendChild(sectionItem.element);
             });
 
