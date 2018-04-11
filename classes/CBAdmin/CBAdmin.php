@@ -19,6 +19,10 @@
  * classes so that it can implement the CBHTMLOutput interfaces to specify its
  * own dependencies.
  *
+ * CBAdmin_render() implementation is required. Even if a page is rendered
+ * entirely using JavaScript, the implementation of this function should set the
+ * page title.
+ *
  * A single admin page class may render multiple admin pages based on another
  * query variable. They will usually be rendering similar pages. Vastly
  * different pages or pages with different sets of functionality should still
