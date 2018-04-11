@@ -70,7 +70,7 @@ final class CBStatusAdminPage {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v371.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v416.js', cbsysurl())];
     }
 
     /**
@@ -168,6 +168,26 @@ final class CBStatusAdminPage {
             if (is_callable('CBPageHelpers::classNameForPageSettings')) {
                 $issues[] = ['CBPageHelpers', 'The function CBPageHelpers::classNameForPageSettings() has been removed with no replacement.'];
             }
+
+            /* 2018.04.11 */
+            if (is_callable('CBPageHelpers::classNameForUnsetPageSettings')) {
+                $message = <<<EOT
+
+                    Remove the function
+                    (classNameForUnsetPageSettings\(\)(code)) from the class
+                    (CBPageHelpers(code)).
+
+                    Pages that use page settings are now required to have the
+                    (classNamesForSettings(code)) property set on their model.
+
+                    Implement (get\(\)(code)) on
+                    (CBPageSettings_defaultClassName(code)) as a temporary
+                    workaround.
+
+EOT;
+
+                $issues[] = $message;
+            }
         }
 
         return [
@@ -180,8 +200,7 @@ final class CBStatusAdminPage {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIMessagePart', 'CBUISectionItem4',
-                'CBUIStringsPart'];
+        return ['CBUI', 'CBUIMessagePart', 'CBUISectionItem4'];
     }
 
     /**
