@@ -16,7 +16,7 @@
 }
 
 .CBUIExpander > .container > .header > .toggle {
-    background-color: hsl(210, 100%, 50%);
+    background-color: hsl(210, 100%, 45%); /* severity 6: informational */
     border-bottom-right-radius: 5px;
     color: hsla(0, 100%, 100%, 0.9);
     font-size: 80%;
@@ -32,27 +32,35 @@
 }
 
 .CBUIExpander.severity7 > .container > .header > .toggle {
-    background-color: hsl(210, 100%, 80%);
+    background-color: hsl(210, 100%, 70%);
+}
+
+.CBUIExpander.severity6 > .container > .header > .toggle {
+    /* uses default color */
+}
+
+.CBUIExpander.severity5 > .container > .header > .toggle {
+    background-color: hsl(120, 50%, 40%); /* green */
 }
 
 .CBUIExpander.severity4 > .container > .header > .toggle {
-    background-color: orange;
+    background-color: hsl(30, 100%, 50%); /* orange */
 }
 
 .CBUIExpander.severity3 > .container > .header > .toggle {
-    background-color: red;
+    background-color: hsl(0, 100%, 50%); /* red */
 }
 
 .CBUIExpander.severity2 > .container > .header > .toggle {
-    background-color: hsl(300, 50%, 50%);
+    background-color: hsl(0, 100%, 40%);
 }
 
 .CBUIExpander.severity1 > .container > .header > .toggle {
-    background-color: hsl(300, 50%, 25%);
+    background-color: hsl(0, 50%, 30%);
 }
 
 .CBUIExpander.severity0 > .container > .header > .toggle {
-    background-color: hsl(0, 0%, 0%);
+    background-color: hsl(0, 0%, 0%); /* black */
 }
 
 .CBUIExpander > .container > .header > .toggle::before {
