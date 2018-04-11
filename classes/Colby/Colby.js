@@ -634,6 +634,38 @@ var Colby = {
     },
 
     /**
+     * @param Element element
+     * @param Date now?
+     *
+     * @return undefined
+     */
+    updateCBTimeElementTextContent: function (element, now) {
+        if (now === undefined) {
+            now = new Date();
+        }
+
+        let timestamp = Colby.elementToTimestamp(element);
+
+        if (timestamp === null) {
+            if (element.hasAttribute("data-nulltextcontent")) {
+                element.textContent =
+                    element.getAttribute("data-nulltextcontent");
+            }
+
+            return;
+        }
+
+        let date = new Date(timestamp);
+        let args;
+
+        if (element.classList.contains("compact")) {
+            args = { "compact" : true };
+        }
+
+        element.textContent = Colby.dateToRelativeLocaleString(date, now, args);
+    },
+
+    /**
      * @param bool restart
      *
      *      Specify true to restart updates every second after adding new time
@@ -655,33 +687,12 @@ var Colby = {
             Colby.updateTimesCount += 1;
         }
 
-        var args, date, dateString, element, timestamp;
         var elements = document.getElementsByClassName('time');
         var countOfElements = elements.length;
-        var now = new Date();
+        let now = new Date();
 
         for (var i = 0; i < countOfElements; i++) {
-            element = elements.item(i);
-            timestamp = Colby.elementToTimestamp(element);
-
-            if (timestamp === null) {
-                if (element.hasAttribute("data-nulltextcontent")) {
-                    element.textContent =
-                        element.getAttribute("data-nulltextcontent");
-                }
-
-                continue;
-            }
-
-            date = new Date(timestamp);
-            args = undefined;
-
-            if (element.classList.contains("compact")) {
-                args = { "compact" : true };
-            }
-
-            dateString = Colby.dateToRelativeLocaleString(date, now, args);
-            element.textContent = dateString;
+            Colby.updateCBTimeElementTextContent(elements.item(i), now);
         }
 
         if (Array.isArray(Colby.timeUpdateCallbacks)) {
