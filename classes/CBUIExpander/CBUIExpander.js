@@ -180,6 +180,7 @@ var CBUIExpander = {
                     let timeElement = Colby.unixTimestampToElement(timestamp);
                     timeElement.classList.add("compact");
                     timeContainerElement.appendChild(timeElement);
+                    Colby.updateCBTimeElementTextContent(timeElement);
                     Colby.updateTimes(true);
                 }
             },
