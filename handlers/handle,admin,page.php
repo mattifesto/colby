@@ -23,7 +23,7 @@ if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
 
     if ('Public' === $permissions->group || ColbyUser::current()->isOneOfThe($permissions->group)) {
         CBHTMLOutput::begin();
-        CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForAdminPages';
+        CBHTMLOutput::pageInformation()->classNameForPageSettings = 'CBPageSettingsForAdminPages';
         CBHTMLOutput::requireClassName('CBUI');
         CBHTMLOutput::requireClassName($class);
 
