@@ -20,11 +20,10 @@ final class CBTestPage {
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
         return (object)[
-            'title' => CBModel::value($spec, 'title', ''),
-            'description' => CBModel::value($spec, 'description', ''),
-            'isPublished' => CBModel::value($spec, 'isPublished'),
-            'publicationTimeStamp' => CBModel::value($spec, 'publicationTimeStamp'),
-            'URI' => CBModel::value($spec, 'URI'),
+            'description' => CBModel::valueToString($spec, 'description'),
+            'isPublished' => (bool)CBModel::value($spec, 'isPublished'),
+            'publicationTimeStamp' => CBModel::valueAsInt($spec, 'publicationTimeStamp'),
+            'URI' => CBModel::valueToString($spec, 'URI'),
         ];
     }
 
@@ -44,35 +43,34 @@ final class CBTestPage {
     }
 
     /**
-     * @param [stdClass] $tuples
+     * @param [model] $models
      *
-     * @return null
+     * @return void
      */
-    static function modelsWillSave(array $tuples) {
-        $models = array_map(function($tuple) { return $tuple->model; }, $tuples);
+    static function CBModels_willSave(array $models): void {
         CBPages::save($models);
     }
 
     /**
      * @param [hex160] $IDs
      *
-     * @return null
+     * @return void
      */
-    static function modelsWillDelete(array $IDs) {
+    static function CBModels_willDelete(array $IDs): void {
         CBPages::deletePagesByID($IDs);
     }
 
     /**
      * @param model $model
      *
-     * @return null
+     * @return void
      */
-    static function CBPage_render(stdClass $model) {
+    static function CBPage_render(stdClass $model): void {
         $title = CBConvert::valueToString(CBModel::value($model, 'title'));
 
-        CBHTMLOutput::$classNameForSettings = 'CBPageSettingsForResponsivePages';
         CBHTMLOutput::begin();
         CBHTMLOutput::pageInformation()->title = $title;
+        CBHTMLOutput::pageInformation()->classNameForPageSettings = 'CBPageSettingsForResponsivePages';
 
         ?>
 
