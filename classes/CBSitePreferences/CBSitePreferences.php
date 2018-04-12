@@ -72,6 +72,49 @@ final class CBSitePreferences {
      *
      * @return model
      */
+    static function CBModel_build(stdClass $spec) {
+        $model = (object)[
+            'className' => __CLASS__,
+            'administratorEmails' => CBModel::value($spec, 'administratorEmails', [], function ($value) {
+                return array_unique(preg_split(
+                    '/[\s,]+/', $value, null, PREG_SPLIT_NO_EMPTY
+                ));
+            }),
+            'classNamesForUserSettings' => CBModel::value($spec, 'classNamesForUserSettings', [], function ($value) {
+                if (is_array($value)) {
+                    return array_map('trim', $value);
+                } else {
+                    return [];
+                }
+            }),
+            'imageForIcon' => CBModel::build(CBModel::valueAsModel($spec, 'imageForIcon', ['CBImage'])),
+            'siteName' => trim(CBModel::valueToString($spec, 'siteName')),
+            'slackWebhookURL' => trim(CBModel::valueToString($spec, 'slackWebhookURL')),
+        ];
+
+        $model->debug = isset($spec->debug) ? !!$spec->debug : false;
+        $model->defaultClassNameForPageSettings = isset($spec->defaultClassNameForPageSettings) ? trim($spec->defaultClassNameForPageSettings) : '';
+        $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
+        $model->facebookURL = CBModel::value($spec, 'facebookURL', '', 'trim');
+        $model->frontPageID = CBModel::value($spec, 'frontPageID');
+        $model->googleTagManagerID = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
+        $model->onDemandImageResizeOperations = CBModel::value($spec, 'onDemandImageResizeOperations', '');
+        $model->reCAPTCHASecretKey = CBModel::value($spec, 'reCAPTCHASecretKey', null, 'trim');
+        $model->reCAPTCHASiteKey = CBModel::value($spec, 'reCAPTCHASiteKey', null, 'trim');
+        $model->twitterURL = CBModel::value($spec, 'twitterURL', '', 'trim');
+
+        /* custom values */
+
+        $model->custom = CBKeyValuePair::valueToObject($spec, 'custom');
+
+        return $model;
+    }
+
+    /**
+     * @param model $spec
+     *
+     * @return model
+     */
     static function CBModel_upgrade(stdClass $spec) {
         /**
          * 2018.04.11 Remove unused property
@@ -399,49 +442,6 @@ EOT
      */
     static function setFrontPageIDForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
-    }
-
-    /**
-     * @param model $spec
-     *
-     * @return model
-     */
-    static function CBModel_build(stdClass $spec) {
-        $model = (object)[
-            'className' => __CLASS__,
-            'administratorEmails' => CBModel::value($spec, 'administratorEmails', [], function ($value) {
-                return array_unique(preg_split(
-                    '/[\s,]+/', $value, null, PREG_SPLIT_NO_EMPTY
-                ));
-            }),
-            'classNamesForUserSettings' => CBModel::value($spec, 'classNamesForUserSettings', [], function ($value) {
-                if (is_array($value)) {
-                    return array_map('trim', $value);
-                } else {
-                    return [];
-                }
-            }),
-            'imageForIcon' => CBModel::build(CBModel::valueAsModel($spec, 'imageForIcon', ['CBImage'])),
-            'siteName' => trim(CBModel::valueToString($spec, 'siteName')),
-            'slackWebhookURL' => trim(CBModel::valueToString($spec, 'slackWebhookURL')),
-        ];
-
-        $model->debug = isset($spec->debug) ? !!$spec->debug : false;
-        $model->defaultClassNameForPageSettings = isset($spec->defaultClassNameForPageSettings) ? trim($spec->defaultClassNameForPageSettings) : '';
-        $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
-        $model->facebookURL = CBModel::value($spec, 'facebookURL', '', 'trim');
-        $model->frontPageID = CBModel::value($spec, 'frontPageID');
-        $model->googleTagManagerID = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
-        $model->onDemandImageResizeOperations = CBModel::value($spec, 'onDemandImageResizeOperations', '');
-        $model->reCAPTCHASecretKey = CBModel::value($spec, 'reCAPTCHASecretKey', null, 'trim');
-        $model->reCAPTCHASiteKey = CBModel::value($spec, 'reCAPTCHASiteKey', null, 'trim');
-        $model->twitterURL = CBModel::value($spec, 'twitterURL', '', 'trim');
-
-        /* custom values */
-
-        $model->custom = CBKeyValuePair::valueToObject($spec, 'custom');
-
-        return $model;
     }
 
     /**
