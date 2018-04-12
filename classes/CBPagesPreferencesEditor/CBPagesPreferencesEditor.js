@@ -29,7 +29,6 @@ var CBPagesPreferencesEditor = {
             { name : "deprecatedViewClassNames", labelText : "Deprecated View Class Name" },
             { name : "classNamesForKinds", labelText : "Class Names for Kinds" },
             { name : "classNamesForLayouts", labelText : "Class Names for Layouts" },
-            { name : "classNamesForSettings", labelText : "Class Names for Page Settings" },
         ];
 
         section = CBUI.createSection();
