@@ -153,6 +153,12 @@ final class CBHTMLOutput {
     }
 
     /**
+     * @deprecated 2018.04.12
+     *
+     *      This function will be removed because the only supported way of
+     *      specifying page settings is to set the classNameForPageSettings
+     *      property on CBHTMLOutput::pageInformation().
+     *
      * This function calculates the current class name of the class to be used
      * for page settings.
      *
