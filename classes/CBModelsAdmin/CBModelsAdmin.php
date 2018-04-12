@@ -52,7 +52,7 @@ final class CBModelsAdmin {
      * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables() {
-        $classHasTemplates = count(CBModelTemplates::fetchTemplateClassNames(
+        $classHasTemplates = count(CBModelTemplateCatalog::fetchTemplateClassNamesByTargetClassName(
             CBModelsAdmin::$modelClassName
         )) > 0;
 
