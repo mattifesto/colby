@@ -93,7 +93,6 @@ final class CBSitePreferences {
         ];
 
         $model->debug = isset($spec->debug) ? !!$spec->debug : false;
-        $model->defaultClassNameForPageSettings = isset($spec->defaultClassNameForPageSettings) ? trim($spec->defaultClassNameForPageSettings) : '';
         $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
         $model->facebookURL = CBModel::value($spec, 'facebookURL', '', 'trim');
         $model->frontPageID = CBModel::value($spec, 'frontPageID');
