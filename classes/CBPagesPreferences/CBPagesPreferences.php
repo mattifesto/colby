@@ -67,6 +67,25 @@ EOT
             ]);
         }
 
+        /**
+         * 2018.04.12 Remove unused property
+         * Can be removed after run on every site
+         */
+        if (isset($spec->classNamesForSettings)) {
+            unset($spec->classNamesForSettings);
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'severity' => 5,
+                'message' => <<<EOT
+
+                    Removed the "classNamesForSettings" property from the
+                    CBPagesPreferences spec because it is no longer used.
+
+EOT
+            ]);
+        }
+
         return $spec;
     }
 
@@ -98,11 +117,6 @@ EOT
         if (!empty($spec->classNamesForLayouts)) {
             $model->classNamesForLayouts = array_unique(preg_split(
                 '/[\s,]+/', $spec->classNamesForLayouts, null, PREG_SPLIT_NO_EMPTY));
-        }
-
-        if (!empty($spec->classNamesForSettings)) {
-            $model->classNamesForSettings = array_unique(preg_split(
-                '/[\s,]+/', $spec->classNamesForSettings, null, PREG_SPLIT_NO_EMPTY));
         }
 
         return $model;
@@ -202,18 +216,6 @@ EOT
      */
     static function classNamesForPageKindsDefault() {
         return ['CBFrontPageKind'];
-    }
-
-    /**
-     * Returns an array of class names that can be presented as options for page
-     * editors for a page's page settings. Most of the time, a page editor
-     * should not set a specific class name for pages settings.
-     *
-     * @return [string]
-     */
-    static function classNamesForSettings() {
-        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        return CBModel::valueToArray($model, 'classNamesForSettings');
     }
 
     /**
