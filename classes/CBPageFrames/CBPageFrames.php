@@ -3,7 +3,7 @@
 final class CBPageFrames {
 
     /**
-     * This variable will be set to a substitute ID to by used by CBPageFrames
+     * This variable will be set to a substitute ID to be used by CBPageFrames
      * while tests are running.
      */
     static $testID = null;
