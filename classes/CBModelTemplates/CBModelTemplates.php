@@ -3,7 +3,7 @@
 final class CBModelTemplates {
 
     /**
-     * This variable will be set to a substitute ID to by used by
+     * This variable will be set to a substitute ID to be used by
      * CBModelTemplates while tests are running.
      */
     static $testID = null;
