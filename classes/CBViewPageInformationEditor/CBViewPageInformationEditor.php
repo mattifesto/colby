@@ -36,7 +36,7 @@ final class CBViewPageInformationEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v414.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v416.js', cbsysurl())];
     }
 
     /**
@@ -47,10 +47,10 @@ final class CBViewPageInformationEditor {
             ['CBCurrentUserID', ColbyUser::currentUserId()],
             ['CBPageClassNamesForKinds', CBPagesPreferences::classNamesForKinds()],
             ['CBPageClassNamesForLayouts', CBPagesPreferences::classNamesForLayouts()],
-            ['CBPageClassNamesForSettings', CBPagesPreferences::classNamesForSettings()],
             ['CBUsersWhoAreAdministrators', CBViewPageInformationEditor::usersWhoAreAdministrators()],
             ['CBViewPageInformationEditor_frameClassNames', CBPageFrames::fetchFrameClassNames()],
             ['CBViewPageInformationEditor_mainMenuItemOptions', CBViewPageInformationEditor::fetchMainMenuItemOptions()],
+            ['CBViewPageInformationEditor_settingsClassNames', CBPageSettingsCatalog::fetchClassNames()],
         ];
     }
 

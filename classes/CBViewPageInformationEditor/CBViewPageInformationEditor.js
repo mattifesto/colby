@@ -6,7 +6,6 @@
     CBCurrentUserID,
     CBPageClassNamesForKinds,
     CBPageClassNamesForLayouts,
-    CBPageClassNamesForSettings,
     CBUI,
     CBUIActionLink,
     CBUIBooleanEditor,
@@ -21,6 +20,7 @@
     CBViewPageEditor,
     CBViewPageInformationEditor_frameClassNames,
     CBViewPageInformationEditor_mainMenuItemOptions,
+    CBViewPageInformationEditor_settingsClassNames,
     Colby */
 
 var CBViewPageInformationEditor = {
@@ -179,23 +179,33 @@ var CBViewPageInformationEditor = {
         section.appendChild(item);
 
         /* classNameForSettings */
-        if (CBPageClassNamesForSettings.length > 0) {
-            classNames = CBPageClassNamesForSettings.map(function(className) {
-                return { title : className, value : className };
+
+        {
+            let selector = CBUISelector.create();
+            selector.title = "Page Settings";
+            selector.value = args.spec.classNameForSettings;
+            selector.onchange = function () {
+                args.spec.classNameForSettings = selector.value;
+                args.specChangedCallback();
+            };
+
+            let options = [
+                {
+                    title: "None",
+                    value: undefined,
+                },
+            ];
+
+            CBViewPageInformationEditor_settingsClassNames.forEach(function (settingsClassName) {
+                options.push({
+                    title: settingsClassName,
+                    value: settingsClassName,
+                });
             });
 
-            classNames.unshift({ title : "Default", value : undefined });
+            selector.options = options;
 
-            item = CBUI.createSectionItem();
-            item.appendChild(CBUISelector.create({
-                labelText : "Page Settings",
-                navigateToItemCallback : args.navigateToItemCallback,
-                propertyName : "classNameForSettings",
-                spec : args.spec,
-                specChangedCallback : args.specChangedCallback,
-                options : classNames,
-            }).element);
-            section.appendChild(item);
+            section.appendChild(selector.element);
         }
 
         /* classNameForKind */
