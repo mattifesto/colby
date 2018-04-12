@@ -108,15 +108,6 @@ final class CBSitePreferences {
     }
 
     /**
-     * @deprecated use CBPagesPreferences::classNameForUnsetPageSettings()
-     *
-     * @return string
-     */
-    static function defaultClassNameForPageSettings() {
-        return CBPagesPreferences::classNameForUnsetPageSettings();
-    }
-
-    /**
      * @return bool
      */
     static function disallowRobots() {
