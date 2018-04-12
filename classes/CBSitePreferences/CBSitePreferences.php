@@ -68,6 +68,34 @@ final class CBSitePreferences {
     }
 
     /**
+     * @param model $spec
+     *
+     * @return model
+     */
+    static function CBModel_upgrade(stdClass $spec) {
+        /**
+         * 2018.04.11 Remove unused property
+         * Can be removed after run on every site
+         */
+        if (isset($spec->defaultClassNameForPageSettings)) {
+            unset($spec->defaultClassNameForPageSettings);
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'severity' => 5,
+                'message' => <<<EOT
+
+                    Removed the "defaultClassNameForPageSettings" property from
+                    the CBSitePreferences spec because it is no longer used.
+
+EOT
+            ]);
+        }
+
+        return $spec;
+    }
+
+    /**
      * The value of this setting should be changed directly on the spec by
      * adjusting the array value of classNamesForUserSettings.
      *
