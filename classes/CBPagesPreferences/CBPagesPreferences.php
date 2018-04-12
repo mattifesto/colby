@@ -109,28 +109,6 @@ EOT
     }
 
     /**
-     * 2018.03.15
-     * @deprecated use CBPageSettings::defaultClassName()
-     *
-     *      Sites should implement CBPageSettings_defaultClassName::get()
-     *
-     * @return string
-     */
-    static function classNameForUnsetPageSettings() {
-        if (is_callable($function = 'CBPageHelpers::classNameForUnsetPageSettings')) {
-            return call_user_func($function);
-        }
-
-        $model = CBSitePreferences::model();
-
-        if (empty($model->defaultClassNameForPageSettings)) {
-            return 'CBPageSettingsForResponsivePages';
-        } else {
-            return $model->defaultClassNameForPageSettings; // deprecated
-        }
-    }
-
-    /**
      * @return [string]
      *
      *      An array of view class names that can be added to a page.

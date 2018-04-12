@@ -159,7 +159,7 @@ final class CBHTMLOutput {
      * @return ?string
      */
     static function classNameForPageSettings(): ?string {
-        $className = CBHTMLOutput::$classNameForSettings; // @deprecated
+        $className = CBHTMLOutput::$classNameForSettings; /* deprecated */
 
         if (empty($className)) {
             $className = CBConvert::valueToString(
@@ -168,18 +168,7 @@ final class CBHTMLOutput {
         }
 
         if (empty($className)) {
-            $className = CBPageSettings::defaultClassName();
-        }
-
-        if (empty($className)) {
-
-            /**
-             * @deprecated 2018.03.15
-             *
-             *      Sites should implement CBPageSettings_defaultClassName::get()
-             */
-
-            $className = CBPagesPreferences::classNameForUnsetPageSettings();
+            $className = CBPageSettings::defaultClassName(); /* deprecated */
         }
 
         return $className;
