@@ -7,7 +7,7 @@
     CBUINavigationArrowPart,
     CBUINavigationView,
     CBUISectionItem4,
-    CBUITitleAndDescriptionPart,
+    CBUIStringsPart,
     Colby */
 
 var CBUISelector = {
@@ -70,9 +70,11 @@ var CBUISelector = {
         var valueChangedCallback = args.valueChangedCallback;
 
         let sectionItem = CBUISectionItem4.create();
-        let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
+        let stringsPart = CBUIStringsPart.create();
 
-        sectionItem.appendPart(titleAndDescriptionPart);
+        stringsPart.element.classList.add('keyvalue');
+
+        sectionItem.appendPart(stringsPart);
         sectionItem.appendPart(CBUINavigationArrowPart.create());
 
         var state = { options: undefined };
@@ -111,8 +113,8 @@ var CBUISelector = {
                 return title;
             },
             set title(value) {
-                title = String(value);
-                titleAndDescriptionPart.title = title;
+                title = value;
+                stringsPart.string1 = title;
             },
             get value() {
                 return spec[propertyName];
@@ -159,7 +161,7 @@ var CBUISelector = {
 
         /* closure */
         function updateInterface() {
-            titleAndDescriptionPart.description = currentValueToTitle();
+            stringsPart.string2 = currentValueToTitle();
         }
 
         /**
@@ -215,15 +217,17 @@ var CBUISelector = {
 
         args.options.forEach(function (option) {
             let sectionItem = CBUISectionItem4.create();
-            let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
-            titleAndDescriptionPart.title = option.title;
-            titleAndDescriptionPart.description = option.description;
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = option.title;
+            stringsPart.string2 = option.description;
+
+            stringsPart.element.classList.add('titledescription');
 
             sectionItem.callback = function () {
                 args.callback(option.value);
             };
 
-            sectionItem.appendPart(titleAndDescriptionPart);
+            sectionItem.appendPart(stringsPart);
             section.appendChild(sectionItem.element);
         });
 

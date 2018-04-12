@@ -6,14 +6,19 @@ final class CBUISelector {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUINavigationArrowPart', 'CBUINavigationView',
-                'CBUISectionItem4', 'CBUITitleAndDescriptionPart'];
+        return [
+            'CBUI',
+            'CBUINavigationArrowPart',
+            'CBUINavigationView',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v397.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v416.js', cbsysurl())];
     }
 }
