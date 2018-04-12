@@ -1,23 +1,23 @@
 <?php
 
-final class CBModelTemplatesTests {
+final class CBModelTemplateCatalogTests {
 
     /**
      * @return object
      */
     static function CBTest_test(): stdClass {
-        CBModelTemplates::$testID = '2933b216beb27fe98400106b4d235165b0e12852';
+        CBModelTemplateCatalog::$testID = '2933b216beb27fe98400106b4d235165b0e12852';
 
-        CBModelTemplates::CBInstall_install();
-        CBModelTemplates::installTemplate('CBModelTemplatesTests_template1');
-        CBModelTemplates::installTemplate('CBModelTemplatesTests_template2');
-        CBModelTemplates::installTemplate('CBModelTemplatesTests_template3');
-        CBModelTemplates::installTemplate('CBModelTemplatesTests_template3');
+        CBModelTemplateCatalog::CBInstall_install();
+        CBModelTemplateCatalog::install('CBModelTemplateCatalogTests_template1');
+        CBModelTemplateCatalog::install('CBModelTemplateCatalogTests_template2');
+        CBModelTemplateCatalog::install('CBModelTemplateCatalogTests_template3');
+        CBModelTemplateCatalog::install('CBModelTemplateCatalogTests_template3');
 
-        $templateClassNames = CBModelTemplates::fetchTemplateClassNames('Foo');
+        $templateClassNames = CBModelTemplateCatalog::fetchTemplateClassNamesByTargetClassName('Foo');
         $expectedClassNames = [
-            'CBModelTemplatesTests_template1',
-            'CBModelTemplatesTests_template2',
+            'CBModelTemplateCatalogTests_template1',
+            'CBModelTemplateCatalogTests_template2',
         ];
 
         if ($templateClassNames != $expectedClassNames) {
@@ -28,9 +28,9 @@ final class CBModelTemplatesTests {
             ];
         }
 
-        $templateClassNames = CBModelTemplates::fetchTemplateClassNames('Bar');
+        $templateClassNames = CBModelTemplateCatalog::fetchTemplateClassNamesByTargetClassName('Bar');
         $expectedClassNames = [
-            'CBModelTemplatesTests_template3',
+            'CBModelTemplateCatalogTests_template3',
         ];
 
         if ($templateClassNames != $expectedClassNames) {
@@ -41,7 +41,7 @@ final class CBModelTemplatesTests {
             ];
         }
 
-        $templateClassNames = CBModelTemplates::fetchTemplateClassNames('Baz');
+        $templateClassNames = CBModelTemplateCatalog::fetchTemplateClassNamesByTargetClassName('Baz');
         $expectedClassNames = [];
 
         if ($templateClassNames != $expectedClassNames) {
@@ -52,9 +52,9 @@ final class CBModelTemplatesTests {
             ];
         }
 
-        CBModels::deleteByID(CBModelTemplates::$testID);
+        CBModels::deleteByID(CBModelTemplateCatalog::$testID);
 
-        CBModelTemplates::$testID = null;
+        CBModelTemplateCatalog::$testID = null;
 
         return (object)[
             'succeeded' => true,
@@ -66,12 +66,12 @@ final class CBModelTemplatesTests {
      */
     static function CBUnitTests_tests(): array {
         return [
-            ['CBModelTemplates', 'test']
+            ['CBModelTemplateCatalog', 'test']
         ];
     }
 }
 
-final class CBModelTemplatesTests_template1 {
+final class CBModelTemplateCatalogTests_template1 {
     static function CBModelTemplate_spec(): stdClass {
         return (object)[
             'className' => 'Foo',
@@ -79,7 +79,7 @@ final class CBModelTemplatesTests_template1 {
     }
 }
 
-final class CBModelTemplatesTests_template2 {
+final class CBModelTemplateCatalogTests_template2 {
     static function CBModelTemplate_spec(): stdClass {
         return (object)[
             'className' => 'Foo',
@@ -87,7 +87,7 @@ final class CBModelTemplatesTests_template2 {
     }
 }
 
-final class CBModelTemplatesTests_template3 {
+final class CBModelTemplateCatalogTests_template3 {
     static function CBModelTemplate_spec(): stdClass {
         return (object)[
             'className' => 'Bar',
