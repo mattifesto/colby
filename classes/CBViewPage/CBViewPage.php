@@ -241,11 +241,11 @@ final class CBViewPage {
         $info->selectedMainMenuItemName = CBModel::value($model, 'selectedMainMenuItemName');
         $info->title = $title;
 
-        CBHTMLOutput::begin();
-
         if ($model->classNameForSettings) {
-            CBHTMLOutput::$classNameForSettings = $model->classNameForSettings;
+            $info->classNameForPageSettings = $model->classNameForSettings;
         }
+
+        CBHTMLOutput::begin();
 
         if (empty($model->layout->className)) {
 
