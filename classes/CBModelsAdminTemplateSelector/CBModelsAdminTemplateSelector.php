@@ -46,7 +46,7 @@ final class CBModelsAdminTemplateSelector {
      * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables(): array {
-        $templateClassNames = CBModelTemplates::fetchTemplateClassNames(
+        $templateClassNames = CBModelTemplateCatalog::fetchTemplateClassNamesByTargetClassName(
             CBModelsAdminTemplateSelector::$modelClassName
         );
 
