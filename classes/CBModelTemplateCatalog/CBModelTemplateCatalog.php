@@ -1,10 +1,10 @@
 <?php
 
-final class CBModelTemplates {
+final class CBModelTemplateCatalog {
 
     /**
      * This variable will be set to a substitute ID to be used by
-     * CBModelTemplates while tests are running.
+     * CBModelTemplateCatalog while tests are running.
      */
     static $testID = null;
 
@@ -13,7 +13,7 @@ final class CBModelTemplates {
      */
     static function CBInstall_install(): void {
         CBDB::transaction(function () {
-            CBModels::deleteByID(CBModelTemplates::ID());
+            CBModels::deleteByID(CBModelTemplateCatalog::ID());
         });
     }
 
@@ -38,8 +38,8 @@ final class CBModelTemplates {
     /**
      * @return [string]
      */
-    static function fetchTemplateClassNames(string $targetClassName): array {
-        $model = CBModels::fetchModelByID(CBModelTemplates::ID());
+    static function fetchTemplateClassNamesByTargetClassName(string $targetClassName): array {
+        $model = CBModels::fetchModelByID(CBModelTemplateCatalog::ID());
 
         return CBModel::valueToArray($model, "templates.{$targetClassName}");
     }
@@ -48,7 +48,7 @@ final class CBModelTemplates {
      * @return ID
      */
     static function ID(): string {
-        return CBModelTemplates::$testID ??
+        return CBModelTemplateCatalog::$testID ??
             'a50a379457147244325e3c512dadd5fac26daf11';
     }
 
@@ -57,37 +57,34 @@ final class CBModelTemplates {
      *
      * @return void
      */
-    static function installTemplate(string $templateClassName): void {
+    static function install(string $templateClassName): void {
         $templateSpec = call_user_func("{$templateClassName}::CBModelTemplate_spec");
         $targetClassName = $templateSpec->className;
-        $originalSpec = CBModels::fetchSpecByID(CBModelTemplates::ID());
+        $originalSpec = CBModels::fetchSpecByID(CBModelTemplateCatalog::ID());
 
         if (empty($originalSpec)) {
             $originalSpec = (object)[
-                'ID' => CBModelTemplates::ID(),
+                'ID' => CBModelTemplateCatalog::ID(),
             ];
         }
 
         $spec = CBModel::clone($originalSpec);
-        $spec->className = 'CBModelTemplates';
+        $spec->className = 'CBModelTemplateCatalog';
+        $templates = CBModel::valueAsObject($spec, 'templates');
 
-        if (empty($spec->templates)) {
-            $spec->templates = (object)[];
+        if (empty($templates)) {
+            $templates = (object)[];
         }
 
-        if (empty($spec->templates->{$targetClassName})) {
-            $templateClassNames = [$templateClassName];
-        } else {
-            $templateClassNames = $spec->templates->{$targetClassName};
+        $templateClassNamesForTarget = CBModel::valueToArray($templates, $targetClassName);
 
-            array_push($templateClassNames, $templateClassName);
+        array_push($templateClassNamesForTarget, $templateClassName);
 
-            $templateClassNames = array_values(array_filter(array_unique(
-                $templateClassNames
-            )));
-        }
+        $templates->{$targetClassName} = array_values(array_filter(array_unique(
+            $templateClassNamesForTarget
+        )));
 
-        $spec->templates->{$targetClassName} = $templateClassNames;
+        $spec->templates = $templates;
 
         if ($spec != $originalSpec) {
             CBDB::transaction(function () use ($spec) {
