@@ -126,15 +126,6 @@ final class CBStatusAdminPage {
                 $issues[] = ['CBPagesPreferences::classNamesForKinds', 'Implement CBPageHelpers::classNamesForPageKinds() instead of the CBPagesPreferences model.'];
             }
 
-            /* 2017.07.17 The classNameForPageSettings property on the
-               CBSitePreferences model has been deprecated. */
-            $model = CBSitePreferences::model();
-            $className = CBModel::value($model, 'defaultClassNameForPageSettings');
-
-            if (!empty($className)) {
-                $issues[] = ['CBSitePreferences::classNameForPageSettings', 'Implement CBPageHelpers::classNameForUnsetPageSettings() instead of the CBSitePreferences model.'];
-            }
-
             /* 2017.08.17 The slackWebhookURL propery on the CBSitePreferences model
                is not technically required, but it is effectively required because
                an admin should be tracking site errors. */
