@@ -67,19 +67,15 @@ final class CBErrorHandler {
         try {
             CBExceptionView::pushThrowable($throwable);
 
-            CBPage::renderSpec((object)[
-                'className' => 'CBViewPage',
-                'title' => 'Error',
-                'layout' => (object)[
-                    'className' => 'CBPageLayout',
-                    'CSSClassNames' => 'center',
+            $spec = CBModelTemplateCatalog::fetchLivePageTemplate();
+            $spec->title = 'Error';
+            $spec->sections = [
+                (object)[
+                    'className' => 'CBExceptionView',
                 ],
-                'sections' => [
-                    (object)[
-                        'className' => 'CBExceptionView',
-                    ],
-                ],
-            ]);
+            ];
+
+            CBPage::renderSpec($spec);
 
             CBExceptionView::popThrowable();
         } catch (Throwable $throwable) {
