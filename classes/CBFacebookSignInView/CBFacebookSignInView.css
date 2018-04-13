@@ -1,0 +1,24 @@
+.CBFacebookSignInView {
+    display: flex;
+    justify-content: center;
+
+    padding: 100px 20px;
+}
+
+.CBFacebookSignInView > .button {
+    background-color: hsl(221, 44%, 41%);
+    background-image: url(/colby/classes/ColbyUser/FB-f-Logo__white_29.png);
+    background-position: 8px center;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    color: white;
+    cursor: default;
+    display: inline-block;
+    padding: 12px 80px;
+    text-decoration: none;
+}
+
+.CBFacebookSignInView > .button:hover {
+    background-color: hsl(221, 44%, 51%);
+    text-decoration: none;
+}
