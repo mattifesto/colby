@@ -485,32 +485,6 @@ EOT;
     }
 
     /**
-     * Creates a hyperlink for either logging in or out depending on whether
-     * the user is currently logged in or out.
-     *
-     * @param string $redirectURL
-     *
-     * @return string
-     *  a string containg an HTML anchor element
-     *  <a href="...">log in</a>
-     */
-    static function loginHyperlink($redirectURL = null) {
-        if (!CBFacebookAppID) {
-            return '<span style="color: red;">this site is not configured to support users</span>';
-        } else if (ColbyUser::currentUserId()) {
-            $url = ColbyUser::logoutURL($redirectURL);
-            $url = ColbyConvert::textToHTML($url);
-
-            return "<a href=\"{$url}\">Log Out</a>";
-        } else {
-            $url = ColbyUser::loginURL($redirectURL);
-            $url = ColbyConvert::textToHTML($url);
-
-            return "<a href=\"{$url}\">Log In</a>";
-        }
-    }
-
-    /**
      * @deprecated use CBFacebook::loginURL
      */
     static function loginURL($redirectURL = null) {
