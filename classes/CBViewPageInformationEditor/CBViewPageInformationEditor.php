@@ -48,7 +48,7 @@ final class CBViewPageInformationEditor {
             ['CBPageClassNamesForKinds', CBPagesPreferences::classNamesForKinds()],
             ['CBPageClassNamesForLayouts', CBPagesPreferences::classNamesForLayouts()],
             ['CBUsersWhoAreAdministrators', CBViewPageInformationEditor::usersWhoAreAdministrators()],
-            ['CBViewPageInformationEditor_frameClassNames', CBPageFrames::fetchFrameClassNames()],
+            ['CBViewPageInformationEditor_frameClassNames', CBPageFrameCatalog::fetchClassNames()],
             ['CBViewPageInformationEditor_mainMenuItemOptions', CBViewPageInformationEditor::fetchMainMenuItemOptions()],
             ['CBViewPageInformationEditor_settingsClassNames', CBPageSettingsCatalog::fetchClassNames()],
         ];
