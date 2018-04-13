@@ -1,11 +1,11 @@
 <?php
 
 if (!ColbyUser::current()->isOneOfThe('Administrators')) {
-    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
+    return include cbsysdir() . '/handlers/handle-authorization-failed.php';
 }
 
-$ID = $_GET['ID'];
-$version = empty($_GET['version']) ? null : $_GET['version'];
+$ID = cb_query_string_value('ID');
+$version = cb_query_string_value('version');
 
 if (empty($version)) {
     $model = CBModels::fetchModelByID($ID);
@@ -13,39 +13,28 @@ if (empty($version)) {
     $model = CBModels::fetchModelByIDWithVersion($ID, $version);
 }
 
-$IDAsHTML = cbhtml($ID);
-
 if ($model === false) {
+    $IDAsHTML = CBMessageMarkup::stringToMarkup($ID);
     $message = <<<EOT
 
-        There is no model in the CBModels table for a page with this ID:
-
-        --- pre preline
-        {$IDAsHTML}
-        ---
-
-        It's possible that this is an older page that hasn't yet moved its model
-        to CBModels.
+        There is no model in the CBModels table for a page with the ID
+        ({$IDAsHTML} (code)).
 
 EOT;
 
-    CBPage::renderSpec((object)[
-        'className' => 'CBViewPage',
-        'title' => 'Page Preview Error',
-        'layout' => (object)[
-            'className' => 'CBPageLayout',
+    $spec = CBModelTemplateCatalog::fetchLivePageTemplate();
+    $spec->title = 'Page Preview Error';
+    $spec->sections = [
+        (object)[
+            'className' => 'CBPageTitleAndDescriptionView',
         ],
-        'sections' => [
-            (object)[
-                'className' => 'CBPageTitleAndDescriptionView',
-            ],
-            (object)[
-                'className' => 'CBMessageView',
-                'markup' => $message,
-            ],
+        (object)[
+            'className' => 'CBMessageView',
+            'markup' => $message,
         ]
+    ];
 
-    ]);
+    CBPage::renderSpec($spec);
 } else {
     CBPage::render($model);
 }
