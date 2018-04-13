@@ -1,24 +1,24 @@
 <?php
 
-final class CBPageFramesTests {
+final class CBPageFrameCatalogTests {
 
     /**
      * @return object
      */
     static function CBTest_test(): stdClass {
-        CBPageFrames::$testID = '961cf3538a564259b47db8658f5f507d92f63e52';
+        CBPageFrameCatalog::$testID = '961cf3538a564259b47db8658f5f507d92f63e52';
 
-        CBPageFrames::CBInstall_install();
-        CBPageFrames::installFrame('CBPageFramesTests_frame1');
-        CBPageFrames::installFrame('CBPageFramesTests_frame2');
-        CBPageFrames::installFrame('CBPageFramesTests_fake');
-        CBPageFrames::installFrame('CBPageFramesTests_frame1');
-        CBPageFrames::installFrame('CBPageFramesTests_frame2');
+        CBPageFrameCatalog::CBInstall_install();
+        CBPageFrameCatalog::install('CBPageFrameCatalogTests_frame1');
+        CBPageFrameCatalog::install('CBPageFrameCatalogTests_frame2');
+        CBPageFrameCatalog::install('CBPageFrameCatalogTests_fake');
+        CBPageFrameCatalog::install('CBPageFrameCatalogTests_frame1');
+        CBPageFrameCatalog::install('CBPageFrameCatalogTests_frame2');
 
-        $frameClassNames = CBPageFrames::fetchFrameClassNames();
+        $frameClassNames = CBPageFrameCatalog::fetchClassNames();
         $expectedClassNames = [
-            'CBPageFramesTests_frame1',
-            'CBPageFramesTests_frame2',
+            'CBPageFrameCatalogTests_frame1',
+            'CBPageFrameCatalogTests_frame2',
         ];
 
         if ($frameClassNames != $expectedClassNames) {
@@ -29,9 +29,9 @@ final class CBPageFramesTests {
             ];
         }
 
-        CBModels::deleteByID(CBPageFrames::$testID);
+        CBModels::deleteByID(CBPageFrameCatalog::$testID);
 
-        CBPageFrames::$testID = null;
+        CBPageFrameCatalog::$testID = null;
 
         return (object)[
             'succeeded' => true,
@@ -44,12 +44,12 @@ final class CBPageFramesTests {
      */
     static function CBUnitTests_tests(): array {
         return [
-            ['CBPageFrames', 'test']
+            ['CBPageFrameCatalog', 'test']
         ];
     }
 }
 
-final class CBPageFramesTests_frame1 {
+final class CBPageFrameCatalogTests_frame1 {
     static function CBPageFrame_render(callable $renderContent): void {
         echo __CLASS__ . 'begin';
         $renderContent();
@@ -57,7 +57,7 @@ final class CBPageFramesTests_frame1 {
     }
 }
 
-final class CBPageFramesTests_frame2 {
+final class CBPageFrameCatalogTests_frame2 {
     static function CBPageFrame_render(callable $renderContent): void {
         echo __CLASS__ . 'begin';
         $renderContent();
