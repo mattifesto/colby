@@ -485,13 +485,6 @@ EOT;
     }
 
     /**
-     * @deprecated use CBFacebook::loginURL
-     */
-    static function loginURL($redirectURL = null) {
-        return CBFacebook::loginURL($redirectURL);
-    }
-
-    /**
      * This function must be called before any output is generated because it
      * sets a cookie.
      */
