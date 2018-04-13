@@ -31,7 +31,26 @@ final class CBModelTemplateCatalog {
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
         return (object)[
+            'livePageTemplateClassName' => CBModel::valueToString($spec, 'livePageTemplateClassName'),
             'templates' => CBModel::valueToObject($spec, 'templates'),
+        ];
+    }
+
+    static function fetchLivePageTemplate(): stdClass {
+        $model = CBModels::fetchModelByID(CBModelTemplateCatalog::ID());
+
+        $className = CBModel::valueToString($model, 'livePageTemplateClassName');
+
+        if (is_callable($function = "{$className}::CBModelTemplate_spec")) {
+            $spec = $function();
+
+            unset($spec->sections);
+
+            return $spec;
+        }
+
+        return (object)[
+            'className' => 'CBViewPage',
         ];
     }
 
@@ -85,6 +104,40 @@ final class CBModelTemplateCatalog {
         )));
 
         $spec->templates = $templates;
+
+        if ($spec != $originalSpec) {
+            CBDB::transaction(function () use ($spec) {
+                CBModels::save($spec);
+            });
+        }
+    }
+
+    /**
+     * This template will be used by code that needs to create and render a page
+     * live. This could be for a system notification, search results, or any
+     * other page that is created and displayed live.
+     *
+     * @param string $templateClassName
+     *
+     *      The template should be a template for a CBViewPage model. The
+     *      template can have views but they will be removed before the template
+     *      is returned by the fetchLivePageTemplate(). This way, the standard
+     *      page template for a site can often also be used as this template.
+     *
+     * @return void
+     */
+    static function installLivePageTemplate(string $templateClassName): void {
+        $originalSpec = CBModels::fetchSpecByID(CBModelTemplateCatalog::ID());
+
+        if (empty($originalSpec)) {
+            $originalSpec = (object)[
+                'ID' => CBModelTemplateCatalog::ID(),
+            ];
+        }
+
+        $spec = CBModel::clone($originalSpec);
+        $spec->className = 'CBModelTemplateCatalog';
+        $spec->livePageTemplateClassName = $templateClassName;
 
         if ($spec != $originalSpec) {
             CBDB::transaction(function () use ($spec) {
