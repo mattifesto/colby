@@ -1,10 +1,10 @@
 <?php
 
-final class CBPageFrames {
+final class CBPageFrameCatalog {
 
     /**
-     * This variable will be set to a substitute ID to be used by CBPageFrames
-     * while tests are running.
+     * This variable will be set to a substitute ID to be used by
+     * CBPageFrameCatalog while tests are running.
      */
     static $testID = null;
 
@@ -13,7 +13,7 @@ final class CBPageFrames {
      */
     static function CBInstall_install(): void {
         CBDB::transaction(function () {
-            CBModels::deleteByID(CBPageFrames::ID());
+            CBModels::deleteByID(CBPageFrameCatalog::ID());
         });
     }
 
@@ -31,17 +31,17 @@ final class CBPageFrames {
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
         return (object)[
-            'frameClassNames' => CBModel::valueToArray($spec, 'frameClassNames'),
+            'classNames' => CBModel::valueToArray($spec, 'classNames'),
         ];
     }
 
     /**
      * @return [string]
      */
-    static function fetchFrameClassNames(): array {
-        $model = CBModels::fetchModelByID(CBPageFrames::ID());
+    static function fetchClassNames(): array {
+        $model = CBModels::fetchModelByID(CBPageFrameCatalog::ID());
 
-        return CBModel::valueToArray($model, 'frameClassNames');
+        return CBModel::valueToArray($model, 'classNames');
     }
 
 
@@ -49,7 +49,7 @@ final class CBPageFrames {
      * @return ID
      */
     static function ID(): string {
-        return CBPageFrames::$testID ??
+        return CBPageFrameCatalog::$testID ??
             'ba9966cc7bdc57747fbe07f684dd7097e04b1aa6';
     }
 
@@ -58,35 +58,28 @@ final class CBPageFrames {
      *
      * @return void
      */
-    static function installFrame(string $frameClassName): void {
+    static function install(string $frameClassName): void {
         if (!is_callable("{$frameClassName}::CBPageFrame_render")) {
             return;
         }
 
-        $originalSpec = CBModels::fetchSpecByID(CBPageFrames::ID());
+        $originalSpec = CBModels::fetchSpecByID(CBPageFrameCatalog::ID());
 
         if (empty($originalSpec)) {
             $originalSpec = (object)[
-                'ID' => CBPageFrames::ID(),
+                'ID' => CBPageFrameCatalog::ID(),
             ];
         }
 
         $spec = CBModel::clone($originalSpec);
-        $spec->className = 'CBPageFrames';
-
-        if (empty($spec->frameClassNames)) {
-            $frameClassNames = [];
-        } else {
-            $frameClassNames = $spec->frameClassNames;
-        }
+        $spec->className = 'CBPageFrameCatalog';
+        $frameClassNames = CBModel::valueToArray($spec, 'classNames');
 
         array_push($frameClassNames, $frameClassName);
 
-        $frameClassNames = array_values(array_filter(array_unique(
+        $spec->classNames = array_values(array_filter(array_unique(
             $frameClassNames
         )));
-
-        $spec->frameClassNames = $frameClassNames;
 
         if ($spec != $originalSpec) {
             CBDB::transaction(function () use ($spec) {
