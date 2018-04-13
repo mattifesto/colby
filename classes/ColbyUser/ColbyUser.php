@@ -558,42 +558,6 @@ EOT;
     }
 
     /**
-     * @param string $URL
-     *
-     * @return null
-     */
-    static function renderSignInWithFacebookButton($URL = null) {
-        $loginURL = ColbyUser::loginURL($URL);
-
-        ?>
-
-        <a class="CBSignInWithFacebook" href="<?= $loginURL ?>">
-            <style>
-                .CBSignInWithFacebook {
-                    background-color: #3b5998; /* hsl(221, 44%, 41%) */
-                    background-image: url(/colby/classes/ColbyUser/FB-f-Logo__white_29.png);
-                    background-position: 8px center;
-                    background-repeat: no-repeat;
-                    border-radius: 8px;
-                    color: white;
-                    cursor: default;
-                    display: inline-block;
-                    padding: 12px 80px;
-                    text-decoration: none;
-                }
-
-                .CBSignInWithFacebook:hover {
-                    background-color: hsl(221, 44%, 51%);
-                    text-decoration: none;
-                }
-            </style>
-            Sign in with Facebook
-        </a>
-
-        <?php
-    }
-
-    /**
      * This function must be called before any output is generated because it
      * sets a cookie.
      */
