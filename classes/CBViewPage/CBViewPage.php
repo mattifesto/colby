@@ -160,6 +160,31 @@ final class CBViewPage {
             CBModel::valueToArray($spec, 'sections')
         )));
 
+        /**
+         * @NOTE 2018.04.13
+         *
+         *      This warning exists to help sites update all of the page specs
+         *      because soon the classNameForSettings property will be required.
+         */
+        if (empty($spec->classNameForSettings)) {
+            $title = CBMessageMarkup::stringToMarkup(
+                CBModel::valueToString($spec, 'title')
+            );
+
+            $message = <<<EOT
+
+                The (classNameForSettings (code)) property is not set on the
+                spec for the page with the title "{$title}".
+
+EOT;
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'severity' => 4,
+                'message' => $message,
+            ]);
+        }
+
         return $spec;
     }
 
