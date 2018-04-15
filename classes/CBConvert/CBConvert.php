@@ -227,13 +227,13 @@ final class CBConvert {
             $traceAsString = CBConvert::traceToString($trace);
 
             return "{$firstLine}\n\n{$traceAsString}";
-        } catch (Throwable $throwable) {
-            return 'INNER EXCEPTION "' .
-                $throwable->getMessage() .
+        } catch (Throwable $innerThrowable) {
+            return 'INNER ERROR: "' .
+                $innerThrowable->getMessage() .
                 '" during ' .
                 __METHOD__ .
                 "()\n\n" .
-                $throwable->getTraceAsString();
+                $innerThrowable->getTraceAsString();
         }
     }
 
