@@ -6,14 +6,15 @@ final class CBXPageTemplate {
      * @return void
      */
     static function CBInstall_install(): void {
-        CBModelTemplates::installTemplate(__CLASS__);
+        CBModelTemplateCatalog::install(__CLASS__);
+        CBModelTemplateCatalog::installLivePageTemplate(__CLASS__);
     }
 
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBModelTemplates'];
+        return ['CBModelTemplateCatalog'];
     }
 
     /**
@@ -23,6 +24,7 @@ final class CBXPageTemplate {
         return (object)[
             'className' => 'CBViewPage',
             'frameClassName' => 'CBXPageFrame',
+            'classNameForSettings' => 'CBXPageSettings',
             'sections' => [
                 (object)[
                     'className' => 'CBPageTitleAndDescriptionView',
