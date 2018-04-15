@@ -18,61 +18,35 @@ EOT;
 
         Colby::query($SQL);
 
-        /**
-         * New installation process. This is placed at the end of the install
-         * process at first but will eventually move earlier and become the
-         * entire install process.
-         */
+        $installableClassNames = array_filter(
+            CBAdmin::fetchClassNames(),
+            function ($className) {
+                return is_callable("{$className}::CBInstall_install");
+            }
+        );
 
-        $allClassNames = CBAdmin::fetchClassNames();
-        $installableClassNames = [];
-
-        foreach ($allClassNames as $className) {
-            CBInstall::addInstallableClassName($className, $installableClassNames);
-        }
+        $installableClassNames = CBRequiredClassNamesResolver::resolveRequiredClassNames(
+            $installableClassNames,
+            ['CBInstall_requiredClassNames']
+        );
 
         foreach ($installableClassNames as $className) {
-            call_user_func("{$className}::CBInstall_install");
-            error_log("{$className}::CBInstall_install()");
-        }
-    }
-
-    /**
-     * This function resolves and adds the installation dependencies for a class
-     * name and then adds the class name to the list of installable class names
-     * if the class is installable.
-     */
-    static function addInstallableClassName(string $className, array &$installableClassNames): void {
-        if (in_array($className, $installableClassNames)) {
-            return;
-        }
-
-        if (is_callable($function = "{$className}::CBInstall_requiredClassNames")) {
-            $requiredClassNames = call_user_func($function);
-
-            foreach ($requiredClassNames as $requiredClassName) {
-                if (!class_exists($requiredClassName)) {
-                    throw new RuntimeException("{$className} has an installation dependency on the class {$requiredClassName} which doesn't exist.");
-                }
-
-                CBInstall::addInstallableClassName($requiredClassName, $installableClassNames);
-            }
-        }
-
-        if (is_callable($function = "{$className}::CBInstall_install")) {
 
             /**
-             * The class name was not in the list of installable class names
-             * when the function began. If it has been added that means some
-             * class this class requires also requires this class. This is a
-             * circular dependency which is impossible to resolve.
+             * @NOTE 2018.04.15
+             *
+             *      It is possible for a class to have an install requirement
+             *      on another class that doesn't implement the install
+             *      interface. The required class name would end up in
+             *      $installableClassNames. This won't hurt the installation but
+             *      it might be nice to warn about this. We don't have the
+             *      dependent class name here so the warning wouldn't be very
+             *      helpful.
              */
 
-            if (in_array($className, $installableClassNames)) {
-                throw new RuntimeException("{$className} has a circular installation dependency.");
+            if (is_callable($function = "{$className}::CBInstall_install")) {
+                $function();
             }
-
-            $installableClassNames[] = $className;
         }
     }
 }
