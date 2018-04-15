@@ -78,15 +78,19 @@ final class CBErrorHandler {
             CBPage::renderSpec($spec);
 
             CBExceptionView::popThrowable();
-        } catch (Throwable $throwable) {
+        } catch (Throwable $innerThrowable) {
             if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
-                $message = 'INNER ERROR: ' . CBConvert::throwableToMessage($throwable);
-                $stackTrace = CBConvert::throwableToStackTrace($throwable);
+                $innerErrorMessage = 'INNER ERROR: ' .
+                    CBConvert::throwableToMessage($innerThrowable);
+                $errorMessage = 'ORIGINAL ERROR: ' .
+                    CBConvert::throwableToMessage($throwable);
+                $errorStackTrace = CBConvert::throwableToStackTrace($throwable);
             } else {
-                $message = 'Sorry, something has gone wrong. An error ' .
-                    'occurred on this page and our administrators have been ' .
-                    'notified.';
-                $stackTrace = '';
+                $innerErrorMessage = 'Sorry, something has gone wrong. An ' .
+                    'error occurred on this page and our administrators have ' .
+                    'been notified.';
+                $errorMessage = '';
+                $errorStackTrace = '';
             }
 
             $CSS = <<<EOT
@@ -121,8 +125,9 @@ EOT;
 
             ?>
 
-            <div><?= cbhtml($message); ?></div>
-            <div class="stack"><?= cbhtml($stackTrace) ?></div>
+            <div><?= cbhtml($innerErrorMessage) ?></div>
+            <div><?= cbhtml($errorMessage) ?></div>
+            <div class="stack"><?= cbhtml($errorStackTrace) ?></div>
 
             <?php
 
