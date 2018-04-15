@@ -17,10 +17,11 @@ final class CBRequiredClassNamesResolver {
 
     /**
      * @param [string] $classNames
+     * @param [string] $getRequiredClassNamesFunctionNames
      *
      * @return void
      */
-    private function resolve(array $classNames, array $functionNames): void {
+    private function resolve(array $classNames, array $getRequiredClassNamesFunctionNames): void {
         foreach ($classNames as $className) {
 
             /**
@@ -49,10 +50,10 @@ final class CBRequiredClassNamesResolver {
             /**
              * Resolve this class name's dependencies.
              */
-            foreach($functionNames as $functionName) {
+            foreach($getRequiredClassNamesFunctionNames as $functionName) {
                 if (is_callable($function = "{$className}::{$functionName}")) {
                     $requiredClassNames = call_user_func($function);
-                    $this->resolve($requiredClassNames, $functionNames);
+                    $this->resolve($requiredClassNames, $getRequiredClassNamesFunctionNames);
                     break;
                 }
             }
@@ -72,12 +73,13 @@ final class CBRequiredClassNamesResolver {
 
     /**
      * @param [string] $classNames
+     * @param [string] $getRequiredClassNamesFunctionNames
      *
      * @return [string]
      */
-    static function resolveRequiredClassNames(array $classNames, array $functionNames): array {
+    static function resolveRequiredClassNames(array $classNames, array $getRequiredClassNamesFunctionNames): array {
         $resolver = new CBRequiredClassNamesResolver();
-        $resolver->resolve($classNames, $functionNames);
+        $resolver->resolve($classNames, $getRequiredClassNamesFunctionNames);
 
         return $resolver->resolvedClassNames;
     }
