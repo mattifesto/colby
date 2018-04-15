@@ -18,8 +18,16 @@ EOT;
 
         Colby::query($SQL);
 
+        $allClassNames = CBAdmin::fetchClassNames();
+
+        /**
+         * Installation happens by calling the CBInstall_install() interface
+         * with dependencies specified by the CBInstall_requiredClassNames()
+         * interface.
+         */
+
         $installableClassNames = array_filter(
-            CBAdmin::fetchClassNames(),
+            $allClassNames,
             function ($className) {
                 return is_callable("{$className}::CBInstall_install");
             }
@@ -45,6 +53,19 @@ EOT;
              */
 
             if (is_callable($function = "{$className}::CBInstall_install")) {
+                $function();
+            }
+        }
+
+        /**
+         * Configuration happens by calling the CBInstall_configure() interface
+         * after the system is fully installed. There are no dependencies
+         * allowed in configuration except for the dependency that the system is
+         * fully installed.
+         */
+
+        foreach ($allClassNames as $className) {
+            if (is_callable($function = "{$className}::CBInstall_configure")) {
                 $function();
             }
         }
