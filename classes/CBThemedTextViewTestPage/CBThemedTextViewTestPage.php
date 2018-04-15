@@ -5,43 +5,22 @@ final class CBThemedTextViewTestPage {
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
-        $originalSpec = CBModels::fetchSpecByID(CBThemedTextViewTestPage::ID());
+    static function CBInstall_configure(): void {
+        CBModels::deleteByID(CBThemedTextViewTestPage::ID());
 
-        if (empty($originalSpec)) {
-            $spec = (object)[
-                'ID' => CBThemedTextViewTestPage::ID(),
-            ];
-        } else {
-            $spec = CBModel::clone($originalSpec);
-        }
+        $spec = CBModelTemplateCatalog::fetchLivePageTemplate();
 
-        $properties = (object)[
-            'className' => 'CBViewPage',
+        CBModel::merge($spec, (object)[
+            'ID' => CBThemedTextViewTestPage::ID(),
             'description' => 'A page for testing and experimenting with CBThemedTextView.',
-            'layout' => (object)[
-                'className' => 'CBPageLayout',
-                'CSSClassNames' => 'CBLightTheme',
-            ],
             'title' => 'CBThemedTextView Test Page',
-        ];
-
-        CBModel::merge($spec, $properties);
+        ]);
 
         include __DIR__ . '/sections.php';
 
-        if ($spec != $originalSpec) {
-            CBDB::transaction(function () use ($spec) {
-                CBModels::save($spec);
-            });
-        }
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBInstall_requiredClassNames(): array {
-        return ['CBModels', 'CBPages', 'CBViewPage'];
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
     }
 
     /**
