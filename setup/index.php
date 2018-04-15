@@ -223,7 +223,6 @@ class ColbyInstaller {
             /* class files */
 
             $classfiles = [
-                ['CBPageSettings_defaultClassName', 'php'],
                 ['CBXPageFrame', 'php'],
                 ['CBXPageFrame', 'css'],
                 ['CBXPageSettings', 'php'],
