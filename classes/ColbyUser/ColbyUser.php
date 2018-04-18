@@ -89,6 +89,13 @@ final class ColbyUser {
     }
 
     /**
+     * @return bool
+     */
+    static function currentUserIsLoggedIn(): bool {
+        return !empty(ColbyUser::$currentUserHash);
+    }
+
+    /**
      * This function is more efficient than ColbyUser::isMemberOfGroup() because
      * it memoizes the results for the current user.
      *
@@ -234,6 +241,10 @@ EOT;
     }
 
     /**
+     * @deprecated 2018.04.17
+     *
+     *      Use ColbyUser::currentUserIsLoggedIn())
+     *
      * @return bool
      */
     public function isLoggedIn() {
