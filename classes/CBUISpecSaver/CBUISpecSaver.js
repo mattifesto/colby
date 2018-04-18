@@ -12,9 +12,11 @@ var CBUISpecSaver = {
      * @param function? args.fulfilledCallback
      * @param function? args.rejectedCallback
      *
-     * @return {
-     *      specChangedCallback: function,
-     * }
+     * @return object
+     *
+     *      {
+     *          specChangedCallback: function,
+     *      }
      */
     create: function (args) {
         if (CBUISpecSaver.specDataByID[args.spec.ID]) {
