@@ -6,7 +6,7 @@ final class CBViewPage {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v414.css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v418.css', cbsysurl())];
     }
 
     /**
