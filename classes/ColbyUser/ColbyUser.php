@@ -76,7 +76,7 @@ final class ColbyUser {
      * @return hex160|null
      */
     static function currentUserHash() {
-        return self::$currentUserHash;
+        return ColbyUser::$currentUserHash;
     }
 
     /**
@@ -158,7 +158,9 @@ EOT;
     /**
      * @param hex160 $userHash
      *
-     * @return stdClass|false
+     * @return object|false
+     *
+     *      Returns an object is the user is logged in; otherwise false.
      */
     static function fetchUserDataByHash($userHash) {
         if (empty($userHash)) {
@@ -519,7 +521,7 @@ EOT;
         $state = new stdClass();
         $state->colby_redirect_uri = $redirectURL;
 
-        $URL = CBSitePreferences::siteURL() . '/colby/logout/?state=' . urlencode(json_encode($state));
+        $URL = cbsiteurl() . '/colby/logout/?state=' . urlencode(json_encode($state));
 
         return $URL;
     }
