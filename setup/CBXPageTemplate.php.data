@@ -23,8 +23,8 @@ final class CBXPageTemplate {
     static function CBModelTemplate_spec(): stdClass {
         return (object)[
             'className' => 'CBViewPage',
-            'frameClassName' => 'CBXPageFrame',
             'classNameForSettings' => 'CBXPageSettings',
+            'frameClassName' => 'CBXPageFrame',
             'sections' => [
                 (object)[
                     'className' => 'CBPageTitleAndDescriptionView',
