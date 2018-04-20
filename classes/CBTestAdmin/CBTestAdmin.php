@@ -98,15 +98,6 @@ final class CBTestAdmin {
     }
 
     /**
-     * The data store ID for the old image data store.
-     *
-     * @return hex160
-     */
-    static function oldStyleImageDataStoreID() {
-        return 'acefdba4848ff407c150a240e2f177d59e3839b3';
-    }
-
-    /**
      * This image can be used for testing purposes. Do not modify the original.
      *
      * @return string
