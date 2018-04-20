@@ -53,12 +53,12 @@ class CBImages {
      * This function will import the largest image in the provided data store
      * as a CBInage.
      *
-     * @return object|false
+     * @return ?model
      *
      *      If the data store contains images, a CBImage model will be returned;
-     *      otherwise false.
+     *      otherwise null.
      */
-    static function importOldStyleImageDataStore($ID) {
+    static function importOldStyleImageDataStore($ID): ?stdClass {
         $directory = CBDataStore::directoryForID($ID);
         $iterator = new RecursiveDirectoryIterator($directory);
         $largestArea = 0;
@@ -97,60 +97,12 @@ class CBImages {
             return false;
         }
 
-        $image = CBImages::importImage($largestPathname);
-        $noticeFilepath = CBDataStore::flexpath($ID, 'ImportedToCBImage.json', CBSiteDirectory);
+        $image = CBImages::URItoCBImage($largestPathname);
+        $noticeFilepath = CBDataStore::flexpath($ID, 'ImportedToCBImage.json', cbsitedir());
 
         file_put_contents($noticeFilepath, json_encode($image));
 
         return $image;
-    }
-
-    /**
-     * @return object|false
-     *
-     *      Returns a CBImage model.
-     */
-    static function importImage($filepath) {
-        $size = CBImage::getimagesize($filepath);
-        $spec = false;
-
-        if ($size === false || !in_array($size[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
-            throw new Exception('The file specified is either not a an image or has a file format that is not supported.');
-        }
-
-        Colby::query('START TRANSACTION');
-
-        try {
-
-            $timestamp = time();
-            $extension = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
-            $ID = sha1_file($filepath);
-            $filename = "original";
-            $basename = "{$filename}.{$extension}";
-            $destinationFilepath = CBDataStore::flexpath($ID, $basename, CBSiteDirectory);
-            $spec = (object)[
-                'className' => 'CBImage',
-                'extension' => $extension,
-                'filename' => $filename,
-                'height' => $size[1],
-                'ID' => $ID,
-                'width' => $size[0],
-            ];
-
-            CBModels::save([$spec], /* force: */ true);
-            CBDataStore::makeDirectoryForID($ID);
-            copy($filepath, $destinationFilepath);
-            Colby::query('COMMIT');
-
-        } catch (Throwable $exception) {
-
-            Colby::query('ROLLBACK');
-
-            throw $exception;
-
-        }
-
-        return $spec;
     }
 
     /**
@@ -179,11 +131,15 @@ EOT;
     /**
      * This function determines in an ID is a valid CBImage ID.
      *
-     * @param hex160 $ID
+     * @param mixed $ID
      *
      * @return bool
      */
-    static function isInstance($ID) {
+    static function isInstance($ID): bool {
+        if (!CBHex160::is($ID)) {
+            return false;
+        }
+
         $IDAsSQL = CBHex160::toSQL($ID);
         $SQL = <<<EOT
 
@@ -490,7 +446,7 @@ EOT;
     }
 
     /**
-     * NOTE: 2017.06.16 This function should be modified to call importImage()
+     * NOTE: 2017.06.16 This function should be modified to call URIToCBImage()
      *
      * @param string $name
      *
@@ -536,6 +492,70 @@ EOT;
             CBModels::save([$spec], /* force: */ true);
             CBDataStore::makeDirectoryForID($ID);
             move_uploaded_file($temporaryFilepath, $permanentFilepath);
+            Colby::query('COMMIT');
+
+        } catch (Throwable $exception) {
+
+            Colby::query('ROLLBACK');
+
+            throw $exception;
+
+        }
+
+        return $spec;
+    }
+
+    /**
+     * This function will return a CBImage spec for an image URI. If the URI is
+     * a local image file that is not a CBImage, the image will be imported.
+     *
+     * @return ?model
+     *
+     *      If the URI does not represent a CBImage, is not local, or can't be
+     *      imported for other reasons then null will be returned.
+     */
+    static function URIToCBImage(string $URI): ?stdClass {
+        $dataStoreID = CBDataStore::URIToID($URI);
+
+        if (CBImages::isInstance($dataStoreID)) {
+            return CBImages::makeModelForID($dataStoreID);
+        }
+
+        $filepath = CBDataStore::URIToFilepath($URI);
+
+        if (empty($filepath)) {
+            return null;
+        }
+
+        $size = CBImage::getimagesize($filepath);
+        $spec = null;
+
+        if ($size === false || !in_array($size[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
+            throw new Exception('The file specified is either not a an image or has a file format that is not supported.');
+        }
+
+        Colby::query('START TRANSACTION');
+
+        try {
+
+            $timestamp = time();
+            $extension = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
+            $ID = sha1_file($filepath);
+            $filename = "original";
+            $basename = "{$filename}.{$extension}";
+            $destinationFilepath = CBDataStore::flexpath($ID, $basename, cbsitedir());
+            $spec = (object)[
+                'className' => 'CBImage',
+                'extension' => $extension,
+                'filename' => $filename,
+                'height' => $size[1],
+                'ID' => $ID,
+                'width' => $size[0],
+            ];
+
+            CBModels::save([$spec], /* force: */ true);
+            CBDataStore::makeDirectoryForID($ID);
+            copy($filepath, $destinationFilepath);
             Colby::query('COMMIT');
 
         } catch (Throwable $exception) {
