@@ -50,62 +50,6 @@ class CBImages {
     }
 
     /**
-     * This function will import the largest image in the provided data store
-     * as a CBInage.
-     *
-     * @return ?model
-     *
-     *      If the data store contains images, a CBImage model will be returned;
-     *      otherwise null.
-     */
-    static function importOldStyleImageDataStore($ID): ?stdClass {
-        $directory = CBDataStore::directoryForID($ID);
-        $iterator = new RecursiveDirectoryIterator($directory);
-        $largestArea = 0;
-        $largestPathname = '';
-
-        while ($iterator->valid()) {
-            if ($iterator->isFile()) {
-              $pathname = $iterator->getPathname();
-              $extension = strtolower(pathinfo($pathname, PATHINFO_EXTENSION));
-
-              switch ($extension) {
-                  case 'jpg':
-                  case 'jpeg':
-                  case 'png':
-                  case 'gif':
-                      $size = CBImage::getimagesize($pathname);
-                      $area = $size[0] * $size[1];
-
-                      if ($area > $largestArea) {
-                          $largestArea = $area;
-                          $largestPathname = $pathname;
-                      }
-
-                      break;
-
-                  default:
-
-                      break;
-              }
-            }
-
-            $iterator->next();
-        }
-
-        if ($largestArea === 0) {
-            return false;
-        }
-
-        $image = CBImages::URItoCBImage($largestPathname);
-        $noticeFilepath = CBDataStore::flexpath($ID, 'ImportedToCBImage.json', cbsitedir());
-
-        file_put_contents($noticeFilepath, json_encode($image));
-
-        return $image;
-    }
-
-    /**
      * @return void
      */
     static function CBInstall_install(): void {
