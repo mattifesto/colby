@@ -140,24 +140,33 @@ EOT;
      */
     static function importThumbnailURLToImageTest() {
         $pageID = '4a7bc517a928056f9518d839881cc9f49ea10c0a';
+        $temporaryImageDataStoreID = 'a66a45225d071a4f6e65c475ece1810ac4dec45a';
 
-        CBTestAdmin::prepareOldStyleImageDataStore();
+        CBDB::transaction(function () use ($pageID) {
+            CBModels::deleteByID([$pageID]);
+        });
 
-        Colby::query('START TRANSACTION');
-        CBModels::deleteByID([$pageID]);
-        Colby::query('COMMIT');
+        CBModels::deleteByID($temporaryImageDataStoreID);
+        CBModels::deleteByID(CBTestAdmin::testImageID());
+
+        $testImageFilepath = CBTestAdmin::testImageFilepath();
+        $temporaryImageFilepath = CBDataStore::flexpath($temporaryImageDataStoreID, 'test.jpeg', cbsitedir());
+        $temporaryImageURL = CBDataStore::flexpath($temporaryImageDataStoreID, 'test.jpeg', cbsiteurl());
+
+        CBDataStore::create($temporaryImageDataStoreID);
+        copy($testImageFilepath, $temporaryImageFilepath);
 
         $initialPageSspec = (object)[
             'isTest' => true,
             'className' => 'CBViewPage',
             'ID' => $pageID,
             'title' => 'Test Page for ' . __METHOD__ . '()',
-            'thumbnailURL' => CBDataStore::flexpath(CBTestAdmin::oldStyleImageDataStoreID(), 'thumbnail.jpeg', CBSitePreferences::siteURL()),
+            'thumbnailURL' => $temporaryImageURL,
         ];
 
-        Colby::query('START TRANSACTION');
-        CBModels::save([$initialPageSspec]);
-        Colby::query('COMMIT');
+        CBDB::transaction(function () use ($initialPageSspec) {
+            CBModels::save($initialPageSspec);
+        });
 
         CBTasks2::runSpecificTask('CBPageVerificationTask', $pageID);
 
@@ -171,17 +180,23 @@ EOT;
             throw new Exception('The `deprecatedThumbnailURL` property should be set on the updated page spec.');
         }
 
-        $imageID = CBModel::value($updatedPageSpec, 'image.ID');
+        $resultImageID = CBModel::value($updatedPageSpec, 'image.ID');
+        $expectedImageID = CBTestAdmin::testImageID();
 
-        if ($imageID !== CBTestAdmin::testImageID()) {
-            $v = json_encode($imageID);
-            throw new Exception("The `image`.`ID` property has an incorrect value '{$v}' on the page spec.");
+        if ($resultImageID !== $expectedImageID) {
+            $resultImageIDAsJSON = json_encode($resultImageID);
+            $expectedImageIDAsJSON = json_encode($expectedImageID);
+            throw new Exception("1: The page spec \"image.ID\" property is {$resultImageIDAsJSON} but {$expectedImageIDAsJSON} was expected.");
         }
 
         // clean up
 
-        CBModels::deleteByID($pageID);
-        CBTestAdmin::removeOldStyleImageDataStore();
+        CBDB::transaction(function () use ($pageID) {
+            CBModels::deleteByID([$pageID]);
+        });
+
+        CBModels::deleteByID($temporaryImageDataStoreID);
+        CBModels::deleteByID(CBTestAdmin::testImageID());
     }
 
     /**
@@ -222,47 +237,56 @@ EOT;
     static function upgradeThumbnailURLToImageTest() {
         $pageID = '4a7bc517a928056f9518d839881cc9f49ea10c0a';
 
-        CBTestAdmin::prepareOldStyleImageDataStore();
-        CBImages::importOldStyleImageDataStore(CBTestAdmin::oldStyleImageDataStoreID());
+        CBDB::transaction(function () use ($pageID) {
+            CBModels::deleteByID([$pageID]);
+        });
 
-        Colby::query('START TRANSACTION');
-        CBModels::deleteByID([$pageID]);
-        Colby::query('COMMIT');
+        CBModels::deleteByID(CBTestAdmin::testImageID());
+
+        $testImage = CBImages::URIToCBImage(CBTestAdmin::testImageFilepath());
+
+        if ($testImage->ID !== CBTestAdmin::testImageID()) {
+            throw new Exception('2: The imported test image ID is not what was expected.');
+        }
+
+        $testImageURL = CBDataStore::flexpath($testImage->ID, 'rw640.jpeg', cbsiteurl());
 
         $initialPageSspec = (object)[
             'isTest' => true,
             'className' => 'CBViewPage',
             'ID' => $pageID,
             'title' => 'Test Page for ' . __METHOD__ . '()',
-            'thumbnailURL' => CBDataStore::flexpath(CBTestAdmin::testImageID(), 'rw640.jpeg', CBSitePreferences::siteURL()),
+            'thumbnailURL' => $testImageURL,
         ];
 
-        Colby::query('START TRANSACTION');
-        CBModels::save([$initialPageSspec]);
-        Colby::query('COMMIT');
+        CBDB::transaction(function () use ($initialPageSspec) {
+            CBModels::save($initialPageSspec);
+        });
 
         CBTasks2::runSpecificTask('CBPageVerificationTask', $pageID);
 
         $updatedPageSpec = CBModels::fetchSpecByID($pageID);
 
         if (!empty($updatedPageSpec->thumbnailURL)) {
-            throw new Exception('The `thumbnailURL` property is still set on the updated page spec.');
+            throw new Exception('2: The `thumbnailURL` property is still set on the updated page spec.');
         }
 
         if (empty($updatedPageSpec->deprecatedThumbnailURL)) {
-            throw new Exception('The `deprecatedThumbnailURL` property should be set on the updated page spec.');
+            throw new Exception('2: The `deprecatedThumbnailURL` property should be set on the updated page spec.');
         }
 
-        $imageID = CBModel::value($updatedPageSpec, 'image.ID');
+        $resultImageID = CBModel::value($updatedPageSpec, 'image.ID');
+        $expectedImageID = CBTestAdmin::testImageID();
 
-        if ($imageID !== CBTestAdmin::testImageID()) {
-            $v = json_encode($imageID);
-            throw new Exception("The `image`.`ID` property has an incorrect value '{$v}' on the page spec.");
+        if ($resultImageID !== $expectedImageID) {
+            $resultImageIDAsJSON = json_encode($resultImageID);
+            $expectedImageIDAsJSON = json_encode($expectedImageID);
+            throw new Exception("2: The page spec \"image.ID\" property is {$resultImageIDAsJSON} but {$expectedImageIDAsJSON} was expected.");
         }
 
         // clean up
 
         CBModels::deleteByID($pageID);
-        CBTestAdmin::removeOldStyleImageDataStore();
+        CBModels::deleteByID($resultImageID);
     }
 }
