@@ -174,6 +174,38 @@ final class CBDataStore {
     }
 
     /**
+     * This function takes a URI and converts it to a filepath if the file can
+     * be confirmed to exist.
+     *
+     * @param string $URI
+     *
+     *      The URI can be in the following forms:
+     *
+     *      http://bob.com/dir/dir/file.ext
+     *      /dir/dir/file.ext (relative to document root)
+     *      /dir/dir/file.ext (absolute)
+     *
+     * @return ?string
+     */
+    static function URIToFilepath(string $URI): ?string {
+        $path = parse_url($URI, PHP_URL_PATH);
+
+        if (empty($path)) {
+            return null;
+        }
+
+        if (is_file($path)) {
+            return $path;
+        }
+
+        if (is_file(cbsitedir() . $path)) {
+            return cbsitedir() . $path;
+        }
+
+        return null;
+    }
+
+    /**
      * Detects whether the URI represents a local data store and returns the
      * data store ID. The data store does not have to exist for the function to
      * return the ID.
