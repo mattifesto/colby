@@ -107,14 +107,6 @@ final class CBTestAdmin {
     }
 
     /**
-     * @return null
-     */
-    static function removeOldStyleImageDataStore() {
-        CBModels::deleteByID(CBTestAdmin::oldStyleImageDataStoreID());
-        CBModels::deleteByID(CBTestAdmin::testImageID());
-    }
-
-    /**
      * This image can be used for testing purposes. Do not modify the original.
      *
      * @return string
