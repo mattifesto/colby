@@ -94,14 +94,10 @@ final class CBPageVerificationTask {
                  */
 
                 if ($thumbnailURL = CBModel::value($result, 'spec.thumbnailURL')) {
-                    if ($thumbnailDataStoreID = CBDataStore::URIToID($thumbnailURL)) {
-                        if (CBImages::isInstance($thumbnailDataStoreID)) {
-                            $result->spec->image = CBImages::makeModelForID($thumbnailDataStoreID);
-                        } else {
-                            $result->spec->image = CBImages::importOldStyleImageDataStore($thumbnailDataStoreID);
-                        }
-
+                    if ($image = CBImages::URIToCBImage($thumbnailURL)) {
+                        $result->spec->image = $image;
                         $result->spec->deprecatedThumbnailURL = $result->spec->thumbnailURL;
+
                         unset($result->spec->thumbnailURL);
 
                         $resave = true;
