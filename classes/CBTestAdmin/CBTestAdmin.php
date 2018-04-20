@@ -107,40 +107,6 @@ final class CBTestAdmin {
     }
 
     /**
-     * At one time images were uploaded into data store directories with no
-     * mention in the database. This function creates a test data store similar
-     * to those for use in testing upgrade scenarios.
-     *
-     * One you are done using this data store, remove it by calling:
-     *
-     *      CBTestAdmin::removeOldStyleImageDataStore();
-     *
-     * @return null
-     */
-    static function prepareOldStyleImageDataStore() {
-        CBTestAdmin::removeOldStyleImageDataStore();
-
-        $ID = CBTestAdmin::oldStyleImageDataStoreID();
-
-        CBDataStore::makeDirectoryForID($ID);
-
-        $originalFilepath = CBTestAdmin::testImageFilepath();
-        $largeFilepath = CBDataStore::flexpath($ID, 'large.jpeg', cbsitedir());
-        $mediumFilepath = CBDataStore::flexpath($ID, 'medium.jpeg', cbsitedir());
-        $thumbnailFilepath = CBDataStore::flexpath($ID, 'thumbnail.jpeg', cbsitedir());
-
-        copy($originalFilepath, $largeFilepath);
-
-        $projection = CBProjection::fromImageFilepath($largeFilepath);
-        $projection = CBProjection::applyOpString($projection, 'rw1280');
-        CBImages::reduceImageFile($largeFilepath, $mediumFilepath, $projection);
-
-        $projection = CBProjection::fromImageFilepath($largeFilepath);
-        $projection = CBProjection::applyOpString($projection, 'rs400clc400');
-        CBImages::reduceImageFile($largeFilepath, $thumbnailFilepath, $projection);
-    }
-
-    /**
      * @return null
      */
     static function removeOldStyleImageDataStore() {
