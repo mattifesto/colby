@@ -3,6 +3,45 @@
 class CBDataStoreTests {
 
     /**
+     * @return object
+     */
+    static function CBTest_URIToFilepath(): stdClass {
+        $relative = '/colby/classes/CBDataStore/CBDataStore.php';
+        $filepath = cbsitedir() . $relative;
+        $cases = [
+            [cbsiteurl() . $relative, $filepath],
+            [$relative, $filepath],
+            [$filepath, $filepath],
+            ['/foo/bar/', null],
+        ];
+
+        foreach ($cases as $case) {
+            $result = CBDataStore::URIToFilepath($case[0]);
+            $expected = $case[1];
+
+            if ($result !== $expected) {
+                return (object)[
+                    'message' => "The result for \"{$case[0]}\" is not what was expected.\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($result, $expected),
+                ];
+            }
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
+     * @return [[<classname>, <testname>]]
+     */
+    static function CBUnitTests_tests(): array {
+        return [
+            ['CBDataStore', 'URIToFilepath']
+        ];
+    }
+
+    /**
      * @return null
      */
     private static function confirmDeleted($ID) {
