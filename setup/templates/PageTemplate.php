@@ -1,6 +1,6 @@
 <?php
 
-final class CBXPageTemplate {
+final class PREFIXPageTemplate {
 
     /**
      * @return void
@@ -23,8 +23,8 @@ final class CBXPageTemplate {
     static function CBModelTemplate_spec(): stdClass {
         return (object)[
             'className' => 'CBViewPage',
-            'classNameForSettings' => 'CBXPageSettings',
-            'frameClassName' => 'CBXPageFrame',
+            'classNameForSettings' => 'PREFIXPageSettings',
+            'frameClassName' => 'PREFIXPageFrame',
             'sections' => [
                 (object)[
                     'className' => 'CBPageTitleAndDescriptionView',
