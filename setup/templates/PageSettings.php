@@ -1,6 +1,6 @@
 <?php
 
-final class CBXPageSettings {
+final class PREFIXPageSettings {
 
     /**
      * @return void
