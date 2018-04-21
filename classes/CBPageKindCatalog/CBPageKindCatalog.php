@@ -59,6 +59,10 @@ final class CBPageKindCatalog {
      * @return void
      */
     static function install(string $kindClassName): void {
+        if (!class_exists($kindClassName)) {
+            return;
+        }
+
         $originalSpec = CBModels::fetchSpecByID(CBPageKindCatalog::ID());
 
         if (empty($originalSpec)) {
