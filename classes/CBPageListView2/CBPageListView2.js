@@ -4,7 +4,8 @@
 /* global
     CBArtworkElement,
     CBUI,
-    Colby */
+    Colby,
+*/
 
 var CBPageListView2 = {
 
@@ -100,12 +101,10 @@ var CBPageListView2 = {
                 state.element.appendChild(state.buttonContainerElement);
             }
 
-            if (result.pages.length == 0 && !state.hasFetchedAllElements) {
+            if (result.pages.length === 0 && !state.hasFetchedAllElements) {
                 state.hasFetchedAllElements = true;
 
                 state.buttonContainerElement.classList.add("hidden");
-
-                Colby.alert("There are no additional pages.");
             }
         }
     },
