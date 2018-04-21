@@ -4,7 +4,6 @@
 /* exported CBViewPageInformationEditor */
 /* globals
     CBCurrentUserID,
-    CBPageClassNamesForKinds,
     CBPageClassNamesForLayouts,
     CBUI,
     CBUIActionLink,
@@ -19,9 +18,11 @@
     CBUsersWhoAreAdministrators,
     CBViewPageEditor,
     CBViewPageInformationEditor_frameClassNames,
+    CBViewPageInformationEditor_kindClassNames,
     CBViewPageInformationEditor_mainMenuItemOptions,
     CBViewPageInformationEditor_settingsClassNames,
-    Colby */
+    Colby,
+*/
 
 var CBViewPageInformationEditor = {
 
@@ -73,7 +74,7 @@ var CBViewPageInformationEditor = {
      * @return Element
      */
     createEditor: function (args) {
-        var section, item, classNames;
+        var section, item;
         var element = document.createElement("section");
         element.className = "CBViewPageInformationEditor";
 
@@ -209,23 +210,33 @@ var CBViewPageInformationEditor = {
         }
 
         /* classNameForKind */
-        if (CBPageClassNamesForKinds.length > 0) {
-            classNames = CBPageClassNamesForKinds.map(function(className) {
-                return { title : className, value : className };
+
+        {
+            let selector = CBUISelector.create();
+            selector.title = "Page Kind";
+            selector.value = args.spec.classNameForKind;
+            selector.onchange = function () {
+                args.spec.classNameForKind = selector.value;
+                args.specChangedCallback();
+            };
+
+            let options = [
+                {
+                    title: "None",
+                    value: undefined,
+                },
+            ];
+
+            CBViewPageInformationEditor_kindClassNames.forEach(function (kindClassName) {
+                options.push({
+                    title: kindClassName,
+                    value: kindClassName,
+                });
             });
 
-            classNames.unshift({ title : "None", value : undefined });
+            selector.options = options;
 
-            item = CBUI.createSectionItem();
-            item.appendChild(CBUISelector.create({
-                labelText : "Page Kind",
-                navigateToItemCallback : args.navigateToItemCallback,
-                propertyName : "classNameForKind",
-                spec : args.spec,
-                specChangedCallback : args.specChangedCallback,
-                options : classNames,
-            }).element);
-            section.appendChild(item);
+            section.appendChild(selector.element);
         }
 
         /* frameClassName */
