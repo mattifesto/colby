@@ -19,7 +19,6 @@
     CBViewPageEditor,
     CBViewPageInformationEditor_frameClassNames,
     CBViewPageInformationEditor_kindClassNames,
-    CBViewPageInformationEditor_mainMenuItemOptions,
     CBViewPageInformationEditor_settingsClassNames,
     Colby,
 */
@@ -269,23 +268,29 @@ var CBViewPageInformationEditor = {
             section.appendChild(selector.element);
         }
 
-        /* selectedMainMenuItemName */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUISelector.create({
-            labelText: "Selected Main Menu Item",
-            navigateToItemCallback: args.navigateToItemCallback,
-            options: CBViewPageInformationEditor_mainMenuItemOptions,
-            propertyName: "selectedMainMenuItemName",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
+        { /* selectedMainMenuItemName */
+            let sectionItemElement = CBUI.createSectionItem();
+            let stringEditor = CBUIStringEditor.create();
+            stringEditor.title = "Selected Main Menu Item Name";
+
+            if (args.spec.selectedMainMenuItemName !== undefined) {
+                stringEditor.value = args.spec.selectedMainMenuItemName;
+            }
+
+            stringEditor.changed = function () {
+                args.spec.selectedMainMenuItemName = stringEditor.value;
+                args.specChangedCallback();
+            };
+
+            sectionItemElement.appendChild(stringEditor.element);
+            section.appendChild(sectionItemElement);
+        }
 
         element.appendChild(section);
+        element.appendChild(CBUI.createHalfSpace());
 
         /* thumbnail */
 
-        element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({text: "Page Thumbnail Image"}));
 
         section = CBUI.createSection();

@@ -3,33 +3,20 @@
 final class CBViewPageInformationEditor {
 
     /**
-     * @return [object]
-     */
-    static function fetchMainMenuItemOptions() {
-        $mainMenu = CBModels::fetchModelByID(CBWellKnownMenuForMain::ID());
-
-        $options = [(object)[
-            'title' => 'None',
-        ]];
-
-        foreach ($mainMenu->items as $item) {
-            $options[] = (object)[
-                'title' => $item->text,
-                'value' => $item->name,
-            ];
-        }
-
-        return $options;
-    }
-
-    /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink', 'CBUIImageChooser',
-                'CBUISectionItem4', 'CBUISelector', 'CBUISpecPropertyEditor',
-                'CBUIStringEditor', 'CBUIStringsPart',
-                'CBUIUnixTimestampEditor'];
+        return [
+            'CBUI',
+            'CBUIActionLink',
+            'CBUIImageChooser',
+            'CBUISectionItem4',
+            'CBUISelector',
+            'CBUISpecPropertyEditor',
+            'CBUIStringEditor',
+            'CBUIStringsPart',
+            'CBUIUnixTimestampEditor'
+        ];
     }
 
     /**
@@ -49,7 +36,6 @@ final class CBViewPageInformationEditor {
             ['CBUsersWhoAreAdministrators', CBViewPageInformationEditor::usersWhoAreAdministrators()],
             ['CBViewPageInformationEditor_frameClassNames', CBPageFrameCatalog::fetchClassNames()],
             ['CBViewPageInformationEditor_kindClassNames', CBPageKindCatalog::fetchClassNames()],
-            ['CBViewPageInformationEditor_mainMenuItemOptions', CBViewPageInformationEditor::fetchMainMenuItemOptions()],
             ['CBViewPageInformationEditor_settingsClassNames', CBPageSettingsCatalog::fetchClassNames()],
         ];
     }
