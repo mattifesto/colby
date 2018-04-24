@@ -25,6 +25,7 @@ final class PREFIXBlogPostPageTemplate {
             'classNameForKind' => 'PREFIXBlogPostPageKind',
             'classNameForSettings' => 'PREFIXPageSettings',
             'frameClassName' => 'PREFIXPageFrame',
+            'selectedMainMenuItemName' => 'blog',
             'sections' => [
                 (object)[
                     'className' => 'CBPageTitleAndDescriptionView',
