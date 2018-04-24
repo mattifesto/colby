@@ -3,7 +3,8 @@
 /* jshint esversion: 6 */
 /* exported CBUINavigationView */
 /* global
-    CBUI */
+    CBUI,
+*/
 
 /**
  * A navigator is a user interface control that navigates between panels of user
@@ -127,6 +128,17 @@ var CBUINavigationView = {
             get element() {
                 return element;
             },
+
+            /**
+             * @param object item
+             *
+             *      {
+             *          left: string
+             *          element: Element
+             *          rightElements: [Elements]
+             *          title: string
+             *      }
+             */
             navigate: navigate,
             navigateToItemCallback: navigate, /* deprecated */
         };
