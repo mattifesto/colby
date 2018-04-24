@@ -10,6 +10,7 @@ function cbsitedir(): string {
 }
 
 include cbsitedir() . '/colby/functions.php';
+include cbsitedir() . '/colby/classes/CBHex160/CBHex160.php';
 
 ColbyInstaller::initialize();
 
@@ -114,8 +115,11 @@ class ColbyInstaller {
      */
     static function install() {
         try {
-            $sitedir = cbsitedir();
-            $setupdir = __DIR__;
+            $sitedir = cbsitedir(); /* deprecated */
+            $siteDirectory = cbsitedir();
+            $setupdir = __DIR__; /* deprecated */
+            $setupDirectory = __DIR__;
+            $templateDirectory = "{$setupdir}/templates";
 
             /* Verify MySQL login properties */
 
@@ -220,30 +224,36 @@ class ColbyInstaller {
                 mkdir($destdir);
             }
 
-            /* class files */
-
-            $classfiles = [
-                ['CBXPageFrame', 'php'],
-                ['CBXPageFrame', 'css'],
-                ['CBXPageSettings', 'php'],
-                ['CBXPageTemplate', 'php'],
+            $prefix = 'CBX';
+            $templates = [
+                ['BlogPage', 'php'],
+                ['BlogPostPageKind', 'php'],
+                ['BlogPostPageTemplate', 'php'],
+                ['MainMenu', 'php'],
+                ['PageFooterView', 'php'],
+                ['PageFooterView', 'css'],
+                ['PageFrame', 'php'],
+                ['PageHeaderView', 'php'],
+                ['PageSettings', 'php'],
+                ['PageTemplate', 'php'],
             ];
 
-            foreach ($classfiles as $classfile) {
-                $className = $classfile[0];
-                $extension = $classfile[1];
-                $directory = "{$sitedir}/classes/{$className}";
+            foreach ($templates as $template) {
+                $templateName = $template[0];
+                $extension = $template[1];
+                $sourceFilepath = "{$templateDirectory}/{$templateName}.{$extension}";
+                $destinationDirectory = "{$siteDirectory}/classes/{$prefix}{$templateName}";
+                $destinationFilepath = "{$destinationDirectory}/{$prefix}{$templateName}.{$extension}";
 
-                if (!is_dir($directory)) {
-                    mkdir($directory);
+                if (!is_dir($destinationDirectory)) {
+                    mkdir($destinationDirectory);
                 }
 
-                $src = "{$setupdir}/{$className}.{$extension}.data";
-                $dest = "{$directory}/{$className}.{$extension}";
-
-                if (!is_file($dest)) {
-                    copy($src, $dest);
-                }
+                $content = file_get_contents($sourceFilepath);
+                $content = preg_replace('/PREFIX/', $prefix, $content);
+                $randomID = CBHex160::random();
+                $content = preg_replace('/RANDOMID/', "'{$randomID}'", $content);
+                file_put_contents($destinationFilepath, $content);
             }
         } catch (Throwable $throwable) {
             ColbyInstaller::renderPageBegin();
