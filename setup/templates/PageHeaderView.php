@@ -8,7 +8,7 @@ final class PREFIXPageHeaderView {
      * @return void
      */
     static function CBView_render(stdClass $model): void {
-        $selectedMainMenuItemName = CBModel::value(
+        $selectedMainMenuItemName = CBModel::valueToString(
             CBHTMLOutput::pageInformation(),
             'selectedMainMenuItemName'
         );
@@ -20,7 +20,7 @@ final class PREFIXPageHeaderView {
 
             CBView::render((object)[
                 'className' => 'CBMenuView',
-                'menuID' => CBWellKnownMenuForMain::ID(),
+                'menuID' => PREFIXMainMenu::ID(),
                 'selectedItemName' => $selectedMainMenuItemName,
             ]);
 
