@@ -71,6 +71,13 @@ RewriteRule ^tmp/ /index.php [L]
 
 
 #
+# If the request is for an existing file in the `/colby/setup/templates`
+# directory rewrite to index.php (do not show the file)
+#
+
+RewriteRule ^colby/setup/templates/ /index.php [L]
+
+#
 # If the request is for an existing php file (other than index.php) rewrite to
 # index.php (do not show the file)
 #
