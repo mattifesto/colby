@@ -7,14 +7,9 @@
     CBUISpecArrayEditor,
     CBViewPageEditor_addableClassNames,
     CBViewPageInformationEditor,
-    Colby */
+    Colby,
+*/
 
-/**
- * The CBViewPageEditor variable allows this class to be the editor factory for
- * a CBViewPage without havng to special case it. It probably should be the name
- * of this class but we're moving toward making this a model so it's not worth
- * too much effort.
- */
 var CBViewPageEditor = {
 
     /**
@@ -68,6 +63,7 @@ var CBViewPageEditor = {
         editorContainer.appendChild(CBUI.createHalfSpace());
 
         /* views */
+
         {
             if (args.spec.sections === undefined) {
                 args.spec.sections = [];
