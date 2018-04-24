@@ -121,11 +121,7 @@ final class CBViewPage {
 
         $publicationTimeStamp = CBModel::valueAsInt($model, 'publicationTimeStamp');
 
-        $info = CBHTMLOutput::pageInformation();
-        $info->description = $description;
-        $info->ID = CBModel::valueAsID($model, 'ID');
-        $info->publishedTimestamp = empty($model->isPublished) ? null : $publicationTimeStamp;
-        $info->title = $title;
+        CBViewPage::initializePageInformation($model);
 
         return implode(
             ' ',
@@ -275,19 +271,7 @@ EOT;
         $title = CBConvert::valueToString(CBModel::value($model, 'title'));
         $description = CBConvert::valueToString(CBModel::value($model, 'description'));
 
-        $info = CBHTMLOutput::pageInformation();
-        $info->description = $description;
-        $info->ID = CBModel::value($model, 'ID', '');
-        $info->image = CBModel::valueAsModel($model, 'image', ['CBImage']);
-        $info->imageURL = CBModel::valueToString($model, 'thumbnailURL');
-        $info->publishedTimestamp = empty($model->isPublished) ? null : $publicationTimeStamp;
-        $info->selectedMainMenuItemName = CBModel::value($model, 'selectedMainMenuItemName');
-        $info->title = $title;
-
-        if ($model->classNameForSettings) {
-            $info->classNameForPageSettings = $model->classNameForSettings;
-        }
-
+        CBViewPage::initializePageInformation($model);
         CBHTMLOutput::begin();
 
         if (empty($model->layout->className)) {
@@ -327,5 +311,34 @@ EOT;
         }
 
         CBHTMLOutput::render();
+    }
+
+    /**
+     * This function copies the appropriate model information into the
+     * CBHTMLOutput page information object.
+     *
+     * @param model $model
+     *
+     * @return void
+     */
+    private static function initializePageInformation(stdClass $model): void {
+        $pageInformation = CBHTMLOutput::pageInformation();
+
+        if (empty($model->isPublished)) {
+            $publishedTimestamp = null;
+        } else {
+            $publishedTimestamp = CBModel::valueAsInt($model, 'publicationTimeStamp');
+        }
+
+        CBModel::merge($pageInformation, (object)[
+            'classNameForPageSettings' => CBModel::valueToString($model, 'classNameForSettings'),
+            'description' => CBModel::valueToString($model, 'description'),
+            'ID' => CBModel::valueAsID($model, 'ID'),
+            'image' => CBModel::valueAsModel($model, 'image', ['CBImage']),
+            'imageURL' => CBModel::valueToString($model, 'thumbnailURL'),
+            'publishedTimestamp' => $publishedTimestamp,
+            'selectedMainMenuItemName' => CBModel::valueToString($model, 'selectedMainMenuItemName'),
+            'title' => CBModel::valueToString($model, 'title'),
+        ]);
     }
 }
