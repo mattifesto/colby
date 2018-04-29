@@ -43,6 +43,7 @@
 }
 
 .CBUIStringsPart.keyvalue > .string1 {
+    color: hsla(0, 0%, 0%, 0.6); /* IE11 */
     color: var(--CBTextColor2);
 }
 
@@ -54,6 +55,7 @@
 
 .CBUIStringsPart.action > .string2,
 .CBUIStringsPart.titledescription > .string2 {
+    color: hsla(0, 0%, 0%, 0.6); /* IE11 */
     color: var(--CBTextColor2);
     font-size: 80%;
 }
@@ -63,10 +65,12 @@
 }
 
 .CBUIStringsPart.action > .string1 {
+    color: hsla(210, 80%, 50%, 0.9); /* IE11 */
     color: var(--CBTextColorForLinks);
 }
 
 .CBUIStringsPart.disabled > * {
+    color: hsla(0, 0%, 0%, 0.3) !important; /* IE11 */
     color: var(--CBTextColor3) !important;
 }
 
