@@ -788,13 +788,24 @@ Colby.extend = function(objectToExtend, objectWithProperties) {
  * @return false
  */
 Colby.handleError = function(message, sourceURL, line, column, error) {
-    if (error === undefined) {
-        error = {
-            column: column,
-            line: line,
-            message: message + " (no error object provided)",
-            sourceURL: sourceURL,
-        };
+    if (typeof error !== "object") { /* IE11 */
+        error = {};
+    }
+
+    if (error.column === undefined) { /* IE11 */
+        error.column = column;
+    }
+
+    if (error.line === undefined) { /* IE11 */
+        error.line = line;
+    }
+
+    if (error.message === undefined) { /* IE11 */
+        error.message = message;
+    }
+
+    if (error.sourceURL === undefined) { /* IE11 */
+        error.sourceURL = sourceURL;
     }
 
     Colby.reportError(error);
