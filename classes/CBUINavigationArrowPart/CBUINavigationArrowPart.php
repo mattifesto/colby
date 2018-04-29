@@ -6,7 +6,7 @@ final class CBUINavigationArrowPart {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v421.css', cbsysurl())];
     }
 
     /**

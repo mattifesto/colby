@@ -1,5 +1,6 @@
 .CBUINavigationArrowPart {
     align-items: center;
+    color: hsla(0, 0%, 0%, 0.3); /* IE11 */
     color: var(--CBTextColor3);
     display: flex;
     flex: none;
