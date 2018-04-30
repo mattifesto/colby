@@ -3,13 +3,19 @@
 $message = <<<EOT
 
         --- center
-        This is the default front page. To replace it create the file:
+        This is the default front page rendered by:
 
+        (colby/handlers/handle-front-page.php (code))
+
+        To replace this, create a page in the admin area and set it as the front
+        page. A front page created in the admin area has higher priority than a
+        handler.
+
+        Alternatively, you can create this file to render your front page
+        content.
+        
         (handlers/handle-front-page.php (code))
 
-        in the main website directory. Alternatively, create a page in the admin
-        area and set it as the front page. A front page created in the admin
-        area has higher priority than a handler.
         ---
 
 EOT;
