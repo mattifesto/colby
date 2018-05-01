@@ -92,8 +92,15 @@ class ColbyInstaller {
      * @return null
      */
     static function initializeProperties() {
+        $siteClassPrefix = trim(cb_post_value('siteClassPrefix', ''));
+
+        if (empty($siteClassPrefix)) {
+            $siteClassPrefix = 'CBX';
+        }
+
         $p = (object)[
             'siteDomainName' => cb_post_value('siteDomainName', $_SERVER['SERVER_NAME'], 'trim'),
+            'siteClassPrefix' => $siteClassPrefix,
             'mysqlHost' => cb_post_value('mysqlHost', '', 'trim'),
             'mysqlUser' => cb_post_value('mysqlUser', '', 'trim'),
             'mysqlPassword' => cb_post_value('mysqlPassword', '', 'trim'),
@@ -225,7 +232,7 @@ class ColbyInstaller {
                 mkdir($destdir);
             }
 
-            $prefix = 'CBX';
+            $prefix = ColbyInstaller::$properties->siteClassPrefix;
             $templates = [
                 ['BlogPage', 'php'],
                 ['BlogPostPageKind', 'php'],

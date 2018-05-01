@@ -49,6 +49,10 @@ directory.
         <input type="text" name="siteDomainName" value="<?= cbhtml($p->siteDomainName) ?>">
     </div>
     <div class="property">
+        <div>Site Class Prefix</div>
+        <input type="text" name="siteClassPrefix" value="<?= cbhtml($p->siteClassPrefix) ?>">
+    </div>
+    <div class="property">
         <div>MySQL Host</div>
         <input type="text" name="mysqlHost" value="<?= cbhtml($p->mysqlHost) ?>">
     </div>
