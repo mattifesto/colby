@@ -120,9 +120,7 @@ class ColbyInstaller {
     static function install() {
         try {
             $siteDirectory = cbsitedir();
-            $setupdir = __DIR__; /* deprecated */
-            $setupDirectory = __DIR__;
-            $templateDirectory = "{$setupdir}/templates";
+            $templateDirectory = __DIR__ . '/templates';
 
             /* Verify MySQL login properties */
 
