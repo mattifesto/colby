@@ -119,7 +119,6 @@ class ColbyInstaller {
      */
     static function install() {
         try {
-            $sitedir = cbsitedir(); /* deprecated */
             $siteDirectory = cbsitedir();
             $setupdir = __DIR__; /* deprecated */
             $setupDirectory = __DIR__;
@@ -222,7 +221,7 @@ class ColbyInstaller {
 
             /* /classes */
 
-            $destdir = "{$sitedir}/classes";
+            $destdir = "{$siteDirectory}/classes";
 
             if (!is_dir($destdir)) {
                 mkdir($destdir);
