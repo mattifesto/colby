@@ -35,13 +35,29 @@
     padding: 1px 10px;
 }
 
-.ColbyInstaller .property input {
+.ColbyInstaller input {
+    background-color: white;
+    border: 1px solid hsl(0, 0%, 80%);
+    border-radius: 5px;
     box-sizing: border-box;
+    display: block;
     font: inherit;
-    padding: 5px;
+    padding: 8px;
     width: 100%;
 }
 
+.ColbyInstaller .property label {
+    color: hsl(0, 0%, 50%);
+    display: block;
+}
+
 .ColbyInstaller .property + .property {
-    margin-top: 0.5em;
+    margin-top: 1em;
+}
+
+.ColbyInstaller input[type=submit] {
+    border-color: hsl(210, 100%, 60%);
+    border-width: 2px;
+    color: hsl(210, 100%, 50%);
+    margin: 40px 0;
 }
