@@ -9,8 +9,12 @@ function cbsitedir(): string {
     return $_SERVER['DOCUMENT_ROOT'];
 }
 
-include cbsitedir() . '/colby/functions.php';
-include cbsitedir() . '/colby/classes/CBHex160/CBHex160.php';
+function cbsysdir(): string {
+    return cbsitedir() . '/colby';
+}
+
+include cbsysdir() . '/functions.php';
+include cbsysdir() . '/classes/CBHex160/CBHex160.php';
 
 ColbyInstaller::initialize();
 
