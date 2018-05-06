@@ -192,15 +192,6 @@ EOT
     }
 
     /**
-     * The default value for CBPagesPreferences::classNamesForPageKinds()
-     *
-     * @return [string]
-     */
-    static function classNamesForPageKindsDefault() {
-        return ['CBFrontPageKind'];
-    }
-
-    /**
      * @return [string]
      *
      *      A alphabetized merge of the default supported view class names and
