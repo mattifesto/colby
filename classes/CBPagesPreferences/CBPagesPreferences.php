@@ -86,6 +86,25 @@ EOT
             ]);
         }
 
+        /**
+         * 2018.05.06 Remove unused property
+         * Can be removed after run on every site
+         */
+        if (isset($spec->classNamesForKinds)) {
+            unset($spec->classNamesForKinds);
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'severity' => 5,
+                'message' => <<<EOT
+
+                    Removed the "classNamesForSettings" property from the
+                    CBPagesPreferences spec because it is no longer used.
+
+EOT
+            ]);
+        }
+
         return $spec;
     }
 
@@ -107,11 +126,6 @@ EOT
         if (!empty($spec->deprecatedViewClassNames)) {
             $model->deprecatedViewClassNames = array_unique(preg_split(
                 '/[\s,]+/', $spec->deprecatedViewClassNames, null, PREG_SPLIT_NO_EMPTY));
-        }
-
-        if (!empty($spec->classNamesForKinds)) {
-            $model->classNamesForKinds = array_unique(preg_split(
-                '/[\s,]+/', $spec->classNamesForKinds, null, PREG_SPLIT_NO_EMPTY));
         }
 
         if (!empty($spec->classNamesForLayouts)) {
@@ -185,12 +199,6 @@ EOT
     }
 
     /**
-     * Returns an array of class names for page kinds. To customize the this
-     * value implement CBPageHelpers::classNamesForKinds().
-     *
-     * @NOTE 2017.07.15 The `classNamesForKinds` property on the model has been
-     *       deprecated and will be removed shortly.
-     *
      * @return [string]
      */
     static function classNamesForPageKinds() {
@@ -198,15 +206,7 @@ EOT
             return call_user_func($function);
         }
 
-        // @deprecated
-        $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-        $kinds = CBModel::valueToArray($model, 'classNamesForKinds');
-
-        if (empty($kinds)) {
-            return CBPagesPreferences::classNamesForPageKindsDefault();
-        } else {
-            return $kinds;
-        }
+        return CBPagesPreferences::classNamesForPageKindsDefault();
     }
 
     /**
