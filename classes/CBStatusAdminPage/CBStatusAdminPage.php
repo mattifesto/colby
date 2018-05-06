@@ -117,15 +117,6 @@ final class CBStatusAdminPage {
                 }
             }
 
-            /* 2017.07.15 The classNamesForKinds property on the CBPagesPreferences
-               model has beed deprecated. */
-            $model = CBModelCache::fetchModelByID(CBPagesPreferences::ID);
-            $kinds = CBModel::value($model, 'classNamesForKinds', []);
-
-            if (!empty($kinds)) {
-                $issues[] = ['CBPagesPreferences::classNamesForKinds', 'Implement CBPageHelpers::classNamesForPageKinds() instead of the CBPagesPreferences model.'];
-            }
-
             /* 2018.05.05 Page kinds should install themselves. */
             if (is_callable('CBPageHelpers::classNamesForPageKinds')) {
                 $message = <<<EOT
