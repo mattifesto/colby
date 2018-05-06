@@ -180,13 +180,6 @@ EOT
     }
 
     /**
-     * @deprecated use CBPagesPreferences::classNamesForPageKinds()
-     */
-    static function classNamesForKinds() {
-        return CBPagesPreferences::classNamesForPageKinds();
-    }
-
-    /**
      * Returns an array of class names for page layouts.
      *
      * @return [string]
