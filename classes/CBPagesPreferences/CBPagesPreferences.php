@@ -192,17 +192,6 @@ EOT
     }
 
     /**
-     * @return [string]
-     */
-    static function classNamesForPageKinds() {
-        if (is_callable($function = 'CBPageHelpers::classNamesForPageKinds')) {
-            return call_user_func($function);
-        }
-
-        return CBPagesPreferences::classNamesForPageKindsDefault();
-    }
-
-    /**
      * The default value for CBPagesPreferences::classNamesForPageKinds()
      *
      * @return [string]
