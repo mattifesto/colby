@@ -126,6 +126,21 @@ final class CBStatusAdminPage {
                 $issues[] = ['CBPagesPreferences::classNamesForKinds', 'Implement CBPageHelpers::classNamesForPageKinds() instead of the CBPagesPreferences model.'];
             }
 
+            /* 2018.05.05 Page kinds should install themselves. */
+            if (is_callable('CBPageHelpers::classNamesForPageKinds')) {
+                $message = <<<EOT
+
+                    Remove the function
+                    (classNamesForPageKinds\(\)(code)) from the class
+                    (CBPageHelpers(code)).
+
+                    Page kind classes should install themselves.
+
+EOT;
+
+                $issues[] = $message;
+            }
+
             /* 2017.08.17 The slackWebhookURL propery on the CBSitePreferences model
                is not technically required, but it is effectively required because
                an admin should be tracking site errors. */
