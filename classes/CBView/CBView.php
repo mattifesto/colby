@@ -199,14 +199,12 @@ final class CBView {
      * @return [object]
      */
     static function toSubviews($model): array {
-        if ($className = CBModel::valueToString($model, 'className')) {
-            if (is_callable($function = "{$className}::CBView_toSubviews")) {
-                return call_user_func($function, $model);
-            } else {
-                return CBModel::valueToArray($model, 'subviews');
-            }
+        $className = CBModel::valueToString($model, 'className');
+
+        if (is_callable($function = "{$className}::CBView_toSubviews")) {
+            return call_user_func($function, $model);
         } else {
-            return [];
+            return CBModel::valueToArray($model, 'subviews');
         }
     }
 }
