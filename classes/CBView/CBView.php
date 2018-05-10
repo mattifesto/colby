@@ -194,7 +194,7 @@ final class CBView {
     /**
      * @param model $model
      *
-     *      Can be either a spec or a model.
+     *      Can be a spec or a model.
      *
      * @return [model]
      */
@@ -205,6 +205,25 @@ final class CBView {
             return call_user_func($function, $model);
         } else {
             return CBModel::valueToArray($model, 'subviews');
+        }
+    }
+
+    /**
+     * @param model $model
+     *
+     *      Can be a spec or a model.
+     *
+     * @param [model] $subviews
+     *
+     * @return void
+     */
+    static function setSubviews(stdClass $model, array $subviews): void {
+        $className = CBModel::valueToString($model, 'className');
+
+        if (is_callable($function = "{$className}::CBView_setSubviews")) {
+            call_user_func($function, $model, $subviews);
+        } else {
+            $model->subviews = $subviews;
         }
     }
 
