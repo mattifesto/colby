@@ -3,6 +3,44 @@
 final class CBViewTests {
 
     /**
+     * @return object
+     */
+    static function CBTest_getAndSetSubviewsTest(): stdClass {
+        $classNames = CBAdmin::fetchClassNames();
+
+        foreach ($classNames as $className) {
+            $model = (object)[
+                'className' => $className,
+            ];
+
+            CBView::setSubviews($model, CBViewTests::testSubviewSpecs());
+
+            $subviews = CBView::getSubviews($model);
+
+            if ($subviews != CBViewTests::testSubviewSpecs()) {
+                return (object)[
+                    'message' =>
+                        "For a {$className} spec, the value returned by getSubviews() does not match the value set with setSubviews().\n\n" .
+                        CBConvertTests::resultAndExpectedToMessage($subviews, CBViewTests::testSubviewSpecs()),
+                ];
+            }
+        }
+
+        return (object)[
+            'succeeded' => 'true',
+        ];
+    }
+
+    /**
+     * @return [[<class>, <test>]]
+     */
+    static function CBUnitTests_tests(): array {
+        return [
+            ['CBView', 'getAndSetSubviewsTest'],
+        ];
+    }
+
+    /**
      * This test runs a CBView::render() test for all known classes.
      *
      * @NOTE 2018.02.13
