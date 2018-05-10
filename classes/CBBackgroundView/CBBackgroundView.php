@@ -136,4 +136,14 @@ final class CBBackgroundView {
     static function CBView_toSubviews(stdClass $spec): array {
         return CBModel::valueToArray($spec, 'children');
     }
+
+    /**
+     * @param model $model
+     * @param [model] $subviews
+     *
+     * @return void
+     */
+    static function CBView_setSubviews(stdClass $model, array $subviews ): void {
+        $model->children = $subviews;
+    }
 }
