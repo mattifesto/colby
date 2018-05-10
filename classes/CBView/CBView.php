@@ -192,13 +192,13 @@ final class CBView {
     }
 
     /**
-     * @param mixed $model
+     * @param model $model
      *
-     *      This function is able to be used with either specs or models.
+     *      Can be either a spec or a model.
      *
-     * @return [object]
+     * @return [model]
      */
-    static function toSubviews($model): array {
+    static function getSubviews(stdClass $model): array {
         $className = CBModel::valueToString($model, 'className');
 
         if (is_callable($function = "{$className}::CBView_toSubviews")) {
@@ -206,5 +206,12 @@ final class CBView {
         } else {
             return CBModel::valueToArray($model, 'subviews');
         }
+    }
+
+    /**
+     * @deprecated use CBView::getSubviews()
+     */
+    static function toSubviews($model): array {
+        return CBView::getSubviews($model);
     }
 }
