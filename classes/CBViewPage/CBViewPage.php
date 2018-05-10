@@ -239,6 +239,16 @@ EOT;
     }
 
     /**
+     * @param model $model
+     * @param [model] $subviews
+     *
+     * @return void
+     */
+    static function CBView_setSubviews(stdClass $model, array $subviews): void {
+        $model->sections = $subviews;
+    }
+
+    /**
      * @param [hex160] $IDs
      *
      * @return null
