@@ -55,7 +55,7 @@ final class CBView {
      * @return object|null
      */
     static function findSubview($model, $key, $value): ?stdClass {
-        $subviews = CBView::toSubviews($model);
+        $subviews = CBView::getSubviews($model);
 
         foreach ($subviews as $view) {
             if (isset($view->{$key}) && $view->{$key} == $value) {
