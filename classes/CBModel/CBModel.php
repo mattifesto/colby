@@ -109,6 +109,34 @@ final class CBModel {
     }
 
     /**
+     * Returns the index of the first model found with the specified property
+     * value.
+     *
+     * @param [model] $models
+     * @param string $propertyName
+     * @param mixed $propertyValue
+     *
+     *      The property value is compared to the model property value with the
+     *      == operator.
+     *
+     * @return mixed
+     *
+     *      Returns an int for numeric arrays and a string for associative
+     *      arrays. Returns null if no match is found.
+     */
+    static function indexOf(array $models, string $propertyName, $propertyValue) {
+        foreach ($models as $index => $model) {
+            $value = CBModel::value($model, $propertyName);
+
+            if ($value == $propertyValue) {
+                return $index;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * This function can be used to generate IDs for specs, such as specs
      * imported from CSV files.
      *
