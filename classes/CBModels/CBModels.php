@@ -309,6 +309,34 @@ EOT;
     }
 
     /**
+     * This function will return all the models with a given class name. This
+     * function should be used mindfully because there are some class names with
+     * a high number of models. This function is intended to be used in cases
+     * where the caller is aware that the total number of models that will be
+     * returned is likely to be reasonable.
+     *
+     * @param string $className
+     *
+     * @return [ID => model]
+     */
+    static function fetchModelsByClassName(string $className): array {
+        $classNameAsSQL = CBDB::stringToSQL($className);
+        $SQL = <<<EOT
+
+            SELECT  LOWER(HEX(m.ID)),
+                    v.modelAsJSON
+            FROM    CBModels as m
+            JOIN    CBModelVersions as v ON
+                    m.ID = v.ID AND
+                    m.version = v.version
+            WHERE   m.className = {$classNameAsSQL}
+
+EOT;
+
+        return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+    }
+
+    /**
      * Retreives the current version of models
      *
      * Scenarios:       Fetch the model for a web page
