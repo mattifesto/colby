@@ -5,7 +5,7 @@ final class PREFIXMainMenu {
     /**
      * @return void
      */
-    static function CBInstall_configure(): void {
+    static function CBInstall_install(): void {
         $originalSpec = CBModels::fetchSpecByID(PREFIXMainMenu::ID());
 
         if (empty($originalSpec)) {
@@ -35,6 +35,13 @@ final class PREFIXMainMenu {
                 CBModels::save($spec);
             });
         }
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBModels'];
     }
 
     /**
