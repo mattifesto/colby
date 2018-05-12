@@ -217,6 +217,32 @@ EOT;
     }
 
     /**
+     * Sometimes pages are considered "well-known" or "special" because they
+     * have a specific URI. Use this function to find the published pages
+     * associated with a specific URI.
+     *
+     * @param string $URI
+     *
+     * @return [ID]
+     *
+     *      The returned array may be empty if no page is found or have more
+     *      than one ID if multiple pages are found.
+     */
+    static function fetchPublishedPageIDsByURI(string $URI): array {
+        $URIAsSQL = CBDB::stringToSQL($URI);
+        $SQL = <<<EOT
+
+            SELECT  LOWER(HEX(archiveID))
+            FROM    ColbyPages
+            WHERE   URI = {$URIAsSQL} AND
+                    published IS NOT NULL
+
+EOT;
+
+        return CBDB::SQLToArray($SQL);
+    }
+
+    /**
      * NOTE 2016.03.15 This function is somewhat messed up and it's very
      * important. It makes a ton of assumptions many of which may be wrong. It
      * needs to be reviewed, have its parameters well documented, and fixed to
