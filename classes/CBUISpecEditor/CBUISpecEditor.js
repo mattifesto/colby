@@ -1,8 +1,12 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBUISpecEditor */
 /* global
-    CBDefaultEditor */
+    CBDefaultEditor,
+    CBUINavigationView,
+    Colby,
+*/
 
 var CBUISpecEditor = {
 
@@ -14,8 +18,7 @@ var CBUISpecEditor = {
      * @param object args
      *
      *      {
-     *          navigateToItemCallback: function
-     *          spec: object
+     *          spec: model
      *          specChangedCallback: function
      *      }
      *
@@ -33,7 +36,12 @@ var CBUISpecEditor = {
 
         return {
             element: editorFactory.createEditor({
-                navigateToItemCallback: args.navigateToItemCallback,
+
+                /**
+                 * @deprecated Editors should directly use CBUINavigationView.navigate()
+                 */
+                navigateToItemCallback: CBUINavigationView.navigate,
+
                 spec: spec,
                 specChangedCallback: args.specChangedCallback,
             }),
