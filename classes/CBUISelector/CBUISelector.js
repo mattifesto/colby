@@ -283,12 +283,21 @@ var CBUISelector = {
     },
 
     /**
-     * @param function args.callback
-     * @param function args.navigateToItemCallback
-     * @param [object] args.options
-     *  object = { string title, string? description, mixed value }
-     * @param mixed? args.selectedValue
-     * @param string? args.title
+     * @param object $args
+     *
+     *      {
+     *          callback: function
+     *          options: [object]
+     *
+     *              {
+     *                  title: string
+     *                  description: string?
+     *                  value: mixed
+     *              }
+     *
+     *          selectedValue: mixed
+     *          title: string?
+     *      }
      *
      * @return undefined
      */
@@ -299,7 +308,7 @@ var CBUISelector = {
             selectedValue: args.selectedValue,
         });
 
-        args.navigateToItemCallback.call(undefined, {
+        CBUINavigationView.navigate({
             element: selector,
             title: args.title,
         });
