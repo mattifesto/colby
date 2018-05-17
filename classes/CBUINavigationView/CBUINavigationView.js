@@ -23,15 +23,26 @@
 var CBUINavigationView = {
 
     /**
-     * The context is set each time a new navigator is created, which is usually
-     * only once per page, but can be more. This context is used by user
-     * interface controls that use navigation to access navigation functionality
-     * without the developer having to specify the navigation parameters
-     * explicitly.
+     * The context property is set to the API object returned by
+     * CBUINavigationView.create() the first time the function is called. The
+     * function will throw an error if called a second time.
      *
-     * The context is used only at user interface creation time. A developer
-     * using multiple navigators can set the context to the navigator of their
-     * choice when building user interfaces.
+     * History:
+     * Originally this class was created with the idea that multiple navigation
+     * views could be created on a single page. The navigation view API object
+     * was passed around from function to function. This pattern of a resource
+     * being passed from function to function becomes awkward quickly.
+     *
+     * In actual use, there is only one CBUINavigationView created per page so
+     * in an effort to greatly simplify code, support for multiple navigation
+     * views has been removed. It can be supported, but there will have to be a
+     * good, real world, use case example to be used to properly design the
+     * programming model.
+     *
+     * Note: the concept of multiple navigation areas on a single page is
+     * awkward from an end user standpoint. Before enabling this functionality a
+     * case will have to be made as to how it will not be too much context for
+     * the user to be able to comfortably work with.
      */
     context: undefined,
 
@@ -116,8 +127,6 @@ var CBUINavigationView = {
             items: [],
         };
 
-        var navigate = CBUINavigationView.navigateToItem.bind(undefined, state);
-
         window.addEventListener("popstate", CBUINavigationView.handlePopState.bind(undefined, state));
 
         if (args !== undefined && args.rootItem !== undefined) {
@@ -129,23 +138,63 @@ var CBUINavigationView = {
                 return element;
             },
 
-            /**
-             * @param object item
-             *
-             *      {
-             *          left: string
-             *          element: Element
-             *          rightElements: [Elements]
-             *          title: string
-             *      }
-             */
             navigate: navigate,
             navigateToItemCallback: navigate, /* deprecated */
         };
 
-        CBUINavigationView.context = api;
+        if (CBUINavigationView.context !== undefined) {
+            throw new Error("There is only one CBUINavigationView allowed per page.");
+        } else {
+            CBUINavigationView.context = api;
+        }
 
         return api;
+
+        /**
+         * closure
+         *
+         * @param object item
+         *
+         *      {
+         *          left: string
+         *          element: Element
+         *          rightElements: [Elements]
+         *          title: string
+         *      }
+         *
+         * @return undefined
+         */
+        function navigate(item) {
+            var fromItem;
+            var toItem = {
+                element: item.element,
+                left: item.left,
+                rightElements: item.rightElements,
+                title: item.title,
+            };
+
+            if (state.items.length > 0) {
+                fromItem = state.items[state.items.length - 1];
+
+                if (toItem.left === undefined) {
+                    toItem.left = fromItem.title;
+                }
+            }
+
+            /* var from = state.elements[state.elements.length - 1]; */
+            toItem.container = CBUINavigationView.containerFromItem(toItem);
+
+            state.items.push(toItem);
+
+            state.element.textContent = null;
+            state.element.appendChild(toItem.container);
+
+            if (state.items.length > 1) {
+                history.pushState(undefined, undefined);
+            }
+
+            window.scrollTo(0, 0);
+        }
     },
 
     /**
@@ -161,50 +210,5 @@ var CBUINavigationView = {
 
         state.element.textContent = null;
         state.element.appendChild(newContainerElement);
-    },
-
-    /**
-     * @param object state
-     * @param object item
-     *
-     *      {
-     *          left: string
-     *          element: Element
-     *          rightElements: [Elements]
-     *          title: string
-     *      }
-     *
-     * @return undefined
-     */
-    navigateToItem: function (state, item) {
-        var fromItem;
-        var toItem = {
-            element: item.element,
-            left: item.left,
-            rightElements: item.rightElements,
-            title: item.title,
-        };
-
-        if (state.items.length > 0) {
-            fromItem = state.items[state.items.length - 1];
-
-            if (toItem.left === undefined) {
-                toItem.left = fromItem.title;
-            }
-        }
-
-        /* var from = state.elements[state.elements.length - 1]; */
-        toItem.container = CBUINavigationView.containerFromItem(toItem);
-
-        state.items.push(toItem);
-
-        state.element.textContent = null;
-        state.element.appendChild(toItem.container);
-
-        if (state.items.length > 1) {
-            history.pushState(undefined, undefined);
-        }
-
-        window.scrollTo(0, 0);
     },
 };
