@@ -6,9 +6,15 @@ final class CBBackgroundViewEditor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink', 'CBUIBooleanEditor',
-                'CBUIImageChooser', 'CBUISpec', 'CBUISpecArrayEditor',
-                'CBUIStringEditor'];
+        return [
+            'CBUI',
+            'CBUIActionLink',
+            'CBUIBooleanEditor',
+            'CBUIImageChooser',
+            'CBUISpec',
+            'CBUISpecArrayEditor',
+            'CBUIStringEditor'
+        ];
     }
 
     /**
