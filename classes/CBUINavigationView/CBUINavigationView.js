@@ -211,4 +211,24 @@ var CBUINavigationView = {
         state.element.textContent = null;
         state.element.appendChild(newContainerElement);
     },
+
+    /**
+     * @param object item
+     *
+     *      {
+     *          left: string
+     *          element: Element
+     *          rightElements: [Elements]
+     *          title: string
+     *      }
+     *
+     * @return undefined
+     */
+    navigate: function (item) {
+        if (CBUINavigationView.context === undefined) {
+            throw new Error("No CBUINavigationView has been created");
+        }
+
+        CBUINavigationView.context.navigate(item);
+    },
 };

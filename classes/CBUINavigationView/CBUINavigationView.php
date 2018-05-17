@@ -6,7 +6,9 @@ final class CBUINavigationView {
      * @return [string]
      */
     static function requiredClassNames() {
-        return ['CBUI', 'CBUISpecEditor'];
+        return [
+            'CBUI',
+        ];
     }
 
     /**
@@ -20,6 +22,6 @@ final class CBUINavigationView {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v393.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v426.js', cbsysurl())];
     }
 }
