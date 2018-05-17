@@ -5,6 +5,7 @@
 /* global
     CBUICommandPart,
     CBUINavigationArrowPart,
+    CBUINavigationView,
     CBUISelectableItem,
     CBUISelectableItemContainer,
     CBUISelector,
@@ -13,7 +14,8 @@
     CBUISpecEditor,
     CBUIThumbnailPart,
     CBUITitleAndDescriptionPart,
-    Colby */
+    Colby,
+*/
 
 var CBUISpecArrayEditor = {
 
@@ -22,7 +24,6 @@ var CBUISpecArrayEditor = {
      *
      *      {
                 addableClassNames: [string]
-     *          navigateToItemCallback: function
      *          specs: [object]
      *          specsChangedCallback: function
      *      }
@@ -38,7 +39,6 @@ var CBUISpecArrayEditor = {
         var addableClassNames = args.addableClassNames;
         var specs = args.specs;
         var specsChangedCallback = args.specsChangedCallback;
-        var navigateToItemCallback = args.navigateToItemCallback;
 
         var element = document.createElement("div");
         element.className = "CBUISpecArrayEditor";
@@ -298,10 +298,9 @@ var CBUISpecArrayEditor = {
 
                     CBUISelector.showSelector({
                         callback: resolve,
-                        navigateToItemCallback: navigateToItemCallback,
                         options: options,
                         selectedValue: undefined,
-                        title: "Select a View",
+                        title: "Select a Class Name",
                     });
                 }
             });
@@ -333,12 +332,11 @@ var CBUISpecArrayEditor = {
             let selectableItem = CBUISelectableItem.create();
             selectableItem.callback = function () {
                 let editor = CBUISpecEditor.create({
-                    navigateToItemCallback: navigateToItemCallback,
                     spec: spec,
                     specChangedCallback: specChangedCallback,
                 });
 
-                navigateToItemCallback({
+                CBUINavigationView.navigate({
                     element: editor.element,
                     title: spec.className,
                 });
