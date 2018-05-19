@@ -59,8 +59,12 @@ class CBModelEditor {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         $classNames = [
-            'CBUI', 'CBUIMessagePart', 'CBUINavigationView', 'CBUISectionItem4',
-            'CBUISpecSaver'
+            'CBUI',
+            'CBUIMessagePart',
+            'CBUINavigationView',
+            'CBUISectionItem4',
+            'CBUISpecEditor',
+            'CBUISpecSaver',
         ];
 
         if (CBModelEditor::$originalSpec) {
