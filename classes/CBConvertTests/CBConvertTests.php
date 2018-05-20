@@ -3,6 +3,38 @@
 final class CBConvertTests {
 
     /**
+     * @return object
+     */
+    static function CBTest_stringToURI(): stdClass {
+
+        /* test 1 */
+        $testcase = '   / foo /bar   /// baz/ /';
+        $expected = 'foo/bar/baz';
+        $result = CBConvert::stringToURI($testcase);
+
+        if ($result != $expected) {
+            return (object)[
+                'message' =>
+                    "The result of test 1 did not match the expected value.\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage($result, $expected),
+            ];
+        } else {
+            return (object)[
+                'succeeded' => true,
+            ];
+        }
+    }
+
+    /**
+     * @return [[<class>, <test>]]
+     */
+    static function CBUnitTests_tests(): array {
+        return [
+            ['CBConvert', 'stringToURI'],
+        ];
+    }
+
+    /**
      * @param mixed $result
      * @param mixed $expected
      *
