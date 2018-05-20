@@ -23,8 +23,7 @@ final class CBViewPage {
      * @return model
      */
     static function CBModel_build($spec) {
-        $ID = CBModel::value($spec, 'ID', '');
-        $time = time();
+        $ID = CBModel::valueAsID($spec, 'ID');
         $model = (object)[
             'classNameForKind' => CBModel::valueToString($spec, 'classNameForKind'),
             'classNameForSettings' => CBModel::valueToString($spec, 'classNameForSettings'),
@@ -32,25 +31,19 @@ final class CBViewPage {
             'frameClassName' => CBModel::valueToString($spec, 'frameClassName'),
             'isPublished' => (bool)CBModel::value($spec, 'isPublished'),
             'iteration' => 0, /* deprecated */
+            'publicationTimeStamp' => CBModel::valueAsInt($spec, 'publicationTimeStamp'),
             'publishedBy' => CBModel::valueAsInt($spec, 'publishedBy'),
             'selectedMainMenuItemName' => CBModel::valueToString($spec, 'selectedMainMenuItemName'),
             'title' => trim(CBModel::valueToString($spec, 'title')),
+            'URI' => CBConvert::stringToURI(CBModel::valueToString($spec, 'URI')),
         ];
 
-        // URI
-
-        $model->URI = CBConvert::stringToURI(CBModel::valueToString($spec, 'URI'));
-
-        if ($model->URI === '') {
+        if (empty($model->URI) && !empty($ID)) {
             $model->URI = $ID;
         }
 
-        // publicationTimeStamp
-
-        $model->publicationTimeStamp = CBModel::valueAsInt($spec, 'publicationTimeStamp');
-
         if ($model->publicationTimeStamp === null && $model->isPublished) {
-            $model->publicationTimeStamp = $time;
+            $model->publicationTimeStamp = time();
         }
 
         // image
