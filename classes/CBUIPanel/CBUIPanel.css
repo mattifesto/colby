@@ -1,0 +1,49 @@
+.CBUIPanel {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+
+    background-color: hsla(0, 0%, 0%, 0.5);
+    display: none;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    position: fixed;
+}
+
+.CBUIPanel.showing {
+    display: block;
+}
+
+.CBUIPanel > .surface {
+    display: flex;
+    flex-direction: column;
+
+    background-color: white;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin: 10px;
+    min-height: 100%;
+}
+
+.CBUIPanel > .surface > .message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 1 0 auto;
+    padding: 10px;
+}
+
+.CBUIPanel > .surface > .message > .content {
+    text-align: center;
+}
+
+.CBUIPanel > .surface > .interface {
+    margin-top: auto;
+    padding: 10px 0;
+}
+
+.CBUIPanel > .surface > .interface.empty {
+    display: none;
+}
