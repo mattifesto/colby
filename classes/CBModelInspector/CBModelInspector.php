@@ -61,16 +61,25 @@ final class CBModelInspector {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBArtworkElement', 'CBMessageMarkup', 'CBUI', 'CBUIExpander',
-                'CBUINavigationArrowPart', 'CBUINavigationView',
-                'CBUISectionItem4', 'CBUIStringEditor', 'CBUIStringsPart'];
+        return [
+            'CBArtworkElement',
+            'CBMessageMarkup',
+            'CBUI',
+            'CBUIExpander',
+            'CBUINavigationArrowPart',
+            'CBUINavigationView',
+            'CBUIPanel',
+            'CBUISectionItem4',
+            'CBUIStringEditor',
+            'CBUIStringsPart',
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v407.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v426.js', cbsysurl())];
     }
 
     /**

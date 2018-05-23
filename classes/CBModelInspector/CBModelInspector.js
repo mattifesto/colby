@@ -9,10 +9,12 @@
     CBUIExpander,
     CBUINavigationArrowPart,
     CBUINavigationView,
+    CBUIPanel,
     CBUISectionItem4,
     CBUIStringEditor,
     CBUIStringsPart,
-    Colby */
+    Colby,
+*/
 
 var CBModelInspector = {
 
@@ -77,8 +79,10 @@ var CBModelInspector = {
      * @return undefined
      */
     IDDidChange: function (args) {
-        if (/^[0-9a-f]{40}$/.test(args.spec.ID)) {
-            Colby.callAjaxFunction("CBModelInspector", "fetchModelData", {ID: args.spec.ID})
+        let spec = args.spec || {};
+
+        if (/^[0-9a-f]{40}$/.test(spec.ID)) {
+            Colby.callAjaxFunction("CBModelInspector", "fetchModelData", {ID: spec.ID})
                  .then(resolved)
                  .catch(Colby.displayAndReportError);
         } else {
@@ -93,7 +97,7 @@ var CBModelInspector = {
             section = CBUI.createSection();
 
             if (response.modelVersions.length === 0) {
-                document.title = "Inspector: " + args.spec.ID;
+                document.title = "Inspector: " + spec.ID;
                 section.appendChild(CBUI.createKeyValueSectionItem({
                     key: "Notice",
                     value: "This ID has no model."
@@ -143,11 +147,66 @@ var CBModelInspector = {
                     stringsPart.element.classList.add("action");
 
                     sectionItem.callback = function () {
-                        window.location = '/admin/?c=CBModelEditor&ID=' + args.spec.ID;
+                        window.location = '/admin/?c=CBModelEditor&ID=' + model.ID;
                     };
 
                     sectionItem.appendPart(stringsPart);
                     section.appendChild(sectionItem.element);
+                }
+
+                {
+                    let sectionItem = CBUISectionItem4.create();
+                    sectionItem.callback = function () { confirm(); };
+
+                    let stringsPart = CBUIStringsPart.create();
+                    stringsPart.string1 = "Delete Model";
+
+                    stringsPart.element.classList.add("action");
+
+                    sectionItem.appendPart(stringsPart);
+                    section.appendChild(sectionItem.element);
+
+                    /* stage 1 */
+                    let confirm = function () {
+                        CBUIPanel.message = "Are you sure you want to delete this model?";
+                        CBUIPanel.buttons = [
+                            {
+                                title: "Yes",
+                                callback: deleteModel,
+                            },
+                            {
+                                title: "No",
+                            },
+                        ];
+
+                        CBUIPanel.isShowing = true;
+                    };
+
+                    /* stage 2 */
+                    let deleteModel = function () {
+                        CBUIPanel.message = "Deleting model...";
+                        CBUIPanel.buttons = [];
+
+                        Colby.callAjaxFunction("CBModels", "deleteByID", {ID: model.ID})
+                            .then(report)
+                            .catch(Colby.displayAndReportError);
+                    };
+
+                    /* stage 3 */
+                    let report = function () {
+                        CBUIPanel.message = "The model has been deleted.\n\nPress OK to navigate to the models admin page.";
+                        CBUIPanel.buttons = [
+                            {
+                                title: "OK",
+                                callback: navigate,
+                            }
+                        ];
+                    };
+
+                    /* stage 4 */
+                    let navigate = function () {
+                        window.location = "/admin/?c=CBModelsAdmin";
+                    };
                 }
             }
 
@@ -244,7 +303,7 @@ var CBModelInspector = {
 
                         function revert() {
                             var data = new FormData();
-                            data.append("ID", args.spec.ID);
+                            data.append("ID", spec.ID);
                             data.append("version", version.version);
 
                             Colby.fetchAjaxResponse("/api/?class=CBModels&function=revert", data)
