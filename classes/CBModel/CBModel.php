@@ -498,6 +498,23 @@ EOT;
     /**
      * This is a convenience function for:
      *
+     *      CBConvert::valueToBool(CBModel::value(...))
+     *
+     * CBConvert::valueToBool() behaves differently than boolval() when the
+     * value is a string.
+     *
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return bool
+     */
+    static function valueToBool($model, string $keyPath): bool {
+        return CBConvert::valueToBool(CBModel::value($model, $keyPath));
+    }
+
+    /**
+     * This is a convenience function for:
+     *
      *      CBConvert::valueToObject(CBModel::value(...));
      *
      * @param mixed $model
