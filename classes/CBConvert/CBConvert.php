@@ -450,6 +450,33 @@ final class CBConvert {
     }
 
     /**
+     * This function differs from the PHP boolval() function by trimming a
+     * string value before determining its boolean value. This helps when
+     * importing data from a CSV file created from a spreadsheet where the users
+     * may have typed "0    " or "   " not realizing that there are extra spaces
+     * or that those spaces will cause boolval() to consider the value to be
+     * true when what they clearly meant was for the value to be false.
+     *
+     *      $value  boolval  valueToBool
+     *      ------  -------  -----------
+     *         " "     true        false
+     *       " 0 "     true        false
+     *        true     true         true
+     *       false    false        false
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    static function valueToBool($value): bool {
+        if (is_string($value)) {
+            trim($value);
+        }
+
+        return boolval($value);
+    }
+
+    /**
      * Split a value into an array of names.
      *
      * In the past the concept of "name" has been specialized to mean CSS names
