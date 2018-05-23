@@ -169,6 +169,22 @@ EOT
      * instance, a site shouldn't send passwords to debug log or reveal user
      * data to public pages in debug mode.
      *
+     * @NOTE 2018.05.20
+     *
+     *      In some scenarios it may be better to check whether the current user
+     *      is a member of the Developers group than to use this function. For
+     *      instance, when deciding whether to display error stack traces on a
+     *      web page, it may be more important to determine that the user can
+     *      understand and use the information rather than if the site is in
+     *      debug mode.
+     *
+     * @NOTE 2018.05.20
+     *
+     *      The ability to set debug mode on a website is very old. The actual
+     *      number of practical purposes for it is low and may be zero. This
+     *      property may be a candidate for deprecation. Its purpose should be
+     *      more clearly determined.
+     *
      * @return bool
      */
     static function debug() {
