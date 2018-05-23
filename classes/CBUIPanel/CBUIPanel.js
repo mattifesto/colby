@@ -10,6 +10,43 @@
     Colby,
 */
 
+/**
+ * This file will create a CBUIPanel global variable (a property on the window
+ * object) that can be used to display panels with messages and custom buttons.
+ *
+ * This is the documentation for the API of the CBUIPanel object.
+ *
+ *      {
+ *          buttons: [object] (get, set)
+ *
+ *              The default button of the panel is an OK button that hides the
+ *              panel. Developers can add custom buttons for panels with more
+ *              complex interaction.
+ *
+ *              {
+ *                  title: string
+ *                  callback: function?
+ *
+ *                      If no callback is specified, a callback will be used
+ *                      that resets (and hides) the panel.
+ *              }
+ *
+ *          isShowing: bool (get, set)
+ *
+ *              Shows and hides the panel.
+ *
+ *          message: string (get, set)
+ *
+ *              The content of the panel in message markup.
+ *
+ *          reset: function (get)
+ *
+ *              The reset function hides the panel, clears the message, and
+ *              resets the buttons to a single OK button that will hide the
+ *              panel.
+ *      }
+ */
+
 Colby.afterDOMContentLoaded(function () {
     let buttons;
     let isShowing = false;
@@ -60,17 +97,6 @@ Colby.afterDOMContentLoaded(function () {
             return buttons;
         },
 
-        /**
-         * @param [object] descriptors
-         *
-         *      {
-         *          title: string
-         *          callback: function?
-         *
-         *              If no callback is specified, a callback will be used
-         *              that resets (and hides) the panel.
-         *      }
-         */
         set buttons(value) {
             setButtons(value);
         },
