@@ -18,25 +18,29 @@ Colby.afterDOMContentLoaded(function () {
     /**
      * Stucture:
      *
-     *      element
-     *          surfaceElement
-     *              messageElement
-     *                  contentElement
-     *              interfaceElement
-     *                  sectionElement
+     *      viewportElement
+     *          backgroundElement
+     *              surfaceElement
+     *                  messageElement
+     *                      contentElement
+     *                  interfaceElement
+     *                      sectionElement
      */
 
-    let element = document.createElement("div");
-    element.className = "CBUIPanel";
+    let viewportElement = document.createElement("div");
+    viewportElement.className = "CBUIPanel";
+    let backgroundElement = document.createElement("div");
+    backgroundElement.className = "background";
     let surfaceElement = document.createElement("div");
     surfaceElement.className = "surface";
 
-    element.appendChild(surfaceElement);
+    backgroundElement.appendChild(surfaceElement);
+    viewportElement.appendChild(backgroundElement);
 
     let messageElement = document.createElement("div");
     messageElement.className = "message";
     let contentElement = document.createElement("div");
-    contentElement.className = "content";
+    contentElement.className = "content CBContentStyleSheet";
 
     messageElement.appendChild(contentElement);
     surfaceElement.appendChild(messageElement);
@@ -48,7 +52,7 @@ Colby.afterDOMContentLoaded(function () {
     interfaceElement.appendChild(sectionElement);
     surfaceElement.appendChild(interfaceElement);
 
-    document.body.appendChild(element);
+    document.body.appendChild(viewportElement);
 
     let api = {
 
@@ -148,9 +152,10 @@ Colby.afterDOMContentLoaded(function () {
         isShowing = !!value;
 
         if (isShowing) {
-            element.classList.add("showing");
+            viewportElement.classList.add("showing");
         } else {
-            element.classList.remove("showing");
+            viewportElement.scrollTop = 0;
+            viewportElement.classList.remove("showing");
         }
     }
 

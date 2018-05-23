@@ -1,10 +1,14 @@
+/**
+ * The CBUIPanel element is a viewport element that is the exact size of the
+ * viewport and does not grow. If its content is taller that its height the
+ * content will scroll.
+ */
 .CBUIPanel {
-    bottom: 0;
-    left: 0;
-    right: 0;
     top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 
-    background-color: hsla(0, 0%, 0%, 0.5);
     display: none;
     overflow-y: scroll;
     overscroll-behavior: contain;
@@ -15,18 +19,43 @@
     display: block;
 }
 
-.CBUIPanel > .surface {
+/**
+ * The background element has the transparent black background and 10px of
+ * padding to draw a translucent border around the surface element. It is a
+ * flexbox so that the surface element can grow to fill its height it it is
+ * shorter.
+ */
+.CBUIPanel > .background {
+    display: flex;
+    flex-direction: column;
+
+    background-color: hsla(0, 0%, 0%, 0.5);
+    box-sizing: border-box;
+    min-height: 100vh;
+    padding: 10px;
+}
+
+/**
+ * The surface element has a white background and rounded corners. It is a
+ * flexbox so that the interface element can always be aligned with its bottem
+ * edge by having a margin-top value of "auto".
+ */
+.CBUIPanel > .background > .surface {
     display: flex;
     flex-direction: column;
 
     background-color: white;
     border-radius: 10px;
     box-sizing: border-box;
-    margin: 10px;
-    min-height: 100%;
+    flex: 1 0 auto;
 }
 
-.CBUIPanel > .surface > .message {
+/**
+ * The message element has a padding of 10px to prevent the message from
+ * touching the edges of the surface. The element is flexbox so that it can
+ * center to content element both horizontally and vertically.
+ */
+.CBUIPanel > .background > .surface > .message {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -35,15 +64,28 @@
     padding: 10px;
 }
 
-.CBUIPanel > .surface > .message > .content {
+/**
+ * The content element contains the HTML generated from the message. The text is
+ * centered by default. It has the same maximum width as the CBMessageView to
+ * maintain readability.
+ */
+.CBUIPanel > .background > .surface > .message > .content {
+    max-width: 36em;
     text-align: center;
 }
 
-.CBUIPanel > .surface > .interface {
+/**
+ * The interface element contains a section element that displays the buttons
+ * that are currently used by the panel. It has a margin-top value of "auto" to
+ * ensure it will appear at the bottom of the surface in all scenarios. It does
+ * not display if there are no buttons. It has no left or right padding to make
+ * the section element display correctly in narrow scenarios.
+ */
+.CBUIPanel > .background > .surface > .interface {
     margin-top: auto;
     padding: 10px 0;
 }
 
-.CBUIPanel > .surface > .interface.empty {
+.CBUIPanel > .background > .surface > .interface.empty {
     display: none;
 }

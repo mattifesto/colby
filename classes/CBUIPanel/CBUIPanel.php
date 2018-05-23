@@ -25,6 +25,7 @@ final class CBUIPanel {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBContentStyleSheet',
             'CBMessageMarkup',
             'CBUI',
             'CBUISectionItem4',
