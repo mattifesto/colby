@@ -90,6 +90,7 @@ var CBGitHistoryAdmin = {
         }
 
         let expander = CBUIExpander.create();
+        expander.expanded = true;
 
         element.appendChild(expander.element);
         element.appendChild(CBUI.createHalfSpace());

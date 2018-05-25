@@ -63,7 +63,7 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v397.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v426.js', cbsysurl())];
     }
 
     /**
@@ -79,7 +79,11 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
-        return ['CBUI', 'CBUIExpander', 'CBUISelector'];
+        return [
+            'CBUI',
+            'CBUIExpander',
+            'CBUISelector'
+        ];
     }
 
     /**
