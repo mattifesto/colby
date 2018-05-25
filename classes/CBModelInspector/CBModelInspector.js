@@ -259,16 +259,17 @@ var CBModelInspector = {
                         }
 
                         {
-                            let expander = CBUIExpander.create();
-                            let markup = CBMessageMarkup.stringToMarkup(
+                            let message = CBMessageMarkup.stringToMarkup(
                                 JSON.stringify(JSON.parse(version.specAsJSON), undefined, 2)
                             );
 
+                            let expander = CBUIExpander.create();
+                            expander.expanded = true;
                             expander.message = `
 
                                 Spec
 
-                                --- pre\n${markup}
+                                --- pre\n${message}
                                 ---
 
                             `;
@@ -278,16 +279,17 @@ var CBModelInspector = {
                         }
 
                         {
-                            let expander = CBUIExpander.create();
-                            let markup = CBMessageMarkup.stringToMarkup(
+                            let message = CBMessageMarkup.stringToMarkup(
                                 JSON.stringify(JSON.parse(version.modelAsJSON), undefined, 2)
                             );
 
+                            let expander = CBUIExpander.create();
+                            expander.expanded = true;
                             expander.message = `
 
                                 Model
 
-                                --- pre\n${markup}
+                                --- pre\n${message}
                                 ---
 
                             `;
