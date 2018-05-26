@@ -160,24 +160,6 @@ EOT;
             }
         }
 
-        /* check for many old versions */
-
-        $versionCount = CBPageVerificationTask::fetchCountOfOldVersions($ID);
-
-        if ($versionCount > 5) {
-            $inFiveMinutes = 5 * 60;
-
-            CBTasks2::restart('CBModelPruneVersionsTask', $ID, null, $inFiveMinutes);
-
-            $severity = min(6, $severity);
-            $messages[] = <<<EOT
-
-                The CBModelPruneVersionsTask was restarted for this page because
-                it has more than five versions.
-
-EOT;
-        }
-
         if ($resave) {
             CBModels::save($result->spec);
         }
