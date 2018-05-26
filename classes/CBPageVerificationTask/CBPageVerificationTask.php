@@ -43,7 +43,13 @@ final class CBPageVerificationTask {
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBImages', 'CBLog', 'CBModels', 'CBPages', 'CBTasks2'];
+        return [
+            'CBImages',
+            'CBLog',
+            'CBModels',
+            'CBPages',
+            'CBTasks2',
+        ];
     }
 
     /**
