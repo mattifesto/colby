@@ -222,15 +222,16 @@ EOT;
 
         $SQL = <<<EOT
 
-            SELECT  `className`,
-                    LOWER(HEX(`ID`)) AS `ID`,
-                    `message`,
-                    `serial`,
-                    `severity`,
-                    `timestamp`
-            FROM    `CBLog`
+            SELECT  className,
+                    LOWER(HEX(ID)) AS ID,
+                    message,
+                    LOWER(HEX(processID)) as processID,
+                    serial,
+                    severity,
+                    timestamp
+            FROM    CBLog
             {$whereAsSQL}
-            ORDER BY `serial` {$descAsSQL}
+            ORDER BY serial {$descAsSQL}
             LIMIT 500
 
 EOT;
