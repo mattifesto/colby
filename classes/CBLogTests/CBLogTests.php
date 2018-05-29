@@ -3,8 +3,19 @@
 final class CBLogTests {
 
     static function noClassNameTest() {
+        $message = <<<EOT
+
+            This is a test log entry created by noClassNameTest() in
+            CBLogTests.php.
+
+            This test creates this log entry with no class name and a severity
+            of 7 (debug). The log entry should have its severity raised to 4
+            (warning) because it has no class name.
+
+EOT;
+
         $serialNumber = CBLog::log((object)[
-            'message' => 'This is a CBLogsTests log entry with no class name.',
+            'message' => $message,
             'severity' => 7,
         ]);
 
