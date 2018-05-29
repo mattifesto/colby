@@ -82,8 +82,18 @@ final class CBPageVerificationTask {
         }
 
         if (!empty($result->didDeleteRowWithoutModel)) {
-            $severity = min(4, $severity);
-            $messages[] = 'The page row and data store were deleted';
+            $message = <<<EOT
+
+                The page row and data store were deleted by this task because no
+                model exists for this ID
+
+EOT;
+
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => $message,
+                'severity' => 4,
+            ]);
         }
 
         if (!empty($result->renderError)) {
