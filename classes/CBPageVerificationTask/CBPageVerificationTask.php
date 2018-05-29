@@ -74,8 +74,11 @@ final class CBPageVerificationTask {
         }
 
         if (empty($result->model)) {
-            $severity = min(4, $severity);
-            $messages[] = 'No model exists for this ID';
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => 'No model exists for this ID',
+                'severity' => 4,
+            ]);
         }
 
         if (!empty($result->didDeleteRowWithoutModel)) {
