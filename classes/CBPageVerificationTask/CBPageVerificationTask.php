@@ -123,8 +123,7 @@ EOT;
                         unset($result->spec->thumbnailURL);
 
                         $resave = true;
-                        $severity = min(6, $severity);
-                        $messages[] = <<<EOT
+                        $message = <<<EOT
 
                             A CBViewPage spec upgraded its thumbnailURL
 
@@ -135,6 +134,12 @@ EOT;
                             {$result->spec->image->ID}
 
 EOT;
+
+                        CBLog::log((object)[
+                            'className' => __CLASS__,
+                            'message' => $message,
+                            'severity' => 4,
+                        ]);
                     }
                 }
 
