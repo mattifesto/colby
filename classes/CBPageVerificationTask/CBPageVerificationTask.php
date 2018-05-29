@@ -66,8 +66,11 @@ final class CBPageVerificationTask {
         $result = CBPageVerificationTask::run($ID);
 
         if (empty($result->hasColbyPagesRow)) {
-            $severity = min(4, $severity);
-            $messages[] = 'No ColbyPages row exists for this ID';
+            CBLog::log((object)[
+                'className' => __CLASS__,
+                'message' => 'No ColbyPages row exists for this ID',
+                'severity' => 4,
+            ]);
         }
 
         if (empty($result->model)) {
