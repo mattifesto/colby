@@ -204,7 +204,7 @@ EOT;
      * This test exists to ensure code coverage. At this point, it does not
      * ensure that the tested functionality has actually run.
      *
-     * Manually, the log can be checked for an error entry after this test is
+     * Manually, the log can be checked for an warning entry after this test is
      * run to ensure that the functionality worked properly during the test.
      *
      * @return object

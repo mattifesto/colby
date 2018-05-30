@@ -180,7 +180,7 @@ EOT;
                     CBLog::log((object)[
                         'className' => __CLASS__,
                         'message' => $message,
-                        'severity' => 3,
+                        'severity' => 4,
                     ]);
                 }
             }
