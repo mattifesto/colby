@@ -11,7 +11,7 @@ final class CBMessageMarkup {
      * @return string
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v405.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v427.js', cbsysurl())];
     }
 
     /**
@@ -533,7 +533,14 @@ final class CBMessageMarkup {
     }
 
     /**
-     * This function converts a string to markup representing that string as
+     * @deprecated use stringToMessage()
+     */
+    static function stringToMarkup(string $value): string {
+        return CBMessageMarkup::stringToMessage($value);
+    }
+
+    /**
+     * This function converts a string to a message representing that string as
      * plain text. This function is the `htmlspecialchars` of message markup.
      *
      * Conversions:
@@ -548,11 +555,11 @@ final class CBMessageMarkup {
      *      A single backslash in a regular expression or a preg_replace
      *      replacement is represented by four backslashes.
      *
-     * @param string $string
+     * @param string $value
      *
      * @return string
      */
-    static function stringToMarkup(string $string): string {
+    static function stringToMessage(string $value): string {
         $patterns = [
             '/\\\\/',   /* single backslack */
             '/-/',      /* hyphen */
@@ -566,7 +573,7 @@ final class CBMessageMarkup {
             '\\\\)',    /* backslash close bracket */
         ];
 
-        return preg_replace($patterns, $replacements, $string);
+        return preg_replace($patterns, $replacements, $value);
     }
 
     /**

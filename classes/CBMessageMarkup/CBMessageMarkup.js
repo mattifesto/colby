@@ -519,6 +519,13 @@ var CBMessageMarkup = {
     },
 
     /**
+     * @deprecated use stringToMessage()
+     */
+    stringToMarkup: function (value) {
+        return CBMessageMarkup.stringToMessage(value);
+    },
+
+    /**
      * This function converts a string to markup representing that string as
      * plain text. This function is the `htmlspecialchars` of message markup.
      *
@@ -530,11 +537,11 @@ var CBMessageMarkup = {
      *     close bracket -> backslash, close bracket
      *
      *
-     * @param string string
+     * @param string value
      *
      * @return string
      */
-    stringToMarkup: function (string) {
+    stringToMessage: function (value) {
         var patterns = [
             /\\/g,      /* single backslack */
             /-/g,       /* hyphen */
@@ -549,10 +556,10 @@ var CBMessageMarkup = {
         ];
 
         patterns.forEach(function (pattern, index) {
-            string = string.replace(pattern, replacements[index]);
+            value = value.replace(pattern, replacements[index]);
         });
 
-        return string;
+        return value;
     },
 
     /**
