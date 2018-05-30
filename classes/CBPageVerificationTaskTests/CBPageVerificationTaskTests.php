@@ -9,6 +9,7 @@ final class CBPageVerificationTaskTests {
         return [
             ['CBPageVerificationTask', 'hasColbyPagesRow'],
             ['CBPageVerificationTask', 'importThumbnailURLToImage'],
+            ['CBPageVerificationTask', 'invalidImageProperty'],
             ['CBPageVerificationTask', 'rowWithNoModel'],
             ['CBPageVerificationTask', 'upgradeThumbnailURLToImage'],
         ];
@@ -197,6 +198,54 @@ EOT;
 
         CBModels::deleteByID($temporaryImageDataStoreID);
         CBModels::deleteByID(CBTestAdmin::testImageID());
+    }
+
+    /**
+     * This test exists to ensure code coverage. At this point, it does not
+     * ensure that the tested functionality has actually run.
+     *
+     * Manually, the log can be checked for an error entry after this test is
+     * run to ensure that the functionality worked properly during the test.
+     *
+     * @return object
+     */
+    static function CBTest_invalidImageProperty(): stdClass {
+        $ID = '5cf7dc1d21b1c70d62eeede0b9558d63f91781a3';
+        $spec = (object)[
+            'className' => 'CBViewPage',
+            'ID' => $ID,
+            'image' => 'This test image property value is a string. A valid property value would be a CBImage spec.',
+            'title' => 'Test Page for CBTest_invalidImageProperty() in CBPageVerificationTaskTests',
+        ];
+
+        CBDB::transaction(function () use ($ID) {
+            CBModels::deleteByID($ID);
+        });
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+
+        $taskWasRun = CBTasks2::runSpecificTask(
+            'CBPageVerificationTask',
+            $ID
+        );
+
+        if (!$taskWasRun) {
+            throw new Exception("The task was not run.");
+        }
+
+        /**
+         * A log entry should be created, no current way to verify.
+         */
+
+        CBDB::transaction(function () use ($ID) {
+            CBModels::deleteByID($ID);
+        });
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 
     /**
