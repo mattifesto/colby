@@ -132,4 +132,55 @@ EOT;
     static function CBAjax_run_group(): string {
         return 'Developers';
     }
+
+    /**
+     * @param string $testTitle
+     *
+     *      The test function name and class name will be added by the test
+     *      framework so this title only needs to indicate which subtest in the
+     *      test function  had the issue.
+     *
+     *      Examples:
+     *
+     *      "Test 1"
+     *      "Test 2"
+     *      "String Test"
+     *
+     * @param mixed $actualResult
+     * @param mixed $expectedResult
+     *
+     * @return object
+     */
+    static function resultMismatchFailure(string $testTitle, $actualResult, $expectedResult) {
+        $testTitleAsMessage = CBMessageMarkup::stringToMessage($testTitle);
+
+        $actualResultAsJSON = CBMessageMarkup::stringToMarkup(
+            CBConvert::valueToPrettyJSON($actualResult)
+        );
+
+        $expectedResultAsJSON = CBMessageMarkup::stringToMarkup(
+            CBConvert::valueToPrettyJSON($expectedResult)
+        );
+
+        $message = <<<EOT
+
+            {$testTitleAsMessage}
+
+            (result (strong))
+
+            --- pre\n{$actualResultAsJSON}
+            ---
+
+            (expected (strong))
+
+            --- pre\n{$expectedResultAsJSON}
+            ---
+
+EOT;
+
+        return (object)[
+            'succeeded' => false,
+            'message' => $message,
+        ];
+    }
 }
