@@ -107,7 +107,9 @@ EOT;
         array_unshift($messages, $firstLine);
 
         if (CBModel::valueToString($result, 'model.className') == 'CBViewPage') {
-            if (empty($result->spec->image)) {
+            $imageValue = CBModel::value($result, 'spec.image');
+
+            if (empty($imageValue)) {
 
                 /**
                  * We only process `thumbnailURL` on the spec if `image` is not
@@ -138,25 +140,48 @@ EOT;
                         CBLog::log((object)[
                             'className' => __CLASS__,
                             'message' => $message,
-                            'severity' => 4,
+                            'severity' => 6,
                         ]);
                     }
                 }
-
             } else {
+                $imageID = CBModel::value($imageValue, 'ID');
 
-                /**
-                 * Emit a warning if the `image` on the spec is not a valid CBImage.
-                 */
+                if (!CBImages::isInstance($imageID)) {
+                    $imageValueAsMessage = CBMessageMarkup::stringToMarkup(
+                        CBConvert::valueToPrettyJSON($imageValue)
+                    );
 
-                if (!CBImages::isInstance($result->spec->image->ID)) {
-                    $severity = min(3, $severity);
-                    $messages[] = <<<EOT
+                    $imageIDAsMessage = CBMessageMarkup::stringToMarkup(
+                        CBConvert::valueToPrettyJSON($imageID)
+                    );
 
-                        The "image" property is set on the spec to an image that
-                        is not a valid CBImage instance.
+                    $message = <<<EOT
+
+                        The "image" property value of a page spec with the
+                        title, "{$pageTitle}", is invalid.
+
+                        The "image" property value is:
+
+                        --- pre\n{$imageValueAsMessage}
+                        ---
+
+                        The "ID" property value of this value is:
+
+                        --- pre\n{$imageIDAsMessage}
+                        ---
+
+                        When the ID property value was used as the parameter to
+                        the (CBImage::isInstance\(\) (code)) function, the function
+                        returned false.
 
 EOT;
+
+                    CBLog::log((object)[
+                        'className' => __CLASS__,
+                        'message' => $message,
+                        'severity' => 3,
+                    ]);
                 }
             }
 
