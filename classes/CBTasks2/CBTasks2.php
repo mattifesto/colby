@@ -344,45 +344,109 @@ EOT;
     }
 
     /**
+     * This function will run the specified task before the function returns.
+     *
      * @param string $className
-     * @param hex160 $ID
+     * @param ID $ID
      *
      * @return bool
      *
-     *      Returns true if the task is run; otherwise false.
+     *      Returns true if the task was run; otherwise false.
+     *
+     *      If the specified task is currently running this function will return
+     *      false. There are many issues if the task is currently running. Is
+     *      the current run enough to make the caller happy? Does the caller
+     *      need a run from start to finish because they are monitoring
+     *      something. If the task is running, the task can take the entire
+     *      request time so waiting to run the task again is not a technically
+     *      viable option, so in almost all theoretical cases the run should
+     *      happen during a future request.
+     *
+     *      Task management using MySQL, HTTP, and PHP is meant to support light
+     *      weight scenarios. The technical requirements of a computer operating
+     *      system threading system would quickly push this implementation past
+     *      its abilities. Tasks in Colby are not meant meet such a high level
+     *      of requirements at this time.
      */
-    static function runSpecificTask($className, $ID) {
+    static function runSpecificTask(string $className, string $ID): bool {
         $classNameAsSQL = CBDB::stringToSQL($className);
         $IDAsSQL = CBHex160::toSQL($ID);
         $timestamp = time();
-        $state = 2; // running
+        $state_running = 2;
         $starterID = CBHex160::random();
         $starterIDAsSQL = CBHex160::toSQL($starterID);
 
         /**
-         * BUG: Avoid running if task is already running.
+         * If the task is in the CBTasks2 table in a non-running state, place it
+         * in a running state with the generated starter ID.
          */
 
         $SQL = <<<EOT
 
-            INSERT INTO `CBTasks2`
-            (`className`, `ID`, `starterID`, `state`, `timestamp`)
-            VALUES
-            ({$classNameAsSQL}, {$IDAsSQL}, {$starterIDAsSQL}, {$state}, {$timestamp})
-            ON DUPLICATE KEY UPDATE
-                `starterID` = {$starterIDAsSQL},
-                `state` = {$state},
-                `timestamp` = {$timestamp}
+            UPDATE  CBTasks2
+            SET     starterID = {$starterIDAsSQL},
+                    state = {$state_running},
+                    timestamp = {$timestamp}
+            WHERE   className = $classNameAsSQL AND
+                    ID = {$IDAsSQL} AND
+                    state != {$state_running}
 
 EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
 
-        if (Colby::mysqli()->affected_rows > 0) {
-            return CBTasks2::runTaskForStarter($starterID);
-        } else {
-            return false;
+        /**
+         * If the task was not in the CBTasks2 table in a non-running state,
+         * attempt to insert it with a running state and the generated starter
+         * ID.
+         */
+
+        if (Colby::mysqli()->affected_rows !== 1) {
+            $SQL = <<<EOT
+
+                INSERT INTO CBTasks2
+                (
+                    className,
+                    ID,
+                    starterID,
+                    state,
+                    timestamp
+                )
+                VALUES
+                (
+                    {$classNameAsSQL},
+                    {$IDAsSQL},
+                    {$starterIDAsSQL},
+                    {$state_running},
+                    {$timestamp}
+                )
+
+EOT;
+
+            try {
+                Colby::query($SQL, /* retryOnDeadlock */ true);
+            } catch (Throwable $throwable) {
+                if (Colby::mysqli()->errno === 1062) {
+
+                    /**
+                     * This is they MySQL error number for "duplicate entry"
+                     * which means the row already exists. In the current
+                     * context it means the task was either already running or
+                     * that another process inserted the row since the time we
+                     * ran the function's first query.
+                     *
+                     * Either way, the task cannot be run during this function
+                     * call.
+                     */
+
+                    return false;
+                } else {
+                    throw $throwable;
+                }
+            }
         }
+
+        return CBTasks2::runTaskForStarter($starterID);
     }
 
     /**
