@@ -3,6 +3,58 @@
 final class CBLogTests {
 
     /**
+     * @return object
+     */
+    static function CBTest_bufferEndClean(): stdClass {
+        CBLog::bufferStart();
+
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'message' => 'CBLogTests_firstBuffer',
+        ]);
+
+        CBLog::bufferStart();
+
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'message' => 'CBLogTests_secondBuffer',
+        ]);
+
+        CBLog::bufferEndClean();
+
+        $buffer = CBLog::bufferContents();
+
+        CBLog::bufferEndClean();
+
+        if (
+            count($buffer) !== 1 ||
+            $buffer[0]->message !== 'CBLogTests_firstBuffer'
+        ) {
+            $bufferAsMessage = CBMessageMarkup::stringToMessage(
+                CBConvert::valueToPrettyJSON($buffer)
+            );
+
+            $message = <<<EOT
+
+                The log entry buffer is not what was expected.
+
+                --- pre\n{$bufferAsMessage}
+                ---
+
+EOT;
+
+            return (object)[
+                'message' => $message,
+                'succeeded' => false,
+            ];
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
      * This is a code coverage test for bufferEndFlush(). This test does not
      * confirm that the function ran correcty.
      *
@@ -146,6 +198,7 @@ EOT;
      */
     static function CBUnitTests_tests(): array {
         return [
+            ['CBLog', 'bufferEndClean'],
             ['CBLog', 'bufferEndFlush'],
             ['CBLog', 'noClassName'],
             ['CBLog', 'noMessage'],
