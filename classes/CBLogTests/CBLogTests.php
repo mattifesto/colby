@@ -3,6 +3,27 @@
 final class CBLogTests {
 
     /**
+     * This is a code coverage test for bufferEndFlush(). This test does not
+     * confirm that the function ran correcty.
+     *
+     * @return object
+     */
+    static function CBTest_bufferEndFlush(): stdClass {
+        CBLog::bufferStart();
+
+        CBLog::log((object)[
+            'className' => __CLASS__,
+            'message' => __FUNCTION__ . '() in ' . __CLASS__,
+        ]);
+
+        CBLog::bufferEndFlush();
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
      * @return object
      */
     static function CBTest_noClassName(): stdClass {
@@ -125,6 +146,7 @@ EOT;
      */
     static function CBUnitTests_tests(): array {
         return [
+            ['CBLog', 'bufferEndFlush'],
             ['CBLog', 'noClassName'],
             ['CBLog', 'noMessage'],
         ];
