@@ -80,9 +80,9 @@ EOT;
     }
 
     /**
-     * @return ?object
+     * @return object
      */
-    static function hasColbyPagesRowTest(): ?stdClass {
+    static function CBTest_hasColbyPagesRow(): stdClass {
         $ID = '722880dadcef3874157d086b4eceeae83194173f';
         $spec = (object)[
             'className' => 'CBViewPage',
@@ -128,7 +128,9 @@ EOT;
             CBModels::deleteByID($ID);
         });
 
-        return null;
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 
     /**
