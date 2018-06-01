@@ -71,8 +71,6 @@ class CBUnitTests {
             ['CBDB',                    'SQLToValue'],
             ['CBImage',                 'upgrade'],
             ['CBImages',                'resize'],
-            ['CBLog',                   'noClassName'],
-            ['CBLog',                   'noMessage'],
             ['CBMarkaround',            'paragraphToHTML'],
             ['CBMessageMarkup',         'markupToHTML'],
             ['CBMessageMarkup',         'markupToText'],
