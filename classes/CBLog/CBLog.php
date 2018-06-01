@@ -15,6 +15,20 @@ final class CBLog {
     ];
 
     /**
+     * This is a stack of log entry buffers. A log entry buffer is an array of
+     * log entry objects.
+     *
+     * Normally, there is no log entry buffer and log entries are written
+     * directly to the log. A log entry buffer is added to the stack each time
+     * bufferStart() is called. All log entries are added to the log entry
+     * buffer at the top of the stack and will not be added to the lower log
+     * entry buffer unless bufferEndFlush() is called. No buffered log entires
+     * will be written to the log unless bufferEndFlush() is called for the log
+     * entry buffer at the bottom of the stack.
+     */
+    private static $bufferStack = [];
+
+    /**
      * @deprecated use CBLog::log()
      */
     static function addMessage($category, $severity, $message) {
@@ -23,6 +37,62 @@ final class CBLog {
             'message' => $message,
             'severity' => $severity,
         ]);
+    }
+
+    /**
+     * @return ?[object]
+     *
+     *      If log entries are currently being buffered, an array of log entries
+     *      in the current buffer will be returned; otherwise null.
+     */
+    static function bufferContents(): ?array {
+        if (empty(CBLog::$bufferStack)) {
+            return null;
+        } else {
+            $count = count(CBLog::$bufferStack);
+
+            return json_decode(json_encode(CBLog::$bufferStack[$count - 1]));
+        }
+    }
+
+    /**
+     * @return void
+     */
+    static function bufferEndClean(): void {
+        if (empty(CBLog::$bufferStack)) {
+            throw new Exception('There is no log entry buffer.');
+        } else {
+            array_pop(CBLog::$bufferStack);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    static function bufferEndFlush(): void {
+        if (empty(CBLog::$bufferStack)) {
+            throw new Exception('There is no log entry buffer.');
+        } else {
+            $count = count(CBLog::$bufferStack);
+            $buffer = array_pop(CBLog::$bufferStack);
+
+            if ($count > 1) {
+                $lowerBuffer = array_pop(CBLog::$bufferStack);
+                $mergedBuffer = array_merge($lowerBuffer, $buffer);
+                array_push(CBLog::$bufferStack, $mergedBuffer);
+            } else {
+                array_walk($buffer, function ($entry) {
+                    CBLog::logForReals($entry);
+                });
+            }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    static function bufferStart(): void {
+        array_push(CBLog::$bufferStack, []);
     }
 
     /**
@@ -271,18 +341,37 @@ EOT;
      *              default: 6 (Informational)
      *      }
      *
-     * @return int
-     *
-     *      The serial number for the log entry.
+     * @return void
      */
-    static function log(stdClass $args) {
-        $hasIssues = false;
+    static function log(stdClass $args): void {
+        CBLog::verifyEntry($args);
+
+        if (empty(CBLog::$bufferStack)) {
+            CBLog::logForReals($args);
+        } else {
+            $count = count(CBLog::$bufferStack);
+            array_push(CBLog::$bufferStack[$count - 1], $args);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private static function logForReals(stdClass $args): void {
         $className = CBModel::valueToString($args, 'className');
+        $classNameAsSQL = CBDB::stringToSQL($className);
+
+        /* severity */
+
         $severity = CBModel::valueAsInt($args, 'severity');
 
         if (empty($severity)) {
             $severity = 6; /* informational */
         }
+
+        $severityAsSQL = (int)$severity;
+
+        /* ID */
 
         $ID = CBModel::valueAsID($args, 'ID');
 
@@ -290,62 +379,20 @@ EOT;
             $ID = CBID::peek();
         }
 
-        $message = CBModel::valueToString($args, 'message');
-
-        if (empty($message)) {
-            $hasIssues = true;
-            $severity = min($severity, 4);
-            $message = 'A CBLog entry was created with no message.'; /* first line */
-            $message .= <<<EOT
-
-
-                (Log issue: (strong))
-
-                No message was specified for this log entry.
-
-EOT;
-        }
-
-        if (empty($className)) {
-            $hasIssues = true;
-            $severity = min($severity, 4);
-            $message .= <<<EOT
-
-
-                (Log issue: (strong))
-
-                No className was specified for this log entry.
-
-EOT;
-        }
-
-        if ($hasIssues) {
-            $argumentsAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($args));
-            $stackTrace = CBMessageMarkup::stringToMarkup(CBConvert::traceToString(debug_backtrace()));
-            $message .= <<<EOT
-
-
-                (Log arguments: (strong))
-
-                --- pre prewrap
-{$argumentsAsJSON}
-                ---
-
-                (Stack trace: (strong))
-
-                --- pre prewrap
-{$stackTrace}
-                ---
-
-EOT;
-        }
-
-        $classNameAsSQL = CBDB::stringToSQL($className);
         $IDAsSQL = ($ID === null) ? 'NULL' : CBHex160::toSQL($ID);
+
+        /* message */
+
+        $message = CBModel::valueToString($args, 'message');
+        $messageAsSQL = CBDB::stringToSQL($message);
+
+        /* process ID */
+
         $processID = CBProcess::ID();
         $processIDAsSQL = ($processID === null) ? 'NULL' : CBHex160::toSQL($processID);
-        $messageAsSQL = CBDB::stringToSQL($message);
-        $severityAsSQL = (int)$severity;
+
+        /* timestamp */
+
         $timestampAsSQL = time();
 
         $SQL = <<<EOT
@@ -369,8 +416,6 @@ EOT;
 EOT;
 
         Colby::query($SQL);
-
-        return Colby::mysqli()->insert_id;
     }
 
     /**
@@ -410,6 +455,67 @@ EOT;
             return CBLog::$severityDescriptions[$severity];
         } else {
             return "Unknown severity code: {$severity}";
+        }
+    }
+
+    /**
+     * This function will make additional log entries to point out issues with a
+     * log entry submitted to CBLog::log()
+     *
+     * @return void
+     */
+    private static function verifyEntry(stdClass $entry): void {
+        $entryClassName = CBModel::valueToString($entry, 'className');
+        $entryMessage = CBModel::valueToString($entry, 'message');
+
+        if (empty($entryClassName) || empty($entryMessage)) {
+            $entryAsMessage = CBMessageMarkup::stringToMessage(
+                CBConvert::valueToPrettyJSON($entry)
+            );
+
+            $stackTraceAsMessage = CBMessageMarkup::stringToMessage(
+                CBConvert::traceToString(debug_backtrace())
+            );
+
+            if (empty($entryClassName)) {
+                $message = <<<EOT
+
+                    CBLog_warning_noClassName: A log entry was submitted that does not have a class name.
+
+                    --- pre\n{$entryAsMessage}
+                    ---
+
+                    --- pre\n{$stackTraceAsMessage}
+                    ---
+
+EOT;
+
+                CBLog::log((object)[
+                    'className' => __CLASS__,
+                    'message' => $message,
+                    'severity' => 4,
+                ]);
+            }
+
+            if (empty($entryMessage)) {
+                $message = <<<EOT
+
+                    CBLog_warning_noMessage: A log entry was submitted that does not have a message.
+
+                    --- pre\n{$entryAsMessage}
+                    ---
+
+                    --- pre\n{$stackTraceAsMessage}
+                    ---
+
+EOT;
+
+                CBLog::log((object)[
+                    'className' => __CLASS__,
+                    'message' => $message,
+                    'severity' => 4,
+                ]);
+            }
         }
     }
 }
