@@ -2,56 +2,131 @@
 
 final class CBLogTests {
 
-    static function noClassNameTest() {
-        $message = <<<EOT
+    /**
+     * @return object
+     */
+    static function CBTest_noClassName(): stdClass {
+        CBLog::bufferStart();
 
-            This is a test log entry created by noClassNameTest() in
-            CBLogTests.php.
-
-            This test creates this log entry with no class name and a severity
-            of 7 (debug). The log entry should have its severity raised to 4
-            (warning) because it has no class name.
-
-EOT;
-
-        $serialNumber = CBLog::log((object)[
-            'message' => $message,
+        $entry = (object)[
+            'message' => 'Test',
             'severity' => 7,
-        ]);
+        ];
 
-        $SQL = <<<EOT
+        CBLog::log($entry);
 
-            SELECT  `className`, `message`, `severity`
-            FROM    `CBLog`
-            WHERE   `serial` = {$serialNumber}
+        $buffer = CBLog::bufferContents();
+
+        CBLog::bufferEndClean();
+
+        $bufferSizeFailed = function ($buffer) {
+            return count($buffer) !== 2;
+        };
+
+        $warningMessageFailed = function ($entry) {
+            $message = CBModel::valueToString($entry, 'message');
+            return strpos($message, 'CBLog_warning_noClassName') === false;
+        };
+
+        $warningSeverityFailed = function ($entry) {
+            return CBModel::valueAsInt($entry, 'severity') !== 4;
+        };
+
+        if (
+            $bufferSizeFailed($buffer) ||
+            $warningMessageFailed($buffer[0]) ||
+            $warningSeverityFailed($buffer[0])
+        ) {
+            $bufferAsMessage = CBMessageMarkup::stringToMessage(
+                CBConvert::valueToPrettyJSON($buffer)
+            );
+
+            $message = <<<EOT
+
+                The log entry buffer is not what was expected.
+
+                --- pre\n{$bufferAsMessage}
+                ---
 
 EOT;
 
-        $row = CBDB::SQLToObject($SQL);
-
-        if ($row->severity != 4) {
-            throw new Exception('The severity of the log entry should have been changed to 4.');
+            return (object)[
+                'message' => $message,
+                'succeeded' => false,
+            ];
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 
-    static function noMessageTest() {
-        $serialNumber = CBLog::log((object)[
+    /**
+     * @return object
+     */
+    static function CBTest_noMessage(): stdClass {
+        CBLog::bufferStart();
+
+        $entry = (object)[
             'className' => __CLASS__,
             'severity' => 7,
-        ]);
+        ];
 
-        $SQL = <<<EOT
+        CBLog::log($entry);
 
-            SELECT  `className`, `message`, `severity`
-            FROM    `CBLog`
-            WHERE   `serial` = {$serialNumber}
+        $buffer = CBLog::bufferContents();
+
+        CBLog::bufferEndClean();
+
+        $bufferSizeFailed = function ($buffer) {
+            return count($buffer) !== 2;
+        };
+
+        $warningMessageFailed = function ($entry) {
+            $message = CBModel::valueToString($entry, 'message');
+            return strpos($message, 'CBLog_warning_noMessage') === false;
+        };
+
+        $warningSeverityFailed = function ($entry) {
+            return CBModel::valueAsInt($entry, 'severity') !== 4;
+        };
+
+        if (
+            $bufferSizeFailed($buffer) ||
+            $warningMessageFailed($buffer[0]) ||
+            $warningSeverityFailed($buffer[0])
+        ) {
+            $bufferAsMessage = CBMessageMarkup::stringToMessage(
+                CBConvert::valueToPrettyJSON($buffer)
+            );
+
+            $message = <<<EOT
+
+                The log entry buffer is not what was expected.
+
+                --- pre\n{$bufferAsMessage}
+                ---
 
 EOT;
 
-        $row = CBDB::SQLToObject($SQL);
-
-        if ($row->severity != 4) {
-            throw new Exception('The severity of the log entry should have been changed to 4.');
+            return (object)[
+                'message' => $message,
+                'succeeded' => false,
+            ];
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
+     * @return [[<class>, <test>]]
+     */
+    static function CBUnitTests_tests(): array {
+        return [
+            ['CBLog', 'noClassName'],
+            ['CBLog', 'noMessage'],
+        ];
     }
 }
