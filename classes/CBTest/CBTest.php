@@ -79,7 +79,7 @@ EOT
                     'succeeded' => empty($result->failed),
                     'message' => CBModel::valueToString($result, 'message'),
                 ];
-            } else if ($testName = '' && is_callable($function = "{$className}Tests::test")) {
+            } else if ($testName === '' && is_callable($function = "{$className}Tests::test")) {
                 /* deprecated */
                 $result = call_user_func($function);
                 $result = (object)[
