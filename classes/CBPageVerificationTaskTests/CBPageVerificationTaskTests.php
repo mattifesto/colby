@@ -285,8 +285,8 @@ EOT;
      *
      * @return null
      */
-    static function upgradeThumbnailURLToImageTest() {
-        $pageID = '4a7bc517a928056f9518d839881cc9f49ea10c0a';
+    static function CBTest_upgradeThumbnailURLToImage(): stdClass {
+        $pageID = 'e87c8eef4953d3060faaa2e3597c730326adfc29';
 
         CBDB::transaction(function () use ($pageID) {
             CBModels::deleteByID([$pageID]);
@@ -314,7 +314,46 @@ EOT;
             CBModels::save($initialPageSspec);
         });
 
+        CBLog::bufferStart();
+
         CBTasks2::runSpecificTask('CBPageVerificationTask', $pageID);
+
+        $buffer = CBLog::bufferContents();
+
+        CBLog::bufferEndClean();
+
+        $bufferIsValid = function ($buffer): bool {
+            if (count($buffer) !== 3) {
+                return false;
+            }
+
+            $sourceID = CBModel::valueAsID($buffer[0], 'sourceID');
+
+            if ($sourceID !== '0099cecb597038d4bf5f182965271e25cc60c070') {
+                return false;
+            }
+
+            return true;
+        };
+
+        if (!$bufferIsValid($buffer)) {
+            $bufferAsMessage = CBMessageMarkup::stringToMessage(
+                CBConvert::valueToPrettyJSON($buffer)
+            );
+
+            $message = <<<EOT
+
+                The log entry buffer is not what was expected:
+
+                --- pre\n{$bufferAsMessage}
+                ---
+
+EOT;
+
+            return (object)[
+                'message' => $message,
+            ];
+        }
 
         $updatedPageSpec = CBModels::fetchSpecByID($pageID);
 
@@ -339,5 +378,9 @@ EOT;
 
         CBModels::deleteByID($pageID);
         CBModels::deleteByID($resultImageID);
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 }
