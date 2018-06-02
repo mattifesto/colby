@@ -20,6 +20,7 @@ final class CBTextView {
 
         CBLog::log((object)[
             'className' => __CLASS__,
+            'sourceID' => '00754cfbd72404dc44861189397751acabdc4ce7',
             'message' => <<<EOT
 
                 A CBTextView was upgraded to a CBMessageView
