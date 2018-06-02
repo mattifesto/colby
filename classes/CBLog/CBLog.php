@@ -155,6 +155,31 @@ final class CBLog {
      *
      *      The timestamp the log entry was created.
      *
+     * @NOTE Future upgrade thoughts
+     *
+     *      className -> sourceClassName
+     *
+     *          The className property should be renamed to sourceClassName
+     *          because a className property on an object makes it look like
+     *          it's a model which is not the case here.
+     *
+     *      add sourceID
+     *
+     *          This property is used to identify the specific source code that
+     *          created the log entry. For instance, if the CBTextView class
+     *          creates a log entry each time it upgrades a CBTextView model to
+     *          a CBMessageView, it would use a sourceID each time it created
+     *          the log entry. This property allows to test to determine if a
+     *          log entry that is expected to be created actually is created and
+     *          it also allows log browsers to see all entries created that are
+     *          from this exact source.
+     *
+     *      ID -> modelID
+     *
+     *          The fact that this property is named ID makes it appear that
+     *          this property is the ID of the log entry. It is not, it is the
+     *          ID of a specific model associated with a log entry.
+     *
      * @return void
      */
     static function CBInstall_install(): void {
