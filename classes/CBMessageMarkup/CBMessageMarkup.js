@@ -2,15 +2,16 @@
 /* jshint strict: global */
 /* exported CBMessageMarkup */
 /* global
-    Colby */
+    Colby,
+*/
 
 var CBMessageMarkup = {
 
     /**
-     * @deprecated use CBMessageMarkup.markupToHTML()
+     * @deprecated use CBMessageMarkup.messageToHTML()
      */
-    convert: function (markup) {
-        return CBMessageMarkup.markupToHTML(markup);
+    convert: function (message) {
+        return CBMessageMarkup.messageToHTML(message);
     },
 
     /**
@@ -307,11 +308,25 @@ var CBMessageMarkup = {
     },
 
     /**
+     * @deprecated use messageToHTML
+     */
+    markupToHTML: function (message) {
+        return CBMessageMarkup.messageToHTML(message);
+    },
+
+    /**
+     * @deprecated use messageToText
+     */
+    markupToText: function (message) {
+        return CBMessageMarkup.messageToText(message);
+    },
+
+    /**
      * @param string markup
      *
      * @return string
      */
-    markupToHTML: function (markup) {
+    messageToHTML: function (markup) {
         markup = CBMessageMarkup.encodeEscapedCharacters(markup);
 
         var content, line;
@@ -430,7 +445,7 @@ var CBMessageMarkup = {
      *
      * @return string
      */
-    markupToText: function (markup) {
+    messageToText: function (markup) {
         markup = CBMessageMarkup.encodeEscapedCharacters(markup);
         var command, line, paragraph;
         var paragraphs = [];
