@@ -17,6 +17,7 @@ final class CBPagesPreferences {
         'CBPageListView2',
         'CBPageTitleAndDescriptionView',
         'CBTextView2',
+        'CBYouTubeView',
     ];
 
     /**
