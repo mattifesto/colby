@@ -15,10 +15,10 @@ final class CBMessageMarkup {
     }
 
     /**
-     * @deprecated use CBMessageMarkup::markupToHTML()
+     * @deprecated use CBMessageMarkup::messageToHTML()
      */
     static function convert(string $markup): string {
-        return CBMessageMarkup::markupToHTML($markup);
+        return CBMessageMarkup::messageToHTML($markup);
     }
 
     /**
@@ -332,11 +332,25 @@ final class CBMessageMarkup {
     }
 
     /**
+     * @deprecated use messageToHTML()
+     */
+    static function markupToHTML(string $message): string {
+        return CBMessageMarkup::messageToHTML($message);
+    }
+
+    /**
+     * @deprecated use messageToText()
+     */
+    static function markupToText(string $message): string {
+        return CBMessageMarkup::messageToText($message);
+    }
+
+    /**
      * @param string $markup
      *
      * @return string
      */
-    static function markupToHTML(string $markup): string {
+    static function messageToHTML(string $markup): string {
         $markup = CBMessageMarkup::encodeEscapedCharacters($markup);
         $content = null;
         $lines = preg_split("/\r\n|\n|\r/", $markup);
@@ -435,14 +449,14 @@ final class CBMessageMarkup {
     }
 
     /**
-     * Converts message markup to plain text. Useful for creating search text or
+     * Converts a message to plain text. Useful for creating search text or
      * plain text summaries.
      *
      * @param string $markup
      *
      * @return string
      */
-    static function markupToText(string $markup): string {
+    static function messageToText(string $markup): string {
         $markup = CBMessageMarkup::encodeEscapedCharacters($markup);
         $paragraphs = [];
         $paragraph = null;
