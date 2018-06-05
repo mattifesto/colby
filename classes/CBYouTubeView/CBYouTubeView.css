@@ -1,0 +1,48 @@
+.CBYouTubeView {
+    display: flex;
+    justify-content: center;
+
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 20px;
+}
+
+/**
+ * The "width" element establishes the intrinsic and maximum width for the
+ * video. This element is centered horizontally inside the view element.
+ *
+ * The width style will be set directly on the element by the view.
+ */
+.CBYouTubeView > .width {
+    flex: 0 1 auto;
+    max-width: 100%;
+}
+
+/**
+ * The "aspect" element depends on the "width" element's width to set its bottom
+ * padding to create a 16x9 aspect ratio.
+ */
+.CBYouTubeView > .width > .aspect {
+    position: relative;
+
+    padding-bottom: 56.25%;
+}
+
+.CBYouTubeView > .width > .aspect > iframe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    border: none;
+}
+
+.CBYouTubeView .caption {
+    box-sizing: border-box;
+    color: var(--CBTextColor2);
+    font-size: 80%;
+    padding: 10px 0 5px;
+    text-align: center;
+    width: 100%;
+}
