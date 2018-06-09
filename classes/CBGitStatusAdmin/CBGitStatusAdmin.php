@@ -59,14 +59,19 @@ final class CBGitStatusAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v397.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v430.js', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
-        return ['CBUI', 'CBUIExpander', 'CBUISectionItem4', 'CBUIStringsPart'];
+        return [
+            'CBUI',
+            'CBUIExpander',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
+        ];
     }
 
     /**
@@ -129,7 +134,16 @@ EOT;
         }
 
         $lines = [];
-        exec('git log origin/master..head --oneline --no-decorate --reverse', $lines);
+        exec('git remote', $lines);
+
+        if (array_search('origin', $lines) === false) {
+            $range = '';
+        } else {
+            $range = 'origin/master..head';
+        }
+
+        $lines = [];
+        exec("git log {$range} --oneline --no-decorate --reverse", $lines);
 
         if (!empty($lines)) {
             $lines = implode("\n", $lines);

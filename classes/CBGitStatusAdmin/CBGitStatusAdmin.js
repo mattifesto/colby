@@ -7,7 +7,8 @@
     CBUIExpander,
     CBUISectionItem4,
     CBUIStringsPart,
-    Colby */
+    Colby,
+*/
 
 var CBGitStatusAdmin = {
 
@@ -56,14 +57,12 @@ var CBGitStatusAdmin = {
                 container.textContent = "";
 
                 value.forEach(function (status) {
-                    if (status.message) {
-                        let expander = CBUIExpander.create();
-                        expander.expanded = true;
-                        expander.timestamp = Date.now() / 1000;
-                        expander.message = status.message;
+                    let expander = CBUIExpander.create();
+                    expander.expanded = true;
+                    expander.timestamp = Date.now() / 1000;
+                    expander.message = status.message || "";
 
-                        container.appendChild(expander.element);
-                    }
+                    container.appendChild(expander.element);
                 });
 
                 Colby.updateTimes(true);
