@@ -503,15 +503,22 @@ final class Colby {
     }
 
     /**
-     * @return null
+     * @param string $libraryPath
+     *
+     *      The path to the library directory from the site directory with no
+     *      beginning or ending slashes.
+     *
+     *      Example: "mylibrary" or "libraries/mylibrary"
+     *
+     * @return void
      */
-    static function loadLibrary($libraryDirectory) {
-        $absoluteLibraryDirectory = cbsitedir() . "/{$libraryDirectory}";
+    static function loadLibrary($libraryPath): void {
+        Colby::$libraryDirectories[] = $libraryPath;
 
-        include_once "{$absoluteLibraryDirectory}/version.php";
-        include_once "{$absoluteLibraryDirectory}/library-configuration.php";
+        $libraryDirectory = cbsitedir() . "/{$libraryPath}";
 
-        Colby::$libraryDirectories[] = $libraryDirectory;
+        include_once "{$libraryDirectory}/version.php";
+        include_once "{$libraryDirectory}/library-configuration.php";
     }
 
     /**
