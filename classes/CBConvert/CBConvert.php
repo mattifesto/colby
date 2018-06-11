@@ -141,8 +141,8 @@ final class CBConvert {
     static function stringToStub($string) {
         $stub = trim($string);
 
-        $patterns =     array('/[\s-]+/', '/[^a-zA-Z0-9-]/', '/^-+/', '/-+$/', '/--+/');
-        $replacements = array('-'       , ''               , ''     , ''     , '-'    );
+        $patterns =     ['/[\s-_]+/', '/[^a-zA-Z0-9-]/', '/^-+/', '/-+$/', '/--+/'];
+        $replacements = ['-'        , ''               , ''     , ''     , '-'    ];
 
         $stub = preg_replace($patterns, $replacements, $stub);
 
