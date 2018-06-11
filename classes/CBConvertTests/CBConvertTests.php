@@ -3,6 +3,47 @@
 final class CBConvertTests {
 
     /**
+     * @return null
+     */
+    static function CBTest_stringToStub(): stdClass {
+        /* Test 1 */
+
+        $text = ' ';
+        $expected = '';
+        $actual = CBConvert::stringToStub($text);
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure('Test 1', $actual, $expected);
+        }
+
+        /* Test 2 */
+
+        $text = 'You\'re the_best';
+        $expected = 'youre-the-best';
+        $actual = CBConvert::stringToStub($text);
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure('Test 2', $actual, $expected);
+        }
+
+        /* Test 3 */
+
+        $text = '-é- __ --hello __-é-__ world  __ -ö-__';
+        $expected = 'hello-world';
+        $actual = CBConvert::stringToStub($text);
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure('Test 3', $actual, $expected);
+        }
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
      * @return object
      */
     static function CBTest_stringToURI(): stdClass {
@@ -30,6 +71,7 @@ final class CBConvertTests {
      */
     static function CBUnitTests_tests(): array {
         return [
+            ['CBConvert', 'stringToStub'],
             ['CBConvert', 'stringToURI'],
         ];
     }
@@ -94,18 +136,6 @@ EOT;
         if ($diff) {
             $JSON = json_encode($diff);
             throw new Exception("runTestForTextToLineArray: The array returned does not match the expected array with these differences: {$JSON}.");
-        }
-    }
-
-    /**
-     * @return null
-     */
-    static function textToStubTest() {
-        $text = ' ';
-        $stub = ColbyConvert::textToStub($text);
-
-        if ($stub !== '') {
-            throw new Exception('Test failed');
         }
     }
 
