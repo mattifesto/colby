@@ -139,14 +139,30 @@ final class CBConvert {
      * @return string
      */
     static function stringToStub($string) {
-        $stub = trim($string);
+        $patterns = [];
+        $replacements = [];
 
-        $patterns =     ['/[\s-_]+/', '/[^a-zA-Z0-9-]/', '/^-+/', '/-+$/', '/--+/'];
-        $replacements = ['-'        , ''               , ''     , ''     , '-'    ];
+        /* replace separator characters with a hyphen */
+        array_push($patterns, '/[\s-_]+/');
+        array_push($replacements, '-');
 
-        $stub = preg_replace($patterns, $replacements, $stub);
+        /* remove unused characters */
+        array_push($patterns, '/[^a-zA-Z0-9-]/');
+        array_push($replacements, '');
 
-        return strtolower($stub);
+        /* remove leading hyphens */
+        array_push($patterns, '/^-+/');
+        array_push($replacements, '');
+
+        /* remove trailing hyphens */
+        array_push($patterns, '/-+$/');
+        array_push($replacements, '');
+
+        /* replace repeating hyphens with a single hyphen */
+        array_push($patterns, '/--+/');
+        array_push($replacements, '-');
+
+        return strtolower(preg_replace($patterns, $replacements, $string));
     }
 
     /**
