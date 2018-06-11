@@ -104,6 +104,11 @@ EOT;
     }
 
     /**
+     * @NOTE 2018.06.11
+     *
+     *      This function needs more documenation. I'm not sure what it's used
+     *      for.
+     *
      * Best in a transaction.
      */
     static function makeSpec($ID, $className) {
@@ -182,6 +187,29 @@ EOT;
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
+     * This function will remove all the associatedID entries for a given ID and
+     * class name.
+     *
+     * @param ID $ID
+     * @param string $className
+     *
+     * @return void
+     */
+    static function removeAssociations(string $ID, string $className): void {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $classNameAsSQL = CBDB::stringToSQL($className);
+        $SQL = <<<EOT
+
+            DELETE FROM CBModelAssociations
+            WHERE   className = {$classNameAsSQL} AND
+                    ID = {$IDAsSQL}
 
 EOT;
 
