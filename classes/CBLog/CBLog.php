@@ -345,10 +345,7 @@ EOT;
      *      {
      *          className: string
      *
-     *              The name of the class most associated with the message. This
-     *              is often the class calling the function, but sometimes
-     *              classes or functions log messages related to something that
-     *              occurred regarding another class.
+     *              deprecated: use sourceClassName
      *
      *          ID: hex160?
      *
@@ -364,6 +361,11 @@ EOT;
      *              than 4 will also be sent to error_log().
      *
      *              default: 6 (Informational)
+     *
+     *          sourceClassName: string
+     *
+     *              The name of the class that created the log entry. This
+     *              is usually the class calling CBlog::log().
      *      }
      *
      * @return void
@@ -383,8 +385,15 @@ EOT;
      * @return void
      */
     private static function logForReals(stdClass $args): void {
-        $className = CBModel::valueToString($args, 'className');
-        $classNameAsSQL = CBDB::stringToSQL($className);
+        /* sourceClassName */
+
+        $sourceClassName = CBModel::valueToString($args, 'sourceClassName');
+
+        if (empty($sourceClassName)) {
+            $sourceClassName = CBModel::valueToString($args, 'className'); /* deprecated */
+        }
+
+        $sourcClassNameAsSQL = CBDB::stringToSQL($sourceClassName);
 
         /* severity */
 
@@ -430,7 +439,7 @@ EOT;
                 `severity`,
                 `timestamp`
             ) VALUES (
-                {$classNameAsSQL},
+                {$sourcClassNameAsSQL},
                 {$IDAsSQL},
                 {$processIDAsSQL},
                 {$messageAsSQL},
@@ -490,7 +499,12 @@ EOT;
      * @return void
      */
     private static function verifyEntry(stdClass $entry): void {
-        $entryClassName = CBModel::valueToString($entry, 'className');
+        $entrySourceClassName = CBModel::valueToString($entry, 'sourceClassName');
+
+        if (empty($entrySourceClassName)) {
+            $entrySourceClassName = CBModel::valueToString($entry, 'className'); /* deprecated */
+        }
+
         $entryMessage = CBModel::valueToString($entry, 'message');
 
         if (empty($entryClassName) || empty($entryMessage)) {
@@ -502,7 +516,7 @@ EOT;
                 CBConvert::traceToString(debug_backtrace())
             );
 
-            if (empty($entryClassName)) {
+            if (empty($entrySourceClassName)) {
                 $message = <<<EOT
 
                     CBLog_warning_noClassName: A log entry was submitted that does not have a class name.
@@ -516,7 +530,7 @@ EOT;
 EOT;
 
                 CBLog::log((object)[
-                    'className' => __CLASS__,
+                    'sourceClassName' => __CLASS__,
                     'message' => $message,
                     'severity' => 4,
                 ]);
@@ -536,7 +550,7 @@ EOT;
 EOT;
 
                 CBLog::log((object)[
-                    'className' => __CLASS__,
+                    'sourceClassName' => __CLASS__,
                     'message' => $message,
                     'severity' => 4,
                 ]);
