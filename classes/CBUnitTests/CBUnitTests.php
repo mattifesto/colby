@@ -57,7 +57,6 @@ class CBUnitTests {
             ['CB',                      'class'],
             ['CBConvert',               'linesToParagraphs'],
             ['CBConvert',               'textToLines'],
-            ['CBConvert',               'textToStub'],
             ['CBConvert',               'valueAsInt'],
             ['CBConvert',               'valueAsModel'],
             ['CBDataStore',             'createAndDelete'],
