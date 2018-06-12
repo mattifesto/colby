@@ -50,6 +50,8 @@ EOT;
     }
 
     /**
+     * @deprecated use fetch()
+     *
      * @param hex160 $ID
      * @param string $className
      *
@@ -72,6 +74,61 @@ EOT;
     }
 
     /**
+     * @param ?ID $ID
+     * @param ?string $className
+     * @param ?ID $associatedID
+     *
+     * @return [object]
+     *
+     *      {
+     *          ID: ID
+     *          className: string
+     *          associatedID: ID
+     *      }
+     */
+    static function fetch(?string $ID, ?string $className = null, ?string $associatedID = null): array {
+        $clauses = [];
+
+        if ($ID !== null) {
+            $IDAsSQL = CBHex160::toSQL($ID);
+            array_push($clauses, "ID = {$IDAsSQL}");
+        }
+
+        if ($className !== null) {
+            $classNameAsSQL = CBDB::stringToSQL($className);
+            array_push($clauses, "className = {$classNameAsSQL}");
+        }
+
+        if ($associatedID !== null) {
+            $associatedIDAsSQL = CBHex160::toSQL($associatedID);
+            array_push($clauses, "associatedID = {$associatedIDAsSQL}");
+        }
+
+        if (empty($clauses)) {
+            throw new Exception('At least one of the parameters to CBModelAssociations::fetch() must be specified.');
+        } else {
+            $clauses = implode(' AND ', $clauses);
+        }
+
+        $SQL = <<<EOT
+
+            SELECT  LOWER(HEX(ID)) as ID,
+                    className,
+                    LOWER(HEX(associatedID)) as associatedID
+            FROM    CBModelAssociations
+            WHERE   {$clauses}
+
+EOT;
+
+        return CBDB::SQLToObjects($SQL);
+    }
+
+    /**
+     * @NOTE 2018.06.11
+     *
+     *      I think this function should be removed because it's too easy for
+     *      the caller to do. Also it should return an array.
+     *
      * @param hex160 $ID
      * @param string $className
      *
@@ -88,6 +145,11 @@ EOT;
     }
 
     /**
+     * @NOTE 2018.06.11
+     *
+     *      I think this function should be removed because it's too easy for
+     *      the caller to do. Also it should return an array.
+     *
      * @param hex160 $ID
      * @param string $className
      *
