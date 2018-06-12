@@ -25,50 +25,32 @@ EOT;
     }
 
     /**
-     * This function should be called inside a transaction.
-     *
-     * @param hex160 $ID
+     * @param ID $ID
      * @param string $className
-     * @param hex160 $ID
+     * @param ID $associatedID
      *
-     * @return bool
-     *  Returns true if the association was created, false if another
-     *  association already exists.
+     * @return void
      */
-    static function createAssociation($ID, $className, $associatedID) {
+    static function add(string $ID, string $className, string $associatedID): void {
         $IDAsSQL = CBHex160::toSQL($ID);
         $classNameAsSQL = CBDB::stringToSQL($className);
         $associatedIDAsSQL = CBHex160::toSQL($associatedID);
 
         $SQL = <<<EOT
 
-            SELECT  COUNT(*)
-            FROM    `CBModelAssociations`
-            WHERE   `ID` = {$IDAsSQL} AND
-                    `className` = {$classNameAsSQL}
+            INSERT INTO CBModelAssociations
+            VALUES
+            (
+                {$IDAsSQL},
+                {$classNameAsSQL},
+                {$associatedIDAsSQL}
+            )
+            ON DUPLICATE KEY UPDATE
+                associatedID = associatedID
 
 EOT;
 
-        $count = CBDB::SQLToValue($SQL);
-
-        if ($count > 0) {
-            return false;
-        } else {
-            $SQL = <<<EOT
-
-                INSERT INTO `CBModelAssociations`
-                VALUES (
-                    $IDAsSQL,
-                    $classNameAsSQL,
-                    $associatedIDAsSQL
-                )
-
-EOT;
-
-            Colby::query($SQL);
-
-            return true;
-        }
+        Colby::query($SQL);
     }
 
     /**
