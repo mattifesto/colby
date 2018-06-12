@@ -54,6 +54,47 @@ EOT;
     }
 
     /**
+     * @param ?ID $ID
+     * @param ?string $className
+     * @param ?ID $associatedID
+     *
+     * @return void
+     */
+    static function delete(string $ID = null, string $className = null, string $associatedID = null): void {
+        $clauses = [];
+
+        if ($ID !== null) {
+            $IDAsSQL = CBHex160::toSQL($ID);
+            array_push($clauses, "ID = {$IDAsSQL}");
+        }
+
+        if ($className !== null) {
+            $classNameAsSQL = CBDB::stringToSQL($className);
+            array_push($clauses, "className = {$classNameAsSQL}");
+        }
+
+        if ($associatedID !== null) {
+            $associatedIDAsSQL = CBHex160::toSQL($associatedID);
+            array_push($clauses, "associatedID = {$associatedIDAsSQL}");
+        }
+
+        if (empty($clauses)) {
+            throw new Exception('At least one of the parameters to CBModelAssociations::remove() must be specified.');
+        } else {
+            $clauses = implode(' AND ', $clauses);
+        }
+
+        $SQL = <<<EOT
+
+            DELETE FROM CBModelAssociations
+            WHERE {$clauses}
+
+EOT;
+
+        Colby::query($SQL);
+    }
+
+    /**
      * @deprecated use fetch()
      *
      * @param hex160 $ID
@@ -235,46 +276,5 @@ EOT;
      */
     static function makeSpecForAjaxPermissions() {
         return (object)['group' => 'Public'];
-    }
-
-    /**
-     * @param ?ID $ID
-     * @param ?string $className
-     * @param ?ID $associatedID
-     *
-     * @return void
-     */
-    static function remove(string $ID = null, string $className = null, string $associatedID = null): void {
-        $clauses = [];
-
-        if ($ID !== null) {
-            $IDAsSQL = CBHex160::toSQL($ID);
-            array_push($clauses, "ID = {$IDAsSQL}");
-        }
-
-        if ($className !== null) {
-            $classNameAsSQL = CBDB::stringToSQL($className);
-            array_push($clauses, "className = {$classNameAsSQL}");
-        }
-
-        if ($associatedID !== null) {
-            $associatedIDAsSQL = CBHex160::toSQL($associatedID);
-            array_push($clauses, "associatedID = {$associatedIDAsSQL}");
-        }
-
-        if (empty($clauses)) {
-            throw new Exception('At least one of the parameters to CBModelAssociations::remove() must be specified.');
-        } else {
-            $clauses = implode(' AND ', $clauses);
-        }
-
-        $SQL = <<<EOT
-
-            DELETE FROM CBModelAssociations
-            WHERE {$clauses}
-
-EOT;
-
-        Colby::query($SQL);
     }
 }
