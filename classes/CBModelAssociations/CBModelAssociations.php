@@ -238,22 +238,40 @@ EOT;
     }
 
     /**
-     * This function will remove all the associatedID entries for a given ID and
-     * class name.
-     *
-     * @param ID $ID
-     * @param string $className
+     * @param ?ID $ID
+     * @param ?string $className
+     * @param ?ID $associatedID
      *
      * @return void
      */
-    static function removeAssociations(string $ID, string $className): void {
-        $IDAsSQL = CBHex160::toSQL($ID);
-        $classNameAsSQL = CBDB::stringToSQL($className);
+    static function remove(string $ID = null, string $className = null, string $associatedID = null): void {
+        $clauses = [];
+
+        if ($ID !== null) {
+            $IDAsSQL = CBHex160::toSQL($ID);
+            array_push($clauses, "ID = {$IDAsSQL}");
+        }
+
+        if ($className !== null) {
+            $classNameAsSQL = CBDB::stringToSQL($className);
+            array_push($clauses, "className = {$classNameAsSQL}");
+        }
+
+        if ($associatedID !== null) {
+            $associatedIDAsSQL = CBHex160::toSQL($associatedID);
+            array_push($clauses, "associatedID = {$associatedIDAsSQL}");
+        }
+
+        if (empty($clauses)) {
+            throw new Exception('At least one of the parameters to CBModelAssociations::remove() must be specified.');
+        } else {
+            $clauses = implode(' AND ', $clauses);
+        }
+
         $SQL = <<<EOT
 
             DELETE FROM CBModelAssociations
-            WHERE   className = {$classNameAsSQL} AND
-                    ID = {$IDAsSQL}
+            WHERE {$clauses}
 
 EOT;
 
