@@ -2,10 +2,72 @@
 
 final class CBViewTests {
 
+    static function CBTest_filterSubviews(): stdClass {
+        $originalViewModel = (object)[
+            'subviews' => [
+                (object)[
+                    'action' => 'keep_0_0',
+                    'subviews' => [
+                        (object)[
+                            'action' => 'keep_1_0',
+                        ],
+                        (object)[
+                            'action' => 'remove',
+                        ],
+                        (object)[
+                            'action' => 'keep_1_2',
+
+                        ],
+                    ]
+                ],
+                (object)[
+                    'action' => 'remove',
+                ],
+                (object)[
+                    'action' => 'keep_0_2',
+                ],
+            ],
+        ];
+
+        $expectedViewModel = (object)[
+            'subviews' => [
+                (object)[
+                    'action' => 'keep_0_0',
+                    'subviews' => [
+                        (object)[
+                            'action' => 'keep_1_0',
+                        ],
+                        (object)[
+                            'action' => 'keep_1_2',
+
+                        ],
+                    ]
+                ],
+                (object)[
+                    'action' => 'keep_0_2',
+                ],
+            ],
+        ];
+
+        $actualViewModel = CBModel::clone($originalViewModel);
+
+        CBView::filterSubviews($actualViewModel, function ($viewModel) {
+            return CBModel::valueToString($viewModel, 'action') != 'remove';
+        });
+
+        if ($actualViewModel != $expectedViewModel) {
+            return CBTest::resultMismatchFailure('Test 1', $actualViewModel, $expectedViewModel);
+        }
+
+        return (object)[
+            'succeeded' => 'true',
+        ];
+    }
+
     /**
      * @return object
      */
-    static function CBTest_getAndSetSubviewsTest(): stdClass {
+    static function CBTest_getAndSetSubviews(): stdClass {
         $classNames = CBAdmin::fetchClassNames();
 
         foreach ($classNames as $className) {
@@ -36,7 +98,8 @@ final class CBViewTests {
      */
     static function CBUnitTests_tests(): array {
         return [
-            ['CBView', 'getAndSetSubviewsTest'],
+            ['CBView', 'filterSubviews'],
+            ['CBView', 'getAndSetSubviews'],
         ];
     }
 
