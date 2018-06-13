@@ -32,6 +32,37 @@ final class CBView {
     }
 
     /**
+     * Filters the subviews of a view using a callback function. This function
+     * will recurse into deeper subviews.
+     *
+     * @param model $view
+     * @param callable $callback
+     *
+     *      The callback function should accept one mixed type parameter which
+     *      will be the model of each subview.
+     *
+     *      If the callback returns true the subview will be kept, otherwise the
+     *      subview will be removed.
+     *
+     * @return void
+     */
+    static function filterSubviews(stdClass $view, callable $callback): void {
+        $subviews = CBView::getSubviews($view);
+
+        if (empty($subviews)) {
+            return;
+        } else {
+            $subviews = array_values(array_filter($subviews, $callback));
+
+            foreach ($subviews as $subview) {
+                CBView::filterSubviews($subview, $callback);
+            }
+
+            CBView::setSubviews($view, $subviews);
+        }
+    }
+
+    /**
      * Finds a subview in an object that may have subviews.
      *
      * NOTE
