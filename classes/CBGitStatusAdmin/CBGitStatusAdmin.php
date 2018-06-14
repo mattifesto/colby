@@ -108,11 +108,20 @@ final class CBGitStatusAdmin {
         chdir(cbsitedir() . "/{$directory}");
 
         $lines = [];
-        exec('git describe', $lines);
+        $command = 'git describe 2>&1';
+        exec($command, $lines, $returnValue);
 
         if (!empty($lines)) {
+            if ($returnValue !== 0) {
+                $errorMessage = "The command ({$command} (code)) returned ({$returnValue} (code))";
+            } else {
+                $errorMessage = '';
+            }
+
             $lines = implode("\n", $lines);
             $message .= <<<EOT
+
+                {$errorMessage}
 
                 --- pre CBGitStatusAdmin_pre\n{$lines}
                 ---
@@ -154,10 +163,8 @@ EOT;
 EOT;
         }
 
-        if (!empty($message)) {
-            $message = (empty($directory) ? 'website' : $directory) .
-                "\n\n{$message}";
-        }
+        $message = (empty($directory) ? 'website' : $directory) .
+            "\n\n{$message}";
 
         return (object)[
             'location' => empty($directory) ? 'website' : $directory,
