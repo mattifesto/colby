@@ -124,36 +124,35 @@ final class CBGitStatusAdmin {
 
         $lines = implode("\n", $lines);
 
-        return <<<EOT
-
-            --- pre CBGitStatusAdmin_pre\n{$lines}
-            ---
-
-EOT;
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function fetchStatus(string $directory): stdClass {
-        $message = '';
-
-        chdir(cbsitedir() . "/{$directory}");
-
-        $message .= CBGitStatusAdmin::exec('git describe');
-
-        $lines = [];
-        exec('git status --porcelain', $lines);
-
-        if (!empty($lines)) {
-            $lines = implode("\n", $lines);
-            $message .= <<<EOT
+        if (empty($lines)) {
+            return '';
+        } else {
+            return <<<EOT
 
                 --- pre CBGitStatusAdmin_pre\n{$lines}
                 ---
 
 EOT;
         }
+    }
+
+    /**
+     * @return stdClass
+     */
+    static function fetchStatus(string $directory): stdClass {
+        $location = empty($directory) ? 'website' : $directory;
+        $locationAsMessage = CBMessageMarkup::stringToMessage($location);
+
+        $message = <<<EOT
+
+            {$locationAsMessage}
+
+EOT;
+
+        chdir(cbsitedir() . "/{$directory}");
+
+        $message .= CBGitStatusAdmin::exec('git describe');
+        $message .= CBGitStatusAdmin::exec('git status --porcelain');
 
         $lines = [];
         exec('git remote', $lines);
@@ -164,23 +163,10 @@ EOT;
             $range = 'origin/master..head';
         }
 
-        $lines = [];
-        exec("git log {$range} --oneline --no-decorate --reverse", $lines);
-
-        if (!empty($lines)) {
-            $lines = implode("\n", $lines);
-            $message .= <<< EOT
-
-                --- pre CBGitStatusAdmin_pre\n{$lines}
-                ---
-EOT;
-        }
-
-        $message = (empty($directory) ? 'website' : $directory) .
-            "\n\n{$message}";
+        $message .= CBGitStatusAdmin::exec("git log {$range} --oneline --no-decorate --reverse");
 
         return (object)[
-            'location' => empty($directory) ? 'website' : $directory,
+            'location' => $location,
             'message' => $message,
         ];
     }
