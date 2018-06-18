@@ -32,9 +32,6 @@ final class CBUsers {
 EOT;
 
         Colby::query($SQL);
-
-        CBUsers::installUserGroup('Administrators');
-        CBUsers::installUserGroup('Developers');
     }
 
     /**
