@@ -467,33 +467,4 @@ EOT
     static function setFrontPageIDForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
-
-    /**
-     * This function should be called by installation functions that want to
-     * remove a class name for user settings.
-     *
-     * @param string $className
-     *
-     * @return null
-     */
-    static function uninstallClassNameForUserSettings($className) {
-        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
-
-        // We assume spec has been saved by the CBSitePreferences::install()
-        // function. If not, we want to let the error occur as notification.
-
-        if (empty($spec->classNamesForUserSettings)) {
-            return;
-        } else {
-            $classNames = array_values(array_filter($spec->classNamesForUserSettings, function ($value) use ($className) {
-                return $value !== $className;
-            }));
-
-            if (count($classNames) !== count($spec->classNamesForUserSettings)) {
-                $spec->classNamesForUserSettings = $classNames;
-
-                CBModels::save([$spec]);
-            }
-        }
-    }
 }
