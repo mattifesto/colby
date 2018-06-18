@@ -91,13 +91,6 @@ final class CBSitePreferences {
                     '/[\s,]+/', $value, null, PREG_SPLIT_NO_EMPTY
                 ));
             }),
-            'classNamesForUserSettings' => CBModel::value($spec, 'classNamesForUserSettings', [], function ($value) {
-                if (is_array($value)) {
-                    return array_map('trim', $value);
-                } else {
-                    return [];
-                }
-            }),
             'imageForIcon' => CBModel::build(CBModel::valueAsModel($spec, 'imageForIcon', ['CBImage'])),
             'siteName' => trim(CBModel::valueToString($spec, 'siteName')),
             'slackWebhookURL' => trim(CBModel::valueToString($spec, 'slackWebhookURL')),
@@ -146,18 +139,6 @@ EOT
         }
 
         return $spec;
-    }
-
-    /**
-     * The value of this setting should be changed directly on the spec by
-     * adjusting the array value of classNamesForUserSettings.
-     *
-     * @return [string]
-     */
-    static function classNamesForUserSettings() {
-        $model = CBSitePreferences::model();
-
-        return CBModel::valueToArray($model, 'classNamesForUserSettings');
     }
 
     /**
@@ -247,33 +228,6 @@ EOT
         } else {
             return $model->imageForIcon;
         }
-    }
-
-    /**
-     * This function should be called by installation functions that want to add
-     * a class name for user settings.
-     *
-     * @param string $className
-     *
-     * @return null
-     */
-    static function installClassNameForUserSettings($className) {
-        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
-
-        // We assume spec has been saved by the CBSitePreferences::install()
-        // function. If not, we want to let the error occur as notification.
-
-        if (empty($spec->classNamesForUserSettings)) {
-            $spec->classNamesForUserSettings = [$className];
-        } else {
-            if (in_array($className, $spec->classNamesForUserSettings)) {
-                return;
-            } else {
-                $spec->classNamesForUserSettings[] = $className;
-            }
-        }
-
-        CBModels::save([$spec]);
     }
 
     /**
