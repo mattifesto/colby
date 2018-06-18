@@ -1,12 +1,12 @@
 <?php
 
-final class CBAdministratorUserSettingsManager {
+final class CBDevelopersUserGroupUserSettingsManager {
 
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        CBUserSettingsManagerCatalog::installUserSettingsManager(__CLASS__, 10);
+        CBUserSettingsManagerCatalog::installUserSettingsManager(__CLASS__, 20);
     }
 
     /**
@@ -32,10 +32,6 @@ final class CBAdministratorUserSettingsManager {
         $targetUserData = (object)[
             'id' => $targetUserNumber,
         ];
-
-        if (ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
-            CBGroupUserSettings::renderUserSettings($targetUserData, 'Administrators');
-        }
 
         if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
             CBGroupUserSettings::renderUserSettings($targetUserData, 'Developers');
