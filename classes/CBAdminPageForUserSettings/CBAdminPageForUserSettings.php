@@ -37,16 +37,6 @@ final class CBAdminPageForUserSettings {
         <?php
 
         CBUserSettingsManagerCatalog::render($targetUserID);
-
-        $classNamesForUserSettings = CBSitePreferences::classNamesForUserSettings();
-
-        foreach ($classNamesForUserSettings as $className) {
-            CBHTMLOutput::requireClassName($className);
-
-            if (is_callable($function = "{$className}::renderUserSettings")) {
-                call_user_func($function, $userData);
-            }
-        }
     }
 
     /**
