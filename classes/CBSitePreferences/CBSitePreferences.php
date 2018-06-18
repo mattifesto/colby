@@ -48,14 +48,23 @@ final class CBSitePreferences {
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
+        $originalSpec = CBModels::fetchSpecByID(CBSitePreferences::ID);
 
-        if (empty($spec)) {
-            CBDB::transaction(function () {
-                CBModels::save((object)[
-                    'className' => 'CBSitePreferences',
-                    'ID' => CBSitePreferences::ID,
-                ]);
+        if (empty($originalSpec)) {
+            $spec = (object)[
+                'ID' => CBSitePreferences::ID,
+            ];
+        } else {
+            $spec = CBModel::clone($originalSpec);
+        }
+
+        $spec->className = 'CBSitePreferences';
+
+        unset($spec->classNamesForUserSettings);
+
+        if ($spec != $originalSpec) {
+            CBDB::transaction(function () use ($spec) {
+                CBModels::save($spec);
             });
         }
     }
