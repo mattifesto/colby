@@ -12,6 +12,8 @@
 final class CBSitePreferences {
 
     const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
+    /* deprecated use CBSitePreferences::ID() */
+
     const defaultResizeOperations = [
         'rs200clc200',  /*  100 x 100 */
         'rw320',        /*  160 x ? */
@@ -48,11 +50,11 @@ final class CBSitePreferences {
      * @return void
      */
     static function CBInstall_install(): void {
-        $originalSpec = CBModels::fetchSpecByID(CBSitePreferences::ID);
+        $originalSpec = CBModels::fetchSpecByID(CBSitePreferences::ID());
 
         if (empty($originalSpec)) {
             $spec = (object)[
-                'ID' => CBSitePreferences::ID,
+                'ID' => CBSitePreferences::ID(),
             ];
         } else {
             $spec = CBModel::clone($originalSpec);
@@ -225,6 +227,13 @@ EOT
     static function googleTagManagerID() {
         $model = CBSitePreferences::model();
         return empty($model->googleTagManagerID) ? '' : $model->googleTagManagerID;
+    }
+
+    /**
+     * @return ID
+     */
+    static function ID(): string {
+        return '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
     }
 
     /**
