@@ -40,64 +40,6 @@ final class CBModels {
     }
 
     /**
-     * Fetches a spec by ID.
-     *
-     *      Ajax errors:
-     *
-     *      If the spec exists but user does not have permission to read the it,
-     *      this is treated as an error. When you use this API it is assumed you
-     *      have permission to read the spec, if you don't it's an error.
-     *
-     *      If the spec doesn't exist but the user wouldn't have permission to
-     *      read it, there is no error from this API. If an app needs to predict
-     *      permissions it should use another API.
-     *
-     * @param object $args
-     *
-     *      {
-     *          ID: hex160
-     *      }
-     *
-     * @return object
-     *
-     *      {
-     *          spec: object?
-     *
-     *              The spec property will be set to the spec if the spec exists
-     *              and the current user has read permissions; otherwise it will
-     *              not be set.
-     *      }
-     */
-    static function CBAjax_fetchSpec(stdClass $args) {
-        $ID = CBConvert::valueAsHex160(CBModel::value($args, 'ID'));
-
-        if ($ID === null) {
-            return (object)[];
-        }
-
-        $spec = CBModels::fetchSpecByID($ID);
-
-        if (empty($spec)) {
-            return (object)[];
-        }
-
-        if (CBModels::currentUserCanRead($spec)) {
-            return (object)[
-                'spec' => $spec,
-            ];
-        } else {
-            return (object)[];
-        }
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_fetchSpec_group() {
-        return 'Public';
-    }
-
-    /**
      * @return void
      */
     static function CBInstall_install(): void {
