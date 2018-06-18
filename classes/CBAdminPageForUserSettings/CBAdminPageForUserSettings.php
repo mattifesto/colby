@@ -20,8 +20,8 @@ final class CBAdminPageForUserSettings {
      * @return void
      */
     static function adminPageRenderContent() {
-        $userHash = $_GET['hash'];
-        $userData = ColbyUser::fetchUserDataByHash($userHash);
+        $targetUserID = $_GET['hash'];
+        $userData = ColbyUser::fetchUserDataByHash($targetUserID);
 
         CBHTMLOutput::pageInformation()->title = "User Administration ({$userData->facebookName})";
 
@@ -36,8 +36,7 @@ final class CBAdminPageForUserSettings {
 
         <?php
 
-        CBGroupUserSettings::renderUserSettings($userData, 'Administrators');
-        CBGroupUserSettings::renderUserSettings($userData, 'Developers');
+        CBUserSettingsManagerCatalog::render($targetUserID);
 
         $classNamesForUserSettings = CBSitePreferences::classNamesForUserSettings();
 
