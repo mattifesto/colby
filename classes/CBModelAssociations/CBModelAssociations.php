@@ -234,25 +234,4 @@ EOT;
             return CBModels::fetchModelByID($associatedID);
         }
     }
-
-    /**
-     * @NOTE 2018.06.11
-     *
-     *      I think this function should be removed because it's too easy for
-     *      the caller to do. Also it should return an array.
-     *
-     * @param hex160 $ID
-     * @param string $className
-     *
-     * @return stdClass|false
-     */
-    static function fetchSpec($ID, $className) {
-        $associatedID = CBModelAssociations::fetchAssociatedID($ID, $className);
-
-        if (empty($associatedID)) {
-            return false;
-        } else {
-            return CBModels::fetchSpecByID($associatedID);
-        }
-    }
 }
