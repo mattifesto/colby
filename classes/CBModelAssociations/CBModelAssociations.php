@@ -282,45 +282,4 @@ EOT;
 
         return $spec;
     }
-
-    /**
-     * @return null
-     */
-    static function makeSpecForAjax() {
-        $response = new CBAjaxResponse();
-        $ID = $_POST['ID'];
-        $className = $_POST['className'];
-
-        try {
-
-            Colby::query('START TRANSACTION');
-
-            $spec = CBModelAssociations::makeSpec($ID, $className);
-
-            Colby::query('COMMIT');
-
-        } catch (Throwable $exception) {
-
-            Colby::query('ROLLBACK');
-
-            throw $exception;
-
-        }
-
-        if (CBModels::currentUserCanRead($spec)) {
-            $response->spec = $spec;
-        } else {
-            $response->message = "You do not have permission to read the associated spec for ID: {$ID} and className: {$className}";
-        }
-
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function makeSpecForAjaxPermissions() {
-        return (object)['group' => 'Public'];
-    }
 }
