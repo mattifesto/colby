@@ -138,7 +138,9 @@ EOT;
             return false;
         }
 
-        if (is_callable($function = "{$model->className}::currentUserCanWrite")) {
+        if (is_callable($function = "{$model->className}::CBModels_currentUserCanWrite")) {
+            return call_user_func($function, $model);
+        } else if (is_callable($function = "{$model->className}::currentUserCanWrite")) {
             return call_user_func($function, $model);
         } else {
             return ColbyUser::isMemberOfGroup(ColbyUser::currentUserId(), 'Administrators');
