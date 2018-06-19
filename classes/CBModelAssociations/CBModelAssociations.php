@@ -169,6 +169,52 @@ EOT;
     }
 
     /**
+     * Call this function instead of fetch() when you know the result should be
+     * either one row or no rows. This function will throw an exception if it
+     * finds more than one row.
+     *
+     * @param ?ID $masterID
+     * @param ?string $associationClassName
+     * @param ?ID $associateID
+     *
+     * @return ?object
+     */
+    static function fetchOne(?string $masterID, ?string $associationClassName = null, ?string $associateID = null): ?stdClass {
+        $rows = CBModelAssociations::fetch($masterID, $associationClassName, $associateID);
+
+        if (empty($rows)) {
+            return null;
+        } else if (count($rows) === 1) {
+            return $rows[0];
+        } else {
+            $rowsAsJSONAsMessage = CBMessageMarkup::stringToMessage(
+                CBConvert::valueToPrettyJSON($rows)
+            );
+
+            $message = <<<EOT
+
+                More than one CBModelAssociations row was found when at most one
+                row was expected.
+
+                (Rows (b))
+
+                --- pre\n{$rowsAsJSONAsMessage}
+                ---
+
+EOT;
+
+            CBLog::log((object)[
+                'ID' => $masterID ?? $associateID,
+                'message' => $message,
+                'severity' => 3,
+                'sourceClassName' => __CLASS__,
+            ]);
+
+            throw new Exception('More than one CBModelAssociations row was found when at most one row was expected.');
+        }
+    }
+
+    /**
      * @NOTE 2018.06.11
      *
      *      I think this function should be removed because it's too easy for
