@@ -255,31 +255,4 @@ EOT;
             return CBModels::fetchSpecByID($associatedID);
         }
     }
-
-    /**
-     * @NOTE 2018.06.11
-     *
-     *      This function needs more documenation. I'm not sure what it's used
-     *      for.
-     *
-     * Best in a transaction.
-     */
-    static function makeSpec($ID, $className) {
-        $spec = CBModelAssociations::fetchSpec($ID, $className);
-
-        if ($spec === false) {
-            $associatedID = CBHex160::random();
-            $spec = (object)[
-                'className' => $className,
-                'ID' => $associatedID,
-            ];
-
-            CBModels::save([$spec]);
-            CBModelAssociations::createAssociation($ID, $className, $spec->ID);
-
-            $spec = CBModels::fetchSpecByID($associatedID);
-        }
-
-        return $spec;
-    }
 }
