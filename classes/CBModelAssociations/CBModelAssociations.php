@@ -95,30 +95,6 @@ EOT;
     }
 
     /**
-     * @deprecated use fetch()
-     *
-     * @param hex160 $ID
-     * @param string $className
-     *
-     * @return hex160|false
-     */
-    static function fetchAssociatedID($ID, $className) {
-        $IDAsSQL = CBHex160::toSQL($ID);
-        $classNameAsSQL = CBDB::stringToSQL($className);
-
-        $SQL = <<<EOT
-
-            SELECT  LOWER(HEX(`associatedID`))
-            FROM    `CBModelAssociations`
-            WHERE   `ID` = {$IDAsSQL} AND
-                    `className` = {$classNameAsSQL}
-
-EOT;
-
-        return CBDB::SQLToValue($SQL);
-    }
-
-    /**
      * @param ?ID $ID
      * @param ?string $className
      * @param ?ID $associatedID
