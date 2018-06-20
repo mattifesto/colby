@@ -109,26 +109,6 @@ EOT;
      * @param stdClass $model
      *
      * @return bool
-     *      Returns true if the current user can read the model via Ajax;
-     *      otherwise false. If permissions aren't implement by the model class
-     *      the default is that Administrators can read and others can't.
-     */
-    static function currentUserCanRead(stdClass $model) {
-        if (empty($model->className)) {
-            return false;
-        }
-
-        if (is_callable($function = "{$model->className}::currentUserCanRead")) {
-            return call_user_func($function, $model);
-        } else {
-            return ColbyUser::isMemberOfGroup(ColbyUser::currentUserId(), 'Administrators');
-        }
-    }
-
-    /**
-     * @param stdClass $model
-     *
-     * @return bool
      *      Returns true if the current user can write the model via Ajax;
      *      otherwise false. If permissions aren't implement by the model class
      *      the default is that Administrators can write and others can't.
