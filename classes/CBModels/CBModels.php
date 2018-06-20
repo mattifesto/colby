@@ -235,18 +235,43 @@ EOT;
     }
 
     /**
-     * Retreives the current version of a model
+     * @deprecated use fetchModelByIDNullable()
      *
-     * Scenarios:       Fetch the model for a web page
-     * Usage Frequency: Often
+     * @param ID $ID
      *
-     * @return stdClass|false
+     * @return model|false
      */
     static function fetchModelByID($ID) {
-        $models = self::fetchModelsByID([$ID]);
+        $models = CBModels::fetchModelsByID([$ID]);
 
         if (empty($models)) {
             return false;
+        } else {
+            return $models[$ID];
+        }
+    }
+
+    /**
+     * @NOTE 2018.06.20
+     *
+     *      This function is a transition function to move callers away from
+     *      fetchModelByID() which returns false if there is no model found.
+     *
+     *      The fetchModelByID() function was created before PHP 7 and the
+     *      introduction of nullable return types.
+     *
+     *      Eventually, this function will be deprecated and fetchModelByID()
+     *      will be reintroduced returning a nullable object.
+     *
+     * @param ID $ID
+     *
+     * @return ?model
+     */
+    static function fetchModelByIDNullable(string $ID): ?stdClass {
+        $models = CBModels::fetchModelsByID([$ID]);
+
+        if (empty($models)) {
+            return null;
         } else {
             return $models[$ID];
         }
