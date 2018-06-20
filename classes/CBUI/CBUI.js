@@ -290,7 +290,7 @@ var CBUI = {
         key.textContent = args.key || "\xa0";
         var value = document.createElement("div");
         value.className = "value";
-        value.textContent = args.value || "";
+        value.textContent = args.value || "\xa0";
 
         keyValue.appendChild(key);
         keyValue.appendChild(value);
