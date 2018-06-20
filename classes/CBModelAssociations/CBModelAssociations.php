@@ -213,25 +213,4 @@ EOT;
             throw new Exception('More than one CBModelAssociations row was found when at most one row was expected.');
         }
     }
-
-    /**
-     * @NOTE 2018.06.11
-     *
-     *      I think this function should be removed because it's too easy for
-     *      the caller to do. Also it should return an array.
-     *
-     * @param hex160 $ID
-     * @param string $className
-     *
-     * @return stdClass|false
-     */
-    static function fetchModel($ID, $className) {
-        $associatedID = CBModelAssociations::fetchAssociatedID($ID, $className);
-
-        if (empty($associatedID)) {
-            return false;
-        } else {
-            return CBModels::fetchModelByID($associatedID);
-        }
-    }
 }
