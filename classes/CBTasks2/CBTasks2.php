@@ -501,7 +501,7 @@ EOT;
                 throw new Exception("The CBTasks2_run() interface has not been implemented by the {$task->className} class preventing execution of the task for ID {$task->ID}");
             }
 
-            $scheduled = CBModel::value($status, 'scheduled', null, 'CBConvert::valueAsInt');
+            $scheduled = CBModel::valueAsInt($status, 'scheduled');
 
             // Log a debug level entry that a task has run.
 
