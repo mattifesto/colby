@@ -309,7 +309,7 @@ EOT;
      *      Returns true if a task is run; otherwise false.
      */
     static function runNextTask($args) {
-        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+        $processID = CBModel::valueAsID($args, 'processID');
 
         if (!empty($processID)) {
             $processIDAsSQL = CBHex160::toSQL($processID);
@@ -458,13 +458,13 @@ EOT;
      * The situations are rare race conditions and potentially a very closely
      * timed calls to runNextTask() and runSpecificTask().
      *
-     * @param hex160 $starterID
+     * @param ID $starterID
      *
      * @return bool
      *
      *      Returns true if the task is run; otherwise false.
      */
-    static function runTaskForStarter($starterID) {
+    private static function runTaskForStarter($starterID) {
         $starterIDAsSQL = CBHex160::toSQL($starterID);
         $SQL = <<<EOT
 
