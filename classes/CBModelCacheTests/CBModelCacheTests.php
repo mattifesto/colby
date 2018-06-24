@@ -8,9 +8,13 @@ final class CBModelCacheTests {
     static function CBUnitTests_tests(): array {
         return [
             ['CBModelCache', 'general'],
+            ['CBModelCache', 'save'],
         ];
     }
 
+    /**
+     * @return object
+     */
     static function CBTest_general(): stdClass {
         Colby::query('START TRANSACTION');
 
@@ -69,6 +73,78 @@ final class CBModelCacheTests {
         }
 
         Colby::query('ROLLBACK');
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
+     * @return object
+     */
+    static function CBTest_save(): stdClass {
+        $ID = '275097249aeb4eb28b1f6bfa3280485346eb5c94';
+
+        CBModels::deleteByID($ID);
+
+        $model = CBModelCache::modelByID($ID);
+
+        if (!empty($model)) {
+            throw new Exception('Subtest 1: The model should not be cached.');
+        }
+
+        $spec = (object)[
+            'className' => 'CBMessageView',
+            'ID' => $ID,
+        ];
+
+        CBModels::save($spec);
+
+        $model = CBModelCache::modelByID($ID);
+
+        if (!empty($model)) {
+            throw new Exception('Subtest 2: The model should not be cached.');
+        }
+
+        $model = CBModelCache::fetchModelByID($ID);
+
+        if ($model->ID !== $ID) {
+            throw new Exception('Subtest 3: The model was not fetched.');
+        }
+
+        $model = CBModelCache::modelByID($ID);
+
+        if (empty($model)) {
+            throw new Exception('Subtest 4: The model was not cached.');
+        }
+
+        CBModels::save($spec);
+
+        $model = CBModelCache::modelByID($ID);
+
+        if (!empty($model)) {
+            throw new Exception('Subtest 5: The cached model was not uncached when the model was saved.');
+        }
+
+        $model = CBModelCache::fetchModelByID($ID);
+
+        if ($model->ID !== $ID) {
+            throw new Exception('Subtest 6: The model was not fetched.');
+        }
+
+        $model = CBModelCache::modelByID($ID);
+
+        if (empty($model)) {
+            throw new Exception('Subtest 7: The model was not cached.');
+        }
+
+        CBModels::deleteByID($ID);
+
+        $model = CBModelCache::modelByID($ID);
+
+        if (!empty($model)) {
+            throw new Exception('Subtest 8: The cached model was not uncached when the model was deleted.');
+        }
 
         return (object)[
             'succeeded' => true,
