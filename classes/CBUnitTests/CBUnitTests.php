@@ -79,7 +79,6 @@ class CBUnitTests {
             ['CBModel',                 'buildMinimalImplementation'],
             ['CBModel',                 'toSearchText'],
             ['CBModel',                 'upgrade'],
-            ['CBModelCache'],
             ['CBModels',                'fetchModelByID'],
             ['CBModels',                'fetchModelsByID'],
             ['CBModels',                'saveNullableModel'],

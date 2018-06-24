@@ -2,7 +2,16 @@
 
 final class CBModelCacheTests {
 
-    static function test() {
+    /**
+     * @return [[<class>, <test>]]
+     */
+    static function CBUnitTests_tests(): array {
+        return [
+            ['CBModelCache', 'general'],
+        ];
+    }
+
+    static function CBTest_general(): stdClass {
         Colby::query('START TRANSACTION');
 
         $ID = CBHex160::random();
@@ -60,5 +69,9 @@ final class CBModelCacheTests {
         }
 
         Colby::query('ROLLBACK');
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 }
