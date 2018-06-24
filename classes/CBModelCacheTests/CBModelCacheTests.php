@@ -37,7 +37,7 @@ final class CBModelCacheTests {
             throw new Exception('The model does not appear to have been cached properly.');
         }
 
-        CBModelCache::uncacheModelsByID([$ID]);
+        CBModelCache::uncacheByID([$ID]);
 
         $model = CBModelCache::modelByID($ID);
 
