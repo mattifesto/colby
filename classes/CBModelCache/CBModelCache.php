@@ -69,9 +69,11 @@ final class CBModelCache {
     }
 
     /**
+     * @param [ID] $IDs
+     *
      * @return void
      */
-    static function uncacheModelsByID(array $IDs): void {
+    static function uncacheByID(array $IDs): void {
         CBModelCache::$cache = array_filter(CBModelCache::$cache, function ($key) use ($IDs) {
             return isset($IDs[$key]);
         }, ARRAY_FILTER_USE_KEY);
