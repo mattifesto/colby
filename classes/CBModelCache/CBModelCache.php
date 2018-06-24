@@ -11,12 +11,12 @@ final class CBModelCache {
      *
      * @param [ID] $IDs
      *
-     * @return null
+     * @return void
      */
-    static function cacheModelsByID(array $IDs) {
+    static function cacheModelsByID(array $IDs): void {
         $IDsToFetch = array_unique(array_merge($IDs, CBModelCache::$neededModelIDs));
         $IDsToFetch = array_filter($IDsToFetch, function($ID) {
-            return CBModelCache::modelByID($ID) === false;
+            return empty(CBModelCache::modelByID($ID));
         });
 
         if (!empty($IDsToFetch)) {
@@ -31,14 +31,15 @@ final class CBModelCache {
      * in the cache a query will be run to fetch the requested model and all
      * other needed models.
      *
-     * If the model doesn't exist in the database then false will be returned.
+     * If the model doesn't exist in the database then null will be returned.
      *
      * @param ID $ID
      *
-     * @return model|false
+     * @return ?model
      */
-    static function fetchModelByID($ID) {
+    static function fetchModelByID($ID): ?stdClass {
         CBModelCache::cacheModelsByID([$ID]);
+
         return CBModelCache::modelByID($ID);
     }
 
@@ -59,12 +60,12 @@ final class CBModelCache {
     /**
      * @param ID $ID
      *
-     * @return model|false
+     * @return ?model
      *
-     *      Returns the model if it's cached; otherwise false.
+     *      Returns the model if it's cached; otherwise null.
      */
-    static function modelByID($ID) {
-        return isset(CBModelCache::$cache[$ID]) ? CBModelCache::$cache[$ID] : false;
+    static function modelByID($ID): ?stdClass {
+        return isset(CBModelCache::$cache[$ID]) ? CBModelCache::$cache[$ID] : null;
     }
 
     /**
