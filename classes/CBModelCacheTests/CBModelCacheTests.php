@@ -5,16 +5,16 @@ final class CBModelCacheTests {
     static function test() {
         Colby::query('START TRANSACTION');
 
-        $ID     = CBHex160::random();
-        $model  = CBModelCache::modelByID($ID);
+        $ID = CBHex160::random();
+        $model = CBModelCache::modelByID($ID);
 
-        if ($model !== false) {
+        if (!empty($model)) {
             throw new Exception('Model appears to be cached when it should not be.');
         }
 
-        $model  = CBModelCache::fetchModelByID($ID);
+        $model = CBModelCache::fetchModelByID($ID);
 
-        if ($model !== false) {
+        if (!empty($model)) {
             throw new Exception('Model appears to exist when it should not.');
         }
 
@@ -41,7 +41,7 @@ final class CBModelCacheTests {
 
         $model = CBModelCache::modelByID($ID);
 
-        if ($model !== false) {
+        if (!empty($model)) {
             throw new Exception('The model does not appear to have been uncached properly.');
         }
 
@@ -49,7 +49,7 @@ final class CBModelCacheTests {
 
         $model = CBModelCache::fetchModelByID(CBHex160::random());
 
-        if ($model !== false) {
+        if (!empty($model)) {
             throw new Exception('The false model appears to exist.');
         }
 
