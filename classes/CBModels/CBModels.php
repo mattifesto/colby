@@ -153,6 +153,13 @@ EOT;
             $IDs = [$IDs];
         }
 
+        /**
+         * If any of the models being deleted are in the cache, remove them now.
+         */
+        if (class_exists('CBModelCache', false)) {
+            CBModelCache::uncacheByID($IDs);
+        }
+
         $IDsForSQL = CBHex160::toSQL($IDs);
         $SQL = <<<EOT
 
@@ -618,6 +625,14 @@ EOT;
         }, $specs);
 
         $IDs = array_map(function ($tuple) { return $tuple->model->ID; }, $tuples);
+
+        /**
+         * If any of the models being saved are in the cache, remove them now.
+         */
+        if (class_exists('CBModelCache', false)) {
+            CBModelCache::uncacheByID($IDs);
+        }
+
         $initialDataByID = CBModels::selectInitialDataForUpdateByID($IDs, $modified);
 
         array_walk($tuples, function ($tuple) use ($initialDataByID, $modified, $force) {
