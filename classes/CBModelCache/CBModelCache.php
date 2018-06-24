@@ -9,12 +9,12 @@ final class CBModelCache {
      * This is the only function in this class that will query the database
      * directly.
      *
-     * @param   [{hex160}]  $IDs
+     * @param [ID] $IDs
      *
-     * @return  null
+     * @return null
      */
     static function cacheModelsByID(array $IDs) {
-        $IDsToFetch = array_unique(array_merge($IDs, self::$neededModelIDs));
+        $IDsToFetch = array_unique(array_merge($IDs, CBModelCache::$neededModelIDs));
         $IDsToFetch = array_filter($IDsToFetch, function($ID) {
             return CBModelCache::modelByID($ID) === false;
         });
@@ -23,7 +23,7 @@ final class CBModelCache {
             CBModelCache::$cache = array_merge(CBModelCache::$cache, CBModels::fetchModelsByID($IDsToFetch));
         }
 
-        self::$neededModelIDs = [];
+        CBModelCache::$neededModelIDs = [];
     }
 
     /**
@@ -33,9 +33,9 @@ final class CBModelCache {
      *
      * If the model doesn't exist in the database then false will be returned.
      *
-     * @param hex160 $ID
+     * @param ID $ID
      *
-     * @return stdClass|false
+     * @return model|false
      */
     static function fetchModelByID($ID) {
         CBModelCache::cacheModelsByID([$ID]);
@@ -43,34 +43,35 @@ final class CBModelCache {
     }
 
     /**
-     * @return null
+     * @return void
      */
-    static function fetchModelLazilyByID($ID) {
-        self::$neededModelIDs[] = $ID;
+    static function fetchModelLazilyByID($ID): void {
+        CBModelCache::$neededModelIDs[] = $ID;
     }
 
     /**
-     * @return null
+     * @return void
      */
-    static function fetchModelsLazilyByID(array $IDs) {
-        self::$neededModelIDs = array_merge(self::$neededModelIDs, $IDs);
+    static function fetchModelsLazilyByID(array $IDs): void {
+        CBModelCache::$neededModelIDs = array_merge(CBModelCache::$neededModelIDs, $IDs);
     }
 
     /**
-     * @param   {hex160}    $ID
+     * @param ID $ID
      *
-     * @return  {stdClass} | false
-     *  Returns the model if it's cached; otherwise false.
+     * @return model|false
+     *
+     *      Returns the model if it's cached; otherwise false.
      */
     static function modelByID($ID) {
         return isset(CBModelCache::$cache[$ID]) ? CBModelCache::$cache[$ID] : false;
     }
 
     /**
-     * @return null
+     * @return void
      */
-    static function uncacheModelsByID(array $IDs) {
-        CBModelCache::$cache = array_filter(CBModelCache::$cache, function($key) use ($IDs) {
+    static function uncacheModelsByID(array $IDs): void {
+        CBModelCache::$cache = array_filter(CBModelCache::$cache, function ($key) use ($IDs) {
             return isset($IDs[$key]);
         }, ARRAY_FILTER_USE_KEY);
     }
