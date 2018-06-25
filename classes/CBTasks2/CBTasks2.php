@@ -458,6 +458,21 @@ EOT;
      * The situations are rare race conditions and potentially a very closely
      * timed calls to runNextTask() and runSpecificTask().
      *
+     * @NOTE Exception Handling
+     *
+     *      It is the job of this function to, at the very least, change the
+     *      state of the CBTasks2 table row to either 3 (complete) or 4 (error).
+     *
+     *      It will catch any exceptions that occur and hold onto them until it
+     *      can at least attempt to set the state to 4 (error). If it can set
+     *      the state it will the throw the caught exception. If another
+     *      exception occurs it will report the first exception and throw the
+     *      second.
+     *
+     *      The prinicple is that this function will not hide exceptions. If an
+     *      exception occurs this function will make sure the system has
+     *      recovered from it and then throw that exception.
+     *
      * @param ID $starterID
      *
      * @return bool
@@ -466,33 +481,34 @@ EOT;
      */
     private static function runTaskForStarter($starterID) {
         $starterIDAsSQL = CBHex160::toSQL($starterID);
-        $SQL = <<<EOT
 
-            SELECT  `className`,
-                    LOWER(HEX(`ID`)) AS `ID`,
-                    LOWER(HEX(`processID`)) as `processID`
-            FROM    `CBTasks2`
-            WHERE   `starterID` = {$starterIDAsSQL}
+        try {
+            $SQL = <<<EOT
+
+                SELECT  `className`,
+                        LOWER(HEX(`ID`)) AS `ID`,
+                        LOWER(HEX(`processID`)) as `processID`
+                FROM    `CBTasks2`
+                WHERE   `starterID` = {$starterIDAsSQL}
 
 EOT;
 
-        $task = CBDB::SQLToObject($SQL, /* retryOnDeadlock */ true);
+            $task = CBDB::SQLToObject($SQL, /* retryOnDeadlock */ true);
 
-        /**
-         * If someone deleted or manually ran the task return false.
-         */
+            /**
+             * If someone deleted or manually ran the task return false.
+             */
 
-        if ($task === false) {
-            return false;
-        }
+            if ($task === false) {
+                return false;
+            }
 
-        if ($task->processID !== null) {
-            CBProcess::setID($task->processID);
-        }
+            if ($task->processID !== null) {
+                CBProcess::setID($task->processID);
+            }
 
-        CBID::push($task->ID);
+            CBID::push($task->ID);
 
-        try {
             if (is_callable($function = "{$task->className}::CBTasks2_run")) {
                 $status = call_user_func($function, $task->ID);
             } else if (is_callable($function = "{$task->className}::CBTasks2_Execute")) { /* deprecated */
@@ -513,49 +529,63 @@ EOT;
 
             $state = 3; /* complete */
         } catch (Throwable $throwable) {
-            CBErrorHandler::report($throwable);
+            /**
+             * We'll rethrow this throwable at the end of the function after we
+             * get the CBTasks2 table fixed up.
+             */
+            $firstThrowable = $throwable;
 
             $scheduled = null;
             $state = 4; /* failed */
         }
 
-        $now = time();
+        try {
+            $now = time();
 
-        if ($scheduled === null) {
-            // state will already be 3 or 4 depending on failure status
-            $timestamp = $now;
-        } else if ($scheduled <= $now) {
-            $state = 1; /* ready */
-            $timestamp = $now;
-        } else {
-            $state = 0; /* scheduled */
-            $timestamp = $scheduled;
-        }
+            if ($scheduled === null) {
+                // state will already be 3 or 4 depending on failure status
+                $timestamp = $now;
+            } else if ($scheduled <= $now) {
+                $state = 1; /* ready */
+                $timestamp = $now;
+            } else {
+                $state = 0; /* scheduled */
+                $timestamp = $scheduled;
+            }
 
-        $classNameAsSQL = CBDB::stringToSQL($task->className);
-        $IDAsSQL = CBHex160::toSQL($task->ID);
-        $SQL = <<<EOT
+            $classNameAsSQL = CBDB::stringToSQL($task->className);
+            $IDAsSQL = CBHex160::toSQL($task->ID);
+            $SQL = <<<EOT
 
-            UPDATE  `CBTasks2`
-            SET     `state` = {$state},
-                    `timestamp` = {$timestamp}
-            WHERE   `className` = {$classNameAsSQL} AND
-                    `ID` = {$IDAsSQL} AND
-                    `starterID` = {$starterIDAsSQL}
+                UPDATE  `CBTasks2`
+                SET     `state` = {$state},
+                        `timestamp` = {$timestamp}
+                WHERE   `className` = {$classNameAsSQL} AND
+                        `ID` = {$IDAsSQL} AND
+                        `starterID` = {$starterIDAsSQL}
 
 EOT;
 
-        Colby::query($SQL, /* retryOnDeadlock */ true);
+            Colby::query($SQL, /* retryOnDeadlock */ true);
 
-        $affectedRows = Colby::mysqli()->affected_rows;
+            $affectedRows = Colby::mysqli()->affected_rows;
 
-        CBID::pop();
+            CBID::pop();
 
-        if ($task->processID !== null) {
-            CBProcess::clearID();
+            if ($task->processID !== null) {
+                CBProcess::clearID();
+            }
+        } catch (Throwable $throwable) {
+            if (!empty($firstThrowable)) {
+                CBErrorHandler::report($firstThrowable);
+            }
+
+            throw $throwable;
         }
 
-        if ($affectedRows === 1) {
+        if (!empty($firstThrowable)) {
+            throw $firstThrowable;
+        } else if ($affectedRows === 1) {
             return true;
         } else {
             return false;
