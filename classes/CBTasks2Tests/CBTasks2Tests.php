@@ -6,6 +6,63 @@
 final class CBTasks2Tests {
 
     /**
+     * This test verifies two behaviors:
+     *
+     *      An exception thrown by a task should not be hidden.
+     *
+     *      After such an exception, the row in the CBTasks2 table should have a
+     *      state of 4, meaning an error occurred when trying to run the task.
+     *
+     * @return object
+     */
+    static function CBTest_exceptionHandling(): stdClass {
+        $ID = 'add1d0e46582644d3b3488206d85bd3c22fdc19b';
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $actualExceptionMessage = '';
+        $expectedExceptionMessage = 'CBTasks2Tests_testException';
+
+        CBModels::deleteByID($ID);
+
+        CBModels::save((object)[
+            'className' => 'CBMessageView',
+            'ID' => $ID,
+            'markup' => 'throw an exception',
+        ]);
+
+        try {
+            CBTasks2::runSpecificTask('CBTasks2Tests_task', $ID);
+        } catch (Throwable $throwable) {
+            $actualExceptionMessage = $throwable->getMessage();
+        }
+
+        CBModels::deleteByID($ID);
+
+        if ($actualExceptionMessage != $expectedExceptionMessage) {
+            return CBTest::resultMismatchFailure('Subtest 1', $actualExceptionMessage, $expectedExceptionMessage);
+        }
+
+        $SQL = <<<EOT
+
+            SELECT  state
+            FROM    CBTasks2
+            WHERE   className = 'CBTasks2Tests_task' AND
+                    ID = {$IDAsSQL}
+
+EOT;
+
+        $actualState = intval(CBDB::SQLToValue($SQL));
+        $expectedState = 4; /* state value for error */
+
+        if ($actualState != $expectedState) {
+            return CBTest::resultMismatchFailure('Subtest 2', $actualState, $expectedState);
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
      * @return object
      */
     static function CBTest_runSpecificTask(): stdClass {
@@ -56,6 +113,7 @@ final class CBTasks2Tests {
     static function CBUnitTests_tests(): array {
         return [
             ['CBTasks2', 'runSpecificTask'],
+            ['CBTasks2', 'exceptionHandling'],
         ];
     }
 }
@@ -97,10 +155,17 @@ EOT;
     }
 
     /**
+     * @param ID $ID
+     *
      * @return void
      */
-    static function CBTasks2_run(): void {
+    static function CBTasks2_run(string $ID): void {
+        $model = CBModelCache::fetchModelByID($ID);
+        $message = CBModel::valueToString($model, 'markup');
 
+        if ($message === 'throw an exception') {
+            throw new Exception('CBTasks2Tests_testException');
+        }
     }
 
     /**
