@@ -188,22 +188,32 @@ EOT;
 
             /* check for deprecated views */
 
-            CBPageVerificationTask::$messageContext = [];
-            $views = CBView::toSubviews($result->spec);
-            array_walk($views, 'CBPageVerificationTask::verifyView');
+            $deprecatedViewClassNames = CBPageVerificationTask::findDeprecatedSubviewClassNames($result->spec);
 
-            if (!empty(CBPageVerificationTask::$messageContext)) {
-                $issues = implode("\n\n", CBPageVerificationTask::$messageContext);
-                $severity = min(6, $severity);
-                $messages[] = <<<EOT
+            if (!empty($deprecatedViewClassNames)) {
+                $count = count($deprecatedViewClassNames);
+                $countPlural = $count > 1 ? 's' : '';
+                $uniqueClassNames = array_values(array_unique($deprecatedViewClassNames));
+                $uniqueCount = count($uniqueClassNames);
+                $uniqueCountPlural = $uniqueCount > 1 ? 'es' : '';
+                $uniqueClassNames = implode("\n\n", $uniqueClassNames);
+                $message = <<<EOT
 
-                    View issues:
+                    The page "{$pageTitle}" has {$count} deprecated view{$countPlural} using
+                    {$uniqueCount} deprecated view class{$uniqueCountPlural}.
 
                     --- ul
-                    {$issues}
+                    {$uniqueClassNames}
                     ---
 
 EOT;
+
+                CBLog::log((object)[
+                    'message' => $message,
+                    'severity' => 4,
+                    'sourceClassName' => __CLASS__,
+                    'sourceID' => '06232e21d9ced6f7b8f91fb0f7ae381944e5f4f2',
+                ]);
             }
         }
 
@@ -324,19 +334,27 @@ EOT;
     }
 
     /**
-     * @param object $spec
+     * This function walks the subview tree of the model provided and returns a
+     * non-unique array of deprecated subview class names.
      *
-     * @return
+     * @param model $model
+     *
+     * @return [string]
      */
-    static function verifyView($spec) {
-        $className = CBModel::value($spec, 'className');
+    static function findDeprecatedSubviewClassNames(stdClass $model): array {
+        $data = (object)[
+            'classNames' => [],
+        ];
 
-        if (!in_array($className, CBPageVerificationTask::allowedViewClassNames())) {
-            CBPageVerificationTask::$messageContext[] = "The {$className} class is not supported.";
-        }
+        CBView::walkSubviews($model, function ($subview) use ($data) {
+            $viewClassName = CBModel::valueToString($subview, 'className');
 
-        $subviews = CBView::toSubviews($spec);
+            if (in_array($viewClassName, CBViewCatalog::fetchDeprecatedViewClassNames())) {
+                array_push($data->classNames, $viewClassName);
+            }
+        });
 
-        array_walk($subviews, 'CBPageVerificationTask::verifyView');
+        return $data->classNames;
     }
+
 }
