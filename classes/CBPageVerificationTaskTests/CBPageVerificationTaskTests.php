@@ -7,76 +7,13 @@ final class CBPageVerificationTaskTests {
      */
     static function CBUnitTests_tests(): array {
         return [
+            ['CBPageVerificationTask', 'findDeprecatedSubviewClassNames'],
             ['CBPageVerificationTask', 'hasColbyPagesRow'],
             ['CBPageVerificationTask', 'importThumbnailURLToImage'],
             ['CBPageVerificationTask', 'invalidImageProperty'],
             ['CBPageVerificationTask', 'rowWithNoModel'],
             ['CBPageVerificationTask', 'upgradeThumbnailURLToImage'],
         ];
-    }
-
-    /**
-     * @return ID
-     */
-    static function createPagesRowAndDataStoreWithoutModel(): string {
-        $ID = CBHex160::random();
-        $now = time();
-
-        $archiveIDAsSQL= CBHex160::toSQL($ID);
-        $keyValueDataAsSQL = CBDB::stringToSQL('');
-        $classNameAsSQL = 'NULL';
-        $classNameForKindAsSQL = 'NULL';
-        $createdAsSQL = $now;
-        $iterationAsSQL = 1;
-        $modifiedAsSQL = $now;
-        $URIAsSQL = 'NULL';
-        $thumbnailURLAsSQL = 'NULL';
-        $searchTextAsSQL = 'NULL';
-        $publishedAsSQL = 'NULL';
-        $publishedByAsSQL = 'NULL';
-        $publishedMonthAsSQL = 'NULL';
-
-        CBDataStore::deleteByID($ID);
-        CBPages::deletePagesByID([$ID]);
-
-        $SQL = <<<EOT
-
-            INSERT INTO ColbyPages
-            VALUES (
-                {$archiveIDAsSQL},
-                {$keyValueDataAsSQL},
-                {$classNameAsSQL},
-                {$classNameForKindAsSQL},
-                {$createdAsSQL},
-                {$iterationAsSQL},
-                {$modifiedAsSQL},
-                {$URIAsSQL},
-                {$thumbnailURLAsSQL},
-                {$searchTextAsSQL},
-                {$publishedAsSQL},
-                {$publishedByAsSQL},
-                {$publishedMonthAsSQL}
-            )
-
-EOT;
-
-        Colby::query($SQL);
-
-        if (!CBDB::SQLToValue("SELECT COUNT(*) FROM ColbyPages where archiveID = {$archiveIDAsSQL}")) {
-            throw new RuntimeException('The ColbyPages row was not created.');
-        }
-
-        CBDataStore::create($ID);
-
-        $filepath = CBDataStore::flexpath($ID, 'tmp.txt', cbsitedir());
-
-        file_put_contents($filepath, __METHOD__ . "()\n");
-
-        if (!is_dir(CBDataStore::directoryForID($ID)) || !is_file($filepath)) {
-            throw new RuntimeException('The data store was not completely created.');
-        }
-
-        return $ID;
     }
 
     /**
@@ -278,12 +215,37 @@ EOT;
     }
 
     /**
+     * @return object
+     */
+    static function CBTest_findDeprecatedSubviewClassNames(): stdClass {
+        $spec = CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews();
+        $expectedDeprecatedSubviewClassNames = [
+            'CBThemedTextView',
+        ];
+
+        $actualDeprecatedSubviewClassNames =
+            CBPageVerificationTask::findDeprecatedSubviewClassNames($spec);
+
+        if ($actualDeprecatedSubviewClassNames != $expectedDeprecatedSubviewClassNames) {
+            return CBTest::resultMismatchFailure(
+                'Subtest 1',
+                $actualDeprecatedSubviewClassNames,
+                $expectedDeprecatedSubviewClassNames
+            );
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
      * This test creates a page that has a `thumbnailURL` that references an
      * image from a CBImage. The test then runs CBPageVerificationTask on the
      * page to make sure the `thumbnailURL` is upgraded to an `image` for the
      * same CBImage.
      *
-     * @return null
+     * @return object
      */
     static function CBTest_upgradeThumbnailURLToImage(): stdClass {
         $pageID = 'e87c8eef4953d3060faaa2e3597c730326adfc29';
@@ -381,6 +343,116 @@ EOT;
 
         return (object)[
             'succeeded' => true,
+        ];
+    }
+
+    /**
+     * @return ID
+     */
+    private static function createPagesRowAndDataStoreWithoutModel(): string {
+        $ID = CBHex160::random();
+        $now = time();
+
+        $archiveIDAsSQL= CBHex160::toSQL($ID);
+        $keyValueDataAsSQL = CBDB::stringToSQL('');
+        $classNameAsSQL = 'NULL';
+        $classNameForKindAsSQL = 'NULL';
+        $createdAsSQL = $now;
+        $iterationAsSQL = 1;
+        $modifiedAsSQL = $now;
+        $URIAsSQL = 'NULL';
+        $thumbnailURLAsSQL = 'NULL';
+        $searchTextAsSQL = 'NULL';
+        $publishedAsSQL = 'NULL';
+        $publishedByAsSQL = 'NULL';
+        $publishedMonthAsSQL = 'NULL';
+
+        CBDataStore::deleteByID($ID);
+        CBPages::deletePagesByID([$ID]);
+
+        $SQL = <<<EOT
+
+            INSERT INTO ColbyPages
+            VALUES (
+                {$archiveIDAsSQL},
+                {$keyValueDataAsSQL},
+                {$classNameAsSQL},
+                {$classNameForKindAsSQL},
+                {$createdAsSQL},
+                {$iterationAsSQL},
+                {$modifiedAsSQL},
+                {$URIAsSQL},
+                {$thumbnailURLAsSQL},
+                {$searchTextAsSQL},
+                {$publishedAsSQL},
+                {$publishedByAsSQL},
+                {$publishedMonthAsSQL}
+            )
+
+EOT;
+
+        Colby::query($SQL);
+
+        if (!CBDB::SQLToValue("SELECT COUNT(*) FROM ColbyPages where archiveID = {$archiveIDAsSQL}")) {
+            throw new RuntimeException('The ColbyPages row was not created.');
+        }
+
+        CBDataStore::create($ID);
+
+        $filepath = CBDataStore::flexpath($ID, 'tmp.txt', cbsitedir());
+
+        file_put_contents($filepath, __METHOD__ . "()\n");
+
+        if (!is_dir(CBDataStore::directoryForID($ID)) || !is_file($filepath)) {
+            throw new RuntimeException('The data store was not completely created.');
+        }
+
+        return $ID;
+    }
+
+    /**
+     * @return model
+     */
+    private static function specWithDeprecatedAndUnsupportedViews(): stdClass {
+        return (object)[
+            'className' => 'CBViewPage',
+            'title' => 'Test Page for CBTest_unsupportedViews() in CBPageVerificationTaskTests',
+            'sections' => [
+                (object)[
+                    'className' => 'CBTextBoxView',
+                ],
+                (object)[
+                    'className' => 'CBThemedTextView',
+                ],
+                (object)[
+                    'className' => 'CBContainerView',
+                    'subviews' => [
+                        (object)[
+                            'className' => 'CBImageView',
+                        ],
+                        (object)[
+                            'className' => 'CBContainerView',
+                            'subviews' => [
+                                (object)[
+                                    'className' => 'CBTextView',
+                                ],
+                                (object)[
+                                    'className' => 'CBTextView2',
+                                ],
+                                (object)[
+                                    'className' => 'CBImageView',
+                                ],
+                                (object)[
+                                    'className' => 'CBMessageView',
+                                ],
+                                (object)[
+                                    'className' => 'CBFlexBoxView',
+                                ],
+                            ]
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 }
