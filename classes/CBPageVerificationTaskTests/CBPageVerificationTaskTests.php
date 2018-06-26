@@ -2,6 +2,48 @@
 
 final class CBPageVerificationTaskTests {
 
+    static function CBTest_deprecatedAndUnsupportedViews(): stdClass {
+        $ID = 'f9553b44249935fb78965c67862a1cec675b0835';
+        $spec = CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews();
+        $spec->ID = $ID;
+
+        CBDB::transaction(function () use ($ID) {
+            CBModels::deleteByID($ID);
+        });
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+
+        CBLog::bufferStart();
+
+        CBTasks2::runSpecificTask(
+            'CBPageVerificationTask',
+            $ID
+        );
+
+        $actualLogEntriesAsJSON = json_encode(CBLog::bufferContents());
+
+        CBLog::bufferEndClean();
+
+        CBDB::transaction(function () use ($ID) {
+            CBModels::deleteByID($ID);
+        });
+
+        $expectedLogEntriesAsJSON = "[{\"message\":\"\\n                    The page \\\"Test Page for CBTest_unsupportedViews() in CBPageVerificationTaskTests\\\" has 1 deprecated\\n                    view using 1 deprecated view\\n                    class.\\n\\n                    --- ul\\n                    CBThemedTextView\\n                    ---\\n\",\"severity\":4,\"sourceClassName\":\"CBPageVerificationTask\",\"sourceID\":\"06232e21d9ced6f7b8f91fb0f7ae381944e5f4f2\"},{\"message\":\"\\n                    The page \\\"Test Page for CBTest_unsupportedViews() in CBPageVerificationTaskTests\\\" has 5 unsupported\\n                    views using 4 unsupported view\\n                    classes.\\n\\n                    --- ul\\n                    CBTextBoxView\\n\\nCBImageView\\n\\nCBTextView\\n\\nCBFlexBoxView\\n                    ---\\n\",\"severity\":3,\"sourceClassName\":\"CBPageVerificationTask\",\"sourceID\":\"d8faccb5fe6161d7a61a12ddcdbc5b16f42c6e4d\"},{\"className\":\"CBPageVerificationTask\",\"message\":\"A page with the title \\\"Test Page for CBTest_unsupportedViews() in CBPageVerificationTaskTests\\\" was verified\",\"severity\":7},{\"className\":\"CBTasks2\",\"message\":\"CBTasks2 ran CBPageVerificationTask for ID f9553b44249935fb78965c67862a1cec675b0835\",\"severity\":7}]";
+
+        if ($actualLogEntriesAsJSON != $expectedLogEntriesAsJSON) {
+            $actualLogEntries = json_decode($actualLogEntriesAsJSON);
+            $expectedLogEntries = json_decode($expectedLogEntriesAsJSON);
+
+            return CBTest::resultMismatchFailure('Subtest 1', $actualLogEntries, $expectedLogEntries);
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
     /**
      * @return object
      */
@@ -368,6 +410,7 @@ EOT;
      */
     static function CBUnitTests_tests(): array {
         return [
+            ['CBPageVerificationTask', 'deprecatedAndUnsupportedViews'],
             ['CBPageVerificationTask', 'findDeprecatedSubviewClassNames'],
             ['CBPageVerificationTask', 'findUnsupportedSubviewClassNames'],
             ['CBPageVerificationTask', 'hasColbyPagesRow'],
