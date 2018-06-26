@@ -13,6 +13,20 @@
 final class CBImageView {
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBViewCatalog::installView(__CLASS__, (object)['isUnsupported' => true]);
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBViewCatalog'];
+    }
+
+    /**
      * @param object $model
      *
      * @return bool
