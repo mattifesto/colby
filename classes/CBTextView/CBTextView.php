@@ -9,6 +9,20 @@
 final class CBTextView {
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBViewCatalog::installView(__CLASS__, (object)['isUnsupported' => true]);
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBViewCatalog'];
+    }
+
+    /**
      * @param model $spec
      *
      * @return model
@@ -39,29 +53,5 @@ EOT
         unset($spec->text);
 
         return $spec;
-    }
-
-    /**
-     * @deprecated 2018.03.31
-     *
-     *      This function just deletes a page that used to be a test page for
-     *      this class. Once it has run once on each site install for this class
-     *      can be removed.
-     *
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        $pageID = '1814177fa26d544f1cd3cdd264442d03a33a48d6';
-
-        CBDB::transaction(function () use ($pageID) {
-            CBModels::deleteByID($pageID);
-        });
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBInstall_requiredClassNames(): array {
-        return ['CBModels', 'CBTasks2', 'CBLog', 'CBPages', 'CBViewPage'];
     }
 }
