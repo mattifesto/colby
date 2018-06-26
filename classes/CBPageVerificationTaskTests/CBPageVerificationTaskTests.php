@@ -3,6 +3,31 @@
 final class CBPageVerificationTaskTests {
 
     /**
+     * @return object
+     */
+    static function CBTest_findDeprecatedSubviewClassNames(): stdClass {
+        $spec = CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews();
+        $expectedDeprecatedSubviewClassNames = [
+            'CBThemedTextView',
+        ];
+
+        $actualDeprecatedSubviewClassNames =
+            CBPageVerificationTask::findDeprecatedSubviewClassNames($spec);
+
+        if ($actualDeprecatedSubviewClassNames != $expectedDeprecatedSubviewClassNames) {
+            return CBTest::resultMismatchFailure(
+                'Subtest 1',
+                $actualDeprecatedSubviewClassNames,
+                $expectedDeprecatedSubviewClassNames
+            );
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
      * @return [[<class>, <test>]]
      */
     static function CBUnitTests_tests(): array {
@@ -212,31 +237,6 @@ final class CBPageVerificationTaskTests {
         }
 
         return null;
-    }
-
-    /**
-     * @return object
-     */
-    static function CBTest_findDeprecatedSubviewClassNames(): stdClass {
-        $spec = CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews();
-        $expectedDeprecatedSubviewClassNames = [
-            'CBThemedTextView',
-        ];
-
-        $actualDeprecatedSubviewClassNames =
-            CBPageVerificationTask::findDeprecatedSubviewClassNames($spec);
-
-        if ($actualDeprecatedSubviewClassNames != $expectedDeprecatedSubviewClassNames) {
-            return CBTest::resultMismatchFailure(
-                'Subtest 1',
-                $actualDeprecatedSubviewClassNames,
-                $expectedDeprecatedSubviewClassNames
-            );
-        }
-
-        return (object)[
-            'succeeded' => true,
-        ];
     }
 
     /**
