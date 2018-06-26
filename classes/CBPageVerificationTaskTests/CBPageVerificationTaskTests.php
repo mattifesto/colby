@@ -28,20 +28,6 @@ final class CBPageVerificationTaskTests {
     }
 
     /**
-     * @return [[<class>, <test>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBPageVerificationTask', 'findDeprecatedSubviewClassNames'],
-            ['CBPageVerificationTask', 'hasColbyPagesRow'],
-            ['CBPageVerificationTask', 'importThumbnailURLToImage'],
-            ['CBPageVerificationTask', 'invalidImageProperty'],
-            ['CBPageVerificationTask', 'rowWithNoModel'],
-            ['CBPageVerificationTask', 'upgradeThumbnailURLToImage'],
-        ];
-    }
-
-    /**
      * @return object
      */
     static function CBTest_hasColbyPagesRow(): stdClass {
@@ -343,6 +329,20 @@ EOT;
 
         return (object)[
             'succeeded' => true,
+        ];
+    }
+
+    /**
+     * @return [[<class>, <test>]]
+     */
+    static function CBUnitTests_tests(): array {
+        return [
+            ['CBPageVerificationTask', 'findDeprecatedSubviewClassNames'],
+            ['CBPageVerificationTask', 'hasColbyPagesRow'],
+            ['CBPageVerificationTask', 'importThumbnailURLToImage'],
+            ['CBPageVerificationTask', 'invalidImageProperty'],
+            ['CBPageVerificationTask', 'rowWithNoModel'],
+            ['CBPageVerificationTask', 'upgradeThumbnailURLToImage'],
         ];
     }
 
