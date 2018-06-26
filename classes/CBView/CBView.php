@@ -264,4 +264,29 @@ final class CBView {
     static function toSubviews($model): array {
         return CBView::getSubviews($model);
     }
+
+    /**
+     * The function performs a view tree walk. The callback is not called for
+     * the root $view parameter.
+     *
+     * @param model $view
+     * @param callable $callback
+     *
+     *      function callback($subview, $index, $view)
+     *
+     *      $subview: the view model
+     *      $index: the subview's index in the subview's parent's subview array
+     *      $view: the subview's parent's model
+     *
+     * @return void
+     */
+    static function walkSubviews($view, callable $callback): void {
+        $subviews = CBView::getSubviews($view);
+
+        foreach($subviews as $index => $subview) {
+            call_user_func($callback, $subview, $index, $view);
+
+            CBView::walkSubviews($subview, $callback);
+        }
+    }
 }
