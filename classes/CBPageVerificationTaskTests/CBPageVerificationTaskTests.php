@@ -30,6 +30,35 @@ final class CBPageVerificationTaskTests {
     /**
      * @return object
      */
+    static function CBTest_findUnsupportedSubviewClassNames(): stdClass {
+        $spec = CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews();
+        $expectedUnsupportedSubviewClassNames = [
+            'CBTextBoxView',
+            'CBImageView',
+            'CBTextView',
+            'CBImageView',
+            'CBFlexBoxView',
+        ];
+
+        $actualUnsupportedSubviewClassNames =
+            CBPageVerificationTask::findUnsupportedSubviewClassNames($spec);
+
+        if ($actualUnsupportedSubviewClassNames != $expectedUnsupportedSubviewClassNames) {
+            return CBTest::resultMismatchFailure(
+                'Subtest 1',
+                $actualUnsupportedSubviewClassNames,
+                $expectedUnsupportedSubviewClassNames
+            );
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
+     * @return object
+     */
     static function CBTest_hasColbyPagesRow(): stdClass {
         $ID = '722880dadcef3874157d086b4eceeae83194173f';
         $spec = (object)[
@@ -340,6 +369,7 @@ EOT;
     static function CBUnitTests_tests(): array {
         return [
             ['CBPageVerificationTask', 'findDeprecatedSubviewClassNames'],
+            ['CBPageVerificationTask', 'findUnsupportedSubviewClassNames'],
             ['CBPageVerificationTask', 'hasColbyPagesRow'],
             ['CBPageVerificationTask', 'importThumbnailURLToImage'],
             ['CBPageVerificationTask', 'invalidImageProperty'],
