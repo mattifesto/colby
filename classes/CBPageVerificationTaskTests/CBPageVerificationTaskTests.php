@@ -201,7 +201,7 @@ final class CBPageVerificationTaskTests {
     /**
      * @return ?object
      */
-    static function rowWithNoModelTest(): ?stdClass {
+    static function CBTest_rowWithNoModel(): stdClass {
         $ID = CBPageVerificationTaskTests::createPagesRowAndDataStoreWithoutModel();
         $IDAsSQL = CBHex160::toSQL($ID);
         $result = CBPageVerificationTask::run($ID);
@@ -222,7 +222,9 @@ final class CBPageVerificationTaskTests {
             ];
         }
 
-        return null;
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 
     /**
