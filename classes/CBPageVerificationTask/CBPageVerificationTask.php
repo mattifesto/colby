@@ -199,8 +199,9 @@ EOT;
                 $uniqueClassNames = implode("\n\n", $uniqueClassNames);
                 $message = <<<EOT
 
-                    The page "{$pageTitle}" has {$count} deprecated view{$countPlural} using
-                    {$uniqueCount} deprecated view class{$uniqueCountPlural}.
+                    The page "{$pageTitle}" has {$count} deprecated
+                    view{$countPlural} using {$uniqueCount} deprecated view
+                    class{$uniqueCountPlural}.
 
                     --- ul
                     {$uniqueClassNames}
@@ -213,6 +214,37 @@ EOT;
                     'severity' => 4,
                     'sourceClassName' => __CLASS__,
                     'sourceID' => '06232e21d9ced6f7b8f91fb0f7ae381944e5f4f2',
+                ]);
+            }
+
+            /* check for unsupported views */
+
+            $unsupportedViewClassNames = CBPageVerificationTask::findUnsupportedSubviewClassNames($result->spec);
+
+            if (!empty($unsupportedViewClassNames)) {
+                $count = count($unsupportedViewClassNames);
+                $countPlural = $count > 1 ? 's' : '';
+                $uniqueClassNames = array_values(array_unique($unsupportedViewClassNames));
+                $uniqueCount = count($uniqueClassNames);
+                $uniqueCountPlural = $uniqueCount > 1 ? 'es' : '';
+                $uniqueClassNames = implode("\n\n", $uniqueClassNames);
+                $message = <<<EOT
+
+                    The page "{$pageTitle}" has {$count} unsupported
+                    view{$countPlural} using {$uniqueCount} unsupported view
+                    class{$uniqueCountPlural}.
+
+                    --- ul
+                    {$uniqueClassNames}
+                    ---
+
+EOT;
+
+                CBLog::log((object)[
+                    'message' => $message,
+                    'severity' => 3,
+                    'sourceClassName' => __CLASS__,
+                    'sourceID' => 'd8faccb5fe6161d7a61a12ddcdbc5b16f42c6e4d',
                 ]);
             }
         }
@@ -357,4 +389,27 @@ EOT;
         return $data->classNames;
     }
 
+    /**
+     * This function walks the subview tree of the model provided and returns a
+     * non-unique array of deprecated subview class names.
+     *
+     * @param model $model
+     *
+     * @return [string]
+     */
+    static function findUnsupportedSubviewClassNames(stdClass $model): array {
+        $data = (object)[
+            'classNames' => [],
+        ];
+
+        CBView::walkSubviews($model, function ($subview) use ($data) {
+            $viewClassName = CBModel::valueToString($subview, 'className');
+
+            if (in_array($viewClassName, CBViewCatalog::fetchUnsupportedViewClassNames())) {
+                array_push($data->classNames, $viewClassName);
+            }
+        });
+
+        return $data->classNames;
+    }
 }
