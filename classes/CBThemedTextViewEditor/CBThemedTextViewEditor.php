@@ -6,7 +6,14 @@ final class CBThemedTextViewEditor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIBooleanEditor', 'CBUIStringEditor'];
+        return [
+            'CBUI',
+            'CBUIBooleanEditor',
+            'CBUISectionItem4',
+            'CBUISpecClipboard',
+            'CBUIStringEditor',
+            'CBUIStringsPart',
+        ];
     }
 
     /**
