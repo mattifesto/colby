@@ -1,10 +1,12 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBThemedTextViewEditor */
 /* globals
     CBUI,
     CBUIBooleanEditor,
-    CBUIStringEditor */
+    CBUIStringEditor,
+*/
 
 var CBThemedTextViewEditor = {
 
@@ -15,7 +17,6 @@ var CBThemedTextViewEditor = {
      * @return Element
      */
     createEditor : function(args) {
-        var section, item;
         var element = document.createElement("div");
         element.className = "CBThemedTextViewEditor";
 
@@ -74,88 +75,115 @@ var CBThemedTextViewEditor = {
         }).element);
 
         element.appendChild(CBUI.createHalfSpace());
-        section = CBUI.createSection();
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Title",
-            propertyName : "titleAsMarkaround",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
+        {
+            let section = CBUI.createSection();
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Content",
-            propertyName : "contentAsMarkaround",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
+            {
+                let item = CBUI.createSectionItem();
+                item.appendChild(CBUIStringEditor.createEditor({
+                    labelText : "Title",
+                    propertyName : "titleAsMarkaround",
+                    spec : args.spec,
+                    specChangedCallback : args.specChangedCallback,
+                }).element);
+                section.appendChild(item);
+            }
 
-        element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
-        section = CBUI.createSection();
+            {
+                let item = CBUI.createSectionItem();
+                item.appendChild(CBUIStringEditor.createEditor({
+                    labelText : "Content",
+                    propertyName : "contentAsMarkaround",
+                    spec : args.spec,
+                    specChangedCallback : args.specChangedCallback,
+                }).element);
+                section.appendChild(item);
+            }
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "URL",
-            propertyName : "URL",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
+            element.appendChild(section);
+            element.appendChild(CBUI.createHalfSpace());
+        }
 
-        section = CBUI.createSection();
+        {
+            let section = CBUI.createSection();
 
-        /* titleColor */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Title Color",
-            propertyName : "titleColor",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
+            {
+                let item = CBUI.createSectionItem();
+                item.appendChild(CBUIStringEditor.createEditor({
+                    labelText : "URL",
+                    propertyName : "URL",
+                    spec : args.spec,
+                    specChangedCallback : args.specChangedCallback,
+                }).element);
+                section.appendChild(item);
+            }
 
-        /* contentColor */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Content Color",
-            propertyName : "contentColor",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
+            element.appendChild(section);
+            element.appendChild(CBUI.createHalfSpace());
+        }
 
-        /* center */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Center",
-            propertyName : "center",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
+        {
+            let section = CBUI.createSection();
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+            /* titleColor */
+            {
+                let item = CBUI.createSectionItem();
+                item.appendChild(CBUIStringEditor.createEditor({
+                    labelText : "Title Color",
+                    propertyName : "titleColor",
+                    spec : args.spec,
+                    specChangedCallback : args.specChangedCallback,
+                }).element);
+                section.appendChild(item);
+            }
 
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Styles Template",
-            propertyName : "stylesTemplate",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+            /* contentColor */
+            {
+                let item = CBUI.createSectionItem();
+                item.appendChild(CBUIStringEditor.createEditor({
+                    labelText : "Content Color",
+                    propertyName : "contentColor",
+                    spec : args.spec,
+                    specChangedCallback : args.specChangedCallback,
+                }).element);
+                section.appendChild(item);
+            }
 
-        element.appendChild(CBUI.createHalfSpace());
+            /* center */
+            {
+                let item = CBUI.createSectionItem();
+                item.appendChild(CBUIBooleanEditor.create({
+                    labelText : "Center",
+                    propertyName : "center",
+                    spec : args.spec,
+                    specChangedCallback : args.specChangedCallback,
+                }).element);
+                section.appendChild(item);
+            }
+
+            element.appendChild(section);
+            element.appendChild(CBUI.createHalfSpace());
+        }
+
+        {
+            let section = CBUI.createSection();
+
+            {
+                let item = CBUI.createSectionItem();
+
+                item.appendChild(CBUIStringEditor.createEditor({
+                    labelText : "Styles Template",
+                    propertyName : "stylesTemplate",
+                    spec : args.spec,
+                    specChangedCallback : args.specChangedCallback,
+                }).element);
+                section.appendChild(item);
+            }
+
+            element.appendChild(section);
+            element.appendChild(CBUI.createHalfSpace());
+        }
 
         return element;
     },
