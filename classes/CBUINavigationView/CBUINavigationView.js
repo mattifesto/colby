@@ -126,8 +126,9 @@ var CBUINavigationView = {
             element: element,
             items: [],
         };
+        let level;
 
-        window.addEventListener("popstate", CBUINavigationView.handlePopState.bind(undefined, state));
+        window.addEventListener("popstate", handlePopState);
 
         if (args !== undefined && args.rootItem !== undefined) {
             navigate(args.rootItem);
@@ -165,7 +166,12 @@ var CBUINavigationView = {
          * @return undefined
          */
         function navigate(item) {
-            var fromItem;
+            if (level === undefined) {
+                level = 0;
+            } else {
+                level += 1;
+            }
+
             var toItem = {
                 element: item.element,
                 left: item.left,
@@ -174,42 +180,53 @@ var CBUINavigationView = {
             };
 
             if (state.items.length > 0) {
-                fromItem = state.items[state.items.length - 1];
+                let fromItem = state.items[state.items.length - 1];
 
                 if (toItem.left === undefined) {
                     toItem.left = fromItem.title;
                 }
+
+                state.items = state.items.slice(0, level);
             }
 
             /* var from = state.elements[state.elements.length - 1]; */
-            toItem.container = CBUINavigationView.containerFromItem(toItem);
+            toItem.containerElement = CBUINavigationView.containerFromItem(toItem);
 
             state.items.push(toItem);
 
-            state.element.textContent = null;
-            state.element.appendChild(toItem.container);
-
-            if (state.items.length > 1) {
-                history.pushState(undefined, undefined);
+            if (level === 0) {
+                history.replaceState({level: level}, toItem.title);
+            } else {
+                history.pushState({level: level}, toItem.title);
             }
+
+            renderLevel(level);
 
             window.scrollTo(0, 0);
         }
-    },
 
-    /**
-     * @param object state
-     *
-     * @return undefined
-     */
-    handlePopState: function (state, event) {
-        if (state.items.length < 2) { return; }
+        /**
+         * @param object state
+         *
+         * @return undefined
+         */
+        function handlePopState(event) {
+            level = event.state.level;
 
-        /* var from = */ state.items.pop();
-        var newContainerElement = state.items[state.items.length - 1].container;
+            renderLevel(level);
+        }
 
-        state.element.textContent = null;
-        state.element.appendChild(newContainerElement);
+        /**
+         * @param int level
+         *
+         * @return undefined
+         */
+        function renderLevel(level) {
+            let containerElement = state.items[level].containerElement;
+
+            element.textContent = null;
+            element.appendChild(containerElement);
+        }
     },
 
     /**
