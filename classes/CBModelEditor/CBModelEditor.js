@@ -61,35 +61,35 @@ var CBModelEditor = {
      * @return undefined
      */
     renderEditorForSpec: function (spec) {
-        var element = document.createElement("div");
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
+
         var specSaver = CBUISpecSaver.create({
             rejectedCallback: CBModelEditor.saveWasRejected,
             spec: spec,
         });
-        var specChangedCallback = specSaver.specChangedCallback;
+
         var navigationView = CBUINavigationView.create({
-            defaultSpecChangedCallback: specChangedCallback,
+            defaultSpecChangedCallback: specSaver.specChangedCallback,
         });
 
-        element.appendChild(CBUISpecEditor.create({
+        main.appendChild(navigationView.element);
+
+        let specEditor = CBUISpecEditor.create({
             navigateToItemCallback: navigationView.navigateToItemCallback,
             spec: spec,
-            specChangedCallback: specChangedCallback,
-        }).element);
+            specChangedCallback: specSaver.specChangedCallback,
+        });
 
         let inspectHeaderItem = CBUI.createHeaderItem();
         inspectHeaderItem.textContent = "Inspect";
         inspectHeaderItem.href = "/admin/?c=CBModelInspector&ID=" + CBModelEditor_originalSpec.ID;
 
         navigationView.navigateToItemCallback.call(undefined, {
-            element: element,
+            element: specEditor.element,
             rightElements: [inspectHeaderItem.element],
             title: spec.className + " Editor",
         });
-
-        main.appendChild(navigationView.element);
     },
 
     /**

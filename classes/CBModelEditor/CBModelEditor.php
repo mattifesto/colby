@@ -78,7 +78,7 @@ class CBModelEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v410.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v433.js', cbsysurl())];
     }
 
     /**
