@@ -346,7 +346,6 @@ var CBUISpecArrayEditor = {
             selectableItem.push(thumbnailPart);
 
             let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
-            titleAndDescriptionPart.title = spec.className;
             selectableItem.push(titleAndDescriptionPart);
 
             {
@@ -356,18 +355,19 @@ var CBUISpecArrayEditor = {
             }
 
             updateThumbnail();
-            updateDescription();
+            updateTitleAndDescription();
 
             return selectableItem;
 
             function specChangedCallback() {
-                updateDescription();
+                updateTitleAndDescription();
                 updateThumbnail();
                 specsChangedCallback();
             }
 
-            function updateDescription() {
+            function updateTitleAndDescription() {
                 let nonBreakingSpace = "\u00A0";
+                titleAndDescriptionPart.title = spec.className;
                 titleAndDescriptionPart.description = CBUISpec.specToDescription(spec) || nonBreakingSpace;
             }
 
