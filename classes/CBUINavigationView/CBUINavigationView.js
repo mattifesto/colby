@@ -141,6 +141,7 @@ var CBUINavigationView = {
 
             navigate: navigate,
             navigateToItemCallback: navigate, /* deprecated */
+            replace: replace,
         };
 
         if (CBUINavigationView.context !== undefined) {
@@ -179,8 +180,8 @@ var CBUINavigationView = {
                 title: item.title,
             };
 
-            if (state.items.length > 0) {
-                let fromItem = state.items[state.items.length - 1];
+            if (level > 0) {
+                let fromItem = state.items[level - 1];
 
                 if (toItem.left === undefined) {
                     toItem.left = fromItem.title;
@@ -189,7 +190,6 @@ var CBUINavigationView = {
                 state.items = state.items.slice(0, level);
             }
 
-            /* var from = state.elements[state.elements.length - 1]; */
             toItem.containerElement = CBUINavigationView.containerFromItem(toItem);
 
             state.items.push(toItem);
@@ -199,6 +199,53 @@ var CBUINavigationView = {
             } else {
                 history.pushState({level: level}, toItem.title);
             }
+
+            renderLevel(level);
+
+            window.scrollTo(0, 0);
+        }
+
+        /**
+         * closure
+         *
+         * @param object item
+         *
+         *      {
+         *          left: string
+         *          element: Element
+         *          rightElements: [Elements]
+         *          title: string
+         *      }
+         *
+         * @return undefined
+         */
+        function replace(item) {
+            if (level === undefined) {
+                navigate(item);
+
+                return;
+            }
+
+            var toItem = {
+                element: item.element,
+                left: item.left,
+                rightElements: item.rightElements,
+                title: item.title,
+            };
+
+            if (level > 0) {
+                let fromItem = state.items[level - 1];
+
+                if (toItem.left === undefined) {
+                    toItem.left = fromItem.title;
+                }
+            }
+
+            toItem.containerElement = CBUINavigationView.containerFromItem(toItem);
+
+            state.items[level] = toItem;
+
+            history.replaceState({level: level}, toItem.title);
 
             renderLevel(level);
 
@@ -247,5 +294,25 @@ var CBUINavigationView = {
         }
 
         CBUINavigationView.context.navigate(item);
+    },
+
+    /**
+     * @param object item
+     *
+     *      {
+     *          left: string
+     *          element: Element
+     *          rightElements: [Elements]
+     *          title: string
+     *      }
+     *
+     * @return undefined
+     */
+    replace: function (item) {
+        if (CBUINavigationView.context === undefined) {
+            throw new Error("No CBUINavigationView has been created");
+        }
+
+        CBUINavigationView.context.replace(item);
     },
 };
