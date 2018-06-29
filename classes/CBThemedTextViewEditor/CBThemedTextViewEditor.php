@@ -9,8 +9,11 @@ final class CBThemedTextViewEditor {
         return [
             'CBUI',
             'CBUIBooleanEditor',
+            'CBUINavigationView',
+            'CBUIPanel',
             'CBUISectionItem4',
             'CBUISpecClipboard',
+            'CBUISpecEditor',
             'CBUIStringEditor',
             'CBUIStringsPart',
         ];

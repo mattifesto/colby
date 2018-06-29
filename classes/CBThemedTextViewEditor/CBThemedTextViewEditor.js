@@ -5,10 +5,14 @@
 /* globals
     CBUI,
     CBUIBooleanEditor,
+    CBUINavigationView,
+    CBUIPanel,
     CBUISectionItem4,
     CBUISpecClipboard,
+    CBUISpecEditor,
     CBUIStringEditor,
     CBUIStringsPart,
+    Colby,
 */
 
 var CBThemedTextViewEditor = {
@@ -18,52 +22,44 @@ var CBThemedTextViewEditor = {
      *
      * @return undefined
      */
-    convertToCBTextView2: function (spec) {
-        var value;
-        var CSSClassNames = [];
-        var localCSSRulesets = [];
+    convertToCBMessageView: function (spec, specChangedCallback) {
+        CBUIPanel.message = "Are you sure?";
+        CBUIPanel.buttons = [
+            {
+                title: "Yes",
+                callback: convert,
+            },
+            {
+                title: "No",
+            },
+        ];
+        CBUIPanel.isShowing = true;
 
-        if (spec.center) {
-            CSSClassNames.push("center");
+        function convert() {
+            CBUIPanel.reset();
+
+            CBUISpecClipboard.specs = [spec];
+
+            Colby.callAjaxFunction("CBThemedTextView", "convertToCBMessageView", spec)
+                .then(fulfilled)
+                .catch(Colby.displayAndReportError);
+
+            function fulfilled(convertedSpec) {
+                Object.assign(spec, convertedSpec);
+
+                specChangedCallback();
+
+                let editor = CBUISpecEditor.create({
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
+                });
+
+                CBUINavigationView.replace({
+                    element: editor.element,
+                    title: spec.className,
+                });
+            }
         }
-
-        value = spec.titleColor;
-        if (typeof value === "string" && (value = value.trim())) {
-            localCSSRulesets.push("view > .content > h1:first-child { color: " + value + " }");
-        }
-
-        value = spec.contentColor;
-        if (typeof value === "string" && (value = value.trim())) {
-            localCSSRulesets.push("view > .content { color: " + value + " }");
-        }
-
-        value = spec.stylesTemplate;
-        if (typeof value === "string" && (value = value.trim())) {
-            localCSSRulesets.push(value);
-        }
-
-        var content = [];
-
-        value = spec.titleAsMarkaround;
-        if (typeof value === "string" && (value = value.trim())) {
-            content.push("# " + value);
-        }
-
-        value = spec.contentAsMarkaround;
-        if (typeof value === "string" && (value = value.trim())) {
-            content.push(value);
-        }
-
-        let convertedSpec = {
-            className: "CBTextView2",
-            contentAsCommonMark: content.join("\n\n"),
-            CSSClassNames: CSSClassNames.join(" "),
-            localCSSTemplate: localCSSRulesets.join("\n\n"),
-        };
-
-        CBUISpecClipboard.specs = [convertedSpec];
-
-        alert("The CBTextView2 is now on the clipboard. You can paste it after this view, compare the two and make revisions, then delete this view.");
     },
 
     /**
@@ -84,11 +80,11 @@ var CBThemedTextViewEditor = {
             {
                 let sectionItem = CBUISectionItem4.create();
                 sectionItem.callback = function () {
-                    CBThemedTextViewEditor.convertToCBTextView2(args.spec);
+                    CBThemedTextViewEditor.convertToCBMessageView(args.spec, args.specChangedCallback);
                 };
 
                 let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Convert to CBTextView2";
+                stringsPart.string1 = "Convert to CBMessageView";
 
                 stringsPart.element.classList.add("action");
 
