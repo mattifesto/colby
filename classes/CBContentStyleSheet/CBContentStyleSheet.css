@@ -92,14 +92,17 @@
     padding: 10px 15px;
 }
 
+.CBContentStyleSheet.center,
 .CBContentStyleSheet .center {
     text-align: center;
 }
 
+.CBContentStyleSheet.justify,
 .CBContentStyleSheet .justify {
     text-align: justify;
 }
 
+.CBContentStyleSheet.left,
 .CBContentStyleSheet .left {
     text-align: left;
 }
@@ -112,6 +115,7 @@
     white-space: pre-line;
 }
 
+.CBContentStyleSheet.right,
 .CBContentStyleSheet .right {
     text-align: right;
 }
