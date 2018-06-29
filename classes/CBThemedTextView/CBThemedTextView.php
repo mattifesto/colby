@@ -3,6 +3,22 @@
 final class CBThemedTextView {
 
     /**
+     * @param object $spec
+     *
+     * @return model
+     */
+    static function CBAjax_convertToCBMessageView($spec): stdClass {
+        return CBThemedTextView::convertToCBMessageView($spec);
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_convertToCBMessageView_group(): string {
+        return 'Administrators';
+    }
+
+    /**
      * @return void
      */
     static function CBInstall_install(): void {
@@ -121,5 +137,104 @@ final class CBThemedTextView {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+    }
+
+    /**
+     * This function converts a CBThemedTextView spec into a CBMessageView spec.
+     *
+     * @param object $spec
+     *
+     * @return model
+     */
+    static function convertToCBMessageView(stdClass $specIn): stdClass {
+        $message = '';
+        $CSSClassNames = [];
+        $CSSTemplate = [];
+
+        /* title */
+
+        $value = CBMessageMarkup::stringToMessage(
+            trim(CBModel::valueToString($specIn, 'titleAsMarkaround'))
+        );
+
+        if (!empty($value)) {
+            $message .= "--- h1\n{$value}\n---";
+        }
+
+        /* content */
+
+        $value = CBMessageMarkup::stringToMessage(
+            trim(CBModel::valueToString($specIn, 'contentAsMarkaround'))
+        );
+
+        if (!empty($value)) {
+            if (!empty($message)) { $message .= "\n\n"; }
+
+            $message .= $value;
+        }
+
+        /* CSS template */
+
+        $value = trim(CBModel::valueToString($specIn, 'stylesTemplate'));
+
+        if (!empty($value)) {
+            array_push($CSSTemplate, $value);
+        }
+
+        /* title color */
+
+        $value = trim(CBModel::valueToString($specIn, 'titleColor'));
+
+        if (!empty($value)) {
+            array_push($CSSTemplate, "view > .content > h1:first-child { color: {$value} }");
+        }
+
+        /* content color */
+
+        $value = trim(CBModel::valueToString($specIn, 'contentColor'));
+
+        if (!empty($value)) {
+            array_push($CSSTemplate, "view > .content { color: {$value} }");
+        }
+
+        /* center */
+
+        $value = CBModel::valueToBool($specIn, 'center');
+
+        if ($value) {
+            array_push($CSSClassNames, 'center');
+        }
+
+        /* URL */
+
+        $value = CBMessageMarkup::stringToMessage(
+            trim(CBModel::valueToString($specIn, 'URL'))
+        );
+
+        if (!empty($value)) {
+            if (!empty($message)) { $message .= "\n\n"; }
+
+            $message .= "--- center\n({$value} (a {$value}))\n---";
+        }
+
+        /* generate CBMessageView spec */
+
+        $specOut = (object)[
+            'className' => 'CBMessageView',
+        ];
+
+        if (!empty($message)) {
+            $specOut->markup = $message;
+        }
+
+        if (!empty($CSSClassNames)) {
+            $specOut->CSSClassNames = implode(' ', $CSSClassNames);
+        }
+
+        if (!empty($CSSTemplate)) {
+            $specOut->CSSTemplate = implode("\n\n", $CSSTemplate);
+        }
+
+        return $specOut;
     }
 }
