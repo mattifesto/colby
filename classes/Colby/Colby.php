@@ -517,8 +517,13 @@ final class Colby {
 
         $libraryDirectory = cbsitedir() . "/{$libraryPath}";
 
-        include_once "{$libraryDirectory}/version.php";
-        include_once "{$libraryDirectory}/library-configuration.php";
+        if (file_exists($filename = "{$libraryDirectory}/version.php")) {
+            include_once $filename;
+        }
+
+        if (file_exists($filename = "{$libraryDirectory}/library-configuration.php")) {
+            include_once $filename;
+        }
     }
 
     /**
