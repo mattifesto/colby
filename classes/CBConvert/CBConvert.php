@@ -399,13 +399,38 @@ final class CBConvert {
 
         $className = CBModel::valueToString($object, 'className');
 
-
         if ($className === '' || preg_match('/\s/', $className)) {
             return null;
         }
 
         if (empty($classNames) || in_array($className, $classNames)) {
             return $object;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * This function returns a moniker if the $value parameter can reasonably be
+     * interpreted to represent a moniker. It will trim the string before
+     * deciding if that string is a moniker. This means that outer white space
+     * characters are removed, but inner white space characters are not.
+     *
+     * The function name uses "as" because we are returning the same value, but
+     * as a strict moniker string instead of the original value type.
+     *
+     * @param mixed $value
+     *
+     * @return ?string
+     *
+     *      If the string value of the $value parameter is a valid moniker, the
+     *      moniker will be returned; otherwise null.
+     */
+    static function valueAsMoniker($value): ?string {
+        $stringValue = trim(CBConvert::valueToString($value));
+
+        if (preg_match('/^[a-z][a-z0-9_]*$/', $stringValue)) {
+            return $stringValue;
         } else {
             return null;
         }
