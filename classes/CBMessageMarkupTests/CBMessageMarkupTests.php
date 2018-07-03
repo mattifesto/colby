@@ -28,6 +28,18 @@ final class CBMessageMarkupTests {
     }
 
     /**
+     * @return [[<class>, <test>]]
+     */
+    static function CBUnitTests_tests(): array {
+        return [
+            ['CBMessageMarkup', 'markupToHTML'],
+            ['CBMessageMarkup', 'markupToText'],
+            ['CBMessageMarkup', 'singleLineMarkupToText'],
+            ['CBMessageMarkup', 'stringToMarkup'],
+        ];
+    }
+
+    /**
      * @param string $string 1
      * @param string $string 2
      *
@@ -271,23 +283,31 @@ EOT;
     }
 
     /**
-     * @return void
+     * @return object
      */
-    static function markupToHTMLTest(): void {
+    static function CBTest_markupToHTML(): stdClass {
         $expected = CBMessageMarkupTests::html1();
         $result = CBMessageMarkup::markupToHTML(CBMessageMarkupTests::markup1());
 
         CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
+
+        return (object)[
+            'succeeded' => 'true',
+        ];
     }
 
     /**
-     * @return void
+     * @return object
      */
-    static function markupToTextTest(): void {
+    static function CBTest_markupToText(): stdClass {
         $expected = CBMessageMarkupTests::text1();
         $result = CBMessageMarkup::markupToText(CBMessageMarkupTests::markup1());
 
         CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
+
+        return (object)[
+            'succeeded' => 'true',
+        ];
     }
 
     /**
@@ -296,20 +316,24 @@ EOT;
      *      CBMessageMarkup::markupToText() always puts a new line at the end of
      *      the last line whether one was originally there or not.
      *
-     * @return void
+     * @return object
      */
-    static function singleLineMarkupToTextTest(): void {
+    static function CBTest_singleLineMarkupToText(): stdClass {
         $singleLineMarkup = 'This \(is \- the - result)!';
         $expected = "This (is - the - result)!\n";
         $result = CBMessageMarkup::markupToText($singleLineMarkup);
 
         CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
+
+        return (object)[
+            'succeeded' => 'true',
+        ];
     }
 
     /**
-     * @return void
+     * @return object
      */
-    static function stringToMarkupTest(): void {
+    static function CBTest_stringToMarkup(): stdClass {
         $string = <<<EOT
 --- div
 --- hi
@@ -331,6 +355,10 @@ EOT;
         $result = CBMessageMarkup::stringToMarkup($string);
 
         CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
+
+        return (object)[
+            'succeeded' => 'true',
+        ];
     }
 
     static function text1(): string {
