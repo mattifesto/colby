@@ -301,7 +301,7 @@ EOT;
      */
     static function CBTest_markupToText(): stdClass {
         $expected = CBMessageMarkupTests::text1();
-        $result = CBMessageMarkup::markupToText(CBMessageMarkupTests::markup1());
+        $result = CBMessageMarkup::messageToText(CBMessageMarkupTests::markup1());
 
         CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
 
@@ -313,7 +313,7 @@ EOT;
     /**
      * @NOTE
      *
-     *      CBMessageMarkup::markupToText() always puts a new line at the end of
+     *      CBMessageMarkup::messageToText() always puts a new line at the end of
      *      the last line whether one was originally there or not.
      *
      * @return object
@@ -321,9 +321,17 @@ EOT;
     static function CBTest_singleLineMarkupToText(): stdClass {
         $singleLineMarkup = 'This \(is \- the - result)!';
         $expected = "This (is - the - result)!\n";
-        $result = CBMessageMarkup::markupToText($singleLineMarkup);
+        $result = CBMessageMarkup::messageToText($singleLineMarkup);
 
         CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
+
+        $singleLineMarkup = 'This is an ID: (68658b6709f44bf11248a88975486ea6bac7ef60 (code))';
+        $actualResult = CBMessageMarkup::messageToText($singleLineMarkup);
+        $expectedResult = "This is an ID: 68658b6709f44bf11248a88975486ea6bac7ef60\n";
+
+        if ($actualResult != $expectedResult) {
+            return CBTest::resultMismatchFailureDiff('Subtest 2', $actualResult, $expectedResult);
+        }
 
         return (object)[
             'succeeded' => 'true',
@@ -361,6 +369,9 @@ EOT;
         ];
     }
 
+    /**
+     * @return string
+     */
     static function text1(): string {
         return <<<EOT
             This is the Title
