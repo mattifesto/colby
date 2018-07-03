@@ -6,7 +6,8 @@
     CBMessageMarkup,
     CBMessageMarkupTests_html1,
     CBMessageMarkupTests_markup1,
-    CBMessageMarkupTests_text1 */
+    CBMessageMarkupTests_text1,
+*/
 
 var CBMessageMarkupTests = {
 
@@ -72,17 +73,27 @@ var CBMessageMarkupTests = {
     /**
      * @NOTE
      *
-     *      CBMessageMarkup.markupToText() always puts a new line at the end of
+     *      CBMessageMarkup.messageToText() always puts a new line at the end of
      *      the last line whether one was originally there or not.
      *
      * @return undefined
      */
     singleLineMarkupToTextTest: function () {
-        var singleLineMarkup = "This \(is \- the - result)!";
-        var expected = "This (is - the - result)!\n";
-        var result = CBMessageMarkup.markupToText(singleLineMarkup);
+        {
+            let singleLineMarkup = "This \(is \- the - result)!";
+            let expected = "This (is - the - result)!\n";
+            let result = CBMessageMarkup.messageToText(singleLineMarkup);
 
-        CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+            CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+        }
+
+        {
+            let singleLineMarkup = "This is an ID: (9b44a390fcc6d188862ea616940d1860d0a1ee4f (code))";
+            let expected = "This is an ID: 9b44a390fcc6d188862ea616940d1860d0a1ee4f\n";
+            let result = CBMessageMarkup.messageToText(singleLineMarkup);
+
+            CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+        }
     },
 
     /**
