@@ -4,7 +4,8 @@
 /* exported CBUIExpander */
 /* global
     CBMessageMarkup,
-    Colby */
+    Colby,
+*/
 
 var CBUIExpander = {
 
@@ -128,7 +129,7 @@ var CBUIExpander = {
              */
             set message(value) {
                 message = String(value || "");
-                summaryElement.textContent = CBMessageMarkup.markupToText(message).split("\n\n", 1)[0];
+                summaryElement.textContent = CBMessageMarkup.messageToText(message).split("\n\n", 1)[0];
                 messageElement.innerHTML = CBMessageMarkup.convert(message);
             },
 
