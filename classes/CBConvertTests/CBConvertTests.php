@@ -67,12 +67,60 @@ final class CBConvertTests {
     }
 
     /**
+     * @return object
+     */
+    static function CBTest_valueAsMoniker(): stdClass {
+        /* subtest 1 */
+
+        $actualResult = CBConvert::valueAsMoniker(' love_life ');
+        $expectedResult = 'love_life';
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure('subtest 1', $actualResult, $expectedResult);
+        }
+
+        /* subtest 2 */
+
+        $actualResult = CBConvert::valueAsMoniker(' love life ');
+        $expectedResult = null;
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure('subtest 2', $actualResult, $expectedResult);
+        }
+
+        /* subtest 3 */
+
+        $actualResult = CBConvert::valueAsMoniker(' 2love ');
+        $expectedResult = null;
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure('subtest 3', $actualResult, $expectedResult);
+        }
+
+        /* subtest 4 */
+
+        $actualResult = CBConvert::valueAsMoniker(' love2 ');
+        $expectedResult = 'love2';
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure('subtest 4', $actualResult, $expectedResult);
+        }
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
      * @return [[<class>, <test>]]
      */
     static function CBUnitTests_tests(): array {
         return [
             ['CBConvert', 'stringToStub'],
             ['CBConvert', 'stringToURI'],
+            ['CBConvert', 'valueAsMoniker'],
         ];
     }
 
