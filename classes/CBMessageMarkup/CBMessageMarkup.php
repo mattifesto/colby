@@ -490,6 +490,7 @@ final class CBMessageMarkup {
         // After processing every line
 
         if ($paragraph !== null) {
+            $paragraph = CBMessageMarkup::paragraphToText($paragraph);
             $paragraphs[] = $paragraph;
             $paragraph = null;
         }
