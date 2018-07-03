@@ -479,7 +479,10 @@ var CBMessageMarkup = {
         // After processing every line
 
         if (paragraph !== undefined) {
+            paragraph = CBMessageMarkup.paragraphToText(paragraph);
+
             paragraphs.push(paragraph);
+
             paragraph = undefined;
         }
 
