@@ -4,7 +4,8 @@
 /* exported CBUIProcessStatus */
 /* global
     CBUIExpander,
-    Colby */
+    Colby,
+*/
 
 var CBUIProcessStatus = {
 
@@ -38,7 +39,7 @@ var CBUIProcessStatus = {
                 entriesElement.textContent = "";
 
                 let expander = CBUIExpander.create({
-                    message: "Process ID: " + processID,
+                    message: `Process ID: (${processID} (code))`,
                 });
 
                 entriesElement.appendChild(expander.element);
