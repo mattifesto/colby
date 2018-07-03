@@ -183,4 +183,91 @@ EOT;
             'message' => $message,
         ];
     }
+
+    /**
+     * @param string $testTitle
+     * @param string $actualResult 1
+     * @param string $expectedResult 2
+     *
+     * @return object
+     */
+    static function resultMismatchFailureDiff(string $testTitle, string $actualResult, string $expectedResult): stdClass {
+        $actualResultLines = CBConvert::stringToLines($actualResult);
+        $actualResultLinesCount = count($actualResultLines);
+        $expectedResultLines = CBConvert::stringToLines($expectedResult);
+        $expectedResultLinesCount = count($expectedResultLines);
+
+
+        for ($index = 0; $index < $actualResultLinesCount; $index += 1) {
+            if (!isset($expectedResultLines[$index])) {
+                $message = <<<EOT
+
+                    {$testTitle}
+
+                    Line {$index} of the actual result doesn't exist in the expected result.
+
+                    ({$actualLine} (code))
+
+EOT;
+
+                return (object)[
+                    'message' => $message,
+                    'sourceID' => '08437677d6da8acc68b06c9a4418f7fbd4ffeb76',
+                ];
+            }
+
+            $actualLine = $actualResultLines[$index];
+            $expectedLine = $expectedResultLines[$index];
+
+            if ($actualLine !== $expectedLine) {
+                $message = <<<EOT
+
+                    {$testTitle}
+
+                    Line {$index} of the actual result is:
+
+                    ({$actualLine} (code))
+
+                    which does't match line {$index} of the expected result:
+
+                    ({$expectedLine} (code))
+
+EOT;
+
+                return (object)[
+                    'message' => $message,
+                    'sourceID' => '696cd3366b14ad7ac12fd4604a9c8fb41824cb96',
+                ];
+            }
+        }
+
+        if ($actualResultLinesCount != $expectedResultLinesCount) {
+            $message = <<<EOT
+
+                {$testTitle}
+
+                The expected result has more lines than the actual result.
+
+EOT;
+
+            return (object)[
+                'message' => $message,
+                'sourceID' => '2c8897739fcfa9df391fc698894e4a7af566a9a6',
+            ];
+        }
+
+        $message = <<<EOT
+
+            {$testTitle}
+
+            No difference was found between the actual and expected result. This
+            function should only be called if there is a difference.
+
+EOT;
+
+        return (object)[
+            'message' => $message,
+            'sourceID' => '3098da7e4559278488a42ad81fbaef5fe0a7575e',
+        ];
+    }
 }
