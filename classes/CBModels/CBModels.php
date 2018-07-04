@@ -293,23 +293,27 @@ EOT;
     }
 
     /**
-     * Retreives the current version of models
+     * @param [ID] $IDs
      *
-     * Scenarios:       Fetch the model for a web page
-     * Usage Frequency: Often
+     * @return [ID => model]
      *
-     * @return [<hex160> => {stdClass}, ...]
+     *      If no model exists for an ID there will be no item in the returned
+     *      array for that ID.
      */
-    static function fetchModelsByID(array $IDs) {
-        if (empty($IDs)) { return []; }
+    static function fetchModelsByID(array $IDs): array {
+        if (empty($IDs)) {
+            return [];
+        }
 
         $IDsAsSQL = CBHex160::toSQL($IDs);
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(`m`.`ID`)), `v`.`modelAsJSON`
-            FROM    `CBModels` AS `m`
-            JOIN    `CBModelVersions` AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
-            WHERE   `m`.`ID` IN ($IDsAsSQL)
+            SELECT  LOWER(HEX(m.ID)), v.modelAsJSON
+            FROM    CBModels AS m
+            JOIN    CBModelVersions AS v ON
+                    m.ID = v.ID AND
+                    m.version = v.version
+            WHERE   m.ID IN ($IDsAsSQL)
 
 EOT;
 
