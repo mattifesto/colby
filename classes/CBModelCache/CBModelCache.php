@@ -51,6 +51,34 @@ final class CBModelCache {
     }
 
     /**
+     * @param [ID] $IDs
+     *
+     * @return [ID => model]
+     *
+     *      If no model exists for an ID there will be no item in the returned
+     *      array for that ID.
+     */
+    static function fetchModelsByID(array $IDs): array {
+        if (empty($IDs)) {
+            return [];
+        }
+
+        CBModelCache::cacheModelsByID($IDs);
+
+        $models = [];
+
+        foreach ($IDs as $ID) {
+            $model = CBModelCache::modelByID($ID);
+
+            if (!empty($model)) {
+                $models[$ID] = $model;
+            }
+        }
+
+        return $models;
+    }
+
+    /**
      * @return void
      */
     static function fetchModelsLazilyByID(array $IDs): void {
