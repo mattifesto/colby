@@ -15,23 +15,19 @@ final class CBPageKindCatalogTests {
         CBPageKindCatalog::install('CBPageKindCatalogTests_pageKind1');
         CBPageKindCatalog::install('CBPageKindCatalogTests_pageKind2');
 
-        $pageKindClassNames = CBPageKindCatalog::fetchClassNames();
+        $actualClassNames = CBPageKindCatalog::fetchClassNames();
         $expectedClassNames = [
             'CBPageKindCatalogTests_pageKind1',
             'CBPageKindCatalogTests_pageKind2',
         ];
 
-        if ($pageKindClassNames != $expectedClassNames) {
-            return (object)[
-                'message' =>
-                    "The page kind class names do not match the expected class names\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($pageKindClassNames, $expectedClassNames),
-            ];
-        }
-
         CBModels::deleteByID(CBPageKindCatalog::$testID);
 
         CBPageKindCatalog::$testID = null;
+
+        if ($actualClassNames != $expectedClassNames) {
+            return CBTest::resultMismatchFailure('subtest1', $actualClassNames, $expectedClassNames);
+        }
 
         return (object)[
             'succeeded' => true,
