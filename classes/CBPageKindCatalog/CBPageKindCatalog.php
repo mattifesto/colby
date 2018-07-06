@@ -66,12 +66,13 @@ final class CBPageKindCatalog {
         $originalSpec = CBModels::fetchSpecByID(CBPageKindCatalog::ID());
 
         if (empty($originalSpec)) {
-            $originalSpec = (object)[
+            $spec = (object)[
                 'ID' => CBPageKindCatalog::ID(),
             ];
+        } else {
+            $spec = CBModel::clone($originalSpec);
         }
 
-        $spec = CBModel::clone($originalSpec);
         $spec->className = 'CBPageKindCatalog';
         $kindClassNames = CBModel::valueToArray($spec, 'classNames');
 
