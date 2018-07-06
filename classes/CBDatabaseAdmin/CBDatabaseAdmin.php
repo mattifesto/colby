@@ -24,6 +24,33 @@ final class CBDatabaseAdmin {
     }
 
     /**
+     * @return [[name, value]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables(): array {
+        return [
+            ['CBDatabaseAdmin_tableMetadataList', CBDatabaseAdmin::fetchTableMetadataList()],
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v435.js', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBUI',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
+        ];
+    }
+
+    /**
      * @return void
      */
     static function CBInstall_install(): void {
@@ -46,5 +73,21 @@ final class CBDatabaseAdmin {
      */
     static function CBInstall_requiredClassNames(): array {
         return ['CBDevelopAdminMenu'];
+    }
+
+    /**
+     * @return [object]
+     */
+    private static function fetchTableMetadataList(): array {
+        $SQL = <<<EOT
+
+            SELECT  table_name as tableName,
+                    round(((data_length + index_length) / 1000 / 1000), 2) AS tableSizeInMB
+            FROM    information_schema.TABLES
+            WHERE   table_schema = DATABASE()
+
+EOT;
+
+        return CBDB::SQLToObjects($SQL);
     }
 }
