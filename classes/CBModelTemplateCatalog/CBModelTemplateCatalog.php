@@ -36,6 +36,12 @@ final class CBModelTemplateCatalog {
         ];
     }
 
+    /**
+     * @return model
+     *
+     *      Returns a the spec that has been installed as a starting point for a
+     *      page on this site.
+     */
     static function fetchLivePageTemplate(): stdClass {
         $model = CBModels::fetchModelByID(CBModelTemplateCatalog::ID());
 
