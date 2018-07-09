@@ -42,6 +42,20 @@
 final class CBModel {
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v436.js', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return ['CBConvert'];
+    }
+
+    /**
      * This function returns a copy of the $spec parameter.
      *
      * Copies of model specs are further processed by model classes that
@@ -397,8 +411,8 @@ EOT;
      *      Examples: "height", "width", "image.height",
      *                "image.alternativeText.text"
      *
-     * @param mixed? $default
-     * @param function? $transform
+     * @param mixed $default (deprecated)
+     * @param function $transform (deprecated)
      *
      * @return mixed
      */
