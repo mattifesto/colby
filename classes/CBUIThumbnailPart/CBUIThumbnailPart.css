@@ -1,20 +1,52 @@
 .CBUIThumbnailPart {
-    align-items: center;
     display: flex;
-    flex: none;
+    align-items: center;
     justify-content: center;
+
+    flex: none;
+
     min-height: 44px;
+    width: 38px; /* matches width of img, 44 - 3 - 3 */
+
     padding: 0 5px;
-    width: 38px;
 }
 
 .CBUIThumbnailPart img {
     display: none;
-    height: 38px; /* 44 - 3 - 3 */
-    object-fit: cover;
+
+    height: 38px;
     width: 38px;
+
+    object-fit: cover;
 }
 
+/**
+ * The "show" class will be added by the CBUIThumbnailPart object when a the
+ * "src" property is set and removed when it is unset.
+ */
 .CBUIThumbnailPart.show img {
     display: block;
+}
+
+/**
+ * The "contain" class is optional to be added by the developer.
+ */
+.CBUIThumbnailPart.contain img {
+    object-fit: contain;
+}
+
+/**
+ * The "large" class is optional to be added by the developer. It only takes
+ * affect if the width is 480px or greater.
+ */
+@media (min-width: 480px) {
+    .CBUIThumbnailPart.large {
+        min-height: 106px;
+        width: 100px; /* 106 - 3 -3 */
+    }
+
+    .CBUIThumbnailPart.large img {
+        height: 100px;
+        width: 100px;
+    }
 }

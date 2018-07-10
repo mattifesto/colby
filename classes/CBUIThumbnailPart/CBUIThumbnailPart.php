@@ -6,7 +6,7 @@ final class CBUIThumbnailPart {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v361.css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v436.css', cbsysurl())];
     }
 
     /**
