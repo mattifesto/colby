@@ -38,6 +38,16 @@ var CBModel = {
      * @param mixed model
      * @param string keyPath
      *
+     * @return [mixed]
+     */
+    valueToArray: function (model, keyPath) {
+        return CBConvert.valueToArray(CBModel.value(model, keyPath));
+    },
+
+    /**
+     * @param mixed model
+     * @param string keyPath
+     *
      * @return string
      */
     valueToString: function (model, keyPath) {
