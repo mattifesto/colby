@@ -3,6 +3,32 @@
 final class CBModelTests {
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v437.js', cbsysurl())];
+    }
+
+    /**
+     * @return [[<className>, <testName>]]
+     */
+    static function CBTest_javaScriptTests(): array {
+        return [
+            ['CBModel', 'equals'],
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBMessageMarkup',
+            'CBModel',
+        ];
+    }
+
+    /**
      * This test runs a CBModel::build() test for all known classes.
      */
     static function buildTest() {
