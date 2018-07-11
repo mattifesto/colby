@@ -16,9 +16,36 @@ var CBModelTests = {
         let equalValues = [
             [false, false],
             [0, 0],
+            ["", ""],
             [undefined, undefined],
             [null, null],
+            [{}, {}],
+            [[], []],
             [42.42, 42.42],
+            [
+                {
+                    foo: "bar",
+                    num: 1,
+                    so: true,
+                    non: null,
+                    obj: {
+                        name: "bob",
+                        quan: 5,
+                    },
+                    arr: [5, 4, "3"],
+                },
+                {
+                    num: 1,
+                    non: null,
+                    arr: [5, 4, "3"],
+                    foo: "bar",
+                    so: true,
+                    obj: {
+                        quan: 5,
+                        name: "bob",
+                    },
+                }
+            ],
         ];
 
         for (let i = 0; i < equalValues.length; i += 1) {
