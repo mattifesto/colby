@@ -52,7 +52,7 @@ final class CBTestAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v408.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v437.js', cbsysurl())];
     }
 
     /**
