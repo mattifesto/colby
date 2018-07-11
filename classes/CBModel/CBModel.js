@@ -54,6 +54,16 @@ var CBModel = {
             if (keys1.length !== keys2.length) {
                 return false;
             }
+
+            for (let i = 0; i < keys1.length; i += 1) {
+                let key = keys1[i];
+
+                if (!CBModel.equals(value1[key], value2[key])) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         switch (type) {
