@@ -134,6 +134,22 @@ EOT;
     }
 
     /**
+     * @return [[<className>, <testName>]]
+     */
+    static function javaScriptTests(): array {
+        $tests = [];
+        $classNames = CBAdmin::fetchClassNames();
+
+        foreach ($classNames as $className) {
+            if (is_callable($function = "{$className}::CBTest_javaScriptTests")) {
+                $tests = array_merge($tests, call_user_func($function));
+            }
+        }
+
+        return $tests;
+    }
+
+    /**
      * @param string $testTitle
      *
      *      The test function name and class name will be added by the test
