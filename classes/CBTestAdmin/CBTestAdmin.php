@@ -60,7 +60,7 @@ final class CBTestAdmin {
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
-            ['CBTestAdmin_javaScriptTests', CBTestAdmin::javaScriptTests()],
+            ['CBTestAdmin_javaScriptTests', CBTest::javaScriptTests()],
         ];
     }
 
@@ -68,22 +68,33 @@ final class CBTestAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        $classNames = array_map(function ($element) {
-            return $element[0] . "Tests";
-        }, CBTestAdmin::javaScriptTests());
+        $classNames = [
+            'CBUI',
+            'CBUIExpander',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
+        ];
 
-        $classNames[] = 'CBUI';
-        $classNames[] = 'CBUIExpander';
-        $classNames[] = 'CBUISectionItem4';
-        $classNames[] = 'CBUIStringsPart';
+        $tests = CBTest::javaScriptTests();
 
-        return array_values(array_unique($classNames));
+        return array_values(array_unique(array_merge(
+            $classNames,
+            array_map(
+                function ($test) {
+                    return $test[0] . "Tests";
+                },
+                $tests
+            )
+        )));
     }
 
     /**
-     * @return [[string (className), string (testName)]]
+     * These tests should be moved to CBTest_javaScriptTests() in their test
+     * class.
+     *
+     * @return [[<className>, <testName>]]
      */
-    static function javaScriptTests(): array {
+    static function CBTest_javaScriptTests(): array {
         return [
             ['CBImages',        'deleteByID'],
             ['CBImages',        'upload'],

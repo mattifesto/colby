@@ -260,43 +260,56 @@ var CBTestAdmin = {
 
             /* closure */
             function run() {
-                var test = CBTestAdmin_javaScriptTests[index];
-                var className = test[0] + "Tests";
-                var functionName = test[1] + "Test";
-                var obj = window[className];
+                let test = CBTestAdmin_javaScriptTests[index];
+                let className = test[0];
+                let testClassName = `${className}Tests`;
+                let testName = test[1];
+                let testObject = window[testClassName];
 
-                let title = "JavaScript Test: " + className + " - " + functionName;
+                let title = "JavaScript Test: " + className + " - " + testName;
                 let expander = CBUIExpander.create();
                 expander.message = title + " (running)";
 
                 CBTestAdmin.status.element.appendChild(expander.element);
                 expander.element.scrollIntoView();
 
-                if (typeof obj !== "object") {
-                    throw new Error("The " + className + " object does not exist.");
+                if (typeof testObject !== "object") {
+                    throw new Error(`The ${testClassName} object does not exist.`);
                 }
 
-                var runTestFunction = obj[functionName];
+                let testFunction = testObject[`CBTest_${testName}`];
 
-                if (typeof runTestFunction !== "function") {
-                    throw new Error("The " + functionName + " function does not exist.");
+                if (typeof testFunction !== "function") {
+                    testFunction = testObject[`${testName}Test`]; /* deprecated */
+
+                    if (typeof testFunction !== "function") {
+                        throw new Error(`No JavaScript function is available to run the "${testName}" test for ${className}.`);
+                    }
                 }
 
                 Promise.resolve()
-                    .then(runTestFunction)
+                    .then(testFunction)
                     .then(onFulfilled)
                     .then(next)
                     .catch(onRejected);
 
                 /* closure */
                 function onFulfilled(value) {
-                    var message = "succeeded";
+                    let message;
 
-                    if (value && value.message) {
-                        message = value.message;
+                    if (typeof value === "object") {
+                        if (value.succeeded) {
+                            message = value.message || "succeeded";
+                        } else {
+                            // TODO: need to increase error count so test run doesn't succeed
+                            expander.severity = 3;
+                            message = value.message || "failed";
+                        }
+                    } else {
+                        message = "succeeded";
                     }
 
-                    expander.message = `${title} (${message})`;
+                    expander.message = `${title}: ${message}`;
                 }
 
                 function onRejected(error) {
