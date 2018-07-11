@@ -39,6 +39,10 @@ var CBModel = {
             });
         }
 
+        if (Array.isArray(value1) || Array.isArray(value2)) {
+            return false;
+        }
+
         if (type === "object") {
             if (value1 === null && value2 === null) {
                 return true;
