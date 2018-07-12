@@ -3,6 +3,23 @@
 final class CBTestTests {
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v437.js', cbsysurl())];
+    }
+
+    /**
+     * @return [[<className>, <testName>]]
+     */
+    static function CBTest_javaScriptTests(): array {
+        return [
+            ['CBTest', 'sample'],
+            ['CBTest', 'asynchronousSample'],
+        ];
+    }
+
+    /**
      * @return object
      */
     static function CBTest_resultMismatchFailureDiff(): stdClass {
