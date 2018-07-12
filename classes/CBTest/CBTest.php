@@ -134,6 +134,9 @@ EOT;
     }
 
     /**
+     * Sample JavaScript tests are provided in CBTestTests.php and
+     * CBTestTests.js.
+     *
      * @return [[<className>, <testName>]]
      */
     static function javaScriptTests(): array {
