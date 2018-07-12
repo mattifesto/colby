@@ -22,6 +22,31 @@ var CBConvert = {
     },
 
     /**
+     * @param mixed value
+     *
+     * @return object
+     *
+     *      If the value parameter is an object it will be returned; otherwise
+     *      an empty object will be returned.
+     */
+    valueToObject: function (value) {
+        if (typeof value === "object" && !Array.isArray(value)) {
+            return value;
+        } else {
+            return {};
+        }
+    },
+
+    /**
+     * @param mixed value
+     *
+     * @return string
+     */
+    valueToPrettyJSON: function (value) {
+        return JSON.stringify(value, undefined, 2);
+    },
+
+    /**
      * This function exists to support Colby's idea of "to" conversions. To
      * conversions return the desired type, in this case a string, if the
      * original value can reasonably be converted to a string. Otherwise it
