@@ -3,6 +3,33 @@
 final class CBConvertTests {
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [Colby::flexpath(__CLASS__, 'v437.js', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBConvert',
+            'CBModel',
+            'CBMessageMarkup',
+        ];
+    }
+
+    /**
+     * @return [[<className>, <testName>]]
+     */
+    static function CBTest_javaScriptTests(): array {
+        return [
+            ['CBConvert', 'valueToObject'],
+        ];
+    }
+
+    /**
      * @return null
      */
     static function CBTest_stringToStub(): stdClass {
