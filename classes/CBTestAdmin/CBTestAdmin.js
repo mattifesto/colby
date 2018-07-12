@@ -273,25 +273,46 @@ var CBTestAdmin = {
                 CBTestAdmin.status.element.appendChild(expander.element);
                 expander.element.scrollIntoView();
 
+                let testFunction;
+
                 if (typeof testObject !== "object") {
-                    throw new Error(`The ${testClassName} object does not exist.`);
-                }
+                    testFunction = function () {
+                        let message = `The ${testClassName} object does not exist.`;
 
-                let testFunction = testObject[`CBTest_${testName}`];
-
-                if (typeof testFunction !== "function") {
-                    testFunction = testObject[`${testName}Test`]; /* deprecated */
+                        return {
+                            succeded: false,
+                            message: message,
+                        };
+                    };
+                } else {
+                    testFunction = testObject[`CBTest_${testName}`];
 
                     if (typeof testFunction !== "function") {
-                        throw new Error(`No JavaScript function is available to run the "${testName}" test for ${className}.`);
+                        testFunction = testObject[`${testName}Test`]; /* deprecated */
+
+                        if (typeof testFunction !== "function") {
+                            testFunction = function () {
+                                let message = `
+
+                                    No JavaScript function is available to run the
+                                    "${testName}" test for ${className}.
+
+                                `;
+
+                                return {
+                                    succeeded: false,
+                                    message: message,
+                                };
+                            };
+                        }
                     }
                 }
 
                 Promise.resolve()
                     .then(testFunction)
                     .then(onFulfilled)
-                    .then(next)
-                    .catch(onRejected);
+                    .catch(onRejected)
+                    .then(next);
 
                 /* closure */
                 function onFulfilled(value) {
@@ -312,11 +333,10 @@ var CBTestAdmin = {
                     expander.message = `${title}: ${message}`;
                 }
 
+                /* closure */
                 function onRejected(error) {
                     expander.severity = 3;
                     expander.message = `${title} (failed: ${error.message})`;
-
-                    reject(error);
                 }
             }
 
