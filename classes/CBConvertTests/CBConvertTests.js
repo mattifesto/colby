@@ -55,7 +55,7 @@ var CBConvertTests = {
                     `;
 
                     return {
-                        succeded: false,
+                        succeeded: false,
                         message: message,
                     };
                 }
