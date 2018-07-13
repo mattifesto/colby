@@ -104,6 +104,35 @@ var CBConvert = {
     /**
      * @param mixed value
      *
+     * @return int|undefined
+     */
+    valueAsInt: function (value) {
+        if (typeof value === "string") {
+            value = value.trim();
+
+            if (value === "") {
+                /**
+                 * An empty string would be converted to 0 by the Number
+                 * constructor.
+                 */
+                return undefined;
+            }
+
+            value = Number(value);
+        }
+
+        if (typeof value === "number") {
+            if (Number.isInteger(value)) {
+                return value;
+            }
+        }
+
+        return undefined;
+    },
+
+    /**
+     * @param mixed value
+     *
      * @return [mixed]
      *
      *      If the value parameter is an array it is returned; otherwise an
@@ -137,9 +166,23 @@ var CBConvert = {
      * @param mixed value
      *
      * @return string
+     *
+     *      The value parameter converted to JSON suitable for display. The
+     *      value returned will not always be valid JSON. It will return
+     *      "undefined" for the value undefined which is not valid JSON.
      */
     valueToPrettyJSON: function (value) {
-        return JSON.stringify(value, undefined, 2);
+        let result = JSON.stringify(value, undefined, 2);
+
+        if (typeof result === "string") {
+            return result;
+        } else {
+            /**
+             * JSON.stringify() will return undefined if the value parameter is
+             * undefined or other non-convertible values.
+             */
+            return String(result);
+        }
     },
 
     /**
