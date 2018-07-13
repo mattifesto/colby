@@ -58,6 +58,10 @@ var CBMessageMarkupTests = {
         var result = CBMessageMarkup.markupToHTML(CBMessageMarkupTests_markup1);
 
         CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+
+        return {
+            succeeded: true,
+        };
     },
 
     /**
@@ -68,6 +72,10 @@ var CBMessageMarkupTests = {
         var result = CBMessageMarkup.markupToText(CBMessageMarkupTests_markup1);
 
         CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+
+        return {
+            succeeded: true,
+        };
     },
 
     /**
@@ -94,6 +102,10 @@ var CBMessageMarkupTests = {
 
             CBMessageMarkupTests.compareStringsLineByLine(expected, result);
         }
+
+        return {
+            succeeded: true,
+        };
     },
 
     /**
@@ -121,5 +133,9 @@ var CBMessageMarkupTests = {
         var result = CBMessageMarkup.stringToMarkup(string);
 
         CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+
+        return {
+            succeeded: true,
+        };
     }
 };
