@@ -118,6 +118,10 @@ var CBImagesTests = {
             if (!doesExist) {
                 throw new Error("The image file is not available but should be.");
             }
+
+            return {
+                succeeded: true,
+            };
         }
     },
 };
