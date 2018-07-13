@@ -329,10 +329,17 @@ var CBTestAdmin = {
                             message = value.message || "failed";
                         }
                     } else {
-                        message = "succeeded";
+                        expander.severity = 3;
+                        message = "This test failed because the test function did not return an object.";
                     }
 
-                    expander.message = `${title}: ${message}`;
+                    expander.message = `
+
+                        ${title}
+
+                        ${message}
+
+                    `;
                 }
 
                 /* closure */
