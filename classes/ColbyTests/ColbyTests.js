@@ -3,7 +3,8 @@
 /* jshint esversion: 6 */
 /* exported ColbyTests */
 /* global
-    Colby */
+    Colby,
+*/
 
 var ColbyTests = {
 
@@ -47,6 +48,10 @@ var ColbyTests = {
                                 " Expected: " + test.expected);
             }
         });
+
+        return {
+            succeeded: true,
+        };
     },
 
     /**
@@ -122,6 +127,10 @@ var ColbyTests = {
                                 "\"");
             }
         });
+
+        return {
+            succeeded: true,
+        };
     },
 
     /**
@@ -148,5 +157,9 @@ var ColbyTests = {
                 }
             }
         }
+
+        return {
+            succeeded: true,
+        };
     },
 };

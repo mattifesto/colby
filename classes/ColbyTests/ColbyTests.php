@@ -6,7 +6,7 @@ final class ColbyTests {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v398.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v437.js', cbsysurl())];
     }
 
     /**
