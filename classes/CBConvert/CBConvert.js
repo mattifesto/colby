@@ -6,6 +6,99 @@
 var CBConvert = {
 
     /**
+     * @param Error error
+     *
+     * @return string (plain text)
+     */
+    errorToDescription: function (error) {
+        let errorMessage = error.message;
+
+        if (typeof errorMessage !== "string") {
+            errorMessage = "no error message is available";
+        }
+
+        let stack = CBConvert.errorToStackTrace(error);
+
+        if (stack !== undefined) {
+            let entry = stack.split("\n", 1)[0];
+            let data = stackTraceEntryToData(entry);
+            let basename = pathToBasename(data.fileName) || data.fileName;
+
+            if (data !== undefined) {
+                return '"' +
+                    errorMessage +
+                    '" in ' +
+                    basename +
+                    " line " +
+                    data.lineNumber;
+            }
+        }
+
+        return errorMessage;
+
+        /**
+         * @NOTE 2017.07.13 imperfect implementaton
+         *
+         * @param string path
+         *
+         * @return string|undefined
+         */
+        function pathToBasename(path) {
+            let captures = /^.*\/([^\/]+)$/.exec(path);
+
+            if (captures === undefined) {
+                return undefined;
+            }
+
+            return captures[1];
+        }
+
+        /**
+         * @NOTE 2017.07.13 imperfect implementaton
+         *
+         * @param entry string
+         *
+         * @return object|undefined
+         *
+         *      {
+         *          functionName: string
+         *          fileName: string
+         *          lineNumber: int
+         *          columnNumber: int
+         *      }
+         */
+        function stackTraceEntryToData(entry) {
+            let captures = /^(.*)@(.*):([0-9]+):([0-9]+)$/.exec(entry);
+
+            if (captures === undefined) {
+                return undefined;
+            }
+
+            return {
+                functionName: captures[1],
+                fileName: captures[2],
+                lineNumber: captures[3],
+                columnNumber: captures[4],
+            };
+        }
+    },
+
+    /**
+     * @param Error error
+     *
+     * @return string|undefined
+     */
+    errorToStackTrace: function (error) {
+        let stackTrace = error.stack;
+
+        if (typeof stackTrace === "string") {
+            return stackTrace;
+        } else {
+            return undefined;
+        }
+    },
+
+    /**
      * @param mixed value
      *
      * @return [mixed]
