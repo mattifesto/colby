@@ -69,6 +69,8 @@ final class CBTestAdmin {
      */
     static function CBHTMLOutput_requiredClassNames() {
         $classNames = [
+            'CBConvert',
+            'CBMessageMarkup',
             'CBUI',
             'CBUIExpander',
             'CBUISectionItem4',

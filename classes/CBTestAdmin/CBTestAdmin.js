@@ -3,6 +3,8 @@
 /* jshint esversion: 6 */
 /* exported CBTestAdmin */
 /* global
+    CBConvert,
+    CBMessageMarkup,
     CBTestAdmin_javaScriptTests,
     CBUI,
     CBUIExpander,
@@ -280,7 +282,7 @@ var CBTestAdmin = {
                         let message = `The ${testClassName} object does not exist.`;
 
                         return {
-                            succeded: false,
+                            succeeded: false,
                             message: message,
                         };
                     };
@@ -335,8 +337,24 @@ var CBTestAdmin = {
 
                 /* closure */
                 function onRejected(error) {
+                    let descriptionAsMessage = CBMessageMarkup.stringToMessage(
+                        CBConvert.errorToDescription(error)
+                    );
+                    let stackTraceAsMessage = CBMessageMarkup.stringToMessage(
+                        CBConvert.errorToStackTrace(error)
+                    );
+
                     expander.severity = 3;
-                    expander.message = `${title} (failed: ${error.message})`;
+                    expander.message = `
+
+                        ${title} failed
+
+                        ${descriptionAsMessage}
+
+                        --- pre\n${stackTraceAsMessage}
+                        ---
+
+                    `;
                 }
             }
 
