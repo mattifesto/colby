@@ -6,7 +6,7 @@ final class CBImagesTests {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v372.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v437.js', cbsysurl())];
     }
 
     /**

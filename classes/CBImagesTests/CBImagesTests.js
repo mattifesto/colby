@@ -4,7 +4,8 @@
 /* exported CBImagesTests */
 /* global
     CBTestAdmin,
-    Colby */
+    Colby,
+*/
 
 /**
  * @NOTE 2017.11.14
@@ -35,6 +36,10 @@ var CBImagesTests = {
             if (doesExist) {
                 throw new Error("The image file is available but should not be.");
             }
+
+            return {
+                succeeded: true,
+            };
         }
     },
 
