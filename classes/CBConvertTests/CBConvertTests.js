@@ -13,6 +13,64 @@ var CBConvertTests = {
     /**
      * @return object|Promise
      */
+    CBTest_valueAsInt: function () {
+        let tests = [
+            [5, 5],
+            [5.0, 5],
+            [5.1, undefined],
+            ["5", 5],
+            [" 5 ", 5],
+            ["5.0", 5],
+            ["5.1", undefined],
+            ["", undefined],
+            ["five", undefined],
+            [true, undefined],
+            [false, undefined],
+        ];
+
+        for (let i = 0; i < tests.length; i += 1) {
+            let test = tests[i];
+            let value = test[0];
+            let actualResult = CBConvert.valueAsInt(value);
+            let expectedResult = test[1];
+
+            if (actualResult !== expectedResult) {
+                let valueAsMessage = CBMessageMarkup.stringToMessage(
+                    CBConvert.valueToPrettyJSON(value)
+                );
+
+                let actualResultAsMessage = CBMessageMarkup.stringToMessage(
+                    CBConvert.valueToPrettyJSON(actualResult)
+                );
+
+                let expectedResultAsMessage = CBMessageMarkup.stringToMessage(
+                    CBConvert.valueToPrettyJSON(expectedResult)
+                );
+
+                let message = `
+
+                    When the value (${valueAsMessage} (code)) was used as an
+                    argument to CBConvert.valueAsInt() the actual result was
+                    (${actualResultAsMessage} (code)) but the expected result
+                    was (${expectedResultAsMessage} (code)).
+
+                `;
+
+                return {
+                    succeeded: false,
+                    message: message,
+                };
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+
+    /**
+     * @return object|Promise
+     */
     CBTest_valueToObject: function () {
         let tests = [
             [{a:1}, "same"],

@@ -25,6 +25,7 @@ final class CBConvertTests {
      */
     static function CBTest_javaScriptTests(): array {
         return [
+            ['CBConvert', 'valueAsInt'],
             ['CBConvert', 'valueToObject'],
         ];
     }
