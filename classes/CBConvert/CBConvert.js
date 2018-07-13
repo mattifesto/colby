@@ -22,15 +22,18 @@ var CBConvert = {
         if (stack !== undefined) {
             let entry = stack.split("\n", 1)[0];
             let data = stackTraceEntryToData(entry);
-            let basename = pathToBasename(data.fileName) || data.fileName;
 
             if (data !== undefined) {
-                return '"' +
-                    errorMessage +
-                    '" in ' +
-                    basename +
-                    " line " +
-                    data.lineNumber;
+                let basename = pathToBasename(data.fileName) || data.fileName;
+
+                if (data !== undefined) {
+                    return '"' +
+                        errorMessage +
+                        '" in ' +
+                        basename +
+                        " line " +
+                        data.lineNumber;
+                }
             }
         }
 
@@ -70,7 +73,7 @@ var CBConvert = {
         function stackTraceEntryToData(entry) {
             let captures = /^(.*)@(.*):([0-9]+):([0-9]+)$/.exec(entry);
 
-            if (captures === undefined) {
+            if (captures === null) {
                 return undefined;
             }
 
