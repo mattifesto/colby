@@ -26,7 +26,7 @@ var CBConvertTests = {
             ["5.0", 5],
             ["5.1", undefined],
             [" -5 ", -5],
-            [" -5.0 ", -50],
+            [" -5.0 ", -5],
             [" - 5.0 ", undefined],
             [" -5.1 ", undefined],
             ["", undefined],
