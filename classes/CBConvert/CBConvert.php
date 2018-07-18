@@ -6,7 +6,7 @@ final class CBConvert {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v437.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v438.js', cbsysurl())];
     }
 
     /**
@@ -332,18 +332,28 @@ final class CBConvert {
      *      all callers.
      */
 
-
     /**
      * @param mixed $value
      *
-     * @return hex160|null
+     * @return ?ID
      */
-    static function valueAsHex160($value) {
+    static function valueAsID($value): ?string {
         if (CBHex160::is($value)) {
             return $value;
         } else {
             return null;
         }
+    }
+
+    /**
+     * @deprecated use CBConvert::valueAsID()
+     *
+     * @param mixed $value
+     *
+     * @return ?ID
+     */
+    static function valueAsHex160($value): ?string {
+        return CBConvert::valueAsID($value);
     }
 
     /**
