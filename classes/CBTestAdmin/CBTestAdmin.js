@@ -11,10 +11,12 @@
     CBUISectionItem4,
     CBUIStringsPart,
     CBUI,
-    Colby */
+    Colby,
+*/
 
 var CBTestAdmin = {
 
+    errorCount: 0,
     testImageID: "3dd8e721048bbe8ea5f0c043fab73277a0b0044c",
 
     createStatus: function () {
@@ -216,6 +218,7 @@ var CBTestAdmin = {
             return;
         }
 
+        CBTestAdmin.errorCount = 0;
         CBTestAdmin.status.element.textContent = "";
 
         Promise.resolve()
@@ -226,12 +229,12 @@ var CBTestAdmin = {
             .catch(onRejected)
             .then(onFinally, onFinally);
 
-        function onFulfilled(errorCount) {
+        function onFulfilled() {
             let expander = CBUIExpander.create();
 
-            if (errorCount > 0) {
+            if (CBTestAdmin.errorCount > 0) {
                 expander.severity = 3;
-                expander.message = `Finished running tests, ${errorCount} failed`;
+                expander.message = `Finished running tests, ${CBTestAdmin.errorCount} failed`;
             } else {
                 expander.message = "All tests completed successfully";
             }
@@ -324,11 +327,12 @@ var CBTestAdmin = {
                         if (value.succeeded) {
                             message = value.message || "succeeded";
                         } else {
-                            // TODO: need to increase error count so test run doesn't succeed
+                            CBTestAdmin.errorCount += 1;
                             expander.severity = 3;
                             message = value.message || "failed";
                         }
                     } else {
+                        CBTestAdmin.errorCount += 1;
                         expander.severity = 3;
                         message = "This test failed because the test function did not return an object.";
                     }
@@ -351,6 +355,7 @@ var CBTestAdmin = {
                         CBConvert.errorToStackTrace(error)
                     );
 
+                    CBTestAdmin.errorCount += 1;
                     expander.severity = 3;
                     expander.message = `
 
@@ -383,7 +388,6 @@ var CBTestAdmin = {
     runServerTests: function (fetchServerTestsResponse) {
         return new Promise(function (resolve, reject) {
             let i = 0;
-            let errorCount = 0;
 
             next();
 
@@ -422,17 +426,18 @@ var CBTestAdmin = {
                     message = `${title} ${status}\n\n${message}`;
 
                     expander.message = message;
-                    expander.severity = value.succeeded ? 6 : 3;
                     expander.timestamp = Date.now() / 1000;
 
                     if (!value.succeeded) {
-                        errorCount += 1;
+                        CBTestAdmin.errorCount += 1;
+                        expander.severity = 3;
                     }
 
                     next();
                 }
 
                 function onRejected(error) {
+                    CBTestAdmin.errorCount += 1;
                     expander.severity = 3;
                     expander.message = `
 
@@ -452,7 +457,7 @@ var CBTestAdmin = {
                     run(fetchServerTestsResponse.tests[i]);
                     i += 1;
                 } else {
-                    resolve(errorCount);
+                    resolve();
                 }
             }
         });
