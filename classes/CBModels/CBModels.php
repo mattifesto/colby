@@ -381,18 +381,44 @@ EOT;
     }
 
     /**
-     * Retreives the current version of a spec
+     * @deprecated use fetchSpecByIDNullable()
      *
-     * Scenarios:       Fetch the spec for a web page
-     * Usage Frequency: Occasionally
+     * @param ID $ID
+     * @param [<arg> => <value>] $args
      *
-     * @return {stdClass} | false
+     * @return model|false
      */
     static function fetchSpecByID($ID, $args = []) {
         $specs = CBModels::fetchSpecsByID([$ID], $args);
 
         if (empty($specs)) {
             return false;
+        } else {
+            return $specs[$ID];
+        }
+    }
+
+    /**
+     * @NOTE 2018.07.15
+     *
+     *      This function is a transition function to move callers away from
+     *      fetchSpecByID() which returns false if there is no model found.
+     *
+     *      The fetchSpecByID() function was created before PHP 7 and the
+     *      introduction of nullable return types.
+     *
+     *      Eventually, this function will be deprecated and fetchSpecByID()
+     *      will be reintroduced returning a nullable object.
+     *
+     * @param ID $ID
+     *
+     * @return ?model
+     */
+    static function fetchSpecByIDNullable(string $ID): ?stdClass {
+        $specs = CBModels::fetchSpecsByID([$ID]);
+
+        if (empty($specs)) {
+            return null;
         } else {
             return $specs[$ID];
         }
