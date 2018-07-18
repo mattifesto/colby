@@ -104,27 +104,55 @@ var CBConvert = {
     /**
      * @param mixed value
      *
-     * @return int|undefined
+     * @return Number|undefined
      */
     valueAsInt: function (value) {
-        if (typeof value === "string") {
-            value = value.trim();
+        let number = CBConvert.valueAsNumber(value);
 
-            if (value === "") {
-                /**
-                 * An empty string would be converted to 0 by the Number
-                 * constructor.
-                 */
-                return undefined;
-            }
+        if (Number.isInteger(number)) {
+            return number;
+        } else {
+            return undefined;
+        }
+    },
 
-            value = Number(value);
+    /**
+     * Determines whether the value parameter can reasonably be interpreted to
+     * be a number.
+     *
+     * If the value is a Number and is finite, the value will be returned.
+     *
+     * If the value is a String and its trimmed value is a series of digits with
+     * an optional single decimal point, it will be converted to a Number and
+     * returned.
+     *
+     * This function differs from a cast in that boolean and other types will
+     * not ever be considered numbers.
+     *
+     * This function is not localized.
+     *
+     * @param mixed value
+     *
+     * @return Number|undefined
+     *
+     *      If the value is determined to be a number, a Number is returned;
+     *      otherwise undefined.
+     */
+    valueAsNumber: function (value) {
+        if (typeof value === "number") {
+            return Number.isFinite(value) ? value : undefined;
         }
 
-        if (typeof value === "number") {
-            if (Number.isInteger(value)) {
-                return value;
+        if (typeof value === "string") {
+            if (value.match(/[0-9]/) !== null) {
+                value = value.trim();
+
+                if (value.match(/^-?[0-9]*\.?[0-9]*$/) !== null) {
+                    return Number(value);
+                }
             }
+
+            return undefined;
         }
 
         return undefined;
