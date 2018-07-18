@@ -93,6 +93,10 @@ var CBModel = {
             return undefined;
         }
 
+        if (typeof keyPath !== "string") {
+            throw new TypeError("The \"keyPath\" argument to the CModel.value() function must be a string.");
+        }
+
         let keys = keyPath.split(".");
         let propertyName = keys.pop();
 
