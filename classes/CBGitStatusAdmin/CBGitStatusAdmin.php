@@ -160,7 +160,7 @@ EOT;
         if (array_search('origin', $lines) === false) {
             $range = '';
         } else {
-            $range = 'origin/master..head';
+            $range = 'origin/master..HEAD';
         }
 
         $message .= CBGitStatusAdmin::exec("git log {$range} --oneline --no-decorate --reverse");
