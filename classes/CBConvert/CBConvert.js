@@ -6,6 +6,68 @@
 var CBConvert = {
 
     /**
+     * Convert valid dollar amounts, usually from a string, to an integer number
+     * of cents.
+     *
+     * Dollar amounts should not be stored as floating point values because of
+     * potential floating point errors. However, user interface elements will
+     * sometimes ask for dollar amounts that will be given as a string in the
+     * format:
+     *
+     *      <dollars>.<cents>
+     *
+     * This function exists mostly to convert those strings into cents integer
+     * values.
+     *
+     * @param mixed dollars
+     *
+     *      Valid
+     *
+     *          "-1"
+     *          "-1.59"
+     *          "0"
+     *          "12"
+     *          "12.49"
+     *          "  12.49 "
+     *
+     *      Invalid
+     *
+     *          "1.123"
+     *          ""
+     *
+     * @return Number|undefined
+     */
+    dollarsAsCents: function (dollars) {
+        if (typeof dollars !== "string") {
+            dollars = String(dollars);
+        }
+
+        dollars = dollars.trim();
+
+        if (dollars.match(/[0-9]/) !== null) {
+            let matches = dollars.match(/^(-?)([0-9]*)\.?([0-9]?)([0-9]?)0*$/);
+
+            if (matches !== null) {
+                let minusPart = matches[1];
+                let dollarsPart = matches[2];
+                let cents1Part = matches[3];
+                let cents2Part = matches[4];
+                let cents = (Number(dollarsPart) * 100) +
+                            (Number(cents1Part) * 10) +
+                            Number(cents2Part);
+
+                if (minusPart === "-") {
+                    cents = -cents;
+                }
+
+                return cents;
+            }
+        }
+
+        return undefined;
+    },
+
+    /**
      * @param Error error
      *
      * @return string (plain text)
