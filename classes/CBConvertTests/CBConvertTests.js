@@ -13,6 +13,85 @@ var CBConvertTests = {
     /**
      * @return object|Promise
      */
+    CBTest_dollarsAsCents: function () {
+        let tests = [
+            ["68.21", 6821],
+            [" 68.21  ", 6821],
+            ["000068.21", 6821],
+            ["68.210000", 6821],
+            ["-68.21", -6821],
+            [" -68.21 ", -6821],
+            [" -00068.21000 ", -6821],
+            ["42", 4200],
+            [" 42 ", 4200],
+            [" 00042", 4200],
+            [".42", 42],
+            [" .42 ", 42],
+            [".42000", 42],
+            ["0.42", 42],
+            [".42", 42],
+            ["0", 0],
+
+            ["68.211", undefined],
+            [".211", undefined],
+            ["a68.21", undefined],
+            ["68.21a", undefined],
+            ["", undefined],
+            ["five", undefined],
+
+            [21.22, 2122],
+            [21, 2100],
+            [.22, 22],
+            [-.22, -22],
+
+            [.333, undefined],
+            [true, undefined],
+            [false, undefined],
+        ];
+
+        for (let i = 0; i < tests.length; i += 1) {
+            let test = tests[i];
+            let value = test[0];
+            let actualResult = CBConvert.dollarsAsCents(value);
+            let expectedResult = test[1];
+
+            if (actualResult !== expectedResult) {
+                let valueAsMessage = CBMessageMarkup.stringToMessage(
+                    CBConvert.valueToPrettyJSON(value)
+                );
+
+                let actualResultAsMessage = CBMessageMarkup.stringToMessage(
+                    CBConvert.valueToPrettyJSON(actualResult)
+                );
+
+                let expectedResultAsMessage = CBMessageMarkup.stringToMessage(
+                    CBConvert.valueToPrettyJSON(expectedResult)
+                );
+
+                let message = `
+
+                    When the value (${valueAsMessage} (code)) was used as an
+                    argument to CBConvert.dollarsAsCents() the actual result was
+                    (${actualResultAsMessage} (code)) but the expected result
+                    was (${expectedResultAsMessage} (code)).
+
+                `;
+
+                return {
+                    succeeded: false,
+                    message: message,
+                };
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+
+    /**
+     * @return object|Promise
+     */
     CBTest_valueAsInt: function () {
         let tests = [
             [5, 5],
