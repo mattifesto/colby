@@ -223,6 +223,19 @@ var CBConvert = {
     /**
      * @param mixed value
      *
+     * @return Object|undefined
+     */
+    valueAsObject: function (value) {
+        if (typeof value === "object") {
+            return value;
+        } else {
+            return undefined;
+        }
+    },
+
+    /**
+     * @param mixed value
+     *
      * @return [mixed]
      *
      *      If the value parameter is an array it is returned; otherwise an
