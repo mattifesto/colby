@@ -116,10 +116,20 @@ var CBModel = {
      * @param mixed model
      * @param string keyPath
      *
-     * @return int|undefined
+     * @return Number|undefined
      */
     valueAsInt: function (model, keyPath) {
         return CBConvert.valueAsInt(CBModel.value(model, keyPath));
+    },
+
+    /**
+     * @param mixed model
+     * @param string keyPath
+     *
+     * @return Object|undefined
+     */
+    valueAsObject: function (model, keyPath) {
+        return CBConvert.valueAsObject(CBModel.value(model, keyPath));
     },
 
     /**
