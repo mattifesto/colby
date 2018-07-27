@@ -91,6 +91,18 @@ var CBModelTests = {
                     },
                 }
             ],
+            [
+                /* explicitly undefined properties test */
+                {
+                    a: "b",
+                    w: undefined,
+                    x: undefined,
+                },
+                {
+                    a: "b",
+                    y: undefined,
+                }
+            ]
         ];
 
         for (let i = 0; i < equalValues.length; i += 1) {
