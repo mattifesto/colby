@@ -44,18 +44,54 @@ var CBModel = {
     },
 
     /**
-     * This function determines if two models are effectively the same. This
-     * function enforces the fact that the objects are either models or types
-     * that are allowed for model properties. For instance, if the type of a
-     * value is "function", false will be returned even if the functions are
-     * equal because functions are not allowed property types of models.
+     * This function is similar to Object.keys() except that it will not return
+     * keys for explicitly undefined property values. JavaScript objects treat
+     * properties explicitly set with an undefined value as set properties.
      *
-     * This function currently does allow loose equality.
+     * @param mixed value
+     *
+     *      This function is meant to be used with objects. The return value for
+     *      non-objects will be similar the return value of Object.keys().
+     *
+     * @return [string]
+     */
+    definedKeys: function (value) {
+        let definedKeys = [];
+        let keys = Object.keys(value);
+
+        keys.forEach(function (key) {
+            if (value[key] !== undefined) {
+                definedKeys.push(key);
+            }
+        });
+
+        return definedKeys;
+    },
+
+    /**
+     * This function determines if two models or model-like values are equal.
+     *
+     * Notes:
+     *
+     *      Explicitly Set Undefined Values: This function will ignore
+     *      explicitly set undefined property values.
+     *
+     *      Strict Equality Only: 1 and "1" are not considered to be equal.
+     *
+     *      Primitive Object Instances: String, Number, and Boolean object
+     *      instances and their primitive values are not considered to be equal.
+     *      It is odd behavior to assign a primitive object instance to a
+     *      property anyway, so avoid doing this.
+     *
+     *      JSON Types Only: This function is intended to be used only with
+     *      model and model-like values. The existence of a function typed
+     *      property value on an object will always make this function return
+     *      false.
      *
      * @param mixed value1
      * @param mixed value2
      *
-     * @return bool
+     * @return boolean
      */
     equals: function (value1, value2) {
         let type = typeof value1;
@@ -87,8 +123,8 @@ var CBModel = {
                 return false;
             }
 
-            let keys1 = Object.keys(value1);
-            let keys2 = Object.keys(value2);
+            let keys1 = CBModel.definedKeys(value1);
+            let keys2 = CBModel.definedKeys(value2);
 
             if (keys1.length !== keys2.length) {
                 return false;
