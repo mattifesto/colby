@@ -9,6 +9,41 @@
 var CBModel = {
 
     /**
+     * @param model model
+     * @param string functionName
+     *
+     * @return Function|undefined
+     */
+    classFunction: function (model, functionName) {
+        let className = CBModel.valueToString(model, "className");
+        let callable = CBModel.value(window, className + "." + functionName);
+
+        if (typeof callable === "function") {
+            return callable;
+        }
+
+        return undefined;
+    },
+
+    /**
+     * This function performs a deep clone of a model by serializing it to JSON
+     * and then unserializing it. Since models are always serialized to JSON
+     * this method of cloning is will always produce a valid clone.
+     *
+     * @param mixed model
+     *
+     *      This parameter does not technically have to be a model. It does not
+     *      need be an object, have className property, or a valid ID.
+     *
+     *      It does need to be JSON encodable.
+     *
+     * @return mixed
+     */
+    clone: function (model) {
+        return JSON.parse(JSON.stringify(model));
+    },
+
+    /**
      * This function determines if two models are effectively the same. This
      * function enforces the fact that the objects are either models or types
      * that are allowed for model properties. For instance, if the type of a
