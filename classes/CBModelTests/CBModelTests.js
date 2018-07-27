@@ -2,12 +2,57 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* exported CBModelTests */
+/* exported CBModelTests_classFunctionTestClass */
 /* global
     CBMessageMarkup,
     CBModel,
 */
 
 var CBModelTests = {
+
+    /**
+     * @return object
+     */
+    CBTest_classFunction: function () {
+        let model = {
+            className: "CBModelTests_classFunctionTestClass",
+        };
+
+        {
+            let badfunction = CBModel.classFunction(model, "badfunction");
+
+            if (badfunction !== undefined) {
+                return {
+                    succeeded: false,
+                    message: "badfunction test failed",
+                };
+            }
+        }
+
+        {
+            let undefinedfunction = CBModel.classFunction(model, "undefinedfunction");
+
+            if (undefinedfunction !== undefined) {
+                return {
+                    succeeded: false,
+                    message: "undefinedfunction test failed",
+                };
+            }
+        }
+
+        {
+            let goodfunction = CBModel.classFunction(model, "goodfunction");
+
+            if (typeof goodfunction !== "function") {
+                return {
+                    succeeded: false,
+                    message: "goodfunction test failed",
+                };
+            }
+
+            return goodfunction();
+        }
+    },
 
     /**
      * @return object
@@ -135,6 +180,19 @@ var CBModelTests = {
             }
         }
 
+        return {
+            succeeded: true,
+        };
+    },
+};
+
+/**
+ *
+ */
+var CBModelTests_classFunctionTestClass = {
+    badfunction: "not a function",
+
+    goodfunction: function () {
         return {
             succeeded: true,
         };
