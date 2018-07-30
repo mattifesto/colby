@@ -788,7 +788,7 @@ Colby.extend = function(objectToExtend, objectWithProperties) {
  * @return false
  */
 Colby.handleError = function(message, sourceURL, line, column, error) {
-    if (typeof error !== "object") { /* IE11 */
+    if (typeof error !== "object" || error === null) { /* IE11 */
         error = {};
     }
 
