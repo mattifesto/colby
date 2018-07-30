@@ -187,6 +187,16 @@ var CBModel = {
      * @param mixed model
      * @param string keyPath
      *
+     * @return ID|undefined
+     */
+    valueAsID: function (model, keyPath) {
+        return CBConvert.valueAsID(CBModel.value(model, keyPath));
+    },
+
+    /**
+     * @param mixed model
+     * @param string keyPath
+     *
      * @return Number|undefined
      */
     valueAsInt: function (model, keyPath) {
