@@ -166,6 +166,21 @@ var CBConvert = {
     /**
      * @param mixed value
      *
+     * @return ID|undefined
+     */
+    valueAsID: function (value) {
+        if (typeof value === "string") {
+            if (value.match(/^[a-f0-9]{40}$/)) {
+                return value;
+            }
+        }
+
+        return undefined;
+    },
+
+    /**
+     * @param mixed value
+     *
      * @return Number|undefined
      */
     valueAsInt: function (value) {
