@@ -164,7 +164,7 @@ final class CBView {
      * @return void
      */
     static function render(stdClass $model): void {
-        $className = CBModel::value($model, 'className', '');
+        $className = CBModel::valueToString($model, 'className');
 
         if (empty($className)) {
             return;
@@ -187,7 +187,7 @@ final class CBView {
      * @deprecated use CBView::render()
      */
     static function renderModelAsHTML(stdClass $model) {
-        $className = CBModel::value($model, 'className', '');
+        $className = CBModel::valueToString($model, 'className');
 
         if ($className != 'CBView') {
             return CBView::render($model);
