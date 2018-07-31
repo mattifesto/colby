@@ -6,7 +6,7 @@ final class CBUIMessagePart {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v418.css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v440.css', cbsysurl())];
     }
 
     /**
@@ -20,6 +20,9 @@ final class CBUIMessagePart {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBContentStyleSheet', 'CBMessageMarkup'];
+        return [
+            'CBContentStyleSheet',
+            'CBMessageMarkup'
+        ];
     }
 }
