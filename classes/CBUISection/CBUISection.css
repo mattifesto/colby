@@ -1,0 +1,40 @@
+.CBUISection {
+    background-color: hsl(0, 0%, 100%); /* IE11 */
+    background-color: var(--CBBackgroundColor);
+    border-color: hsl(0, 0%, 85%); /* IE11 */
+    border-color: var(--CBUIBorderColor);
+    border-style: solid;
+    border-width: 1px 0;
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 100%;
+    overflow: hidden;
+    width: 640px;
+
+    /*
+    Stop double-tap zooming on all CBUISections
+
+    Interactive user interfaces are meant to be readable (don't need to be
+    zoomed) and often meant to be tapped, potentially quickly.
+    */
+    touch-action: manipulation;
+}
+
+.CBUISection > * + * {
+    border-top-color: hsl(0, 0%, 85%); /* IE11 */
+    border-top-color: var(--CBUIBorderColor);
+    border-top-style: solid;
+    border-top-width: 1px;
+}
+
+.CBUISection.inner {
+    border-radius: 10px;
+    border-width: 1px;
+}
+
+@media all and (min-width: 641px) {
+    .CBUISection {
+        border-radius: 10px;
+        border-width: 1px;
+    }
+}
