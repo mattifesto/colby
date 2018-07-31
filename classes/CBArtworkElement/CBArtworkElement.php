@@ -12,6 +12,20 @@
 final class CBArtworkElement {
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [Colby::flexpath(__CLASS__, 'v383.css', cbsysurl())];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [Colby::flexpath(__CLASS__, 'v383.js', cbsysurl())];
+    }
+
+    /**
      * @param int $maxHeight
      *
      *      The length in any units of the maximum desired height.
@@ -132,19 +146,5 @@ EOT;
         </div>
 
         <?php
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v383.css', cbsysurl())];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v383.js', cbsysurl())];
     }
 }
