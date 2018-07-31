@@ -1,13 +1,44 @@
 <?php
 
 /**
- * The CBArtworkElement represents an element of an image that may have an
- * optional maximum width and will shrink fit its container width if necessary.
- * Its inherent resizability is what differentiates it from the <img> element.
+ * The purpose of CBArtworkElement is to be an easy to use alternative to the
+ * image element that has a constant layout regardless of whether the image has
+ * loaded.
  *
- * Because the implementation may change you should avoid styling element.
- * Acceptable styles:
- *  - Add a frame with a border style.
+ * The CBArtworkElement may grow or shrink in responsive design scenarios.
+ *
+ * The primary difference between CBArtworkElement and the img element is that a
+ * CBArtworkElement requires an aspect ratio to be specified. Usually this is
+ * aspect ratio of the image. The aspect ratio may be different than that of the
+ * image, in which case the image will be fit and centered inside an aspect
+ * ratio shaped container.
+ *
+ *      Example: In scenarios where many images are shown adjacent to each
+ *      other, such as a list of products where the product images may have
+ *      various aspect ratios, rendering CBArtworkElements with a square aspect
+ *      ratio will normalize the layout.
+ *
+ * A CBArtworkElement completely detaches an image's actual size in pixels from
+ * the layout process. Specify images with a pixel size to provide the desired
+ * detail level for the expected viewing sizes you expect the CBArtworkElement
+ * to have.
+ *
+ *      Example: If you know your CBArtworkElement is going to be viewed at
+ *      around 320 CSS pixels wide, you will probably want to specify an image
+ *      file that has 640 actual pixels of width. You may want to specify an
+ *      even larger image file if you expect them image to be zoomed often.
+ *
+ * @NOTE
+ *
+ *      A CBImage model holds an image's original size, and this size can be
+ *      used to specify the aspetc ratio for a CBArtworkElement.
+ *
+ *      In older browsers that don't support object-fit, most notably IE 11,
+ *      images may overflow the container and be cropped. Colby treats IE 11 as
+ *      a pseudo-supported browser where everything must technically work, but
+ *      imperfections are accepted because the browser is basically deprecated.
+ *      In this case, CBArtworkElement consideres the constant layout to be more
+ *      important than displaying the entire image.
  */
 final class CBArtworkElement {
 
@@ -45,38 +76,35 @@ final class CBArtworkElement {
     }
 
     /**
-     * @NOTE: 2017.07.16 This class does not have a CBView_render() function
-     *        because it is not meant to be used with a model. It is just
-     *        supposed to be a set of functions. However, it does have a
-     *        required style sheet so it adds itself as a required class name.
-     *
-     *        The JavaScript is not required by a call to this function, but it
-     *        feels cleaner to have it as a requirement of the class rather than
-     *        using a different method of inclusion.
-     *
-     * @param string? $args['alternativeText']
-     *
-     *      The alternative text for the image.
-     *
-     * @param int $args['height']
-     *
-     *      The aspect height of the image, image pixel height can work here.
-     *
-     * @param int $args['width']
-     *
-     *      The aspect width of the image, image pixel width can work here.
-     *
-     * @param float? $args['maxHeight']
-     *
-     *      The maximum height in CSS pixels that the image should be displayed.
-     *
-     * @param float? $args['maxWidth']
-     *
-     *      The maximum width in CSS pixels that the image should be displayed.
+     * @NOTE:
      *
      * @param string $args['URL']
      *
-     *      The URL for the image.
+     *      The URL for the image. The size of this image has no effect on the
+     *      layout of the CBArtworkElement. The recommended image size is two
+     *      times the number of CSS pixels of the "usual" viewing size of the
+     *      CBArtworkElement. So if you expect the CBArtworkElement will usually
+     *      be seen as 800px by 400px wide use an image with 1600 by 800 actual
+     *      pixels.
+     *
+     * @param float $args['width']
+     * @param float $args['height']
+     *
+     *      These arguments specify the aspect ratio of the container. They are
+     *      often the original image dimensions in pixels, because that is what
+     *      is available in the CBImage model. Other times, such as when
+     *      specifying a square aspect ratio, they may be 1 and 1.
+     *
+     * @param float $args['maxWidth'] (optional)
+     * @param float $args['maxHeight'] (optional)
+     *
+     *      The maximum width and/or height in CSS pixels that the image should
+     *      be displayed. CBArtworkElement images always expand to fit the
+     *      available width. These properties place limits on that expansion.
+     *
+     * @param string $args['alternativeText'] (optional)
+     *
+     *      The alternative text for the image.
      *
      * @return void
      */
@@ -90,7 +118,7 @@ final class CBArtworkElement {
         $aspectWidth = $args['width'];
         $aspectHeight = $args['height'];
         $ID = CBHex160::random();
-        $inverseAspectRatio = $aspectHeight/ $aspectWidth;
+        $inverseAspectRatio = $aspectHeight / $aspectWidth;
         $URLAsHTML = cbhtml($args['URL']);
         $paddingBottom = $inverseAspectRatio * 100;
         $paddingBottomDeclaration = "padding-bottom: {$paddingBottom}%";
