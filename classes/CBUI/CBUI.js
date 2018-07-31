@@ -4,7 +4,8 @@
 /* exported CBUI */
 /* global
     CBMessageMarkup,
-    CBUIDropdown */
+    CBUIDropdown,
+*/
 
 var CBUI = {
 
@@ -325,13 +326,14 @@ var CBUI = {
     },
 
     /**
+     * @deprecated use CBUISection.create()
+     *
      * @return Element
      */
     createSection: function () {
-        var element = document.createElement("div");
-        element.className = "CBUISection";
+        let section = CBUISection.create();
 
-        return element;
+        return section.element;
     },
 
     /**

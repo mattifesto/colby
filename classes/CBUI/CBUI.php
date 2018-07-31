@@ -6,21 +6,26 @@ final class CBUI {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v421.css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v440.css', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v432.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v440.js', cbsysurl())];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBContentStyleSheet', 'CBMessageMarkup', 'CBUIDropdown'];
+        return [
+            'CBContentStyleSheet',
+            'CBMessageMarkup',
+            'CBUIDropdown',
+            'CBUISection',
+        ];
     }
 
     /**
