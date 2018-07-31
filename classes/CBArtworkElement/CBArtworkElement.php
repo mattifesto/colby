@@ -13,11 +13,17 @@ final class CBArtworkElement {
 
     /**
      * @param int $maxHeight
-     *  The length in any units of the maximum desired height.
+     *
+     *      The length in any units of the maximum desired height.
+     *
      * @param int $aspectWidth
-     *  The length in any units (same as $aspectHeight) of the image width.
+     *
+     *      The length in any units (same as $aspectHeight) of the image width.
+     *
      * @param int $aspectHeight
-     *  The length in any units (same as $aspectWidth) of the image height.
+     *
+     *      The length in any units (same as $aspectWidth) of the image height.
+     *
      * @return int
      */
     static function maxHeightToMaxWidth($maxHeight, $aspectWidth, $aspectHeight) {
@@ -35,21 +41,32 @@ final class CBArtworkElement {
      *        using a different method of inclusion.
      *
      * @param string? $args['alternativeText']
-     *  The alternative text for the image.
-     * @param int $args['height']
-     *  The aspect height of the image, image pixel height can work here.
-     * @param int $args['width']
-     *  The aspect width of the image, image pixel width can work here.
-     * @param float? $args['maxHeight']
-     *  The maximum height in CSS pixels that the image should be displayed.
-     * @param float? $args['maxWidth']
-     *  The maximum width in CSS pixels that the image should be displayed.
-     * @param string $args['URL']
-     *  The URL for the image.
      *
-     * @return null
+     *      The alternative text for the image.
+     *
+     * @param int $args['height']
+     *
+     *      The aspect height of the image, image pixel height can work here.
+     *
+     * @param int $args['width']
+     *
+     *      The aspect width of the image, image pixel width can work here.
+     *
+     * @param float? $args['maxHeight']
+     *
+     *      The maximum height in CSS pixels that the image should be displayed.
+     *
+     * @param float? $args['maxWidth']
+     *
+     *      The maximum width in CSS pixels that the image should be displayed.
+     *
+     * @param string $args['URL']
+     *
+     *      The URL for the image.
+     *
+     * @return void
      */
-    static function render(array $args = []) {
+    static function render(array $args = []): void {
         if (empty($args['height']) || empty($args['width']) || empty($args['URL'])) {
             return;
         }
