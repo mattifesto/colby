@@ -111,14 +111,14 @@ final class CBModel {
      * and then unserializing it. Since models are always serialized to JSON
      * this method of cloning is will always produce a valid clone.
      *
-     * @param object $model
+     * @param mixed $model
      *
-     *      This parameter does not technically have to be a model. It does not
-     *      need to have className property or a valid ID.
+     *      This parameter does not technically have to be a model. It does need
+     *      to be serializable to JSON.
      *
-     * @return object
+     * @return mixed
      */
-    static function clone(stdClass $model): stdClass {
+    static function clone($model) {
         return json_decode(json_encode($model));
     }
 
