@@ -155,6 +155,22 @@ final class CBView {
     }
 
     /**
+     * @param model $model
+     * @param callable $callback
+     *
+     *      The callback function receives a single parameter, a clone of the
+     *      model's current array of subviews. The callback should return its
+     *      desired array of subviews.
+     *
+     * @return void
+     */
+    static function modifySubviews(stdClass $model, callable $callback): void {
+        $clonedSubviews = CBModel::clone(CBView::getSubviews($model));
+
+        CBView::setSubviews($model, call_user_func($callback, $clonedSubviews));
+    }
+
+    /**
      * Always use this function to render a view instead of calling the render
      * interfaces directly on the view class. This function will also make sure
      * that all of the view class's dependencies are included.
