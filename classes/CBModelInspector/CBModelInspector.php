@@ -83,7 +83,7 @@ final class CBModelInspector {
     }
 
     /**
-     * @return [[key, value]]
+     * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         $ID = cb_query_string_value('ID');
