@@ -50,6 +50,11 @@ EOT;
      *
      * @param [object] $versions
      *
+     *      The array of versions with the most recent version at index 0 and
+     *      each additional index holding an older version that the previous.
+     *
+     *      The version at index 0 will never be pruned.
+     *
      *      {
      *          timestamp: int
      *          version: int
@@ -74,16 +79,18 @@ EOT;
         $tenminutes = 60 * 10;
         $twohours   = 60 * 60 * 2;
         $oneday     = 60 * 60 * 24;
-
-        $onedayago      = $now - $oneday;
-        $sevendaysago   = $now - ($oneday * 7);
-        $thirtydaysago  = $now - ($oneday * 30);
-        $ninetydaysago  = $now - ($oneday * 90);
+        $sevendays  = $oneday * 7;
+        $ninetydays = $oneday * 90;
 
         $count = count($versions);
         $versionsToPrune = [];
 
-        $nextVersionTimestamp = $versions[0]->timestamp;
+        $nextVersionCreated = $versions[0]->timestamp;
+
+        /**
+         * Loop through the versions starting at index 1, which holds the first
+         * version that could potentially be pruned.
+         */
 
         for ($index = 1; $index < $count; $index++) {
             if ($count - count($versionsToPrune) <= $minimumVersionCount) {
@@ -91,23 +98,24 @@ EOT;
             }
 
             $thisVersionNumber = $versions[$index]->version;
-            $thisVersionTimestamp = $versions[$index]->timestamp;
-            $thisVersionAge = $nextVersionTimestamp - $thisVersionTimestamp;
+            $thisVersionCreated = $versions[$index]->timestamp;
+            $thisVersionDuration = $nextVersionCreated - $thisVersionCreated;
+            $thisVersionAge = $now - $thisVersionCreated;
 
-            if ($thisVersionTimestamp > $onedayago) {
-                $minimumAge = $tenminutes;
-            } else if ($thisVersionTimestamp > $sevendaysago) {
-                $minimumAge = $twohours;
-            } else if ($thisVersionTimestamp > $ninetydaysago) {
-                $minimumAge = $oneday;
+            if ($thisVersionAge < $oneday) {
+                $minimumDurationRequiredToBeKept = $tenminutes;
+            } else if ($thisVersionAge < $sevendays) {
+                $minimumDurationRequiredToBeKept = $twohours;
+            } else if ($thisVersionAge < $ninetydays) {
+                $minimumDurationRequiredToBeKept = $oneday;
             } else {
-                $minimumAge = PHP_INT_MAX;
+                $minimumDurationRequiredToBeKept = PHP_INT_MAX;
             }
 
-            if ($thisVersionAge < $minimumAge) {
+            if ($thisVersionDuration < $minimumDurationRequiredToBeKept) {
                 $versionsToPrune[] = $thisVersionNumber;
             } else {
-                $nextVersionTimestamp = $thisVersionTimestamp;
+                $nextVersionCreated = $thisVersionCreated;
             }
         }
 
