@@ -40,69 +40,17 @@ final class CBModels {
     }
 
     /**
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        CBModels::createModelsTable();
-
-        $SQL = <<<EOT
-
-            CREATE TABLE IF NOT EXISTS `CBModelVersions`
-            (
-                `ID`            BINARY(20) NOT NULL,
-                `version`       BIGINT UNSIGNED NOT NULL,
-                `modelAsJSON`   LONGTEXT NOT NULL,
-                `specAsJSON`    LONGTEXT NOT NULL,
-                `timestamp`     BIGINT NOT NULL,
-                PRIMARY KEY     (`ID`, `version`)
-            )
-            ENGINE=InnoDB
-            DEFAULT CHARSET=utf8mb4
-            COLLATE=utf8mb4_unicode_520_ci
-
-EOT;
-
-        Colby::query($SQL);
-    }
-
-    /**
      * When a model is saved a task is created, so CBTasks2 is required for this
      * class to be fully installed.
      *
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBTasks2'];
-    }
-
-    /**
-     * Creates either the permanent or a temporary CBModels table.
-     *
-     * @return null
-     */
-    static function createModelsTable($temporary = false) {
-        $name = $temporary ? 'CBModelsTemp' : 'CBModels';
-        $options = $temporary ? 'TEMPORARY' : '';
-        $SQL = <<<EOT
-
-            CREATE {$options} TABLE IF NOT EXISTS `{$name}` (
-                `ID`        BINARY(20) NOT NULL,
-                `className` VARCHAR(80) NOT NULL,
-                `created`   BIGINT NOT NULL,
-                `modified`  BIGINT NOT NULL,
-                `title`     TEXT NOT NULL,
-                `version`   BIGINT UNSIGNED NOT NULL,
-                PRIMARY KEY                 (`ID`),
-                KEY `className_created`     (`className`, `created`),
-                KEY `className_modified`    (`className`, `modified`)
-            )
-            ENGINE=InnoDB
-            DEFAULT CHARSET=utf8mb4
-            COLLATE=utf8mb4_unicode_520_ci
-
-EOT;
-
-        Colby::query($SQL);
+        return [
+            'CBModelsTable',
+            'CBModelVersionsTable',
+            'CBTasks2',
+        ];
     }
 
     /**
@@ -811,8 +759,8 @@ EOT;
         }, $tuples);
         $values = implode(',', $values);
 
-        CBModels::createModelsTable(/* temporary: */ true);
-        Colby::query("INSERT INTO `CBModelsTemp` VALUES {$values}");
+        CBModelsTable::create(/* temporary: */ true);
+        Colby::query("INSERT INTO CBModelsTemp VALUES {$values}");
 
         $SQL = <<<EOT
 
@@ -838,6 +786,6 @@ EOT;
 
         Colby::query($SQL);
 
-        Colby::query('DROP TEMPORARY TABLE `CBModelsTemp`');
+        Colby::query('DROP TEMPORARY TABLE CBModelsTemp');
     }
 }
