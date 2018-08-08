@@ -73,6 +73,7 @@ final class CBTestAdmin {
             'CBMessageMarkup',
             'CBUI',
             'CBUIExpander',
+            'CBUISection',
             'CBUISectionItem4',
             'CBUIStringsPart',
         ];

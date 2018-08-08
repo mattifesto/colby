@@ -8,6 +8,7 @@
     CBTestAdmin_javaScriptTests,
     CBUI,
     CBUIExpander,
+    CBUISection,
     CBUISectionItem4,
     CBUIStringsPart,
     CBUI,
@@ -52,22 +53,29 @@ var CBTestAdmin = {
 
         containerElement.appendChild(input);
 
-        let sectionElement = CBUI.createSection();
-
         {
-            let sectionItem = CBUISectionItem4.create();
-            sectionItem.callback = function () {
-                input.click();
-            };
+            let section = CBUISection.create();
 
-            let stringsPart = CBUIStringsPart.create();
-            stringsPart.string1 = "Run Tests";
+            {
+                let sectionItem = CBUISectionItem4.create();
+                sectionItem.callback = function () {
+                    input.click();
+                };
 
-            stringsPart.element.classList.add("action");
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Run Tests";
 
-            sectionItem.appendPart(stringsPart);
-            sectionElement.appendChild(sectionItem.element);
+                stringsPart.element.classList.add("action");
+
+                sectionItem.appendPart(stringsPart);
+                section.appendItem(sectionItem);
+            }
+
+            containerElement.appendChild(section.element);
+            containerElement.appendChild(CBUI.createHalfSpace());
         }
+
+        let sectionElement = CBUI.createSection();
 
         {
             let sectionItem = CBUISectionItem4.create();
