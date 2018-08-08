@@ -8,8 +8,10 @@
     CBTestAdmin_javaScriptTests,
     CBUI,
     CBUIExpander,
+    CBUINavigationView,
     CBUISection,
     CBUISectionItem4,
+    CBUISelector,
     CBUIStringsPart,
     CBUI,
     Colby,
@@ -57,13 +59,44 @@ var CBTestAdmin = {
             let section = CBUISection.create();
 
             {
+                let options = [];
+
+                CBTestAdmin.serverTests.forEach(function (serverTest, index) {
+                    options.push({
+                        title: `${serverTest[0]} / ${serverTest[1]}`,
+                        value: index,
+                    });
+                });
+
+                options.sort(function (a, b) {
+                    return a.title.localeCompare(b.title);
+                });
+
+                options.unshift({
+                    title: "All Tests",
+                });
+
+                let selector = CBUISelector.create();
+                selector.options = options;
+                selector.onchange = function () {
+                    CBTestAdmin.selectedTest = selector.value;
+                };
+
+                section.appendItem(selector);
+            }
+
+            {
                 let sectionItem = CBUISectionItem4.create();
                 sectionItem.callback = function () {
-                    input.click();
+                    if (CBTestAdmin.selectedTest === undefined) {
+                        input.click();
+                    } else {
+                        CBTestAdmin.handleRunTests();
+                    }
                 };
 
                 let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Run Tests";
+                stringsPart.string1 = "Run";
 
                 stringsPart.element.classList.add("action");
 
@@ -204,8 +237,14 @@ var CBTestAdmin = {
                 CBTestAdmin.serverTests = response.tests;
 
                 let main = document.getElementsByTagName("main")[0];
+                let navigator = CBUINavigationView.create();
 
-                main.appendChild(CBTestAdmin.createTestUI());
+                main.appendChild(navigator.element);
+
+                navigator.navigate({
+                    title: "Test",
+                    element: CBTestAdmin.createTestUI(),
+                });
             })
             .catch(Colby.displayAndReportError);
     },
@@ -229,7 +268,11 @@ var CBTestAdmin = {
         CBTestAdmin.status.element.textContent = "";
 
         Promise.resolve()
-            .then(CBTestAdmin.runJavaScriptTests)
+            .then(function () {
+                if (CBTestAdmin.selectedTest === undefined) {
+                    return CBTestAdmin.runJavaScriptTests();
+                }
+            })
             .then(CBTestAdmin.runServerTests)
             .then(onFulfilled)
             .catch(onRejected)
@@ -265,7 +308,7 @@ var CBTestAdmin = {
      */
     runJavaScriptTests: function () {
         return new Promise(function (resolve, reject) {
-            var index = 0;
+            let index = 0;
 
             next();
 
@@ -395,6 +438,10 @@ var CBTestAdmin = {
         return new Promise(function (resolve, reject) {
             let i = 0;
 
+            if (CBTestAdmin.selectedTest !== undefined) {
+                i = CBTestAdmin.selectedTest;
+            }
+
             next();
 
             function run(test) {
@@ -439,7 +486,11 @@ var CBTestAdmin = {
                         expander.severity = 3;
                     }
 
-                    next();
+                    if (CBTestAdmin.selectedTest === undefined) {
+                        next();
+                    } else {
+                        resolve();
+                    }
                 }
 
                 function onRejected(error) {
