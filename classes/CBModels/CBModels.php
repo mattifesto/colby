@@ -50,6 +50,7 @@ final class CBModels {
             'CBModelsTable',
             'CBModelVersionsTable',
             'CBTasks2',
+            'CBUpgradesForVersion442',
         ];
     }
 
@@ -742,11 +743,11 @@ EOT;
             $modelAsJSONAsSQL = CBDB::stringToSQL(json_encode($tuple->model));
             $specAsJSONAsSQL = CBDB::stringToSQL(json_encode($tuple->spec));
 
-            return "({$IDAsSQL}, {$tuple->meta->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->meta->modified})";
+            return "({$IDAsSQL}, {$tuple->meta->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->meta->modified}, NULL)";
         }, $tuples);
         $values = implode(',', $values);
 
-        Colby::query("INSERT INTO `CBModelVersions` VALUES {$values}");
+        Colby::query("INSERT INTO CBModelVersions VALUES {$values}");
 
         /* 2: CBModels */
 
