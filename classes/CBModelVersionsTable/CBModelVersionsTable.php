@@ -3,6 +3,18 @@
 final class CBModelVersionsTable {
 
     /**
+     * Columns
+     *
+     *      timestamp (Unix timestamp)
+     *
+     *          This is the time the version was created.
+     *
+     *      replaced (Unix timestamp)
+     *
+     *          The value for this column is set by the CBModelPruneVersionsTask
+     *          class before versions are pruned. This enables the calculation
+     *          of a version's lifetime and relative historical significance.
+     *
      * @return void
      */
     static function CBInstall_install(): void {
@@ -15,6 +27,7 @@ final class CBModelVersionsTable {
                 modelAsJSON     LONGTEXT NOT NULL,
                 specAsJSON      LONGTEXT NOT NULL,
                 timestamp       BIGINT NOT NULL,
+                replaced        BIGINT,
 
                 PRIMARY KEY     (ID, version)
             )
