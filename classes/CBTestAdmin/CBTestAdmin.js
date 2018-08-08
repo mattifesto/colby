@@ -191,16 +191,15 @@ var CBTestAdmin = {
      * @return undefined
      */
     DOMContentDidLoad: function() {
-        var main = document.getElementsByTagName("main")[0];
+        Colby.fetchAjaxResponse("/api/?class=CBUnitTests&function=getListOfTests")
+            .then(function (response) {
+                CBTestAdmin.serverTests = response.tests;
 
-        main.appendChild(CBTestAdmin.createTestUI());
-    },
+                let main = document.getElementsByTagName("main")[0];
 
-    /**
-     * @return Promise
-     */
-    fetchServerTests: function () {
-        return Colby.fetchAjaxResponse("/api/?class=CBUnitTests&function=getListOfTests");
+                main.appendChild(CBTestAdmin.createTestUI());
+            })
+            .catch(Colby.displayAndReportError);
     },
 
     /**
@@ -223,7 +222,6 @@ var CBTestAdmin = {
 
         Promise.resolve()
             .then(CBTestAdmin.runJavaScriptTests)
-            .then(CBTestAdmin.fetchServerTests)
             .then(CBTestAdmin.runServerTests)
             .then(onFulfilled)
             .catch(onRejected)
@@ -385,7 +383,7 @@ var CBTestAdmin = {
     /**
      * @return Promise
      */
-    runServerTests: function (fetchServerTestsResponse) {
+    runServerTests: function () {
         return new Promise(function (resolve, reject) {
             let i = 0;
 
@@ -453,8 +451,8 @@ var CBTestAdmin = {
 
             /* closure */
             function next() {
-                if (i < fetchServerTestsResponse.tests.length) {
-                    run(fetchServerTestsResponse.tests[i]);
+                if (i < CBTestAdmin.serverTests.length) {
+                    run(CBTestAdmin.serverTests[i]);
                     i += 1;
                 } else {
                     resolve();
@@ -462,7 +460,6 @@ var CBTestAdmin = {
             }
         });
     },
-
 };
 
 Colby.afterDOMContentLoaded(CBTestAdmin.DOMContentDidLoad);
