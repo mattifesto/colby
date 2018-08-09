@@ -101,9 +101,19 @@ EOT;
      *
      * @param [object] $versions
      *
-     * @return [object]
+     * @return void
+     *
+     *      This function is a function which modifies the objects inside the
+     *      $versions array. It's technically possible to clone this whole array
+     *      including its objects but in all use cases there's no desire for
+     *      that. So instead this function just modifies the $versions array in
+     *      place and returns void.
      */
-    static function assignActions(array $versions): array {
+    static function assignActions(array $versions): void {
+        if (empty($versions)) {
+            return;
+        }
+
         $now = time();
 
         /**
@@ -180,7 +190,5 @@ EOT;
 
             $nextVersion = $version;
         }
-
-        return $versions;
     }
 }
