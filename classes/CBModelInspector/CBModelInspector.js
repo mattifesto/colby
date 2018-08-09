@@ -223,12 +223,22 @@ var CBModelInspector = {
                 }
 
                 section = CBUI.createSection();
+                let unixNow = Math.floor(Date.now() / 1000);
 
                 response.modelVersions.forEach(function (version) {
                     let versionCreated = new Date(version.timestamp * 1000);
+                    let info = "";
+
+                    if (version.replaced !== null) {
+                        let deathspan = (unixNow - version.replaced).toLocaleString();
+                        let lifespan = (version.replaced - version.timestamp).toLocaleString();
+
+                        info = `(${deathspan} / ${lifespan} ${version.action})`;
+                    }
+
                     let sectionItem = CBUISectionItem4.create();
                     let stringsPart = CBUIStringsPart.create();
-                    stringsPart.string1 = `Version ${version.version}`;
+                    stringsPart.string1 = `Version ${version.version} ${info}`;
 
                     stringsPart.element.classList.add("titledescription");
 

@@ -79,7 +79,9 @@ final class CBModelInspector {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v426.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v442.js', cbsysurl())
+        ];
     }
 
     /**
@@ -158,14 +160,22 @@ final class CBModelInspector {
         $IDAsSQL = CBHex160::toSQL($ID);
         $SQL = <<<EOT
 
-            SELECT      `version`, `timestamp`, `specAsJSON`, `modelAsJSON`
-            FROM        `CBModelVersions`
-            WHERE       `ID` = {$IDAsSQL}
-            ORDER BY    `version` DESC
+            SELECT      version,
+                        timestamp,
+                        replaced,
+                        specAsJSON,
+                        modelAsJSON
+            FROM        CBModelVersions
+            WHERE       ID = {$IDAsSQL}
+            ORDER BY    version DESC
 
 EOT;
 
-        return CBDB::SQLToObjects($SQL);
+        $versions = CBDB::SQLToObjects($SQL);
+
+        CBModelPruneVersionsTask::assignActions($versions);
+
+        return $versions;
     }
 
     /**
