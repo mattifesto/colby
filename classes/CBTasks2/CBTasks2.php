@@ -510,14 +510,25 @@ EOT;
             CBID::push($task->ID);
 
             if (is_callable($function = "{$task->className}::CBTasks2_run")) {
-                $status = call_user_func($function, $task->ID);
+                $taskReturnValue = call_user_func($function, $task->ID);
             } else if (is_callable($function = "{$task->className}::CBTasks2_Execute")) { /* deprecated */
-                $status = call_user_func($function, $task->ID);
+                $taskReturnValue = call_user_func($function, $task->ID);
             } else {
                 throw new Exception("The CBTasks2_run() interface has not been implemented by the {$task->className} class preventing execution of the task for ID {$task->ID}");
             }
 
-            $scheduled = CBModel::valueAsInt($status, 'scheduled');
+            /**
+             * The task function can request that the task be rerun by returning
+             * an integer value for the "sheduled" property.
+             */
+            $requestedScheduled = CBModel::valueAsInt($taskReturnValue, 'scheduled');
+
+            /**
+             * The task function can request that the task be set to a specific
+             * priority by returning an integer value for the "priority"
+             * property.
+             */
+            $requestedPriority = CBModel::valueAsInt($taskReturnValue, 'priority');
 
             // Log a debug level entry that a task has run.
 
@@ -527,7 +538,7 @@ EOT;
                 'severity' => 7,
             ]);
 
-            $state = 3; /* complete */
+            $newState = 3; /* complete */
         } catch (Throwable $throwable) {
             /**
              * We'll rethrow this throwable at the end of the function after we
@@ -535,34 +546,55 @@ EOT;
              */
             $firstThrowable = $throwable;
 
-            $scheduled = null;
-            $state = 4; /* failed */
+            $requestedScheduled = null;
+            $newState = 4; /* failed */
         }
 
         try {
             $now = time();
 
-            if ($scheduled === null) {
-                // state will already be 3 or 4 depending on failure status
-                $timestamp = $now;
-            } else if ($scheduled <= $now) {
-                $state = 1; /* ready */
-                $timestamp = $now;
+            /**
+             * Tasks are returned to the default priority after running unless
+             * the task function requests otherwise.
+             */
+            $newPriority = $requestedPriority ?? CBTasks2::defaultPriority;
+
+            if ($requestedScheduled === null) {
+                // $newState will already be set to 3 (completed) or 4 (failed)
+                $newTimestamp = $now;
+            } else if ($requestedScheduled <= $now) {
+                $newState = 1; /* ready */
+                $newTimestamp = $now;
             } else {
-                $state = 0; /* scheduled */
-                $timestamp = $scheduled;
+                $newState = 0; /* scheduled */
+                $newTimestamp = $requestedScheduled;
             }
 
             $classNameAsSQL = CBDB::stringToSQL($task->className);
             $IDAsSQL = CBHex160::toSQL($task->ID);
+
+            /**
+             * @NOTE 2018.08.09
+             *
+             *      This query specifies a starterID column value in the where
+             *      clause even though this table's primary key is className and
+             *      ID which have also been specified. This would indicate this
+             *      was done to make sure this query only completed if the
+             *      startedID is still the same at this point.
+             *
+             *      I'm not sure it's possible for the starterID to have
+             *      changed, but after investigation uncovers that is possible,
+             *      add a comment here describing the scenarios.
+             */
             $SQL = <<<EOT
 
-                UPDATE  `CBTasks2`
-                SET     `state` = {$state},
-                        `timestamp` = {$timestamp}
-                WHERE   `className` = {$classNameAsSQL} AND
-                        `ID` = {$IDAsSQL} AND
-                        `starterID` = {$starterIDAsSQL}
+                UPDATE  CBTasks2
+                SET     priority = {$newPriority},
+                        state = {$newState},
+                        timestamp = {$newTimestamp}
+                WHERE   className = {$classNameAsSQL} AND
+                        ID = {$IDAsSQL} AND
+                        starterID = {$starterIDAsSQL}
 
 EOT;
 
