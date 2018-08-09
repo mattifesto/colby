@@ -12,6 +12,25 @@
 final class CBModelPruneVersionsTask {
 
     /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $IDs = CBDB::SQLToArray('SELECT LOWER(HEX(ID)) FROM CBModels');
+        $priority = 200;
+
+        CBTasks2::restart('CBModelPruneVersionsTask', $IDs, $priority);
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBTasks2',
+        ];
+    }
+
+    /**
      * @param hex160 $ID
      *
      * @return void
