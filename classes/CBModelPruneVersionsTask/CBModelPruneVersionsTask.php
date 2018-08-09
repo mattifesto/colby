@@ -39,7 +39,9 @@ final class CBModelPruneVersionsTask {
         $IDAsSQL = CBHex160::toSQL($ID);
         $SQL = <<<EOT
 
-            SELECT      version, timestamp
+            SELECT      version,
+                        timestamp,
+                        replaced
             FROM        CBModelVersions
             WHERE       ID = {$IDAsSQL}
             ORDER BY    version DESC
@@ -47,7 +49,33 @@ final class CBModelPruneVersionsTask {
 EOT;
 
         $versions = CBDB::SQLToObjects($SQL);
-        $versionsToPrune = CBModelPruneVersionsTask::calculateVersionsToPrune($versions);
+
+        if (empty($versions)) {
+            return; // model has been deleted
+        }
+
+        CBModelPruneVersionsTask::assignActions($versions);
+
+        $versionsToPrune = [];
+
+        foreach ($versions as $version) {
+            if ($version->action === 'prune') {
+                array_push($versionsToPrune, $version->version);
+            } else if ($version->action === 'update') {
+                $replacedAsSQL = CBConvert::valueAsInt($version->replaced);
+                $versionAsSQL = CBConvert::valueAsInt($version->version);
+                $SQL = <<<EOT
+
+                    UPDATE  CBModelVersions
+                    SET     replaced = {$replacedAsSQL}
+                    WHERE   ID = {$IDAsSQL} AND
+                            version = {$versionAsSQL}
+
+EOT;
+
+                Colby::query($SQL);
+            }
+        }
 
         if (!empty($versionsToPrune)) {
             $versionsToPruneAsSQL = implode(',', $versionsToPrune);
@@ -64,80 +92,95 @@ EOT;
     }
 
     /**
-     * This is a separate function so that it can be tested without having to
-     * purposely insert records into the CBModelVersions table.
+     * This function takes an array of version records and:
+     *
+     *      Calculates the repaclace column value if it doesn't have one yet.
+     *
+     *      Determines the next appropriate action for the row: 'keep',
+     *      'updated', or 'prune'.
      *
      * @param [object] $versions
      *
-     *      The array of versions with the most recent version at index 0 and
-     *      each additional index holding an older version that the previous.
-     *
-     *      The version at index 0 will never be pruned.
-     *
-     *      {
-     *          timestamp: int
-     *          version: int
-     *      }
-     *
-     * @return [int]
+     * @return [object]
      */
-    static function calculateVersionsToPrune(array $versions): array {
-        if (empty($versions)) {
-            return [];
-        }
+    static function assignActions(array $versions): array {
+        $now = time();
 
         /**
-         * Always keep a minimum number of versions regardless of age so that if
-         * the most recently saved version is bad for some reason there will be
-         * versions available to revert to.
+         * After creating an implementation of this function that used time
+         * spans in round minutes, hours, days, weeks, months, and years; it
+         * became apparent that simplifying the time spans into more visibly
+         * obvious numbers would be helpful to developers and maintainers.
+         *
+         * The actual amounts of time are less important than being able to see
+         * them at a glance without calculation.
+         *
+         *         100    1.6666 minutes
+         *       1,000   16.6666 minutes
+         *      10,000    2.7777 hours    166.6666 minutes
+         *     100,000    1.1574 days      27.7777 hours
+         *   1,000,000   11.5740 days
+         *  10,000,000    3.8580 months   115.7407 days
          */
 
-        $minimumVersionCount = 3;
-
-        $now        = time();
-        $tenminutes = 60 * 10;
-        $twohours   = 60 * 60 * 2;
-        $oneday     = 60 * 60 * 24;
-        $sevendays  = $oneday * 7;
-        $ninetydays = $oneday * 90;
-
         $count = count($versions);
-        $versionsToPrune = [];
-
-        $nextVersionCreated = $versions[0]->timestamp;
+        $nextVersion = $versions[0];
+        $nextVersion->action = 'keep';
 
         /**
-         * Loop through the versions starting at index 1, which holds the first
-         * version that could potentially be pruned.
+         * Loop through the version records starting at index 1, which holds the
+         * first record that could potentially be pruned.
          */
 
         for ($index = 1; $index < $count; $index++) {
-            if ($count - count($versionsToPrune) <= $minimumVersionCount) {
-                break;
+            $version = $versions[$index];
+
+            if (empty($version->replaced)) {
+                $version->replaced = $nextVersion->timestamp;
+                $version->action = 'update';
             }
 
-            $thisVersionNumber = $versions[$index]->version;
-            $thisVersionCreated = $versions[$index]->timestamp;
-            $thisVersionDuration = $nextVersionCreated - $thisVersionCreated;
-            $thisVersionAge = $now - $thisVersionCreated;
+            // lifespan = the duration the version was the current version
+            $lifespan = $version->replaced - $version->timestamp;
 
-            if ($thisVersionAge < $oneday) {
-                $minimumDurationRequiredToBeKept = $tenminutes;
-            } else if ($thisVersionAge < $sevendays) {
-                $minimumDurationRequiredToBeKept = $twohours;
-            } else if ($thisVersionAge < $ninetydays) {
-                $minimumDurationRequiredToBeKept = $oneday;
-            } else {
-                $minimumDurationRequiredToBeKept = PHP_INT_MAX;
+            if ($lifespan < 0) {
+                throw new Exception('The lifespan of a version is negative.');
             }
 
-            if ($thisVersionDuration < $minimumDurationRequiredToBeKept) {
-                $versionsToPrune[] = $thisVersionNumber;
-            } else {
-                $nextVersionCreated = $thisVersionCreated;
+            // deathspan = the time since the version was replaced
+            $deathspan = $now - $version->replaced;
+
+            if ($deathspan < 0) {
+                throw new Exception('The deathspan of a version is negative.');
             }
+
+            if ($deathspan < 1000) { /* 0 to 16.6 minutes: 10 seconds */
+                if ($lifespan < 10) {
+                    $version->action = 'prune';
+                }
+            } else if ($deathspan < 100000) { /* 16.6 minutes to 1.1 days: 1.6 minutes */
+                if ($lifespan < 100) {
+                    $version->action = 'prune';
+                }
+            } else if ($deathspan < 1000000) { /* 1.1 days to 11.5 days: 16.6 minutes */
+                if ($lifespan < 1000) {
+                    $version->action = 'prune';
+                }
+            } else if ($deathspan < 10000000) { /* 11.5 days to 3.8 months: 2.7 hours */
+                if ($lifespan < 10000) {
+                    $version->action = 'prune';
+                }
+            } else { /* greater than 3.8 months: prune */
+                $version->action = 'prune';
+            }
+
+            if (empty($version->action)) {
+                $version->action = 'keep';
+            }
+
+            $nextVersion = $version;
         }
 
-        return $versionsToPrune;
+        return $versions;
     }
 }
