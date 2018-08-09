@@ -11,12 +11,14 @@
  */
 final class CBModelPruneVersionsTask {
 
+    const standardTaskPriority = 200;
+
     /**
      * @return void
      */
     static function CBInstall_install(): void {
         $IDs = CBDB::SQLToArray('SELECT LOWER(HEX(ID)) FROM CBModels');
-        $priority = 200;
+        $priority = CBModelPruneVersionsTask::standardTaskPriority;
 
         CBTasks2::restart('CBModelPruneVersionsTask', $IDs, $priority);
     }
@@ -31,11 +33,11 @@ final class CBModelPruneVersionsTask {
     }
 
     /**
-     * @param hex160 $ID
+     * @param ID $ID
      *
-     * @return void
+     * @return ?object
      */
-    static function CBTasks2_run(string $ID): void {
+    static function CBTasks2_run(string $ID): ?stdClass {
         $IDAsSQL = CBHex160::toSQL($ID);
         $SQL = <<<EOT
 
@@ -50,8 +52,12 @@ EOT;
 
         $versions = CBDB::SQLToObjects($SQL);
 
-        if (empty($versions)) {
-            return; // model has been deleted
+        /**
+         * If the model has been deleted or only has one version there's no need
+         * to take any further action or reschedule this task.
+         */
+        if (count($versions) < 2) {
+            return null;
         }
 
         CBModelPruneVersionsTask::assignActions($versions);
@@ -89,6 +95,15 @@ EOT;
 
             Colby::query($SQL);
         }
+
+        /**
+         * Reschedule this task to run again in 5 days to further prune the
+         * model versions.
+         */
+        return (object)[
+            'scheduled' => time() + (60 * 60 * 24 * 5),
+            'priority' => CBModelPruneVersionsTask::standardTaskPriority,
+        ];
     }
 
     /**
