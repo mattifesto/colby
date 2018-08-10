@@ -59,12 +59,12 @@ var CBAdminPageForUpdate = {
         {
             let section = CBUISection.create();
 
-            /* update only */
+            /* backup database only */
             {
                 let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = update;
+                sectionItem.callback = backuponly;
                 let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Update Site";
+                stringsPart.string1 = "Backup Database";
 
                 stringsPart.element.classList.add("action");
 
@@ -72,12 +72,12 @@ var CBAdminPageForUpdate = {
                 section.appendItem(sectionItem);
             }
 
-            /* backup database only */
+            /* update only */
             {
                 let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = backuponly;
+                sectionItem.callback = update;
                 let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Backup Database";
+                stringsPart.string1 = "Update Site";
 
                 stringsPart.element.classList.add("action");
 
