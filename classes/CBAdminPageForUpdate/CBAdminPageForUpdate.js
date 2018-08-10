@@ -16,7 +16,7 @@ var CBAdminPageForUpdate = {
     /**
      * @return undefined
      */
-    init: function() {
+    init: function () {
         var main = document.getElementsByTagName("main")[0];
         var outputElement = document.createElement("div");
         outputElement.className = "output";
@@ -29,9 +29,24 @@ var CBAdminPageForUpdate = {
             /* backup, pull, and update */
             {
                 let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = backupPullAndUpdate;
+                sectionItem.callback = function () {
+                    if (taskBegin()) {
+                        /**
+                         * promiseToPullUpdates() is called twice to ensure new submodules
+                         * are properly initialized
+                         */
+
+                        promiseToBackupDatabase()
+                            .then(promiseToPullUpdates)
+                            .then(promiseToPullUpdates)
+                            .then(promiseToUpdateSite)
+                            .catch(Colby.displayAndReportError)
+                            .then(taskEnd);
+                    }
+                };
+
                 let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Backup Database, Pull, and Update Site";
+                stringsPart.string1 = "Backup, Pull, and Update";
 
                 stringsPart.element.classList.add("action");
 
@@ -39,12 +54,20 @@ var CBAdminPageForUpdate = {
                 section.appendItem(sectionItem);
             }
 
-            /* backup and update */
+            /* pull and update */
             {
                 let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = backupAndUpdate;
+                sectionItem.callback = function () {
+                    if (taskBegin()) {
+                        promiseToPullUpdates()
+                            .then(promiseToUpdateSite)
+                            .catch(Colby.displayAndReportError)
+                            .then(taskEnd);
+                    }
+                };
+
                 let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Backup Database and Update Site";
+                stringsPart.string1 = "Pull and Update";
 
                 stringsPart.element.classList.add("action");
 
@@ -59,12 +82,39 @@ var CBAdminPageForUpdate = {
         {
             let section = CBUISection.create();
 
-            /* backup database only */
+            /* backup only */
             {
                 let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = backuponly;
+                sectionItem.callback = function () {
+                    if (taskBegin()) {
+                        promiseToBackupDatabase()
+                            .catch(Colby.displayAndReportError)
+                            .then(taskEnd);
+                    }
+                };
+
                 let stringsPart = CBUIStringsPart.create();
                 stringsPart.string1 = "Backup Database";
+
+                stringsPart.element.classList.add("action");
+
+                sectionItem.appendPart(stringsPart);
+                section.appendItem(sectionItem);
+            }
+
+            /* pull only */
+            {
+                let sectionItem = CBUISectionItem4.create();
+                sectionItem.callback = function () {
+                    if (taskBegin()) {
+                        promiseToPullUpdates()
+                            .catch(Colby.displayAndReportError)
+                            .then(taskEnd);
+                    }
+                };
+
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Git Pull";
 
                 stringsPart.element.classList.add("action");
 
@@ -75,7 +125,14 @@ var CBAdminPageForUpdate = {
             /* update only */
             {
                 let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = update;
+                sectionItem.callback = function () {
+                    if (taskBegin()) {
+                        promiseToUpdateSite()
+                            .catch(Colby.displayAndReportError)
+                            .then(taskEnd);
+                    }
+                };
+
                 let stringsPart = CBUIStringsPart.create();
                 stringsPart.string1 = "Update Site";
 
@@ -93,68 +150,26 @@ var CBAdminPageForUpdate = {
 
         main.appendChild(outputElement);
 
-        /* closure */
-        function backuponly() {
-            if (CBAdminPageForUpdate.isDisabled) {
+        /**
+         * closure
+         *
+         * @return bool
+         */
+        function taskBegin() {
+            if (CBAdminPageForUpdate.taskIsRunning) {
                 alert("A task is already running.");
-                return;
+                return false;
             }
 
-            disable();
-            outputElement.textContent = undefined;
+            outputElement.textContent = "";
+            CBAdminPageForUpdate.taskIsRunning = true;
 
-            promiseToBackupDatabase()
-                .catch(Colby.displayAndReportError)
-                .then(enable);
+            return true;
         }
 
         /* closure */
-        function backupAndUpdate() {
-            if (CBAdminPageForUpdate.isDisabled) {
-                alert("A task is already running.");
-                return;
-            }
-
-            disable();
-            outputElement.textContent = undefined;
-
-            promiseToBackupDatabase()
-                .then(promiseToUpdateSite)
-                .catch(Colby.displayAndReportError)
-                .then(enable);
-        }
-
-        /* closure */
-        function backupPullAndUpdate() {
-            if (CBAdminPageForUpdate.isDisabled) {
-                alert("A task is already running.");
-                return;
-            }
-
-            disable();
-            outputElement.textContent = undefined;
-
-            /**
-             * promiseToPullUpdates() is called twice to ensure new submodules
-             * are properly initialized
-             */
-
-            promiseToBackupDatabase()
-                .then(promiseToPullUpdates)
-                .then(promiseToPullUpdates)
-                .then(promiseToUpdateSite)
-                .catch(Colby.displayAndReportError)
-                .then(enable);
-        }
-
-        /* closure */
-        function disable() {
-            CBAdminPageForUpdate.isDisabled = true;
-        }
-
-        /* closure */
-        function enable() {
-            CBAdminPageForUpdate.isDisabled = false;
+        function taskEnd() {
+            CBAdminPageForUpdate.taskIsRunning = false;
         }
 
         /* closure */
@@ -212,21 +227,6 @@ var CBAdminPageForUpdate = {
                 expander.timestamp = Date.now() / 1000;
                 Colby.updateTimes();
             }
-        }
-
-        /* closure */
-        function update() {
-            if (CBAdminPageForUpdate.isDisabled) {
-                alert("A task is already running.");
-                return;
-            }
-
-            disable();
-            outputElement.textContent = undefined;
-
-            promiseToUpdateSite()
-                .catch(Colby.displayAndReportError)
-                .then(enable);
         }
     },
 };
