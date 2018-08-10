@@ -99,14 +99,20 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink', 'CBUIExpander'];
+        return [
+            'CBUI',
+            'CBUIActionLink',
+            'CBUIExpander'
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v370.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v443.js', cbsysurl())
+        ];
     }
 
     /**
