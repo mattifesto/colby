@@ -26,6 +26,26 @@ final class CBAdminPageForUpdate {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBUI',
+            'CBUIActionLink',
+            'CBUIExpander'
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v443.js', cbsysurl())
+        ];
+    }
+
+    /**
      * @return bool
      *
      *      Returns true if the Colby tables need to be installed; otherwise
@@ -93,26 +113,6 @@ EOT;
      */
     static function pullUpdatesForAjaxPermissions() {
         return (object)['group' => 'Developers'];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
-            'CBUI',
-            'CBUIActionLink',
-            'CBUIExpander'
-        ];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v443.js', cbsysurl())
-        ];
     }
 
     /**
