@@ -1,11 +1,15 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
+/* exported CBAdminPageForUpdate */
 /* globals
     CBUI,
-    CBUIActionLink,
     CBUIExpander,
-    Colby */
+    CBUISection,
+    CBUISectionItem4,
+    CBUIStringsPart,
+    Colby,
+*/
 
 var CBAdminPageForUpdate = {
 
@@ -13,66 +17,89 @@ var CBAdminPageForUpdate = {
      * @return undefined
      */
     init: function() {
-        var section, item;
         var main = document.getElementsByTagName("main")[0];
         var outputElement = document.createElement("div");
         outputElement.className = "output";
 
         main.appendChild(CBUI.createHalfSpace());
 
-        section = CBUI.createSection();
+        {
+            let section = CBUISection.create();
 
-        /* backup, pull, and update */
+            /* backup, pull, and update */
+            {
+                let sectionItem = CBUISectionItem4.create();
+                sectionItem.callback = backupPullAndUpdate;
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Backup Database, Pull, and Update Site";
 
-        item = CBUI.createSectionItem();
-        var backupPullAndUpdateActionLink = CBUIActionLink.create({
-            callback: backupPullAndUpdate,
-            labelText: "Backup Database, Pull, and Update Site",
-        });
-        item.appendChild(backupPullAndUpdateActionLink.element);
-        section.appendChild(item);
+                stringsPart.element.classList.add("action");
 
-        /* backup and update */
+                sectionItem.appendPart(stringsPart);
+                section.appendItem(sectionItem);
+            }
 
-        item = CBUI.createSectionItem();
-        var backupAndUpdateActionLink = CBUIActionLink.create({
-            callback: backupAndUpdate,
-            labelText: "Backup Database and Update Site",
-        });
-        item.appendChild(backupAndUpdateActionLink.element);
-        section.appendChild(item);
+            /* backup and update */
+            {
+                let sectionItem = CBUISectionItem4.create();
+                sectionItem.callback = backupAndUpdate;
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Backup Database and Update Site";
 
-        /* update only */
+                stringsPart.element.classList.add("action");
 
-        item = CBUI.createSectionItem();
-        var updateActionLink = CBUIActionLink.create({
-            callback: update,
-            labelText: "Update Site",
-        });
-        item.appendChild(updateActionLink.element);
-        section.appendChild(item);
+                sectionItem.appendPart(stringsPart);
+                section.appendItem(sectionItem);
+            }
 
-        main.appendChild(section);
+            main.appendChild(section.element);
+            main.appendChild(CBUI.createHalfSpace());
+        }
 
-        /* backup database only */
+        {
+            let section = CBUISection.create();
 
-        item = CBUI.createSectionItem();
-        var backuponlyActionLink = CBUIActionLink.create({
-            callback: backuponly,
-            labelText: "Backup Database",
-        });
-        item.appendChild(backuponlyActionLink.element);
-        section.appendChild(item);
+            /* update only */
+            {
+                let sectionItem = CBUISectionItem4.create();
+                sectionItem.callback = update;
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Update Site";
 
-        main.appendChild(section);
+                stringsPart.element.classList.add("action");
+
+                sectionItem.appendPart(stringsPart);
+                section.appendItem(sectionItem);
+            }
+
+            /* backup database only */
+            {
+                let sectionItem = CBUISectionItem4.create();
+                sectionItem.callback = backuponly;
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Backup Database";
+
+                stringsPart.element.classList.add("action");
+
+                sectionItem.appendPart(stringsPart);
+                section.appendItem(sectionItem);
+            }
+
+            main.appendChild(section.element);
+            main.appendChild(CBUI.createHalfSpace());
+        }
 
         /* output */
 
-        main.appendChild(CBUI.createHalfSpace());
         main.appendChild(outputElement);
 
         /* closure */
         function backuponly() {
+            if (CBAdminPageForUpdate.isDisabled) {
+                alert("A task is already running.");
+                return;
+            }
+
             disable();
             outputElement.textContent = undefined;
 
@@ -83,6 +110,11 @@ var CBAdminPageForUpdate = {
 
         /* closure */
         function backupAndUpdate() {
+            if (CBAdminPageForUpdate.isDisabled) {
+                alert("A task is already running.");
+                return;
+            }
+
             disable();
             outputElement.textContent = undefined;
 
@@ -94,6 +126,11 @@ var CBAdminPageForUpdate = {
 
         /* closure */
         function backupPullAndUpdate() {
+            if (CBAdminPageForUpdate.isDisabled) {
+                alert("A task is already running.");
+                return;
+            }
+
             disable();
             outputElement.textContent = undefined;
 
@@ -112,18 +149,12 @@ var CBAdminPageForUpdate = {
 
         /* closure */
         function disable() {
-            backupAndUpdateActionLink.disable();
-            backupPullAndUpdateActionLink.disable();
-            updateActionLink.disable();
-            backuponlyActionLink.disable();
+            CBAdminPageForUpdate.isDisabled = true;
         }
 
         /* closure */
         function enable() {
-            backupAndUpdateActionLink.enable();
-            backupPullAndUpdateActionLink.enable();
-            updateActionLink.enable();
-            backuponlyActionLink.enable();
+            CBAdminPageForUpdate.isDisabled = false;
         }
 
         /* closure */
@@ -185,6 +216,11 @@ var CBAdminPageForUpdate = {
 
         /* closure */
         function update() {
+            if (CBAdminPageForUpdate.isDisabled) {
+                alert("A task is already running.");
+                return;
+            }
+
             disable();
             outputElement.textContent = undefined;
 

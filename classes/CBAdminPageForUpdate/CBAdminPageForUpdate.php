@@ -28,18 +28,20 @@ final class CBAdminPageForUpdate {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBUI',
-            'CBUIActionLink',
-            'CBUIExpander'
+            'CBUIExpander',
+            'CBUISection',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
         ];
     }
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
             Colby::flexpath(__CLASS__, 'v443.js', cbsysurl())
         ];
