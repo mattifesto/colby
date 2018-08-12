@@ -46,21 +46,39 @@ final class CBTasks2 {
      * @return object
      *
      *      {
+     *          tasksRunCount: int
      *          taskWasRun: bool
      *      }
      */
     static function CBAjax_runNextTask($args) {
-        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
-        $taskWasRun = CBTasks2::runNextTask((object)[
-            'processID' => $processID,
-        ]);
+        $processID = CBModel::valueAsID($args, 'processID');
+        $tasksRunCount = 0;
 
-        if (!$taskWasRun) {
+        if (ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
+            $expirationTimestamp = time() + 5;
+        } else {
+            $expirationTimestamp = time() + 1;
+        }
+
+        do {
+            $wasRun = CBTasks2::runNextTask((object)[
+                'processID' => $processID,
+            ]);
+
+            if ($wasRun) {
+                $tasksRunCount += 1;
+            } else {
+                break;
+            }
+        } while (time() < $expirationTimestamp);
+
+        if ($tasksRunCount === 0) {
             CBTasks2::wakeScheduledTasks();
         }
 
         return (object)[
-            'taskWasRun' => $taskWasRun,
+            'tasksRunCount' => $tasksRunCount,
+            'taskWasRun' => $tasksRunCount > 0,
         ];
     }
 
