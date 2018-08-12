@@ -1125,8 +1125,8 @@ Colby.afterDOMContentLoaded(function () {
 
     /* closure */
     function onFulfilled(value) {
-        if (value.taskWasRun) {
-            Colby.CBTasks2_countOfTasksRun += 1;
+        if (value.tasksRunCount > 0) {
+            Colby.CBTasks2_countOfTasksRun += value.tasksRunCount;
 
             if (Colby.CBTasks2_runFast) {
                 runNextTask();
