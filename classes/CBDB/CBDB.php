@@ -165,29 +165,29 @@ final class CBDB {
      *
      * @param callable $callback
      *
-     * @return null
+     * @return void
      */
-    static function transaction(callable $callback) {
+    static function transaction(callable $callback): void {
         if (CBDB::$transactionIsActive) {
             throw new RuntimeException('Nested transactions are not allowed.');
         }
 
         CBDB::$transactionIsActive = true;
-
+        CBLog::bufferStart();
+        
         try {
             Colby::query('START TRANSACTION');
 
             call_user_func($callback);
 
             Colby::query('COMMIT');
-
-            CBDB::$transactionIsActive = false;
         } catch (Throwable $throwable) {
             Colby::query('ROLLBACK');
 
-            CBDB::$transactionIsActive = false;
-
             throw $throwable;
+        } finally {
+            CBDB::$transactionIsActive = false;
+            CBLog::bufferEndFlush();
         }
     }
 
