@@ -498,6 +498,20 @@ EOT;
     /**
      * This is a convenience function for:
      *
+     *      CBConvert::valueAsNumber(CBModel::value(...))
+     *
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return ?float
+     */
+    static function valueAsNumber($model, string $keyPath): ?float {
+        return CBConvert::valueAsNumber(CBModel::value($model, $keyPath));
+    }
+
+    /**
+     * This is a convenience function for:
+     *
      *      CBConvert::valueAsObject(CBModel::value(...));
      *
      * @param mixed $model
