@@ -566,10 +566,12 @@ EOT;
             $specs = [$specs];
         }
 
-        if (empty($specs[0]->className)) {
+        $firstSpec = reset($specs);
+
+        if (empty($firstSpec->className)) {
             throw new Exception('The first spec does not have its `className` propery set.');
         } else {
-            $sharedClassName = $specs[0]->className;
+            $sharedClassName = $firstSpec->className;
         }
 
         $modified = time();
