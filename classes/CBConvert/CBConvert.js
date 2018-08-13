@@ -221,6 +221,17 @@ var CBConvert = {
         }
 
         if (typeof value === "string") {
+
+            /**
+             * Start by verifing the presence of at least a single number
+             * character in the string because the next regular expression does
+             * not require a number character to be present on either side of
+             * the decimal point.
+             *
+             * The combination of these two regular expressions guarantees that
+             * there is at least one number character either before or after the
+             * decimal point.
+             */
             if (value.match(/[0-9]/) !== null) {
                 value = value.trim();
 

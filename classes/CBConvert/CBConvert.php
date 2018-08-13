@@ -454,6 +454,72 @@ final class CBConvert {
     }
 
     /**
+     * Determines whether the value parameter can reasonably be interpreted to
+     * be a number. It always returns a float so that it can closely match the
+     * JavaScript version of the function.
+     *
+     * If $value is a float, it will be returned.
+     *
+     * If $value is a integer, the float version of that integer will be
+     * returned.
+     *
+     * If the value is a string and its trimmed value is a series of digits with
+     * an optional single decimal point, it will be converted to a float and
+     * returned.
+     *
+     * This function differs from a cast in that boolean and other types will
+     * not ever be considered numbers.
+     *
+     * @NOTE
+     *
+     *      This function does not currently convert strings in exponent
+     *      notation such as "9.223372036854776e+18".
+     *
+     *      This function has not been tested with strings containing huge
+     *      numbers.
+     *
+     * @param mixed $value
+     *
+     * @return ?float
+     */
+    static function valueAsNumber($value): ?float {
+        if (is_float($value)) {
+            if (is_nan($value) || is_infinite($value)) {
+                return null;
+            }
+
+            return $value;
+        }
+
+        if (is_int($value)) {
+            return floatval($value);
+        }
+
+        if (is_string($value)) {
+
+            /**
+             * Start by verifing the presence of at least a single number
+             * character in the string because the next regular expression does
+             * not require a number character to be present on either side of
+             * the decimal point.
+             *
+             * The combination of these two regular expressions guarantees that
+             * there is at least one number character either before or after the
+             * decimal point.
+             */
+            if (preg_match('/[0-9]/', $value)) {
+                $value = trim($value);
+
+                if (preg_match('/^-?[0-9]*\.?[0-9]*$/', $value)) {
+                    return floatval($value);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param mixed $value
      *
      * @return object|null
