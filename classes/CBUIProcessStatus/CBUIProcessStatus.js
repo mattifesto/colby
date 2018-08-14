@@ -13,8 +13,19 @@ var CBUIProcessStatus = {
      * @return object
      *
      *      {
-     *          element: Element
-     *          processID: hex160 (getter, setter)
+     *          append(element)
+     *
+     *              This function will append an element to the status for use
+     *              in cases where a non-log entry related status is needed.
+     *              It's best to use a CBUIExpander element.
+     *
+     *          element: Element (readonly)
+     *          processID: hex160 (get, set)
+     *
+     *              Setting the process ID will cause the CBUIProcessStatus to
+     *              continually fetch and display log entries that occur for the
+     *              process.
+     *
      *      }
      */
     create: function (args) {
@@ -30,6 +41,10 @@ var CBUIProcessStatus = {
         element.appendChild(entriesElement);
 
         return {
+            append: function (element) {
+                entriesElement.appendChild(element);
+                element.scrollIntoView();
+            },
             get element() {
                 return element;
             },
@@ -80,6 +95,7 @@ var CBUIProcessStatus = {
                     entries.forEach(function (entry) {
                         let expander = CBUIExpander.create(entry);
                         entriesElement.appendChild(expander.element);
+                        expander.element.scrollIntoView();
                     });
 
                     Colby.updateTimes();
