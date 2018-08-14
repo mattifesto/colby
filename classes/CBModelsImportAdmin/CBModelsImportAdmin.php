@@ -34,8 +34,13 @@ final class CBModelsImportAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIBooleanSwitchPart', 'CBUIProcessStatus',
-                'CBUISectionItem4', 'CBUIStringsPart'];
+        return [
+            'CBUI',
+            'CBUIBooleanSwitchPart',
+            'CBUIProcessStatus',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
+        ];
     }
 
     /**
