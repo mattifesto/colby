@@ -111,17 +111,23 @@ var CBLogAdminPage = {
 
                     ${entry.message}
 
-                    (Log Entry Information (b))
-
-                    --- ul
-                    modelID: (${entry.modelID} (a /admin/?c=CBModelInspector&ID=${entry.modelID}))
-
-                    process ID: ${entry.processID}
-
-                    sourceClassName: ${entry.sourceClassName}
-
-                    sourceID: ${entry.sourceID}
+                    --- h2
+                    Log Entry Information
                     ---
+
+                    (modelID(b))((br))
+                    (${entry.modelID}(code))((br))
+                    (Inspect >(a /admin/?c=CBModelInspector&ID=${entry.modelID}))
+
+                    (processID(b))((br))
+                    (${entry.processID}(code))
+
+                    (sourceClassName(b))((br))
+                    ${entry.sourceClassName}
+
+                    (sourceID(b))((br))
+                    (${entry.sourceID} (code))
+
                 `;
 
                 entriesElement.appendChild(CBUIExpander.create({
