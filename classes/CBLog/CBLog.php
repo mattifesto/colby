@@ -114,6 +114,15 @@ final class CBLog {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBLogTable'
+        ];
+    }
+
+    /**
      * @param object $args
      *
      *      {
