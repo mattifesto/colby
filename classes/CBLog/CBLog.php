@@ -33,7 +33,7 @@ final class CBLog {
      */
     static function addMessage($category, $severity, $message) {
         CBLog::log((object)[
-            'className' => $category,
+            'sourceClassName' => $category,
             'message' => $message,
             'severity' => $severity,
         ]);
@@ -160,11 +160,13 @@ final class CBLog {
      * @return [object]
      *
      *      {
-     *          className: string
-     *          ID: hex160?
      *          message: string
+     *          modelID: ?ID
+     *          processID: ?ID
      *          serial: int
      *          severity: int
+     *          sourceClassName: string
+     *          sourceID: ?ID
      *          timestamp: int
      *      }
      */
@@ -183,11 +185,11 @@ final class CBLog {
             $whereAsSQL[] = "`timestamp` > {$afterTimestamp}";
         }
 
-        $className = CBModel::valueToString($args, 'className');
+        $sourceClassName = CBModel::valueToString($args, 'className');
 
-        if (!empty($className)) {
-            $classNameAsSQL = CBDB::stringToSQL($className);
-            $whereAsSQL[] = "`className` = {$classNameAsSQL}";
+        if (!empty($sourceClassName)) {
+            $sourceClassNameAsSQL = CBDB::stringToSQL($sourceClassName);
+            $whereAsSQL[] = "`sourceClassName` = {$sourceClassNameAsSQL}";
         }
 
         $lowestSeverity = CBModel::value($args, 'lowestSeverity', null, 'CBConvert::valueAsInt');
@@ -214,12 +216,13 @@ final class CBLog {
 
         $SQL = <<<EOT
 
-            SELECT  className,
-                    LOWER(HEX(ID)) AS ID,
-                    message,
+            SELECT  message,
+                    LOWER(HEX(modelID)) AS modelID,
                     LOWER(HEX(processID)) as processID,
                     serial,
                     severity,
+                    sourceClassName,
+                    LOWER(HEX(sourceID)) as sourceID,
                     timestamp
             FROM    CBLog
             {$whereAsSQL}
@@ -290,7 +293,12 @@ EOT;
             $sourceClassName = CBModel::valueToString($args, 'className'); /* deprecated */
         }
 
-        $sourcClassNameAsSQL = CBDB::stringToSQL($sourceClassName);
+        $sourceClassNameAsSQL = CBDB::stringToSQL($sourceClassName);
+
+        /* sourceID */
+
+        $sourceID = CBModel::valueAsID($args, 'sourceID');
+        $sourceIDAsSQL = $sourceID ? CBHex160::toSQL($sourceID) : 'NULL';
 
         /* severity */
 
@@ -304,13 +312,13 @@ EOT;
 
         /* ID */
 
-        $ID = CBModel::valueAsID($args, 'ID');
+        $modelID = CBModel::valueAsID($args, 'ID');
 
-        if (empty($ID)) {
-            $ID = CBID::peek();
+        if (empty($modelID)) {
+            $modelID = CBID::peek();
         }
 
-        $IDAsSQL = ($ID === null) ? 'NULL' : CBHex160::toSQL($ID);
+        $modelIDAsSQL = $modelID ? CBHex160::toSQL($modelID) : 'NULL';
 
         /* message */
 
@@ -328,19 +336,21 @@ EOT;
 
         $SQL = <<<EOT
 
-            INSERT INTO `CBLog` (
-                `className`,
-                `ID`,
-                `processID`,
-                `message`,
-                `severity`,
-                `timestamp`
+            INSERT INTO CBLog (
+                message,
+                modelID,
+                processID,
+                severity,
+                sourceClassName,
+                sourceID,
+                timestamp
             ) VALUES (
-                {$sourcClassNameAsSQL},
-                {$IDAsSQL},
-                {$processIDAsSQL},
                 {$messageAsSQL},
+                {$modelIDAsSQL},
+                {$processIDAsSQL},
                 {$severityAsSQL},
+                {$sourceClassNameAsSQL},
+                {$sourceIDAsSQL},
                 {$timestampAsSQL}
             )
 
@@ -368,7 +378,7 @@ EOT;
         $count = Colby::mysqli()->affected_rows;
 
         CBLog::log((object)[
-            'className' => __CLASS__,
+            'soureClassName' => __CLASS__,
             'message' => "CBLog::removeExpiredEntries() removed {$count} entries from the CBLog table.",
             'severity' => 7,
         ]);
