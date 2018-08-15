@@ -27,7 +27,12 @@ final class CBLogAdminPage {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIExpander', 'CBUINavigationView', 'CBUISelector'];
+        return [
+            'CBUI',
+            'CBUIExpander',
+            'CBUINavigationView',
+            'CBUISelector',
+        ];
     }
 
     /**
@@ -36,7 +41,7 @@ final class CBLogAdminPage {
     static function CBHTMLOutput_JavaScriptVariables() {
         $SQL = <<<EOT
 
-            SELECT DISTINCT className
+            SELECT DISTINCT sourceClassName
             FROM CBLog
 
 EOT;
@@ -54,6 +59,8 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v405.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v446.js', cbsysurl()),
+        ];
     }
 }

@@ -8,7 +8,8 @@
     CBLogAdminPage_classNames,
     CBUINavigationView,
     CBUISelector,
-    Colby */
+    Colby,
+*/
 
 var CBLogAdminPage = {
 
@@ -113,11 +114,13 @@ var CBLogAdminPage = {
                     (Log Entry Information (b))
 
                     --- ul
-                    className: ${entry.className}
-
-                    associated ID: (${entry.ID} (a /admin/?c=CBModelInspector&ID=${entry.ID}))
+                    modelID: (${entry.modelID} (a /admin/?c=CBModelInspector&ID=${entry.modelID}))
 
                     process ID: ${entry.processID}
+
+                    sourceClassName: ${entry.sourceClassName}
+
+                    sourceID: ${entry.sourceID}
                     ---
                 `;
 
