@@ -3,48 +3,43 @@
 final class CBLogTable {
 
     /**
-     * Table columns:
+     * Columns:
      *
-     *      `className`
+     *      message
      *
-     *      The name of the class that created the log entry. This may be the
-     *      class name of a task that is currently executing.
-     *
-     *      `ID`
-     *
-     *      One of:
-     *          - The ID of a specific model associated with the log entry.
-     *          - The ID of the task that created the log entry.
-     *          - NULL if neither of the above is applicable.
-     *
-     *      `processID`
-     *
-     *      This is automatically set if a process ID has been set when the log
-     *      entry is created.
-     *
-     *      `message`
-     *
-     *      The message of the log entry. The very first line should provide a
-     *      short understandable summary of the entire log message.
+     *          The message of the log entry. The very first line should provide
+     *          a short understandable summary of the entire log message.
      *
      *          Bad first lines:
+     *
      *          <empty>
      *          Done
      *          1/15
      *
      *          Good first lines:
+     *
      *          The page "My Blog Post" was checked for deprecated views.
      *          The data directory "data/a5/23" was checked for files.
      *          The log table was cleared of 35 very old entries.
      *
-     *      `serial`
+     *      modelID
      *
-     *      An automatically incremented number to establish an exact order of
-     *      log entries.
+     *          The modelID is provided if the log entry pertains to a specific
+     *          model.
      *
-     *      `severity`
+     *      processID
      *
-     *      A number 0-7 indicating the severity of the log message.
+     *          This is automatically set if a process ID has been set when the
+     *          log entry is created.
+     *
+     *      serial
+     *
+     *          An automatically incremented number to establish an exact order
+     *          of log entries.
+     *
+     *      severity
+     *
+     *          A number 0-7 indicating the severity of the log message.
      *
      *          RFC3164 Severity Codes
      *          https://tools.ietf.org/html/rfc3164
@@ -58,34 +53,46 @@ final class CBLogTable {
      *          6  Informational: informational messages
      *          7  Debug: debug-level messages
      *
-     *      `timestamp`
+     *      sourceClassName
      *
-     *      The timestamp the log entry was created.
+     *          This class name is specified by developer to provide name of the
+     *          class that created the log entry.
      *
-     * @NOTE Future upgrade thoughts
+     *      sourceID
      *
-     *      className -> sourceClassName
+     *          This ID is specified by a developer to provide an easy way to
+     *          find the exact location in the source code that create a log
+     *          entry. Searching the source code for this ID with a tool like
+     *          "ack" will find that location.
      *
-     *          The className property should be renamed to sourceClassName
-     *          because a className property on an object makes it look like
-     *          it's a model which is not the case here.
+     *          Only a single source code call to CBLog::log() should use a
+     *          unique source ID. If that source code is called multiple times,
+     *          then there will be multiple log entries that share the same
+     *          source ID.
      *
-     *      add sourceID
+     *      timestamp
      *
-     *          This property is used to identify the specific source code that
-     *          created the log entry. For instance, if the CBTextView class
-     *          creates a log entry each time it upgrades a CBTextView model to
-     *          a CBMessageView, it would use a sourceID each time it created
-     *          the log entry. This property allows to test to determine if a
-     *          log entry that is expected to be created actually is created and
-     *          it also allows log browsers to see all entries created that are
-     *          from this exact source.
+     *          The timestamp the log entry was created.
      *
-     *      ID -> modelID
+     * Indexes:
      *
-     *          The fact that this property is named ID makes it appear that
-     *          this property is the ID of the log entry. It is not, it is the
-     *          ID of a specific model associated with a log entry.
+     *      UNIQUE KEY serial (serial)
+     *
+     *          This is automatically created by using the SERIAL data type for
+     *          the "serial" column. It is the most important index because we
+     *          usually list log entries in order of creation ascending or
+     *          descending.
+     *
+     *      KEY processID_serial (processID, serial)
+     *
+     *          This index is used to track log entries made while a process is
+     *          running or after a process has run, such as the model import
+     *          process.
+     *
+     *      KEY sourceClassName_serial (sourceClassName, serial)
+     *
+     *          This index is used when a source class name is selected to
+     *          filter the log entires on the log admin page.
      *
      * @return void
      */
@@ -93,17 +100,16 @@ final class CBLogTable {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `CBLog` (
-                `className` VARCHAR(80) NOT NULL,
-                `ID`        BINARY(20),
-                `processID` BINARY(20),
-                `message`   TEXT NOT NULL,
-                `serial`    SERIAL,
-                `severity`  TINYINT NOT NULL,
-                `timestamp` BIGINT NOT NULL,
-                KEY `className_serial` (`className`, `serial`),
-                KEY `className_ID_serial` (`className`, `ID`, `serial`),
-                KEY `processID_serial` (`processID`, `serial`),
-                KEY `severity_serial` (`severity`, `serial`)
+                message             TEXT NOT NULL,
+                modelID             BINARY(20),
+                processID           BINARY(20),
+                serial              SERIAL,
+                severity            TINYINT NOT NULL,
+                sourceClassName     VARCHAR(80) NOT NULL,
+                sourceID            BINARY(20),
+                timestamp           BIGINT NOT NULL,
+                KEY processID_serial (processID, serial),
+                KEY sourceClassName_serial (sourceClassName, serial)
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
