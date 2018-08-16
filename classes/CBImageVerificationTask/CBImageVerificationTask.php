@@ -27,45 +27,90 @@ final class CBImageVerificationTask {
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBImages', 'CBLog', 'CBModels', 'CBPages', 'CBTasks2'];
+        return [
+            'CBImages',
+            'CBLog',
+            'CBModels',
+            'CBPages',
+            'CBTasks2',
+        ];
     }
 
     /**
-     * @param hex160 $ID
+     * @param ID $ID
      *
-     * @return null
+     * @return void
      */
-    static function CBTasks2_run($ID) {
+    static function CBTasks2_run(string $ID): void {
         $severity = 7;
         $messages = [
             "Image {$ID} verified",
             "(inspect > (a /admin/?c=CBModelInspector&ID={$ID}))",
         ];
-        $IDAsSQL = CBHex160::toSQL($ID);
-        $rowExtension = CBDB::SQLToValue("SELECT `extension` FROM `CBImages` WHERE `ID` = {$IDAsSQL}");
 
-        if ($rowExtension === false) {
+        $IDAsSQL = CBHex160::toSQL($ID);
+        $SQL = <<<EOT
+
+            SELECT  extension
+            FROM    CBImages
+            WHERE   ID = {$IDAsSQL}
+
+EOT;
+
+        $CBImagesTableFileExtension = CBDB::SQLToValue($SQL);
+
+        if ($CBImagesTableFileExtension === false) {
             $severity = min(3, $severity);
             $messages[] = 'The `CBImages` row for this image no longer exists.';
         }
 
         $originalFilenames = glob(CBDataStore::flexpath($ID, 'original.*', cbsitedir()));
+        $originalFilenamesCount = count($originalFilenames);
 
-        if (($count = count($originalFilenames)) === 1) {
+        if ($originalFilenamesCount === 1) {
             $pathinfo = pathinfo($originalFilenames[0]);
+            $fileExtension = $pathinfo['extension'];
 
-            if ($rowExtension && ($pathinfo['extension'] !== $rowExtension)) {
-                $severity = min(3, $severity);
-                $messages[] = "The extension from the CBImages table ({$rowExtension}) does not match the extension of the original filename ({$pathinfo['extension']}).";
+            if ($CBImagesTableFileExtension && ($fileExtension !== $CBImagesTableFileExtension)) {
+                CBImageVerificationTask::reportOriginalImageFileExtensionMismatch(
+                    $ID,
+                    $fileExtension,
+                    $CBImagesTableFileExtension
+                );
+
+                /**
+                 * If the two extensions don't match an administrator should
+                 * investigate and either fix the issue or manually remove the
+                 * image if necessary.
+                 */
+
+                return;
             }
-        } else {
-            $severity = min(3, $severity);
-            $messages[] = "The number of original image files is {$count}. There should be one original file.";
+        } else if ($originalFilenamesCount === 0) {
+            CBImageVerificationTask::reportNoOriginalImageFile($ID);
+
+            /**
+             * The presence of no original image file is an odd situation. An
+             * administrator should inspect the ID and be able to manually
+             * remove it if necessary.
+             */
+
+            return;
+        } else if ($originalFilenamesCount > 1) {
+            CBImageVerificationTask::reportMultipleOriginalImageFiles($ID);
+
+            /**
+             * The presence of multiple original image files is an odd
+             * situation. An administrator should inspect the ID and be able to
+             * manually remove it if necessary.
+             */
+
+            return;
         }
 
         $spec = CBModels::fetchSpecByID($ID);
 
-        if ($spec === false) {
+        if (empty($spec)) {
             $severity = min(6, $severity);
             $imagesize = CBImage::getimagesize($originalFilenames[0]);
             $spec = (object)[
@@ -73,7 +118,7 @@ final class CBImageVerificationTask {
                 'className' => 'CBImage',
                 'filename' => 'original',
                 'height' => $imagesize[1],
-                'extension' => $rowExtension,
+                'extension' => $CBImagesTableFileExtension,
                 'width' => $imagesize[0],
             ];
 
@@ -105,10 +150,92 @@ EOT;
         }
 
         CBLog::log((object)[
-            'className' => __CLASS__,
-            'ID' => $ID,
             'message' => implode("\n\n", $messages),
+            'modelID' => $ID,
             'severity' => $severity,
+            'sourceClassName' => __CLASS__,
+            'sourceID' => 'f9c392f85b3593c9df5a3fc065ea12cce789c4db',
+        ]);
+    }
+
+    /**
+     * @param ID $ID
+     *
+     * @return void
+     */
+    private static function reportMultipleOriginalImageFiles(string $ID): void {
+        $message = <<<EOT
+
+            Multiple original image files were found for the CBImage with the ID
+            ($ID(code)).
+
+EOT;
+
+        CBLog::log((object)[
+            'message' => $message,
+            'modelID' => $ID,
+            'severity' => 3,
+            'sourceClassName' => __CLASS__,
+            'sourceID' => '8c15c3984a4779b8740321033e5844142edac22e',
+        ]);
+    }
+
+    /**
+     * @param ID $ID
+     *
+     * @return void
+     */
+    private static function reportNoOriginalImageFile(string $ID): void {
+        $message = <<<EOT
+
+            There was no original image file found for the CBImage with the ID
+            ($ID(code)).
+
+EOT;
+
+        CBLog::log((object)[
+            'message' => $message,
+            'modelID' => $ID,
+            'severity' => 3,
+            'sourceClassName' => __CLASS__,
+            'sourceID' => '020a81f55950e037072dc1a168c6ca4db890a347',
+        ]);
+    }
+
+    /**
+     * @param ID $ID
+     * @param string $extension
+     *
+     *      The extension of the original image file.
+     *
+     * @param string $CBImagesTableFileExtension
+     *
+     *      The extension stored in the CBImages table.
+     *
+     * @return void
+     */
+    private static function reportOriginalImageFileExtensionMismatch(
+        string $ID,
+        string $fileExtension,
+        string $CBImagesTableFileExtension
+    ): void {
+        $fileExtensionAsMessage = CBMessageMarkup::stringToMessage($fileExtension);
+        $CBImagesTableFileExtensionAsMessage = CBMessageMarkup::stringToMessage($CBImagesTableFileExtension);
+        $message = <<<EOT
+
+            The extension of the original image file,
+            "{$fileExtensionAsMessage}", does no match the extension stored in
+            the CBImages table, "{$CBImagesTableFileExtensionAsMessage}", for
+            the CBImage with the ID ($ID (code)).
+
+EOT;
+
+        CBLog::log((object)[
+            'message' => $message,
+            'modelID' => $ID,
+            'severity' => 3,
+            'sourceClassName' => __CLASS__,
+            'sourceID' => '87ab5b91d861c43c3e06ac72b9c315ad049928f0',
         ]);
     }
 
