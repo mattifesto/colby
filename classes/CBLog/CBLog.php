@@ -367,15 +367,18 @@ EOT;
     }
 
     /**
-     * @return int
+     * 10 days of log entries are kept in the CBLog table. If a situation arises
+     * where that is not enough, document it here and consider adjustment
+     * options.
      *
-     *      Returns the number of entries removed.
+     * @return void
      */
-    static function removeExpiredEntries() {
-        $timestamp = time() - (60 * 60 * 24 * 30 /* 30 days */);
+    static function removeExpiredEntries(): void {
+        $tenDays = 60 * 60 * 24 * 10;
+        $timestamp = time() - $tenDays;
         $SQL = <<<EOT
 
-            DELETE FROM `CBLog`
+            DELETE FROM CBLog
             WHERE timestamp < {$timestamp}
 
 EOT;
@@ -383,14 +386,19 @@ EOT;
         Colby::query($SQL);
 
         $count = Colby::mysqli()->affected_rows;
+        $message = <<<EOT
+
+            CBLog::removeExpiredEntries() removed {$count} expired entries from
+            the CBLog table.
+
+EOT;
 
         CBLog::log((object)[
-            'soureClassName' => __CLASS__,
-            'message' => "CBLog::removeExpiredEntries() removed {$count} entries from the CBLog table.",
+            'message' => $message,
             'severity' => 7,
+            'sourceClassName' => __CLASS__,
+            'sourceID' => '0206ded5aab567162f0e2651b492091181d5a377',
         ]);
-
-        return $count;
     }
 
     /**
