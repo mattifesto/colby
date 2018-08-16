@@ -61,7 +61,7 @@ final class CBLogTable {
      *      sourceID
      *
      *          This ID is specified by a developer to provide an easy way to
-     *          find the exact location in the source code that create a log
+     *          find the exact location in the source code that created a log
      *          entry. Searching the source code for this ID with a tool like
      *          "ack" will find that location.
      *
