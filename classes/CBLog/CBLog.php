@@ -243,19 +243,16 @@ EOT;
      * @param object $args
      *
      *      {
-     *          className: string
-     *
-     *              deprecated: use sourceClassName
-     *
-     *          ID: hex160?
-     *
-     *              The ID of a specific model or the ID of a task or null.
-     *
      *          message: string
      *
      *              The message must have a length greater than 0.
      *
-     *          severity: int?
+     *          modelID: ?ID
+     *
+     *              If the log entry is related to a specific model, pass that
+     *              model's ID in this argument.
+     *
+     *          severity: ?int
      *
      *              The severity of the log entry. Entries with a severity less
      *              than 4 will also be sent to error_log().
@@ -266,6 +263,12 @@ EOT;
      *
      *              The name of the class that created the log entry. This
      *              is usually the class calling CBlog::log().
+     *
+     *          sourceID: ?ID
+     *
+     *              This ID is specified by a developer to provide an easy way
+     *              to find the exact location in the source code that created a
+     *              log entry.
      *      }
      *
      * @return void
@@ -310,12 +313,16 @@ EOT;
 
         $severityAsSQL = (int)$severity;
 
-        /* ID */
+        /* modelID */
 
-        $modelID = CBModel::valueAsID($args, 'ID');
+        $modelID = CBModel::valueAsID($args, 'modelID');
 
         if (empty($modelID)) {
-            $modelID = CBID::peek();
+            $modelID = CBModel::valueAsID($args, 'ID'); /* deprecated */
+
+            if (empty($modelID)) {
+                $modelID = CBID::peek();
+            }
         }
 
         $modelIDAsSQL = $modelID ? CBHex160::toSQL($modelID) : 'NULL';
