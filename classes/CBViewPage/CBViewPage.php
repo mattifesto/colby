@@ -344,4 +344,16 @@ EOT;
             'title' => CBModel::valueToString($model, 'title'),
         ]);
     }
+
+    /**
+     * @param string $moniker
+     *
+     *      This function will not trim or make any other modifications to the
+     *      moniker.
+     *
+     * @return ID
+     */
+    static function monikerToID(string $moniker): string {
+        return sha1("0e64b8a8110db365de4e49d6d890a7d9a2dd60fa {$moniker}");
+    }
 }
