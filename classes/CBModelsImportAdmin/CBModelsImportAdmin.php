@@ -184,25 +184,7 @@ final class CBModelsImportAdmin {
                     $className = CBModel::valueToString($rowSpec, 'className');
 
                     if (empty($className)) {
-                        $rowSpecJSONAsMarkup = CBMessageMarkup::stringToMarkup(
-                            CBConvert::valueToPrettyJSON($rowSpec)
-                        );
-
-                        $message = <<<EOT
-
-                            An imported spec does not have a class name:
-
-                            --- pre\n{$rowSpecJSONAsMarkup}
-                            ---
-
-EOT;
-
-                        CBLog::log((object)[
-                            'className' => __CLASS__,
-                            'message' => $message,
-                            'severity' => 3,
-                        ]);
-
+                        CBModelsImportAdmin::reportNoClassName($rowSpec);
                         continue;
                     }
 
@@ -285,6 +267,41 @@ EOT;
      */
     static function CBAjax_uploadDataFile_group(): string {
         return 'Administrators';
+    }
+
+    /**
+     * @param object $spec
+     *
+     * @return void
+     */
+    static function reportNoClassName(stdClass $spec): void {
+        $specAsJSONAsMarkup = CBMessageMarkup::stringToMessage(
+            CBConvert::valueToPrettyJSON($spec)
+        );
+
+        $message = <<<EOT
+
+            An imported spec does not have a class name:
+
+            --- dl
+                --- dt
+                Imported spec
+                ---
+
+                --- dd
+                    --- pre\n{$specAsJSONAsMarkup}
+                    ---
+                ---
+            ---
+
+EOT;
+
+        CBLog::log((object)[
+            'message' => $message,
+            'severity' => 3,
+            'sourceClassName' => __CLASS__,
+            'sourceID' => 'de8eed53486f7f53a2185b93cc69c9e499e41b90',
+        ]);
     }
 
     /**
