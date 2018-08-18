@@ -210,30 +210,7 @@ EOT;
                         $ID = CBModel::toID($rowSpec);
 
                         if ($ID === null) {
-                            $rowSpecJSONAsMarkup = CBMessageMarkup::stringToMarkup(
-                                CBConvert::valueToPrettyJSON($rowSpec)
-                            );
-                            $message = "An imported {$className} spec was unable to generate its own ID";
-
-                            if (!is_callable("{$className}::CBModel_toID")) {
-                                $message .= " because the CBModel_toID() interface is not implemented by the {$className} class";
-                            }
-
-                            $message = <<<EOT
-
-                                {$message}
-
-                                --- pre\n{$rowSpecJSONAsMarkup}
-                                ---
-
-EOT;
-
-                            CBLog::log((object)[
-                                'className' => __CLASS__,
-                                'message' => $message,
-                                'severity' => 3,
-                            ]);
-
+                            CBModelsImportAdmin::reportNoID($rowSpec);
                             continue;
                         } else {
                             $rowSpec->ID = $ID;
@@ -308,5 +285,60 @@ EOT;
      */
     static function CBAjax_uploadDataFile_group(): string {
         return 'Administrators';
+    }
+
+    /**
+     * @param object $spec
+     *
+     * @return void
+     */
+    static function reportNoID(stdClass $spec): void {
+        $className = CBModel::valueToString($spec, 'className');
+        $specAsJSONAsMarkup = CBMessageMarkup::stringToMessage(
+            CBConvert::valueToPrettyJSON($spec)
+        );
+
+        $message = <<<EOT
+
+            An imported {$className} spec was unable to generate its own ID.
+
+EOT;
+
+        if (!class_exists($className)) {
+            $message .= <<<EOT
+
+                The {$className} class does not exist.
+
+EOT;
+        } else if (!is_callable("{$className}::CBModel_toID")) {
+            $message .= <<<EOT
+
+                The (CBModel_toID\(\)(code)) interface is not implemented by the
+                {$className} class.
+
+EOT;
+        }
+
+        $message .= <<<EOT
+
+            --- dl
+                --- dt
+                Imported spec
+                ---
+
+                --- dd
+                    --- pre\n{$specAsJSONAsMarkup}
+                    ---
+                ---
+            ---
+
+EOT;
+
+        CBLog::log((object)[
+            'message' => $message,
+            'severity' => 3,
+            'sourceClassName' => __CLASS__,
+            'sourceID' => '1506dfad3b967c8fc527f581e0a145d6475e5852',
+        ]);
     }
 }
