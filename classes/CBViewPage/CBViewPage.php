@@ -23,7 +23,6 @@ final class CBViewPage {
      * @return model
      */
     static function CBModel_build($spec) {
-        $ID = CBModel::valueAsID($spec, 'ID');
         $model = (object)[
             'classNameForKind' => CBModel::valueToString($spec, 'classNameForKind'),
             'classNameForSettings' => CBModel::valueToString($spec, 'classNameForSettings'),
@@ -33,10 +32,32 @@ final class CBViewPage {
             'iteration' => 0, /* deprecated */
             'publicationTimeStamp' => CBModel::valueAsInt($spec, 'publicationTimeStamp'),
             'publishedBy' => CBModel::valueAsInt($spec, 'publishedBy'),
-            'selectedMainMenuItemName' => CBModel::valueToString($spec, 'selectedMainMenuItemName'),
             'title' => trim(CBModel::valueToString($spec, 'title')),
             'URI' => CBConvert::stringToURI(CBModel::valueToString($spec, 'URI')),
         ];
+
+        /**
+         * selectedMenuItemNames
+         *
+         * The property value on the spec is a string, on the model an array.
+         */
+
+        $selectedMenuItemNames = CBModel::valueToNames($spec, 'selectedMenuItemNames');
+
+        if (empty($selectedMenuItemNames)) {
+            /* deprecated */
+            $selectedMainMenuItemName = CBModel::valueToString($spec, 'selectedMainMenuItemName');
+
+            if (!empty($selectedMainMenuItemName)) {
+                $selectedMenuItemNames = [$selectedMainMenuItemName];
+            }
+        }
+
+        $model->selectedMenuItemNames = $selectedMenuItemNames;
+
+        /* URI */
+
+        $ID = CBModel::valueAsID($spec, 'ID');
 
         if (empty($model->URI) && !empty($ID)) {
             $model->URI = $ID;
@@ -46,7 +67,7 @@ final class CBViewPage {
             $model->publicationTimeStamp = time();
         }
 
-        // image
+        /* image */
 
         $imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage']);
 
@@ -340,9 +361,38 @@ EOT;
             'image' => CBModel::valueAsModel($model, 'image', ['CBImage']),
             'imageURL' => CBModel::valueToString($model, 'thumbnailURL'),
             'publishedTimestamp' => $publishedTimestamp,
-            'selectedMainMenuItemName' => CBModel::valueToString($model, 'selectedMainMenuItemName'),
+            'selectedMenuItemNames' => CBViewPage::selectedMenuItemNames($model),
             'title' => CBModel::valueToString($model, 'title'),
         ]);
+    }
+
+    /**
+     * Use this function to get the array of selected menu item names. The first
+     * name is for the selected main menu item, the second name is for the
+     * selected secondary menu item, etc.
+     *
+     * This function handles the transition between the deprecated
+     * 'selectedMainMenuItemName' property and its replacement, the
+     * 'selectedMenuItemNames' property.
+     *
+     * @param object $model
+     *
+     * @return [string]
+     */
+    static function selectedMenuItemNames(stdClass $model): array {
+        $selectedMenuItemNames = CBModel::valueToArray($model, 'selectedMenuItemNames');
+
+        if (empty($selectedMenuItemNames)) {
+            $selectedMainMenuItemName = trim(CBModel::valueToString($model, 'selectedMainMenuItemName'));
+
+            if (empty($selectedMainMenuItemName)) {
+                return [];
+            } else {
+                return [$selectedMainMenuItemName];
+            }
+        }
+
+        return $selectedMenuItemNames;
     }
 
     /**
