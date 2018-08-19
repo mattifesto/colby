@@ -9,18 +9,33 @@
 final class CBRedirect {
 
     /**
-     * @param model $spec
+     * @param object $spec
      *
-     * @return ?model
+     *      {
+     *          URI: string
+     *
+     *              The URI that should be redirected.
+     *
+     *              Example: "blog-posts/my-day"
+     *
+     *          redirectToURI: string
+     *
+     *              The destination URI.
+     *
+     *              Example: "blog/my-day"
+     *      }
+     *
+     * @return ?object
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
-        $ID = CBModel::valueAsID($spec, 'ID');
         $model = (object)[
             'isPublished' => !empty($spec->isPublished),
             'publicationTimeStamp' => CBModel::valueAsInt($spec, 'publicationTimeStamp'),
             'redirectToURI' => CBConvert::stringToURI(CBModel::valueToString($spec, 'redirectToURI')),
             'URI' => CBConvert::stringToURI(CBModel::valueToString($spec, 'URI')),
         ];
+
+        $ID = CBModel::valueAsID($spec, 'ID');
 
         if (empty($model->URI) && !empty($ID)) {
             $model->URI = $ID;
