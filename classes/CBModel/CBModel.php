@@ -126,7 +126,7 @@ final class CBModel {
      * Returns the index of the first model found with the specified property
      * value.
      *
-     * @param [model] $models
+     * @param [object] $models
      * @param string $propertyName
      * @param mixed $propertyValue
      *
