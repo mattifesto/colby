@@ -37,27 +37,41 @@ final class CBModelTemplateCatalog {
     }
 
     /**
+     * @param ?object $updates
+     *
+     *      After the live page template spec is fetched, it will be merged with
+     *      this object. The reason for this parameter is that after almost
+     *      every call of this function, one of the next steps is to merge with
+     *      another object to make property updates.
+     *
+     *      Passing the updates to this function results in cleaner and more
+     *      concise code.
+     *
      * @return model
      *
      *      Returns a the spec that has been installed as a starting point for a
-     *      page on this site.
+     *      page on this site. The spec will be merged with the updates provided
+     *      before being returned.
      */
-    static function fetchLivePageTemplate(): stdClass {
+    static function fetchLivePageTemplate(?stdClass $updates = null): stdClass {
         $model = CBModels::fetchModelByID(CBModelTemplateCatalog::ID());
-
         $className = CBModel::valueToString($model, 'livePageTemplateClassName');
 
         if (is_callable($function = "{$className}::CBModelTemplate_spec")) {
-            $spec = $function();
+            $spec = call_user_func($function);
 
             unset($spec->sections);
-
-            return $spec;
+        } else {
+            $spec =  (object)[
+                'className' => 'CBViewPage',
+            ];
         }
 
-        return (object)[
-            'className' => 'CBViewPage',
-        ];
+        if ($updates !== null) {
+            CBModel::merge($spec, $updates);
+        }
+
+        return $spec;
     }
 
     /**
