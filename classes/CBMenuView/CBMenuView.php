@@ -47,6 +47,21 @@ final class CBMenuView {
      *
      *          menuID: ID
      *          menuIndex: ?int (optional)
+     *
+     *              This parameter indicates the level of the menu on the page.
+     *              For instance, index 0 means this is a view of the main menu.
+     *              Index 1 means it's a view of the second menu, or first
+     *              submenu, etc.
+     *
+     *              When a page specifies a "selectedMenuItemNames" property
+     *              value of "products cards" it means the select item name of
+     *              the main menu is "products", and the selected item name of
+     *              the first submenu is "cards".
+     *
+     *              If the "selectedItemName" property is not set this property
+     *              will be used in conjunction with the page information to
+     *              determine the selected menu item name.
+     *
      *          selectedItemName: string (optional)
      *      }
      *
