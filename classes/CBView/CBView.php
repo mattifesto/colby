@@ -83,7 +83,7 @@ final class CBView {
      *      The $value parameter is compared against the model property value
      *      with the equal comparison operator (==).
      *
-     * @return object|null
+     * @return ?object
      */
     static function findSubview($model, $key, $value): ?stdClass {
         $subviews = CBView::getSubviews($model);
