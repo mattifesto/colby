@@ -72,6 +72,24 @@ final class CBMenu {
     }
 
     /**
+     * If an item with the provided name exists in the menu it will be removed.
+     *
+     * @param model $menu
+     * @param string $name
+     *
+     * @return void
+     */
+    static function removeItemByName(stdClass $menu, string $name): void {
+        $items = CBModel::valueToArray($menu, 'items');
+        $index = CBModel::indexOf($items, 'name', $name);
+
+        if ($index !== null) {
+            unset($items[$index]);
+            $menu->items = array_values($items);
+        }
+    }
+
+    /**
      * @param mixed $model
      * @param string $selectedMenuItemName
      *
