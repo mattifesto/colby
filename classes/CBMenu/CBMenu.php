@@ -3,6 +3,30 @@
 final class CBMenu {
 
     /**
+     * If an item with the same name as the provided item already exists in the
+     * menu, the provided item will replace that item. If no item with the same
+     * name exists in the menu, the provided item will be appended to the menu.
+     *
+     * @param model $menu
+     * @param model $item
+     *
+     * @return void
+     */
+    static function addOrReplaceItem(stdClass $menu, stdClass $item): void {
+        $items = CBModel::valueToArray($menu, 'items');
+        $name = CBModel::valueToString($item, 'name');
+        $index = CBModel::indexOf($items, 'name', $name);
+
+        if ($index === null) {
+            array_push($items, $item);
+        } else {
+            $items[$index] = $item;
+        }
+
+        $menu->items = $items;
+    }
+
+    /**
      * @param model $spec
      *
      *      {
