@@ -115,7 +115,7 @@ var CBMenuViewEditor = {
             return option.value === spec.menuID;
         });
 
-        if (selectedMenuOption.title) {
+        if (selectedMenuOption && selectedMenuOption.title) {
             if (spec.selectMenuItemName) {
                 return selectedMenuOption.title + " (" + spec.selectMenuItemName + ")";
             } else {

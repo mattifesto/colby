@@ -6,14 +6,20 @@ final class CBMenuViewEditor {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUISelector', 'CBUIStringEditor'];
+        return [
+            'CBUI',
+            'CBUISelector',
+            'CBUIStringEditor',
+        ];
     }
 
     /**
      * @return string
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v446.1.js', cbsysurl()),
+        ];
     }
 
     /**
