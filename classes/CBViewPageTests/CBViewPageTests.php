@@ -29,7 +29,7 @@ final class CBViewPageTests {
             'isPublished' => false,
             'iteration' => 0,
             'publishedBy' => null,
-            'selectedMainMenuItemName' => '',
+            'selectedMenuItemNames' => [],
             'title' => '',
             'URI' => '',
             'publicationTimeStamp' => null,
