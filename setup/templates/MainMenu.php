@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @TODO 2018_08_20
+ *
+ *      File should be renamed to Menu_main.php
+ *      Class should be renamed to PREFIXMenu_main
+ *      Implementation should use CBModelUpdater
+ *      Implementation should use CBMenu::addOrReplaceItem()
+ */
 final class PREFIXMainMenu {
 
     /**
@@ -41,7 +49,9 @@ final class PREFIXMainMenu {
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBModels'];
+        return [
+            'CBModels'
+        ];
     }
 
     /**
