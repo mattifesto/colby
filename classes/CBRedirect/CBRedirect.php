@@ -29,6 +29,7 @@ final class CBRedirect {
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
+            'classNameForKind' => trim(CBModel::valueToString($spec, 'classNameForKind')),
             'isPublished' => !empty($spec->isPublished),
             'publicationTimeStamp' => CBModel::valueAsInt($spec, 'publicationTimeStamp'),
             'redirectToURI' => CBConvert::stringToURI(CBModel::valueToString($spec, 'redirectToURI')),
