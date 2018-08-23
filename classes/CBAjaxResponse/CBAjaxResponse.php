@@ -59,10 +59,6 @@ class CBAjaxResponse {
             return;
         }
 
-        if (!isset($this->warnings)) {
-            $this->warnings = CBAjaxContext::warnings();
-        }
-
         $output = json_encode($this);
 
         /**
