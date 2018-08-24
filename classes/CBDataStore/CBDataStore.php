@@ -120,15 +120,15 @@ final class CBDataStore {
      * provided. $ID is required, $basename is likely to be provided, and
      * $flexdir is likely but less likely than $basename to be provided.
      *
-     * @param hex160 $ID
-     * @param string? $basename
-     * @param string? $flexdir
+     * @param ID $ID
+     * @param ?string $basename
+     * @param ?string $flexdir
      *
-     *      This will usually be either CBSiteDirectory or CBSitePreferences::siteURL().
+     *      This will usually be either cbsitedir() or cbsiteurl().
      *
      * @return string
      */
-    static function flexpath($ID, $basename = null, $flexdir = null) {
+    static function flexpath($ID, $basename = null, $flexdir = null): string {
         $flexpath = CBDataStore::directoryNameFromDocumentRoot($ID);
 
         if (!empty($basename)) {
