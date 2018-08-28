@@ -212,9 +212,8 @@ final class CBModelsImportAdmin {
                         $updatedSpecs[$ID] = $rowSpec;
                     } else {
                         $originalSpec = $originalSpecs[$ID];
-                        $updatedSpec = CBModel::clone($originalSpec);
-
-                        CBModel::merge($updatedSpec, $rowSpec);
+                        $updatedSpec = $rowSpec;
+                        $updatedSpec->version = $originalSpec->version;
 
                         if ($saveUnchangedModels || $updatedSpec != $originalSpec) {
                             $updatedSpecs[$ID] = $updatedSpec;
