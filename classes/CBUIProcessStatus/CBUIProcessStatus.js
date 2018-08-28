@@ -20,6 +20,7 @@ var CBUIProcessStatus = {
      *              It's best to use a CBUIExpander element.
      *
      *          element: Element (readonly)
+     *
      *          processID: hex160 (get, set)
      *
      *              Setting the process ID will cause the CBUIProcessStatus to
@@ -80,7 +81,13 @@ var CBUIProcessStatus = {
 
             isFetching = true;
 
-            Colby.callAjaxFunction("CBLog", "fetchEntries", {afterSerial: afterSerial, processID: processID})
+            let ajaxargs = {
+                afterSerial: afterSerial,
+                lowestSeverity: 6,
+                processID: processID,
+            };
+
+            Colby.callAjaxFunction("CBLog", "fetchEntries", ajaxargs)
                 .then(onFetchLogEntriesFulfilled)
                 .then(fetchTaskStatus)
                 .then(onFetchTaskStatusFulfilled)
