@@ -6,7 +6,10 @@ final class CBTasks2Admin {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['general', 'tasks'];
+        return [
+            'general',
+            'tasks'
+        ];
     }
 
     /**
@@ -20,14 +23,20 @@ final class CBTasks2Admin {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v391.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v448.js', cbsysurl()),
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
-        return ['CBUI', 'CBUISectionItem4', 'CBUIStringsPart'];
+        return [
+            'CBUI',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
+        ];
     }
 
     /**
@@ -52,6 +61,8 @@ final class CBTasks2Admin {
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBGeneralAdminMenu'];
+        return [
+            'CBGeneralAdminMenu',
+        ];
     }
 }

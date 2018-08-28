@@ -6,7 +6,8 @@
     CBUI,
     CBUISectionItem4,
     CBUIStringsPart,
-    Colby */
+    Colby,
+*/
 
 var CBTasks2Admin = {
 
@@ -16,8 +17,7 @@ var CBTasks2Admin = {
      * @return Element
      */
     init: function () {
-        Colby.CBTasks2_runAlways = true;
-        Colby.CBTasks2_runFast = true;
+        Colby.CBTasks2_delay = 0;
 
         var mainElement = document.getElementsByTagName("main")[0];
         CBTasks2Admin.sectionElement = CBUI.createSection();
