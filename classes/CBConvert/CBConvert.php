@@ -581,12 +581,17 @@ final class CBConvert {
      * or that those spaces will cause boolval() to consider the value to be
      * true when what they clearly meant was for the value to be false.
      *
-     *      $value  boolval  valueToBool
-     *      ------  -------  -----------
-     *         " "     true        false
-     *       " 0 "     true        false
-     *        true     true         true
-     *       false    false        false
+     *      $value      boolval valueToBool
+     *      -------     ------- -----------
+     *      " "         true    false
+     *      " 0 "       true    false
+     *
+     *      "1"         true    true
+     *      "true"      true    true
+     *      "false"     true    true
+     *
+     *      true        true    true
+     *      false       false   false
      *
      * @param mixed $value
      *
