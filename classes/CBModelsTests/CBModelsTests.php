@@ -186,12 +186,20 @@ final class CBModelsTests_TestClass {
             throw new Exception(__METHOD__ . ' Incorrect `className` property');
         }
 
-        if (!isset($model->created) || !is_int($model->created)) {
-            throw new Exception(__METHOD__ . ' Incorrect `created` property');
+        /**
+         * At one point the "created" property was set on the model when the
+         * model was saved. This is no longer happens.
+         */
+        if (isset($model->created)) {
+            throw new Exception('The model should not have its "created" property set.');
         }
 
-        if (!isset($model->modified) || !is_int($model->modified)) {
-            throw new Exception(__METHOD__ . ' Incorrect `modified` property');
+        /**
+         * At one point the "modified" property was set on the model when the
+         * model was saved. This is no longer happens.
+         */
+        if (isset($model->modified)) {
+            throw new Exception('The model should not have its "modified" property set.');
         }
 
         if ($model->name !== "Name {$ID}") {
