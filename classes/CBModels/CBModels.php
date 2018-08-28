@@ -542,12 +542,6 @@ EOT;
      *
      * @NOTE Reserved and required properties:
      *
-     *      created: The model will have its created property set to the
-     *      timestamp when the model was first saved.\\
-     *
-     *      modified: The model will have its modified property set to the
-     *      timestamp of this save.
-     *
      *      version: Both the spec and model will have their version properties
      *      set to the version assigned for this save.
      *
@@ -637,9 +631,6 @@ EOT;
                     throw new CBModelVersionMismatchException();
                 }
             }
-
-            $tuple->model->created = $initialDataByID[$ID]->created;
-            $tuple->model->modified = $modified;
 
             /**
              * 2016.06.29 In the future I would like to not set the version on
