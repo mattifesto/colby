@@ -418,10 +418,20 @@ EOT;
      * Locks the rows for and fetches the version and created timestamp for a
      * set of IDs in preparation for an update. This will also insert rows for
      * IDs that don't exist.
+     *
+     * @param [ID] $IDs
+     * @param int $modified
+     *
+     * @return [ID => object]
+     *
+     *      {
+     *          created: int
+     *          modified: int
+     *          vesion: int
+     *      }
      */
-    private static function selectInitialDataForUpdateByID(array $IDs, $modified) {
+    private static function selectInitialDataForUpdateByID(array $IDs, int $modified) {
         $IDsAsSQL = CBHex160::toSQL($IDs);
-        $modifiedAsSQL = (int)$modified;
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`ID`)) AS `ID`, `created`, `version`
