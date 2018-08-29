@@ -487,16 +487,16 @@ EOT;
     /**
      * @param string $string
      *
-     * @return string|null
+     * @return ?string
      */
-    private static function searchClauseFromString($string) {
+    static function searchClauseFromString($string): ?string {
         $words = preg_split('/[\s,]+/', $string, null, PREG_SPLIT_NO_EMPTY);
         $clauses = [];
 
         foreach ($words as $word) {
             if (strlen($word) > 2) {
-                $wordForSQL = ColbyConvert::textToSQl($word);
-                $clauses[] = "`searchText` LIKE '%{$wordForSQL}%'";
+                $wordAsSQL = ColbyConvert::textToSQl($word);
+                $clauses[] = "`searchText` LIKE '%{$wordAsSQL}%'";
             }
         }
 
