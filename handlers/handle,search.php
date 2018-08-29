@@ -41,19 +41,23 @@ if (empty($searchQuery)) {
 
     <?php
 
-    $searchQueryAsSQL = Colby::mysqli()->escape_string($searchQuery);
-    $searchQueryAsSQL = "'%$searchQueryAsSQL%'";
-    $SQL = <<<END
+    $searchClause = CBPages::searchClauseFromString($searchQuery);
 
-        SELECT      keyValueData
-        FROM        ColbyPages
-        WHERE       published IS NOT NULL AND
-                    searchText LIKE {$searchQueryAsSQL}
-        ORDER BY    published
+    if (empty($searchClause)) {
+        $summaries = [];
+    } else {
+        $SQL = <<<END
+
+            SELECT      keyValueData
+            FROM        ColbyPages
+            WHERE       published IS NOT NULL AND
+                        {$searchClause}
+            ORDER BY    published
 
 END;
 
-    $summaries = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $summaries = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+    }
 
     if (count($summaries) > 0) {
         foreach ($summaries as $model) {
