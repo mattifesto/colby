@@ -551,6 +551,117 @@ var Colby = {
     },
 
     /**
+     * @return object
+     *
+     *      {
+     *          start() -> Promise
+     *
+     *              If tasks aren't currently running, calling this function
+     *              will start running tasks again until there aren't any. The
+     *              promise returned will resolve when there are no more tasks
+     *              to run.
+     *
+     *          stop() -> undefined
+     *
+     *              Will stop running tasks. This is useful when the session is
+     *              running other operations on the server or is preparing to
+     *              only run tasks for a specific process.
+     *      }
+     */
+    get tasks() {
+        let isStopped = false;
+        let promise;
+
+        if (Colby.CBTasks2_API) {
+            return Colby.CBTasks2_API;
+        }
+
+        Colby.CBTasks2_API = {
+            start: start,
+            stop: stop,
+        };
+
+        return Colby.CBTasks2_API;
+
+
+        /**
+         * @return Promise
+         */
+        function start() {
+            isStopped = false;
+
+            if (promise) {
+                return promise;
+            }
+
+            promise = new Promise(function (resolve, reject) {
+                return go();
+
+                /**
+                 * @return undefined
+                 */
+                function go() {
+
+                    /**
+                     * Errors occuring during this process are likely to be server
+                     * side errors and will be reported on the server. If the
+                     * promise is rejected further requests will be stopped. This
+                     * process does not communicate with the end user.
+                     */
+
+                    let args = {
+                        processID: Colby.CBTasks2_processID,
+                    };
+
+                    Colby.callAjaxFunction("CBTasks2", "runNextTask", args)
+                        .then(goAgainOrResolve)
+                        .catch(report);
+
+                    Colby.CBTasks2_countOfTasksRequested += 1;
+                }
+
+                /**
+                 * This function will determine if there is any reason to continue
+                 * to attempt to run tasks. If there is, it will go again; if not,
+                 * it will resolve the promise.
+                 *
+                 * @return undefined
+                 */
+                function goAgainOrResolve(value) {
+                    Colby.CBTasks2_countOfTasksRun += value.tasksRunCount;
+
+                    if (isStopped || value.tasksRunCount === 0) {
+                        promise = undefined;
+                        resolve();
+                    } else {
+                        setTimeout(go, Colby.CBTasks2_delay);
+                    }
+                }
+
+                /**
+                 * @return undefined
+                 */
+                function report(error) {
+                    promise = undefined;
+
+                    Colby.report(error);
+
+                    reject(error);
+                }
+            });
+
+            return promise;
+        }
+
+        /**
+         * @return undefined
+         */
+        function stop() {
+            isStopped = true;
+        }
+    },
+
+    /**
      * @param string text
      *
      * @return string
@@ -1097,44 +1208,9 @@ Colby.afterDOMContentLoaded(function () {
  * CBTasks2 run tasks
  */
 
-Colby.CBTasks2_runAlways = false;
-Colby.CBTasks2_runFast = false;
 Colby.CBTasks2_countOfTasksRequested = 0;
 Colby.CBTasks2_countOfTasksRun = 0;
 Colby.CBTasks2_delay = 5000;
+Colby.CBTasks2_processID = undefined;
 
-Colby.afterDOMContentLoaded(function () {
-    runNextTask();
-
-    /* closure */
-    function runNextTask() {
-
-        /**
-         * Errors occuring during this process are likely to be server side
-         * errors and will be reported on the server. If the promise is rejected
-         * further requests will be stopped. This process does not communicate
-         * with the end user.
-         */
-
-        Colby.callAjaxFunction("CBTasks2", "runNextTask")
-            .then(onFulfilled)
-            .catch(Colby.reportError);
-
-        Colby.CBTasks2_countOfTasksRequested += 1;
-    }
-
-    /* closure */
-    function onFulfilled(value) {
-        if (value.tasksRunCount > 0) {
-            Colby.CBTasks2_countOfTasksRun += value.tasksRunCount;
-
-            if (Colby.CBTasks2_runFast) {
-                runNextTask();
-            } else {
-                setTimeout(runNextTask, Colby.CBTasks2_delay);
-            }
-        } else if (Colby.CBTasks2_runAlways) {
-            setTimeout(runNextTask, Colby.CBTasks2_delay);
-        }
-    }
-});
+Colby.afterDOMContentLoaded(function () { Colby.tasks.start(); });
