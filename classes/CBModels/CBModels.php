@@ -736,7 +736,13 @@ EOT;
      *
      * This function is meant to be called during a database transaction.
      *
-     * @param [{'spec':stdClass, 'model':stdClass, 'meta':stdClass}] $tuples
+     * @param [object] $tuples
+     *
+     *      {
+     *          spec: object
+     *          model: object
+     *          meta: object
+     *      }
      */
     private static function saveToDatabase(array $tuples) {
         /* 1: CBModelVersions */
@@ -763,32 +769,56 @@ EOT;
         }, $tuples);
         $values = implode(',', $values);
 
+        /**
+         * Created temporary CBModels table.
+         */
+
         CBModelsTable::create(/* temporary: */ true);
+
+        /**
+         * Insert data for all models into the temporary CBModels table.
+         */
+
         Colby::query("INSERT INTO CBModelsTemp VALUES {$values}");
 
+        /**
+         * For models that already exist in the CBModels table, transfer their
+         * data from the temporary CBModels table into the CBModels table.
+         */
+
         $SQL = <<<EOT
 
-            UPDATE  `CBModels`      AS `m`
-            JOIN    `CBModelsTemp`  AS `t` ON `m`.`ID` = `t`.`ID`
-            SET     `m`.`className` = `t`.`className`,
-                    `m`.`modified` = `t`.`modified`,
-                    `m`.`title` = `t`.`title`,
-                    `m`.`version` = `t`.`version`
+            UPDATE  CBModels      AS m
+            JOIN    CBModelsTemp  AS t
+                    ON m.ID = t.ID
+            SET     m.className = t.className,
+                    m.modified = t.modified,
+                    m.title = t.title,
+                    m.version = t.version
 
 EOT;
 
         Colby::query($SQL);
 
+        /**
+         * For models that don't yet exist in the CBModels table, insert their
+         * data into the CBModels table.
+         */
+
         $SQL = <<<EOT
 
-            INSERT INTO `CBModels`
-            SELECT      `ID`, `className`, `created`, `modified`, `title`, `version`
-            FROM        `CBModelsTemp`
-            WHERE       `version` = 1
+            INSERT INTO CBModels
+            SELECT      ID, className, created, modified, title, version
+            FROM        CBModelsTemp
+            WHERE       version = 1
 
 EOT;
 
         Colby::query($SQL);
+
+        /**
+         * Delete the temporary CBModels table.
+         */
 
         Colby::query('DROP TEMPORARY TABLE CBModelsTemp');
     }
