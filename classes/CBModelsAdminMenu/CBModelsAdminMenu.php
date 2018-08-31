@@ -52,7 +52,7 @@ final class CBModelsAdminMenu {
     }
 
     /**
-     * @return hex160
+     * @return ID
      */
     static function ID(): string {
         return 'f6a893489fb3ea4bfbc4af9f8cb3f052f8add349';
