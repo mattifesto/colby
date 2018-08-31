@@ -47,6 +47,37 @@ final class CBSitePreferences {
     }
 
     /**
+     * @param object $args
+     *
+     *      {
+     *          ID: ID
+     *      }
+     *
+     * @return object
+     */
+    static function CBAjax_setFrontPageID($args): stdClass {
+        $ID = CBModel::valueAsID($args, 'ID');
+
+        if (empty($ID)) {
+            throw new InvalidArgumentException('No ID argument was provided.');
+        }
+
+        CBSitePreferences::setFrontPageID($ID);
+
+        return (object)[
+            'message' => 'The front page was changed successfully.',
+        ];
+    }
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_setFrontPageID_group(): string {
+        return 'Administrators';
+    }
+
+    /**
      * @return void
      */
     static function CBInstall_install(): void {
@@ -363,13 +394,13 @@ EOT
     }
 
     /**
-     * @param hex160 $ID
+     * @param ID $ID
      *
-     * @return null
+     * @return void
      */
-    static function setFrontPageID($ID) {
+    static function setFrontPageID(string $ID): void {
         if (!CBHex160::is($ID)) {
-            throw new Exception("'{$ID}' is not a 160-bit hexadecimal value.");
+            throw new InvalidArgumentException("'{$ID}' is not a valid ID");
         }
 
         $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
@@ -378,20 +409,6 @@ EOT
 
         /* clear cache */
         CBSitePreferences::$model = false;
-    }
-
-    /**
-     * @return null
-     */
-    static function setFrontPageIDForAjax() {
-        $response = new CBAjaxResponse();
-        $ID = $_POST['ID'];
-
-        CBSitePreferences::setFrontPageID($ID);
-
-        $response->message = "The front page was changed successfully.";
-        $response->wasSuccessful = true;
-        $response->send();
     }
 
     /**
@@ -422,12 +439,5 @@ EOT
      */
     static function siteURL() {
         return cbsiteurl();
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function setFrontPageIDForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
     }
 }
