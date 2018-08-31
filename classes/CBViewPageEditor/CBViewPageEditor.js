@@ -106,30 +106,26 @@ var CBViewPageEditor = {
     },
 
     /**
-     * @param hex160 args.ID
+     * @param object args
+     *
+     *      {
+     *          ID: ID
+     *      }
      *
      * @return undefined
      */
     makeFrontPage: function (args) {
         if (window.confirm("Are you sure you want to use this page as the front page?")) {
-            var data = new FormData();
-            data.append("ID", args.ID);
-
-            var xhr = new XMLHttpRequest();
-            xhr.onerror = Colby.displayXHRError.bind(undefined, { xhr: xhr });
-            xhr.onload = CBViewPageEditor.makeFrontPageDidLoad.bind(undefined, { xhr: xhr });
-            xhr.open("POST", "/api/?class=CBSitePreferences&function=setFrontPageID", true);
-            xhr.send(data);
+            Colby.callAjaxFunction("CBSitePreferences", "setFrontPageID",
+                {
+                    ID: args.ID
+                }
+            ).then(
+                function (response) {
+                    Colby.alert(response.message);
+                }
+            ).catch(Colby.displayAndReportError);
         }
-    },
-
-    /**
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    makeFrontPageDidLoad: function (args) {
-        Colby.displayResponse(Colby.responseFromXMLHttpRequest(args.xhr));
     },
 
     /**
