@@ -69,7 +69,12 @@ final class CBMaintenance {
             throw new InvalidArgumentException('No title argument was provided.');
         }
 
-        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID());
+        $updater = CBModelUpdater::fetch((object)[
+            'className' => 'CBMaintenance',
+            'ID' => CBMaintenance::ID(),
+        ]);
+
+        $spec = $updater->working;
         $previousHolderID = CBModel::valueAsID($spec, 'holderID');
 
         /**
@@ -84,7 +89,7 @@ final class CBMaintenance {
              * not able to lock.
              */
             if (time() - $previousTimestamp < 30) {
-                return false;
+                return false; /* request denied */
             }
         }
 
@@ -95,9 +100,7 @@ final class CBMaintenance {
             'userID' => ColbyUser::currentUserHash(),
         ]);
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBModelUpdater::save($updater);
 
         return true; /* request granted */
     }
@@ -118,7 +121,12 @@ final class CBMaintenance {
             throw new InvalidArgumentException('No holderID argument was provided.');
         }
 
-        $spec = CBModels::fetchSpecByIDNullable(CBMaintenance::ID());
+        $updater = CBModelUpdater::fetch((object)[
+            'className' => 'CBMaintenance',
+            'ID' => CBMaintenance::ID(),
+        ]);
+
+        $spec = $updater->working;
         $previousHolderID = CBModel::valueAsID($spec, 'holderID');
 
         if ($holderID !== $previousHolderID) {
@@ -132,9 +140,7 @@ final class CBMaintenance {
             'userID' => null,
         ]);
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBModelUpdater::save($updater);
     }
 
     /**
