@@ -249,7 +249,9 @@ EOT
     }
 
     /**
-     * @return object:CBImage|false
+     * @return object|false
+     *
+     *      The object is a CBImage model.
      */
     static function imageForIcon() {
         $model = CBSitePreferences::model();
