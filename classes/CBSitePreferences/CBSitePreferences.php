@@ -26,7 +26,7 @@ final class CBSitePreferences {
         'rw2560',       /* 1280 x ? */
     ];
 
-    private static $model = false;
+    private static $model = null;
 
     /**
      * return [string]
@@ -310,18 +310,28 @@ EOT
      * database is down we can still get the information needed to send an
      * alert email.
      *
-     * @return null
+     * @return void
      */
-    static function modelsWillSave(array $tuples) {
-        array_map(function($tuple) {
-            $filepath   = CBDataStore::filepath([
-                'ID'        => $tuple->spec->ID,
-                'filename'  => 'site-preferences.json'
-            ]);
+    static function CBModels_willSave(array $models): void {
+        array_map(
+            function ($model) {
+                $filepath = CBDataStore::flexpath(
+                    $model->ID,
+                    'site-preferences.json',
+                    cbsitedir()
+                );
 
-            CBDataStore::makeDirectoryForID($tuple->spec->ID);
-            file_put_contents($filepath, json_encode($tuple->model));
-        }, $tuples);
+                CBDataStore::create($model->ID);
+
+                file_put_contents($filepath, json_encode($model));
+            },
+            $models
+        );
+
+        /**
+         * Clear the cached model.
+         */
+        CBSitePreferences::$model = null;
     }
 
     /**
