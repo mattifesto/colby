@@ -183,6 +183,8 @@ EOT;
 
         $message = <<<EOT
 
+            (test title (strong))
+
             {$testTitleAsMessage}
 
             (result (strong))
