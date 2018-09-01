@@ -264,25 +264,35 @@ EOT
     }
 
     /**
-     * @return stdClass
+     * This function fetches the CBSitePreferences model from a file instead of
+     * the database which has historically been how this model is intended to be
+     * accessed.
      *
-     *  Properties:
+     * @NOTE 2018.09.01
      *
-     *      string? facebookURL
-     *      hex160? frontPageID
-     *      string? twitterURL
+     *      I think this pattern was to allow site preferences to be available
+     *      even if the database is down. Or maybe it was to reduce the database
+     *      calls required per request since this model is requested every time.
+     *
+     *      Either way, add documentation here including scenarios for why this
+     *      behavior is necessary. It actually may not be a good idea.
+     *
+     * @return model
+     *
+     *      The current CBSitePreferences model.
      */
     static function model() {
-        if (CBSitePreferences::$model === false) {
-            $filepath = CBDataStore::filepath([
-                'ID'        => CBSitePreferences::ID,
-                'filename'  => 'site-preferences.json'
-            ]);
+        if (empty(CBSitePreferences::$model)) {
+            $filepath = CBDataStore::flexpath(
+                CBSitePreferences::ID(),
+                'site-preferences.json',
+                cbsitedir()
+            );
 
             if (is_file($filepath)) {
                 $model = json_decode(file_get_contents($filepath));
             } else {
-                $model = CBModel::toModel((object)[
+                $model = CBModel::build((object)[
                     'className' => 'CBSitePreferences',
                 ]);
             }
