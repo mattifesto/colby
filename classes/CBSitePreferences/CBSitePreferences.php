@@ -415,12 +415,10 @@ EOT
             throw new InvalidArgumentException("'{$ID}' is not a valid ID");
         }
 
-        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID);
+        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID());
         $spec->frontPageID = $ID;
-        CBModels::save([$spec]);
 
-        /* clear cache */
-        CBSitePreferences::$model = false;
+        CBModels::save($spec);
     }
 
     /**
