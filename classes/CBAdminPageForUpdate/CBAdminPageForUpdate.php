@@ -30,6 +30,7 @@ final class CBAdminPageForUpdate {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBMaintenance',
             'CBUI',
             'CBUIExpander',
             'CBUISection',
@@ -43,7 +44,7 @@ final class CBAdminPageForUpdate {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v443.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v450.js', cbsysurl())
         ];
     }
 
