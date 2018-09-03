@@ -332,14 +332,22 @@ EOT;
      *
      *      Returns true if a task is run; otherwise false.
      */
-    static function runNextTask($args) {
+    static function runNextTask($args): bool {
         $processID = CBModel::valueAsID($args, 'processID');
 
-        if (!empty($processID)) {
+        /**
+         * If no process ID is specified, we will only run a task if the
+         * maintenance lock is not held.
+         */
+        if (empty($processID)) {
+            if (CBMaintenance::isLocked()) {
+                return false;
+            }
+
+            $andProcessID = '';
+        } else {
             $processIDAsSQL = CBHex160::toSQL($processID);
             $andProcessID = "AND `processID` = {$processIDAsSQL}";
-        } else {
-            $andProcessID = '';
         }
 
         $timestamp = time();
