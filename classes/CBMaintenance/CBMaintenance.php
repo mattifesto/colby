@@ -31,6 +31,26 @@ final class CBMaintenance {
     }
 
     /**
+     * @param object $args
+     *
+     *      {
+     *          holderID: ID
+     *      }
+     *
+     * @return void
+     */
+    static function CBAjax_unlock(stdClass $args): void {
+        CBMaintenance::unlock(CBModel::valueAsID($args, 'holderID'));
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_unlock_group(): string {
+        return 'Administrators';
+    }
+
+    /**
      * @param object $spec
      *
      * @return ?object
