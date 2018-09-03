@@ -51,6 +51,15 @@ final class CBMaintenance {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v450.js', cbsysurl()),
+        ];
+    }
+
+    /**
      * @param object $spec
      *
      * @return ?object
