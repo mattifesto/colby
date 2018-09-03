@@ -93,14 +93,19 @@ final class CBTasks2 {
      * @param object $args
      *
      *      {
-     *          processID: hex160?
+     *          processID: ?ID
      *      }
      *
-     *  @return [int => object]
+     *  @return object
      *
      *      {
-     *          state: int
-     *          count: int
+     *          complete: int
+     *          failed: int
+     *          maintenanceStatus: string
+     *          ready: int
+     *          running: int
+     *          scheduled: int
+     *          total: int
      *      }
      */
     static function fetchStatus($args) {
@@ -130,11 +135,12 @@ EOT;
         $failed = isset($states[4]) ? intval($states[4]->count) : 0;
 
         return (object)[
-            'scheduled' => $scheduled,
-            'ready' => $ready,
-            'running' => $running,
             'complete' => $complete,
             'failed' => $failed,
+            'maintenanceStatus' => CBMaintenance::status(),
+            'ready' => $ready,
+            'running' => $running,
+            'scheduled' => $scheduled,
             'total' => $scheduled + $ready + $running + $complete + $failed,
         ];
     }
