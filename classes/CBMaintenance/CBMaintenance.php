@@ -163,6 +163,23 @@ final class CBMaintenance {
     }
 
     /**
+     * @return string
+     *
+     *      Returns a human friendly string describing the current maintenance
+     *      status of the website. This string should only be shown to
+     *      administrative users.
+     *
+     *      The string is valid message markup.
+     */
+    static function status(): string {
+        if (CBMaintenance::isLocked()) {
+            return 'The site is locked for maintenance.';
+        } else {
+            return 'The site is not locked for maintenance.';
+        }
+    }
+
+    /**
      * If the holder ID matches the previously set holder ID, the lock will be
      * released. If not, the lock has already been release from the specified
      * holder.
