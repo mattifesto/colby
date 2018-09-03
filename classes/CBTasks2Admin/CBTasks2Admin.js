@@ -4,6 +4,8 @@
 /* exported CBTasks2Admin */
 /* global
     CBUI,
+    CBUIMessagePart,
+    CBUISection,
     CBUISectionItem4,
     CBUIStringsPart,
     Colby,
@@ -17,19 +19,127 @@ var CBTasks2Admin = {
      * @return Element
      */
     init: function () {
+        let maintenanceMessagePart;
+        var mainElement = document.getElementsByTagName("main")[0];
+
+        appendHeader(mainElement);
+
+        {
+            let result = appendStatusSection(mainElement);
+            CBTasks2Admin.sectionElement = result.sectionElement;
+        }
+
+        {
+            let result = appendMaintenanceSection(mainElement);
+            maintenanceMessagePart = result.messagePart;
+        }
+
         Colby.CBTasks2_delay = 0;
 
-        var mainElement = document.getElementsByTagName("main")[0];
-        CBTasks2Admin.sectionElement = CBUI.createSection();
+        fetchStatus();
 
-        mainElement.appendChild(CBUI.createHeader({
-            centerElement: CBUI.createHeaderTitle({text: "Tasks"}),
-        }));
-        mainElement.appendChild(CBUI.createHalfSpace());
-        mainElement.appendChild(CBTasks2Admin.sectionElement);
-        mainElement.appendChild(CBUI.createHalfSpace());
+        return;
 
-        CBTasks2Admin.startFetchingStatus();
+        /**
+         * CBTasks2Admin.init() closure
+         *
+         * @param Element parentElement
+         *
+         * @return undefined
+         */
+        function appendHeader(parentElement) {
+            parentElement.appendChild(
+                CBUI.createHeader({
+                    centerElement: CBUI.createHeaderTitle({
+                        text: "Tasks"
+                    }),
+                })
+            );
+
+            parentElement.appendChild(CBUI.createHalfSpace());
+        }
+
+        /**
+         * CBTasks2Admin.init() closure
+         *
+         * @param Element parentElement
+         *
+         * @return object
+         *
+         *      {
+         *          stringsPart: CBUIMessagePart
+         *      }
+         *
+         *      The message part is returned so that it can be updated with the
+         *      current maintenance status.
+         */
+        function appendMaintenanceSection(parentElement) {
+            mainElement.appendChild(
+                CBUI.createSectionHeader({
+                    text: "Maintenance"
+                })
+            );
+
+            let section = CBUISection.create();
+            let sectionItem = CBUISectionItem4.create();
+            let messagePart = CBUIMessagePart.create();
+
+            sectionItem.appendPart(messagePart);
+            section.appendItem(sectionItem);
+            parentElement.appendChild(section.element);
+            parentElement.appendChild(CBUI.createHalfSpace());
+
+            return {
+                messagePart: messagePart,
+            };
+        }
+
+        /**
+         * CBTasks2Admin.init() closure
+         *
+         * @param Element parentElement
+         *
+         * @return object
+         *
+         *      {
+         *          sectionElement: Element
+         *      }
+         *
+         *      The section element is returned so that it can be updated with
+         *      the current task status.
+         */
+        function appendStatusSection(parentElement) {
+            let section = CBUISection.create();
+
+            parentElement.appendChild(section.element);
+            parentElement.appendChild(CBUI.createHalfSpace());
+
+            return {
+                sectionElement: section.element,
+            };
+        }
+
+        /**
+         * CBTasks2Admin.init() closure
+         *
+         * @return undefined
+         */
+        function fetchStatus() {
+            Colby.callAjaxFunction(
+                "CBTasks2",
+                "fetchStatus"
+            ).then(
+                function (value) {
+                    maintenanceMessagePart.message = value.maintenanceStatus;
+
+                    CBTasks2Admin.updateStatus(value);
+
+                    setTimeout(fetchStatus, 500);
+                }
+            ).catch(
+                Colby.displayAndReportError
+            );
+        }
     },
 
     /**
@@ -63,27 +173,6 @@ var CBTasks2Admin = {
             sectionItem.appendPart(stringsPart);
 
             return sectionItem.element;
-        }
-    },
-
-    /**
-     * @return undefined
-     */
-    startFetchingStatus: function (element) {
-        fetchStatus();
-
-        /* closure */
-        function fetchStatus() {
-            Colby.callAjaxFunction("CBTasks2", "fetchStatus")
-                .then(onFulfilled)
-                .catch(Colby.displayAndReportError);
-        }
-
-        /* closure */
-        function onFulfilled(value) {
-            CBTasks2Admin.updateStatus(value);
-
-            setTimeout(fetchStatus, 500);
         }
     },
 };

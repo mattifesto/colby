@@ -24,7 +24,7 @@ final class CBTasks2Admin {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v448.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v450.js', cbsysurl()),
         ];
     }
 
@@ -34,6 +34,8 @@ final class CBTasks2Admin {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBUI',
+            'CBUIMessagePart',
+            'CBUISection',
             'CBUISectionItem4',
             'CBUIStringsPart',
         ];
