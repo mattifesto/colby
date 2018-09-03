@@ -3,6 +3,34 @@
 final class CBMaintenance {
 
     /**
+     * @param object $args
+     *
+     *      {
+     *          holderID: ID
+     *          title: string
+     *      }
+     *
+     * @return void
+     */
+    static function CBAjax_lock(stdClass $args): void {
+        $didLock = CBMaintenance::lock((object)[
+            'holderID' => CBModel::valueAsID($args, 'holderID'),
+            'title' => CBModel::valueToString($args, 'title'),
+        ]);
+
+        if (!$didLock) {
+            throw new Exception('Unable to lock. The lock is held by another process.');
+        }
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_lock_group(): string {
+        return 'Administrators';
+    }
+
+    /**
      * @param object $spec
      *
      * @return ?object
