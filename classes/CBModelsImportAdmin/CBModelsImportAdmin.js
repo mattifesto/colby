@@ -20,15 +20,14 @@ var CBModelsImportAdmin = {
         let dataFileInputElement;
         let saveUnchangedModels = false;
         let disabled = false;
-        var main = document.getElementsByTagName("main")[0];
         var status = CBUIProcessStatus.create();
+
+        let main = document.getElementsByTagName("main")[0];
+        main.appendChild(CBUI.createHalfSpace());
 
         initDateFileInputElement();
 
         /* import CSV */
-
-
-        main.appendChild(CBUI.createHalfSpace());
 
         let importActionPart = CBUIStringsPart.create();
 
