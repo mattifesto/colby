@@ -28,26 +28,11 @@ var CBModelsImportAdmin = {
 
         initDataFileInputElement();
 
-        /* import CSV */
-
-
         {
             let sectionElement = CBUI.createSection();
 
             initImportButton(sectionElement);
-
-            {
-                let sectionItem = CBUISectionItem4.create();
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Save Unchanged Models";
-                let switchPart = CBUIBooleanSwitchPart.create();
-                switchPart.changed = function () {
-                    saveUnchangedModels = switchPart.value;
-                };
-                sectionItem.appendPart(stringsPart);
-                sectionItem.appendPart(switchPart);
-                sectionElement.appendChild(sectionItem.element);
-            }
+            initSaveUnchangedModelsSwitch(sectionElement);
 
             main.appendChild(sectionElement);
             main.appendChild(CBUI.createHalfSpace());
@@ -140,6 +125,29 @@ var CBModelsImportAdmin = {
             importActionPart.element.classList.add("action");
 
             sectionItem.appendPart(importActionPart);
+            sectionElement.appendChild(sectionItem.element);
+        }
+
+        /**
+         * CBModelsImportAdmin.init() closure
+         *
+         *      Creates the "save unchanged models" switch.
+         *
+         * @param Element sectionElement
+         *
+         * @return undefined
+         */
+        function initSaveUnchangedModelsSwitch(sectionElement) {
+            let sectionItem = CBUISectionItem4.create();
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Save Unchanged Models";
+            let switchPart = CBUIBooleanSwitchPart.create();
+            switchPart.changed = function () {
+                saveUnchangedModels = switchPart.value;
+            };
+
+            sectionItem.appendPart(stringsPart);
+            sectionItem.appendPart(switchPart);
             sectionElement.appendChild(sectionItem.element);
         }
     },
