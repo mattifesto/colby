@@ -58,9 +58,11 @@ var CBModelsImportAdmin = {
                     saveUnchangedModels: saveUnchangedModels,
                 },
                 dataFileInputElement.files[0]
-            )
-            .then(uploadFulfilled)
-            .catch(Colby.displayAndReportError);
+            ).then(
+                uploadFulfilled
+            ).catch(
+                Colby.displayAndReportError
+            );
 
             dataFileInputElement.value = null;
 
