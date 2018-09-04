@@ -21,7 +21,7 @@ var CBModelsImportAdmin = {
         let importActionPart;
         let saveUnchangedModels = false;
         let disabled = false;
-        var status = CBUIProcessStatus.create();
+        let status = CBUIProcessStatus.create();
 
         let main = document.getElementsByTagName("main")[0];
         main.appendChild(CBUI.createHalfSpace());
