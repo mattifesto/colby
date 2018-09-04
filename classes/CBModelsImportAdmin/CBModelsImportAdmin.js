@@ -59,6 +59,14 @@ var CBModelsImportAdmin = {
                 },
                 dataFileInputElement.files[0]
             ).then(
+                function (value) {
+                    status.processID = value.processID;
+                    Colby.CBTasks2_processID = value.processID;
+                    Colby.CBTasks2_delay = 0;
+
+                    return Colby.tasks.start();
+                }
+            ).then(
                 uploadFulfilled
             ).catch(
                 Colby.displayAndReportError
@@ -67,32 +75,11 @@ var CBModelsImportAdmin = {
             dataFileInputElement.value = null;
 
             /* closure */
-            function uploadFulfilled(response) {
-                status.processID = response.processID;
+            function uploadFulfilled() {
                 window.setTimeout(function () {
                     disabled = false;
                     importActionPart.element.classList.remove("disabled");
                 }, 2000);
-
-                return new Promise(function (resolve, reject) {
-                    runNextTask();
-
-                    /* closure */
-                    function runNextTask() {
-                        Colby.callAjaxFunction("CBTasks2", "runNextTask", {processID: response.processID})
-                            .then(runNextTaskFulfilled)
-                            .catch(reject);
-                    }
-
-                    /* closure */
-                    function runNextTaskFulfilled(value) {
-                        if (value.taskWasRun) {
-                            setTimeout(runNextTask, 0);
-                        } else {
-                            resolve();
-                        }
-                    }
-                });
             }
         }
 
