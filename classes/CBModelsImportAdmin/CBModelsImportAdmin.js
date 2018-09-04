@@ -25,7 +25,7 @@ var CBModelsImportAdmin = {
         let main = document.getElementsByTagName("main")[0];
         main.appendChild(CBUI.createHalfSpace());
 
-        initDateFileInputElement();
+        initDataFileInputElement();
 
         /* import CSV */
 
@@ -123,7 +123,7 @@ var CBModelsImportAdmin = {
          *
          * @return undefined
          */
-        function initDateFileInputElement() {
+        function initDataFileInputElement() {
             dataFileInputElement = document.createElement("input");
             dataFileInputElement.type = "file";
             dataFileInputElement.style.display = "none";
