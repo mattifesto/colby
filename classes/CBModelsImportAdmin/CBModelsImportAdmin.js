@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBModelsImportAdmin */
 /* global
+    CBMaintenance,
     CBUI,
     CBUIBooleanSwitchPart,
     CBUIProcessStatus,
@@ -51,7 +52,12 @@ var CBModelsImportAdmin = {
             disabled = true;
             importActionPart.element.classList.add("disabled");
 
-            upload().then(dotasks).finally(finish).catch(report);
+            CBMaintenance.transaction(
+                "CBModelsImportAdmin Import",
+                function () {
+                    return upload().then(dotasks).finally(finish).catch(report);
+                }
+            );
 
             return;
 
