@@ -40,7 +40,14 @@ var CBModelsImportAdmin = {
 
         main.appendChild(status.element);
 
-        dataFileInputElement.addEventListener("change", function() {
+        return;
+
+        /**
+         * CBModelsImportAdmin.init() closure
+         *
+         * @return undefined
+         */
+        function handleDataFileInputElementChanged() {
             disabled = true;
             importActionPart.element.classList.add("disabled");
 
@@ -85,7 +92,7 @@ var CBModelsImportAdmin = {
                     }
                 });
             }
-        });
+        }
 
         /**
          * CBModelsImportAdmin.init() closure
@@ -100,6 +107,11 @@ var CBModelsImportAdmin = {
             dataFileInputElement.type = "file";
             dataFileInputElement.style.display = "none";
             document.body.appendChild(dataFileInputElement);
+
+            dataFileInputElement.addEventListener(
+                "change",
+                handleDataFileInputElementChanged
+            );
         }
 
         /**
