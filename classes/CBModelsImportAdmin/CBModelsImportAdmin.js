@@ -18,6 +18,7 @@ var CBModelsImportAdmin = {
      */
     init: function() {
         let dataFileInputElement;
+        let importActionPart;
         let saveUnchangedModels = false;
         let disabled = false;
         var status = CBUIProcessStatus.create();
@@ -29,25 +30,11 @@ var CBModelsImportAdmin = {
 
         /* import CSV */
 
-        let importActionPart = CBUIStringsPart.create();
 
         {
             let sectionElement = CBUI.createSection();
 
-            {
-                let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = function () {
-                    if (!disabled) {
-                        dataFileInputElement.click();
-                    }
-                };
-
-                importActionPart.string1 = "Import CSV File...";
-                importActionPart.element.classList.add("action");
-
-                sectionItem.appendPart(importActionPart);
-                sectionElement.appendChild(sectionItem.element);
-            }
+            initImportButton(sectionElement);
 
             {
                 let sectionItem = CBUISectionItem4.create();
@@ -128,6 +115,32 @@ var CBModelsImportAdmin = {
             dataFileInputElement.type = "file";
             dataFileInputElement.style.display = "none";
             document.body.appendChild(dataFileInputElement);
+        }
+
+        /**
+         * CBModelsImportAdmin.init() closure
+         *
+         *      Creates the import button and and initializes the closure
+         *      importActionPart variable.
+         *
+         * @param Element sectionElement
+         *
+         * @return undefined
+         */
+        function initImportButton(sectionElement) {
+            let sectionItem = CBUISectionItem4.create();
+            sectionItem.callback = function () {
+                if (!disabled) {
+                    dataFileInputElement.click();
+                }
+            };
+
+            importActionPart = CBUIStringsPart.create();
+            importActionPart.string1 = "Import CSV File...";
+            importActionPart.element.classList.add("action");
+
+            sectionItem.appendPart(importActionPart);
+            sectionElement.appendChild(sectionItem.element);
         }
     },
 };
