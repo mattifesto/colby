@@ -17,17 +17,16 @@ var CBModelsImportAdmin = {
      * @return undefined
      */
     init: function() {
+        let dataFileInputElement;
         let saveUnchangedModels = false;
         let disabled = false;
         var main = document.getElementsByTagName("main")[0];
         var status = CBUIProcessStatus.create();
 
+        initDateFileInputElement();
+
         /* import CSV */
 
-        let input = document.createElement("input");
-        input.type = "file";
-        input.style.display = "none";
-        document.body.appendChild(input);
 
         main.appendChild(CBUI.createHalfSpace());
 
@@ -40,7 +39,7 @@ var CBModelsImportAdmin = {
                 let sectionItem = CBUISectionItem4.create();
                 sectionItem.callback = function () {
                     if (!disabled) {
-                        input.click();
+                        dataFileInputElement.click();
                     }
                 };
 
@@ -70,7 +69,7 @@ var CBModelsImportAdmin = {
 
         main.appendChild(status.element);
 
-        input.addEventListener("change", function() {
+        dataFileInputElement.addEventListener("change", function() {
             disabled = true;
             importActionPart.element.classList.add("disabled");
 
@@ -80,12 +79,12 @@ var CBModelsImportAdmin = {
                 {
                     saveUnchangedModels: saveUnchangedModels,
                 },
-                input.files[0]
+                dataFileInputElement.files[0]
             )
             .then(uploadFulfilled)
             .catch(Colby.displayAndReportError);
 
-            input.value = null;
+            dataFileInputElement.value = null;
 
             /* closure */
             function uploadFulfilled(response) {
@@ -116,6 +115,21 @@ var CBModelsImportAdmin = {
                 });
             }
         });
+
+        /**
+         * CBModelsImportAdmin.init() closure
+         *
+         *      Creates and initializes the closure dataFileInputElement
+         *      variable.
+         *
+         * @return undefined
+         */
+        function initDateFileInputElement() {
+            dataFileInputElement = document.createElement("input");
+            dataFileInputElement.type = "file";
+            dataFileInputElement.style.display = "none";
+            document.body.appendChild(dataFileInputElement);
+        }
     },
 };
 
