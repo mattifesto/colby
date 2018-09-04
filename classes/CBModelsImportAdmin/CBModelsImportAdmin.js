@@ -8,14 +8,15 @@
     CBUIProcessStatus,
     CBUISectionItem4,
     CBUIStringsPart,
-    Colby */
+    Colby
+*/
 
 var CBModelsImportAdmin = {
 
     /**
      * @return undefined
      */
-    DOMContentDidLoad: function() {
+    init: function() {
         let saveUnchangedModels = false;
         let disabled = false;
         var main = document.getElementsByTagName("main")[0];
@@ -118,4 +119,4 @@ var CBModelsImportAdmin = {
     },
 };
 
-Colby.afterDOMContentLoaded(CBModelsImportAdmin.DOMContentDidLoad);
+Colby.afterDOMContentLoaded(CBModelsImportAdmin.init);
