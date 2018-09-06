@@ -14,6 +14,6 @@ final class CBEqualizePageSettingsPart {
         <script src="<?= cbsysurl() . '/classes/CBEqualizePageSettingsPart/es6-promise.auto.min.v362.js' ?>"></script>
         <script src="<?= cbsysurl() . '/classes/CBEqualizePageSettingsPart/classList.min.v438.js' ?>"></script>
         <script src="<?= Colby::flexpath(__CLASS__, 'v438.js', cbsysurl()) ?>"></script>
-        <link rel="stylesheet" href="<?= Colby::flexpath(__CLASS__, 'v414.css', cbsysurl()) ?>">
+        <link rel="stylesheet" href="<?= Colby::flexpath(__CLASS__, 'v452.css', cbsysurl()) ?>">
     <?php }
 }

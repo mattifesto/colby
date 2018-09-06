@@ -1,11 +1,30 @@
-/*
-This file is used to give all platforms and browsers an equal starting point for
-CSS. If there is anything very basic that's different among platforms or
-browsers then rules should be added to this file to equalize and make the
-experience the same for all browsers and platforms. Rules that commonly change
-between themes or sites should not be placed in this file.
-*/
-
+/**
+ * This file is used to give all platforms and browsers an equal starting point
+ * for CSS. If there is anything very basic that's different among platforms or
+ * browsers then rules should be added to this file to equalize and make the
+ * experience the same for all browsers and platforms. Rules that commonly
+ * change between themes or sites should not be placed in this file.
+ *
+ * --CBBackgroundOffsetColor
+ *
+ *      This color should be used as the background color for CBArtworkElement
+ *      containers to render the CBArtworkElement aspect ratio box when the
+ *      actual image is not the same aspect ratio as specified on the
+ *      CBArtworkElement.
+ *
+ *          <div class="container">
+ *              <!-- CBArtworkElement -->
+ *          </div>
+ *
+ *      With images the shape of the image container is often a unifying design
+ *      aspect for the page. So showing this background color when an image
+ *      doesn't match its container shape brings stability to the visual design.
+ *
+ *      Sometimes beginning website administrators are unaware of concepts like
+ *      aspect ratio and sometimes advanced users don't have the time to make a
+ *      cropped image. In both cases use of this color can make the site look
+ *      more polished.
+ */
 
 * {
     margin: 0; /* 1 */
@@ -27,6 +46,7 @@ html {
 
 .CBDarkTheme {
     --CBBackgroundColor: hsl(0, 0%, 10%);
+    --CBBackgroundOffsetColor: hsl(0, 0%, 15%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.05);
     --CBTextColor: hsla(0, 0%, 100%, 0.9);
     --CBTextColor2: hsla(0, 0%, 100%, 0.6);
@@ -50,6 +70,7 @@ html {
 
 .CBLightTheme {
     --CBBackgroundColor: hsl(0, 0%, 100%);
+    --CBBackgroundOffsetColor: hsl(0, 0%, 98%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
     --CBTextColor: hsla(0, 0%, 0%, 0.9);
     --CBTextColor2: hsla(0, 0%, 0%, 0.6);
