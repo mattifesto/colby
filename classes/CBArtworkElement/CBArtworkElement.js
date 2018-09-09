@@ -1,24 +1,37 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBArtworkElement */
 /* globals
     CBModel,
-    Colby
 */
 
 var CBArtworkElement = {
 
     /**
+     * For a better understanding of this function and CBArtworkElement, view
+     * the documentation at:
+     *
+     *      /admin/?c=CBArtworkElementDocumentation
+     *
      * @param object args
      *
      *      {
-     *          filename: string?   (default: "rw1280")
-     *          image: object?
-     *          src: string?
-     *          maxWidth: int?      (@deprecated use width)
-     *          width: string?      (default: "100vw" example: "480px")
+     *          URL: string
      *
-     *              The intrinsic display width in CSS pixels.
+     *              The URL for the image.
+     *
+     *          aspectRatioWidth: number (default: 1)
+     *          aspectRatioHeight: number (default: 1)
+     *
+     *              These arguments specify the aspect ratio of the container.
+     *              Callers often provide the original image dimensions in
+     *              pixels, because that is what is available in the CBImage
+     *              model. Other times, such as when fitting the image in a
+     *              square aspect ratio container, they may be 1 and 1.
+     *
+     *          maxWidth: number (optional)
+     *          maxHeight: number (optional)
      *      }
      *
      * @return Element
