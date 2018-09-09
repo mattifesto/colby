@@ -42,6 +42,24 @@ final class CBImage {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v453.js', cbsysurl()),
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBModel',
+        ];
+    }
+
+    /**
      * This model is validated more than most models because all of the
      * properties are required for the model to be valid.
      *
