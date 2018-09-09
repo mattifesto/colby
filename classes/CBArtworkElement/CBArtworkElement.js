@@ -37,47 +37,50 @@ var CBArtworkElement = {
      * @return Element
      */
     create: function (args) {
-        if (!args.image && !args.src) {
-            return document.createComment(" CBArtworkElement: no image data was provided ");
-        }
+        let URL = CBModel.valueToString(args, "URL");
+        let aspectRatioWidth = CBModel.valueAsNumber(args, 'aspectRatioWidth') || 1;
+        let aspectRatioHeight = CBModel.valueAsNumber(args, 'aspectRatioHeight') || 1;
+        let maxWidth = CBModel.valueAsNumber(args, 'maxWidth');
+        let maxHeight = CBModel.valueAsNumber(args, 'maxHeight');
 
-        var element = document.createElement("div");
-        element.className = "CBArtworkElement";
-        element.style.width = args.width || (args.maxWidth ? args.maxWidth + "px" : "100vw");
+        let calculatedMaxWidth = CBArtworkElement.calculateMaxWidth(
+            maxWidth,
+            maxHeight,
+            aspectRatioWidth,
+            aspectRatioHeight
+        );
 
-        var containerElement = document.createElement("div");
-        var imgElement = document.createElement("img");
-        imgElement.style.width = "100%";
+        /* outer element */
 
-        if (args.image) {
-            imgElement.src = Colby.imageToURL(args.image, args.filename || "rw1280");
-            imgElement.style.position = "absolute";
-            imgElement.style.top = "0";
-            imgElement.style.left = "0";
-            containerElement.style.overflow = "hidden";
-            containerElement.style.position = "relative";
-            containerElement.style.paddingBottom = ((args.image.height / args.image.width) * 100) + "%";
+        var outerElement = document.createElement("div");
+        outerElement.className = "CBArtworkElement";
+
+        if (calculatedMaxWidth !== undefined) {
+            outerElement.style.width = calculatedMaxWidth + "px";
         } else {
-
-            /**
-             * Returning only the img element with a max-width will get the job
-             * done. The element will change size after the image loads.
-             */
-
-            imgElement.src = args.src;
-            imgElement.style.display = "block";
-
-            if (args.maxWidth) {
-                imgElement.style.maxWidth = args.maxWidth + "px";
-            }
-
-            return imgElement;
+            outerElement.style.width = "100vw";
         }
 
-        containerElement.appendChild(imgElement);
-        element.appendChild(containerElement);
+        /* inner element */
 
-        return element;
+        var innerElement = document.createElement("div");
+
+        {
+            let ratio = (aspectRatioHeight / aspectRatioWidth);
+            let percent = ratio * 100;
+
+            innerElement.style.paddingBottom = percent + "%";
+        }
+
+        /* image element */
+
+        var imageElement = document.createElement("img");
+        imageElement.src = URL;
+
+        innerElement.appendChild(imageElement);
+        outerElement.appendChild(innerElement);
+
+        return outerElement;
     },
 
     /**
