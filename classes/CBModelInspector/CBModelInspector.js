@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* global
     CBArtworkElement,
+    CBImage,
     CBMessageMarkup,
     CBModelInspector_modelID,
     CBUI,
@@ -113,13 +114,14 @@ var CBModelInspector = {
                     container.style.padding = "0 20px";
                     container.style.justifyContent = "center";
 
-                    let image = CBArtworkElement.create({
-                        filename: "rw1600",
-                        image: model,
-                        width: "800px"
+                    let artworkElement = CBArtworkElement.create({
+                        URL: CBImage.toURL(model, "rw1600"),
+                        aspectRatioWidth: model.width,
+                        aspectRatioHeight: model.height,
+                        maxWidth: 800,
                     });
 
-                    container.appendChild(image);
+                    container.appendChild(artworkElement);
                     args.container.appendChild(container);
                     args.container.appendChild(CBUI.createHalfSpace());
                 }

@@ -63,6 +63,7 @@ final class CBModelInspector {
     static function CBHTMLOutput_requiredClassNames() {
         return [
             'CBArtworkElement',
+            'CBImage',
             'CBMessageMarkup',
             'CBUI',
             'CBUIExpander',
@@ -80,7 +81,7 @@ final class CBModelInspector {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v442.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v453.js', cbsysurl())
         ];
     }
 
