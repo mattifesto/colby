@@ -6,14 +6,17 @@ final class CBTitleAndDescriptionDocumentation {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['help', 'title_description'];
+        return [
+            'help',
+            'title_description'
+        ];
     }
 
     /**
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::pageInformation()->title = 'Caption and Alternative Text';
+        CBHTMLOutput::pageInformation()->title = 'Title and Description';
 
         echo '<div class="CBLightTheme">';
 
