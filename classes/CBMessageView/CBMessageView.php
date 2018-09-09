@@ -6,15 +6,17 @@ final class CBMessageView {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
     }
 
     /**
-     * @param model $spec
+     * @param object $spec
      *
      * @return ?object
      */
-    static function CBModel_toModel(stdClass $spec): ?stdClass {
+    static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
             'html' => CBMessageMarkup::markupToHTML(CBModel::valueToString($spec, 'markup')),
             'markup' => CBModel::valueToString($spec, 'markup'),
