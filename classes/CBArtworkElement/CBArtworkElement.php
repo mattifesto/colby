@@ -61,6 +61,15 @@ final class CBArtworkElement {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBModel',
+        ];
+    }
+
+    /**
      * @param int $maxHeight
      *
      *      The length in any units of the maximum desired height.

@@ -2,7 +2,9 @@
 /* jshint strict: global */
 /* exported CBArtworkElement */
 /* globals
-    Colby */
+    CBModel,
+    Colby
+*/
 
 var CBArtworkElement = {
 
