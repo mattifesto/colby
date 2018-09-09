@@ -31,7 +31,7 @@
  * @NOTE
  *
  *      A CBImage model holds an image's original size, and this size can be
- *      used to specify the aspetc ratio for a CBArtworkElement.
+ *      used to specify the aspect ratio for a CBArtworkElement.
  *
  *      In older browsers that don't support object-fit, most notably IE 11,
  *      images may overflow the container and be cropped. Colby treats IE 11 as
@@ -46,7 +46,9 @@ final class CBArtworkElement {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v383.css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v383.css', cbsysurl()),
+        ];
     }
 
     /**
