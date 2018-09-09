@@ -45,7 +45,7 @@ final class CBModel {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v439.js', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v453.js', cbsysurl())];
     }
 
     /**
