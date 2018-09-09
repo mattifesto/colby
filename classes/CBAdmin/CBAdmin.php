@@ -38,7 +38,9 @@ final class CBAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v374.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v374.js', cbsysurl()),
+        ];
     }
 
     /**
