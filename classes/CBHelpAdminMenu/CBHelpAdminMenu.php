@@ -21,14 +21,7 @@ final class CBHelpAdminMenu {
             'title' => 'Help',
             'titleURI' => '/admin/?c=CBTitleAndDescriptionDocumentation',
             'ID' => CBHelpAdminMenu::ID(),
-            'items' => [
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'CBArtworkElement',
-                    'text' => 'CBArtworkElement',
-                    'URL' => '/admin/page/?class=CBAdminPageForCBArtworkElement',
-                ],
-            ],
+            'items' => [],
         ];
 
         /**
