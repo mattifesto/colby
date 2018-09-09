@@ -76,7 +76,22 @@ final class Colby {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v448.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v453.js', cbsysurl()),
+        ];
+    }
+
+    /**
+     * @NOTE 2018.09.06
+     *
+     *      The function imageToURL() in Colby.js has been deprecated and moved
+     *      to toURL() in CBImage.js. Once all callers have been migrated the
+     *      CBImage required class name can be removed.
+     *
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBImage',
         ];
     }
 

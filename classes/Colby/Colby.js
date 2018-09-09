@@ -2,6 +2,9 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* exported Colby */
+/* global
+    CBImage,
+*/
 
 var Colby = {
     updateTimesTimeoutID: null,
@@ -348,28 +351,12 @@ var Colby = {
     },
 
     /**
-     * @NOTE 2017.08.21 Eventually we can check the image model className but
-     * right now there are still a lot of old image specs that were created
-     * without a className property.
+     * @deprecated 2018.09.06
      *
-     * @param string image.filename
-     * @param string image.extension
-     * @param hex160 image.ID
-     * @param string? filename
-     *      If specified, this will be used instead of the filename in the image
-     *      parameter. Used to specify a smaller size such as "rw320" because
-     *      often the image parameter will specify original.
-     *
-     * @return string
+     *      Use CBImage::toURL()
      */
-    imageToURL : function (image, filename) {
-        if (typeof image != "object" /* || image.className !== "CBImage" */) {
-            return "";
-        }
-
-        filename = filename || image.filename;
-        var basename = filename + "." + image.extension;
-        return "/" + Colby.dataStoreFlexpath(image.ID, basename);
+    imageToURL: function (image, filename) {
+        return CBImage.toURL(image, filename);
     },
 
     /**
