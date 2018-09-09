@@ -1,26 +1,33 @@
 <?php
 
-final class CBAdminPageForCBArtworkElement {
+final class CBArtworkElementDocumentation {
 
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
-        return ['help', 'CBArtworkElement'];
+    static function CBAdmin_menuNamePath(): array {
+        return [
+            'help',
+            'CBArtworkElement'
+        ];
     }
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Developers'];
+    static function CBAdmin_group(): string {
+        return 'Developers';
     }
 
     /**
-     * @return null
+     * @return void
      */
-    static function adminPageRenderContent() {
-        CBHTMLOutput::pageInformation()->title = 'CBArtworkElement Help';
+    static function CBAdmin_render(): void {
+        CBHTMLOutput::pageInformation()->title = 'CBArtworkElement Documentation';
+
+        CBView::renderSpec((object)[
+            'className' => 'CBPageTitleAndDescriptionView',
+        ]);
 
         $URL = CBTestAdmin::testImageURL();
         $CSS = <<<EOT
@@ -39,10 +46,6 @@ EOT;
         CBHTMLOutput::addCSS($CSS);
 
         $message = <<<EOT
-
-            --- h1
-            CBArtworkElement
-            ---
 
             A CBArtworkElement uses a set of 3 elements to display an image with
             the following features:
@@ -280,5 +283,30 @@ EOT;
             'maxWidth' => 640,
             'URL' => $URL,
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBHelpAdminMenu::ID());
+
+        $spec->items[] = (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'CBArtworkElement',
+            'text' => 'CBArtworkElement',
+            'URL' => '/admin/?c=CBArtworkElementDocumentation',
+        ];
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return ['CBHelpAdminMenu'];
     }
 }
