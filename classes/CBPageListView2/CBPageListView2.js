@@ -26,17 +26,28 @@ var CBPageListView2 = {
     fetchPages: function (state) {
         var classNameForKind = state.element.dataset.classnameforkind;
 
-        var formData = new FormData();
-        formData.append("classNameForKind", classNameForKind);
+        Colby.callAjaxFunction(
+            "CBPageListView2",
+            "fetchPages",
+            {
+                classNameForKind: classNameForKind,
+                publishedBeforeTimestamp: state.published,
+            }
+        ).then(display).catch(Colby.report);
 
-        if (state.published) {
-            formData.append("publishBeforeTimestamp", state.published);
-        }
+        return;
 
-        Colby.fetchAjaxResponse("/api/?class=CBPageListView2&function=fetchPages", formData)
-             .then(display)
-             .catch(Colby.report);
-
+        /**
+         * CBPageListView2.fetchPages() closure
+         *
+         * @param object result
+         *
+         *      {
+         *          pages: [object]
+         *      }
+         *
+         * @return undefined
+         */
         function display(result) {
             var count = 0;
 

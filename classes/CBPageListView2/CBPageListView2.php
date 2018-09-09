@@ -3,44 +3,52 @@
 final class CBPageListView2 {
 
     /**
-     * @param string $_POST['classNameForKind']
+     * @param object $args
      *
-     * @return null
+     *      {
+     *          classNameForKind: string
+     *          publishedBeforeTimestamp: ?int
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          pages: [object]
+     *      }
      */
-    static function fetchPagesForAjax() {
-        $response = new CBAjaxResponse();
-        $classNameForKindAsSQL = CBDB::stringToSQL(cb_post_value('classNameForKind', ''));
+    static function CBAjax_fetchPages($args): stdClass {
+        $classNameForKind = CBModel::valueToString($args, 'classNameForKind');
+        $classNameForKindAsSQL = CBDB::stringToSQL($classNameForKind);
+        $publishedBeforeTimestamp = CBModel::valueAsInt($args, 'publishedBeforeTimestamp');
 
-        if (empty($_POST['publishBeforeTimestamp'])) {
+        if (empty($publishedBeforeTimestamp)) {
             $publishedBeforeClause = '';
         } else {
-            $publishBeforeTimestamp = intval($_POST['publishBeforeTimestamp']);
-            $publishedBeforeClause = "AND `published` < {$publishBeforeTimestamp}";
+            $publishedBeforeClause = "AND `published` < {$publishedBeforeTimestamp}";
         }
 
         $SQL = <<<EOT
 
-            SELECT  `keyValueData`
-            FROM    `ColbyPages`
-            WHERE   `classNameForKind` = {$classNameForKindAsSQL} AND
-                    `published` IS NOT NULL
-                    {$publishedBeforeClause}
-            ORDER BY `published` DESC
-            LIMIT 10
+            SELECT      keyValueData
+            FROM        ColbyPages
+            WHERE       classNameForKind = {$classNameForKindAsSQL} AND
+                        published IS NOT NULL
+                        {$publishedBeforeClause}
+            ORDER BY    published DESC
+            LIMIT       10
 
 EOT;
 
-        $response->pages = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-        $response->message = count($response->pages) . " pages were fetched.";
-        $response->wasSuccessful = true;
-        $response->send();
+        return (object)[
+            'pages' => CBDB::SQLToArray($SQL, ['valueIsJSON' => true]),
+        ];
     }
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function fetchPagesForAjaxPermissions() {
-        return (object)['group' => 'Public'];
+    static function CBAjax_fetchPages_group() {
+        return 'Public';
     }
 
     /**
@@ -77,7 +85,10 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBArtworkElement', 'CBUI'];
+        return [
+            'CBArtworkElement',
+            'CBUI'
+        ];
     }
 
     /**
