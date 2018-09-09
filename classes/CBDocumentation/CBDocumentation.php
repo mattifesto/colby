@@ -41,9 +41,6 @@ final class CBDocumentation {
             case 'Markaround':
                 return ['help', 'Markaround'];
 
-            case 'TitlesAndDescriptions':
-                return ['help', 'TitlesAndDescriptions'];
-
             default:
                 return ['help'];
         }
