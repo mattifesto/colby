@@ -79,4 +79,36 @@ var CBArtworkElement = {
 
         return element;
     },
+
+    /**
+     * @param number? maxWidth
+     * @param number? maxHeight
+     * @param number aspectRatioWidth
+     * @param number aspectRatioHeight
+     *
+     * @return number?
+     *
+     *      If neither maxWidth nor maxHeight are provided, undefined will be
+     *      returned.
+     */
+    calculateMaxWidth: function(
+        maxWidth,
+        maxHeight,
+        aspectRatioWidth,
+        aspectRatioHeight
+    ) {
+        let result;
+
+        if (maxHeight !== undefined) {
+            result = maxHeight * (aspectRatioWidth / aspectRatioHeight);
+
+            if (maxWidth !== undefined) {
+                result = Math.min(result, maxWidth);
+            }
+        } else if (maxWidth !== undefined) {
+            result = maxWidth;
+        }
+
+        return result;
+    },
 };
