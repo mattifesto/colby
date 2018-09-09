@@ -53,7 +53,9 @@ final class CBArtworkElement {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v383.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v453.js', cbsysurl()),
+        ];
     }
 
     /**
