@@ -1,53 +1,50 @@
-.CBPageListView2_default > * {
-    padding: 40px 20px;
-    text-align: center;
-}
-
-.CBPageListView2_default > * + * {
-    border-top: 1px dashed var(--CBTextColor3);
-}
-
-.CBPageListView2_default a {
-    align-items: center;
-    color: inherit;
+/**
+ * This view's declarations follow the Colby View Element Standards
+ */
+.CBPageListView2_default > article {
+    box-sizing: border-box;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    max-width: 100%;
+    padding: 60px 20px;
+}
+
+.CBPageListView2_default > article > .content {
+    max-width: 100%;
+    width: 36em;
+
+    /* override anchor element defaults */
+    color: inherit;
     text-decoration: none;
 }
 
-/**
- * This element is inside a flexbox so it needs to ensure that it is no larger
- * that 100% wide.
- */
-.CBPageListView2_default .image {
-    max-width: 100%;
+.CBPageListView2_default > article .image {
+    background-color: var(--CBBackgroundOffsetColor);
 }
 
-.CBPageListView2_default h2 {
-    font-size: 2.5em;
-    padding: 40px 0 0;
+.CBPageListView2_default > article .text {
+    line-height: 1.6;
+    text-align: center;
 }
 
-@media (max-width: 735px) {
-    .CBPageListView2_default h2 {
-        font-size: 1.5em;
-    }
+.CBPageListView2_default > article .text > * {
+    margin: 10px 0;
 }
 
-.CBPageListView2_default .published {
+.CBPageListView2_default > article h2 {
+    font-size: inherit;
+}
+
+.CBPageListView2_default > article .description {
     color: var(--CBTextColor2);
-    font-size: 70%;
-    padding: 0 0 40px;
 }
 
-
-.CBPageListView2_default .description {
-    max-width: 36em;
+.CBPageListView2_default > article .published {
+    color: var(--CBTextColor3);
 }
 
-.CBPageListView2_default a .readmore {
+.CBPageListView2_default > article .readmore {
     color: var(--CBTextColorForLinks);
-    padding: 40px 0 0;
 }
 
 .CBPageListView2 .buttonContainer {

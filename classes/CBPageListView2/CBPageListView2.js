@@ -1,8 +1,10 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBPageListView2 */
 /* global
     CBArtworkElement,
+    CBImage,
     CBUI,
     Colby,
 */
@@ -47,38 +49,60 @@ var CBPageListView2 = {
                 var anchorElement = document.createElement("a");
                 anchorElement.href = "/" + page.URI + "/";
 
-                /* header */
-                var dateElement = document.createElement("div");
-                dateElement.className = "published";
-                dateElement.appendChild(Colby.unixTimestampToElement(page.publicationTimeStamp));
+                anchorElement.classList.add("content");
 
                 /* image */
+
                 var imageElement = document.createElement("div");
                 imageElement.className = "image";
-                var artworkElement = CBArtworkElement.create({
-                    filename: "rw960",
-                    image: page.image,
-                    src: page.thumbnailURL,
-                    width: "480px",
+
+                let URL = CBImage.toURL(page.image, "rw1280");
+
+                if (URL === "") {
+                    URL = page.thumbnailURL;
+                }
+
+                let artworkElement = CBArtworkElement.create({
+                    URL: URL,
+                    aspectRatioWidth: 16,
+                    aspectRatioHeight: 9,
                 });
 
                 imageElement.appendChild(artworkElement);
-
-                var titleElement = document.createElement("h2");
-                titleElement.className = "title";
-                titleElement.textContent = page.title;
-                var descriptionElement = document.createElement("div");
-                descriptionElement.className = "description";
-                descriptionElement.textContent = page.description;
-                var readModeElement = document.createElement("div");
-                readModeElement.className = "readmore";
-                readModeElement.textContent = "read more >";
-
                 anchorElement.appendChild(imageElement);
-                anchorElement.appendChild(titleElement);
-                anchorElement.appendChild(dateElement);
-                anchorElement.appendChild(descriptionElement);
-                anchorElement.appendChild(readModeElement);
+
+                /* text */
+
+                {
+                    let textElement = document.createElement("div");
+                    textElement.className = "text";
+
+                    let titleElement = document.createElement("h2");
+                    titleElement.className = "title";
+                    titleElement.textContent = page.title;
+
+                    textElement.appendChild(titleElement);
+
+                    let descriptionElement = document.createElement("div");
+                    descriptionElement.className = "description";
+                    descriptionElement.textContent = page.description;
+
+                    textElement.appendChild(descriptionElement);
+
+                    var dateElement = document.createElement("div");
+                    dateElement.className = "published";
+                    dateElement.appendChild(Colby.unixTimestampToElement(page.publicationTimeStamp));
+
+                    textElement.appendChild(dateElement);
+
+                    let readModeElement = document.createElement("div");
+                    readModeElement.className = "readmore";
+                    readModeElement.textContent = "read more >";
+
+                    textElement.appendChild(readModeElement);
+                    anchorElement.appendChild(textElement);
+                }
+
                 element.appendChild(anchorElement);
 
                 state.element.insertBefore(element, state.buttonContainerElement);
@@ -107,15 +131,6 @@ var CBPageListView2 = {
                 state.buttonContainerElement.classList.add("hidden");
             }
         }
-    },
-
-    /**
-     * @param string URL
-     *
-     * @return undefined
-     */
-    navigate: function (URL) {
-        location.href = URL;
     },
 };
 
