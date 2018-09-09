@@ -752,11 +752,25 @@ EOT;
             $modelAsJSONAsSQL = CBDB::stringToSQL(json_encode($tuple->model));
             $specAsJSONAsSQL = CBDB::stringToSQL(json_encode($tuple->spec));
 
-            return "({$IDAsSQL}, {$tuple->meta->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->meta->modified}, NULL)";
+            return "({$IDAsSQL}, {$tuple->meta->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->meta->modified})";
         }, $tuples);
         $values = implode(',', $values);
 
-        Colby::query("INSERT INTO CBModelVersions VALUES {$values}");
+        $SQL = <<<EOT
+
+            INSERT INTO CBModelVersions
+            (
+                ID,
+                version,
+                modelAsJSON,
+                specAsJSON,
+                timestamp
+            )
+            VALUES {$values}
+
+EOT;
+
+        Colby::query($SQL);
 
         /* 2: CBModels */
 
