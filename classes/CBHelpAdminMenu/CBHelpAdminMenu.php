@@ -11,15 +11,14 @@ final class CBHelpAdminMenu {
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'help',
-            'submenuID' => CBHelpAdminMenu::ID(),
             'text' => 'Help',
-            'URL' => '/admin/?c=CBTitleAndDescriptionDocumentation',
+            'URL' => '/admin/?c=CBDocumentation',
         ];
 
         $spec = (object)[
             'className' => 'CBMenu',
             'title' => 'Help',
-            'titleURI' => '/admin/?c=CBTitleAndDescriptionDocumentation',
+            'titleURI' => '/admin/?c=CBDocumentation',
             'ID' => CBHelpAdminMenu::ID(),
             'items' => [],
         ];
