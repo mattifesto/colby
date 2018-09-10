@@ -3,20 +3,19 @@
 final class CBArtworkElementDocumentation {
 
     /**
+     * @return string
+     */
+    static function CBAdmin_group(): string {
+        return 'Developers';
+    }
+
+    /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
         return [
             'help',
-            'CBArtworkElement'
         ];
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAdmin_group(): string {
-        return 'Developers';
     }
 
     /**
@@ -25,11 +24,6 @@ final class CBArtworkElementDocumentation {
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'CBArtworkElement Documentation';
 
-        CBView::renderSpec((object)[
-            'className' => 'CBPageTitleAndDescriptionView',
-        ]);
-
-        $URL = CBTestAdmin::testImageURL();
         $CSS = <<<EOT
 
             main.CBUIRoot {
@@ -45,6 +39,11 @@ EOT;
 
         CBHTMLOutput::addCSS($CSS);
 
+        CBView::renderSpec((object)[
+            'className' => 'CBPageTitleAndDescriptionView',
+        ]);
+
+        $URL = CBTestAdmin::testImageURL();
         $message = <<<EOT
 
             A CBArtworkElement uses a set of 3 elements to display an image with
