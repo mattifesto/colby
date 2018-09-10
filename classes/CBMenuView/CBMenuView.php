@@ -68,8 +68,9 @@ final class CBMenuView {
      * @return void
      */
     static function CBView_render(stdClass $model): void {
-        $menu = CBModel::value($model, 'menu');
-        if (!is_object($menu)) {
+        $menu = CBModel::valueAsObject($model, 'menu');
+
+        if (empty($menu)) {
             $menuID = CBModel::valueAsID($model, 'menuID');
 
             if (empty($menuID)) {
@@ -77,7 +78,7 @@ final class CBMenuView {
                 return;
             }
 
-            $menu = CBModels::fetchModelByID($menuID);
+            $menu = CBModelCache::fetchModelByID($menuID);
         }
 
         if (empty($menu) || (empty($menu->title) && empty($menu->items))) {
@@ -116,8 +117,8 @@ final class CBMenuView {
 
         $CSSClassNames = implode(' ', $CSSClassNames);
 
-        $titleAsHTML = CBModel::value($menu, 'title', '', 'cbhtml');
-        $titleURIAsHTML = CBModel::value($menu, 'titleURI', '', 'cbhtml');
+        $titleAsHTML = cbhtml(CBModel::valueToString($menu, 'title'));
+        $titleURIAsHTML = cbhtml(CBModel::valueToString($menu, 'titleURI'));
 
         /**
          * HTML Structure
@@ -162,9 +163,9 @@ final class CBMenuView {
                         $items = CBModel::valueToArray($menu, 'items');
 
                         array_walk($items, function ($item) use ($selectedItemName) {
-                            $name = CBModel::value($item, 'name', '');
-                            $textAsHTML = CBModel::value($item, 'text', '');
-                            $URLAsHTML = CBModel::value($item, 'URL', '', 'cbhtml');
+                            $name = CBModel::valueToString($item, 'name');
+                            $textAsHTML = cbhtml(CBModel::valueToString($item, 'text'));
+                            $URLAsHTML = cbhtml(CBModel::valueToString($item, 'URL'));
 
                             if (!empty($selectedItemName) && $name === $selectedItemName) {
                                 ?>
