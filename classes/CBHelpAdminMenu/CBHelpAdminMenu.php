@@ -15,42 +15,18 @@ final class CBHelpAdminMenu {
             'URL' => '/admin/?c=CBDocumentation',
         ];
 
-        $spec = (object)[
+        $helpAdminMenuSpec = (object)[
             'className' => 'CBMenu',
+            'ID' => CBHelpAdminMenu::ID(),
             'title' => 'Help',
             'titleURI' => '/admin/?c=CBDocumentation',
-            'ID' => CBHelpAdminMenu::ID(),
             'items' => [],
         ];
 
-        /**
-         * @deprecated The following code should be replaced with the pages
-         * having and install function that will add menu items to this menu.
-         */
-
-        $allClassNames = CBAdmin::fetchClassNames();
-
-        foreach ($allClassNames as $className) {
-            if (is_callable($function = "{$className}::CBAdmin_menuItems")) {
-                $menuItemData = call_user_func($function);
-
-                foreach ($menuItemData as $menuItemDatum) {
-                    switch ($menuItemDatum->mainMenuItemName) {
-                        case 'help':
-                            $spec->items[] = $menuItemDatum->menuItem;
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-
-        CBDB::transaction(function () use ($adminMenuSpec, $spec) {
+        CBDB::transaction(function () use ($adminMenuSpec, $helpAdminMenuSpec) {
             CBModels::save($adminMenuSpec);
             CBModels::deleteByID(CBHelpAdminMenu::ID());
-            CBModels::save($spec);
+            CBModels::save($helpAdminMenuSpec);
         });
     }
 
@@ -62,7 +38,7 @@ final class CBHelpAdminMenu {
     }
 
     /**
-     * @return hex160
+     * @return ID
      */
     static function ID(): string {
         return '62eeeabc11366b92bf22017903bffb1fead31764';
