@@ -117,6 +117,28 @@ final class CBStatusAdminPage {
                 }
             }
 
+            if (sha1_file(cbsitedir() . '/.gitignore') !== sha1_file(cbsysdir() . '/setup/gitignore.template.data')) {
+                $message = <<<EOT
+
+                    The website (.gitigore (code)) file is different than the
+                    (colby/setup/gitigore.template.data (code)) file.
+
+EOT;
+
+                array_push($issues, $message);
+            }
+
+            if (sha1_file(cbsitedir() . '/.htaccess') !== sha1_file(cbsysdir() . '/setup/htaccess.template.data')) {
+                $message = <<<EOT
+
+                    The website (.htaccess (code)) file is different than the
+                    (colby/setup/htaccess.template.data (code)) file.
+
+EOT;
+
+                array_push($issues, $message);
+            }
+
             /* 2018.05.05 Page kinds should install themselves. */
             if (is_callable('CBPageHelpers::classNamesForPageKinds')) {
                 $message = <<<EOT
@@ -149,12 +171,6 @@ EOT;
                 if (preg_match('/Colby\.php/', $text)) {
                     $issues[] = ['colby/Colby.php', 'The "index.php" file for this site references the deprecated "colby/Colby.php" file. Replace this with a reference to the "colby/init.php" file.'];
                 }
-            }
-
-            /* 2017.11.20 Warn if the site .htaccess is different from the Colby
-              .htaccess */
-            if (sha1_file(cbsitedir() . '/.htaccess') !== sha1_file(cbsysdir() . '/setup/htaccess.template.data')) {
-                $issues[] = ['.htaccess', 'The .htaccess file is different from the suggested Colby .htaccess file.'];
             }
 
             /* 2018.01.01 Warn if the site name has not been set. */
