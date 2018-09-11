@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @TODO 2018_09_10
- *
- *      File should be renamed to Page_blog.php
- *      Class should be renamed to PREFIXPage_blog
- */
 final class PREFIXPage_blog {
 
     /**
