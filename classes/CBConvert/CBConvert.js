@@ -282,6 +282,8 @@ var CBConvert = {
     },
 
     /**
+     * This function does not consider null values or arrays to be objects.
+     *
      * @param mixed value
      *
      * @return object
@@ -290,10 +292,12 @@ var CBConvert = {
      *      an empty object will be returned.
      */
     valueToObject: function (value) {
-        if (typeof value === "object" && !Array.isArray(value)) {
-            return value;
-        } else {
+        let valueAsObject = CBConvert.valueAsObject(value);
+
+        if (valueAsObject === undefined) {
             return {};
+        } else {
+            return valueAsObject;
         }
     },
 
