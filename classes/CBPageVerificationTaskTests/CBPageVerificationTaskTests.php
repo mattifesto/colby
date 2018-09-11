@@ -222,12 +222,6 @@ final class CBPageVerificationTaskTests {
     }
 
     /**
-     * This test exists to ensure code coverage. At this point, it does not
-     * ensure that the tested functionality has actually run.
-     *
-     * Manually, the log can be checked for an warning entry after this test is
-     * run to ensure that the functionality worked properly during the test.
-     *
      * @return object
      */
     static function CBTest_invalidImageProperty(): stdClass {
@@ -247,13 +241,54 @@ final class CBPageVerificationTaskTests {
             CBModels::save($spec);
         });
 
+        CBLog::bufferStart();
+
         $taskWasRun = CBTasks2::runSpecificTask(
             'CBPageVerificationTask',
             $ID
         );
 
-        if (!$taskWasRun) {
-            throw new Exception("The task was not run.");
+        $entries = CBLog::bufferContents();
+
+        CBLog::bufferEndClean();
+
+        /* task was run */
+
+        $actual = $taskWasRun;
+        $expected = true;
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'Task was run',
+                $actual,
+                $expected
+            );
+        }
+
+        /* log entry count */
+
+        $actual = count($entries);
+        $expected = 3;
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'Log entry count',
+                $actual,
+                $expected
+            );
+        }
+
+        /* log entry source ID */
+
+        $actual = CBModel::valueAsID($entries[0], 'sourceID');
+        $expected = '4b30866e7e5e5edf42b7a5cab882b072ec144b75';
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'Log entry source ID',
+                $actual,
+                $expected
+            );
         }
 
         /**
