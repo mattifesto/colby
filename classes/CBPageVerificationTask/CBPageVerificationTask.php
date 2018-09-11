@@ -179,9 +179,10 @@ EOT;
 EOT;
 
                     CBLog::log((object)[
-                        'className' => __CLASS__,
                         'message' => $message,
                         'severity' => 4,
+                        'sourceClassName' => __CLASS__,
+                        'sourceID' => '4b30866e7e5e5edf42b7a5cab882b072ec144b75',
                     ]);
                 }
             }
