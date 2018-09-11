@@ -247,12 +247,18 @@ var CBConvert = {
     },
 
     /**
+     * This function does not consider null values or arrays to be objects.
+     *
      * @param mixed value
      *
-     * @return Object|undefined
+     * @return object|undefined
      */
     valueAsObject: function (value) {
-        if (typeof value === "object") {
+        if (
+            typeof value === "object" &&
+            value !== null &&
+            !Array.isArray(value)
+        ) {
             return value;
         } else {
             return undefined;
