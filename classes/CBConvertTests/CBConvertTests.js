@@ -6,6 +6,7 @@
     CBConvert,
     CBModel,
     CBMessageMarkup,
+    CBTest,
 */
 
 var CBConvertTests = {
@@ -41,10 +42,10 @@ var CBConvertTests = {
 
             [21.22, 2122],
             [21, 2100],
-            [.22, 22],
-            [-.22, -22],
+            [0.22, 22],
+            [-0.22, -22],
 
-            [.333, undefined],
+            [0.333, undefined],
             [true, undefined],
             [false, undefined],
         ];
@@ -224,10 +225,51 @@ var CBConvertTests = {
     /**
      * @return object|Promise
      */
+    CBTest_valueAsObject: function () {
+        let tests = [
+            [{a:1}, "same"],
+            [{}, "same"],
+            [undefined],
+            [null],
+            [1],
+            ["1"],
+            [true],
+            [[1,2,3]],
+        ];
+
+        for (let i = 0; i < tests.length; i += 1) {
+            let test = tests[i];
+            let value = test[0];
+            let actual = CBConvert.valueAsObject(value);
+            let expected;
+
+            if (test[1] === "same") {
+                expected = value;
+            }
+
+            if (actual !== expected) {
+                return CBTest.resultMismatchFailure(
+                    `Test index ${i}`,
+                    actual,
+                    expected
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+
+    /**
+     * @return object|Promise
+     */
     CBTest_valueToObject: function () {
         let tests = [
             [{a:1}, "same"],
             [{}, "same"],
+            [undefined],
+            [null],
             [1],
             ["1"],
             [true],
@@ -240,68 +282,23 @@ var CBConvertTests = {
             let actual = CBConvert.valueToObject(value);
 
             if (test[1] === "same") {
-                if (actual !== value) {
-                    let valueAsMessage = CBMessageMarkup.stringToMessage(
-                        CBConvert.valueToPrettyJSON(value)
+                let expected = value;
+                if (actual !== expected) {
+                    return CBTest.resultMismatchFailure(
+                        `Test index ${i}`,
+                        actual,
+                        expected
                     );
-
-                    let actualAsMessage = CBMessageMarkup.stringToMessage(
-                        CBConvert.valueToPrettyJSON(actual)
-                    );
-
-                    let message = `
-
-                        The following value was provided as an argument to
-                        CBConvert.valueToObject()
-
-                        --- pre\n${valueAsMessage}
-                        ---
-
-                        The return value was expected to be the exact argument
-                        value but instead was
-
-                        --- pre\n${actualAsMessage}
-                        ---
-
-                    `;
-
-                    return {
-                        succeeded: false,
-                        message: message,
-                    };
                 }
             } else {
                 let expected = {};
 
                 if (!CBModel.equals(actual, expected)) {
-                    let valueAsMessage = CBMessageMarkup.stringToMessage(
-                        CBConvert.valueToPrettyJSON(value)
+                    return CBTest.resultMismatchFailure(
+                        `Test index ${i}`,
+                        actual,
+                        expected
                     );
-
-                    let actualAsMessage = CBMessageMarkup.stringToMessage(
-                        CBConvert.valueToPrettyJSON(actual)
-                    );
-
-                    let message = `
-
-                        The following value was provided as an argument to
-                        CBConvert.valueToObject()
-
-                        --- pre\n${valueAsMessage}
-                        ---
-
-                        The return value was expected to be an empty object but
-                        instead was
-
-                        --- pre\n${actualAsMessage}
-                        ---
-
-                    `;
-
-                    return {
-                        succeeded: false,
-                        message: message,
-                    };
                 }
             }
         }

@@ -6,7 +6,9 @@ final class CBConvertTests {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v438.1.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v455.1.js', cbsysurl()),
+        ];
     }
 
     /**
@@ -17,6 +19,7 @@ final class CBConvertTests {
             'CBConvert',
             'CBModel',
             'CBMessageMarkup',
+            'CBTest',
         ];
     }
 
@@ -28,6 +31,7 @@ final class CBConvertTests {
             ['CBConvert', 'dollarsAsCents'],
             ['CBConvert', 'valueAsInt'],
             ['CBConvert', 'valueAsNumber'],
+            ['CBConvert', 'valueAsObject'],
             ['CBConvert', 'valueToObject'],
         ];
     }
