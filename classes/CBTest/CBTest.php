@@ -134,6 +134,25 @@ EOT;
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v455.1.js', cbsysurl()),
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBConvert',
+            'CBMessageMarkup',
+        ];
+    }
+
+    /**
      * Sample JavaScript tests are provided in CBTestTests.php and
      * CBTestTests.js.
      *
@@ -173,11 +192,11 @@ EOT;
     static function resultMismatchFailure(string $testTitle, $actualResult, $expectedResult) {
         $testTitleAsMessage = CBMessageMarkup::stringToMessage($testTitle);
 
-        $actualResultAsJSON = CBMessageMarkup::stringToMarkup(
+        $actualResultAsJSONAsMessage = CBMessageMarkup::stringToMarkup(
             CBConvert::valueToPrettyJSON($actualResult)
         );
 
-        $expectedResultAsJSON = CBMessageMarkup::stringToMarkup(
+        $expectedResultAsJSONAsMessage = CBMessageMarkup::stringToMarkup(
             CBConvert::valueToPrettyJSON($expectedResult)
         );
 
@@ -187,14 +206,14 @@ EOT;
 
             {$testTitleAsMessage}
 
-            (result (strong))
+            (actual result (strong))
 
-            --- pre\n{$actualResultAsJSON}
+            --- pre\n{$actualResultAsJSONAsMessage}
             ---
 
-            (expected (strong))
+            (expected result (strong))
 
-            --- pre\n{$expectedResultAsJSON}
+            --- pre\n{$expectedResultAsJSONAsMessage}
             ---
 
 EOT;
