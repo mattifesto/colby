@@ -6,7 +6,7 @@
  *      File should be renamed to Menu_main.php
  *      Class should be renamed to PREFIXMenu_main
  */
-final class PREFIXMainMenu {
+final class PREFIXMenu_main {
 
     /**
      * @return void
@@ -15,7 +15,7 @@ final class PREFIXMainMenu {
         $updater = CBModelUpdater::fetch(
             (object)[
                 'className' => 'CBMenu',
-                'ID' => PREFIXMainMenu::ID(),
+                'ID' => PREFIXMenu_main::ID(),
                 'title' => 'Website',
                 'titleURI' => '/',
             ]
