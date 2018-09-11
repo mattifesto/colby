@@ -259,8 +259,14 @@ class ColbyInstaller {
 
                 $content = file_get_contents($sourceFilepath);
                 $content = preg_replace('/PREFIX/', $prefix, $content);
-                $randomID = CBHex160::random();
-                $content = preg_replace('/RANDOMID/', "'{$randomID}'", $content);
+                $content = preg_replace_callback(
+                    '/RANDOMID/',
+                    function () {
+                        $ID = CBHex160::random();
+                        return "'{$ID}'";
+                    },
+                    $content
+                );
                 file_put_contents($destinationFilepath, $content);
             }
         } catch (Throwable $throwable) {
