@@ -6,6 +6,7 @@
 /* global
     CBMessageMarkup,
     CBModel,
+    CBTest,
 */
 
 var CBModelTests = {
@@ -189,6 +190,40 @@ var CBModelTests = {
                 return {
                     message: message,
                 };
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+
+    /**
+     * @return object|Promise
+     */
+    CBTest_value: function () {
+        let tests = [
+            [null, "color", undefined], /* bug fix test */
+            [{color: "red"}, "color", "red"],
+            [{color: null}, "color.shade", undefined], /* bug fix test */
+            [{color: {shade: "light"}}, "color.shade", "light"],
+            [{number: 42}, "number", 42],
+        ];
+
+        for (let i = 0; i < tests.length; i += 1) {
+            let test = tests[i];
+            let model = test[0];
+            let keyPath = test[1];
+            let expected = test[2];
+
+            let actual = CBModel.value(model, keyPath);
+
+            if (actual !== expected) {
+                return CBTest.resultMismatchFailure(
+                    `Test index ${i}`,
+                    actual,
+                    expected
+                );
             }
         }
 

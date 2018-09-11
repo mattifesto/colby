@@ -6,7 +6,9 @@ final class CBModelTests {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v439.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v455.1.js', cbsysurl()),
+        ];
     }
 
     /**
@@ -14,8 +16,9 @@ final class CBModelTests {
      */
     static function CBTest_javaScriptTests(): array {
         return [
-            ['CBModel', 'equals'],
             ['CBModel', 'classFunction'],
+            ['CBModel', 'equals'],
+            ['CBModel', 'value'],
         ];
     }
 
@@ -26,6 +29,7 @@ final class CBModelTests {
         return [
             'CBMessageMarkup',
             'CBModel',
+            'CBTest',
         ];
     }
 
