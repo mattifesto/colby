@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @TODO 2018_08_20
- *
- *      File should be renamed to Menu_main.php
- *      Class should be renamed to PREFIXMenu_main
- */
 final class PREFIXMenu_main {
 
     /**
