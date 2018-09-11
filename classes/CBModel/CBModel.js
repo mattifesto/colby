@@ -160,6 +160,8 @@ var CBModel = {
      * @return mixed
      */
     value: function (model, keyPath) {
+        model = CBConvert.valueAsObject(model);
+
         if (model === undefined) {
             return undefined;
         }
@@ -173,7 +175,7 @@ var CBModel = {
 
         for (let i = 0; i < keys.length; i += 1) {
             let key = keys[i];
-            model = model[key];
+            model = CBConvert.valueAsObject(model[key]);
 
             if (model === undefined) {
                 return undefined;
