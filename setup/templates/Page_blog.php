@@ -6,14 +6,14 @@
  *      File should be renamed to Page_blog.php
  *      Class should be renamed to PREFIXPage_blog
  */
-final class PREFIXBlogPage {
+final class PREFIXPage_blog {
 
     /**
      * @return void
      */
     static function CBInstall_configure(): void {
-        PREFIXBlogPage::installPage();
-        PREFIXBlogPage::installMenuItem();
+        PREFIXPage_blog::installPage();
+        PREFIXPage_blog::installMenuItem();
     }
 
     /**
@@ -29,7 +29,7 @@ final class PREFIXBlogPage {
     private static function installMenuItem(): void {
         $updater = CBModelUpdater::fetch(
             (object)[
-                'ID' => PREFIXMainMenu::ID(),
+                'ID' => PREFIXMenu_main::ID(),
             ]
         );
 
@@ -55,7 +55,7 @@ final class PREFIXBlogPage {
         $updater = CBModelUpdater::fetch(
             CBModelTemplateCatalog::fetchLivePageTemplate(
                 (object)[
-                    'ID' => PREFIXBlogPage::ID(),
+                    'ID' => PREFIXPage_blog::ID(),
                     'classNameForKind' => 'PREFIXGeneratedPageKind',
                     'isPublished' => true,
                     'selectedMenuItemNames' => 'blog',
@@ -97,7 +97,7 @@ final class PREFIXBlogPage {
             $sourceID,
             (object)[
                 'className' => 'CBPageListView2',
-                'classNameForKind' => 'CBBlogPostPageKind',
+                'classNameForKind' => 'PREFIXBlogPostPageKind',
                 'sourceID' => $sourceID,
             ]
         );
