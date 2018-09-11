@@ -234,16 +234,16 @@ class ColbyInstaller {
 
             $prefix = ColbyInstaller::$properties->siteClassPrefix;
             $templates = [
-                ['BlogPage', 'php'],
                 ['BlogPostPageKind', 'php'],
                 ['BlogPostPageTemplate', 'php'],
-                ['MainMenu', 'php'],
+                ['Menu_main', 'php'],
                 ['PageFooterView', 'php'],
                 ['PageFooterView', 'css'],
                 ['PageFrame', 'php'],
                 ['PageHeaderView', 'php'],
                 ['PageSettings', 'php'],
                 ['PageTemplate', 'php'],
+                ['Page_blog', 'php'],
             ];
 
             foreach ($templates as $template) {
