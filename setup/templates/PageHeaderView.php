@@ -20,7 +20,7 @@ final class PREFIXPageHeaderView {
 
             CBView::render((object)[
                 'className' => 'CBMenuView',
-                'menuID' => PREFIXMainMenu::ID(),
+                'menuID' => PREFIXMenu_main::ID(),
                 'selectedItemName' => $selectedMainMenuItemName,
             ]);
 
