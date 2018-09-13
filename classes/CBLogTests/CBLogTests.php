@@ -55,20 +55,70 @@ EOT;
     }
 
     /**
-     * This is a code coverage test for bufferEndFlush(). This test does not
-     * confirm that the function ran correcty.
-     *
      * @return object
      */
     static function CBTest_bufferEndFlush(): stdClass {
+        $sourceID = CBHex160::random();
+        $message = <<<EOT
+
+            This is a temporary test log entry created by the function
+            CBTest_bufferEndFlush() in the class CBLogTests.
+
+            It should be deleted by the test, so if you see this in the log
+            investigate why it wasn't.
+
+EOT;
+
         CBLog::bufferStart();
 
         CBLog::log((object)[
-            'className' => __CLASS__,
-            'message' => __FUNCTION__ . '() in ' . __CLASS__,
+            'message' => $message,
+            'sourceClassName' => __CLASS__,
+            'sourceID' => $sourceID,
         ]);
 
         CBLog::bufferEndFlush();
+
+        /* log entry count */
+
+        $entries = CBLog::entries((object)[
+            'sourceID' => $sourceID,
+        ]);
+
+        $actual = count($entries);
+        $expected = 1;
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'log entry count',
+                $actual,
+                $expected
+            );
+        }
+
+        /* delete log entry */
+
+        $sourceIDAsSQL = CBHex160::toSQL($sourceID);
+        Colby::query("DELETE FROM CBLog WHERE sourceID = {$sourceIDAsSQL}");
+
+        /* log entry count after delete */
+
+        $entries = CBLog::entries((object)[
+            'sourceID' => $sourceID,
+        ]);
+
+        $actual = count($entries);
+        $expected = 0;
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'log entry count after delete',
+                $actual,
+                $expected
+            );
+        }
+
+        /* done */
 
         return (object)[
             'succeeded' => true,
