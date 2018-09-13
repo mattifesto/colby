@@ -28,6 +28,7 @@ final class CBModelTests {
     static function CBTest_phpTests(): array {
         return [
             ['CBModel', 'upgrade'],
+            ['CBModel', 'upgradeSpecWithID'],
         ];
     }
 
@@ -119,9 +120,86 @@ final class CBModelTests {
             'succeeded' => true,
         ];
     }
+
+    /**
+     * This test verifies that if log entires are made while a spec with an ID
+     * is being upgraded, that those entires will have a modelID equal to the
+     * spec's ID.
+     *
+     * This tests has to read the log entry out of the CBLog table because the
+     * actual entry made will not have have a modelID specified.
+     *
+     * @return object
+     */
+    static function CBTest_upgradeSpecWithID(): stdClass {
+        $ID = CBHex160::random();
+        $spec = (object)[
+            'className' => 'CBModelTests_TestClass1',
+            'ID' => $ID,
+        ];
+
+        CBModel::upgrade($spec);
+
+        $entries = CBLog::entries((object)[
+            'modelID' => $ID,
+        ]);
+
+        /* log entry count */
+
+        $actual = count($entries);
+        $expected = 1;
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'log entry count',
+                $actual,
+                $expected
+            );
+        }
+
+        /* log entry source ID */
+
+        $actual = CBModel::valueAsID($entries[0], 'sourceID');
+        $expected = '15f8d83aef490873969223172e5b218a1cb8d987';
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'log entry source ID',
+                $actual,
+                $expected
+            );
+        }
+
+        /* log entry model ID */
+
+        $actual = CBModel::valueAsID($entries[0], 'modelID');
+        $expected = $ID;
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'log entry model ID',
+                $actual,
+                $expected
+            );
+        }
+
+        /* remove log entry from CBLog */
+
+        $IDAsSQL = CBHex160::toSQL($ID);
+
+        Colby::query("DELETE FROM CBLog WHERE modelID = {$IDAsSQL}");
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
 }
 
-
+/**
+ *
+ */
 final class CBModelTests_TestClass1 {
 
     /**
