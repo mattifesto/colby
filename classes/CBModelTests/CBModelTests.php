@@ -102,18 +102,18 @@ final class CBModelTests {
      * @return object
      */
     static function CBTest_upgrade(): stdClass {
-        $ID = CBHex160::random();
-        $classNames = CBAdmin::fetchClassNames();
+        CBLog::buffer(function () {
+            $classNames = CBAdmin::fetchClassNames();
 
-        foreach ($classNames as $className) {
-            $spec = (object)[
-                'ID' => $ID,
-                'className' => $className,
-                'title' => 'This is the title of a test model created by CBTest_upgrade() in CBModelTests',
-            ];
+            foreach ($classNames as $className) {
+                $spec = (object)[
+                    'className' => $className,
+                    'title' => 'This is the title of a test model created by CBTest_upgrade() in CBModelTests',
+                ];
 
-            $upgradedSpec = CBModel::upgrade($spec);
-        }
+                $upgradedSpec = CBModel::upgrade($spec);
+            }
+        });
 
         return (object)[
             'succeeded' => true,
