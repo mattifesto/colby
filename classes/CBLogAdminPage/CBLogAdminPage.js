@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBLogAdminPage */
 /* globals
+    CBModel,
     CBUI,
     CBUIExpander,
     CBLogAdminPage_classNames,
