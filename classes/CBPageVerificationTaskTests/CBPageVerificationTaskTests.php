@@ -158,9 +158,9 @@ final class CBPageVerificationTaskTests {
      * that the image is imported and the spec is upgraded to use the `image`
      * property instead of `thumbnailURL`.
      *
-     * @return null
+     * @return object
      */
-    static function importThumbnailURLToImageTest() {
+    static function CBTest_importThumbnailURLToImage(): stdClass {
         $pageID = '4a7bc517a928056f9518d839881cc9f49ea10c0a';
         $temporaryImageDataStoreID = 'a66a45225d071a4f6e65c475ece1810ac4dec45a';
 
@@ -190,7 +190,41 @@ final class CBPageVerificationTaskTests {
             CBModels::save($initialPageSspec);
         });
 
+        CBLog::bufferStart();
+
         CBTasks2::runSpecificTask('CBPageVerificationTask', $pageID);
+
+        $entries = CBLog::bufferContents();
+
+        CBLog::bufferEndClean();
+
+        /* log entry count */
+
+        $actual = count($entries);
+        $expected = 3;
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'Log entry count',
+                $actual,
+                $expected
+            );
+        }
+
+        /* log entry source ID */
+
+        $actual = CBModel::valueAsID($entries[0], 'sourceID');
+        $expected = '0099cecb597038d4bf5f182965271e25cc60c070';
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'Log entry source ID',
+                $actual,
+                $expected
+            );
+        }
+
+        /* --- */
 
         $updatedPageSpec = CBModels::fetchSpecByID($pageID);
 
@@ -219,6 +253,10 @@ final class CBPageVerificationTaskTests {
 
         CBModels::deleteByID($temporaryImageDataStoreID);
         CBModels::deleteByID(CBTestAdmin::testImageID());
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 
     /**
@@ -290,10 +328,6 @@ final class CBPageVerificationTaskTests {
                 $expected
             );
         }
-
-        /**
-         * A log entry should be created, no current way to verify.
-         */
 
         CBDB::transaction(function () use ($ID) {
             CBModels::deleteByID($ID);
