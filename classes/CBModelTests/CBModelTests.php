@@ -45,17 +45,25 @@ final class CBModelTests {
 
     /**
      * This test runs a CBModel::build() test for all known classes.
+     *
+     * @return object
      */
-    static function buildTest() {
-        $classNames = CBAdmin::fetchClassNames();
+    static function CBTest_build(): stdClass {
+        CBLog::buffer(function () {
+            $classNames = CBAdmin::fetchClassNames();
 
-        foreach ($classNames as $className) {
-            $spec = (object)[
-                'className' => $className,
-            ];
+            foreach ($classNames as $className) {
+                $spec = (object)[
+                    'className' => $className,
+                ];
 
-            $model = CBModel::build($spec);
-        }
+                $model = CBModel::build($spec);
+            }
+        });
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 
     /**
