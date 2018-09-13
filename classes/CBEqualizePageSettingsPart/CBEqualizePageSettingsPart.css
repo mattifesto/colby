@@ -156,6 +156,17 @@ code, pre {
     font-family: var(--CBMonospaceFontFamily);
 }
 
+/**
+ * @NOTE 2018_09_12
+ *
+ *      Why is this declaration in this file?
+ *      Why is it not just "overflow-x: auto;"?
+ *
+ *      Consider removing this declaration and only adding it in places where
+ *      its context is fully documented.
+ *
+ *      Similar pre element styles exist in CBContentStyleSheet.css.
+ */
 pre {
     overflow: auto;
 }
