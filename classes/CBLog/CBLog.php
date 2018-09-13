@@ -85,6 +85,36 @@ EOT;
     }
 
     /**
+     * This function will run the callback buffering any log entries. If the
+     * callback executes without throwing an exception, any log entries made
+     * will be returned from the function and won't be flushed to the log.
+     *
+     * If an exception occurs, any log entries made will be flushed to the log
+     * and the exception will be re-thrown.
+     *
+     * @return [object]
+     *
+     *      Returns a array of log entries.
+     */
+    static function buffer(callable $callback): array {
+        CBLog::bufferStart();
+
+        try {
+            call_user_func($callback);
+
+            $entries = CBLog::bufferContents();
+
+            CBLog::bufferEndClean();
+        } catch (Throwable $throwable) {
+            CBLog::bufferEndFlush();
+
+            throw $throwable;
+        }
+
+        return $entries;
+    }
+
+    /**
      * @return ?[object]
      *
      *      If log entries are currently being buffered, an array of log entries
