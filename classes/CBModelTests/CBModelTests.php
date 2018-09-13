@@ -23,6 +23,15 @@ final class CBModelTests {
     }
 
     /**
+     * @return [[<className>, <testName>]]
+     */
+    static function CBTest_phpTests(): array {
+        return [
+            ['CBModel', 'upgrade'],
+        ];
+    }
+
+    /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
