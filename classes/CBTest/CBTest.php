@@ -172,6 +172,62 @@ EOT;
     }
 
     /**
+     * @return [[<className>, <testName>]]
+     */
+    static function phpTests(): array {
+        $tests = [
+            ['CB',                      'class'],
+            ['CBConvert',               'linesToParagraphs'],
+            ['CBConvert',               'textToLines'],
+            ['CBConvert',               'valueAsInt'],
+            ['CBConvert',               'valueAsModel'],
+            ['CBDataStore',             'createAndDelete'],
+            ['CBDataStore',             'directoryNameFromDocumentRoot'],
+            ['CBDataStore',             'toURL'],
+            ['CBDataStore',             'URIToID'],
+            ['CBDB',                    'hex160ToSQL'],
+            ['CBDB',                    'optional'],
+            ['CBDB',                    'SQLToArray'],
+            ['CBDB',                    'SQLToAssociativeArray'],
+            ['CBDB',                    'SQLToValue'],
+            ['CBImage',                 'upgrade'],
+            ['CBImages',                'resize'],
+            ['CBMarkaround',            'paragraphToHTML'],
+            ['CBModel',                 'build'],
+            ['CBModel',                 'buildMinimalImplementation'],
+            ['CBModel',                 'toSearchText'],
+            ['CBModels',                'fetchModelByID'],
+            ['CBModels',                'fetchModelsByID'],
+            ['CBModels',                'saveNullableModel'],
+            ['CBModels',                'saveSpecWithoutID'],
+            ['CBPageLayout',            'CBModel_toModel'],
+            ['CBPages',                 'stringToDencodedURIPath'],
+            ['CBProjection'],
+            ['CBSitePreferences'],
+            ['CBTestPage'],
+            ['CBView',                  'render'],
+            ['CBView',                  'toSubviews'],
+            ['CBViewPage',              'save'],
+            ['Colby',                   'encryption'],
+            ['ColbyMarkaroundParser',   'orderedList'],
+            ['ColbyMarkaroundParser',   'paragraph'],
+            ['ColbyMarkaroundParser',   'unorderedList'],
+        ];
+
+        $classNames = CBAdmin::fetchClassNames();
+
+        foreach ($classNames as $className) {
+            if (is_callable($function = "{$className}::CBTest_phpTests")) {
+                $tests = array_merge($tests, call_user_func($function));
+            } else if (is_callable($function = "{$className}::CBUnitTests_tests")) {
+                $tests = array_merge($tests, call_user_func($function));
+            }
+        }
+
+        return $tests;
+    }
+
+    /**
      * @param string $testTitle
      *
      *      The test function name and class name will be added by the test
