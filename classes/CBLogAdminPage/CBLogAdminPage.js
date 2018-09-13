@@ -107,31 +107,88 @@ var CBLogAdminPage = {
             entriesElement.textContent = "";
 
             for (let entry of entries) {
-                let message = `
+                let informationMessage = "";
 
-                    ${entry.message}
+                {
+                    let modelID = CBModel.valueAsID(entry, "modelID");
 
-                    --- h2
-                    Log Entry Information
-                    ---
+                    if (modelID !== undefined) {
+                        informationMessage += `
 
-                    (modelID(b))((br))
-                    (${entry.modelID}(code))((br))
-                    (Inspect >(a /admin/?c=CBModelInspector&ID=${entry.modelID}))
+                            --- dt
+                            modelID
+                            ---
+                            --- dd
+                            ((${modelID} (code)) (a /admin/?c=CBModelInspector&ID=${modelID}))
+                            ---
 
-                    (processID(b))((br))
-                    (${entry.processID}(code))
+                        `;
+                    }
+                }
 
-                    (sourceClassName(b))((br))
-                    ${entry.sourceClassName}
+                {
+                    let processID = CBModel.valueAsID(entry, "processID");
 
-                    (sourceID(b))((br))
-                    (${entry.sourceID} (code))
+                    if (processID !== undefined) {
+                        informationMessage += `
 
-                `;
+                            --- dt
+                            processID
+                            ---
+                            --- dd
+                            (${processID} (code))
+                            ---
+
+                        `;
+                    }
+                }
+
+                {
+                    let sourceClassName = CBModel.valueToString(entry, "sourceClassName");
+
+                    if (sourceClassName !== "") {
+                        informationMessage += `
+
+                            --- dt
+                            sourceClassName
+                            ---
+                            --- dd
+                            (${sourceClassName} (code))
+                            ---
+
+                        `;
+                    }
+                }
+
+                {
+                    let sourceID = CBModel.valueAsID(entry, "sourceID");
+
+                    if (sourceID !== undefined) {
+                        informationMessage += `
+
+                            --- dt
+                            sourceID
+                            ---
+                            --- dd
+                            (${sourceID} (code))
+                            ---
+
+                        `;
+                    }
+                }
+
+                if (informationMessage != "") {
+                    informationMessage = `
+
+                        --- dl
+                        ${informationMessage}
+                        ---
+
+                    `;
+                }
 
                 entriesElement.appendChild(CBUIExpander.create({
-                    message: message,
+                    message: entry.message + informationMessage,
                     severity: entry.severity,
                     timestamp: entry.timestamp,
                 }).element);

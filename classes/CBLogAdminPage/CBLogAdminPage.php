@@ -24,18 +24,6 @@ final class CBLogAdminPage {
     }
 
     /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
-            'CBUI',
-            'CBUIExpander',
-            'CBUINavigationView',
-            'CBUISelector',
-        ];
-    }
-
-    /**
      * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables() {
@@ -60,7 +48,20 @@ EOT;
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v446.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v456.js', cbsysurl()),
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBModel',
+            'CBUI',
+            'CBUIExpander',
+            'CBUINavigationView',
+            'CBUISelector',
         ];
     }
 }
