@@ -96,18 +96,28 @@ final class CBModelTests {
     }
 
     /**
-     * This test runs a CBModel::upgrade() test for all known classes.
+     * This test creates a test spec for all known classes and passes it to
+     * CBModel::upgrade().
+     *
+     * @return object
      */
-    static function upgradeTest() {
+    static function CBTest_upgrade(): stdClass {
+        $ID = CBHex160::random();
         $classNames = CBAdmin::fetchClassNames();
 
         foreach ($classNames as $className) {
             $spec = (object)[
+                'ID' => $ID,
                 'className' => $className,
+                'title' => 'This is the title of a test model created by CBTest_upgrade() in CBModelTests',
             ];
 
             $upgradedSpec = CBModel::upgrade($spec);
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 }
 
