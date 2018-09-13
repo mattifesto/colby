@@ -160,6 +160,8 @@ final class CBConvertTests {
     }
 
     /**
+     * @deprecated use CBTest::resultMismatchFailure()
+     *
      * @param mixed $result
      * @param mixed $expected
      *
