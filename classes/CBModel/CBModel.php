@@ -358,6 +358,12 @@ final class CBModel {
             return null;
         }
 
+        $ID = CBModel::valueAsID($spec, 'ID');
+
+        if (!empty($ID)) {
+            CBID::push($ID);
+        }
+
         $upgradedSpec = CBModel::clone($spec);
 
         if (is_callable($function = "{$spec->className}::CBModel_upgrade")) {
@@ -367,15 +373,14 @@ final class CBModel {
                 throw new Exception("{$function}() returned an invalid model");
             }
 
-            $ID = CBModel::valueAsID($spec, 'ID');
             $upgradedID = CBModel::valueAsID($upgradedSpec, 'ID');
 
             if ($upgradedID != $ID) {
                 $message = <<<EOT
 
-                    When the {$className} model with the ID "{$ID}"
-                    was upgraded using CBModel::upgrade(), the ID was
-                    altered which is not allowed.
+                    When the {$className} model with the ID "{$ID}" was upgraded
+                    using CBModel::upgrade(), the ID was altered which is not
+                    allowed.
 
                     The upgrade was cancelled.
 
@@ -389,6 +394,10 @@ EOT;
 
                 return CBModel::clone($spec);
             }
+        }
+
+        if (!empty($ID)) {
+            CBID::pop();
         }
 
         return $upgradedSpec;
