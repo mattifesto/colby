@@ -189,23 +189,17 @@ EOT;
      *              severity or greater severity. Note: Severity becomes greater
      *              as the severity integer gets lower.
      *
+     *          modelID: ?ID
+     *
      *          mostRecentDescending: bool?
      *
      *          processID: hex160?
      *
-     *              If specified, will only fetch log entries made for this
-     *              process ID.
-     *
-     *          className: ?string (deprecated)
+     *          className: ?string (deprecated, use sourceClassName)
      *          sourceClassName: ?string
-     *
-     *              If specified, will only fetch log entries with the specified
-     *              source class name.
      *
      *          sourceID: ?ID
      *
-     *              If specified, will only fetch log entries with the specified
-     *              source ID.
      *      }
      *
      * @return [object]
@@ -236,6 +230,17 @@ EOT;
             $whereAsSQL[] = "`timestamp` > {$afterTimestamp}";
         }
 
+        /* modelID */
+
+        $modelID = CBModel::valueAsID($args, 'modelID');
+
+        if (!empty($modelID)) {
+            $modelIDAsSQL = CBHex160::toSQL($modelID);
+            array_push($whereAsSQL, "modelID = {$modelIDAsSQL}");
+        }
+
+        /* sourceClassName */
+
         $sourceClassName = CBModel::valueToString($args, 'sourceClassName');
 
         if (empty($sourceClassName)) {
@@ -246,6 +251,8 @@ EOT;
             $sourceClassNameAsSQL = CBDB::stringToSQL($sourceClassName);
             $whereAsSQL[] = "`sourceClassName` = {$sourceClassNameAsSQL}";
         }
+
+        /* sourceID */
 
         $sourceID = CBModel::valueAsID($args, 'sourceID');
 
