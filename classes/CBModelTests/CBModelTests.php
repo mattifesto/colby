@@ -132,4 +132,19 @@ final class CBModelTests_TestClass1 {
     static function CBModel_build(stdClass $spec) {
         return (object)[];
     }
+
+    /**
+     * @param object $spec
+     *
+     * @param object
+     */
+    static function CBModel_upgrade(stdClass $spec): stdClass {
+        CBLog::log((object)[
+            'message' => 'test log entry',
+            'sourceClassName' => __CLASS__,
+            'sourceID' => '15f8d83aef490873969223172e5b218a1cb8d987',
+        ]);
+
+        return $spec;
+    }
 }
