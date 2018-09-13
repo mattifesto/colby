@@ -1,3 +1,12 @@
+.CBContentStyleSheet {
+    /**
+     * 2018_09_12 This will allow long words like IDs and URLs to wrap of they
+     * take up more than one line of width. Child pre elementsunset this rule
+     * below.
+     */
+    overflow-wrap: break-word;
+}
+
 .CBContentStyleSheet h1 {
     font-size: 1.5em;
 }
@@ -20,6 +29,7 @@
 }
 
 .CBContentStyleSheet dt {
+    font-weight: bold;
     margin-bottom: 0.5em;
     margin-top: 0.5em;
 }
@@ -36,7 +46,7 @@
  * like a sub-element of its preceding dt element.
  */
 .CBContentStyleSheet dd {
-    margin: 0.5em 3.0em;
+    margin: 0.5em 0.5em;
 }
 
 /**
@@ -82,6 +92,11 @@
 .CBContentStyleSheet pre + *,
 .CBContentStyleSheet ul + * {
     margin-top: 1.5em;
+}
+
+.CBContentStyleSheet pre {
+    overflow-wrap: normal; /* unset inherited value */
+    overflow-x: auto;
 }
 
 .CBContentStyleSheet pre.green {
