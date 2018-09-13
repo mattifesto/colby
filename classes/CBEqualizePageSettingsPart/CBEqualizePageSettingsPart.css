@@ -92,6 +92,10 @@ html {
     color: var(--CBTextColor);
 }
 
+.CBBackgroundOffsetColor {
+    background-color: var(--CBBackgroundOffsetColor);
+}
+
 a {
     color: var(--CBTextColorForLinks);
 }
