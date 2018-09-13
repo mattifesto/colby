@@ -40,6 +40,51 @@ final class CBLog {
     }
 
     /**
+     * @param string $message
+     *
+     * @return string
+     */
+    private static function appendBacktrace(string $message): string {
+        $backtrace = debug_backtrace();
+
+        /**
+         * Shift off the call to CBlog::appendBacktrace()
+         */
+        array_shift($backtrace);
+
+        /**
+         * Shift off the call to CBLog::logForReals()
+         */
+        array_shift($backtrace);
+
+        /**
+         * Shift off the call to CBLog::log()
+         */
+        array_shift($backtrace);
+
+        $backtraceAsJSONAsMessage = CBMessageMarkup::stringToMessage(
+            CBConvert::valueToPrettyJSON($backtrace)
+        );
+
+        $message .= <<<EOT
+
+            --- dl
+                --- dt
+                backtrace
+                ---
+
+                --- dd
+                    --- pre backtrace CBBackgroundOffsetColor\n{$backtraceAsJSONAsMessage}
+                    ---
+                ---
+            ---
+
+EOT;
+
+        return $message;
+    }
+
+    /**
      * @return ?[object]
      *
      *      If log entries are currently being buffered, an array of log entries
@@ -330,6 +375,7 @@ EOT;
         /* message */
 
         $message = CBModel::valueToString($args, 'message');
+        $message = CBLog::appendBacktrace($message);
         $messageAsSQL = CBDB::stringToSQL($message);
 
         /* process ID */
