@@ -28,20 +28,23 @@ final class CBFlexBoxView {
      * @return model
      */
     static function CBModel_upgrade(stdClass $spec): stdClass {
-        $specAsMarkup = CBMessageMarkup::stringToMarkup(
+        $specAsJSONAsMessage = CBMessageMarkup::stringToMessage(
             CBConvert::valueToPrettyJSON($spec)
         );
 
+        $message = <<<EOT
+
+            A CBFlexBoxView was upgraded to a CBContainerView2
+
+            --- pre\n{$specAsJSONAsMessage}
+            ---
+
+EOT;
+
         CBLog::log((object)[
-            'className' => __CLASS__,
-            'message' => <<<EOT
-
-                A CBFlexBoxView was upgraded to a CBContainerView2
-
-                --- pre\n{$specAsMarkup}
-                ---
-
-EOT
+            'message' => $message,
+            'sourceClassName' => __CLASS__,
+            'sourceID' => '7a17c8d3bdc1a02f3930f873ddd7df8f78ae3bfd',
         ]);
 
         $spec->className = 'CBContainerView2';
