@@ -183,11 +183,6 @@ EOT;
      *              greater than afterTimestamp. This allows callers to request
      *              only new entries since the last tiime they asked.
      *
-     *          className: string?
-     *
-     *              If specified, will only fetch log entries with the specified
-     *              class name.
-     *
      *          lowestSeverity: int?
      *
      *              If specified, will only fetch log entries with the specified
@@ -200,6 +195,17 @@ EOT;
      *
      *              If specified, will only fetch log entries made for this
      *              process ID.
+     *
+     *          className: ?string (deprecated)
+     *          sourceClassName: ?string
+     *
+     *              If specified, will only fetch log entries with the specified
+     *              source class name.
+     *
+     *          sourceID: ?ID
+     *
+     *              If specified, will only fetch log entries with the specified
+     *              source ID.
      *      }
      *
      * @return [object]
@@ -230,11 +236,22 @@ EOT;
             $whereAsSQL[] = "`timestamp` > {$afterTimestamp}";
         }
 
-        $sourceClassName = CBModel::valueToString($args, 'className');
+        $sourceClassName = CBModel::valueToString($args, 'sourceClassName');
+
+        if (empty($sourceClassName)) {
+            $sourceClassName = CBModel::valueToString($args, 'className');
+        }
 
         if (!empty($sourceClassName)) {
             $sourceClassNameAsSQL = CBDB::stringToSQL($sourceClassName);
             $whereAsSQL[] = "`sourceClassName` = {$sourceClassNameAsSQL}";
+        }
+
+        $sourceID = CBModel::valueAsID($args, 'sourceID');
+
+        if (!empty($sourceID)) {
+            $sourceIDAsSQL = CBHex160::toSQL($sourceID);
+            $whereAsSQL[] = "sourceID = {$sourceIDAsSQL}";
         }
 
         $lowestSeverity = CBModel::value($args, 'lowestSeverity', null, 'CBConvert::valueAsInt');
