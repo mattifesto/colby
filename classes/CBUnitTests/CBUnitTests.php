@@ -53,54 +53,7 @@ class CBUnitTests {
      */
     static function getListOfTestsForAjax() {
         $response = new CBAjaxResponse();
-        $response->tests = [
-            ['CB',                      'class'],
-            ['CBConvert',               'linesToParagraphs'],
-            ['CBConvert',               'textToLines'],
-            ['CBConvert',               'valueAsInt'],
-            ['CBConvert',               'valueAsModel'],
-            ['CBDataStore',             'createAndDelete'],
-            ['CBDataStore',             'directoryNameFromDocumentRoot'],
-            ['CBDataStore',             'toURL'],
-            ['CBDataStore',             'URIToID'],
-            ['CBDB',                    'hex160ToSQL'],
-            ['CBDB',                    'optional'],
-            ['CBDB',                    'SQLToArray'],
-            ['CBDB',                    'SQLToAssociativeArray'],
-            ['CBDB',                    'SQLToValue'],
-            ['CBImage',                 'upgrade'],
-            ['CBImages',                'resize'],
-            ['CBMarkaround',            'paragraphToHTML'],
-            ['CBModel',                 'build'],
-            ['CBModel',                 'buildMinimalImplementation'],
-            ['CBModel',                 'toSearchText'],
-            ['CBModel',                 'upgrade'],
-            ['CBModels',                'fetchModelByID'],
-            ['CBModels',                'fetchModelsByID'],
-            ['CBModels',                'saveNullableModel'],
-            ['CBModels',                'saveSpecWithoutID'],
-            ['CBPageLayout',            'CBModel_toModel'],
-            ['CBPages',                 'stringToDencodedURIPath'],
-            ['CBProjection'],
-            ['CBSitePreferences'],
-            ['CBTestPage'],
-            ['CBView',                  'render'],
-            ['CBView',                  'toSubviews'],
-            ['CBViewPage',              'save'],
-            ['Colby',                   'encryption'],
-            ['ColbyMarkaroundParser',   'orderedList'],
-            ['ColbyMarkaroundParser',   'paragraph'],
-            ['ColbyMarkaroundParser',   'unorderedList'],
-        ];
-
-        $classNames = CBAdmin::fetchClassNames();
-
-        foreach ($classNames as $className) {
-            if (is_callable($function = "{$className}::CBUnitTests_tests")) {
-                $response->tests = array_merge($response->tests, call_user_func($function));
-            }
-        }
-
+        $response->tests = CBTest::phpTests();
         $response->wasSuccessful = true;
         $response->send();
     }
