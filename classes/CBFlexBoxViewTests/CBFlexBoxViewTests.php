@@ -53,12 +53,9 @@ final class CBFlexBoxViewTests {
             ],
         ];
 
-        CBLog::bufferStart();
-
-        $actual = CBModel::upgrade($original);
-        $entries = CBLog::bufferContents();
-
-        CBLog::bufferEndClean();
+        $entries = CBLog::buffer(function () use ($original, &$actual) {
+            $actual = CBModel::upgrade($original);
+        });
 
         if ($actual != $expected) {
             return CBTest::resultMismatchFailure('upgrade', $actual, $expected);
