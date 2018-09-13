@@ -53,20 +53,41 @@ final class CBFlexBoxViewTests {
             ],
         ];
 
-        $result = CBModel::upgrade($original);
+        CBLog::bufferStart();
 
-        if ($result != $expected) {
-            $message = CBConvertTests::resultAndExpectedToMessage($result, $expected);
+        $actual = CBModel::upgrade($original);
+        $entries = CBLog::bufferContents();
 
-            return (object)[
-                'message' => <<<EOT
+        CBLog::bufferEndClean();
 
-                    The result upgraded spec does not match the expected upgrade spec:
+        if ($actual != $expected) {
+            return CBTest::resultMismatchFailure('upgrade', $actual, $expected);
+        }
 
-                    {$message}
+        /* log entry count */
 
-EOT
-            ];
+        $actual = count($entries);
+        $expected = 1;
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'log entry count',
+                $actual,
+                $expected
+            );
+        }
+
+        /* log entry source ID */
+
+        $actual = CBModel::valueAsID($entries[0], 'sourceID');
+        $expected = '7a17c8d3bdc1a02f3930f873ddd7df8f78ae3bfd';
+
+        if ($actual !== $expected) {
+            return CBTest::resultMismatchFailure(
+                'log entry source ID',
+                $actual,
+                $expected
+            );
         }
 
         return (object)[
