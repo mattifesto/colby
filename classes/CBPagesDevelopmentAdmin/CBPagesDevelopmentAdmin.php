@@ -6,7 +6,10 @@ final class CBPagesDevelopmentAdmin {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['pages', 'develop'];
+        return [
+            'pages',
+            'develop',
+        ];
     }
 
     /**
@@ -27,7 +30,9 @@ final class CBPagesDevelopmentAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v380.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v380.js', cbsysurl()),
+        ];
     }
 
     /**
@@ -61,15 +66,20 @@ EOT;
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIExpander', 'CBUINavigationArrowPart',
-                'CBUISectionItem4', 'CBUIStringsPart'];
+        return [
+            'CBUI',
+            'CBUIExpander',
+            'CBUINavigationArrowPart',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
+        ];
     }
 
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBPagesAdminMenu::ID);
+        $spec = CBModels::fetchSpecByID(CBPagesAdminMenu::ID());
         $spec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'develop',
@@ -86,6 +96,8 @@ EOT;
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBPagesAdminMenu'];
+        return [
+            'CBPagesAdminMenu'
+        ];
     }
 }
