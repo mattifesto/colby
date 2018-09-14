@@ -96,4 +96,36 @@ final class CBAdminPageForPagesFind {
             ['CBPageKindsOptions', $pageKinds]
         ];
     }
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $updater = CBModelUpdater::fetch((object)[
+            'ID' => CBPagesAdminMenu::ID(),
+        ]);
+
+        $pagesAdminMenuSpec = $updater->working;
+
+        CBMenu::addOrReplaceItem(
+            $pagesAdminMenuSpec,
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'find',
+                'text' => 'Find',
+                'URL' => '/admin/page/?class=CBAdminPageForPagesFind',
+            ]
+        );
+
+        CBModelUpdater::save($updater);
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBPagesAdminMenu',
+        ];
+    }
 }
