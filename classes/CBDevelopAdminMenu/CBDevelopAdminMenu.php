@@ -60,7 +60,10 @@ final class CBDevelopAdminMenu {
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBAdminMenu', 'CBHelpAdminMenu'];
+        return [
+            'CBAdminMenu',
+            'CBHelpAdminMenu',
+        ];
     }
 
     /**
