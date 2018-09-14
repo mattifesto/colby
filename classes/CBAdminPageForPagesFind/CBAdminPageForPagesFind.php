@@ -6,7 +6,10 @@ final class CBAdminPageForPagesFind {
      * @return [string]
      */
     static function adminPageMenuNamePath() {
-        return ['pages', 'find'];
+        return [
+            'pages',
+            'find',
+        ];
     }
 
     /**
@@ -27,23 +30,34 @@ final class CBAdminPageForPagesFind {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-         return ['CBUI', 'CBUINavigationArrowPart', 'CBUINavigationView',
-                 'CBUISectionItem4', 'CBUISelector', 'CBUIStringEditor',
-                 'CBUIStringsPart', 'CBUIThumbnailPart'];
+        return [
+            'CBUI',
+            'CBUINavigationArrowPart',
+            'CBUINavigationView',
+            'CBUISectionItem4',
+            'CBUISelector',
+            'CBUIStringEditor',
+            'CBUIStringsPart',
+            'CBUIThumbnailPart',
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v411.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v411.js', cbsysurl()),
+        ];
     }
 
     /**
