@@ -2,8 +2,6 @@
 
 final class CBPagesAdminMenu {
 
-    const ID = '8a2344fe85d9224f6d5f8964a7d0e350fcc6985b';
-
     /**
      * @return void
      */
@@ -13,14 +11,14 @@ final class CBPagesAdminMenu {
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'pages',
-            'submenuID' => CBPagesAdminMenu::ID,
+            'submenuID' => CBPagesAdminMenu::ID(),
             'text' => 'Pages',
             'URL' => '/admin/page/?class=CBAdminPageForPagesFind',
         ];
 
-        $spec = (object)[
+        $pagesAdminMenuSpec = (object)[
             'className' => 'CBMenu',
-            'ID' => CBPagesAdminMenu::ID,
+            'ID' => CBPagesAdminMenu::ID(),
             'title' => 'Pages',
             'titleURI' => '/admin/page/?class=CBAdminPageForPagesFind',
             'items' => [
@@ -30,19 +28,13 @@ final class CBPagesAdminMenu {
                     'text' => 'Create',
                     'URL' => '/admin/?c=CBModelsAdminTemplateSelector&modelClassName=CBViewPage',
                 ],
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'find',
-                    'text' => 'Find',
-                    'URL' => '/admin/page/?class=CBAdminPageForPagesFind',
-                ],
             ],
         ];
 
-        CBDB::transaction(function () use ($adminMenuSpec, $spec) {
+        CBDB::transaction(function () use ($adminMenuSpec, $pagesAdminMenuSpec) {
             CBModels::save($adminMenuSpec);
-            CBModels::deleteByID(CBPagesAdminMenu::ID);
-            CBModels::save($spec);
+            CBModels::deleteByID(CBPagesAdminMenu::ID());
+            CBModels::save($pagesAdminMenuSpec);
         });
     }
 
@@ -54,5 +46,12 @@ final class CBPagesAdminMenu {
             'CBAdminMenu',
             'CBGeneralAdminMenu',
         ];
+    }
+
+    /**
+     * @return ID
+     */
+    static function ID(): string {
+        return '8a2344fe85d9224f6d5f8964a7d0e350fcc6985b';
     }
 }
