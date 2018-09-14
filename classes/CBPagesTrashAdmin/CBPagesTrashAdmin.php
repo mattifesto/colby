@@ -6,7 +6,10 @@ final class CBPagesTrashAdmin {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['pages', 'trash'];
+        return [
+            'pages',
+            'trash',
+        ];
     }
 
     /**
@@ -20,14 +23,16 @@ final class CBPagesTrashAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v381.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v381.js', cbsysurl()),
+        ];
     }
 
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBPagesAdminMenu::ID);
+        $spec = CBModels::fetchSpecByID(CBPagesAdminMenu::ID());
 
         $spec->items[] = (object)[
             'className' => 'CBMenuItem',
@@ -45,7 +50,9 @@ final class CBPagesTrashAdmin {
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBPagesAdminMenu'];
+        return [
+            'CBPagesAdminMenu',
+        ];
     }
 
     /**
@@ -98,6 +105,8 @@ EOT;
      * @return [string]
      */
     static function requiredClassNames() {
-        return ['CBUI'];
+        return [
+            'CBUI',
+        ];
     }
 }
