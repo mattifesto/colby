@@ -47,6 +47,16 @@ EOT;
 
         $items = CBModel::valueToArray($menuModel, 'items');
 
+        usort(
+            $items,
+            function ($a, $b) {
+                $atext = CBModel::valueToString($a, 'text');
+                $btext = CBModel::valueToString($b, 'text');
+
+                return $atext <=> $btext;
+            }
+        );
+
         array_walk(
             $items,
             function ($item) {
