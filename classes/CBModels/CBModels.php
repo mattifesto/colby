@@ -625,7 +625,7 @@ EOT;
             $mostRecentVersion = (int)$initialDataByID[$ID]->version;
 
             if ($force !== true) {
-                $specVersion = CBModel::value($tuple->spec, 'version', 0);
+                $specVersion = CBModel::valueAsInt($tuple->spec, 'version') ?? 0;
 
                 if ($specVersion !== $mostRecentVersion) {
                     throw new CBModelVersionMismatchException();
