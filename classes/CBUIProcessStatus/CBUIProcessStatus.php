@@ -16,7 +16,7 @@ final class CBUIProcessStatus {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v448.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v457.js', cbsysurl()),
         ];
     }
 

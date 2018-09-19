@@ -116,7 +116,7 @@ var CBUIProcessStatus = {
 
             /* closure */
             function onFetchTaskStatusFulfilled(status) {
-                var text = status.complete + " / " + status.total;
+                var text = status.complete + " / " + (status.complete + status.ready);
 
                 if (status.scheduled > 0) {
                     text += " Scheduled: " + status.scheduled;
