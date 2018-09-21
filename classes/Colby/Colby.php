@@ -633,9 +633,14 @@ final class Colby {
         while (true) {
             $result = $mysqli->query($SQL);
 
-            if ($mysqli->errno === 1213 && $retryOnDeadlock && $countOfDeadlocks < $maxDeadlocks) {
-                $countOfDeadlocks += 1;
-                continue;
+            if ($mysqli->errno === 1213) {
+                if ($retryOnDeadlock && $countOfDeadlocks < $maxDeadlocks) {
+                    $countOfDeadlocks += 1;
+                    continue;
+                } else {
+                    // @TODO save InnoDB status somewhere for dev reference
+                    //$status = $msysqli->query('SHOW ENGINE INNODB STATUS');
+                }
             }
 
             if ($mysqli->error) {
