@@ -3,6 +3,12 @@
 final class CBModelAssociationsTable {
 
     /**
+     * @TODO 2018_09_14
+     *
+     *      Add the following key to the table:
+     *
+     *      KEY associatedID_className (associatedID, className)
+     *
      * @return void
      */
     static function CBInstall_install(): void {
