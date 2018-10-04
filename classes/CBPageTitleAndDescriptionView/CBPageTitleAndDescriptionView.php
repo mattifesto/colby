@@ -36,7 +36,13 @@ final class CBPageTitleAndDescriptionView {
 
         $CSSClassNames = implode(' ', $CSSClassNames);
 
-        ?><header class="CBPageTitleAndDescriptionView <?= $CSSClassNames ?>"><div><?php
+        ?>
+
+        <header class="CBPageTitleAndDescriptionView <?= $CSSClassNames ?>">
+            <div>
+
+                <?php
+
             if (!empty($info->title)) {
                 if (empty($model->titleColor)) {
                     $style = '';
