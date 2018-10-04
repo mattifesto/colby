@@ -43,14 +43,21 @@ final class CBPageTitleAndDescriptionView {
 
                 <?php
 
-            if (!empty($info->title)) {
-                if (empty($model->titleColor)) {
-                    $style = '';
-                } else {
-                    $style = "style='color: {$model->titleColor}'";
+                if (!empty($info->title)) {
+                    if (empty($model->titleColor)) {
+                        $style = '';
+                    } else {
+                        $style = "color: {$model->titleColor}";
+                    }
+
+                    ?>
+
+                    <h1 class="title" style="<?= $style ?>">
+                        <?= cbhtml($info->title) ?>
+                    </h1>
+
+                    <?php
                 }
-                echo "<h1 class='title' {$style}>" . cbhtml($info->title) . '</h1>';
-            }
 
             if (!empty($info->description) && empty($model->hideDescription)) {
                 if (empty($model->descriptionColor)) {
