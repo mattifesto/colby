@@ -118,7 +118,13 @@ final class CBMenuView {
         $CSSClassNames = implode(' ', $CSSClassNames);
 
         $titleAsHTML = cbhtml(CBModel::valueToString($menu, 'title'));
-        $titleURIAsHTML = cbhtml(CBModel::valueToString($menu, 'titleURI'));
+        $titleURI = CBModel::valueToString($menu, 'titleURI');
+
+        if ($titleURI === '') {
+            $titleHREFAttribute = '';
+        } else {
+            $titleHREFAttribute = 'href="' . cbhtml($titleURI) . '"';
+        }
 
         /**
          * HTML Structure
@@ -148,19 +154,19 @@ final class CBMenuView {
         ?>
 
         <nav class="CBMenuView <?= $CSSClassNames ?>">
-            <div class="menu_header">
-                <div class="left"><a class="title" href="<?= $titleURIAsHTML ?>"><?= $titleAsHTML ?></a></div>
-                <div class="center"><a class="title" href="<?= $titleURIAsHTML ?>"><?= $titleAsHTML ?></a></div>
+            <div class="CBMenuView_header menu_header">
+                <div class="left"><a class="title" <?= $titleHREFAttribute ?>><?= $titleAsHTML ?></a></div>
+                <div class="center"><a class="title" <?= $titleHREFAttribute ?>><?= $titleAsHTML ?></a></div>
                 <div class="right"></div>
             </div>
-            <div class="menu_items">
-                <div class="container">
+            <div class="CBMenuView_items menu_items">
+                <div class="CBMenuView_container container">
                     <?php
 
                     if (!empty($menu->title)) {
                         ?>
 
-                        <div class="title"><a href="<?= $titleURIAsHTML ?>"><?= $titleAsHTML ?></a></div>
+                        <div class="CBMenuView_containerTitle title"><a <?= $titleHREFAttribute ?>><?= $titleAsHTML ?></a></div>
 
                         <?php
                     }
@@ -168,7 +174,7 @@ final class CBMenuView {
                     ?>
 
                     <ul>
-                        <li class="title"><a href="<?= $titleURIAsHTML ?>"><span><?= $titleAsHTML ?></span></a></li>
+                        <li class="CBMenuView_listItemTitle title"><a <?= $titleHREFAttribute ?>><span><?= $titleAsHTML ?></span></a></li>
 
                         <?php
 
