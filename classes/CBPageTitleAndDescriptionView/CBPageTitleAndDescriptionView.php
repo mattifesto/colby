@@ -59,14 +59,21 @@ final class CBPageTitleAndDescriptionView {
                     <?php
                 }
 
-            if (!empty($info->description) && empty($model->hideDescription)) {
-                if (empty($model->descriptionColor)) {
-                    $style = '';
-                } else {
-                    $style = " style='color: {$model->descriptionColor}'";
+                if (!empty($info->description) && empty($model->hideDescription)) {
+                    if (empty($model->descriptionColor)) {
+                        $style = '';
+                    } else {
+                        $style = "color: {$model->descriptionColor}";
+                    }
+
+                    ?>
+
+                    <div class="description" style="<?= $style ?>">
+                        <div><?= cbhtml($info->description) ?></div>
+                    </div>
+
+                    <?php
                 }
-                echo "<div class='description'{$style}>" . cbhtml($info->description) . '</div>';
-            }
 
                 if (!empty($model->showPublicationDate)) {
                     if (empty($model->publishedColor)) {
