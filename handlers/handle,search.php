@@ -73,17 +73,19 @@ END;
 
             ?>
 
-            <article class="result">
-                <?php
+            <article class="CBSearchResultView result">
+                <div class="CBSearchResultView_thumbnail">
+                    <?php
 
-                CBArtworkElement::render([
-                    'height' => 100,
-                    'width' => 100,
-                    'maxWidth' => '100px',
-                    'URL' => $imageURL,
-                ]);
+                    CBArtworkElement::render([
+                        'aspectRatioWidth' => 1,
+                        'aspectRatioHeight' => 1,
+                        'maxWidth' => '150',
+                        'URL' => $imageURL,
+                    ]);
 
-                ?>
+                    ?>
+                </div>
                 <div class="text">
                     <h1><a href="<?= $URL ?>"><?= cbhtml($title) ?></a></h1>
                     <div><p><?= cbhtml($description) ?></div>

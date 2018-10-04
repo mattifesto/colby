@@ -10,6 +10,7 @@ main {
 
 .CBPageSearchResultsView .result {
     box-sizing: border-box;
+    max-width: 100%;
     padding: 20px;
     width: 480px;
 }
@@ -20,13 +21,16 @@ main {
     }
 }
 
-.CBPageSearchResultsView .CBArtworkElement {
-    float: right;
-    margin: 0 0 5px 10px;
+.CBSearchResultView {
+    overflow-wrap: break-word;
 }
 
-.CBPageSearchResultsView .CBArtworkElement img {
-    object-fit: cover;
+.CBSearchResultView_thumbnail {
+    background-color: var(--CBBackgroundOffsetColor);
+    box-sizing: border-box;
+    float: right;
+    margin: 0 0 5px 10px;
+    max-width: 100%;
 }
 
 .CBPageSearchResultsView .result h1 {
@@ -47,7 +51,7 @@ main {
     font-family: inherit;
     font-size: inherit;
     margin-bottom: 20px;
-    max-width: 480px;
+    max-width: 100%;
     padding: 5px;
-    width: 100%;
+    width: 480px;;
 }
