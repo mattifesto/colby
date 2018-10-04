@@ -108,7 +108,9 @@ final class CBPageTitleAndDescriptionView {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+        return [
+            Colby::flexpath(__CLASS__, 'v458.css', cbsysurl()),
+        ];
     }
 
     /**

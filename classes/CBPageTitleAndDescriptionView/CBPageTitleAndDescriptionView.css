@@ -3,33 +3,39 @@
     display: flex;
     justify-content: center;
     max-width: 100%;
-    padding: 40px 6vw;
+    overflow-wrap: break-word;
+    padding: 40px 20px;
     text-align: center;
 }
 
 .CBPageTitleAndDescriptionView_default > div {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
+    max-width: 100%;
+    width: 36em;
 }
 
 .CBPageTitleAndDescriptionView_default h1 {
     font-size: 2em;
-    max-width: 36em;
 }
 
 .CBPageTitleAndDescriptionView_default .description {
+    display: flex;
+    justify-content: center;
+
     color: var(--CBTextColor2);
     font-style: italic;
     line-height: 1.5;
-    max-width: 480px;
-    padding: 50px 0 0;
+    padding-top: 50px;
+}
+
+.CBPageTitleAndDescriptionView_default .description > div {
+    max-width: 100%;
+    width: 480px;
 }
 
 .CBPageTitleAndDescriptionView_default .published {
     color: var(--CBTextColor2);
     font-size: 80%;
-    padding: 50px 0 0;
+    padding-top: 50px;
 }
 
 /* light text colors (deprecated) */
