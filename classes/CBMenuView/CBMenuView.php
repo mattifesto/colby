@@ -123,14 +123,26 @@ final class CBMenuView {
         /**
          * HTML Structure
          *
-         *      .CBMenuView
-         *          .header
-         *              .left, .center, .right
-         *          .menu
-         *              .container
-         *                  .title, ul
+         *      <nav class="CBMenuView">
+         *          <div class="CBMenuView_header">
+         *              <div class="left">
+         *              <div class="center">
+         *              <div class="right">
+         *          </div>
+         *          <div class="CBMenuView_items">
+         *              <div class="CBMenuView_container">
+         *                  <div class="CBMenuView_containerTitle">
+         *                  <ul>
+         *                      <li class="CBMenuView_listItemTitle title">
+         *                      <li>
+         *                      <li>
+         *                  </ul>
+         *              </div>
+         *          </div>
+         *      </nav>
          *
-         *  The .header and .menu elements are intended to have 100% width.
+         * The CBMenuView_header and CBMenuView_items elements are intended to
+         * have 100% width.
          */
 
         ?>
