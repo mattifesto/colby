@@ -1,11 +1,11 @@
-.CBMenuView li {
-    padding: 0 5px;
-
+.CBMenuView li a {
     /* ellipsis */
+    display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 /**
  * CBMenuView_default
  */
@@ -45,6 +45,9 @@
     width: 980px;
 }
 
+.CBMenuView_default li {
+    padding: 0 5px;
+}
 
 .CBMenuView_default .selected {
     color: var(--CBTextColor2);
@@ -155,6 +158,10 @@
     padding: 0;
 }
 
+.CBMenuView_submenu1 li {
+    padding: 0 5px;
+}
+
 .CBMenuView_submenu1 .selected {
     color: var(--CBTextColorForLinks);
 }
@@ -165,7 +172,6 @@
 }
 
 .CBMenuView_submenu1 .menu_items a {
-    display: inline-block;
     line-height: 44px;
 }
 
@@ -202,6 +208,7 @@
 
     .CBMenuView_submenu1 li {
         font-size: 14px;
+        list-style-type: none;
     }
 
     .CBMenuView_submenu1 li + li {
@@ -264,4 +271,65 @@
     .CBMenuView_submenu1 li {
         padding: 0 10px;
     }
+}
+
+/**
+ * CBMenuView_list1
+ *
+ * This style is used to display a menu as a list for use in situations such as
+ * displaying multiple menus in a footer view.
+ */
+
+.CBMenuView_list1 {
+    /* CBView root element declarations */
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    padding: 20px;
+
+    /* other declarations */
+    font-size: 0.9em;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.CBMenuView_list1 .CBMenuView_items {
+    /* CBView content element declarations */
+    max-width: 100%;
+    width: 100vw;
+}
+
+.CBMenuView_list1 a {
+    text-decoration: none;
+}
+
+.CBMenuView_list1 a:hover {
+    text-decoration: underline;
+}
+
+.CBMenuView_list1 ul {
+    list-style: none;
+    padding: 0;
+}
+
+.CBMenuView_list1 li {
+    line-height: 44px;
+    padding: 0;
+}
+
+.CBMenuView_list1 .CBMenuView_header,
+.CBMenuView_list1 .CBMenuView_containerTitle {
+    display: none;
+}
+
+.CBMenuView_list1 .CBMenuView_listItemTitle a {
+    color: inherit;
+    border-bottom: 1px solid var(--CBTextColor3);
+}
+
+.CBMenuView_list1 .CBMenuView_listItemTitle a:hover {
+    text-decoration: none;
 }

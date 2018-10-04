@@ -7,7 +7,7 @@ final class CBMenuView {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v376.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v458.css', cbsysurl()),
         ];
     }
 
@@ -105,7 +105,9 @@ final class CBMenuView {
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
-        if (in_array('submenu1', $CSSClassNames)) {
+        if (in_array('list1', $CSSClassNames)) {
+            $CSSClassNames[] = 'CBMenuView_list1';
+        } else if (in_array('submenu1', $CSSClassNames)) {
             $CSSClassNames[] = 'CBMenuView_submenu1';
         } else if (!in_array('custom', $CSSClassNames)) {
             $CSSClassNames[] = 'CBMenuView_default';
