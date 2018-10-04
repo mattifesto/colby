@@ -82,8 +82,12 @@ final class CBPageTitleAndDescriptionView {
                     <?php
                 }
 
+            ?>
 
-        ?></div></header><?php
+            </div>
+        </header>
+
+        <?php
     }
 
     /**
