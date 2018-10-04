@@ -133,10 +133,12 @@ final class CBThemedTextView {
     }
 
     /**
-     * @return string
+     * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v458.css', cbsysurl()),
+        ];
     }
 
     /**
