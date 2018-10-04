@@ -61,20 +61,28 @@ final class CBPageTitleAndDescriptionView {
                 echo "<div class='description'{$style}>" . cbhtml($info->description) . '</div>';
             }
 
-            if (!empty($model->showPublicationDate)) {
-                if (empty($model->publishedColor)) {
-                    $style = '';
-                } else {
-                    $style = " style='color: {$model->publishedColor}'";
+                if (!empty($model->showPublicationDate)) {
+                    if (empty($model->publishedColor)) {
+                        $style = '';
+                    } else {
+                        $style = "color: {$model->publishedColor}";
+                    }
+
+                    $publishedAsHTML = ColbyConvert::timestampToHTML(
+                        CBModel::valueAsInt($info, 'publishedTimestamp'),
+                        'Unpublished'
+                    );
+
+                    ?>
+
+                    <div class="published" style="<?= $style ?>">
+                        <?= $publishedAsHTML ?>
+                    </div>
+
+                    <?php
                 }
 
-                $publishedAsHTML = ColbyConvert::timestampToHTML(
-                    CBModel::valueAsInt($info, 'publishedTimestamp'),
-                    'Unpublished'
-                );
 
-                echo "<div class='published'{$style}>{$publishedAsHTML}</div>";
-            }
         ?></div></header><?php
     }
 
