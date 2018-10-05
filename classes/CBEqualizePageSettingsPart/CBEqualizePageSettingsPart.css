@@ -70,7 +70,7 @@ html {
 
 .CBLightTheme {
     --CBBackgroundColor: hsl(0, 0%, 100%);
-    --CBBackgroundOffsetColor: hsl(0, 0%, 98%);
+    --CBBackgroundOffsetColor: hsl(0, 0%, 97%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
     --CBTextColor: hsla(0, 0%, 0%, 0.9);
     --CBTextColor2: hsla(0, 0%, 0%, 0.6);
