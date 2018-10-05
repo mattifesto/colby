@@ -31,6 +31,7 @@ main {
     float: right;
     margin: 0 0 5px 10px;
     max-width: 100%;
+    padding: 10px;
 }
 
 .CBPageSearchResultsView .result h1 {

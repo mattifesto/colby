@@ -13,7 +13,7 @@ if ($searchQueryHTML) {
 CBHTMLOutput::begin();
 CBHTMLOutput::pageInformation()->title = $title;
 CBHTMLOutput::pageInformation()->description = 'Search for site content.';
-CBHTMLOutput::addCSSURL(cbsysurl() . '/handlers/handle,search.v386.css');
+CBHTMLOutput::addCSSURL(cbsysurl() . '/handlers/handle,search.v459.css');
 
 CBPageLayout::renderPageHeader();
 
