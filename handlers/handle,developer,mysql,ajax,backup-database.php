@@ -47,9 +47,33 @@ $output     = array();
  * that contains the MySQL binaries to work around whatever is happening here.
  */
 
-$command    = 'mysqldump';
-$command    = defined('CBMySQLDirectory') ? CBMySQLDirectory . "/{$command}" : $command;
-$command    = "{$command} -h {$host} -u {$user} --password={$password} --databases {$database} --add-drop-database --extended-insert=FALSE --hex-blob --routines --result-file={$absoluteFilename}";
+$command = 'mysqldump';
+$command = defined('CBMySQLDirectory') ? CBMySQLDirectory . "/{$command}" : $command;
+$command = implode(
+    ' ',
+    [
+        "{$command} -h {$host} -u {$user} --password={$password}",
+        "--databases {$database}",
+        "--add-drop-database",
+        "--extended-insert=FALSE",
+        "--hex-blob",
+        "--routines",
+        "--result-file={$absoluteFilename}",
+
+        /**
+         * @NOTE 2018_10_12
+         *
+         *      Since I added code to save a call stack with each log entry the
+         *      log table has been growing substantially. There is future work
+         *      to be done here, but in the meantime it is making database
+         *      backups take forever when the CBLog table isn't that important
+         *      in that context. The CBLog table will not be backed up for now
+         *      and with future mitigations we may add it back in, but probably
+         *      not.
+         */
+        "--ignore-table={$database}.CBLog",
+    ]
+);
 
 exec($command, $output, $result);
 
