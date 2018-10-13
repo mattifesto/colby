@@ -137,7 +137,7 @@ EOT;
         return (object)[
             'complete' => $complete,
             'failed' => $failed,
-            'maintenanceStatus' => CBMaintenance::status(),
+            'maintenanceIsLocked' => CBMaintenance::isLocked(),
             'ready' => $ready,
             'running' => $running,
             'scheduled' => $scheduled,
