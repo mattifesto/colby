@@ -24,7 +24,7 @@ final class CBTasks2Admin {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v450.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v460.js', cbsysurl()),
         ];
     }
 

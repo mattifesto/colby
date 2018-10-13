@@ -130,7 +130,9 @@ var CBTasks2Admin = {
                 "fetchStatus"
             ).then(
                 function (value) {
-                    maintenanceMessagePart.message = value.maintenanceStatus;
+                    maintenanceMessagePart.message = value.maintenanceIsLocked ?
+                        '(The site is locked for maintenance (b)).' :
+                        'The site is operating normally.';
 
                     CBTasks2Admin.updateStatus(value);
 
