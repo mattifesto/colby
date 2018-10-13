@@ -82,7 +82,10 @@ final class CBMaintenance {
         $model = CBModelCache::fetchModelByID(CBMaintenance::ID());
         $timestamp = CBModel::valueAsInt($model, 'timestamp');
 
-        if ($timestamp !== null || time() - $timestamp < 30) {
+        if (
+            $timestamp !== null &&
+            (time() - $timestamp) < 30
+        ) {
             return true;
         } else {
             return false;
