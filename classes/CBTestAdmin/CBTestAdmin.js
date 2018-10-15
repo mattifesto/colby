@@ -32,6 +32,65 @@ var CBTestAdmin = {
     },
 
     /**
+     * @param array javaScriptTest
+     *
+     *      [
+     *          testClassName,
+     *          testName,
+     *      ]
+     *
+     * @return function
+     */
+    convertJavaScriptTestToFunction: function (javaScriptTest) {
+        let testClassName = javaScriptTest[0];
+        let testName = javaScriptTest[1];
+        let testObjectGlobalVariableName = `${testClassName}Tests`;
+        let testObject = window[testObjectGlobalVariableName];
+
+        if (typeof testObject !== "object") {
+            let testFunction = function () {
+                let message = `
+
+                    The ${testObjectGlobalVariableName} global variable either
+                    does not exist or is not an object.
+
+                `;
+
+                return {
+                    succeeded: false,
+                    message: message,
+                };
+            };
+
+            return testFunction;
+        } else {
+            let testFunction = testObject[`CBTest_${testName}`];
+
+            if (typeof testFunction !== "function") {
+                testFunction = testObject[`${testName}Test`]; /* deprecated */
+
+                if (typeof testFunction !== "function") {
+                    testFunction = function () {
+                        let message = `
+
+                            No JavaScript function is available to run the
+                            "${testName}" test for ${testClassName}.
+
+                        `;
+
+                        return {
+                            succeeded: false,
+                            message: message,
+                        };
+                    };
+                }
+            }
+
+            return testFunction;
+        }
+    },
+
+    /**
      * @return Element
      */
     createTestUI: function () {
@@ -315,52 +374,17 @@ var CBTestAdmin = {
             /* closure */
             function run() {
                 let test = CBTestAdmin_javaScriptTests[index];
-                let className = test[0];
-                let testClassName = `${className}Tests`;
+                let testClassName = test[0];
                 let testName = test[1];
-                let testObject = window[testClassName];
 
-                let title = "JavaScript Test: " + className + " - " + testName;
+                let title = "JavaScript Test: " + testClassName + " - " + testName;
                 let expander = CBUIExpander.create();
                 expander.message = title + " (running)";
 
                 CBTestAdmin.status.element.appendChild(expander.element);
                 expander.element.scrollIntoView();
 
-                let testFunction;
-
-                if (typeof testObject !== "object") {
-                    testFunction = function () {
-                        let message = `The ${testClassName} object does not exist.`;
-
-                        return {
-                            succeeded: false,
-                            message: message,
-                        };
-                    };
-                } else {
-                    testFunction = testObject[`CBTest_${testName}`];
-
-                    if (typeof testFunction !== "function") {
-                        testFunction = testObject[`${testName}Test`]; /* deprecated */
-
-                        if (typeof testFunction !== "function") {
-                            testFunction = function () {
-                                let message = `
-
-                                    No JavaScript function is available to run the
-                                    "${testName}" test for ${className}.
-
-                                `;
-
-                                return {
-                                    succeeded: false,
-                                    message: message,
-                                };
-                            };
-                        }
-                    }
-                }
+                let testFunction = CBTestAdmin.convertJavaScriptTestToFunction(test);
 
                 Promise.resolve()
                     .then(testFunction)

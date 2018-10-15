@@ -45,14 +45,18 @@ final class CBTestAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v374.css', cbsysurl()),
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v442.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v460.js', cbsysurl()),
+        ];
     }
 
     /**
