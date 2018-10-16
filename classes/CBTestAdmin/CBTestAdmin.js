@@ -126,6 +126,13 @@ var CBTestAdmin = {
                     });
                 });
 
+                CBTestAdmin_javaScriptTests.forEach(function (test) {
+                    options.push({
+                        title: `${test.testClassName} / ${test.testName} (JavaScript)`,
+                        value: test,
+                    });
+                });
+
                 options.sort(function (a, b) {
                     return a.title.localeCompare(b.title);
                 });
@@ -146,8 +153,12 @@ var CBTestAdmin = {
             {
                 let sectionItem = CBUISectionItem4.create();
                 sectionItem.callback = function () {
+                    CBTestAdmin.status.element.textContent = "";
+
                     if (CBTestAdmin.selectedTest === undefined) {
                         input.click();
+                    } else if (typeof CBTestAdmin.selectedTest === "object") {
+                        CBTestAdmin.runTest(CBTestAdmin.selectedTest);
                     } else {
                         CBTestAdmin.handleRunTests();
                     }
@@ -323,7 +334,6 @@ var CBTestAdmin = {
         }
 
         CBTestAdmin.errorCount = 0;
-        CBTestAdmin.status.element.textContent = "";
 
         Promise.resolve()
             .then(function () {
