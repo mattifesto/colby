@@ -363,6 +363,10 @@ var CBTestAdmin = {
 
     /**
      * @return Promise
+     *
+     *      The promise returned by this function never rejects because every test
+     *      will run even if it fails. (need research make sure this is right way of
+     *      thinking)
      */
     runJavaScriptTests: function () {
         return new Promise(function (resolve, reject) {
@@ -373,70 +377,8 @@ var CBTestAdmin = {
             /* closure */
             function run() {
                 let test = CBTestAdmin_javaScriptTests[index];
-                let title = "JavaScript Test: " + test.testClassName + " - " + test.testName;
-                let expander = CBUIExpander.create();
-                expander.message = title + " (running)";
 
-                CBTestAdmin.status.element.appendChild(expander.element);
-                expander.element.scrollIntoView();
-
-                let testFunction = CBTestAdmin.convertJavaScriptTestToFunction(test);
-
-                Promise.resolve()
-                    .then(testFunction)
-                    .then(onFulfilled)
-                    .catch(onRejected)
-                    .then(next);
-
-                /* closure */
-                function onFulfilled(value) {
-                    let message;
-
-                    if (typeof value === "object") {
-                        if (value.succeeded) {
-                            message = value.message || "succeeded";
-                        } else {
-                            CBTestAdmin.errorCount += 1;
-                            expander.severity = 3;
-                            message = value.message || "failed";
-                        }
-                    } else {
-                        CBTestAdmin.errorCount += 1;
-                        expander.severity = 3;
-                        message = "This test failed because the test function did not return an object.";
-                    }
-
-                    expander.message = `
-
-                        ${title}
-
-                        ${message}
-
-                    `;
-                }
-
-                /* closure */
-                function onRejected(error) {
-                    let descriptionAsMessage = CBMessageMarkup.stringToMessage(
-                        CBConvert.errorToDescription(error)
-                    );
-                    let stackTraceAsMessage = CBMessageMarkup.stringToMessage(
-                        CBConvert.errorToStackTrace(error)
-                    );
-
-                    CBTestAdmin.errorCount += 1;
-                    expander.severity = 3;
-                    expander.message = `
-
-                        ${title} failed
-
-                        ${descriptionAsMessage}
-
-                        --- pre\n${stackTraceAsMessage}
-                        ---
-
-                    `;
-                }
+                CBTestAdmin.runTest(test).then(next);
             }
 
             /* closure */
@@ -538,6 +480,83 @@ var CBTestAdmin = {
                 }
             }
         });
+    },
+
+    /**
+     * @param object test
+     *
+     *      {
+     *          type: string
+     *          testClassName: string
+     *          testName: string
+     *      }
+     *
+     * @return Promise
+     */
+    runTest: function (test) {
+        let title = "JavaScript Test: " + test.testClassName + " - " + test.testName;
+        let expander = CBUIExpander.create();
+        expander.message = title + " (running)";
+
+        CBTestAdmin.status.element.appendChild(expander.element);
+        expander.element.scrollIntoView();
+
+        let testFunction = CBTestAdmin.convertJavaScriptTestToFunction(test);
+
+        return Promise.resolve()
+            .then(testFunction)
+            .then(onFulfilled)
+            .catch(onRejected);
+
+        /* closure */
+        function onFulfilled(value) {
+            let message;
+
+            if (typeof value === "object") {
+                if (value.succeeded) {
+                    message = value.message || "succeeded";
+                } else {
+                    CBTestAdmin.errorCount += 1;
+                    expander.severity = 3;
+                    message = value.message || "failed";
+                }
+            } else {
+                CBTestAdmin.errorCount += 1;
+                expander.severity = 3;
+                message = "This test failed because the test function did not return an object.";
+            }
+
+            expander.message = `
+
+                ${title}
+
+                ${message}
+
+            `;
+        }
+
+        /* closure */
+        function onRejected(error) {
+            let descriptionAsMessage = CBMessageMarkup.stringToMessage(
+                CBConvert.errorToDescription(error)
+            );
+            let stackTraceAsMessage = CBMessageMarkup.stringToMessage(
+                CBConvert.errorToStackTrace(error)
+            );
+
+            CBTestAdmin.errorCount += 1;
+            expander.severity = 3;
+            expander.message = `
+
+                ${title} failed
+
+                ${descriptionAsMessage}
+
+                --- pre\n${stackTraceAsMessage}
+                ---
+
+            `;
+        }
     },
 };
 
