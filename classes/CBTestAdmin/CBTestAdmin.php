@@ -89,8 +89,8 @@ final class CBTestAdmin {
         return array_values(array_unique(array_merge(
             $classNames,
             array_map(
-                function ($test) {
-                    return $test[0] . "Tests";
+                function (stdClass $test) {
+                    return "{$test->testClassName}Tests";
                 },
                 $tests
             )

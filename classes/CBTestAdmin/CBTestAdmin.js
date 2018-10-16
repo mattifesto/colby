@@ -32,19 +32,18 @@ var CBTestAdmin = {
     },
 
     /**
-     * @param array javaScriptTest
+     * @param object test
      *
-     *      [
-     *          testClassName,
-     *          testName,
-     *      ]
+     *      {
+     *          type: string
+     *          testClassName: string
+     *          testName: string
+     *      }
      *
      * @return function
      */
-    convertJavaScriptTestToFunction: function (javaScriptTest) {
-        let testClassName = javaScriptTest[0];
-        let testName = javaScriptTest[1];
-        let testObjectGlobalVariableName = `${testClassName}Tests`;
+    convertJavaScriptTestToFunction: function (test) {
+        let testObjectGlobalVariableName = `${test.testClassName}Tests`;
         let testObject = window[testObjectGlobalVariableName];
 
         if (typeof testObject !== "object") {
@@ -64,17 +63,17 @@ var CBTestAdmin = {
 
             return testFunction;
         } else {
-            let testFunction = testObject[`CBTest_${testName}`];
+            let testFunction = testObject[`CBTest_${test.testName}`];
 
             if (typeof testFunction !== "function") {
-                testFunction = testObject[`${testName}Test`]; /* deprecated */
+                testFunction = testObject[`${test.testName}Test`]; /* deprecated */
 
                 if (typeof testFunction !== "function") {
                     testFunction = function () {
                         let message = `
 
                             No JavaScript function is available to run the
-                            "${testName}" test for ${testClassName}.
+                            "${test.testName}" test for ${test.testClassName}.
 
                         `;
 
@@ -374,10 +373,7 @@ var CBTestAdmin = {
             /* closure */
             function run() {
                 let test = CBTestAdmin_javaScriptTests[index];
-                let testClassName = test[0];
-                let testName = test[1];
-
-                let title = "JavaScript Test: " + testClassName + " - " + testName;
+                let title = "JavaScript Test: " + test.testClassName + " - " + test.testName;
                 let expander = CBUIExpander.create();
                 expander.message = title + " (running)";
 
