@@ -34,6 +34,7 @@ final class CBTasks2Admin {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBUI',
+            'CBUIBooleanSwitchPart',
             'CBUIMessagePart',
             'CBUISection',
             'CBUISectionItem4',

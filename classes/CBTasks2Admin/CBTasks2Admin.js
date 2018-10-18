@@ -4,6 +4,7 @@
 /* exported CBTasks2Admin */
 /* global
     CBUI,
+    CBUIBooleanSwitchPart,
     CBUIMessagePart,
     CBUISection,
     CBUISectionItem4,
@@ -23,6 +24,7 @@ var CBTasks2Admin = {
         var mainElement = document.getElementsByTagName("main")[0];
 
         appendHeader(mainElement);
+        appendControlSection();
 
         {
             let result = appendStatusSection(mainElement);
@@ -39,6 +41,30 @@ var CBTasks2Admin = {
         fetchStatus();
 
         return;
+
+        /**
+         * @return undefined
+         */
+        function appendControlSection() {
+            let section = CBUISection.create();
+            let sectionItem = CBUISectionItem4.create();
+            let stringsPart = CBUIStringsPart.create();
+            stringsPart.string1 = "Process Tasks";
+            let booleanSwitchPart = CBUIBooleanSwitchPart.create();
+            booleanSwitchPart.changed = function () {
+                if (booleanSwitchPart.value) {
+                    Colby.tasks.start();
+                } else {
+                    Colby.tasks.stop();
+                }
+            };
+
+            sectionItem.appendPart(stringsPart);
+            sectionItem.appendPart(booleanSwitchPart);
+            section.appendItem(sectionItem);
+            mainElement.appendChild(section.element);
+            mainElement.appendChild(CBUI.createHalfSpace());
+        }
 
         /**
          * CBTasks2Admin.init() closure
@@ -178,5 +204,11 @@ var CBTasks2Admin = {
         }
     },
 };
+
+/**
+ * By default, this page is an observer of task status, not a page that runs
+ * tasks.
+ */
+Colby.tasks.stop();
 
 Colby.afterDOMContentLoaded(CBTasks2Admin.init);
