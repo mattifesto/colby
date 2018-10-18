@@ -1,7 +1,7 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Developers')) {
-    return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php';
+if (!ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+    return include cbsysdir() . '/handlers/handle-authorization-failed-ajax.php';
 }
 
 $response = new CBAjaxResponse();
@@ -24,10 +24,11 @@ removeOldBackupFiles($absoluteDatabaseBackupsDirectory);
  */
 
 $time = time();
-$date = gmdate("Y.m.d", $time);
-$filename = $_SERVER['SERVER_NAME'] . "-{$date}.{$time}.sql";
+$date = gmdate("Y_m_d", $time);
+$domain = preg_replace('/\\./', '_', $_SERVER['SERVER_NAME']);
+$filename = "{$domain}_{$date}_{$time}.sql";
 $intraSiteFilename = "{$intraSiteDatabaseBackupsDirectory}/{$filename}";
-$absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
+$absoluteFilename = cbsitedir() . "/{$intraSiteFilename}";
 
 /**
  * Generate the command and execute.
@@ -37,7 +38,7 @@ $host       = escapeshellarg(CBSitePreferences::mysqlHost());
 $user       = escapeshellarg(CBSitePreferences::mysqlUser());
 $password   = escapeshellarg(CBSitePreferences::mysqlPassword());
 $database   = escapeshellarg(CBSitePreferences::mysqlDatabase());
-$output     = array();
+$output     = [];
 
 /**
  * 2015.02.10
