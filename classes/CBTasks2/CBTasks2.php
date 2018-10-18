@@ -53,12 +53,7 @@ final class CBTasks2 {
     static function CBAjax_runNextTask($args) {
         $processID = CBModel::valueAsID($args, 'processID');
         $tasksRunCount = 0;
-
-        if (ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
-            $expirationTimestamp = time() + 5;
-        } else {
-            $expirationTimestamp = time() + 1;
-        }
+        $expirationTimestamp = microtime(true) + 1;
 
         do {
             $wasRun = CBTasks2::runNextTask((object)[
@@ -70,7 +65,7 @@ final class CBTasks2 {
             } else {
                 break;
             }
-        } while (time() < $expirationTimestamp);
+        } while (microtime(true) < $expirationTimestamp);
 
         if ($tasksRunCount === 0) {
             CBTasks2::wakeScheduledTasks();
