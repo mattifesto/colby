@@ -541,7 +541,13 @@ var Colby = {
      * @return object
      *
      *      {
-     *          start() -> Promise
+     *          init()-> undefined
+     *
+     *              Called after DOMContentLoaded. If another JavaScript file
+     *              has called stop() before DOMContentLoaded, this function
+     *              will not start processing tasks.
+     *
+     *          start() -> Promise -> undefined
      *
      *              If tasks aren't currently running, calling this function
      *              will start running tasks again until there aren't any. The
@@ -564,14 +570,30 @@ var Colby = {
         }
 
         Colby.CBTasks2_API = {
+            init: init,
             start: start,
             stop: stop,
         };
 
         return Colby.CBTasks2_API;
 
+        /**
+         * @return undefined
+         */
+        function init() {
+            if (!isStopped) {
+                start();
+            }
+        }
 
         /**
+         * Under normal circumstances the promise returned by this function is
+         * not used. But there are some situations where the caller of this
+         * function wants all tasks to run until they are complete, potentially
+         * for a specific process ID, and the to have the promise resolve.
+         *
+         * The model import process is one of these situations.
+         *
          * @return Promise
          */
         function start() {
@@ -1200,4 +1222,4 @@ Colby.CBTasks2_countOfTasksRun = 0;
 Colby.CBTasks2_delay = 5000;
 Colby.CBTasks2_processID = undefined;
 
-Colby.afterDOMContentLoaded(function () { Colby.tasks.start(); });
+Colby.afterDOMContentLoaded(function () { Colby.tasks.init(); });
