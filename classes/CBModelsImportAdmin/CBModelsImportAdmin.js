@@ -4,6 +4,8 @@
 /* exported CBModelsImportAdmin */
 /* global
     CBMaintenance,
+    CBModelImporter,
+    CBModelImporter_processID,
     CBUI,
     CBUIBooleanSwitchPart,
     CBUIProcessStatus,
@@ -23,6 +25,7 @@ var CBModelsImportAdmin = {
         let saveUnchangedModels = false;
         let disabled = false;
         let status = CBUIProcessStatus.create();
+        status.processID = CBModelImporter_processID;
 
         let main = document.getElementsByTagName("main")[0];
         main.appendChild(CBUI.createHalfSpace());
@@ -67,10 +70,6 @@ var CBModelsImportAdmin = {
              * @return Promise
              */
             function dotasks(value) {
-                status.processID = value.processID;
-                Colby.CBTasks2_processID = value.processID;
-                Colby.CBTasks2_delay = 0;
-
                 return Colby.tasks.start();
             }
 
@@ -184,5 +183,7 @@ var CBModelsImportAdmin = {
         }
     },
 };
+
+CBModelImporter.initBeforeDOMContentLoaded();
 
 Colby.afterDOMContentLoaded(CBModelsImportAdmin.init);

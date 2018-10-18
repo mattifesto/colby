@@ -6,7 +6,10 @@ final class CBModelsImportAdmin {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['models', 'import'];
+        return [
+            'models',
+            'import',
+        ];
     }
 
     /**
@@ -20,14 +23,18 @@ final class CBModelsImportAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v451.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v460.js', cbsysurl()),
+        ];
     }
 
     /**
@@ -36,6 +43,7 @@ final class CBModelsImportAdmin {
     static function CBHTMLOutput_requiredClassNames() {
         return [
             'CBMaintenance',
+            'CBModelImporter',
             'CBUI',
             'CBUIBooleanSwitchPart',
             'CBUIProcessStatus',
@@ -66,7 +74,9 @@ final class CBModelsImportAdmin {
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBModelsAdminMenu'];
+        return [
+            'CBModelsAdminMenu',
+        ];
     }
 
     /**
@@ -132,11 +142,7 @@ final class CBModelsImportAdmin {
      * @return object
      */
     static function CBAjax_uploadDataFile(stdClass $args): stdClass {
-        $response = (object)[
-            'processID' => CBHex160::random(),
-        ];
-
-        CBProcess::setID($response->processID);
+        CBProcess::setID(CBModelImporter::processID());
 
         $saveUnchangedModels = (bool)CBModel::value($args, 'saveUnchangedModels');
 
@@ -259,7 +265,7 @@ final class CBModelsImportAdmin {
 
         CBProcess::clearID();
 
-        return $response;
+        return (object)[];
     }
 
     /**
