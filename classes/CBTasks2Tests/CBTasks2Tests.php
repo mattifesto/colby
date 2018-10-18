@@ -6,6 +6,15 @@
 final class CBTasks2Tests {
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v460.js', cbsysurl()),
+        ];
+    }
+
+    /**
      * This test verifies two behaviors:
      *
      *      An exception thrown by a task should not be hidden.
@@ -59,6 +68,15 @@ EOT;
 
         return (object)[
             'succeeded' => true,
+        ];
+    }
+
+    /**
+     * @return [[<class name>, <test name>]]
+     */
+    static function CBTest_javaScriptTests(): array {
+        return [
+            ['CBTasks2', 'stress'],
         ];
     }
 
