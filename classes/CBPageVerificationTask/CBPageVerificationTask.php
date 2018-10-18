@@ -329,15 +329,28 @@ EOT;
             $result->spec = $data->spec;
             $result->model = $data->model;
 
-            ob_start();
+            /**
+             * @BUG 2018_10_18
+             *
+             *      Excluded CBRedirect pages here because they emit headers
+             *      that redirect the browser to a different page and don't
+             *      allow the task to finish.
+             *
+             *      In the future every model should be checked by a standard
+             *      model specific process (if one exists). This should be the
+             *      process for CBViewPage models.
+             */
+            if ($data->spec->className !== 'CBRedirect') {
+                ob_start();
 
-            try {
-                CBPage::render($result->model);
-            } catch (Throwable $throwable) {
-                $result->renderError = $throwable;
+                try {
+                    CBPage::render($result->model);
+                } catch (Throwable $throwable) {
+                    $result->renderError = $throwable;
+                }
+
+                ob_end_clean();
             }
-
-            ob_end_clean();
         }
 
         return $result;
