@@ -82,8 +82,6 @@ final class CBRedirect {
 
         $URI = "/{$URI}/";
 
-        error_log($URI);
-
         if ($queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY)) {
             $URI = "{$URI}?{$queryString}";
         }
