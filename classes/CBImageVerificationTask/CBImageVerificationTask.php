@@ -191,6 +191,9 @@ EOT;
             There was no original image file found for the CBImage with the ID
             ($ID(code)).
 
+            An administrator should inspect this model and delete it manually if
+            the data store files available are not in working order.
+
 EOT;
 
         CBLog::log((object)[
