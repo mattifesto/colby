@@ -334,6 +334,34 @@ EOT;
     }
 
     /**
+     * @param ?ID $processID
+     *
+     * @return int
+     */
+    static function fetchMostRecentSerial(?string $processID = null): int {
+        $where = '';
+
+        if ($processID !== null) {
+            $processIDAsSQL = CBHex160::toSQL($processID);
+            $where = "WHERE processID = {$processIDAsSQL}";
+        }
+
+        $SQL = <<<EOT
+
+            SELECT      serial
+            FROM        CBLog
+            {$where}
+            ORDER BY    serial DESC
+            LIMIT       1
+
+EOT;
+
+        return CBConvert::valueAsInt(
+            CBDB::SQLToValue2($SQL)
+        ) ?? -1;
+    }
+
+    /**
      * Create a log entry.
      *
      * See CBLog::install() for detailed descriptions of the CBLog table
