@@ -189,6 +189,28 @@ EOT;
     }
 
     /**
+     * @param object $args
+     *
+     *      {
+     *          processID: ?ID
+     *      }
+     *
+     * @return int
+     */
+    static function CBAjax_fetchMostRecentSerial(stdClass $args): int {
+        return CBLog::fetchMostRecentSerial(
+            CBModel::valueAsID($args, 'processID')
+        );
+    }
+
+    /**
+     * @return string
+     */
+    static function CBAjax_fetchMostRecentSerial_group(): string {
+        return 'Administrators';
+    }
+
+    /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
