@@ -76,6 +76,8 @@ final class CBDB {
     }
 
     /**
+     * @deprecated use SQLToValue2()
+     *
      * Takes a SQL statement and returns the value of the first column of the
      * first row.
      *
@@ -93,6 +95,41 @@ final class CBDB {
             $value = $valueIsJSON ? json_decode($row[0]) : $row[0];
         } else {
             $value = false;
+        }
+
+        $result->free();
+
+        return $value;
+    }
+
+    /**
+     * @param string $SQL
+     *
+     * @return ?string
+     *
+     *      Returns the value of the first column of the first row of the result
+     *      set of rows. All column values except NULL are returned as strings.
+     *      Returns null if there are no rows in the result set.
+     *
+     * @NOTE
+     *
+     *      When directly fetching binary column values the result is returned
+     *      as a string that is an array of the bytes of the binary data. This
+     *      will NOT be a valid UTF-8 string but it can be converted to a
+     *      hexadecimal UTF-8 string using the bin2hex() function.
+     */
+    static function SQLToValue2(string $SQL): ?string {
+        $result = Colby::query($SQL);
+
+        /**
+         * Fetch the first row as a numerically indexed array of column values.
+         */
+        $row = $result->fetch_array(MYSQLI_NUM);
+
+        if ($row === null) {
+            $value = null;
+        } else {
+            $value = $row[0];
         }
 
         $result->free();
@@ -174,7 +211,7 @@ final class CBDB {
 
         CBDB::$transactionIsActive = true;
         CBLog::bufferStart();
-        
+
         try {
             Colby::query('START TRANSACTION');
 
