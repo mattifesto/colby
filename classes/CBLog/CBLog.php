@@ -213,6 +213,15 @@ EOT;
     /**
      * @return [string]
      */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v462.js', cbsysurl()),
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
     static function CBInstall_requiredClassNames(): array {
         return [
             'CBLogTable'
