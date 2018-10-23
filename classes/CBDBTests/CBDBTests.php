@@ -59,6 +59,15 @@ final class CBDBTests {
     }
 
     /**
+     * @return [[<class name>, <test name>]]
+     */
+    static function CBTest_phpTests(): array {
+        return [
+            ['CBDB', 'SQLToValue2'],
+        ];
+    }
+
+    /**
      * @return null
      */
     static function SQLToArrayTest() {
@@ -176,5 +185,145 @@ EOT;
                 "The original value and the retrieve value don't match. " .
                 "Original: '{$original}' Retrieved: '{$retrieved}'");
         }
+    }
+
+    /**
+     * @return object
+     */
+    static function CBTest_SQLToValue2(): stdClass {
+        $tableName = 'CBTest_SQLToValue2_' . CBHex160::random();
+        $SQL = <<<EOT
+
+            CREATE TEMPORARY TABLE {$tableName}
+            (
+                binarycol BINARY(20),
+                nullcol BIGINT,
+                numcol BIGINT,
+                stringcol VARCHAR(80)
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8mb4
+            COLLATE=utf8mb4_unicode_520_ci
+
+EOT;
+
+        Colby::query($SQL);
+
+
+        /* no rows */
+
+        $SQL = <<<EOT
+
+            SELECT      numcol
+            FROM        {$tableName}
+            ORDER BY    numcol
+
+EOT;
+
+        $expectedResult = null;
+        $actualResult = CBDB::SQLToValue2($SQL);
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure('no rows', $actualResult, $expectedResult);
+        }
+
+
+        /* insert test rows */
+
+        $binary1 = CBHex160::random();
+        $binary2 = CBHex160::random();
+        $SQL = <<<EOT
+
+            INSERT INTO {$tableName}
+            VALUES
+            (UNHEX('{$binary1}'), NULL, 1, 'one'),
+            (UNHEX('{$binary2}'), NULL, 2, 'two')
+
+EOT;
+
+        Colby::query($SQL);
+
+
+        /**
+         * fetch binarycol
+         *
+         * When directly fetching binary column values the result is returned as
+         * a string that is an array of the bytes of the binary data. This will
+         * NOT be a valid UTF-8 string but it can be converted to a hexadecimal
+         * (UTF-8) string using the bin2hex() function.
+         */
+
+        $SQL = <<<EOT
+
+            SELECT      binarycol
+            FROM        {$tableName}
+            ORDER BY    numcol
+
+EOT;
+
+        $expectedResult = $binary1;
+        $actualResult = bin2hex(CBDB::SQLToValue2($SQL));
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure('fetch binarycol', $actualResult, $expectedResult);
+        }
+
+
+        /* fetch nullcol */
+
+        $SQL = <<<EOT
+
+            SELECT      nullcol
+            FROM        {$tableName}
+            ORDER BY    numcol
+
+EOT;
+
+        $expectedResult = null;
+        $actualResult = CBDB::SQLToValue2($SQL);
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure('fetch nullcol', $actualResult, $expectedResult);
+        }
+
+
+        /* fetch numcol */
+
+        $SQL = <<<EOT
+
+            SELECT      numcol
+            FROM        {$tableName}
+            ORDER BY    numcol
+
+EOT;
+
+        $expectedResult = '1';
+        $actualResult = CBDB::SQLToValue2($SQL);
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure('fetch numcol', $actualResult, $expectedResult);
+        }
+
+
+        /* fetch stringcol */
+
+        $SQL = <<<EOT
+
+            SELECT      stringcol
+            FROM        {$tableName}
+            ORDER BY    numcol
+
+EOT;
+
+        $expectedResult = 'one';
+        $actualResult = CBDB::SQLToValue2($SQL);
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure('fetch stringcol', $actualResult, $expectedResult);
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 }
