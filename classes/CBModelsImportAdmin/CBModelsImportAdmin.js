@@ -53,7 +53,9 @@ var CBModelsImportAdmin = {
          */
         function handleDataFileInputElementChanged() {
             disabled = true;
+
             importActionPart.element.classList.add("disabled");
+            status.clear();
 
             CBMaintenance.transaction(
                 "CBModelsImportAdmin Import",
