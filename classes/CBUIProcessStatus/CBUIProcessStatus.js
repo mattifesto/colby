@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUIProcessStatus */
 /* global
+    CBLog,
     CBUIExpander,
     Colby,
 */
@@ -46,10 +47,14 @@ var CBUIProcessStatus = {
                 entriesElement.appendChild(element);
                 element.scrollIntoView();
             },
+            clear: function () {
+                entriesElement.textContent = "";
+            },
             get element() {
                 return element;
             },
             set processID(value) {
+                afterSerial = undefined;
                 processID = value;
                 overviewElement.textContent = "";
                 entriesElement.textContent = "";
@@ -60,7 +65,13 @@ var CBUIProcessStatus = {
 
                 entriesElement.appendChild(expander.element);
 
-                fetchStatus();
+                CBLog.fetchMostRecentSerial(processID).then(
+                    function (mostRecentSerial) {
+                        afterSerial = mostRecentSerial;
+                    }
+                ).then(
+                    fetchStatus
+                );
             },
             get processID() {
                 return processID;
@@ -83,7 +94,6 @@ var CBUIProcessStatus = {
 
             let ajaxargs = {
                 afterSerial: afterSerial,
-                lowestSeverity: 6,
                 processID: processID,
             };
 
