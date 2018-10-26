@@ -513,10 +513,20 @@ var CBTestAdmin = {
 
         let testFunction = CBTestAdmin.convertJavaScriptTestToFunction(test);
 
-        return Promise.resolve()
-            .then(testFunction)
-            .then(onFulfilled)
-            .catch(onRejected);
+        return Promise.resolve(
+            {
+                set progress(value) {
+                    let percent = (value * 100).toFixed(1);
+                    expander.message = title + ` (running ${percent}%)`;
+                }
+            }
+        ).then(
+            testFunction
+        ).then(
+            onFulfilled
+        ).catch(
+            onRejected
+        );
 
         /* closure */
         function onFulfilled(value) {

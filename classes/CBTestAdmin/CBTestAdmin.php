@@ -13,7 +13,10 @@ final class CBTestAdmin {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['develop', 'test'];
+        return [
+            'develop',
+            'test',
+        ];
     }
 
     /**
@@ -55,7 +58,7 @@ final class CBTestAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v460.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v462.js', cbsysurl()),
         ];
     }
 
@@ -136,7 +139,7 @@ final class CBTestAdmin {
     /**
      * If the test image is imported as a CBImage this will be its image ID.
      *
-     * @return hex160
+     * @return ID
      */
     static function testImageID() {
         return '3dd8e721048bbe8ea5f0c043fab73277a0b0044c';
