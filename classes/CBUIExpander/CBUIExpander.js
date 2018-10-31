@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUIExpander */
 /* global
+    CBConvert,
     CBMessageMarkup,
     Colby,
 */
@@ -42,6 +43,17 @@ var CBUIExpander = {
     },
 
     /**
+     * Structure:
+     *
+     *      CBUIExpander
+     *          .container
+     *              .header
+     *                  .toggle
+     *                  <time container>
+     *              .summary
+     *              .contentContainer
+     *                  <content element>
+     *
      * @param object args
      *
      *      {
@@ -61,7 +73,7 @@ var CBUIExpander = {
      */
     create: function (args) {
         args = args || {};
-        let message = '';
+        let message = "";
         let severity;
         let timestamp;
 
@@ -76,8 +88,8 @@ var CBUIExpander = {
         let timeContainerElement = document.createElement("div");
         var summaryElement = document.createElement("div");
         summaryElement.className = "summary";
-        var messageElement = document.createElement("div");
-        messageElement.className = "message CBContentStyleSheet";
+        var contentContainerElement = document.createElement("div");
+        contentContainerElement.className = "contentContainer";
 
         toggleElement.addEventListener("click", function () {
             element.classList.toggle("expanded");
@@ -87,10 +99,30 @@ var CBUIExpander = {
         headerElement.appendChild(timeContainerElement);
         containerElement.appendChild(headerElement);
         containerElement.appendChild(summaryElement);
-        containerElement.appendChild(messageElement);
+        containerElement.appendChild(contentContainerElement);
         element.appendChild(containerElement);
 
         let api = {
+
+            /**
+             * @return Element|null
+             */
+            get contentElement() {
+                return contentContainerElement.firstElementChild;
+            },
+
+            /**
+             * Setting this property will change the message property to an
+             * empty string.
+             *
+             * @param element Element
+             */
+            set contentElement(element) {
+                contentContainerElement.textContent = "";
+                message = "";
+
+                contentContainerElement.appendChild(element);
+            },
 
             /**
              * @return Element
@@ -125,12 +157,23 @@ var CBUIExpander = {
             },
 
             /**
-             * @param string? value
+             * @param string value
              */
             set message(value) {
-                message = String(value || "");
-                summaryElement.textContent = CBMessageMarkup.messageToText(message).split("\n\n", 1)[0];
-                messageElement.innerHTML = CBMessageMarkup.convert(message);
+                value = CBConvert.valueToString(value);
+
+                let title = CBMessageMarkup.messageToText(value);
+                title = title.split("\n\n", 1)[0];
+
+                api.title = title;
+
+                let contentElement = document.createElement("div");
+                contentElement.className = "CBContentStyleSheet";
+                contentElement.innerHTML = CBMessageMarkup.messageToHTML(value);
+
+                api.contentElement = contentElement;
+
+                message = value;
             },
 
             /**
@@ -184,6 +227,23 @@ var CBUIExpander = {
                     Colby.updateCBTimeElementTextContent(timeElement);
                     Colby.updateTimes(true);
                 }
+            },
+
+            /**
+             * @return string
+             */
+            get title() {
+                return summaryElement.textContent;
+            },
+
+            /**
+             * @param string value
+             *
+             *      The value should be plain text.
+             */
+            set title(value) {
+                value = CBConvert.valueToString(value);
+                summaryElement.textContent = value;
             },
         };
 
