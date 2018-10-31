@@ -50,7 +50,7 @@ var CBUIExpander = {
      *              .header
      *                  .toggle
      *                  <time container>
-     *              .summary
+     *              .title
      *              .contentContainer
      *                  <content element>
      *
@@ -86,8 +86,8 @@ var CBUIExpander = {
         var toggleElement = document.createElement("div");
         toggleElement.className = "toggle";
         let timeContainerElement = document.createElement("div");
-        var summaryElement = document.createElement("div");
-        summaryElement.className = "summary";
+        var titleElement = document.createElement("div");
+        titleElement.className = "title";
         var contentContainerElement = document.createElement("div");
         contentContainerElement.className = "contentContainer";
 
@@ -98,7 +98,7 @@ var CBUIExpander = {
         headerElement.appendChild(toggleElement);
         headerElement.appendChild(timeContainerElement);
         containerElement.appendChild(headerElement);
-        containerElement.appendChild(summaryElement);
+        containerElement.appendChild(titleElement);
         containerElement.appendChild(contentContainerElement);
         element.appendChild(containerElement);
 
@@ -233,7 +233,7 @@ var CBUIExpander = {
              * @return string
              */
             get title() {
-                return summaryElement.textContent;
+                return titleElement.textContent;
             },
 
             /**
@@ -243,7 +243,7 @@ var CBUIExpander = {
              */
             set title(value) {
                 value = CBConvert.valueToString(value);
-                summaryElement.textContent = value;
+                titleElement.textContent = value;
             },
         };
 

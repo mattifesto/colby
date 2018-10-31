@@ -77,14 +77,14 @@
     padding: 5px 10px;
 }
 
-.CBUIExpander > .container > .summary {
+.CBUIExpander > .container > .title {
     overflow: hidden;
     padding: 10px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.CBUIExpander.expanded > .container > .summary {
+.CBUIExpander.expanded > .container > .title {
     display: none;
 }
 
