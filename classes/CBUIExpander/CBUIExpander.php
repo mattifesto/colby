@@ -5,23 +5,28 @@ final class CBUIExpander {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v416.css', cbsysurl())];
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v463.css', cbsysurl()),
+        ];
     }
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v434.js', cbsysurl())];
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v463.js', cbsysurl()),
+        ];
     }
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBContentStyleSheet',
+            'CBConvert',
             'CBMessageMarkup'
         ];
     }
