@@ -4,96 +4,108 @@
     padding: 10px;
 }
 
-.CBUIExpander > .container {
+.CBUIExpander_container {
     background-color: var(--CBBackgroundColor);
     border: 1px solid var(--CBUIBorderColor);
     border-radius: 5px;
     overflow: hidden;
 }
 
-.CBUIExpander > .container > .header {
+.CBUIExpander_header {
     display: flex;
 }
 
-.CBUIExpander > .container > .header > .toggle {
+.CBUIExpander.expanded .CBUIExpander_header {
+    border-bottom: 1px solid var(--CBUIBorderColor);
+}
+
+.CBUIExpander_toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     background-color: hsl(210, 100%, 45%); /* severity 6: informational */
-    border-bottom-right-radius: 5px;
+    box-sizing: border-box;
     color: hsla(0, 100%, 100%, 0.9);
-    font-size: 80%;
-    padding: 5px 10px;
-    text-align: center;
-    text-transform: lowercase;
+    flex: none;
+    min-height: 50px;
     user-select: none;
-    width: 3em;
+    width: 50px;
 
     -moz-user-select: none;
     -ms-user-select: none;
     -webkit-user-select: none;
 }
 
-.CBUIExpander.severity7 > .container > .header > .toggle {
+.CBUIExpander_toggle::before {
+    content: "▼";
+}
+
+.CBUIExpander.expanded .CBUIExpander_toggle::before {
+    content: "▲";
+}
+
+.CBUIExpander.severity7 .CBUIExpander_toggle {
     background-color: hsl(210, 100%, 70%);
 }
 
-.CBUIExpander.severity6 > .container > .header > .toggle {
+.CBUIExpander.severity6 .CBUIExpander_toggle {
     /* uses default color */
 }
 
-.CBUIExpander.severity5 > .container > .header > .toggle {
+.CBUIExpander.severity5 .CBUIExpander_toggle {
     background-color: hsl(120, 50%, 40%); /* green */
 }
 
-.CBUIExpander.severity4 > .container > .header > .toggle {
+.CBUIExpander.severity4 .CBUIExpander_toggle {
     background-color: hsl(30, 100%, 50%); /* orange */
 }
 
-.CBUIExpander.severity3 > .container > .header > .toggle {
+.CBUIExpander.severity3 .CBUIExpander_toggle {
     background-color: hsl(0, 100%, 50%); /* red */
 }
 
-.CBUIExpander.severity2 > .container > .header > .toggle {
+.CBUIExpander.severity2 .CBUIExpander_toggle {
     background-color: hsl(0, 100%, 40%);
 }
 
-.CBUIExpander.severity1 > .container > .header > .toggle {
+.CBUIExpander.severity1 .CBUIExpander_toggle {
     background-color: hsl(0, 50%, 30%);
 }
 
-.CBUIExpander.severity0 > .container > .header > .toggle {
+.CBUIExpander.severity0 .CBUIExpander_toggle {
     background-color: hsl(0, 0%, 0%); /* black */
 }
 
-.CBUIExpander > .container > .header > .toggle::before {
-    content: "Show";
+.CBUIExpander_headerTextContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3px 0;
+
+    /* required for ellipsis of CBUIExpander_title */
+    min-width: 0;
 }
 
-.CBUIExpander.expanded > .container > .header > .toggle::before {
-    content: "Hide";
-}
-
-.CBUIExpander > .container > .header time {
-    color: var(--CBTextColor2);
-    font-size: 80%;
-    padding: 5px 10px;
-}
-
-.CBUIExpander > .container > .title {
+.CBUIExpander_title,
+.CBUIExpander_timeContainer {
     overflow: hidden;
-    padding: 10px;
+    padding: 0 10px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.CBUIExpander.expanded > .container > .title {
-    display: none;
+.CBUIExpander_timeContainer {
+    color: var(--CBTextColor2);
+    font-size: 70%;
 }
 
-.CBUIExpander > .container > .contentContainer {
+.CBUIExpander_contentContainer {
     display: none;
     overflow-y: scroll;
     padding: 10px;
 }
 
-.CBUIExpander.expanded > .container > .contentContainer {
+.CBUIExpander.expanded .CBUIExpander_contentContainer {
     display: block;
 }

@@ -45,13 +45,14 @@ var CBUIExpander = {
     /**
      * Structure:
      *
-     *      CBUIExpander
-     *          .container
-     *              .header
-     *                  .toggle
-     *                  <time container>
-     *              .title
-     *              .contentContainer
+     *      .CBUIExpander
+     *          .CBUIExpander_container
+     *              .CBUIExpander_header
+     *                  .CBUIExpander_toggle
+     *                  .CBUIExpander_headerTextContainer
+     *                      .CBUIExpander_title
+     *                      .CBUIExpander_timeContainer
+     *              .CBUIExpander_contentContainer
      *                  <content element>
      *
      * @param object args
@@ -79,28 +80,18 @@ var CBUIExpander = {
 
         var element = document.createElement("div");
         element.className = "CBUIExpander";
+
         let containerElement = document.createElement("div");
-        containerElement.className = "container";
-        var headerElement = document.createElement("div");
-        headerElement.className = "header";
-        var toggleElement = document.createElement("div");
-        toggleElement.className = "toggle";
-        let timeContainerElement = document.createElement("div");
-        var titleElement = document.createElement("div");
-        titleElement.className = "title";
-        var contentContainerElement = document.createElement("div");
-        contentContainerElement.className = "contentContainer";
+        containerElement.className = "CBUIExpander_container";
 
-        toggleElement.addEventListener("click", function () {
-            element.classList.toggle("expanded");
-        });
-
-        headerElement.appendChild(toggleElement);
-        headerElement.appendChild(timeContainerElement);
-        containerElement.appendChild(headerElement);
-        containerElement.appendChild(titleElement);
-        containerElement.appendChild(contentContainerElement);
         element.appendChild(containerElement);
+
+        let header = createHeader(containerElement);
+
+        var contentContainerElement = document.createElement("div");
+        contentContainerElement.className = "CBUIExpander_contentContainer";
+
+        containerElement.appendChild(contentContainerElement);
 
         let api = {
 
@@ -215,7 +206,7 @@ var CBUIExpander = {
             set timestamp(value) {
                 let newTimestamp = Number.parseInt(value);
 
-                timeContainerElement.textContent = "";
+                header.timeContainerElement.textContent = "";
 
                 if (Number.isNaN(newTimestamp)) {
                     timestamp = undefined;
@@ -223,7 +214,7 @@ var CBUIExpander = {
                     timestamp = newTimestamp;
                     let timeElement = Colby.unixTimestampToElement(timestamp);
                     timeElement.classList.add("compact");
-                    timeContainerElement.appendChild(timeElement);
+                    header.timeContainerElement.appendChild(timeElement);
                     Colby.updateCBTimeElementTextContent(timeElement);
                     Colby.updateTimes(true);
                 }
@@ -233,7 +224,7 @@ var CBUIExpander = {
              * @return string
              */
             get title() {
-                return titleElement.textContent;
+                return header.titleElement.textContent;
             },
 
             /**
@@ -243,7 +234,7 @@ var CBUIExpander = {
              */
             set title(value) {
                 value = CBConvert.valueToString(value);
-                titleElement.textContent = value;
+                header.titleElement.textContent = value;
             },
         };
 
@@ -252,6 +243,60 @@ var CBUIExpander = {
         api.timestamp = args.timestamp;
 
         return api;
+
+        /**
+         * CBUIExpander.create() closure
+         *
+         * @return object
+         *
+         *      {
+         *          timeElement: Element
+         *          titleElement: Element
+         *      }
+         */
+        function createHeader(parentElement) {
+            let headerElement = document.createElement("div");
+            headerElement.className = "CBUIExpander_header";
+
+            parentElement.appendChild(headerElement);
+
+            /* toggle */
+
+            let toggleElement = document.createElement("div");
+            toggleElement.className = "CBUIExpander_toggle";
+
+            toggleElement.addEventListener("click", function () {
+                element.classList.toggle("expanded");
+            });
+
+            headerElement.appendChild(toggleElement);
+
+            /* header container */
+
+            let headerTextContainerElement = document.createElement("div");
+            headerTextContainerElement.className = "CBUIExpander_headerTextContainer";
+
+            headerElement.appendChild(headerTextContainerElement);
+
+            /* title */
+
+            let titleElement = document.createElement("div");
+            titleElement.className = "CBUIExpander_title";
+
+            headerTextContainerElement.appendChild(titleElement);
+
+            /* time container */
+
+            let timeContainerElement = document.createElement("div");
+            timeContainerElement.className = "CBUIExpander_timeContainer";
+
+            headerTextContainerElement.appendChild(timeContainerElement);
+
+            return {
+                timeContainerElement: timeContainerElement,
+                titleElement: titleElement,
+            };
+        }
     },
 };
 
