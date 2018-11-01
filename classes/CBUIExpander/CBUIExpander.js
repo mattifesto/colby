@@ -148,18 +148,26 @@ var CBUIExpander = {
             },
 
             /**
+             * Setting this property is a short cut for setting the
+             * contentElement and title properties. It will always change the
+             * contentElement property. If the title property is empty, it will
+             * set the title property to first paragraph of the message when
+             * converted to text.
+             *
              * @param string value
              */
             set message(value) {
                 value = CBConvert.valueToString(value);
 
-                let title = CBMessageMarkup.messageToText(value);
-                title = title.split("\n\n", 1)[0];
+                if (api.title === "") {
+                    let firstLineOfMessage = CBMessageMarkup.messageToText(value);
+                    firstLineOfMessage = firstLineOfMessage.split("\n\n", 1)[0];
 
-                api.title = title;
+                    api.title = firstLineOfMessage;
+                }
 
                 let contentElement = document.createElement("div");
-                contentElement.className = "CBContentStyleSheet";
+                contentElement.className = "CBUIExpander_message CBContentStyleSheet";
                 contentElement.innerHTML = CBMessageMarkup.messageToHTML(value);
 
                 api.contentElement = contentElement;
@@ -224,7 +232,7 @@ var CBUIExpander = {
              * @return string
              */
             get title() {
-                return header.titleElement.textContent;
+                return header.titleElement.textContent || "";
             },
 
             /**
