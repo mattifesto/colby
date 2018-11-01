@@ -147,7 +147,7 @@ final class CBConvert {
      *
      * @return string
      */
-    static function stringToStub($string) {
+    static function stringToStub($string): string {
         $patterns = [];
         $replacements = [];
 
@@ -171,7 +171,9 @@ final class CBConvert {
         array_push($patterns, '/--+/');
         array_push($replacements, '-');
 
-        return strtolower(preg_replace($patterns, $replacements, $string));
+        return strtolower(
+            preg_replace($patterns, $replacements, $string)
+        );
     }
 
     /**
