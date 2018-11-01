@@ -69,7 +69,7 @@ final class CBUI {
         ?>
         <header class="CBUISectionHeader">
             <h1><?= cbhtml($title) ?></h1>
-            <div><?= cbhtml($description) ?><div>
+            <div><?= cbhtml($description) ?></div>
         </header>
         <?php
     }
