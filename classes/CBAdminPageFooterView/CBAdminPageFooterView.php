@@ -12,7 +12,7 @@ final class CBAdminPageFooterView {
     static function CBView_render(stdClass $model) {
         ?>
 
-        <section class="CBAdminPageFooterView">
+        <div class="CBAdminPageFooterView">
             <ul>
                 <li>Copyright &copy; 2012-<?php echo gmdate('Y'); ?> Mattifesto Design</li>
 
@@ -34,7 +34,7 @@ final class CBAdminPageFooterView {
                 ?>
 
             </ul>
-        </section>
+        </div>
 
         <?php
     }
