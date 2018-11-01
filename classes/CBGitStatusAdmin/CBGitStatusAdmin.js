@@ -37,7 +37,7 @@ var CBGitStatusAdmin = {
         }
 
         var container = document.createElement("div");
-        container.className = "statusContainer";
+        container.className = "CBGitStatusAdmin_statusContainer";
 
         mainElement.appendChild(container);
 

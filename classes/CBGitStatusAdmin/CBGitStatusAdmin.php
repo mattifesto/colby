@@ -13,7 +13,11 @@ final class CBGitStatusAdmin {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['develop', 'git', 'status'];
+        return [
+            'develop',
+            'git',
+            'status',
+        ];
     }
 
     /**
@@ -52,14 +56,18 @@ final class CBGitStatusAdmin {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v397.css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v463.css', cbsysurl()),
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v430.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v463.js', cbsysurl()),
+        ];
     }
 
     /**

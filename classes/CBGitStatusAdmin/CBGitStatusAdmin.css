@@ -1,13 +1,3 @@
-.CBGitStatusAdmin .statusContainer {
-    align-content: flex-start;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.CBGitStatusAdmin .statusContainer > * {
-    flex-grow: 1;
-}
-
 .CBGitStatusAdmin_pre {
     border-left: 1px solid var(--CBTextColor3);
     font-size: 12px;
