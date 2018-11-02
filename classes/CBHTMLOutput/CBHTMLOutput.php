@@ -36,6 +36,14 @@
  *
  *      CBHTMLOutput_requiredClassNames -> [string]
  *          A list of class names that are required.
+ *
+ * @TODO 2018_11_02
+ *
+ *      There are scenarios, such as generating email HTML content, when it is
+ *      necessary to generate another HTML document, one that won't be
+ *      immediately viewed, while handling a request. Future changes to this
+ *      class should be made to enable at least the easy use of functions on
+ *      this class in that scenario or even full support for that scenario.
  */
 final class CBHTMLOutput {
 
