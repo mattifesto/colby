@@ -100,10 +100,10 @@
 }
 
 .CBContentStyleSheet pre.green {
-    background-color: hsl(0, 0%, 10%);
+    background-color: hsl(0, 0%, 15%);
     border-radius: 10px;
-    color: hsl(120, 100%, 45%);
-    letter-spacing: 0.1em;
+    color: hsl(120, 80%, 45%);
+    line-height: 1.4;
     padding: 10px 15px;
 }
 
