@@ -16,7 +16,7 @@ final class CBUIProcessStatus {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v462.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v463.js', cbsysurl()),
         ];
     }
 
@@ -25,6 +25,7 @@ final class CBUIProcessStatus {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBConvert',
             'CBUIExpander',
             'CBLog',
         ];

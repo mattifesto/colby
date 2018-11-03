@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUIProcessStatus */
 /* global
+    CBConvert,
     CBLog,
     CBUIExpander,
     Colby,
@@ -22,16 +23,24 @@ var CBUIProcessStatus = {
      *
      *          element: Element (readonly)
      *
+     *          logEntryMinimumSeverity: int
+     *
+     *              A higher severity is represented by a lower severity rating.
+     *              Setting this property to 6 means that log entries with a
+     *              severity rating of 7 or greater will not be shown.
+     *
+     *              default: 6
+     *
      *          processID: hex160 (get, set)
      *
      *              Setting the process ID will cause the CBUIProcessStatus to
      *              continually fetch and display log entries that occur for the
      *              process.
-     *
      *      }
      */
     create: function (args) {
         var afterSerial, isFetching, shouldFetchNextQuickly, processID, timeoutID;
+        let logEntryMinimumSeverity = 6;
         var element = document.createElement("div");
         element.className = "CBUIProcessStatus CBDarkTheme";
         var overviewElement = document.createElement("div");
@@ -53,6 +62,25 @@ var CBUIProcessStatus = {
             get element() {
                 return element;
             },
+
+            /**
+             * @return int
+             */
+            get logEntryMinimumSeverity() {
+                return logEntryMinimumSeverity;
+            },
+
+            /**
+             * @param int value
+             */
+            set logEntryMinimumSeverity(value) {
+                value = CBConvert.valueAsInt(value);
+
+                if (value !== undefined) {
+                    logEntryMinimumSeverity = value;
+                }
+            },
+
             set processID(value) {
                 afterSerial = undefined;
                 processID = value;
@@ -110,9 +138,11 @@ var CBUIProcessStatus = {
                     afterSerial = entries[entries.length - 1].serial;
 
                     entries.forEach(function (entry) {
-                        let expander = CBUIExpander.create(entry);
-                        entriesElement.appendChild(expander.element);
-                        expander.element.scrollIntoView();
+                        if (entry.severity <= logEntryMinimumSeverity) {
+                            let expander = CBUIExpander.create(entry);
+                            entriesElement.appendChild(expander.element);
+                            expander.element.scrollIntoView();
+                        }
                     });
 
                     Colby.updateTimes();
