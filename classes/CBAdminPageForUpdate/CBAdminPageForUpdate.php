@@ -31,6 +31,7 @@ final class CBAdminPageForUpdate {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBMaintenance',
+            'CBMessageMarkup',
             'CBUI',
             'CBUIExpander',
             'CBUISection',
@@ -44,7 +45,7 @@ final class CBAdminPageForUpdate {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v450.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v465.js', cbsysurl())
         ];
     }
 
@@ -77,45 +78,34 @@ EOT;
     }
 
     /**
-     * @return null
+     * @return object
+     *
+     *      {
+     *          output: string
+     *          succeeded: bool
+     *      }
      */
-    static function pullUpdatesForAjax() {
+    static function CBAjax_pull(): stdClass {
         $response = new CBAjaxResponse();
+        $output = [];
 
-        $description[] = "$ git pull";
-        $result = CBGit::pull();
-        $description[] = $result->output;
+        CBGit::pull($output, $exitCode);
 
-        if ($result->wasSuccessful) {
-            $message[] = 'Git pull succeeded.';
-        } else {
-            $message[] = 'Git pull failed.';
+        if (empty($exitCode)) {
+            CBGit::submoduleUpdate($output, $exitCode);
         }
 
-        $description[] = '$ git submodule update --init --recursive';
-
-        $result = CBGit::submoduleUpdate();
-
-        if ($result->wasSuccessful) {
-            $message[] = 'Git submodule update succeeded.';
-        } else {
-            $message[] = 'Git submodule update failed.';
-        }
-
-        $description[] = $result->output;
-
-        $response->description = implode("\n\n", $description);
-        $response->descriptionFormat = 'preformatted';
-        $response->message = implode(' ', $message);
-        $response->wasSuccessful = true;
-        $response->send();
+        return (object)[
+            'output' => implode("\n", $output),
+            'succeeded' => empty($exitCode),
+        ];
     }
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function pullUpdatesForAjaxPermissions() {
-        return (object)['group' => 'Developers'];
+    static function CBAjax_pull_group(): string {
+        return 'Developers';
     }
 
     /**

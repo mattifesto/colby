@@ -4,6 +4,7 @@
 /* exported CBAdminPageForUpdate */
 /* globals
     CBMaintenance,
+    CBMessageMarkup,
     CBUI,
     CBUIExpander,
     CBUISection,
@@ -200,57 +201,68 @@ var CBAdminPageForUpdate = {
         /* closure */
         function promiseToBackupDatabase() {
             let expander = CBUIExpander.create();
-            expander.message = "Starting database backup.";
+            expander.title = "database backup in progress";
             expander.timestamp = Date.now() / 1000;
 
             outputElement.appendChild(expander.element);
-            Colby.updateTimes();
 
             return Colby.fetchAjaxResponse("/developer/mysql/ajax/backup-database/")
                 .then(onFulfilled);
 
             function onFulfilled() {
-                expander.message = "Database backup completed.";
+                expander.title = "database backup completed";
                 expander.timestamp = Date.now() / 1000;
-                Colby.updateTimes();
             }
         }
 
         /* closure */
         function promiseToPullUpdates() {
             let expander = CBUIExpander.create();
-            expander.message = "Starting Git pull.";
+            expander.title = "git pull in progress";
             expander.timestamp = Date.now() / 1000;
 
             outputElement.appendChild(expander.element);
-            Colby.updateTimes();
 
-            return Colby.fetchAjaxResponse("/api/?class=CBAdminPageForUpdate&function=pullUpdates")
-                .then(onFulfilled);
+            return Colby.callAjaxFunction(
+                "CBAdminPageForUpdate",
+                "pull"
+            ).then(
+                onFulfilled
+            );
 
-            function onFulfilled() {
-                expander.message = "Git pull completed.";
+            function onFulfilled(response) {
+                let message = [
+                    "--- pre green",
+                    CBMessageMarkup.stringToMessage(response.output),
+                    "---",
+                ].join("\n");
+
+                expander.message = message;
                 expander.timestamp = Date.now() / 1000;
-                Colby.updateTimes();
+
+                if (!response.succeeded) {
+                    expander.title = "git pull failed";
+                    expander.severity = 3;
+                } else {
+                    expander.title = "git pull completed";
+                }
             }
         }
 
         /* closure */
         function promiseToUpdateSite() {
             let expander = CBUIExpander.create();
-            expander.message = "Starting website update.";
+            expander.title = "website update in progress";
             expander.timestamp = Date.now() / 1000;
 
             outputElement.appendChild(expander.element);
-            Colby.updateTimes();
 
             return Colby.fetchAjaxResponse("/api/?class=CBAdminPageForUpdate&function=update")
                 .then(onFulfilled);
 
             function onFulfilled() {
-                expander.message = "Website update completed.";
+                expander.title = "website update completed";
                 expander.timestamp = Date.now() / 1000;
-                Colby.updateTimes();
             }
         }
     },
