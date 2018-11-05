@@ -182,8 +182,8 @@ final class CBMenuView {
 
                         $items = CBModel::valueToArray($menu, 'items');
 
-                        array_walk($items, function ($item) use ($selectedItemName) {
-                            CBMenuView::renderMenuItem($item, $selectedItemName);
+                        array_walk($items, function ($menuItemModel) use ($selectedItemName) {
+                            CBMenuItem::render($menuItemModel, $selectedItemName);
                         });
 
                         ?>
@@ -193,34 +193,5 @@ final class CBMenuView {
         </nav>
 
         <?php
-    }
-
-    /**
-     * @param model $menuItemModel
-     * @param string $selectedMenuItemName
-     *
-     * @return void
-     */
-    static function renderMenuItem(
-        stdClass $menuItemModel,
-        string $selectedMenuItemName = ''
-    ): void {
-        $name = CBModel::valueToString($menuItemModel, 'name');
-        $textAsHTML = cbhtml(CBModel::valueToString($menuItemModel, 'text'));
-        $URLAsHTML = cbhtml(CBModel::valueToString($menuItemModel, 'URL'));
-
-        if (!empty($selectedMenuItemName) && $name === $selectedMenuItemName) {
-            ?>
-
-            <li class="selected"><a href="<?= $URLAsHTML ?>"><span><?= $textAsHTML ?></span></a></li>
-
-            <?php
-        } else {
-            ?>
-
-            <li><a href="<?= $URLAsHTML ?>"><span><?= $textAsHTML ?></span></a></li>
-
-            <?php
-        }
     }
 }
