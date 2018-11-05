@@ -58,6 +58,9 @@ final class CBMenuItem {
     }
 
     /**
+     * If the menu item is not hidden, this menu item will render a list item
+     * element.
+     *
      * @param model $menuItemModel
      * @param string $selectedMenuItemName
      *
