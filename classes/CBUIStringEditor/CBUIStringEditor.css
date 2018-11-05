@@ -1,21 +1,21 @@
 .CBUIStringEditor {
+    box-sizing: border-box;
     display: flex;
-    display: -ms-flexbox;
-    display: -webkit-flex;
+    flex: 1 1 auto;
     flex-direction: column;
-    -ms-flex-direction: column;
-    -webkit-flex-direction: column;
-    padding: 5px 10px;
+    padding: 3px 5px;
 }
 
 .CBUIStringEditor label {
-    color: hsl(0, 0%, 50%);
+    color: hsla(0, 0%, 0%, 0.6); /* IE11 */
+    color: var(--CBTextColor2);
 }
 
 .CBUIStringEditor input,
 .CBUIStringEditor textarea {
     background-color: transparent;
     border: none;
+    color: inherit;
     font: inherit;
     line-height: 1.4;
     min-height: 1.4em; /* 1 */
