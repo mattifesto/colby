@@ -30,7 +30,7 @@
     flex-direction: column;
     justify-content: center;
     min-height: 44px;
-    padding: 3px 0;
+    padding: 3px 0 5px;
 
     /* ellipsis */
     min-width: 0;

@@ -6,7 +6,7 @@ final class CBUIStringsPart {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v421.css', cbsysurl())];
+        return [Colby::flexpath(__CLASS__, 'v466.css', cbsysurl())];
     }
 
     /**
