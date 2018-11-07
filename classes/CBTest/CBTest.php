@@ -129,12 +129,12 @@ EOT;
      *          testName: string
      *      }
      */
-    static function javaScriptTests(): array {
+    static function JavaScriptTests(): array {
         $allTests = [];
         $classNames = CBAdmin::fetchClassNames();
 
         foreach ($classNames as $className) {
-            if (is_callable($function = "{$className}::CBTest_javaScriptTests")) {
+            if (is_callable($function = "{$className}::CBTest_JavaScriptTests")) {
                 $tests = call_user_func($function);
                 $tests = array_map(
                     function ($value) use ($className) {
@@ -165,7 +165,7 @@ EOT;
     /**
      * @return [[<className>, <testName>]]
      */
-    static function phpTests(): array {
+    static function PHPTests(): array {
         $tests = [
             ['CB',                      'class'],
             ['CBConvert',               'linesToParagraphs'],
@@ -208,7 +208,7 @@ EOT;
         $classNames = CBAdmin::fetchClassNames();
 
         foreach ($classNames as $className) {
-            if (is_callable($function = "{$className}::CBTest_phpTests")) {
+            if (is_callable($function = "{$className}::CBTest_PHPTests")) {
                 $tests = array_merge($tests, call_user_func($function));
             } else if (is_callable($function = "{$className}::CBUnitTests_tests")) {
                 $tests = array_merge($tests, call_user_func($function));
