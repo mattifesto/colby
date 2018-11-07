@@ -239,6 +239,18 @@ var CBModel = {
      * @param mixed model
      * @param string keyPath
      *
+     * @return bool
+     */
+    valueToBool: function (model, keyPath) {
+        return CBConvert.valueToBool(
+            CBModel.value(model, keyPath)
+        );
+    },
+
+    /**
+     * @param mixed model
+     * @param string keyPath
+     *
      * @return object
      */
     valueToObject: function (model, keyPath) {
