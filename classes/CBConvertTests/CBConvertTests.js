@@ -264,6 +264,76 @@ var CBConvertTests = {
     /**
      * @return object|Promise
      */
+    CBTest_valueToBool: function () {
+        let falsyValues = [
+            false,
+            0,
+            0.0,
+            null,
+            undefined,
+            "",
+            " ",
+            "          ",
+            "\t",
+            " \t ",
+            "0",
+            "    0",
+            "0    ",
+            "  0  ",
+            "\t 0 \t",
+            "\n 0 \n",
+        ];
+
+        for (let i = 0; i < falsyValues.length; i += 1) {
+            let falsyValue = falsyValues[i];
+            let actualResult = CBConvert.valueToBool(falsyValue);
+            let expectedResult = false;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    CBConvert.valueToPrettyJSON(falsyValue),
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        let truthyValues = [
+            true,
+            1,
+            1.0,
+            "1",
+            " 1 ",
+            "\t 1 \t",
+            "\n 1 \n",
+            "a",
+            Number.NaN,
+            Number.POSITIVE_INFINITY,
+            Number.NEGATIVE_INFINITY,
+        ];
+
+        for (let i = 0; i < truthyValues.length; i += 1) {
+            let truthyValue = truthyValues[i];
+            let actualResult = CBConvert.valueToBool(truthyValue);
+            let expectedResult = true;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    CBConvert.valueToPrettyJSON(truthyValue),
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+
+    /**
+     * @return object|Promise
+     */
     CBTest_valueToObject: function () {
         let tests = [
             [{a:1}, "same"],

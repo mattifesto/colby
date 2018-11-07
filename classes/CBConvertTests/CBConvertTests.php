@@ -7,7 +7,7 @@ final class CBConvertTests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v455.1.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v466.js', cbsysurl()),
         ];
     }
 
@@ -26,12 +26,13 @@ final class CBConvertTests {
     /**
      * @return [[<className>, <testName>]]
      */
-    static function CBTest_javaScriptTests(): array {
+    static function CBTest_JavaScriptTests(): array {
         return [
             ['CBConvert', 'dollarsAsCents'],
             ['CBConvert', 'valueAsInt'],
             ['CBConvert', 'valueAsNumber'],
             ['CBConvert', 'valueAsObject'],
+            ['CBConvert', 'valueToBool'],
             ['CBConvert', 'valueToObject'],
         ];
     }
@@ -150,12 +151,81 @@ final class CBConvertTests {
     /**
      * @return [[<class>, <test>]]
      */
-    static function CBUnitTests_tests(): array {
+    static function CBTest_PHPTests(): array {
         return [
             ['CBConvert', 'stringToStub'],
             ['CBConvert', 'stringToURI'],
             ['CBConvert', 'valueAsMoniker'],
             ['CBConvert', 'valueAsNumber'],
+            ['CBConvert', 'valueToBool'],
+        ];
+    }
+
+    /**
+     * @return object
+     */
+    static function CBTest_valueToBool(): stdClass {
+        $falsyValues = [
+            false,
+            0,
+            0.0,
+            null,
+            "",
+            " ",
+            "          ",
+            "\t",
+            " \t ",
+            "0",
+            "    0",
+            "0    ",
+            "  0  ",
+            "\t 0 \t",
+            "\n 0 \n",
+        ];
+
+        foreach ($falsyValues as $falsyValue) {
+            $actualResult = CBConvert::valueToBool($falsyValue);
+            $expectedResult = false;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    CBConvert::valueToPrettyJSON($falsyValue),
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+        $truthyValues = [
+            true,
+            1,
+            1.0,
+            "1",
+            " 1 ",
+            "\t 1 \t",
+            "\n 1 \n",
+            "a",
+            NAN,
+            INF,
+        ];
+
+        foreach ($truthyValues as $truthyValue) {
+            $actualResult = CBConvert::valueToBool($truthyValue);
+            $expectedResult = true;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    CBConvert::valueToPrettyJSON($truthyValue),
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
         ];
     }
 
