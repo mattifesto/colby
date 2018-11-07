@@ -38,11 +38,11 @@ var CBUISelector = {
      * @return object
      *
      *      {
+     *          changed: function (get, set)
      *          element: Element (readonly)
      *
      *              The element represents a CBUISectionItem4.
      *
-     *          onchange: function (get, set)
      *          options: [object] (get, set)
      *
      *              {
@@ -52,9 +52,11 @@ var CBUISelector = {
      *              }
      *
      *          title: string (get, set)
-     *          updateOptionsCallback: function (deprecated)
-     *          updateValueCallback: function (deprecated)
      *          value: mixed (get, set)
+     *
+     *          onchange: function (get, set) (deprecated, use changed)
+     *          updateOptionsCallback: function (deprecated, use options)
+     *          updateValueCallback: function (deprecated, use value)
      *      }
      */
     create: function (args) {
@@ -101,6 +103,28 @@ var CBUISelector = {
         sectionItem.callback = showSelector;
 
         let api = {
+
+            /**
+             * @return function|undefined
+             */
+            get changed() {
+                return onchangeCallback;
+            },
+
+            /**
+             * @param function|undefined value
+             */
+            set changed(value) {
+                if (typeof value === "function" || typeof value === "undefined") {
+                    onchangeCallback = value;
+                } else {
+                    throw new TypeError(
+                        "The changed property of a CBUISelector can only be " +
+                        "set to a function or undefined."
+                    );
+                }
+            },
+
             get element() {
                 return sectionItem.element;
             },
@@ -123,12 +147,21 @@ var CBUISelector = {
                 title = value;
                 stringsPart.string1 = title;
             },
+
+            /**
+             * @return mixed
+             */
             get value() {
                 return spec[propertyName];
             },
+
+            /**
+             * @param mixed value
+             */
             set value(value) {
                 updateValue(value);
             },
+
             updateOptionsCallback: updateOptions, /* deprecated */
             updateValueCallback: updateValue, /* deprecated */
         };
@@ -192,7 +225,13 @@ var CBUISelector = {
             updateInterface();
         }
 
-        /* closure */
+        /**
+         * CBUISelector.create() closure
+         *
+         * @param mixed value
+         *
+         * @return undefined
+         */
         function updateValue(value) {
             spec[propertyName] = value;
 
