@@ -351,9 +351,9 @@ var CBTestAdmin = {
 
             if (CBTestAdmin.errorCount > 0) {
                 expander.severity = 3;
-                expander.message = `Finished running tests, ${CBTestAdmin.errorCount} failed`;
+                expander.title = `Finished running tests, ${CBTestAdmin.errorCount} failed`;
             } else {
-                expander.message = "All tests completed successfully";
+                expander.title = "All tests completed successfully";
             }
 
             CBTestAdmin.status.element.appendChild(expander.element);
@@ -431,7 +431,7 @@ var CBTestAdmin = {
                     "for " +
                     className;
                 let expander = CBUIExpander.create();
-                expander.message = title + " (running)";
+                expander.title = title + " (running)";
 
                 CBTestAdmin.status.element.appendChild(expander.element);
                 expander.element.scrollIntoView();
@@ -448,8 +448,8 @@ var CBTestAdmin = {
                 function onFulfilled(value) {
                     let status = value.succeeded ? "succeeded" : "failed";
                     let message = value.message || "";
-                    message = `${title} ${status}\n\n${message}`;
 
+                    expander.title = `${title} ${status}`;
                     expander.message = message;
                     expander.timestamp = Date.now() / 1000;
 
@@ -468,13 +468,8 @@ var CBTestAdmin = {
                 function onRejected(error) {
                     CBTestAdmin.errorCount += 1;
                     expander.severity = 3;
-                    expander.message = `
-
-                        ${title} failed
-
-                        ${error.message}
-
-                    `;
+                    expander.title = `${title} failed`;
+                    expander.message = error.message;
 
                     reject(error);
                 }
@@ -506,7 +501,7 @@ var CBTestAdmin = {
     runTest: function (test) {
         let title = "JavaScript Test: " + test.testClassName + " - " + test.testName;
         let expander = CBUIExpander.create();
-        expander.message = title + " (running)";
+        expander.title = title + " (running)";
 
         CBTestAdmin.status.element.appendChild(expander.element);
         expander.element.scrollIntoView();
@@ -517,7 +512,7 @@ var CBTestAdmin = {
             {
                 set progress(value) {
                     let percent = (value * 100).toFixed(1);
-                    expander.message = title + ` (running ${percent}%)`;
+                    expander.title = title + ` (running ${percent}%)`;
                 }
             }
         ).then(
@@ -531,28 +526,26 @@ var CBTestAdmin = {
         /* closure */
         function onFulfilled(value) {
             let message;
+            let status;
 
             if (typeof value === "object") {
                 if (value.succeeded) {
-                    message = value.message || "succeeded";
+                    status = "passed";
                 } else {
+                    status = "failed";
                     CBTestAdmin.errorCount += 1;
                     expander.severity = 3;
-                    message = value.message || "failed";
                 }
+
+                message = value.message || status;
             } else {
                 CBTestAdmin.errorCount += 1;
                 expander.severity = 3;
                 message = "This test failed because the test function did not return an object.";
             }
 
-            expander.message = `
-
-                ${title}
-
-                ${message}
-
-            `;
+            expander.title = `${title} (${status})`;
+            expander.message = message;
         }
 
         /* closure */
@@ -566,9 +559,8 @@ var CBTestAdmin = {
 
             CBTestAdmin.errorCount += 1;
             expander.severity = 3;
+            expander.title = `${title} failed`;
             expander.message = `
-
-                ${title} failed
 
                 ${descriptionAsMessage}
 
