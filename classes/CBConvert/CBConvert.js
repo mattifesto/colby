@@ -282,6 +282,56 @@ var CBConvert = {
     },
 
     /**
+     * This function exists to simplify boolean conversions, especially with
+     * regard to JSON object property values and strings typed into spreadsheet
+     * cells or text fields.
+     *
+     *      False:
+     *
+     *          false
+     *          null
+     *          undefined (JavaScript)
+     *          0 or 0.0
+     *          trimmed string is "0"
+     *          trimmed string is ""
+     *
+     *      True:
+     *
+     *          everything else
+     *
+     * @param mixed value
+     *
+     * @return bool
+     *
+     *      If the value parameter is truthy, true is returned; otherwise false.
+     */
+    valueToBool: function (value) {
+        if (typeof value === "string") {
+            value = value.trim();
+
+            if (
+                value === "" ||
+                value === "0"
+            ) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        if (
+            value === false ||
+            value === 0 ||
+            value === null ||
+            value === undefined
+        ) {
+            return false;
+        } else {
+            return true;
+        }
+    },
+
+    /**
      * This function does not consider null values or arrays to be objects.
      *
      * @param mixed value

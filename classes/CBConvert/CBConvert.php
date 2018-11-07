@@ -7,7 +7,7 @@ final class CBConvert {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v455.1.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v466.js', cbsysurl()),
         ];
     }
 
@@ -578,24 +578,22 @@ final class CBConvert {
     }
 
     /**
-     * This function differs from the PHP boolval() function by trimming a
-     * string value before determining its boolean value. This helps when
-     * importing data from a CSV file created from a spreadsheet where the users
-     * may have typed "0    " or "   " not realizing that there are extra spaces
-     * or that those spaces will cause boolval() to consider the value to be
-     * true when what they clearly meant was for the value to be false.
+     * This function exists to simplify boolean conversions, especially with
+     * regard to JSON object property values and strings typed into spreadsheet
+     * cells or text fields.
      *
-     *      $value      boolval valueToBool
-     *      -------     ------- -----------
-     *      " "         true    false
-     *      " 0 "       true    false
+     *      False:
      *
-     *      "1"         true    true
-     *      "true"      true    true
-     *      "false"     true    true
+     *          false
+     *          null
+     *          undefined (JavaScript)
+     *          0 or 0.0
+     *          trimmed string is "0"
+     *          trimmed string is ""
      *
-     *      true        true    true
-     *      false       false   false
+     *      True:
+     *
+     *          everything else
      *
      * @param mixed $value
      *
@@ -603,10 +601,28 @@ final class CBConvert {
      */
     static function valueToBool($value): bool {
         if (is_string($value)) {
-            trim($value);
+            $value = trim($value);
+
+            if (
+                $value === '' ||
+                $value === '0'
+            ) {
+                return false;
+            } else {
+                return true;
+            }
         }
 
-        return boolval($value);
+        if (
+            $value === false ||
+            $value === 0 ||
+            $value === 0.0 ||
+            $value === null
+        ) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
