@@ -109,6 +109,11 @@ final class CBStatusAdminPage {
                 ['COLBY_MYSQL_USER', 'Use CBMySQLUser instead.'], // 2017.07.08
                 ['COLBY_MYSQL_PASSWORD', 'Use CBMySQLPassword instead.'], // 2017.07.08
                 ['COLBY_MYSQL_DATABASE', 'Use CBMySQLDatabase instead.'], // 2017.07.08
+                [
+                    /* 2018_11_06 */
+                    'STRIPE_PAYMENT_ENABLED',
+                    'Enable payments in stripe preferences.',
+                ],
             ];
 
             foreach ($deprecatedConstants as $constant) {
