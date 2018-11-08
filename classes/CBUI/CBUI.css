@@ -94,7 +94,8 @@
 }
 
 .CBUIHeaderItem.action > a {
-    color: hsl(210, 100%, 50%);
+    color: hsla(210, 80%, 50%, 0.9); /* IE11 */
+    color: var(--CBTextColorForLinks);
     cursor: pointer;
     font-weight: normal;
 }

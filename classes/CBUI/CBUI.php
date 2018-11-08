@@ -6,14 +6,18 @@ final class CBUI {
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v440.css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v466.css', cbsysurl()),
+        ];
     }
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v440.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v440.js', cbsysurl()),
+        ];
     }
 
     /**
