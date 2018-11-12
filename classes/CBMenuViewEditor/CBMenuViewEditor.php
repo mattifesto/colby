@@ -53,8 +53,8 @@ EOT;
 
             foreach ($menu->items as $item) {
                 $options[] = (object)[
-                    'title' => $item->text,
-                    'value' => $item->name,
+                    'title' => CBModel::valueToString($item, 'text'),
+                    'value' => CBModel::valueToString($item, 'name'),
                 ];
             }
 
