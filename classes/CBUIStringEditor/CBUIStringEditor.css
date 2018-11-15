@@ -22,6 +22,8 @@
     outline: none;
     padding: 0;
     resize: none;
+
+    -ms-overflow-style: none; /* hide scrollbars on IE11 */
 }
 
 /* 1: Setting the line height and min-height is important because of an odd edge
