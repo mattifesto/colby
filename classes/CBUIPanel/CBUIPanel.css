@@ -13,6 +13,7 @@
     overflow-y: scroll;
     overscroll-behavior: contain;
     position: fixed;
+    z-index: 1500; /* see CBEqualizePageSettingsPart.css */
 }
 
 .CBUIPanel.showing {
