@@ -11,7 +11,8 @@
     CBUINavigationView,
     CBUISectionItem4,
     CBUISpecEditor,
-    CBUISpecSaver */
+    CBUISpecSaver,
+*/
 
 var CBModelEditor = {
 

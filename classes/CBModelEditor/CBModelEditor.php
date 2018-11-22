@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * @NOTE 2018_11_19
+ *
+ *      This class currently behaves as an admin page for editing models.
+ *      However, admin page classes should end in "Admin". This is becoming an
+ *      issue because model editors on public facing pages is becoming more
+ *      common and this class is using a potentially important non-admin
+ *      specific class name.
+ */
 class CBModelEditor {
 
     private static $originalSpec = null;
@@ -78,7 +87,9 @@ class CBModelEditor {
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v433.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v433.js', cbsysurl()),
+        ];
     }
 
     /**
