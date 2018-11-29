@@ -9,20 +9,17 @@
 var CBModel = {
 
     /**
-     * @param model model
+     * @param object model
      * @param string functionName
      *
-     * @return Function|undefined
+     * @return function|undefined
      */
     classFunction: function (model, functionName) {
         let className = CBModel.valueToString(model, "className");
-        let callable = CBModel.value(window, className + "." + functionName);
 
-        if (typeof callable === "function") {
-            return callable;
-        }
-
-        return undefined;
+        return CBConvert.valueAsFunction(
+            CBModel.value(window, className + "." + functionName)
+        );
     },
 
     /**
