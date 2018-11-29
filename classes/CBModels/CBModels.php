@@ -40,6 +40,15 @@ final class CBModels {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
+        ];
+    }
+
+    /**
      * When a model is saved a task is created, so CBTasks2 is required for this
      * class to be fully installed.
      *
