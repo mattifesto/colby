@@ -151,6 +151,18 @@ var CBModel = {
     },
 
     /**
+     * @param object model1
+     * @param object model2
+     *
+     *      The model2 property value will be merged into model1.
+     *
+     * @return undefined
+     */
+    merge: function(model1, model2) {
+        Object.assign(model1, model2);
+    },
+
+    /**
      * @param mixed model
      * @param string keyPath
      *
