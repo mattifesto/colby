@@ -41,6 +41,27 @@ final class CBConvert {
     }
 
     /**
+     * This function will throw an exception if the JSON is not valid.
+     *
+     * @param string $JSON
+     *
+     * @return mixed
+     */
+    static function JSONToValue(string $JSON) {
+        $value = json_decode($JSON);
+        $error = json_last_error();
+
+        if ($error === JSON_ERROR_NONE) {
+            return $value;
+        } else {
+            throw new Exception(
+                "The JSON error {$error} was produced when trying to parse " .
+                "the value: {$JSON}"
+            );
+        }
+    }
+
+    /**
      * Determines whether a string is a CSS background image. If so then it is
      * sanitized and returned; if not then null is returned.
      *
