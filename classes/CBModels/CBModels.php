@@ -242,6 +242,34 @@ EOT;
     }
 
     /**
+     * @param string $className
+     *
+     * @return [model]
+     */
+    static function fetchModelsByClassName2(string $className): array {
+        $classNameAsSQL = CBDB::stringToSQL($className);
+        $SQL = <<<EOT
+
+            SELECT  v.modelAsJSON
+            FROM    CBModels as m
+            JOIN    CBModelVersions as v ON
+                    m.ID = v.ID AND
+                    m.version = v.version
+            WHERE   m.className = {$classNameAsSQL}
+
+EOT;
+
+        $valuesAsJSON = CBDB::SQLToArrayOfNullableStrings($SQL);
+
+        return array_map(
+            function ($JSON) {
+                return CBConvert::JSONToValue($JSON);
+            },
+            $valuesAsJSON
+        );
+    }
+
+    /**
      * @param [ID] $IDs
      *
      * @return [ID => model]
