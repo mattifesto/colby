@@ -1,0 +1,23 @@
+.CBUIRadioButton {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.CBUIRadioButton_button {
+    display: flex;
+    align-items: center;
+
+    border: 2px solid var(--CBTextColor3);
+    border-radius: 5px;
+    box-sizing: border-box;
+    max-width: 100%;
+    min-height: 60px;
+    overflow: hidden;
+    padding: 0 5px;
+    width: 640px;
+}
+
+.CBUIRadioButton_selected .CBUIRadioButton_button {
+    border-color: var(--CBTextColorForLinks);
+}
