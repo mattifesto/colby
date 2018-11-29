@@ -45,6 +45,12 @@ final class CBDB {
     }
 
     /**
+     * @NOTE 2018_11_27
+     *
+     *      This function isn't fully deprecated yet, however its method of
+     *      specifying arguments and varied behavior is not ideal. Consider
+     *      using SQLToArrayOfNullableStrings() instead.
+     *
      * If the query returns one column the values for that column will be
      * placed in an array.
      *
@@ -55,7 +61,7 @@ final class CBDB {
      * If the first column of a multicolumn query is not unique, some data will
      * not be returned.
      *
-     * @return {array}
+     * @return [?string]|[mixed]|[string => ?string]|[string => mixed]|
      */
     static function SQLToArray($SQL, $args = []) {
         $valueIsJSON = false;
@@ -70,6 +76,26 @@ final class CBDB {
             } else {
                 $values[] = $valueIsJSON ? json_decode($row[0]) : $row[0];
             }
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param string $SQL
+     *
+     * @return [?string]
+     *
+     *      The values returned represent the values of the first column of the
+     *      result. Since mysqli returns all values as either string or null
+     *      regardless of type, all of the values will be nullable strings.
+     */
+    static function SQLToArrayOfNullableStrings(string $SQL): array {
+        $result = Colby::query($SQL);
+        $values = [];
+
+        while ($row = $result->fetch_array(MYSQLI_NUM)) {
+            $values[] = $row[0];
         }
 
         return $values;
