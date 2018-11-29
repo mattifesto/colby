@@ -8,7 +8,7 @@
     CBUINavigationView,
     CBUISectionItem4,
     CBUIStringsPart,
-    Colby */
+*/
 
 var CBUISelector = {
 
@@ -96,7 +96,9 @@ var CBUISelector = {
             if (typeof CBUINavigationView === "object" && CBUINavigationView.context) {
                 navigate = CBUINavigationView.context.navigate;
             } else {
-                Colby.alert("CBUISelector requires the use of CBUINavigationView");
+                throw new Error(
+                    "CBUISelector requires the use of CBUINavigationView"
+                );
             }
         }
 
