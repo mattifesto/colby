@@ -49,6 +49,16 @@ final class CBModels {
     }
 
     /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBConvert',
+            'CBModel',
+        ];
+    }
+
+    /**
      * When a model is saved a task is created, so CBTasks2 is required for this
      * class to be fully installed.
      *
