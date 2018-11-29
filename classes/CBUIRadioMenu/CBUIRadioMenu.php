@@ -1,21 +1,18 @@
 <?php
 
+/**
+ * @deprecated 2018_11_23
+ *
+ *      Use CBUIRadioButton and/or CBMutator
+ */
 final class CBUIRadioMenu {
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBUIRadioMenu::URL('CBUIRadioMenu.js')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+        return [
+            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
+        ];
     }
 }

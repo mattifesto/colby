@@ -1,18 +1,32 @@
 "use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBUIRadioMenu */
 
+/**
+ * @deprecated 2018_11_23
+ *
+ *      Use CBUIRadioButton and/or CBMutator
+ */
 var CBUIRadioMenu = {
 
     /**
-     * @param string args.propertyName
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
      *
-     * @return {
-     *  function createOptionCallback,
-     *  function setValueCallback
-     * }
+     *      {
+     *          propertyName: strings
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          createOptionCallback: function
+     *          setValueCallback: function
+     *      }
      */
-    createMenu : function (args) {
+    createMenu: function (args) {
         var menuData = {
             options : [],
             propertyName : args.propertyName,
@@ -33,13 +47,19 @@ var CBUIRadioMenu = {
     /**
      * @param object menuData
      * @param function setValueCallback
-     * @param var args.value
+     * @param object args
      *
-     * @return {
-     *  Element element
-     * }
+     *      {
+     *          value: mixed
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          element: Element
+     *      }
      */
-    createOption : function(menuData, setValueCallback, args) {
+    createOption: function(menuData, setValueCallback, args) {
         var element = document.createElement("div");
         element.className = "CBUIRadioMenuOption";
 
@@ -58,16 +78,16 @@ var CBUIRadioMenu = {
 
         return {
             element : element,
-        }
+        };
     },
 
     /**
      * @param menuData menuData
-     * @param var value
+     * @param mixed value
      *
      * @return undefined
      */
-    setValue : function(menuData, value) {
+    setValue: function(menuData, value) {
         menuData.spec[menuData.propertyName] = value;
 
         menuData.options.forEach(function (option) {
