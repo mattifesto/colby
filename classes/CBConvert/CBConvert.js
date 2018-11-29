@@ -166,6 +166,19 @@ var CBConvert = {
     /**
      * @param mixed value
      *
+     * @return function|undefined
+     */
+    valueAsFunction: function (value) {
+        if (typeof value === "function") {
+            return value;
+        } else {
+            return undefined;
+        }
+    },
+
+    /**
+     * @param mixed value
+     *
      * @return ID|undefined
      */
     valueAsID: function (value) {
