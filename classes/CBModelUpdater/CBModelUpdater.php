@@ -5,6 +5,25 @@ final class CBModelUpdater {
     /**
      * @return [string]
      */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBModel',
+            'CBModels',
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
     static function CBInstall_requiredClassNames(): array {
         return [
             'CBModels',
