@@ -127,7 +127,8 @@
 
 .CBUISectionHeader {
     box-sizing: border-box;
-    color: hsl(0, 0%, 40%);
+    color: hsl(0, 0%, 40%); /* IE11 */
+    color: var(--CBTextColor2);
     font-size: 14px;
     font-weight: normal;
     margin: 0 auto;
