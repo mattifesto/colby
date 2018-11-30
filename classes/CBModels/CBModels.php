@@ -121,13 +121,6 @@ final class CBModels {
             $IDs = [$IDs];
         }
 
-        /**
-         * If any of the models being deleted are in the cache, remove them now.
-         */
-        if (class_exists('CBModelCache', false)) {
-            CBModelCache::uncacheByID($IDs);
-        }
-
         $IDsForSQL = CBHex160::toSQL($IDs);
         $SQL = <<<EOT
 
@@ -166,6 +159,13 @@ EOT;
 
         foreach ($IDs as $ID) {
             CBDataStore::deleteByID($ID);
+        }
+
+        /**
+         * If any of the models being deleted are in the cache, remove them now.
+         */
+        if (class_exists('CBModelCache', false)) {
+            CBModelCache::uncacheByID($IDs);
         }
     }
 
