@@ -3,12 +3,6 @@
 final class CBModelAssociationsTable {
 
     /**
-     * @TODO 2018_09_14
-     *
-     *      Add the following key to the table:
-     *
-     *      KEY associatedID_className (associatedID, className)
-     *
      * @return void
      */
     static function CBInstall_install(): void {
@@ -19,11 +13,50 @@ final class CBModelAssociationsTable {
                 className       VARCHAR(80) NOT NULL,
                 associatedID    BINARY(20) NOT NULL,
 
-                PRIMARY KEY (ID, className, associatedID)
+                PRIMARY KEY                 (ID, className, associatedID),
+                KEY className_associatedID  (className, associatedID),
+                KEY associatedID            (associatedID)
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
+
+EOT;
+
+        Colby::query($SQL);
+
+        CBModelAssociationsTable::upgradeForVersion468();
+    }
+
+    /**
+     * 2018_11_29
+     *
+     * @return void
+     */
+    static function upgradeForVersion468(): void {
+        $SQL = <<<EOT
+
+            SELECT  COUNT(*)
+            FROM    information_schema.STATISTICS
+            WHERE   TABLE_NAME = 'CBModelAssociations' AND
+                    INDEX_NAME = 'className_associatedID' AND
+                    TABLE_SCHEMA = DATABASE()
+
+EOT;
+
+        $count = CBConvert::valueAsInt(
+            CBDB::SQLToValue($SQL)
+        ) ?? 0;
+
+        if ($count > 0) {
+            return;
+        }
+
+        $SQL = <<<EOT
+
+            ALTER TABLE CBModelAssociations
+            ADD KEY className_associatedID  (className, associatedID),
+            ADD KEY associatedID            (associatedID)
 
 EOT;
 
