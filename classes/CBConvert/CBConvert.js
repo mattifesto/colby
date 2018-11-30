@@ -6,6 +6,47 @@
 var CBConvert = {
 
     /**
+     * @param mixed cents
+     *
+     *      This parameter must convert to an integer using
+     *      CBConvert.valueAsInt().
+     *
+     * @return string
+     *
+     *      150         => "1.50"
+     *      "5"         => "0.05"
+     *      75          => "0.75"
+     *      "  3500  "  => "35.00"
+     */
+    centsToDollars: function (cents) {
+        let centsAsInt = CBConvert.valueAsInt(cents);
+
+        if (centsAsInt === undefined) {
+            throw new TypeError("The cents parameter is not a valid integer.");
+        }
+
+        /**
+         * Convert to a string.
+         */
+
+        let centsAsString = CBConvert.valueToString(centsAsInt);
+
+        /**
+         * Pad with zeros until the string is at least 3 digits long.
+         */
+
+        while (centsAsString.length < 3) {
+            centsAsString = "0" + centsAsString;
+        }
+
+        return (
+            centsAsString.substr(0, centsAsString.length - 2) +
+            "." +
+            centsAsString.substr(-2)
+        );
+    },
+
+    /**
      * Convert valid dollar amounts, usually from a string, to an integer number
      * of cents.
      *
