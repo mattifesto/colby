@@ -76,21 +76,24 @@ final class Colby {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v460.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
         ];
     }
 
     /**
-     * @NOTE 2018.09.06
+     * @NOTE 2018_09_06
      *
-     *      The function imageToURL() in Colby.js has been deprecated and moved
-     *      to toURL() in CBImage.js. Once all callers have been migrated the
-     *      CBImage required class name can be removed.
+     *      The deprecated function Colby.imageToURL() requires CBImage.
+     *
+     * @NOTE 2018_11_29
+     *
+     *      The deprecated function Colby.centsToDollars() requires CBConvert.
      *
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBConvert',
             'CBImage',
         ];
     }

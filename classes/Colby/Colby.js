@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported Colby */
 /* global
+    CBConvert,
     CBImage,
 */
 
@@ -80,40 +81,10 @@ var Colby = {
     },
 
     /**
-     * Converts cents to dollars.
-     *
-     *      150 => "1.50"
-     *      "5" => "0.05"
-     *       75 => "0.75"
-     *
-     * @param mixed cents
-     *
-     * @return string
+     * @deprecated use CBConvert.centsToDollars()
      */
     centsToDollars: function (cents) {
-        /**
-         * Normalize cents to an integer. Parse as base 10.
-         */
-
-        cents = parseInt(cents, 10);
-
-        /**
-         * Convert to a string.
-         */
-
-        cents = String(cents);
-
-        /**
-         * Pad with zeros until the string is at least 3 digits long.
-         */
-
-        while (cents.length < 3) {
-            cents = "0" + cents;
-        }
-
-        var dollars = cents.substr(0, cents.length - 2) + "." + cents.substr(-2);
-
-        return dollars;
+        return CBConvert.centsToDollars(cents);
     },
 
     /**
