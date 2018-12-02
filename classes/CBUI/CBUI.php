@@ -16,7 +16,7 @@ final class CBUI {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v440.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
         ];
     }
 

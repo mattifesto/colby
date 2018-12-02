@@ -5,82 +5,10 @@
 /* global
     CBMessageMarkup,
     CBUIDropdown,
+    CBUISection,
 */
 
 var CBUI = {
-
-    /**
-     * @param object args
-     *
-     *      {
-     *          callback: function?
-     *          text: string?
-     *      }
-     *
-     * @return object
-     *
-     *      {
-     *          disable: function
-     *          element: Element
-     *          enable: function
-     *          updateCallback: function
-     *          updateText: function
-     *      }
-     */
-    createButton: function (args) {
-        var callback = args.callback;
-        var element = document.createElement("div");
-        element.className = "CBUIButton";
-        var buttonElement = document.createElement("div");
-        buttonElement.className = "button";
-
-        element.appendChild(buttonElement);
-
-        buttonElement.addEventListener("click", function () {
-            if (!element.classList.contains("disabled") && typeof callback === "function") {
-                callback();
-            }
-        });
-
-        updateText(args.text);
-
-        return {
-            get callback() {
-                return callback;
-            },
-            set callback(value) {
-                callback = value;
-            },
-            disable: disable,
-            element: element,
-            enable: enable,
-            updateCallback: updateCallback, /* deprecated use callback */
-            updateText: updateText,
-        };
-
-        function disable() {
-            element.classList.add("disabled");
-        }
-
-        function enable() {
-            element.classList.remove("disabled");
-        }
-
-        /* deprecated */
-        function updateCallback(newCallback) {
-            var previousCallback = callback;
-            callback = newCallback;
-
-            return previousCallback;
-        }
-
-        function updateText(value) {
-            var previousValue = buttonElement.textContent;
-            buttonElement.textContent = value;
-
-            return previousValue;
-        }
-    },
 
     /**
      * @return Element

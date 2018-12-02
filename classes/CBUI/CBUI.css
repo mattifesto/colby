@@ -9,35 +9,6 @@
     display: none;
 }
 
-.CBUIButton {
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-}
-
-.CBUIButton .button {
-    background-color: hsl(210, 80%, 50%); /* IE11, from equalize.css */
-    background-color: var(--CBButtonBackgroundColor);
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    color: hsl(0, 0%, 100%); /* IE11, from equalize.css */
-    color: var(--CBButtonTextColor);
-    cursor: default;
-    padding: 10px 20px;
-
-    user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-}
-
-.CBUIButton.disabled .button {
-    background-color: hsl(210, 80%, 30%); /* IE11, from equalize.css */
-    background-color: var(--CBButtonBackgroundColorDisabled);
-    color: hsla(0, 0, 100%, 0.3); /* IE11, from equalize.css */
-    color: var(--CBButtonTextColorDisabled);
-}
-
 .CBUIHalfSpace {
     height: 22px;
 }
