@@ -6,43 +6,31 @@
 var CBUIRadioButton = {
 
     /**
-     * @param object args
-     *
-     *      {
-     *          mutator: object
-     *
-     *              {
-     *                  addChangeListener: function
-     *                  value: mixed (get, set)
-     *              }
-     *
-     *          value: mixed
-     *      }
-     *
      * @return object
      *
      *      {
      *          element: Element
      *
+     *          addClickListener()
      *          appendPart()
+     *          removeClickListener()
      *      }
      */
-    create: function (args) {
-        let mutator = args.mutator;
-        let value = args.value;
+    create: function () {
+        let clickListeners = [];
         let element = document.createElement("label");
         element.className = "CBUIRadioButton";
         let buttonElement = document.createElement("div");
         buttonElement.className = "CBUIRadioButton_button";
 
-        buttonElement.addEventListener("click", click);
+        buttonElement.addEventListener("click", handleClick);
 
         element.appendChild(buttonElement);
 
-        mutator.addChangeListener(changed);
-
         return {
+            addClickListener: addClickListener,
             appendPart: appendPart,
+            removeClickListener: removeClickListener,
 
             /**
              * @return Element
@@ -50,7 +38,44 @@ var CBUIRadioButton = {
             get element() {
                 return element;
             },
+
+            /**
+             * @return bool
+             */
+            get selected() {
+                return element.classList.contains("CBUIRadioButton_selected");
+            },
+
+            /**
+             * @param bool value
+             */
+            set selected(value) {
+                if (value) {
+                    element.classList.add("CBUIRadioButton_selected");
+                } else {
+                    element.classList.remove("CBUIRadioButton_selected");
+                }
+            },
         };
+
+        /**
+         * closure in create()
+         *
+         * @param function value
+         *
+         * @return undefined
+         */
+        function addClickListener(value) {
+            if (typeof value !== "function") {
+                throw new TypeError();
+            }
+
+            if (clickListeners.includes(value)) {
+                return;
+            }
+
+            clickListeners.push(value);
+        }
 
         /**
          * closure in create()
@@ -69,20 +94,38 @@ var CBUIRadioButton = {
 
         /**
          * closure in create()
+         *
+         * @return undefined
          */
-        function changed() {
-            if (mutator.value === value) {
-                element.classList.add("CBUIRadioButton_selected");
-            } else {
-                element.classList.remove("CBUIRadioButton_selected");
+        function handleClick() {
+            if (element.classList.contains("CBUIButton_disabled")) {
+                return;
             }
+
+            clickListeners.forEach(
+                function (callback) {
+                    callback.call();
+                }
+            );
         }
 
         /**
-         * closure in create();
+         * closure in create()
+         *
+         * @param function value
+         *
+         * @return undefined
          */
-        function click() {
-            mutator.value = value;
+        function removeClickListener(value) {
+            if (typeof value !== "function") {
+                throw new TypeError();
+            }
+
+            clickListeners = clickListeners.filter(
+                function (callback) {
+                    return callback !== value;
+                }
+            );
         }
     },
 };
