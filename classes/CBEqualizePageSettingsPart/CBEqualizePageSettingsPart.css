@@ -39,6 +39,7 @@ html {
 
     --CBButtonBackgroundColor: hsl(210, 80%, 50%);
     --CBButtonBackgroundColorDisabled: hsl(210, 80%, 30%);
+    --CBButtonBackgroundColorHighlight: hsl(210, 80%, 60%);
     --CBButtonTextColor: hsl(0, 0%, 100%);
     --CBButtonTextColorDisabled: hsla(0, 0, 100%, 0.3);
     --CBMonospaceFontFamily: 'Menlo', 'Courier New', 'Courier', monospace;
