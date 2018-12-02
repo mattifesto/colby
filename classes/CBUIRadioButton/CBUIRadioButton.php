@@ -1,8 +1,8 @@
 <?php
 
 /**
- * CBUIRadioButton instances work with CBMutator objects to change the value of
- * a variable.
+ * A CBUIRadioButton is a container similar to CBUISectionItem4. If a radio
+ * button is selected, it displays a highlight.
  */
 final class CBUIRadioButton {
 
@@ -21,16 +21,6 @@ final class CBUIRadioButton {
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
             Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
-        ];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return [
-            'CBModel',
-            'CBUIStringsPart',
         ];
     }
 }

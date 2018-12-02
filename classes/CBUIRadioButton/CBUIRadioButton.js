@@ -2,10 +2,6 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* exported CBUIRadioButton */
-/* global
-    CBModel,
-    CBUIStringsPart,
-*/
 
 var CBUIRadioButton = {
 
@@ -13,7 +9,6 @@ var CBUIRadioButton = {
      * @param object args
      *
      *      {
-     *          description: string
      *          mutator: object
      *
      *              {
@@ -21,7 +16,6 @@ var CBUIRadioButton = {
      *                  value: mixed (get, set)
      *              }
      *
-     *          title: string
      *          value: mixed
      *      }
      *
@@ -29,6 +23,8 @@ var CBUIRadioButton = {
      *
      *      {
      *          element: Element
+     *
+     *          appendPart()
      *      }
      */
     create: function (args) {
@@ -43,19 +39,33 @@ var CBUIRadioButton = {
 
         element.appendChild(buttonElement);
 
-        let stringsPart = CBUIStringsPart.create();
-        stringsPart.string1 = CBModel.valueToString(args, "title");
-        stringsPart.string2 = CBModel.valueToString(args, "description");
-
-        stringsPart.element.classList.add("titledescription");
-
-        buttonElement.appendChild(stringsPart.element);
-
         mutator.addChangeListener(changed);
 
         return {
-            element: element,
+            appendPart: appendPart,
+
+            /**
+             * @return Element
+             */
+            get element() {
+                return element;
+            },
         };
+
+        /**
+         * closure in create()
+         *
+         * @param object part
+         *
+         *      {
+         *          element: Element
+         *      }
+         *
+         * @return undefined
+         */
+        function appendPart(part) {
+            buttonElement.appendChild(part.element);
+        }
 
         /**
          * closure in create()
