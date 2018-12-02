@@ -5,7 +5,7 @@
 /* global
     CBArtworkElement,
     CBImage,
-    CBUI,
+    CBUIButton,
     Colby,
 */
 
@@ -127,10 +127,13 @@ var CBPageListView2 = {
             if (!state.renderStyleIsRecent && state.buttonContainerElement === undefined) {
                 state.buttonContainerElement = document.createElement("div");
                 state.buttonContainerElement.className = "buttonContainer";
-                var button = CBUI.createButton({
-                    text: "View More",
-                    callback: CBPageListView2.fetchPages.bind(undefined, state),
-                });
+
+                let button = CBUIButton.create();
+                button.textContent = "View More";
+
+                button.addClickListener(
+                    CBPageListView2.fetchPages.bind(undefined, state)
+                );
 
                 state.buttonContainerElement.appendChild(button.element);
                 state.element.appendChild(state.buttonContainerElement);

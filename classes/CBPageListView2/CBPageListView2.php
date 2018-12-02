@@ -84,10 +84,11 @@ EOT;
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBArtworkElement',
-            'CBUI'
+            'CBImage',
+            'CBUIButton',
         ];
     }
 
@@ -105,7 +106,7 @@ EOT;
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v453.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
         ];
     }
 
