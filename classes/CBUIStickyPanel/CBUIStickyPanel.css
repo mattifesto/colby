@@ -1,0 +1,26 @@
+.CBUIStickyPanel {
+    bottom: 0;
+    position: fixed;
+    width: 100vw;
+    z-index: 500; /* see CBEqualizePageSettingsPart.css */
+}
+
+.CBUIStickyPanel,
+.CBUIStickyPanel_placeholder {
+    display: none;
+}
+
+.CBUIStickyPanel.CBUIStickyPanel_showing,
+.CBUIStickyPanel_placeholder.CBUIStickyPanel_showing {
+    display: block;
+}
+
+.CBUIStickyPanel_container,
+.CBUIStickyPanel_placeholder {
+    height: 125px;
+}
+
+.CBUIStickyPanel_container {
+    width: 100%;
+    background-color: var(--CBBackgroundColor);
+}
