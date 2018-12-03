@@ -18,9 +18,19 @@
  *
  *          String 1 is the title and string 2 (the description) is lighter.
  *
+ *
+ *      CBUIStringsPart_titledescription_full
+ *
+ *          The same as titledescription except no text will be truncated.
+ *
  *      disabled
  *
  *          Both strings are very light.
+ *
+ *      CBUIStringsPart_price
+ *
+ *          The part has a constant width appropriate for displaying a price and
+ *          the text is right aligned.
  */
 
 .CBUIStringsPart {
@@ -54,7 +64,8 @@
 }
 
 .CBUIStringsPart.action > .string2,
-.CBUIStringsPart.titledescription > .string2 {
+.CBUIStringsPart.titledescription > .string2,
+.CBUIStringsPart_titledescription_full > .string2 {
     color: hsla(0, 0%, 0%, 0.6); /* IE11 */
     color: var(--CBTextColor2);
     font-size: 80%;
@@ -72,6 +83,12 @@
 .CBUIStringsPart.disabled > * {
     color: hsla(0, 0%, 0%, 0.3) !important; /* IE11 */
     color: var(--CBTextColor3) !important;
+}
+
+.CBUIStringsPart_price {
+    text-align: right;
+    width: 120px;
+    flex: none;
 }
 
 /* the key string in keyvalue is truncated */
