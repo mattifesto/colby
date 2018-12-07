@@ -3,6 +3,12 @@
 final class CBModelAssociationsTable {
 
     /**
+     * @NOTE 2018_12_07
+     *
+     *      The "className" column will eventually be renamed to
+     *      "associationKey" because it does not represent an actual class name
+     *      but instead the context of the assocation for the row.
+     *
      * @return void
      */
     static function CBInstall_install(): void {

@@ -4,14 +4,14 @@ final class CBModelAssociations {
 
     /**
      * @param ID $ID
-     * @param string $className
+     * @param string $associationKey
      * @param ID $associatedID
      *
      * @return void
      */
-    static function add(string $ID, string $className, string $associatedID): void {
+    static function add(string $ID, string $associationKey, string $associatedID): void {
         $IDAsSQL = CBHex160::toSQL($ID);
-        $classNameAsSQL = CBDB::stringToSQL($className);
+        $associationKeyAsSQL = CBDB::stringToSQL($associationKey);
         $associatedIDAsSQL = CBHex160::toSQL($associatedID);
 
         $SQL = <<<EOT
@@ -20,7 +20,7 @@ final class CBModelAssociations {
             VALUES
             (
                 {$IDAsSQL},
-                {$classNameAsSQL},
+                {$associationKeyAsSQL},
                 {$associatedIDAsSQL}
             )
             ON DUPLICATE KEY UPDATE
@@ -33,12 +33,12 @@ EOT;
 
     /**
      * @param ?ID $ID
-     * @param ?string $className
+     * @param ?string $associationKey
      * @param ?ID $associatedID
      *
      * @return void
      */
-    static function delete(string $ID = null, string $className = null, string $associatedID = null): void {
+    static function delete(string $ID = null, string $associationKey = null, string $associatedID = null): void {
         $clauses = [];
 
         if ($ID !== null) {
@@ -46,9 +46,9 @@ EOT;
             array_push($clauses, "ID = {$IDAsSQL}");
         }
 
-        if ($className !== null) {
-            $classNameAsSQL = CBDB::stringToSQL($className);
-            array_push($clauses, "className = {$classNameAsSQL}");
+        if ($associationKey !== null) {
+            $associationKeyAsSQL = CBDB::stringToSQL($associationKey);
+            array_push($clauses, "className = {$associationKeyAsSQL}");
         }
 
         if ($associatedID !== null) {
@@ -74,7 +74,7 @@ EOT;
 
     /**
      * @param ?ID $ID
-     * @param ?string $className
+     * @param ?string $associationKey
      * @param ?ID $associatedID
      *
      * @return [object]
@@ -85,7 +85,7 @@ EOT;
      *          associatedID: ID
      *      }
      */
-    static function fetch(?string $ID, ?string $className = null, ?string $associatedID = null): array {
+    static function fetch(?string $ID, ?string $associationKey = null, ?string $associatedID = null): array {
         $clauses = [];
 
         if ($ID !== null) {
@@ -93,9 +93,9 @@ EOT;
             array_push($clauses, "ID = {$IDAsSQL}");
         }
 
-        if ($className !== null) {
-            $classNameAsSQL = CBDB::stringToSQL($className);
-            array_push($clauses, "className = {$classNameAsSQL}");
+        if ($associationKey !== null) {
+            $associationKeyAsSQL = CBDB::stringToSQL($associationKey);
+            array_push($clauses, "className = {$associationKeyAsSQL}");
         }
 
         if ($associatedID !== null) {
