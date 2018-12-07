@@ -289,6 +289,8 @@ EOT;
     }
 
     /**
+     * @deprecated use fetchModelsByID2()
+     *
      * @param [ID] $IDs
      *
      * @return [ID => model]
@@ -314,6 +316,38 @@ EOT;
 EOT;
 
         return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+    }
+
+    /**
+     * @param [ID] $IDs
+     *
+     * @return [model]
+     */
+    static function fetchModelsByID2(array $IDs): array {
+        if (empty($IDs)) {
+            return [];
+        }
+
+        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $SQL = <<<EOT
+
+            SELECT  v.modelAsJSON
+            FROM    CBModels as m
+            JOIN    CBModelVersions as v ON
+                    m.ID = v.ID AND
+                    m.version = v.version
+            WHERE   m.ID IN ($IDsAsSQL)
+
+EOT;
+
+        $valuesAsJSON = CBDB::SQLToArrayOfNullableStrings($SQL);
+
+        return array_map(
+            function ($JSON) {
+                return CBConvert::JSONToValue($JSON);
+            },
+            $valuesAsJSON
+        );
     }
 
     /**
