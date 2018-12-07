@@ -568,6 +568,18 @@ EOT;
     }
 
     /**
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return [string]
+     */
+    static function valueToCommaSeparatedValues($model, string $keyPath): array {
+        return CBConvert::valueToCommaSeparatedValues(
+            CBModel::value($model, $keyPath)
+        );
+    }
+
+    /**
      * This is a convenience function for:
      *
      *      CBConvert::valueToObject(CBModel::value(...));
