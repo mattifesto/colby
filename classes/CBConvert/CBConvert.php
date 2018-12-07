@@ -647,6 +647,54 @@ final class CBConvert {
     }
 
     /**
+     * @NOTE 2018_12_06
+     *
+     *      A $value of an empty string or a non-string that converts to
+     *      an empty string will return an array with one empty string item.
+     *      This function disagrees with the str_getcsv() behavior of returning
+     *      an array with one null item in that case, especially since
+     *      str_getcsv() will return an array of two empty strings for the value
+     *      ",".
+     *
+     *      An investigation of this issue did not produce an absolutely
+     *      definitive answer as to the correct result for an empty CSV string.
+     *      No trustworthy sources address the scenario of an empty CSV string.
+     *      However, in addition, no trustworthy sources acknowledge the idea
+     *      that a one of the values in a CSV string could represent null.
+     *
+     *      This function asserts that a CSV string is a series of one or more
+     *      string values separated by commas. By passing a string to this
+     *      function you are asserting that the string is a CSV string. An empty
+     *      CSV string has no commas, and therefore has only one value, and that
+     *      value is an empty string.
+     *
+     *      Potential callers that consider an empty string to represent no
+     *      values may detect an empty string and choose not to call this
+     *      function. Other callers may choose to trim and ignore empty string
+     *      values returned by this function.
+     *
+     *      Reference: RFC 4180
+     *
+     *          https://www.ietf.org/rfc/rfc4180.txt
+     *
+     * @param mixed $value
+     *
+     *      The $value parameter is converted to a string before being parsed
+     *      for comma separated values.
+     *
+     * @return [string]
+     */
+    static function valueToCommaSeparatedValues($value): array {
+        $csv = CBConvert::valueToString($value);
+
+        if ($csv === '') {
+            return [''];
+        }
+
+        return str_getcsv($csv);
+    }
+
+    /**
      * Split a value into an array of names.
      *
      * In the past the concept of "name" has been specialized to mean CSS names
