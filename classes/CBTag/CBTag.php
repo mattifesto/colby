@@ -87,10 +87,6 @@ EOT;
      * @return ID
      */
     static function tagToID(string $tag): string {
-        if ($tag === '') {
-            throw new InvalidArgumentException('the tag argument is empty');
-        }
-
         return sha1("94ece6500fcaafedf25690262b45da0ec2d8c5b0 {$tag}");
     }
 }
