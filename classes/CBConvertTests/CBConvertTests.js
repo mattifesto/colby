@@ -14,6 +14,59 @@ var CBConvertTests = {
     /**
      * @return object|Promise
      */
+    CBTest_centsToDollars: function () {
+        let tests = [
+            [150, "1.50"],
+            ["5", "0.05"],
+            [75, "0.75"],
+            ["  3500  ", "35.00"],
+            ["  -5  ", "-0.05"],
+            ["  -3500  ", "-35.00"],
+        ];
+
+        for (let i = 0; i < tests.length; i += 1) {
+            let test = tests[i];
+            let value = test[0];
+            let actualResult = CBConvert.centsToDollars(value);
+            let expectedResult = test[1];
+
+            if (actualResult !== expectedResult) {
+                let valueAsMessage = CBMessageMarkup.stringToMessage(
+                    CBConvert.valueToPrettyJSON(value)
+                );
+
+                let actualResultAsMessage = CBMessageMarkup.stringToMessage(
+                    CBConvert.valueToPrettyJSON(actualResult)
+                );
+
+                let expectedResultAsMessage = CBMessageMarkup.stringToMessage(
+                    CBConvert.valueToPrettyJSON(expectedResult)
+                );
+
+                let message = `
+
+                    When the value (${valueAsMessage} (code)) was used as an
+                    argument to CBConvert.centsToDollars() the actual result was
+                    (${actualResultAsMessage} (code)) but the expected result
+                    was (${expectedResultAsMessage} (code)).
+
+                `;
+
+                return {
+                    succeeded: false,
+                    message: message,
+                };
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+
+    /**
+     * @return object|Promise
+     */
     CBTest_dollarsAsCents: function () {
         let tests = [
             ["68.21", 6821],

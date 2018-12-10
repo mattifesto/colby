@@ -7,7 +7,7 @@ final class CBConvertTests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v466.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
         ];
     }
 
@@ -24,10 +24,43 @@ final class CBConvertTests {
     }
 
     /**
+     * @return null
+     */
+    static function CBTest_centsToDollars(): stdClass {
+        $tests = [
+            [150, "1.50"],
+            ["5", "0.05"],
+            [75, "0.75"],
+            ["  3500  ", "35.00"],
+            ["  -5  ", "-0.05"],
+            ["  -3500  ", "-35.00"],
+        ];
+
+        foreach ($tests as $test) {
+            $value = $test[0];
+            $actualResult = CBConvert::centsToDollars($value);
+            $expectedResult = $test[1];
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    json_encode($value),
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
      * @return [[<className>, <testName>]]
      */
     static function CBTest_JavaScriptTests(): array {
         return [
+            ['CBConvert', 'centsToDollars'],
             ['CBConvert', 'dollarsAsCents'],
             ['CBConvert', 'valueAsInt'],
             ['CBConvert', 'valueAsNumber'],
@@ -153,6 +186,7 @@ final class CBConvertTests {
      */
     static function CBTest_PHPTests(): array {
         return [
+            ['CBConvert', 'centsToDollars'],
             ['CBConvert', 'stringToStub'],
             ['CBConvert', 'stringToURI'],
             ['CBConvert', 'valueAsMoniker'],
