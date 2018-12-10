@@ -3,6 +3,55 @@
 final class CBConvert {
 
     /**
+     * @param mixed cents
+     *
+     *      This parameter must convert to an integer using
+     *      CBConvert.valueAsInt().
+     *
+     * @return string
+     *
+     *      150         => "1.50"
+     *      "5"         => "0.05"
+     *      75          => "0.75"
+     *      "  3500  "  => "35.00"
+     *      " -3500  "  => "-35.00"
+     */
+    static function centsToDollars($cents): string {
+        $isNegative = false;
+        $centsAsInt = CBConvert::valueAsInt($cents);
+
+        if ($centsAsInt === null) {
+            throw new InvalidArgumentException(
+                'The $cents parameter is not a valid integer.'
+            );
+        }
+
+        if ($centsAsInt < 0) {
+            $isNegative = true;
+            $centsAsInt = abs($centsAsInt);
+        }
+
+        /**
+         * Convert to a string.
+         */
+
+        $centsAsString = CBConvert::valueToString($centsAsInt);
+
+        /**
+         * Pad with zeros until the string is at least 3 digits long.
+         */
+
+        while (strlen($centsAsString) < 3) {
+            $centsAsString = "0" . $centsAsString;
+        }
+
+        return (
+            ($isNegative ? '-' : '') .
+            substr_replace($centsAsString, '.', -2, 0)
+        );
+    }
+
+    /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
