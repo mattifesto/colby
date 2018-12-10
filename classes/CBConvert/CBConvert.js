@@ -17,12 +17,19 @@ var CBConvert = {
      *      "5"         => "0.05"
      *      75          => "0.75"
      *      "  3500  "  => "35.00"
+     *      " -3500  "  => "-35.00"
      */
     centsToDollars: function (cents) {
+        let isNegative = false;
         let centsAsInt = CBConvert.valueAsInt(cents);
 
         if (centsAsInt === undefined) {
             throw new TypeError("The cents parameter is not a valid integer.");
+        }
+
+        if (centsAsInt < 0) {
+            isNegative = true;
+            centsAsInt = Math.abs(centsAsInt);
         }
 
         /**
@@ -40,6 +47,7 @@ var CBConvert = {
         }
 
         return (
+            (isNegative ? "-" : "") +
             centsAsString.substr(0, centsAsString.length - 2) +
             "." +
             centsAsString.substr(-2)
