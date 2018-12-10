@@ -3,22 +3,14 @@
 final class ColbyConvert {
 
     /**
+     * @deprecated use CBConvert::centsToDollars()
+     *
+     * @param mixed $cents
+     *
      * @return string
      */
-    static function centsIntToDollarsString($amountInCents) {
-        $amountInCents = (int)$amountInCents;
-
-        /**
-         * 2013.10.26
-         *
-         * BUGBUG: This doesn't handle negative numbers correctly.
-         */
-
-        $amountInCents = sprintf('%03d', $amountInCents);
-
-        $amountInDollars = substr_replace($amountInCents, '.', -2, 0);
-
-        return $amountInDollars;
+    static function centsIntToDollarsString($cents): string {
+        return CBConvert::centsToDollars($cents);
     }
 
     /**
