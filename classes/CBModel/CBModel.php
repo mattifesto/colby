@@ -127,6 +127,34 @@ final class CBModel {
     }
 
     /**
+     * Returns the the first model found with the specified property value.
+     *
+     * @param [object] $models
+     * @param string $propertyName
+     * @param mixed $propertyValue
+     *
+     *      The property value is compared to the model property value with the
+     *      == operator.
+     *
+     * @return ?object
+     *
+     *      Returns the found model or null if no match is found.
+     */
+    static function findModelInArrayByPropertyValue(
+        array $models,
+        string $propertyName,
+        $propertyValue
+    ): ?stdClass {
+        foreach ($models as $model) {
+            $value = CBModel::value($model, $propertyName);
+
+            if ($value == $propertyValue) {
+                return $model;
+            }
+        }
+    }
+
+    /**
      * Returns the index of the first model found with the specified property
      * value.
      *
