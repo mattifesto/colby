@@ -3,12 +3,111 @@
 final class CBModelCacheTests {
 
     /**
-     * @return [[<class>, <test>]]
+     * @return [[<className>, <testName>]]
      */
-    static function CBUnitTests_tests(): array {
+    static function CBTest_PHPTests(): array {
         return [
+            ['CBModelCache', 'fetchModelsByID'],
             ['CBModelCache', 'general'],
             ['CBModelCache', 'save'],
+        ];
+    }
+
+    /**
+     * @return object
+     */
+    static function CBTest_fetchModelsByID(): stdClass {
+        /* test 1 */
+
+        $actualResult = CBModelCache::fetchModelsByID([]);
+        $expectedResult = [];
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+        /* test 2 */
+
+        $sortedRandomlyGeneratedIDs = [
+            '1b15ca3d2c3cc8b093565008a650167d4f3aadeb',
+            '4d3da1a1b8365097567c049cfb1dd913f500f4bc',
+        ];
+
+        CBDB::transaction(
+            function () use ($sortedRandomlyGeneratedIDs) {
+                CBModels::deleteByID($sortedRandomlyGeneratedIDs);
+            }
+        );
+
+        $specs = [
+            (object)[
+                'className' => 'CBMessageView',
+                'ID' => $sortedRandomlyGeneratedIDs[0],
+            ],
+            (object)[
+                'className' => 'CBMessageView',
+                'ID' => $sortedRandomlyGeneratedIDs[1],
+            ],
+        ];
+
+        CBDB::transaction(
+            function () use ($specs) {
+                CBModels::save($specs);
+            }
+        );
+
+        $models = CBModelCache::fetchModelsByID($sortedRandomlyGeneratedIDs);
+
+        /* test 2: count */
+
+        $actualResult = count($models);
+        $expectedResult = 2;
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'test 2: count',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+        /* test 2: IDs */
+
+        $actualResult = array_values(array_map(
+            function ($model) {
+                return $model->ID;
+            },
+            $models
+        ));
+
+        sort($actualResult);
+
+        $expectedResult = $sortedRandomlyGeneratedIDs;
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'test 2: IDs',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+        /* test 2: clean up */
+
+        CBDB::transaction(
+            function () use ($sortedRandomlyGeneratedIDs) {
+                CBModels::deleteByID($sortedRandomlyGeneratedIDs);
+            }
+        );
+
+        /* all tests succeeded */
+
+        return (object)[
+            'succeeded' => true,
         ];
     }
 
