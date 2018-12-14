@@ -45,9 +45,10 @@
     display: flex;
     flex-direction: column;
 
-    background-color: white;
+    background-color: var(--CBBackgroundColor);
     border-radius: 10px;
     box-sizing: border-box;
+    color: var(--CBTextColor);
     flex: 1 0 auto;
 }
 
