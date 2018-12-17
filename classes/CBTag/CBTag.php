@@ -9,8 +9,8 @@ final class CBTag {
 
     /**
      * @param ID $ID
-     * @param [string] $tags
      * @param string $associationKey
+     * @param [string] $tags
      *
      * @return void
      */
@@ -30,7 +30,7 @@ final class CBTag {
      * @return ?object
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
-        $tag = CBModel::valueToString($spec, 'tag');
+        $tag = CBModel::valueToString($spec, 'title');
         $ID = CBModel::valueAsID($spec, 'ID');
 
         if (
@@ -77,6 +77,42 @@ EOT;
                 ]
             );
         }
+    }
+
+    /**
+     * @param ID $ID
+     * @param string $associationKey
+     * @param [string] $tags
+     *
+     * @return void
+     */
+    static function delete(string $ID, string $associationKey, array $tags): void {
+        foreach ($tags as $tag) {
+            CBModelAssociations::delete(
+                $ID,
+                $associationKey,
+                CBTag::tagToID($tag)
+            );
+        }
+    }
+
+    /**
+     * @param string $associationKey
+     * @param string $tag
+     *
+     * @return [ID]
+     */
+    static function fetchModelIDs(string $associationKey, $tag): array {
+        return array_map(
+            function ($association) {
+                return $association->ID;
+            },
+            CBModelAssociations::fetch(
+                null,
+                $associationKey,
+                CBTag::tagToID($tag)
+            )
+        );
     }
 
     /**
