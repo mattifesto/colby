@@ -57,7 +57,10 @@ EOT;
         }
 
         if (empty($clauses)) {
-            throw new Exception('At least one of the parameters to CBModelAssociations::remove() must be specified.');
+            throw new Exception(
+                'At least one of the parameters to ' .
+                'CBModelAssociations::delete() must be specified.'
+            );
         } else {
             $clauses = implode(' AND ', $clauses);
         }
