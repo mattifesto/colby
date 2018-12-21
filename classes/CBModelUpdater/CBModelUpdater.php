@@ -16,6 +16,7 @@ final class CBModelUpdater {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBConvert',
             'CBModel',
             'CBModels',
         ];

@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBModelUpdater */
 /* global
+    CBConvert,
     CBModel,
     CBModels,
 */
@@ -10,53 +11,49 @@
 var CBModelUpdater = {
 
     /**
+     * @param ID ID
      * @param object updates
-     *
-     *      {
-     *          ID: ID
-     *
-     *              A valid ID must be specified because the ID is used to fetch
-     *              the spec.
-     *      }
      *
      * @return object
      *
      *      {
-     *          original: mixed
-     *          working: object
+     *          spec: object (readonly)
      *          save: function
      *      }
      */
-    fetchFromSession: function (updates) {
-        let ID = CBModel.valueAsID(updates, "ID");
-
-        if (ID === undefined) {
-            throw new Error(
-                "The updates parameter does not have a valid ID property value."
-            );
+    fetchFromSession: function (ID, updates) {
+        if (CBConvert.valueAsObject(updates) === undefined) {
+            throw new TypeError("The updates parameter is not valid.");
         }
 
-        let originalSpec = CBModels.fetchSpecFromSessionStorageByID(ID);
-        let workingSpec = updates;
+        let record = CBModels.fetchFromSessionStorage(ID);
+        let mostRecentlySavedSpec = CBModel.value(record, "spec");
+        let workingSpec = CBModel.clone(
+            CBModel.valueToObject(record, "spec")
+        );
+        let workingVersion = CBModel.valueAsInt(record, "meta.version") || 0;
 
-        if (originalSpec !== undefined) {
-            workingSpec = CBModel.clone(originalSpec);
+        /**
+         * Merge updates with the working spec.
+         */
+        CBModel.merge(workingSpec, updates);
 
-            CBModel.merge(workingSpec, updates);
-        }
+        /**
+         * Release the record and updates objects.
+         */
+        record = undefined;
+        updates = undefined;
 
         let api = {
-            get original() {
-                return CBModel.clone(originalSpec);
-            },
-            get working() {
+            get spec() {
                 return workingSpec;
             },
             save: function () {
-                if (!CBModel.equals(originalSpec, workingSpec)) {
-                    CBModels.saveSpecToSessionStorage(workingSpec);
+                if (!CBModel.equals(mostRecentlySavedSpec, workingSpec)) {
+                    CBModels.saveToSessionStorage(ID, workingSpec, workingVersion);
 
-                    originalSpec = CBModel.clone(workingSpec);
+                    mostRecentlySavedSpec = CBModel.clone(workingSpec);
+                    workingVersion += 1;
                 }
             }
         };
