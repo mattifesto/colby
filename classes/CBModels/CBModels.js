@@ -13,17 +13,28 @@ var CBModels = {
      * @param ID ID
      *
      * @return object|undefined
+     *
+     *      {
+     *          spec: object
+     *          meta: object
+     *
+     *              {
+     *                  ID: ID
+     *                  version: int
+     *              }
+     *      }
      */
-    fetchSpecFromSessionStorageByID: function (ID) {
+    fetchFromSessionStorage: function (ID) {
         if (CBConvert.valueAsID(ID) === undefined) {
             throw new TypeError("The ID parameter is not valid.");
         }
 
-        let key = CBModels.IDToStorageKey(ID);
-        let specAsJSON = sessionStorage.getItem(key);
+        let recordAsJSON = sessionStorage.getItem(
+            CBModels.IDToStorageKey(ID)
+        );
 
-        if (specAsJSON !== null) {
-            return JSON.parse(specAsJSON);
+        if (recordAsJSON !== null) {
+            return JSON.parse(recordAsJSON);
         } else {
             return undefined;
         }
@@ -47,25 +58,33 @@ var CBModels = {
      *
      * @return undefined
      */
-    saveSpecToSessionStorage: function (spec) {
-        let ID = CBModel.valueAsID(spec, "ID");
-
-        if (ID === undefined) {
-            throw new Error(
-                "The spec does not have a valid ID property value."
-            );
+    saveToSessionStorage: function (ID, spec, version) {
+        if (CBConvert.valueAsObject(spec) === undefined) {
+            throw new TypeError("The spec parameter is not valid");
         }
 
-        let version = CBModel.valueAsInt(spec, "version") || 0;
-        let originalSpec = CBModels.fetchSpecFromSessionStorageByID(ID);
-        let originalVersion = CBModel.valueAsInt(originalSpec, 'version') || 0;
+        let record = CBModels.fetchFromSessionStorage(ID);
+        let recordVersion = CBModel.valueAsInt(record, "meta.version") || 0;
+        let now = Date.now();
 
-        if (version === originalVersion) {
-            spec.version = version + 1;
+        if (version === recordVersion) {
+            if (version === 0) {
+                record = {
+                    meta: {
+                        ID: ID,
+                        created: now,
+                        version: 0,
+                    },
+                };
+            }
+
+            record.spec = spec;
+            record.meta.modified = now;
+            record.meta.version += 1;
 
             sessionStorage.setItem(
                 CBModels.IDToStorageKey(ID),
-                JSON.stringify(spec)
+                JSON.stringify(record)
             );
         } else {
             throw new Error(
