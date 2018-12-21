@@ -298,6 +298,14 @@ final class CBModel {
             }
         }
 
+        /**
+         * @NOTE 2018_12_21
+         *
+         *      This code is deprecated. It infers that if the spec has its
+         *      "title" property set that the "title" property is a valid string
+         *      property for this particular model. In the future the class will
+         *      be responsible for building all model properties.
+         */
         if (!isset($model->title) && isset($spec->title)) {
             $model->title = trim(CBModel::valueToString($spec, 'title'));
         }
