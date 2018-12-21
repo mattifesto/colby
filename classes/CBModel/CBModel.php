@@ -288,6 +288,11 @@ final class CBModel {
             return null;
         }
 
+        /**
+         * Since "className" is the one required property for a model and should
+         * always be transferred by the build process, this function can
+         * transfer the property for all models.
+         */
         $model->className = $className;
 
         if (!empty($spec->ID)) {
