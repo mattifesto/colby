@@ -152,6 +152,8 @@ final class CBModel {
                 return $model;
             }
         }
+
+        return null;
     }
 
     /**
