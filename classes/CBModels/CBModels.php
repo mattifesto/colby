@@ -665,23 +665,24 @@ EOT;
             $ID = CBModel::value($spec, 'ID', null, 'CBConvert::valueAsHex160');
 
             if ($ID === null) {
-                throw new Exception("A {$spec->className} spec being saved does not have an ID.");
+                throw new Exception(
+                    "A {$spec->className} spec being saved does not have an ID."
+                );
             }
 
-            $model = CBModel::toModel($spec);
+            $model = CBModel::build($spec);
 
             if ($model === null) {
-                $message = "A {$spec->className} spec being saved generated a null model.";
-
-                if (!is_callable("{$spec->className}::CBModel_build")) {
-                    $message .= " The CBModel_build() interface is not implemented by the {$spec->className} class.";
-                }
-
-                throw new Exception($message);
+                throw new Exception(
+                    "A {$spec->className} spec being saved generated a null " .
+                    'model.'
+                );
             }
 
             if ($model->className !== $sharedClassName) {
-                throw new Exception('All specs being saved must have the same className.');
+                throw new Exception(
+                    'All specs being saved must have the same className.'
+                );
             }
 
             return (object)[
