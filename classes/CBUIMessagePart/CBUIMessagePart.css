@@ -12,13 +12,17 @@
     -webkit-user-select: text;
 }
 
-/*
-Compact CBUIMessagePart elements are styled to resemble CBUIStringsPart
-*/
+/**
+ * Compact CBUIMessagePart elements are styled to resemble CBUIStringsPart.
+ */
 .CBUIMessagePart.compact {
     display: flex;
     align-items: center;
     justify-content: center;
 
+    padding: 3px 5px;
+}
+
+.CBUIMessagePart_compactpadding {
     padding: 3px 5px;
 }
