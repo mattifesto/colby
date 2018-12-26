@@ -10,9 +10,19 @@
  *
  *          String 1 (the key) is lighter and string 2 (the value) is heavier.
  *
+ *      CBUIStringsPart_leftandright
+ *
+ *          String 1 is on the left side and string 2 is on the right side.
+ *          String 2 is right aligned. If the strings are long enough string 2
+ *          will wrap under string 1. No part of either string will ever be
+ *          truncated.
+ *
+ *          This is like a "lossless" style of "sidebyside".
+ *
  *      sidebyside
  *
- *          String 1 is left justified and string 2 is right justified.
+ *          String 1 is on the left edge and string 2 is on the right edge. The
+ *          strings will never wrap and will be truncated if necessary.
  *
  *      titledescription
  *
@@ -55,6 +65,25 @@
 .CBUIStringsPart.keyvalue > .string1 {
     color: hsla(0, 0%, 0%, 0.6); /* IE11 */
     color: var(--CBTextColor2);
+}
+
+.CBUIStringsPart_leftandright {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.CBUIStringsPart_leftandright > .string2 {
+
+    /**
+     * A justify-content value of "space-between" will not work when the items
+     * are wrapped. A margin-left of auto on string 2 will create the same
+     * result when wrapped or not.
+     */
+    margin-left: auto;
+
+    text-align: right;
 }
 
 .CBUIStringsPart.sidebyside {
