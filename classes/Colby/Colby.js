@@ -250,6 +250,7 @@ var Colby = {
             message: error.message,
             pageURL: location.href,
             sourceURL: error.sourceURL,
+            stack: error.stack,
         };
     },
 
