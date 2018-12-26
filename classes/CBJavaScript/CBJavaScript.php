@@ -72,11 +72,55 @@ class CBJavaScript {
             ]);
         }
 
-        CBLog::log((object)[
-            'className' => __CLASS__,
-            'message' => CBMessageMarkup::stringToMarkup($firstLine) . "\n\n" . implode("\n\n", $messages),
-            'severity' => 3,
-        ]);
+        $firstLineAsMessage = CBMessageMarkup::stringToMarkup($firstLine);
+        $messagesAsMessage = implode("\n\n", $messages);
+
+        $stack = CBModel::valueToString($errorModel, 'stack');
+
+        if (!empty($stack)) {
+
+            /**
+             * @TODO 2018_12_25
+             *
+             *      Give the JavaScript stack a nicer appearance.
+             */
+            $stackAsMessage = CBMessageMarkup::stringToMessage($stack);
+
+            $stackAsMessage = <<<EOT
+
+                --- dl
+                    --- dt
+                    stack
+                    ---
+                    --- dd
+                        --- pre\n{$stackAsMessage}
+                        ---
+                    ---
+                ---
+
+EOT;
+        } else {
+            $stackAsMessage = '';
+        }
+
+        $message = <<<EOT
+
+            {$firstLineAsMessage}
+
+            {$messagesAsMessage}
+
+            {$stackAsMessage}
+
+EOT;
+
+        CBLog::log(
+            (object)[
+                'message' => $message,
+                'severity' => 3,
+                'sourceClassName' => __CLASS__,
+                'sourceID' => '0d0c0f9b9a21d20421001b7071816f3abc08ae79',
+            ]
+        );
     }
 
     /**
