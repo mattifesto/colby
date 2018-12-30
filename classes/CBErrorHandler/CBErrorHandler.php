@@ -166,15 +166,58 @@ EOT;
      *
      * @param Throwable $exception
      *
-     * @return null
+     * @return void
      */
-    static function report(Throwable $throwable) {
+    static function report(Throwable $throwable): void {
         try {
             try {
                 $firstLine = 'Error ' . CBConvert::throwableToMessage($throwable);
                 $firstLineAsMarkup = CBMessageMarkup::stringToMarkup($firstLine);
-                $stackTraceAsMarkup = CBMessageMarkup::stringToMarkup(Colby::exceptionStackTrace($throwable));
-                $messageAsMarkup = "{$firstLineAsMarkup}\n\n--- pre\n{$stackTraceAsMarkup}\n---\n";
+                $stackTraceAsMarkup = CBMessageMarkup::stringToMarkup(
+                    Colby::exceptionStackTrace($throwable)
+                );
+
+                if ($throwable instanceof CBException) {
+                    $extendedMessage = $throwable->getExtendedMessage();
+                    $messageAsMarkup = <<<EOT
+
+                        {$firstLineAsMarkup}
+
+                        --- dl
+                            --- dt
+                                extended message
+                            ---
+                            --- dd
+                                {$extendedMessage}
+                            ---
+
+                            --- dt
+                                stack trace
+                            ---
+                            --- dd
+                                --- pre\n{$stackTraceAsMarkup}
+                                ---
+                            ---
+                        ---
+
+EOT;
+                } else {
+                    $messageAsMarkup = <<<EOT
+
+                        {$firstLineAsMarkup}
+
+                        --- dl
+                            --- dt
+                                stack trace
+                            ---
+                            --- dd
+                                --- pre\n{$stackTraceAsMarkup}
+                                ---
+                            ---
+                        ---
+
+EOT;
+                }
             } catch (Throwable $innerThrowable) {
                 $message = $innerThrowable->getMessage();
                 $firstLine = "INNER ERROR \"{$message}\" occurred when Colby::reportException() attempted to generate a message";
