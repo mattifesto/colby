@@ -8,36 +8,33 @@ final class CBViewCatalog {
      */
     static $testID = null;
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        $originalSpec = CBModels::fetchSpecByID(CBViewCatalog::ID());
-
-        if (empty($originalSpec)) {
-            return;
-        }
-
-        $spec = CBModel::clone($originalSpec);
-        $spec->className = __CLASS__;
-
-        unset($spec->viewClassNames);
-        unset($spec->deprecatedViewClassNames);
-        unset($spec->unsupportedViewClassNames);
-
-        if ($spec != $originalSpec) {
-            CBDB::transaction(function () use ($spec) {
-                CBModels::save($spec);
-            });
-        }
+        CBModelUpdater::update(
+            (object)[
+                'ID' => CBViewCatalog::ID(),
+                'className' => 'CBViewCatalog',
+                'viewClassNames' => [],
+                'deprecatedViewClassNames' => [],
+                'unsupportedViewClassNames' => [],
+            ]
+        );
     }
 
     /**
      * @return array
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBModels'];
+        return [
+            'CBModelUpdater',
+        ];
     }
+
+    /* -- CBModel interfaces -- -- -- -- -- */
 
     /**
      * @param model $spec
@@ -51,6 +48,8 @@ final class CBViewCatalog {
             'unsupportedViewClassNames' => CBModel::valueToArray($spec, 'unsupportedViewClassNames'),
         ];
     }
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @return [string]
