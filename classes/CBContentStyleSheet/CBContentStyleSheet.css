@@ -34,19 +34,19 @@
     margin-top: 0.5em;
 }
 
-.CBContentStyleSheet hr {
-    border-style: none;
-    border-top: 0.1em solid var(--CBTextColor3);
-    margin: 3em 8em !important;
-}
-
 /**
  * 2017.11.30 A rare use of left an right margins because the border box should
  * be inset relative to the parent element. This allows the dd element to look
  * like a sub-element of its preceding dt element.
  */
 .CBContentStyleSheet dd {
-    margin: 0.5em 0.5em;
+    margin: 0.5em 1em;
+}
+
+.CBContentStyleSheet hr {
+    border-style: none;
+    border-top: 0.1em solid var(--CBTextColor3);
+    margin: 3em 8em !important;
 }
 
 /**
