@@ -6,7 +6,7 @@
 /**
  * @deprecated 2018_11_23
  *
- *      Use CBUIRadioButton and/or CBMutator
+ *      Use CBUI_selectable and CBMutator
  */
 var CBUIRadioMenu = {
 
