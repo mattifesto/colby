@@ -3,7 +3,21 @@
     cursor: default;
     display: flex;
     min-height: 44px;
-    padding: 0 5px;
+
+    /**
+     * @NOTE 2019_01_04
+     *
+     *      For a while this rule set contained a padding declaration that
+     *      specified left and right padding of 5px. However, Colby explicitly
+     *      recommends against applying padding to a container elements because
+     *      it denies the contained elements the ability to specify a background
+     *      that will go all the way to the edge of the container. This can be
+     *      important even for simple buttons.
+     *
+     *      Elements of parts placed in CBUISectionItem4 containers should
+     *      usually have 10px of padding on their left an right sides. Non-text
+     *      parts may only have 5px or in rare cases 0px of visible white space.
+     */
 
     user-select: none;
     -moz-user-select: none;
