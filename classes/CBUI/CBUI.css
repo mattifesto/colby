@@ -25,6 +25,10 @@
     justify-content: center;
 }
 
+.CBUI_section_width {
+    width: 640px;
+}
+
 .CBUI_selectable {
     border: 2px solid var(--CBTextColor3);
     border-radius: 5px;
