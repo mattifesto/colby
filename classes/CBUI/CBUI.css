@@ -1,3 +1,44 @@
+/**
+ * 2019_01_06
+ *
+ *      This container is was created to hold one item centered horizontally
+ *      will 10px of padding to separarte it from adjacent items.
+ *
+ *      It might be used to hold each selectable item in a list of selectable
+ *      items.
+ */
+.CBUI_container1 {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+/**
+ * 2019_01_06
+ *
+ *      This container was created to hold items that will be centered
+ *      horizontally and wrap if there are to many to fit on one line.
+ */
+.CBUI_container2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.CBUI_selectable {
+    border: 2px solid var(--CBTextColor3);
+    border-radius: 5px;
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 44px;
+    min-height: 44px;
+    overflow: hidden;
+}
+
+.CBUI_selectable.CBUI_selected {
+    border-color: var(--CBTextColorForLinks);
+}
+
 .CBUIRoot {
     background-color: hsl(0, 0%, 95%); /* IE11 */
     background-color: var(--CBUIBackgroundColor);
