@@ -130,14 +130,14 @@ EOT;
      * either one row or no rows. This function will throw an exception if it
      * finds more than one row.
      *
-     * @param ?ID $masterID
+     * @param ?ID $primaryID
      * @param ?string $associationClassName
-     * @param ?ID $associateID
+     * @param ?ID $associatedID
      *
      * @return ?object
      */
-    static function fetchOne(?string $masterID, ?string $associationClassName = null, ?string $associateID = null): ?stdClass {
-        $rows = CBModelAssociations::fetch($masterID, $associationClassName, $associateID);
+    static function fetchOne(?string $primaryID, ?string $associationClassName = null, ?string $associatedID = null): ?stdClass {
+        $rows = CBModelAssociations::fetch($primaryID, $associationClassName, $associatedID);
 
         if (empty($rows)) {
             return null;
@@ -161,7 +161,7 @@ EOT;
 EOT;
 
             CBLog::log((object)[
-                'ID' => $masterID ?? $associateID,
+                'ID' => $primaryID ?? $associatedID,
                 'message' => $message,
                 'severity' => 3,
                 'sourceClassName' => __CLASS__,
