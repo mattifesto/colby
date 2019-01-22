@@ -2,11 +2,16 @@
 
 final class CBModelInspector {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath() {
-        return ['models', 'inspector'];
+        return [
+            'models',
+            'inspector',
+        ];
     }
 
     /**
@@ -15,6 +20,8 @@ final class CBModelInspector {
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Model Inspector';
     }
+
+    /* -- CBAjax interfaces -- -- -- -- -- */
 
     /**
      * @param object $args
@@ -57,6 +64,8 @@ final class CBModelInspector {
         return 'Administrators';
     }
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
@@ -94,6 +103,8 @@ final class CBModelInspector {
             ['CBModelInspector_modelID', $ID],
         ];
     }
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @param hex160 $ID
