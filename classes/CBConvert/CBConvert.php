@@ -520,7 +520,7 @@ final class CBConvert {
     static function valueAsMoniker($value): ?string {
         $stringValue = trim(CBConvert::valueToString($value));
 
-        if (preg_match('/^[a-z][a-z0-9_]*$/', $stringValue)) {
+        if (preg_match('/^[a-z0-9_]+$/', $stringValue)) {
             return $stringValue;
         } else {
             return null;
