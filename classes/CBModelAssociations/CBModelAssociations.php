@@ -1,5 +1,35 @@
 <?php
 
+/**
+ * @NOTE 2019_01_23
+ *
+ *      Changes have recently been made to the associations table to optimize it
+ *      for "bi-directional" assocations. However, now I think that the
+ *      associated item or items should always be stored in the "associatedID"
+ *      column of the table.
+ *
+ *      If you have a "bi-directional" association this would actually be
+ *      expressed by creating two associations.
+ *
+ *      1. CBTag_CBViewPage
+ *
+ *          This association is created to get all the pages associated with a
+ *          given tag.
+ *
+ *      2. CBViewPage_CBTag
+ *
+ *          This association is created to get all the tags associated with a
+ *          given page.
+ *
+ *      This may clean up the APIs associated with this class because they no
+ *      longer have to try to support "bi-directional" access.
+ *
+ *          // good
+ *          CBModelAssociations::fetchAssociatedModel()
+ *
+ *          // not needed
+ *          CBModelAssociations::fetchPrimaryModel()
+ */
 final class CBModelAssociations {
 
     /**
@@ -76,7 +106,7 @@ EOT;
     }
 
     /**
-     * @param ?ID $ID
+     * @param ?ID $primaryID
      * @param ?string $associationKey
      * @param ?ID $associatedID
      *
@@ -88,12 +118,12 @@ EOT;
      *          associatedID: ID
      *      }
      */
-    static function fetch(?string $ID, ?string $associationKey = null, ?string $associatedID = null): array {
+    static function fetch(?string $primaryID, ?string $associationKey = null, ?string $associatedID = null): array {
         $clauses = [];
 
-        if ($ID !== null) {
-            $IDAsSQL = CBHex160::toSQL($ID);
-            array_push($clauses, "ID = {$IDAsSQL}");
+        if ($primaryID !== null) {
+            $primaryIDAsSQL = CBHex160::toSQL($primaryID);
+            array_push($clauses, "ID = {$primaryIDAsSQL}");
         }
 
         if ($associationKey !== null) {
@@ -123,6 +153,100 @@ EOT;
 EOT;
 
         return CBDB::SQLToObjects($SQL);
+    }
+
+    /**
+     * @param ID $modelID
+     * @param string $associationKey
+     *
+     * @return ID|null
+     */
+    static function fetchAssociatedID(
+        $primaryID,
+        $associationKey
+    ): ?string {
+        $associations = CBModelAssociations::fetch(
+            $primaryID,
+            $associationKey
+        );
+
+        if (count($associations) === 0) {
+            return null;
+        } else if (count($associations) === 1) {
+            return $associations[0]->associatedID;
+        } else {
+            throw new Exception(
+                "There is more than one ID associated with the ID " .
+                "{$primaryID} for the association key \"{$associationKey}\"."
+            );
+        }
+    }
+
+    /**
+     * @param ID $modelID
+     * @param string $associationKey
+     *
+     * @return [ID]
+     */
+    static function fetchAssociatedIDs(
+        $primaryID,
+        $associationKey
+    ): array {
+        $associations = CBModelAssociations::fetch(
+            $primaryID,
+            $associationKey
+        );
+
+        return array_map(
+            function ($association) {
+                return $association->associatedID;
+            },
+            $associations
+        );
+    }
+
+    /**
+     * @param ID $modelID
+     * @param string $associationKey
+     *
+     * @return object|null
+     */
+    static function fetchAssociatedModel(
+        string $primaryID,
+        string $associationKey
+    ): ?stdClass {
+        $associatedID = CBModelAssociations::fetchAssociatedID(
+            $primaryID,
+            $associationKey
+        );
+
+        if ($associatedID === null) {
+            return null;
+        } else {
+            return CBModelCache::fetchModelByID($associatedID);
+        }
+    }
+
+    /**
+     * @param ID $modelID
+     * @param string $associationKey
+     *
+     * @return [object]
+     */
+    static function fetchAssociatedModels(
+        string $primaryID,
+        string $associationKey
+    ): array {
+        $associatedIDs = CBModelAssociations::fetchAssociatedIDs(
+            $primaryID,
+            $associationKey
+        );
+
+        if (count($associatedIDs) === 0) {
+            return [];
+        } else {
+            return CBModelCache::fetchModelsByID($associatedIDs);
+        }
     }
 
     /**
@@ -169,5 +293,33 @@ EOT;
 
             throw new Exception('More than one CBModelAssociations row was found when at most one row was expected.');
         }
+    }
+
+    /**
+     * This function is useful in situations where you have a one-to-one
+     * association and you want to add or replace the associated ID while making
+     * sure the assocation remains singular.
+     *
+     * @param ID $ID
+     * @param string $associationKey
+     * @param ID $associatedID
+     *
+     * @return void
+     */
+    static function replaceAssociatedID(
+        string $ID,
+        string $associationKey,
+        string $associatedID
+    ): void {
+        CBModelAssociations::delete(
+            $ID,
+            $associationKey
+        );
+
+        CBModelAssociations::add(
+            $ID,
+            $associationKey,
+            $associatedID
+        );
     }
 }
