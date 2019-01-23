@@ -41,6 +41,8 @@
  */
 final class CBModel {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
