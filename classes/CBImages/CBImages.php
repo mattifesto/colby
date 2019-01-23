@@ -394,17 +394,18 @@ EOT;
      *
      * @param string $name
      *
-     * @return stdClass (image)
+     * @return object (CBImage spec)
      *
      *      {
-     *          string extension,
-     *          string filename,
-     *          int height,
-     *          hex160 ID,
-     *          int width,
+     *          className: "CBImage"
+     *          ID: ID
+     *          extension: string
+     *          filename: string
+     *          height: int
+     *          width: int
      *      }
      */
-    private static function uploadImageWithName($name) {
+    private static function uploadImageWithName(string $name): stdClass {
         CBImages::verifyUploadedFile($name);
 
         $temporaryFilepath = $_FILES[$name]['tmp_name'];
@@ -426,10 +427,10 @@ EOT;
             $permanentFilepath = CBDataStore::flexpath($ID, $basename, CBSiteDirectory);
             $spec = (object)[
                 'className' => 'CBImage',
+                'ID' => $ID,
                 'extension' => $extension,
                 'filename' => $filename,
                 'height' => $size[1],
-                'ID' => $ID,
                 'width' => $size[0],
             ];
 
