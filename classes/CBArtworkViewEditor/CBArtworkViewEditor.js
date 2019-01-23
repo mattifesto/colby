@@ -8,7 +8,8 @@
     CBUISelector,
     CBUIStringEditor,
     CBViewPageEditor,
-    Colby */
+    Colby
+*/
 
 var CBArtworkViewEditor = {
 
@@ -143,7 +144,7 @@ var CBArtworkViewEditor = {
         }
 
         /* closure */
-        function handleImageRemoved(chooserArgs) {
+        function handleImageRemoved() {
             args.spec.image = undefined;
             args.specChangedCallback();
         }
