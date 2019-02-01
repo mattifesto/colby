@@ -205,6 +205,79 @@ final class CBConvertTests {
     /**
      * @return object
      */
+    static function CBTest_valueAsNumber(): stdClass {
+
+        /**
+         * Unlike the JavaScript tests for this function, the expected results
+         * here are always floating point numbers because in PHP 5 === 5.0 is
+         * false.
+         */
+
+        $tests = [
+            [1, 1.0],
+            [2.0, 2.0],
+            [2.1, 2.1],
+            ["3", 3.0],
+            [" 4 ", 4.0],
+            ["5.0", 5.0],
+            ["5.1", 5.1],
+            ["  3.14159  ", 3.14159],
+            [" -3.14159  ", -3.14159],
+            ["- 3.14159  ", null],
+            ["", null],
+            ["five", null],
+            [true, null],
+            [false, null],
+            [NAN, null],
+            [INF, null],
+            [-0, 0.0],
+            [function () { return 5; }, null],
+            [(object)['a' => 1], null],
+        ];
+
+        for ($i = 0; $i < count($tests); $i += 1) {
+            $test = $tests[$i];
+            $value = $test[0];
+            $actualResult = CBConvert::valueAsNumber($value);
+            $expectedResult = $test[1];
+
+            if ($actualResult !== $expectedResult) {
+                $valueAsMessage = CBMessageMarkup::stringToMessage(
+                    CBConvert::valueToPrettyJSON($value)
+                );
+
+                $actualResultAsMessage = CBMessageMarkup::stringToMessage(
+                    CBConvert::valueToPrettyJSON($actualResult)
+                );
+
+                $expectedResultAsMessage = CBMessageMarkup::stringToMessage(
+                    CBConvert::valueToPrettyJSON($expectedResult)
+                );
+
+                $message = <<<EOT
+
+                    When the value (${valueAsMessage} (code)) was used as an
+                    argument to CBConvert.valueAsNumber() the actual result was
+                    (${actualResultAsMessage} (code)) but the expected result
+                    was (${expectedResultAsMessage} (code)).
+
+EOT;
+
+                return (object)[
+                    'succeeded' => false,
+                    'message' => $message,
+                ];
+            }
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
+     * @return object
+     */
     static function CBTest_valueToBool(): stdClass {
         $falsyValues = [
             false,
@@ -460,78 +533,5 @@ EOT;
         }
 
         return null;
-    }
-
-    /**
-     * @return object
-     */
-    static function CBTest_valueAsNumber(): stdClass {
-
-        /**
-         * Unlike the JavaScript tests for this function, the expected results
-         * here are always floating point numbers because in PHP 5 === 5.0 is
-         * false.
-         */
-
-        $tests = [
-            [1, 1.0],
-            [2.0, 2.0],
-            [2.1, 2.1],
-            ["3", 3.0],
-            [" 4 ", 4.0],
-            ["5.0", 5.0],
-            ["5.1", 5.1],
-            ["  3.14159  ", 3.14159],
-            [" -3.14159  ", -3.14159],
-            ["- 3.14159  ", null],
-            ["", null],
-            ["five", null],
-            [true, null],
-            [false, null],
-            [NAN, null],
-            [INF, null],
-            [-0, 0.0],
-            [function () { return 5; }, null],
-            [(object)['a' => 1], null],
-        ];
-
-        for ($i = 0; $i < count($tests); $i += 1) {
-            $test = $tests[$i];
-            $value = $test[0];
-            $actualResult = CBConvert::valueAsNumber($value);
-            $expectedResult = $test[1];
-
-            if ($actualResult !== $expectedResult) {
-                $valueAsMessage = CBMessageMarkup::stringToMessage(
-                    CBConvert::valueToPrettyJSON($value)
-                );
-
-                $actualResultAsMessage = CBMessageMarkup::stringToMessage(
-                    CBConvert::valueToPrettyJSON($actualResult)
-                );
-
-                $expectedResultAsMessage = CBMessageMarkup::stringToMessage(
-                    CBConvert::valueToPrettyJSON($expectedResult)
-                );
-
-                $message = <<<EOT
-
-                    When the value (${valueAsMessage} (code)) was used as an
-                    argument to CBConvert.valueAsNumber() the actual result was
-                    (${actualResultAsMessage} (code)) but the expected result
-                    was (${expectedResultAsMessage} (code)).
-
-EOT;
-
-                return (object)[
-                    'succeeded' => false,
-                    'message' => $message,
-                ];
-            }
-        }
-
-        return (object)[
-            'succeeded' => true,
-        ];
     }
 }
