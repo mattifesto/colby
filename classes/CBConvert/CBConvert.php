@@ -480,10 +480,29 @@ final class CBConvert {
      *      models with a class name matching one of the class names in the
      *      array will be returned.
      *
-     * @return ?model
+     *      @TODO 2019_01_31
      *
-     *      If $value is an object with a non-empty class name it will be
-     *      returned; otherwise null.
+     *          This parameter should be deprecated. This is not the place to
+     *          compare class names. If it isn't deprecated, replace this note
+     *          with explicit documentation on why this is the place for it and
+     *          adjust the JavaScript implementation, which does not support the
+     *          parameter currently.
+     *
+     * @return object|null
+     *
+     *      If $value is an object that has a non-empty string type "className"
+     *      property value then $value will be returned; otherwise null.
+     *
+     *      @NOTE 2019_01_31
+     *
+     *          This function does not perform any sort of "className" property
+     *          value validation because it would be time consuming and
+     *          difficult, if not impossible, since it would have to work for
+     *          any programming language.
+     *
+     *          It's more important for this function to quickly determine
+     *          whether the $value parameter is attempting to be a model than
+     *          whether it might succeed at being a model.
      */
     static function valueAsModel($value, array $classNames = []): ?stdClass {
         $object = CBConvert::valueAsObject($value);
@@ -492,14 +511,12 @@ final class CBConvert {
             return null;
         }
 
-        $className = CBModel::valueToString($object, 'className');
-
-        if ($className === '' || preg_match('/\s/', $className)) {
+        if (empty($value->className) || !is_string($value->className)) {
             return null;
         }
 
-        if (empty($classNames) || in_array($className, $classNames)) {
-            return $object;
+        if (empty($classNames) || in_array($value->className, $classNames)) {
+            return $value;
         } else {
             return null;
         }
