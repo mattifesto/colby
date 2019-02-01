@@ -1,4 +1,27 @@
 /**
+ * 2019_01_15
+ *
+ */
+.CBUI_action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+    color: hsla(210, 80%, 50%, 0.9); /* IE11 */
+    color: var(--CBTextColorForLinks);
+    cursor: default;
+    min-height: 44px;
+    padding: 5px 10px;
+    text-align: center;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/**
  * 2019_01_06
  *
  *      This container is was created to hold one item centered horizontally
@@ -25,6 +48,57 @@
     justify-content: center;
 }
 
+/**
+ * 2019_01_15
+ *
+ *      This class was created to hold content in section item parts. It is
+ *      designed to hold content from a single string to full message content.
+ */
+.CBUI_content {
+    padding: 5px 10px;
+}
+
+.CBUI_section_container {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.CBUI_section {
+    background-color: hsl(0, 0%, 100%); /* IE11 */
+    background-color: var(--CBBackgroundColor);
+    border-color: hsl(0, 0%, 85%); /* IE11 */
+    border-color: var(--CBUIBorderColor);
+    border-style: solid;
+    border-width: 1px 0;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow: hidden;
+    width: 640px;
+
+    /*
+    Stop double-tap zooming on all CBUISections
+
+    Interactive user interfaces are meant to be readable (don't need to be
+    zoomed) and often meant to be tapped, potentially quickly.
+    */
+    touch-action: manipulation;
+}
+
+@media (min-width: 641px) {
+    .CBUI_section {
+        border-radius: 10px;
+        border-width: 1px;
+    }
+}
+
+.CBUI_section > * + * {
+    border-top-color: hsl(0, 0%, 85%); /* IE11 */
+    border-top-color: var(--CBUIBorderColor);
+    border-top-style: solid;
+    border-top-width: 1px;
+}
+
 .CBUI_section_width {
     width: 640px;
 }
@@ -41,6 +115,18 @@
 
 .CBUI_selectable.CBUI_selected {
     border-color: var(--CBTextColorForLinks);
+}
+
+/**
+ * 2019_01_15
+ *
+ *      This simple title class can be used before a section or a set of related
+ *      sections. It is generally used on an h1-h6 element.
+ */
+.CBUI_title1 {
+    font-size: 100%;
+    padding: 20px 20px 10px;
+    text-align: center;
 }
 
 .CBUIRoot {
