@@ -17,7 +17,7 @@ var CBModelUpdater = {
      * @return object
      *
      *      {
-     *          spec: object (readonly)
+     *          spec: object
      *          save: function
      *      }
      */
@@ -47,6 +47,9 @@ var CBModelUpdater = {
         let api = {
             get spec() {
                 return workingSpec;
+            },
+            set spec(value) {
+                workingSpec = value;
             },
             save: function () {
                 if (!CBModel.equals(mostRecentlySavedSpec, workingSpec)) {
