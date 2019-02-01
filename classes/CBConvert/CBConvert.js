@@ -256,6 +256,23 @@ var CBConvert = {
     },
 
     /**
+     * @param mixed value
+     *
+     * @return object|undefined
+     */
+    valueAsModel: function (value) {
+        if (CBConvert.valueAsObject(value) === undefined) {
+            return undefined;
+        }
+
+        if (value.className === "" || typeof value.className !== "string") {
+            return undefined;
+        } else {
+            return value;
+        }
+    },
+
+    /**
      * Determines whether the value parameter can reasonably be interpreted to
      * be a number.
      *
