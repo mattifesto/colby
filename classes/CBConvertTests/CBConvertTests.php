@@ -28,6 +28,38 @@ final class CBConvertTests {
     /* -- CBTest interfaces -- -- -- -- -- */
 
     /**
+     * @return [[<className>, <testName>]]
+     */
+    static function CBTest_JavaScriptTests(): array {
+        return [
+            ['CBConvert', 'centsToDollars'],
+            ['CBConvert', 'dollarsAsCents'],
+            ['CBConvert', 'valueAsInt'],
+            ['CBConvert', 'valueAsModel'],
+            ['CBConvert', 'valueAsNumber'],
+            ['CBConvert', 'valueAsObject'],
+            ['CBConvert', 'valueToBool'],
+            ['CBConvert', 'valueToObject'],
+        ];
+    }
+
+    /**
+     * @return [[<class>, <test>]]
+     */
+    static function CBTest_PHPTests(): array {
+        return [
+            ['CBConvert', 'centsToDollars'],
+            ['CBConvert', 'stringToStub'],
+            ['CBConvert', 'stringToURI'],
+            ['CBConvert', 'valueAsMoniker'],
+            ['CBConvert', 'valueAsNumber'],
+            ['CBConvert', 'valueToBool'],
+        ];
+    }
+
+    /* -- tests -- -- -- -- -- */
+
+    /**
      * @return null
      */
     static function CBTest_centsToDollars(): stdClass {
@@ -56,22 +88,6 @@ final class CBConvertTests {
 
         return (object)[
             'succeeded' => true,
-        ];
-    }
-
-    /**
-     * @return [[<className>, <testName>]]
-     */
-    static function CBTest_JavaScriptTests(): array {
-        return [
-            ['CBConvert', 'centsToDollars'],
-            ['CBConvert', 'dollarsAsCents'],
-            ['CBConvert', 'valueAsInt'],
-            ['CBConvert', 'valueAsModel'],
-            ['CBConvert', 'valueAsNumber'],
-            ['CBConvert', 'valueAsObject'],
-            ['CBConvert', 'valueToBool'],
-            ['CBConvert', 'valueToObject'],
         ];
     }
 
@@ -187,20 +203,6 @@ final class CBConvertTests {
     }
 
     /**
-     * @return [[<class>, <test>]]
-     */
-    static function CBTest_PHPTests(): array {
-        return [
-            ['CBConvert', 'centsToDollars'],
-            ['CBConvert', 'stringToStub'],
-            ['CBConvert', 'stringToURI'],
-            ['CBConvert', 'valueAsMoniker'],
-            ['CBConvert', 'valueAsNumber'],
-            ['CBConvert', 'valueToBool'],
-        ];
-    }
-
-    /**
      * @return object
      */
     static function CBTest_valueToBool(): stdClass {
@@ -267,6 +269,8 @@ final class CBConvertTests {
             'succeeded' => true,
         ];
     }
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @deprecated use CBTest::resultMismatchFailure()
