@@ -2,12 +2,14 @@
 
 final class CBConvertTests {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v469.js', cbsysurl()),
         ];
     }
 
@@ -22,6 +24,8 @@ final class CBConvertTests {
             'CBTest',
         ];
     }
+
+    /* -- CBTest interfaces -- -- -- -- -- */
 
     /**
      * @return null
@@ -63,6 +67,7 @@ final class CBConvertTests {
             ['CBConvert', 'centsToDollars'],
             ['CBConvert', 'dollarsAsCents'],
             ['CBConvert', 'valueAsInt'],
+            ['CBConvert', 'valueAsModel'],
             ['CBConvert', 'valueAsNumber'],
             ['CBConvert', 'valueAsObject'],
             ['CBConvert', 'valueToBool'],
@@ -362,12 +367,21 @@ EOT;
     }
 
     /**
-     * @return ?stdClass
+     * @return object|null
      */
     static function valueAsModelTest(): ?stdClass {
         $validModels = [
             (object)[
                 'className' => 'CBViewPage',
+            ],
+            (object)[
+                'className' => ' ',
+            ],
+            (object)[
+                'className' => ' CBViewPage',
+            ],
+            (object)[
+                'className' => 'CBViewPage ',
             ],
         ];
 
@@ -399,15 +413,6 @@ EOT;
             (object)[
                 'className' => '',
             ],
-            (object)[
-                'className' => ' ',
-            ],
-            (object)[
-                'className' => ' CBViewPage',
-            ],
-            (object)[
-                'className' => 'CBViewPage ',
-            ],
         ];
 
         foreach($invalidModels as $model) {
@@ -428,6 +433,26 @@ EOT;
                     'message' => $message,
                 ];
             }
+        }
+
+        /* deprecated PHP-only class name matching tests */
+
+        $model = (object)[
+            'className' => 'CBFoo',
+        ];
+
+        if (
+            CBConvert::valueAsModel(
+                $model,
+                ['CBFee', 'CBFaa', 'CBFoo']
+            ) !== $model
+        ) {
+            return (object)[
+                'failed' => true,
+                'message' =>
+                    'The (CBConvert::valueAsModel\(\) (code)) class name ' .
+                    'matching test failed.',
+            ];
         }
 
         return null;

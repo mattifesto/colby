@@ -211,6 +211,68 @@ var CBConvertTests = {
     /**
      * @return object|Promise
      */
+    CBTest_valueAsModel: function () {
+        let validModels = [
+            {
+                className: "CBViewPage",
+            },
+            {
+                className: " ",
+            },
+            {
+                className: " CBViewPage",
+            },
+            {
+                className: "CBViewPage ",
+            },
+        ];
+
+        for (let index = 0; index < validModels.length; index += 1) {
+            let model = validModels[index];
+            let actualResult = CBConvert.valueAsModel(model);
+            let expectedResult = model;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    "valid model test index " + index + " failed",
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        let invalidModels = [
+            2,
+            5.5,
+            "hello",
+            [],
+            {
+                className: "",
+            },
+        ];
+
+        for (let index = 0; index < invalidModels.length; index += 1) {
+            let model = invalidModels[index];
+            let actualResult = CBConvert.valueAsModel(model);
+            let expectedResult; // = undefined;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    "invalid model test index " + index + " failed",
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+
+    /**
+     * @return object|Promise
+     */
     CBTest_valueAsNumber: function () {
         let tests = [
             [5, 5],
