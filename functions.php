@@ -47,6 +47,29 @@ function cb_array_any(callable $callback, array $array) {
 }
 
 /**
+ * This function is a PHP version of Array.prototype.find().
+ *
+ * @param array $array
+ * @param callable $callback
+ *
+ * @return mixed|null
+ */
+function cb_array_find(array $array, callable $callback) {
+    $foundArrayElement = null;
+
+    foreach ($array as $index => $element) {
+        $result = call_user_func($callback, $element, $index, $array);
+
+        if ($result) {
+            $foundArrayElement = $element;
+            break;
+        }
+    }
+
+    return $foundArrayElement;
+}
+
+/**
  * This behaves almost exactly like `array_map` except that it passes the key
  * as well as the value to the callback function.
  *
