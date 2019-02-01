@@ -2,6 +2,19 @@
 
 final class CBConvert {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v469.js', cbsysurl()),
+        ];
+    }
+
+    /* -- functions -- -- -- -- -- */
+
     /**
      * @param mixed cents
      *
@@ -49,15 +62,6 @@ final class CBConvert {
             ($isNegative ? '-' : '') .
             substr_replace($centsAsString, '.', -2, 0)
         );
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
-        ];
     }
 
     /**
