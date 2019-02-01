@@ -511,9 +511,7 @@ final class CBConvert {
      *          whether it might succeed at being a model.
      */
     static function valueAsModel($value, array $classNames = []): ?stdClass {
-        $object = CBConvert::valueAsObject($value);
-
-        if ($object === null) {
+        if (CBConvert::valueAsObject($value) === null) {
             return null;
         }
 
