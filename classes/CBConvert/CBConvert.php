@@ -65,6 +65,12 @@ final class CBConvert {
     }
 
     /**
+     * @BUG 2019_01_31
+     *
+     *      This function incorrectly uses the CBModel class. The CBModel class
+     *      actually has a dependency on this class. This function should
+     *      probably be moved to another class, something like CBJavaScript.
+     *
      * @param object $error
      *
      * @return string
