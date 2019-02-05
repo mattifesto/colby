@@ -32,6 +32,8 @@ var CBArtworkElement = {
      *
      *          maxWidth: number (optional)
      *          maxHeight: number (optional)
+     *
+     *              The units for these properties are CSS pixels.
      *      }
      *
      * @return Element
