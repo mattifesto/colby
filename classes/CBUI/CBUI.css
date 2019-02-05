@@ -99,6 +99,17 @@
     border-top-width: 1px;
 }
 
+/**
+ * 2019_02_01
+ *
+ *      Add this style to a CBUI_section element to make sure the side borders
+ *      are never hidden.
+ */
+.CBUI_section_inner {
+    border-radius: 10px;
+    border-width: 1px;
+}
+
 .CBUI_section_width {
     width: 640px;
 }
