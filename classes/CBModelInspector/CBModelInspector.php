@@ -76,6 +76,7 @@ final class CBModelInspector {
             'CBMessageMarkup',
             'CBUI',
             'CBUIExpander',
+            'CBUIImageChooser',
             'CBUINavigationArrowPart',
             'CBUINavigationView',
             'CBUIPanel',
@@ -99,8 +100,20 @@ final class CBModelInspector {
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         $ID = cb_query_string_value('ID');
+        $associatedImageModel = CBModelAssociations::fetchAssociatedModel(
+            $ID,
+            'CBModelToCBImageAssociation'
+        );
+
         return [
-            ['CBModelInspector_modelID', $ID],
+            [
+                'CBModelInspector_modelID',
+                $ID,
+            ],
+            [
+                'CBModelInspector_associatedImageModel',
+                $associatedImageModel,
+            ],
         ];
     }
 

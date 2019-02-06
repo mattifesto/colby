@@ -5,9 +5,11 @@
     CBArtworkElement,
     CBImage,
     CBMessageMarkup,
+    CBModelInspector_associatedImageModel,
     CBModelInspector_modelID,
     CBUI,
     CBUIExpander,
+    CBUIImageChooser,
     CBUINavigationArrowPart,
     CBUINavigationView,
     CBUIPanel,
@@ -215,13 +217,68 @@ var CBModelInspector = {
             args.container.appendChild(section);
             args.container.appendChild(CBUI.createHalfSpace());
 
+            {
+                let titleElement = document.createElement("div");
+                titleElement.className = "CBUI_title1";
+                titleElement.textContent = "Associated Image";
+                args.container.appendChild(titleElement);
+
+                let sectionContainerElement = document.createElement("div");
+                sectionContainerElement.className = "CBUI_section_container";
+                args.container.appendChild(sectionContainerElement);
+
+                let sectionElement = document.createElement("div");
+                sectionElement.className = "CBUI_section";
+                sectionContainerElement.appendChild(sectionElement);
+
+                let chooser = CBUIImageChooser.create();
+                sectionElement.appendChild(chooser.element);
+
+                if (CBModelInspector_associatedImageModel !== null) {
+                    chooser.src = CBImage.toURL(
+                        CBModelInspector_associatedImageModel,
+                        "rw1600"
+                    );
+                }
+
+                chooser.chosen = function (args) {
+                    Colby.callAjaxFunction(
+                        "CBImages",
+                        "upload",
+                        undefined,
+                        args.file
+                    ).then(
+                        function (imageSpec) {
+                            return Colby.callAjaxFunction(
+                                "CBModelToCBImageAssociation",
+                                "replaceImageID",
+                                {
+                                    modelID: CBModelInspector_modelID,
+                                    imageID: imageSpec.ID,
+                                }
+                            ).then(
+                                function () {
+                                    chooser.src = CBImage.toURL(
+                                        imageSpec,
+                                        "rw1600"
+                                    );
+                                }
+                            );
+                        }
+                    ).catch(
+                        function (error) {
+                            Colby.displayAndReportError(error);
+                        }
+                    );
+                };
+            }
+
             if (response.modelVersions.length > 0) {
                 {
-                    let sectionHeaderElement = CBUI.createSectionHeader({
-                        text: "Versions",
-                    });
-
-                    args.container.appendChild(sectionHeaderElement);
+                    let titleElement = document.createElement("div");
+                    titleElement.className = "CBUI_title1";
+                    titleElement.textContent = "Versions";
+                    args.container.appendChild(titleElement);
                 }
 
                 section = CBUI.createSection();
@@ -324,7 +381,7 @@ var CBModelInspector = {
                                  .then(resolved)
                                  .catch(Colby.report);
 
-                            function resolved(response) {
+                            function resolved() {
                                 location.reload(true);
                             }
                         }
