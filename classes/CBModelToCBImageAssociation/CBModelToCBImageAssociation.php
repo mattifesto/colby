@@ -1,6 +1,6 @@
 <?php
 
-final class CBModelImages {
+final class CBModelToCBImageAssociation {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -14,7 +14,7 @@ final class CBModelImages {
      *
      * @return void
      */
-    static function CBAjax_replaceImagesModel(stdClass $args): void {
+    static function CBAjax_replaceImageID(stdClass $args): void {
         $associationKey = __CLASS__;
 
         CBModelAssociations::replaceAssociatedID(
@@ -27,7 +27,7 @@ final class CBModelImages {
     /**
      * @return string
      */
-    static function CBAjax_replaceImagesModel_group(): string {
+    static function CBAjax_replaceImageID_group(): string {
         return 'Administrators';
     }
 }
