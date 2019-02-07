@@ -34,6 +34,7 @@ final class CBMessageMarkupTests {
         return [
             ['CBMessageMarkup', 'markupToHTML'],
             ['CBMessageMarkup', 'markupToText'],
+            ['CBMessageMarkup', 'paragraphToText'],
             ['CBMessageMarkup', 'singleLineMarkupToText'],
             ['CBMessageMarkup', 'stringToMarkup'],
         ];
@@ -293,8 +294,8 @@ EOT;
         string $actualResult,
         string $expectedResult
     ): stdClass {
-        $actualResultLines = $string1Lines = CBConvert::stringToLines($actualResult);
-        $expectedResultLines = $string2Lines = CBConvert::stringToLines($expectedResult);
+        $actualResultLines = CBConvert::stringToLines($actualResult);
+        $expectedResultLines = CBConvert::stringToLines($expectedResult);
 
         for ($index = 0; $index < count($actualResultLines); $index += 1) {
             $lineNumber = $index + 1;
@@ -399,6 +400,41 @@ EOT;
         return (object)[
             'succeeded' => 'true',
         ];
+    }
+
+    /**
+     * @return object
+     */
+    static function CBTest_paragraphToText(): stdClass {
+        $message = <<<EOT
+
+            This is a
+            paragraph that is
+                spaced
+            oddly
+                and is great. Also it is more than eighty
+            characters
+                in length for heavens sake!
+
+EOT;
+        $expectedResult = <<<EOT
+This is a paragraph that is spaced oddly and is great. Also it is more than
+eighty characters in length for heavens sake!
+EOT;
+
+        $actualResult = CBMessageMarkup::paragraphToText($message);
+
+        if ($actualResult !== $expectedResult) {
+            return CBMessageMarkupTests::textResultMismatchFailure(
+                'test 1',
+                $actualResult,
+                $expectedResult
+            );
+        } else {
+            return (object)[
+                'succeeded' => 'true',
+            ];
+        }
     }
 
     /**
