@@ -313,10 +313,35 @@ EOT;
             $expectedResultLine = $expectedResultLines[$index];
 
             if ($actualResultLine !== $expectedResultLine) {
+                $actualResultLineAsMessage = CBMessageMarkup::stringToMessage(
+                    $actualResultLine
+                );
+
+                $expectedResultLineAsMessage = CBMessageMarkup::stringToMessage(
+                    $expectedResultLine
+                );
+
                 $message = <<<EOT
 
                     Line {$lineNumber} of the actual result does not match the
                     expected result.
+
+                    --- dl
+                        --- dt
+                        actual line
+                        ---
+                        --- dd
+                            --- pre\n{$actualResultLineAsMessage}
+                            ---
+                        ---
+                        --- dt
+                        expected line
+                        ---
+                        --- dd
+                            --- pre\n{$expectedResultLineAsMessage}
+                            ---
+                        ---
+                    ---
 
 EOT;
 
