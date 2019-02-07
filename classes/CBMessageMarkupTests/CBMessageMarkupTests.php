@@ -33,7 +33,7 @@ final class CBMessageMarkupTests {
     static function CBUnitTests_tests(): array {
         return [
             ['CBMessageMarkup', 'markupToHTML'],
-            ['CBMessageMarkup', 'markupToText'],
+            ['CBMessageMarkup', 'messageToText'],
             ['CBMessageMarkup', 'paragraphToText'],
             ['CBMessageMarkup', 'singleLineMarkupToText'],
             ['CBMessageMarkup', 'stringToMarkup'],
@@ -204,7 +204,8 @@ EOT;
             --- ul
                 This is the first list item.
 
-                This is the second list item.
+                This is the second list item which is a long sentence that will
+                need to wrap if it is converted to text.
 
                 --- li
                     This is the third list item.
@@ -416,15 +417,23 @@ EOT;
     /**
      * @return object
      */
-    static function CBTest_markupToText(): stdClass {
-        $expected = CBMessageMarkupTests::text1();
-        $result = CBMessageMarkup::messageToText(CBMessageMarkupTests::markup1());
+    static function CBTest_messageToText(): stdClass {
+        $expectedResult = CBMessageMarkupTests::text1();
+        $actualResult = CBMessageMarkup::messageToText(
+            CBMessageMarkupTests::markup1()
+        );
 
-        CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
-
-        return (object)[
-            'succeeded' => 'true',
-        ];
+        if ($actualResult !== $expectedResult) {
+            return CBMessageMarkupTests::textResultMismatchFailure(
+                'test 1',
+                $actualResult,
+                $expectedResult
+            );
+        } else {
+            return (object)[
+                'succeeded' => 'true',
+            ];
+        }
     }
 
     /**
@@ -526,83 +535,77 @@ EOT;
      */
     static function text1(): string {
         return <<<EOT
-            This is the Title
+This is the Title
 
-            This is an
-            introductory paragraph.
+This is an introductory paragraph.
 
-            ( \( \\\\( ) \) \\\\)
+( \( \\\\( ) \) \\\\)
 
-            Explicitly declared p
+Explicitly declared p
 
-                This is the first list item.
+This is the first list item.
 
-                This is the second list item.
+This is the second list item which is a long sentence that will need to wrap if
+it is converted to text.
 
-                    This is the third list item.
+This is the third list item.
 
-Product             Price
--------------- ----------
-Socks                2.99
-Latte                5.98
-Strawberry Jam      14.32
+Product Price -------------- ---------- Socks 2.99 Latte 5.98 Strawberry Jam
+14.32
 
-                    Prices may vary.
+Prices may vary.
 
-            A sunny day
-            A rainy day
-            It doesn't matter anyway
+A sunny day A rainy day It doesn't matter anyway
 
-            This is an unspecified div.
+This is an unspecified div.
 
-            Inline Tests
+Inline Tests
 
-            The linked word.
+The linked word.
 
-            The YOLO abbreviation.
+The YOLO abbreviation.
 
-            The bold word.
+The bold word.
 
-            The إيان name.
+The إيان name.
 
-            The right to left phrase.
+The right to left phrase.
 
-            The poetry  line break.
+The poetry line break.
 
-            The Good Dog, Carl citation.
+The Good Dog, Carl citation.
 
-            The printf("Hello, world!") code.
+The printf("Hello, world!") code.
 
-            The product code for Teddy Ruxpin.
+The product code for Teddy Ruxpin.
 
-            The emphasized word.
+The emphasized word.
 
-            The italicized word.
+The italicized word.
 
-            The Control + C copy.
+The Control + C copy.
 
-            The highlighted word.
+The highlighted word.
 
-            The Four score and seven years ago quotation.
+The Four score and seven years ago quotation.
 
-            The striking strikethrough.
+The striking strikethrough.
 
-            The computer asked me, Would you like to play a game?
+The computer asked me, Would you like to play a game?
 
-            It was hidden in the small text.
+It was hidden in the small text.
 
-            The strong word.
+The strong word.
 
-            I said, take a drink of H2O.
+I said, take a drink of H2O.
 
-            He proposed that E=mc2.
+He proposed that E=mc2.
 
-            He was born on March 14, 1879.
+He was born on March 14, 1879.
 
-            The he wrote The Meaning of Relativity.
+The he wrote The Meaning of Relativity.
 
-            I proposed that pizza = dough + love.
-
+I proposed that pizza = dough + love.
 EOT;
     }
 }
