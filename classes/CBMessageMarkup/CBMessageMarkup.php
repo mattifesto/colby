@@ -495,8 +495,25 @@ final class CBMessageMarkup {
             $paragraph = null;
         }
 
-        $text = implode("\n", $paragraphs);
-        $text = CBMessageMarkup::decodeEncodedCharacters($text);
+        $paragraphs = array_map(
+            function ($paragraph) {
+                return wordwrap(
+                    trim(
+                        preg_replace(
+                            '/\s+/',
+                            ' ',
+                            CBMessageMarkup::decodeEncodedCharacters($paragraph)
+                        )
+                    ),
+                    80,
+                    "\n", /* line break character */
+                    true /* cut long words */
+                );
+            },
+            $paragraphs
+        );
+
+        $text = implode("\n\n", $paragraphs);
 
         return $text;
     }
@@ -539,17 +556,16 @@ final class CBMessageMarkup {
         $inlineElementExpression = "/{$openBracket}({$notBracket}*){$openBracket}({$notBracket}+){$closeBracket}\s*{$closeBracket}/";
 
         do {
-            $content = preg_replace_callback($inlineElementExpression, 'CBMessageMarkup::inlineElementToText', $content, -1, $count);
+            $content = preg_replace_callback(
+                $inlineElementExpression,
+                'CBMessageMarkup::inlineElementToText',
+                $content,
+                -1,
+                $count
+            );
         } while ($count > 0);
 
-        return wordwrap(
-            trim(
-                preg_replace('/\s+/', ' ', $content)
-            ),
-            80,
-            "\n", /* line break character */
-            true /* cut long words */
-        );
+        return $content;
     }
 
     /**
