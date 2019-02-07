@@ -283,6 +283,97 @@ EOT;
     }
 
     /**
+     * @param string $string 1
+     * @param string $string 2
+     *
+     * @return void
+     */
+    static function textResultMismatchFailure(
+        string $testTitle,
+        string $actualResult,
+        string $expectedResult
+    ): stdClass {
+        $actualResultLines = $string1Lines = CBConvert::stringToLines($actualResult);
+        $expectedResultLines = $string2Lines = CBConvert::stringToLines($expectedResult);
+
+        for ($index = 0; $index < count($actualResultLines); $index += 1) {
+            $lineNumber = $index + 1;
+            $actualResultLine = $actualResultLines[$index];
+
+            if (!isset($expectedResultLines[$index])) {
+                $message = <<<EOT
+
+                    The actual result has more lines than the expected result.
+
+EOT;
+                break;
+            }
+
+            $expectedResultLine = $expectedResultLines[$index];
+
+            if ($actualResultLine !== $expectedResultLine) {
+                $message = <<<EOT
+
+                    Line {$lineNumber} of the actual result does not match the
+                    expected result.
+
+EOT;
+
+                break;
+            }
+        }
+
+        if (
+            !isset($message) &&
+            count($actualResultLines) < count($expectedResultLines)
+        ) {
+            $message = <<<EOT
+
+                The actual result has less lines than the expected result.
+
+EOT;
+        }
+
+        $actualResultAsMessage = CBMessageMarkup::stringToMessage($actualResult);
+        $expectedResultAsMessage = CBMessageMarkup::stringToMessage($expectedResult);
+        $message = <<<EOT
+
+            {$message}
+
+            --- dl
+                --- dt
+                Test Title
+                ---
+                {$testTitle}
+
+                --- dt
+                Actual Result
+                ---
+                --- dd
+                    --- pre\n{$actualResultAsMessage}
+                    ---
+                ---
+
+                --- dt
+                Expected Result
+                ---
+                --- dd
+                    --- pre\n{$expectedResultAsMessage}
+                    ---
+                ---
+            ---
+
+EOT;
+
+        return (object)[
+            'succeeded' => false,
+            'message' => $message,
+        ];
+    }
+
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+    /**
      * @return object
      */
     static function CBTest_markupToHTML(): stdClass {
