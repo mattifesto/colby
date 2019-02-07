@@ -542,9 +542,14 @@ final class CBMessageMarkup {
             $content = preg_replace_callback($inlineElementExpression, 'CBMessageMarkup::inlineElementToText', $content, -1, $count);
         } while ($count > 0);
 
-        $content = preg_replace('/[ \t]+$/m', '', $content);
-
-        return $content;
+        return wordwrap(
+            trim(
+                preg_replace('/\s+/', ' ', $content)
+            ),
+            80,
+            "\n", /* line break character */
+            true /* cut long words */
+        );
     }
 
     /**
