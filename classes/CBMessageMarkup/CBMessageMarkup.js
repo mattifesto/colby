@@ -260,6 +260,7 @@ var CBMessageMarkup = {
 
         switch (inlineTagName) {
             case "br":
+                return "\n";
             case "wbr":
                 return "";
             default:

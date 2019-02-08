@@ -279,6 +279,8 @@ final class CBMessageMarkup {
 
         switch ($inlineTagName) {
             case 'br':
+                return "\n";
+                break;
             case 'wbr':
                 return '';
                 break;
