@@ -27,6 +27,20 @@ final class CBMessageMarkupTests {
         return ['CBMessageMarkup'];
     }
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+    /**
+     * @return [[<className>, <testName>]]
+     */
+    static function CBTest_JavaScriptTests(): array {
+        return [
+            ['CBMessageMarkup', 'markupToHTML'],
+            ['CBMessageMarkup', 'markupToText'],
+            ['CBMessageMarkup', 'singleLineMarkupToText'],
+            ['CBMessageMarkup', 'stringToMarkup'],
+        ];
+    }
+
     /**
      * @return [[<class>, <test>]]
      */

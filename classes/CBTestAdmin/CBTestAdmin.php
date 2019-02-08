@@ -106,14 +106,10 @@ final class CBTestAdmin {
      *
      * @return [[<className>, <testName>]]
      */
-    static function CBTest_javaScriptTests(): array {
+    static function CBTest_JavaScriptTests(): array {
         return [
             ['CBImages',        'deleteByID'],
             ['CBImages',        'upload'],
-            ['CBMessageMarkup', 'markupToHTML'],
-            ['CBMessageMarkup', 'markupToText'],
-            ['CBMessageMarkup', 'singleLineMarkupToText'],
-            ['CBMessageMarkup', 'stringToMarkup'],
             ['Colby',           'centsToDollars'],
             ['Colby',           'dateToString'],
             ['Colby',           'random160'],
