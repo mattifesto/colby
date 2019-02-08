@@ -9,7 +9,7 @@ final class CBMessageMarkupTests {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v437.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v469.js', cbsysurl()),
         ];
     }
 
@@ -41,8 +41,8 @@ final class CBMessageMarkupTests {
      */
     static function CBTest_JavaScriptTests(): array {
         return [
-            ['CBMessageMarkup', 'markupToHTML'],
             ['CBMessageMarkup', 'markupToText'],
+            ['CBMessageMarkup', 'messageToHTML'],
             ['CBMessageMarkup', 'singleLineMarkupToText'],
             ['CBMessageMarkup', 'stringToMarkup'],
         ];
