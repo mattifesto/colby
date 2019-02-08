@@ -1,7 +1,9 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBMessageMarkup */
 /* global
+    CBConvert,
     Colby,
 */
 

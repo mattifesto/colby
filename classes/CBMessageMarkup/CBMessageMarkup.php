@@ -8,10 +8,21 @@ final class CBMessageMarkup {
     const encodedHyphen = '4605702366f1f3d132e1a76a25165e2c0b6b352c';
 
     /**
-     * @return string
+     * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v434.js', cbsysurl())];
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v469.js', cbsysurl()),
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBConvert',
+        ];
     }
 
     /**
