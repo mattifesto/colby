@@ -449,7 +449,7 @@ var CBMessageMarkup = {
         markup = CBMessageMarkup.encodeEscapedCharacters(markup);
         var command, line, paragraph;
         var paragraphs = [];
-        var lines = markup.split(/\r?\n/);
+        var lines = CBConvert.stringToLines(markup);
 
         for (var index = 0; index < lines.length; index++) {
             line = lines[index];
@@ -486,10 +486,17 @@ var CBMessageMarkup = {
             paragraph = undefined;
         }
 
-        var text = paragraphs.join("\n");
-        text = CBMessageMarkup.decodeEncodedCharacters(text);
+        paragraphs = paragraphs.map(
+            function (paragraph) {
+                paragraph = CBMessageMarkup.decodeEncodedCharacters(
+                    paragraph
+                );
 
-        return text;
+                return paragraph.replace(/\s+/g, ' ').trim();
+            }
+        );
+
+        return paragraphs.join("\n\n");
     },
 
     /**
@@ -520,11 +527,27 @@ var CBMessageMarkup = {
      */
     paragraphToText: function (markup) {
         var content = markup;
+
         var openBracket = "\\(";
         var closeBracket = "\\)";
         var notBracket = "[^\\(\\)]";
 
-        var inlineElementExpression = new RegExp(openBracket + "(" + notBracket + "*)" + openBracket + "(" + notBracket + "+)" + closeBracket + "\\s*" + closeBracket, "g");
+        var inlineElementExpression = new RegExp(
+            (
+                openBracket +
+                "(" +
+                notBracket +
+                "*)" +
+                openBracket +
+                "(" +
+                notBracket +
+                "+)" +
+                closeBracket +
+                "\\s*" +
+                closeBracket
+            ),
+            "g"
+        );
 
         do {
             CBMessageMarkup.replacementCount = 0;

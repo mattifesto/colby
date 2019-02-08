@@ -460,7 +460,7 @@ final class CBMessageMarkup {
         $markup = CBMessageMarkup::encodeEscapedCharacters($markup);
         $paragraphs = [];
         $paragraph = null;
-        $lines = preg_split("/\r\n|\n|\r/", $markup);
+        $lines = CBConvert::stringToLines($markup);
 
         for ($index = 0; $index < count($lines); $index++) {
             $line = $lines[$index];
@@ -491,31 +491,26 @@ final class CBMessageMarkup {
 
         if ($paragraph !== null) {
             $paragraph = CBMessageMarkup::paragraphToText($paragraph);
+
             $paragraphs[] = $paragraph;
+
             $paragraph = null;
         }
 
         $paragraphs = array_map(
             function ($paragraph) {
-                return wordwrap(
-                    trim(
-                        preg_replace(
-                            '/\s+/',
-                            ' ',
-                            CBMessageMarkup::decodeEncodedCharacters($paragraph)
-                        )
-                    ),
-                    80,
-                    "\n", /* line break character */
-                    true /* cut long words */
+                $paragraph = CBMessageMarkup::decodeEncodedCharacters(
+                    $paragraph
+                );
+
+                return trim(
+                    preg_replace('/\s+/', ' ', $paragraph)
                 );
             },
             $paragraphs
         );
 
-        $text = implode("\n\n", $paragraphs);
-
-        return $text;
+        return implode("\n\n", $paragraphs);
     }
 
     /**
@@ -553,7 +548,24 @@ final class CBMessageMarkup {
         $notBracket = '[^\\(\\)]';
 
         // No 'g' modifier in php because preg_replace always does all.
-        $inlineElementExpression = "/{$openBracket}({$notBracket}*){$openBracket}({$notBracket}+){$closeBracket}\s*{$closeBracket}/";
+        $inlineElementExpression = implode(
+            '',
+            [
+                '/',
+                $openBracket,
+                '(',
+                $notBracket,
+                '*)',
+                $openBracket,
+                '(',
+                $notBracket,
+                '+)',
+                $closeBracket,
+                '\s*',
+                $closeBracket,
+                '/',
+            ]
+        );
 
         do {
             $content = preg_replace_callback(
