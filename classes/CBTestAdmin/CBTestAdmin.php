@@ -101,19 +101,6 @@ final class CBTestAdmin {
     }
 
     /**
-     * These tests should be moved to CBTest_javaScriptTests() in their test
-     * class.
-     *
-     * @return [[<className>, <testName>]]
-     */
-    static function CBTest_JavaScriptTests(): array {
-        return [
-            ['CBImages',        'deleteByID'],
-            ['CBImages',        'upload'],
-        ];
-    }
-
-    /**
      * This image can be used for testing purposes. Do not modify the original.
      *
      * @return string
