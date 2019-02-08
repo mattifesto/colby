@@ -2,11 +2,28 @@
 
 final class ColbyTests {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v437.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v437.js', cbsysurl()),
+        ];
+    }
+
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+    /**
+     * @return [[<className>, <testName>]]
+     */
+    static function CBTest_JavaScriptTests(): array {
+        return [
+            ['Colby', 'centsToDollars'],
+            ['Colby', 'dateToString'],
+            ['Colby', 'random160'],
+        ];
     }
 
     /**

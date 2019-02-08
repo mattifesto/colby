@@ -110,9 +110,6 @@ final class CBTestAdmin {
         return [
             ['CBImages',        'deleteByID'],
             ['CBImages',        'upload'],
-            ['Colby',           'centsToDollars'],
-            ['Colby',           'dateToString'],
-            ['Colby',           'random160'],
         ];
     }
 
