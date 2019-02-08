@@ -41,8 +41,8 @@ final class CBMessageMarkupTests {
      */
     static function CBTest_JavaScriptTests(): array {
         return [
-            ['CBMessageMarkup', 'markupToText'],
             ['CBMessageMarkup', 'messageToHTML'],
+            ['CBMessageMarkup', 'messageToText'],
             ['CBMessageMarkup', 'singleLineMarkupToText'],
             ['CBMessageMarkup', 'stringToMarkup'],
         ];
@@ -107,7 +107,8 @@ final class CBMessageMarkupTests {
 <p>                This is the first list item.
 </li>
 <li>
-<p>                This is the second list item.
+<p>                This is the second list item which is a long sentence that will
+                not wrap if it is converted to text.
 </li>
 <li>
 <p>                    This is the third list item.
@@ -228,7 +229,7 @@ EOT;
                 This is the first list item.
 
                 This is the second list item which is a long sentence that will
-                need to wrap if it is converted to text.
+                not wrap if it is converted to text.
 
                 --- li
                     This is the third list item.
@@ -568,13 +569,11 @@ Explicitly declared p
 
 This is the first list item.
 
-This is the second list item which is a long sentence that will need to wrap if
-it is converted to text.
+This is the second list item which is a long sentence that will not wrap if it is converted to text.
 
 This is the third list item.
 
-Product Price -------------- ---------- Socks 2.99 Latte 5.98 Strawberry Jam
-14.32
+Product Price -------------- ---------- Socks 2.99 Latte 5.98 Strawberry Jam 14.32
 
 Prices may vary.
 

@@ -74,17 +74,26 @@ var CBMessageMarkupTests = {
     },
 
     /**
-     * @return undefined
+     * @return object
      */
-    markupToTextTest: function () {
-        var expected = CBMessageMarkupTests_text1;
-        var result = CBMessageMarkup.markupToText(CBMessageMarkupTests_markup1);
+    CBTest_messageToText: function () {
+        let actualResult = CBMessageMarkup.markupToText(
+            CBMessageMarkupTests_markup1
+        );
 
-        CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+        let expectedResult = CBMessageMarkupTests_text1;
 
-        return {
-            succeeded: true,
-        };
+        if (actualResult !== expectedResult) {
+            return CBMessageMarkupTests.textResultMismatchFailure(
+                'test 1',
+                actualResult,
+                expectedResult
+            );
+        } else {
+            return {
+                succeeded: true,
+            };
+        }
     },
 
     /**
