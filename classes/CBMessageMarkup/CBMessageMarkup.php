@@ -262,6 +262,15 @@ final class CBMessageMarkup {
     }
 
     /**
+     * Convert and inline element to text.
+     *
+     * @NOTE
+     *
+     *      This function converts <br> elements to an end of line character to
+     *      ensure that there is a break between words in cases like:
+     *
+     *          one((br))two
+     *
      * @param string $matches[0]
      *
      *      "( Extra! ( strong))"
@@ -539,16 +548,51 @@ final class CBMessageMarkup {
         $notBracket = '[^\\(\\)]';
 
         // No 'g' modifier in php because preg_replace always does all.
-        $inlineElementExpression = "/{$openBracket}({$notBracket}*){$openBracket}({$notBracket}+){$closeBracket}\s*{$closeBracket}/";
+        $inlineElementExpression = implode(
+            '',
+            [
+                '/',
+                $openBracket,
+                '(',
+                $notBracket,
+                '*)',
+                $openBracket,
+                '(',
+                $notBracket,
+                '+)',
+                $closeBracket,
+                '\s*',
+                $closeBracket,
+                '/'
+            ]
+        );
 
         do {
-            $content = preg_replace_callback($inlineElementExpression, 'CBMessageMarkup::inlineElementToHTML', $content, -1, $count);
+            $content = preg_replace_callback(
+                $inlineElementExpression,
+                'CBMessageMarkup::inlineElementToHTML',
+                $content,
+                -1,
+                $count
+            );
         } while ($count > 0);
 
         return $content;
     }
 
     /**
+     * This function will convert a paragraph with inline elements into text.
+     *
+     * @NOTE 2019_02_08
+     *
+     *      This function does very little formatting, and its purpose with
+     *      regard to formatting is partially undetermined. However, it calls
+     *      the inlineElementToText() function which will convert <br> elements
+     *      to end of line characters to make sure there is white space between
+     *      words in situations such as:
+     *
+     *          one((br))two
+     *
      * @param string $markup
      *
      * @return string
