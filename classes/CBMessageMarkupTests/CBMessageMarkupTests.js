@@ -97,28 +97,46 @@ var CBMessageMarkupTests = {
     },
 
     /**
-     * @NOTE
+     * @NOTE 2019_02_07
      *
-     *      CBMessageMarkup.messageToText() always puts a new line at the end of
-     *      the last line whether one was originally there or not.
+     *      Before today CBMessageMarkup.messageToText() would always put a new
+     *      line at the end of the last line whether one was originally there or
+     *      not. Now it never puts a new line at the end of the last line.
      *
-     * @return undefined
+     *      This is not because of my strong feelling, but the behavior changed
+     *      for other reasons and this test started failing. I think maybe it
+     *      makes more sense not to add a new line at the end of the last line,
+     *      especially in the context of a single line input.
+     *
+     * @return object
      */
-    singleLineMarkupToTextTest: function () {
+    CBTest_singleLineMarkupToText: function () {
         {
             let singleLineMarkup = "This \(is \- the - result)!";
-            let expected = "This (is - the - result)!\n";
-            let result = CBMessageMarkup.messageToText(singleLineMarkup);
+            let actualResult = CBMessageMarkup.messageToText(singleLineMarkup);
+            let expectedResult = "This (is - the - result)!";
 
-            CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+            if (actualResult !== expectedResult) {
+                return CBMessageMarkupTests.textResultMismatchFailure(
+                    'test 1',
+                    actualResult,
+                    expectedResult
+                );
+            }
         }
 
         {
             let singleLineMarkup = "This is an ID: (9b44a390fcc6d188862ea616940d1860d0a1ee4f (code))";
-            let expected = "This is an ID: 9b44a390fcc6d188862ea616940d1860d0a1ee4f\n";
-            let result = CBMessageMarkup.messageToText(singleLineMarkup);
+            let actualResult = CBMessageMarkup.messageToText(singleLineMarkup);
+            let expectedResult = "This is an ID: 9b44a390fcc6d188862ea616940d1860d0a1ee4f";
 
-            CBMessageMarkupTests.compareStringsLineByLine(expected, result);
+            if (actualResult !== expectedResult) {
+                return CBMessageMarkupTests.textResultMismatchFailure(
+                    'test 2',
+                    actualResult,
+                    expectedResult
+                );
+            }
         }
 
         return {
