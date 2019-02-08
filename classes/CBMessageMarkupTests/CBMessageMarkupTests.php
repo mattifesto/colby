@@ -508,26 +508,42 @@ EOT;
     }
 
     /**
-     * @NOTE
+     * @NOTE 2019_02_07
      *
-     *      CBMessageMarkup::messageToText() always puts a new line at the end of
-     *      the last line whether one was originally there or not.
+     *      Before today CBMessageMarkup.messageToText() would always put a new
+     *      line at the end of the last line whether one was originally there or
+     *      not. Now it never puts a new line at the end of the last line.
+     *
+     *      This is not because of my strong feelling, but the behavior changed
+     *      for other reasons and this test started failing. I think maybe it
+     *      makes more sense not to add a new line at the end of the last line,
+     *      especially in the context of a single line input.
      *
      * @return object
      */
     static function CBTest_singleLineMarkupToText(): stdClass {
         $singleLineMarkup = 'This \(is \- the - result)!';
-        $expected = "This (is - the - result)!\n";
-        $result = CBMessageMarkup::messageToText($singleLineMarkup);
+        $actualResult = CBMessageMarkup::messageToText($singleLineMarkup);
+        $expectedResult = "This (is - the - result)!";
 
-        CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
+        if ($actualResult !== $expectedResult) {
+            return CBMessageMarkupTests::textResultMismatchFailure(
+                'test 1',
+                $actualResult,
+                $expectedResult
+            );
+        }
 
         $singleLineMarkup = 'This is an ID: (68658b6709f44bf11248a88975486ea6bac7ef60 (code))';
         $actualResult = CBMessageMarkup::messageToText($singleLineMarkup);
-        $expectedResult = "This is an ID: 68658b6709f44bf11248a88975486ea6bac7ef60\n";
+        $expectedResult = "This is an ID: 68658b6709f44bf11248a88975486ea6bac7ef60";
 
-        if ($actualResult != $expectedResult) {
-            return CBTest::resultMismatchFailureDiff('Subtest 2', $actualResult, $expectedResult);
+        if ($actualResult !== $expectedResult) {
+            return CBMessageMarkupTests::textResultMismatchFailure(
+                'test 2',
+                $actualResult,
+                $expectedResult
+            );
         }
 
         return (object)[
