@@ -213,6 +213,15 @@ var CBConvert = {
     },
 
     /**
+     * @param string value
+     *
+     * @return [string]
+     */
+    stringToLines: function (value) {
+        return value.split(/\r\n|\r|\n/);
+    },
+
+    /**
      * @param mixed value
      *
      * @return function|undefined
