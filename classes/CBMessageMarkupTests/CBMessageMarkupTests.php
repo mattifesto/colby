@@ -385,8 +385,12 @@ EOT;
 EOT;
         }
 
-        $actualResultAsMessage = CBMessageMarkup::stringToMessage($actualResult);
-        $expectedResultAsMessage = CBMessageMarkup::stringToMessage($expectedResult);
+        $actualResultAsMessage = CBMessageMarkup::stringToMessage(
+            $actualResult
+        );
+        $expectedResultAsMessage = CBMessageMarkup::stringToMessage(
+            $expectedResult
+        );
         $message = <<<EOT
 
             {$message}
