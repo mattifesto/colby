@@ -14,13 +14,21 @@ final class CBMessageMarkupTests {
     }
 
     /**
-     * @return [[string, string]]
+     * @return [[<variableName>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
             ['CBMessageMarkupTests_html1', CBMessageMarkupTests::html1()],
             ['CBMessageMarkupTests_markup1', CBMessageMarkupTests::markup1()],
             ['CBMessageMarkupTests_text1', CBMessageMarkupTests::text1()],
+            [
+                'CBMessageMarkupTests_paragraphToText_originalValue',
+                CBMessageMarkupTests::paragraphToText_originalValue(),
+            ],
+            [
+                'CBMessageMarkupTests_paragraphToText_expectedResult',
+                CBMessageMarkupTests::paragraphToText_expectedResult(),
+            ],
         ];
     }
 
@@ -43,6 +51,7 @@ final class CBMessageMarkupTests {
         return [
             ['CBMessageMarkup', 'messageToHTML'],
             ['CBMessageMarkup', 'messageToText'],
+            ['CBMessageMarkup', 'paragraphToText'],
             ['CBMessageMarkup', 'singleLineMarkupToText'],
             ['CBMessageMarkup', 'stringToMarkup'],
         ];
@@ -309,6 +318,41 @@ EOT;
     }
 
     /**
+     * @return string
+     */
+    static function paragraphToText_expectedResult(): string {
+        return <<<EOT
+
+            This is a
+            paragraph that is
+                spaced
+            oddly
+                and is great. Also, it is more than eighty
+            characters
+                in length for
+(heavens) sake!
+
+EOT;
+    }
+
+    /**
+     * @return string
+     */
+    static function paragraphToText_originalValue(): string {
+        return <<<EOT
+
+            This is a
+            paragraph that is
+                spaced
+            oddly
+                and is (great (b)). Also, it is more than eighty
+            characters
+                in length for((br))(heavens) sake!
+
+EOT;
+    }
+
+    /**
      * @param string $string 1
      * @param string $string 2
      *
@@ -476,23 +520,13 @@ EOT;
      * @return object
      */
     static function CBTest_paragraphToText(): stdClass {
-        $message = <<<EOT
+        $actualResult = CBMessageMarkup::paragraphToText(
+            CBMessageMarkupTests::paragraphToText_originalValue()
+        );
 
-            This is a
-            paragraph that is
-                spaced
-            oddly
-                and is great. Also it is more than eighty
-            characters
-                in length for heavens sake!
-
-EOT;
-        $expectedResult = <<<EOT
-This is a paragraph that is spaced oddly and is great. Also it is more than
-eighty characters in length for heavens sake!
-EOT;
-
-        $actualResult = CBMessageMarkup::paragraphToText($message);
+        $expectedResult = (
+            CBMessageMarkupTests::paragraphToText_expectedResult()
+        );
 
         if ($actualResult !== $expectedResult) {
             return CBMessageMarkupTests::textResultMismatchFailure(

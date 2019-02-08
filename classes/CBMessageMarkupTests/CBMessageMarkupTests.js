@@ -8,6 +8,8 @@
     CBMessageMarkupTests_html1,
     CBMessageMarkupTests_markup1,
     CBMessageMarkupTests_text1,
+    CBMessageMarkupTests_paragraphToText_originalValue,
+    CBMessageMarkupTests_paragraphToText_expectedResult,
 */
 
 var CBMessageMarkupTests = {
@@ -82,6 +84,31 @@ var CBMessageMarkupTests = {
         );
 
         let expectedResult = CBMessageMarkupTests_text1;
+
+        if (actualResult !== expectedResult) {
+            return CBMessageMarkupTests.textResultMismatchFailure(
+                'test 1',
+                actualResult,
+                expectedResult
+            );
+        } else {
+            return {
+                succeeded: true,
+            };
+        }
+    },
+
+    /**
+     * @return object
+     */
+    CBTest_paragraphToText: function () {
+        let actualResult = CBMessageMarkup.paragraphToText(
+            CBMessageMarkupTests_paragraphToText_originalValue
+        );
+
+        let expectedResult = (
+            CBMessageMarkupTests_paragraphToText_expectedResult
+        );
 
         if (actualResult !== expectedResult) {
             return CBMessageMarkupTests.textResultMismatchFailure(
