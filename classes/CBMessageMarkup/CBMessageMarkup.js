@@ -513,11 +513,29 @@ var CBMessageMarkup = {
         var closeBracket = "\\)";
         var notBracket = "[^\\(\\)]";
 
-        var inlineElementExpression = new RegExp(openBracket + "(" + notBracket + "*)" + openBracket + "(" + notBracket + "+)" + closeBracket + "\\s*" + closeBracket, "g");
+        let inlineElementExpression = new RegExp(
+            [
+                openBracket,
+                "(",
+                notBracket,
+                "*)",
+                openBracket,
+                "(",
+                notBracket,
+                "+)",
+                closeBracket,
+                "\\s*",
+                closeBracket,
+            ].join(""),
+            "g"
+        );
 
         do {
             CBMessageMarkup.replacementCount = 0;
-            content = content.replace(inlineElementExpression, CBMessageMarkup.inlineElementToHTML);
+            content = content.replace(
+                inlineElementExpression,
+                CBMessageMarkup.inlineElementToHTML
+            );
         } while (CBMessageMarkup.replacementCount);
 
         return content;
@@ -535,26 +553,29 @@ var CBMessageMarkup = {
         var closeBracket = "\\)";
         var notBracket = "[^\\(\\)]";
 
-        var inlineElementExpression = new RegExp(
-            (
-                openBracket +
-                "(" +
-                notBracket +
-                "*)" +
-                openBracket +
-                "(" +
-                notBracket +
-                "+)" +
-                closeBracket +
-                "\\s*" +
-                closeBracket
-            ),
+        let inlineElementExpression = new RegExp(
+            [
+                openBracket,
+                "(",
+                notBracket,
+                "*)",
+                openBracket,
+                "(",
+                notBracket,
+                "+)",
+                closeBracket,
+                "\\s*",
+                closeBracket,
+            ].join(""),
             "g"
         );
 
         do {
             CBMessageMarkup.replacementCount = 0;
-            content = content.replace(inlineElementExpression, CBMessageMarkup.inlineElementToText);
+            content = content.replace(
+                inlineElementExpression,
+                CBMessageMarkup.inlineElementToText
+            );
         } while (CBMessageMarkup.replacementCount);
 
         content = content.replace(/[ \t]+$/gm, '');
