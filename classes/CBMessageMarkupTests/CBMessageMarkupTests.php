@@ -51,9 +51,9 @@ final class CBMessageMarkupTests {
     /**
      * @return [[<class>, <test>]]
      */
-    static function CBUnitTests_tests(): array {
+    static function CBTest_PHPTests(): array {
         return [
-            ['CBMessageMarkup', 'markupToHTML'],
+            ['CBMessageMarkup', 'messageToHTML'],
             ['CBMessageMarkup', 'messageToText'],
             ['CBMessageMarkup', 'paragraphToText'],
             ['CBMessageMarkup', 'singleLineMarkupToText'],
@@ -431,15 +431,23 @@ EOT;
     /**
      * @return object
      */
-    static function CBTest_markupToHTML(): stdClass {
-        $expected = CBMessageMarkupTests::html1();
-        $result = CBMessageMarkup::markupToHTML(CBMessageMarkupTests::markup1());
+    static function CBTest_messageToHTML(): stdClass {
+        $actualResult = CBMessageMarkup::messageToHTML(
+            CBMessageMarkupTests::markup1()
+        );
+        $expectedResult = CBMessageMarkupTests::html1();
 
-        CBMessageMarkupTests::compareStringsLineByLine($expected, $result);
-
-        return (object)[
-            'succeeded' => 'true',
-        ];
+        if ($actualResult !== $expectedResult) {
+            return CBMessageMarkupTests::textResultMismatchFailure(
+                'tests 1',
+                $actualResult,
+                $expectedResult
+            );
+        } else {
+            return (object)[
+                'succeeded' => 'true',
+            ];
+        }
     }
 
     /**
