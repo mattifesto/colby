@@ -2,11 +2,15 @@
 
 final class CBMessageMarkupTests {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v437.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v437.js', cbsysurl()),
+        ];
     }
 
     /**
@@ -24,7 +28,10 @@ final class CBMessageMarkupTests {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBMessageMarkup'];
+        return [
+            'CBConvert',
+            'CBMessageMarkup'
+        ];
     }
 
     /* -- CBTest interfaces -- -- -- -- -- */
@@ -53,6 +60,8 @@ final class CBMessageMarkupTests {
             ['CBMessageMarkup', 'stringToMarkup'],
         ];
     }
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @param string $string 1

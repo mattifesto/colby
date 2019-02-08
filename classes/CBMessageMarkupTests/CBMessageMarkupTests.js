@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBMessageMarkupTests */
 /* globals
+    CBConvert,
     CBMessageMarkup,
     CBMessageMarkupTests_html1,
     CBMessageMarkupTests_markup1,
@@ -137,5 +138,127 @@ var CBMessageMarkupTests = {
         return {
             succeeded: true,
         };
-    }
+    },
+
+    /* -- functions -- -- -- -- -- */
+
+    /**
+     * @param string title
+     * @param string actualResult
+     * @param string expectedResult
+     *
+     * @return object
+     */
+    textResultMismatchFailure: function (
+        testTitle,
+        actualResult,
+        expectedResult
+    ) {
+        let message;
+        let actualResultLines = CBConvert.stringToLines(actualResult);
+        let expectedResultLines = CBConvert.stringToLines(expectedResult);
+
+        for (let index = 0; index < actualResultLines.length; index += 1) {
+            let lineNumber = index + 1;
+            let actualResultLine = actualResultLines[index];
+            let expectedResultLine = expectedResultLines[index];
+
+            if (expectedResultLine === undefined) {
+                message = `
+
+                    The actual result has more lines than the expected result.
+
+                `;
+
+                break;
+            }
+
+            if (actualResultLine !== expectedResultLine) {
+                let actualResultLineAsMessage = CBMessageMarkup.stringToMessage(
+                    actualResultLine
+                );
+
+                let expectedResultLineAsMessage = CBMessageMarkup.stringToMessage(
+                    expectedResultLine
+                );
+
+                message = `
+
+                    Line ${lineNumber} of the actual result does not match the
+                    expected result.
+
+                    --- dl
+                        --- dt
+                        actual line
+                        ---
+                        --- dd
+                            --- pre\n${actualResultLineAsMessage}
+                            ---
+                        ---
+                        --- dt
+                        expected line
+                        ---
+                        --- dd
+                            --- pre\n${expectedResultLineAsMessage}
+                            ---
+                        ---
+                    ---
+
+                `;
+
+                break;
+            }
+        }
+
+        if (
+            message === undefined &&
+            actualResultLines.length < expectedResultLines.length
+        ) {
+            message = `
+
+                The actual result has less lines than the expected result.
+
+            `;
+        }
+
+        let actualResultAsMessage = CBMessageMarkup.stringToMessage(
+            actualResult
+        );
+        let expectedResultAsMessage = CBMessageMarkup.stringToMessage(
+            expectedResult
+        );
+        message = `
+
+            ${message}
+
+            --- dl
+                --- dt
+                Test Title
+                ---
+                ${testTitle}
+
+                --- dt
+                Actual Result
+                ---
+                --- dd
+                    --- pre\n${actualResultAsMessage}
+                    ---
+                ---
+
+                --- dt
+                Expected Result
+                ---
+                --- dd
+                    --- pre\n${expectedResultAsMessage}
+                    ---
+                ---
+            ---
+
+        `;
+
+        return {
+            succeeded: false,
+            message: message,
+        };
+    },
 };
