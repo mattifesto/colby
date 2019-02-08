@@ -34,6 +34,7 @@ final class CBConvertTests {
         return [
             ['CBConvert', 'centsToDollars'],
             ['CBConvert', 'dollarsAsCents'],
+            ['CBConvert', 'stringToLines'],
             ['CBConvert', 'valueAsInt'],
             ['CBConvert', 'valueAsModel'],
             ['CBConvert', 'valueAsNumber'],
@@ -49,6 +50,7 @@ final class CBConvertTests {
     static function CBTest_PHPTests(): array {
         return [
             ['CBConvert', 'centsToDollars'],
+            ['CBConvert', 'stringToLines'],
             ['CBConvert', 'stringToStub'],
             ['CBConvert', 'stringToURI'],
             ['CBConvert', 'valueAsMoniker'],
@@ -92,7 +94,35 @@ final class CBConvertTests {
     }
 
     /**
-     * @return null
+     * @return object
+     */
+    static function CBTest_stringToLines(): stdClass {
+        $testValue = "one\ntwo\rthree\r\nfour\rfive\nsix";
+        $actualResult = CBConvert::stringToLines($testValue);
+        $expectedResult = [
+            'one',
+            'two',
+            'three',
+            'four',
+            'five',
+            'six'
+        ];
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $actualResult,
+                $expectedResult
+            );
+        } else {
+            return (object)[
+                'succeeded' => true,
+            ];
+        }
+    }
+
+    /**
+     * @return object
      */
     static function CBTest_stringToStub(): stdClass {
         /* Test 1 */

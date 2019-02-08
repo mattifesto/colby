@@ -146,6 +146,34 @@ var CBConvertTests = {
     /**
      * @return object|Promise
      */
+    CBTest_stringToLines: function () {
+        let testValue = "one\ntwo\rthree\r\nfour\rfive\nsix";
+        let actualResult = CBConvert.stringToLines(testValue);
+        let expectedResult = [
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six"
+        ];
+
+        if (!CBModel.equals(actualResult, expectedResult)) {
+            return CBTest.resultMismatchFailure(
+                'test 1',
+                actualResult,
+                expectedResult
+            );
+        } else {
+            return {
+                succeeded: true,
+            };
+        }
+    },
+
+    /**
+     * @return object|Promise
+     */
     CBTest_valueAsInt: function () {
         let tests = [
             [5, 5],
