@@ -4,6 +4,7 @@
 /* exported CBConvertTests */
 /* global
     CBConvert,
+    CBConvertTests_valueAsMonikerTestCases,
     CBModel,
     CBMessageMarkup,
     CBTest,
@@ -287,6 +288,35 @@ var CBConvertTests = {
             if (actualResult !== expectedResult) {
                 return CBTest.resultMismatchFailure(
                     "invalid model test index " + index + " failed",
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+
+    /**
+     * @return object|Promise
+     */
+    CBTest_valueAsMoniker: function () {
+        let testCaseCount = CBConvertTests_valueAsMonikerTestCases.length;
+
+        for (let index = 0; index < testCaseCount; index += 1) {
+            let testCase = CBConvertTests_valueAsMonikerTestCases[index];
+            let actualResult = CBConvert.valueAsMoniker(testCase.originalValue);
+            let expectedResult = (
+                (testCase.expectedResult === null) ?
+                undefined :
+                testCase.expectedResult
+            );
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    JSON.stringify(testCase.originalValue),
                     actualResult,
                     expectedResult
                 );

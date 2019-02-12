@@ -14,6 +14,18 @@ final class CBConvertTests {
     }
 
     /**
+     * @return [[<variableName>, <variableValue>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables(): array {
+        return [
+            [
+                'CBConvertTests_valueAsMonikerTestCases',
+                CBConvertTests::valueAsMonikerTestCases(),
+            ],
+        ];
+    }
+
+    /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
@@ -37,6 +49,7 @@ final class CBConvertTests {
             ['CBConvert', 'stringToLines'],
             ['CBConvert', 'valueAsInt'],
             ['CBConvert', 'valueAsModel'],
+            ['CBConvert', 'valueAsMoniker'],
             ['CBConvert', 'valueAsNumber'],
             ['CBConvert', 'valueAsObject'],
             ['CBConvert', 'valueToBool'],
@@ -189,43 +202,18 @@ final class CBConvertTests {
      * @return object
      */
     static function CBTest_valueAsMoniker(): stdClass {
-        /* subtest 1 */
+        foreach (CBConvertTests::valueAsMonikerTestCases() as $testCase) {
+            $actualResult = CBConvert::valueAsMoniker($testCase->originalValue);
+            $expectedResult = $testCase->expectedResult;
 
-        $actualResult = CBConvert::valueAsMoniker(' love_life ');
-        $expectedResult = 'love_life';
-
-        if ($actualResult !== $expectedResult) {
-            return CBTest::resultMismatchFailure('subtest 1', $actualResult, $expectedResult);
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    json_encode($testCase->originalValue),
+                    $actualResult,
+                    $expectedResult
+                );
+            }
         }
-
-        /* subtest 2 */
-
-        $actualResult = CBConvert::valueAsMoniker(' love life ');
-        $expectedResult = null;
-
-        if ($actualResult !== $expectedResult) {
-            return CBTest::resultMismatchFailure('subtest 2', $actualResult, $expectedResult);
-        }
-
-        /* subtest 3 */
-
-        $actualResult = CBConvert::valueAsMoniker(' 2love ');
-        $expectedResult = null;
-
-        if ($actualResult !== $expectedResult) {
-            return CBTest::resultMismatchFailure('subtest 3', $actualResult, $expectedResult);
-        }
-
-        /* subtest 4 */
-
-        $actualResult = CBConvert::valueAsMoniker(' love2 ');
-        $expectedResult = 'love2';
-
-        if ($actualResult !== $expectedResult) {
-            return CBTest::resultMismatchFailure('subtest 4', $actualResult, $expectedResult);
-        }
-
-        /* done */
 
         return (object)[
             'succeeded' => true,
@@ -563,5 +551,69 @@ EOT;
         }
 
         return null;
+    }
+
+    /**
+     * @return [object]
+     */
+    static function valueAsMonikerTestCases(): array {
+        return [
+            (object)[
+                'originalValue' => 'cats',
+                'expectedResult' => 'cats',
+            ],
+            (object)[
+                'originalValue' => ' cats2',
+                'expectedResult' => 'cats2',
+            ],
+            (object)[
+                'originalValue' => '2cats ',
+                'expectedResult' => '2cats',
+            ],
+            (object)[
+                'originalValue' => '    cats    ',
+                'expectedResult' => 'cats',
+            ],
+            (object)[
+                'originalValue' => '    __cats    ',
+                'expectedResult' => '__cats',
+            ],
+            (object)[
+                'originalValue' => '    cats__    ',
+                'expectedResult' => 'cats__',
+            ],
+            (object)[
+                'originalValue' => '   dogs_cats    ',
+                'expectedResult' => 'dogs_cats',
+            ],
+            (object)[
+                'originalValue' => '    dogs cats    ',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => '    dogs:cats    ',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => '    dogs,cats    ',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => '    café    ',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => '    A    ',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => '        ',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => '',
+                'expectedResult' => null,
+            ],
+        ];
     }
 }
