@@ -282,6 +282,21 @@ var CBConvert = {
     },
 
     /**
+     * @param mixed value
+     *
+     * @return string|undefined
+     */
+    valueAsMoniker: function (value) {
+        let stringValue = CBConvert.valueToString(value).trim();
+
+        if (stringValue.match(/^[a-z0-9_]+$/) !== null) {
+            return stringValue;
+        } else {
+            return undefined;
+        }
+    },
+
+    /**
      * Determines whether the value parameter can reasonably be interpreted to
      * be a number.
      *
