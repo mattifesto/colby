@@ -280,13 +280,37 @@ final class CBHTMLOutput {
                 array_walk($URLs, function ($URL) { CBHTMLOutput::addJavaScriptURLForRequiredClass($URL); });
             }
 
-            if (is_callable($function = "{$className}::CBHTMLOutput_JavaScriptVariables") || is_callable($function = "{$className}::requiredJavaScriptVariables")) {
+            if (
+                is_callable($function = "{$className}::CBHTMLOutput_JavaScriptVariables") ||
+                is_callable($function = "{$className}::requiredJavaScriptVariables")
+            ) {
                 $variables = call_user_func($function);
-                array_walk($variables, function ($variable) use ($function) {
+                array_walk($variables, function ($variable, $index) use ($function) {
                     if (is_array($variable) && count($variable) > 1) {
                         CBHTMLOutput::exportVariable($variable[0], $variable[1]);
                     } else {
-                        throw new Exception("The function {$function}() returned a bad value.");
+                        $valueAsJSONAsMessage = CBMessageMarkup::stringToMessage(
+                            CBConvert::valueToPrettyJSON($variable)
+                        );
+
+                        $message = <<<EOT
+
+                            Each element in the array returned from a
+                            CBHTMLOutput_JavaScriptVariables() implementation
+                            should be another array with more than one element.
+
+                            Index {$index} has the value:
+
+                            --- pre\n{$valueAsJSONAsMessage}
+                            ---
+
+EOT;
+
+                        throw new CBException(
+                            'A CBHTMLOutput_JavaScriptVariables() ' .
+                            'implementation returned a bad value.',
+                            $message
+                        );
                     }
                 });
             }
