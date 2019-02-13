@@ -218,6 +218,16 @@ var CBModel = {
      * @param mixed model
      * @param string keyPath
      *
+     * @return object|undefined
+     */
+    valueAsModel: function (model, keyPath) {
+        return CBConvert.valueAsModel(CBModel.value(model, keyPath));
+    },
+
+    /**
+     * @param mixed model
+     * @param string keyPath
+     *
      * @return string|undefined
      */
     valueAsMoniker: function (model, keyPath) {
