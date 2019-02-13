@@ -11,9 +11,26 @@
 var CBUI = {
 
     /**
+     * Create a new <div> element and assign it a class name. This function is
+     * often more convenient than document.createElement() because most of the
+     * time Colby code creates elements that are <div> elements and are always
+     * assigned a class name.
+     *
+     * @param string className
+     *
      * @return Element
      */
-    createHalfSpace : function() {
+    createElement: function (className) {
+        let element = document.createElement("div");
+        element.className = className;
+
+        return element;
+    },
+
+    /**
+     * @return Element
+     */
+    createHalfSpace: function() {
         var element = document.createElement("div");
         element.className = "CBUIHalfSpace";
 
