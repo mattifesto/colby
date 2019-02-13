@@ -129,6 +129,24 @@
 }
 
 /**
+ * 2019_02_13
+ *
+ *      This class was created for an element that contains a single string of
+ *      text that will be centered horizontally and vertically inside an element
+ *      at least 44px high.
+ */
+.CBUI_text1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 3px 10px 5px;
+    text-align: center;
+}
+
+/**
  * 2019_01_15
  *
  *      This simple title class can be used before a section or a set of related
