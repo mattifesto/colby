@@ -86,6 +86,8 @@ EOT;
                 'succeeded' => false,
                 'message' => $message,
             ];
+
+            CBErrorHandler::report($throwable);
         }
 
         return $result;
