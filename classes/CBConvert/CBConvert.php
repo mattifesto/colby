@@ -527,6 +527,8 @@ final class CBConvert {
     }
 
     /**
+     * @deprecated use CBConvert::valueAsName()
+     *
      * This function returns a moniker if the $value parameter can reasonably be
      * interpreted to represent a moniker. It will trim the string before
      * deciding if that string is a moniker. This means that outer white space
@@ -549,6 +551,186 @@ final class CBConvert {
             return $stringValue;
         } else {
             return null;
+        }
+    }
+
+    /**
+     * A "name" is a simple string that can be used as an identifier in many
+     * situations. As Colby matured, the importance and nature of the "name"
+     * concept has grown.
+     *
+     * Names can contain the following characters:
+     *
+     *      a-z
+     *      A-Z
+     *      0-9
+     *      _ (underscore)
+     *
+     *      Why not hyphens?
+     *
+     *          Technically hyphens are not word characters. This means that
+     *          double clicking on a word with a hyphen will not select the
+     *          entire word. Since names are intended to provide positive
+     *          benefits to speed development, hyphens are not allowed.
+     *
+     * Uses for names
+     *
+     *      Monikers
+     *
+     *          A moniker is a readable ID for a model that's usually provided
+     *          in a CSV file that will be used to import models.
+     *
+     *      CSS class names
+     *
+     *          Restricting your CSS class names to the characters allowed in
+     *          names will help speed your development process.
+     *
+     * When should this function be used?
+     *
+     *      This function should be used when building specs into models. Then
+     *      valueAsString() can be used to get the value from the model.
+     *
+     *      There are many other use cases, but this function is generally
+     *      focused on preparing data, not accessing data.
+     *
+     * @param mixed $value
+     *
+     *      This value is usually a string value.
+     *
+     * @return string|null
+     *
+     *      If the parameter contains a valid name, the name is returned;
+     *      otherwise null is returned.
+     */
+    static function valueAsName($value): ?string {
+        $stringValue = CBConvert::valueToString($value);
+
+        /**
+         * this code will make preg_match() return false:
+         *
+         * $pregMatchReturnValue = preg_match('/(?:\D+|<\d+>)*[!?]/', 'foobar foobar foobar');
+         */
+
+        $pregMatchReturnValue = preg_match(
+            '/^\s*([a-zA-Z0-9_]+)\s*$/',
+            $stringValue,
+            $matches
+        );
+
+        if ($pregMatchReturnValue === 0) {
+            return null;
+        } else if ($pregMatchReturnValue === 1) {
+            return $matches[1];
+        } else {
+            $valueAsMessage = CBMessageMarkup::stringToMessage(
+                json_encode($value)
+            );
+            $pregMatchReturnValueAsMessage = CBMessageMarkup::stringToMessage(
+                json_encode($pregMatchReturnValue)
+            );
+
+            $errorCode = preg_last_error();
+            $message = <<<EOT
+
+                An unexpected value of ($pregMatchReturnValueAsMessage (code))
+                was returned from preg_match() in CBConvert::valueAsName().
+
+                --- dl
+                    --- dt
+                    $value
+                    ---
+                    --- dd
+                        {$valueAsMessage}
+                    ---
+                    --- dt
+                    preg_last_error()
+                    ---
+                    --- dd
+                        {$errorCode}
+                    ---
+                ---
+
+EOT;
+
+            throw new CBException(
+                'CBConvert::valueAsName() failed',
+                $message
+            );
+        }
+    }
+
+    /**
+     * This function parses a string of comma and/or white space separated set
+     * of names.
+     *
+     * @param mixed $value
+     *
+     *      This value is usually a string value.
+     *
+     * @return [string]|null
+     *
+     *      If the $value parameter contains a valid set of names, an array of
+     *      names is returned. If the $value parameter contains any characters
+     *      not allowed in a name, null will be returned.
+     */
+    static function valueAsNames($value): ?array {
+        $stringValue = CBConvert::valueToString($value);
+        $pregSplitReturnValue = preg_split(
+            '/[\s,]+/',
+            $stringValue,
+            null,
+            PREG_SPLIT_NO_EMPTY
+        );
+
+        if (is_array($pregSplitReturnValue)) {
+            $names = [];
+
+            foreach ($pregSplitReturnValue as $potentialName) {
+                $name = CBConvert::valueAsName($potentialName);
+
+                if ($name === null) {
+                    return null;
+                } else {
+                    array_push($names, $name);
+                }
+            }
+
+            return $names;
+        } else {
+            $valueAsMessage = CBMessageMarkup::stringToMessage(
+                json_encode($value)
+            );
+            $pregSplitReturnValueAsMessage = CBMessageMarkup::stringToMessage(
+                json_encode($pregSplitReturnValue)
+            );
+
+            $errorCode = preg_last_error();
+            $message = <<<EOT
+
+                An unexpected value of ($pregSplitReturnValueAsMessage (code))
+                was returned from preg_match() in CBConvert::valueAsName().
+
+                --- dl
+                    --- dt
+                    $value
+                    ---
+                    --- dd
+                        {$valueAsMessage}
+                    ---
+                    --- dt
+                    preg_last_error()
+                    ---
+                    --- dd
+                        {$errorCode}
+                    ---
+                ---
+
+EOT;
+
+            throw new CBException(
+                'CBConvert::valueAsNames() failed',
+                $message
+            );
         }
     }
 
@@ -769,6 +951,13 @@ final class CBConvert {
     }
 
     /**
+     * @deprecated use CBConvert::valueAsNames()
+     *
+     *      This function has an odd implementation in that it will convert the
+     *      word naïve into ["na", "ve"]. The concepts of "name" and "monikder"
+     *      have been more completely analyzed resulting in the valueAsName()
+     *      and valueAsNames() functions on this class.``
+     *
      * Split a value into an array of names.
      *
      * In the past the concept of "name" has been specialized to mean CSS names
