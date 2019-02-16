@@ -556,6 +556,20 @@ EOT;
     /**
      * This is a convenience function for:
      *
+     *      CBConvert::valueAsName(CBModel::value(...))
+     *
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return ?string
+     */
+    static function valueAsName($model, string $keyPath): ?string {
+        return CBConvert::valueAsName(CBModel::value($model, $keyPath));
+    }
+
+    /**
+     * This is a convenience function for:
+     *
      *      CBConvert::valueAsNumber(CBModel::value(...))
      *
      * @param mixed $model
