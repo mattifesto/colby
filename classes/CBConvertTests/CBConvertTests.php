@@ -67,6 +67,8 @@ final class CBConvertTests {
             ['CBConvert', 'stringToStub'],
             ['CBConvert', 'stringToURI'],
             ['CBConvert', 'valueAsMoniker'],
+            ['CBConvert', 'valueAsName'],
+            ['CBConvert', 'valueAsNames'],
             ['CBConvert', 'valueAsNumber'],
             ['CBConvert', 'valueToBool'],
         ];
@@ -204,6 +206,50 @@ final class CBConvertTests {
     static function CBTest_valueAsMoniker(): stdClass {
         foreach (CBConvertTests::valueAsMonikerTestCases() as $testCase) {
             $actualResult = CBConvert::valueAsMoniker($testCase->originalValue);
+            $expectedResult = $testCase->expectedResult;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    json_encode($testCase->originalValue),
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
+     * @return object
+     */
+    static function CBTest_valueAsName(): stdClass {
+        foreach (CBConvertTests::valueAsNameTestCases() as $testCase) {
+            $actualResult = CBConvert::valueAsName($testCase->originalValue);
+            $expectedResult = $testCase->expectedResult;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    json_encode($testCase->originalValue),
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+
+    /**
+     * @return object
+     */
+    static function CBTest_valueAsNames(): stdClass {
+        foreach (CBConvertTests::valueAsNamesTestCases() as $testCase) {
+            $actualResult = CBConvert::valueAsNames($testCase->originalValue);
             $expectedResult = $testCase->expectedResult;
 
             if ($actualResult !== $expectedResult) {
@@ -613,6 +659,78 @@ EOT;
             (object)[
                 'originalValue' => '',
                 'expectedResult' => null,
+            ],
+        ];
+    }
+
+    /**
+     * @return [object]
+     */
+    static function valueAsNameTestCases(): array {
+        return [
+            (object)[
+                'originalValue' => 'dogs',
+                'expectedResult' => 'dogs',
+            ],
+            (object)[
+                'originalValue' => ' dogs ',
+                'expectedResult' => 'dogs',
+            ],
+            (object)[
+                'originalValue' => "\n\tdogs\t ",
+                'expectedResult' => 'dogs',
+            ],
+            (object)[
+                'originalValue' => 'dogs8 ',
+                'expectedResult' => 'dogs8',
+            ],
+            (object)[
+                'originalValue' => ' dogs',
+                'expectedResult' => 'dogs',
+            ],
+            (object)[
+                'originalValue' => ' DogsLoveToBark ',
+                'expectedResult' => 'DogsLoveToBark',
+            ],
+            (object)[
+                'originalValue' => 'dogs dogs',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => ',dogs',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => 'dögs',
+                'expectedResult' => null,
+            ],
+        ];
+    }
+
+    /**
+     * @return [object]
+     */
+    static function valueAsNamesTestCases(): array {
+        return [
+            (object)[
+                'originalValue' => 'dogs',
+                'expectedResult' => ['dogs'],
+            ],
+            (object)[
+                'originalValue' => ' dogs',
+                'expectedResult' => ['dogs'],
+            ],
+            (object)[
+                'originalValue' => ' , , , dogs, , ,',
+                'expectedResult' => ['dogs'],
+            ],
+            (object)[
+                'originalValue' => ' , , , dogs, , cats ,',
+                'expectedResult' => ['dogs', 'cats'],
+            ],
+            (object)[
+                'originalValue' => "\t\ndogs ,cats    hippos2\t\t",
+                'expectedResult' => ['dogs', 'cats', 'hippos2'],
             ],
         ];
     }
