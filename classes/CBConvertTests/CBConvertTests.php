@@ -77,7 +77,7 @@ final class CBConvertTests {
     /* -- tests -- -- -- -- -- */
 
     /**
-     * @return null
+     * @return object
      */
     static function CBTest_centsToDollars(): stdClass {
         $tests = [
