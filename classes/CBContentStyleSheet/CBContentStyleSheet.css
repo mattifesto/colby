@@ -35,6 +35,20 @@
 }
 
 /**
+ * @NOTE 2019_02_19
+ *
+ *      <p> elements inside of <dt> elements should have no margin. If there are
+ *      multiple <p> elements they should be display directly on top of each
+ *      other.
+ *
+ *      It is more appropriate to use two adjacent <dt> elements than to use two
+ *      <p> elements inside a single <dt> element.
+ */
+.CBContentStyleSheet dt > p {
+    margin-bottom: 0;
+}
+
+/**
  * 2017.11.30 A rare use of left an right margins because the border box should
  * be inset relative to the parent element. This allows the dd element to look
  * like a sub-element of its preceding dt element.
@@ -69,29 +83,43 @@
 }
 
 /**
- * These elements have whitespace on top if they follow other elements to
- * emphasize their block.
+ * @NOTE 2019_02_19
+ *
+ *      The vertical margins have been changed for <dl>, <ol>, <pre>, and <ul>
+ *      elements that represents a change in perspective.
+ *
+ *      Previously, there had been attempts not to apply a top margin if the
+ *      element was a first child, and not to apply a bottom margin if the
+ *      element was a last child.
+ *
+ *      While this kind of made sense if the element was the very first or last
+ *      child, it didn't really make sense elsewhere. No top and bottom margins
+ *      are generally displayed for any element that has them at all times.
  */
-.CBContentStyleSheet * + dl,
-.CBContentStyleSheet * + ol,
-.CBContentStyleSheet * + pre,
-.CBContentStyleSheet * + ul {
+.CBContentStyleSheet dl,
+.CBContentStyleSheet ol,
+.CBContentStyleSheet pre,
+.CBContentStyleSheet ul {
+    margin-bottom: 1.5em;
     margin-top: 1.5em;
+}
+
+/**
+ * @NOTE 2019_02_19
+ *
+ *      Applying only a bottom margin to <p> elements tends to work better than
+ *      placing top and bottom margins. In many cases a <p> element is the first
+ *      element and having no top margin looks good. Having a large bottom
+ *      margin also looks good most of the time.
+ */
+.CBContentStyleSheet p {
+    margin-bottom: 1.5em;
 }
 
 .CBContentStyleSheet li,
 .CBContentStyleSheet li p {
     margin-bottom: 0.75em;
     margin-top: 0.75em;
-}
-
-.CBContentStyleSheet blockquote + *,
-.CBContentStyleSheet dl + *,
-.CBContentStyleSheet ol + *,
-.CBContentStyleSheet p + *,
-.CBContentStyleSheet pre + *,
-.CBContentStyleSheet ul + * {
-    margin-top: 1.5em;
 }
 
 .CBContentStyleSheet pre {
