@@ -21,6 +21,12 @@
     user-select: none;
 }
 
+/**
+ * 2019_02_23
+ *
+ *      The class styles an element to look like a button which can be used
+ *      instead of a link style for high priority user interface items.
+ */
 .CBUI_button1 {
     display: inline-flex;
     align-items: center;
@@ -48,7 +54,7 @@
  * 2019_01_06
  *
  *      This container is was created to hold one item centered horizontally
- *      will 10px of padding to separarte it from adjacent items.
+ *      will 10px of padding to separate it from adjacent items.
  *
  *      It might be used to hold each selectable item in a list of selectable
  *      items.
