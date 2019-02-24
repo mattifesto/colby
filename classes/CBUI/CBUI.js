@@ -22,7 +22,10 @@ var CBUI = {
      */
     createElement: function (className) {
         let element = document.createElement("div");
-        element.className = className;
+
+        if (className) {
+            element.className = className;
+        }
 
         return element;
     },
