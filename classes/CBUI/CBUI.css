@@ -21,6 +21,29 @@
     user-select: none;
 }
 
+.CBUI_button1 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(var(--CBButtonBackgroundColorHighlight), var(--CBButtonBackgroundColor));
+    border: 1px solid var(--CBButtonBackgroundColor);
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: var(--CBButtonTextColor);
+    min-height: 44px;
+    padding: 5px 10px;
+    text-align: center;
+    width: 640px;
+
+    cursor: default;
+
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
 /**
  * 2019_01_06
  *
