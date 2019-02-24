@@ -163,6 +163,22 @@
 }
 
 /**
+ * 2019_02_23
+ *
+ *      This class styles an element to stick to the top of the viewport as long
+ *      as its parent element is visible. It is intended to be used for high
+ *      priority user interface items, such as a container for a subtotal and
+ *      buy button on a tall product builder page.
+ */
+.CBUI_sticky_top {
+    background-color: var(--CBBackgroundColor);
+    margin-bottom: 40px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+
+/**
  * 2019_02_13
  *
  *      This class was created for an element that contains a single string of
