@@ -14,7 +14,7 @@ final class CBModelTests {
     /**
      * @return [[<className>, <testName>]]
      */
-    static function CBTest_javaScriptTests(): array {
+    static function CBTest_JavaScriptTests(): array {
         return [
             ['CBModel', 'classFunction'],
             ['CBModel', 'equals'],
@@ -25,8 +25,11 @@ final class CBModelTests {
     /**
      * @return [[<className>, <testName>]]
      */
-    static function CBTest_phpTests(): array {
+    static function CBTest_PHPTests(): array {
         return [
+            ['CBModel', 'build'],
+            ['CBModel', 'buildMinimalImplementation'],
+            ['CBModel', 'toSearchText'],
             ['CBModel', 'upgrade'],
             ['CBModel', 'upgradeSpecWithID'],
         ];
