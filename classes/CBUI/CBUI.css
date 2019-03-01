@@ -98,6 +98,16 @@
     padding: 5px 10px;
 }
 
+/**
+ * 2019_03_01
+ *
+ *      This class styles an element to hold a single string or full message
+ *      content with padding similar to what is standard for most view elements.
+ */
+.CBUI_content2 {
+    padding: 20px;
+}
+
 .CBUI_section_container {
     display: flex;
     justify-content: center;
