@@ -108,7 +108,47 @@
     padding: 20px;
 }
 
-.CBUI_section_container {
+/**
+ * 2019_03_01
+ *
+ *      This class styles an element to use the default pointer which is
+ *      appropriate for user interface elements that shouldn't display the text
+ *      bar.
+ */
+.CBUI_cursorDefault {
+    cursor: default;
+}
+
+/**
+ * 2019_03_01
+ *
+ *      This class styles an element so that its text will only be shown on one
+ *      line and truncated with an ellipsis.
+ *
+ *      The parent element may need to have "min-width: 0" applied in some
+ *      cases.
+ */
+.CBUI_ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/**
+ * 2019_03_01
+ */
+.CBUI_flexGrow {
+    flex-grow: 1;
+}
+
+/**
+ * 2019_03_01
+ *
+ *      The class styles an element to apply the appropriate white space and
+ *      layout to hold a child element with the CBUI_section class.
+ */
+.CBUI_section_container, /* deprecated use CBUI_sectionContainer */
+.CBUI_sectionContainer {
     display: flex;
     justify-content: center;
     padding: 10px 0;
@@ -147,6 +187,55 @@
     border-top-color: var(--CBUIBorderColor);
     border-top-style: solid;
     border-top-width: 1px;
+}
+
+/**
+ * 2019_03_01
+ *
+ *      This class styles an element as a horizontal flex box that can hold one
+ *      or more "section item parts". One of the parts should grow so that the
+ *      part or parts will fill the horizontal width of the section item.
+ *
+ *      @NOTE
+ *
+ *          This class should not make assumptions about its cursor or whether
+ *          its section item parts are selectable. Substyles may be created for
+ *          those purposes later.
+ */
+.CBUI_sectionItem {
+    display: flex;
+    min-height: 44px;
+}
+
+/**
+ * 2019_03_01
+ *
+ *      This class styles an element with two string child elements where the
+ *      first child is a title and the second child is a description.
+ *
+ *      To truncate the string in a child element, apply the CBUI_ellipsis class
+ *      to the child element.
+ */
+.CBUI_sectionItemPart_titleDescription {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    xmin-height: 44px;
+    padding: 3px 0 5px;
+
+    /* enable ellipsis */
+    min-width: 0;
+}
+
+.CBUI_sectionItemPart_titleDescription > * {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.CBUI_sectionItemPart_titleDescription :nth-child(2) {
+    color: var(--CBTextColor2);
+    font-size: 80%;
 }
 
 /**
@@ -232,6 +321,20 @@
  */
 .CBUI_touch_height {
     min-height: 44px;
+}
+
+/**
+ * 2019_03_01
+ *
+ *      This class styles an element so that its contents are unable to be
+ *      selected. This sould be used when an element is a user interface
+ *      control.
+ */
+.CBUI_userSelectNone {
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 }
 
 .CBUIRoot {
