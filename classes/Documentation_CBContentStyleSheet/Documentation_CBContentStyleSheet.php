@@ -6,7 +6,7 @@ final class Documentation_CBContentStyleSheet {
      * @return string
      */
     static function CBAdmin_group(): string {
-        return 'Developers';
+        return 'Administrators';
     }
 
     /**
