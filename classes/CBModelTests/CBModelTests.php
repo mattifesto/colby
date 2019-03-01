@@ -27,7 +27,6 @@ final class CBModelTests {
      */
     static function CBTest_PHPTests(): array {
         return [
-            ['CBModel', 'build'],
             ['CBModel', 'buildMinimalImplementation'],
             ['CBModel', 'toSearchText'],
             ['CBModel', 'upgrade'],
@@ -43,29 +42,6 @@ final class CBModelTests {
             'CBMessageMarkup',
             'CBModel',
             'CBTest',
-        ];
-    }
-
-    /**
-     * This test runs a CBModel::build() test for all known classes.
-     *
-     * @return object
-     */
-    static function CBTest_build(): stdClass {
-        CBLog::buffer(function () {
-            $classNames = CBAdmin::fetchClassNames();
-
-            foreach ($classNames as $className) {
-                $spec = (object)[
-                    'className' => $className,
-                ];
-
-                $model = CBModel::build($spec);
-            }
-        });
-
-        return (object)[
-            'succeeded' => true,
         ];
     }
 

@@ -261,15 +261,23 @@ final class CBModel {
      *          $model = CBModel::build(CBModel::value($spec, 'image'));
      *
      *      If the value returned by CBModel::value() is not an object
-     *      CBModel::build() will return null.
+     *      CBModel::build() will return null for now, but will throw an
+     *      exception in the future.
      *
-     * @return ?model
+     * @return object
      *
-     *      This function will return null if the CBModel_build() interface is
-     *      not implemented. That function may return null for specs that don't
-     *      meet its basic requirements. The CBImage class, for example, has a
-     *      number of specific spec requirements. However, most classes can
-     *      build a model from a completely empty spec.
+     *      This function was updated in February 2019 to prefer that
+     *      implementations throw an exception rather than return null. In the
+     *      future the return type will not be nullable and this function will
+     *      throw an exception in the cases where it used to return null.
+     *
+     *      There is no use case where a return value of null is helpful, in
+     *      fact it probably hides errors.
+     *
+     *      It is no longer correct to think that building an any spec is
+     *      guaranteed to not throw an exception. The build process is allowed
+     *      to have requirements and allowed to throw exceptions if those
+     *      requirements are not met.
      */
     static function build($spec): ?stdClass {
         $className = CBModel::valueToString($spec, 'className');
