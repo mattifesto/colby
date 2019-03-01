@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * A CBException allows developers to throw exceptions with a longer extended
+ * message formatted with message markup.
+ *
+ *      $exception->getMesssage()
+ *
+ *          Returns the same type of text string as any other exception.
+ *
+ *      $exception->getExtendedMessage()
+ *
+ *          Returns a string of message markup that replaces the text string
+ *          returned by getMessage(). Use one or the other, depending on the
+ *          situation, not both.
+ */
 final class CBException extends Exception {
 
     private $extendedMessage;
