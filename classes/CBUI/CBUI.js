@@ -17,11 +17,16 @@ var CBUI = {
      * assigned a class name.
      *
      * @param string className
+     * @param string tagName (optional, default: "div")
      *
      * @return Element
      */
-    createElement: function (className) {
-        let element = document.createElement("div");
+    createElement: function (className, tagName) {
+        if (tagName === undefined) {
+            tagName = "div";
+        }
+
+        let element = document.createElement(tagName);
 
         if (className) {
             element.className = className;
