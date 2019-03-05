@@ -1,6 +1,5 @@
 /**
  * 2019_01_15
- *
  */
 .CBUI_action {
     display: flex;
@@ -208,6 +207,25 @@
 }
 
 /**
+ * 2019_03_05
+ *
+ *      This class is usually applied to an anchor element that is a direct
+ *      child of an element with the "CBUI_sectionItem" class and is acting as a
+ *      section item part.
+ */
+.CBUI_sectionItemPart_anchor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 5px 10px;
+    text-align: center;
+}
+
+/**
  * 2019_03_01
  *
  *      This class styles an element with two string child elements where the
@@ -217,12 +235,13 @@
  *      to the child element.
  */
 .CBUI_sectionItemPart_titleDescription {
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    xmin-height: 44px;
-    padding: 3px 0 5px;
+
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 5px 0;
 
     /* enable ellipsis */
     min-width: 0;
