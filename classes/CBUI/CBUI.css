@@ -207,6 +207,17 @@
 }
 
 /**
+ * 2019_03_09
+ *
+ *      When a section item is a link to another page the section item should
+ *      not inherit typical link styles.
+ */
+a.CBUI_sectionItem {
+    text-decoration: none;
+    color: inherit;
+}
+
+/**
  * 2019_03_05
  *
  *      This class is usually applied to an anchor element that is a direct
@@ -252,7 +263,7 @@
     padding-right: 10px;
 }
 
-.CBUI_sectionItemPart_titleDescription :nth-child(2) {
+.CBUI_sectionItemPart_titleDescription > :nth-child(2) {
     color: var(--CBTextColor2);
     font-size: 80%;
 }
