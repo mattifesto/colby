@@ -99,11 +99,18 @@ final class CBModelInspector {
      * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables() {
-        $ID = cb_query_string_value('ID');
-        $associatedImageModel = CBModelAssociations::fetchAssociatedModel(
-            $ID,
-            'CBModelToCBImageAssociation'
+        $ID = CBConvert::valueAsID(
+            cb_query_string_value('ID')
         );
+
+        if ($ID) {
+            $associatedImageModel = CBModelAssociations::fetchAssociatedModel(
+                $ID,
+                'CBModelToCBImageAssociation'
+            );
+        } else {
+            $associatedImageModel = null;
+        }
 
         return [
             [
