@@ -9,12 +9,18 @@ final class CBExceptionView {
 
     private static $throwableStack = [];
 
+    /* -- CBView interfaces -- -- -- -- -- */
+
     /**
-     * @param Exception? $model->exception
+     * @param object $model
      *
-     * @return null
+     *      {
+     *          exception: Throwable
+     *      }
+     *
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
         if (!empty($model->exception)) {
             $throwable = $model->exception;
         } else {
@@ -64,11 +70,15 @@ EOT;
         <?php
     }
 
+    /* -- CBModel interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v385.css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v385.css', cbsysurl()),
+        ];
     }
 
     /**
@@ -76,25 +86,27 @@ EOT;
      *
      * @return object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): stdClass {
         return (object)[
             'className' => __CLASS__,
         ];
     }
 
+    /* -- functions -- -- -- -- -- */
+
     /**
-     * @return null
+     * @return void
      */
-    static function popThrowable() {
+    static function popThrowable(): void {
         array_pop(CBExceptionView::$throwableStack);
     }
 
     /**
      * @param Throwable $throwable
      *
-     * @return null
+     * @return void
      */
-    static function pushThrowable(Throwable $throwable) {
+    static function pushThrowable(Throwable $throwable): void {
         array_push(CBExceptionView::$throwableStack, $throwable);
     }
 }
