@@ -31,6 +31,7 @@ final class CBActiveObjectTests {
     static function CBTest_JavaScriptTests(): array {
         return [
             ['CBActiveObject', 'wasChanged'],
+            ['CBActiveObject', 'wasRemoved'],
             ['CBActiveObject', 'wasReplaced'],
         ];
     }

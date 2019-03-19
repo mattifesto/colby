@@ -95,6 +95,73 @@ var CBActiveObjectTests = {
     /**
      * @return object | Promise
      */
+    CBTest_wasRemoved: function () {
+        let currentChangeCount = 0;
+        let currentRemovalCount = 0;
+        let activeObject = {};
+
+        CBActiveObject.activate(activeObject);
+
+        activeObject.CBActiveObject.addEventListener(
+            "wasChanged",
+            handleWasChanged
+        );
+
+        activeObject.CBActiveObject.addEventListener(
+            "wasRemoved",
+            handleWasRemoved
+        );
+
+        activeObject.CBActiveObject.wasChanged();
+        activeObject.CBActiveObject.wasChanged();
+        activeObject.CBActiveObject.remove();
+
+        if (activeObject.CBActiveObject !== undefined) {
+            return {
+                succeeded: false,
+                message: "activeObject.CBActiveObject should be undefined",
+            };
+        }
+
+        let expectedChangeCount = 2;
+
+        if (currentChangeCount !== expectedChangeCount) {
+            return CBTest.resultMismatchFailure(
+                `Final Change Count`,
+                currentChangeCount,
+                expectedChangeCount
+            );
+        }
+
+        let expectedRemovalCount = 1;
+
+        if (currentRemovalCount !== expectedRemovalCount) {
+            return CBTest.resultMismatchFailure(
+                `Final Removal Count`,
+                currentRemovalCount,
+                expectedRemovalCount
+            );
+        }
+
+        return {
+            succeeded: true,
+        };
+
+        /**
+         * @return undefined
+         */
+        function handleWasChanged() {
+            currentChangeCount += 1;
+        }
+
+        function handleWasRemoved() {
+            currentRemovalCount += 1;
+        }
+    },
+
+    /**
+     * @return object | Promise
+     */
     CBTest_wasReplaced: function () {
         let expectedChangeCount;
         let expectedName;
