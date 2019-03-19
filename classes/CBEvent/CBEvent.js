@@ -9,8 +9,8 @@ var CBEvent = {
      * @return object
      *
      *      {
-     *          addListener(<function>) -> <undefined>
-     *          dispatch() -> <undefined>
+     *          addListener: function
+     *          dispatch: function
      *      }
      */
     create: function () {
@@ -22,9 +22,11 @@ var CBEvent = {
         };
 
         /**
-         * @param <function> listener
+         * closure in CBEvent.create()
          *
-         * @return <undefined>
+         * @param function listener
+         *
+         * @return undefined
          */
         function addListener(listener) {
             if (typeof listener !== "function") {
@@ -37,12 +39,19 @@ var CBEvent = {
         }
 
         /**
-         * @return <undefined>
+         * closure in CBEvent.create()
+         *
+         * @param mixed argument (optional)
+         *
+         *      If the event has argument information to provide when it is
+         *      dispatched it should be provided with this argument.
+         *
+         * @return undefined
          */
-        function dispatch() {
+        function dispatch(argument) {
             listeners.forEach(
                 function (listener) {
-                    listener();
+                    listener(argument);
                 }
             );
         }
