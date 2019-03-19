@@ -91,4 +91,120 @@ var CBActiveObjectTests = {
             }
         }
     },
+
+    /**
+     * @return object | Promise
+     */
+    CBTest_wasReplaced: function () {
+        let expectedChangeCount;
+        let expectedName;
+        let returnValue;
+        let testIndex;
+
+        let activeObject0 = {
+            name: "Sam",
+        };
+        let currentActiveObject = activeObject0;
+        let currentChangeCount = 0;
+
+        CBActiveObject.activate(activeObject0);
+
+        currentActiveObject.CBActiveObject.addEventListener(
+            "wasChanged",
+            handleWasChanged
+        );
+
+        currentActiveObject.CBActiveObject.addEventListener(
+            "wasReplaced",
+            handleWasReplaced
+        );
+
+        testIndex = 1;
+        expectedChangeCount = 1;
+        expectedName = "Bob";
+        let activeObject1 = {
+            name: expectedName,
+        };
+
+        currentActiveObject.CBActiveObject.replace(activeObject1);
+
+        if (returnValue) {
+            return returnValue;
+        }
+
+        if (activeObject0.CBActiveObject !== undefined) {
+            return {
+                succeeded: false,
+                message: "activeObject0.CBActiveObject should be undefined",
+            };
+        }
+
+        testIndex = 2;
+        expectedChangeCount = 2;
+        expectedName = "Fred";
+        let activeObject2 = {
+            name: expectedName,
+        };
+
+        currentActiveObject.CBActiveObject.replace(activeObject2);
+
+        if (returnValue) {
+            return returnValue;
+        }
+
+        if (activeObject1.CBActiveObject !== undefined) {
+            return {
+                succeeded: false,
+                message: "activeObject1.CBActiveObject should be undefined",
+            };
+        }
+
+        if (currentChangeCount !== expectedChangeCount) {
+            return CBTest.resultMismatchFailure(
+                `Final Change Count`,
+                currentChangeCount,
+                expectedChangeCount
+            );
+        }
+
+        return {
+            succeeded: true,
+        };
+
+        /**
+         * @return undefined
+         */
+        function handleWasChanged() {
+            currentChangeCount += 1;
+
+            if (currentChangeCount !== expectedChangeCount) {
+                returnValue = CBTest.resultMismatchFailure(
+                    `Test ${testIndex}: Change Count`,
+                    currentChangeCount,
+                    expectedChangeCount
+                );
+
+                return;
+            }
+
+            if (currentActiveObject.name !== expectedName) {
+                returnValue = CBTest.resultMismatchFailure(
+                    `Test ${testIndex}: Name Check`,
+                    currentActiveObject.name,
+                    expectedName
+                );
+
+                return;
+            }
+        }
+
+        /**
+         * @param object replacementActiveObject
+         *
+         * @return undefined
+         */
+        function handleWasReplaced(replacementActiveObject) {
+            currentActiveObject = replacementActiveObject;
+        }
+    },
 };
