@@ -2,14 +2,14 @@
 
 final class CBView {
 
-    /* CBHTMLOutput interfaces ---------- */
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v470.js', cbsysurl()),
         ];
     }
 
@@ -22,7 +22,7 @@ final class CBView {
         ];
     }
 
-    /* functions ---------- */
+    /* -- functions -- -- -- -- -- */
 
     /**
      * CSS Template Documentation

@@ -20,20 +20,14 @@ var CBView = {
     create: function (model) {
         let callable = CBModel.classFunction(model, "CBView_create");
 
-        if (callable !== undefined) {
-            return callable(model);
-        } else {
-            let element = document.createComment(
-                "The class for a model with the class name \"" +
+        if (callable === undefined) {
+            throw new Error(
+                "The function CBView_create() in not callable on the " +
                 CBModel.valueToString(model, "className") +
-                "\" has not implemented the CBView_create() interface."
+                " object."
             );
-
-            return {
-                get element() {
-                    return element;
-                }
-            };
         }
+
+        return callable(model);
     },
 };
