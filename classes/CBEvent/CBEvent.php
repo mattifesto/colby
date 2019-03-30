@@ -7,7 +7,7 @@ final class CBEvent {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v470.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v471.js', cbsysurl()),
         ];
     }
 }

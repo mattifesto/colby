@@ -14,6 +14,7 @@ var CBEvent = {
      *      }
      */
     create: function () {
+        let dispatchIsHappening = false;
         let listeners = [];
 
         return {
@@ -41,6 +42,9 @@ var CBEvent = {
         /**
          * closure in CBEvent.create()
          *
+         * A call to dispatch() on an event while dispatch is happening for that
+         * event will be ignored.
+         *
          * @param mixed argument (optional)
          *
          *      If the event has argument information to provide when it is
@@ -49,11 +53,19 @@ var CBEvent = {
          * @return undefined
          */
         function dispatch(argument) {
+            if (dispatchIsHappening) {
+                return;
+            }
+
+            dispatchIsHappening = true;
+
             listeners.forEach(
                 function (listener) {
                     listener(argument);
                 }
             );
+
+            dispatchIsHappening = false;
         }
     },
 };
