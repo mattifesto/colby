@@ -10,9 +10,9 @@
 var CBActiveObjectTests = {
 
     /**
-     * @return object | Promise
+     * @return object|Promise
      */
-    CBTest_wasChanged: function () {
+    CBTest_tellListenersThatTheObjectDataHasChanged: function () {
         let expectedChangeCount;
         let expectedName;
         let returnValue;
@@ -26,8 +26,8 @@ var CBActiveObjectTests = {
         CBActiveObject.activate(activeObject);
 
         activeObject.CBActiveObject.addEventListener(
-            "wasChanged",
-            handleWasChanged
+            "theObjectDataHasChanged",
+            theObjectDataHasChanged
         );
 
         testIndex = 1;
@@ -35,7 +35,7 @@ var CBActiveObjectTests = {
         expectedName = "Bob";
         activeObject.name = expectedName;
 
-        activeObject.CBActiveObject.wasChanged();
+        activeObject.CBActiveObject.tellListenersThatTheObjectDataHasChanged();
 
         if (returnValue) {
             return returnValue;
@@ -46,7 +46,7 @@ var CBActiveObjectTests = {
         expectedName = "Fred";
         activeObject.name = expectedName;
 
-        activeObject.CBActiveObject.wasChanged();
+        activeObject.CBActiveObject.tellListenersThatTheObjectDataHasChanged();
 
         if (returnValue) {
             return returnValue;
@@ -64,10 +64,14 @@ var CBActiveObjectTests = {
             succeeded: true,
         };
 
+        /* -- closures -- -- -- -- -- */
+
         /**
+         * closure in CBTest_tellListenersThatTheObjectDataHasChanged()
+         *
          * @return undefined
          */
-        function handleWasChanged() {
+        function theObjectDataHasChanged() {
             currentChangeCount += 1;
 
             if (currentChangeCount !== expectedChangeCount) {
@@ -93,9 +97,9 @@ var CBActiveObjectTests = {
     },
 
     /**
-     * @return object | Promise
+     * @return object|Promise
      */
-    CBTest_wasRemoved: function () {
+    CBTest_deactivate: function () {
         let currentChangeCount = 0;
         let currentRemovalCount = 0;
         let activeObject = {};
@@ -103,18 +107,18 @@ var CBActiveObjectTests = {
         CBActiveObject.activate(activeObject);
 
         activeObject.CBActiveObject.addEventListener(
-            "wasChanged",
-            handleWasChanged
+            "theObjectDataHasChanged",
+            theObjectDataHasChanged
         );
 
         activeObject.CBActiveObject.addEventListener(
-            "wasRemoved",
-            handleWasRemoved
+            "theObjectHasBeenDeactivated",
+            theObjectHasBeenDeactivated
         );
 
-        activeObject.CBActiveObject.wasChanged();
-        activeObject.CBActiveObject.wasChanged();
-        activeObject.CBActiveObject.remove();
+        activeObject.CBActiveObject.tellListenersThatTheObjectDataHasChanged();
+        activeObject.CBActiveObject.tellListenersThatTheObjectDataHasChanged();
+        activeObject.CBActiveObject.deactivate();
 
         if (activeObject.CBActiveObject !== undefined) {
             return {
@@ -147,23 +151,33 @@ var CBActiveObjectTests = {
             succeeded: true,
         };
 
+        /* -- closures -- -- -- -- -- */
+
         /**
+         * closure in CBTest_deactivate()
+         *
          * @return undefined
          */
-        function handleWasChanged() {
+        function theObjectDataHasChanged() {
             currentChangeCount += 1;
         }
 
-        function handleWasRemoved() {
+        /**
+         * closure in CBTest_deactivate()
+         *
+         * @return undefined
+         */
+        function theObjectHasBeenDeactivated() {
             currentRemovalCount += 1;
         }
     },
 
     /**
-     * @return object | Promise
+     * @return object|Promise
      */
-    CBTest_wasReplaced: function () {
-        let expectedChangeCount;
+    CBTest_replace: function () {
+        let expectedChangeCount = 0;
+        let expectedReplacementCount = 0;
         let expectedName;
         let returnValue;
         let testIndex;
@@ -171,24 +185,28 @@ var CBActiveObjectTests = {
         let activeObject0 = {
             name: "Sam",
         };
+
         let currentActiveObject = activeObject0;
         let currentChangeCount = 0;
+        let currentReplacementCount = 0;
 
         CBActiveObject.activate(activeObject0);
 
         currentActiveObject.CBActiveObject.addEventListener(
-            "wasChanged",
-            handleWasChanged
+            "theObjectDataHasChanged",
+            theObjectDataHasChanged
         );
 
         currentActiveObject.CBActiveObject.addEventListener(
-            "wasReplaced",
-            handleWasReplaced
+            "theObjectHasBeenReplaced",
+            theObjectHasBeenReplaced
         );
 
         testIndex = 1;
-        expectedChangeCount = 1;
+        expectedChangeCount = 0;
+        expectedReplacementCount = 1;
         expectedName = "Bob";
+
         let activeObject1 = {
             name: expectedName,
         };
@@ -207,8 +225,10 @@ var CBActiveObjectTests = {
         }
 
         testIndex = 2;
-        expectedChangeCount = 2;
+        expectedChangeCount = 0;
+        expectedReplacementCount = 2;
         expectedName = "Fred";
+
         let activeObject2 = {
             name: expectedName,
         };
@@ -234,14 +254,26 @@ var CBActiveObjectTests = {
             );
         }
 
+        if (currentReplacementCount !== expectedReplacementCount) {
+            return CBTest.resultMismatchFailure(
+                `Final Replacement Count`,
+                currentReplacementCount,
+                expectedReplacementCount
+            );
+        }
+
         return {
             succeeded: true,
         };
 
+        /* -- closures -- -- -- -- -- */
+
         /**
+         * closure in CBTest_replace()
+         *
          * @return undefined
          */
-        function handleWasChanged() {
+        function theObjectDataHasChanged() {
             currentChangeCount += 1;
 
             if (currentChangeCount !== expectedChangeCount) {
@@ -266,12 +298,35 @@ var CBActiveObjectTests = {
         }
 
         /**
+         * closure in CBTest_replace()
+         *
          * @param object replacementActiveObject
          *
          * @return undefined
          */
-        function handleWasReplaced(replacementActiveObject) {
+        function theObjectHasBeenReplaced(replacementActiveObject) {
+            currentReplacementCount += 1;
             currentActiveObject = replacementActiveObject;
+
+            if (currentReplacementCount !== expectedReplacementCount) {
+                returnValue = CBTest.resultMismatchFailure(
+                    `Test ${testIndex}: Replacement Count`,
+                    currentReplacementCount,
+                    expectedReplacementCount
+                );
+
+                return;
+            }
+
+            if (currentActiveObject.name !== expectedName) {
+                returnValue = CBTest.resultMismatchFailure(
+                    `Test ${testIndex}: Name Check`,
+                    currentActiveObject.name,
+                    expectedName
+                );
+
+                return;
+            }
         }
     },
 };

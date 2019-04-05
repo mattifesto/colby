@@ -9,7 +9,7 @@ final class CBActiveObjectTests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v470.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v471.js', cbsysurl()),
         ];
     }
 
@@ -30,9 +30,9 @@ final class CBActiveObjectTests {
      */
     static function CBTest_JavaScriptTests(): array {
         return [
-            ['CBActiveObject', 'wasChanged'],
-            ['CBActiveObject', 'wasRemoved'],
-            ['CBActiveObject', 'wasReplaced'],
+            ['CBActiveObject', 'tellListenersThatTheObjectDataHasChanged'],
+            ['CBActiveObject', 'deactivate'],
+            ['CBActiveObject', 'replace'],
         ];
     }
 }
