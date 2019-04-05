@@ -24,64 +24,15 @@ var CBActiveObject = {
         let currentObject = targetObject;
         targetObject = undefined;
 
-        let changedEvent = CBEvent.create();
-        let replacedEvent = CBEvent.create();
-        let removedEvent = CBEvent.create();
+        let theObjectDataHasChangedEvent = CBEvent.create();
+        let theObjectHasBeenReplacedEvent = CBEvent.create();
+        let theObjectHasBeenDeactivatedEvent = CBEvent.create();
 
-        let api = {
-            addEventListener: function (type, callback) {
-                switch (type) {
-                    case "wasChanged":
-                        changedEvent.addListener(callback);
-                        break;
-
-                    case "wasReplaced":
-                        replacedEvent.addListener(callback);
-                        break;
-
-                    case "wasRemoved":
-                        removedEvent.addListener(callback);
-                        break;
-
-                    default:
-                        throw new Error("unrecognized event type");
-                }
-            },
-
-            wasChanged: function () {
-                changedEvent.dispatch();
-            },
-
-            replace: function (replacementObject) {
-                if (replacementObject.CBActiveObject !== undefined) {
-                    throw new Error(
-                        "An active object can't be replaced with another " +
-                        "active object."
-                    );
-                }
-
-                Object.defineProperty(
-                    replacementObject,
-                    "CBActiveObject",
-                    {
-                        configurable: true,
-                        value: api,
-                    }
-                );
-
-                delete currentObject.CBActiveObject;
-
-                currentObject = replacementObject;
-
-                replacedEvent.dispatch(replacementObject);
-                changedEvent.dispatch();
-            },
-
-            remove: function () {
-                delete currentObject.CBActiveObject;
-
-                removedEvent.dispatch();
-            },
+        let API = {
+            addEventListener: addEventListener,
+            deactivate: deactivate,
+            replace: replace,
+            tellListenersThatTheObjectDataHasChanged: tellListenersThatTheObjectDataHasChanged,
         };
 
         Object.defineProperty(
@@ -89,10 +40,98 @@ var CBActiveObject = {
             "CBActiveObject",
             {
                 configurable: true,
-                value: api,
+                enumerable: false,
+                value: API,
+                writable: false,
             }
         );
 
         return;
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * closure in activate()
+         *
+         * @param string type
+         * @param function callback
+         *
+         * @return undefined
+         */
+        function addEventListener(type, callback) {
+            switch (type) {
+                case "theObjectDataHasChanged":
+                    theObjectDataHasChangedEvent.addListener(callback);
+                    break;
+
+                case "theObjectHasBeenReplaced":
+                    theObjectHasBeenReplacedEvent.addListener(callback);
+                    break;
+
+                case "theObjectHasBeenDeactivated":
+                    theObjectHasBeenDeactivatedEvent.addListener(callback);
+                    break;
+
+                default:
+                    throw new Error("unrecognized event type");
+            }
+        }
+
+        /**
+         * closure in activate()
+         *
+         * Calling deactivate signals to listeners that the purpose the
+         * object was originally created for is no longer relevant. In its
+         * own context, deactivaton may imply that the object was deleted or
+         * some other context specific concept of removal or ending.
+         */
+        function deactivate() {
+            delete currentObject.CBActiveObject;
+
+            theObjectHasBeenDeactivatedEvent.dispatch();
+        }
+
+        /**
+         * closure in activate()
+         *
+         * @param object replacementObject
+         *
+         * @return undefined
+         */
+        function replace(replacementObject) {
+            if (replacementObject.CBActiveObject !== undefined) {
+                throw new Error(
+                    "An active object can't be replaced with another " +
+                    "active object."
+                );
+            }
+
+            Object.defineProperty(
+                replacementObject,
+                "CBActiveObject",
+                {
+                    configurable: true,
+                    value: API,
+                }
+            );
+
+            delete currentObject.CBActiveObject;
+
+            currentObject = replacementObject;
+
+            theObjectHasBeenReplacedEvent.dispatch(replacementObject);
+        }
+
+        /**
+         * closure in activate()
+         *
+         * You must always call this function after you are finished making
+         * changes to the data in the object.
+         *
+         * @return undefined
+         */
+        function tellListenersThatTheObjectDataHasChanged() {
+            theObjectDataHasChangedEvent.dispatch();
+        }
     },
 };
