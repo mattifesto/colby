@@ -58,7 +58,7 @@ final class CBConvertTests {
     }
 
     /**
-     * @return [[<class>, <test>]]
+     * @return [[<className>, <testName>]]
      */
     static function CBTest_PHPTests(): array {
         return [
