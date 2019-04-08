@@ -73,7 +73,11 @@ var CBActiveObject = {
                     break;
 
                 default:
-                    throw new Error("unrecognized event type");
+                    throw new Error(
+                        "The event type \"" +
+                        type +
+                        "\" is not a valid CBActiveObject event type."
+                    );
             }
         }
 
@@ -111,7 +115,9 @@ var CBActiveObject = {
                 "CBActiveObject",
                 {
                     configurable: true,
+                    enumerable: false,
                     value: API,
+                    writable: false,
                 }
             );
 
