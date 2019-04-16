@@ -105,7 +105,7 @@ EOT;
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v455.1.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v471.js', cbsysurl()),
         ];
     }
 
@@ -306,17 +306,25 @@ EOT;
             $expectedLine = $expectedResultLines[$index];
 
             if ($actualLine !== $expectedLine) {
+                $actualLineAsMessage = CBMessageMarkup::stringToMessage(
+                    $actualLine
+                );
+
+                $expectedLineAsMessage = CBMessageMarkup::stringToMessage(
+                    $expectedLine
+                );
+
                 $message = <<<EOT
 
                     {$testTitle}
 
                     Line {$index} of the actual result is:
 
-                    ({$actualLine} (code))
+                    ({$actualLineAsMessage} (code))
 
                     which does't match line {$index} of the expected result:
 
-                    ({$expectedLine} (code))
+                    ({$expectedLineAsMessage} (code))
 
 EOT;
 

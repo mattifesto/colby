@@ -11,12 +11,48 @@ var CBTest = {
 
     /**
      * @param string testTitle
+     * @param string message
+     *
+     * @return object
+     */
+    generalFailure: function (testTitle, issueMessage) {
+        let testTitleAsMessage = CBMessageMarkup.stringToMessage(
+            testTitle
+        );
+
+        let message = `
+
+            --- dl
+                --- dt
+                    test title
+                ---
+                --- dd
+                    ${testTitleAsMessage}
+                ---
+                --- dt
+                    issue
+                ---
+                --- dd
+                    ${issueMessage}
+                ---
+            ---
+
+        `;
+
+        return {
+            succeeded: false,
+            message: message,
+        };
+    },
+
+    /**
+     * @param string testTitle
      * @param mixed actualResult
      * @param mixed expectedResult
      *
      * @return object
      */
-    resultMismatchFailure: function (testTitle, actualResult, exprectedResult) {
+    resultMismatchFailure: function (testTitle, actualResult, expectedResult) {
         let testTitleAsMessage = CBMessageMarkup.stringToMessage(
             testTitle
         );
@@ -26,23 +62,80 @@ var CBTest = {
         );
 
         let expectedResultAsJSONAsMessage = CBMessageMarkup.stringToMessage(
-            CBConvert.valueToPrettyJSON(exprectedResult)
+            CBConvert.valueToPrettyJSON(expectedResult)
         );
 
         let message = `
 
-            (test title (strong))
-
-            ${testTitleAsMessage}
-
-            (actual result (strong))
-
-            --- pre\n${actualResultAsJSONAsMessage}
+            --- dl
+                --- dt
+                    test title
+                ---
+                --- dd
+                    ${testTitleAsMessage}
+                ---
+                --- dt
+                    actual result
+                ---
+                --- dd
+                    --- pre\n${actualResultAsJSONAsMessage}
+                    ---
+                ---
+                --- dt
+                    expected result
+                ---
+                --- dd
+                    --- pre\n${expectedResultAsJSONAsMessage}
+                    ---
+                ---
             ---
 
-            (expected result (strong))
+        `;
 
-            --- pre\n${expectedResultAsJSONAsMessage}
+        return {
+            succeeded: false,
+            message: message,
+        };
+    },
+
+    /**
+     * @param string testTitle
+     * @param mixed value
+     * @param string message
+     *
+     * @return object
+     */
+    valueIssueFailure: function (testTitle, value, issueMessage) {
+        let testTitleAsMessage = CBMessageMarkup.stringToMessage(
+            testTitle
+        );
+
+        let valueAsJSONAsMessage = CBMessageMarkup.stringToMessage(
+            CBConvert.valueToPrettyJSON(value)
+        );
+
+        let message = `
+
+            --- dl
+                --- dt
+                    test title
+                ---
+                --- dd
+                    ${testTitleAsMessage}
+                ---
+                --- dt
+                    issue
+                ---
+                --- dd
+                    ${issueMessage}
+                ---
+                --- dt
+                    value
+                ---
+                --- dd
+                    --- pre\n${valueAsJSONAsMessage}
+                    ---
+                ---
             ---
 
         `;
