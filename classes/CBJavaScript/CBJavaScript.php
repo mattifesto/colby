@@ -84,17 +84,16 @@ class CBJavaScript {
              *
              *      Give the JavaScript stack a nicer appearance.
              */
-            $stackAsMessage = CBMessageMarkup::stringToMessage($stack);
+            $stackAsMessage = CBJavaScript::stackToMessage($stack);
 
             $stackAsMessage = <<<EOT
 
                 --- dl
                     --- dt
-                    stack
+                        stack
                     ---
                     --- dd
-                        --- pre\n{$stackAsMessage}
-                        ---
+                        {$stackAsMessage}
                     ---
                 ---
 
@@ -158,5 +157,60 @@ EOT;
         }
 
         return true;
+    }
+
+    /**
+     * @param string $stack
+     *
+     *      A JavaScript stack string.
+     *
+     * @return string
+     */
+    static function stackToMessage(string $stack): string {
+        $lines = CBConvert::stringToLines($stack);
+        $lineMessages = [];
+
+        error_log(count($lines));
+
+        foreach ($lines as $line) {
+            if (
+                preg_match(
+                    '/^([^@]+)@(.*):([0-9]*):([0-9]*)$/',
+                    $line,
+                    $matches
+                )
+            ) {
+                $functionPart = $matches[1] . '()';
+
+                $basename = pathinfo(
+                    parse_url(
+                        $matches[2],
+                        PHP_URL_PATH
+                    ),
+                    PATHINFO_BASENAME
+                );
+
+                $lineNumber = $matches[3];
+
+                $lineMessage = implode(
+                    "((br))\n",
+                    [
+                        CBMessageMarkup::stringToMessage($functionPart),
+                        "was running on line {$lineNumber} of",
+                        CBMessageMarkup::stringToMessage($basename),
+                    ]
+                );
+
+                array_push($lineMessages, $lineMessage);
+            } else {
+                array_push($lineMessages, $line);
+            }
+
+        }
+
+        return implode(
+            "\n\n",
+            $lineMessages
+        );
     }
 }
