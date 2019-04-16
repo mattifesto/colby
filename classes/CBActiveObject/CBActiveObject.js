@@ -16,8 +16,8 @@ var CBActiveObject = {
     activate: function (targetObject) {
         if (targetObject.CBActiveObject !== undefined) {
             throw new Error(
-                "The targetObject parameter value to " +
-                "CBActiveObject.activate() is already active."
+                "The targetObject parameter to CBActiveObject.activate() is " +
+                "already active."
             );
         }
 
@@ -28,9 +28,10 @@ var CBActiveObject = {
         let theObjectHasBeenReplacedEvent = CBEvent.create();
         let theObjectHasBeenDeactivatedEvent = CBEvent.create();
 
-        let API = {
+        let pod = {
             addEventListener: addEventListener,
             deactivate: deactivate,
+            removeEventListener: removeEventListener,
             replace: replace,
             tellListenersThatTheObjectDataHasChanged: tellListenersThatTheObjectDataHasChanged,
         };
@@ -41,7 +42,7 @@ var CBActiveObject = {
             {
                 configurable: true,
                 enumerable: false,
-                value: API,
+                value: pod,
                 writable: false,
             }
         );
@@ -98,6 +99,37 @@ var CBActiveObject = {
         /**
          * closure in activate()
          *
+         * @param string type
+         * @param function callback
+         *
+         * @return undefined
+         */
+        function removeEventListener(type, callback) {
+            switch (type) {
+                case "theObjectDataHasChanged":
+                    theObjectDataHasChangedEvent.removeListener(callback);
+                    break;
+
+                case "theObjectHasBeenReplaced":
+                    theObjectHasBeenReplacedEvent.removeListener(callback);
+                    break;
+
+                case "theObjectHasBeenDeactivated":
+                    theObjectHasBeenDeactivatedEvent.removeListener(callback);
+                    break;
+
+                default:
+                    throw new Error(
+                        "The event type \"" +
+                        type +
+                        "\" is not a valid CBActiveObject event type."
+                    );
+            }
+        }
+
+        /**
+         * closure in activate()
+         *
          * @param object replacementObject
          *
          * @return undefined
@@ -116,16 +148,20 @@ var CBActiveObject = {
                 {
                     configurable: true,
                     enumerable: false,
-                    value: API,
+                    value: pod,
                     writable: false,
                 }
             );
 
+            /**
+             * While the event is dispatched both objects will have the
+             * CBActiveObject pod.
+             */
+            theObjectHasBeenReplacedEvent.dispatch(replacementObject);
+
             delete currentObject.CBActiveObject;
 
             currentObject = replacementObject;
-
-            theObjectHasBeenReplacedEvent.dispatch(replacementObject);
         }
 
         /**
