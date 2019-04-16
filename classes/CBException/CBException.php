@@ -17,6 +17,7 @@
 final class CBException extends Exception {
 
     private $extendedMessage;
+    private $sourceID;
 
     /**
      * @param string $message
@@ -27,6 +28,11 @@ final class CBException extends Exception {
      *
      *      A message formatted with message markup.
      *
+     * @param string $sourceID
+     *
+     *      An ID (160-bit hexadecimal number) indicating the source of the
+     *      exception.
+     *
      * @param int $code (optional)
      * @param Throwable $previous (optional)
      *
@@ -35,12 +41,14 @@ final class CBException extends Exception {
     public function __construct(
         string $message,
         string $extendedMessage,
+        ?string $sourceID = null,
         int $code = 0,
         Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
 
         $this->extendedMessage = $extendedMessage;
+        $this->sourceID = $sourceID;
     }
 
     /**
@@ -68,7 +76,8 @@ final class CBException extends Exception {
      */
     static function createModelIssueException(
         string $title,
-        $model
+        $model,
+        ?string $sourceID = null
     ): CBException {
         $titleAsMessage = CBMessageMarkup::stringToMessage($title);
         $modelAsMessage = CBMessageMarkup::stringToMessage(
@@ -86,7 +95,7 @@ final class CBException extends Exception {
 
 EOT;
 
-        return new CBException($title, $message);
+        return new CBException($title, $message, $sourceID);
     }
 
     /**
@@ -94,5 +103,12 @@ EOT;
      */
     function getExtendedMessage(): string {
         return $this->extendedMessage;
+    }
+
+    /**
+     * @return string
+     */
+    function getSourceID(): ?string {
+        return $this->sourceID;
     }
 }
