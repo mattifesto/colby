@@ -19,6 +19,7 @@ final class CBEventTests {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBEvent',
+            'CBTest',
         ];
     }
 
@@ -30,6 +31,7 @@ final class CBEventTests {
     static function CBTest_JavaScriptTests(): array {
         return [
             ['CBEvent', 'recursive'],
+            ['CBEvent', 'removeListener'],
         ];
     }
 }
