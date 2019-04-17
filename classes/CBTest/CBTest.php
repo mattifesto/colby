@@ -2,6 +2,8 @@
 
 final class CBTest {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
     /**
      * @param object $args
      *
@@ -100,6 +102,8 @@ EOT;
         return 'Developers';
     }
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
@@ -118,6 +122,8 @@ EOT;
             'CBMessageMarkup',
         ];
     }
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * Sample JavaScript tests are provided in CBTestTests.php and
@@ -362,6 +368,58 @@ EOT;
         return (object)[
             'message' => $message,
             'sourceID' => '3098da7e4559278488a42ad81fbaef5fe0a7575e',
+        ];
+    }
+
+    /**
+     * @param string testTitle
+     * @param mixed value
+     * @param string message
+     *
+     * @return object
+     */
+    static function valueIssueFailure(
+        string $testTitle,
+        $value,
+        string $issueMessage
+    ): stdClass {
+        $testTitleAsMessage = CBMessageMarkup::stringToMessage(
+            $testTitle
+        );
+
+        $valueAsJSONAsMessage = CBMessageMarkup::stringToMessage(
+            CBConvert::valueToPrettyJSON($value)
+        );
+
+        $message = <<<EOT
+
+            --- dl
+                --- dt
+                    test title
+                ---
+                --- dd
+                    ${testTitleAsMessage}
+                ---
+                --- dt
+                    issue
+                ---
+                --- dd
+                    ${issueMessage}
+                ---
+                --- dt
+                    value
+                ---
+                --- dd
+                    --- pre\n${valueAsJSONAsMessage}
+                    ---
+                ---
+            ---
+
+EOT;
+
+        return (object)[
+            'succeeded' => false,
+            'message' => $message,
         ];
     }
 }
