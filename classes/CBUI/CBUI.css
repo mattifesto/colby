@@ -147,19 +147,6 @@
     flex: none;
 }
 
-/**
- * 2019_03_01
- *
- *      The class styles an element to apply the appropriate white space and
- *      layout to hold a child element with the CBUI_section class.
- */
-.CBUI_section_container, /* deprecated use CBUI_sectionContainer */
-.CBUI_sectionContainer {
-    display: flex;
-    justify-content: center;
-    padding: 10px 0;
-}
-
 .CBUI_section {
     background-color: hsl(0, 0%, 100%); /* IE11 */
     background-color: var(--CBBackgroundColor);
@@ -203,6 +190,19 @@
  */
 .CBUI_section_cautionary {
     border-color: hsl(0, 100%, 80%);
+}
+
+/**
+ * 2019_03_01
+ *
+ *      The class styles an element to apply the appropriate white space and
+ *      layout to hold a child element with the CBUI_section class.
+ */
+.CBUI_section_container, /* deprecated use CBUI_sectionContainer */
+.CBUI_sectionContainer {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
 }
 
 /**
