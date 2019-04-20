@@ -19,6 +19,8 @@ final class CBException extends Exception {
     private $extendedMessage;
     private $sourceID;
 
+    /* -- constructor -- -- -- -- -- */
+
     /**
      * @param string $message
      *
@@ -50,6 +52,28 @@ final class CBException extends Exception {
         $this->extendedMessage = $extendedMessage;
         $this->sourceID = $sourceID;
     }
+
+    /* -- CBHTMLOutput -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v472.js', cbsysurl()),
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'Colby',
+        ];
+    }
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @param $title
