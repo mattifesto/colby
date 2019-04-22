@@ -529,14 +529,6 @@ final class CBConvert {
     /**
      * @deprecated use CBConvert::valueAsName()
      *
-     * This function returns a moniker if the $value parameter can reasonably be
-     * interpreted to represent a moniker. It will trim the string before
-     * deciding if that string is a moniker. This means that outer white space
-     * characters are removed, but inner white space characters are not.
-     *
-     * The function name uses "as" because we are returning the same value, but
-     * as a strict moniker string instead of the original value type.
-     *
      * @param mixed $value
      *
      * @return ?string

@@ -548,14 +548,12 @@ EOT;
     }
 
     /**
-    * This is a convenience function for:
-    *
-    *      CBConvert::valueAsMoniker(CBModel::value(...))
-    *
-    * @param mixed $model
-    * @param string $keyPath
-    *
-    * @return ?string
+     * @deprecated use CBModel::valueAsName()
+     *
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return ?string
      */
     static function valueAsMoniker($model, string $keyPath): ?string {
         return CBConvert::valueAsMoniker(CBModel::value($model, $keyPath));
