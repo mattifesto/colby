@@ -47,10 +47,14 @@ var CBActiveArray = {
                     break;
 
                 default:
-                    throw new Error(
-                        "The event type \"" +
-                        type +
-                        "\" is not a valid CBActiveArray event type."
+                    throw CBException.withError(
+                        Error(
+                            "The event type \"" +
+                            type +
+                            "\" is not a valid CBActiveArray event type."
+                        ),
+                        ``,
+                        "baf266926a2fbfb4c1341293f366f8400f048be4"
                     );
             }
         }
