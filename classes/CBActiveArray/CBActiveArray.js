@@ -77,11 +77,15 @@ var CBActiveArray = {
             }
 
             if (items.includes(item)) {
-                throw new Error(
-                    [
-                        "An item was pushed onto a CBActiveArray that is",
-                        "already in the active array.",
-                    ]
+                throw CBException.withError(
+                    Error(
+                        [
+                            "An item was pushed onto a CBActiveArray that is",
+                            "already in the active array.",
+                        ].join(" ")
+                    ),
+                    ``,
+                    "64033117f4fdb3abf482532e3bf90a81827d2961"
                 );
             }
 
