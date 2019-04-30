@@ -19,6 +19,7 @@ final class CBActiveArrayTests {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBActiveArray',
+            'CBActiveObject',
             'CBTest',
         ];
     }
