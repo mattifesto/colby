@@ -13,6 +13,87 @@ var CBActiveArrayTests = {
     /**
      * @return object|Promise
      */
+    CBTest_events: function () {
+        let anItemWasAdded_lastItem;
+        let anItemWasAdded_count = 0;
+
+        let activeArray = CBActiveArray.createPod();
+
+        activeArray.addEventListener(
+            "anItemWasAdded",
+            anItemWasAdded
+        );
+
+        {
+            let sourceID;
+
+            try {
+                activeArray.addEventListener(
+                    "notARealEventType",
+                    function () {}
+                );
+            } catch (error) {
+                sourceID = error.CBException.sourceID;
+            }
+
+            let expectedSourceID = "baf266926a2fbfb4c1341293f366f8400f048be4";
+
+            if (sourceID !== expectedSourceID) {
+                return CBTest.resultMismatchFailure(
+                    "addEventListener for bad event type",
+                    sourceID,
+                    expectedSourceID
+                );
+            }
+        }
+
+        {
+            let item0 = { name: "item0" };
+            let item1 = { name: "item1" };
+
+            CBActiveObject.activate(item0);
+            CBActiveObject.activate(item1);
+
+            activeArray.push(item0);
+
+            if (anItemWasAdded_count !== 1) {
+                return CBTest.resultMismatchFailure(
+                    "first item added count check",
+                    anItemWasAdded_count,
+                    1
+                );
+            }
+
+            if (anItemWasAdded_lastItem !== item0) {
+                return CBTest.resultMismatchFailure(
+                    "first item added item check",
+                    anItemWasAdded_lastItem,
+                    item0
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * CBTest_events()
+         *   anItemWasAdded()
+         */
+        function anItemWasAdded(item) {
+            anItemWasAdded_count += 1;
+            anItemWasAdded_lastItem = item;
+        }
+        /* anItemWasAdded() */
+    },
+    /* CBTest_events() */
+
+    /**
+     * @return object|Promise
+     */
     CBTest_general: function () {
         let activeArray = CBActiveArray.createPod();
 
