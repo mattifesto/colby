@@ -9,6 +9,24 @@
 var CBException = {
 
     /**
+     * This function adds a CBException pod to an Error object. It can be used
+     * in the following manner:
+     *
+     *      if (failure) {
+     *          throw CBException.withError(
+     *              Error(
+     *                  "A number somewhere was too low."
+     *              ),
+     *              `
+     *                  --- blockquote
+     *                  Four score and seven years ago...
+     *                  a number was too low.
+     *                  ---
+     *              `,
+     *              "bc19df51de08f0b2838825f23ee424454805dfb2"
+     *          );
+     *      }
+     *
      * @param string message
      * @param ID sourceID
      *
