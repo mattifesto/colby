@@ -24,7 +24,12 @@ var CBActiveArray = {
 
         let pod = {
             addEventListener: addEventListener,
+            item: item,
             push: push,
+
+            get length() {
+                return items.length;
+            }
         };
 
         return pod;
@@ -59,6 +64,15 @@ var CBActiveArray = {
             }
         }
         /* addEventListener() */
+
+        /**
+         * @param int index
+         *
+         * @return mixed
+         */
+        function item(index) {
+            return items[index];
+        }
 
         /**
          * createPod()
