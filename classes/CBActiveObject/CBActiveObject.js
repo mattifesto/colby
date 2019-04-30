@@ -128,7 +128,12 @@ var CBActiveObject = {
         }
 
         /**
-         * closure in activate()
+         * activate()
+         *   replace()
+         *
+         * Calling replace will dispatch theObjectHasBeenReplaced event. It will
+         * not dispatch theObjectDataHasChanged event. Developers should always
+         * add listeners to both events to be informed of all changes.
          *
          * @param object replacementObject
          *
@@ -163,6 +168,7 @@ var CBActiveObject = {
 
             currentObject = replacementObject;
         }
+        /* replace() */
 
         /**
          * closure in activate()
