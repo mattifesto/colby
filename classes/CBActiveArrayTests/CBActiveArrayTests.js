@@ -71,6 +71,60 @@ var CBActiveArrayTests = {
                     item0
                 );
             }
+
+            if (activeArray.length !== 1) {
+                return CBTest.resultMismatchFailure(
+                    "first item added length check",
+                    activeArray.length,
+                    1
+                );
+            }
+
+            activeArray.push(item1);
+
+            if (anItemWasAdded_count !== 2) {
+                return CBTest.resultMismatchFailure(
+                    "second item added count check",
+                    anItemWasAdded_count,
+                    2
+                );
+            }
+
+            if (anItemWasAdded_lastItem !== item1) {
+                return CBTest.resultMismatchFailure(
+                    "second item added item check",
+                    anItemWasAdded_lastItem,
+                    item1
+                );
+            }
+
+            if (activeArray.length !== 2) {
+                return CBTest.resultMismatchFailure(
+                    "second item added length check",
+                    activeArray.length,
+                    2
+                );
+            }
+
+            let itemAtIndex0 = activeArray.item(0);
+
+            if (itemAtIndex0 !== item0) {
+                return CBTest.resultMismatchFailure(
+                    "first item added item check",
+                    itemAtIndex0,
+                    item0
+                );
+            }
+
+            let itemAtIndex1 = activeArray.item(1);
+
+            if (itemAtIndex1 !== item1) {
+                return CBTest.resultMismatchFailure(
+                    "second item added item check",
+                    itemAtIndex1,
+                    item1
+                );
+            }
         }
 
         return {
