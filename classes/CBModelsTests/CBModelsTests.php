@@ -8,26 +8,29 @@ final class CBModelsTests {
         '95397735c2fd6d7e75a2d059fededae693665f50'
     ];
 
-    /**
-     * This function assumes that the CBModels functionality is working. The
-     * functions that call it will be testing to see if that is actually true.
-     *
-     * A transaction should be started before this function is called.
-     *
-     * @return null
-     */
-    private static function createTestEnvironment() {
-        $specs = CBModels::fetchSpecsByID(CBModelsTests::testModelIDs, [
-            'createSpecForIDCallback' => function($ID) {
-                $spec           = CBModels::modelWithClassName('CBModelsTests_TestClass', ['ID' => $ID]);
-                $spec->title    = "Title for {$ID}";
-                $spec->name     = "Name {$ID}";
-                return $spec;
-            }
-        ]);
+    /* -- CBTest interfaces -- -- -- -- -- */
 
-        CBModels::save(array_values($specs));
+    /**
+     * @return [[<className>, <testName>]]
+     */
+    static function CBTest_PHPTests(): array {
+        return [
+            ['CBModels', 'fetchModelByID'],
+            ['CBModels', 'fetchModelsByID'],
+            ['CBModels', 'saveNullableModel'],
+            ['CBModels', 'saveSpecWithoutID'],
+        ];
     }
+
+    /**
+     * @return [[<className>, <testName>]]
+     */
+    static function CBTest_JavaScriptTests(): array {
+        return [
+        ];
+    }
+
+    /* -- tests -- -- -- -- -- */
 
     /**
      * @return null
@@ -166,6 +169,29 @@ final class CBModelsTests {
         if (!$exceptionWasThrown) {
             throw new Exception('This test expects an exception to be thrown.');
         }
+    }
+
+    /* -- functions  -- -- -- -- -- */
+
+    /**
+     * This function assumes that the CBModels functionality is working. The
+     * functions that call it will be testing to see if that is actually true.
+     *
+     * A transaction should be started before this function is called.
+     *
+     * @return null
+     */
+    private static function createTestEnvironment() {
+        $specs = CBModels::fetchSpecsByID(CBModelsTests::testModelIDs, [
+            'createSpecForIDCallback' => function($ID) {
+                $spec           = CBModels::modelWithClassName('CBModelsTests_TestClass', ['ID' => $ID]);
+                $spec->title    = "Title for {$ID}";
+                $spec->name     = "Name {$ID}";
+                return $spec;
+            }
+        ]);
+
+        CBModels::save(array_values($specs));
     }
 }
 
