@@ -13,19 +13,25 @@ var CBActiveArray = {
      * @return object
      *
      *      {
-     *          push(item)
      *          addEventListener(type, callback)
+     *          find(callback)
+     *          item(index)
+     *          push(item)
+     *          slice(begin, end)
      *      }
      */
     createPod: function () {
         let items = [];
 
         let anItemWasAddedEvent = CBEvent.create();
+        let somethingChanged = CBEvent.create();
 
         let pod = {
             addEventListener: addEventListener,
+            find: find,
             item: item,
             push: push,
+            slice: items.slice.bind(items),
 
             get length() {
                 return items.length;
@@ -51,6 +57,10 @@ var CBActiveArray = {
                     anItemWasAddedEvent.addListener(callback);
                     break;
 
+                case "somethingChanged":
+                    somethingChanged.addListener(callback);
+                    break;
+
                 default:
                     throw CBException.withError(
                         Error(
@@ -65,7 +75,41 @@ var CBActiveArray = {
         }
         /* addEventListener() */
 
+
         /**
+         * createPod()
+         *   find()
+         *
+         * @param function callback
+         *
+         *      This callback can will be passed two parameters;
+         *
+         *      element:
+         *      The current element being processed in the array.
+         *
+         *      index:
+         *      The index of the current element being processed in the array.
+         *
+         *      Unlike the Array find function this function will not pass the
+         *      array itself as the third parameter to the callback because the
+         *      array is private.
+         *
+         * @return mixed
+         */
+        function find(callback) {
+            return items.find(
+                function (element, index) {
+                    return callback(element, index);
+                }
+            );
+        }
+        /* find() */
+
+
+        /**
+         * createPod()
+         *   item()
+         *
          * @param int index
          *
          * @return mixed
@@ -73,6 +117,8 @@ var CBActiveArray = {
         function item(index) {
             return items[index];
         }
+        /* item() */
+
 
         /**
          * createPod()
@@ -110,9 +156,44 @@ var CBActiveArray = {
             let length = items.push(item);
 
             anItemWasAddedEvent.dispatch(item);
+            somethingChanged.dispatch();
+
+            item.CBActiveObject.addEventListener(
+                "theObjectDataHasChanged",
+                function () {
+                    somethingChanged.dispatch();
+                }
+            );
+
+            item.CBActiveObject.addEventListener(
+                "theObjectHasBeenReplaced",
+                function (replacementObject) {
+                    let index = items.findIndex(
+                        function (currentItem) {
+                            return currentItem === item;
+                        }
+                    );
+
+                    items[index] = replacementObject;
+                }
+            );
+
+            item.CBActiveObject.addEventListener(
+                "theObjectHasBeenDeactivated",
+                function () {
+                    let index = items.findIndex(
+                        function (currentItem) {
+                            return currentItem === item;
+                        }
+                    );
+
+                    items.splice(index, 1);
+                }
+            );
 
             return length;
         }
         /* push() */
     },
+    /* createPod() */
 };
