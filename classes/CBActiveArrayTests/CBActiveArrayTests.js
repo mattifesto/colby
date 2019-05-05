@@ -5,6 +5,7 @@
 /* global
     CBActiveArray,
     CBActiveObject,
+    CBModel,
     CBTest,
 */
 
@@ -284,4 +285,54 @@ var CBActiveArrayTests = {
         };
     },
     /* CBTest_general() */
+
+
+    /**
+     * @return object|Promise
+     */
+    CBTest_slice: function () {
+        let cartItems = [
+            {
+                className: "foo",
+                productCode: "1",
+            },
+            {
+                className: "foo",
+                productCode: "2",
+            },
+            {
+                className: "foo",
+                productCode: "3",
+            },
+            {
+                className: "foo",
+                productCode: "4",
+            },
+        ];
+
+        let activeArray = CBActiveArray.createPod();
+
+        cartItems.forEach(
+            function (cartItem) {
+                CBActiveObject.activate(cartItem);
+                activeArray.push(cartItem);
+            }
+        );
+
+        let actualResult = activeArray.slice();
+        let expectedResult = cartItems;
+
+        if (!CBModel.equals(actualResult, expectedResult)) {
+            return CBTest.resultMismatchFailure(
+                "slice",
+                actualResult,
+                expectedResult
+            );
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_slice() */
 };

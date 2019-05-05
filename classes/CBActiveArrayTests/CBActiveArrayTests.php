@@ -20,6 +20,7 @@ final class CBActiveArrayTests {
         return [
             'CBActiveArray',
             'CBActiveObject',
+            'CBModel',
             'CBTest',
         ];
     }
@@ -34,6 +35,7 @@ final class CBActiveArrayTests {
             ['CBActiveArray', 'events'],
             ['CBActiveArray', 'find'],
             ['CBActiveArray', 'general'],
+            ['CBActiveArray', 'slice'],
         ];
     }
 }
