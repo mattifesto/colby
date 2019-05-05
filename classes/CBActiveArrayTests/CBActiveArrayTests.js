@@ -16,6 +16,7 @@ var CBActiveArrayTests = {
     CBTest_events: function () {
         let anItemWasAdded_lastItem;
         let anItemWasAdded_count = 0;
+        let somethingChanged_count = 0;
 
         let activeArray = CBActiveArray.createPod();
 
@@ -24,6 +25,13 @@ var CBActiveArrayTests = {
             function handleAnItemWasAdded(item) {
                 anItemWasAdded_count += 1;
                 anItemWasAdded_lastItem = item;
+            }
+        );
+
+        activeArray.addEventListener(
+            "somethingChanged",
+            function handleSomethingChanged(item) {
+                somethingChanged_count += 1;
             }
         );
 
@@ -67,6 +75,14 @@ var CBActiveArrayTests = {
                 );
             }
 
+            if (somethingChanged_count !== 1) {
+                return CBTest.resultMismatchFailure(
+                    "somethingChanged_count === 1",
+                    somethingChanged_count,
+                    1
+                );
+            }
+
             if (anItemWasAdded_lastItem !== item0) {
                 return CBTest.resultMismatchFailure(
                     "first item added item check",
@@ -89,6 +105,14 @@ var CBActiveArrayTests = {
                 return CBTest.resultMismatchFailure(
                     "second item added count check",
                     anItemWasAdded_count,
+                    2
+                );
+            }
+
+            if (somethingChanged_count !== 2) {
+                return CBTest.resultMismatchFailure(
+                    "somethingChanged_count === 2",
+                    somethingChanged_count,
                     2
                 );
             }
@@ -126,6 +150,18 @@ var CBActiveArrayTests = {
                     "second item added item check",
                     itemAtIndex1,
                     item1
+                );
+            }
+
+            item0.CBActiveObject.tellListenersThatTheObjectDataHasChanged();
+            item0.CBActiveObject.tellListenersThatTheObjectDataHasChanged();
+            item1.CBActiveObject.tellListenersThatTheObjectDataHasChanged();
+
+            if (somethingChanged_count !== 5) {
+                return CBTest.resultMismatchFailure(
+                    "somethingChanged_count === 5",
+                    somethingChanged_count,
+                    5
                 );
             }
         }
