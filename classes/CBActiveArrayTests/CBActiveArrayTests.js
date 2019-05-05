@@ -357,6 +357,103 @@ var CBActiveArrayTests = {
     /**
      * @return object|Promise
      */
+    CBTest_replace: function () {
+        let cartItems = [
+            {
+                className: "foo",
+                productCode: "1",
+            },
+            {
+                className: "foo",
+                productCode: "2",
+            },
+            {
+                className: "foo",
+                productCode: "3",
+            },
+            {
+                className: "foo",
+                productCode: "4",
+            },
+        ];
+
+        let activeArray = CBActiveArray.createPod();
+
+        cartItems.forEach(
+            function (cartItem) {
+                CBActiveObject.activate(cartItem);
+                activeArray.push(cartItem);
+            }
+        );
+
+        let replacementCartItem = {
+            className: "foo",
+            productCode: "5",
+        };
+
+        cartItems[2].CBActiveObject.replace(
+            replacementCartItem
+        );
+
+        {
+            let actualResult = activeArray.length;
+            let expectedResult = 4;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    "length === 4",
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        {
+            let actualResult = activeArray.find(
+                function (currentItem) {
+                    return currentItem === cartItems[2];
+                }
+            );
+
+            let expectedResult;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    "replaced cart item not found",
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        {
+            let actualResult = activeArray.find(
+                function (currentItem) {
+                    return currentItem === replacementCartItem;
+                }
+            );
+
+            let expectedResult = replacementCartItem;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    "replacement cart item found",
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_replace() */
+
+
+    /**
+     * @return object|Promise
+     */
     CBTest_slice: function () {
         let cartItems = [
             {

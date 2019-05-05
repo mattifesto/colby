@@ -36,6 +36,7 @@ final class CBActiveArrayTests {
             ['CBActiveArray', 'events'],
             ['CBActiveArray', 'find'],
             ['CBActiveArray', 'general'],
+            ['CBActiveArray', 'replace'],
             ['CBActiveArray', 'slice'],
         ];
     }
