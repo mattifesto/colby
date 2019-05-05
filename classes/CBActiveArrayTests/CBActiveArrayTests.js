@@ -172,6 +172,62 @@ var CBActiveArrayTests = {
     },
     /* CBTest_events() */
 
+
+    /**
+     * @return object|Promise
+     */
+    CBTest_find: function () {
+        let cartItems = [
+            {
+                className: "foo",
+                productCode: "1",
+            },
+            {
+                className: "foo",
+                productCode: "2",
+            },
+            {
+                className: "foo",
+                productCode: "3",
+            },
+            {
+                className: "foo",
+                productCode: "4",
+            },
+        ];
+
+        let activeArray = CBActiveArray.createPod();
+
+        cartItems.forEach(
+            function (cartItem) {
+                CBActiveObject.activate(cartItem);
+                activeArray.push(cartItem);
+            }
+        );
+
+        let actualResult = activeArray.find(
+            function (cartItem) {
+                return cartItem.productCode === "3";
+            }
+        );
+
+        let expectedResult = cartItems[2];
+
+        if (actualResult !== expectedResult) {
+            return CBTest.resultMismatchFailure(
+                "find",
+                actualResult,
+                expectedResult
+            );
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_find() */
+
+
     /**
      * @return object|Promise
      */
