@@ -21,7 +21,10 @@ var CBActiveArrayTests = {
 
         activeArray.addEventListener(
             "anItemWasAdded",
-            anItemWasAdded
+            function handleAnItemWasAdded(item) {
+                anItemWasAdded_count += 1;
+                anItemWasAdded_lastItem = item;
+            }
         );
 
         {
@@ -130,18 +133,6 @@ var CBActiveArrayTests = {
         return {
             succeeded: true,
         };
-
-        /* -- closures -- -- -- -- -- */
-
-        /**
-         * CBTest_events()
-         *   anItemWasAdded()
-         */
-        function anItemWasAdded(item) {
-            anItemWasAdded_count += 1;
-            anItemWasAdded_lastItem = item;
-        }
-        /* anItemWasAdded() */
     },
     /* CBTest_events() */
 
