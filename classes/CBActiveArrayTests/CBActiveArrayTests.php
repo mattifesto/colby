@@ -32,6 +32,7 @@ final class CBActiveArrayTests {
      */
     static function CBTest_JavaScriptTests(): array {
         return [
+            ['CBActiveArray', 'deactivate'],
             ['CBActiveArray', 'events'],
             ['CBActiveArray', 'find'],
             ['CBActiveArray', 'general'],

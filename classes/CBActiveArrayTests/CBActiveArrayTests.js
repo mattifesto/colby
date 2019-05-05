@@ -14,6 +14,73 @@ var CBActiveArrayTests = {
     /**
      * @return object|Promise
      */
+    CBTest_deactivate: function () {
+        let cartItems = [
+            {
+                className: "foo",
+                productCode: "1",
+            },
+            {
+                className: "foo",
+                productCode: "2",
+            },
+            {
+                className: "foo",
+                productCode: "3",
+            },
+            {
+                className: "foo",
+                productCode: "4",
+            },
+        ];
+
+        let activeArray = CBActiveArray.createPod();
+
+        cartItems.forEach(
+            function (cartItem) {
+                CBActiveObject.activate(cartItem);
+                activeArray.push(cartItem);
+            }
+        );
+
+        {
+            let actualResult = activeArray.length;
+            let expectedResult = 4;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    "length === 4",
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        cartItems[2].CBActiveObject.deactivate();
+
+        {
+            let actualResult = activeArray.length;
+            let expectedResult = 3;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    "length === 3",
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_deactivate() */
+
+
+    /**
+     * @return object|Promise
+     */
     CBTest_events: function () {
         let anItemWasAdded_lastItem;
         let anItemWasAdded_count = 0;
