@@ -13,6 +13,7 @@ var CBModelUpdater = {
     /**
      * @param ID ID
      * @param object updates
+     * @param Storage storage
      *
      * @return object
      *
@@ -21,12 +22,12 @@ var CBModelUpdater = {
      *          save: function
      *      }
      */
-    fetchFromSession: function (ID, updates) {
+    fetch: function (ID, updates, storage) {
         if (CBConvert.valueAsObject(updates) === undefined) {
             throw new TypeError("The updates parameter is not valid.");
         }
 
-        let record = CBModels.fetchFromSessionStorage(ID);
+        let record = CBModels.fetch(ID, storage);
         let mostRecentlySavedSpec = CBModel.value(record, "spec");
         let workingSpec = CBModel.clone(
             CBModel.valueToObject(record, "spec")
@@ -53,7 +54,7 @@ var CBModelUpdater = {
             },
             save: function () {
                 if (!CBModel.equals(mostRecentlySavedSpec, workingSpec)) {
-                    CBModels.saveToSessionStorage(ID, workingSpec, workingVersion);
+                    CBModels.save(ID, workingSpec, workingVersion, storage);
 
                     mostRecentlySavedSpec = CBModel.clone(workingSpec);
                     workingVersion += 1;
@@ -63,4 +64,22 @@ var CBModelUpdater = {
 
         return api;
     },
+    /* fetch() */
+
+
+    /**
+     * @param ID ID
+     * @param object updates
+     *
+     * @return object
+     *
+     *      {
+     *          spec: object
+     *          save: function
+     *      }
+     */
+    fetchFromSession: function (ID, updates) {
+        return CBModelUpdater.fetch(ID, updates, sessionStorage);
+    },
+    /* fetchFromSession() */
 };
