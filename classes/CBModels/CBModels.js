@@ -13,6 +13,18 @@ var CBModels = {
      * @param ID ID
      * @param Storage storage
      *
+     * @return undefined
+     */
+    delete: function (ID, storage) {
+        storage.removeItem(CBModels.IDToStorageKey(ID));
+    },
+    /* delete() */
+
+
+    /**
+     * @param ID ID
+     * @param Storage storage
+     *
      * @return object|undefined
      *
      *      {
