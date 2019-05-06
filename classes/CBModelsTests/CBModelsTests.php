@@ -8,6 +8,29 @@ final class CBModelsTests {
         '95397735c2fd6d7e75a2d059fededae693665f50'
     ];
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v472.js', cbsysurl()),
+        ];
+    }
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBModel',
+            'CBModels',
+            'CBTest',
+            'Colby',
+        ];
+    }
+
     /* -- CBTest interfaces -- -- -- -- -- */
 
     /**
@@ -27,6 +50,7 @@ final class CBModelsTests {
      */
     static function CBTest_JavaScriptTests(): array {
         return [
+            ['CBModels', 'general'],
         ];
     }
 
