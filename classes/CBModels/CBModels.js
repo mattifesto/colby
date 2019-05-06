@@ -11,6 +11,40 @@ var CBModels = {
 
     /**
      * @param ID ID
+     * @param Storage storage
+     *
+     * @return object|undefined
+     *
+     *      {
+     *          spec: object
+     *          meta: object
+     *
+     *              {
+     *                  ID: ID
+     *                  version: int
+     *              }
+     *      }
+     */
+    fetch: function (ID, storage) {
+        if (CBConvert.valueAsID(ID) === undefined) {
+            throw new TypeError("The ID parameter is not valid.");
+        }
+
+        let recordAsJSON = storage.getItem(
+            CBModels.IDToStorageKey(ID)
+        );
+
+        if (recordAsJSON !== null) {
+            return JSON.parse(recordAsJSON);
+        } else {
+            return undefined;
+        }
+    },
+    /* fetch() */
+
+
+    /**
+     * @param ID ID
      *
      * @return object|undefined
      *
@@ -25,20 +59,10 @@ var CBModels = {
      *      }
      */
     fetchFromSessionStorage: function (ID) {
-        if (CBConvert.valueAsID(ID) === undefined) {
-            throw new TypeError("The ID parameter is not valid.");
-        }
-
-        let recordAsJSON = sessionStorage.getItem(
-            CBModels.IDToStorageKey(ID)
-        );
-
-        if (recordAsJSON !== null) {
-            return JSON.parse(recordAsJSON);
-        } else {
-            return undefined;
-        }
+        return CBModels.fetch(ID, sessionStorage);
     },
+    /* fetchFromSessionStorage() */
+
 
     /**
      * @param ID ID
@@ -52,18 +76,23 @@ var CBModels = {
 
         return "ID_" + ID;
     },
+    /* IDToStorageKey() */
+
 
     /**
+     * @param ID ID
      * @param object spec
+     * @param int version
+     * @param Storage storage
      *
      * @return undefined
      */
-    saveToSessionStorage: function (ID, spec, version) {
+    save: function (ID, spec, version, storage) {
         if (CBConvert.valueAsObject(spec) === undefined) {
             throw new TypeError("The spec parameter is not valid");
         }
 
-        let record = CBModels.fetchFromSessionStorage(ID);
+        let record = CBModels.fetch(ID, storage);
         let recordVersion = CBModel.valueAsInt(record, "meta.version") || 0;
         let now = Date.now();
 
@@ -82,7 +111,7 @@ var CBModels = {
             record.meta.modified = now;
             record.meta.version += 1;
 
-            sessionStorage.setItem(
+            storage.setItem(
                 CBModels.IDToStorageKey(ID),
                 JSON.stringify(record)
             );
@@ -91,5 +120,19 @@ var CBModels = {
                 "The spec has been saved by another process since you loaded it."
             );
         }
+    },
+    /* save() */
+
+
+    /**
+     * @param ID ID
+     * @param object spec
+     * @param int version
+     *
+     * @return undefined
+     */
+    saveToSessionStorage: function (ID, spec, version) {
+        CBModels.save(ID, spec, version, sessionStorage);
     }
+    /* saveToSessionStorage() */
 };
