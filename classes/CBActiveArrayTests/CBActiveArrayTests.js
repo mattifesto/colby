@@ -299,6 +299,71 @@ var CBActiveArrayTests = {
     /**
      * @return object|Promise
      */
+    CBTest_forEach: function () {
+        let items = [
+            {
+                count: 5,
+            },
+            {
+                count: 7,
+            },
+            {
+                count: 3,
+            },
+        ];
+
+        let activeArray = CBActiveArray.createPod();
+
+        items.forEach(
+            function (item) {
+                CBActiveObject.activate(item);
+                activeArray.push(item);
+            }
+        );
+
+        activeArray.forEach(
+            function (item, index, array) {
+                if (array !== undefined) {
+                    throw Error(
+                        "The third parameter to forEach should be undefined."
+                    );
+                }
+
+                item.count = index;
+            }
+        );
+
+        let actualResult = activeArray.slice();
+        let expectedResult = [
+            {
+                count: 0,
+            },
+            {
+                count: 1,
+            },
+            {
+                count: 2,
+            },
+        ];
+
+        if (!CBModel.equals(actualResult, expectedResult)) {
+            return CBTest.resultMismatchFailure(
+                "final result comparison",
+                actualResult,
+                expectedResult
+            );
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_forEach() */
+
+
+    /**
+     * @return object|Promise
+     */
     CBTest_general: function () {
         let activeArray = CBActiveArray.createPod();
 

@@ -35,6 +35,7 @@ final class CBActiveArrayTests {
             ['CBActiveArray', 'deactivate'],
             ['CBActiveArray', 'events'],
             ['CBActiveArray', 'find'],
+            ['CBActiveArray', 'forEach'],
             ['CBActiveArray', 'general'],
             ['CBActiveArray', 'replace'],
             ['CBActiveArray', 'slice'],
