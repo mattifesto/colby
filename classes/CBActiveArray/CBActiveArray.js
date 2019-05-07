@@ -29,6 +29,7 @@ var CBActiveArray = {
         let pod = {
             addEventListener: addEventListener,
             find: find,
+            forEach: forEach,
             item: item,
             push: push,
             slice: items.slice.bind(items),
@@ -104,6 +105,25 @@ var CBActiveArray = {
             );
         }
         /* find() */
+
+
+        /**
+         * This implementation of forEach does not provide the third "array"
+         * parameter to the callback because the actual array in a CBActiveArray
+         * is private.
+         *
+         * @parameter function(currentValue, index) callback
+         *
+         * @return undefined
+         */
+        function forEach(callback) {
+            items.forEach(
+                function (currentValue, index) {
+                    callback(currentValue, index);
+                }
+            );
+        }
+        /* forEach() */
 
 
         /**
