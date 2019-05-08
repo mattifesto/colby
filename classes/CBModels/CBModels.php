@@ -54,6 +54,7 @@ final class CBModels {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBConvert',
+            'CBException',
             'CBModel',
         ];
     }

@@ -4,6 +4,7 @@
 /* exported CBModels */
 /* global
     CBConvert,
+    CBException,
     CBModel,
 */
 
@@ -128,8 +129,13 @@ var CBModels = {
                 JSON.stringify(record)
             );
         } else {
-            throw new Error(
-                "The spec has been saved by another process since you loaded it."
+            let message =
+            "The spec has been saved by another process since you loaded it.";
+
+            throw CBException.withError(
+                Error(message),
+                "",
+                "1d094e7ef6db1efc327c1b8addd0c7ec758dccd9"
             );
         }
     },
