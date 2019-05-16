@@ -11,13 +11,22 @@
  *      $exception->getExtendedMessage()
  *
  *          Returns a string of message markup that replaces the text string
- *          returned by getMessage(). Use one or the other, depending on the
- *          situation, not both.
+ *          returned by getMessage(). In cases where an extended message would
+ *          add nothing, it will be set to an empty string which indicates that
+ *          the standard exception message should be used.
+ *
+ *      Which to display?
+ *
+ *          If the extended message is a non-empty string and the UI situation
+ *          can display a full message, use the extended message.
+ *
+ *          Otherwise, use the standard exception message.
  */
 final class CBException extends Exception {
 
     private $extendedMessage;
     private $sourceID;
+
 
     /* -- constructor -- -- -- -- -- */
 
@@ -53,16 +62,19 @@ final class CBException extends Exception {
         $this->sourceID = $sourceID;
     }
 
-    /* -- CBHTMLOutput -- -- -- -- -- */
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v472.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v473.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [string]
@@ -72,6 +84,8 @@ final class CBException extends Exception {
             'Colby',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
 
     /* -- functions -- -- -- -- -- */
 
@@ -121,13 +135,23 @@ EOT;
 
         return new CBException($title, $message, $sourceID);
     }
+    /* createModelIssueException() */
+
 
     /**
      * @return string
      */
     function getExtendedMessage(): string {
-        return $this->extendedMessage;
+        if ($this->extendedMessage === '') {
+            return CBMessageMarkup::stringToMessage(
+                $this->getMessage()
+            );
+        } else {
+            return $this->extendedMessage;
+        }
     }
+    /* getExtendedMessage() */
+
 
     /**
      * @return string
@@ -135,4 +159,5 @@ EOT;
     function getSourceID(): ?string {
         return $this->sourceID;
     }
+    /* getSourceID() */
 }

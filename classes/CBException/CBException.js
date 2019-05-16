@@ -47,8 +47,12 @@ var CBException = {
         }
 
         let pod = {
-            extendedMessage: extendedMessage,
-            sourceID: sourceID,
+            get extendedMessage() {
+                return extendedMessage;
+            },
+            get sourceID() {
+                return sourceID;
+            },
         };
 
         Object.defineProperty(
