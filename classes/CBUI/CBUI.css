@@ -183,16 +183,6 @@
 }
 
 /**
- * 2019_03_23
- *
- *      This style was added to remove SCUI. It may be deprecated as more
- *      research is done on the nature of cautionary items.
- */
-.CBUI_section_cautionary {
-    border-color: hsl(0, 100%, 80%);
-}
-
-/**
  * 2019_03_01
  *
  *      The class styles an element to apply the appropriate white space and
