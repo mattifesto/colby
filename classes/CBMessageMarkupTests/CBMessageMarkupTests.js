@@ -174,7 +174,7 @@ var CBMessageMarkupTests = {
     /**
      * @return undefined
      */
-    stringToMarkupTest: function () {
+    CBTest_stringToMarkup: function () {
         var string = `
 --- div
 --- hi
@@ -324,3 +324,4 @@ var CBMessageMarkupTests = {
         };
     },
 };
+/* CBMessageMarkupTests */

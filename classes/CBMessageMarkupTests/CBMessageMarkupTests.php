@@ -9,9 +9,11 @@ final class CBMessageMarkupTests {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v469.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [[<variableName>, <value>]]
