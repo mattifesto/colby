@@ -21,18 +21,50 @@ var CBImagesTests = {
      *
      * @return Promise
      */
-    deleteByIDTest: function () {
-        return Colby.callAjaxFunction("CBModels", "deleteByID", { ID: CBTestAdmin.testImageID })
-                    .then(report1)
-                    .then(report2);
+    CBTest_deleteByID: function () {
+        let promise = Colby.callAjaxFunction(
+            "CBModels",
+            "deleteByID",
+            {
+                ID: CBTestAdmin.testImageID
+            }
+        ).then(
+            function (value) {
+                return CBTest_deleteByID_report1(value);
+            }
+        ).then(
+            function (value) {
+                return CBTest_deleteByID_report2(value);
+            }
+        );
 
-        function report1(response) {
-            var imageURI = "/" + Colby.dataStoreFlexpath(CBTestAdmin.testImageID, "original.jpeg");
+        return promise;
+
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return Promise -> bool
+         */
+        function CBTest_deleteByID_report1() {
+            var imageURI =
+            "/" +
+            Colby.dataStoreFlexpath(
+                CBTestAdmin.testImageID,
+                "original.jpeg"
+            );
 
             return CBImagesTests.fetchURIDoesExist(imageURI);
         }
+        /* CBTest_deleteByID_report1() */
 
-        function report2(doesExist) {
+
+        /**
+         * @param bool doesExist
+         *
+         * @return object
+         */
+        function CBTest_deleteByID_report2(doesExist) {
             if (doesExist) {
                 throw new Error("The image file is available but should not be.");
             }
@@ -41,7 +73,10 @@ var CBImagesTests = {
                 succeeded: true,
             };
         }
+        /* CBTest_deleteByID_report2() */
     },
+    /* CBTest_deleteByID() */
+
 
     /**
      * @param string URI
@@ -49,29 +84,37 @@ var CBImagesTests = {
      * @return Promise
      */
     fetchURIDoesExist: function (URI) {
-        return new Promise(function (resolve, reject) {
-            var xhr = new XMLHttpRequest();
-            xhr.onloadend = handler;
-            xhr.open("HEAD", URI);
-            xhr.send();
+        return new Promise(
+            function (resolve, reject) {
+                let xhr = new XMLHttpRequest();
+                xhr.onloadend = handler;
+                xhr.open("HEAD", URI);
+                xhr.send();
 
-            function handler() {
-                if (xhr.status === 200) {
-                    resolve(true);
-                } else if (xhr.status === 404) {
-                    resolve(false); // The image has been deleted, as expected.
-                } else {
-                    reject(new Error("Request returned an unexpected status: " + xhr.status));
+                function handler() {
+                    if (xhr.status === 200) {
+                        resolve(true);
+                    } else if (xhr.status === 404) {
+                        resolve(false); // The image has been deleted, as expected.
+                    } else {
+                        reject(
+                            Error(
+                                "Request returned an unexpected status: " +
+                                xhr.status
+                            )
+                        );
+                    }
                 }
             }
-        });
+        );
     },
+    /* fetchURIDoesExist() */
 
 
     /**
      * @return Promise
      */
-    uploadTest: function () {
+    CBTest_upload: function () {
         var URL = "/api/?class=CBImages&function=upload";
         var data = new FormData();
 
@@ -124,4 +167,6 @@ var CBImagesTests = {
             };
         }
     },
+    /* CBTest_upload() */
 };
+/* CBImagesTests */

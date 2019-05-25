@@ -9,9 +9,11 @@ final class CBImagesTests {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v437.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -36,16 +38,33 @@ final class CBImagesTests {
      * @return void
      */
     static function resizeTest(): void {
-        CBImages::reduceImage(CBTestAdmin::testImageID(), 'jpeg', 'rw5000rh5000');
+        CBImages::reduceImage(
+            CBTestAdmin::testImageID(),
+            'jpeg',
+            'rw5000rh5000'
+        );
 
-        $filepath1 = CBDataStore::flexpath(CBTestAdmin::testImageID(), 'original.jpeg', CBSiteDirectory);
-        $filepath2 = CBDataStore::flexpath(CBTestAdmin::testImageID(), 'rw5000rh5000.jpeg', CBSiteDirectory);
+        $filepath1 = CBDataStore::flexpath(
+            CBTestAdmin::testImageID(),
+            'original.jpeg',
+            cbsitedir()
+        );
+
+        $filepath2 = CBDataStore::flexpath(
+            CBTestAdmin::testImageID(),
+            'rw5000rh5000.jpeg',
+            cbsitedir()
+        );
 
         $sha1 = sha1_file($filepath1);
         $sha2 = sha1_file($filepath2);
 
         if ($sha1 !== $sha2) {
-            throw new Exception("The original image file and a reduced version to a larger size are not the same file.");
+            throw new Exception(
+                'The original image file and a reduced version to a larger'
+                . ' size are not the same file.'
+            );
         }
     }
+    /* resizeTest() */
 }
