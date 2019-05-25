@@ -9,9 +9,11 @@ final class ColbyTests {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v437.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /* -- CBTest interfaces -- -- -- -- -- */
 

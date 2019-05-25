@@ -8,10 +8,12 @@
 
 var ColbyTests = {
 
+    /* -- tests -- -- -- -- -- */
+
     /**
      * @return undefined
      */
-    centsToDollarsTest: function () {
+    CBTest_centsToDollars: function () {
         var tests = [];
 
         tests.push({
@@ -53,11 +55,13 @@ var ColbyTests = {
             succeeded: true,
         };
     },
+    /* CBTest_centsToDollars() */
+
 
     /**
      * @return undefined
      */
-    dateToStringTest: function () {
+    CBTest_dateToString: function () {
         var now = new Date('2012/12/16 10:51 pm');
         var tests = [];
 
@@ -132,11 +136,13 @@ var ColbyTests = {
             succeeded: true,
         };
     },
+    /* CBTest_dateToString() */
+
 
     /**
      * @return undefined
      */
-    random160Test: function () {
+    CBTest_random160: function () {
         let count = 10;
         let values = [];
 
@@ -153,7 +159,11 @@ var ColbyTests = {
 
             for (let j = i + 1; j < count; j++) {
                 if (value === values[j]) {
-                    throw new Error(`Value ${i} "${value}" is the same as value ${j} "${values[j]}" which is extremely unlikely and probably represents an error.`);
+                    throw Error(
+                        `Value ${i} "${value}" is the same as value` +
+                        ` ${j} "${values[j]}" which is extremely unlikely` +
+                        ` and probably represents an error.`
+                    );
                 }
             }
         }
@@ -162,4 +172,6 @@ var ColbyTests = {
             succeeded: true,
         };
     },
+    /* CBTest_random160() */
 };
+/* ColbyTests */
