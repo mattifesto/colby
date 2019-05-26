@@ -2,12 +2,20 @@
 
 final class CBTestTests {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v437.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+        ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /* -- CBTest interfaces -- -- -- -- -- */
 
     /**
      * @return [[<className>, <testName>]]

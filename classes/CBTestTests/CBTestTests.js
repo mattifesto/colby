@@ -6,33 +6,56 @@
 var CBTestTests = {
 
     /**
-     * @return object|Promise
+     * @return Promise -> object
      */
     CBTest_asynchronousSample: function () {
-        return new Promise(function (resolve, reject) {
-
-            /**
-             * placeholder: test code
-             */
-
-            setTimeout(finish, 100);
-
-            function finish() {
+        let promise = new Promise(
+            function (resolve, reject) {
 
                 /**
                  * placeholder: test code
                  */
 
-                resolve({
-                    succeeded: true,
-                    message: "The asynchronous sample test succeeded.",
-                });
+                setTimeout(
+                    function () {
+                        CBTest_asynchronousSample_finish();
+                    },
+                    100
+                );
+
+                return;
+
+
+                /* -- closures -- -- -- -- -- */
+
+                /**
+                 * @return undefined
+                 */
+                function CBTest_asynchronousSample_finish() {
+
+                    /**
+                     * placeholder: test code
+                     */
+
+                    resolve(
+                        {
+                            succeeded: true,
+                            message: "The asynchronous sample test succeeded.",
+                        }
+                    );
+                }
+                /* CBTest_asynchronousSample_finish */
             }
-        });
+        );
+        /* new Promise() */
+
+        return promise;
     },
+    /* CBTest_asynchronousSample() */
+
 
     /**
-     * @return object|Promise
+     * @return object
      */
     CBTest_sample: function () {
 
@@ -45,4 +68,6 @@ var CBTestTests = {
             message: "The sample test succeeded.",
         };
     },
+    /* CBTest_sample() */
 };
+/* CBTestTests */
