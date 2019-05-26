@@ -163,6 +163,135 @@ EOT;
     /* -- functions -- -- -- -- -- */
 
     /**
+     * @return [object]
+     *
+     *      {
+     *          title: string
+     *          description: string
+     *          name: string
+     *
+     *              The name of the test.
+     *
+     *          testClassName: string
+     *
+     *              The class that implements the test function in JavaScript.
+     *      }
+     */
+    static function getTests(): array {
+        $tests = [];
+        $classNames = CBAdmin::fetchClassNames();
+
+        foreach ($classNames as $className) {
+            $tests = array_merge(
+                $tests,
+                CBTest::getTests_classNameToTests($className),
+
+                /* deprecated */
+                CBTest::getTests_classNameToJavaScriptTests($className)
+            );
+        }
+
+        return $tests;
+    }
+    /* getTests() */
+
+
+    /**
+     * @deprecated 2019_05_25
+     *
+     *      Use CBTest_getTests() instead of CBTest_JavaScriptTests().
+     *
+     * @param string $className
+     *
+     * @return [object]
+     */
+    static function getTests_classNameToJavaScriptTests(
+        string $className
+    ): array {
+        $tests = [];
+        $functionName = "{$className}::CBTest_JavaScriptTests";
+
+        if (is_callable($functionName)) {
+            $values = call_user_func($functionName);
+
+            if (!is_array($values)) {
+                throw CBException::createModelIssueException(
+                    'The function '
+                    . $functionName
+                    . '() should return an array.',
+                    $values,
+                    'b090aa3351dc247954ed7a8b82ae0ed08678d179'
+                );
+            }
+
+            $tests = array_map(
+                function ($value) use ($className) {
+                    return (object)[
+                        'title' => "{$value[0]}Tests / {$value[1]} (OSJS)",
+                        'testClassName' => "{$value[0]}Tests",
+                        'name' => $value[1],
+                    ];
+                },
+                $values
+            );
+        }
+
+        return $tests;
+    }
+    /* getTests_classNameToJavaScriptTests() */
+
+
+    /**
+     * @param string $className
+     *
+     * @return [object]
+     */
+    static function getTests_classNameToTests(
+        string $className
+    ): array {
+        $tests = [];
+        $functionName = "{$className}::CBTest_getTests";
+
+        if (is_callable($functionName)) {
+            $tests = call_user_func($functionName);
+
+            if (!is_array($tests)) {
+                throw CBException::createModelIssueException(
+                    'The function '
+                    . $functionName
+                    . '() should return an array.',
+                    $tests,
+                    '2f124f63ff0a25662415c894d2eb9f742a74f5c3'
+                );
+            }
+
+            for ($index = 0; $index < count($tests); $index += 1) {
+                $test = $tests[$index];
+
+                if (!is_object($test)) {
+                    throw CBException::createModelIssueException(
+                        'The array of tests returned by '
+                        . $functionName
+                        . '() has a non-object value at index '
+                        . $index,
+                        $tests,
+                        'a955214c24c7cb1edbb1dfae513220fb63382f1a'
+                    );
+                }
+
+                if (CBModel::valueToString($test, 'testClassName') === '') {
+                    $test->testClassName = $className;
+                }
+            }
+            /* for */
+        }
+
+        return $tests;
+    }
+    /* getTests_classNameToTests() */
+
+
+    /**
      * Sample JavaScript tests are provided in CBTestTests.php and
      * CBTestTests.js.
      *
@@ -176,6 +305,8 @@ EOT;
      */
     static function JavaScriptTests(): array {
         $allTests = [];
+
+        /*
         $classNames = CBAdmin::fetchClassNames();
 
         foreach ($classNames as $className) {
@@ -203,9 +334,12 @@ EOT;
                 $allTests = array_merge($allTests, $tests);
             }
         }
+        */
 
         return $allTests;
     }
+    /* JavaScriptTests() */
+
 
     /**
      * @return [[<className>, <testName>]]
