@@ -3,37 +3,6 @@
 class CBUnitTests {
 
     /**
-     * @param string $pageStub
-     *
-     * @return [string]
-     */
-    static function CBAdmin_menuNamePath(string $pageStub) {
-        switch ($pageStub) {
-            case 'AdminPageException':
-                return ['develop', 'test'];
-
-            default:
-                return ['develop'];
-        }
-    }
-
-    /**
-     * @param string $pageStub
-     *
-     * @return void
-     */
-    static function CBAdmin_render(string $pageStub): void {
-        switch ($pageStub) {
-            case 'AdminPageException':
-                throw new RuntimeException('Admin Page Exception Test');
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    /**
      * @return null
      */
     static function CBAjax_errorTest() {
