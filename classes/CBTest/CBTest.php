@@ -292,56 +292,6 @@ EOT;
 
 
     /**
-     * Sample JavaScript tests are provided in CBTestTests.php and
-     * CBTestTests.js.
-     *
-     * @return [object]
-     *
-     *      {
-     *          type: "JavaScript",
-     *          testClassName: string
-     *          testName: string
-     *      }
-     */
-    static function JavaScriptTests(): array {
-        $allTests = [];
-
-        /*
-        $classNames = CBAdmin::fetchClassNames();
-
-        foreach ($classNames as $className) {
-            if (is_callable($function = "{$className}::CBTest_JavaScriptTests")) {
-                $tests = call_user_func($function);
-                $tests = array_map(
-                    function ($value) use ($className) {
-                        if (is_string($value)) {
-                            return (object)[
-                                'type' => 'JavaScript',
-                                'testClassName' => $className,
-                                'testName' => $value,
-                            ];
-                        } else {
-                            return (object)[
-                                'type' => 'JavaScript',
-                                'testClassName' => $value[0],
-                                'testName' => $value[1],
-                            ];
-                        }
-                    },
-                    $tests
-                );
-
-                $allTests = array_merge($allTests, $tests);
-            }
-        }
-        */
-
-        return $allTests;
-    }
-    /* JavaScriptTests() */
-
-
-    /**
      * @return [[<className>, <testName>]]
      */
     static function PHPTests(): array {
