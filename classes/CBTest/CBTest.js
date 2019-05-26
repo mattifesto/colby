@@ -5,9 +5,37 @@
 /* global
     CBConvert,
     CBMessageMarkup,
+    CBModel,
+    Colby,
 */
 
 var CBTest = {
+
+    /* -- functions -- -- -- -- -- */
+
+    /**
+     * @param object args
+     *
+     * @return Promise -> object
+     */
+    runServerTest: function (args) {
+        let testArgs = {
+            className: CBModel.valueToString(args, "test.testClassName"),
+            testName: CBModel.valueToString(args, "test.name"),
+        };
+
+        let promise = Colby.callAjaxFunction(
+            "CBTest",
+            "run",
+            testArgs
+        );
+
+        return promise;
+    },
+    /* runServerTest() */
+
+
+    /* -- test result creation functions -- -- -- -- -- */
 
     /**
      * @param string testTitle
@@ -145,4 +173,6 @@ var CBTest = {
             message: message,
         };
     },
+    /* valueIssueFailure() */
 };
+/* CBTest */

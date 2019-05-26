@@ -140,9 +140,11 @@ EOT;
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v471.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [string]
@@ -151,8 +153,12 @@ EOT;
         return [
             'CBConvert',
             'CBMessageMarkup',
+            'CBModel',
+            'Colby',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
 
     /* -- functions -- -- -- -- -- */
 
