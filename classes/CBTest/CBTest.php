@@ -19,12 +19,27 @@ final class CBTest {
             $className = CBModel::valueToString($args, 'className');
             $testName = CBModel::valueToString($args, 'testName');
 
-            if (is_callable($function = "{$className}Tests::CBTest_{$testName}")) {
+            if (
+                is_callable(
+                    $function = "{$className}::CBTest_{$testName}"
+                )
+
+                ||
+
+                /* deprecated */
+                is_callable(
+                    $function = "{$className}Tests::CBTest_{$testName}"
+                )
+            ) {
                 $result = call_user_func($function);
 
                 if (!is_object($result)) {
                     $resultAsJSON = CBConvert::valueToPrettyJSON($result);
-                    $functionAsMarkup = CBMessageMarkup::stringToMarkup($function);
+
+                    $functionAsMarkup = CBMessageMarkup::stringToMarkup(
+                        $function
+                    );
+
                     $result = (object)[
                         'succeeded' => false,
                         'message' => <<<EOT
@@ -39,14 +54,26 @@ final class CBTest {
 EOT
                     ];
                 }
-            } else if (is_callable($function = "{$className}Tests::{$testName}Test")) {
+            } else if (
+                is_callable(
+                    $function = "{$className}Tests::{$testName}Test"
+                )
+            ) {
                 /* deprecated */
                 $result = call_user_func($function);
                 $result = (object)[
                     'succeeded' => empty($result->failed),
                     'message' => CBModel::valueToString($result, 'message'),
                 ];
-            } else if ($testName === '' && is_callable($function = "{$className}Tests::test")) {
+            } else if (
+                $testName === ''
+
+                &&
+
+                is_callable(
+                    $function = "{$className}Tests::test"
+                )
+            ) {
                 /* deprecated */
                 $result = call_user_func($function);
                 $result = (object)[
@@ -94,6 +121,8 @@ EOT;
 
         return $result;
     }
+    /* CBAjax_run() */
+
 
     /**
      * @return string
@@ -101,6 +130,8 @@ EOT;
     static function CBAjax_run_group(): string {
         return 'Developers';
     }
+    /* CBAjax_run_group() */
+
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
