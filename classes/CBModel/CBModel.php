@@ -48,9 +48,11 @@ final class CBModel {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v469.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [string]
@@ -58,8 +60,13 @@ final class CBModel {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBConvert',
+            'CBException',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * This function returns a copy of the $spec parameter.

@@ -4,6 +4,7 @@
 /* exported CBModel */
 /* global
     CBConvert,
+    CBException,
 */
 
 var CBModel = {
@@ -17,8 +18,9 @@ var CBModel = {
     classFunction: function (model, functionName) {
         let className = CBModel.valueToString(model, "className");
 
-        return CBConvert.valueAsFunction(
-            CBModel.value(window, className + "." + functionName)
+        return CBModel.valueAsFunction(
+            window[className],
+            functionName
         );
     },
 
@@ -176,7 +178,13 @@ var CBModel = {
         }
 
         if (typeof keyPath !== "string") {
-            throw new TypeError("The \"keyPath\" argument to the CModel.value() function must be a string.");
+            throw CBException.withError(
+                TypeError(
+                    "The keyPath argument must be a string."
+                ),
+                "",
+                "604d5d5d2f4dd57fee2da86a18f4f9b4a2b8644b"
+            );
         }
 
         let keys = keyPath.split(".");
@@ -193,6 +201,19 @@ var CBModel = {
 
         return model[propertyName];
     },
+    /* value() */
+
+
+    /**
+     * @return function|undefined
+     */
+    valueAsFunction: function (model, keyPath) {
+        return CBConvert.valueAsFunction(
+            CBModel.value(model, keyPath)
+        );
+    },
+    /* valueAsFunction() */
+
 
     /**
      * @param mixed model
@@ -296,3 +317,4 @@ var CBModel = {
         return CBConvert.valueToString(CBModel.value(model, keyPath));
     },
 };
+/* CBModel */
