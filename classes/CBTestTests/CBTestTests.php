@@ -18,14 +18,88 @@ final class CBTestTests {
     /* -- CBTest interfaces -- -- -- -- -- */
 
     /**
-     * @return [[<className>, <testName>]]
+     * @return [object]
      */
-    static function CBTest_javaScriptTests(): array {
+    static function CBTest_getTests(): array {
         return [
-            ['CBTest', 'sample'],
-            ['CBTest', 'asynchronousSample'],
+            (object)[
+                'title' => 'CBTest Synchronous Test Sample',
+                'name' => 'sample',
+            ],
+            (object)[
+                'title' => 'CBTest Asychronous Test Sample',
+                'name' => 'asynchronousSample',
+            ],
+            (object)[
+                'type' => 'server',
+                'title' => 'CBTest::getTests_classNameToTests()',
+                'name' => 'getTests_classNameToTests',
+            ],
+            (object)[
+                'type' => 'server',
+                'title' => 'CBTest::resultMismatchFailureDiff()',
+                'name' => 'resultMismatchFailureDiff',
+            ],
         ];
     }
+    /* CBTest_getTests() */
+
+
+    /* -- tests -- -- -- -- -- */
+
+    /**
+     * @return object
+     */
+    static function CBTest_getTests_classNameToTests(): stdClass {
+
+        /* wrong return type */
+
+        $actualSourceID = 'no source ID';
+        $expectedSourceID = '2f124f63ff0a25662415c894d2eb9f742a74f5c3';
+
+        try {
+            CBTest::getTests_classNameToTests(
+                'CBTestTests_WrongReturnType'
+            );
+        } catch (Throwable $throwable) {
+            if ($throwable instanceof CBException) {
+                $actualSourceID = $throwable->getSourceID();
+            }
+
+            if ($actualSourceID !== $expectedSourceID) {
+                throw $throwable;
+            }
+        }
+
+
+        /* bad test name */
+
+        $actualSourceID = 'no source ID';
+        $expectedSourceID = 'a955214c24c7cb1edbb1dfae513220fb63382f1a';
+
+        try {
+            CBTest::getTests_classNameToTests(
+                'CBTestTests_BadTestName'
+            );
+        } catch (Throwable $throwable) {
+            if ($throwable instanceof CBException) {
+                $actualSourceID = $throwable->getSourceID();
+            }
+
+            if ($actualSourceID !== $expectedSourceID) {
+                throw $throwable;
+            }
+        }
+
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_getTests_classNameToTests() */
+
 
     /**
      * @return object
@@ -88,13 +162,30 @@ final class CBTestTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_resultMismatchFailureDiff() */
+}
+/* CBTestTests */
 
-    /**
-     * @return [[<class>, <test>]]
-     */
-    static function CBUnitTests_tests(): array {
+
+final class CBTestTests_WrongReturnType {
+    static function CBTest_getTests() {
+        return "bad";
+    }
+}
+
+
+final class CBTestTests_BadTestName {
+    static function CBTest_getTests() {
         return [
-            ['CBTest', 'resultMismatchFailureDiff'],
+
+            (object)[
+            ],
+
+            2,
+
+            (object)[
+            ],
+
         ];
     }
 }
