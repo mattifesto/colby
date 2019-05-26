@@ -44,7 +44,6 @@ final class CBConvertTests {
      */
     static function CBTest_JavaScriptTests(): array {
         return [
-            ['CBConvert', 'centsToDollars'],
             ['CBConvert', 'dollarsAsCents'],
             ['CBConvert', 'stringToLines'],
             ['CBConvert', 'valueAsInt'],
@@ -62,7 +61,6 @@ final class CBConvertTests {
      */
     static function CBTest_PHPTests(): array {
         return [
-            ['CBConvert', 'centsToDollars'],
             ['CBConvert', 'stringToLines'],
             ['CBConvert', 'stringToStub'],
             ['CBConvert', 'stringToURI'],
@@ -73,6 +71,27 @@ final class CBConvertTests {
             ['CBConvert', 'valueToBool'],
         ];
     }
+    /* CBTest_PHPTests() */
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'title' => 'CBConvert.centsToDollars()',
+                'name' => 'centsToDollars',
+            ],
+            (object)[
+                'type' => 'server',
+                'title' => 'CBConvert::centsToDollars()',
+                'name' => 'centsToDollars',
+            ],
+        ];
+    }
+    /* CBTest_getTests() */
+
 
     /* -- tests -- -- -- -- -- */
 
