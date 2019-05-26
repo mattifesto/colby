@@ -67,9 +67,14 @@ final class CBTestAdmin {
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
-            ['CBTestAdmin_javaScriptTests', CBTest::javaScriptTests()],
+            [
+                'CBTestAdmin_tests',
+                CBTest::getTests(),
+            ],
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
 
     /**
      * @return [string]
@@ -77,7 +82,10 @@ final class CBTestAdmin {
     static function CBHTMLOutput_requiredClassNames() {
         $classNames = [
             'CBConvert',
+            'CBException',
             'CBMessageMarkup',
+            'CBModel',
+            'CBTest',
             'CBUI',
             'CBUIExpander',
             'CBUINavigationView',
@@ -85,20 +93,22 @@ final class CBTestAdmin {
             'CBUISectionItem4',
             'CBUISelector',
             'CBUIStringsPart',
+            'Colby',
         ];
-
-        $tests = CBTest::javaScriptTests();
 
         return array_values(array_unique(array_merge(
             $classNames,
+
             array_map(
                 function (stdClass $test) {
-                    return "{$test->testClassName}Tests";
+                    return CBModel::valueToString($test, "testClassName");
                 },
-                $tests
+                CBTest::getTests()
             )
         )));
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
 
     /**
      * This image can be used for testing purposes. Do not modify the original.
