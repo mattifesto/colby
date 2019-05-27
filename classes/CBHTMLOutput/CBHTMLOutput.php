@@ -148,11 +148,24 @@ final class CBHTMLOutput {
             CBHTMLOutput::JSAsync | CBHTMLOutput::JSDefer
         );
     }
+    /* addPinterest() */
+
 
     /**
-     * @return null
+     * Call this function before you start rendering the content of the body
+     * element. When you are finished, call CBHTMLOutput::render().
+     *
+     * @return void
      */
-    static function begin() {
+    static function begin(): void {
+        if (CBHTMLOutput::$isActive) {
+            throw new CBException(
+                'CBHTMLOutput buffering has already begun.',
+                '',
+                '29ade9f6d4a763a69f69c79a191893743ef3fcef'
+            );
+        }
+
         ob_start();
 
         set_exception_handler('CBHTMLOutput::handleException');
@@ -230,7 +243,8 @@ final class CBHTMLOutput {
         CBErrorHandler::report($throwable);
 
         try {
-            $classNameForPageSettings = CBHTMLOutput::classNameForPageSettings();
+            $classNameForPageSettings =
+            CBHTMLOutput::classNameForPageSettings();
 
             /**
              * A page may have already been partially rendered so reset
@@ -238,11 +252,14 @@ final class CBHTMLOutput {
              */
             CBHTMLOutput::reset();
 
-            if (!CBPageSettings::renderErrorPage($classNameForPageSettings, $throwable)) {
-                CBErrorHandler::renderErrorReportPage($throwable);
-            }
+            CBPageSettings::renderErrorPage(
+                $classNameForPageSettings,
+                $throwable
+            );
         } catch (Throwable $innerThrowable) {
+            /* this is a severe situation, just try to report and exit */
             CBErrorHandler::report($innerThrowable);
+            exit;
         }
     }
 
@@ -316,12 +333,16 @@ EOT;
             }
         }
     }
+    /* processRequiredClassNames() */
+
 
     /**
      * @return void
      */
     static function render(): void {
         $bodyContent = ob_get_clean();
+
+        ob_start();
 
         if ($className = CBHTMLOutput::classNameForPageSettings()) {
             $pageSettingsClassNames = CBPageSettings::requiredClassNames([$className]);
@@ -334,8 +355,6 @@ EOT;
         array_walk($htmlElementClassNames, 'CBHTMLOutput::requireClassName');
 
         CBHTMLOutput::processRequiredClassNames();
-
-        ob_start();
 
         $info = CBHTMLOutput::$pageInformation;
         $title = CBModel::valueToString($info, 'title');
@@ -385,6 +404,8 @@ EOT;
 
         CBHTMLOutput::reset();
     }
+    /* render() */
+
 
     /**
      * This function can be called at almost any time, even by a view in the
