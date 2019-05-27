@@ -33,6 +33,33 @@ final class Colby {
 
     public static $libraryDirectories = [];
 
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v357.css', cbsysurl()),
+        ];
+    }
+    /* CBHTMLOutput_CSSURLs() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /* -- functions -- -- -- -- -- */
+
     /**
      * @return bool
      */
@@ -62,41 +89,6 @@ final class Colby {
         }
     }
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v357.css', cbsysurl()),
-        ];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
-        ];
-    }
-
-    /**
-     * @NOTE 2018_09_06
-     *
-     *      The deprecated function Colby.imageToURL() requires CBImage.
-     *
-     * @NOTE 2018_11_29
-     *
-     *      The deprecated function Colby.centsToDollars() requires CBConvert.
-     *
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
-            'CBConvert',
-            'CBImage',
-        ];
-    }
 
     /**
      * If the site is marked as being debugged this function will send a message

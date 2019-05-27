@@ -2,10 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* exported Colby */
-/* global
-    CBConvert,
-    CBImage,
-*/
+
 
 var Colby = {
     updateTimesTimeoutID: null,
@@ -80,12 +77,6 @@ var Colby = {
         }
     },
 
-    /**
-     * @deprecated use CBConvert.centsToDollars()
-     */
-    centsToDollars: function (cents) {
-        return CBConvert.centsToDollars(cents);
-    },
 
     /**
      * @param hex160 ID
@@ -322,14 +313,6 @@ var Colby = {
         });
     },
 
-    /**
-     * @deprecated 2018.09.06
-     *
-     *      Use CBImage::toURL()
-     */
-    imageToURL: function (image, filename) {
-        return CBImage.toURL(image, filename);
-    },
 
     /**
      * @return bool
@@ -1176,6 +1159,8 @@ Colby.textToURI = function (text) {
 
     return uri;
 };
+/* Colby */
+
 
 /**
  * General page loaded tasks
