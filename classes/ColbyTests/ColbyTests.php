@@ -37,7 +37,7 @@ final class ColbyTests {
             ],
         ];
     }
-    /* CBTest_tests() */
+    /* CBTest_getTests() */
 
 
     /**
