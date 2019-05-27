@@ -3,7 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBAdminPageForPagesFind */
 /* globals
-    CBPageKindsOptions,
+    CBImage,
     CBUI,
     CBUINavigationArrowPart,
     CBUINavigationView,
@@ -12,7 +12,10 @@
     CBUIStringEditor,
     CBUIStringsPart,
     CBUIThumbnailPart,
-    Colby */
+    Colby,
+
+    CBPageKindsOptions,
+*/
 
 var CBAdminPageForPagesFind = {
 
@@ -149,6 +152,8 @@ var CBAdminPageForPagesFind = {
         }
     },
 };
+/* CBAdminPageForPagesFind */
+
 
 /**
  * Used to be separate file, but only used by the above code.
@@ -176,7 +181,10 @@ var CBPageList = {
             let thumbnailPart = CBUIThumbnailPart.create();
 
             if (page.keyValueData.image) {
-                thumbnailPart.src = Colby.imageToURL(page.keyValueData.image, "rs200clc200");
+                thumbnailPart.src = CBImage.toURL(
+                    page.keyValueData.image,
+                    "rs200clc200"
+                );
             } else if (page.keyValueData.thumbnailURL) {
                 thumbnailPart.src = page.keyValueData.thumbnailURL;
             }
@@ -199,9 +207,21 @@ var CBPageList = {
         return element;
     },
 };
+/* CBPageList (CBAdminPageForPagesFind) */
 
-document.addEventListener("DOMContentLoaded", function() {
-    var main = document.getElementsByTagName("main")[0];
 
-    main.appendChild(CBAdminPageForPagesFind.createElement());
-});
+Colby.afterDOMContentLoaded(
+    function() {
+        var elements = document.getElementsByClassName(
+            "CBAdminPageForPagesFind"
+        );
+
+        if (elements.length > 0) {
+            let element = elements.item(0);
+
+            element.appendChild(
+                CBAdminPageForPagesFind.createElement()
+            );
+        }
+    }
+);

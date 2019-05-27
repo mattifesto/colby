@@ -26,11 +26,15 @@ final class CBAdminPageForPagesFind {
         CBHTMLOutput::pageInformation()->title = 'Pages Administration: Find';
     }
 
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBImage',
             'CBUI',
             'CBUINavigationArrowPart',
             'CBUINavigationView',
@@ -39,8 +43,11 @@ final class CBAdminPageForPagesFind {
             'CBUIStringEditor',
             'CBUIStringsPart',
             'CBUIThumbnailPart',
+            'Colby',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
 
     /**
      * @return [string]
@@ -56,9 +63,11 @@ final class CBAdminPageForPagesFind {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v411.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [[string, mixed]]
@@ -96,6 +105,10 @@ final class CBAdminPageForPagesFind {
             ['CBPageKindsOptions', $pageKinds]
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
 
     /**
      * @return void
@@ -129,3 +142,4 @@ final class CBAdminPageForPagesFind {
         ];
     }
 }
+/* CBAdminPageForPagesFind */
