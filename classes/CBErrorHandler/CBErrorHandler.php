@@ -26,9 +26,9 @@ final class CBErrorHandler {
      *
      * @param Throwable $throwable
      *
-     * @return null
+     * @return void
      */
-    static function handle(Throwable $throwable) {
+    static function handle(Throwable $throwable): void {
         Colby::reportException($throwable);
 
         try {
@@ -37,27 +37,22 @@ final class CBErrorHandler {
             CBErrorHandler::report($innerThrowable);
         }
     }
+    /* handle() */
+
 
     /**
      * This function renders an HTML page to display an error message. It is
-     * meant to be called only by an exception handler. This function may throw
-     * an exception.
+     * meant to be called only by an exception handler.
      *
      * See CBErrorHandler::handle() for additional documentation.
      *
-     * This function makes two attempts to render an error message to make life
-     * easier for developers. The first attempt uses a CBViewPage to render the
-     * message on a page that looks similar to other pages on the site.
+     * This function attempts to render the error page assuming that the system
+     * is in good working order and the exception that occurred was specific to
+     * the code it was in.
      *
-     * While a developer is workig on the code for the site the first attempt
-     * may fail, for instance if there is currently an issue with rendering the
-     * site header or the site footer. In response to an inner exception this
-     * function will make a second attempt to render a page to report the inner
-     * exception using fewer code paths.
-     *
-     * If this second attempt to render fails, the second inner exception will
-     * be thrown back to the exception handler that called this function and
-     * that exception will be logged. In this case no page will be rendered.
+     * However, if an exception occurs when trying to render the page, this
+     * function treats that as if there are serious system issues and renders
+     * a basic error page and exits.
      *
      * @param Throwable $throwable
      *
@@ -79,61 +74,75 @@ final class CBErrorHandler {
 
             CBExceptionView::popThrowable();
         } catch (Throwable $innerThrowable) {
-            if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
-                $innerErrorMessage = 'INNER ERROR: ' .
-                    CBConvert::throwableToMessage($innerThrowable);
-                $errorMessage = 'ORIGINAL ERROR: ' .
-                    CBConvert::throwableToMessage($throwable);
-                $errorStackTrace = CBConvert::throwableToStackTrace($throwable);
-            } else {
-                $innerErrorMessage = 'Sorry, something has gone wrong. An ' .
-                    'error occurred on this page and our administrators have ' .
-                    'been notified.';
-                $errorMessage = '';
-                $errorStackTrace = '';
+            CBErrorHandler::report($innerThrowable);
+
+            CBErrorHandler::renderErrorReportPageForInnerErrorAndExit(
+                $throwable,
+                $innerThrowable
+            );
+        }
+    }
+    /* renderErrorReportPage() */
+
+
+    /**
+     * This function called to render an error page in cases where an original
+     * exception occurred and during the process of trying to render an error
+     * page another exception occurred.
+     *
+     *
+     * @param Throwable $originalThrowable
+     * @param Throwable $innerThrowable
+     *
+     * @return void
+     */
+    static function renderErrorReportPageForInnerErrorAndExit(
+        Throwable $originalThrowable,
+        Throwable $innerThrowable
+    ): void {
+        try {
+            while (ob_get_level() > 0) {
+                ob_end_clean();
             }
-
-            $CSS = <<<EOT
-
-                body {
-                    align-items: center;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                }
-
-                body > * {
-                    box-sizing: border-box;
-                    max-width: 100%;
-                    padding: 20px;
-                }
-
-                .stack {
-                    overflow-x: auto;
-                    white-space: pre-line;
-                }
-
-EOT;
-
-            CBHTMLOutput::reset();
-            CBHTMLOutput::addCSS($CSS);
-            CBHTMLOutput::begin();
-
-            $info = CBHTMLOutput::pageInformation();
-            $info->classNameForPageSettings = 'CBPageSettingsForResponsivePages';
-            $info->title = "Error";
 
             ?>
 
-            <div><?= cbhtml($innerErrorMessage) ?></div>
-            <div><?= cbhtml($errorMessage) ?></div>
-            <div class="stack"><?= cbhtml($errorStackTrace) ?></div>
+            <!doctype html>
+            <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Error</title>
+                    <meta name="description" content="">
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <style>
+                        * {
+                            margin: 0;
+                        }
+                        html {
+                            -webkit-text-size-adjust: 100%;
+                            -ms-text-size-adjust: 100%;
+                        }
+                        body {
+                            padding: 40px 20px;
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <body>
+                    An error has occurred.
+                </body>
+            </html>
 
             <?php
-
-            CBHTMLOutput::render();
+        } catch (Throwable $innerInnerException) {
+            /* this is a severe situation */
+            CBErrorHandler::report($innerInnerException);
+        } finally {
+            exit;
         }
     }
+    /* renderErrorReportPageForInnerError() */
+
 
     /**
      * This function:
@@ -220,7 +229,11 @@ EOT;
                 }
             } catch (Throwable $innerThrowable) {
                 $message = $innerThrowable->getMessage();
-                $firstLine = "INNER ERROR \"{$message}\" occurred when Colby::reportException() attempted to generate a message";
+
+                $firstLine =
+                "INNER ERROR \"{$message}\" occurred when"
+                . " Colby::reportException() attempted to generate a message";
+
                 $messageAsMarkup = $firstLine;
             }
 
@@ -233,23 +246,38 @@ EOT;
             } catch (Throwable $innerThrowable) {
                 $serialNumber = '';
                 $message = $innerThrowable->getMessage();
-                error_log("INNER ERROR \"{$message}\" occurred when Colby::reportException() attempted to create a log entry AFTER {$firstLine}");
+
+                error_log(
+                    "INNER ERROR \"{$message}\" occurred when"
+                    . " Colby::reportException() attempted to create a log"
+                    . " entry AFTER {$firstLine}"
+                );
             }
 
             try {
-                $link = cbsiteurl() . "/admin/page/?class=CBLogAdminPage&serialNumber={$serialNumber}";
+                $link =
+                cbsiteurl()
+                . "/admin/page/?class=CBLogAdminPage&serialNumber={$serialNumber}";
 
                 CBSlack::sendMessage((object)[
                     'message' => "{$firstLine} <{$link}|link>",
                 ]);
             } catch (Throwable $innerThrowable) {
                 $message = $innerThrowable->getMessage();
-                error_log("INNER ERROR \"{$message}\" occurred when Colby::reportException() attempted to send a Slack message AFTER {$firstLine}");
+
+                error_log(
+                    "INNER ERROR \"{$message}\" occurred when"
+                    . " Colby::reportException() attempted to send a Slack"
+                    . " message AFTER {$firstLine}"
+                );
             }
         } catch (Throwable $innerThrowable) {
             try {
                 $message = $innerThrowable->getMessage();
-                error_log("INNER ERROR \"{$message}\" occurred inside Colby::reportException()");
+
+                error_log(
+                    "INNER ERROR \"{$message}\" occurred inside Colby::reportException()"
+                );
             } catch (Throwable $secondInnerThrowable) {
                 /**
                  * Things are really bad if this point is reached. This catch is
@@ -259,4 +287,6 @@ EOT;
             }
         }
     }
+    /* report() */
 }
+/* CBErrorHandler */
