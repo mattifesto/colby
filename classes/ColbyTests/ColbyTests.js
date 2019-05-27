@@ -13,54 +13,6 @@ var ColbyTests = {
     /**
      * @return undefined
      */
-    CBTest_centsToDollars: function () {
-        var tests = [];
-
-        tests.push({
-            "input" : 0,
-            "expected" : "0.00"
-        });
-
-        tests.push({
-            "input" : "020",
-            "expected" : "0.20"
-        });
-
-        tests.push({
-            "input" : "10",
-            "expected" : "0.10"
-        });
-
-        tests.push({
-            "input" : 110,
-            "expected" : "1.10"
-        });
-
-        tests.push({
-            "input" : 3234393,
-            "expected" : "32343.93"
-        });
-
-        tests.forEach(function (test) {
-            var result = Colby.centsToDollars(test.input);
-
-            if (result != test.expected) {
-                throw new Error("Input: " + test.input +
-                                " Result: " + result +
-                                " Expected: " + test.expected);
-            }
-        });
-
-        return {
-            succeeded: true,
-        };
-    },
-    /* CBTest_centsToDollars() */
-
-
-    /**
-     * @return undefined
-     */
     CBTest_dateToString: function () {
         var now = new Date('2012/12/16 10:51 pm');
         var tests = [];

@@ -18,20 +18,32 @@ final class ColbyTests {
     /* -- CBTest interfaces -- -- -- -- -- */
 
     /**
-     * @return [[<className>, <testName>]]
+     * @return [object]
      */
-    static function CBTest_JavaScriptTests(): array {
+    static function CBTest_getTests(): array {
         return [
-            ['Colby', 'centsToDollars'],
-            ['Colby', 'dateToString'],
-            ['Colby', 'random160'],
+            (object)[
+                'title' => 'Colby.dateToString()',
+                'name' => 'dateToString',
+            ],
+            (object)[
+                'title' => 'Colby.random160()',
+                'name' => 'random160',
+            ],
+            (object)[
+                'type' => 'server',
+                'title' => 'Colby::encrypt() and Colby::decrypt()',
+                'name' => 'encrypt',
+            ],
         ];
     }
+    /* CBTest_tests() */
+
 
     /**
-     * @return null
+     * @return object
      */
-    static function encryptionTest() {
+    static function CBTest_encrypt(): stdClass {
         $originalText = 'Hello, world!';
 
         $cipherOutput = Colby::encrypt($originalText);
@@ -39,7 +51,17 @@ final class ColbyTests {
         $decryptedText = Colby::decrypt($cipherOutput);
 
         if ($decryptedText !== $originalText) {
-            throw new Exception("Text was not the same after being encrypted and decrypted. Decrypted: \"{$decryptedText}\" Original: \"{$originalText}\"");
+            return CBTest::resultMismatchFailure(
+                'Colby::encrypt() test',
+                $decryptedText,
+                $originalText
+            );
         }
+
+        return (object) [
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_encrypt() */
 }
+/* ColbyTests */

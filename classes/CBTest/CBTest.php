@@ -321,7 +321,6 @@ EOT;
             ['CBView',                  'render'],
             ['CBView',                  'toSubviews'],
             ['CBViewPage',              'save'],
-            ['Colby',                   'encryption'],
             ['ColbyMarkaroundParser',   'orderedList'],
             ['ColbyMarkaroundParser',   'paragraph'],
             ['ColbyMarkaroundParser',   'unorderedList'],
