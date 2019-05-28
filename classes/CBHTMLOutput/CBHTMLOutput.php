@@ -287,12 +287,18 @@ final class CBHTMLOutput {
         );
 
         foreach ($resolvedClassNames as $className) {
-            if (is_callable($function = "{$className}::CBHTMLOutput_CSSURLs") || is_callable($function = "{$className}::requiredCSSURLs")) {
+            if (
+                is_callable($function = "{$className}::CBHTMLOutput_CSSURLs") ||
+                is_callable($function = "{$className}::requiredCSSURLs")
+            ) {
                 $URLs = call_user_func($function);
                 array_walk($URLs, function ($URL) { CBHTMLOutput::addCSSURL($URL); });
             }
 
-            if (is_callable($function = "{$className}::CBHTMLOutput_JavaScriptURLs") || is_callable($function = "{$className}::requiredJavaScriptURLs")) {
+            if (
+                is_callable($function = "{$className}::CBHTMLOutput_JavaScriptURLs") ||
+                is_callable($function = "{$className}::requiredJavaScriptURLs")
+            ) {
                 $URLs = call_user_func($function);
                 array_walk($URLs, function ($URL) { CBHTMLOutput::addJavaScriptURLForRequiredClass($URL); });
             }
