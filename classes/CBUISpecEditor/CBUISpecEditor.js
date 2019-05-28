@@ -4,8 +4,9 @@
 /* exported CBUISpecEditor */
 /* global
     CBDefaultEditor,
+    CBException,
+    CBModel,
     CBUINavigationView,
-    Colby,
 */
 
 var CBUISpecEditor = {
@@ -20,31 +21,63 @@ var CBUISpecEditor = {
      *      {
      *          spec: model
      *          specChangedCallback: function
+     *          useStrict: bool
+     *
+     *              If strict is true, an editor will only be created if a
+     *              properly implemented editor exists for the spec.
      *      }
      *
      * @return object
      *
      *      {
-     *          element: Element
+     *          element: Element|undefined
      *      }
      */
     create: function (args) {
-        var spec = args.spec;
-        var editorFactory = window[spec.className + "Editor"] ||
-                            window[spec.className + "EditorFactory"] ||
-                            CBDefaultEditor;
+        let spec = CBModel.valueAsModel(args, "spec");
+
+        if (spec === undefined) {
+            throw CBException.withError(
+                TypeError("The \"spec\" argument must be a model."),
+                "",
+                "3593d2e3851720b1f4155b5e502b0a9bf7f33512"
+            );
+        }
+
+        let useStrict = CBModel.valueToBool(args, "useStrict");
+        let className = CBModel.valueToString(spec, "className");
+
+        let editorObject;
+        let element;
+
+        if (useStrict) {
+            editorObject = window[className + "Editor"];
+        } else {
+            editorObject =
+            window[className + "Editor"] ||
+            window[className + "EditorFactory"] ||
+            CBDefaultEditor;
+        }
+
+        if (editorObject) {
+            element = editorObject.createEditor(
+                {
+                    spec: spec,
+                    specChangedCallback: args.specChangedCallback,
+
+                    /**
+                     * @deprecated Editors should directly use
+                     * CBUINavigationView.navigate()
+                     */
+                    navigateToItemCallback: CBUINavigationView.navigate,
+                }
+            );
+        }
 
         return {
-            element: editorFactory.createEditor({
-
-                /**
-                 * @deprecated Editors should directly use CBUINavigationView.navigate()
-                 */
-                navigateToItemCallback: CBUINavigationView.navigate,
-
-                spec: spec,
-                specChangedCallback: args.specChangedCallback,
-            }),
+            element: element,
         };
     },
+    /* create() */
 };
+/* CBUISpecEditor */
