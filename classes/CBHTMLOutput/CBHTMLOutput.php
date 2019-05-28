@@ -100,8 +100,14 @@ final class CBHTMLOutput {
      * @return null
      */
     static function addJavaScriptSnippet($javaScriptSnippetFilename) {
-        if (!in_array($javaScriptSnippetFilename, CBHTMLOutput::$javaScriptSnippetFilenames)) {
-            CBHTMLOutput::$javaScriptSnippetFilenames[] = $javaScriptSnippetFilename;
+        if (
+            !in_array(
+                $javaScriptSnippetFilename,
+                CBHTMLOutput::$javaScriptSnippetFilenames
+            )
+        ) {
+            CBHTMLOutput::$javaScriptSnippetFilenames[] =
+            $javaScriptSnippetFilename;
         }
     }
 
@@ -124,7 +130,12 @@ final class CBHTMLOutput {
         if (true === $options) {
             $backtrace = debug_backtrace();
 
-            error_log("Use of a boolean parameter with the `CBHTMLOutput::addJavaScriptURL` method has been deprecated. Used in {$backtrace[0]['file']} on line {$backtrace[0]['line']}");
+            error_log(
+                'Use of a boolean parameter with the'
+                . ' `CBHTMLOutput::addJavaScriptURL()` method has been'
+                . " deprecated. Used in {$backtrace[0]['file']} on line"
+                . " {$backtrace[0]['line']}"
+            );
 
             $options = CBHTMLOutput::JSAsync;
         }
@@ -190,7 +201,10 @@ final class CBHTMLOutput {
 
         if (empty($className)) {
             $className = CBConvert::valueToString(
-                CBModel::value(CBHTMLOutput::$pageInformation, 'classNameForPageSettings')
+                CBModel::value(
+                    CBHTMLOutput::$pageInformation,
+                    'classNameForPageSettings'
+                )
             );
         }
 
@@ -278,7 +292,9 @@ final class CBHTMLOutput {
      */
     private static function processRequiredClassNames() {
         $requiredClassNames = array_keys(CBHTMLOutput::$requiredClassNames);
-        $resolvedClassNames = CBRequiredClassNamesResolver::resolveRequiredClassNames(
+
+        $resolvedClassNames =
+        CBRequiredClassNamesResolver::resolveRequiredClassNames(
             $requiredClassNames,
             [
                 'CBHTMLOutput_requiredClassNames',
@@ -292,7 +308,13 @@ final class CBHTMLOutput {
                 is_callable($function = "{$className}::requiredCSSURLs")
             ) {
                 $URLs = call_user_func($function);
-                array_walk($URLs, function ($URL) { CBHTMLOutput::addCSSURL($URL); });
+
+                array_walk(
+                    $URLs,
+                    function ($URL) {
+                        CBHTMLOutput::addCSSURL($URL);
+                    }
+                );
             }
 
             if (
@@ -300,7 +322,13 @@ final class CBHTMLOutput {
                 is_callable($function = "{$className}::requiredJavaScriptURLs")
             ) {
                 $URLs = call_user_func($function);
-                array_walk($URLs, function ($URL) { CBHTMLOutput::addJavaScriptURLForRequiredClass($URL); });
+
+                array_walk(
+                    $URLs,
+                    function ($URL) {
+                        CBHTMLOutput::addJavaScriptURLForRequiredClass($URL);
+                    }
+                );
             }
 
             if (
@@ -308,36 +336,43 @@ final class CBHTMLOutput {
                 is_callable($function = "{$className}::requiredJavaScriptVariables")
             ) {
                 $variables = call_user_func($function);
-                array_walk($variables, function ($variable, $index) use ($function) {
-                    if (is_array($variable) && count($variable) > 1) {
-                        CBHTMLOutput::exportVariable($variable[0], $variable[1]);
-                    } else {
-                        $valueAsJSONAsMessage = CBMessageMarkup::stringToMessage(
-                            CBConvert::valueToPrettyJSON($variable)
-                        );
 
-                        $message = <<<EOT
+                array_walk(
+                    $variables,
+                    function ($variable, $index) use ($function) {
+                        if (is_array($variable) && count($variable) > 1) {
+                            CBHTMLOutput::exportVariable($variable[0], $variable[1]);
+                        } else {
+                            $valueAsJSONAsMessage = CBMessageMarkup::stringToMessage(
+                                CBConvert::valueToPrettyJSON($variable)
+                            );
 
-                            Each element in the array returned from a
-                            CBHTMLOutput_JavaScriptVariables() implementation
-                            should be another array with more than one element.
+                            $message = <<<EOT
 
-                            Index {$index} has the value:
+                                Each element in the array returned from a
+                                CBHTMLOutput_JavaScriptVariables()
+                                implementation should be another array with more
+                                than one element.
 
-                            --- pre\n{$valueAsJSONAsMessage}
-                            ---
+                                Index {$index} has the value:
+
+                                --- pre\n{$valueAsJSONAsMessage}
+                                ---
 
 EOT;
 
-                        throw new CBException(
-                            'A CBHTMLOutput_JavaScriptVariables() ' .
-                            'implementation returned a bad value.',
-                            $message
-                        );
+                            throw new CBException(
+                                'A CBHTMLOutput_JavaScriptVariables() ' .
+                                'implementation returned a bad value.',
+                                $message
+                            );
+                        }
                     }
-                });
+                );
+                /* array_walk() */
             }
         }
+        /* foreach */
     }
     /* processRequiredClassNames() */
 
@@ -351,14 +386,23 @@ EOT;
         ob_start();
 
         if ($className = CBHTMLOutput::classNameForPageSettings()) {
-            $pageSettingsClassNames = CBPageSettings::requiredClassNames([$className]);
+            $pageSettingsClassNames = CBPageSettings::requiredClassNames(
+                [
+                    $className,
+                ]
+            );
         } else {
             $pageSettingsClassNames = [];
         }
 
-        $htmlElementClassNames = CBPageSettings::htmlElementClassNames($pageSettingsClassNames);
+        $htmlElementClassNames = CBPageSettings::htmlElementClassNames(
+            $pageSettingsClassNames
+        );
 
-        array_walk($htmlElementClassNames, 'CBHTMLOutput::requireClassName');
+        array_walk(
+            $htmlElementClassNames,
+            'CBHTMLOutput::requireClassName'
+        );
 
         CBHTMLOutput::processRequiredClassNames();
 
@@ -369,7 +413,12 @@ EOT;
         ?>
 
         <!doctype html>
-        <html lang="en" class="<?= cbhtml(implode(' ',$htmlElementClassNames)) ?>">
+        <html lang="en" class="<?= cbhtml(
+            implode(
+                ' ',
+                $htmlElementClassNames
+            )
+        ) ?>">
             <head>
                 <meta charset="UTF-8">
                 <title><?= cbhtml($title) ?></title>
@@ -381,7 +430,11 @@ EOT;
 
                 if (!empty($imageForIcon)) {
                     $basename = "rw320.{$imageForIcon->extension}";
-                    $iconURL = CBDataStore::flexpath($imageForIcon->ID, $basename, CBSiteURL);
+                    $iconURL = CBDataStore::flexpath(
+                        $imageForIcon->ID,
+                        $basename,
+                        cbsiteurl()
+                    );
 
                     ?>
                     <link rel="icon" sizes="320x320" href="<?= $iconURL ?>">
@@ -397,10 +450,19 @@ EOT;
                 ?>
             </head>
             <body>
-                <?php CBPageSettings::renderPreContentHTML($pageSettingsClassNames) ?>
-                <?php echo $bodyContent; $bodyContent = null; ?>
-                <?php CBPageSettings::renderPostContentHTML($pageSettingsClassNames) ?>
-                <?php CBHTMLOutput::renderJavaScript(); ?>
+                <?php
+
+                CBPageSettings::renderPreContentHTML($pageSettingsClassNames);
+
+                echo $bodyContent;
+
+                $bodyContent = null;
+
+                CBPageSettings::renderPostContentHTML($pageSettingsClassNames);
+
+                CBHTMLOutput::renderJavaScript();
+
+                ?>
             </body>
         </html>
 
@@ -431,7 +493,9 @@ EOT;
      */
     static function render404() {
         CBHTMLOutput::reset();
+
         include Colby::findFile('handlers/handle-default.php');
+
         exit;
     }
 
@@ -448,7 +512,10 @@ EOT;
      * @return null
      */
     private static function renderJavaScript() {
-        if (!empty(CBHTMLOutput::$exportedVariables) || !empty(CBHTMLOutput::$exportedLists)) {
+        if (
+            !empty(CBHTMLOutput::$exportedVariables) ||
+            !empty(CBHTMLOutput::$exportedLists)
+        ) {
             echo "<script>\n\"use strict\";\n";
 
             foreach (CBHTMLOutput::$exportedVariables as $name => $value) {
@@ -466,11 +533,15 @@ EOT;
             echo "</script>\n";
         }
 
-        foreach (CBHTMLOutput::$javaScriptURLsForRequiredClasses as $URL => $options) {
+        foreach (
+            CBHTMLOutput::$javaScriptURLsForRequiredClasses as $URL => $options
+        ) {
             echo "<script src=\"{$URL}\"></script>";
         }
 
-        foreach (CBHTMLOutput::$javaScriptURLs as $URL => $options) {
+        foreach (
+            CBHTMLOutput::$javaScriptURLs as $URL => $options
+        ) {
             if (isset(CBHTMLOutput::$javaScriptURLsForRequiredClasses[$URL])) {
                 continue;
             }
@@ -483,7 +554,9 @@ EOT;
             }
         }
 
-        foreach (CBHTMLOutput::$javaScriptSnippetFilenames as $snippetFilename) {
+        foreach (
+            CBHTMLOutput::$javaScriptSnippetFilenames as $snippetFilename
+        ) {
             include $snippetFilename;
         }
 
@@ -494,10 +567,11 @@ EOT;
         }
     }
 
+
     /**
-     * @return null
+     * @return void
      */
-    private static function renderJavaScriptInHead() {
+    private static function renderJavaScriptInHead(): void {
         foreach (CBHTMLOutput::$javaScriptURLs as $URL => $options) {
             if ($options & CBHTMLOutput::JSInHeadElement) {
                 $async = $options & CBHTMLOutput::JSAsync ? 'async ' : '';
@@ -508,28 +582,31 @@ EOT;
         }
     }
 
+
     /**
-     * @return null
+     * @return void
      */
-    private static function renderStyleSheets() {
+    private static function renderStyleSheets(): void {
         array_walk(CBHTMLOutput::$styleSheets, function ($styleSheet) {
             echo "<style>$styleSheet</style>";
         });
     }
 
+
     /**
-     * @return null
+     * @return void
      */
-    static function requireClassName($className) {
+    static function requireClassName($className): void {
         if (!array_key_exists($className, CBHTMLOutput::$requiredClassNames)) {
             CBHTMLOutput::$requiredClassNames[$className] = true;
         }
     }
 
+
     /**
-     * @return null
+     * @return void
      */
-    static function reset() {
+    static function reset(): void {
         if (CBHTMLOutput::$isActive) {
             restore_exception_handler();
             ob_end_clean();
@@ -558,6 +635,8 @@ EOT;
 
         CBHTMLOutput::requireClassName('Colby');
     }
+    /* reset() */
 }
+/* CBHTMLOutput */
 
 CBHTMLOutput::reset();
