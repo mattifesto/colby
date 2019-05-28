@@ -18,7 +18,7 @@ final class CBUISpecEditor_Tests {
     /**
      * @TODO 2019_05_27
      *
-     *      Eventually we want to have all model editors registerd and fetch
+     *      Eventually we want to have all model editors registered and fetch
      *      them here by using an API.
      *
      * @return [string]

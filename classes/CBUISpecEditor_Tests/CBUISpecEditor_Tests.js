@@ -19,6 +19,10 @@ var CBUISpecEditor_Tests = {
                 image: 5,
             },
             {
+                className: "CBBackgroundView",
+                image: 5,
+            },
+            {
                 className: "CBViewPage",
                 image: 5,
             },
