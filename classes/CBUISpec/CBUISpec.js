@@ -1,8 +1,10 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBUISpec */
 /* globals
-    Colby */
+    CBImage,
+*/
 
 var CBUISpec = {
 
@@ -54,9 +56,14 @@ var CBUISpec = {
             /* deprecated */
             return editor.specToThumbnailURI.call(undefined, spec);
         } else if (spec.image) {
-            return Colby.imageToURL(spec.image, 'rw320');
+            return CBImage.toURL(
+                spec.image,
+                'rw320'
+            );
         } else {
             return undefined;
         }
     },
+    /* specToThumbnailURI() */
 };
+/* CBUISpec */
