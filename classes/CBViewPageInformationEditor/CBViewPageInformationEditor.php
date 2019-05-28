@@ -2,43 +2,76 @@
 
 final class CBViewPageInformationEditor {
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
-            'CBUI',
-            'CBUIActionLink',
-            'CBUIImageChooser',
-            'CBUISectionItem4',
-            'CBUISelector',
-            'CBUISpecPropertyEditor',
-            'CBUIStringEditor',
-            'CBUIStringsPart',
-            'CBUIUnixTimestampEditor'
-        ];
-    }
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v420.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+        ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [[string, mixed]]
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
-            ['CBCurrentUserID', ColbyUser::currentUserId()],
-            ['CBPageClassNamesForLayouts', CBPagesPreferences::classNamesForLayouts()],
-            ['CBUsersWhoAreAdministrators', CBViewPageInformationEditor::usersWhoAreAdministrators()],
-            ['CBViewPageInformationEditor_frameClassNames', CBPageFrameCatalog::fetchClassNames()],
-            ['CBViewPageInformationEditor_kindClassNames', CBPageKindCatalog::fetchClassNames()],
-            ['CBViewPageInformationEditor_settingsClassNames', CBPageSettingsCatalog::fetchClassNames()],
+            [
+                'CBCurrentUserID',
+                ColbyUser::currentUserId()
+            ],
+            [
+                'CBPageClassNamesForLayouts',
+                CBPagesPreferences::classNamesForLayouts()
+            ],
+            [
+                'CBUsersWhoAreAdministrators',
+                CBViewPageInformationEditor::usersWhoAreAdministrators()
+            ],
+            [
+                'CBViewPageInformationEditor_frameClassNames',
+                CBPageFrameCatalog::fetchClassNames()
+            ],
+            [
+                'CBViewPageInformationEditor_kindClassNames',
+                CBPageKindCatalog::fetchClassNames()
+            ],
+            [
+                'CBViewPageInformationEditor_settingsClassNames',
+                CBPageSettingsCatalog::fetchClassNames()
+            ],
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBImage',
+            'CBUI',
+            'CBUIActionLink',
+            'CBUIBooleanEditor',
+            'CBUIImageChooser',
+            'CBUISectionItem4',
+            'CBUISelector',
+            'CBUISpecPropertyEditor',
+            'CBUIStringEditor',
+            'CBUIStringsPart',
+            'CBUIUnixTimestampEditor',
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames */
+
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @return [{stdClass}]
