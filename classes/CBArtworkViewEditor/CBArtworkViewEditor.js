@@ -3,12 +3,14 @@
 /* jshint esversion: 6 */
 /* exported CBArtworkViewEditor */
 /* globals
+    CBImage,
     CBUI,
     CBUIImageChooser,
     CBUISelector,
     CBUIStringEditor,
+    Colby,
+
     CBViewPageEditor,
-    Colby
 */
 
 var CBArtworkViewEditor = {
@@ -72,8 +74,20 @@ var CBArtworkViewEditor = {
                 {title: "800 CSS pixels (default)"},
                 {title: "960 CSS pixels", value: "rw1920"},
                 {title: "1280 CSS pixels", value: "rw2560"},
-                {title: "Image Width", description: "The maximum width in CSS pixels is half the count of horizontal pixels of the uploaded image.", value: "original"},
-                {title: "Page Width", description: "The uploaded image will always use the full width of the page regardless of its size.", value: "page"},
+                {
+                    title: "Image Width",
+                    description:
+                    "The maximum width in CSS pixels is half the count of" +
+                    " horizontal pixels of the uploaded image.",
+                    value: "original",
+                },
+                {
+                    title: "Page Width",
+                    description:
+                    "The uploaded image will always use the full width of" +
+                    " the page regardless of its size.",
+                    value: "page",
+                },
             ],
             propertyName : "size",
             spec : args.spec,
@@ -119,12 +133,21 @@ var CBArtworkViewEditor = {
         /* set thumbnail */
 
         if (args.spec.image) {
-            chooser.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
+            chooser.setImageURLCallback(
+                CBImage.toURL(args.spec.image, "rw960")
+            );
         }
 
         return element;
 
-        /* closure */
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @param object chooseArgs
+         *
+         * @return undefined
+         */
         function handleImageChosen(chooserArgs) {
             var ajaxURI = "/api/?class=CBImages&function=upload";
             var formData = new FormData();
@@ -138,17 +161,24 @@ var CBArtworkViewEditor = {
             function handleImageUploaded(response) {
                 args.spec.image = response.image;
                 args.specChangedCallback();
-                chooserArgs.setImageURI(Colby.imageToURL(args.spec.image, "rw960"));
+                chooserArgs.setImageURI(
+                    CBImage.toURL(args.spec.image, "rw960")
+                );
                 CBViewPageEditor.suggestThumbnailImage(response.image);
             }
         }
 
-        /* closure */
+
+        /**
+         * @return undefined
+         */
         function handleImageRemoved() {
             args.spec.image = undefined;
             args.specChangedCallback();
         }
     },
+    /* createEditor() */
+
 
     /**
      * @param object spec
@@ -161,10 +191,15 @@ var CBArtworkViewEditor = {
      * @return string|undefined
      */
     CBUISpec_toDescription: function (spec) {
-        if (typeof spec.alternativeText === "string" && spec.alternativeText.trim().length > 0) {
+        if (
+            typeof spec.alternativeText === "string" &&
+            spec.alternativeText.trim().length > 0
+        ) {
             return spec.alternativeText;
         } else {
             return spec.captionAsMarkdown;
         }
     },
+    /* CBUISpec_toDescription() */
 };
+/* CBArtworkViewEditor */

@@ -7,21 +7,27 @@ final class CBArtworkViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            'CBUI',
-            'CBUIImageChooser',
-            'CBUISelector',
-            'CBUIStringEditor'
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function CBHTMLOutput_requiredClassNames(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v469.js', cbsysurl()),
+            'CBImage',
+            'CBUI',
+            'CBUIImageChooser',
+            'CBUISelector',
+            'CBUIStringEditor',
+            'Colby',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 }
+/* CBArtworkViewEditor */
