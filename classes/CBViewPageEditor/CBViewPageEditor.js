@@ -3,11 +3,13 @@
 /* jshint esversion: 6 */
 /* exported CBViewPageEditor */
 /* global
+    CBImage,
     CBUI,
     CBUISpecArrayEditor,
-    CBViewPageEditor_addableClassNames,
     CBViewPageInformationEditor,
     Colby,
+
+    CBViewPageEditor_addableClassNames,
 */
 
 var CBViewPageEditor = {
@@ -47,23 +49,47 @@ var CBViewPageEditor = {
 
         editorContainer.classList.add("CBViewPageEditor");
 
-        editorContainer.appendChild(CBUI.createHalfSpace());
+        editorContainer.appendChild(
+            CBUI.createHalfSpace()
+        );
 
-        /**
-         * Page information
-         */
 
-        editorContainer.appendChild(CBViewPageInformationEditor.createEditor({
-            handleTitleChanged: CBViewPageEditor.handleTitleChanged.bind(undefined, { spec: args.spec }),
-            makeFrontPageCallback: CBViewPageEditor.makeFrontPage.bind(undefined, { ID: args.spec.ID }),
-            navigateToItemCallback: args.navigateToItemCallback,
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }));
-        editorContainer.appendChild(CBUI.createHalfSpace());
+        /* CBViewPageInformationEditor */
+        {
+            let handleTitleChanged =
+            CBViewPageEditor.handleTitleChanged.bind(
+                undefined,
+                {
+                    spec: args.spec,
+                }
+            );
+
+            let makeFrontPageCallback =
+            CBViewPageEditor.makeFrontPage.bind(
+                undefined,
+                {
+                    ID: args.spec.ID,
+                }
+            );
+
+            editorContainer.appendChild(
+                CBViewPageInformationEditor.createEditor(
+                    {
+                        handleTitleChanged: handleTitleChanged,
+                        makeFrontPageCallback: makeFrontPageCallback,
+                        navigateToItemCallback: args.navigateToItemCallback,
+                        spec: args.spec,
+                        specChangedCallback: args.specChangedCallback,
+                    }
+                )
+            );
+
+            editorContainer.appendChild(CBUI.createHalfSpace());
+        }
+        /* CBViewPageInformationEditor */
+
 
         /* views */
-
         {
             if (args.spec.sections === undefined) {
                 args.spec.sections = [];
@@ -81,13 +107,23 @@ var CBViewPageEditor = {
             editorContainer.appendChild(editor.element);
             editorContainer.appendChild(CBUI.createHalfSpace());
         }
+        /* views */
 
-        CBViewPageEditor.handleTitleChanged({spec: args.spec});
 
-        editorContainer.appendChild(CBUI.createHalfSpace());
+        CBViewPageEditor.handleTitleChanged(
+            {
+                spec: args.spec,
+            }
+        );
+
+        editorContainer.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         return editorContainer;
     },
+    /* createEditor() */
+
 
     /**
      * @param object args
@@ -98,7 +134,7 @@ var CBViewPageEditor = {
      *
      * @return undefined
      */
-    handleTitleChanged: function(args) {
+    handleTitleChanged: function (args) {
         var title = args.spec.title || "";
         title = title.trim();
         title = (title.length > 0) ? ": " + title: "";
@@ -124,9 +160,13 @@ var CBViewPageEditor = {
                 function (response) {
                     Colby.alert(response.message);
                 }
-            ).catch(Colby.displayAndReportError);
+            ).catch(
+                Colby.displayAndReportError
+            );
         }
     },
+    /* makeFrontPage() */
+
 
     /**
      * @param model? image
@@ -145,17 +185,27 @@ var CBViewPageEditor = {
             spec.thumbnailURL = undefined;
         } else {
             spec.image = image;
-            spec.thumbnailURL = Colby.imageToURL(image, "rw640");
+            spec.thumbnailURL = CBImage.toURL(
+                image,
+                "rw640"
+            );
         }
 
         var callback = CBViewPageEditor.thumbnailChangedCallback;
 
         if (callback) {
-            callback({ spec: spec, image: image });
+            callback(
+                {
+                    spec: spec,
+                    image: image
+                }
+            );
         }
 
         CBViewPageEditor.specChangedCallback.call();
     },
+    /* setThumbnailImage() */
+
 
     /**
      * @param model image
@@ -169,4 +219,6 @@ var CBViewPageEditor = {
             CBViewPageEditor.setThumbnailImage(image);
         }
     },
+    /* suggestThumbnailImage() */
 };
+/* CBViewPageEditor */

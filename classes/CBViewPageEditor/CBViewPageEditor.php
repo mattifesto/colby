@@ -2,10 +2,37 @@
 
 final class CBViewPageEditor {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables() {
+        return [
+            [
+                'CBViewPageEditor_addableClassNames',
+                CBPagesPreferences::classNamesForAddableViews()
+            ],
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
         $classNamesForEditableViewsAndLayouts = array_merge(
             CBPagesPreferences::classNamesForEditableViews(),
             CBPagesPreferences::classNamesForLayouts()
@@ -18,34 +45,14 @@ final class CBViewPageEditor {
         return array_merge(
             $classNamesForEditors,
             [
+                'CBImage',
                 'CBUI',
-                'CBUINavigationArrowPart',
-                'CBUINavigationView',
-                'CBUISectionItem4',
                 'CBUISpecArrayEditor',
-                'CBUISpecEditor',
-                'CBUISpecSaver',
-                'CBUITitleAndDescriptionPart',
                 'CBViewPageInformationEditor',
+                'Colby',
             ]
         );
     }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v450.js', cbsysurl()),
-        ];
-    }
-
-    /**
-     * @return [[<name>, <value>]]
-     */
-    static function requiredJavaScriptVariables() {
-        return [
-            ['CBViewPageEditor_addableClassNames', CBPagesPreferences::classNamesForAddableViews()],
-        ];
-    }
+    /* CBHTMLOutput_requiredClassNames() */
 }
+/* CBViewPageEditor */
