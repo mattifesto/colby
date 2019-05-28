@@ -2,18 +2,32 @@
 
 final class CBIconLinkViewEditor {
 
-    /**
-     * @return [string]
-     */
-    static function requiredClassNames() {
-        return ['CBUI', 'CBUIBooleanEditor', 'CBUIImageChooser',
-                'CBUIStringEditor'];
-    }
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl())
+        ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBImage',
+            'CBModel',
+            'CBUI',
+            'CBUIBooleanEditor',
+            'CBUIImageChooser',
+            'CBUIStringEditor',
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 }
+/* CBIconLinkViewEditor */

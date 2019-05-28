@@ -1,12 +1,16 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBIconLinkViewEditor */
 /* globals
+    CBImage,
+    CBModel,
     CBUI,
     CBUIBooleanEditor,
     CBUIImageChooser,
     CBUIStringEditor,
-    Colby */
+    Colby,
+*/
 
 var CBIconLinkViewEditor = {
 
@@ -16,7 +20,7 @@ var CBIconLinkViewEditor = {
      *
      * @return Element
      */
-    createEditor : function(args) {
+    createEditor: function(args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBIconLinkViewEditor";
@@ -25,68 +29,105 @@ var CBIconLinkViewEditor = {
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Text",
-            propertyName : "text",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Text",
+                    propertyName: "text",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Text Color",
-            propertyName : "textColor",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Text Color",
+                    propertyName: "textColor",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Alternative Text",
-            propertyName : "alternativeText",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Alternative Text",
+                    propertyName: "alternativeText",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "URL",
-            propertyName : "URL",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "URL",
+                    propertyName: "URL",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Disable Rounded Corners",
-            propertyName : "disableRoundedCorners",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+        item.appendChild(
+            CBUIBooleanEditor.create(
+                {
+                    labelText: "Disable Rounded Corners",
+                    propertyName: "disableRoundedCorners",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
         element.appendChild(section);
 
         /* image  */
 
         element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            paragraphs : [
-                "Suggested Size: 320pt (640px) × 320pt (640px)",
-            ],
-            text : "Image"
-        }));
 
-        var chooser = CBUIImageChooser.createFullSizedChooser({
-            imageChosenCallback : handleImageChosen,
-            imageRemovedCallback : handleImageRemoved,
-        });
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    paragraphs: [
+                        "Suggested Size: 320pt (640px) × 320pt (640px)",
+                    ],
+                    text: "Image"
+                }
+            )
+        );
+
+        var chooser = CBUIImageChooser.createFullSizedChooser(
+            {
+                imageChosenCallback: handleImageChosen,
+                imageRemovedCallback: handleImageRemoved,
+            }
+        );
 
         if (args.spec.image) {
-            chooser.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
+            chooser.setImageURLCallback(
+                CBImage.toURL(args.spec.image, "rw960")
+            );
         }
 
         section = CBUI.createSection();
@@ -107,13 +148,19 @@ var CBIconLinkViewEditor = {
             var formData = new FormData();
             formData.append("image", chooserArgs.file);
 
-            CBIconLinkViewEditor.promise = Colby.fetchAjaxResponse(ajaxURI, formData)
-                .then(handleImageUploaded);
+            CBIconLinkViewEditor.promise = Colby.fetchAjaxResponse(
+                ajaxURI,
+                formData
+            ).then(
+                handleImageUploaded
+            );
 
             function handleImageUploaded(response) {
                 args.spec.image = response.image;
                 args.specChangedCallback();
-                chooserArgs.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
+                chooserArgs.setImageURLCallback(
+                    CBImage.toURL(args.spec.image, "rw960")
+                );
             }
         }
 
@@ -125,30 +172,46 @@ var CBIconLinkViewEditor = {
             args.specChangedCallback();
         }
     },
+    /* createEditor() */
+
 
     /**
      * @param [function] args.callbacks
      *
      * @return undefined
      */
-    imageChanged : function (args) {
-        args.callbacks.forEach(function (callback) {
-            callback.call();
-        });
+    imageChanged: function (args) {
+        args.callbacks.forEach(
+            function (callback) {
+                callback.call();
+            }
+        );
     },
+    /* imageChanged() */
+
 
     /**
      * @param string? spec.text
      *
      * @return string|undefined
      */
-    specToDescription : function (spec) {
-        if (typeof spec.text === "string" && spec.text.trim()) {
-            return spec.text;
-        } else if (typeof spec.alternativeText === "string" && spec.alternativeText.trim()) {
-            return spec.alternativeText;
-        } else {
-            return undefined;
+    CBUISpec_toDescription: function (spec) {
+        let text =
+        CBModel.valueToString(spec, "text").trim();
+
+        if (text !== "") {
+            return text;
         }
+
+        let alternativeText =
+        CBModel.valueToString(spec, "alternativeText").trim();
+
+        if (alternativeText !== "") {
+            return alternativeText;
+        }
+
+        return undefined;
     },
+    /* CBUISpec_toDescription() */
 };
+/* CBIconLinkViewEditor */
