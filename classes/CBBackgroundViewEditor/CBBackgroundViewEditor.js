@@ -3,14 +3,18 @@
 /* jshint esversion: 6 */
 /* exported CBBackgroundViewEditor */
 /* global
+    CBImage,
+    CBModel,
     CBUI,
-    CBBackgroundViewEditor_addableClassNames,
     CBUIBooleanEditor,
     CBUIImageChooser,
     CBUISpec,
     CBUISpecArrayEditor,
     CBUIStringEditor,
-    Colby */
+    Colby,
+
+    CBBackgroundViewEditor_addableClassNames,
+*/
 
 var CBBackgroundViewEditor = {
 
@@ -20,12 +24,16 @@ var CBBackgroundViewEditor = {
      * @return string|undefined
      */
     CBUISpec_toDescription: function (spec) {
-        if (typeof spec.title === "string" && spec.title.trim() !== "") {
-            return spec.title.trim();
+        let title = CBModel.valueToString(spec, "title").trim();
+
+        if (title !== "") {
+            return title;
         } else {
             if (Array.isArray(spec.children)) {
                 for (let i = 0; i < spec.children.length; i++) {
-                    let description = CBUISpec.specToDescription(spec.children[i]);
+                    let description = CBUISpec.specToDescription(
+                        spec.children[i]
+                    );
 
                     if (description) {
                         return description;
@@ -34,6 +42,8 @@ var CBBackgroundViewEditor = {
             }
         }
     },
+    /* CBUISpec_toDescription() */
+
 
     /**
      * @param object spec
@@ -42,13 +52,18 @@ var CBBackgroundViewEditor = {
      */
     CBUISpec_toThumbnailURI: function (spec) {
         if (spec.image) {
-            return Colby.imageToURL(spec.image, 'rw320');
+            return CBImage.toURL(
+                spec.image,
+                'rw320'
+            );
         } else if (spec.imageURL) {
             return spec.imageURL;
         } else {
             if (Array.isArray(spec.children)) {
                 for (let i = 0; i < spec.children.length; i++) {
-                    let thumbnailURI = CBUISpec.specToThumbnailURI(spec.children[i]);
+                    let thumbnailURI = CBUISpec.specToThumbnailURI(
+                        spec.children[i]
+                    );
 
                     if (thumbnailURI) {
                         return thumbnailURI;
@@ -57,6 +72,8 @@ var CBBackgroundViewEditor = {
             }
         }
     },
+    /* CBUISpec_toThumbnailURI() */
+
 
     /**
      * @param function args.navigateToItemCallback
@@ -65,7 +82,7 @@ var CBBackgroundViewEditor = {
      *
      * @return Element
      */
-    createEditor: function(args) {
+    createEditor: function (args) {
         CBBackgroundViewEditor.prepareSpec(args.spec);
 
         var section, item;
@@ -145,50 +162,46 @@ var CBBackgroundViewEditor = {
             text: "Background Image"
         }));
 
-        var chooser = CBUIImageChooser.createFullSizedChooser({
-            imageChosenCallback: function (chooserArgs) {
-                var formData = new FormData();
-                formData.append("image", chooserArgs.file);
+        var chooser = CBUIImageChooser.createFullSizedChooser(
+            {
+                imageChosenCallback: function (chooserArgs) {
+                    var formData = new FormData();
+                    formData.append("image", chooserArgs.file);
 
-                Colby.fetchAjaxResponse("/api/?class=CBImages&function=upload", formData)
-                    .then(function (response) {
-                        args.spec.image = response.image;
-                        args.spec.imageHeight = response.image.height;
-                        args.spec.imageWidth = response.image.width;
-                        args.spec.imageURL = Colby.imageToURL(response.image);
+                    Colby.fetchAjaxResponse(
+                        "/api/?class=CBImages&function=upload",
+                        formData
+                    ).then(
+                        function (response) {
+                            args.spec.image = response.image;
+                            args.spec.imageHeight = response.image.height;
+                            args.spec.imageWidth = response.image.width;
+                            args.spec.imageURL = CBImage.toURL(
+                                response.image
+                            );
 
-                        updateImagePreview();
+                            updateImagePreview();
 
-                        args.specChangedCallback();
-                    })
-                    .catch(Colby.displayAndReportError);
-            },
-            imageRemovedCallback: function () {
-                args.spec.image = undefined;
-                args.spec.imageHeight = undefined;
-                args.spec.imageWidth = undefined;
-                args.spec.imageURL = undefined;
+                            args.specChangedCallback();
+                        }
+                    ).catch(
+                        Colby.displayAndReportError
+                    );
+                },
+                imageRemovedCallback: function () {
+                    args.spec.image = undefined;
+                    args.spec.imageHeight = undefined;
+                    args.spec.imageWidth = undefined;
+                    args.spec.imageURL = undefined;
 
-                updateImagePreview();
+                    updateImagePreview();
 
-                args.specChangedCallback();
-            },
-        });
-
-        function updateImagePreview() {
-            if (args.spec.imageURL) {
-                if (args.spec.image) {
-                    chooser.setImageURLCallback(Colby.imageToURL(args.spec.image, 'rw960'));
-                } else {
-                    chooser.setImageURLCallback(args.spec.imageURL);
-                }
-
-                chooser.setCaptionCallback(args.spec.imageWidth + "px × " + args.spec.imageHeight + "px");
-            } else {
-                chooser.setImageURLCallback();
-                chooser.setCaptionCallback("");
+                    args.specChangedCallback();
+                },
             }
-        }
+        );
+        /*  CBUIImageChooser.createFullSizedChooser() */
+
 
         updateImagePreview();
 
@@ -201,7 +214,32 @@ var CBBackgroundViewEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         return element;
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return undefined
+         */
+        function updateImagePreview() {
+            if (args.spec.imageURL) {
+                if (args.spec.image) {
+                    chooser.setImageURLCallback(
+                        CBImage.toURL(args.spec.image, 'rw960')
+                    );
+                } else {
+                    chooser.setImageURLCallback(args.spec.imageURL);
+                }
+
+                chooser.setCaptionCallback(args.spec.imageWidth + "px × " + args.spec.imageHeight + "px");
+            } else {
+                chooser.setImageURLCallback();
+                chooser.setCaptionCallback("");
+            }
+        }
+        /* updateImagePreview */
     },
+    /* createEditor() */
+
 
     /**
      * @return undefined
@@ -215,4 +253,6 @@ var CBBackgroundViewEditor = {
             spec.minimumViewHeightIsImageHeight = true;
         }
     },
+    /* prepareSpec() */
 };
+/* CBBackgroundViewEditor */
