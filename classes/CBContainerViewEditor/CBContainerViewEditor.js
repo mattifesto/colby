@@ -3,14 +3,18 @@
 /* jshint esversion: 6 */
 /* exported CBContainerViewEditor */
 /* globals
-    CBContainerViewEditor_addableClassNames,
+    CBImage,
+    CBModel,
     CBUI,
     CBUIImageChooser,
     CBUISelector,
     CBUISpec,
     CBUISpecArrayEditor,
     CBUIStringEditor,
-    Colby */
+    Colby,
+
+    CBContainerViewEditor_addableClassNames,
+*/
 
 var CBContainerViewEditor = {
 
@@ -20,8 +24,10 @@ var CBContainerViewEditor = {
      * @return string|undefined
      */
     CBUISpec_toDescription: function (spec) {
-        if (typeof spec.title === "string" && spec.title.trim() !== "") {
-            return spec.title.trim();
+        let title = CBModel.valueToString(spec, "title").trim();
+
+        if (title !== "") {
+            return title;
         } else {
             if (Array.isArray(spec.subviews)) {
                 for (let i = 0; i < spec.subviews.length; i++) {
@@ -34,6 +40,8 @@ var CBContainerViewEditor = {
             }
         }
     },
+    /* CBUISpec_toDescription() */
+
 
     /**
      * @param object spec
@@ -44,7 +52,10 @@ var CBContainerViewEditor = {
         let image = spec.smallImage || spec.mediumImage || spec.largeImage;
 
         if (image) {
-            return Colby.imageToURL(image, 'rw320');
+            return CBImage.toURL(
+                image,
+                'rw320'
+            );
         } else {
             if (Array.isArray(spec.subviews)) {
                 for (let i = 0; i < spec.subviews.length; i++) {
@@ -57,6 +68,8 @@ var CBContainerViewEditor = {
             }
         }
     },
+    /* CBUISpec_toThumbnailURI() */
+
 
     /**
      * @param function args.navigateToItemCallback
@@ -65,87 +78,154 @@ var CBContainerViewEditor = {
      *
      * @return Element
      */
-    createEditor : function(args) {
+    createEditor: function(args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBContainerViewEditor";
 
         var HREFSectionItem = CBUI.createSectionItem();
 
-        var tagNameChangedCallback = CBContainerViewEditor.handleTagNameChanged.bind(undefined, {
-            HREFSectionItem : HREFSectionItem,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        });
+        var tagNameChangedCallback =
+        CBContainerViewEditor.handleTagNameChanged.bind(
+            undefined,
+            {
+                HREFSectionItem: HREFSectionItem,
+                spec: args.spec,
+                specChangedCallback: args.specChangedCallback,
+            }
+        );
 
         tagNameChangedCallback();
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         /* section */
         section = CBUI.createSection();
 
         /* title */
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Title",
-            propertyName : "title",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Title",
+                    propertyName: "title",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         /* tagName */
         item = CBUI.createSectionItem();
+
         var options = [
-            { title : "Default", description: "The contents of this container have no specific purpose outside of being additional content.", value : undefined },
-            { title : "Article", description: "The contents of this container represent a blog post or a syndicated article. This setting is not appropriate for regular pages such as the \"About\" page.", value : "article" },
-            { title : "Section", description: "The contents of this container represent a section in a document.", value : "section" },
-            { title : "Link", description : "This setting should only be used when this container's images must link to another page. Text links communicate much more clearly to the user and are highly preferred over image links and should be used whenever feasible. Adding subviews with links inside a container using this setting will cause severe layout issues by design and by all browsers.", value : "a" },
+            {
+                title: "Default",
+                description:
+                "The contents of this container have no specific purpose" +
+                " outside of being additional content.",
+                value: undefined
+            },
+            {
+                title: "Article",
+                description:
+                "The contents of this container represent a blog post or a" +
+                " syndicated article. This setting is not appropriate for" +
+                " regular pages such as the \"About\" page.",
+                value: "article"
+            },
+            {
+                title: "Section",
+                description:
+                "The contents of this container represent a section in a" +
+                " document.",
+                value: "section"
+            },
+            {
+                title: "Link",
+                description:
+                "This setting should only be used when this container's" +
+                " images must link to another page. Text links communicate" +
+                " much more clearly to the user and are highly preferred" +
+                " over image links and should be used whenever feasible." +
+                " Adding subviews with links inside a container using this" +
+                " setting will cause severe layout issues by design and by" +
+                " all browsers.",
+                value: "a"
+            },
         ];
-        item.appendChild(CBUISelector.create({
-            labelText : "Type",
-            navigateToItemCallback : args.navigateToItemCallback,
-            options : options,
-            propertyName : "tagName",
-            spec : args.spec,
-            specChangedCallback : tagNameChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUISelector.create(
+                {
+                    labelText: "Type",
+                    navigateToItemCallback: args.navigateToItemCallback,
+                    options: options,
+                    propertyName: "tagName",
+                    spec: args.spec,
+                    specChangedCallback: tagNameChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         /* HREF */
         item = HREFSectionItem;
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "URL",
-            propertyName : "HREF",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "URL",
+                    propertyName: "HREF",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         /* backgroundColor */
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Background Color",
-            propertyName : "backgroundColor",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Background Color",
+                    propertyName: "backgroundColor",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
         element.appendChild(section);
 
         /* subviews */
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
-        if (args.spec.subviews === undefined) { args.spec.subviews = []; }
+        if (args.spec.subviews === undefined) {
+            args.spec.subviews = [];
+        }
 
         {
-            let editor = CBUISpecArrayEditor.create({
-                addableClassNames: CBContainerViewEditor_addableClassNames,
-                navigateToItemCallback: args.navigateToItemCallback,
-                specs: args.spec.subviews,
-                specsChangedCallback: args.specChangedCallback,
-            });
+            let editor = CBUISpecArrayEditor.create(
+                {
+                    addableClassNames: CBContainerViewEditor_addableClassNames,
+                    navigateToItemCallback: args.navigateToItemCallback,
+                    specs: args.spec.subviews,
+                    specsChangedCallback: args.specChangedCallback,
+                }
+            );
 
             editor.title = "Views";
 
@@ -165,35 +245,54 @@ var CBContainerViewEditor = {
         }
 
         function imageToURL(image) {
-            return Colby.imageToURL(image, "rw960");
+            return CBImage.toURL(
+                image,
+                "rw960"
+            );
         }
 
         function createImageEditorElement(propertyName) {
             var section = CBUI.createSection();
-            var chooser = CBUIImageChooser.createFullSizedChooser({
-                imageChosenCallback : function (imageChosenArgs) {
-                    var ajaxURI = "/api/?class=CBImages&function=upload";
-                    var formData = new FormData();
-                    formData.append("image", imageChosenArgs.file);
+            var chooser = CBUIImageChooser.createFullSizedChooser(
+                {
+                    imageChosenCallback: function (imageChosenArgs) {
+                        var ajaxURI = "/api/?class=CBImages&function=upload";
+                        var formData = new FormData();
+                        formData.append("image", imageChosenArgs.file);
 
-                    CBContainerViewEditor.promise = Colby.fetchAjaxResponse(ajaxURI, formData)
-                        .then(handleImageUploaded);
+                        CBContainerViewEditor.promise =
+                        Colby.fetchAjaxResponse(
+                            ajaxURI,
+                            formData
+                        ).then(
+                            handleImageUploaded
+                        );
 
-                    function handleImageUploaded(response) {
-                        args.spec[propertyName] = response.image;
+                        function handleImageUploaded(response) {
+                            args.spec[propertyName] = response.image;
+                            args.specChangedCallback();
+                            imageChosenArgs.setImageURLCallback(imageToURL(response.image));
+                            imageChosenArgs.setCaptionCallback(imageToSize(response.image));
+                        }
+                    },
+                    imageRemovedCallback: function () {
+                        args.spec[propertyName] = undefined;
                         args.specChangedCallback();
-                        imageChosenArgs.setImageURLCallback(imageToURL(response.image));
-                        imageChosenArgs.setCaptionCallback(imageToSize(response.image));
-                    }
-                },
-                imageRemovedCallback : function () {
-                    args.spec[propertyName] = undefined;
-                    args.specChangedCallback();
-                },
-            });
+                    },
+                }
+            );
 
-            chooser.setImageURLCallback(imageToURL(args.spec[propertyName]));
-            chooser.setCaptionCallback(imageToSize(args.spec[propertyName]));
+            chooser.setImageURLCallback(
+                imageToURL(
+                    args.spec[propertyName]
+                )
+            );
+
+            chooser.setCaptionCallback(
+                imageToSize(
+                    args.spec[propertyName]
+                )
+            );
 
             var item = CBUI.createSectionItem();
             item.appendChild(chooser.element);
@@ -205,67 +304,95 @@ var CBContainerViewEditor = {
         /* large image */
 
         element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            paragraphs : [
-                "Maximum Width: 2560pt (5120px)",
-                "Focus Width: 1068pt (2136px)",
-            ],
-            text : "Large Image"
-        }));
+
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    paragraphs: [
+                        "Maximum Width: 2560pt (5120px)",
+                        "Focus Width: 1068pt (2136px)",
+                    ],
+                    text: "Large Image"
+                }
+            )
+        );
+
         element.appendChild(createImageEditorElement("largeImage"));
 
         /* medium image */
 
         element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            paragraphs : [
-                "Maximum Width: 1068pt (2136px)",
-                "Focus Width: 736pt (1472px)",
-            ],
-            text : "Medium Image"
-        }));
+
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    paragraphs: [
+                        "Maximum Width: 1068pt (2136px)",
+                        "Focus Width: 736pt (1472px)",
+                    ],
+                    text: "Medium Image"
+                }
+            )
+        );
+
         element.appendChild(createImageEditorElement("mediumImage"));
 
         /* small image */
 
         element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            paragraphs : [
-                "Maximum Width: 736pt (1472px)",
-                "Focus Width: 320pt (640px)",
-            ],
-            text : "Small Image"
-        }));
+
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    paragraphs: [
+                        "Maximum Width: 736pt (1472px)",
+                        "Focus Width: 320pt (640px)",
+                    ],
+                    text: "Small Image"
+                }
+            )
+        );
+
         element.appendChild(createImageEditorElement("smallImage"));
 
         /* CSSClassNames */
 
         element.appendChild(CBUI.createHalfSpace());
 
-        element.appendChild(CBUI.createSectionHeader({
-            paragraphs: [
-                `
-                Supported Class Names:
-                `,`
-                flow: Flow subviews from left to right and wrap into new lines.
-                Center each line of children. Example scenario: displaying a
-                collection of images.
-                `,`
-                noMinHeight: Don't use the height of the background images or
-                any other minimum height specified as the minimum height for the
-                view.
-                `,
-           ],
-        }));
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    paragraphs: [
+                        `
+                        Supported Class Names:
+                        `,`
+                        flow: Flow subviews from left to right and wrap into new
+                        lines. Center each line of children. Example scenario:
+                        displaying a collection of images.
+                        `,`
+                        noMinHeight: Don't use the height of the background
+                        images or any other minimum height specified as the
+                        minimum height for the view.
+                        `,
+                   ],
+                }
+            )
+        );
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "CSS Class Names",
-            propertyName : "CSSClassNames",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "CSS Class Names",
+                    propertyName: "CSSClassNames",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
         element.appendChild(section);
 
@@ -275,12 +402,18 @@ var CBContainerViewEditor = {
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Styles Template",
-            propertyName : "stylesTemplate",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Styles Template",
+                    propertyName: "stylesTemplate",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
         element.appendChild(section);
 
@@ -288,6 +421,8 @@ var CBContainerViewEditor = {
 
         return element;
     },
+    /* createEditor() */
+
 
     /**
      * @param Element args.HREFSectionItem
@@ -296,7 +431,7 @@ var CBContainerViewEditor = {
      *
      * @return undefined
      */
-    handleTagNameChanged : function (args) {
+    handleTagNameChanged: function (args) {
         if (args.spec.tagName === "a") {
             args.HREFSectionItem.style.display = "block";
         } else {
@@ -305,4 +440,6 @@ var CBContainerViewEditor = {
 
         args.specChangedCallback.call();
     },
+    /* handleTagNameChanged() */
 };
+/* CBContainerViewEditor */
