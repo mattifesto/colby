@@ -98,14 +98,60 @@ final class CBCodeAdmin {
     /* -- functions -- -- -- -- -- */
 
     static function results(): array {
+        $issues = [
+            (object)[
+                'regex' => 'Colby\\.centsToDollars\\(',
+                'filetype' => 'js',
+            ],
+            (object)[
+                'regex' => 'Colby\\.imageToURL\\(',
+                'filetype' => 'js',
+            ],
+            (object)[
+                'regex' => '(?<!CBUISpec\\.)specToDescription',
+                'filetype' => 'js',
+                'args' => implode(
+                    ' ',
+                    [
+                        '--ignore-file=match:CBUISpec.js',
+                        '--ignore-file=match:CBUISpec_Tests.js',
+                    ]
+                ),
+            ],
+        ];
+
         $output = [];
         $exitCode;
 
-        CBGit::exec(
-            '/usr/local/bin/ack --js --heading --underline \'Colby\\.imageToURL\\(\'',
-            $output,
-            $exitCode
-        );
+        foreach ($issues as $issue) {
+            $command = implode(
+                ' ',
+                [
+                    '/usr/local/bin/ack',
+                    '--heading',
+                    '--underline',
+                    "--match '{$issue->regex}'",
+                    CBModel::valueToString($issue, 'args'),
+                ]
+            );
+
+            switch ($issue->filetype) {
+                case 'js':
+
+                    $command .= ' --js';
+                    break;
+
+                default:
+
+                    throw new Exception('unknown filetype');
+            }
+
+            CBGit::exec(
+                $command,
+                $output,
+                $exitCode
+            );
+        }
 
         return $output;
     }
