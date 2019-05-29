@@ -25,6 +25,7 @@ final class CBUISpec_Tests {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBModel',
             'CBTest',
             'CBUISpec',
 
@@ -53,9 +54,9 @@ final class CBUISpec_Tests {
             ],
             (object)[
                 'title' =>
-                'CBUISpec.specToThumbnailURI() tests for well-known models',
+                'CBUISpec.specToThumbnailURL() tests for well-known models',
 
-                'name' => 'specToThumbnailURI',
+                'name' => 'specToThumbnailURL',
             ],
         ];
     }

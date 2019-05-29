@@ -2,7 +2,13 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* exported CBUISpec_Tests */
+/* exported CBUISpec_Tests_DescriptionClass1Editor */
+/* exported CBUISpec_Tests_DescriptionClass2Editor */
+/* exported CBUISpec_Tests_ThumbnailURLClass1Editor */
+/* exported CBUISpec_Tests_ThumbnailURLClass2Editor */
+/* exported CBUISpec_Tests_ThumbnailURLClass3Editor */
 /* globals
+    CBModel,
     CBTest,
     CBUISpec,
 */
@@ -16,6 +22,26 @@ var CBUISpec_Tests = {
      */
     CBTest_specToDescription: function () {
         let tests = [
+            {
+                spec: {
+                    className: "CBUISpec_Tests_DescriptionClass1",
+                    theTitle: "  Hello  ",
+                },
+                expectedResult: "Hello",
+            },
+            {
+                spec: {
+                    className: "CBUISpec_Tests_DescriptionClass1",
+                },
+                expectedResult: undefined,
+            },
+            {
+                spec: {
+                    className: "CBUISpec_Tests_DescriptionClass2",
+                    theTitle: "  Hello  ",
+                },
+                expectedResult: "Hello",
+            },
             {
                 spec: {
                     className: "CBBackgroundView",
@@ -77,8 +103,35 @@ var CBUISpec_Tests = {
     /**
      * @return object
      */
-    CBTest_specToThumbnailURI: function () {
+    CBTest_specToThumbnailURL: function () {
         let tests = [
+            {
+                spec: {
+                    className: "CBUISpec_Tests_ThumbnailURLClass1",
+                    theThumbnailURL: "  Hello  ",
+                },
+                expectedResult: "Hello",
+            },
+            {
+                spec: {
+                    className: "CBUISpec_Tests_ThumbnailURLClass1",
+                },
+                expectedResult: undefined,
+            },
+            {
+                spec: {
+                    className: "CBUISpec_Tests_ThumbnailURLClass2",
+                    theThumbnailURL: "  Hello  ",
+                },
+                expectedResult: "Hello",
+            },
+            {
+                spec: {
+                    className: "CBUISpec_Tests_ThumbnailURLClass3",
+                    theThumbnailURL: "  Hello  ",
+                },
+                expectedResult: "Hello",
+            },
             {
                 spec: {
                     className: "CBBackgroundView",
@@ -111,7 +164,7 @@ var CBUISpec_Tests = {
 
         for (let index = 0; index < tests.length; index += 1) {
             let test = tests[index];
-            let actualResult = CBUISpec.specToThumbnailURI(test.spec);
+            let actualResult = CBUISpec.specToThumbnailURL(test.spec);
 
             if (actualResult !== test.expectedResult) {
                 return CBTest.resultMismatchFailure(
@@ -127,6 +180,52 @@ var CBUISpec_Tests = {
             succeeded: true,
         };
     },
-    /* CBTest_specToThumbnailURI() */
+    /* CBTest_specToThumbnailURL() */
 };
 /* CBUISpec_Tests */
+
+
+var CBUISpec_Tests_DescriptionClass1Editor = {
+    CBUISpec_toDescription: function (spec) {
+        return CBModel.valueToString(
+            spec,
+            "theTitle"
+        ).trim() || undefined;
+    }
+};
+
+var CBUISpec_Tests_DescriptionClass2Editor = {
+    specToDescription: function (spec) {
+        return CBModel.valueToString(
+            spec,
+            "theTitle"
+        ).trim() || undefined;
+    }
+};
+
+var CBUISpec_Tests_ThumbnailURLClass1Editor = {
+    CBUISpec_toThumbnailURL: function (spec) {
+        return CBModel.valueToString(
+            spec,
+            "theThumbnailURL"
+        ).trim() || undefined;
+    }
+};
+
+var CBUISpec_Tests_ThumbnailURLClass2Editor = {
+    CBUISpec_toThumbnailURI: function (spec) {
+        return CBModel.valueToString(
+            spec,
+            "theThumbnailURL"
+        ).trim() || undefined;
+    }
+};
+
+var CBUISpec_Tests_ThumbnailURLClass3Editor = {
+    specToThumbnailURI: function (spec) {
+        return CBModel.valueToString(
+            spec,
+            "theThumbnailURL"
+        ).trim() || undefined;
+    }
+};
