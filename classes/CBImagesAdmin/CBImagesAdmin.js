@@ -3,10 +3,12 @@
 /* jshint esversion: 6 */
 /* exported CBImagesAdmin */
 /* global
+    CBImage,
     CBUI,
     CBUISectionItem4,
     CBUIStringsPart,
-    Colby */
+    Colby,
+*/
 
 var CBImagesAdmin = {
 
@@ -14,19 +16,46 @@ var CBImagesAdmin = {
      * @return undefined
      */
     init: function() {
-        var mainElement = document.getElementsByTagName("main")[0];
+        let elements = document.getElementsByClassName("CBImagesAdmin");
 
-        mainElement.classList.add("CBDarkTheme");
+        if (elements.length > 0) {
+            let element = elements.item(0);
 
-        mainElement.appendChild(CBUI.createHalfSpace());
+            element.appendChild(
+                CBImagesAdmin.createElement()
+            );
+        }
+    },
+    /* init() */
+
+
+    /**
+     * @return Element
+     */
+    createElement: function () {
+        let element = CBUI.createElement(
+            "CBUIRoot CBDarkTheme"
+        );
+
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         {
             let sectionElement = CBUI.createSection();
             let sectionItem = CBUISectionItem4.create();
+
             sectionItem.callback = function () {
-                Colby.callAjaxFunction("CBImageVerificationTask", "startForAllImages")
-                    .then(function () { Colby.alert("Verification for all images started."); })
-                    .catch(Colby.displayAndReportError);
+                Colby.callAjaxFunction(
+                    "CBImageVerificationTask",
+                    "startForAllImages"
+                ).then(
+                    function () {
+                        Colby.alert("Verification for all images started.");
+                    }
+                ).catch(
+                    Colby.displayAndReportError
+                );
             };
 
             let stringsPart = CBUIStringsPart.create();
@@ -36,20 +65,26 @@ var CBImagesAdmin = {
 
             sectionItem.appendPart(stringsPart);
             sectionElement.appendChild(sectionItem.element);
-            mainElement.appendChild(sectionElement);
-            mainElement.appendChild(CBUI.createHalfSpace());
+            element.appendChild(sectionElement);
+            element.appendChild(CBUI.createHalfSpace());
         }
 
         var imagesElement = document.createElement("div");
         imagesElement.className = "CBImagesAdmin_imageList";
 
-        CBImagesAdmin.fetchImages({
-            element: imagesElement
-        });
+        CBImagesAdmin.fetchImages(
+            {
+                element: imagesElement
+            }
+        );
 
-        mainElement.appendChild(imagesElement);
-        mainElement.appendChild(CBUI.createHalfSpace());
+        element.appendChild(imagesElement);
+        element.appendChild(CBUI.createHalfSpace());
+
+        return element;
     },
+    /* createElement() */
+
 
     /**
      * @param object (CBImage) image
@@ -68,7 +103,10 @@ var CBImagesAdmin = {
             sectionItemElement.className = "thumbnail";
 
             let img = document.createElement("img");
-            img.src = Colby.imageToURL(image, "rw320");
+            img.src = CBImage.toURL(
+                image,
+                "rw320"
+            );
 
             sectionItemElement.appendChild(img);
             sectionElement.appendChild(sectionItemElement);
@@ -93,6 +131,8 @@ var CBImagesAdmin = {
 
         return element;
     },
+    /* createImageElement() */
+
 
     /**
      * @param object args
@@ -101,20 +141,41 @@ var CBImagesAdmin = {
      *          element: Element
      *      }
      *
-     * @return undefined
+     * @return Promise
      */
     fetchImages: function (args) {
-        Colby.callAjaxFunction("CBImagesAdmin", "fetchImages")
-            .then(onFulfilled)
-            .catch(Colby.displayAndReportError);
+        let promise = Colby.callAjaxFunction(
+            "CBImagesAdmin",
+            "fetchImages"
+        ).then(
+            fetchImages_onFulfilled
+        ).catch(
+            Colby.displayAndReportError
+        );
 
-        function onFulfilled(images) {
+        return promise;
+
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @param [object] images
+         *
+         * @return undefined
+         */
+        function fetchImages_onFulfilled(images) {
             for (var i = 0; i < images.length; i++) {
-                let imageElement = CBImagesAdmin.createImageElement(images[i]);
+                let imageElement = CBImagesAdmin.createImageElement(
+                    images[i]
+                );
+
                 args.element.appendChild(imageElement);
             }
         }
+        /* fetchImages_onFulfilled() */
     },
+    /* fetchImages() */
 };
+/* CBImagesAdmin */
 
 Colby.afterDOMContentLoaded(CBImagesAdmin.init);

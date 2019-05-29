@@ -9,12 +9,17 @@ class CBImagesAdmin {
         return 'Developers';
     }
 
+
     /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['develop', 'images'];
+        return [
+            'develop',
+            'images'
+        ];
     }
+
 
     /**
      * @return void
@@ -22,6 +27,7 @@ class CBImagesAdmin {
     static function CBAdmin_render() {
         CBHTMLOutput::pageInformation()->title = 'Images Administration';
     }
+
 
     /**
      * @return [object]
@@ -64,6 +70,7 @@ EOT;
         return $images;
     }
 
+
     /**
      * @return string
      */
@@ -71,32 +78,55 @@ EOT;
         return 'Administrators';
     }
 
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v374.css', cbsysurl()),
+        ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+        ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUISectionItem4', 'CBUIStringsPart'];
+        return [
+            'CBImage',
+            'CBUI',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
+            'Colby',
+        ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
 
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBDevelopAdminMenu::ID());
+        $spec = CBModels::fetchSpecByID(
+            CBDevelopAdminMenu::ID()
+        );
 
         $spec->items[] = (object)[
             'className' => 'CBMenuItem',
@@ -105,15 +135,23 @@ EOT;
             'URL' => '/admin/?c=CBImagesAdmin',
         ];
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
     }
+    /* CBInstall_install() */
+
 
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBDevelopAdminMenu'];
+        return [
+            'CBDevelopAdminMenu'
+        ];
     }
+    /* CBInstall_requiredClassNames() */
 }
+/* CBImagesAdmin */
