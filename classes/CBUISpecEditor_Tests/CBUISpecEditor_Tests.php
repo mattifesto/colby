@@ -29,6 +29,12 @@ final class CBUISpecEditor_Tests {
             'CBUISpecEditor',
 
             'CBArtworkViewEditor',
+            'CBBackgroundViewEditor',
+            'CBContainerViewEditor',
+            'CBContainerView2Editor',
+            'CBIconLinkViewEditor',
+            'CBLinkView1',
+            'CBSitePreferencesEditor',
             'CBViewPageEditor',
         ];
     }

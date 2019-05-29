@@ -23,6 +23,26 @@ var CBUISpecEditor_Tests = {
                 image: 5,
             },
             {
+                className: "CBContainerView",
+                smallImage: 5,
+            },
+            {
+                className: "CBContainerView2",
+                image: 5,
+            },
+            {
+                className: "CBIconLinkView",
+                image: 5,
+            },
+            {
+                className: "CBLinkView1",
+                image: 5,
+            },
+            {
+                className: "CBSitePreferences",
+                imageForIcon: 5,
+            },
+            {
                 className: "CBViewPage",
                 image: 5,
             },
