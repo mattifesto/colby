@@ -25,9 +25,14 @@ var CBUISpec = {
 
 
     /**
-     * @param object? spec
+     * @param object spec
      *
      * @return string|undefined
+     *
+     *      The implementation of CBUISpec_toDescription() should return
+     *      undefined if the spec has no description to offer. This will signal
+     *      to the caller that it can try other options for finding a
+     *      description.
      */
     specToDescription: function (spec) {
         spec = CBConvert.valueAsModel(spec);
@@ -36,60 +41,78 @@ var CBUISpec = {
             return undefined;
         }
 
-        var editor = window[spec.className + "Editor"];
+        let editorObject = window[spec.className + "Editor"];
+        let callable;
 
         if (
-            editor !== undefined &&
-            typeof editor.CBUISpec_toDescription === "function"
-        ) {
-            return editor.CBUISpec_toDescription.call(undefined, spec);
-        }
+            (callable = CBModel.valueAsFunction(
+                editorObject,
+                "CBUISpec_toDescription"
+            )) ||
 
-        /* deprecated */
-        else if (
-            editor !== undefined &&
-            typeof editor.specToDescription === "function"
+            (callable = CBModel.valueAsFunction(
+                editorObject,
+                "specToDescription"
+            ))
         ) {
-            return editor.specToDescription.call(undefined, spec);
+            return callable(spec);
         }
 
         else {
-            return CBModel.valueToString(spec, "title");
+            return CBModel.valueToString(spec, "title").trim() || undefined;
         }
     },
     /* specToDescription() */
 
 
     /**
-     * @param object? spec
-     *
-     * @return string|undefined
+     * @deprecated 2019_05_29
      */
     specToThumbnailURI: function (spec) {
+        return CBUISpec.specToThumbnailURL(spec);
+    },
+    /* specToThumbnailURI() */
+
+
+    /**
+     * @param object spec
+     *
+     * @return string|undefined
+     *
+     *      The implementation of CBUISpec_toThumbnailURL() should return
+     *      undefined if the spec has no thumbnail URL to offer. This will
+     *      signal to the caller that it can try other options for finding a
+     *      thumbnail URL.
+     */
+    specToThumbnailURL: function (spec) {
         spec = CBConvert.valueAsModel(spec);
 
         if (spec === undefined) {
             return undefined;
         }
 
-        var editor = window[spec.className + "Editor"];
+        let editorObject = window[spec.className + "Editor"];
+        let callable;
 
         if (
-            editor !== undefined &&
-            typeof editor.CBUISpec_toThumbnailURI === "function"
-        ) {
-            return editor.CBUISpec_toThumbnailURI.call(
-                undefined,
-                spec
-            );
-        }
+            (callable = CBModel.valueAsFunction(
+                editorObject,
+                "CBUISpec_toThumbnailURL"
+            )) ||
 
-        /* deprecated */
-        else if (
-            editor !== undefined &&
-            typeof editor.specToThumbnailURI === "function"
+            /* deprecated */
+            (callable = CBModel.valueAsFunction(
+                editorObject,
+                "CBUISpec_toThumbnailURI"
+            )) ||
+
+            /* deprecated */
+            (callable = CBModel.valueAsFunction(
+                editorObject,
+                "specToThumbnailURI"
+            ))
         ) {
-            return editor.specToThumbnailURI.call(undefined, spec);
+            return callable(spec);
         }
 
         else if (spec.image) {
