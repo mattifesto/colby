@@ -29,6 +29,10 @@ final class CBUISpec_Tests {
             'CBUISpec',
 
             'CBBackgroundViewEditor',
+            'CBContainerViewEditor',
+            'CBContainerView2Editor',
+            'CBIconLinkViewEditor',
+            'CBLinkView1Editor',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

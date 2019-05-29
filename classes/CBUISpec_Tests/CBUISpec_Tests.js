@@ -23,6 +23,34 @@ var CBUISpec_Tests = {
                 },
                 expectedResult: "Hello",
             },
+            {
+                spec: {
+                    className: "CBContainerView",
+                    title: "  Hello  ",
+                },
+                expectedResult: "Hello",
+            },
+            {
+                spec: {
+                    className: "CBContainerView2",
+                    title: "  Hello  ",
+                },
+                expectedResult: "Hello",
+            },
+            {
+                spec: {
+                    className: "CBIconLinkView",
+                    text: "  Hello  ",
+                },
+                expectedResult: "Hello",
+            },
+            {
+                spec: {
+                    className: "CBIconLinkView",
+                    alternativeText: "  Hello  ",
+                },
+                expectedResult: "Hello",
+            },
         ];
 
         for (let index = 0; index < tests.length; index += 1) {
@@ -61,6 +89,20 @@ var CBUISpec_Tests = {
             {
                 spec: {
                     className: "CBBackgroundView",
+                    image: 5,
+                },
+                expectedResult: "",
+            },
+            {
+                spec: {
+                    className: "CBContainerView",
+                    smallImage: 5,
+                },
+                expectedResult: "",
+            },
+            {
+                spec: {
+                    className: "CBContainerView2",
                     image: 5,
                 },
                 expectedResult: "",
