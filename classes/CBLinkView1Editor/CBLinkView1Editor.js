@@ -1,12 +1,15 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBLinkView1Editor */
 /* globals
+    CBImage,
     CBUI,
     CBUIImageChooser,
     CBUISelector,
     CBUIStringEditor,
-    Colby */
+    Colby,
+*/
 
 var CBLinkView1Editor = {
 
@@ -25,12 +28,16 @@ var CBLinkView1Editor = {
 
         section = CBUI.createSection();
 
-        var chooser = CBUIImageChooser.createFullSizedChooser({
-            imageChosenCallback : handleImageChosen,
-            imageRemovedCallback : handleImageRemoved,
-        });
+        var chooser = CBUIImageChooser.createFullSizedChooser(
+            {
+                imageChosenCallback: createEditor_handleImageChosen,
+                imageRemovedCallback: createEditor_handleImageRemoved,
+            }
+        );
 
-        chooser.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
+        chooser.setImageURLCallback(
+            CBImage.toURL(args.spec.image, "rw960")
+        );
 
         item = CBUI.createSectionItem();
         item.appendChild(chooser.element);
@@ -43,43 +50,43 @@ var CBLinkView1Editor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Title",
-            propertyName : "title",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Title",
+            propertyName: "title",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Description",
-            propertyName : "description",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Description",
+            propertyName: "description",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "URL",
-            propertyName : "URL",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "URL",
+            propertyName: "URL",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
-            labelText : "Size",
+            labelText: "Size",
             navigateToItemCallback: args.navigateToItemCallback,
             options: [
                 {title: "Small", value: "small"},
                 {title: "Medium", value: undefined},
                 {title: "Large", value: "large"},
             ],
-            propertyName : "size",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            propertyName: "size",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -88,30 +95,44 @@ var CBLinkView1Editor = {
 
         return element;
 
+
+        /* -- closures -- -- -- -- -- */
+
         /**
+         * @param object chooserArgs
          *
+         * @return undefined
          */
-        function handleImageChosen(chooserArgs) {
+        function createEditor_handleImageChosen(chooserArgs) {
             var ajaxURI = "/api/?class=CBImages&function=upload";
             var formData = new FormData();
             formData.append("image", chooserArgs.file);
 
-            CBLinkView1Editor.promise = Colby.fetchAjaxResponse(ajaxURI, formData)
-                .then(handleImageUploaded);
-
-            function handleImageUploaded(response) {
-                args.spec.image = response.image;
-                args.specChangedCallback();
-                chooserArgs.setImageURLCallback(Colby.imageToURL(args.spec.image, "rw960"));
-            }
+            CBLinkView1Editor.promise = Colby.fetchAjaxResponse(
+                ajaxURI,
+                formData
+            ).then(
+                function (response) {
+                    args.spec.image = response.image;
+                    args.specChangedCallback();
+                    chooserArgs.setImageURLCallback(
+                        CBImage.toURL(args.spec.image, "rw960")
+                    );
+                }
+            );
         }
+        /* createEditor_handleImageChosen() */
+
 
         /**
-         *
+         * @return undefined
          */
-        function handleImageRemoved(chooserArgs) {
+        function createEditor_handleImageRemoved(chooserArgs) {
             args.spec.image = undefined;
             args.specChangedCallback();
         }
+        /* createEditor_handleImageRemoved() */
     },
+    /* createEditor() */
 };
+/* CBLinkView1Editor */
