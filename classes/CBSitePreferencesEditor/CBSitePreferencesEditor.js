@@ -3,12 +3,14 @@
 /* jshint esversion: 6 */
 /* exported CBSitePreferencesEditor */
 /* globals
+    CBImage,
     CBUI,
     CBUIBooleanEditor,
     CBUIImageChooser,
     CBUISpecArrayEditor,
     CBUIStringEditor,
-    Colby */
+    Colby,
+*/
 
 var CBSitePreferencesEditor = {
 
@@ -19,7 +21,7 @@ var CBSitePreferencesEditor = {
      *
      * @return Element
      */
-    createEditor : function (args) {
+    createEditor: function (args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBSitePreferencesEditor";
@@ -30,19 +32,19 @@ var CBSitePreferencesEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Site Name",
-            propertyName : "siteName",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Site Name",
+            propertyName: "siteName",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Administrator Email Addresses",
-            propertyName : "administratorEmails",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Administrator Email Addresses",
+            propertyName: "administratorEmails",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
@@ -52,28 +54,37 @@ var CBSitePreferencesEditor = {
 
         section = CBUI.createSection();
 
-        var chooser = CBUIImageChooser.createFullSizedChooser({
-            imageChosenCallback : function (chooserArgs) {
-                var ajaxURI = "/api/?class=CBImages&function=upload";
-                var formData = new FormData();
-                formData.append("image", chooserArgs.file);
+        var chooser = CBUIImageChooser.createFullSizedChooser(
+            {
+                imageChosenCallback: function (chooserArgs) {
+                    var ajaxURI = "/api/?class=CBImages&function=upload";
+                    var formData = new FormData();
+                    formData.append("image", chooserArgs.file);
 
-                CBSitePreferencesEditor.promise = Colby.fetchAjaxResponse(ajaxURI, formData)
-                    .then(handleImageUploaded);
+                    CBSitePreferencesEditor.promise = Colby.fetchAjaxResponse(
+                        ajaxURI,
+                        formData
+                    ).then(
+                        function (response) {
+                            args.spec.imageForIcon = response.image;
+                            args.specChangedCallback();
+                            chooserArgs.setImageURLCallback(
+                                CBImage.toURL(response.image, "rw960")
+                            );
+                        }
+                    );
+                },
 
-                function handleImageUploaded(response) {
-                    args.spec.imageForIcon = response.image;
+                imageRemovedCallback: function () {
+                    args.spec.imageForIcon = undefined;
                     args.specChangedCallback();
-                    chooserArgs.setImageURLCallback(Colby.imageToURL(response.image, "rw960"));
-                }
-            },
-            imageRemovedCallback : function () {
-                args.spec.imageForIcon = undefined;
-                args.specChangedCallback();
-            },
-        });
+                },
+            }
+        );
 
-        chooser.setImageURLCallback(Colby.imageToURL(args.spec.imageForIcon, "rw960"));
+        chooser.setImageURLCallback(
+            CBImage.toURL(args.spec.imageForIcon, "rw960")
+        );
 
         item = CBUI.createSectionItem();
         item.appendChild(chooser.element);
@@ -86,46 +97,46 @@ var CBSitePreferencesEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Debug",
-            propertyName : "debug",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Debug",
+            propertyName: "debug",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Disallow Robots",
-            propertyName : "disallowRobots",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Disallow Robots",
+            propertyName: "disallowRobots",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Google Tag Manager ID",
-            propertyName : "googleTagManagerID",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Google Tag Manager ID",
+            propertyName: "googleTagManagerID",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Default Class Name for Page Settings (deprecated)",
-            propertyName : "defaultClassNameForPageSettings",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Default Class Name for Page Settings (deprecated)",
+            propertyName: "defaultClassNameForPageSettings",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "On Demand Image Resize Operations (deprecated)",
-            propertyName : "onDemandImageResizeOperations",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "On Demand Image Resize Operations (deprecated)",
+            propertyName: "onDemandImageResizeOperations",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
@@ -138,16 +149,16 @@ var CBSitePreferencesEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Webhook URL",
-            propertyName : "slackWebhookURL",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Webhook URL",
+            propertyName: "slackWebhookURL",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({
-            text : "Slack",
+            text: "Slack",
         }));
         element.appendChild(section);
 
@@ -157,25 +168,25 @@ var CBSitePreferencesEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Facebook URL",
-            propertyName : "facebookURL",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Facebook URL",
+            propertyName: "facebookURL",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Twitter URL",
-            propertyName : "twitterURL",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Twitter URL",
+            propertyName: "twitterURL",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({
-            text : "Social",
+            text: "Social",
         }));
         element.appendChild(section);
 
@@ -185,25 +196,25 @@ var CBSitePreferencesEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Site Key",
-            propertyName : "reCAPTCHASiteKey",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Site Key",
+            propertyName: "reCAPTCHASiteKey",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Secret Key",
-            propertyName : "reCAPTCHASecretKey",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Secret Key",
+            propertyName: "reCAPTCHASecretKey",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({
-            text : "Google reCAPTCHA",
+            text: "Google reCAPTCHA",
         }));
         element.appendChild(section);
         element.appendChild(CBUI.createHalfSpace());
@@ -229,4 +240,6 @@ var CBSitePreferencesEditor = {
 
         return element;
     },
+    /* createEditor() */
 };
+/* CBSitePreferencesEditor */
