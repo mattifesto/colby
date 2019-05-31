@@ -3,8 +3,10 @@
 /* jshint esversion: 6 */
 /* exported CBCustomViewEditor */
 /* global
+    CBModel,
     CBUI,
-    CBUIStringEditor */
+    CBUIStringEditor,
+*/
 
 var CBCustomViewEditor = {
 
@@ -26,10 +28,10 @@ var CBCustomViewEditor = {
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Custom View Class Name",
-            propertyName : "customViewClassName",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Custom View Class Name",
+            propertyName: "customViewClassName",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -38,7 +40,7 @@ var CBCustomViewEditor = {
 
         element.appendChild(CBUI.createHalfSpace());
         element.appendChild(CBUI.createSectionHeader({
-            text : "Custom Properties",
+            text: "Custom Properties",
         }));
 
         var propertiesAsJSON = "{\n\n}";
@@ -52,10 +54,10 @@ var CBCustomViewEditor = {
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Properties",
-            propertyName : "propertiesAsJSON",
-            spec : propertiesSpec,
-            specChangedCallback : CBCustomViewEditor.propertiesChanged.bind(undefined, {
+            labelText: "Properties",
+            propertyName: "propertiesAsJSON",
+            spec: propertiesSpec,
+            specChangedCallback: CBCustomViewEditor.propertiesChanged.bind(undefined, {
                 propertiesSpec: propertiesSpec,
                 sectionItem: item,
                 spec: args.spec,
@@ -69,6 +71,8 @@ var CBCustomViewEditor = {
 
         return element;
     },
+    /* createEditor() */
+
 
     /**
      * @param string? propertiesSpec.propertiesAsJSON
@@ -118,13 +122,22 @@ var CBCustomViewEditor = {
         args.sectionItem.style.backgroundColor = "white";
         args.spec.properties = {};
     },
+    /* propertiesChanged() */
+
 
     /**
      * @param string? spec.customViewClassName
      *
      * @return string|undefined
      */
-    specToDescription : function (spec) {
-        return spec.customViewClassName;
+    CBUISpec_toDescription: function (spec) {
+        let description =
+        CBModel.valueToString(spec, "customViewClassName") ||
+        CBModel.valueToString(spec, "properties.className") ||
+        undefined;
+
+        return description;
     },
+    /* CBUISpec_toDescription() */
 };
+/* CBCustomViewEditor */
