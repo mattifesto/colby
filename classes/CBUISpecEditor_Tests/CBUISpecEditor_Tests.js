@@ -39,6 +39,9 @@ var CBUISpecEditor_Tests = {
                 image: 5,
             },
             {
+                className: "CBPageListView2",
+            },
+            {
                 className: "CBSitePreferences",
                 imageForIcon: 5,
             },
