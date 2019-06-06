@@ -77,6 +77,26 @@ var CBUISpec_Tests = {
                 },
                 expectedResult: "Hello",
             },
+            {
+                spec: {
+                    className: "CBPageListView2",
+                    classNameForKind: "  Hello  ",
+                },
+                expectedResult: "Hello",
+            },
+            {
+                spec: {
+                    className: "CBPageListView2",
+                    classNameForKind: "    ",
+                },
+                expectedResult: undefined,
+            },
+            {
+                spec: {
+                    className: "CBPageListView2",
+                },
+                expectedResult: undefined,
+            },
         ];
 
         for (let index = 0; index < tests.length; index += 1) {
