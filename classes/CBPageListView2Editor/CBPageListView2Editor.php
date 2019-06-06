@@ -2,17 +2,28 @@
 
 final class CBPageListView2Editor {
 
-    /**
-     * @return [string]
-     */
-    static function requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor'];
-    }
+    /* -- CBHTMLOutput interfaces -- -- -- -- --  */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v476.js', cbsysurl()),
+        ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBModel',
+            'CBUI',
+            'CBUIStringEditor'
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 }
