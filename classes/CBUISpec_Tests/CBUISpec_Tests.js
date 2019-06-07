@@ -78,6 +78,30 @@ var CBUISpec_Tests = {
                 expectedResult: "Hello",
             },
             {
+                /* uses installed admin menu */
+                spec: {
+                    className: "CBMenuView",
+                    menuID: "3924c0a0581171f86f0708bfa799a3d8c34bd390",
+                    selectedItemName: "help",
+                },
+                expectedResult: "Administration (help)",
+            },
+            {
+                /* references menu that doesn't exist */
+                spec: {
+                    className: "CBMenuView",
+                    menuID: "0528a695d6708d8545ebe73842b33a8eddf0dbac",
+                    selectedItemName: "foo",
+                },
+                expectedResult: undefined,
+            },
+            {
+                spec: {
+                    className: "CBMenuView",
+                },
+                expectedResult: undefined,
+            },
+            {
                 spec: {
                     className: "CBPageListView2",
                     classNameForKind: "  Hello  ",
