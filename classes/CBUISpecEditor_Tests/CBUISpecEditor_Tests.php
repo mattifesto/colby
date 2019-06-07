@@ -9,7 +9,7 @@ final class CBUISpecEditor_Tests {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v476.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v477.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -34,6 +34,7 @@ final class CBUISpecEditor_Tests {
             'CBContainerView2Editor',
             'CBIconLinkViewEditor',
             'CBLinkView1',
+            'CBMenuViewEditor',
             'CBPageListView2Editor',
             'CBSitePreferencesEditor',
             'CBViewPageEditor',

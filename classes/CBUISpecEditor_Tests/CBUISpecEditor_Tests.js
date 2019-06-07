@@ -39,6 +39,15 @@ var CBUISpecEditor_Tests = {
                 image: 5,
             },
             {
+                className: "CBMenuView",
+            },
+            /* uses installed admin menu */
+            {
+                className: "CBMenuView",
+                menuID: "3924c0a0581171f86f0708bfa799a3d8c34bd390",
+                selectedItemName: "help",
+            },
+            {
                 className: "CBPageListView2",
             },
             {
