@@ -2,36 +2,56 @@
 
 final class CBMenuViewEditor {
 
+    /* -- CBHtMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v477.js', cbsysurl()),
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /**
+     * @return [[string, mixed]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables() {
+        return [
+            [
+                'CBMenuViewEditor_menuOptions',
+                CBMenuViewEditor::fetchMenuOptions(),
+            ],
+            [
+                'CBMenuViewEditor_menuItemOptionsByMenuID',
+                CBMenuViewEditor::fetchMenuItemOptionsByMenuID(),
+            ],
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBModel',
             'CBUI',
             'CBUISelector',
             'CBUIStringEditor',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+    /* -- functions -- -- -- -- -- */
 
     /**
-     * @return string
+     * @return [menuID => [object]]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v446.1.js', cbsysurl()),
-        ];
-    }
-
-    /**
-     * @return [[string, any]]
-     */
-    static function CBHTMLOutput_JavaScriptVariables() {
-        return [
-            ['CBMenuViewEditor_menuOptions', CBMenuViewEditor::fetchMenuOptions()],
-            ['CBMenuViewEditor_menuItemOptionsByMenuID', CBMenuViewEditor::fetchMenuItemOptionsByMenuID()],
-        ];
-    }
-
     static function fetchMenuItemOptionsByMenuID() {
         $SQL = <<<EOT
 
@@ -63,6 +83,8 @@ EOT;
 
         return $menuItemOptionsByMenuID;
     }
+    /* fetchMenuItemOptionsByMenuID() */
+
 
     /**
      * @return [object]
@@ -84,4 +106,6 @@ EOT;
 
         return $options;
     }
+    /* fetchMenuOptions() */
 }
+/* CBMenuViewEditor */
