@@ -4,6 +4,7 @@
 /* exported CBViewPageEditor */
 /* global
     CBImage,
+    CBModel,
     CBUI,
     CBUISpecArrayEditor,
     CBViewPageInformationEditor,
@@ -135,11 +136,38 @@ var CBViewPageEditor = {
      * @return undefined
      */
     handleTitleChanged: function (args) {
-        var title = args.spec.title || "";
-        title = title.trim();
-        title = (title.length > 0) ? ": " + title: "";
-        document.title = "Page Editor" + title;
+
+        /**
+         * Only change the page title if this is a CBModelEditor admin page.
+         */
+
+        let elements = document.getElementsByClassName(
+            "CBModelEditor"
+        );
+
+        if (elements.length === 0) {
+            return;
+        }
+
+        /**
+         * Change the page title.
+         */
+
+        let title = CBModel.valueToString(
+            args,
+            "spec.title"
+        ).trim();
+
+        let documentTitle = "Page Editor";
+
+        if (title.length > 0) {
+            documentTitle = documentTitle + ": " + title;
+        }
+
+        document.title = documentTitle;
     },
+    /* handleTitleChanged() */
+
 
     /**
      * @param object args
@@ -151,7 +179,11 @@ var CBViewPageEditor = {
      * @return undefined
      */
     makeFrontPage: function (args) {
-        if (window.confirm("Are you sure you want to use this page as the front page?")) {
+        if (
+            window.confirm(
+                "Are you sure you want to use this page as the front page?"
+            )
+        ) {
             Colby.callAjaxFunction("CBSitePreferences", "setFrontPageID",
                 {
                     ID: args.ID
