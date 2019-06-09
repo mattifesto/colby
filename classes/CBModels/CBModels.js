@@ -34,6 +34,8 @@ var CBModels = {
      *
      *              {
      *                  ID: ID
+     *                  created: int
+     *                  modified: int
      *                  version: int
      *              }
      *      }
@@ -47,29 +49,32 @@ var CBModels = {
             CBModels.IDToStorageKey(ID)
         );
 
-        if (recordAsJSON !== null) {
-            return JSON.parse(recordAsJSON);
-        } else {
+        if (recordAsJSON === null) {
             return undefined;
         }
+
+        let record = JSON.parse(recordAsJSON);
+
+        /**
+         * A record is only valid if its spec property value is a model and
+         * its meta.version property value is an integer.
+         */
+
+        if (CBModel.valueAsModel(record, "spec") === undefined) {
+            return undefined;
+        }
+
+        if (CBModel.valueAsInt(record, "meta.version") === undefined) {
+            return undefined;
+        }
+
+        return record;
     },
     /* fetch() */
 
 
     /**
-     * @param ID ID
-     *
-     * @return object|undefined
-     *
-     *      {
-     *          spec: object
-     *          meta: object
-     *
-     *              {
-     *                  ID: ID
-     *                  version: int
-     *              }
-     *      }
+     * @deprecated use CBModels.fetch()
      */
     fetchFromSessionStorage: function (ID) {
         return CBModels.fetch(ID, sessionStorage);
@@ -101,39 +106,47 @@ var CBModels = {
      * @return undefined
      */
     save: function (ID, spec, version, storage) {
-        if (CBConvert.valueAsObject(spec) === undefined) {
-            throw new TypeError("The spec parameter is not valid");
+        if (CBConvert.valueAsModel(spec) === undefined) {
+            throw new TypeError(
+                "The \"spec\" parameter must be a model."
+            );
         }
 
-        let record = CBModels.fetch(ID, storage);
-        let recordVersion = CBModel.valueAsInt(record, "meta.version") || 0;
         let now = Date.now();
+        let fetchedRecord = CBModels.fetch(ID, storage);
 
-        if (version === recordVersion) {
-            if (version === 0) {
-                record = {
-                    meta: {
-                        ID: ID,
-                        created: now,
-                        version: 0,
-                    },
-                };
-            }
+        let fetchedVersion = CBModel.valueAsInt(
+            fetchedRecord,
+            "meta.version"
+        ) || 0;
 
-            record.spec = spec;
-            record.meta.modified = now;
-            record.meta.version += 1;
+
+        if (version === fetchedVersion) {
+            let created = CBModel.valueAsInt(
+                fetchedRecord,
+                "meta.created"
+            ) || now;
+
+            let updatedRecord = {
+                spec: spec,
+                meta: {
+                    ID: ID,
+                    created: created,
+                    modified: now,
+                    version: version + 1,
+                }
+            };
 
             storage.setItem(
                 CBModels.IDToStorageKey(ID),
-                JSON.stringify(record)
+                JSON.stringify(updatedRecord)
             );
         } else {
             let message =
             "The spec has been saved by another process since you loaded it.";
 
             throw CBException.withError(
-                Error(message),
+                new Error(message),
                 "",
                 "1d094e7ef6db1efc327c1b8addd0c7ec758dccd9"
             );

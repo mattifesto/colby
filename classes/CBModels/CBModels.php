@@ -11,6 +11,8 @@
  */
 final class CBModels {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
     /**
      * This function is a heavy-duty delete. It will remove the model, and it
      * will also remove the data store. If you need the files in the data store
@@ -31,6 +33,8 @@ final class CBModels {
             CBModels::deleteByID($ID);
         });
     }
+    /* CBAjax_deleteByID() */
+
 
     /**
      * @return string
@@ -38,15 +42,21 @@ final class CBModels {
     static function CBAjax_deleteByID_group() {
         return 'Administrators';
     }
+    /* CBAjax_deleteByID_group() */
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v472.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v478.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [string]
@@ -58,6 +68,10 @@ final class CBModels {
             'CBModel',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
 
     /**
      * When a model is saved a task is created, so CBTasks2 is required for this
