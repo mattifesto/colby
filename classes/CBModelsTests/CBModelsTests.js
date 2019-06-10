@@ -135,4 +135,44 @@ var CBModelsTests = {
         };
     },
     /* CBTest_general() */
+
+
+    /**
+     * @return object
+     */
+    CBTest_saveAfterSave: function () {
+        const ID = "d1114e1695715ca2d975885c27d0a44227e6e78b";
+
+        let correctErrorWasThrown = false;
+
+        let spec = {
+            className: "CBModelsTests_saveAfterSave",
+        };
+
+        CBModels.delete(ID, sessionStorage);
+        CBModels.save(ID, spec, 0, sessionStorage);
+
+        try {
+            CBModels.save(ID, spec, 0, sessionStorage);
+        } catch (error) {
+            const sourceID = CBModel.valueAsID(
+                error,
+                "CBException.sourceID"
+            );
+
+            const expectedSourceID = "1d094e7ef6db1efc327c1b8addd0c7ec758dccd9";
+
+            if (sourceID === expectedSourceID) {
+                correctErrorWasThrown = true;
+            }
+        } finally {
+            CBModels.delete(ID, sessionStorage);
+        }
+
+        return {
+            succeeded: correctErrorWasThrown,
+        };
+    }
+    /* CBTest_saveAfterSave() */
 };
+/* CBModelsTests */
