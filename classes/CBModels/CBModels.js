@@ -17,7 +17,20 @@ var CBModels = {
      * @return undefined
      */
     delete: function (ID, storage) {
-        storage.removeItem(CBModels.IDToStorageKey(ID));
+        if (!(storage instanceof Storage)) {
+            throw CBException.withError(
+                new TypeError(
+                    "The \"storage\" parameter must be an instance of the" +
+                    " Storage class."
+                ),
+                "",
+                "acca1dfe5b808d6afc8b7d52007367356761b743"
+            );
+        }
+
+        storage.removeItem(
+            CBModels.IDToStorageKey(ID)
+        );
     },
     /* delete() */
 
@@ -107,8 +120,12 @@ var CBModels = {
      */
     save: function (ID, spec, version, storage) {
         if (CBConvert.valueAsModel(spec) === undefined) {
-            throw new TypeError(
-                "The \"spec\" parameter must be a model."
+            throw CBException.withError(
+                new TypeError(
+                    "The \"spec\" parameter must be a model."
+                ),
+                "",
+                "08d54c8f19edf030e57d80c0ee436aae6a91083f"
             );
         }
 
