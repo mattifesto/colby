@@ -41,6 +41,10 @@ var CBModels = {
      *
      * @return object|undefined
      *
+     *      If the function returns an object, the spec property is guaranteed
+     *      to be a model and the meta.version property is guaranteed to be an
+     *      integer.
+     *
      *      {
      *          spec: object
      *          meta: object
