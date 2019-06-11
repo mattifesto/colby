@@ -2,25 +2,7 @@
 
 final class CBModelUpdater {
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v472.js', cbsysurl()),
-        ];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return [
-            'CBConvert',
-            'CBModel',
-            'CBModels',
-        ];
-    }
+    /* -- CBInstall interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
@@ -30,6 +12,10 @@ final class CBModelUpdater {
             'CBModels',
         ];
     }
+    /* CBInstall_requiredClassNames() */
+
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * The purpose of this function is to fetch and apply updates to a model.
