@@ -97,6 +97,9 @@ final class CBCodeAdmin {
 
     /* -- functions -- -- -- -- -- */
 
+    /**
+     * @return [string]
+     */
     static function results(): array {
         $issues = [
             (object)[
@@ -105,6 +108,10 @@ final class CBCodeAdmin {
             ],
             (object)[
                 'regex' => 'Colby\\.imageToURL\\(',
+                'filetype' => 'js',
+            ],
+            (object)[
+                'regex' => 'CBModelUpdater',
                 'filetype' => 'js',
             ],
             (object)[
@@ -155,5 +162,6 @@ final class CBCodeAdmin {
 
         return $output;
     }
+    /* results() */
 }
 /* CBCodeAdmin */
