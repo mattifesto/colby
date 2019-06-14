@@ -102,6 +102,22 @@ final class CBCodeAdmin {
      */
     static function results(): array {
         $issues = [
+            /**
+             * Colby.warnOlderBrowsers() has been removed.
+             */
+            (object)[
+                'regex' => 'warnOlderBrowsers\\(',
+                'filetype' => 'js',
+            ],
+
+            /**
+             * Colby.setPanelContent() has been removed.
+             */
+            (object)[
+                'regex' => 'setPanelContent\\(',
+                'filetype' => 'js',
+            ],
+
             (object)[
                 'regex' => 'Colby\\.centsToDollars\\(',
                 'filetype' => 'js',
