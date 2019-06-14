@@ -2,6 +2,8 @@
 
 final class CBEqualizePageSettingsPart {
 
+    /* -- CBPageSettings interfaces -- -- -- -- -- */
+
     /**
      * html5shiv.js -> IE 11
      * es6-promise.auto.min.js -> IE 11
@@ -9,11 +11,24 @@ final class CBEqualizePageSettingsPart {
      *
      * @return void
      */
-    static function CBPageSettings_renderHeadElementHTML(): void { ?>
+    static function CBPageSettings_renderHeadElementHTML(): void {
+        /*
+
+        2019.06.14
+
+            Support for IE 11 and below has been removed. See
+            Colby.browserIsSupported() in Colby.js
+
         <script src="<?= cbsysurl() . '/classes/CBEqualizePageSettingsPart/html5shiv.v362.js' ?>"></script>
         <script src="<?= cbsysurl() . '/classes/CBEqualizePageSettingsPart/es6-promise.auto.min.v362.js' ?>"></script>
         <script src="<?= cbsysurl() . '/classes/CBEqualizePageSettingsPart/classList.min.v438.js' ?>"></script>
+
+        */
+
+        ?>
         <script src="<?= Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()) ?>"></script>
         <link rel="stylesheet" href="<?= Colby::flexpath(__CLASS__, 'v468.css', cbsysurl()) ?>">
-    <?php }
+        <?php
+    }
+    /* CBPageSettings_renderHeadElementHTML() */
 }
