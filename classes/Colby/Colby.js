@@ -16,6 +16,10 @@ var Colby = {
       * @return undefined
       */
      afterDOMContentLoaded: function (callback) {
+         if (!Colby.browserIsSupported) {
+             return;
+         }
+
          if (document.readyState === "loading") {
              document.addEventListener("DOMContentLoaded", callback);
          } else {
@@ -32,6 +36,8 @@ var Colby = {
         Colby.setPanelText(text);
         Colby.showPanel();
     },
+    /* alert() */
+
 
     /**
      * This function is often used with bind() to create a single callback from
@@ -131,12 +137,20 @@ var Colby = {
      * @return undefined
      */
     displayError: function (error) {
+        if (!Colby.browserIsSupported) {
+            return;
+        }
+
         if (error.ajaxResponse) {
             Colby.displayResponse(error.ajaxResponse);
         } else {
-            Colby.alert(Colby.errorToMessage(error));
+            Colby.alert(
+                Colby.errorToMessage(error)
+            );
         }
     },
+    /* displayError() */
+
 
     /**
      * @param object ajaxResponse
@@ -399,13 +413,21 @@ var Colby = {
      *      not meant to be inserted into promise chains.
      */
     reportError: function (error) {
+        if (!Colby.browserIsSupported) {
+            return;
+        }
+
         if (error.ajaxResponse) { // Filter out Ajax errors
             return;
         }
 
-        Colby.callAjaxFunction("CBJavaScript", "reportError", {
-            errorModel: Colby.errorToCBJavaScriptErrorModel(error),
-        });
+        Colby.callAjaxFunction(
+            "CBJavaScript",
+            "reportError",
+            {
+                errorModel: Colby.errorToCBJavaScriptErrorModel(error),
+            }
+        );
     },
 
     /**
@@ -812,21 +834,10 @@ var Colby = {
             };
         }
     },
-
-    warnOlderBrowsers: function () {
-        if (window.CSS) {
-            if (window.CSS.supports) {
-                if (window.CSS.supports('color', 'var(--color1)')) {
-                    return;
-                }
-            }
-        }
-
-        Colby.alert("Warning: You are using an older browser. Upgrade to a " +
-                    "recent version of Chrome, Edge, Firefox, or Safari. Even " +
-                    "on an older operation system these browsers will work fine.");
-    }
+    /* URIToImage() */
 };
+/* Colby */
+
 
 /**
  * This function is used extend one object by appending the properites of
@@ -847,20 +858,38 @@ Colby.extend = function(objectToExtend, objectWithProperties) {
     }
 };
 
+
 /**
  * This function is out of order to get the error handler set as soon as
  * possible.
  *
- * NOTE: Some errors will somehow disable this error handling. It's very odd.
- * When this happens use debugging to find the error and once you fix it the
- * error handling will start working again. I'm not sure exactly which errors
- * cause this strange behavior.
+ * @NOTE unknown original date
  *
- * BUG: 2016.12.28
- * Because this makes an asynchronous request it will not work if there is
- * navigation immediately after which cancels the request.
+ *      Some errors will somehow disable this error handling. It's very odd.
+ *      When this happens use debugging to find the error and once you fix it
+ *      the error handling will start working again. I'm not sure exactly which
+ *      errors cause this strange behavior.
+ *
+ *      @NOTE 2019.06.14 This hasn't been seen in a while.
+ *
+ * @NOTE 2016.12.28
+ *
+ *      Because this makes an asynchronous request it will not work if there is
+ *      navigation immediately after which cancels the request.
+ *
+ *
+ * @NOTE 2019.06.14
+ *
+ *      The properties of an error object such as column and line are currently
+ *      not well documented. The code to add these properties has been left in
+ *      despite discontinuation of IE 11 support because I don't have the time
+ *      right now to do a full investigation.
  *
  * @return false
+ *
+ *      Returning false allows the firing of the default event handler. I don't
+ *      remember right now why this is important and it was not originally
+ *      documented.
  */
 Colby.handleError = function(message, sourceURL, line, column, error) {
     if (typeof error !== "object" || error === null) { /* IE11 */
@@ -887,6 +916,8 @@ Colby.handleError = function(message, sourceURL, line, column, error) {
 
     return false;
 };
+/* handleError() */
+
 
 /**
  * Set the error handler as soon as possible
@@ -978,18 +1009,23 @@ Colby.dateToLocaleTimeString = function(date, args) {
 
     return formattedHour + ':' + formattedMinutes + formattedAMPM;
 };
+/* dateToLocaleTimeString() */
+
 
 /**
  * @return string
  */
-Colby.dateToRelativeLocaleString = function(date, now, args) {
+Colby.dateToRelativeLocaleString = function (date, now, args) {
     if (args === undefined) args = {};
     var timespan = now.getTime() - date.getTime();
     var string;
 
     // date is in the future by more than 60 seconds
     if (timespan < (1000 * -60)) {
-        string = Colby.dateToLocaleDateString(date) + ' ' + Colby.dateToLocaleTimeString(date);
+        string =
+        Colby.dateToLocaleDateString(date) +
+        ' ' +
+        Colby.dateToLocaleTimeString(date);
     }
 
     // less than 60 seconds
@@ -1011,54 +1047,50 @@ Colby.dateToRelativeLocaleString = function(date, now, args) {
     }
 
     // less that 24 hours and today
-    else if (timespan < (1000 * 60 * 60 * 24) && date.getDate() == now.getDate())
-    {
+    else if (
+        timespan < (1000 * 60 * 60 * 24) &&
+        date.getDate() == now.getDate()
+    ) {
         string = 'Today at ' + Colby.dateToLocaleTimeString(date, args);
     }
 
     // less than 48 house and yesterday
-    else if (timespan < (1000 * 60 * 60 * 24 * 2) && ((date.getDay() + 1) % 7) == now.getDay())
-    {
+    else if (
+        timespan < (1000 * 60 * 60 * 24 * 2) &&
+        ((date.getDay() + 1) % 7) == now.getDay()
+    ) {
         string = 'Yesterday at ' + Colby.dateToLocaleTimeString(date, args);
     }
 
     // just return date and time
     else
     {
-        string = Colby.dateToLocaleDateString(date, args) + ' ' + Colby.dateToLocaleTimeString(date, args);
+        string =
+        Colby.dateToLocaleDateString(date, args) +
+        ' ' +
+        Colby.dateToLocaleTimeString(date, args);
     }
 
     return string;
 };
+/* dateToRelativeLocaleString() */
+
 
 /**
- * @return void
+ * @return undefined
  */
-Colby.hidePanel = function()
-{
-    if (Colby.panel &&
-        Colby.panel.parentNode)
-    {
-        Colby.panel.parentNode.removeChild(Colby.panel);
+Colby.hidePanel = function () {
+    if (
+        Colby.panel &&
+        Colby.panel.parentNode
+    ) {
+        Colby.panel.parentNode.removeChild(
+            Colby.panel
+        );
     }
 };
+/* hidePanel() */
 
-/**
- * 2014.03.17
- *  This method has been deprecated.
- *
- * @return void
- */
-Colby.setPanelContent = function(text)
-{
-    console.log("The `Colby.setPanelContent()` method has been deprecated.");
-
-    var element     = document.createElement("pre");
-    var textNode    = document.createTextNode(text);
-    element.appendChild(textNode);
-
-    Colby.setPanelElement(element);
-};
 
 /**
  * @return undefined
@@ -1180,3 +1212,42 @@ Colby.CBTasks2_delay = 5000;
 Colby.CBTasks2_processID = undefined;
 
 Colby.afterDOMContentLoaded(function () { Colby.tasks.init(); });
+
+
+/* initialize */
+(function init() {
+
+    /**
+     * @NOTE 2019.06.14
+     *
+     *      Browsers must natively support Promises. This requirement makes
+     *      Internet Explorer 11 an unsupported browser.
+     */
+
+    let browserIsSupported = false;
+
+    if (
+        typeof Promise !== "undefined" &&
+        Promise.toString().indexOf("[native code]") !== -1
+    ) {
+        browserIsSupported = true;
+    } else {
+        Colby.alert(
+            "The web browser you are using is no longer supported by this" +
+            " website. Upgrade to a recent version of Chrome, Edge, Firefox," +
+            " or Safari."
+        );
+    }
+
+    Object.defineProperty(
+        Colby,
+        "browserIsSupported",
+        {
+            configurable: true,
+            enumerable: false,
+            get: function () { return browserIsSupported; },
+        }
+    );
+
+})();
+/* initialize */
