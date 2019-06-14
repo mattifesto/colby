@@ -34,14 +34,7 @@
  */
 final class CBAdmin {
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v374.js', cbsysurl()),
-        ];
-    }
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @param string $className
@@ -57,13 +50,18 @@ final class CBAdmin {
             $group = call_user_func($function);
 
             if (!ColbyUser::currentUserIsMemberOfGroup($group)) {
-                include cbsysdir() . '/handlers/handle-authorization-failed.php';
+                include cbsysdir() .
+                '/handlers/handle-authorization-failed.php';
+
                 return;
             }
         }
 
         CBHTMLOutput::begin();
-        CBHTMLOutput::pageInformation()->classNameForPageSettings = 'CBPageSettingsForAdminPages';
+
+        CBHTMLOutput::pageInformation()->classNameForPageSettings =
+        'CBPageSettingsForAdminPages';
+
         CBHTMLOutput::requireClassName('CBAdmin');
         CBHTMLOutput::requireClassName('CBUI');
         CBHTMLOutput::requireClassName($className);
@@ -107,6 +105,8 @@ final class CBAdmin {
 
         CBHTMLOutput::render();
     }
+    /* render() */
+
 
     /**
      * @return [string]
@@ -114,22 +114,40 @@ final class CBAdmin {
      *      Returns a unique list of subdirectories of each library's classes
      *      directory.
      */
-    static function fetchClassNames() {
+    static function fetchClassNames(): array {
         $classNames = [];
 
         foreach (Colby::$libraryDirectories as $libraryDirectory) {
             if ($libraryDirectory === '') {
-                $libraryClassesDirectory = cbsitedir() . '/classes';
+                $libraryClassesDirectory =
+                cbsitedir() .
+                '/classes';
             } else {
-                $libraryClassesDirectory = cbsitedir() . "/{$libraryDirectory}/classes";
+                $libraryClassesDirectory =
+                cbsitedir() .
+                "/{$libraryDirectory}/classes";
             }
 
-            $libraryClassDirectories = glob("{$libraryClassesDirectory}/*" , GLOB_ONLYDIR);
-            $libraryClassNames = array_map('basename', $libraryClassDirectories);
+            $libraryClassDirectories = glob(
+                "{$libraryClassesDirectory}/*",
+                GLOB_ONLYDIR
+            );
 
-            $classNames = array_merge($classNames, $libraryClassNames);
+            $libraryClassNames = array_map(
+                'basename',
+                $libraryClassDirectories
+            );
+
+            $classNames = array_merge(
+                $classNames,
+                $libraryClassNames
+            );
         }
 
-        return array_values(array_unique($classNames));
+        return array_values(
+            array_unique($classNames)
+        );
     }
+    /* fetchClassNames() */
 }
+/* CBAdmin */
