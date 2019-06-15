@@ -3,10 +3,10 @@
 /* jshint esversion: 6 */
 /* exported CBUIPanel */
 /* global
+    CBConvert,
     CBMessageMarkup,
+    CBModel,
     CBUI,
-    CBUISectionItem4,
-    CBUIStringsPart,
     Colby,
 */
 
@@ -47,147 +47,213 @@
  *      }
  */
 
-Colby.afterDOMContentLoaded(function () {
-    let buttons;
-    let isShowing = false;
-    let message = "";
+Colby.afterDOMContentLoaded(
+    function init() {
+        let buttons;
+        let isShowing = false;
+        let message = "";
 
-    /**
-     * Stucture:
-     *
-     *      viewportElement
-     *          backgroundElement
-     *              surfaceElement
-     *                  messageElement
-     *                      contentElement
-     *                  interfaceElement
-     *                      sectionElement
-     */
+        /**
+         * Stucture:
+         *
+         *      viewportElement
+         *          backgroundElement
+         *              surfaceElement
+         *                  messageElement
+         *                      contentElement
+         *                  interfaceElement
+         *                      [button element]
+         */
 
-    let viewportElement = document.createElement("div");
-    viewportElement.className = "CBUIPanel";
-    let backgroundElement = document.createElement("div");
-    backgroundElement.className = "background";
-    let surfaceElement = document.createElement("div");
-    surfaceElement.className = "surface";
+        let viewportElement = document.createElement("div");
+        viewportElement.className = "CBUIPanel";
 
-    backgroundElement.appendChild(surfaceElement);
-    viewportElement.appendChild(backgroundElement);
+        let backgroundElement = document.createElement("div");
+        backgroundElement.className = "CBUIPanel_background";
 
-    let messageElement = document.createElement("div");
-    messageElement.className = "message";
-    let contentElement = document.createElement("div");
-    contentElement.className = "content CBContentStyleSheet";
+        viewportElement.appendChild(backgroundElement);
 
-    messageElement.appendChild(contentElement);
-    surfaceElement.appendChild(messageElement);
+        let surfaceElement = document.createElement("div");
+        surfaceElement.className = "CBUIPanel_surface";
 
-    let interfaceElement = document.createElement("div");
-    interfaceElement.className = "interface";
-    let sectionElement = CBUI.createSection();
+        backgroundElement.appendChild(surfaceElement);
 
-    interfaceElement.appendChild(sectionElement);
-    surfaceElement.appendChild(interfaceElement);
+        let messageElement = document.createElement("div");
+        messageElement.className = "CBUIPanel_message";
 
-    document.body.appendChild(viewportElement);
+        surfaceElement.appendChild(messageElement);
 
-    let api = {
+        let contentElement = document.createElement("div");
+        contentElement.className = "CBUIPanel_content CBContentStyleSheet";
 
-        get buttons() {
-            return buttons;
-        },
+        messageElement.appendChild(contentElement);
 
-        set buttons(value) {
-            setButtons(value);
-        },
+        let interfaceElement = CBUI.createElement("CBUIPanel_interface");
 
-        get isShowing() {
-            return isShowing;
-        },
+        surfaceElement.appendChild(interfaceElement);
 
-        set isShowing(value) {
-            setIsShowing(value);
-        },
+        document.body.appendChild(viewportElement);
 
-        get message() {
-            return message;
-        },
+        let api = {
 
-        set message(value) {
-            setMessage(value);
-        },
+            get buttons() {
+                return buttons;
+            },
 
-        reset: reset,
-    };
+            set buttons(value) {
+                init_setButtons(value);
+            },
 
-    reset();
+            get isShowing() {
+                return isShowing;
+            },
 
-    Object.defineProperty(window, 'CBUIPanel', {
-        value: api,
-    });
+            set isShowing(value) {
+                init_setIsShowing(value);
+            },
 
-    function createButtonSectionItem(descriptor) {
-        let sectionItem = CBUISectionItem4.create();
+            get message() {
+                return message;
+            },
 
-        if (typeof descriptor.callback === "function") {
-            sectionItem.callback = descriptor.callback;
-        } else {
-            sectionItem.callback = function () {
-                reset();
-            };
-        }
+            set message(value) {
+                init_setMessage(value);
+            },
 
-        let stringsPart = CBUIStringsPart.create();
-        stringsPart.string1 = descriptor.title;
+            reset: init_reset,
+        };
 
-        stringsPart.element.classList.add("action");
+        init_reset();
 
-        sectionItem.appendPart(stringsPart);
+        Object.defineProperty(window, 'CBUIPanel', {
+            value: api,
+        });
 
-        return sectionItem;
-    }
+        return;
 
-    function reset() {
-        setIsShowing(false);
-        setMessage("");
-        setButtons([
-            {
-                title: "OK",
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @param object args
+         *
+         *      {
+         *          callback: function
+         *          title: string
+         *      }
+         *
+         * @return Element
+         */
+        function init_createButtonElement(args) {
+            let containerElement = CBUI.createElement("CBUI_container1");
+            let buttonElement = CBUI.createElement("CBUI_button1");
+
+            containerElement.appendChild(buttonElement);
+
+            buttonElement.textContent = CBModel.valueToString(
+                args,
+                "title"
+            );
+
+            let callback = CBModel.valueAsFunction(
+                args,
+                "callback"
+            );
+
+            if (callback === undefined) {
+                callback = init_reset;
             }
-        ]);
-    }
 
-    function setButtons(value) {
-        buttons = value;
-        sectionElement.textContent = "";
+            buttonElement.addEventListener(
+                "click",
+                callback
+            );
 
-        if (Array.isArray(buttons) && buttons.length > 0) {
-            buttons.forEach(function (button) {
-                sectionElement.appendChild(
-                    createButtonSectionItem(button).element
+            return containerElement;
+        }
+        /* init_createButtonElement() */
+
+
+        /**
+         * @return undefined
+         */
+        function init_reset() {
+            init_setIsShowing(false);
+
+            init_setMessage("");
+
+            init_setButtons(
+                [
+                    {
+                        title: "OK",
+                    }
+                ]
+            );
+        }
+
+
+        /**
+         * @param [object] buttonArgsArray
+         *
+         *      {
+         *          callback: function
+         *          title: string,
+         *      }
+         *
+         * @return undefined
+         */
+        function init_setButtons(buttonArgsArray) {
+            interfaceElement.textContent = "";
+
+            if (
+                Array.isArray(buttonArgsArray) &&
+                buttonArgsArray.length > 0
+            ) {
+                buttonArgsArray.forEach(
+                    function (buttonArgs) {
+                        let buttonElement = init_createButtonElement(
+                            buttonArgs
+                        );
+
+                        interfaceElement.appendChild(
+                            buttonElement
+                        );
+                    }
                 );
-            });
-
-            interfaceElement.classList.remove("empty");
-        } else {
-            interfaceElement.classList.add("empty");
+            }
         }
-    }
+        /* init_setButtons() */
 
-    function setIsShowing(value) {
-        isShowing = !!value;
 
-        if (isShowing) {
-            viewportElement.classList.add("showing");
-        } else {
-            viewportElement.scrollTop = 0;
-            viewportElement.classList.remove("showing");
+        /**
+         * @param bool value
+         *
+         * @return undefined
+         */
+        function init_setIsShowing(value) {
+            isShowing = !!value;
+
+            if (isShowing) {
+                viewportElement.classList.add("showing");
+            } else {
+                viewportElement.scrollTop = 0;
+                viewportElement.classList.remove("showing");
+            }
         }
-    }
+        /* init_setIsShowing() */
 
-    function setMessage(value) {
-        message = String(value);
 
-        contentElement.innerHTML = CBMessageMarkup.markupToHTML(message);
+        /**
+         * @param string message
+         *
+         * @return undefined
+         */
+        function init_setMessage(value) {
+            message = CBConvert.valueToString(value);
+
+            contentElement.innerHTML = CBMessageMarkup.markupToHTML(message);
+        }
+        /* init_setMessage() */
     }
-});
+    /* init() */
+);

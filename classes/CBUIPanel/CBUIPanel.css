@@ -26,7 +26,7 @@
  * flexbox so that the surface element can grow to fill its height it it is
  * shorter.
  */
-.CBUIPanel > .background {
+.CBUIPanel_background {
     display: flex;
     flex-direction: column;
 
@@ -41,9 +41,10 @@
  * flexbox so that the interface element can always be aligned with its bottem
  * edge by having a margin-top value of "auto".
  */
-.CBUIPanel > .background > .surface {
+.CBUIPanel_surface {
     display: flex;
     flex-direction: column;
+    justify-content: center;
 
     background-color: var(--CBBackgroundColor);
     border-radius: 10px;
@@ -57,12 +58,11 @@
  * touching the edges of the surface. The element is flexbox so that it can
  * center to content element both horizontally and vertically.
  */
-.CBUIPanel > .background > .surface > .message {
+.CBUIPanel_message {
     display: flex;
     align-items: center;
     justify-content: center;
 
-    flex: 1 0 auto;
     padding: 10px;
 }
 
@@ -71,23 +71,15 @@
  * centered by default. It has the same maximum width as the CBMessageView to
  * maintain readability.
  */
-.CBUIPanel > .background > .surface > .message > .content {
+.CBUIPanel_content {
     max-width: 36em;
     text-align: center;
 }
 
 /**
- * The interface element contains a section element that displays the buttons
- * that are currently used by the panel. It has a margin-top value of "auto" to
- * ensure it will appear at the bottom of the surface in all scenarios. It does
- * not display if there are no buttons. It has no left or right padding to make
- * the section element display correctly in narrow scenarios.
+ * The interface element the button elements that are currently used by the
+ * panel.
  */
-.CBUIPanel > .background > .surface > .interface {
-    margin-top: auto;
-    padding: 10px 0;
-}
-
-.CBUIPanel > .background > .surface > .interface.empty {
-    display: none;
+.CBUIPanel_interface {
+    margin-top: 3em;
 }

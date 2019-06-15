@@ -7,18 +7,22 @@ final class CBUIPanel {
      */
     static function CBHTMLOutput_CSSURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v468.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v480.css', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v480.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [string]
@@ -26,10 +30,14 @@ final class CBUIPanel {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBContentStyleSheet',
+
+            'CBConvert',
             'CBMessageMarkup',
+            'CBModel',
             'CBUI',
-            'CBUISectionItem4',
-            'CBUIStringsPart',
+            'Colby',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 }
+/* CBUIPanel */
