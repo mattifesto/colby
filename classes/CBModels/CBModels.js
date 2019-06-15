@@ -100,6 +100,55 @@ var CBModels = {
 
 
     /**
+     * This function will fetch and update a spec, but it will not save the
+     * updates.
+     *
+     * @param string ID
+     * @param Storage storage
+     * @param object updates
+     *
+     * @return object
+     *
+     *      {
+     *          spec: object
+     *          meta: object
+     *
+     *              {
+     *                  ID: ID
+     *                  created: int
+     *                  modified: int
+     *                  version: int
+     *              }
+     *      }
+     */
+    fetchAndUpdate: function (ID, storage, updates) {
+        let record = CBModels.fetch(ID, storage);
+
+        if (record === undefined) {
+            let now = Date.now();
+
+            record = {
+                spec: updates,
+                meta: {
+                    ID: ID,
+                    created: now,
+                    modified: now,
+                    version: 0,
+                }
+            };
+        } else {
+            CBModel.merge(
+                record.spec,
+                updates
+            );
+        }
+
+        return record;
+    },
+    /* fetchAndUpdate() */
+
+
+    /**
      * @param ID ID
      *
      * @return string
