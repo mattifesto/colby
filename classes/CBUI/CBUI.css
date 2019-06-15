@@ -88,6 +88,20 @@
 }
 
 /**
+ * 2019_06_14
+ *
+ *      This container is was created to hold one item centered horizontally
+ *      will 20px of padding to separate it from adjacent items.
+ *
+ *      It is the same as CBUI_container1 but with 20px padding.
+ */
+.CBUI_container4 {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+/**
  * 2019_01_15
  *
  *      This class was created to hold content in section item parts. It is
@@ -376,6 +390,7 @@ a.CBUI_sectionItem {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
+    z-index: 500;
 }
 
 /**

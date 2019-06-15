@@ -2,14 +2,18 @@
 
 final class CBUI {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v472.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v479.css', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
 
     /**
      * @return [string]
@@ -19,6 +23,8 @@ final class CBUI {
             Colby::flexpath(__CLASS__, 'v470.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [string]
@@ -31,6 +37,10 @@ final class CBUI {
             'CBUISection',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @return null
@@ -92,3 +102,4 @@ final class CBUI {
         ?></div><?php
     }
 }
+/* CBUI */
