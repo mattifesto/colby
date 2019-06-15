@@ -646,6 +646,8 @@ var Colby = {
             isStopped = true;
         }
     },
+    /* get tasks */
+
 
     /**
      * @param string text
@@ -1191,27 +1193,6 @@ Colby.textToURI = function (text) {
 
     return uri;
 };
-/* Colby */
-
-
-/**
- * General page loaded tasks
- */
-
-Colby.afterDOMContentLoaded(function () {
-    Colby.updateTimes(true);
-});
-
-/**
- * CBTasks2 run tasks
- */
-
-Colby.CBTasks2_countOfTasksRequested = 0;
-Colby.CBTasks2_countOfTasksRun = 0;
-Colby.CBTasks2_delay = 5000;
-Colby.CBTasks2_processID = undefined;
-
-Colby.afterDOMContentLoaded(function () { Colby.tasks.init(); });
 
 
 /* initialize */
@@ -1246,6 +1227,18 @@ Colby.afterDOMContentLoaded(function () { Colby.tasks.init(); });
             configurable: true,
             enumerable: false,
             get: function () { return browserIsSupported; },
+        }
+    );
+
+    Colby.CBTasks2_countOfTasksRequested = 0;
+    Colby.CBTasks2_countOfTasksRun = 0;
+    Colby.CBTasks2_delay = 5000;
+    Colby.CBTasks2_processID = undefined;
+
+    Colby.afterDOMContentLoaded(
+        function () {
+            Colby.updateTimes(true);
+            Colby.tasks.init();
         }
     );
 
