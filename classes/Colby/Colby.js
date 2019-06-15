@@ -1234,8 +1234,8 @@ Colby.afterDOMContentLoaded(function () { Colby.tasks.init(); });
     } else {
         Colby.alert(
             "The web browser you are using is no longer supported by this" +
-            " website. Upgrade to a recent version of Chrome, Edge, Firefox," +
-            " or Safari."
+            " website. Use a recent version a regularly maintained browser" +
+            " such as Chrome, Edge, Firefox, or Safari."
         );
     }
 
