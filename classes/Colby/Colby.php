@@ -657,14 +657,6 @@ final class Colby {
         return CBHex160::random();
     }
 
-    /**
-     * @deprecated use CBErrorHandler::report()
-     *
-     * @return null
-     */
-    static function reportException(Throwable $throwable, $severity = 3) {
-        CBErrorHandler::report($throwable);
-    }
 
     /**
      * @deprecated use `CBSitePreferences::debug()` instead
