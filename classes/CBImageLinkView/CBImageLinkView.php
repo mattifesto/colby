@@ -1,26 +1,39 @@
 <?php
 
 /**
- *     This class is meant to a simple and universally useful view to display
- * an image with an optional link. Part of the simplicity of this class is that
- * it does not allow for image resizing. Image resizing usually requires
- * domain specific knowledge and is not a great feature for a view that is
- * meant to be useful everywhere.
- *     Two features, aside from image uploading and display, have been included
- * to make this class useful for the long term. The first is to allow an
- * optional link which is needed in the majority of scenarios. The other is to
- * allow the image to be specified as "retina" which will allow the view to be
- * useful into the foreseeable future. Declaring the image as "retina" will use
- * the same image but will render it at half size.
+ * @TODO 2019_06_16
+ *
+ *      This view needs investigation and should probably be deprecated. The
+ *      description below was written before the artwork element was developed.
+ *
+ * This class is meant to a simple and universally useful view to display an
+ * image with an optional link. Part of the simplicity of this class is that it
+ * does not allow for image resizing. Image resizing usually requires domain
+ * specific knowledge and is not a great feature for a view that is meant to be
+ * useful everywhere.
+ *
+ * Two features, aside from image uploading and display, have been included to
+ * make this class useful for the long term. The first is to allow an optional
+ * link which is needed in the majority of scenarios. The other is to allow the
+ * image to be specified as "retina" which will allow the view to be useful into
+ * the foreseeable future. Declaring the image as "retina" will use the same
+ * image but will render it at half size.
  */
 final class CBImageLinkView {
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v480.css', cbsysurl())
+        ];
     }
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
 
     /**
      * @param model $spec
