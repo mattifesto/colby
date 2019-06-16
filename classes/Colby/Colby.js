@@ -7,25 +7,34 @@
 var Colby = {
     updateTimesTimeoutID: null,
     updateTimesCount: 0,
-    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-                 'August', 'September', 'October', 'November', 'December'],
+    monthNames: [
+        'January', 'February', 'March',
+        'April', 'May', 'June',
+        'July', 'August', 'September',
+        'October', 'November', 'December',
+    ],
 
-     /**
-      * @param function callback
-      *
-      * @return undefined
-      */
-     afterDOMContentLoaded: function (callback) {
-         if (!Colby.browserIsSupported) {
-             return;
-         }
+    /**
+     * @param function callback
+     *
+     * @return undefined
+     */
+    afterDOMContentLoaded: function (callback) {
+        if (!Colby.browserIsSupported) {
+            return;
+        }
 
-         if (document.readyState === "loading") {
-             document.addEventListener("DOMContentLoaded", callback);
-         } else {
-             callback();
-         }
-     },
+        if (document.readyState === "loading") {
+            document.addEventListener(
+                "DOMContentLoaded",
+                callback
+            );
+        } else {
+            callback();
+        }
+    },
+    /* afterDOMContentLoaded() */
+
 
     /**
      * @param string text
@@ -50,6 +59,7 @@ var Colby = {
     call: function (callbacks) {
         callbacks.forEach(function (callback) { callback.call(); });
     },
+
 
     /**
      * @param string className
@@ -91,7 +101,7 @@ var Colby = {
      *
      * @return string
      */
-    dataStoreFlexpath : function (ID, basename, flexdir) {
+    dataStoreFlexpath: function (ID, basename, flexdir) {
         var flexpath = ID.replace(/^(..)(..)/, "data/$1/$2/");
 
         if (basename) {
@@ -105,12 +115,19 @@ var Colby = {
         return flexpath;
     },
 
+
     /**
      * @return string
      */
     dateToLocaleString: function (date) {
-        return Colby.dateToLocaleDateString(date) + " " + Colby.dateToLocaleTimeString(date);
+        let localeString =
+        Colby.dateToLocaleDateString(date) +
+        " " +
+        Colby.dateToLocaleTimeString(date);
+
+        return localeString;
     },
+
 
     /**
      * Use this function with promises to display error messages to the user and
@@ -126,6 +143,7 @@ var Colby = {
         Colby.displayError(error);
         Colby.reportError(error);
     },
+
 
     /**
      * Use this function with promises to display error messages to the user.
@@ -159,6 +177,7 @@ var Colby = {
      */
     displayResponse: function (ajaxResponse) {
         var element, message, button;
+
         if ('stackTrace' in ajaxResponse) {
             element                     = document.createElement("div");
             message                     = document.createElement("p");
@@ -168,13 +187,21 @@ var Colby = {
 
             element.appendChild(message);
 
-            if (ajaxResponse.classNameForException === "CBModelVersionMismatchException") {
+            if (
+                ajaxResponse.classNameForException ===
+                "CBModelVersionMismatchException"
+            ) {
                 button                  = document.createElement("button");
                 button.textContent      = "Reload";
                 button.style.display    = "block";
                 button.style.margin     = "20px auto";
 
-                button.addEventListener("click", function() { location.reload(); });
+                button.addEventListener(
+                    "click",
+                    function() {
+                        location.reload();
+                    }
+                );
 
                 element.appendChild(button);
             } else {
@@ -196,7 +223,12 @@ var Colby = {
             button.style.display    = "block";
             button.style.margin     = "20px auto";
 
-            button.addEventListener("click", function() { location.reload(); });
+            button.addEventListener(
+                "click",
+                function() {
+                    location.reload();
+                }
+            );
 
             element.appendChild(message);
             element.appendChild(button);
@@ -209,6 +241,7 @@ var Colby = {
         Colby.showPanel();
     },
 
+
     /**
      * This function can be used as a handler for XHR.onerror
      *
@@ -216,20 +249,24 @@ var Colby = {
      *
      * @return undefined
      */
-    displayXHRError : function (args) {
-        Colby.displayResponse(Colby.responseFromXMLHttpRequest(args.xhr));
+    displayXHRError: function (args) {
+        Colby.displayResponse(
+            Colby.responseFromXMLHttpRequest(args.xhr)
+        );
     },
+
 
     /**
      * @param Element element
      *
      * @return int|null
      */
-    elementToTimestamp : function (element) {
+    elementToTimestamp: function (element) {
         var timestamp = parseInt(element.getAttribute("data-timestamp"), 10);
 
         return isNaN(timestamp) ? null : timestamp;
     },
+
 
     /**
      * Converts an error object to a CBJavaScriptError model.
@@ -259,6 +296,7 @@ var Colby = {
         };
     },
 
+
     /**
      * @param Error error
      *
@@ -266,11 +304,17 @@ var Colby = {
      */
     errorToMessage: function (error) {
         var message = error.message || "(no message)";
-        var basename = error.sourceURL ? error.sourceURL.split(/[\\/]/).pop() : "(no sourceURL)";
+
+        var basename =
+        error.sourceURL ?
+        error.sourceURL.split(/[\\/]/).pop() :
+        "(no sourceURL)";
+
         var line = error.line || "(no line)";
 
         return "\"" + message + "\" in " + basename + " line " + line;
     },
+
 
     /**
      * This function is the recommended way to make an Ajax request for Colby.
@@ -347,12 +391,14 @@ var Colby = {
         return Colby.cachedLocalStorageIsSupported;
     },
 
+
     /**
      * @return string
      */
     get nonBreakingSpace() {
         return "\u00A0";
     },
+
 
     /**
      * This method generates a random hex string representing a 160-bit number
@@ -364,7 +410,11 @@ var Colby = {
         var i;
         var randomNumbers;
 
-        if (typeof Uint16Array !== undefined && window.crypto && window.crypto.getRandomValues) {
+        if (
+            typeof Uint16Array !== undefined &&
+            window.crypto &&
+            window.crypto.getRandomValues
+        ) {
             randomNumbers = new Uint16Array(10);
 
             window.crypto.getRandomValues(randomNumbers);
@@ -389,12 +439,14 @@ var Colby = {
         return random160;
     },
 
+
     /**
      * @deprecated use Colby.reportError()
      */
     report: function (error) {
         Colby.reportError(error);
     },
+
 
     /**
      * Use this function to report an error to the server.
@@ -430,6 +482,7 @@ var Colby = {
         );
     },
 
+
     /**
      * The requestTimeUpdate() function tells Colby that you have a relative
      * time value that you wish to update. Using the function is an alternative
@@ -460,6 +513,7 @@ var Colby = {
         }
     },
 
+
     /**
      * @return object
      *
@@ -475,13 +529,13 @@ var Colby = {
         switch (xhr.status) {
             case 0:
                 response = {
-                    className : "CBAjaxResponse",
-                    message : "An error occured when making an Ajax request " +
+                    className: "CBAjaxResponse",
+                    message: "An error occured when making an Ajax request " +
                               "to the server. This was most likely caused by " +
                               "a network issue or less likely caused by the " +
                               "server domain name in the request URL being " +
                               "incorrect.",
-                    wasSuccessful : false,
+                    wasSuccessful: false,
                 };
                 break;
             case 200:
@@ -499,12 +553,12 @@ var Colby = {
                 break;
             default:
                 response = {
-                    className : "CBAjaxResponse",
-                    message : "An Ajax request to the server returned an " +
+                    className: "CBAjaxResponse",
+                    message: "An Ajax request to the server returned an " +
                               "unexpected response with the status code " +
                               xhr.status + " and the status text: \"" +
                               xhr.statusText + "\".",
-                    wasSuccessful : false,
+                    wasSuccessful: false,
                 };
                 break;
         }
@@ -513,6 +567,7 @@ var Colby = {
 
         return response;
     },
+
 
     /**
      * @return object
@@ -666,6 +721,7 @@ var Colby = {
          return text.replace(/[&<>"']/g, function(m) { return map[m]; });
     },
 
+
     /**
      * If you want to receive the time update callback directly instead of using
      * the element returned by this function use Colby.requestTimeUpdate().
@@ -691,6 +747,7 @@ var Colby = {
         return element;
     },
 
+
     /**
      * This function converts a unix timestamp to a string that can be parsed
      * properly by Date.parse().
@@ -699,25 +756,37 @@ var Colby = {
      *
      * @return string
      */
-    unixTimestampToParseableDateString : function (unixTimestamp) {
+    unixTimestampToParseableDateString: function (unixTimestamp) {
         var date = new Date(unixTimestamp * 1000);
 
-        return (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+        let parseableDateString =
+        (date.getMonth() + 1) +
+        "/" +
+        date.getDate() +
+        "/" +
+        date.getFullYear();
+
+        return parseableDateString;
     },
+
 
     /**
      * @return string
      */
-    unixTimestampToParseableString : function (unixTimestamp) {
-        return Colby.unixTimestampToParseableDateString(unixTimestamp) +
-               " " +
-               Colby.unixTimestampToParseableTimeString(unixTimestamp);
+    unixTimestampToParseableString: function (unixTimestamp) {
+        let parseableString =
+        Colby.unixTimestampToParseableDateString(unixTimestamp) +
+        " " +
+        Colby.unixTimestampToParseableTimeString(unixTimestamp);
+
+        return parseableString;
     },
+
 
     /**
      * @return string
      */
-    unixTimestampToParseableTimeString : function (unixTimestamp) {
+    unixTimestampToParseableTimeString: function (unixTimestamp) {
         var date = new Date(unixTimestamp * 1000);
         var hour = date.getHours() % 12;
         hour = hour ? hour : 12;
@@ -731,6 +800,7 @@ var Colby = {
 
         return hour + ':' + minutes + ' ' + AMPM;
     },
+
 
     /**
      * @param Element element
@@ -758,11 +828,13 @@ var Colby = {
         let args;
 
         if (element.classList.contains("compact")) {
-            args = { "compact" : true };
+            args = { "compact": true };
         }
 
-        element.textContent = Colby.dateToRelativeLocaleString(date, now, args);
+        element.textContent =
+        Colby.dateToRelativeLocaleString(date, now, args);
     },
+
 
     /**
      * @param bool restart
@@ -809,11 +881,18 @@ var Colby = {
          */
 
         if (Colby.updateTimesCount < 90) {
-            Colby.updateTimesTimeoutID = window.setTimeout(Colby.updateTimes, 1000);
+            Colby.updateTimesTimeoutID = window.setTimeout(
+                Colby.updateTimes,
+                1000
+            );
         } else {
-            Colby.updateTimesTimeoutID = window.setTimeout(Colby.updateTimes, 15000);
+            Colby.updateTimesTimeoutID = window.setTimeout(
+                Colby.updateTimes,
+                15000
+            );
         }
     },
+
 
     /**
      * This code is dangerous because it can provide an image structure for
@@ -824,7 +903,9 @@ var Colby = {
      * @return object|undefined
      */
     URIToImage: function (URI) {
-        var regex = /\/data\/([0-9a-f]{2})\/([0-9a-f]{2})\/([0-9a-f]{36})\/([^\/\.]+)\.([^\/\.]+)$/;
+        var regex =
+        /\/data\/([0-9a-f]{2})\/([0-9a-f]{2})\/([0-9a-f]{36})\/([^\/\.]+)\.([^\/\.]+)$/;
+
         var matches = URI.match(regex);
 
         if (matches) {
