@@ -923,26 +923,6 @@ var Colby = {
 
 
 /**
- * This function is used extend one object by appending the properites of
- * another object. It allows for more clear and safer code when adding multiple
- * properties and functions to an object by not having to specify the object
- * name for each property or function.
- *
- * @return Object
- */
-Colby.extend = function(objectToExtend, objectWithProperties) {
-
-    for (var property in objectWithProperties) {
-
-        if (objectWithProperties.hasOwnProperty(property)) {
-
-            objectToExtend[property] = objectWithProperties[property];
-        }
-    }
-};
-
-
-/**
  * This function is out of order to get the error handler set as soon as
  * possible.
  *
