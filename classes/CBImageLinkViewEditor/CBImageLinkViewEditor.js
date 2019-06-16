@@ -1,13 +1,15 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBImageLinkViewEditor */
 /* global
+    CBImage,
     CBUI,
     CBUIBooleanEditor,
     CBUIImageUploader,
     CBUIImageURLView,
     CBUIStringEditor,
-    Colby */
+*/
 
 var CBImageLinkViewEditor = {
 
@@ -121,12 +123,14 @@ var CBImageLinkViewEditor = {
         return element;
     },
 
+
     /**
      * @param [function] callbacks
      */
     handleImageUploaded: function (args) {
         args.callbacks.forEach(function (callback) { callback(); });
     },
+
 
     /**
      * @param object spec
@@ -137,6 +141,7 @@ var CBImageLinkViewEditor = {
     specToDescription: function (spec) {
         return spec.alt;
     },
+
 
     /**
      * @param object spec
@@ -153,6 +158,7 @@ var CBImageLinkViewEditor = {
         }
     },
 
+
     /**
      * @param object args.spec
      * @param object args.specWithImage
@@ -163,9 +169,11 @@ var CBImageLinkViewEditor = {
         var spec = args.spec;
         var image = args.specWithImage.image;
         spec.height = image.height;
-        spec.URL = Colby.dataStoreIDToURI(image.ID) + "/" + image.filename + "." + image.extension;
+        spec.URL = CBImage.toURL(image);
         spec.width = image.width;
     },
+    /* transferImageProperties() */
+
 
     /**
      * @param Element args.dimensionsElement
@@ -177,3 +185,4 @@ var CBImageLinkViewEditor = {
         args.dimensionsElement.textContent = CBImageLinkViewEditor.specToDimensionsText(args.spec);
     },
 };
+/* CBImageLinkViewEditor */
