@@ -124,7 +124,43 @@ var Colby = {
         Colby.panelContent = content;
     },
     /* createPanel() */
-    
+
+
+    /**
+     * @NOTE 2015_03_24
+     *
+     *      The toLocaleDateString() function can be used in the future when the
+     *      "locales" and "options" arguments are supported in all browsers.
+     *      This can be tracked at Mozilla's documentation for the function.
+     *
+     * @param Date date
+     * @param object args
+     *
+     *      {
+     *          compact: bool
+     *      }
+     *
+     * @return string
+     *
+     *      example: "February 14, 2010".
+     */
+    dateToLocaleDateString: function (date, args) {
+        if (args && args.compact === true) {
+            return date.getFullYear() +
+                "/" +
+                ("00" + (date.getMonth() + 1)).slice(-2) +
+                "/" +
+                ("00" + date.getDate()).slice(-2);
+        } else {
+            return Colby.monthNames[date.getMonth()] +
+                " " +
+                date.getDate() +
+                ", " +
+                date.getFullYear();
+        }
+    },
+    /* dateToLocaleDateString() */
+
 
     /**
      * @return string
@@ -137,6 +173,107 @@ var Colby = {
 
         return localeString;
     },
+
+
+    /**
+     * @param Date date
+     * @param object args
+     *
+     *      {
+     *          compact: bool
+     *      }
+     *
+     * @return string
+     */
+    dateToLocaleTimeString: function (date, args) {
+        let formattedAMPM;
+
+        let formattedHour = date.getHours() % 12;
+        formattedHour = formattedHour ? formattedHour : 12;
+
+        let formattedMinutes = ("00" + date.getMinutes()).slice(-2);
+
+        if (args && args.compact === true) {
+            formattedAMPM = (date.getHours() > 11) ? 'pm' : 'am';
+            formattedHour = ("00" + formattedHour).slice(-2);
+        } else {
+            formattedAMPM = (date.getHours() > 11) ? ' p.m.' : ' a.m.';
+        }
+
+        return formattedHour + ':' + formattedMinutes + formattedAMPM;
+    },
+    /* dateToLocaleTimeString() */
+
+
+    /**
+     * @param Date date
+     * @param Date now
+     * @param object args
+     *
+     *      {
+     *          compact: bool
+     *      }
+     *
+     * @return string
+     */
+    dateToRelativeLocaleString: function (date, now, args) {
+        var timespan = now.getTime() - date.getTime();
+        var string;
+
+        // date is in the future by more than 60 seconds
+        if (timespan < (1000 * -60)) {
+            string =
+            Colby.dateToLocaleDateString(date) +
+            ' ' +
+            Colby.dateToLocaleTimeString(date);
+        }
+
+        // less than 60 seconds
+        else if (timespan < (1000 * 60))
+        {
+            string = Math.floor(timespan / 1000) + ' seconds ago';
+        }
+
+        // less than 2 minutes
+        else if (timespan < (1000 * 60 * 2))
+        {
+            string = '1 minute ago';
+        }
+
+        // less than 60 minutes
+        else if (timespan < (1000 * 60 * 60))
+        {
+            string = Math.floor(timespan / (1000 * 60)) + ' minutes ago';
+        }
+
+        // less that 24 hours and today
+        else if (
+            timespan < (1000 * 60 * 60 * 24) &&
+            date.getDate() == now.getDate()
+        ) {
+            string = 'Today at ' + Colby.dateToLocaleTimeString(date, args);
+        }
+
+        // less than 48 house and yesterday
+        else if (
+            timespan < (1000 * 60 * 60 * 24 * 2) &&
+            ((date.getDay() + 1) % 7) == now.getDay()
+        ) {
+            string = 'Yesterday at ' + Colby.dateToLocaleTimeString(date, args);
+        }
+
+        // just return date and time
+        else
+        {
+            string =
+            Colby.dateToLocaleDateString(date, args) +
+            ' ' +
+            Colby.dateToLocaleTimeString(date, args);
+        }
+
+        return string;
+    },
+    /* dateToRelativeLocaleString() */
 
 
     /**
@@ -443,6 +580,22 @@ var Colby = {
 
 
     /**
+     * @return undefined
+     */
+    hidePanel: function () {
+        if (
+            Colby.panel &&
+            Colby.panel.parentNode
+        ) {
+            Colby.panel.parentNode.removeChild(
+                Colby.panel
+            );
+        }
+    },
+    /* hidePanel() */
+
+
+    /**
      * @return bool
      */
     localStorageIsSupported: function () {
@@ -638,6 +791,51 @@ var Colby = {
 
         return response;
     },
+    /* responseFromXMLHttpRequest() */
+
+
+    /**
+     * @param Element element
+     *
+     * @return undefined
+     */
+    setPanelElement: function (element) {
+        if (Colby.panel === undefined) {
+            Colby.createPanel();
+        }
+
+        Colby.panelContent.textContent = null;
+        Colby.panelContent.appendChild(element);
+    },
+    /* setPanelElement() */
+
+
+    /**
+     * @param string text
+     *
+     * @return undefined
+     */
+    setPanelText: function (text) {
+        Colby.setPanelElement(
+            document.createTextNode(text)
+        );
+    },
+    /* setPanelText() */
+
+
+    /**
+     * @return undefined
+     */
+    showPanel: function () {
+        if (Colby.panel === undefined) {
+            Colby.createPanel();
+        }
+
+        if (!Colby.panel.parentNode) {
+            document.body.appendChild(Colby.panel);
+        }
+    },
+    /* showPanel() */
 
 
     /**
@@ -791,6 +989,76 @@ var Colby = {
 
          return text.replace(/[&<>"']/g, function(m) { return map[m]; });
     },
+
+
+    /**
+     * @TODO Reconcile with CBConvert::stringToURI()
+     *
+     * @param string text
+     *
+     * @return string
+     */
+    textToURI: function (text) {
+        text = (typeof text === "string") ? text.trim() : "";
+
+        /**
+         * Colby limits URIs to 100 characters, we'll reduce the text to 80
+         * characters to leave room for multi-byte characters.
+         */
+
+        text = text.substr(0, 80);
+
+        /**
+         * Convert all characters to lowercase to start the URI string.
+         */
+
+        var uri = text.toLowerCase();
+
+        /**
+         * Replace ampersands surrounded by white space with the word "and"
+         */
+
+        uri = uri.replace(/\s&\s/g, ' and ');
+
+        /**
+         * Remove all characters from the URI string except lowercase letters,
+         * numbers, forward slashes, hyphens, and spaces.
+         */
+
+        uri = uri.replace(/[^a-z0-9\/\-\ ]/g, '');
+
+        /**
+         * Remove all of the adjacent forward slashes, hyphens, and spaces from
+         * the beginning and the end of the URI.
+         *
+         * Example:
+         *  '//--blog/my-day/ ' --> 'blog/my-day'
+         */
+
+        uri = uri.replace(/^[\/\-\ ]+|[\/\-\ ]+$/g, '');
+
+        /**
+         * Replace all adjacent hyphens, spaces, and forward slashes containing
+         * at least one forward slash with a single forward slash.
+         *
+         * Example:
+         *  'blog--/---- / - /  -my-day' --> 'blog/my-day'
+         */
+
+        uri = uri.replace(/[\-\ ]*\/[\/\-\ ]+/g, '/');
+
+        /**
+         * Replace all adjacent hyphens and spaces with a single hypen.
+         *
+         * Example:
+         *  'blog/my- - - - ----- -day' --> 'blog/my-day'
+         */
+
+        uri = uri.replace(/[\-\ ]+/g, '-');
+
+        return uri;
+    },
+    /* textToURI() */
 
 
     /**
@@ -1000,242 +1268,11 @@ var Colby = {
 window.onerror = Colby.handleError;
 
 
-/**
- * NOTE: 2015.03.24
- * The `toLocaleDateString` function can be used in the future when the
- * `locales` and `options` arguments are supported in all browsers. This can
- * be tracked at Mozilla's documentation for the function.
- *
- * @param Date date
- * @param object? args
- * @param bool args.compact
- *
- * @return string
- *  This method returns a date in the following format: "February 14, 2010".
- */
-Colby.dateToLocaleDateString = function(date, args) {
-    if (args === undefined) args = {};
-
-    if (args.compact === true) {
-        return date.getFullYear() + "/" +
-            ("00" + (date.getMonth() + 1)).slice(-2) + "/" +
-            ("00" + date.getDate()).slice(-2);
-    } else {
-        return Colby.monthNames[date.getMonth()] + " " +
-            date.getDate() + ", " +
-            date.getFullYear();
-    }
-};
-
-/**
- * @return string
- */
-Colby.dateToLocaleTimeString = function(date, args) {
-    if (args === undefined) args = {};
-
-    var formattedAMPM, formattedHour, formattedMinutes;
-    formattedHour = date.getHours() % 12;
-    formattedHour = formattedHour ? formattedHour : 12;
-    formattedMinutes = ("00" + date.getMinutes()).slice(-2);
-
-    if (args.compact === true) {
-        formattedAMPM = (date.getHours() > 11) ? 'pm' : 'am';
-        formattedHour = ("00" + formattedHour).slice(-2);
-    } else {
-        formattedAMPM = (date.getHours() > 11) ? ' p.m.' : ' a.m.';
-    }
-
-    return formattedHour + ':' + formattedMinutes + formattedAMPM;
-};
-/* dateToLocaleTimeString() */
-
-
-/**
- * @return string
- */
-Colby.dateToRelativeLocaleString = function (date, now, args) {
-    if (args === undefined) args = {};
-    var timespan = now.getTime() - date.getTime();
-    var string;
-
-    // date is in the future by more than 60 seconds
-    if (timespan < (1000 * -60)) {
-        string =
-        Colby.dateToLocaleDateString(date) +
-        ' ' +
-        Colby.dateToLocaleTimeString(date);
-    }
-
-    // less than 60 seconds
-    else if (timespan < (1000 * 60))
-    {
-        string = Math.floor(timespan / 1000) + ' seconds ago';
-    }
-
-    // less than 2 minutes
-    else if (timespan < (1000 * 60 * 2))
-    {
-        string = '1 minute ago';
-    }
-
-    // less than 60 minutes
-    else if (timespan < (1000 * 60 * 60))
-    {
-        string = Math.floor(timespan / (1000 * 60)) + ' minutes ago';
-    }
-
-    // less that 24 hours and today
-    else if (
-        timespan < (1000 * 60 * 60 * 24) &&
-        date.getDate() == now.getDate()
-    ) {
-        string = 'Today at ' + Colby.dateToLocaleTimeString(date, args);
-    }
-
-    // less than 48 house and yesterday
-    else if (
-        timespan < (1000 * 60 * 60 * 24 * 2) &&
-        ((date.getDay() + 1) % 7) == now.getDay()
-    ) {
-        string = 'Yesterday at ' + Colby.dateToLocaleTimeString(date, args);
-    }
-
-    // just return date and time
-    else
-    {
-        string =
-        Colby.dateToLocaleDateString(date, args) +
-        ' ' +
-        Colby.dateToLocaleTimeString(date, args);
-    }
-
-    return string;
-};
-/* dateToRelativeLocaleString() */
-
-
-/**
- * @return undefined
- */
-Colby.hidePanel = function () {
-    if (
-        Colby.panel &&
-        Colby.panel.parentNode
-    ) {
-        Colby.panel.parentNode.removeChild(
-            Colby.panel
-        );
-    }
-};
-/* hidePanel() */
-
-
-/**
- * @return undefined
- */
-Colby.setPanelElement = function(element) {
-    if (Colby.panel === undefined) {
-        Colby.createPanel();
-    }
-
-    Colby.panelContent.textContent = null;
-    Colby.panelContent.appendChild(element);
-};
-
-/**
- * @return undefined
- */
-Colby.setPanelText = function(text) {
-    Colby.setPanelElement(document.createTextNode(text));
-};
-
-/**
- * @return undefined
- */
-Colby.showPanel = function() {
-    if (Colby.panel === undefined) {
-        Colby.createPanel();
-    }
-
-    if (!Colby.panel.parentNode) {
-        document.body.appendChild(Colby.panel);
-    }
-};
-
-/**
- * TODO: Reconcile with CBConvert::stringToURI()
- *
- * @param string? text
- *
- * @return string
- */
-Colby.textToURI = function (text) {
-    text = (typeof text === "string") ? text.trim() : "";
-
-    /**
-     * Colby limits URIs to 100 characters, we'll reduce the text to 80
-     * characters to leave room for multi-byte characters.
-     */
-
-    text = text.substr(0, 80);
-
-    /**
-     * Convert all characters to lowercase to start the URI string.
-     */
-
-    var uri = text.toLowerCase();
-
-    /**
-     * Replace ampersands surrounded by white space with the word "and"
-     */
-
-    uri = uri.replace(/\s&\s/g, ' and ');
-
-    /**
-     * Remove all characters from the URI string except lowercase letters,
-     * numbers, forward slashes, hyphens, and spaces.
-     */
-
-    uri = uri.replace(/[^a-z0-9\/\-\ ]/g, '');
-
-    /**
-     * Remove all of the adjacent forward slashes, hyphens, and spaces from
-     * the beginning and the end of the URI.
-     *
-     * Example:
-     *  '//--blog/my-day/ ' --> 'blog/my-day'
-     */
-
-    uri = uri.replace(/^[\/\-\ ]+|[\/\-\ ]+$/g, '');
-
-    /**
-     * Replace all adjacent hyphens, spaces, and forward slashes containing
-     * at least one forward slash with a single forward slash.
-     *
-     * Example:
-     *  'blog--/---- / - /  -my-day' --> 'blog/my-day'
-     */
-
-    uri = uri.replace(/[\-\ ]*\/[\/\-\ ]+/g, '/');
-
-    /**
-     * Replace all adjacent hyphens and spaces with a single hypen.
-     *
-     * Example:
-     *  'blog/my- - - - ----- -day' --> 'blog/my-day'
-     */
-
-    uri = uri.replace(/[\-\ ]+/g, '-');
-
-    return uri;
-};
-
-
 /* initialize */
 (function init() {
 
     /**
-     * @NOTE 2019.06.14
+     * @NOTE 2019_06_14
      *
      *      Browsers must natively support Promises. This requirement makes
      *      Internet Explorer 11 an unsupported browser.
