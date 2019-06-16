@@ -108,10 +108,18 @@ final class ColbyUser {
             return ColbyUser::$currentUserGroups[$groupName];
         } else {
             if (CBAdminPageForUpdate::installationIsRequired()) {
-                error_log('Permissions granted from ' . __METHOD__ . '() because of first installation.');
+                error_log(
+                    'Permissions granted from '
+                    . __METHOD__
+                    . '() because of first installation.'
+                );
+
                 $isMember = true;
             } else {
-                $isMember = ColbyUser::isMemberOfGroup(ColbyUser::$currentUserId, $groupName);
+                $isMember = ColbyUser::isMemberOfGroup(
+                    ColbyUser::$currentUserId,
+                    $groupName
+                );
             }
 
             ColbyUser::$currentUserGroups[$groupName] = $isMember;
@@ -235,13 +243,14 @@ EOT;
             ColbyUser::$currentUserHash = $cookie->userHash;
             ColbyUser::$currentUserId = $cookie->userId;
         } catch (Throwable $exception) {
-            Colby::reportException($exception);
+            CBErrorHandler::report($exception);
             ColbyUser::removeUserCookie();
         }
     }
 
+
     /**
-     * @deprecated 2018.04.17
+     * @deprecated 2018_04_17
      *
      *      Use ColbyUser::currentUserIsLoggedIn())
      *
@@ -362,7 +371,11 @@ EOT;
      *
      * @return null
      */
-    static function loginCurrentUser($facebookAccessToken, $facebookAccessExpirationTime, $facebookProperties) {
+    static function loginCurrentUser(
+        $facebookAccessToken,
+        $facebookAccessExpirationTime,
+        $facebookProperties
+    ) {
         $mysqli = Colby::mysqli();
         $facebookUserID = intval($facebookProperties->id);
 
@@ -445,8 +458,13 @@ EOT;
             $count = CBDB::SQLToValue('SELECT COUNT(*) FROM `ColbyUsers`');
 
             if ($count === '1') {
-                Colby::query("INSERT INTO `ColbyUsersWhoAreAdministrators` VALUES ({$userIdentity->ID}, NOW())");
-                Colby::query("INSERT INTO `ColbyUsersWhoAreDevelopers` VALUES ({$userIdentity->ID}, NOW())");
+                Colby::query(
+                    "INSERT INTO `ColbyUsersWhoAreAdministrators` VALUES ({$userIdentity->ID}, NOW())"
+                );
+
+                Colby::query(
+                    "INSERT INTO `ColbyUsersWhoAreDevelopers` VALUES ({$userIdentity->ID}, NOW())"
+                );
             }
         }
 
@@ -494,7 +512,12 @@ EOT;
          * be transmitted over secure connections.
          */
 
-        setcookie(CBUserCookieName, $encryptedCookie, time() + (60 * 60 * 24 * 30), '/');
+        setcookie(
+            CBUserCookieName,
+            $encryptedCookie,
+            time() + (60 * 60 * 24 * 30),
+            '/'
+        );
     }
 
     /**
@@ -532,7 +555,12 @@ EOT;
         $state = new stdClass();
         $state->colby_redirect_uri = $redirectURL;
 
-        $URL = cbsiteurl() . '/colby/logout/?state=' . urlencode(json_encode($state));
+        $URL =
+        cbsiteurl() .
+        '/colby/logout/?state=' .
+        urlencode(
+            json_encode($state)
+        );
 
         return $URL;
     }
@@ -541,8 +569,7 @@ EOT;
      * This function must be called before any output is generated because it
      * sets a cookie.
      */
-    private static function removeUserCookie()
-    {
+    private static function removeUserCookie() {
         // time = now - 1 day
         // sure to be in the past in all time zones
 
@@ -602,7 +629,8 @@ EOT;
 
             $userId = self::$currentUserId;
         } else {
-            $userId = intval($userId); // intval confirmed 64-bit capable (signed though)
+            // intval confirmed 64-bit capable (signed though)
+            $userId = intval($userId);
         }
 
         if ($userId == self::$currentUserId && self::$currentUserRow) {
