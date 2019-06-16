@@ -3,8 +3,8 @@
 /* jshint esversion: 6 */
 /* exported CBImage */
 /* global
+    CBDataStore,
     CBModel,
-    Colby,
 */
 
 var CBImage = {
@@ -48,7 +48,7 @@ var CBImage = {
             return "";
         }
 
-        return "/" + Colby.dataStoreFlexpath(
+        return "/" + CBDataStore.flexpath(
             imageID,
             filename + "." + image.extension
         );

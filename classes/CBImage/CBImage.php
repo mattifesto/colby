@@ -40,24 +40,33 @@ final class CBImage {
 
         return CBDataStore::flexpath($ID, "{$filename}.{$extension}", $flexdir);
     }
+    /* asFlexpath() */
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v453.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v480.js', cbsysurl()),
         ];
     }
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBDataStore',
             'CBModel',
         ];
     }
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
 
     /**
      * This model is validated more than most models because all of the
