@@ -104,6 +104,7 @@ final class CBCodeAdmin {
         $issues = [
 
             /**
+             * 2019_06_16
              * Use CBConvert
              */
             (object)[
@@ -112,6 +113,7 @@ final class CBCodeAdmin {
             ],
 
             /**
+             * 2019_06_16
              * Use CBConvert
              */
             (object)[
@@ -120,6 +122,16 @@ final class CBCodeAdmin {
             ],
 
             /**
+             * 2019_06_16
+             * Use CBErrorHandler::report()
+             */
+            (object)[
+                'regex' => 'Colby::reportException\\(',
+                'filetype' => 'php',
+            ],
+
+            /**
+             * 2019_06_16
              * Removed
              */
             (object)[
@@ -128,6 +140,7 @@ final class CBCodeAdmin {
             ],
 
             /**
+             * 2019_06_16
              * Use CBDataStore.flexpath()
              */
             (object)[
@@ -136,6 +149,7 @@ final class CBCodeAdmin {
             ],
 
             /**
+             * 2019_06_16
              * Use CBDataStore.flexpath()
              */
             (object)[
@@ -144,6 +158,7 @@ final class CBCodeAdmin {
             ],
 
             /**
+             * 2019_06_16
              * Colby.setPanelContent() has been removed.
              */
             (object)[
@@ -152,6 +167,7 @@ final class CBCodeAdmin {
             ],
 
             /**
+             * 2019_06_16
              * Colby.warnOlderBrowsers() has been removed.
              */
             (object)[
@@ -162,6 +178,7 @@ final class CBCodeAdmin {
             /* lower priority searches */
 
             /**
+             * 2019_06_16
              * Update interface function name
              */
             (object)[
@@ -196,6 +213,11 @@ final class CBCodeAdmin {
                 case 'js':
 
                     $command .= ' --js';
+                    break;
+
+                case 'php':
+
+                    $command .= ' --php';
                     break;
 
                 default:
