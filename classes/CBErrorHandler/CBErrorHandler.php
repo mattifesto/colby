@@ -29,7 +29,7 @@ final class CBErrorHandler {
      * @return void
      */
     static function handle(Throwable $throwable): void {
-        Colby::reportException($throwable);
+        CBErrorHandler::report($throwable);
 
         try {
             CBErrorHandler::renderErrorReportPage($throwable);
@@ -232,7 +232,7 @@ EOT;
 
                 $firstLine =
                 "INNER ERROR \"{$message}\" occurred when"
-                . " Colby::reportException() attempted to generate a message";
+                . " CBErrorHandler::report() attempted to generate a message";
 
                 $messageAsMarkup = $firstLine;
             }
@@ -249,7 +249,7 @@ EOT;
 
                 error_log(
                     "INNER ERROR \"{$message}\" occurred when"
-                    . " Colby::reportException() attempted to create a log"
+                    . " CBErrorHandler::report() attempted to create a log"
                     . " entry AFTER {$firstLine}"
                 );
             }
@@ -267,7 +267,7 @@ EOT;
 
                 error_log(
                     "INNER ERROR \"{$message}\" occurred when"
-                    . " Colby::reportException() attempted to send a Slack"
+                    . " CBErrorHandler::report() attempted to send a Slack"
                     . " message AFTER {$firstLine}"
                 );
             }
@@ -276,7 +276,8 @@ EOT;
                 $message = $innerThrowable->getMessage();
 
                 error_log(
-                    "INNER ERROR \"{$message}\" occurred inside Colby::reportException()"
+                    "INNER ERROR \"{$message}\" occurred inside"
+                    . " CBErrorHandler::report()"
                 );
             } catch (Throwable $secondInnerThrowable) {
                 /**
