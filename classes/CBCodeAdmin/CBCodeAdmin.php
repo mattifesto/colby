@@ -118,10 +118,22 @@ final class CBCodeAdmin {
                 'filetype' => 'js',
             ],
 
+            /**
+             *
+             */
             (object)[
                 'regex' => 'Colby\\.centsToDollars\\(',
                 'filetype' => 'js',
             ],
+
+            /**
+             * Use CBDataStore.flexpath()
+             */
+            (object)[
+                'regex' => 'dataStoreIDToURI',
+                'filetype' => 'js',
+            ],
+
             (object)[
                 'regex' => 'Colby\\.imageToURL\\(',
                 'filetype' => 'js',
@@ -174,6 +186,9 @@ final class CBCodeAdmin {
                 $output,
                 $exitCode
             );
+
+            array_push($output, '');
+            array_push($output, '');
         }
 
         return $output;
