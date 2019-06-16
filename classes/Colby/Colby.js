@@ -92,6 +92,38 @@ var Colby = {
             return response.value;
         }
     },
+    /* callAjaxFunction() */
+
+
+    /**
+     * @return undefined
+     */
+    createPanel: function () {
+        var panel = document.createElement("div");
+        panel.className = "CBPanelView";
+        var container = document.createElement("div");
+        container.className = "CBPanelContainer CBLightTheme";
+        var content = document.createElement("div");
+        content.className = "CBPanelContent";
+        var buttonView = document.createElement("div");
+        buttonView.className = "CBPanelButtonView";
+        var button = document.createElement("button");
+        button.textContent = "Dismiss";
+
+        buttonView.appendChild(button);
+        container.appendChild(content);
+        container.appendChild(buttonView);
+        panel.appendChild(container);
+
+        button.addEventListener(
+            "click",
+            Colby.hidePanel
+        );
+
+        Colby.panel = panel;
+        Colby.panelContent = content;
+    },
+    /* createPanel() */
 
 
     /**
@@ -989,32 +1021,6 @@ var Colby = {
  */
 window.onerror = Colby.handleError;
 
-
-/**
- * @return null
- */
-Colby.createPanel = function() {
-    var panel = document.createElement("div");
-    panel.className = "CBPanelView";
-    var container = document.createElement("div");
-    container.className = "CBPanelContainer CBLightTheme";
-    var content = document.createElement("div");
-    content.className = "CBPanelContent";
-    var buttonView = document.createElement("div");
-    buttonView.className = "CBPanelButtonView";
-    var button = document.createElement("button");
-    button.textContent = "Dismiss";
-
-    buttonView.appendChild(button);
-    container.appendChild(content);
-    container.appendChild(buttonView);
-    panel.appendChild(container);
-
-    button.addEventListener("click", Colby.hidePanel);
-
-    Colby.panel = panel;
-    Colby.panelContent = content;
-};
 
 /**
  * @return string
