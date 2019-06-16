@@ -66,7 +66,7 @@ final class CBGitStatusAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v463.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v480.js', cbsysurl()),
         ];
     }
 

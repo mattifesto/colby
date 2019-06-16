@@ -28,7 +28,7 @@ var CBGitStatusAdmin = {
             stringsPart.string1 = "Refresh";
             stringsPart.element.classList.add("action");
 
-            sectionItem.callback = fetchStatus;
+            sectionItem.callback = init_fetchStatus;
 
             sectionItem.appendPart(stringsPart);
             sectionElement.appendChild(sectionItem.element);
@@ -41,36 +41,62 @@ var CBGitStatusAdmin = {
 
         mainElement.appendChild(container);
 
-        fetchStatus();
+        init_fetchStatus();
 
-        function fetchStatus() {
+        return;
+
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return undefined
+         */
+        function init_fetchStatus() {
             if (timeoutID) {
                 window.clearTimeout(timeoutID);
                 timeoutID = undefined;
             }
 
-            Colby.callAjaxFunction("CBGitStatusAdmin", "fetchStatus")
-                .then(onFulfilled)
-                .catch(Colby.displayAndReportError);
+            Colby.callAjaxFunction(
+                "CBGitStatusAdmin",
+                "fetchStatus"
+            ).then(
+                function (value) {
+                    container.textContent = "";
 
-            function onFulfilled(value) {
-                container.textContent = "";
+                    value.forEach(
+                        function (status) {
+                            let expander = CBUIExpander.create();
+                            expander.expanded = true;
+                            expander.timestamp = Date.now() / 1000;
+                            expander.message = status.message || "";
 
-                value.forEach(function (status) {
-                    let expander = CBUIExpander.create();
-                    expander.expanded = true;
-                    expander.timestamp = Date.now() / 1000;
-                    expander.message = status.message || "";
+                            container.appendChild(expander.element);
+                        }
+                    );
 
-                    container.appendChild(expander.element);
-                });
+                    Colby.updateTimes(true);
 
-                Colby.updateTimes(true);
-
-                timeoutID = window.setTimeout(fetchStatus, 30000);
-            }
+                    timeoutID = window.setTimeout(
+                        init_fetchStatus,
+                        30000
+                    );
+                }
+            ).catch(
+                function (error) {
+                    Colby.displayAndReportError(error);
+                }
+            );
         }
+        /* init_fetchStatus() */
     },
+    /* init() */
 };
+/* CBGitStatusAdmin */
 
-Colby.afterDOMContentLoaded(CBGitStatusAdmin.init);
+
+Colby.afterDOMContentLoaded(
+    function () {
+        CBGitStatusAdmin.init();
+    }
+);
