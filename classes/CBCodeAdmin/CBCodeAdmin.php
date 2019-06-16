@@ -102,11 +102,44 @@ final class CBCodeAdmin {
      */
     static function results(): array {
         $issues = [
+
             /**
-             * Colby.warnOlderBrowsers() has been removed.
+             * Use CBConvert
              */
             (object)[
-                'regex' => 'warnOlderBrowsers\\(',
+                'regex' => 'Colby\\.centsToDollars\\(',
+                'filetype' => 'js',
+            ],
+
+            /**
+             * Use CBConvert
+             */
+            (object)[
+                'regex' => 'Colby\\.imageToURL\\(',
+                'filetype' => 'js',
+            ],
+
+            /**
+             * Removed
+             */
+            (object)[
+                'regex' => 'CBModelUpdater',
+                'filetype' => 'js',
+            ],
+
+            /**
+             * Use CBDataStore.flexpath()
+             */
+            (object)[
+                'regex' => 'dataStoreFlexpath',
+                'filetype' => 'js',
+            ],
+
+            /**
+             * Use CBDataStore.flexpath()
+             */
+            (object)[
+                'regex' => 'dataStoreIDToURI',
                 'filetype' => 'js',
             ],
 
@@ -119,29 +152,18 @@ final class CBCodeAdmin {
             ],
 
             /**
-             *
+             * Colby.warnOlderBrowsers() has been removed.
              */
             (object)[
-                'regex' => 'Colby\\.centsToDollars\\(',
+                'regex' => 'warnOlderBrowsers\\(',
                 'filetype' => 'js',
             ],
+
+            /* lower priority searches */
 
             /**
-             * Use CBDataStore.flexpath()
+             * Update interface function name
              */
-            (object)[
-                'regex' => 'dataStoreIDToURI',
-                'filetype' => 'js',
-            ],
-
-            (object)[
-                'regex' => 'Colby\\.imageToURL\\(',
-                'filetype' => 'js',
-            ],
-            (object)[
-                'regex' => 'CBModelUpdater',
-                'filetype' => 'js',
-            ],
             (object)[
                 'regex' => '(?<!CBUISpec\\.)specToDescription',
                 'filetype' => 'js',
