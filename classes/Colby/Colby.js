@@ -124,29 +124,7 @@ var Colby = {
         Colby.panelContent = content;
     },
     /* createPanel() */
-
-
-    /**
-     * @param hex160 ID
-     * @param string basename
-     * @param string flexdir
-     *
-     * @return string
-     */
-    dataStoreFlexpath: function (ID, basename, flexdir) {
-        var flexpath = ID.replace(/^(..)(..)/, "data/$1/$2/");
-
-        if (basename) {
-            flexpath = flexpath + "/" + basename;
-        }
-
-        if (flexdir) {
-            flexpath = flexdir + "/" + flexpath;
-        }
-
-        return flexpath;
-    },
-
+    
 
     /**
      * @return string
@@ -1021,17 +999,6 @@ var Colby = {
  */
 window.onerror = Colby.handleError;
 
-
-/**
- * @return string
- */
-Colby.dataStoreIDToURI = function(dataStoreID)
-{
-    var regex = /(..)(..)(.*)/;
-    var matches = regex.exec(dataStoreID);
-
-    return "/data/" + matches[1] + "/" + matches[2] + "/" + matches[3];
-};
 
 /**
  * NOTE: 2015.03.24
