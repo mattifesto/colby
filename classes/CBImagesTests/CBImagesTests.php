@@ -9,10 +9,22 @@ final class CBImagesTests {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v480.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBDataStore',
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
     /* -- CBTest interfaces -- -- -- -- -- */

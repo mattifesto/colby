@@ -3,21 +3,24 @@
 /* jshint esnext: true */
 /* exported CBImagesTests */
 /* global
+    CBDataStore,
     CBTestAdmin,
     Colby,
 */
 
 /**
- * @NOTE 2017.11.14
+ * @NOTE 2017_11_14
  *
- * These test were transplanted from CBTestAdmin. They are verified to
- * work, but the cross object accesses are a bit odd. Consider improving in the
- * future.
+ * These tests were transplanted from CBTestAdmin. They are verified to work,
+ * but the cross object accesses are a bit odd. Consider improving in the
+ * future. The value of "CBTestAdmin.testImageID" should be provided as a
+ * JavaScript variable by this class's PHP implementation and any use of
+ * CBTestAdmin should be removed.
  */
 var CBImagesTests = {
 
     /**
-     * @NOTE 2017.11.14 Maybe this should be a CBModels test.
+     * @NOTE 2017_11_14 Maybe this should be a CBModels test.
      *
      * @return Promise
      */
@@ -49,7 +52,7 @@ var CBImagesTests = {
         function CBTest_deleteByID_report1() {
             var imageURI =
             "/" +
-            Colby.dataStoreFlexpath(
+            CBDataStore.flexpath(
                 CBTestAdmin.testImageID,
                 "original.jpeg"
             );
@@ -139,7 +142,12 @@ var CBImagesTests = {
                 image.ID === CBTestAdmin.testImageID &&
                 image.width === 1600)
             {
-                var imageURI = "/" + Colby.dataStoreFlexpath(CBTestAdmin.testImageID, "original.jpeg");
+                var imageURI =
+                "/" +
+                CBDataStore.flexpath(
+                    CBTestAdmin.testImageID,
+                    "original.jpeg"
+                );
 
                 return CBImagesTests.fetchURIDoesExist(imageURI);
             } else {
@@ -149,7 +157,12 @@ var CBImagesTests = {
 
         function report2(doesExist) {
             if (doesExist) {
-                var imageURI = "/" + Colby.dataStoreFlexpath(CBTestAdmin.testImageID, "rw640.jpeg");
+                var imageURI =
+                "/" +
+                CBDataStore.flexpath(
+                    CBTestAdmin.testImageID,
+                    "rw640.jpeg"
+                );
 
                 return CBImagesTests.fetchURIDoesExist(imageURI);
             } else {
