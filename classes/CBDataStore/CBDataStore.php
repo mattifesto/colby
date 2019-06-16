@@ -8,11 +8,26 @@
  * ! simple, obvious, and non-controversial without any non-obvious or tricky
  * ! logic. Any potential additions to the class should be highly scrutinized.
  *
- * 2014.01.29 Don't bother attempting to provide locking functionality to this
+ * 2014_01_29 Don't bother attempting to provide locking functionality to this
  * class or any PHP code unless it is database related. The file locking
  * functionality of PHP isn't very certain and that fact is well documented.
  */
 final class CBDataStore {
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v480.js', cbsysurl()),
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * This function has "create if not exists" semantics.
@@ -81,6 +96,8 @@ final class CBDataStore {
 
         return cbsitedir() . "/{$directoryName}";
     }
+    /* directoryForID() */
+
 
     /**
      * @param string $ID
@@ -90,11 +107,22 @@ final class CBDataStore {
      *      example: "data/1a/b9/879ccb12eaaeda7b81b08fa433fde8bc86e3"
      */
     static function directoryNameFromDocumentRoot($ID) {
-        $ID             = strtolower($ID);
-        $directoryName  = preg_replace('/^(..)(..)/', '$1/$2/', $ID);
+
+        /**
+         * @NOTE 2019_06_15
+         *
+         *      We don't allow correction of capital letters in an ID and I'm
+         *      not sure why we're doing it here. At some point investigate
+         *      further.
+         */
+        $ID = strtolower($ID);
+
+        $directoryName = preg_replace('/^(..)(..)/', '$1/$2/', $ID);
 
         return "data/{$directoryName}";
     }
+    /* directoryNameFromDocumentRoot() */
+
 
     /**
      * @deprecated use CBDataStore::flexpath()
