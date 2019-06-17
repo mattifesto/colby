@@ -161,6 +161,20 @@
     flex: none;
 }
 
+/**
+ * 2019_06_17
+ */
+.CBUI_padding_standard {
+    padding: 20px;
+}
+
+/**
+ * 2019_06_17
+ */
+.CBUI_padding_half {
+    padding: 10px;
+}
+
 .CBUI_section {
     background-color: hsl(0, 0%, 100%); /* IE11 */
     background-color: var(--CBBackgroundColor);
@@ -194,6 +208,21 @@
     border-top-color: var(--CBUIBorderColor);
     border-top-style: solid;
     border-top-width: 1px;
+}
+
+/**
+ * 2019_02_01
+ *
+ *      Add this style to a CBUI_section element to make sure the side borders
+ *      are never hidden.
+ */
+.CBUI_section_inner {
+    border-radius: 10px;
+    border-width: 1px;
+}
+
+.CBUI_section_width {
+    width: 640px;
 }
 
 /**
@@ -317,21 +346,6 @@ a.CBUI_sectionItem {
     text-transform: uppercase;
 }
 
-/**
- * 2019_02_01
- *
- *      Add this style to a CBUI_section element to make sure the side borders
- *      are never hidden.
- */
-.CBUI_section_inner {
-    border-radius: 10px;
-    border-width: 1px;
-}
-
-.CBUI_section_width {
-    width: 640px;
-}
-
 .CBUI_selectable {
     border: 2px solid var(--CBTextColor3);
     border-radius: 5px;
@@ -453,6 +467,34 @@ a.CBUI_sectionItem {
     -ms-user-select: none;
     -webkit-user-select: none;
 }
+
+/**
+ * 2019_06_17
+ *
+ *      All view and view-like root elements should have this class. Many views
+ *      will also add the CBUI_padding_standard class.
+ */
+.CBUI_view {
+    display: flex;
+    justify-content: center;
+
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/**
+ * 2019_06_17
+ *
+ *      All view and view-like root elements should have a single child with
+ *      this class.
+ */
+.CBUI_viewContent {
+    max-width: 100%;
+}
+
+
+/* old style classes */
 
 .CBUIRoot {
     background-color: hsl(0, 0%, 95%); /* IE11 */
