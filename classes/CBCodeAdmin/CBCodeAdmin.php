@@ -101,7 +101,58 @@ final class CBCodeAdmin {
      * @return [string]
      */
     static function results(): array {
-        $issues = [
+        $output = [];
+        $exitCode;
+
+        $searches = CBCodeAdmin::searches();
+
+        foreach ($searches as $issue) {
+            $command = implode(
+                ' ',
+                [
+                    '/usr/local/bin/ack',
+                    '--heading',
+                    '--underline',
+                    "--match '{$issue->regex}'",
+                    CBModel::valueToString($issue, 'args'),
+                ]
+            );
+
+            switch ($issue->filetype) {
+                case 'js':
+
+                    $command .= ' --js';
+                    break;
+
+                case 'php':
+
+                    $command .= ' --php';
+                    break;
+
+                default:
+
+                    throw new Exception('unknown filetype');
+            }
+
+            CBGit::exec(
+                $command,
+                $output,
+                $exitCode
+            );
+
+            array_push($output, '');
+            array_push($output, '');
+        }
+
+        return $output;
+    }
+    /* results() */
+
+    /**
+     * @return [object]
+     */
+    static function searches(): array {
+        return [
 
             /**
              * 2019_06_16
@@ -193,50 +244,7 @@ final class CBCodeAdmin {
                 ),
             ],
         ];
-
-        $output = [];
-        $exitCode;
-
-        foreach ($issues as $issue) {
-            $command = implode(
-                ' ',
-                [
-                    '/usr/local/bin/ack',
-                    '--heading',
-                    '--underline',
-                    "--match '{$issue->regex}'",
-                    CBModel::valueToString($issue, 'args'),
-                ]
-            );
-
-            switch ($issue->filetype) {
-                case 'js':
-
-                    $command .= ' --js';
-                    break;
-
-                case 'php':
-
-                    $command .= ' --php';
-                    break;
-
-                default:
-
-                    throw new Exception('unknown filetype');
-            }
-
-            CBGit::exec(
-                $command,
-                $output,
-                $exitCode
-            );
-
-            array_push($output, '');
-            array_push($output, '');
-        }
-
-        return $output;
     }
-    /* results() */
+    /* searches() */
 }
 /* CBCodeAdmin */
