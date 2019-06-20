@@ -101,52 +101,67 @@ final class CBCodeAdmin {
      * @return [string]
      */
     static function results(): array {
-        $output = [];
-        $exitCode;
+        $results = [];
 
         $searches = CBCodeAdmin::searches();
 
-        foreach ($searches as $issue) {
-            $command = implode(
-                ' ',
-                [
-                    '/usr/local/bin/ack',
-                    '--heading',
-                    '--underline',
-                    "--match '{$issue->regex}'",
-                    CBModel::valueToString($issue, 'args'),
-                ]
-            );
-
-            switch ($issue->filetype) {
-                case 'js':
-
-                    $command .= ' --js';
-                    break;
-
-                case 'php':
-
-                    $command .= ' --php';
-                    break;
-
-                default:
-
-                    throw new Exception('unknown filetype');
-            }
-
-            CBGit::exec(
-                $command,
-                $output,
-                $exitCode
-            );
-
-            array_push($output, '');
-            array_push($output, '');
+        foreach ($searches as $search) {
+            $result = CBCodeAdmin::search($search);
+            $results = array_merge($results, $result);
         }
+
+        return $results;
+    }
+    /* results() */
+
+    /**
+     * @param object $search
+     *
+     * @return [string]
+     */
+    static function search(stdClass $search): array {
+        $output = [];
+
+        $command = implode(
+            ' ',
+            [
+                '/usr/local/bin/ack',
+                '--heading',
+                '--underline',
+                "--match '{$search->regex}'",
+                CBModel::valueToString($search, 'args'),
+            ]
+        );
+
+        switch ($search->filetype) {
+            case 'js':
+
+                $command .= ' --js';
+                break;
+
+            case 'php':
+
+                $command .= ' --php';
+                break;
+
+            default:
+
+                throw new Exception('unknown filetype');
+        }
+
+        CBGit::exec(
+            $command,
+            $output,
+            $exitCode
+        );
+
+        array_push($output, '');
+        array_push($output, '');
 
         return $output;
     }
-    /* results() */
+    /* search() */
+
 
     /**
      * @return [object]
