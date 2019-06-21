@@ -78,16 +78,22 @@ EOT;
 
 
     /**
-     * It's not required that this method be called
-     * however most sites will call this method from index.php
-     * to handle requests in the standard way
-     * which is to search for the appropriate handler file and load it.
-     * If no handler file is found, the method will search for the URL
-     * in the database to see if it can load it that way.
+     * Most sites will call this method from /index.php to handle requests in
+     * the standard way by doing one of the following:
      *
-     * @return null
+     *      Handle Ajax request.
+     *
+     *      Search for the appropriate handler file and load it.
+     *
+     *      Handle well known URLs, such as robots.txt.
+     *
+     *      Search for the URL in the pages table.
+     *
+     *      Display the 404 page.
+     *
+     * @return void
      */
-    static function handleRequest() {
+    static function handleRequest(): void {
         $canonicalEncodedPath = '';
         $countOfStubs = count(ColbyRequest::$decodedStubs);
         $function = null;
