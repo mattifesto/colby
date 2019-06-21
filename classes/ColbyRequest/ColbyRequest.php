@@ -26,12 +26,13 @@ final class ColbyRequest {
     // example:
     // /foo+bar/pi%C3%B1ata/post/
 
+
     /**
-     * @param hex160 $ID
+     * @param string $ID
      *
      * @return int
      */
-    static function currentIterationForPageID($ID) {
+    static function currentIterationForPageID(string $ID) {
         $IDAsSQL = CBHex160::toSQL($ID);
         $SQL = <<<EOT
 
@@ -43,6 +44,8 @@ EOT;
 
         return CBDB::SQLToValue($SQL);
     }
+    /* currentIterationForPageID() */
+
 
     /**
      * @return [{string}]
