@@ -72,8 +72,10 @@ EOT;
      * @return [string]
      */
     static function decodedStubs() {
-        return self::$decodedStubs;
+        return ColbyRequest::$decodedStubs;
     }
+    /* decodedStubs() */
+
 
     /**
      * It's not required that this method be called
