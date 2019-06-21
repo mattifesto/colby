@@ -235,14 +235,25 @@ EOT;
 
 
     /**
-     * @return null
+     * @return void
      */
-    static function initialize() {
-        self::$originalEncodedPath = CBRequest::requestURIToOriginalEncodedPath();
-        self::$decodedPath = urldecode(self::$originalEncodedPath);
-        self::$decodedStubs = CBRequest::decodedPathToDecodedStubs(self::$decodedPath);
-        self::$encodedStubs = array_map('urlencode', self::$decodedStubs);
+    static function initialize(): void {
+        ColbyRequest::$originalEncodedPath =
+        CBRequest::requestURIToOriginalEncodedPath();
+
+        ColbyRequest::$decodedPath =
+        urldecode(ColbyRequest::$originalEncodedPath);
+
+        ColbyRequest::$decodedStubs =
+        CBRequest::decodedPathToDecodedStubs(ColbyRequest::$decodedPath);
+
+        ColbyRequest::$encodedStubs = array_map(
+            'urlencode',
+            ColbyRequest::$decodedStubs
+        );
     }
+    /* initialize() */
+
 
     /**
      * @return bool
