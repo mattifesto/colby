@@ -48,7 +48,28 @@ EOT;
 
 
     /**
-     * @return [{string}]
+     * @return bool
+     */
+    static function currentRequestIsForTheFrontPage(): bool {
+        $countOfStubs = count(ColbyRequest::decodedStubs());
+
+        if ($countOfStubs === 0) {
+            return true;
+        }
+
+        if ($countOfStubs === 1) {
+            $stub = ColbyRequest::decodedStubs()[0];
+
+            return $stub === 'index.php';
+        }
+
+        return false;
+    }
+    /* currentRequestIsForTheFrontPage() */
+
+
+    /**
+     * @return [string]
      */
     static function decodedStubs() {
         return self::$decodedStubs;
