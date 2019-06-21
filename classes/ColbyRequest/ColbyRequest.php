@@ -278,7 +278,8 @@ EOT;
                         `p`.`URI`
             FROM        `ColbyPages`        AS `p`
             LEFT JOIN   `CBModels`          AS `m` ON `p`.`archiveID` = `m`.`ID`
-            LEFT JOIN   `CBModelVersions`   AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
+            LEFT JOIN   `CBModelVersions`   AS `v` ON `m`.`ID` = `v`.`ID` AND
+                                                      `m`.`version` = `v`.`version`
             WHERE       `p`.`URI` = {$URIAsSQL} AND
                         `p`.`published` IS NOT NULL
             ORDER BY    `p`.`published` ASC
@@ -294,6 +295,9 @@ EOT;
 
         return $data;
     }
+    /* pageRenderingDataForURI() */
 }
+/* ColbyRequest */
+
 
 ColbyRequest::initialize();
