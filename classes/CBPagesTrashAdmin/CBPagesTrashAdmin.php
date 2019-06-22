@@ -26,6 +26,35 @@ final class CBPagesTrashAdmin {
     /* CBAdmin_render() */
 
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+    /**
+     * @return [object]
+     */
+    static function CBAjax_fetchPages(): array {
+        $SQL = <<<EOT
+
+            SELECT      LOWER(HEX(pageInTheTrash.archiveID)) AS ID,
+                        model.title AS title
+            FROM        CBPagesInTheTrash AS pageInTheTrash
+            LEFT JOIN   CBModels AS model ON
+                        pageInTheTrash.archiveID = model.ID
+
+EOT;
+
+        return CBDB::SQLToObjects($SQL);
+    }
+    /* CBAjax_fetchPages() */
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_fetchPages_group(): string {
+        return 'Administrators';
+    }
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
@@ -51,7 +80,7 @@ final class CBPagesTrashAdmin {
     /* CBHTMLOutput_requiredClassNames() */
 
 
-    /* -- CBHTMLInstall interfaces -- -- -- -- -- */
+    /* -- CBInstall interfaces -- -- -- -- -- */
 
     /**
      * @return void
@@ -81,29 +110,6 @@ final class CBPagesTrashAdmin {
         ];
     }
 
-
-    /**
-     * @return null
-     */
-    static function CBAjax_fetchPages() {
-        $SQL = <<<EOT
-
-            SELECT      LOWER(HEX(trash.archiveID)) AS ID, model.title AS title
-            FROM        CBPagesInTheTrash AS trash
-            LEFT JOIN   CBModels AS model ON
-                        trash.archiveID = model.ID
-
-EOT;
-
-        return CBDB::SQLToObjects($SQL);
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_fetchPages_group() {
-        return 'Administrators';
-    }
 
     /**
      * @param hex160 $_POST['ID']
