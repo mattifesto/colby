@@ -2,6 +2,8 @@
 
 final class CBPagesTrashAdmin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
@@ -11,13 +13,20 @@ final class CBPagesTrashAdmin {
             'trash',
         ];
     }
+    /* CBAdmin_menuNamePath() */
+
 
     /**
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::pageInformation()->title = 'Pages in the Trash Administration';
+        CBHTMLOutput::pageInformation()->title =
+        'Pages in the Trash Administration';
     }
+    /* CBAdmin_render() */
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
@@ -27,6 +36,22 @@ final class CBPagesTrashAdmin {
             Colby::flexpath(__CLASS__, 'v381.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBUI',
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+    /* -- CBHTMLInstall interfaces -- -- -- -- -- */
 
     /**
      * @return void
@@ -46,6 +71,7 @@ final class CBPagesTrashAdmin {
         });
     }
 
+
     /**
      * @return [string]
      */
@@ -54,6 +80,7 @@ final class CBPagesTrashAdmin {
             'CBPagesAdminMenu',
         ];
     }
+
 
     /**
      * @return null
@@ -100,13 +127,5 @@ EOT;
     static function recoverPageForAjaxPermissions() {
         return (object)['group' => 'Administrators'];
     }
-
-    /**
-     * @return [string]
-     */
-    static function requiredClassNames() {
-        return [
-            'CBUI',
-        ];
-    }
 }
+/* CBPagesTrashAdmin */
