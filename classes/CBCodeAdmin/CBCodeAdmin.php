@@ -289,6 +289,17 @@ final class CBCodeAdmin {
             /* warnings */
 
             /**
+             * 2019_06_22
+             */
+            (object)[
+                'filetype' => 'php',
+                'regex' => 'new\\s+CBAjaxResponse\\(',
+                'severity' => 4,
+                'title' => 'Replace CBAjaxResponse with CBAjax interfaces',
+            ],
+
+
+            /**
              * 2019_06_16
              * Update interface function name
              */
