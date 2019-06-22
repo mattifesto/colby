@@ -3,30 +3,15 @@
 /* jshint esversion: 6 */
 /* exported CBCodeAdmin */
 /* global
+    CBMessageMarkup,
     CBUI,
+    CBUIExpander,
     Colby,
 
-    CBCodeAdmin_results,
+    CBCodeAdmin_searches,
 */
 
 var CBCodeAdmin = {
-
-    /**
-     * @return Element
-     */
-    createRootElement: function () {
-        let element = CBUI.createElement("CBUIRoot");
-
-        let pre = document.createElement("pre");
-
-        element.appendChild(pre);
-
-        pre.textContent = CBCodeAdmin_results.join("\n");
-
-        return element;
-    },
-    /* createRootElement() */
-
 
     /**
      * @return undefined
@@ -34,13 +19,69 @@ var CBCodeAdmin = {
     init: function () {
         let elements = document.getElementsByClassName("CBCodeAdmin");
 
-        if (elements.length > 0) {
-            let element = elements.item(0);
-
-            element.appendChild(
-                CBCodeAdmin.createRootElement()
-            );
+        if (elements.length === 0) {
+            return;
         }
+
+        let element = elements.item(0);
+        let rootElement = CBUI.createElement("CBUIRoot");
+
+        element.appendChild(
+            rootElement
+        );
+
+        let promise = Promise.resolve();
+
+        CBCodeAdmin_searches.forEach(
+            function (search, index) {
+                let expander = CBUIExpander.create();
+                expander.title = search.title;
+
+                rootElement.appendChild(expander.element);
+
+                promise = promise.then(
+                    function () {
+                        return Colby.callAjaxFunction(
+                            "CBCodeAdmin",
+                            "search",
+                            {
+                                index: index,
+                            }
+                        ).then(
+                            function (results) {
+                                if (results.length === 0) {
+                                    expander.severity = 5;
+                                    return;
+                                } else {
+                                    expander.severity = search.severity || 3;
+                                }
+
+                                results = results.map(
+                                    function (line) {
+                                        return CBMessageMarkup.stringToMessage(
+                                            line
+                                        );
+                                    }
+                                );
+
+                                results = results.join("\n");
+
+                                expander.message = `
+
+                                    --- pre\n${results}
+                                    ---
+
+                                `;
+                            }
+                        ).catch(
+                            function (error) {
+                                Colby.displayError(error);
+                            }
+                        );
+                    }
+                );
+            }
+        );
     },
     /* init() */
 };

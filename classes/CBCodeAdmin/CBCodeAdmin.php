@@ -2,6 +2,31 @@
 
 final class CBCodeAdmin {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+    /**
+     * @param object $args
+     *
+     * @return [string]
+     */
+    static function CBAjax_search(stdClass $args): array {
+        $index = CBModel::valueAsInt($args, 'index');
+
+        return CBCodeAdmin::search(
+            CBCodeAdmin::searches()[$index]
+        );
+    }
+    /* CBAjax_search() */
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_search_group(): string {
+        return 'Administrators';
+    }
+
+
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
     /**
@@ -30,7 +55,7 @@ final class CBCodeAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v481.js', cbsysurl()),
         ];
     }
 
@@ -41,8 +66,8 @@ final class CBCodeAdmin {
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
             [
-                'CBCodeAdmin_results',
-                CBCodeAdmin::results(),
+                'CBCodeAdmin_searches',
+                CBCodeAdmin::searches(),
             ],
         ];
     }
@@ -53,7 +78,9 @@ final class CBCodeAdmin {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBMessageMarkup',
             'CBUI',
+            'CBUIExpander',
             'Colby',
         ];
     }
@@ -98,23 +125,6 @@ final class CBCodeAdmin {
     /* -- functions -- -- -- -- -- */
 
     /**
-     * @return [string]
-     */
-    static function results(): array {
-        $results = [];
-
-        $searches = CBCodeAdmin::searches();
-
-        foreach ($searches as $search) {
-            $result = CBCodeAdmin::search($search);
-            $results = array_merge($results, $result);
-        }
-
-        return $results;
-    }
-    /* results() */
-
-    /**
      * @param object $search
      *
      * @return [string]
@@ -129,6 +139,7 @@ final class CBCodeAdmin {
                 '--heading',
                 '--underline',
                 "--match '{$search->regex}'",
+                '--ignore-file=match:CBCodeAdmin',
                 CBModel::valueToString($search, 'args'),
             ]
         );
@@ -149,14 +160,21 @@ final class CBCodeAdmin {
                 throw new Exception('unknown filetype');
         }
 
-        CBGit::exec(
-            $command,
-            $output,
-            $exitCode
-        );
+        $pwd = getcwd();
 
-        array_push($output, '');
-        array_push($output, '');
+        chdir(cbsitedir());
+
+        try {
+            exec("{$command} 2>&1", $output, $exitCode);
+
+            if ($exitCode === 0) {
+
+            } else if ($exitCode !== 1){
+                array_push($output, "! returned exit code: {$exitCode}");
+            }
+        } finally {
+            chdir($pwd);
+        }
 
         return $output;
     }
@@ -169,13 +187,16 @@ final class CBCodeAdmin {
     static function searches(): array {
         return [
 
+            /* errors */
+
             /**
              * 2019_06_16
              * Use CBConvert
              */
             (object)[
-                'regex' => 'Colby\\.centsToDollars\\(',
                 'filetype' => 'js',
+                'regex' => 'Colby\\.centsToDollars\\(',
+                'title' => 'Colby.centsToDollars()',
             ],
 
             /**
@@ -183,8 +204,9 @@ final class CBCodeAdmin {
              * Use CBConvert
              */
             (object)[
-                'regex' => 'Colby\\.imageToURL\\(',
                 'filetype' => 'js',
+                'regex' => 'Colby\\.imageToURL\\(',
+                'title' => 'Colby.imageToURL()',
             ],
 
             /**
@@ -192,8 +214,12 @@ final class CBCodeAdmin {
              * Use CBErrorHandler::report()
              */
             (object)[
-                'regex' => 'Colby::reportException\\(',
                 'filetype' => 'php',
+                'regex' => 'Colby::reportException\\(',
+
+                'title' =>
+                'Colby::reportException() replaced with ' .
+                'CBErrorHandler::report()',
             ],
 
             /**
@@ -201,8 +227,9 @@ final class CBCodeAdmin {
              * Removed
              */
             (object)[
+                'filetype' => 'js',
                 'regex' => 'CBModelUpdater',
-                'filetype' => 'js',
+                'title' => 'CBModelUpdater',
             ],
 
             /**
@@ -210,8 +237,9 @@ final class CBCodeAdmin {
              * Use CBDataStore.flexpath()
              */
             (object)[
+                'filetype' => 'js',
                 'regex' => 'dataStoreFlexpath',
-                'filetype' => 'js',
+                'title' => 'Colby.dataStoreFlexpath()',
             ],
 
             /**
@@ -219,8 +247,9 @@ final class CBCodeAdmin {
              * Use CBDataStore.flexpath()
              */
             (object)[
-                'regex' => 'dataStoreIDToURI',
                 'filetype' => 'js',
+                'regex' => 'dataStoreIDToURI',
+                'title' => 'Colby.dataStoreIDToURI()',
             ],
 
             /**
@@ -228,8 +257,9 @@ final class CBCodeAdmin {
              * Colby.setPanelContent() has been removed.
              */
             (object)[
-                'regex' => 'setPanelContent\\(',
                 'filetype' => 'js',
+                'regex' => 'setPanelContent\\(',
+                'title' => 'Colby.setPanelContent()',
             ],
 
             /**
@@ -237,19 +267,33 @@ final class CBCodeAdmin {
              * Colby.warnOlderBrowsers() has been removed.
              */
             (object)[
-                'regex' => 'warnOlderBrowsers\\(',
                 'filetype' => 'js',
+                'regex' => 'warnOlderBrowsers\\(',
+                'title' => 'Colby.warnOlderBrowsers()',
             ],
 
-            /* lower priority searches */
+
+            /**
+             * 2019_06_16
+             * Colby.warnOlderBrowsers() has been removed.
+             */
+            (object)[
+                'filetype' => 'php',
+                'regex' => 'ColbyRequest::isForFrontPage\\(',
+
+                'title' =>
+                'ColbyRequest::isForFrontPage() replaced with ' .
+                'ColbyRequest::currentRequestIsForTheFrontPage()',
+            ],
+
+
+            /* warnings */
 
             /**
              * 2019_06_16
              * Update interface function name
              */
             (object)[
-                'regex' => '(?<!CBUISpec\\.)specToDescription',
-                'filetype' => 'js',
                 'args' => implode(
                     ' ',
                     [
@@ -257,6 +301,13 @@ final class CBCodeAdmin {
                         '--ignore-file=match:CBUISpec_Tests.js',
                     ]
                 ),
+                'filetype' => 'js',
+                'regex' => '(?<!CBUISpec\\.)specToDescription',
+                'severity' => 4,
+
+                'title' =>
+                'specToDescription() interface functions should have the ' .
+                'name CBUISpec_toDescription()',
             ],
         ];
     }
