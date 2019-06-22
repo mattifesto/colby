@@ -64,8 +64,8 @@ var Colby = {
     /**
      * @param string className
      * @param string functionName
-     * @param object? args
-     * @param File? file
+     * @param object args (optional)
+     * @param File file (optional)
      *
      *      A File usually retrieved from an input element.
      *
@@ -73,24 +73,41 @@ var Colby = {
      *
      * @return Promise
      */
-    callAjaxFunction: function (functionClassName, functionName, args, file) {
+    callAjaxFunction: function (
+        functionClassName,
+        functionName,
+        functionArguments,
+        file
+    ) {
         var formData = new FormData();
-        formData.append("ajax", JSON.stringify({
-            functionClassName: functionClassName,
-            functionName: functionName,
-            args: args,
-        }));
+
+        if (functionArguments === undefined) {
+            functionArguments = {};
+        }
+
+        formData.append(
+            "ajaxArgumentsAsJSON",
+            JSON.stringify(
+                {
+                    functionClassName: functionClassName,
+                    functionName: functionName,
+                    functionArguments: functionArguments,
+                }
+            )
+        );
 
         if (file !== undefined) {
             formData.append("file", file);
         }
 
-        return Colby.fetchAjaxResponse("/", formData)
-            .then(onFulfilled);
-
-        function onFulfilled(response) {
-            return response.value;
-        }
+        return Colby.fetchAjaxResponse(
+            "/",
+            formData
+        ).then(
+            function (response) {
+                return response.value;
+            }
+        );
     },
     /* callAjaxFunction() */
 
