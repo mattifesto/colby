@@ -5,20 +5,29 @@ class CBAjaxResponse {
     private static $countOfSends = 0;
 
     public $className = 'CBAjaxResponse';
+
+    /**
+     * 2019_06_20 This message is a simple text string, not message markup.
+     */
     public $message = '';
+
     public $wasSuccessful = false;
+
 
     /**
      * @return CBAjaxResponse
      */
     public function __construct() {
-        set_exception_handler(array($this, 'handleException'));
+        set_exception_handler(
+            array($this, 'handleException')
+        );
     }
 
+
     /**
-     * @return null
+     * @return void
      */
-    public function cancel() {
+    public function cancel(): void {
         if ($this->isActive) {
             $this->isActive = false;
             restore_exception_handler();
@@ -26,14 +35,14 @@ class CBAjaxResponse {
     }
 
     /**
-     * 2017.12.03 This function was updated to comply with the custom exception
+     * 2017_12_03 This function was updated to comply with the custom exception
      * handler documentation in the CBErrorHandler::handle() comments.
      *
      * @param Throwable $throwable
      *
-     * @return null
+     * @return void
      */
-    public function handleException(Throwable $throwable) {
+    public function handleException(Throwable $throwable): void {
         CBErrorHandler::report($throwable);
 
         try {
@@ -46,15 +55,17 @@ class CBAjaxResponse {
             CBErrorHandler::report($innerThrowable);
         }
     }
+    /* handleException() */
+
 
     /**
      * This function contains a lot of verification code because when a bug
      * occurs here it tends to be messy and developers will need as much
      * information as they can get to fix it.
      *
-     * @return null
+     * @return void
      */
-    public function send() {
+    public function send(): void {
         if (!$this->isActive) {
             return;
         }
@@ -80,4 +91,6 @@ class CBAjaxResponse {
 
         $this->cancel();
     }
+    /* send() */
 }
+/* CBAjaxResponse */
