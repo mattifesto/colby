@@ -256,15 +256,6 @@ EOT;
 
 
     /**
-     * @return bool
-     *  Returns `true` if the current request is for the front page.
-     */
-    static function isForFrontPage()
-    {
-        return !(count(self::$decodedStubs));
-    }
-
-    /**
      * @return object|false
      */
     private static function pageRenderingDataForURI($URI) {
