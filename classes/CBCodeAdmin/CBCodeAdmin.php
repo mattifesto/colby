@@ -274,8 +274,7 @@ final class CBCodeAdmin {
 
 
             /**
-             * 2019_06_16
-             * Colby.warnOlderBrowsers() has been removed.
+             * 2019_06_22
              */
             (object)[
                 'filetype' => 'php',
