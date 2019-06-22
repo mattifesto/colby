@@ -55,6 +55,39 @@ EOT;
     }
 
 
+    /**
+     * @param object $args
+     *
+     *      {
+     *          pageID: string
+     *      }
+     *
+     * @return void
+     */
+    static function CBAjax_recoverPage(stdClass $args): void {
+        $pageID = CBModel::valueAsID($args, 'pageID');
+
+        if ($pageID === null) {
+            throw CBException::createModelIssueException(
+                "The pageID argument must be an ID",
+                $args,
+                '50fd906f9b4ffb56404e13b058bfb8987159668a'
+            );
+        }
+
+        CBPages::recoverRowWithDataStoreIDFromTheTrash($pageID);
+    }
+    /* CBAjax_recoverPage() */
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_recoverPage_group(): string {
+        return 'Administrators';
+    }
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
@@ -62,7 +95,7 @@ EOT;
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v381.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v481.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -108,30 +141,6 @@ EOT;
         return [
             'CBPagesAdminMenu',
         ];
-    }
-
-
-    /**
-     * @param hex160 $_POST['ID']
-     *
-     * @return null
-     */
-    static function recoverPageForAjax() {
-        $response = new CBAjaxResponse();
-
-        $ID = $_POST['ID'];
-
-        CBPages::recoverRowWithDataStoreIDFromTheTrash($ID);
-
-        $response->wasSuccessful = true;
-        $response->send();
-    }
-
-    /**
-     * @return stdClass
-     */
-    static function recoverPageForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
     }
 }
 /* CBPagesTrashAdmin */
