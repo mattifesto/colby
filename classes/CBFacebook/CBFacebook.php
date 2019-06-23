@@ -10,6 +10,8 @@ final class CBFacebook {
     const loginStateCookieName = "facebook-login-state";
 
     /**
+     * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/#confirm
+     *
      * @param string $code
      *
      * @return object
@@ -40,7 +42,7 @@ final class CBFacebook {
         '/colby/facebook-oauth-handler/';
 
         $URL =
-        'https://graph.facebook.com/v2.9/oauth/access_token' .
+        'https://graph.facebook.com/v3.3/oauth/access_token' .
         '?client_id=' . $facebookAppID .
         '&redirect_uri=' . urlencode($redirectURI) .
         '&client_secret=' . $facebookAppSecret .
@@ -109,6 +111,8 @@ final class CBFacebook {
 
 
     /**
+     * https://developers.facebook.com/docs/graph-api/reference/user
+     *
      * @param string $accessToken
      *
      * @return object
@@ -116,8 +120,13 @@ final class CBFacebook {
     static function fetchUserProperties(string $accessToken): stdClass {
         $fields = 'fields=name,metadata{type}';
 
+        /**
+         * Here "me" is translated by Facebook into the user ID of the user
+         * associated with the access token.
+         */
+
         $URL =
-        "https://graph.facebook.com/v2.9/me?access_token=" .
+        "https://graph.facebook.com/v3.3/me?access_token=" .
         "{$accessToken}&metadata=1&{$fields}";
 
         return CBFacebook::fetchGraphAPIResponse($URL);
@@ -171,6 +180,8 @@ final class CBFacebook {
 
 
     /**
+     * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/#login
+     *
      * @NOTE 2017_03_28
      *
      *      The Facebook URL below uses www.facebook.com instead of
@@ -186,9 +197,9 @@ final class CBFacebook {
         '/colby/facebook-oauth-handler/';
 
         $loginURL =
-        'https://www.facebook.com/v2.9/dialog/oauth' .
+        'https://www.facebook.com/v3.3/dialog/oauth' .
         '?client_id=' .
-        CBFacebookAppID .
+        urlencode(CBFacebookAppID) .
         '&redirect_uri=' .
         urlencode($redirectURI);
 
@@ -198,13 +209,15 @@ final class CBFacebook {
 
 
     /**
+     * https://developers.facebook.com/docs/graph-api/reference/user/picture/
+     *
      * @param string $facebookID
      *
      * @return string
      */
     static function userImageURL(string $facebookID): string {
         $userImageURL =
-        "https://graph.facebook.com/v2.9/{$facebookID}/picture?type=large";
+        "https://graph.facebook.com/v3.3/{$facebookID}/picture?type=large";
 
         return $userImageURL;
     }
