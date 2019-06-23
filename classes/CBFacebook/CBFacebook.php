@@ -12,31 +12,51 @@ final class CBFacebook {
     /**
      * @param string $code
      *
-     * @return stdClass
+     * @return object
      */
-    static function fetchAccessTokenObject($code) {
+    static function fetchAccessTokenObject(string $code): stdClass {
 
         /**
-         * NOTE: 2017.03.28
-         * The `redirect_uri` in the request below is not used to redirect
-         * anything. However, it is tested to confirm that it matches the
-         * `redirect_uri` value that was present in the previous request that
-         * provided the $code value.
+         * @NOTE: 2017_03_28
+         *
+         *      The redirect_uri in the request below is not used to redirect
+         *      anything. However, it is tested to confirm that it matches the
+         *      redirect_uri value that was present in the previous request that
+         *      provided the $code value.
          */
 
-        $facebookAppID = defined('COLBY_FACEBOOK_APP_ID') ? COLBY_FACEBOOK_APP_ID : CBFacebookAppID;
-        $facebookAppSecret = defined('COLBY_FACEBOOK_APP_SECRET') ? COLBY_FACEBOOK_APP_SECRET : CBFacebookAppSecret;
-        $redirectURI = CBSitePreferences::siteURL() . '/colby/facebook-oauth-handler/';
-        $URL = 'https://graph.facebook.com/v2.9/oauth/access_token' .
-            '?client_id=' . $facebookAppID .
-            '&redirect_uri=' . urlencode($redirectURI) .
-            '&client_secret=' . $facebookAppSecret .
-            '&code=' . $code;
+        $facebookAppID =
+        defined('COLBY_FACEBOOK_APP_ID') ?
+        COLBY_FACEBOOK_APP_ID :
+        CBFacebookAppID;
+
+        $facebookAppSecret =
+        defined('COLBY_FACEBOOK_APP_SECRET') ?
+        COLBY_FACEBOOK_APP_SECRET :
+        CBFacebookAppSecret;
+
+        $redirectURI =
+        CBSitePreferences::siteURL() .
+        '/colby/facebook-oauth-handler/';
+
+        $URL =
+        'https://graph.facebook.com/v2.9/oauth/access_token' .
+        '?client_id=' . $facebookAppID .
+        '&redirect_uri=' . urlencode($redirectURI) .
+        '&client_secret=' . $facebookAppSecret .
+        '&code=' . $code;
 
         return CBFacebook::fetchGraphAPIResponse($URL);
     }
+    /* fetchAccessTokenObject() */
 
-    static function fetchGraphAPIResponse($URL) {
+
+    /**
+     * @param string $URL
+     *
+     * @return object
+     */
+    static function fetchGraphAPIResponse(string $URL): stdClass {
         $curlHandle = curl_init();
 
         curl_setopt($curlHandle, CURLOPT_URL, $URL);
@@ -44,14 +64,17 @@ final class CBFacebook {
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
 
         /**
-         * NOTE: 2014.08.03
-         * Sometimes Facebook responds very slowly to these requests. It's not the
-         * web, direct requests from the server are also slow. There's a theory that
-         * it has something to do with "round robin DNS", but I never figured that out.
-         * However, setting this time out for some reason makes it respond faster.
-         * There should be a time out regardless, but I just wanted to document the
-         * importance of this.
+         * @NOTE 2014_08_03
+         *
+         *      Sometimes Facebook responds very slowly to these requests. It's
+         *      not the web, direct requests from the server are also slow.
+         *      There's a theory that it has something to do with "round robin
+         *      DNS", but I never figured that out. However, setting this time
+         *      out for some reason makes it respond faster. There should be a
+         *      time out regardless, but I just wanted to document the
+         *      importance of this.
          */
+
         curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 5);
 
         $response = curl_exec($curlHandle);
@@ -59,7 +82,10 @@ final class CBFacebook {
         if ($response === false) {
             $error = curl_errno($curlHandle);
             curl_close($curlHandle);
-            throw new RuntimeException("Facebook OAuth: The request to exchange a code for an access token failed with the error: {$error}");
+            throw new RuntimeException(
+                "Facebook OAuth: The request to exchange a code for an " .
+                "access token failed with the error: {$error}"
+            );
         }
 
         $httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
@@ -67,31 +93,41 @@ final class CBFacebook {
         if ($httpCode === 400) {
             $object = json_decode($response);
 
-            throw new RuntimeException('Error retrieving Facebook Graph API response: ' .
+            throw new RuntimeException(
+                'Error retrieving Facebook Graph API response: ' .
                 $object->error->type .
                 ', ' .
-                $object->error->message);
+                $object->error->message
+            );
         }
 
         curl_close($curlHandle);
 
         return json_decode($response);
     }
+    /* fetchGraphAPIResponse() */
+
 
     /**
      * @param string $accessToken
      *
-     * @return stdClass
+     * @return object
      */
-    static function fetchUserProperties($accessToken) {
+    static function fetchUserProperties(string $accessToken): stdClass {
         $fields = 'fields=name,metadata{type}';
-        $URL = "https://graph.facebook.com/v2.9/me?access_token={$accessToken}&metadata=1&{$fields}";
+
+        $URL =
+        "https://graph.facebook.com/v2.9/me?access_token=" .
+        "{$accessToken}&metadata=1&{$fields}";
 
         return CBFacebook::fetchGraphAPIResponse($URL);
     }
+    /* fetchUserProperties() */
+
 
     /**
-     * @param $redirectURL
+     * @param string|null $redirectURL
+     *
      *      Sending the user to this URL, usually by presenting a link that
      *      appears to look like a login button, will request that Facebook
      *      authenticate the user. The authentication may or may not need to
@@ -109,45 +145,69 @@ final class CBFacebook {
      *      provided, $_SERVER['REQUEST_URI'] (the current page) will be used.
      *
      * @return string
+     *
      *      The returned URL is properly URL encoded.
      */
-    static function loginURL($redirectURI = null) {
+    static function loginURL(?string $redirectURI = null): string {
         if (empty($redirectURI)) {
             $redirectURI = $_SERVER['REQUEST_URI'];
         }
 
-        $state = new stdClass();
-        $state->colby_redirect_uri = $redirectURI;
+        $state = (object)[
+            'colby_redirect_uri' => $redirectURI,
+        ];
 
-        $URL = CBSitePreferences::siteURL() . '/colby/facebook-login/' .
-            '?state=' . urlencode(json_encode($state));
+        $URL =
+        CBSitePreferences::siteURL() .
+        '/colby/facebook-login/' .
+        '?state=' .
+        urlencode(
+            json_encode($state)
+        );
 
         return $URL;
     }
+    /* loginURL() */
+
 
     /**
-     * NOTE: 2017.03.28
-     * The Facebook URL below uses www.facebook.com instead of
-     * graph.facebook.com. This is on purpose, documented as such, and is
-     * required for this URL to work properly. The documentation doesn't say
-     * why.
+     * @NOTE 2017_03_28
+     *
+     *      The Facebook URL below uses www.facebook.com instead of
+     *      graph.facebook.com. This is on purpose, documented as such, and is
+     *      required for this URL to work properly. The documentation doesn't
+     *      say why.
      *
      * @return string
      */
-    static function loginURLForFacebook() {
-        $redirectURI = CBSitePreferences::siteURL() . '/colby/facebook-oauth-handler/';
+    static function loginURLForFacebook(): string {
+        $redirectURI =
+        CBSitePreferences::siteURL() .
+        '/colby/facebook-oauth-handler/';
 
-        return 'https://www.facebook.com/v2.9/dialog/oauth' .
-            '?client_id=' . CBFacebookAppID .
-            '&redirect_uri=' . urlencode($redirectURI);
+        $loginURL =
+        'https://www.facebook.com/v2.9/dialog/oauth' .
+        '?client_id=' .
+        CBFacebookAppID .
+        '&redirect_uri=' .
+        urlencode($redirectURI);
+
+        return $loginURL;
     }
+    /* loginURLForFacebook() */
+
 
     /**
      * @param string $facebookID
      *
      * @return string
      */
-    static function userImageURL($facebookID) {
-        return "https://graph.facebook.com/v2.9/{$facebookID}/picture?type=large";
+    static function userImageURL(string $facebookID): string {
+        $userImageURL =
+        "https://graph.facebook.com/v2.9/{$facebookID}/picture?type=large";
+
+        return $userImageURL;
     }
+    /* userImageURL() */
 }
+/* CBFacebook */
