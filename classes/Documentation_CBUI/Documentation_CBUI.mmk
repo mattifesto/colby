@@ -39,3 +39,109 @@ CBUI_sectionItemPart_titleDescription
         ---
     ---
 ---
+
+--- CBUI_title1
+CBUI_container_leftAndRight
+---
+
+--- CBUI_sectionContainer
+    --- CBUI_section
+        --- CBUI_container_leftAndRight
+            --- p
+            CBUI_container_leftAndRight
+            ---
+
+            --- p CBUI_textColor2
+            text
+            ---
+        ---
+    ---
+---
+
+--- CBUI_sectionContainer
+    --- CBUI_section
+        --- CBUI_container_leftAndRight
+            --- p
+            CBUI_container_leftAndRight creates a horizontally arranged set of
+            two text elements.
+            ---
+
+            --- p CBUI_textColor2
+            If the elements contain text that is long enough, the elements will
+            wrap with the upper element aligning to the left and the lower
+            element aligning to the right.
+            ---
+        ---
+    ---
+---
+
+--- CBUI_sectionContainer
+    --- CBUI_section
+        --- CBUI_container_leftAndRight
+            --- p CBUI_ellipsis
+            CBUI_container_leftAndRight creates a horizontally arranged set of
+            two text elements.
+            ---
+
+            --- p CBUI_textColor2 CBUI_ellipsis
+            If the elements contain text that is long enough, the elements will
+            wrap with the upper element aligning to the left and the lower
+            element aligning to the right.
+            ---
+        ---
+    ---
+---
+
+--- CBUI_title1
+CBUI_container_sideBySide
+---
+
+--- CBUI_sectionContainer
+    --- CBUI_section
+        --- CBUI_container_sideBySide
+            --- p
+            CBUI_container_sideBySide
+            ---
+
+            --- p CBUI_textColor2
+            text
+            ---
+        ---
+    ---
+---
+
+--- CBUI_sectionContainer
+    --- CBUI_section
+        --- CBUI_container_sideBySide
+            --- p
+            CBUI_container_sideBySide creates a horizontally arranged set of
+            two text elements.
+            ---
+
+            --- p CBUI_textColor2
+            If the text elements contain text that is long enough, the elements
+            will each take up at most 50% of the available width and the text in
+            each element will wrap unless the CBUI_ellipsis class is added to
+            the element.
+            ---
+        ---
+    ---
+---
+
+--- CBUI_sectionContainer
+    --- CBUI_section
+        --- CBUI_container_sideBySide
+            --- p CBUI_ellipsis
+            CBUI_container_sideBySide creates a horizontally arranged set of
+            two text elements.
+            ---
+
+            --- p CBUI_textColor2 CBUI_ellipsis
+            If the text elements contain text that is long enough, the elements
+            will each take up at most 50% of the available width and the text in
+            each element will wrap unless the CBUI_ellipsis class is added to
+            the element.
+            ---
+        ---
+    ---
+---
