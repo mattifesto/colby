@@ -101,6 +101,66 @@
     padding: 20px;
 }
 
+
+/**
+ * 2019_06_25
+ *
+ *      CBUI_container_leftAndRight and CBUI_container_sideBySide style
+ *      horizontally aligned container elements meant to hold two text elements.
+ *      With short strings, they will look roughly the same. With long strings,
+ *      CBUI_container_leftAndRight will wrap its two text elements.
+ *
+ *      CBUI_container_leftAndRight is better suited when the text elements
+ *      contain longer text.
+ *
+ *      Elements with these class names can be used as either section item
+ *      elements or section item part elements.
+ */
+
+.CBUI_container_leftAndRight,
+.CBUI_container_sideBySide {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+
+    box-sizing: border-box;
+    min-height: 44px;
+    overflow-wrap: break-word;
+    padding: 5px 0;
+
+    /* enable ellipsis */
+    min-width: 0;
+}
+
+.CBUI_container_leftAndRight > *,
+.CBUI_container_sideBySide > * {
+    box-sizing: border-box;
+    padding: 0 10px;
+}
+
+.CBUI_container_leftAndRight > :nth-child(2),
+.CBUI_container_sideBySide > :nth-child(2) {
+    /**
+     * A justify-content value of "space-between" will not work when the items
+     * are wrapped. A margin-left of auto on string 2 will create the same
+     * result when wrapped or not.
+     */
+    margin-left: auto;
+
+    text-align: right;
+}
+
+.CBUI_container_leftAndRight > * {
+    max-width: 80%;
+}
+
+.CBUI_container_sideBySide > * {
+    max-width: 50%;
+}
+
+
 /**
  * 2019_01_15
  *
@@ -132,13 +192,17 @@
     cursor: default;
 }
 
+
 /**
  * 2019_03_01
  *
  *      This class styles an element so that its text will only be shown on one
- *      line and truncated with an ellipsis.
+ *      line and truncated with an ellipsis. The class should only be used on
+ *      elements that directly contain text content. This means if you're using
+ *      message markup you will want to use it only on elements that are
+ *      explicitly paragraph (<p>) elements.
  *
- *      The parent element may need to have "min-width: 0" applied in some
+ *      The parent element will need to have "min-width: 0" applied in some
  *      cases.
  */
 .CBUI_ellipsis {
@@ -146,6 +210,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 
 /**
  * 2019_03_01
@@ -335,6 +400,7 @@ a.CBUI_sectionItem {
     font-size: 80%;
 }
 
+
 /**
  * 2019_03_23
  */
@@ -431,6 +497,18 @@ a.CBUI_sectionItem {
 .CBUI_textAlign_center {
     text-align: center;
 }
+
+/**
+ * 2019_06_25
+ */
+.CBUI_textColor2 {
+    color: var(--CBTextColor2);
+}
+
+.CBUI_textSize_small {
+    font-size: 80%;
+}
+
 
 /**
  * 2019_01_15
