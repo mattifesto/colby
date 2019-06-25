@@ -25,9 +25,33 @@ final class CBStatusAdminPage {
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Website Status';
 
-        CBUI::renderHalfSpace();
-        CBUI::renderSectionHeader('Versions');
-        CBUI::renderSectionStart();
+        $siteNameAsMessage = CBMessageMarkup::stringToMessage(
+            CBSitePreferences::siteName()
+        );
+
+        $message = <<<EOT
+
+            --- CBUI_sectionContainer
+                --- CBUI_section
+                    --- CBUI_container_leftAndRight
+                        --- p CBUI_textColor2
+                        Site Name
+                        ---
+
+                        {$siteNameAsMessage}
+                    ---
+                ---
+            ---
+
+            --- CBUI_title1
+            Versions
+            ---
+EOT;
+
+        echo CBMessageMarkup::messageToHTML($message);
+
+
+        /* status widgets */
 
         $statusWidgetFilepaths = Colby::globFiles(
             'classes/CBStatusWidgetFor*'
@@ -42,68 +66,48 @@ final class CBStatusAdminPage {
 
         sort($statusWidgetClassNames);
 
-        array_walk(
-            $statusWidgetClassNames,
-            function($className) {
-                $functionName = "{$className}::CBStatusAdminPage_data";
+        $statusWidgetMessage = '';
 
-                if (is_callable($functionName)) {
-                    $data = call_user_func($functionName);
+        foreach ($statusWidgetClassNames as $statusWidgetClassName) {
+            $functionName = "{$statusWidgetClassName}::CBStatusAdminPage_data";
 
-                    CBUISectionItem4::renderOpen();
+            if (is_callable($functionName)) {
+                $data = call_user_func($functionName);
+                $keyAsMessage = CBMessageMarkup::stringToMessage($data[0]);
+                $valueAsMessage = CBMessageMarkup::stringToMessage($data[2]);
 
-                    CBUIStringsPart::render(
-                        $data[0],
-                        $data[2],
-                        'keyvalue sidebyside'
-                    );
+                $statusWidgetMessage .= <<<EOT
 
-                    CBUISectionItem4::renderClose();
-                }
+                    --- CBUI_container_leftAndRight
+                        --- p CBUI_textColor2
+                        {$keyAsMessage}
+                        ---
+
+                        {$valueAsMessage}
+                    ---
+
+EOT;
             }
-        );
-
-        /* deprecated: use status widget classes */
-
-        $widgetClassNames = Colby::globFiles(
-            'classes/*AdminWidgetFor*'
-        );
-
-        $widgetClassNames = array_map(
-            function ($className) {
-                return basename($className, '.php');
-            },
-            $widgetClassNames
-        );
-
-        sort($widgetClassNames);
-
-        array_walk(
-            $widgetClassNames,
-            function($className) {
-                $functionName = "{$className}::render";
-
-                if (is_callable($functionName)) {
-                    call_user_func($functionName);
-                }
-            }
-        );
-
-        /* deprecated: use status widget classes */
-
-        $adminWidgetFilenames = Colby::globFiles(
-            'snippets/admin-widget-*.php'
-        );
-
-        foreach ($adminWidgetFilenames as $adminWidgetFilename) {
-            include $adminWidgetFilename;
         }
 
-        CBUI::renderSectionEnd();
-        CBUI::renderHalfSpace();
+        if ($statusWidgetMessage !== '') {
+            $statusWidgetMessage = <<<EOT
+
+                --- CBUI_sectionContainer
+                    --- CBUI_section
+                        {$statusWidgetMessage}
+                    ---
+                ---
+
+EOT;
+
+            echo CBMessageMarkup::messageToHTML($statusWidgetMessage);
+        }
     }
     /* CBAdmin_render() */
 
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
@@ -348,6 +352,8 @@ EOT;
     }
     /* CBHTMLOutput_requiredClassNames() */
 
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @return [string]
