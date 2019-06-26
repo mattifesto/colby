@@ -9,6 +9,7 @@ class CBImages {
         return CBImages::uploadImageWithName('file');
     }
 
+
     /**
      * @return string
      */
@@ -16,19 +17,24 @@ class CBImages {
         return 'Administrators';
     }
 
+
     /**
      * This function is called by CBImage::CBModels_willDelete() and shouldn't
      * be called otherwise. To delete an image call
      *
      *      CBModels::deleteByID(<imageID>)
      *
-     * @return null
+     * @param string $ID
+     *
+     * @return void
      */
-    static function deleteByID($ID) {
+    static function deleteByID(string $ID): void {
         $IDAsSQL = CBHex160::toSQL($ID);
         $SQL = "DELETE FROM `CBImages` WHERE `ID` = {$IDAsSQL}";
+
         Colby::query($SQL);
     }
+
 
     /**
      * @param {hex160} $ID
@@ -37,10 +43,14 @@ class CBImages {
      *  The original image filepath or false if the image doesn't exist
      */
     static function IDToOriginalFilepath($ID) {
-        $filepaths = glob($s = CBDataStore::filepath([
-            'ID' => $ID,
-            'filename' => 'original.*'
-        ]));
+        $filepaths = glob(
+            $s = CBDataStore::filepath(
+                [
+                    'ID' => $ID,
+                    'filename' => 'original.*'
+                ]
+            )
+        );
 
         if (empty($filepaths)) {
             return false;
@@ -48,6 +58,7 @@ class CBImages {
             return $filepaths[0];
         }
     }
+
 
     /**
      * @return void
@@ -72,6 +83,7 @@ EOT;
         Colby::query($SQL);
     }
 
+
     /**
      * This function determines in an ID is a valid CBImage ID.
      *
@@ -93,8 +105,11 @@ EOT;
 
 EOT;
 
-        return boolval(CBDB::SQLToValue($SQL));
+        return boolval(
+            CBDB::SQLToValue($SQL)
+        );
     }
+
 
     /**
      * This function is called by ColbyRequest before declaring a request a 404
@@ -114,7 +129,13 @@ EOT;
      *  Returns true if an image was generated and sent; otherwise false.
      */
     static function makeAndSendImageForPath($path) {
-        if (!preg_match('%^/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/([^/]+)$%', $path, $matches)) {
+        if (
+            !preg_match(
+                '%^/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/([^/]+)$%',
+                $path,
+                $matches
+            )
+        ) {
             return false;
         }
 
@@ -124,17 +145,30 @@ EOT;
         $operation = $pathinfo['filename'];
         $extension = $pathinfo['extension'];
 
-        if (!in_array($operation, CBSitePreferences::onDemandImageResizeOperations())) {
+        if (
+            !in_array(
+                $operation,
+                CBSitePreferences::onDemandImageResizeOperations()
+            )
+        ) {
             return false;
         }
 
-        if (!file_exists(CBDataStore::flexpath($ID, "original.{$extension}", CBSiteDirectory))) {
+        if (
+            !file_exists(
+                CBDataStore::flexpath(
+                    $ID,
+                    "original.{$extension}",
+                    cbsitedir()
+                )
+            )
+        ) {
             return false;
         }
 
         CBImages::reduceImage($ID, $extension, $operation);
 
-        $reducedFilepath = CBSiteDirectory . $path;
+        $reducedFilepath = cbsitedir() . $path;
         $size = CBImage::getimagesize($reducedFilepath);
         $mimeType = image_type_to_mime_type($size[2]);
 
@@ -144,21 +178,32 @@ EOT;
 
         return true;
     }
+    /* makeAndSendImageForPath() */
+
 
     /**
-     * @param hex160 $ID
+     * @param string $ID
      *
-     * @return object (CBImage)|false
+     * @return object|false
+     *
+     *      CBImage model
      */
-    static function makeModelForID($ID) {
+    static function makeModelForID(string $ID) {
         $IDAsSQL = CBHex160::toSQL($ID);
-        $extension = CBDB::SQLToValue("SELECT `extension` FROM `CBImages` WHERE `ID` = {$IDAsSQL}");
+        $extension = CBDB::SQLToValue(
+            "SELECT `extension` FROM `CBImages` WHERE `ID` = {$IDAsSQL}"
+        );
 
         if ($extension === false) {
             return false;
         }
 
-        $originalImageFilepath = CBDataStore::flexpath($ID, "original.{$extension}", CBSiteDirectory);
+        $originalImageFilepath = CBDataStore::flexpath(
+            $ID,
+            "original.{$extension}",
+            cbsitedir()
+        );
+
         $size = CBImage::getimagesize($originalImageFilepath);
 
         if ($size === false) {
@@ -174,30 +219,47 @@ EOT;
             'width' => $size[0],
         ];
     }
+    /* makeModelForID() */
+
 
     /**
      * Creates a reduced image for an operation only if the reduced image
      * doesn't already exist.
      *
-     * @param hex160 $ID
+     * @param string $ID
      *  The image ID
      * @param string $extension
      *  The image extension
      * @param string $operation
      *  The reduction operation, example: "rs200clc200"
      *
-     * @return stdClass (image)
+     * @return object
+     *
+     *      CBImage model
      */
     static function reduceImage($ID, $extension, $operation) {
-        $sourceFilepath = CBDataStore::flexpath($ID, "original.{$extension}", CBSiteDirectory);
-        $destinationFilepath = CBDataStore::flexpath($ID, "{$operation}.{$extension}", CBSiteDirectory);
+        $sourceFilepath = CBDataStore::flexpath(
+            $ID,
+            "original.{$extension}",
+            cbsitedir()
+        );
+
+        $destinationFilepath = CBDataStore::flexpath(
+            $ID,
+            "{$operation}.{$extension}",
+            cbsitedir()
+        );
 
         if (!is_file($destinationFilepath)) {
             $size = CBImage::getimagesize($sourceFilepath);
             $projection = CBProjection::withSize($size[0], $size[1]);
             $projection = CBProjection::applyOpString($projection, $operation);
 
-            CBImages::reduceImageFile($sourceFilepath, $destinationFilepath, $projection);
+            CBImages::reduceImageFile(
+                $sourceFilepath,
+                $destinationFilepath,
+                $projection
+            );
         }
 
         $size = CBImage::getimagesize($destinationFilepath);
@@ -211,14 +273,21 @@ EOT;
             'width' => $size[0],
         ];
     }
+    /* reduceImage() */
+
 
     /**
      * This function can be used to simply reduce an image file that may or may
      * not be a CBImage. It is used by the other functions to reduce CBImages.
      *
-     * @return null
+     * @return void
      */
-    static function reduceImageFile($sourceFilepath, $destinationFilepath, $projection, $args = []) {
+    static function reduceImageFile(
+        $sourceFilepath,
+        $destinationFilepath,
+        $projection,
+        $args = []
+    ): void {
         $quality = null;
         extract($args, EXTR_IF_EXISTS);
 
@@ -244,7 +313,11 @@ EOT;
             case IMAGETYPE_JPEG:
                 $input = imagecreatefromjpeg($sourceFilepath);
                 $exif = CBImage::exif_read_data($sourceFilepath);
-                $orientation = empty($exif['Orientation']) ? 1 : $exif['Orientation'];
+
+                $orientation =
+                empty($exif['Orientation']) ?
+                1 :
+                $exif['Orientation'];
 
                 if ($orientation == 3) {
                     $input = imagerotate($input, 180, 0);
@@ -262,39 +335,63 @@ EOT;
                 imagealphablending($output, false);
                 imagesavealpha($output, true);
 
-                $transparent = imagecolorallocatealpha($output, 255, 255, 255, 127);
+                $transparent = imagecolorallocatealpha(
+                    $output,
+                    255,
+                    255,
+                    255,
+                    127
+                );
 
-                imagefilledrectangle($output, 0, 0, $dst->width, $dst->height, $transparent);
+                imagefilledrectangle(
+                    $output,
+                    0,
+                    0,
+                    $dst->width,
+                    $dst->height,
+                    $transparent
+                );
 
                 break;
 
             default:
                 throw new RuntimeException(
-                    "The image type for the file \"{$sourceFilepath}\" is not supported.");
+                    "The image type for the file \"{$sourceFilepath}\" is " .
+                    "not supported."
+                );
 
                 break;
         }
 
-        imagecopyresampled($output, $input,
+        imagecopyresampled(
+            $output, $input,
             $dst->x,     $dst->y,      $src->x,     $src->y,
-            $dst->width, $dst->height, $src->width, $src->height);
+            $dst->width, $dst->height, $src->width, $src->height
+        );
 
         switch ($size[2]) {
             case IMAGETYPE_GIF:
                 imagegif($output, $destinationFilepath);
+
                 break;
+
             case IMAGETYPE_JPEG:
                 if ($quality === null) {
                     imagejpeg($output, $destinationFilepath);
                 } else {
                     imagejpeg($output, $destinationFilepath, $quality);
                 }
+
                 break;
+
             case IMAGETYPE_PNG:
                 imagepng($output, $destinationFilepath);
+
                 break;
         }
     }
+    /* reduceImageFile() */
+
 
     /**
      * This function is called by CBImage::CBModels_willSave() and shouldn't
@@ -302,9 +399,9 @@ EOT;
      *
      *      CBModels::save([<imageSpec])
      *
-     * @return null
+     * @return void
      */
-    static function updateRow($ID, $timestamp, $extension) {
+    static function updateRow($ID, $timestamp, $extension): void {
         $extensionAsSQL = ColbyConvert::textToSQL($extension);
         $extensionAsSQL = "'{$extension}'";
         $IDAsSQL = ColbyConvert::textToSQL($ID);
@@ -315,7 +412,12 @@ EOT;
             INSERT INTO `CBImages`
                 (`ID`, `created`, `extension`, `modified`)
             VALUES
-                ({$IDAsSQL}, {$timestampAsSQL}, {$extensionAsSQL}, {$timestampAsSQL})
+                (
+                    {$IDAsSQL},
+                    {$timestampAsSQL},
+                    {$extensionAsSQL},
+                    {$timestampAsSQL}
+                )
             ON DUPLICATE KEY UPDATE
                 `modified` = {$timestampAsSQL}
 
@@ -323,6 +425,8 @@ EOT;
 
         Colby::query($SQL);
     }
+    /* updateRow() */
+
 
     /**
      * 2015.06.04 This is intended to be the primary Ajax function used to
@@ -357,11 +461,20 @@ EOT;
             ]),
         ];
 
-        $requestedSizes = isset($_POST['imageSizesAsJSON']) ? json_decode($_POST['imageSizesAsJSON']) : [];
+        $requestedSizes =
+        isset($_POST['imageSizesAsJSON']) ?
+        json_decode($_POST['imageSizesAsJSON']) :
+        [];
 
         foreach ($requestedSizes as $operation) {
-            $reducedImage = CBImages::reducedImage($image->ID, $image->extension, $operation);
-            $reducedImageBasename = "{$reducedImage->filename}.{$reducedImage->extension}";
+            $reducedImage = CBImages::reducedImage(
+                $image->ID,
+                $image->extension,
+                $operation
+            );
+
+            $reducedImageBasename =
+            "{$reducedImage->filename}.{$reducedImage->extension}";
 
             $sizes[$operation] = (object)[
                 'height' => $reducedImage->height,
@@ -377,20 +490,26 @@ EOT;
         $response->ID = $image->ID;                 /* @deprecated use $image->ID */
         $response->image = $image;
         $response->sizes = $sizes;
-        $response->message = "The image with an ID of {$response->image->ID} uploaded successfully";
+
+        $response->message =
+        "The image with an ID of {$response->image->ID} uploaded successfully";
+
         $response->wasSuccessful = true;
         $response->send();
     }
+    /* uploadForAjax() */
+
 
     /**
-     * @return null
+     * @return object
      */
-    static function uploadForAjaxPermissions() {
+    static function uploadForAjaxPermissions(): stdClass {
         return (object)['group' => 'Administrators'];
     }
 
+
     /**
-     * NOTE: 2017.06.16 This function should be modified to call URIToCBImage()
+     * NOTE: 2017_06_16 This function should be modified to call URIToCBImage()
      *
      * @param string $name
      *
@@ -411,20 +530,43 @@ EOT;
         $temporaryFilepath = $_FILES[$name]['tmp_name'];
         $size = CBImage::getimagesize($temporaryFilepath);
 
-        if ($size === false || !in_array($size[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
-            throw new Exception('The file specified is either not a an image or has a file format that is not supported.');
+        if (
+            $size === false ||
+            !in_array(
+                $size[2],
+                [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG]
+            )
+        ) {
+            throw new Exception(
+                'The file specified is either not a an image or has a file ' .
+                'format that is not supported.'
+            );
         }
 
         Colby::query('START TRANSACTION');
 
         try {
 
-            $timestamp = isset($_POST['timestamp']) ? $_POST['timestamp'] : time();
-            $extension = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
+            $timestamp =
+            isset($_POST['timestamp']) ?
+            $_POST['timestamp'] :
+            time();
+
+            $extension = image_type_to_extension(
+                /* type: */ $size[2],
+                /* include dot: */ false
+            );
+
             $ID = sha1_file($temporaryFilepath);
             $filename = "original";
             $basename = "{$filename}.{$extension}";
-            $permanentFilepath = CBDataStore::flexpath($ID, $basename, CBSiteDirectory);
+
+            $permanentFilepath = CBDataStore::flexpath(
+                $ID,
+                $basename,
+                cbsitedir()
+            );
+
             $spec = (object)[
                 'className' => 'CBImage',
                 'ID' => $ID,
@@ -449,6 +591,8 @@ EOT;
 
         return $spec;
     }
+    /* uploadImageWithName() */
+
 
     /**
      * This function will return a CBImage spec for an image URI. If the URI is
@@ -475,8 +619,17 @@ EOT;
         $size = CBImage::getimagesize($filepath);
         $spec = null;
 
-        if ($size === false || !in_array($size[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
-            throw new Exception('The file specified is either not a an image or has a file format that is not supported.');
+        if (
+            $size === false ||
+            !in_array(
+                $size[2],
+                [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG]
+            )
+        ) {
+            throw new Exception(
+                'The file specified is either not a an image or has a file ' .
+                'format that is not supported.'
+            );
         }
 
         Colby::query('START TRANSACTION');
@@ -484,11 +637,22 @@ EOT;
         try {
 
             $timestamp = time();
-            $extension = image_type_to_extension(/* type: */ $size[2], /* include dot: */ false);
+
+            $extension = image_type_to_extension(
+                /* type: */ $size[2],
+                /* include dot: */ false
+            );
+
             $ID = sha1_file($filepath);
             $filename = "original";
             $basename = "{$filename}.{$extension}";
-            $destinationFilepath = CBDataStore::flexpath($ID, $basename, cbsitedir());
+
+            $destinationFilepath = CBDataStore::flexpath(
+                $ID,
+                $basename,
+                cbsitedir()
+            );
+
             $spec = (object)[
                 'className' => 'CBImage',
                 'extension' => $extension,
@@ -513,6 +677,8 @@ EOT;
 
         return $spec;
     }
+    /* URIToCBImage() */
+
 
     /**
      * @param string $name
@@ -525,14 +691,20 @@ EOT;
                 case UPLOAD_ERR_INI_SIZE:
 
                     $maxSize = ini_get('upload_max_filesize');
-                    $message = "The file uploaded exceeds the allowed upload size of: {$maxSize}.";
+
+                    $message =
+                    "The file uploaded exceeds the allowed upload size " .
+                    "of: {$maxSize}.";
 
                     break;
 
                 case UPLOAD_ERR_FORM_SIZE:
 
                     $maxSize = ini_get('post_max_size');
-                    $message = "The file uploaded exceeds the allowed post upload size of: {$maxSize}.";
+
+                    $message =
+                    "The file uploaded exceeds the allowed post upload " .
+                    "size of: {$maxSize}.";
 
                     break;
 
@@ -543,10 +715,12 @@ EOT;
                 case UPLOAD_ERR_EXTENSION:
                 default:
 
-                    $message = "File upload error code: {$_FILES[$name]['error']}";
+                    $message =
+                    "File upload error code: {$_FILES[$name]['error']}";
             }
 
             throw new RuntimeException($message);
         }
     }
+    /* verifyUploadedFile() */
 }
