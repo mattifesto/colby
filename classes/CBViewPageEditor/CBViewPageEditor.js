@@ -96,12 +96,13 @@ var CBViewPageEditor = {
                 args.spec.sections = [];
             }
 
-            let editor = CBUISpecArrayEditor.create({
-                specs: args.spec.sections,
-                specsChangedCallback: args.specChangedCallback,
-                addableClassNames: CBViewPageEditor_addableClassNames,
-                navigateToItemCallback: args.navigateToItemCallback,
-            });
+            let editor = CBUISpecArrayEditor.create(
+                {
+                    specs: args.spec.sections,
+                    specsChangedCallback: args.specChangedCallback,
+                    addableClassNames: CBViewPageEditor_addableClassNames,
+                }
+            );
 
             editor.title = "Views";
 
