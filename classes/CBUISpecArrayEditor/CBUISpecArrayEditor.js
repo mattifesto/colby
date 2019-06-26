@@ -33,7 +33,13 @@ var CBUISpecArrayEditor = {
      *
      *      {
      *          element: Element (readonly)
+     *
      *          title: string
+     *
+     *              @deprecated 2019_06_26
+     *
+     *              The caller should add a CBUI_title1 element before the
+     *              editor element.
      *      }
      */
     create: function (args) {
