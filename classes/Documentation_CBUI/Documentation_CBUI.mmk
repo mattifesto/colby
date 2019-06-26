@@ -1,44 +1,49 @@
 --- CBUI_title1
-CBUI_sectionItemPart_titleDescription
+CBUI_container_topAndBottom
 ---
 
 --- CBUI_sectionContainer
     --- CBUI_section
-        --- CBUI_sectionItemPart_titleDescription
-        Short Title
+        --- CBUI_container_topAndBottom
+            Short Title
 
-        This is a short description.
-        ---
-    ---
----
-
---- CBUI_sectionContainer
-    --- CBUI_section
-        --- CBUI_sectionItemPart_titleDescription
-            This is a very long title, so very long that will certainly wrap
-            unless something is done to truncate it.
-
-            This is a very long description, so very long that will certainly
-            wrap unless something is done to truncate it.
-        ---
-    ---
----
-
---- CBUI_sectionContainer
-    --- CBUI_section
-        --- CBUI_sectionItemPart_titleDescription
-            --- p CBUI_ellipsis
-            This is a very long title, so very long that will certainly wrap
-            unless something is done to truncate it.
+            --- p CBUI_textSize_small CBUI_textColor2
+            This is a short description.
             ---
+        ---
+    ---
+---
 
-            --- p CBUI_ellipsis
+--- CBUI_sectionContainer
+    --- CBUI_section
+        --- CBUI_container_topAndBottom
+            This is a very long title, so very long that will certainly wrap
+            unless something is done to truncate it.
+
+            --- p CBUI_textSize_small CBUI_textColor2
             This is a very long description, so very long that will certainly
             wrap unless something is done to truncate it.
             ---
         ---
     ---
 ---
+
+--- CBUI_sectionContainer
+    --- CBUI_section
+        --- CBUI_container_topAndBottom
+            --- p CBUI_ellipsis
+            This is a very long title, so very long that will certainly wrap
+            unless something is done to truncate it.
+            ---
+
+            --- p CBUI_textSize_small CBUI_textColor2 CBUI_ellipsis
+            This is a very long description, so very long that will certainly
+            wrap unless something is done to truncate it.
+            ---
+        ---
+    ---
+---
+
 
 --- CBUI_title1
 CBUI_container_leftAndRight
@@ -91,6 +96,7 @@ CBUI_container_leftAndRight
         ---
     ---
 ---
+
 
 --- CBUI_title1
 CBUI_container_sideBySide
