@@ -226,7 +226,7 @@ final class Colby {
                 $intraSiteFilename = $path;
             }
 
-            $absoluteFilename = COLBY_SITE_DIRECTORY . "/{$intraSiteFilename}";
+            $absoluteFilename = cbsitedir() . "/{$intraSiteFilename}";
 
             if (is_file($absoluteFilename)) {
                 switch ($returnFormat) {
