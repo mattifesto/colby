@@ -10,9 +10,7 @@
  * No action is required in this file but common actions are setting constants
  * and loading libraries that are used by the site.
  *
- * Colby::loadLibrary('my-library');
+ * Colby::loadLibrary('MyLibrary');
  *
- * In this case, 'my-library' is the directory relative to COLBY_SITE_DIRECTORY
- * that contains the library.
+ * The argument to Colby::loadLibrary() is a path inside the site directory.
  */
-
