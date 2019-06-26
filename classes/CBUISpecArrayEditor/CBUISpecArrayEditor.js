@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUISpecArrayEditor */
 /* global
+    CBUI,
     CBUICommandPart,
     CBUINavigationArrowPart,
     CBUINavigationView,
@@ -40,8 +41,9 @@ var CBUISpecArrayEditor = {
         var specs = args.specs;
         var specsChangedCallback = args.specsChangedCallback;
 
-        var element = document.createElement("div");
-        element.className = "CBUISpecArrayEditor";
+        let element = CBUI.createElement(
+            "CBUISpecArrayEditor"
+        );
 
         let selectableItemContainer = CBUISelectableItemContainer.create();
         selectableItemContainer.selectionChangedCallback = selectionChanged;
@@ -49,10 +51,25 @@ var CBUISpecArrayEditor = {
         let addCommand = CBUICommandPart.create();
         addCommand.title = "Add";
         addCommand.callback = function () {
-            requestClassName()
-                .then(add)
-                .catch(Colby.displayAndReportError);
+            requestClassName().then(
+                function (className) {
+                    return add(className);
+                }
+            ).catch(
+                function (error) {
+                    Colby.displayAndReportError(error);
+                }
+            );
 
+            return;
+
+            /* --  closures -- -- -- -- -- */
+
+            /**
+             * @param string className
+             *
+             * @return undefined
+             */
             function add(className) {
                 if (className === undefined) {
                     return;
@@ -80,7 +97,10 @@ var CBUISpecArrayEditor = {
 
                 specsChangedCallback();
             }
+            /* add() */
         };
+        /* addCommand.callback */
+
 
         selectableItemContainer.commands.push(addCommand);
 
@@ -170,11 +190,21 @@ var CBUISpecArrayEditor = {
                 let selectableItem = selectableItemContainer.item(i);
 
                 if (selectableItem.selected) {
-                    let previousSelectableItem = selectableItemContainer.item(i - 1);
+                    let previousSelectableItem =
+                    selectableItemContainer.item(i - 1);
 
                     if (!previousSelectableItem.selected) {
-                        let removedSelectableItems = selectableItemContainer.splice(i, 1);
-                        selectableItemContainer.splice(i - 1, 0, removedSelectableItems[0]);
+                        let removedSelectableItems =
+                        selectableItemContainer.splice(
+                            i,
+                            1
+                        );
+
+                        selectableItemContainer.splice(
+                            i - 1,
+                            0,
+                            removedSelectableItems[0]
+                        );
 
                         let removedSpecs = specs.splice(i, 1);
                         specs.splice(i - 1, 0, removedSpecs[0]);
@@ -193,17 +223,29 @@ var CBUISpecArrayEditor = {
         downCommand.title = "▼";
         downCommand.callback = function () {
             let length = selectableItemContainer.length;
-            let i = length - 2; // start at second to last because las can't be moved down
+
+            // start at second to last because las can't be moved down
+            let i = length - 2;
 
             while (i >= 0) {
                 let selectableItem = selectableItemContainer.item(i);
 
                 if (selectableItem.selected) {
-                    let nextSelectableItem = selectableItemContainer.item(i + 1);
+                    let nextSelectableItem =
+                    selectableItemContainer.item(i + 1);
 
                     if (!nextSelectableItem.selected) {
-                        let removedSelectableItems = selectableItemContainer.splice(i, 1);
-                        selectableItemContainer.splice(i + 1, 0, removedSelectableItems[0]);
+                        let removedSelectableItems =
+                        selectableItemContainer.splice(
+                            i,
+                            1
+                        );
+
+                        selectableItemContainer.splice(
+                            i + 1,
+                            0,
+                            removedSelectableItems[0]
+                        );
 
                         let removedSpecs = specs.splice(i, 1);
                         specs.splice(i + 1, 0, removedSpecs[0]);
@@ -283,28 +325,54 @@ var CBUISpecArrayEditor = {
          * @return Promise -> string?
          */
         function requestClassName() {
-            return new Promise(function (resolve, reject) {
-                if (!Array.isArray(addableClassNames) || addableClassNames.length === 0) {
+            let promise = new Promise(
+                function (resolve, reject) {
+                    requestClassName_initializePromise(resolve, reject);
+                }
+            );
+
+            return promise;
+
+            /* -- closures -- -- -- -- -- */
+
+            /**
+             * @param function resolve
+             * @param function reject
+             *
+             * @return undefined
+             */
+            function requestClassName_initializePromise(resolve /* , reject */) {
+                if (
+                    !Array.isArray(addableClassNames) ||
+                    addableClassNames.length === 0
+                ) {
                     resolve(undefined);
                 } else if (addableClassNames.length === 1) {
                     resolve(addableClassNames[0]);
                 } else {
-                    let options = addableClassNames.map(function (className) {
-                        return {
-                            title: className,
-                            value: className,
-                        };
-                    });
+                    let options = addableClassNames.map(
+                        function (className) {
+                            return {
+                                title: className,
+                                value: className,
+                            };
+                        }
+                    );
 
-                    CBUISelector.showSelector({
-                        callback: resolve,
-                        options: options,
-                        selectedValue: undefined,
-                        title: "Select a Class Name",
-                    });
+                    CBUISelector.showSelector(
+                        {
+                            callback: resolve,
+                            options: options,
+                            selectedValue: undefined,
+                            title: "Select a Class Name",
+                        }
+                    );
                 }
-            });
+            }
+            /* requestClassName_initializePromise() */
         }
+        /* requestClassName() */
+
 
         /**
          * @return undefined
@@ -367,8 +435,11 @@ var CBUISpecArrayEditor = {
 
             function updateTitleAndDescription() {
                 let nonBreakingSpace = "\u00A0";
+
                 titleAndDescriptionPart.title = spec.className;
-                titleAndDescriptionPart.description = CBUISpec.specToDescription(spec) || nonBreakingSpace;
+
+                titleAndDescriptionPart.description =
+                CBUISpec.specToDescription(spec) || nonBreakingSpace;
             }
 
             function updateThumbnail() {
@@ -376,4 +447,6 @@ var CBUISpecArrayEditor = {
             }
         }
     },
+    /* create() */
 };
+/* CBUISpecArrayEditor */

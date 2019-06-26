@@ -2,25 +2,36 @@
 
 final class CBUISpecArrayEditor {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v361.css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v361.css', cbsysurl()),
+        ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v433.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v483.js', cbsysurl())
+        ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBUI',
             'CBUICommandPart',
             'CBUINavigationArrowPart',
             'CBUINavigationView',
@@ -34,4 +45,6 @@ final class CBUISpecArrayEditor {
             'CBUITitleAndDescriptionPart'
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 }
+/* CBUISpecArrayEditor */
