@@ -96,6 +96,11 @@ var CBViewPageEditor = {
                 args.spec.sections = [];
             }
 
+            let titleElement = CBUI.createElement("CBUI_title1");
+            titleElement.textContent = "Views";
+
+            editorContainer.appendChild(titleElement);
+
             let editor = CBUISpecArrayEditor.create(
                 {
                     specs: args.spec.sections,
@@ -104,10 +109,11 @@ var CBViewPageEditor = {
                 }
             );
 
-            editor.title = "Views";
-
             editorContainer.appendChild(editor.element);
-            editorContainer.appendChild(CBUI.createHalfSpace());
+
+            editorContainer.appendChild(
+                CBUI.createHalfSpace()
+            );
         }
         /* views */
 
