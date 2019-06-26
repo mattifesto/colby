@@ -105,6 +105,9 @@
 /**
  * 2019_06_25
  *
+ *      CBUI_container_topAndBottom styles vertically aligned container elements
+ *      meant to hold two text elements.
+ *
  *      CBUI_container_leftAndRight and CBUI_container_sideBySide style
  *      horizontally aligned container elements meant to hold two text elements.
  *      With short strings, they will look roughly the same. With long strings,
@@ -118,24 +121,35 @@
  */
 
 .CBUI_container_leftAndRight,
-.CBUI_container_sideBySide {
+.CBUI_container_sideBySide,
+.CBUI_container_topAndBottom {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
 
     box-sizing: border-box;
     min-height: 44px;
     overflow-wrap: break-word;
     padding: 5px 0;
 
-    /* enable ellipsis */
+    /* enable CBUI_ellipsis on direct child elements */
     min-width: 0;
 }
 
+.CBUI_container_leftAndRight,
+.CBUI_container_sideBySide {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.CBUI_container_topAndBottom {
+    flex-direction: column;
+    justify-content: center;
+}
+
 .CBUI_container_leftAndRight > *,
-.CBUI_container_sideBySide > * {
+.CBUI_container_sideBySide > *,
+.CBUI_container_topAndBottom > * {
     box-sizing: border-box;
     padding: 0 10px;
 }
@@ -360,20 +374,12 @@ a.CBUI_sectionItem {
     text-align: center;
 }
 
+
 /**
- * 2019_03_23
+ * @deprecated 2019_06_25
  *
- *      CBUI_sectionItemPart_strings was added to provide a more reusable
- *      section item part for one or more strings each of which will have a
- *      class if it needs additional styling.
- *
- * 2019_03_01
- *
- *      This class styles an element with two string child elements where the
- *      first child is a title and the second child is a description.
- *
- *      To truncate the string in a child element, apply the CBUI_ellipsis class
- *      to the child element.
+ *      Use CBUI_container_topAndBottom, CBUI_textSize_small, CBUI_textColor2,
+ *      and CBUI_ellipsis.
  */
 .CBUI_sectionItemPart_strings,
 .CBUI_sectionItemPart_titleDescription {
