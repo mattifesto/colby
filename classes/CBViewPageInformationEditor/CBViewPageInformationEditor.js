@@ -330,9 +330,12 @@ var CBViewPageInformationEditor = {
 
         /* thumbnail */
 
-        element.appendChild(
-            CBUI.createSectionHeader({text: "Page Thumbnail Image"})
-        );
+        {
+            let sectionTitleElement = CBUI.createElement("CBUI_title1");
+            sectionTitleElement.textContent = "Page Thumbnail Image";
+
+            element.appendChild(sectionTitleElement);
+        }
 
         section = CBUI.createSection();
 
@@ -375,7 +378,13 @@ var CBViewPageInformationEditor = {
         /* actions */
 
         element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({text: "Actions"}));
+
+        {
+            let sectionTitleElement = CBUI.createElement("CBUI_title1");
+            sectionTitleElement.textContent = "Actions";
+
+            element.appendChild(sectionTitleElement);
+        }
 
         section = CBUI.createSection();
 
@@ -396,6 +405,8 @@ var CBViewPageInformationEditor = {
         }).element);
         section.appendChild(item);
 
+
+        /* copy */
         {
             let sectionItem = CBUISectionItem4.create();
             sectionItem.callback = function () {
@@ -414,7 +425,10 @@ var CBViewPageInformationEditor = {
             sectionItem.appendPart(stringsPart);
             section.appendChild(sectionItem.element);
         }
+        /* copy */
 
+
+        /* move to trash */
         {
             let sectionItem = CBUISectionItem4.create();
             sectionItem.callback = function () {
@@ -430,21 +444,20 @@ var CBViewPageInformationEditor = {
                             ID: args.spec.ID
                         }
                     ).then(
-                        onFulfilled
+                        function () {
+                            window.alert(
+                                "The page is the trash. You will be " +
+                                "redirected to pages administration."
+                            );
+
+                            window.location =
+                            "/admin/page/?class=CBAdminPageForPagesFind";
+                        }
                     ).catch(
-                        Colby.displayAndReportError
+                        function (error) {
+                            Colby.displayAndReportError(error);
+                        }
                     );
-                }
-
-
-                function onFulfilled() {
-                    alert(
-                        "The page is the trash. You will be redirected to" +
-                        " pages administration."
-                    );
-
-                    window.location =
-                    "/admin/page/?class=CBAdminPageForPagesFind";
                 }
             };
 
@@ -455,6 +468,8 @@ var CBViewPageInformationEditor = {
             sectionItem.appendPart(stringsPart);
             section.appendChild(sectionItem.element);
         }
+        /* move to trash */
+
 
         element.appendChild(section);
 
