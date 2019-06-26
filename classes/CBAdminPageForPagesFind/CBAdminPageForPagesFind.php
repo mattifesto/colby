@@ -32,26 +32,6 @@ final class CBAdminPageForPagesFind {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
-            'CBImage',
-            'CBUI',
-            'CBUINavigationArrowPart',
-            'CBUINavigationView',
-            'CBUISectionItem4',
-            'CBUISelector',
-            'CBUIStringEditor',
-            'CBUIStringsPart',
-            'CBUIThumbnailPart',
-            'Colby',
-        ];
-    }
-    /* CBHTMLOutput_requiredClassNames() */
-
-
-    /**
-     * @return [string]
-     */
     static function CBHTMLOutput_CSSURLs() {
         return [
             Colby::flexpath(__CLASS__, 'css', cbsysurl()),
@@ -63,7 +43,7 @@ final class CBAdminPageForPagesFind {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v483.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -106,6 +86,24 @@ final class CBAdminPageForPagesFind {
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBImage',
+            'CBUI',
+            'CBUINavigationArrowPart',
+            'CBUINavigationView',
+            'CBUISelector',
+            'CBUIStringEditor',
+            'CBUIThumbnailPart',
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
     /* -- CBInstall interfaces -- -- -- -- -- */

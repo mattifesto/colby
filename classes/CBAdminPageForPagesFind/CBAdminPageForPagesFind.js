@@ -7,10 +7,8 @@
     CBUI,
     CBUINavigationArrowPart,
     CBUINavigationView,
-    CBUISectionItem4,
     CBUISelector,
     CBUIStringEditor,
-    CBUIStringsPart,
     CBUIThumbnailPart,
     Colby,
 
@@ -166,46 +164,76 @@ var CBPageList = {
      * @return Element
      */
     createElement: function(pages) {
-        var element = document.createElement("div");
-        element.className = "CBAdminPageForPagesFind_pageListView";
+        let sectionContainerElement = CBUI.createElement(
+            "CBAdminPageForPagesFind_pageListView CBUI_sectionContainer"
+        );
 
-        var section = CBUI.createSection();
+        let sectionElement = CBUI.createElement(
+            "CBUI_section"
+        );
 
-        pages.forEach(function (page) {
-            let sectionItem = CBUISectionItem4.create();
-            sectionItem.callback = function () {
-                let URI = `/admin/?c=CBModelEditor&ID=${page.ID}`;
-                window.location = URI;
-            };
+        sectionContainerElement.appendChild(sectionElement);
 
-            let thumbnailPart = CBUIThumbnailPart.create();
-
-            if (page.keyValueData.image) {
-                thumbnailPart.src = CBImage.toURL(
-                    page.keyValueData.image,
-                    "rs200clc200"
+        pages.forEach(
+            function (page) {
+                let sectionItemElement = CBUI.createElement(
+                    "CBUI_sectionItem"
                 );
-            } else if (page.keyValueData.thumbnailURL) {
-                thumbnailPart.src = page.keyValueData.thumbnailURL;
+
+                sectionElement.appendChild(sectionItemElement);
+
+                sectionItemElement.addEventListener(
+                    "click",
+                    function () {
+                        let URI = `/admin/?c=CBModelEditor&ID=${page.ID}`;
+                        window.location = URI;
+                    }
+                );
+
+                let thumbnailPart = CBUIThumbnailPart.create();
+
+                if (page.keyValueData.image) {
+                    thumbnailPart.src = CBImage.toURL(
+                        page.keyValueData.image,
+                        "rs200clc200"
+                    );
+                } else if (page.keyValueData.thumbnailURL) {
+                    thumbnailPart.src = page.keyValueData.thumbnailURL;
+                }
+
+                sectionItemElement.appendChild(thumbnailPart.element);
+
+                let textContainerElement = CBUI.createElement(
+                    "CBUI_container_topAndBottom CBUI_flexGrow"
+                );
+
+                sectionItemElement.appendChild(textContainerElement);
+
+                let textElement1 = CBUI.createElement(
+                    "CBUI_ellipsis"
+                );
+
+                textContainerElement.appendChild(textElement1);
+
+                textElement1.textContent = page.keyValueData.title;
+
+                let textElement2 = CBUI.createElement(
+                    "CBUI_textSize_small CBUI_textColor2 CBUI_ellipsis"
+                );
+
+                textContainerElement.appendChild(textElement2);
+
+                textElement2.textContent =  page.keyValueData.description;
+
+                let navigationArrowPart = CBUINavigationArrowPart.create();
+
+                sectionItemElement.appendChild(navigationArrowPart.element);
             }
+        );
 
-            sectionItem.appendPart(thumbnailPart);
-
-            let stringsPart = CBUIStringsPart.create();
-            stringsPart.string1 = page.keyValueData.title;
-            stringsPart.string2 = page.keyValueData.description;
-
-            stringsPart.element.classList.add("titledescription");
-
-            sectionItem.appendPart(stringsPart);
-            sectionItem.appendPart(CBUINavigationArrowPart.create());
-            section.appendChild(sectionItem.element);
-        });
-
-        element.appendChild(section);
-
-        return element;
+        return sectionContainerElement;
     },
+    /* createElement() */
 };
 /* CBPageList (CBAdminPageForPagesFind) */
 
