@@ -289,6 +289,66 @@ final class CBCodeAdmin {
             /* warnings */
 
             /**
+             * 2019_06_26
+             */
+            (object)[
+                'args' => '--ignore-file=match:init.php',
+                'filetype' => 'php',
+                'regex' => 'COLBY_SITE_DIRECTORY',
+                'severity' => 4,
+                'title' => 'Replace COLBY_SITE_DIRECTORY with cbsitedir()',
+            ],
+
+
+            /**
+             * 2019_06_26
+             */
+            (object)[
+                'args' => '--ignore-file=match:init.php',
+                'filetype' => 'php',
+                'regex' => 'CBSiteDirectory',
+                'severity' => 4,
+                'title' => 'Replace CBSiteDirectory with cbsitedir()',
+            ],
+
+
+            /**
+             * 2019_06_26
+             */
+            (object)[
+                'args' => '--ignore-file=match:init.php',
+                'filetype' => 'php',
+                'regex' => 'COLBY_SYSTEM_DIRECTORY',
+                'severity' => 4,
+                'title' => 'Replace COLBY_SYSTEM_DIRECTORY with cbsysdir()',
+            ],
+
+            /**
+             * 2019_06_26
+             */
+            (object)[
+                'args' => '--ignore-file=match:init.php',
+                'filetype' => 'php',
+                'regex' => 'CBSystemDirectory',
+                'severity' => 4,
+                'title' => 'Replace CBSystemDirectory with cbsysdir()',
+            ],
+
+
+            /**
+             * 2019_06_26
+             */
+            (object)[
+                'filetype' => 'php',
+                'regex' => 'CBSitePreferences::siteURL\\(',
+                'severity' => 4,
+
+                'title' =>
+                'Replace CBSitePreferences::siteURL() with cbsiteurl()',
+            ],
+
+
+            /**
              * 2019_06_22
              */
             (object)[
