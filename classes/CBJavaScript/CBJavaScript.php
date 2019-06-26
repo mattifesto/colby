@@ -170,8 +170,6 @@ EOT;
         $lines = CBConvert::stringToLines($stack);
         $lineMessages = [];
 
-        error_log(count($lines));
-
         foreach ($lines as $line) {
             if (
                 preg_match(
