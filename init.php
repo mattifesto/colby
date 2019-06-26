@@ -11,8 +11,15 @@ error_reporting(E_ALL | E_STRICT);
  * cbsysdir() functions instead.
  */
 
-define('CBSiteDirectory', $_SERVER['DOCUMENT_ROOT']);
-define('CBSystemDirectory', __DIR__);
+define(
+    'CBSiteDirectory',
+    realpath($_SERVER['DOCUMENT_ROOT'])
+);
+
+define(
+    'CBSystemDirectory',
+    __DIR__
+);
 
 define('COLBY_SYSTEM_DIRECTORY', CBSystemDirectory); // @deprecated
 define('COLBY_SITE_DIRECTORY', CBSiteDirectory); // @deprecated
