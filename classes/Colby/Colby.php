@@ -233,7 +233,7 @@ final class Colby {
                     case Colby::returnAbsoluteFilename:
                         return $absoluteFilename;
                     case Colby::returnURL:
-                        return CBSitePreferences::siteURL() . "/{$intraSiteFilename}";
+                        return cbsiteurl() . "/{$intraSiteFilename}";
                     default:
                         throw new InvalidArgumentException('returnFormat');
                 }
@@ -686,13 +686,13 @@ final class Colby {
      * @return string
      */
     static function URLForJavaScriptForSiteClass($className) {
-        return CBSitePreferences::siteURL() . "/classes/{$className}/{$className}.js";
+        return cbsiteurl() . "/classes/{$className}/{$className}.js";
     }
 }
 
 
 /**
- * NOTE: 2017.03.19
+ * NOTE: 2017_03_19
  *
  *      Any code wanting the site URL should call this function to get it.
  *      Most of this time this function will return the value of the
