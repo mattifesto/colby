@@ -249,9 +249,9 @@ final class CBDataStore {
      *
      *      Absolute directory:
      *
-     *      CBSiteDirectory/data/.../
+     *      <site directory>/data/.../
      *
-     * @return hex160|false
+     * @return ID|false
      *
      *      If the URI is local and references a data store the data store ID is
      *      returned; otherwise false.
@@ -275,7 +275,8 @@ final class CBDataStore {
          * Test for web addresses
          */
 
-        $pattern = '%^/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/%';
+        $pattern =
+        '%^/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/%';
 
         if (preg_match($pattern, $path, $matches)) {
             return "{$matches[1]}{$matches[2]}{$matches[3]}";
@@ -284,8 +285,10 @@ final class CBDataStore {
         /**
          * Test for absolute directories
          */
-        $siteDirectory = CBSiteDirectory;
-        $pattern = "%^{$siteDirectory}/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/%";
+        $siteDirectory = cbsitedir();
+
+        $pattern =
+        "%^{$siteDirectory}/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/%";
 
         if (preg_match($pattern, $path, $matches)) {
             return "{$matches[1]}{$matches[2]}{$matches[3]}";
@@ -293,4 +296,5 @@ final class CBDataStore {
 
         return false;
     }
+    /* URIToID() */
 }
