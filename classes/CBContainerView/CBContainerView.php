@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @NOTE 2017.07.20
+ * @NOTE 2017_07_20
  *
  * This class has updated the way it accomplishes image styling. Older instances
  * will still work but will be updated to the new method if resaved.
@@ -62,7 +62,13 @@ final class CBContainerView {
         $function = function ($CSSClassName, $image, $maxWidth = null) {
             $imageHeight = $image->height / 2;
             $imageWidth = $image->width / 2;
-            $URL = CBDataStore::flexpath($image->ID, "original.{$image->extension}", CBSiteURL);
+
+            $URL = CBDataStore::flexpath(
+                $image->ID,
+                "original.{$image->extension}",
+                cbsiteurl()
+            );
+
             $CSS = <<<EOT
 
 .{$CSSClassName} {
@@ -87,7 +93,11 @@ EOT;
         };
 
         if (!empty($model->largeImage)) {
-            $blocks[] = call_user_func($function, $CSSClassName, $model->largeImage);
+            $blocks[] = call_user_func(
+                $function,
+                $CSSClassName,
+                $model->largeImage
+            );
         }
 
         if (!empty($model->mediumImage)) {
@@ -95,7 +105,12 @@ EOT;
                 $maxWidth = 1068;
             }
 
-            $blocks[] = call_user_func($function, $CSSClassName, $model->mediumImage, $maxWidth);
+            $blocks[] = call_user_func(
+                $function,
+                $CSSClassName,
+                $model->mediumImage,
+                $maxWidth
+            );
         }
 
         if (!empty($model->smallImage)) {
@@ -103,7 +118,12 @@ EOT;
                 $maxWidth = 735;
             }
 
-            $blocks[] = call_user_func($function, $CSSClassName, $model->smallImage, $maxWidth);
+            $blocks[] = call_user_func(
+                $function,
+                $CSSClassName,
+                $model->smallImage,
+                $maxWidth
+            );
         }
 
         if (!empty($blocks)) {
@@ -144,16 +164,25 @@ EOT;
         }
 
         if ($imageThemeID = CBModel::valueAsID($model, 'imageThemeID')) {
-            CBHTMLOutput::addCSSURL(CBContainerView::imageThemeIDToStyleSheetURL($model->imageThemeID));
+            CBHTMLOutput::addCSSURL(
+                CBContainerView::imageThemeIDToStyleSheetURL(
+                    $model->imageThemeID
+                )
+            );
+
             $classes[] = "T{$imageThemeID} useImageHeight";
         } else {
             $CSSClassName = 'ID_' . CBHex160::random();
-            CBHTMLOutput::addCSS(CBContainerView::modelToImageCSS($model, $CSSClassName));
+
+            CBHTMLOutput::addCSS(
+                CBContainerView::modelToImageCSS($model, $CSSClassName)
+            );
+
             $classes[] = $CSSClassName;
         }
 
         /**
-         * @NOTE 2017.07.20
+         * @NOTE 2017_07_20
          *
          * $model->styleID is deprecated and has the class name for the local
          * styles will be included in CSSClassNames by CBModel_toModel(). This
@@ -205,12 +234,16 @@ EOT;
         <?php
     }
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
     }
+
 
     /**
      * @param model $spec
@@ -219,11 +252,24 @@ EOT;
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
-            'largeImage' => CBModel::build(CBModel::valueAsModel($spec, 'largeImage', ['CBImage'])),
-            'mediumImage' => CBModel::build(CBModel::valueAsModel($spec, 'mediumImage', ['CBImage'])),
-            'smallImage' => CBModel::build(CBModel::valueAsModel($spec, 'smallImage', ['CBImage'])),
+            'largeImage' => CBModel::build(
+                CBModel::valueAsModel($spec, 'largeImage', ['CBImage'])
+            ),
+            'mediumImage' => CBModel::build(
+                CBModel::valueAsModel($spec, 'mediumImage', ['CBImage'])
+            ),
+            'smallImage' => CBModel::build(
+                CBModel::valueAsModel($spec, 'smallImage', ['CBImage'])
+            ),
         ];
-        $model->backgroundColor = CBModel::value($spec, 'backgroundColor', null, 'CBConvert::stringToCSSColor');
+
+        $model->backgroundColor = CBModel::value(
+            $spec,
+            'backgroundColor',
+            null,
+            'CBConvert::stringToCSSColor'
+        );
+
         $model->HREF = CBModel::value($spec, 'HREF');
         $model->HREFAsHTML = cbhtml($model->HREF);
         $model->tagName = CBModel::value($spec, 'tagName');
@@ -252,7 +298,13 @@ EOT;
         /* CSS class names */
 
         $CSSClassNames = CBModel::value($spec, 'CSSClassNames', '');
-        $CSSClassNames = preg_split('/[\s,]+/', $CSSClassNames, null, PREG_SPLIT_NO_EMPTY);
+
+        $CSSClassNames = preg_split(
+            '/[\s,]+/',
+            $CSSClassNames,
+            null,
+            PREG_SPLIT_NO_EMPTY
+        );
 
         if ($CSSClassNames === false) {
             throw new RuntimeException("preg_split() returned false");
@@ -267,7 +319,12 @@ EOT;
         if (!empty($localCSSTemplate)) {
             $localCSSClassName = 'ID_' . CBHex160::random();
             $model->CSSClassNames[] = $localCSSClassName;
-            $model->stylesCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
+
+            $model->stylesCSS = CBView::localCSSTemplateToLocalCSS(
+                $localCSSTemplate,
+                'view',
+                ".{$localCSSClassName}"
+            );
         }
 
         return $model;
