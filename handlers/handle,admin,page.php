@@ -48,7 +48,7 @@ if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
         ]);
         CBHTMLOutput::render();
     } else {
-        return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
+        return include cbsysdir() . '/handlers/handle-authorization-failed.php';
     }
 } else {
     return 0; /* !1 -> 404 */
