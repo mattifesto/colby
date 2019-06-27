@@ -356,31 +356,40 @@ final class Colby {
         CBErrorHandler::handle($throwable);
     }
 
+
     /**
-     * This function exists to catch and report fatal errors which are not
-     * sent through the traditional PHP error handler.
+     * This function exists to catch and report fatal errors which are not sent
+     * through the traditional PHP error handler.
      *
      * Errors that are handled by the traditional PHP error handler will not be
-     * returned by the `error_get_last` function below so we won't accidentally
-     * over-report non-fatal errors.
+     * returned by error_get_last() so we won't accidentally over-report
+     * non-fatal errors.
      *
-     * @return null
+     * @return void
      */
-    static function handleShutdown() {
+    static function handleShutdown(): void {
         $error = error_get_last();
 
         if ($error) {
-            $severity   = 1;
-            $message    = 'Fatal Error: ' . $error['message'];
-            $number     = $error['type'];
-            $filename   = $error['file'];
-            $line       = $error['line'];
+            $severity = 1;
+            $message = 'Fatal Error: ' . $error['message'];
+            $number = $error['type'];
+            $filename = $error['file'];
+            $line = $error['line'];
 
-            $exception  = new ErrorException($message, $number, $severity, $filename, $line);
+            $exception = new ErrorException(
+                $message,
+                $number,
+                $severity,
+                $filename,
+                $line
+            );
 
             CBErrorHandler::report($exception, $severity);
         }
     }
+    /* handleShutdown() */
+
 
     /**
      * To use Colby you must include init.php which includes this file which
@@ -394,13 +403,13 @@ final class Colby {
      *
      * Before this function runs, the following are available:
      *
-     *      CBSiteDirectory (<CBSystemDirectory>/init.php)
-     *      CBSiteVersionNumber (<CBSiteDirectory>/version.php)
-     *      CBSystemDirectory (<CBSystemDirectory>/init.php)
-     *      CBSystemVersionNumber (<CBSystemDirectory>/version.php)
+     *      cbsitedir()             (<system directory>/init.php)
+     *      cbsysdir()              (<system directory>/init.php)
+     *      CBSiteVersionNumber     (<site directory>/version.php)
+     *      CBSystemVersionNumber   (<system directory>/version.php)
      *
-     *      <CBSystemDirectory>/function.php has already been included by
-     *      <CBSystemDirectory>/init.php
+     *      <system directory>/function.php has been included
+     *                              (<system directory>/init.php)
      */
     static function initialize() {
 
@@ -515,6 +524,8 @@ final class Colby {
             throw new RuntimeException("Magic quotes are enabled on this server: magic_quotes_runtime={$mqr}, magic_quotes_gpc={$mqg}. Add the line 'php_flag magic_quotes_gpc off' to the `.htaccess` file.");
         }
     }
+    /* initialize() */
+
 
     /**
      * @param string $libraryPath
