@@ -191,8 +191,8 @@ final class CBDataStore {
         $ID = $filename = null;
         extract($args, EXTR_IF_EXISTS);
 
-        $directoryName  = self::directoryNameFromDocumentRoot($ID);
-        $URL            = CBSitePreferences::siteURL() . "/{$directoryName}";
+        $directoryName = CBDataStore::directoryNameFromDocumentRoot($ID);
+        $URL = cbsiteurl() . "/{$directoryName}";
 
         if ($filename) {
             return "{$URL}/{$filename}";
