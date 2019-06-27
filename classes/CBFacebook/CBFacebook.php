@@ -38,7 +38,7 @@ final class CBFacebook {
         CBFacebookAppSecret;
 
         $redirectURI =
-        CBSitePreferences::siteURL() .
+        cbsiteurl() .
         '/colby/facebook-oauth-handler/';
 
         $URL =
@@ -167,7 +167,7 @@ final class CBFacebook {
         ];
 
         $URL =
-        CBSitePreferences::siteURL() .
+        cbsiteurl() .
         '/colby/facebook-login/' .
         '?state=' .
         urlencode(
@@ -193,7 +193,7 @@ final class CBFacebook {
      */
     static function loginURLForFacebook(): string {
         $redirectURI =
-        CBSitePreferences::siteURL() .
+        cbsiteurl() .
         '/colby/facebook-oauth-handler/';
 
         $loginURL =
