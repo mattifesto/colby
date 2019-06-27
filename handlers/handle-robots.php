@@ -3,7 +3,7 @@
 header("Content-Type: text/plain");
 
 ?>
-Sitemap: <?= CBSitePreferences::siteURL() . '/sitemap.xml' ?>
+Sitemap: <?= cbsiteurl() . '/sitemap.xml' ?>
 
 <?php
 
