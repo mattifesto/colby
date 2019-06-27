@@ -7,5 +7,5 @@ if (isset($_GET['state'])) {
 
     header('Location: ' . $state->colby_redirect_uri);
 } else {
-    header('Location: ' . CBSitePreferences::siteURL() . '/');
+    header('Location: ' . cbsiteurl() . '/');
 }
