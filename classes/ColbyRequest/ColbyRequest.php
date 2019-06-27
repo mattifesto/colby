@@ -2,7 +2,8 @@
 
 /**
  * @deprecated use CBRequest
- *  Move the functionality of this file into the CBRequest class.
+ *
+ *      Move the functionality of this file into the CBRequest class.
  */
 final class ColbyRequest {
 
@@ -135,7 +136,7 @@ EOT;
         ) {
             $canonicalEncodedPath = '/robots.txt';
             $function = function() {
-                return include CBSystemDirectory .
+                return include cbsysdir() .
                 '/handlers/handle-robots.php';
             };
         }
@@ -146,7 +147,7 @@ EOT;
         ) {
             $canonicalEncodedPath = '/sitemap.xml';
             $function = function() {
-                return include CBSystemDirectory .
+                return include cbsysdir() .
                 '/handlers/handle-sitemap.php';
             };
         }
