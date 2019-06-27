@@ -3,123 +3,192 @@
 /* jshint esversion: 6 */
 /* exported CBPageLayoutEditor */
 /* global
+    CBModel,
     CBUI,
     CBUIBooleanEditor,
-    CBUIStringEditor */
+    CBUIStringEditor,
+*/
 
 var CBPageLayoutEditor = {
 
     /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
      *
      * @return Element
      */
     createEditor: function (args) {
-        var section, item;
-        var element = document.createElement("div");
-        element.className = "CBPageLayoutEditor";
+        let section, item;
+        let element = CBUI.createElement("CBPageLayoutEditor");
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
-        element.appendChild(CBUI.createSectionHeader({
-            paragraphs: [
-                `CSS class names can provide additional options. CSS class names
-                 commonly used with this view are:`,
-                `CBLightTheme: a theme with a light background and dark text.`,
-                `CBDarkTheme: a theme with a dark backround and light text.`,
-                `endContentWithWhiteSpace: adds a comfortable amount of white
-                 space and the end of the page content.`
-            ],
-        }));
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    paragraphs: [
+                        `CSS class names can provide additional options. CSS
+                         class names commonly used with this view are:`,
+                        `CBLightTheme: a theme with a light background and dark
+                         text.`,
+                        `CBDarkTheme: a theme with a dark backround and light
+                         text.`,
+                        `endContentWithWhiteSpace: adds a comfortable amount of
+                         white space and the end of the page content.`,
+                    ],
+                }
+            )
+        );
 
         /* CSS class names */
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "CSS Class Names",
-            propertyName : "CSSClassNames",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "CSS Class Names",
+                    propertyName: "CSSClassNames",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
         element.appendChild(section);
 
         /* local CSS */
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Local CSS Template",
-            propertyName : "localCSSTemplate",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Local CSS Template",
+                    propertyName: "localCSSTemplate",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
         element.appendChild(section);
 
         /* is article */
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Page Content is an Article",
-            propertyName : "isArticle",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIBooleanEditor.create(
+                {
+                    labelText: "Page Content is an Article",
+                    propertyName: "isArticle",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
         element.appendChild(section);
 
         /* custom layout */
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            text : "Custom Layout",
-        }));
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
+
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    text: "Custom Layout",
+                }
+            )
+        );
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Custom Layout Class Name",
-            propertyName : "customLayoutClassName",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Custom Layout Class Name",
+                    propertyName: "customLayoutClassName",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         var propertiesAsJSON = "{\n\n}";
 
         if (typeof args.spec.customLayoutProperties === "object") {
-            propertiesAsJSON = JSON.stringify(args.spec.customLayoutProperties, undefined, 2);
+            propertiesAsJSON = JSON.stringify(
+                args.spec.customLayoutProperties,
+                undefined,
+                2
+            );
         }
 
-        var propertiesSpec = { propertiesAsJSON: propertiesAsJSON };
+        var propertiesSpec = {
+            propertiesAsJSON: propertiesAsJSON
+        };
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Custom Layout Properties",
-            propertyName : "propertiesAsJSON",
-            spec : propertiesSpec,
-            specChangedCallback : CBPageLayoutEditor.propertiesChanged.bind(undefined, {
-                propertiesSpec: propertiesSpec,
-                sectionItem: item,
-                spec: args.spec,
-                specChangedCallback: args.specChangedCallback,
-            }),
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Custom Layout Properties",
+                    propertyName: "propertiesAsJSON",
+                    spec: propertiesSpec,
+
+                    specChangedCallback:
+                    CBPageLayoutEditor.propertiesChanged.bind(
+                        undefined,
+                        {
+                            propertiesSpec: propertiesSpec,
+                            sectionItem: item,
+                            spec: args.spec,
+                            specChangedCallback: args.specChangedCallback,
+                        }
+                    ),
+                }
+            ).element
+        );
+
         section.appendChild(item);
         element.appendChild(section);
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         return element;
     },
+    /* createEditor() */
+
 
     /**
      * @param string? propertiesSpec.propertiesAsJSON
@@ -169,13 +238,25 @@ var CBPageLayoutEditor = {
         args.sectionItem.style.backgroundColor = "white";
         args.spec.customLayoutProperties = {};
     },
+    /* propertiesChanged() */
+
 
     /**
-     * @param string? spec.customLayoutClassName
+     * @param object spec
      *
      * @return string|undefined
      */
-    specToDescription : function (spec) {
-        return spec.customLayoutClassName;
+    CBUISpec_toDescription: function (spec) {
+        let description = CBModel.valueToString(
+            spec,
+            "customLayoutClassName"
+        ).trim();
+
+        if (description === "") {
+            return undefined;
+        }
+
+        return description;
     },
+    /* CBUISpec_toDescription() */
 };
