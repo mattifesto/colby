@@ -1,7 +1,8 @@
 <?php
 
 /**
- * 2014.07.29
+ * @NOTE 2014_07_29
+ *
  * This file should be used to generate an Ajax response indicating that the
  * user does not have authorization to perform a certain Ajax action either
  * because they are not logged in or they just simply haven't been granted the
@@ -15,9 +16,9 @@
  *
  * <?php
  *
- * if (!ColbyUser::current()->isOneOfThe('Administrators'))
- * {
- *     return include CBSystemDirectory . '/handlers/handle-authorization-failed-ajax.php
+ * if (!ColbyUser::current()->isOneOfThe('Administrators')) {
+ *     return include cbsysdir() .
+ *     '/handlers/handle-authorization-failed-ajax.php'
  * }
  *
  * $response = new CBAjaxResponse();
@@ -27,13 +28,12 @@
 
 $response = new CBAjaxResponse();
 
-if (ColbyUser::current()->isLoggedIn())
-{
+if (ColbyUser::current()->isLoggedIn()) {
     $response->message = 'You are not authorized to use this feature.';
-}
-else
-{
-    $response->message = 'You are not authorized to use this feature. This may be because you are not currently not logged in.';
+} else {
+    $response->message =
+    'You are not authorized to use this feature. This may be because you ' .
+    'are not currently not logged in.';
 }
 
 $response->send();
