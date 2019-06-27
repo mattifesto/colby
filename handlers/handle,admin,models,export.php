@@ -1,7 +1,7 @@
 <?php
 
 if (!ColbyUser::current()->isOneOfThe('Administrators')) {
-    return include CBSystemDirectory . '/handlers/handle-authorization-failed.php';
+    return include cbsysdir() . '/handlers/handle-authorization-failed.php';
 }
 
 $spec = CBModels::fetchSpecByID($_GET['ID']);
