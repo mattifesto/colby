@@ -62,7 +62,7 @@ END;
     if (count($summaries) > 0) {
         foreach ($summaries as $model) {
             $URI = CBConvert::valueToString(CBModel::value($model, 'URI'));
-            $URL = CBSitePreferences::siteURL() . "/{$URI}/";
+            $URL = cbsiteurl() . "/{$URI}/";
             $title = CBConvert::valueToString(CBModel::value($model, 'title'));
             $description = CBConvert::valueToString(CBModel::value($model, 'description'));
             $imageURL = CBImage::valueToFlexpath($model, 'image', 'rw320', cbsiteurl());
