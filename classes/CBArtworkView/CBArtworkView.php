@@ -174,15 +174,21 @@ final class CBArtworkView {
 
             <?php
 
-            $imageURL = CBDataStore::flexpath($image->ID, "{$filename}.{$image->extension}", CBSitePreferences::siteURL());
+            $imageURL = CBDataStore::flexpath(
+                $image->ID,
+                "{$filename}.{$image->extension}",
+                cbsiteurl()
+            );
 
-            CBArtworkElement::render([
-                'alternativeText' => $alternativeText,
-                'height' => $image->height,
-                'maxWidth' => $maxWidth,
-                'width' => $image->width,
-                'URL' => $imageURL,
-            ]);
+            CBArtworkElement::render(
+                [
+                    'alternativeText' => $alternativeText,
+                    'height' => $image->height,
+                    'maxWidth' => $maxWidth,
+                    'width' => $image->width,
+                    'URL' => $imageURL,
+                ]
+            );
 
             if (!empty($captionAsHTML)) {
                 ?>
