@@ -453,11 +453,4 @@ EOT
 
         return CBModel::valueToString($model, 'siteName');
     }
-
-    /**
-     * @deprecated use cbsiteurl()
-     */
-    static function siteURL() {
-        return cbsiteurl();
-    }
 }
