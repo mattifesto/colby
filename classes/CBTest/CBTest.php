@@ -5,6 +5,24 @@ final class CBTest {
     /* -- CBAjax interfaces -- -- -- -- -- */
 
     /**
+     * @return array
+     */
+    static function CBAjax_getPHPTests(): array {
+        return CBTest::PHPTests();
+    }
+    /* CBAjax_getPHPTests() */
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_getPHPTests_group(): string {
+        return 'Developers';
+    }
+    /* CBAjax_getPHPTests_group() */
+
+
+    /**
      * @param object $args
      *
      *      {
@@ -329,10 +347,22 @@ EOT;
         $classNames = CBAdmin::fetchClassNames();
 
         foreach ($classNames as $className) {
-            if (is_callable($function = "{$className}::CBTest_PHPTests")) {
-                $tests = array_merge($tests, call_user_func($function));
-            } else if (is_callable($function = "{$className}::CBUnitTests_tests")) {
-                $tests = array_merge($tests, call_user_func($function));
+            if (
+                is_callable($function = "{$className}::CBTest_PHPTests")
+            ) {
+                $tests = array_merge(
+                    $tests,
+                    call_user_func($function)
+                );
+            }
+
+            else if (
+                is_callable($function = "{$className}::CBUnitTests_tests")
+            ) {
+                $tests = array_merge(
+                    $tests,
+                    call_user_func($function)
+                );
             }
         }
 
