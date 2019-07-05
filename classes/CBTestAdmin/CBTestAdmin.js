@@ -256,22 +256,6 @@ var CBTestAdmin = {
         {
             let sectionItem = CBUISectionItem4.create();
             sectionItem.callback = function () {
-                Colby.callAjaxFunction("CBUnitTests", "errorTest")
-                    .catch(Colby.displayAndReportError);
-            };
-
-            let stringsPart = CBUIStringsPart.create();
-            stringsPart.string1 = "Test the CBAjaxResponse Custom Exception Handler";
-
-            stringsPart.element.classList.add("action");
-
-            sectionItem.appendPart(stringsPart);
-            sectionElement.appendChild(sectionItem.element);
-        }
-
-        {
-            let sectionItem = CBUISectionItem4.create();
-            sectionItem.callback = function () {
                 throw new Error("Sample JavaScript Error");
             };
 
@@ -390,7 +374,7 @@ var CBTestAdmin = {
                 return handleRunTests_onRejected(error);
             }
         ).then(
-            function (value) {
+            function () {
                 return handleRunTests_onFinally();
             }
         ).catch(
@@ -599,7 +583,7 @@ var CBTestAdmin = {
         let title;
 
         let promise = new Promise(
-            function (resolve, reject) {
+            function (resolve) {
                 title = CBModel.valueToString(test, "title");
 
                 expander = CBUIExpander.create();

@@ -44,6 +44,9 @@ final class CBTestAdmin {
         return 'Developers';
     }
 
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
@@ -52,15 +55,19 @@ final class CBTestAdmin {
             Colby::flexpath(__CLASS__, 'v374.css', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v466.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v484.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [[string (name), string (value)]]
@@ -110,6 +117,8 @@ final class CBTestAdmin {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+    /* -- functions -- -- -- -- -- */
+
     /**
      * This image can be used for testing purposes. Do not modify the original.
      *
@@ -119,12 +128,14 @@ final class CBTestAdmin {
         return __DIR__ . '/2017.02.02.TestImage.jpg';
     }
 
+
     /**
      * @return string
      */
     static function testImageURL() {
         return cbsysurl() . '/classes/' . __CLASS__ . '/2017.02.02.TestImage.jpg';
     }
+
 
     /**
      * If the test image is imported as a CBImage this will be its image ID.
@@ -135,3 +146,4 @@ final class CBTestAdmin {
         return '3dd8e721048bbe8ea5f0c043fab73277a0b0044c';
     }
 }
+/* CBTestAdmin */
