@@ -2,10 +2,14 @@
 
 class CBImages {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
     /**
-     * @return ?model (CBImage)
+     * @return object
+     *
+     *      Returns a CBImage model.
      */
-    static function CBAjax_upload(): ?stdClass {
+    static function CBAjax_upload(): stdClass {
         return CBImages::uploadImageWithName('file');
     }
 
@@ -17,6 +21,35 @@ class CBImages {
         return 'Administrators';
     }
 
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $SQL = <<<EOT
+
+            CREATE TABLE IF NOT EXISTS `CBImages` (
+                `ID`        BINARY(20) NOT NULL,
+                `created`   BIGINT NOT NULL,
+                `extension` VARCHAR(10) NOT NULL,
+                `modified`  BIGINT NOT NULL,
+
+                PRIMARY KEY (`ID`)
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8mb4
+            COLLATE=utf8mb4_unicode_520_ci
+
+EOT;
+
+        Colby::query($SQL);
+    }
+    /* CBInstall_install() */
+
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * This function is called by CBImage::CBModels_willDelete() and shouldn't
@@ -57,30 +90,6 @@ class CBImages {
         } else {
             return $filepaths[0];
         }
-    }
-
-
-    /**
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        $SQL = <<<EOT
-
-            CREATE TABLE IF NOT EXISTS `CBImages` (
-                `ID`        BINARY(20) NOT NULL,
-                `created`   BIGINT NOT NULL,
-                `extension` VARCHAR(10) NOT NULL,
-                `modified`  BIGINT NOT NULL,
-
-                PRIMARY KEY (`ID`)
-            )
-            ENGINE=InnoDB
-            DEFAULT CHARSET=utf8mb4
-            COLLATE=utf8mb4_unicode_520_ci
-
-EOT;
-
-        Colby::query($SQL);
     }
 
 
@@ -429,8 +438,9 @@ EOT;
 
 
     /**
-     * 2015.06.04 This is intended to be the primary Ajax function used to
-     * upload and resize an image.
+     * @deprecated 2019_07_05
+     *
+     *      Use the Ajax function CBAjax_upload() instead.
      *
      * @param file $_POST['image']
      * @param [string] $_POST['imageSizesAsJSON']
@@ -501,11 +511,14 @@ EOT;
 
 
     /**
+     * @deprecated 2019_07_05
+     *
      * @return object
      */
     static function uploadForAjaxPermissions(): stdClass {
         return (object)['group' => 'Administrators'];
     }
+    /* uploadForAjaxPermissions() */
 
 
     /**
