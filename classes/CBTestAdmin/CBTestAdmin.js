@@ -160,20 +160,30 @@ var CBTestAdmin = {
                 /* CBTestAdmin_tests.forEach */
 
 
-                CBTestAdmin.serverTests.forEach(function (serverTest, index) {
-                    options.push({
-                        title: `${serverTest[0]} / ${serverTest[1]}`,
-                        value: index,
-                    });
-                });
+                CBTestAdmin.serverTests.forEach(
+                    function (serverTest, index) {
+                        options.push(
+                            {
+                                title:
+                                `${serverTest[0]} / ${serverTest[1]} ` +
+                                `[old style server test]`,
+                                value: index,
+                            }
+                        );
+                    }
+                );
 
-                options.sort(function (a, b) {
-                    return a.title.localeCompare(b.title);
-                });
+                options.sort(
+                    function (a, b) {
+                        return a.title.localeCompare(b.title);
+                    }
+                );
 
-                options.unshift({
-                    title: "All Tests",
-                });
+                options.unshift(
+                    {
+                        title: "All Tests",
+                    }
+                );
 
                 let selector = CBUISelector.create();
                 selector.options = options;
@@ -313,21 +323,24 @@ var CBTestAdmin = {
      * @return undefined
      */
     DOMContentDidLoad: function() {
-        Colby.fetchAjaxResponse(
-            "/api/?class=CBUnitTests&function=getListOfTests"
+        Colby.callAjaxFunction(
+            "CBTest",
+            "getPHPTests"
         ).then(
-            function (response) {
-                CBTestAdmin.serverTests = response.tests;
+            function (tests) {
+                CBTestAdmin.serverTests = tests;
 
                 let main = document.getElementsByTagName("main")[0];
                 let navigator = CBUINavigationView.create();
 
                 main.appendChild(navigator.element);
 
-                navigator.navigate({
-                    title: "Test",
-                    element: CBTestAdmin.createTestUI(),
-                });
+                navigator.navigate(
+                    {
+                        title: "Test",
+                        element: CBTestAdmin.createTestUI(),
+                    }
+                );
             }
         ).catch(
             function (error) {
