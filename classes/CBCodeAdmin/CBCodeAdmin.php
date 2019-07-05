@@ -190,6 +190,30 @@ final class CBCodeAdmin {
             /* errors */
 
             /**
+             * 2019_06_16
+             */
+            (object)[
+                'filetype' => 'js',
+                'regex' => 'CBModelUpdater',
+
+                'title' =>
+                'The CBModelUpdater JavaScript class has been removed',
+            ],
+
+
+            /**
+             * 2019_06_26
+             */
+            (object)[
+                'filetype' => 'php',
+                'regex' => 'CBSitePreferences::siteURL\\(',
+
+                'title' =>
+                'Replace CBSitePreferences::siteURL() with cbsiteurl()',
+            ],
+
+
+            /**
              * 2019_07_05
              */
             (object)[
@@ -198,6 +222,7 @@ final class CBCodeAdmin {
                 'regex' => 'CBThemedMenuView',
                 'title' => 'Replace use of CBThemedMenuView',
             ],
+
 
             /**
              * 2019_06_16
@@ -209,6 +234,7 @@ final class CBCodeAdmin {
                 'title' => 'Colby.centsToDollars()',
             ],
 
+
             /**
              * 2019_06_16
              * Use CBConvert
@@ -218,6 +244,7 @@ final class CBCodeAdmin {
                 'regex' => 'Colby\\.imageToURL\\(',
                 'title' => 'Colby.imageToURL()',
             ],
+
 
             /**
              * 2019_06_16
@@ -232,15 +259,6 @@ final class CBCodeAdmin {
                 'CBErrorHandler::report()',
             ],
 
-            /**
-             * 2019_06_16
-             * Removed
-             */
-            (object)[
-                'filetype' => 'js',
-                'regex' => 'CBModelUpdater',
-                'title' => 'CBModelUpdater',
-            ],
 
             /**
              * 2019_06_16
@@ -252,6 +270,7 @@ final class CBCodeAdmin {
                 'title' => 'Colby.dataStoreFlexpath()',
             ],
 
+
             /**
              * 2019_06_16
              * Use CBDataStore.flexpath()
@@ -262,6 +281,7 @@ final class CBCodeAdmin {
                 'title' => 'Colby.dataStoreIDToURI()',
             ],
 
+
             /**
              * 2019_06_16
              * Colby.setPanelContent() has been removed.
@@ -271,6 +291,7 @@ final class CBCodeAdmin {
                 'regex' => 'setPanelContent\\(',
                 'title' => 'Colby.setPanelContent()',
             ],
+
 
             /**
              * 2019_06_16
@@ -344,6 +365,7 @@ final class CBCodeAdmin {
                 'title' => 'Replace COLBY_SYSTEM_DIRECTORY with cbsysdir()',
             ],
 
+
             /**
              * 2019_06_26
              */
@@ -353,19 +375,6 @@ final class CBCodeAdmin {
                 'regex' => 'CBSystemDirectory',
                 'severity' => 4,
                 'title' => 'Replace CBSystemDirectory with cbsysdir()',
-            ],
-
-
-            /**
-             * 2019_06_26
-             */
-            (object)[
-                'filetype' => 'php',
-                'regex' => 'CBSitePreferences::siteURL\\(',
-                'severity' => 4,
-
-                'title' =>
-                'Replace CBSitePreferences::siteURL() with cbsiteurl()',
             ],
 
 
