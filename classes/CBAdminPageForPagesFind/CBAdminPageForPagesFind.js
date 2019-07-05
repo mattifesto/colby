@@ -23,85 +23,157 @@ var CBAdminPageForPagesFind = {
      */
     createElement: function() {
         var section, item;
-        var element = document.createElement("div");
-        element.className = "CBAdminPageForPagesFind";
+        var element = CBUI.createElement("CBAdminPageForPagesFind");
         var pageListContainer = document.createElement("div");
 
         var parameters = {};
 
-        var fetchPagesCallback = CBAdminPageForPagesFind.fetchPages.bind(undefined, {
-            element : pageListContainer,
-            parameters : parameters,
-            state : {},
-        });
+        var fetchPagesCallback = CBAdminPageForPagesFind.fetchPages.bind(
+            undefined,
+            {
+                element: pageListContainer,
+                parameters: parameters,
+                state: {},
+            }
+        );
 
-        var navigationView = CBUINavigationView.create({
-            defaultSpecChangedCallback : fetchPagesCallback,
-            rootItem : {
-                element : element,
-                title : "Find Pages",
-            },
-        });
+        var navigationView = CBUINavigationView.create(
+            {
+                defaultSpecChangedCallback: fetchPagesCallback,
+                rootItem: {
+                    element: element,
+                    title: "Find Pages",
+                },
+            }
+        );
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({ text : "Search Criteria" }));
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
+
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    text: "Search Criteria",
+                }
+            )
+        );
 
         section = CBUI.createSection();
 
         /* classNameForKind */
-        section.appendChild(CBUISelector.create({
-            labelText : "Kind",
-            navigateToItemCallback : navigationView.navigateToItemCallback,
-            propertyName : "classNameForKind",
-            spec : parameters,
-            specChangedCallback : fetchPagesCallback,
-            options : CBPageKindsOptions,
-        }).element);
+        section.appendChild(
+            CBUISelector.create(
+                {
+                    labelText: "Kind",
+                    navigateToItemCallback: navigationView.navigateToItemCallback,
+                    propertyName: "classNameForKind",
+                    spec: parameters,
+                    specChangedCallback: fetchPagesCallback,
+                    options: CBPageKindsOptions,
+                }
+            ).element
+        );
 
         /* published */
-        section.appendChild(CBUISelector.create({
-            labelText : "Published",
-            navigateToItemCallback : navigationView.navigateToItemCallback,
-            propertyName : "published",
-            spec : parameters,
-            specChangedCallback : fetchPagesCallback,
-            options : [
-                { title : "All", value : undefined },
-                { title : "Published", value : true },
-                { title : "Unpublished", value : false },
-            ],
-        }).element);
+        section.appendChild(
+            CBUISelector.create(
+                {
+                    labelText: "Published",
+
+                    navigateToItemCallback:
+                    navigationView.navigateToItemCallback,
+
+                    propertyName: "published",
+                    spec: parameters,
+                    specChangedCallback: fetchPagesCallback,
+                    options: [
+                        {
+                            title: "All",
+                            value: undefined,
+                        },
+                        {
+                            title: "Published",
+                            value: true,
+                        },
+                        {
+                            title: "Unpublished",
+                            value: false,
+                        },
+                    ],
+                }
+            ).element
+        );
 
         /* sorting */
-        section.appendChild(CBUISelector.create({
-            labelText : "Sorting",
-            navigateToItemCallback : navigationView.navigateToItemCallback,
-            propertyName : "sorting",
-            spec : parameters,
-            specChangedCallback : fetchPagesCallback,
-            options : [
-                { title : "Modified (most recent first)", value : undefined },
-                { title : "Modified (most recent last)", value : "modifiedAscending" },
-                { title : "Created (most recent first)", value : "createdDescending" },
-                { title : "Created (most recent last)", value : "createdAscending" },
-            ],
-        }).element);
+        section.appendChild(
+            CBUISelector.create(
+                {
+                    labelText: "Sorting",
+
+                    navigateToItemCallback:
+                    navigationView.navigateToItemCallback,
+
+                    propertyName: "sorting",
+                    spec: parameters,
+                    specChangedCallback: fetchPagesCallback,
+                    options: [
+                        {
+                            title: "Modified (most recent first)",
+                            value: undefined,
+                        },
+                        {
+                            title: "Modified (most recent last)",
+                            value: "modifiedAscending",
+                        },
+                        {
+                            title: "Created (most recent first)",
+                            value: "createdDescending",
+                        },
+                        {
+                            title: "Created (most recent last)",
+                            value: "createdAscending",
+                        },
+                    ],
+                }
+            ).element
+        );
 
         /* search */
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Search",
-            propertyName : "search",
-            spec : parameters,
-            specChangedCallback : fetchPagesCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Search",
+                    propertyName: "search",
+                    spec: parameters,
+                    specChangedCallback: fetchPagesCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({ text : "Results" }));
+
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
+
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    text: "Results",
+                }
+            )
+        );
+
         element.appendChild(pageListContainer);
-        element.appendChild(CBUI.createHalfSpace());
+
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         fetchPagesCallback();
 
@@ -233,7 +305,9 @@ var CBPageList = {
                     thumbnailPart.src = page.keyValueData.thumbnailURL;
                 }
 
-                sectionItemElement.appendChild(thumbnailPart.element);
+                sectionItemElement.appendChild(
+                    thumbnailPart.element
+                );
 
                 let textContainerElement = CBUI.createElement(
                     "CBUI_container_topAndBottom CBUI_flexGrow"
@@ -259,7 +333,9 @@ var CBPageList = {
 
                 let navigationArrowPart = CBUINavigationArrowPart.create();
 
-                sectionItemElement.appendChild(navigationArrowPart.element);
+                sectionItemElement.appendChild(
+                    navigationArrowPart.element
+                );
             }
         );
 
