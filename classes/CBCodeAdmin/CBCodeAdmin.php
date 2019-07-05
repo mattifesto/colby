@@ -289,6 +289,17 @@ final class CBCodeAdmin {
             /* warnings */
 
             /**
+             * 2019_07_05
+             */
+            (object)[
+                'filetype' => 'js',
+                'regex' => 'class=CBImages&function=upload',
+                'severity' => 4,
+                'title' => 'Replace deprecated CBImages ajax upload function',
+            ],
+
+
+            /**
              * 2019_06_26
              */
             (object)[
