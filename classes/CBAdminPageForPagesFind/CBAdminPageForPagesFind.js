@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBAdminPageForPagesFind */
 /* globals
+    CBConvert,
     CBImage,
     CBUI,
     CBUINavigationArrowPart,
@@ -106,13 +107,19 @@ var CBAdminPageForPagesFind = {
 
         return navigationView.element;
     },
+    /* createElement() */
+
 
     /**
-     * @param Element args.element
-     * @param object args.parameters
-     * @param object args.state
+     * @param object args
      *
-     * @return undefined
+     *      {
+     *          element: Element
+     *          parameters: object
+     *          state: object
+     *      }
+     *
+     * @return Promise
      */
     fetchPages: function (args) {
         if (args.state.waiting === true) {
@@ -122,23 +129,46 @@ var CBAdminPageForPagesFind = {
 
         args.state.waiting = true;
 
-        var data = new FormData();
-        data.append("parametersAsJSON", JSON.stringify(args.parameters));
+        let promise = Colby.callAjaxFunction(
+            "CBAdminPageForPagesFind",
+            "fetchPages",
+            CBConvert.valueToObject(args.parameters)
+        ).then(
+            function (pages) {
+                return fetchPages_onResolve(pages);
+            }
+        ).catch(
+            function (error) {
+                Colby.displayAndReportError(error);
+            }
+        ).then(
+            fetchPages_onFinally,
+            fetchPages_onFinally
+        );
 
-        Colby.fetchAjaxResponse("/api/?class=CBPages&function=fetchPageList", data)
-            .then(onResolve)
-            .catch(Colby.displayAndReportError)
-            .then(onFinally, onFinally);
+        return promise;
 
-        function onResolve(response) {
-            var pages = response.pages;
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @param [object] pages
+         *
+         * @return undefined
+         */
+        function fetchPages_onResolve(pages) {
             var list = CBPageList.createElement(pages);
 
             args.element.textContent = null;
             args.element.appendChild(list);
         }
+        /* fetchPages_onResolve() */
 
-        function onFinally() {
+
+        /**
+         * @return undefined
+         */
+        function fetchPages_onFinally() {
             args.state.waiting = undefined;
 
             if (args.state.argsForNextRequest) {
@@ -148,7 +178,9 @@ var CBAdminPageForPagesFind = {
                 CBAdminPageForPagesFind.fetchPages(argsForNextRequest);
             }
         }
+        /* fetchPages_onFinally() */
     },
+    /* fetchPages() */
 };
 /* CBAdminPageForPagesFind */
 

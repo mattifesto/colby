@@ -27,6 +27,117 @@ final class CBAdminPageForPagesFind {
     }
 
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+    /**
+     * @param object args
+     *
+     * @return array
+     */
+    static function CBAjax_fetchPages(stdClass $args): array {
+        $parameters = $args;
+        $conditions = [];
+
+        /* classNameForKind (null means all, 'unspecified' means NULL) */
+        if (isset($parameters->classNameForKind)) {
+            if ($parameters->classNameForKind === 'unspecified') {
+                $conditions[] = '`classNameForKind` IS NULL';
+            } else if ($parameters->classNameForKind === 'currentFrontPage') {
+                $frontPageID = CBSitePreferences::frontPageID();
+
+                if (empty($frontPageID)) {
+                    $conditions[] = 'FALSE'; /* return no results */
+                } else {
+                    $frontPageIDForSQL = CBHex160::toSQL($frontPageID);
+                    $conditions[] = "`archiveID` = {$frontPageIDForSQL}";
+                }
+            } else {
+                $classNameForKindAsSQL = CBDB::stringToSQL($parameters->classNameForKind);
+                $conditions[] = "`classNameForKind` = {$classNameForKindAsSQL}";
+            }
+        }
+
+        /* published */
+        if (isset($parameters->published)) {
+            if ($parameters->published === true) {
+                $conditions[] = '`published` IS NOT NULL';
+            } else if ($parameters->published === false) {
+                $conditions[] = '`published` IS NULL';
+            }
+        }
+
+        /* sorting */
+        $sorting = CBModel::value($parameters, 'sorting');
+        switch ($sorting) {
+            case 'modifiedAscending':
+                $order = '`modified` ASC';
+                break;
+            case 'createdDescending':
+                $order = '`created` DESC';
+                break;
+            case 'createdAscending':
+                $order = '`created` ASC';
+                break;
+            default:
+                $order = '`modified` DESC';
+                break;
+        }
+
+        /* search */
+        $search = CBModel::value($parameters, 'search', '', 'trim');
+        if ($clause = CBPages::searchClauseFromString($search)) {
+            $conditions[] = $clause;
+        };
+
+        $conditions = implode(' AND ', $conditions);
+        if ($conditions) { $conditions = "WHERE {$conditions}"; }
+
+        $SQL = <<<EOT
+
+            SELECT LOWER(HEX(`archiveID`)) AS `ID`, `className`, `keyValueData`
+            FROM `ColbyPages`
+            {$conditions}
+            ORDER BY {$order}
+            LIMIT 20
+
+EOT;
+
+        $pages = CBDB::SQLToObjects($SQL);
+
+        $pages = array_map(
+            function ($item) {
+                if (empty($item->keyValueData)) {
+                    $item->keyValueData = (object)[
+                        'ID' => $item->ID,
+                        'title' => 'Page Needs to be Updated',
+                    ];
+                } else {
+                    $item->keyValueData = json_decode($item->keyValueData);
+                }
+
+                if (empty($item->className)) {
+                    $item->className = 'CBViewPage';
+                }
+
+                return $item;
+            },
+            $pages
+        );
+
+        return $pages;
+    }
+    /* CBAjax_fetchPages() */
+
+
+    /**
+     * @return {stdClass}
+     */
+    static function CBAjax_fetchPages_group(): string {
+        return 'Administrators';
+    }
+    /* CBAjax_fetchPages_group() */
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
@@ -37,13 +148,15 @@ final class CBAdminPageForPagesFind {
             Colby::flexpath(__CLASS__, 'css', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v483.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v484.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -93,6 +206,7 @@ final class CBAdminPageForPagesFind {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBConvert',
             'CBImage',
             'CBUI',
             'CBUINavigationArrowPart',
