@@ -2,6 +2,39 @@
 
 final class ColbyTests {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+    /**
+     * @return null
+     */
+    static function CBAjax_requestWithPHPError() {
+        $useLongMessage = false;
+
+        if ($useLongMessage) {
+            throw new RuntimeException(
+                str_repeat(
+                    "This is a long exception message. ",
+                    1000
+                )
+            );
+        }
+
+        throw new RuntimeException(
+            'This is a short exception message'
+        );
+    }
+    /* CBAjax_requestWithPHPError() */
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_requestWithPHPError_group() {
+        return 'Developers';
+    }
+    /* CBAjax_requestWithPHPError_group() */
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**

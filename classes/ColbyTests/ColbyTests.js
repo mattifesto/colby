@@ -98,8 +98,8 @@ var ColbyTests = {
         let testDidPass = false;
 
         return Colby.callAjaxFunction(
-            "CBUnitTests",
-            "errorTest"
+            "ColbyTests",
+            "requestWithPHPError"
         ).catch(
             function (error) {
                 Colby.displayAndReportError(error);
