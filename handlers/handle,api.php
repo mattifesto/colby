@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @deprecated 2019_07_05
+ *
+ *      Ajax functions should be created and called using the CBAjax interfaces
+ *      in PHP and Colby.callAjaxFuncion() in JavaScript.
+ *
  * This handler makes calling Ajax functions easier and it provides a simple
  * standard for developing Ajax functions.
  *
@@ -46,17 +51,39 @@
 
 try {
 
-    $class      = isset($_GET['class']) ? $_GET['class'] : null;
-    $className  = isset($_GET['className']) ? $_GET['className'] : null; // deprecated
-    $function   = isset($_GET['function']) ? $_GET['function'] : 'execute';
-    $args       = isset($_POST['args']) ? json_decode($_POST['args']) : new stdClass();
+    $class =
+    isset($_GET['class']) ?
+    $_GET['class'] :
+    null;
+
+    $function =
+    isset($_GET['function']) ?
+    $_GET['function'] :
+    'execute';
+
+    $args =
+    isset($_POST['args']) ?
+    json_decode($_POST['args']) :
+    (object)[];
+
+    /**
+     * @deprecated
+     */
+    $className =
+    isset($_GET['className']) ?
+    $_GET['className'] :
+    null;
 
     if ($className) { /* deprecated */
-        if (class_exists($className) && is_subclass_of($className, 'CBAPI')) {
+        if (
+            class_exists($className) &&
+            is_subclass_of($className, 'CBAPI')
+        ) {
             $className::call();
         } else {
-            $response           = new CBAjaxResponse();
-            $response->message  = "The '{$className}' API was not found.";
+            $response = new CBAjaxResponse();
+            $response->message = "The '{$className}' API was not found.";
+
             $response->send();
         }
     } else {
@@ -73,24 +100,35 @@ try {
         if (is_callable($function) && is_callable($permissionsFunction)) {
             $permissions = call_user_func($permissionsFunction);
 
-            if ('Public' === $permissions->group || ColbyUser::current()->isOneOfThe($permissions->group)) {
+            if (
+                'Public' === $permissions->group ||
+                ColbyUser::current()->isOneOfThe($permissions->group)
+            ) {
                 call_user_func($function, $args);
             } else {
-                $response           = new CBAjaxResponse();
+                $response = new CBAjaxResponse();
 
                 if (ColbyUser::current()->isLoggedIn()) {
-                    $response->message          = "You do not have permission to call `$function`.";
-                    $response->userMustLogIn    = false;
+                    $response->message =
+                    "You do not have permission to call `$function`.";
+
+                    $response->userMustLogIn = false;
                 } else {
-                    $response->message          = "The operation you requested cannot be performed because you are not currently logged in, possibly because your session has timed out. Reloading the current page will usually remedy this.";
-                    $response->userMustLogIn    = true;
+                    $response->message =
+                    "The operation you requested cannot be performed " .
+                    "because you are not currently logged in, possibly " .
+                    "because your session has timed out. Reloading the " .
+                    "current page will usually remedy this.";
+
+                    $response->userMustLogIn = true;
                 }
 
                 $response->send();
             }
         } else {
-            $response           = new CBAjaxResponse();
-            $response->message  = "`$function` is not an Ajax function.";
+            $response = new CBAjaxResponse();
+            $response->message = "`$function` is not an Ajax function.";
+
             $response->send();
         }
     }
