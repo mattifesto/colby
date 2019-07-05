@@ -35,10 +35,12 @@ var CBArtworkViewEditor = {
 
         section = CBUI.createSection();
 
-        var chooser = CBUIImageChooser.createFullSizedChooser({
-            imageChosenCallback: handleImageChosen,
-            imageRemovedCallback: handleImageRemoved,
-        });
+        var chooser = CBUIImageChooser.createFullSizedChooser(
+            {
+                imageChosenCallback: createEditor_handleImageChosen,
+                imageRemovedCallback: createEditor_handleImageRemoved,
+            }
+        );
 
         item = CBUI.createSectionItem();
         item.appendChild(chooser.element);
@@ -148,34 +150,41 @@ var CBArtworkViewEditor = {
          *
          * @return undefined
          */
-        function handleImageChosen(chooserArgs) {
-            var ajaxURI = "/api/?class=CBImages&function=upload";
-            var formData = new FormData();
-            formData.append("image", chooserArgs.file);
+        function createEditor_handleImageChosen(chooserArgs) {
+            Colby.callAjaxFunction(
+                "CBImages",
+                "upload",
+                {},
+                chooserArgs.file
+            ).then(
+                function (imageModel) {
+                    args.spec.image = imageModel;
 
-            Colby.fetchAjaxResponse(ajaxURI, formData)
-                .then(handleImageUploaded)
-                .catch(Colby.displayAndReportError);
+                    args.specChangedCallback();
 
-            /* closure */
-            function handleImageUploaded(response) {
-                args.spec.image = response.image;
-                args.specChangedCallback();
-                chooserArgs.setImageURI(
-                    CBImage.toURL(args.spec.image, "rw960")
-                );
-                CBViewPageEditor.suggestThumbnailImage(response.image);
-            }
+                    chooserArgs.setImageURI(
+                        CBImage.toURL(imageModel, "rw960")
+                    );
+
+                    CBViewPageEditor.suggestThumbnailImage(imageModel);
+                }
+            ).catch(
+                function (error) {
+                    Colby.displayAndReportError(error);
+                }
+            );
         }
+        /* createEditor_handleImageChosen() */
 
 
         /**
          * @return undefined
          */
-        function handleImageRemoved() {
+        function createEditor_handleImageRemoved() {
             args.spec.image = undefined;
             args.specChangedCallback();
         }
+        /* createEditor_handleImageRemoved() */
     },
     /* createEditor() */
 
