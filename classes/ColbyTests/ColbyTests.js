@@ -92,6 +92,38 @@ var ColbyTests = {
 
 
     /**
+     * @return Promise
+     */
+    CBTest_displayAndReportError: function () {
+        let testDidPass = false;
+
+        return Colby.callAjaxFunction(
+            "CBUnitTests",
+            "errorTest"
+        ).catch(
+            function (error) {
+                Colby.displayAndReportError(error);
+
+                testDidPass = true;
+            }
+        ).then(
+            function () {
+                if (testDidPass) {
+                    return {
+                        succeeded: true,
+                    };
+                } else {
+                    return {
+                        succeeded: false,
+                    };
+                }
+            }
+        );
+    },
+    /* CBTest_displayAndReportError() */
+
+
+    /**
      * @return undefined
      */
     CBTest_random160: function () {
