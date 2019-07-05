@@ -190,6 +190,16 @@ final class CBCodeAdmin {
             /* errors */
 
             /**
+             * 2019_07_05
+             */
+            (object)[
+                'args' => '--ignore-file=match:CBThemedMenuView',
+                'filetype' => 'php',
+                'regex' => 'CBThemedMenuView',
+                'title' => 'Replace use of CBThemedMenuView',
+            ],
+
+            /**
              * 2019_06_16
              * Use CBConvert
              */
@@ -286,7 +296,7 @@ final class CBCodeAdmin {
             ],
 
 
-            /* warnings */
+            /* -- warnings -- -- -- -- -- */
 
             /**
              * 2019_07_05
