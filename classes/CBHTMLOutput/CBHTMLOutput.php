@@ -163,18 +163,58 @@ final class CBHTMLOutput {
 
 
     /**
+     * @NOTE 2019_07_06
+     *
+     *      CBHTMLOutput may move away from begin(), reset(), and render() to a
+     *      method where the caller passes a callback to a new function in this
+     *      class. The new function would start the output buffer and then call
+     *      the callback in a try block. If the callback throws an exception,
+     *      the function would catch it and then reset the rendering state and
+     *      rethrow the exception.
+     *
+     *      For now, callers of this function should always start a try block
+     *      immediately after the call to catch any exceptions and reset or
+     *      handle appropriately if one occurs.
+     *
      * Call this function before you start rendering the content of the body
      * element. When you are finished, call CBHTMLOutput::render().
      *
      * @return void
      */
     static function begin(): void {
+        static $backtrace = null;
+
+        /**
+         * Set this variable to true to help debug situations where this
+         * function is being called twice.
+         */
+        $backtraceIsEnabled = false;
+
         if (CBHTMLOutput::$isActive) {
+            $backtraceAsJSONAsMessage = CBMessageMarkup::stringToMessage(
+                CBConvert::valueToPrettyJSON($backtrace)
+            );
+
+            $message = 'CBHTMLOutput::begin() has already been called.';
+
+            $extendedMessage = <<<EOT
+
+                {$message}
+
+                --- pre\n{$backtraceAsJSONAsMessage}
+                ---
+
+EOT;
+
             throw new CBException(
-                'CBHTMLOutput buffering has already begun.',
-                '',
+                $message,
+                $extendedMessage,
                 '29ade9f6d4a763a69f69c79a191893743ef3fcef'
             );
+        }
+
+        if ($backtraceIsEnabled) {
+            $backtrace = debug_backtrace();
         }
 
         ob_start();
@@ -183,9 +223,11 @@ final class CBHTMLOutput {
 
         CBHTMLOutput::$isActive = true;
     }
+    /* begin() */
+
 
     /**
-     * @deprecated 2018.04.12
+     * @deprecated 2018_04_12
      *
      *      This function will be removed because the only supported way of
      *      specifying page settings is to set the classNameForPageSettings
@@ -244,16 +286,29 @@ final class CBHTMLOutput {
 
         CBHTMLOutput::$exportedVariables[$name] = $value;
     }
+    /* exportVariable() */
+
 
     /**
-     * 2017.12.03 This function was updated to comply with the custom exception
-     * handler documentation in the CBErrorHandler::handle() comments.
+     * @return bool
+     */
+    static function getIsActive(): bool {
+        return CBHTMLOutput::$isActive;
+    }
+    /* getIsActive() */
+
+
+    /**
+     * @NOTE 2017_12_03
+     *
+     *      This function was updated to comply with the custom exception
+     *      handler documentation in the CBErrorHandler::handle() comments.
      *
      * @param Throwable $exception
      *
-     * @return null
+     * @return void
      */
-    static function handleException(Throwable $throwable) {
+    static function handleException(Throwable $throwable): void {
         CBErrorHandler::report($throwable);
 
         try {
