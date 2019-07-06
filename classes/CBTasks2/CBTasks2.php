@@ -56,12 +56,29 @@ final class CBTasks2 {
         $expirationTimestamp = microtime(true) + 1;
 
         do {
-            $wasRun = CBTasks2::runNextTask((object)[
-                'processID' => $processID,
-            ]);
+            $wasRun = CBTasks2::runNextTask(
+                (object)[
+                    'processID' => $processID,
+                ]
+            );
 
             if ($wasRun) {
                 $tasksRunCount += 1;
+
+                if (CBHTMLOutput::getIsActive()) {
+                    CBLog::log(
+                        (object)[
+                            'message' =>
+                            'CBHTMLOutput is active after running a task.',
+                            'severity' => 3,
+                            'sourceClassName' => __CLASS__,
+                            'sourceID' =>
+                            '3db6df0668e64d398d7536c0dd6a0b148b4760ca',
+                        ]
+                    );
+
+                    break;
+                }
             } else {
                 break;
             }
@@ -475,6 +492,8 @@ EOT;
 
         return CBTasks2::runTaskForStarter($starterID);
     }
+    /* runSpecificTask() */
+
 
     /**
      * Runs a task started by the provided starter. There are situations in
