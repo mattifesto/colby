@@ -521,7 +521,12 @@ final class Colby {
             $mqg = get_magic_quotes_gpc();
             $mqg = var_export($mqg, true);
 
-            throw new RuntimeException("Magic quotes are enabled on this server: magic_quotes_runtime={$mqr}, magic_quotes_gpc={$mqg}. Add the line 'php_flag magic_quotes_gpc off' to the `.htaccess` file.");
+            throw new RuntimeException(
+                "Magic quotes are enabled on this server: " .
+                "magic_quotes_runtime={$mqr}, magic_quotes_gpc={$mqg}. " .
+                "Add the line 'php_flag magic_quotes_gpc off' to the " .
+                ".htaccess file."
+            );
         }
     }
     /* initialize() */
@@ -542,14 +547,20 @@ final class Colby {
 
         $libraryDirectory = cbsitedir() . "/{$libraryPath}";
 
-        if (file_exists($filename = "{$libraryDirectory}/version.php")) {
+        $filename = "{$libraryDirectory}/version.php";
+
+        if (file_exists($filename)) {
             include_once $filename;
         }
 
-        if (file_exists($filename = "{$libraryDirectory}/library-configuration.php")) {
+        $filename = "{$libraryDirectory}/library-configuration.php";
+
+        if (file_exists($filename)) {
             include_once $filename;
         }
     }
+    /* loadLibrary() */
+
 
     /**
      * @return mysqli
