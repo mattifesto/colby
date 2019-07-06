@@ -185,231 +185,249 @@ final class CBCodeAdmin {
      * @return [object]
      */
     static function searches(): array {
-        return [
+        $searches = [];
+        $allClassNames = CBAdmin::fetchClassNames();
 
-            /* errors */
+        foreach ($allClassNames as $className) {
+            $function = "{$className}::CBCodeAdmin_searches";
 
-            /**
-             * 2019_06_16
-             */
-            (object)[
-                'filetype' => 'js',
-                'regex' => 'CBModelUpdater',
+            if (is_callable($function)) {
+                $searches = array_merge(
+                    $searches,
+                    call_user_func($function)
+                );
+            }
+        }
 
-                'title' =>
-                'The CBModelUpdater JavaScript class has been removed',
-            ],
+        return array_merge(
+            $searches,
+            [
 
+                /* errors */
 
-            /**
-             * 2019_06_26
-             */
-            (object)[
-                'filetype' => 'php',
-                'regex' => 'CBSitePreferences::siteURL\\(',
+                /**
+                 * 2019_06_16
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'CBModelUpdater',
 
-                'title' =>
-                'Replace CBSitePreferences::siteURL() with cbsiteurl()',
-            ],
-
-
-            /**
-             * 2019_07_05
-             */
-            (object)[
-                'args' => '--ignore-file=match:CBThemedMenuView',
-                'filetype' => 'php',
-                'regex' => 'CBThemedMenuView',
-                'title' => 'Replace use of CBThemedMenuView',
-            ],
+                    'title' =>
+                    'The CBModelUpdater JavaScript class has been removed',
+                ],
 
 
-            /**
-             * 2019_06_16
-             * Use CBConvert
-             */
-            (object)[
-                'filetype' => 'js',
-                'regex' => 'Colby\\.centsToDollars\\(',
-                'title' => 'Colby.centsToDollars()',
-            ],
+                /**
+                 * 2019_06_26
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBSitePreferences::siteURL\\(',
+
+                    'title' =>
+                    'Replace CBSitePreferences::siteURL() with cbsiteurl()',
+                ],
 
 
-            /**
-             * 2019_06_16
-             * Use CBConvert
-             */
-            (object)[
-                'filetype' => 'js',
-                'regex' => 'Colby\\.imageToURL\\(',
-                'title' => 'Colby.imageToURL()',
-            ],
+                /**
+                 * 2019_07_05
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:CBThemedMenuView',
+                    'filetype' => 'php',
+                    'regex' => 'CBThemedMenuView',
+                    'title' => 'Replace use of CBThemedMenuView',
+                ],
 
 
-            /**
-             * 2019_06_16
-             * Use CBErrorHandler::report()
-             */
-            (object)[
-                'filetype' => 'php',
-                'regex' => 'Colby::reportException\\(',
-
-                'title' =>
-                'Colby::reportException() replaced with ' .
-                'CBErrorHandler::report()',
-            ],
+                /**
+                 * 2019_06_16
+                 * Use CBConvert
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\\.centsToDollars\\(',
+                    'title' => 'Colby.centsToDollars()',
+                ],
 
 
-            /**
-             * 2019_06_16
-             * Use CBDataStore.flexpath()
-             */
-            (object)[
-                'filetype' => 'js',
-                'regex' => 'dataStoreFlexpath',
-                'title' => 'Colby.dataStoreFlexpath()',
-            ],
+                /**
+                 * 2019_06_16
+                 * Use CBConvert
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\\.imageToURL\\(',
+                    'title' => 'Colby.imageToURL()',
+                ],
 
 
-            /**
-             * 2019_06_16
-             * Use CBDataStore.flexpath()
-             */
-            (object)[
-                'filetype' => 'js',
-                'regex' => 'dataStoreIDToURI',
-                'title' => 'Colby.dataStoreIDToURI()',
-            ],
+                /**
+                 * 2019_06_16
+                 * Use CBErrorHandler::report()
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'Colby::reportException\\(',
+
+                    'title' =>
+                    'Colby::reportException() replaced with ' .
+                    'CBErrorHandler::report()',
+                ],
 
 
-            /**
-             * 2019_06_16
-             * Colby.setPanelContent() has been removed.
-             */
-            (object)[
-                'filetype' => 'js',
-                'regex' => 'setPanelContent\\(',
-                'title' => 'Colby.setPanelContent()',
-            ],
+                /**
+                 * 2019_06_16
+                 * Use CBDataStore.flexpath()
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'dataStoreFlexpath',
+                    'title' => 'Colby.dataStoreFlexpath()',
+                ],
 
 
-            /**
-             * 2019_06_16
-             * Colby.warnOlderBrowsers() has been removed.
-             */
-            (object)[
-                'filetype' => 'js',
-                'regex' => 'warnOlderBrowsers\\(',
-                'title' => 'Colby.warnOlderBrowsers()',
-            ],
+                /**
+                 * 2019_06_16
+                 * Use CBDataStore.flexpath()
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'dataStoreIDToURI',
+                    'title' => 'Colby.dataStoreIDToURI()',
+                ],
 
 
-            /**
-             * 2019_06_22
-             */
-            (object)[
-                'filetype' => 'php',
-                'regex' => 'ColbyRequest::isForFrontPage\\(',
-
-                'title' =>
-                'ColbyRequest::isForFrontPage() replaced with ' .
-                'ColbyRequest::currentRequestIsForTheFrontPage()',
-            ],
+                /**
+                 * 2019_06_16
+                 * Colby.setPanelContent() has been removed.
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'setPanelContent\\(',
+                    'title' => 'Colby.setPanelContent()',
+                ],
 
 
-            /* -- warnings -- -- -- -- -- */
-
-            /**
-             * 2019_07_05
-             */
-            (object)[
-                'filetype' => 'js',
-                'regex' => 'class=CBImages&function=upload',
-                'severity' => 4,
-                'title' => 'Replace deprecated CBImages ajax upload function',
-            ],
+                /**
+                 * 2019_06_16
+                 * Colby.warnOlderBrowsers() has been removed.
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'warnOlderBrowsers\\(',
+                    'title' => 'Colby.warnOlderBrowsers()',
+                ],
 
 
-            /**
-             * 2019_06_26
-             */
-            (object)[
-                'args' => '--ignore-file=match:init.php',
-                'filetype' => 'php',
-                'regex' => 'COLBY_SITE_DIRECTORY',
-                'severity' => 4,
-                'title' => 'Replace COLBY_SITE_DIRECTORY with cbsitedir()',
-            ],
+                /**
+                 * 2019_06_22
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyRequest::isForFrontPage\\(',
+
+                    'title' =>
+                    'ColbyRequest::isForFrontPage() replaced with ' .
+                    'ColbyRequest::currentRequestIsForTheFrontPage()',
+                ],
 
 
-            /**
-             * 2019_06_26
-             */
-            (object)[
-                'args' => '--ignore-file=match:init.php',
-                'filetype' => 'php',
-                'regex' => 'CBSiteDirectory',
-                'severity' => 4,
-                'title' => 'Replace CBSiteDirectory with cbsitedir()',
-            ],
+                /* -- warnings -- -- -- -- -- */
+
+                /**
+                 * 2019_07_05
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'class=CBImages&function=upload',
+                    'severity' => 4,
+                    'title' =>
+                    'Replace deprecated CBImages ajax upload function',
+                ],
 
 
-            /**
-             * 2019_06_26
-             */
-            (object)[
-                'args' => '--ignore-file=match:init.php',
-                'filetype' => 'php',
-                'regex' => 'COLBY_SYSTEM_DIRECTORY',
-                'severity' => 4,
-                'title' => 'Replace COLBY_SYSTEM_DIRECTORY with cbsysdir()',
-            ],
+                /**
+                 * 2019_06_26
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:init.php',
+                    'filetype' => 'php',
+                    'regex' => 'COLBY_SITE_DIRECTORY',
+                    'severity' => 4,
+                    'title' => 'Replace COLBY_SITE_DIRECTORY with cbsitedir()',
+                ],
 
 
-            /**
-             * 2019_06_26
-             */
-            (object)[
-                'args' => '--ignore-file=match:init.php',
-                'filetype' => 'php',
-                'regex' => 'CBSystemDirectory',
-                'severity' => 4,
-                'title' => 'Replace CBSystemDirectory with cbsysdir()',
-            ],
+                /**
+                 * 2019_06_26
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:init.php',
+                    'filetype' => 'php',
+                    'regex' => 'CBSiteDirectory',
+                    'severity' => 4,
+                    'title' => 'Replace CBSiteDirectory with cbsitedir()',
+                ],
 
 
-            /**
-             * 2019_06_22
-             */
-            (object)[
-                'filetype' => 'php',
-                'regex' => 'new\\s+CBAjaxResponse\\(',
-                'severity' => 4,
-                'title' => 'Replace CBAjaxResponse with CBAjax interfaces',
-            ],
+                /**
+                 * 2019_06_26
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:init.php',
+                    'filetype' => 'php',
+                    'regex' => 'COLBY_SYSTEM_DIRECTORY',
+                    'severity' => 4,
+                    'title' => 'Replace COLBY_SYSTEM_DIRECTORY with cbsysdir()',
+                ],
 
 
-            /**
-             * 2019_06_16
-             * Update interface function name
-             */
-            (object)[
-                'args' => implode(
-                    ' ',
-                    [
-                        '--ignore-file=match:CBUISpec.js',
-                        '--ignore-file=match:CBUISpec_Tests.js',
-                    ]
-                ),
-                'filetype' => 'js',
-                'regex' => '(?<!CBUISpec\\.)specToDescription',
-                'severity' => 4,
+                /**
+                 * 2019_06_26
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:init.php',
+                    'filetype' => 'php',
+                    'regex' => 'CBSystemDirectory',
+                    'severity' => 4,
+                    'title' => 'Replace CBSystemDirectory with cbsysdir()',
+                ],
 
-                'title' =>
-                'specToDescription() interface functions should have the ' .
-                'name CBUISpec_toDescription()',
-            ],
-        ];
+
+                /**
+                 * 2019_06_22
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'new\\s+CBAjaxResponse\\(',
+                    'severity' => 4,
+                    'title' => 'Replace CBAjaxResponse with CBAjax interfaces',
+                ],
+
+
+                /**
+                 * 2019_06_16
+                 * Update interface function name
+                 */
+                (object)[
+                    'args' => implode(
+                        ' ',
+                        [
+                            '--ignore-file=match:CBUISpec.js',
+                            '--ignore-file=match:CBUISpec_Tests.js',
+                        ]
+                    ),
+                    'filetype' => 'js',
+                    'regex' => '(?<!CBUISpec\\.)specToDescription',
+                    'severity' => 4,
+
+                    'title' =>
+                    'specToDescription() interface functions should have the ' .
+                    'name CBUISpec_toDescription()',
+                ],
+            ]
+        );
     }
     /* searches() */
 }
