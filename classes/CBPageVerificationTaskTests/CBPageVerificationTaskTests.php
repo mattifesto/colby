@@ -2,6 +2,9 @@
 
 final class CBPageVerificationTaskTests {
 
+    /**
+     * @return object
+     */
     static function CBTest_deprecatedAndUnsupportedViews(): stdClass {
         $ID = 'f9553b44249935fb78965c67862a1cec675b0835';
         $spec = CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews();
@@ -43,6 +46,8 @@ final class CBPageVerificationTaskTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_deprecatedAndUnsupportedViews() */
+
 
     /**
      * @return object
@@ -68,6 +73,8 @@ final class CBPageVerificationTaskTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_findDeprecatedSubviewClassNames() */
+
 
     /**
      * @return object
@@ -97,6 +104,8 @@ final class CBPageVerificationTaskTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_findUnsupportedSubviewClassNames() */
+
 
     /**
      * @return object
@@ -151,6 +160,8 @@ final class CBPageVerificationTaskTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_hasColbyPagesRow() */
+
 
     /**
      * This test creates a page with a `thumbnailURL` referencing an old style
@@ -258,6 +269,8 @@ final class CBPageVerificationTaskTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_importThumbnailURLToImage() */
+
 
     /**
      * @return object
@@ -337,6 +350,8 @@ final class CBPageVerificationTaskTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_invalidImageProperty() */
+
 
     /**
      * @return ?object
@@ -366,6 +381,8 @@ final class CBPageVerificationTaskTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_rowWithNoModel() */
+
 
     /**
      * This test creates a page that has a `thumbnailURL` that references an
@@ -473,6 +490,8 @@ EOT;
             'succeeded' => true,
         ];
     }
+    /* CBTest_upgradeThumbnailURLToImage() */
+
 
     /**
      * @return [[<class>, <test>]]
@@ -489,6 +508,8 @@ EOT;
             ['CBPageVerificationTask', 'upgradeThumbnailURLToImage'],
         ];
     }
+    /* CBUnitTests_tests() */
+
 
     /**
      * @return ID
@@ -553,6 +574,8 @@ EOT;
 
         return $ID;
     }
+    /* createPagesRowAndDataStoreWithoutModel() */
+
 
     /**
      * @return model
@@ -599,4 +622,6 @@ EOT;
             ],
         ];
     }
+    /* specWithDeprecatedAndUnsupportedViews() */
 }
+/* CBPageVerificationTaskTests */
