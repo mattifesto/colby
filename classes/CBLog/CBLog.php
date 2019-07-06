@@ -70,7 +70,7 @@ final class CBLog {
 
             --- dl
                 --- dt
-                backtrace
+                Who called CBLog::log()?
                 ---
 
                 --- dd
@@ -83,6 +83,8 @@ EOT;
 
         return $message;
     }
+    /* appendBacktrace() */
+
 
     /**
      * This function will run the callback buffering any log entries. If the
@@ -580,10 +582,16 @@ EOT;
      * @return void
      */
     private static function verifyEntry(stdClass $entry): void {
-        $entrySourceClassName = CBModel::valueToString($entry, 'sourceClassName');
+        $entrySourceClassName = CBModel::valueToString(
+            $entry,
+            'sourceClassName'
+        );
 
         if (empty($entrySourceClassName)) {
-            $entrySourceClassName = CBModel::valueToString($entry, 'className'); /* deprecated */
+            $entrySourceClassName = CBModel::valueToString(
+                $entry,
+                'className' /* deprecated */
+            );
         }
 
         $entryMessage = CBModel::valueToString($entry, 'message');
@@ -600,7 +608,8 @@ EOT;
             if (empty($entrySourceClassName)) {
                 $message = <<<EOT
 
-                    CBLog_warning_noClassName: A log entry was submitted that does not have a class name.
+                    CBLog_warning_noClassName: A log entry was submitted that
+                    does not have a source class name.
 
                     --- pre\n{$entryAsMessage}
                     ---
@@ -610,17 +619,20 @@ EOT;
 
 EOT;
 
-                CBLog::log((object)[
-                    'sourceClassName' => __CLASS__,
-                    'message' => $message,
-                    'severity' => 4,
-                ]);
+                CBLog::log(
+                    (object)[
+                        'sourceClassName' => __CLASS__,
+                        'message' => $message,
+                        'severity' => 4,
+                    ]
+                );
             }
 
             if (empty($entryMessage)) {
                 $message = <<<EOT
 
-                    CBLog_warning_noMessage: A log entry was submitted that does not have a message.
+                    CBLog_warning_noMessage: A log entry was submitted that does
+                    not have a message.
 
                     --- pre\n{$entryAsMessage}
                     ---
