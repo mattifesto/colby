@@ -95,142 +95,156 @@ EOT;
      * @return void
      */
     static function handleRequest(): void {
-        $canonicalEncodedPath = '';
-        $countOfStubs = count(ColbyRequest::$decodedStubs);
-        $function = null;
-
-        if (
-            0 === $countOfStubs &&
-            CBAjax::requestIsToCallAnAjaxFunction()
-        ) {
-            CBAjax::handleCallAjaxFunctionRequest();
-            return;
-        }
-
-        if (ColbyRequest::currentRequestIsForTheFrontPage()) {
-            $canonicalEncodedPath = '/';
-            $function = function() {
-                $frontPageID = CBSitePreferences::frontPageID();
-
-                if (isset($frontPageID)) {
-                    $model = CBModels::fetchModelByID($frontPageID);
-
-                    if (!empty($model)) {
-                        $model->title = CBSitePreferences::siteName();
-
-                        CBPage::render($model);
-
-                        return 1;
-                    }
-                }
-
-                return include Colby::findFile(
-                    'handlers/handle-front-page.php'
-                );
-            };
-        }
-
-        else if (
-            1 === $countOfStubs &&
-            'robots.txt' === ColbyRequest::$decodedStubs[0]
-        ) {
-            $canonicalEncodedPath = '/robots.txt';
-            $function = function() {
-                return include cbsysdir() .
-                '/handlers/handle-robots.php';
-            };
-        }
-
-        else if (
-            1 === $countOfStubs &&
-            'sitemap.xml' === ColbyRequest::$decodedStubs[0]
-        ) {
-            $canonicalEncodedPath = '/sitemap.xml';
-            $function = function() {
-                return include cbsysdir() .
-                '/handlers/handle-sitemap.php';
-            };
-        }
-
-        else {
-            $canonicalEncodedPath = implode('/', ColbyRequest::$encodedStubs);
-            $canonicalEncodedPath = "/{$canonicalEncodedPath}/";
-            $allStubs = implode(',', ColbyRequest::$encodedStubs);
-            $firstStub = ColbyRequest::$encodedStubs[0];
+        try {
+            $canonicalEncodedPath = '';
+            $countOfStubs = count(ColbyRequest::$decodedStubs);
+            $function = null;
 
             if (
-                $allStubsHandlerFilepath = Colby::findFile(
-                    "handlers/handle,{$allStubs}.php"
-                )
+                0 === $countOfStubs &&
+                CBAjax::requestIsToCallAnAjaxFunction()
             ) {
-                $function = function() use ($allStubsHandlerFilepath) {
-                    return include $allStubsHandlerFilepath;
+                CBAjax::handleCallAjaxFunctionRequest();
+                return;
+            }
+
+            if (ColbyRequest::currentRequestIsForTheFrontPage()) {
+                $canonicalEncodedPath = '/';
+                $function = function() {
+                    $frontPageID = CBSitePreferences::frontPageID();
+
+                    if (isset($frontPageID)) {
+                        $model = CBModels::fetchModelByID($frontPageID);
+
+                        if (!empty($model)) {
+                            $model->title = CBSitePreferences::siteName();
+
+                            CBPage::render($model);
+
+                            return 1;
+                        }
+                    }
+
+                    return include Colby::findFile(
+                        'handlers/handle-front-page.php'
+                    );
                 };
             }
 
             else if (
-                $firstStubHandlerFilepath = Colby::findFile(
-                    "handlers/handle,{$firstStub},.php"
-                )
+                1 === $countOfStubs &&
+                'robots.txt' === ColbyRequest::$decodedStubs[0]
             ) {
-                $function = function() use ($firstStubHandlerFilepath) {
-                    return include $firstStubHandlerFilepath;
+                $canonicalEncodedPath = '/robots.txt';
+                $function = function() {
+                    return include cbsysdir() .
+                    '/handlers/handle-robots.php';
+                };
+            }
+
+            else if (
+                1 === $countOfStubs &&
+                'sitemap.xml' === ColbyRequest::$decodedStubs[0]
+            ) {
+                $canonicalEncodedPath = '/sitemap.xml';
+                $function = function() {
+                    return include cbsysdir() .
+                    '/handlers/handle-sitemap.php';
                 };
             }
 
             else {
-                $row = ColbyRequest::pageRenderingDataForURI(
-                    implode(
-                        '/',
-                        ColbyRequest::$decodedStubs
+                $canonicalEncodedPath = implode('/', ColbyRequest::$encodedStubs);
+                $canonicalEncodedPath = "/{$canonicalEncodedPath}/";
+                $allStubs = implode(',', ColbyRequest::$encodedStubs);
+                $firstStub = ColbyRequest::$encodedStubs[0];
+
+                if (
+                    $allStubsHandlerFilepath = Colby::findFile(
+                        "handlers/handle,{$allStubs}.php"
                     )
-                );
+                ) {
+                    $function = function() use ($allStubsHandlerFilepath) {
+                        return include $allStubsHandlerFilepath;
+                    };
+                }
 
-                if ($row) {
-                    $canonicalEncodedPath =
-                    CBRequest::decodedPathToCanonicalEncodedPath($row->URI);
+                else if (
+                    $firstStubHandlerFilepath = Colby::findFile(
+                        "handlers/handle,{$firstStub},.php"
+                    )
+                ) {
+                    $function = function() use ($firstStubHandlerFilepath) {
+                        return include $firstStubHandlerFilepath;
+                    };
+                }
 
-                    if ($row->model) {
-                        $function = function() use ($row) {
-                            CBPage::render($row->model);
-                            return 1;
-                        };
+                else {
+                    $row = ColbyRequest::pageRenderingDataForURI(
+                        implode(
+                            '/',
+                            ColbyRequest::$decodedStubs
+                        )
+                    );
+
+                    if ($row) {
+                        $canonicalEncodedPath =
+                        CBRequest::decodedPathToCanonicalEncodedPath($row->URI);
+
+                        if ($row->model) {
+                            $function = function() use ($row) {
+                                CBPage::render($row->model);
+                                return 1;
+                            };
+                        }
                     }
                 }
             }
-        }
 
-        if ($function) {
-            if (ColbyRequest::$originalEncodedPath !== $canonicalEncodedPath) {
-                $redirectURI =
-                $canonicalEncodedPath .
-                CBRequest::requestURIToOriginalEncodedQueryString();
+            if ($function) {
+                if (ColbyRequest::$originalEncodedPath !== $canonicalEncodedPath) {
+                    $redirectURI =
+                    $canonicalEncodedPath .
+                    CBRequest::requestURIToOriginalEncodedQueryString();
 
-                header('Location: ' . $redirectURI, true, 301);
+                    header('Location: ' . $redirectURI, true, 301);
 
-                exit;
-            } else {
-                if (call_user_func($function) === 1) {
-                    return;
+                    exit;
+                } else {
+                    if (call_user_func($function) === 1) {
+                        return;
+                    }
                 }
             }
+
+            /**
+             * If the path provided is for an image that exists already and for an
+             * approved automatic resize, then resize the image and send it back.
+             */
+
+            if (CBImages::makeAndSendImageForPath(ColbyRequest::$decodedPath)) {
+                return;
+            }
+
+            /**
+             * Either no page was found or the function returned a value other than
+             * 1 which indicates that the page doesn't exist.
+             */
+
+            include Colby::findFile('handlers/handle-default.php');
+        } catch (Throwable $throwable) {
+            CBErrorHandler::report($throwable);
+
+            $message = $throwable->getMessage();
+            $filename = $throwable->getFile();
+            $line = $throwable->getLine();
+
+            error_log(
+                "An error was caught in " .
+                __METHOD__ .
+                "(): \"{$message}\" in {$filename} line {$line}"
+            );
         }
-
-        /**
-         * If the path provided is for an image that exists already and for an
-         * approved automatic resize, then resize the image and send it back.
-         */
-
-        if (CBImages::makeAndSendImageForPath(ColbyRequest::$decodedPath)) {
-            return;
-        }
-
-        /**
-         * Either no page was found or the function returned a value other than
-         * 1 which indicates that the page doesn't exist.
-         */
-
-        include Colby::findFile('handlers/handle-default.php');
     }
     /* handleRequest() */
 
