@@ -3,23 +3,53 @@
 final class CBPage {
 
     /**
+     * @TODO 2019_07_05
+     *
+     *      CBPage::render() should be modified to have this behavior.
+     *
+     *      CBPage::render() will either completely finish writing a page to the
+     *      buffer or it will write nothing to the buffer and throw an
+     *      exception.
+     *
+     *      CBPage::render() takes care all of the CBHTMLOutput
+     *      responsibilities. The caller should not, and the implementers of
+     *      CBPage_render() should not.
+     *
+     *      If CBPage::render() throws an exception the first time, feel free to
+     *      call it a second time with a different model to render an error
+     *      page.
+     *
+     *      If CBPage::render() throws an exception the second time, you should
+     *      manually render content to the buffer because there is something
+     *      serious going on.
+     *
+     * @NOTE
+     *
+     *      These changes will require some simplifications to CBHTMLOutput
+     *      also.
+     *
      * @param object $model
      *
-     * @return null
+     * @return void
      */
-    static function render(stdClass $model) {
-        $className = CBModel::value($model, 'className', '');
+    static function render(stdClass $model): void {
+        $className = CBModel::valueToString($model, 'className');
 
         if (is_callable($function = "{$className}::CBPage_render")) {
             CBHTMLOutput::requireClassName($className);
+
             call_user_func($function, $model);
         } else {
-            $ID = CBModel::value($model, 'ID', '(no ID)');
-            $title = CBModel::value($model, 'title', '(no title)');
+            $ID = CBModel::valueAsID($model, 'ID');
+            $title = CBModel::valueToString($model, 'title');
 
-            throw new Exception("The page, {$title} ({$ID}), was unable to render.");
+            throw new Exception(
+                "The page, {$title} ({$ID}), was unable to render."
+            );
         }
     }
+    /* render() */
+
 
     /**
      * @param object $spec
