@@ -300,44 +300,52 @@ EOT;
         CBViewPage::initializePageInformation($model);
         CBHTMLOutput::begin();
 
-        if (empty($model->layout->className)) {
+        try {
+            if (empty($model->layout->className)) {
 
-            /**
-             * TODO 2018.04.07
-             *
-             *      The main element is the container of the CBViewPage class.
-             *      The CBViewPage class should allow you to add classes and
-             *      styles to this element. It does not currently allow that, so
-             *      for now the CBViewPage_default class name is added which
-             *      eventually can be removed by specifying the "custom" class
-             *      name manually.
-             */
+                /**
+                 * @TODO 2018_04_07
+                 *
+                 *      The main element is the container of the CBViewPage class.
+                 *      The CBViewPage class should allow you to add classes and
+                 *      styles to this element. It does not currently allow that, so
+                 *      for now the CBViewPage_default class name is added which
+                 *      eventually can be removed by specifying the "custom" class
+                 *      name manually.
+                 */
 
-            $renderContent = function () use ($model) {
-                echo '<main class="CBViewPage CBViewPage_default">';
-                $sections = CBModel::valueToArray($model, 'sections');
-                array_walk($sections, 'CBView::render');
-                echo '</main>';
-            };
+                $renderContent = function () use ($model) {
+                    echo '<main class="CBViewPage CBViewPage_default">';
+                    $sections = CBModel::valueToArray($model, 'sections');
+                    array_walk($sections, 'CBView::render');
+                    echo '</main>';
+                };
 
-            $frameClassName = CBModel::valueToString($model, 'frameClassName');
+                $frameClassName = CBModel::valueToString($model, 'frameClassName');
 
-            CBPageFrame::render($frameClassName, $renderContent);
-        } else {
-            $renderContentCallback = function () use ($model) {
-                $sections = CBModel::valueToArray($model, 'sections');
-                array_walk($sections, 'CBView::render');
-            };
+                CBPageFrame::render($frameClassName, $renderContent);
+            } else {
+                $renderContentCallback = function () use ($model) {
+                    $sections = CBModel::valueToArray($model, 'sections');
+                    array_walk($sections, 'CBView::render');
+                };
 
-            CBHTMLOutput::requireClassName($model->layout->className);
+                CBHTMLOutput::requireClassName($model->layout->className);
 
-            if (is_callable($renderLayout = "{$model->layout->className}::render")) {
-                call_user_func($renderLayout, $model->layout, $renderContentCallback);
+                if (is_callable($renderLayout = "{$model->layout->className}::render")) {
+                    call_user_func($renderLayout, $model->layout, $renderContentCallback);
+                }
             }
-        }
 
-        CBHTMLOutput::render();
+            CBHTMLOutput::render();
+        } catch (Throwable $throwable) {
+            CBHTMLOutput::reset();
+
+            throw $throwable;
+        }
     }
+    /* CBPage_render() */
+
 
     /**
      * This function copies the appropriate model information into the
