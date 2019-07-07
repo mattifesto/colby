@@ -248,6 +248,16 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2019_07_07
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBView::renderModelAsHTML',
+                    'title' => 'Replace use of CBView::renderModelAsHTML()',
+                ],
+
+
+                /**
                  * 2019_06_16
                  * Use CBConvert
                  */
