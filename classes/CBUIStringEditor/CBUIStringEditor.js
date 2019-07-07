@@ -1,6 +1,7 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
+/* exported CBUIStringEditor */
 /* global
     Colby,
 */
@@ -27,23 +28,27 @@ var CBUIStringEditor = {
         var input = document.createElement("textarea");
         input.id = ID;
 
-        input.addEventListener("input", function () {
-            resize();
+        input.addEventListener(
+            "input",
+            function () {
+                resize();
 
-            if (typeof changed === "function") {
-                changed();
+                if (typeof changed === "function") {
+                    changed();
+                }
             }
-        });
+        );
 
         element.appendChild(label);
         element.appendChild(input);
 
         /**
-         * @NOTE 2015.09.24
-         * We have two timeouts because there is a bug in Safari where the
-         * height is not calculated correctly the first time. The first height
-         * is close which is why we keep both calls. Remove the second timeout
-         * once the bug has been fixed.
+         * @NOTE 2015_09_24
+         *
+         *      We have two timeouts because there is a bug in Safari where the
+         *      height is not calculated correctly the first time. The first
+         *      height is close which is why we keep both calls. Remove the
+         *      second timeout once the bug has been fixed.
          */
         window.setTimeout(resize, 0);
         window.setTimeout(resize, 1000);
@@ -116,38 +121,50 @@ var CBUIStringEditor = {
         var label = document.createElement("label");
         label.htmlFor = ID;
         label.textContent = args.labelText || "";
-        var input = CBUIStringEditor.createInputElement({ type : args.type });
+        var input = CBUIStringEditor.createInputElement({ type: args.type });
         input.id = ID;
         input.placeholder = args.placeholderText || "";
         var resizeTextAreaCallback;
 
         if (input.tagName === "TEXTAREA") {
-            resizeTextAreaCallback = CBUIStringEditor.resizeTextArea.bind(undefined, {
-                inputElement : input,
-            });
+            resizeTextAreaCallback = CBUIStringEditor.resizeTextArea.bind(
+                undefined,
+                {
+                    inputElement: input,
+                }
+            );
         } else {
             resizeTextAreaCallback = CBUIStringEditor.noop;
         }
 
-        var inputCallback = CBUIStringEditor.handleInput.bind(undefined, {
-            propertyName : args.propertyName,
-            resizeTextAreaCallback : resizeTextAreaCallback,
-            inputElement : input,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        });
+        var inputCallback = CBUIStringEditor.handleInput.bind(
+            undefined,
+            {
+                propertyName: args.propertyName,
+                resizeTextAreaCallback: resizeTextAreaCallback,
+                inputElement: input,
+                spec: args.spec,
+                specChangedCallback: args.specChangedCallback,
+            }
+        );
 
-        var updateLabelCallback = CBUIStringEditor.updateLabel.bind(undefined, {
-            labelElement : label,
-        });
+        var updateLabelCallback = CBUIStringEditor.updateLabel.bind(
+            undefined,
+            {
+                labelElement: label,
+            }
+        );
 
-        var updateValueCallback = CBUIStringEditor.updateValue.bind(undefined, {
-            propertyName : args.propertyName,
-            resizeTextAreaCallback : resizeTextAreaCallback,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-            inputElement : input,
-        });
+        var updateValueCallback = CBUIStringEditor.updateValue.bind(
+            undefined,
+            {
+                propertyName: args.propertyName,
+                resizeTextAreaCallback: resizeTextAreaCallback,
+                spec: args.spec,
+                specChangedCallback: args.specChangedCallback,
+                inputElement: input,
+            }
+        );
 
         input.addEventListener("input", inputCallback);
 
@@ -183,7 +200,7 @@ var CBUIStringEditor = {
      *
      * @return Element
      */
-    createInputElement : function (args) {
+    createInputElement: function (args) {
         var element;
 
         switch (args.type) {
@@ -214,7 +231,7 @@ var CBUIStringEditor = {
      *
      * @return  undefined
      */
-    handleInput : function (args) {
+    handleInput: function (args) {
         args.spec[args.propertyName] = args.inputElement.value;
 
         args.resizeTextAreaCallback.call();
@@ -224,14 +241,14 @@ var CBUIStringEditor = {
     /**
      * @return undefined
      */
-    noop : function () { },
+    noop: function () { },
 
     /**
      * @param Element args.inputElement
      *
      * @return undefined
      */
-    resizeTextArea : function (args) {
+    resizeTextArea: function (args) {
         args.inputElement.style.height = "0";
         args.inputElement.style.height = args.inputElement.scrollHeight + "px";
     },
@@ -242,7 +259,7 @@ var CBUIStringEditor = {
      *
      * @return undefined
      */
-    updateLabel : function (args, labelText) {
+    updateLabel: function (args, labelText) {
         args.labelElement.textContent = labelText;
     },
 
@@ -256,7 +273,7 @@ var CBUIStringEditor = {
      *
      * @return undefined
      */
-    updateValue : function (args, value) {
+    updateValue: function (args, value) {
         if (value === undefined) {
             args.inputElement.value = args.spec[args.propertyName] || "";
         } else {

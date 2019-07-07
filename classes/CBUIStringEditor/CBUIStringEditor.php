@@ -11,14 +11,16 @@ final class CBUIStringEditor {
         ];
     }
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v420.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v485.js', cbsysurl()),
         ];
     }
+
 
     /**
      * @return [string]
