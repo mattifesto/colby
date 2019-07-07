@@ -725,6 +725,8 @@ EOT;
             );
         }
     }
+    /* valueAsNames() */
+
 
     /**
      * Determines whether the value parameter can reasonably be interpreted to
@@ -963,7 +965,12 @@ EOT;
      */
     static function valueToNames($value): array {
         $value = CBConvert::valueToString($value);
-        $names = preg_split('/[^A-Za-z0-9_]+/', $value, null, PREG_SPLIT_NO_EMPTY);
+        $names = preg_split(
+            '/[^A-Za-z0-9_]+/',
+            $value,
+            null,
+            PREG_SPLIT_NO_EMPTY
+        );
 
         if ($names === false) {
             return [];
