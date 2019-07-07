@@ -125,6 +125,12 @@ final class CBCodeAdmin {
     /* -- functions -- -- -- -- -- */
 
     /**
+     * You can create a class in each library in which to implement the
+     * CBCodeAdmin_searches() interface to add searches for that library. You
+     * can actually add multiple classes, but the names of all the classes
+     * should include "CodeAdmin" because these clases are automatically removed
+     * from the search.
+     *
      * @param object $search
      *
      * @return [string]
@@ -140,7 +146,7 @@ final class CBCodeAdmin {
                 '--underline',
                 "--match '{$search->regex}'",
                 '--ignore-dir=data',
-                '--ignore-file=match:CBCodeAdmin',
+                '--ignore-file=match:CodeAdmin',
                 CBModel::valueToString($search, 'args'),
             ]
         );
