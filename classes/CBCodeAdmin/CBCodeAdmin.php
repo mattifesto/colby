@@ -139,6 +139,7 @@ final class CBCodeAdmin {
                 '--heading',
                 '--underline',
                 "--match '{$search->regex}'",
+                '--ignore-dir=data',
                 '--ignore-file=match:CBCodeAdmin',
                 CBModel::valueToString($search, 'args'),
             ]
