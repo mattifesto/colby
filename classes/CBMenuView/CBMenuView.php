@@ -5,7 +5,7 @@ final class CBMenuView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function CBHTMLOutput_CSSURLs(): array {
         return [
             Colby::flexpath(__CLASS__, 'v458.css', cbsysurl()),
         ];
@@ -14,7 +14,7 @@ final class CBMenuView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
             Colby::flexpath(__CLASS__, 'v376.js', cbsysurl()),
         ];
@@ -23,9 +23,9 @@ final class CBMenuView {
     /**
      * @param model $spec
      *
-     * @return ?object
+     * @return object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
+    static function CBModel_build(stdClass $spec): stdClass {
         return (object)[
             'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
             'menuID' => CBModel::valueAsID($spec, 'menuID'),
