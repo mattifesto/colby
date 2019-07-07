@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @deprecated 2019_07_07 use CBMenuView
+ */
 final class CBThemedMenuView {
 
     /**
