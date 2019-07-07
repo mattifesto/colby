@@ -31,11 +31,13 @@
     align-items: center;
     justify-content: center;
 
-    background: linear-gradient(var(--CBButtonBackgroundColorHighlight), var(--CBButtonBackgroundColor));
+    background: linear-gradient(var(--CBButtonBackgroundColorHighlight),
+                var(--CBButtonBackgroundColor));
     border: 1px solid var(--CBButtonBackgroundColor);
     border-radius: 5px;
     box-sizing: border-box;
     color: var(--CBButtonTextColor);
+    max-width: 100%;
     min-height: 44px;
     padding: 5px 10px;
     text-align: center;
@@ -45,7 +47,6 @@
 
     user-select: none;
     -moz-user-select: none;
-    -ms-user-select: none;
     -webkit-user-select: none;
 }
 
@@ -253,6 +254,21 @@
 .CBUI_padding_half {
     padding: 10px;
 }
+
+/* 2019_07_07 */
+
+.CBUI_panel {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    position: fixed;
+    z-index: 1500; /* see CBEqualizePageSettingsPart.css */
+}
+
 
 .CBUI_section {
     background-color: hsl(0, 0%, 100%); /* IE11 */
