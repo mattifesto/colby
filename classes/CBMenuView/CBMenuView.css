@@ -333,3 +333,17 @@
 .CBMenuView_list1 .CBMenuView_listItemTitle a:hover {
     text-decoration: none;
 }
+
+
+/* -- CBMenuView_listOfOnlyItems -- -- -- -- -- */
+
+.CBMenuView_listOfOnlyItems .CBMenuView_containerTitle,
+.CBMenuView_listOfOnlyItems .CBMenuView_header,
+.CBMenuView_listOfOnlyItems .CBMenuView_listItemTitle {
+    display: none;
+}
+
+.CBMenuView_listOfOnlyItems ul {
+    list-style: none;
+    padding: 0;
+}

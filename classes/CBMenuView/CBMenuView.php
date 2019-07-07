@@ -2,14 +2,18 @@
 
 final class CBMenuView {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v458.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v485.css', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
 
     /**
      * @return [string]
