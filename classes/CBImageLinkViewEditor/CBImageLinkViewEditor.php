@@ -8,6 +8,7 @@ final class CBImageLinkViewEditor {
     static function CBHTMLOutput_requiredClassNames() {
         return [
             'CBImage',
+            'CBModel',
             'CBUI',
             'CBUIBooleanEditor',
             'CBUIImageUploader',
