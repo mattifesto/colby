@@ -45,9 +45,6 @@ var CBImageLinkViewEditor = {
         var element = document.createElement("div");
         element.className = "CBImageLinkViewEditor";
 
-        var dimensionsElement = document.createElement("div");
-        dimensionsElement.className = "dimensions";
-
         let imageChooser = CBUIImageChooser.createFullSizedChooser(
             {
                 imageChosenCallback: createEditor_handleImageChosen,
@@ -74,7 +71,8 @@ var CBImageLinkViewEditor = {
             element.appendChild(sectionContainerElement);
         }
 
-        /* image chooser */
+
+        /* -- image chooser -- -- -- -- -- */
 
         {
             let sectionItemElement = CBUI.createElement("CBUI_sectionItem");
@@ -85,10 +83,21 @@ var CBImageLinkViewEditor = {
         }
 
 
-        /* dimensions element */
-        item = CBUI.createSectionItem();
-        item.appendChild(dimensionsElement);
-        sectionElement.appendChild(item);
+        /* -- dimensions text element -- -- -- -- -- */
+
+        let dimensionsTextElement = CBUI.createElement(
+            "CBUI_textColor2 CBUI_textAlign_center"
+        );
+
+        {
+            let sectionItemElement = CBUI.createElement(
+                "CBUI_container_topAndBottom"
+            );
+
+            sectionElement.appendChild(sectionItemElement);
+
+            sectionItemElement.appendChild(dimensionsTextElement);
+        }
 
 
         /* retina */
@@ -219,11 +228,11 @@ var CBImageLinkViewEditor = {
          */
         function createEditor_updateDimensions() {
             if (spec.URL === undefined) {
-                dimensionsElement.textContent = "no image";
+                dimensionsTextElement.textContent = "no image";
             } else {
                 var width = (spec.width/2) + "pt (" + spec.width + "px)";
                 var height = (spec.height/2) + "pt (" + spec.height + "px)";
-                dimensionsElement.textContent = width + " × " + height;
+                dimensionsTextElement.textContent = width + " × " + height;
             }
         }
         /* createEditor_updateDimensions() */
