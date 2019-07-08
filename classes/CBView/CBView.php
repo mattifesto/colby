@@ -36,12 +36,17 @@ final class CBView {
      *
      * Sample code:
      *
-     *      $CSSTemplate = trim(CBConvert::valueToString(CBModel::value($spec, 'CSSTemplate')));
+     *      $CSSTemplate = trim(
+     *          CBConvert::valueToString(CBModel::value($spec, 'CSSTemplate'))
+     *      );
      *
      *      if ($CSSTemplate !== '') {
      *          $uniqueCSSClassName = 'ID_' . CBHex160::random();
      *          $model->CSSClassNames[] = $uniqueCSSClassName;
-     *          $model->CSS = CBView::CSSTemplateToCSS($CSSTemplate, $uniqueCSSClassName);
+     *          $model->CSS = CBView::CSSTemplateToCSS(
+     *              $CSSTemplate,
+     *              $uniqueCSSClassName
+     *          );
      *      }
      *
      * @param string $CSSTemplate
@@ -49,8 +54,15 @@ final class CBView {
      *
      * @return string
      */
-    static function CSSTemplateToCSS(string $CSSTemplate, string $uniqueCSSClassName): string {
-        return CBView::localCSSTemplateToLocalCSS($CSSTemplate, 'view', ".{$uniqueCSSClassName}");
+    static function CSSTemplateToCSS(
+        string $CSSTemplate,
+        string $uniqueCSSClassName
+    ): string {
+        return CBView::localCSSTemplateToLocalCSS(
+            $CSSTemplate,
+            'view',
+            ".{$uniqueCSSClassName}"
+        );
     }
 
     /**
@@ -144,21 +156,41 @@ final class CBView {
      *
      * @return string
      */
-    static function localCSSTemplateToLocalCSS($localCSSTemplate, $keyword, $selector) {
+    static function localCSSTemplateToLocalCSS(
+        $localCSSTemplate,
+        $keyword,
+        $selector
+    ) {
         $escapedKeywordPlaceholder = CBHex160::random();
         $localCSS = $localCSSTemplate;
 
         // Replace escaped keywords with a temporary placeholder.
-        $localCSS = preg_replace("/\\\\{$keyword}/", $escapedKeywordPlaceholder, $localCSS);
+        $localCSS = preg_replace(
+            "/\\\\{$keyword}/",
+            $escapedKeywordPlaceholder,
+            $localCSS
+        );
 
         // Replace the keyword, optionally prefixed with a dot, with the selector.
-        $localCSS = preg_replace("/\\.?{$keyword}/", $selector, $localCSS);
+        $localCSS = preg_replace(
+            "/\\.?{$keyword}/",
+            $selector,
+            $localCSS
+        );
 
         // Replace the temporary placeholder with the unescaped keyword.
-        $localCSS = preg_replace("/{$escapedKeywordPlaceholder}/", $keyword, $localCSS);
+        $localCSS = preg_replace(
+            "/{$escapedKeywordPlaceholder}/",
+            $keyword,
+            $localCSS
+        );
 
         if (preg_match('/<\\/style *>/', $localCSS, $matches)) {
-            throw new RuntimeException("The \$localCSSTemplate argument contains the string \"{$matches[0]}\" which is not allowed for security reasons.");
+            throw new RuntimeException(
+                "The \$localCSSTemplate argument contains the string " .
+                "\"{$matches[0]}\" which is not allowed for security " .
+                "reasons."
+            );
         }
 
         return $localCSS;
@@ -212,25 +244,24 @@ final class CBView {
 
         if (is_callable($function = "{$className}::CBView_render")) {
             call_user_func($function, $model);
-        } else if (is_callable($function = "{$className}::renderModelAsHTML")) { // deprecated
+        }
+
+        /* deprecated */
+        else if (is_callable($function = "{$className}::renderModelAsHTML")) {
             call_user_func($function, $model);
-        } else if (CBSitePreferences::debug()) {
+        }
+
+        else if (CBSitePreferences::debug()) {
             $classNameAsComment = ': ' . str_replace('--', ' - - ', $className);
 
-            echo "<!-- CBView::render() found no CBView_render() function for the class: \"{$classNameAsComment}\" -->";
+            echo (
+                "<!-- CBView::render() found no CBView_render() function " .
+                "for the class: \"{$classNameAsComment}\" -->"
+            );
         }
     }
+    /* render() */
 
-    /**
-     * @deprecated use CBView::render()
-     */
-    static function renderModelAsHTML(stdClass $model) {
-        $className = CBModel::valueToString($model, 'className');
-
-        if ($className != 'CBView') {
-            return CBView::render($model);
-        }
-    }
 
     /**
      * This function makes it easy to create a view spec and render it from PHP
@@ -249,7 +280,10 @@ final class CBView {
             $className = CBModel::value($spec, 'className', '');
             $className = str_replace('--', ' - - ', $className);
 
-            echo "<!-- CBView::renderSpec() could not convert a '{$className}' spec into a model. -->";
+            echo (
+                "<!-- CBView::renderSpec() could not convert a " .
+                "'{$className}' spec into a model. -->"
+            );
         }
     }
 
