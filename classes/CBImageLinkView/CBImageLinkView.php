@@ -51,6 +51,10 @@ final class CBImageLinkView {
      *
      *              The height of the image in pixels
      *
+     *          image: object
+     *
+     *              The image spec for the image used.
+     *
      *          HREF: string
      *
      *              The link HREF
@@ -64,10 +68,10 @@ final class CBImageLinkView {
      *              The width of the image in pixels
      *      }
      *
-     * @return ?model
+     * @return object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        return (object)[
+    static function CBModel_build(stdClass $spec): stdClass {
+        $model = (object)[
             'alt' => CBModel::valueToString($spec, 'alt'),
             'retina' => !empty($spec->retina),
             'density' => empty($spec->retina) ? '1x' : '2x',
@@ -76,7 +80,17 @@ final class CBImageLinkView {
             'URL' => CBModel::valueToString($spec, 'URL'),
             'width' => CBModel::valueAsInt($spec, 'width'),
         ];
+
+        /* image */
+
+        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+            $model->image = CBModel::build($imageSpec);
+        }
+
+        return $model;
     }
+    /* CBModel_build() */
+
 
     /**
      * @param model $model
