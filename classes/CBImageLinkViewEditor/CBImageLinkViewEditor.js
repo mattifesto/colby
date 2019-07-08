@@ -70,21 +70,21 @@ var CBImageLinkViewEditor = {
 
         updateDimensionsCallback();
 
-        var handleImageUploadedCallback = CBImageLinkViewEditor.handleImageUploaded.bind(undefined, {
-            callbacks: [
-                transferImagePropertiesCallback,
-                imageView.imageChangedCallback,
-                updateDimensionsCallback,
-                args.specChangedCallback,
-            ],
-        });
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIImageUploader.create({
-            propertyName: "image",
-            spec: specWithImage,
-            specChangedCallback: handleImageUploadedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIImageUploader.create(
+                {
+                    propertyName: "image",
+                    spec: specWithImage,
+                    specChangedCallback: function () {
+                        createEditor_handleImageUploaded();
+                    },
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         /* retina */
@@ -121,15 +121,21 @@ var CBImageLinkViewEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         return element;
-    },
 
+        /* -- closures -- -- -- -- -- */
 
-    /**
-     * @param [function] callbacks
-     */
-    handleImageUploaded: function (args) {
-        args.callbacks.forEach(function (callback) { callback(); });
+        /**
+         * @return undefined
+         */
+        function createEditor_handleImageUploaded() {
+            transferImagePropertiesCallback();
+            imageView.imageChangedCallback();
+            updateDimensionsCallback();
+            args.specChangedCallback();
+        }
+        /* createEditor_handleImageUploaded() */
     },
+    /* createEditor() */
 
 
     /**

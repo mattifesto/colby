@@ -32,7 +32,7 @@ final class CBImageLinkViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v480.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v485.js', cbsysurl())
         ];
     }
 }
