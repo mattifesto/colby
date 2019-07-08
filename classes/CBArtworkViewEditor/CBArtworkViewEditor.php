@@ -9,7 +9,7 @@ final class CBArtworkViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v484.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v485.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -21,6 +21,7 @@ final class CBArtworkViewEditor {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBImage',
+            'CBModel',
             'CBUI',
             'CBUIImageChooser',
             'CBUISelector',

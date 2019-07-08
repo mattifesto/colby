@@ -4,13 +4,12 @@
 /* exported CBArtworkViewEditor */
 /* globals
     CBImage,
+    CBModel,
     CBUI,
     CBUIImageChooser,
     CBUISelector,
     CBUIStringEditor,
     Colby,
-
-    CBViewPageEditor,
 */
 
 var CBArtworkViewEditor = {
@@ -218,7 +217,14 @@ var CBArtworkViewEditor = {
                         CBImage.toURL(imageModel, "rw960")
                     );
 
-                    CBViewPageEditor.suggestThumbnailImage(imageModel);
+                    let suggestThumbnailImage = CBModel.valueAsFunction(
+                        window.CBViewPageEditor,
+                        "suggestThumbnailImage"
+                    );
+
+                    if (suggestThumbnailImage) {
+                        suggestThumbnailImage(imageModel);
+                    }
                 }
             ).catch(
                 function (error) {
