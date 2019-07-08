@@ -25,8 +25,6 @@ var CBImageLinkViewEditor = {
      * @return  Element
      */
     createEditor: function (args) {
-        let item;
-
         let spec = CBModel.valueAsModel(args, "spec");
 
         if (spec === undefined) {
@@ -42,8 +40,7 @@ var CBImageLinkViewEditor = {
             throw TypeError("specChangedCallback");
         }
 
-        var element = document.createElement("div");
-        element.className = "CBImageLinkViewEditor";
+        var element = CBUI.createElement("CBImageLinkViewEditor");
 
         let imageChooser = CBUIImageChooser.createFullSizedChooser(
             {
@@ -100,57 +97,64 @@ var CBImageLinkViewEditor = {
         }
 
 
-        /* retina */
-        item = CBUI.createSectionItem();
+        /* -- retina -- -- -- -- -- */
 
-        item.appendChild(
-            CBUIBooleanEditor.create(
-                {
-                    labelText: "Retina",
-                    propertyName: "retina",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
-                }
-            ).element
-        );
+        {
+            let sectionItemElement = CBUI.createElement("CBUI_sectionItem");
 
-        sectionElement.appendChild(item);
+            sectionElement.appendChild(sectionItemElement);
 
-        /* alternative text */
-        item = CBUI.createSectionItem();
+            sectionItemElement.appendChild(
+                CBUIBooleanEditor.create(
+                    {
+                        labelText: "Retina",
+                        propertyName: "retina",
+                        spec: spec,
+                        specChangedCallback: specChangedCallback,
+                    }
+                ).element
+            );
+        }
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Alternative Text",
-                    propertyName: "alt",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
-                }
-            ).element
-        );
 
-        sectionElement.appendChild(item);
+        /* -- alternative text -- -- -- -- -- */
 
-        /* link href */
-        item = CBUI.createSectionItem();
+        {
+            let sectionItemElement = CBUI.createElement("CBUI_sectionItem");
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Link HREF",
-                    propertyName: "HREF",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
-                }
-            ).element
-        );
+            sectionElement.appendChild(sectionItemElement);
 
-        sectionElement.appendChild(item);
+            sectionItemElement.appendChild(
+                CBUIStringEditor.createEditor(
+                    {
+                        labelText: "Alternative Text",
+                        propertyName: "alt",
+                        spec: spec,
+                        specChangedCallback: specChangedCallback,
+                    }
+                ).element
+            );
+        }
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
+
+        /* -- URL -- -- -- -- -- */
+
+        {
+            let sectionItemElement = CBUI.createElement("CBUI_sectionItem");
+
+            sectionElement.appendChild(sectionItemElement);
+
+            sectionItemElement.appendChild(
+                CBUIStringEditor.createEditor(
+                    {
+                        labelText: "URL",
+                        propertyName: "HREF",
+                        spec: spec,
+                        specChangedCallback: specChangedCallback,
+                    }
+                ).element
+            );
+        }
 
         createEditor_updateDimensions();
 
