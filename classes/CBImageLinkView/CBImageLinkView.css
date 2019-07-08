@@ -7,6 +7,10 @@
     overflow: hidden;
 }
 
-.CBImageLinkView > img {
-    flex : none;
+.CBImageLinkView_container {
+    flex: none;
+}
+
+.CBImageLinkView img {
+    display: block;
 }

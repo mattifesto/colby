@@ -28,7 +28,7 @@ final class CBImageLinkView {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v480.css', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v485.css', cbsysurl())
         ];
     }
 
@@ -101,6 +101,9 @@ final class CBImageLinkView {
         return CBModel::valueToString($model, 'alt');
     }
 
+
+    /* -- CBView interfaces -- -- -- -- -- */
+
     /**
      * @param model $model
      *
@@ -141,10 +144,18 @@ final class CBImageLinkView {
 
         ?>
 
-        <<?= $tag ?> class="CBImageLinkView" <?= $href ?>>
-            <img src="<?= cbhtml($URL) ?>" alt="<?= cbhtml($alt) ?>" style="<?= $styles ?>">
-        </<?= $tag ?>>
+        <div class="CBImageLinkView">
+            <<?= $tag ?> class="CBImageLinkView_container" <?= $href ?>>
+                <img
+                    src="<?= cbhtml($URL) ?>"
+                    alt="<?= cbhtml($alt) ?>"
+                    style="<?= $styles ?>"
+                >
+            </<?= $tag ?>>
+        </div>
 
         <?php
     }
+    /* CBView_render() */
 }
+/* CBImageLinkView */
