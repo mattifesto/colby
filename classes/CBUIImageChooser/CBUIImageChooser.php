@@ -2,17 +2,26 @@
 
 final class CBUIImageChooser {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v375.css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v485.css', cbsysurl()),
+        ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v399.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v399.js', cbsysurl()),
+        ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 }
+/* CBUIImageChooser */
