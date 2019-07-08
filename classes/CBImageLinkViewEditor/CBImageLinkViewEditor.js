@@ -246,12 +246,12 @@ var CBImageLinkViewEditor = {
 
     /**
      * @param object spec
-     * @param string? spec.alt
      *
      * @return string|undefined
      */
-    specToDescription: function (spec) {
-        return spec.alt;
+    CBUISpec_toDescription: function (spec) {
+        return CBModel.valueToString(spec, "alt").trim() || undefined;
     },
+    /* CBUISpec_toDescription() */
 };
 /* CBImageLinkViewEditor */
