@@ -162,6 +162,10 @@ final class CBCodeAdmin {
                 $command .= ' --php';
                 break;
 
+            case 'args':
+
+                break;
+
             default:
 
                 throw new Exception('unknown filetype');
@@ -244,6 +248,17 @@ final class CBCodeAdmin {
                     'filetype' => 'php',
                     'regex' => 'CBThemedMenuView',
                     'title' => 'Replace use of CBThemedMenuView',
+                ],
+
+
+                /**
+                 * 2019_07_08
+                 */
+                (object)[
+                    'args' => '--php --js --css',
+                    'filetype' => 'args',
+                    'regex' => 'CBUIImageUploader',
+                    'title' => 'Replace use of CBUIImageUploader',
                 ],
 
 
