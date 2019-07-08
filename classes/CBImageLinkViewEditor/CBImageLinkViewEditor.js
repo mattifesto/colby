@@ -35,8 +35,9 @@ var CBImageLinkViewEditor = {
 
         var element = document.createElement("div");
         element.className = "CBImageLinkViewEditor";
-        var dimensions = document.createElement("div");
-        dimensions.className = "dimensions";
+
+        var dimensionsElement = document.createElement("div");
+        dimensionsElement.className = "dimensions";
 
         /* upgrade spec */
         if (spec.density !== undefined) {
@@ -63,22 +64,16 @@ var CBImageLinkViewEditor = {
         item.appendChild(imageView.element);
         section.appendChild(item);
 
-        /* dimensions */
+        /* dimensions element */
         item = CBUI.createSectionItem();
-        item.appendChild(dimensions);
+        item.appendChild(dimensionsElement);
         section.appendChild(item);
 
         /* image uploader */
 
         var specWithImage = {};
 
-        var updateDimensionsCallback = CBImageLinkViewEditor.updateDimensions.bind(undefined, {
-            dimensionsElement: dimensions,
-            spec: spec,
-        });
-
-        updateDimensionsCallback();
-
+        createEditor_updateDimensions();
 
         item = CBUI.createSectionItem();
 
@@ -151,6 +146,7 @@ var CBImageLinkViewEditor = {
 
         return element;
 
+
         /* -- closures -- -- -- -- -- */
 
         /**
@@ -164,10 +160,24 @@ var CBImageLinkViewEditor = {
             spec.URL = CBImage.toURL(image);
 
             imageView.imageChangedCallback();
-            updateDimensionsCallback();
+            createEditor_updateDimensions();
             args.specChangedCallback();
         }
         /* createEditor_handleImageUploaded() */
+
+        /**
+         * @return undefined
+         */
+        function createEditor_updateDimensions() {
+            if (spec.URL === undefined) {
+                dimensionsElement.textContent = "no image";
+            } else {
+                var width = (spec.width/2) + "pt (" + spec.width + "px)";
+                var height = (spec.height/2) + "pt (" + spec.height + "px)";
+                dimensionsElement.textContent = width + " × " + height;
+            }
+        }
+        /* createEditor_updateDimensions() */
     },
     /* createEditor() */
 
@@ -180,33 +190,6 @@ var CBImageLinkViewEditor = {
      */
     specToDescription: function (spec) {
         return spec.alt;
-    },
-
-
-    /**
-     * @param object spec
-     *
-     * @return string
-     */
-    specToDimensionsText: function (spec) {
-        if (spec.URL === undefined) {
-            return "no image";
-        } else {
-            var width = (spec.width/2) + "pt (" + spec.width + "px)";
-            var height = (spec.height/2) + "pt (" + spec.height + "px)";
-            return width + " × " + height;
-        }
-    },
-
-
-    /**
-     * @param Element args.dimensionsElement
-     * @param object args.spec
-     *
-     * @return undefined
-     */
-    updateDimensions: function (args) {
-        args.dimensionsElement.textContent = CBImageLinkViewEditor.specToDimensionsText(args.spec);
     },
 };
 /* CBImageLinkViewEditor */
