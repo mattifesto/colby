@@ -2,21 +2,7 @@
 
 final class CBImageLinkViewEditor {
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
-            'CBImage',
-            'CBModel',
-            'CBUI',
-            'CBUIBooleanEditor',
-            'CBUIImageUploader',
-            'CBUIImageURLView',
-            'CBUIStringEditor',
-        ];
-    }
-
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
@@ -26,6 +12,7 @@ final class CBImageLinkViewEditor {
             Colby::flexpath(__CLASS__, 'css', cbsysurl())
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
     /**
@@ -36,5 +23,23 @@ final class CBImageLinkViewEditor {
             Colby::flexpath(__CLASS__, 'v485.js', cbsysurl())
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBImage',
+            'CBModel',
+            'CBUI',
+            'CBUIBooleanEditor',
+            'CBUIImageChooser',
+            'CBUIStringEditor',
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 }
 /* CBImageLinkViewEditor */

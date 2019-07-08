@@ -7,9 +7,9 @@
     CBModel,
     CBUI,
     CBUIBooleanEditor,
-    CBUIImageUploader,
-    CBUIImageURLView,
+    CBUIImageChooser,
     CBUIStringEditor,
+    Colby,
 */
 
 var CBImageLinkViewEditor = {
@@ -25,12 +25,21 @@ var CBImageLinkViewEditor = {
      * @return  Element
      */
     createEditor: function (args) {
-        var section, item;
+        let item;
 
         let spec = CBModel.valueAsModel(args, "spec");
 
         if (spec === undefined) {
             throw TypeError("spec");
+        }
+
+        let specChangedCallback = CBModel.valueAsFunction(
+            args,
+            "specChangedCallback"
+        );
+
+        if (specChangedCallback === undefined) {
+            throw TypeError("specChangedCallback");
         }
 
         var element = document.createElement("div");
@@ -39,57 +48,48 @@ var CBImageLinkViewEditor = {
         var dimensionsElement = document.createElement("div");
         dimensionsElement.className = "dimensions";
 
+        let imageChooser = CBUIImageChooser.createFullSizedChooser(
+            {
+                imageChosenCallback: createEditor_handleImageChosen,
+                imageRemovedCallback: createEditor_handleImageRemoved,
+            }
+        );
+
         /* upgrade spec */
         if (spec.density !== undefined) {
             spec.retina = (spec.density === "2x");
             spec.density = undefined;
         }
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
 
-        section = CBUI.createSection();
+        let sectionElement = CBUI.createElement("CBUI_section");
 
-        /* image view */
-        item = CBUI.createSectionItem();
+        {
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
 
-        var imageView = CBUIImageURLView.create(
-            {
-                propertyName: "URL",
-                spec: spec,
-            }
-        );
+            sectionContainerElement.appendChild(sectionElement);
 
-        item.appendChild(imageView.element);
-        section.appendChild(item);
+            element.appendChild(sectionContainerElement);
+        }
+
+        /* image chooser */
+
+        {
+            let sectionItemElement = CBUI.createElement("CBUI_sectionItem");
+
+            sectionElement.appendChild(sectionItemElement);
+
+            sectionItemElement.appendChild(imageChooser.element);
+        }
+
 
         /* dimensions element */
         item = CBUI.createSectionItem();
         item.appendChild(dimensionsElement);
-        section.appendChild(item);
+        sectionElement.appendChild(item);
 
-        /* image uploader */
-
-        var specWithImage = {};
-
-        createEditor_updateDimensions();
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIImageUploader.create(
-                {
-                    propertyName: "image",
-                    spec: specWithImage,
-                    specChangedCallback: function () {
-                        createEditor_handleImageUploaded();
-                    },
-                }
-            ).element
-        );
-
-        section.appendChild(item);
 
         /* retina */
         item = CBUI.createSectionItem();
@@ -100,12 +100,12 @@ var CBImageLinkViewEditor = {
                     labelText: "Retina",
                     propertyName: "retina",
                     spec: spec,
-                    specChangedCallback: args.specChangedCallback,
+                    specChangedCallback: specChangedCallback,
                 }
             ).element
         );
 
-        section.appendChild(item);
+        sectionElement.appendChild(item);
 
         /* alternative text */
         item = CBUI.createSectionItem();
@@ -115,13 +115,13 @@ var CBImageLinkViewEditor = {
                 {
                     labelText: "Alternative Text",
                     propertyName: "alt",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
                 }
             ).element
         );
 
-        section.appendChild(item);
+        sectionElement.appendChild(item);
 
         /* link href */
         item = CBUI.createSectionItem();
@@ -132,17 +132,24 @@ var CBImageLinkViewEditor = {
                     labelText: "Link HREF",
                     propertyName: "HREF",
                     spec: spec,
-                    specChangedCallback: args.specChangedCallback,
+                    specChangedCallback: specChangedCallback,
                 }
             ).element
         );
 
-        section.appendChild(item);
-        element.appendChild(section);
+        sectionElement.appendChild(item);
 
         element.appendChild(
             CBUI.createHalfSpace()
         );
+
+        createEditor_updateDimensions();
+
+        /* set thumbnail */
+
+        if (spec.URL) {
+            imageChooser.setImageURLCallback(spec.URL);
+        }
 
         return element;
 
@@ -150,20 +157,62 @@ var CBImageLinkViewEditor = {
         /* -- closures -- -- -- -- -- */
 
         /**
+         * @param object chooseArgs
+         *
          * @return undefined
          */
-        function createEditor_handleImageUploaded() {
-            let image = specWithImage.image;
+        function createEditor_handleImageChosen(imageChooserArgs) {
+            Colby.callAjaxFunction(
+                "CBImages",
+                "upload",
+                {},
+                imageChooserArgs.file
+            ).then(
+                function (imageModel) {
+                    spec.image = imageModel;
+                    spec.height = imageModel.height;
+                    spec.width = imageModel.width;
+                    spec.URL = CBImage.toURL(imageModel);
 
-            spec.height = image.height;
-            spec.width = image.width;
-            spec.URL = CBImage.toURL(image);
+                    createEditor_updateDimensions();
+                    specChangedCallback();
 
-            imageView.imageChangedCallback();
-            createEditor_updateDimensions();
-            args.specChangedCallback();
+                    imageChooserArgs.setImageURI(
+                        CBImage.toURL(imageModel, "rw960")
+                    );
+
+                    let suggestThumbnailImage = CBModel.valueAsFunction(
+                        window.CBViewPageEditor,
+                        "suggestThumbnailImage"
+                    );
+
+                    if (suggestThumbnailImage) {
+                        suggestThumbnailImage(imageModel);
+                    }
+                }
+            ).catch(
+                function (error) {
+                    Colby.displayAndReportError(error);
+                }
+            );
         }
-        /* createEditor_handleImageUploaded() */
+        /* createEditor_handleImageChosen() */
+
+
+        /**
+         * @return undefined
+         */
+        function createEditor_handleImageRemoved() {
+            spec.image = undefined;
+            spec.height = undefined;
+            spec.width = undefined;
+            spec.URL = undefined;
+
+            createEditor_updateDimensions();
+            specChangedCallback();
+        }
+        /* createEditor_handleImageRemoved() */
+
 
         /**
          * @return undefined
