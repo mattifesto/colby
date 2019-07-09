@@ -223,11 +223,23 @@ final class CBCodeAdmin {
                  * 2019_07_09
                  */
                 (object)[
+                    'args' => '--ignore-file=match:CBModel\.php',
                     'filetype' => 'php',
                     'regex' => 'CBModel_toModel',
+                    'title' => 'Rename CBModel_toModel() to CBModel_build()',
+                ],
 
-                    'title' =>
-                    'Rename CBModel_toModel() to CBModel_build()',
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:CBModel\.php',
+                    'filetype' => 'php',
+                    'regex' => 'modelToSearchText',
+                    'title' => (
+                        'Rename modelToSearchText() to CBModel_toSearchText()'
+                    ),
                 ],
 
 
@@ -237,9 +249,9 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'js',
                     'regex' => 'CBModelUpdater',
-
-                    'title' =>
-                    'The CBModelUpdater JavaScript class has been removed',
+                    'title' => (
+                        'The CBModelUpdater JavaScript class has been removed'
+                    ),
                 ],
 
 
@@ -374,6 +386,96 @@ final class CBCodeAdmin {
                     'filetype' => 'js',
                     'regex' => 'warnOlderBrowsers\\(',
                     'title' => 'Colby.warnOlderBrowsers()',
+                ],
+
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyConvert::centsIntToDollarsString',
+                    'title' => (
+                        'Replace ColbyConvert::centsIntToDollarsString() ' .
+                        'with CBConvert::centsToDollars()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyConvert::markaroundToHTML',
+                    'title' => (
+                        'Replace ColbyConvert::markaroundToHTML() with ' .
+                        'CBMarkaround::markaroundToHTML()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyConvert::textToFormattedContent',
+                    'title' => (
+                        'Replace ColbyConvert::textToFormattedContent() with ' .
+                        'CBMarkaround::markaroundToHTML()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyConvert::textToHTML',
+                    'title' => (
+                        'Replace ColbyConvert::textToHTML() with cbhtml()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyConvert::textToLines',
+                    'title' => (
+                        'Replace ColbyConvert::textToLines() with ' .
+                        'CBConvert::stringToLines()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyConvert::textToSQL',
+                    'title' => (
+                        'Replace ColbyConvert::textToSQL() with ' .
+                        'CBDB::escapeString()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyConvert::textToStub',
+                    'title' => (
+                        'Replace ColbyConvert::textToStub() with ' .
+                        'CBConvert::stringToStub()'
+                    ),
                 ],
 
 
