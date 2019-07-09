@@ -278,6 +278,16 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBView::modelWithClassName',
+                    'title' => 'Replace use of CBView::modelWithClassName()',
+                ],
+
+
+                /**
                  * 2019_07_07
                  */
                 (object)[
