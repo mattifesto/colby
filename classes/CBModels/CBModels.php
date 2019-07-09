@@ -628,12 +628,12 @@ EOT;
      *
      * @NOTE How model ID is determined:
      *
-     *      The class CBModel_toModel function can set the ID value on the model
+     *      The class CBModel_build() function can set the ID value on the model
      *      by either calculating it or copying it. Potentially no ID value
      *      needs to be set on the spec in this case, and if it is that ID value
      *      will be ignored.
      *
-     *      If CBModel_toModel returns a model with no ID value, the ID value on
+     *      If CBModel_build() returns a model with no ID value, the ID value on
      *      the spec must be set and will be used.
      *
      * @NOTE Reserved and required properties:
