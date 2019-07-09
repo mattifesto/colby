@@ -100,40 +100,38 @@ final class CBTheme {
             file_put_contents($filepath, $tuple->model->styles);
         });
     }
+    /* modelsWillSaveWithClassName() */
+
 
     /**
-     * @param string? $spec->classNameForKind
-     *  The class name of the object this theme styles. This is technically an
-     *  optional parameter but practically required.
-     * @param string? $spec->classNameForTheme
-     *  This class will be required if the theme is used. It will also be added
-     *  to the class names of the theme element. This allows well known themes
-     *  to place their CSS in a style and also to include JavaScript.
-     * @param string? $spec->description
-     *  A friendly description of the theme's purpose.
-     * @param string? $spec->styles
-     *  The CSS for the theme in template syntax.
-     * @param string? $spec->title
-     *  The theme's title.
+     * @param object $spec
      *
      * @return object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): stdClass {
         $classNameForKind = CBModel::value($spec, 'classNameForKind');
         $ID = CBModel::valueAsID($spec, 'ID');
         $template = CBModel::value($spec, 'styles', '');
         $title = CBModel::value($spec, 'title', '', 'trim');
 
         return (object)[
-            'className' => __CLASS__,
             'classNameForKind' => $classNameForKind,
-            'classNameForTheme' => CBModel::value($spec, 'classNameForTheme', null, 'trim'),
+            'classNameForTheme' => trim(
+                CBModel::valueToString($spec, 'classNameForTheme')
+            ),
             'description' => CBModel::value($spec, 'description'),
-            'styles' => CBTheme::templateToStyles($template, $ID, $title, $classNameForKind),
+            'styles' => CBTheme::templateToStyles(
+                $template,
+                $ID,
+                $title,
+                $classNameForKind
+            ),
             'template' => $template,
             'title' => $title,
         ];
     }
+    /* CBModel_build() */
+
 
     /**
      * @deprecated use CBView::localCSSTemplateToLocalCSS()
