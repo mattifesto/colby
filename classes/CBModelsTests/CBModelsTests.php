@@ -76,18 +76,22 @@ final class CBModelsTests {
 
         /* 1 */
 
-        $ID     = CBModelsTests::testModelIDs[2];
-        $model  = CBModels::fetchModelByID($ID);
+        $ID = CBModelsTests::testModelIDs[2];
+        $model = CBModels::fetchModelByID($ID);
 
         CBModelsTests_TestClass::checkModelWithID($model, $ID, 1);
 
         /* 2 */
 
-        $ID     = CBHex160::random();
-        $model  = CBModels::fetchModelByID($ID);
+        $ID = CBHex160::random();
+        $model = CBModels::fetchModelByID($ID);
 
         if ($model !== false) {
-            throw new Exception(__METHOD__ . ' Calling `CBModel::fetchModelByID` with and ID with no model should return false.');
+            throw new Exception(
+                __METHOD__ .
+                ' Calling `CBModel::fetchModelByID` with and ID with ' .
+                'no model should return false.'
+            );
         }
 
         Colby::query('ROLLBACK');
@@ -105,7 +109,9 @@ final class CBModelsTests {
         $models = CBModels::fetchModelsByID(CBModelsTests::testModelIDs);
 
         if (count($models) !== 3) {
-            throw new Exception(__METHOD__ . ' Test 1: Array should contain 3 models.');
+            throw new Exception(
+                __METHOD__ . ' Test 1: Array should contain 3 models.'
+            );
         }
 
         for ($i = 0; $i < 3; $i++) {
@@ -115,28 +121,32 @@ final class CBModelsTests {
 
         /* 2 */
 
-        $IDs    = [CBHex160::random(), CBHex160::random(), CBHex160::random()];
+        $IDs = [CBHex160::random(), CBHex160::random(), CBHex160::random()];
         $models = CBModels::fetchModelsByID($IDs);
 
         if ($models !== []) {
-            throw new Exception(__METHOD__ . ' Test 2: Array should be empty.');
+            throw new Exception(
+                __METHOD__ . ' Test 2: Array should be empty.'
+            );
         }
 
         /* 3 */
 
-        $IDs    = [CBHex160::random(), CBHex160::random(), CBHex160::random()];
-        $IDs    = array_merge(CBModelsTests::testModelIDs, $IDs);
+        $IDs = [CBHex160::random(), CBHex160::random(), CBHex160::random()];
+        $IDs = array_merge(CBModelsTests::testModelIDs, $IDs);
         $models = CBModels::fetchModelsByID($IDs);
 
         if (count($models) !== 3) {
-            throw new Exception(__METHOD__ . ' Test 3: Array should contain 3 models.');
+            throw new Exception(
+                __METHOD__ . ' Test 3: Array should contain 3 models.'
+            );
         }
 
         Colby::query('ROLLBACK');
     }
 
     /**
-     * CBModel::toModel() is allowed to return null when a spec doesn't have
+     * CBModel::build() is allowed to return null when a spec doesn't have
      * required properties. In general, spec shouldn't have required properties,
      * but in cases like CBImage they do. This function tests the behavior of
      * saving a spec that will generate a null model.
@@ -159,21 +169,31 @@ final class CBModelsTests {
             Colby::query('ROLLBACK');
 
             $exceptionWasThrown = true;
-            $expectedMessage = 'A CBImage spec being saved generated a null model.';
+
+            $expectedMessage = (
+                'A CBImage spec being saved generated a null model.'
+            );
+
             $actualMessage = $throwable->getMessage();
 
             if ($actualMessage !== $expectedMessage) {
-                throw new Exception("The exception thrown had the message: \"{$actualMessage}\", but the following message was expected: \"{$expectedMessage}\"");
+                throw new Exception(
+                    "The exception thrown had the message: " .
+                    "\"{$actualMessage}\", but the following message " .
+                    "was expected: \"{$expectedMessage}\""
+                );
             }
         }
 
         if (!$exceptionWasThrown) {
-            throw new Exception('This test expects an exception to be thrown.');
+            throw new Exception(
+                'This test expects an exception to be thrown.'
+            );
         }
     }
 
     /**
-     * CBModel::toModel() is allowed to return a model without an ID, however
+     * CBModel::buildel() is allowed to return a model without an ID, however
      * these models cannot be saved.
      */
     static function saveSpecWithoutIDTest() {
@@ -193,16 +213,26 @@ final class CBModelsTests {
             Colby::query('ROLLBACK');
 
             $exceptionWasThrown = true;
-            $expectedMessage = 'A CBViewPage spec being saved does not have an ID.';
+
+            $expectedMessage = (
+                'A CBViewPage spec being saved does not have an ID.'
+            );
+
             $actualMessage = $throwable->getMessage();
 
             if ($actualMessage !== $expectedMessage) {
-                throw new Exception("The exception thrown had the message: \"{$actualMessage}\", but the following message was expected: \"{$expectedMessage}\"");
+                throw new Exception(
+                    "The exception thrown had the message: " .
+                    "\"{$actualMessage}\", but the following message " .
+                    "was expected: \"{$expectedMessage}\""
+                );
             }
         }
 
         if (!$exceptionWasThrown) {
-            throw new Exception('This test expects an exception to be thrown.');
+            throw new Exception(
+                'This test expects an exception to be thrown.'
+            );
         }
     }
 
@@ -217,14 +247,22 @@ final class CBModelsTests {
      * @return null
      */
     private static function createTestEnvironment() {
-        $specs = CBModels::fetchSpecsByID(CBModelsTests::testModelIDs, [
-            'createSpecForIDCallback' => function($ID) {
-                $spec           = CBModels::modelWithClassName('CBModelsTests_TestClass', ['ID' => $ID]);
-                $spec->title    = "Title for {$ID}";
-                $spec->name     = "Name {$ID}";
-                return $spec;
-            }
-        ]);
+        $specs = CBModels::fetchSpecsByID(
+            CBModelsTests::testModelIDs,
+            [
+                'createSpecForIDCallback' => function ($ID) {
+                    $spec = (object)[
+                        'className' => 'CBModelsTests_TestClass',
+                        'ID' => $ID,
+                    ];
+
+                    $spec->title = "Title for {$ID}";
+                    $spec->name = "Name {$ID}";
+
+                    return $spec;
+                }
+            ]
+        );
 
         CBModels::save(array_values($specs));
     }
@@ -240,11 +278,15 @@ final class CBModelsTests_TestClass {
      */
     static function checkModelWithID(stdClass $model, $ID, $version = false) {
         if ($model->ID !== $ID) {
-            throw new Exception(__METHOD__ . ' Incorrect model ID');
+            throw new Exception(
+                __METHOD__ . ' Incorrect model ID'
+            );
         }
 
         if ($model->className !== __CLASS__) {
-            throw new Exception(__METHOD__ . ' Incorrect `className` property');
+            throw new Exception(
+                __METHOD__ . ' Incorrect `className` property'
+            );
         }
 
         /**
@@ -252,7 +294,9 @@ final class CBModelsTests_TestClass {
          * model was saved. This is no longer happens.
          */
         if (isset($model->created)) {
-            throw new Exception('The model should not have its "created" property set.');
+            throw new Exception(
+                'The model should not have its "created" property set.'
+            );
         }
 
         /**
@@ -260,40 +304,54 @@ final class CBModelsTests_TestClass {
          * model was saved. This is no longer happens.
          */
         if (isset($model->modified)) {
-            throw new Exception('The model should not have its "modified" property set.');
+            throw new Exception(
+                'The model should not have its "modified" property set.'
+            );
         }
 
         if ($model->name !== "Name {$ID}") {
-            throw new Exception(__METHOD__ . ' Incorrect `name` property');
+            throw new Exception(
+                __METHOD__ . ' Incorrect `name` property'
+            );
         }
 
         if ($model->nameAsHTML !== "Name {$ID}") {
-            throw new Exception(__METHOD__ . ' Incorrect `nameAsHTML` property');
+            throw new Exception(
+                __METHOD__ . ' Incorrect `nameAsHTML` property'
+            );
         }
 
         if ($model->title !== "Title for {$ID}") {
-            throw new Exception(__METHOD__ . ' The `title` property is not correct.');
+            throw new Exception(
+                __METHOD__ . ' The `title` property is not correct.'
+            );
         }
 
         if ($version !== false && $model->version !== $version) {
-            $actual     = json_encode($model->version);
-            $expected   = json_encode($version);
-            throw new Exception(__METHOD__ . " Model version: {$actual}, Expected version: {$expected}");
+            $actual = json_encode($model->version);
+            $expected = json_encode($version);
+            throw new Exception(
+                __METHOD__ .
+                " Model version: {$actual}, Expected version: {$expected}"
+            );
         }
     }
+    /* checkModelWithID() */
+
 
     /**
      * @param object $spec
      *
      * @return object
      */
-    static function CBModel_toModel(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): stdClass {
         $model = (object)[
-            'className' => __CLASS__,
+            'name' => CBModel::valueToString($spec, 'name'),
         ];
-        $model->name = isset($spec->name) ? (string)$spec->name : '';
-        $model->nameAsHTML = ColbyConvert::textToHTML($model->name);
+
+        $model->nameAsHTML = cbhtml($model->name);
 
         return $model;
     }
+    /* CBModel_build() */
 }
