@@ -185,7 +185,7 @@ EOT;
          * @NOTE 2017_07_20
          *
          * $model->styleID is deprecated and has the class name for the local
-         * styles will be included in CSSClassNames by CBModel_toModel(). This
+         * styles will be included in CSSClassNames by CBModel_build(). This
          * code should stay while the old instances age out. A resave updates to
          * the new method.
          */
