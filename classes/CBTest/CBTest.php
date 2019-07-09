@@ -331,7 +331,7 @@ EOT;
             ['CBImage',                 'upgrade'],
             ['CBImages',                'resize'],
             ['CBMarkaround',            'paragraphToHTML'],
-            ['CBPageLayout',            'CBModel_toModel'],
+            ['CBPageLayout',            'build'],
             ['CBPages',                 'stringToDencodedURIPath'],
             ['CBProjection'],
             ['CBSitePreferences'],
@@ -369,6 +369,7 @@ EOT;
         return $tests;
     }
 
+
     /**
      * @param string $testTitle
      *
@@ -387,7 +388,11 @@ EOT;
      *
      * @return object
      */
-    static function resultMismatchFailure(string $testTitle, $actualResult, $expectedResult) {
+    static function resultMismatchFailure(
+        string $testTitle,
+        $actualResult,
+        $expectedResult
+    ) {
         $testTitleAsMessage = CBMessageMarkup::stringToMessage($testTitle);
 
         $actualResultAsJSONAsMessage = CBMessageMarkup::stringToMarkup(
@@ -429,7 +434,11 @@ EOT;
      *
      * @return object
      */
-    static function resultMismatchFailureDiff(string $testTitle, string $actualResult, string $expectedResult): stdClass {
+    static function resultMismatchFailureDiff(
+        string $testTitle,
+        string $actualResult,
+        string $expectedResult
+    ): stdClass {
         $actualResultLines = CBConvert::stringToLines($actualResult);
         $actualResultLinesCount = count($actualResultLines);
         $expectedResultLines = CBConvert::stringToLines($expectedResult);
@@ -442,7 +451,8 @@ EOT;
 
                     {$testTitle}
 
-                    Line {$index} of the actual result doesn't exist in the expected result.
+                    Line {$index} of the actual result doesn't exist in the
+                    expected result.
 
                     ({$actualLine} (code))
 

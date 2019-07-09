@@ -5,7 +5,7 @@ final class CBPageLayoutTests {
     /**
      * @return null
      */
-    static function CBModel_toModelTest() {
+    static function buildTest() {
         $spec1 = (object)[
             'className' => 'CBPageLayout',
         ];
@@ -18,12 +18,22 @@ final class CBPageLayoutTests {
             'isArticle' => false,
         ];
 
-        $actualModel1 = CBModel::toModel($spec1);
+        $actualModel1 = CBModel::build($spec1);
 
         if ($actualModel1 != $expectedModel1) {
-            $firstLine = 'In CBPageLayoutTests::CBModel_toModelTest() the actual model did not match the expected model';
-            $expectedModel1AsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($expectedModel1));
-            $actualModel1AsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($actualModel1));
+            $firstLine = (
+                'In CBPageLayoutTests::build() the actual model did not ' .
+                'match the expected model'
+            );
+
+            $expectedModel1AsJSON = CBMessageMarkup::stringToMarkup(
+                CBConvert::valueToPrettyJSON($expectedModel1)
+            );
+
+            $actualModel1AsJSON = CBMessageMarkup::stringToMarkup(
+                CBConvert::valueToPrettyJSON($actualModel1)
+            );
+
             $message = <<<EOT
 
                 {$firstLine}
@@ -49,4 +59,5 @@ EOT;
             throw new Exception($firstLine);
         }
     }
+    /* buildTest() */
 }
