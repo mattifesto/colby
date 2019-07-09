@@ -84,8 +84,8 @@ final class CBPageVerificationTask {
         }
 
         if (empty($result->model)) {
-            CBLog::log((
-                object)[
+            CBLog::log(
+                (object)[
                     'sourceClassName' => __CLASS__,
                     'message' => 'No model exists for this ID',
                     'severity' => 4,
