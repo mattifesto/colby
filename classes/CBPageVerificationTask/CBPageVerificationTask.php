@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @NOTE 2018.03.22
+ * @NOTE 2018_03_22
  *
  *      This class verifies rows in the ColbyPages table. It should not verify
  *      properties of a specific page model. That should be done in
@@ -22,15 +22,21 @@ final class CBPageVerificationTask {
         static $allowedViewClassNames;
 
         if ($allowedViewClassNames === null) {
-            if (is_callable($function = 'CBPageHelpers::allowedViewClassNames')) {
-                $allowedViewClassNames = call_user_func($function);
+            $function = 'CBPageHelpers::allowedViewClassNames';
+
+            if (is_callable($function)) {
+                $allowedViewClassNames =
+                call_user_func($function);
             } else {
-                $allowedViewClassNames = CBPagesPreferences::classNamesForSupportedViews();
+                $allowedViewClassNames =
+                CBPagesPreferences::classNamesForSupportedViews();
             }
         }
 
         return $allowedViewClassNames;
     }
+    /* allowedViewClassNames() */
+
 
     /**
      * @return void
@@ -38,6 +44,7 @@ final class CBPageVerificationTask {
     static function CBInstall_install(): void {
         CBPageVerificationTask::startForAllPages();
     }
+
 
     /**
      * @return [string]
@@ -52,33 +59,38 @@ final class CBPageVerificationTask {
         ];
     }
 
+
     /**
-     * @param hex160 $ID
+     * @param string $ID
      *
-     *      The ID (`ColbyPages`.`archiveID`) of the page to verify.
+     *      The ID of the page to verify.
      *
      * @return object
      */
-    static function CBTasks2_run($ID) {
+    static function CBTasks2_run(string $ID): stdClass {
         $messages = [];
         $resave = false;
         $severity = 7;
         $result = CBPageVerificationTask::run($ID);
 
         if (empty($result->hasColbyPagesRow)) {
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => 'No ColbyPages row exists for this ID',
-                'severity' => 4,
-            ]);
+            CBLog::log(
+                (object)[
+                    'sourceClassName' => __CLASS__,
+                    'message' => 'No ColbyPages row exists for this ID',
+                    'severity' => 4,
+                ]
+            );
         }
 
         if (empty($result->model)) {
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => 'No model exists for this ID',
-                'severity' => 4,
-            ]);
+            CBLog::log((
+                object)[
+                    'sourceClassName' => __CLASS__,
+                    'message' => 'No model exists for this ID',
+                    'severity' => 4,
+                ]
+            );
         }
 
         if (!empty($result->didDeleteRowWithoutModel)) {
@@ -89,11 +101,13 @@ final class CBPageVerificationTask {
 
 EOT;
 
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => $message,
-                'severity' => 4,
-            ]);
+            CBLog::log(
+                (object)[
+                    'sourceClassName' => __CLASS__,
+                    'message' => $message,
+                    'severity' => 4,
+                ]
+            );
         }
 
         if (!empty($result->renderError)) {
@@ -104,9 +118,12 @@ EOT;
 
         $pageTitle = CBModel::valueToString($result, 'model.title');
         $firstLine = "A page with the title \"{$pageTitle}\" was verified";
+
         array_unshift($messages, $firstLine);
 
-        if (CBModel::valueToString($result, 'model.className') == 'CBViewPage') {
+        $modelClassName = CBModel::valueToString($result, 'model.className');
+
+        if ($modelClassName == 'CBViewPage') {
             $imageValue = CBModel::value($result, 'spec.image');
 
             if (empty($imageValue)) {
@@ -114,13 +131,19 @@ EOT;
                 /**
                  * We only process `thumbnailURL` on the spec if `image` is not
                  * set. If `image` is set on the spec `thumbnailURL` will be
-                 * ignored by CBViewPage::CBModel_toModel().
+                 * ignored by CBViewPage::CBModel_build().
                  */
 
-                if ($thumbnailURL = CBModel::value($result, 'spec.thumbnailURL')) {
-                    if ($image = CBImages::URIToCBImage($thumbnailURL)) {
+                $thumbnailURL = CBModel::value($result, 'spec.thumbnailURL');
+
+                if ($thumbnailURL) {
+                    $image = CBImages::URIToCBImage($thumbnailURL);
+
+                    if ($image) {
                         $result->spec->image = $image;
-                        $result->spec->deprecatedThumbnailURL = $result->spec->thumbnailURL;
+
+                        $result->spec->deprecatedThumbnailURL =
+                        $result->spec->thumbnailURL;
 
                         unset($result->spec->thumbnailURL);
 
@@ -137,12 +160,16 @@ EOT;
 
 EOT;
 
-                        CBLog::log((object)[
-                            'className' => __CLASS__,
-                            'sourceID' => '0099cecb597038d4bf5f182965271e25cc60c070',
-                            'message' => $message,
-                            'severity' => 6,
-                        ]);
+                        CBLog::log(
+                            (object)[
+                                'className' => __CLASS__,
+                                'sourceID' => (
+                                    '0099cecb597038d4bf5f182965271e25cc60c070'
+                                ),
+                                'message' => $message,
+                                'severity' => 6,
+                            ]
+                        );
                     }
                 }
             } else {
@@ -173,28 +200,39 @@ EOT;
                         ---
 
                         When the ID property value was used as the parameter to
-                        the (CBImage::isInstance\(\) (code)) function, the function
-                        returned false.
+                        the (CBImage::isInstance\(\) (code)) function, the
+                        function returned false.
 
 EOT;
 
-                    CBLog::log((object)[
-                        'message' => $message,
-                        'severity' => 4,
-                        'sourceClassName' => __CLASS__,
-                        'sourceID' => '4b30866e7e5e5edf42b7a5cab882b072ec144b75',
-                    ]);
+                    CBLog::log(
+                        (object)[
+                            'message' => $message,
+                            'severity' => 4,
+                            'sourceClassName' => __CLASS__,
+                            'sourceID' => (
+                                '4b30866e7e5e5edf42b7a5cab882b072ec144b75'
+                            ),
+                        ]
+                    );
                 }
             }
 
             /* check for deprecated views */
 
-            $deprecatedViewClassNames = CBPageVerificationTask::findDeprecatedSubviewClassNames($result->spec);
+            $deprecatedViewClassNames =
+            CBPageVerificationTask::findDeprecatedSubviewClassNames(
+                $result->spec
+            );
 
             if (!empty($deprecatedViewClassNames)) {
                 $count = count($deprecatedViewClassNames);
                 $countPlural = $count > 1 ? 's' : '';
-                $uniqueClassNames = array_values(array_unique($deprecatedViewClassNames));
+
+                $uniqueClassNames = array_values(
+                    array_unique($deprecatedViewClassNames)
+                );
+
                 $uniqueCount = count($uniqueClassNames);
                 $uniqueCountPlural = $uniqueCount > 1 ? 'es' : '';
                 $uniqueClassNames = implode("\n\n", $uniqueClassNames);
@@ -210,22 +248,33 @@ EOT;
 
 EOT;
 
-                CBLog::log((object)[
-                    'message' => $message,
-                    'severity' => 4,
-                    'sourceClassName' => __CLASS__,
-                    'sourceID' => '06232e21d9ced6f7b8f91fb0f7ae381944e5f4f2',
-                ]);
+                CBLog::log(
+                    (object)[
+                        'message' => $message,
+                        'severity' => 4,
+                        'sourceClassName' => __CLASS__,
+                        'sourceID' => (
+                            '06232e21d9ced6f7b8f91fb0f7ae381944e5f4f2'
+                        ),
+                    ]
+                );
             }
 
             /* check for unsupported views */
 
-            $unsupportedViewClassNames = CBPageVerificationTask::findUnsupportedSubviewClassNames($result->spec);
+            $unsupportedViewClassNames =
+            CBPageVerificationTask::findUnsupportedSubviewClassNames(
+                $result->spec
+            );
 
             if (!empty($unsupportedViewClassNames)) {
                 $count = count($unsupportedViewClassNames);
                 $countPlural = $count > 1 ? 's' : '';
-                $uniqueClassNames = array_values(array_unique($unsupportedViewClassNames));
+
+                $uniqueClassNames = array_values(
+                    array_unique($unsupportedViewClassNames)
+                );
+
                 $uniqueCount = count($uniqueClassNames);
                 $uniqueCountPlural = $uniqueCount > 1 ? 'es' : '';
                 $uniqueClassNames = implode("\n\n", $uniqueClassNames);
@@ -241,12 +290,16 @@ EOT;
 
 EOT;
 
-                CBLog::log((object)[
-                    'message' => $message,
-                    'severity' => 3,
-                    'sourceClassName' => __CLASS__,
-                    'sourceID' => 'd8faccb5fe6161d7a61a12ddcdbc5b16f42c6e4d',
-                ]);
+                CBLog::log(
+                    (object)[
+                        'message' => $message,
+                        'severity' => 3,
+                        'sourceClassName' => __CLASS__,
+                        'sourceID' => (
+                            'd8faccb5fe6161d7a61a12ddcdbc5b16f42c6e4d'
+                        ),
+                    ]
+                );
             }
         }
 
@@ -314,10 +367,11 @@ EOT;
 
         if (empty($data)) {
             if ($result->hasColbyPagesRow) {
+
                 /**
-                 * If there is a row in the pages table that does not have a model
-                 * then it most likely represents a very old page. The row and the
-                 * data store associated with the ID should be deleted.
+                 * If there is a row in the pages table that does not have a
+                 * model then it most likely represents a very old page. The row
+                 * and the data store associated with the ID should be deleted.
                  */
 
                 CBDataStore::deleteByID($ID);
@@ -356,14 +410,18 @@ EOT;
         return $result;
     }
 
+
     /**
      * Start or restart the page verification task for all existing pages.
      */
     static function startForAllPages() {
-        $IDs = CBDB::SQLToArray('SELECT LOWER(HEX(archiveID)) FROM ColbyPages');
+        $IDs = CBDB::SQLToArray(
+            'SELECT LOWER(HEX(archiveID)) FROM ColbyPages'
+        );
 
         CBTasks2::restart(__CLASS__, $IDs, /* priority: */ 101);
     }
+
 
     /**
      * @return null
@@ -372,12 +430,14 @@ EOT;
         CBPageVerificationTask::startForAllPages();
     }
 
+
     /**
      * @return string
      */
     static function CBAjax_startForAllPages_group() {
         return 'Administrators';
     }
+
 
     /**
      * This function walks the subview tree of the model provided and returns a
@@ -392,16 +452,25 @@ EOT;
             'classNames' => [],
         ];
 
-        CBView::walkSubviews($model, function ($subview) use ($data) {
-            $viewClassName = CBModel::valueToString($subview, 'className');
+        CBView::walkSubviews(
+            $model,
+            function ($subview) use ($data) {
+                $viewClassName = CBModel::valueToString($subview, 'className');
 
-            if (in_array($viewClassName, CBViewCatalog::fetchDeprecatedViewClassNames())) {
-                array_push($data->classNames, $viewClassName);
+                if (
+                    in_array(
+                        $viewClassName,
+                        CBViewCatalog::fetchDeprecatedViewClassNames()
+                    )
+                ) {
+                    array_push($data->classNames, $viewClassName);
+                }
             }
-        });
+        );
 
         return $data->classNames;
     }
+
 
     /**
      * This function walks the subview tree of the model provided and returns a
@@ -416,13 +485,21 @@ EOT;
             'classNames' => [],
         ];
 
-        CBView::walkSubviews($model, function ($subview) use ($data) {
-            $viewClassName = CBModel::valueToString($subview, 'className');
+        CBView::walkSubviews(
+            $model,
+            function ($subview) use ($data) {
+                $viewClassName = CBModel::valueToString($subview, 'className');
 
-            if (in_array($viewClassName, CBViewCatalog::fetchUnsupportedViewClassNames())) {
-                array_push($data->classNames, $viewClassName);
+                if (
+                    in_array(
+                        $viewClassName,
+                        CBViewCatalog::fetchUnsupportedViewClassNames()
+                    )
+                ) {
+                    array_push($data->classNames, $viewClassName);
+                }
             }
-        });
+        );
 
         return $data->classNames;
     }
