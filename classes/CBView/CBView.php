@@ -196,17 +196,19 @@ final class CBView {
         return $localCSS;
     }
 
+
     /**
      * @deprecated use (object)['className' => '<desired class name>']
      *
-     * @return stdClass
+     * @return object
      */
-    static function modelWithClassName($className) {
-        $model              = new stdClass();
-        $model->className   = (string)$className;
-
-        return $model;
+    static function modelWithClassName(string $className): stdClass {
+        return (object)[
+            'className' => $className,
+        ];
     }
+    /* modelWithClassName() */
+
 
     /**
      * @param model $model
