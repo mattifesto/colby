@@ -45,7 +45,10 @@ final class CBTextView2 {
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
 
-        if (!empty($model->isCustom) || cb_array_any("CBCSS::isCustom", $CSSClassNames)) {
+        if (
+            !empty($model->isCustom) ||
+            cb_array_any("CBCSS::isCustom", $CSSClassNames)
+        ) {
             // custom
         } else {
             $CSSClassNames[] = 'CBTextView2_default';
@@ -72,24 +75,29 @@ final class CBTextView2 {
         <?php
     }
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
 
     /**
-     * @param string? $spec->contentAsCommonMark
-     * @param string? $spec->CSSClassNames
-     * @param bool? $spec->isCustom
-     * @param string? $spec->localCSSTemplate
+     * @param object $spec
      *
-     * @return ?object
+     * @return object
      */
-    static function CBModel_toModel(stdClass $spec): ?stdClass {
+    static function CBModel_build(stdClass $spec): stdClass {
         $model = (object)[
-            'contentAsCommonMark' => CBModel::valueToString($spec, 'contentAsCommonMark'),
+            'contentAsCommonMark' => CBModel::valueToString(
+                $spec,
+                'contentAsCommonMark'
+            ),
             'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
             'isCustom' => CBModel::value($spec, 'isCustom', false, 'boolval'),
         ];
@@ -104,14 +112,21 @@ final class CBTextView2 {
         $model->contentAsHTML = $parsedown->text($model->contentAsCommonMark);
 
         // localCSS
-        $localCSSTemplate = CBModel::value($spec, 'localCSSTemplate', '', 'trim');
+        $localCSSTemplate = trim(
+            CBModel::valueToString($spec, 'localCSSTemplate')
+        );
 
         if (!empty($localCSSTemplate)) {
             $localCSSClassName = 'ID_' . CBHex160::random();
             $model->CSSClassNames[] = $localCSSClassName;
-            $model->localCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
+            $model->localCSS = CBView::localCSSTemplateToLocalCSS(
+                $localCSSTemplate,
+                'view',
+                ".{$localCSSClassName}"
+            );
         }
 
         return $model;
     }
+    /* CBModel_build() */
 }
