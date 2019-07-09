@@ -151,7 +151,9 @@ final class CBCodeAdmin {
             ]
         );
 
-        switch ($search->filetype) {
+        $filetype = CBModel::valueToString($search, 'filetype');
+
+        switch ($filetype) {
             case 'js':
 
                 $command .= ' --js';
@@ -168,7 +170,8 @@ final class CBCodeAdmin {
 
             default:
 
-                throw new Exception('unknown filetype');
+                $command .= ' --css --js --php';
+                break;
         }
 
         $pwd = getcwd();
@@ -215,6 +218,18 @@ final class CBCodeAdmin {
             [
 
                 /* errors */
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBModel_toModel',
+
+                    'title' =>
+                    'Rename CBModel_toModel() to CBModel_build()',
+                ],
+
 
                 /**
                  * 2019_06_16
