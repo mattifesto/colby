@@ -215,12 +215,14 @@ final class CBDB {
      *
      *      'The \'amazing\' race.'
      *
-     * @return {string}
+     * @return string
      */
-    static function stringToSQL($value) {
+    static function stringToSQL($value): string {
         $value = CBDB::escapeString($value);
         return "'{$value}'";
     }
+    /* stringToSQL() */
+
 
     /**
      * This function runs a callback inside a database transaction. It's easier
