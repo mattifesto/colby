@@ -6,9 +6,9 @@
 final class CBThemedMenuView {
 
     /**
-     * @return null
+     * @return void
      */
-    static function fetchMenuItemOptionsForAjax() {
+    static function fetchMenuItemOptionsForAjax(): void {
         $response = new CBAjaxResponse();
         $menuID = $_POST['menuID'];
 
@@ -21,27 +21,39 @@ final class CBThemedMenuView {
         if ($menu === false) {
             $options = [];
         } else {
-            $options = array_map(function ($menuItem) {
-                return (object)['value' => $menuItem->name, 'title' => $menuItem->text];
-            }, $menu->items);
+            $options = array_map(
+                function ($menuItem) {
+                    return (object)[
+                        'value' => $menuItem->name,
+                        'title' => $menuItem->text
+                    ];
+                },
+                $menu->items
+            );
         }
 
         $response->menuItemOptions = $options;
         $response->wasSuccessful = true;
         $response->send();
     }
+    /* fetchMenuItemOptionsForAjax() */
+
 
     /**
-     * @return stdClass
+     * @return object
      */
-    static function fetchMenuItemOptionsForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function fetchMenuItemOptionsForAjaxPermissions(): stdClass {
+        return (object)[
+            'group' => 'Administrators'
+        ];
     }
+    /* fetchMenuItemOptionsForAjaxPermissions() */
+
 
     /**
-     * @return null
+     * @return void
      */
-    static function fetchMenusForAjax() {
+    static function fetchMenusForAjax(): void {
         $response   = new CBAjaxResponse();
         $SQL        = <<<EOT
 
@@ -57,28 +69,41 @@ EOT;
         $response->wasSuccessful = true;
         $response->send();
     }
+    /* fetchMenusForAjax() */
+
 
     /**
-     * @return stdClass
+     * @return object
      */
-    static function fetchMenusForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+    static function fetchMenusForAjaxPermissions(): stdClass {
+        return (object)[
+            'group' => 'Administrators'
+        ];
     }
+    /* fetchMenusForAjaxPermissions() */
+
 
     /**
-     * @param CBMenu $model
-     * @param hex160? $args->themeID
-     * @param string? $args->selectedItemName
+     * @param object $model
+     * @param ?object $args
      *
-     * @return null
+     * @return void
      */
-    static function renderMenuAsHTML(stdClass $model, stdClass $args = null) {
+    static function renderMenuAsHTML(
+        stdClass $model,
+        stdClass $args = null
+    ): void {
         if (empty($model->items)) {
             return;
         }
 
         $themeID = CBModel::value($args, 'themeID');
-        $class = implode(' ', CBTheme::IDToCSSClasses($themeID));
+
+        $class = implode(
+            ' ',
+            CBTheme::IDToCSSClasses($themeID)
+        );
+
         $class = "CBThemedMenuView {$class}";
 
         CBTheme::useThemeWithID($themeID);
@@ -86,20 +111,31 @@ EOT;
         ?> <div class="<?= $class ?>"><ul> <?php
 
             foreach($model->items as $item) {
-                $selected = (!empty($args->selectedItemName) && $args->selectedItemName === $item->name);
-                CBThemedMenuView::renderMenuItem($item, ['selected' => $selected]);
+                $selected = (
+                    !empty($args->selectedItemName) &&
+                    $args->selectedItemName === $item->name
+                );
+
+                CBThemedMenuView::renderMenuItem(
+                    $item,
+                    [
+                        'selected' => $selected
+                    ]
+                );
             }
 
         ?> </ul></div> <?php
     }
+    /* renderMenuAsHTML() */
+
 
     /**
-     * @param stdClass $menuItem
+     * @param object $menuItem
      * @param bool? $args['selected']
      *
-     * @return null
+     * @return void
      */
-    static function renderMenuItem(stdClass $menuItem, array $args = []) {
+    static function renderMenuItem(stdClass $menuItem, array $args = []): void {
         $selected = false;
         extract($args, EXTR_IF_EXISTS);
 
@@ -118,20 +154,22 @@ EOT;
         ?>
 
         <li class="<?= $classes ?>">
-            <a href="<?= $menuItem->URLAsHTML ?>"><span><?= $menuItem->textAsHTML ?></span></a>
+            <a href="<?= $menuItem->URLAsHTML ?>">
+                <span><?= $menuItem->textAsHTML ?></span>
+            </a>
         </li>
 
         <?php
     }
+    /* renderMenuItem() */
+
 
     /**
-     * @param hex160? $model->menuID
-     * @param hex160? $model->themeID
-     * @param string? $model->selectedItemName
+     * @param object $model
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
         if (empty($model->menuID)) {
             return;
         }
@@ -140,20 +178,22 @@ EOT;
 
         CBThemedMenuView::renderMenuAsHTML($menu, $model);
     }
+    /* CBView_render() */
+
 
     /**
-     * @param hex160? $spec->menuID
-     * @param string? $spec->selectedItemName
-     * @param hex160? $spec->themeID
+     * @param object $spec
      *
-     * @return stdClass
+     * @return object
      */
-    static function CBModel_toModel(stdClass $spec) {
-        $model = CBModels::modelWithClassName(__CLASS__);
-        $model->menuID = isset($spec->menuID) ? trim($spec->menuID) : '';
-        $model->selectedItemName = isset($spec->selectedItemName) ? trim($spec->selectedItemName) : '';
-        $model->themeID = isset($spec->themeID) ? trim($spec->themeID) : '';
-
-        return $model;
+    static function CBModel_build(stdClass $spec): stdClass {
+        return (object) [
+            'menuID' => CBModel::valueAsID($spec, 'menuID'),
+            'selectedItemName' => trim(
+                CBModel::valueToString($spec, 'selectedItemName')
+            ),
+            'themeID' => CBModel::valueAsID($spec, 'themeID'),
+        ];
     }
+    /* CBModel_build() */
 }
