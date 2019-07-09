@@ -281,11 +281,11 @@ EOT;
 
 
     /**
-     * @param [{stdClass}] $models
+     * @param [object] $models
      *
-     * @return null
+     * @return void
      */
-    static function save(array $models) {
+    static function save(array $models): void {
         $values = array_map('CBPages::modelToRowValues', $models);
         $values = implode(',', $values);
 
@@ -382,6 +382,8 @@ EOT;
             Colby::query("DROP TEMPORARY TABLE `CBPagesTemporary`");
         }
     }
+    /* save() */
+
 
     /**
      * @param string $string
@@ -394,7 +396,7 @@ EOT;
 
         foreach ($words as $word) {
             if (strlen($word) > 2) {
-                $wordAsSQL = ColbyConvert::textToSQl($word);
+                $wordAsSQL = CBDB::escapeString($word);
                 $clauses[] = "`searchText` LIKE '%{$wordAsSQL}%'";
             }
         }
@@ -406,16 +408,32 @@ EOT;
             return "({$clauses})";
         }
     }
+    /* searchClauseFromString() */
+
 
     /**
-     * @return {string}
+     * @return string
      *
      * "////Piñata///Örtega Smith//" --> "piata/rtega-smith"
      */
-    static function stringToDencodedURIPath($string) {
+    static function stringToDencodedURIPath($string): string {
         $stubs = CBRequest::decodedPathToDecodedStubs($string);
-        $stubs = array_map('ColbyConvert::textToStub', $stubs);
-        $stubs = array_filter($stubs, function($stub) { return !empty($stub); });
+
+        $stubs = array_map(
+            function ($value) {
+                return CBConvert::stringToStub($value);
+            },
+            $stubs
+        );
+
+        $stubs = array_filter(
+            $stubs,
+            function ($stub) {
+                return !empty($stub);
+            }
+        );
+
         return implode('/', $stubs);
     }
+    /* stringToDencodedURIPath() */
 }
