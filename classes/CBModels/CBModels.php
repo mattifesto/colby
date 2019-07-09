@@ -88,6 +88,7 @@ final class CBModels {
         ];
     }
 
+
     /**
      * @param stdClass $model
      *
@@ -101,14 +102,26 @@ final class CBModels {
             return false;
         }
 
-        if (is_callable($function = "{$model->className}::CBModels_currentUserCanWrite")) {
+        if (
+            is_callable(
+                $function = "{$model->className}::CBModels_currentUserCanWrite"
+            )
+        ) {
             return call_user_func($function, $model);
-        } else if (is_callable($function = "{$model->className}::currentUserCanWrite")) {
+        } else if (
+            is_callable(
+                $function = "{$model->className}::currentUserCanWrite"
+            )
+        ) {
             return call_user_func($function, $model);
         } else {
-            return ColbyUser::isMemberOfGroup(ColbyUser::currentUserId(), 'Administrators');
+            return ColbyUser::isMemberOfGroup(
+                ColbyUser::currentUserId(),
+                'Administrators'
+            );
         }
     }
+
 
     /**
      * Delete models. This function will also delete the data stores associated
@@ -151,12 +164,20 @@ EOT;
             if (count($classNames) > 1) {
                 $classNames = implode(', ', $classNames);
                 $method = __METHOD__;
-                throw new RuntimeException("The IDs provided to {$method} have multiple class names: {$classNames}.");
+
+                throw new RuntimeException(
+                    "The IDs provided to {$method} have multiple class " .
+                    "names: {$classNames}."
+                );
             }
 
-            if (is_callable($function = "{$classNames[0]}::CBModels_willDelete")) {
+            if (
+                is_callable($function = "{$classNames[0]}::CBModels_willDelete")
+            ) {
                 call_user_func($function, $IDs);
-            } else  if (is_callable($function = "{$classNames[0]}::modelsWillDelete")) {
+            } else  if (
+                is_callable($function = "{$classNames[0]}::modelsWillDelete")
+            ) {
                 call_user_func($function, $IDs);
             }
         }
@@ -165,7 +186,8 @@ EOT;
 
             DELETE  `CBModels`, `CBModelVersions`
             FROM    `CBModels`
-            JOIN    `CBModelVersions` ON `CBModelVersions`.`ID` = `CBModels`.`ID`
+            JOIN    `CBModelVersions`
+            ON      `CBModelVersions`.`ID` = `CBModels`.`ID`
             WHERE   `CBModels`.`ID` IN ($IDsForSQL)
 
 EOT;
@@ -183,6 +205,7 @@ EOT;
             CBModelCache::uncacheByID($IDs);
         }
     }
+
 
     /**
      * @param [hex160] $IDs
@@ -204,6 +227,7 @@ EOT;
         return CBDB::SQLtoArray($SQL);
     }
 
+
     /**
      * @deprecated use fetchModelByIDNullable()
      *
@@ -220,6 +244,7 @@ EOT;
             return $models[$ID];
         }
     }
+
 
     /**
      * @NOTE 2018.06.20
@@ -246,6 +271,7 @@ EOT;
             return $models[$ID];
         }
     }
+
 
     /**
      * This function will return all the models with a given class name. This
@@ -275,6 +301,7 @@ EOT;
         return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
     }
 
+
     /**
      * @param string $className
      *
@@ -302,6 +329,7 @@ EOT;
             $valuesAsJSON
         );
     }
+
 
     /**
      * @deprecated use fetchModelsByID2()
@@ -365,6 +393,7 @@ EOT;
         );
     }
 
+
     /**
      * Retreives a specific version of a model
      *
@@ -389,6 +418,7 @@ EOT;
 
         return CBDB::SQLToValue($SQL, ['valueIsJSON' => true]);
     }
+
 
     /**
      * Fetches the spec and model for use in tasks that analyze both.
@@ -425,6 +455,7 @@ EOT;
         return $value;
     }
 
+
     /**
      * @deprecated use fetchSpecByIDNullable()
      *
@@ -443,8 +474,9 @@ EOT;
         }
     }
 
+
     /**
-     * @NOTE 2018.07.15
+     * @NOTE 2018_07_15
      *
      *      This function is a transition function to move callers away from
      *      fetchSpecByID() which returns false if there is no model found.
@@ -484,7 +516,9 @@ EOT;
      *      ]
      */
     static function fetchSpecsByID(array $IDs, $args = []): array {
-        if (empty($IDs)) { return []; }
+        if (empty($IDs)) {
+            return [];
+        }
 
         $createSpecForIDCallback = null;
         extract($args, EXTR_IF_EXISTS);
@@ -494,7 +528,9 @@ EOT;
 
             SELECT  LOWER(HEX(`m`.`ID`)), `v`.`specAsJSON`
             FROM    `CBModels` AS `m`
-            JOIN    `CBModelVersions` AS `v` ON `m`.`ID` = `v`.`ID` AND `m`.`version` = `v`.`version`
+            JOIN    `CBModelVersions` AS `v`
+            ON      `m`.`ID` = `v`.`ID` AND
+                    `m`.`version` = `v`.`version`
             WHERE   `m`.`ID` IN ($IDsAsSQL)
 
 EOT;
@@ -504,7 +540,10 @@ EOT;
             $existingIDs = array_keys($specs);
             $newIDs = array_diff($IDs, $existingIDs);
             $newSpecs = array_map($createSpecForIDCallback, $newIDs);
-            foreach($newSpecs as $newSpec) { $specs[$newSpec->ID] = $newSpec; }
+
+            foreach ($newSpecs as $newSpec) {
+                $specs[$newSpec->ID] = $newSpec;
+            }
         }
 
         return $specs;
@@ -526,7 +565,10 @@ EOT;
      *          vesion: int
      *      }
      */
-    private static function selectInitialDataForUpdateByID(array $IDs, int $modified) {
+    private static function selectInitialDataForUpdateByID(
+        array $IDs,
+        int $modified
+    ) {
         $IDsAsSQL = CBHex160::toSQL($IDs);
         $SQL = <<<EOT
 
@@ -553,9 +595,18 @@ EOT;
 
         return $metaByID;
     }
+    /* selectInitialDataForUpdateByID() */
+
 
     /**
-     * Creates a new model with a class name and optionally an ID.
+     * @deprecated 2019_07_09
+     *
+     *      Just use:
+     *
+     *      (object)[
+     *          'className' => <class name>,
+     *          'ID' => <ID>,
+     *      ]
      */
     static function modelWithClassName($className, $args = []) {
         $ID = null;
@@ -570,6 +621,8 @@ EOT;
 
         return $model;
     }
+    /* modelWithClassName() */
+
 
     /**
      * @param hex160 $ID
@@ -594,6 +647,7 @@ EOT;
         CBModels::save([$spec], /* force: */ true);
     }
 
+
     /**
      * @return null
      */
@@ -608,12 +662,16 @@ EOT;
         $response->send();
     }
 
+
     /**
      * @return stdClass
      */
     static function revertForAjaxPermissions() {
-        return (object)['group' => 'Administrators'];
+        return (object)[
+            'group' => 'Administrators'
+        ];
     }
+
 
     /**
      * Creates and saves models using specifications.
@@ -669,44 +727,55 @@ EOT;
         $firstSpec = reset($specs);
 
         if (empty($firstSpec->className)) {
-            throw new Exception('The first spec does not have its `className` propery set.');
+            throw new Exception(
+                'The first spec does not have its `className` propery set.'
+            );
         } else {
             $sharedClassName = $firstSpec->className;
         }
 
         $modified = time();
 
-        $tuples = array_map(function ($spec) use ($sharedClassName) {
-            $ID = CBModel::value($spec, 'ID', null, 'CBConvert::valueAsHex160');
+        $tuples = array_map(
+            function ($spec) use ($sharedClassName) {
+                $ID = CBModel::valueAsID($spec, 'ID');
 
-            if ($ID === null) {
-                throw new Exception(
-                    "A {$spec->className} spec being saved does not have an ID."
-                );
-            }
+                if ($ID === null) {
+                    throw new Exception(
+                        "A {$spec->className} spec being saved does not " .
+                        "have an ID."
+                    );
+                }
 
-            $model = CBModel::build($spec);
+                $model = CBModel::build($spec);
 
-            if ($model === null) {
-                throw new Exception(
-                    "A {$spec->className} spec being saved generated a null " .
-                    'model.'
-                );
-            }
+                if ($model === null) {
+                    throw new Exception(
+                        "A {$spec->className} spec being saved generated " .
+                        "a null model."
+                    );
+                }
 
-            if ($model->className !== $sharedClassName) {
-                throw new Exception(
-                    'All specs being saved must have the same className.'
-                );
-            }
+                if ($model->className !== $sharedClassName) {
+                    throw new Exception(
+                        'All specs being saved must have the same className.'
+                    );
+                }
 
-            return (object)[
-                'spec' => $spec,
-                'model' => $model,
-            ];
-        }, $specs);
+                return (object)[
+                    'spec' => $spec,
+                    'model' => $model,
+                ];
+            },
+            $specs
+        );
 
-        $IDs = array_map(function ($tuple) { return $tuple->model->ID; }, $tuples);
+        $IDs = array_map(
+            function ($tuple) {
+                return $tuple->model->ID;
+            },
+            $tuples
+        );
 
         /**
          * If any of the models being saved are in the cache, remove them now.
@@ -715,44 +784,59 @@ EOT;
             CBModelCache::uncacheByID($IDs);
         }
 
-        $initialDataByID = CBModels::selectInitialDataForUpdateByID($IDs, $modified);
+        $initialDataByID = CBModels::selectInitialDataForUpdateByID(
+            $IDs,
+            $modified
+        );
 
-        array_walk($tuples, function ($tuple) use ($initialDataByID, $modified, $force) {
-            $ID = $tuple->model->ID;
-            $mostRecentVersion = (int)$initialDataByID[$ID]->version;
+        array_walk(
+            $tuples,
+            function ($tuple) use ($initialDataByID, $modified, $force) {
+                $ID = $tuple->model->ID;
+                $mostRecentVersion = (int)$initialDataByID[$ID]->version;
 
-            if ($force !== true) {
-                $specVersion = CBModel::valueAsInt($tuple->spec, 'version') ?? 0;
+                if ($force !== true) {
+                    $specVersion = CBModel::valueAsInt(
+                        $tuple->spec,
+                        'version'
+                    ) ?? 0;
 
-                if ($specVersion !== $mostRecentVersion) {
-                    throw new CBModelVersionMismatchException();
+                    if ($specVersion !== $mostRecentVersion) {
+                        throw new CBModelVersionMismatchException();
+                    }
                 }
+
+                /**
+                 * 2016_06_29 In the future I would like to not set the version on
+                 * the spec. The spec should theoretically remain unchanged. It's a
+                 * data vs. metadata issue.
+                 *
+                 * 2016_07_03 No new properties should be set on the spec or the
+                 * model. Use the meta property instead.
+                 */
+                $tuple->spec->version =
+                $tuple->model->version =
+                $mostRecentVersion + 1;
+
+                $tuple->meta = (object)[
+                    'created' => $initialDataByID[$ID]->created,
+                    'modified' => $modified,
+                    'version' => $mostRecentVersion + 1,
+                ];
             }
+        );
 
-            /**
-             * 2016.06.29 In the future I would like to not set the version on
-             * the spec. The spec should theoretically remain unchanged. It's a
-             * data vs. metadata issue.
-             *
-             * 2016.07.03 No new properties should be set on the spec or the
-             * model. Use the meta property instead.
-             */
-            $tuple->spec->version = $tuple->model->version = $mostRecentVersion + 1;
-
-            $tuple->meta = (object)[
-                'created' => $initialDataByID[$ID]->created,
-                'modified' => $modified,
-                'version' => $mostRecentVersion + 1,
-            ];
-        });
-
-        if (is_callable($function = "{$sharedClassName}::CBModels_willSave")) {
+        if (
+            is_callable($function = "{$sharedClassName}::CBModels_willSave")
+        ) {
             $models = array_map(function ($tuple) {
                 return $tuple->model;
             }, $tuples);
 
             call_user_func($function, $models);
-        } else if (is_callable($function = "{$sharedClassName}::modelsWillSave")) { /* deprecated */
+        } else if (
+            is_callable($function = "{$sharedClassName}::modelsWillSave")
+        ) { /* deprecated */
             call_user_func($function, $tuples);
         }
 
@@ -761,8 +845,14 @@ EOT;
         $priority = null;
         $delayInSeconds = 60; /* 1 minute */
 
-        CBTasks2::restart('CBModelPruneVersionsTask', $IDs, $priority, $delayInSeconds);
+        CBTasks2::restart(
+            'CBModelPruneVersionsTask',
+            $IDs,
+            $priority,
+            $delayInSeconds
+        );
     }
+
 
     /**
      * This function is used often by websites to save models. The page editor
@@ -810,12 +900,16 @@ EOT;
             // response as not successful. Not being able to write is something
             // the end user should be explicitly notified about.
             $ID = empty($spec->ID) ? 'no ID specified' : $spec->ID;
-            $response->message = "You do not have permissions to write the spec with ID: {$ID}";
+
+            $response->message =
+            "You do not have permissions to write the spec with ID: {$ID}";
+
             $response->wasSuccessful = false;
         }
 
         $response->send();
     }
+
 
     /**
      * @return stdClass
@@ -823,6 +917,7 @@ EOT;
     static function saveForAjaxPermissions() {
         return (object)['group' => 'Public'];
     }
+
 
     /**
      * Saves model data
@@ -844,13 +939,31 @@ EOT;
     private static function saveToDatabase(array $tuples) {
         /* 1: CBModelVersions */
 
-        $values = array_map(function($tuple) {
-            $IDAsSQL = CBHex160::toSQL($tuple->model->ID);
-            $modelAsJSONAsSQL = CBDB::stringToSQL(json_encode($tuple->model));
-            $specAsJSONAsSQL = CBDB::stringToSQL(json_encode($tuple->spec));
+        $values = array_map(
+            function ($tuple) {
+                $IDAsSQL = CBHex160::toSQL($tuple->model->ID);
 
-            return "({$IDAsSQL}, {$tuple->meta->version}, {$modelAsJSONAsSQL}, {$specAsJSONAsSQL}, {$tuple->meta->modified})";
-        }, $tuples);
+                $modelAsJSONAsSQL = CBDB::stringToSQL(
+                    json_encode($tuple->model)
+                );
+
+                $specAsJSONAsSQL = CBDB::stringToSQL(
+                    json_encode($tuple->spec)
+                );
+
+                return (
+                    "(" .
+                    "{$IDAsSQL}," .
+                    "{$tuple->meta->version}," .
+                    "{$modelAsJSONAsSQL}," .
+                    "{$specAsJSONAsSQL}," .
+                    "{$tuple->meta->modified}" .
+                    ")"
+                );
+            },
+            $tuples
+        );
+
         $values = implode(',', $values);
 
         $SQL = <<<EOT
@@ -871,13 +984,28 @@ EOT;
 
         /* 2: CBModels */
 
-        $values = array_map(function($tuple) {
-            $IDAsSQL = CBHex160::toSQL($tuple->model->ID);
-            $classNameAsSQL = CBDB::stringToSQL($tuple->model->className);
-            $titleAsSQL = CBDB::stringToSQL(CBModel::value($tuple->model, 'title', ''));
+        $values = array_map(
+            function ($tuple) {
+                $IDAsSQL = CBHex160::toSQL($tuple->model->ID);
+                $classNameAsSQL = CBDB::stringToSQL($tuple->model->className);
+                $titleAsSQL = CBDB::stringToSQL(
+                    CBModel::valueToString($tuple->model, 'title')
+                );
 
-            return "({$IDAsSQL}, {$classNameAsSQL}, {$tuple->meta->created}, {$tuple->meta->modified}, {$titleAsSQL}, {$tuple->meta->version})";
-        }, $tuples);
+                return (
+                    "(" .
+                    "{$IDAsSQL}," .
+                    "{$classNameAsSQL}," .
+                    "{$tuple->meta->created}," .
+                    "{$tuple->meta->modified}," .
+                    "{$titleAsSQL}," .
+                    "{$tuple->meta->version}" .
+                    ")"
+                );
+            },
+            $tuples
+        );
+
         $values = implode(',', $values);
 
         /**
