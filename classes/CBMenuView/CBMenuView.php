@@ -24,6 +24,7 @@ final class CBMenuView {
         ];
     }
 
+
     /**
      * @param model $spec
      *
@@ -34,9 +35,13 @@ final class CBMenuView {
             'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
             'menuID' => CBModel::valueAsID($spec, 'menuID'),
             'menuIndex' => CBModel::valueAsInt($spec, 'menuIndex'),
-            'selectedItemName' => CBModel::valueToString($spec, 'selectedItemName'),
+            'selectedItemName' => CBModel::valueToString(
+                $spec,
+                'selectedItemName'
+            ),
         ];
     }
+
 
     /**
      * @param model $model
@@ -47,7 +52,7 @@ final class CBMenuView {
      *
      *              This parameter is used by direct callers that dynamically
      *              construct a menu. It takes higher priority than menuID. This
-     *              parameter will not be preserved by CBModel_toModel().
+     *              parameter will not be preserved by CBModel_build().
      *
      *          menuID: ID
      *          menuIndex: ?int (optional)
@@ -161,8 +166,16 @@ final class CBMenuView {
 
         <nav class="CBMenuView <?= $CSSClassNames ?>">
             <div class="CBMenuView_header menu_header">
-                <div class="left"><a class="title" <?= $titleHREFAttribute ?>><?= $titleAsHTML ?></a></div>
-                <div class="center"><a class="title" <?= $titleHREFAttribute ?>><?= $titleAsHTML ?></a></div>
+                <div class="left">
+                    <a class="title" <?= $titleHREFAttribute ?>>
+                        <?= $titleAsHTML ?>
+                    </a>
+                </div>
+                <div class="center">
+                    <a class="title" <?= $titleHREFAttribute ?>>
+                        <?= $titleAsHTML ?>
+                    </a>
+                </div>
                 <div class="right"></div>
             </div>
             <div class="CBMenuView_items menu_items">
@@ -172,7 +185,11 @@ final class CBMenuView {
                     if (!empty($menu->title)) {
                         ?>
 
-                        <div class="CBMenuView_containerTitle title"><a <?= $titleHREFAttribute ?>><?= $titleAsHTML ?></a></div>
+                        <div class="CBMenuView_containerTitle title">
+                            <a <?= $titleHREFAttribute ?>>
+                                <?= $titleAsHTML ?>
+                            </a>
+                        </div>
 
                         <?php
                     }
@@ -180,15 +197,25 @@ final class CBMenuView {
                     ?>
 
                     <ul>
-                        <li class="CBMenuView_listItemTitle title"><a <?= $titleHREFAttribute ?>><span><?= $titleAsHTML ?></span></a></li>
+                        <li class="CBMenuView_listItemTitle title">
+                            <a <?= $titleHREFAttribute ?>>
+                                <span><?= $titleAsHTML ?></span>
+                            </a>
+                        </li>
 
                         <?php
 
                         $items = CBModel::valueToArray($menu, 'items');
 
-                        array_walk($items, function ($menuItemModel) use ($selectedItemName) {
-                            CBMenuItem::render($menuItemModel, $selectedItemName);
-                        });
+                        array_walk(
+                            $items,
+                            function ($menuItemModel) use ($selectedItemName) {
+                                CBMenuItem::render(
+                                    $menuItemModel,
+                                    $selectedItemName
+                                );
+                            }
+                        );
 
                         ?>
                     </ul>
@@ -198,4 +225,5 @@ final class CBMenuView {
 
         <?php
     }
+    /* CBView_render() */
 }
