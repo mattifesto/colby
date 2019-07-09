@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @deprecated 2018.05.16
+ * @deprecated 2018_05_16
  *
  *      Use CBPageFrame related classes and functions
  */
@@ -10,10 +10,10 @@ final class CBPageLayout {
     /**
      * @return void
      */
-    static function render(stdClass $layoutModel, callable $renderContentCallback): void {
-
-        /* CSS class names */
-
+    static function render(
+        stdClass $layoutModel,
+        callable $renderContentCallback
+    ): void {
         $CSSClassNames = CBModel::valueToArray($layoutModel, 'CSSClassNames');
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
@@ -26,19 +26,33 @@ final class CBPageLayout {
             CBHTMLOutput::addCSS($layoutModel->localCSS);
         }
 
-        $customLayoutClassName = CBModel::value($layoutModel, 'customLayoutClassName', '');
-        $customLayoutProperties = CBModel::valueToObject($layoutModel, 'customLayoutProperties');
+        $customLayoutClassName = CBModel::valueToString(
+            $layoutModel,
+            'customLayoutClassName'
+        );
 
-        CBPageLayout::renderPageHeader($customLayoutClassName, $customLayoutProperties);
+        $customLayoutProperties = CBModel::valueToObject(
+            $layoutModel,
+            'customLayoutProperties'
+        );
+
+        CBPageLayout::renderPageHeader(
+            $customLayoutClassName,
+            $customLayoutProperties
+        );
 
         ?>
 
         <main class="CBPageLayout <?= $CSSClassNames ?>">
             <?php
 
-                if (!empty($layoutModel->isArticle)) { echo "<article>"; }
+                if (!empty($layoutModel->isArticle)) {
+                    echo "<article>";
+                }
 
-                if (is_callable($function = "{$customLayoutClassName}::renderPageContent")) {
+                if (is_callable(
+                    $function = "{$customLayoutClassName}::renderPageContent"
+                )) {
                     call_user_func($function, $customLayoutProperties);
                 } else {
                     $renderContentCallback();
@@ -51,8 +65,13 @@ final class CBPageLayout {
 
         <?php
 
-        CBPageLayout::renderPageFooter($customLayoutClassName, $customLayoutProperties);
+        CBPageLayout::renderPageFooter(
+            $customLayoutClassName,
+            $customLayoutProperties
+        );
     }
+    /* render() */
+
 
     /**
      * Call this function without parameters to render the default page footer.
@@ -69,12 +88,19 @@ final class CBPageLayout {
      *
      * @return null
      */
-    static function renderPageFooter($className = '', stdClass $properties = null) {
+    static function renderPageFooter(
+        $className = '',
+        stdClass $properties = null
+    ) {
         if ($properties === null) { $properties = (object)[]; }
 
-        if (is_callable($function = "{$className}::renderPageFooter")) {
+        if (
+            is_callable($function = "{$className}::renderPageFooter")
+        ) {
             call_user_func($function, $properties);
-        } else if (is_callable($function = 'CBPageHelpers::renderDefaultPageFooter')) {
+        } else if (
+            is_callable($function = 'CBPageHelpers::renderDefaultPageFooter')
+        ) {
             call_user_func($function, $properties);
         } else {
             CBView::render((object)[
@@ -82,6 +108,8 @@ final class CBPageLayout {
             ]);
         }
     }
+    /* renderPageFooter() */
+
 
     /**
      * Call this function without parameters to render the default page header.
@@ -98,37 +126,50 @@ final class CBPageLayout {
      *
      * @return null
      */
-    static function renderPageHeader($className = '', stdClass $properties = null) {
-        if ($properties === null) { $properties = (object)[]; }
+    static function renderPageHeader(
+        $className = '',
+        stdClass $properties = null
+    ) {
+        if ($properties === null) {
+            $properties = (object)[];
+        }
 
-        if (is_callable($function = "{$className}::renderPageHeader")) {
+        if (
+            is_callable($function = "{$className}::renderPageHeader")
+        ) {
             call_user_func($function, $properties);
-        } else if (is_callable($function = 'CBPageHelpers::renderDefaultPageHeader')) {
+        } else if (
+            is_callable($function = 'CBPageHelpers::renderDefaultPageHeader')
+        ) {
             call_user_func($function, $properties);
         } else {
-            CBView::render((object)[
-                'className' => 'CBDefaultPageHeaderView',
-            ]);
+            CBView::render(
+                (object)[
+                    'className' => 'CBDefaultPageHeaderView',
+                ]
+            );
         }
     }
+    /* renderPageHeader() */
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
 
     /**
-     * @param string? $spec->CSSClassNames
-     * @param string? $spec->customLayoutClassName
-     * @param stdClass? $spec->customLayoutProperties
-     * @param bool? $spec->isArticle
-     * @param string? $spec->localCSSTemplate
+     * @param object $spec
      *
-     * @return ?object
+     * @return object
      */
-    static function CBModel_toModel(stdClass $spec): ?stdClass {
+    static function CBModel_build(stdClass $spec): stdClass {
         $model = (object)[
             'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
             'customLayoutClassName' => trim(CBModel::valueToString($spec, 'customLayoutClassName')),
@@ -151,4 +192,5 @@ final class CBPageLayout {
 
         return $model;
     }
+    /* CBModel_build() */
 }
