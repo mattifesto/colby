@@ -137,25 +137,28 @@ final class ColbyConvert {
         return array_map(function($paragraph) { return implode(' ', $paragraph); }, $paragraphs);
     }
 
+
     /**
-     * @deprecated use CBMarkaround::markaroundToHTML() (2016.01.07)
+     * @deprecated 2016_01_07
+     *
+     *      Use CBMarkaround::markaroundToHTML()
      *
      * @return string
      */
     static function markaroundToHTML($markaround) {
-        Colby::debugLog('ColbyConvert::markaroundToHTML() has been deprecated.');
         return CBMarkaround::markaroundToHTML($markaround);
     }
 
+
     /**
-     * @deprecated use CBMarkaround::markaroundToHTML() (2013.01.14)
+     * @deprecated 2013_01_14
      *
      * @return string
      */
     static function textToFormattedContent($text) {
-        Colby::debugLog('ColbyConvert::textToFormattedContent() has been deprecated.');
         return CBMarkaround::markaroundToHTML($markaround);
     }
+
 
     /**
      * @deprecated use cbhtml()
@@ -164,6 +167,7 @@ final class ColbyConvert {
         return cbhtml($text);
     }
 
+
     /**
      * @deprecated use CBConvert::stringToLines()
      */
@@ -171,15 +175,14 @@ final class ColbyConvert {
         return CBConvert::stringToLines($text);
     }
 
+
     /**
-     * @param string $text
-     *
-     * @return string
-     *  The $text parameter escaped for use in SQL.
+     * @deprecated 2019_07_09
      */
     static function textToSQL($text) {
-        return Colby::mysqli()->escape_string($text);
+        return CBDB::escapeString($text);
     }
+
 
     /**
      * @deprecated use CBConvert::stringToStub()
@@ -187,6 +190,7 @@ final class ColbyConvert {
     static function textToStub($text) {
         return CBConvert::stringToStub($text);
     }
+
 
     /**
      * This function will make the whitespace inside text visible, usually for
