@@ -411,9 +411,9 @@ EOT;
      * @return void
      */
     static function updateRow($ID, $timestamp, $extension): void {
-        $extensionAsSQL = ColbyConvert::textToSQL($extension);
+        $extensionAsSQL = CBDB::escapeString($extension);
         $extensionAsSQL = "'{$extension}'";
-        $IDAsSQL = ColbyConvert::textToSQL($ID);
+        $IDAsSQL = CBDB::escapeString($ID);
         $IDAsSQL = "UNHEX('{$IDAsSQL}')";
         $timestampAsSQL = (int)$timestamp;
         $SQL = <<<EOT
@@ -496,8 +496,12 @@ EOT;
             ];
         }
 
-        $response->extension = $image->extension;   /* @deprecated use $image->extension */
-        $response->ID = $image->ID;                 /* @deprecated use $image->ID */
+        /* @deprecated use $image->extension */
+        $response->extension = $image->extension;
+
+        /* @deprecated use $image->ID */
+        $response->ID = $image->ID;
+
         $response->image = $image;
         $response->sizes = $sizes;
 
