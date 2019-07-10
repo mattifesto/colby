@@ -1,14 +1,16 @@
 <?php
 
 /**
- * @deprecated 2015.06.09
+ * @deprecated 2015_06_09
+ *
  *      This class has been around since very early on in the process of
- *  creating views. Because of this, the theory behind views was not fully
- *  formed and it is not elegantly implemented.
+ *      creating views. Because of this, the theory behind views was not fully
+ *      formed and it is not elegantly implemented.
+ *
  *      It is currently used by the MCLinkView and the LEMiniLinkView. These
- *  views should be deprecated also and replaced by views that behave better.
- *  When there is system wide view upgrade functionality all of the models can
- *  be upgraded and these views deleted.
+ *      views should be deprecated also and replaced by views that behave
+ *      better. When there is system wide view upgrade functionality all of the
+ *      models can be upgraded and these views deleted.
  */
 final class CBImageView {
 
@@ -16,15 +18,24 @@ final class CBImageView {
      * @return void
      */
     static function CBInstall_install(): void {
-        CBViewCatalog::installView(__CLASS__, (object)['isUnsupported' => true]);
+        CBViewCatalog::installView(
+            __CLASS__,
+            (object)[
+                'isUnsupported' => true
+            ]
+        );
     }
+
 
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBViewCatalog'];
+        return [
+            'CBViewCatalog'
+        ];
     }
+
 
     /**
      * @param object $model
@@ -35,16 +46,19 @@ final class CBImageView {
         return !!$model->filename;
     }
 
+
     /**
      * @param object $model
+     *
      * @return string
      */
     static function CBModel_toSearchText(stdClass $model) {
         return CBModel::valueToString($model, 'alternativeTextViewModel.text');
     }
 
+
     /**
-     * @param model $model
+     * @param object $model
      *
      * @return void
      */
@@ -56,7 +70,7 @@ final class CBImageView {
         }
 
         /**
-         * @NOTE 2018.02.13
+         * @NOTE 2018_02_13
          *
          *      Technically there should be better property access below but
          *      because this view is rarely or maybe never used it can wait.
@@ -100,6 +114,8 @@ final class CBImageView {
 
         <?php
     }
+    /* CBView_render() */
+
 
     /**
      * @param object $spec
@@ -108,20 +124,41 @@ final class CBImageView {
      */
     static function CBModel_build(stdClass $spec) {
         $model = (object)[];
-        $model->actualHeight = isset($spec->actualHeight) ? $spec->actualHeight : null;
-        $model->actualWidth = isset($spec->actualWidth) ? $spec->actualWidth : null;
-        $model->displayHeight = isset($spec->displayHeight) ? $spec->displayHeight : null;
-        $model->displayWidth = isset($spec->displayWidth) ? $spec->displayWidth : null;
+
+        $model->actualHeight =
+        isset($spec->actualHeight) ?
+        $spec->actualHeight :
+        null;
+
+        $model->actualWidth =
+        isset($spec->actualWidth) ?
+        $spec->actualWidth :
+        null;
+
+        $model->displayHeight =
+        isset($spec->displayHeight) ?
+        $spec->displayHeight :
+        null;
+
+        $model->displayWidth =
+        isset($spec->displayWidth) ?
+        $spec->displayWidth :
+        null;
+
         $model->filename = isset($spec->filename) ? $spec->filename : null;
         $model->maxHeight = isset($spec->maxHeight) ? $spec->maxHeight : null;
         $model->maxWidth = isset($spec->maxWidth) ? $spec->maxWidth : null;
         $model->URL = isset($spec->URL) ? $spec->URL : null;
-        $altTextSpec = isset($spec->alternativeTextViewModel) ? $spec->alternativeTextViewModel : null;
+
+        $altTextSpec =
+        isset($spec->alternativeTextViewModel) ?
+        $spec->alternativeTextViewModel :
+        null;
 
         $textViewSpecToModel = function (stdClass $spec = null) {
             $model = (object)[];
             $model->text = isset($spec->text) ? (string)$spec->text : '';
-            $model->HTML = ColbyConvert::textToHTML($model->text);
+            $model->HTML = cbhtml($model->text);
 
             return $model;
         };
@@ -130,4 +167,5 @@ final class CBImageView {
 
         return $model;
     }
+    /* CBModel_build() */
 }
