@@ -20,13 +20,15 @@ final class CBHex160 {
         }
     }
 
+
     /**
-     * @return hex160
+     * @return string
      */
-    static function random() {
+    static function random(): string {
         $bytes = openssl_random_pseudo_bytes(20);
         return bin2hex($bytes);
     }
+
 
     /**
      * @param hex160 | [hex160]
@@ -42,24 +44,37 @@ final class CBHex160 {
             $values = [$values];
         }
 
-        $values = array_map(function($value) {
-            if (!CBHex160::is($value)) {
-                $valueAsJSON = json_encode($value);
+        $values = array_map(
+            function($value) {
+                if (!CBHex160::is($value)) {
+                    $valueAsJSON = json_encode($value);
 
-                if (is_string($value) && preg_match('/^[a-fA-F0-9]{40}$/', $value)) {
-                    $message = "The value {$valueAsJSON} is not a hex160 value because it contains capital letters.";
-                } else {
-                    $message = "The value {$valueAsJSON} is not a 160-bit hexadecimal value.";
+                    if (
+                        is_string($value) &&
+                        preg_match('/^[a-fA-F0-9]{40}$/', $value)
+                    ) {
+                        $message = (
+                            "The value {$valueAsJSON} is not a hex160 value " .
+                            "because it contains capital letters."
+                        );
+                    } else {
+                        $message = (
+                            "The value {$valueAsJSON} is not a 160-bit " .
+                            "hexadecimal value."
+                        );
+                    }
+
+                    throw new RuntimeException($message);
                 }
 
-                throw new RuntimeException($message);
-            }
+                $value = CBDB::escapeString($value);
 
-            $value = ColbyConvert::textToSQL($value);
-
-            return "UNHEX('{$value}')";
-        }, $values);
+                return "UNHEX('{$value}')";
+            },
+            $values
+        );
 
         return implode(',', $values);
     }
+    /* toSQL() */
 }
