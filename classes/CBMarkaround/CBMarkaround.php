@@ -5,7 +5,10 @@ final class CBMarkaround {
     /**
      * @return string
      */
-    private static function expressionForSpan($openExpression, $closeExpression) {
+    private static function expressionForSpan(
+        $openExpression,
+        $closeExpression
+    ): string {
         return "/
 
             {$openExpression}
@@ -19,6 +22,7 @@ final class CBMarkaround {
             /x";
     }
 
+
     /**
      * @param string $markaround
      *
@@ -29,8 +33,9 @@ final class CBMarkaround {
         return $parser->html();
     }
 
+
     /**
-     * TODO: 2016.01.07 This function still needs to be properly implemented.
+     * TODO: 2016_01_07 This function still needs to be properly implemented.
      *
      * @param string $markaround
      *
@@ -39,6 +44,7 @@ final class CBMarkaround {
     static function markaroundToText($markaround) {
         return $markaround;
     }
+
 
     /**
      * @note functional programming
@@ -67,7 +73,7 @@ final class CBMarkaround {
             '\\\\`'     => '`',     //  \`  -->  `
             '\\\\^'     => '^');    //  \^  -->  ^
 
-        $paragraph = ColbyConvert::textToHTML($paragraph);
+        $paragraph = cbhtml($paragraph);
 
         foreach ($escapes as $pattern => $replacement) {
             $hash       = sha1($pattern);
@@ -76,30 +82,30 @@ final class CBMarkaround {
 
         switch ($format) {
             case 'HTML':
-                $patterns[]     = self::expressionForSpan('\*', '\*');
+                $patterns[]     = CBMarkaround::expressionForSpan('\*', '\*');
                 $replacements[] = '<b>$1</b>';
-                $patterns[]     = self::expressionForSpan('_', '_');
+                $patterns[]     = CBMarkaround::expressionForSpan('_', '_');
                 $replacements[] = '<i>$1</i>';
-                $patterns[]     = self::expressionForSpan('{', '}');
+                $patterns[]     = CBMarkaround::expressionForSpan('{', '}');
                 $replacements[] = '<cite>$1</cite>';
-                $patterns[]     = self::expressionForSpan('`', '`');
+                $patterns[]     = CBMarkaround::expressionForSpan('`', '`');
                 $replacements[] = '<code>$1</code>';
-                $patterns[]     = self::expressionForSpan('\^', '\^');
+                $patterns[]     = CBMarkaround::expressionForSpan('\^', '\^');
                 $replacements[] = '<span class="special">$1</span>';
                 $patterns[]     = '/ (?<=^|\s) \/ (?=\s|$) /x';
                 $replacements[] = '<br>';
                 break;
 
             case 'text':
-                $patterns[]     = self::expressionForSpan('\*', '\*');
+                $patterns[]     = CBMarkaround::expressionForSpan('\*', '\*');
                 $replacements[] = '$1';
-                $patterns[]     = self::expressionForSpan('_', '_');
+                $patterns[]     = CBMarkaround::expressionForSpan('_', '_');
                 $replacements[] = '$1';
-                $patterns[]     = self::expressionForSpan('{', '}');
+                $patterns[]     = CBMarkaround::expressionForSpan('{', '}');
                 $replacements[] = '$1';
-                $patterns[]     = self::expressionForSpan('`', '`');
+                $patterns[]     = CBMarkaround::expressionForSpan('`', '`');
                 $replacements[] = '$1';
-                $patterns[]     = self::expressionForSpan('\^', '\^');
+                $patterns[]     = CBMarkaround::expressionForSpan('\^', '\^');
                 $replacements[] = '$1';
                 $patterns[]     = '/ (?<=^|\s) \/ (?=\s|$) /x';
                 $replacements[] = '';
@@ -120,12 +126,14 @@ final class CBMarkaround {
         return $paragraph;
     }
 
+
     /**
      * @return {string}
      */
     static function paragraphToHTML($paragraph) {
         return CBMarkaround::paragraphTo($paragraph, ['format' => 'HTML']);
     }
+
 
     /**
      * @return {string}
@@ -134,8 +142,10 @@ final class CBMarkaround {
         return CBMarkaround::paragraphTo($paragraph, ['format' => 'text']);
     }
 
+
     /**
-     * @param {string} format
+     * @param string format
+     *
      *  This specifies what kind of formatting the text uses. The only supported
      *  value currently is the default value `inline` which specifies to only
      *  format the inline markaround and not markaround for block level element,
@@ -147,11 +157,22 @@ final class CBMarkaround {
         $format = 'inline'; $text = '';
         extract($args);
 
-        $lines          = ColbyConvert::textToLines((string)$text);
-        $paragraphs     = ColbyConvert::linesToParagraphs($lines);
-        $paragraphs     = array_map('CBMarkaround::paragraphToHTML', $paragraphs);
-        $paragraphs     = array_map(function($p) { return "<p>{$p}"; }, $paragraphs);
+        $lines = CBConvert::stringToLines((string)$text);
+        $paragraphs = ColbyConvert::linesToParagraphs($lines);
+
+        $paragraphs = array_map(
+            'CBMarkaround::paragraphToHTML',
+            $paragraphs
+        );
+
+        $paragraphs = array_map(
+            function($p) {
+                return "<p>{$p}";
+            },
+            $paragraphs
+        );
 
         return implode("\n\n", $paragraphs);
     }
+    /* textToHTML() */
 }
