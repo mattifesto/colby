@@ -312,6 +312,18 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => ' renderModelAsHTML',
+                    'title' => (
+                        'Replace renderModelAsHTML() with CBView_render()'
+                    ),
+                ],
+
+
+                /**
                  * 2019_07_07
                  */
                 (object)[
