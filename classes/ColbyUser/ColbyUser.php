@@ -53,7 +53,9 @@ final class ColbyUser {
         $groupTableName = "ColbyUsersWhoAre{$groupName}";
         $userID = intval($userID);
 
-        Colby::query("INSERT INTO `{$groupTableName}` VALUES ({$userID}, NOW())");
+        Colby::query(
+            "INSERT INTO `{$groupTableName}` VALUES ({$userID}, NOW())"
+        );
     }
 
     /**
@@ -390,7 +392,7 @@ EOT;
 
         $sqlFacebookAccessExpirationTime = "'{$facebookAccessExpirationTime}'";
 
-        $sqlFacebookName = ColbyConvert::textToHTML($facebookProperties->name);
+        $sqlFacebookName = cbhtml($facebookProperties->name);
         $sqlFacebookName = $mysqli->escape_string($sqlFacebookName);
         $sqlFacebookName = "'{$sqlFacebookName}'";
 
@@ -409,7 +411,8 @@ EOT;
                     `ColbyUsers`
                 SET
                     `facebookAccessToken` = {$sqlFacebookAccessToken},
-                    `facebookAccessExpirationTime` = {$sqlFacebookAccessExpirationTime},
+                    `facebookAccessExpirationTime` =
+                    {$sqlFacebookAccessExpirationTime},
                     `facebookName` = {$sqlFacebookName},
                     `facebookFirstName` = '',
                     `facebookLastName` = '',
@@ -459,11 +462,13 @@ EOT;
 
             if ($count === '1') {
                 Colby::query(
-                    "INSERT INTO `ColbyUsersWhoAreAdministrators` VALUES ({$userIdentity->ID}, NOW())"
+                    "INSERT INTO `ColbyUsersWhoAreAdministrators` " .
+                    "VALUES ({$userIdentity->ID}, NOW())"
                 );
 
                 Colby::query(
-                    "INSERT INTO `ColbyUsersWhoAreDevelopers` VALUES ({$userIdentity->ID}, NOW())"
+                    "INSERT INTO `ColbyUsersWhoAreDevelopers` " .
+                    "VALUES ({$userIdentity->ID}, NOW())"
                 );
             }
         }
@@ -503,8 +508,11 @@ EOT;
         $cookie = (object)[
             'userHash' => $userIdentity->hash,
             'userId' => $userIdentity->ID,
-            'expirationTimestamp' => time() + (60 * 60 * 24), /* 24 hours from now */
+
+            /* 24 hours from now */
+            'expirationTimestamp' => time() + (60 * 60 * 24),
         ];
+
         $encryptedCookie = Colby::encrypt($cookie);
 
         /**
