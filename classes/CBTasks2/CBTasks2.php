@@ -560,29 +560,44 @@ EOT;
             } else if (is_callable($function = "{$task->className}::CBTasks2_Execute")) { /* deprecated */
                 $taskReturnValue = call_user_func($function, $task->ID);
             } else {
-                throw new Exception("The CBTasks2_run() interface has not been implemented by the {$task->className} class preventing execution of the task for ID {$task->ID}");
+                throw new Exception(
+                    "The CBTasks2_run() interface has not been " .
+                    "implemented by the {$task->className} class " .
+                    "preventing execution of the task for ID {$task->ID}"
+                );
             }
 
             /**
              * The task function can request that the task be rerun by returning
              * an integer value for the "sheduled" property.
              */
-            $requestedScheduled = CBModel::valueAsInt($taskReturnValue, 'scheduled');
+            $requestedScheduled = CBModel::valueAsInt(
+                $taskReturnValue,
+                'scheduled'
+            );
 
             /**
              * The task function can request that the task be set to a specific
              * priority by returning an integer value for the "priority"
              * property.
              */
-            $requestedPriority = CBModel::valueAsInt($taskReturnValue, 'priority');
+            $requestedPriority = CBModel::valueAsInt(
+                $taskReturnValue,
+                'priority'
+            );
 
             // Log a debug level entry that a task has run.
 
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => "CBTasks2 ran {$task->className} for ID {$task->ID}",
-                'severity' => 7,
-            ]);
+            CBLog::log(
+                (object)[
+                    'message' => (
+                        "CBTasks2 ran {$task->className} for ID {$task->ID}"
+                    ),
+                    'severity' => 7,
+                    'sourceClassName' => __CLASS__,
+                    'sourceID' => '79ea4dab030cff53f132622f6309bc44b552908a',
+                ]
+            );
 
             $newState = 3; /* complete */
         } catch (Throwable $throwable) {
