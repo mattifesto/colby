@@ -112,9 +112,12 @@ class ColbyMarkaroundParser
 
             case MARKAROUND_LINE_TYPE_PRE_FORMATTED:
 
-                // The sequence of four backslashes below represents a single backslash.
-                //
-                // http://php.net/manual/en/regexp.reference.escape.php
+                /**
+                 * The sequence of four backslashes below represents a single
+                 * backslash.
+                 *
+                 * http://php.net/manual/en/regexp.reference.escape.php
+                 */
 
                 return preg_replace(
                     '/^\)\s*(\\\\)?(.*)\s*$/',
@@ -208,8 +211,7 @@ class ColbyMarkaroundParser
     /**
      * @return void
      */
-    private function flushCurrentParagraph()
-    {
+    private function flushCurrentParagraph(): void {
         if ($this->currentParagraphText)
         {
             $html = CBMarkaround::paragraphToHTML($this->currentParagraphText);
@@ -221,14 +223,14 @@ class ColbyMarkaroundParser
         }
     }
 
+
     /**
      * @return void
      */
-    private function parse()
-    {
+    private function parse(): void {
         $this->currentState     = MARKAROUND_STATE_NONE;
         $this->htmlArray        = array();
-        $markaroundLines        = ColbyConvert::textToLines($this->markaround);
+        $markaroundLines        = CBConvert::stringToLines($this->markaround);
 
         foreach ($markaroundLines as $markaroundLine)
         {
@@ -283,17 +285,14 @@ class ColbyMarkaroundParser
                         throw new RuntimeException('Unknown markaround state.');
                 }
 
-                if ($this->currentState == $newState)
-                {
+                if ($this->currentState == $newState) {
                     $isLineProcessed = true;
-                }
-                else
-                {
+                } else {
                     /**
                      * All state transitions are either going to or from
                      * MARKAROUND_STATE_NONE. Anything else is an error.
                      */
-                     
+
                     if ($this->currentState == MARKAROUND_STATE_NONE)
                     {
                         $this->transitionFromNoStateTo($newState);
@@ -323,6 +322,7 @@ class ColbyMarkaroundParser
         $this->html = implode('', $this->htmlArray);
         $this->htmlArray = null;
     }
+    /* parse() */
 
 
     /**
