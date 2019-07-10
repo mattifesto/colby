@@ -65,9 +65,9 @@ final class CBPageVerificationTask {
      *
      *      The ID of the page to verify.
      *
-     * @return object
+     * @return void
      */
-    static function CBTasks2_run(string $ID): stdClass {
+    static function CBTasks2_run(string $ID): void {
         $messages = [];
         $resave = false;
         $severity = 7;
@@ -307,22 +307,27 @@ EOT;
             CBModels::save($result->spec);
         }
 
-        CBLog::log((object)[
-            'className' => __CLASS__,
-            'message' => implode("\n\n--- hr\n---\n\n", $messages),
-            'severity' => $severity,
-        ]);
+        CBLog::log(
+            (object)[
+                'message' => implode("\n\n--- hr\n---\n\n", $messages),
+                'severity' => $severity,
+                'sourceClassName' => __CLASS__,
+                'sourceID' => 'd05773c6b25805a051444e411221e7ed585d45b3',
+            ]
+        );
     }
+    /* CBTasks2_run() */
+
 
     /**
      * This function counts versions older than 30 days because CBModels:save()
      * will remove those versions.
      *
-     * @param hex160 $ID
+     * @param string $ID
      *
      * @return int
      */
-    static function fetchCountOfOldVersions($ID) {
+    static function fetchCountOfOldVersions(string $ID) {
         $IDAsSQL = CBHex160::toSQL($ID);
         $timestamp = time() - (60 * 60 * 24 * 30); // 30 days ago
         $SQL = <<<EOT
@@ -336,6 +341,8 @@ EOT;
 
         return CBDB::SQLToValue($SQL);
     }
+    /* fetchCountOfOldVersions() */
+
 
     /**
      * This function performs all the actions of the task but doesn't create any
