@@ -316,7 +316,7 @@ EOT;
         $tests = [
             ['CB',                      'class'],
             ['CBConvert',               'linesToParagraphs'],
-            ['CBConvert',               'textToLines'],
+            ['CBConvert',               'stringToLines'],
             ['CBConvert',               'valueAsInt'],
             ['CBConvert',               'valueAsModel'],
             ['CBDataStore',             'createAndDelete'],

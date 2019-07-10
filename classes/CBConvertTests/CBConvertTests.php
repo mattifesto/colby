@@ -208,9 +208,14 @@ final class CBConvertTests {
 
         if ($result != $expected) {
             return (object)[
-                'message' =>
-                    "The result of test 1 did not match the expected value.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($result, $expected),
+                'message' => (
+                    "The result of test 1 did not match the expected " .
+                    "value.\n\n" .
+                    CBConvertTests::resultAndExpectedToMessage(
+                        $result,
+                        $expected
+                    )
+                ),
             ];
         } else {
             return (object)[
@@ -473,25 +478,61 @@ EOT;
 
         if ($diff) {
             $JSON = json_encode($diff);
-            throw new Exception("runTestForLineArrayToParagraphArray: The array returned does not match the expected array with these differences: {$JSON}.");
+            throw new Exception(
+                "runTestForLineArrayToParagraphArray: The array returned " .
+                "does not match the expected array with these " .
+                "differences: {$JSON}."
+            );
         }
     }
+
 
     /**
      * return void
      */
-    static function textToLinesTest() {
-        $text       = "abc \r bcd \n cde \r\n def \n\r efg \r\n\r fgh \r\n\n ghi \r\r\n hij \r\n\r\n ijk";
-        $expected   = ['abc ', ' bcd ', ' cde ', ' def ',
-                       '', ' efg ', '', ' fgh ', '', ' ghi ', '', ' hij ', '', ' ijk'];
-        $actual     = ColbyConvert::textToLines($text);
+    static function strngToLinesTest() {
+        $text = (
+            "abc \r" .
+            " bcd \n" .
+            " cde \r\n" .
+            " def \n\r" .
+            " efg \r\n\r" .
+            " fgh \r\n\n" .
+            " ghi \r\r\n" .
+            " hij \r\n\r\n" .
+            " ijk"
+        );
+
+        $expected = [
+            'abc ',
+            ' bcd ',
+            ' cde ',
+            ' def ',
+            '',
+            ' efg ',
+            '',
+            ' fgh ',
+            '',
+            ' ghi ',
+            '',
+            ' hij ',
+            '',
+            ' ijk'
+        ];
+
+        $actual     = CBConvert::stringToLines($text);
         $diff       = array_diff($actual, $expected);
 
         if ($diff) {
             $JSON = json_encode($diff);
-            throw new Exception("runTestForTextToLineArray: The array returned does not match the expected array with these differences: {$JSON}.");
+            throw new Exception(
+                "runTestForTextToLineArray: The array returned does not " .
+                "match the expected array with these differences: {$JSON}."
+            );
         }
     }
+    /* textToLinesTest() */
+
 
     /**
      * @return null
@@ -521,10 +562,14 @@ EOT;
                 $inputAsJSON = json_encode($test[0]);
                 $actualResultAsJSON = json_encode($result);
                 $expectedResultAsJSON = json_encode($test[1]);
-                throw new Exception("The tested input: {$inputAsJSON} produced: {$actualResultAsJSON} instead of: {$expectedResultAsJSON}");
+                throw new Exception(
+                    "The tested input: {$inputAsJSON} produced: " .
+                    "{$actualResultAsJSON} instead of: {$expectedResultAsJSON}"
+                );
             }
         }
     }
+
 
     /**
      * @return object|null
