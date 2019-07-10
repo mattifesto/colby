@@ -80,19 +80,35 @@ class ColbyMarkaroundParser
         {
             case MARKAROUND_LINE_TYPE_BLOCK_QUOTE:
 
-                return preg_replace('/^>\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
+                return preg_replace(
+                    '/^>\s*(.*)\s*$/',
+                    '$1',
+                    $this->currentMarkaroundLine
+                );
 
             case MARKAROUND_LINE_TYPE_DESCRIPTION_NAME:
 
-                return preg_replace('/^}\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
+                return preg_replace(
+                    '/^}\s*(.*)\s*$/',
+                    '$1',
+                    $this->currentMarkaroundLine
+                );
 
             case MARKAROUND_LINE_TYPE_DESCRIPTION_VALUE:
 
-                return preg_replace('/^]\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
+                return preg_replace(
+                    '/^]\s*(.*)\s*$/',
+                    '$1',
+                    $this->currentMarkaroundLine
+                );
 
             case MARKAROUND_LINE_TYPE_ORDERED_LIST_ITEM:
 
-                return preg_replace('/^[0-9]+\.\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
+                return preg_replace(
+                    '/^[0-9]+\.\s*(.*)\s*$/',
+                    '$1',
+                    $this->currentMarkaroundLine
+                );
 
             case MARKAROUND_LINE_TYPE_PRE_FORMATTED:
 
@@ -100,16 +116,28 @@ class ColbyMarkaroundParser
                 //
                 // http://php.net/manual/en/regexp.reference.escape.php
 
-                return preg_replace('/^\)\s*(\\\\)?(.*)\s*$/', '$2', $this->currentMarkaroundLine);
+                return preg_replace(
+                    '/^\)\s*(\\\\)?(.*)\s*$/',
+                    '$2',
+                    $this->currentMarkaroundLine
+                );
 
             case MARKAROUND_LINE_TYPE_TEXT_INDENTED:
             case MARKAROUND_LINE_TYPE_TEXT_LEFT:
 
-                return preg_replace('/^(\\\\)?\s*(.*)\s*$/', '$2', $this->currentMarkaroundLine);
+                return preg_replace(
+                    '/^(\\\\)?\s*(.*)\s*$/',
+                    '$2',
+                    $this->currentMarkaroundLine
+                );
 
             case MARKAROUND_LINE_TYPE_UNORDERED_LIST_ITEM:
 
-                return preg_replace('/^-\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
+                return preg_replace(
+                    '/^-\s*(.*)\s*$/',
+                    '$1',
+                    $this->currentMarkaroundLine
+                );
 
             default:
 
@@ -205,7 +233,9 @@ class ColbyMarkaroundParser
         foreach ($markaroundLines as $markaroundLine)
         {
             $this->currentMarkaroundLine = $markaroundLine;
-            $this->currentMarkaroundLineType = $this->currentMarkaroundLineType();
+
+            $this->currentMarkaroundLineType =
+            $this->currentMarkaroundLineType();
 
             $isLineProcessed = false;
 
@@ -259,8 +289,11 @@ class ColbyMarkaroundParser
                 }
                 else
                 {
-                    // All state transitions are either going to or from MARKAROUND_STATE_NONE. Anything else is an error.
-
+                    /**
+                     * All state transitions are either going to or from
+                     * MARKAROUND_STATE_NONE. Anything else is an error.
+                     */
+                     
                     if ($this->currentState == MARKAROUND_STATE_NONE)
                     {
                         $this->transitionFromNoStateTo($newState);
@@ -271,7 +304,10 @@ class ColbyMarkaroundParser
                     }
                     else
                     {
-                        $message = "Unsupported state transition from {$this->currentState} to {$newState}";
+                        $message = (
+                            "Unsupported state transition from " .
+                            "{$this->currentState} to {$newState}"
+                        );
 
                         throw new RuntimeException($message);
                     }
@@ -287,6 +323,7 @@ class ColbyMarkaroundParser
         $this->html = implode('', $this->htmlArray);
         $this->htmlArray = null;
     }
+
 
     /**
      * @return MARKAROUND_STATE
@@ -381,7 +418,9 @@ class ColbyMarkaroundParser
                 if ($this->currentParagraphText)
                 {
                     $this->currentParagraphText .= ' ';
-                    $this->currentParagraphText .= $this->currentLineContentText();
+
+                    $this->currentParagraphText .=
+                    $this->currentLineContentText();
                 }
                 else
                 {
@@ -428,24 +467,39 @@ class ColbyMarkaroundParser
 
             case MARKAROUND_LINE_TYPE_HEADING1:
 
-                $lineContentText = preg_replace('/^#\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
-                $lineHTML = ColbyConvert::textToHTML($lineContentText);
+                $lineContentText = preg_replace(
+                    '/^#\s*(.*)\s*$/',
+                    '$1',
+                    $this->currentMarkaroundLine
+                );
+
+                $lineHTML = cbhtml($lineContentText);
                 $this->htmlArray[] = "<h1>{$lineHTML}</h1>\n";
 
                 break;
 
             case MARKAROUND_LINE_TYPE_HEADING2:
 
-                $lineContentText = preg_replace('/^##\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
-                $lineHTML = ColbyConvert::textToHTML($lineContentText);
+                $lineContentText = preg_replace(
+                    '/^##\s*(.*)\s*$/',
+                    '$1',
+                    $this->currentMarkaroundLine
+                );
+
+                $lineHTML = cbhtml($lineContentText);
                 $this->htmlArray[] = "<h2>{$lineHTML}</h2>\n";
 
                 break;
 
             case MARKAROUND_LINE_TYPE_HEADING3:
 
-                $lineContentText = preg_replace('/^###\s*(.*)\s*$/', '$1', $this->currentMarkaroundLine);
-                $lineHTML = ColbyConvert::textToHTML($lineContentText);
+                $lineContentText = preg_replace(
+                    '/^###\s*(.*)\s*$/',
+                    '$1',
+                    $this->currentMarkaroundLine
+                );
+
+                $lineHTML = cbhtml($lineContentText);
                 $this->htmlArray[] = "<h3>{$lineHTML}</h3>\n";
 
                 break;
@@ -477,8 +531,10 @@ class ColbyMarkaroundParser
 
             default:
 
-                $lineHTML = ColbyConvert::textToHTML($this->currentMarkaroundLine);
-                $this->htmlArray[] = "<p>{$this->currentMarkaroundLineType}: {$lineHTML}\n";
+                $lineHTML = cbhtml($this->currentMarkaroundLine);
+
+                $this->htmlArray[] =
+                "<p>{$this->currentMarkaroundLineType}: {$lineHTML}\n";
 
                 break;
 
@@ -527,7 +583,9 @@ class ColbyMarkaroundParser
                 if ($this->currentParagraphText)
                 {
                     $this->currentParagraphText .= ' ';
-                    $this->currentParagraphText .= $this->currentLineContentText();
+
+                    $this->currentParagraphText .=
+                    $this->currentLineContentText();
                 }
                 else
                 {
@@ -557,7 +615,7 @@ class ColbyMarkaroundParser
         {
             case MARKAROUND_LINE_TYPE_PRE_FORMATTED:
 
-                $lineHTML = ColbyConvert::textToHTML($this->currentLineContentText());
+                $lineHTML = cbhtml($this->currentLineContentText());
                 $this->htmlArray[] = "{$lineHTML}\n";
 
                 break;
@@ -643,7 +701,9 @@ class ColbyMarkaroundParser
                 if ($this->currentParagraphText)
                 {
                     $this->currentParagraphText .= ' ';
-                    $this->currentParagraphText .= $this->currentLineContentText();
+
+                    $this->currentParagraphText .=
+                    $this->currentLineContentText();
                 }
                 else
                 {
