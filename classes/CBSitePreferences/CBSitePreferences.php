@@ -106,26 +106,48 @@ final class CBSitePreferences {
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBModels'];
+        return [
+            'CBModels'
+        ];
     }
+    /* CBInstall_requiredClassNames() */
+
 
     /**
-     * @param model $spec
+     * @param object $spec
      *
-     * @return model
+     * @return object
      */
     static function CBModel_build(stdClass $spec) {
         $model = (object)[
-            'className' => __CLASS__,
-            'administratorEmails' => CBModel::value($spec, 'administratorEmails', [], function ($value) {
-                return array_unique(preg_split(
-                    '/[\s,]+/', $value, null, PREG_SPLIT_NO_EMPTY
-                ));
-            }),
-            'imageForIcon' => CBModel::build(CBModel::valueAsModel($spec, 'imageForIcon', ['CBImage'])),
-            'siteName' => trim(CBModel::valueToString($spec, 'siteName')),
-            'slackWebhookURL' => trim(CBModel::valueToString($spec, 'slackWebhookURL')),
+            'imageForIcon' => CBModel::build(
+                CBModel::valueAsModel($spec, 'imageForIcon', ['CBImage'])
+            ),
+            'siteName' => trim(
+                CBModel::valueToString($spec, 'siteName')
+            ),
+            'slackWebhookURL' => trim(
+                CBModel::valueToString($spec, 'slackWebhookURL')
+            ),
         ];
+
+        $administatorEmails = CBModel::valueToString(
+            $spec,
+            'administratorEmails'
+        );
+
+        $administatorEmails = array_values(
+            array_unique(
+                preg_split(
+                    '/[\s,]+/',
+                    $administatorEmails,
+                    null,
+                    PREG_SPLIT_NO_EMPTY
+                )
+            )
+        );
+
+        $model->administratorEmails = $administatorEmails;
 
         $model->debug = isset($spec->debug) ? !!$spec->debug : false;
         $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
