@@ -334,7 +334,6 @@ EOT;
             ['CBPageLayout',            'build'],
             ['CBPages',                 'stringToDencodedURIPath'],
             ['CBProjection'],
-            ['CBSitePreferences'],
             ['CBTestPage'],
             ['CBView',                  'render'],
             ['CBView',                  'toSubviews'],
