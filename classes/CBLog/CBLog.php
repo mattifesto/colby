@@ -63,18 +63,18 @@ final class CBLog {
         array_shift($backtrace);
 
         $backtraceAsJSONAsMessage = CBMessageMarkup::stringToMessage(
-            CBConvert::valueToPrettyJSON($backtrace)
+            CBConvert::traceToString($backtrace)
         );
 
         $message .= <<<EOT
 
-            --- dl
+            --- dl CBBackgroundOffsetColor
                 --- dt
                 Who called CBLog::log()?
                 ---
 
                 --- dd
-                    --- pre backtrace CBBackgroundOffsetColor\n{$backtraceAsJSONAsMessage}
+                    --- pre\n{$backtraceAsJSONAsMessage}
                     ---
                 ---
             ---
@@ -496,7 +496,11 @@ EOT;
         /* process ID */
 
         $processID = CBProcess::ID();
-        $processIDAsSQL = ($processID === null) ? 'NULL' : CBHex160::toSQL($processID);
+
+        $processIDAsSQL =
+        ($processID === null) ?
+        'NULL' :
+        CBHex160::toSQL($processID);
 
         /* timestamp */
 
