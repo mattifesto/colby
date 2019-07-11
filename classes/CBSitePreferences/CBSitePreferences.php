@@ -102,6 +102,7 @@ final class CBSitePreferences {
         }
     }
 
+
     /**
      * @return [string]
      */
@@ -118,10 +119,30 @@ final class CBSitePreferences {
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec) {
+    static function CBModel_build(stdClass $spec): stdClass {
         $model = (object)[
+            'custom' => CBKeyValuePair::valueToObject($spec, 'custom'),
+            'debug' => CBModel::valueToBool($spec, 'debug'),
+            'disallowRobots' => CBModel::valueToBool($spec, 'disallowRobots'),
+            'facebookURL' => trim(
+                CBModel::valueToString($spec, 'facebookURL')
+            ),
+            'frontPageID' => CBModel::valueAsID($spec, 'frontPageID'),
+            'googleTagManagerID' => trim(
+                CBModel::valueToString($spec, 'googleTagManagerID')
+            ),
             'imageForIcon' => CBModel::build(
                 CBModel::valueAsModel($spec, 'imageForIcon', ['CBImage'])
+            ),
+            'onDemandImageResizeOperations' => CBModel::valueToString(
+                $spec,
+                'onDemandImageResizeOperations'
+            ),
+            'reCAPTCHASecretKey' => trim(
+                CBModel::valueToString($spec, 'reCAPTCHASecretKey')
+            ),
+            'reCAPTCHASiteKey' => trim(
+                CBModel::valueToString($spec, 'reCAPTCHASiteKey')
             ),
             'siteName' => trim(
                 CBModel::valueToString($spec, 'siteName')
@@ -129,7 +150,12 @@ final class CBSitePreferences {
             'slackWebhookURL' => trim(
                 CBModel::valueToString($spec, 'slackWebhookURL')
             ),
+            'twitterURL' => trim(
+                CBModel::valueToString($spec, 'twitterURL')
+            ),
         ];
+
+        /* administrator emails */
 
         $administatorEmails = CBModel::valueToString(
             $spec,
@@ -149,29 +175,19 @@ final class CBSitePreferences {
 
         $model->administratorEmails = $administatorEmails;
 
-        $model->debug = isset($spec->debug) ? !!$spec->debug : false;
-        $model->disallowRobots = isset($spec->disallowRobots) ? !!$spec->disallowRobots : false;
-        $model->facebookURL = CBModel::value($spec, 'facebookURL', '', 'trim');
-        $model->frontPageID = CBModel::value($spec, 'frontPageID');
-        $model->googleTagManagerID = isset($spec->googleTagManagerID) ? trim($spec->googleTagManagerID) : '';
-        $model->onDemandImageResizeOperations = CBModel::value($spec, 'onDemandImageResizeOperations', '');
-        $model->reCAPTCHASecretKey = CBModel::value($spec, 'reCAPTCHASecretKey', null, 'trim');
-        $model->reCAPTCHASiteKey = CBModel::value($spec, 'reCAPTCHASiteKey', null, 'trim');
-        $model->twitterURL = CBModel::value($spec, 'twitterURL', '', 'trim');
-
-        /* custom values */
-
-        $model->custom = CBKeyValuePair::valueToObject($spec, 'custom');
+        /* done */
 
         return $model;
     }
+    /* CBModel_build() */
+
 
     /**
-     * @param model $spec
+     * @param object $spec
      *
-     * @return model
+     * @return object
      */
-    static function CBModel_upgrade(stdClass $spec) {
+    static function CBModel_upgrade(stdClass $spec): stdClass {
         /**
          * 2018.04.11 Remove unused property
          * Can be removed after run on every site
@@ -193,6 +209,8 @@ EOT
 
         return $spec;
     }
+    /* CBModel_upgrade() */
+
 
     /**
      * @param string $key
