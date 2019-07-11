@@ -99,6 +99,7 @@ final class CBConvert {
         return "\"{$message}\" in {$basename} at line {$line}";
     }
 
+
     /**
      * This function will throw an exception if the JSON is not valid.
      *
@@ -119,6 +120,33 @@ final class CBConvert {
             );
         }
     }
+    /* JSONToValue() */
+
+
+    /**
+     * This function can be used to convert local absolue URLs to root relative
+     * URLs in cases where local absolute URLs were created with the wrong
+     * scheme and cause security warnings in browsers.
+     *
+     * @param string $URL
+     *
+     * @return string
+     *
+     *      If the $URL parameter represents a local absolute URL, a root
+     *      relative version of that URL will be returned. Otherwise, the
+     *      original URL will be returned.
+     */
+    static function localAbsoluteURLToRootRelativeURL(string $URL): string {
+        $domain = $_SERVER['SERVER_NAME'];
+
+        return preg_replace(
+            "/^https?:\/\/{$domain}\//",
+            "/",
+            $URL
+        );
+    }
+    /* localAbsoluteURLToRootRelativeURL() */
+
 
     /**
      * Determines whether a string is a CSS background image. If so then it is
@@ -391,6 +419,7 @@ final class CBConvert {
 
         return $value;
     }
+    /* truncate() */
 
 
     /**
