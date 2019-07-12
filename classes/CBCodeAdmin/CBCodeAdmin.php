@@ -152,7 +152,7 @@ final class CBCodeAdmin {
             [
                 $ack,
                 '--heading',
-                '--underline',
+                // '--underline', (enable only if ack v3 is available)
                 "--match '{$search->regex}'",
                 '--ignore-dir=data',
                 '--ignore-file=match:CodeAdmin',
