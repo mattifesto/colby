@@ -329,6 +329,11 @@ EOT;
 
                 $issues[] = $message;
             }
+
+            $issues = array_merge(
+                $issues,
+                CBAdmin::getIssueMessages()
+            );
         }
 
         return [
