@@ -50,9 +50,24 @@ var CBSitePreferencesEditor = {
 
         element.appendChild(section);
 
-        /* imageForIcon */
+        element.appendChild(CBUI.createHalfSpace());
+
+
+        /* -- website icon section -- -- -- -- -- */
+
+        {
+            let sectionTitleElement = CBUI.createElement("CBUI_title1");
+
+            element.appendChild(sectionTitleElement);
+
+            sectionTitleElement.textContent = "Website Icon";
+        }
 
         section = CBUI.createSection();
+
+        element.appendChild(section);
+
+        /* image chooser for website icon */
 
         var chooser = CBUIImageChooser.createFullSizedChooser(
             {
@@ -91,9 +106,21 @@ var CBSitePreferencesEditor = {
         section.appendChild(item);
 
         element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(section);
+
+
+        /* -- developer settings section -- -- -- -- -- */
+
+        {
+            let sectionTitleElement = CBUI.createElement("CBUI_title1");
+
+            element.appendChild(sectionTitleElement);
+
+            sectionTitleElement.textContent = "Developer Settings";
+        }
 
         section = CBUI.createSection();
+
+        element.appendChild(section);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIBooleanEditor.create({
@@ -140,29 +167,36 @@ var CBSitePreferencesEditor = {
         }).element);
         section.appendChild(item);
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(section);
+        /* ack */
+
+        {
+            section.appendChild(
+                CBUIStringEditor.createEditor(
+                    {
+                        labelText: "Absolute ack Path",
+                        propertyName: "absoluteAckPath",
+                        spec: args.spec,
+                        specChangedCallback: args.specChangedCallback,
+                    }
+                ).element
+            );
+        }
 
         /* Slack */
 
-        section = CBUI.createSection();
+        section.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Slack Webhook URL",
+                    propertyName: "slackWebhookURL",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "Webhook URL",
-            propertyName: "slackWebhookURL",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            text: "Slack",
-        }));
-        element.appendChild(section);
-
-        /* Social */
+        /* -- social section -- -- -- -- -- */
 
         section = CBUI.createSection();
 

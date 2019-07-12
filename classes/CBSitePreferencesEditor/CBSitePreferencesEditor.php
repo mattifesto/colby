@@ -5,20 +5,13 @@ final class CBSitePreferencesEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
-        ];
-    }
-
-    /**
-     * @return [string]
-     */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v361.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v486.js', cbsysurl()),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
     /**
      * @return [string]
@@ -42,4 +35,5 @@ final class CBSitePreferencesEditor {
             'CBKeyValuePairEditor',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 }
