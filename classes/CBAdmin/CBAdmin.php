@@ -59,51 +59,62 @@ final class CBAdmin {
 
         CBHTMLOutput::begin();
 
-        CBHTMLOutput::pageInformation()->classNameForPageSettings =
-        'CBPageSettingsForAdminPages';
+        try {
+            CBHTMLOutput::pageInformation()->classNameForPageSettings =
+            'CBPageSettingsForAdminPages';
 
-        CBHTMLOutput::requireClassName('CBAdmin');
-        CBHTMLOutput::requireClassName('CBUI');
-        CBHTMLOutput::requireClassName($className);
+            CBHTMLOutput::requireClassName('CBAdmin');
+            CBHTMLOutput::requireClassName('CBUI');
+            CBHTMLOutput::requireClassName($className);
 
-        $menuViewModel = (object)[
-            'className' => 'CBAdminPageMenuView',
-        ];
+            $menuViewModel = (object)[
+                'className' => 'CBAdminPageMenuView',
+            ];
 
-        if (is_callable($function = "{$className}::CBAdmin_initialize")) {
-            call_user_func($function);
-        }
-
-        if (is_callable($function = "{$className}::CBAdmin_menuNamePath")) {
-            $names = call_user_func($function, $pageStub);
-            CBHTMLOutput::pageInformation()->selectedMenuItemNames = $names;
-        }
-
-        CBView::render($menuViewModel);
-
-        ?>
-
-        <main class="CBUIRoot <?= $className ?>">
-
-            <?php
-
-            if (is_callable($function = "{$className}::CBAdmin_render")) {
-                call_user_func($function, $pageStub);
-            } else {
-                CBHTMLOutput::render404();
+            if (is_callable($function = "{$className}::CBAdmin_initialize")) {
+                call_user_func($function);
             }
+
+            if (is_callable($function = "{$className}::CBAdmin_menuNamePath")) {
+                $names = call_user_func($function, $pageStub);
+                CBHTMLOutput::pageInformation()->selectedMenuItemNames = $names;
+            }
+
+            CBView::render($menuViewModel);
 
             ?>
 
-        </main>
+            <main class="CBUIRoot <?= $className ?>">
 
-        <?php
+                <?php
 
-        CBView::render((object)[
-            'className' => 'CBAdminPageFooterView',
-        ]);
+                $functionName = "{$className}::CBAdmin_render";
 
-        CBHTMLOutput::render();
+                if (is_callable($functionName)) {
+                    call_user_func($functionName, $pageStub);
+                } else {
+                    CBHTMLOutput::render404();
+                }
+
+                ?>
+
+            </main>
+
+            <?php
+
+            CBView::render(
+                (object)[
+                    'className' => 'CBAdminPageFooterView',
+                ]
+            );
+
+            CBHTMLOutput::render();
+        } catch (Throwable $throwable) {
+            CBHTMLOutput::reset();
+
+            CBErrorHandler::report($throwable);
+            CBErrorHandler::renderErrorReportPage($throwable);
+        }
     }
     /* render() */
 
@@ -149,5 +160,51 @@ final class CBAdmin {
         );
     }
     /* fetchClassNames() */
+
+
+    /**
+     * Classes can implement the CBAdmin_getIssueMessages() interface to provide
+     * system issue messages if needed. Messages should only be returned if
+     * something needs to be adjusted by a developer, administrator, or user. If
+     * everything is okay, no messages should be returned.
+     *
+     * @return [string]
+     */
+    static function getIssueMessages(): array {
+        $classNames = CBAdmin::fetchClassNames();
+        $issueMessages = [];
+
+        foreach ($classNames as $className) {
+            $functionName = "{$className}::CBAdmin_getIssueMessages";
+
+            if (is_callable($functionName)) {
+                $currentIssueMessages = call_user_func($functionName);
+
+                if (!is_array($currentIssueMessages)) {
+                    throw new Exception(
+                        "{$functionName}() returned a non-array value."
+                    );
+                }
+
+                foreach ($currentIssueMessages as $currentIssueMessage) {
+                    if (!is_string($currentIssueMessage)) {
+                        throw new Exception(
+                            "{$functionName}() returned an issue message " .
+                            "that is not a string."
+                        );
+                    }
+                }
+
+                $issueMessages = array_merge(
+                    $issueMessages,
+                    $currentIssueMessages
+                );
+            }
+        }
+        /* foreach */
+
+        return $issueMessages;
+    }
+    /* getIssueMessages() */
 }
 /* CBAdmin */
