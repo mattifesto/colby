@@ -11,8 +11,8 @@
  */
 final class CBSitePreferences {
 
-    const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
     /* deprecated use CBSitePreferences::ID() */
+    const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
 
     const defaultResizeOperations = [
         'rs200clc200',  /*  100 x 100 */
@@ -45,6 +45,63 @@ final class CBSitePreferences {
             return [];
         }
     }
+    /* administratorEmails() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBAdmin_getIssueMessages(): array {
+        $model = CBSitePreferences::model();
+
+        $absoluteAckPath = CBModel::valueToString($model, 'absoluteAckPath');
+
+        if (empty($absoluteAckPath)) {
+            $ackPath = "ack";
+        } else {
+            $ackPath = $absoluteAckPath;
+        }
+
+        exec("{$ackPath} --version", $output, $returnStatus);
+
+        if ($returnStatus != 0) {
+            $editSitePreferencesLink = (
+                '/admin/?c=CBModelEditor&ID=' .
+                CBSitePreferences::ID()
+            );
+
+            if ($absoluteAckPath) {
+                $absoluteAckPathAsMessage = CBMessageMarkup::stringToMessage(
+                    $absoluteAckPath
+                );
+
+                $message = <<<EOT
+
+                    Trying to execute the (ack (code)) command at the absolute
+                    ack path, ({$absoluteAckPathAsMessage} (code)), which is set
+                    in site preferences generated a status code of
+                    ({$returnStatus} (code)). Fix or remove the absolute ack
+                    path in (site preferences (a {$editSitePreferencesLink})).
+
+EOT;
+            } else {
+                $message = <<<EOT
+
+                    Trying to execute the (ack (code)) command generated a
+                    status code of ({$returnStatus} (code)). Set the absolute
+                    ack path in (site preferences (a
+                    {$editSitePreferencesLink})).
+
+EOT;
+            }
+
+            return [$message];
+        }
+
+        return [];
+    }
+    /* CBAdmin_getIssueMessages() */
+
 
     /**
      * @param object $args
@@ -121,6 +178,9 @@ final class CBSitePreferences {
      */
     static function CBModel_build(stdClass $spec): stdClass {
         $model = (object)[
+            'absoluteAckPath' => trim(
+                CBModel::valueToString($spec, 'absoluteAckPath')
+            ),
             'custom' => CBKeyValuePair::valueToObject($spec, 'custom'),
             'debug' => CBModel::valueToBool($spec, 'debug'),
             'disallowRobots' => CBModel::valueToBool($spec, 'disallowRobots'),
@@ -303,12 +363,13 @@ EOT
         }
     }
 
+
     /**
      * This function fetches the CBSitePreferences model from a file instead of
      * the database which has historically been how this model is intended to be
      * accessed.
      *
-     * @NOTE 2018.09.01
+     * @NOTE 2018_09_01
      *
      *      I think this pattern was to allow site preferences to be available
      *      even if the database is down. Or maybe it was to reduce the database
@@ -330,11 +391,15 @@ EOT
             );
 
             if (is_file($filepath)) {
-                $model = json_decode(file_get_contents($filepath));
+                $model = json_decode(
+                    file_get_contents($filepath)
+                );
             } else {
-                $model = CBModel::build((object)[
-                    'className' => 'CBSitePreferences',
-                ]);
+                $model = CBModel::build(
+                    (object)[
+                        'className' => 'CBSitePreferences',
+                    ]
+                );
             }
 
             CBSitePreferences::$model = $model;
@@ -342,6 +407,8 @@ EOT
 
         return CBSitePreferences::$model;
     }
+    /* model() */
+
 
     /**
      * This function saves the model to disk so that the database doesn't have
