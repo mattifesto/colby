@@ -10,142 +10,150 @@ final class CBAjax {
     static function handleCallAjaxFunctionRequest(): void {
         $response = new CBAjaxResponse();
 
-        $ajaxArgumentsAsJSON = trim(
-            cb_post_value('ajaxArgumentsAsJSON')
-        );
-
-        $ajaxArguments = json_decode($ajaxArgumentsAsJSON);
-
-        $functionClassName = CBModel::valueAsName(
-            $ajaxArguments,
-            'functionClassName'
-        );
-
-        if ($functionClassName === null) {
-            throw CBException::createModelIssueException(
-                'A request to call an Ajax function has an invalid' .
-                ' functionClassName.',
-                $ajaxArguments,
-                '09e390eef9781c3a42a0c030547ff75ee48f1240'
+        try {
+            $ajaxArgumentsAsJSON = trim(
+                cb_post_value('ajaxArgumentsAsJSON')
             );
-        }
 
-        $functionName = CBModel::valueAsName(
-            $ajaxArguments,
-            'functionName'
-        );
+            $ajaxArguments = json_decode($ajaxArgumentsAsJSON);
 
-        if ($functionName === null) {
-            throw CBException::createModelIssueException(
-                'A request to call an Ajax function has an invalid' .
-                ' functionName.',
+            $functionClassName = CBModel::valueAsName(
                 $ajaxArguments,
-                '5b220e8410fe7e3a68176a860724b65892be0847'
+                'functionClassName'
             );
-        }
 
-        $functionArguments = CBModel::valueAsObject(
-            $ajaxArguments,
-            'functionArguments'
-        );
+            if ($functionClassName === null) {
+                throw CBException::createModelIssueException(
+                    'A request to call an Ajax function has an invalid' .
+                    ' functionClassName.',
+                    $ajaxArguments,
+                    '09e390eef9781c3a42a0c030547ff75ee48f1240'
+                );
+            }
 
-        if ($functionArguments === null) {
-            throw CBException::createModelIssueException(
-                'A request to call an Ajax function has functionArguments' .
-                ' that are not an object.',
+            $functionName = CBModel::valueAsName(
                 $ajaxArguments,
-                '102a3f06edc442ff265a29d463da8b725db73416'
+                'functionName'
             );
-        }
 
-        $function = "{$functionClassName}::CBAjax_{$functionName}";
-        $getGroupFunction = "{$function}_group";
+            if ($functionName === null) {
+                throw CBException::createModelIssueException(
+                    'A request to call an Ajax function has an invalid' .
+                    ' functionName.',
+                    $ajaxArguments,
+                    '5b220e8410fe7e3a68176a860724b65892be0847'
+                );
+            }
 
-        if (!is_callable($function)) {
-            $information = CBRequest::requestInformation();
+            $functionArguments = CBModel::valueAsObject(
+                $ajaxArguments,
+                'functionArguments'
+            );
 
-            $simpleMessage =
-            "A request was made to call the Ajax function \"{$functionName}\"" .
-            " on the \"{$functionClassName}\" class but the function " .
-            " \"{$function}()\" has not been implemented.";
+            if ($functionArguments === null) {
+                throw CBException::createModelIssueException(
+                    'A request to call an Ajax function has functionArguments' .
+                    ' that are not an object.',
+                    $ajaxArguments,
+                    '102a3f06edc442ff265a29d463da8b725db73416'
+                );
+            }
 
-            $message = <<<EOT
+            $function = "{$functionClassName}::CBAjax_{$functionName}";
+            $getGroupFunction = "{$function}_group";
 
-                {$simpleMessage}
+            if (!is_callable($function)) {
+                $information = CBRequest::requestInformation();
 
-                --- pre\n{$information}
-                ---
+                $simpleMessage =
+                "A request was made to call the Ajax function \"{$functionName}\"" .
+                " on the \"{$functionClassName}\" class but the function " .
+                " \"{$function}()\" has not been implemented.";
+
+                $message = <<<EOT
+
+                    {$simpleMessage}
+
+                    --- pre\n{$information}
+                    ---
 
 EOT;
 
-            CBLog::log(
-                (object)[
-                    'className' => __CLASS__,
-                    'message' => $message,
-                    'severity' => 3,
-                ]
-            );
+                CBLog::log(
+                    (object)[
+                        'className' => __CLASS__,
+                        'message' => $message,
+                        'severity' => 3,
+                    ]
+                );
 
-            if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
-                $response->message = $simpleMessage;
-            } else {
-                $response->message =
-                'You do not have permission to call a requested Ajax function.';
-            }
-        } else if (!is_callable($getGroupFunction)) {
-            $information = CBRequest::requestInformation();
+                if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+                    $response->message = $simpleMessage;
+                } else {
+                    $response->message =
+                    'You do not have permission to call a requested Ajax function.';
+                }
+            } else if (!is_callable($getGroupFunction)) {
+                $information = CBRequest::requestInformation();
 
-            $simpleMessage =
-            "A request was made to call the Ajax function \"{$functionName}\"" .
-            " on the \"{$functionClassName}\" class but the group function" .
-            " \"{$getGroupFunction}()\" has not been implemented.";
+                $simpleMessage =
+                "A request was made to call the Ajax function \"{$functionName}\"" .
+                " on the \"{$functionClassName}\" class but the group function" .
+                " \"{$getGroupFunction}()\" has not been implemented.";
 
-            $message = <<<EOT
+                $message = <<<EOT
 
-                {$simpleMessage}
+                    {$simpleMessage}
 
-                --- pre\n{$information}
-                ---
+                    --- pre\n{$information}
+                    ---
 
 EOT;
 
-            CBLog::log(
-                (object)[
-                    'className' => __CLASS__,
-                    'message' => $message,
-                    'severity' => 3,
-                ]
-            );
+                CBLog::log(
+                    (object)[
+                        'className' => __CLASS__,
+                        'message' => $message,
+                        'severity' => 3,
+                    ]
+                );
 
-            if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
-                $response->message = $simpleMessage;
+                if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+                    $response->message = $simpleMessage;
+                } else {
+                    $response->message =
+                    'You do not have permission to call a requested Ajax function.';
+                }
             } else {
-                $response->message =
-                'You do not have permission to call a requested Ajax function.';
+                $group = call_user_func($getGroupFunction);
+
+                if (ColbyUser::currentUserIsMemberOfGroup($group)) {
+                    $response->value = call_user_func($function, $functionArguments);
+                    $response->wasSuccessful = true;
+                } else if (ColbyUser::currentUserId() === null) {
+                    $response->message =
+                    'The requested Ajax function cannot be called because you' .
+                    ' are not currently logged in, possibly because your' .
+                    ' session has timed out. Reloading the current page will' .
+                    ' usually remedy this.';
+
+                    $response->userMustLogIn = true;
+                } else {
+                    $response->message =
+                    'You do not have permission to call a requested Ajax function.';
+
+                    $response->userMustLogIn = false;
+                }
             }
-        } else {
-            $group = call_user_func($getGroupFunction);
 
-            if (ColbyUser::currentUserIsMemberOfGroup($group)) {
-                $response->value = call_user_func($function, $functionArguments);
-                $response->wasSuccessful = true;
-            } else if (ColbyUser::currentUserId() === null) {
-                $response->message =
-                'The requested Ajax function cannot be called because you' .
-                ' are not currently logged in, possibly because your' .
-                ' session has timed out. Reloading the current page will' .
-                ' usually remedy this.';
-
-                $response->userMustLogIn = true;
-            } else {
-                $response->message =
-                'You do not have permission to call a requested Ajax function.';
-
-                $response->userMustLogIn = false;
-            }
+            $response->send();
+        } catch (Throwable $throwable) {
+            $response->classNameForException = get_class($throwable);
+            $response->message = 'Error ' . CBConvert::throwableToMessage($throwable);
+            $response->stackTrace = Colby::exceptionStackTrace($throwable);
+            $response->wasSuccessful = false;
+            $response->send();
         }
-
-        $response->send();
     }
     /* call() */
 
