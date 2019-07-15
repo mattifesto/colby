@@ -310,6 +310,7 @@ EOT;
         Colby::query($SQL);
     }
 
+
     /**
      * @param string $className
      * @param [hex160]|hex160 $IDs
@@ -318,7 +319,12 @@ EOT;
      *
      * @return void
      */
-    static function restart(string $className, $IDs, ?int $priority = null, int $delayInSeconds = 0): void {
+    static function restart(
+        string $className,
+        $IDs,
+        ?int $priority = null,
+        int $delayInSeconds = 0
+    ): void {
         if (!is_array($IDs)) {
             $IDs = [$IDs];
         }
@@ -330,8 +336,16 @@ EOT;
         $scheduled = time() + $delayInSeconds;
         $processID = null;
 
-        CBTasks2::updateTasks($className, $IDs, $processID, $priority, $scheduled);
+        CBTasks2::updateTasks(
+            $className,
+            $IDs,
+            $processID,
+            $priority,
+            $scheduled
+        );
     }
+    /* restart() */
+
 
     /**
      * @param object $args
@@ -386,6 +400,8 @@ EOT;
             return false;
         }
     }
+    /* runNextTask() */
+
 
     /**
      * This function will run the specified task before the function returns.
@@ -601,6 +617,8 @@ EOT;
 
             $newState = 3; /* complete */
         } catch (Throwable $throwable) {
+            CBErrorHandler::report($throwable);
+
             /**
              * We'll rethrow this throwable at the end of the function after we
              * get the CBTasks2 table fixed up.
@@ -684,13 +702,29 @@ EOT;
             return false;
         }
     }
+    /* runTaskForStarter() */
+
 
     /**
      * See updateTasks
      */
-    static function updateTask($className, $ID, $processID = null, $priority = null, $scheduled = null) {
-        return CBTasks2::updateTasks($className, [$ID], $processID, $priority, $scheduled);
+    static function updateTask(
+        $className,
+        $ID,
+        $processID = null,
+        $priority = null,
+        $scheduled = null
+    ) {
+        return CBTasks2::updateTasks(
+            $className,
+            [$ID],
+            $processID,
+            $priority,
+            $scheduled
+        );
     }
+    /* updateTask() */
+
 
     /**
      * This function is use to both create and update a task.
