@@ -387,6 +387,7 @@ final class CBModel {
         return implode(' ', array_filter([$text, $className, $ID]));
     }
 
+
     /**
      * This function returns an upgraded version of the $spec parameter.
      *
@@ -396,12 +397,12 @@ final class CBModel {
      * modifications, or it can return an entirely different object. The
      * interface must return a valid model.
      *
-     * @param mixed $spec
+     * @param mixed $originalSpec
      *
      *      This function takes a mixed parameter to make it "array function
      *      safe".
      *
-     * @return ?model
+     * @return ?object
      *
      *      If the $spec parameter is not a model, this function will return
      *      null. Otherwise, this function will always return another model.
@@ -411,26 +412,31 @@ final class CBModel {
      *      argument. You can compare the $spec argument to the returned model
      *      using == to determine if any changes were made during the upgrade.
      */
-    static function upgrade($spec): ?stdClass {
-        $spec = CBConvert::valueAsModel($spec);
-
-        if ($spec === null) {
+    static function upgrade($originalSpec): ?stdClass {
+        if (CBConvert::valueAsModel($originalSpec) === null) {
             return null;
         }
 
-        $ID = CBModel::valueAsID($spec, 'ID');
+        $ID = CBModel::valueAsID($originalSpec, 'ID');
 
         if (!empty($ID)) {
             CBID::push($ID);
         }
 
-        $upgradedSpec = CBModel::clone($spec);
+        $functionName = "{$originalSpec->className}::CBModel_upgrade";
 
-        if (is_callable($function = "{$spec->className}::CBModel_upgrade")) {
-            $upgradedSpec = CBConvert::valueAsModel(call_user_func($function, $upgradedSpec));
+        if (is_callable($functionName)) {
+            $upgradedSpec = CBConvert::valueAsModel(
+                call_user_func(
+                    $functionName,
+                    CBModel::clone($originalSpec)
+                )
+            );
 
             if ($upgradedSpec === null) {
-                throw new Exception("{$function}() returned an invalid model");
+                throw new Exception(
+                    "{$function}() returned an invalid model"
+                );
             }
 
             $upgradedID = CBModel::valueAsID($upgradedSpec, 'ID');
@@ -446,14 +452,23 @@ final class CBModel {
 
 EOT;
 
-                CBLog::log((object)[
-                    'className' => __CLASS__,
-                    'message' => $message,
-                    'severity' => 3,
-                ]);
+                CBLog::log(
+                    (object)[
+                        'message' => $message,
+                        'severity' => 3,
+                        'sourceClassName' => __CLASS__,
+                        'sourceID' => (
+                            '88c7bd6b23e18073302ef354def22d7f1f101e66'
+                        ),
+                    ]
+                );
 
-                return CBModel::clone($spec);
+                /* undo upgrades */
+
+                $upgradedSpec = CBModel::clone($originalSpec);
             }
+        } else {
+            $upgradedSpec = CBModel::clone($originalSpec);
         }
 
         if (!empty($ID)) {
@@ -462,6 +477,8 @@ EOT;
 
         return $upgradedSpec;
     }
+    /* upgrade() */
+
 
     /**
      * @param mixed $model
