@@ -10,7 +10,7 @@ final class ColbyUser {
     private static $currentUser = null;
 
     /**
-     * currentUserHash, currentUserId
+     * currentUserID, currentUserNumericID
      *
      * If we can authenticate the current logged in user we just store their
      * hash and ID, not the table row or anything else. The table row may be
@@ -18,8 +18,8 @@ final class ColbyUser {
      * bugs.
      */
 
-    private static $currentUserHash = null;
-    private static $currentUserId = null;
+    private static $currentUserID = null;
+    private static $currentUserNumericID = null;
     private static $currentUserGroups = [];
 
     // currentUserRow
@@ -66,8 +66,8 @@ final class ColbyUser {
     static function current() {
         if (!ColbyUser::$currentUser) {
             $user = new ColbyUser();
-            $user->hash = ColbyUser::$currentUserHash;
-            $user->id = ColbyUser::$currentUserId;
+            $user->hash = ColbyUser::$currentUserID;
+            $user->id = ColbyUser::$currentUserNumericID;
             ColbyUser::$currentUser = $user;
         }
 
@@ -76,17 +76,21 @@ final class ColbyUser {
 
 
     /**
-     * Returns the current user hash if a user is logged in; otherwise null.
+     * @deprecated 2019_07_16 use ColbyUser::getCurrentUserID()
      *
      * @return string|null
      */
     static function currentUserHash(): ?string {
-        return ColbyUser::$currentUserHash;
+        return ColbyUser::getCurrentUserID();
     }
 
 
     /**
-     * @deprecated 2019_07_16 use ColbyUser::currentUserHash()
+     * @deprecated 2019_07_16
+     *
+     *      Use the hexadecimal user ID instead of the numeric user ID. The
+     *      hexadecimal user ID is returned by the function
+     *      ColbyUser::getCurrentUserID()
      *
      * @return int|null
      *
@@ -94,7 +98,7 @@ final class ColbyUser {
      *      otherwise null.
      */
     static function currentUserId(): ?int {
-        return ColbyUser::$currentUserId;
+        return ColbyUser::$currentUserNumericID;
     }
 
 
@@ -102,7 +106,7 @@ final class ColbyUser {
      * @return bool
      */
     static function currentUserIsLoggedIn(): bool {
-        return !empty(ColbyUser::$currentUserHash);
+        return !empty(ColbyUser::$currentUserID);
     }
 
 
@@ -128,7 +132,7 @@ final class ColbyUser {
                 $isMember = true;
             } else {
                 $isMember = ColbyUser::isMemberOfGroup(
-                    ColbyUser::$currentUserId,
+                    ColbyUser::$currentUserNumericID,
                     $groupName
                 );
             }
@@ -218,6 +222,18 @@ EOT;
 
         return CBDB::SQLToObject($SQL);
     }
+    /* fetchUserDataByHash() */
+
+
+    /**
+     * @return ID|null
+     *
+     * Returns the current user ID if a user is logged in; otherwise null.
+     */
+    static function getCurrentUserID(): ?string {
+        return ColbyUser::$currentUserID;
+    }
+    /* getCurrentUserID() */
 
 
     /**
@@ -287,8 +303,8 @@ EOT;
             }
 
             /* Success, the user is now logged in. */
-            ColbyUser::$currentUserHash = $userID;
-            ColbyUser::$currentUserId = $userNumericID;
+            ColbyUser::$currentUserID = $userID;
+            ColbyUser::$currentUserNumericID = $userNumericID;
         } catch (Throwable $exception) {
             CBErrorHandler::report($exception);
             ColbyUser::removeUserCookie();
@@ -697,18 +713,18 @@ EOT;
      */
     static function userRow($userId = null) {
         if (null === $userId) {
-            if (null === ColbyUser::$currentUserId) {
+            if (null === ColbyUser::$currentUserNumericID) {
                 return null;
             }
 
-            $userId = ColbyUser::$currentUserId;
+            $userId = ColbyUser::$currentUserNumericID;
         } else {
             // intval confirmed 64-bit capable (signed though)
             $userId = intval($userId);
         }
 
         if (
-            $userId == ColbyUser::$currentUserId &&
+            $userId == ColbyUser::$currentUserNumericID &&
             ColbyUser::$currentUserRow
         ) {
             return ColbyUser::$currentUserRow;
@@ -734,7 +750,7 @@ EOT;
 
         $result->free();
 
-        if ($userId == ColbyUser::$currentUserId) {
+        if ($userId == ColbyUser::$currentUserNumericID) {
             // cache current user row
             // user data shouldn't change significantly during a request
             // if it does, that will be the main task of the request
