@@ -5,41 +5,32 @@ final class CBUser {
     /**
      * @param object $spec
      *
-     * @return object|null
+     * @return object
      */
-    static function CBModel_build(stdClass $spec) {
-        $userID = CBModel::value($spec, 'userID', null, 'intval');
+    static function CBModel_build(stdClass $spec): stdClass {
+        $userNumericID = CBModel::valueAsInt($spec, 'userID');
 
-        if (empty($userID)) {
-            $method = __METHOD__ . '()';
-            $specAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($spec));
-            $message = <<<EOT
-
-                {$method} returned null because the spec has no `userID` value.
-
-                (Spec: (strong))
-
-                --- pre
-{$specAsJSON}
-                ---
-
-EOT;
-
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => $message,
-                'severity' => 4,
-            ]);
-
-            return null;
+        if ($userNumericID === null) {
+            throw CBException::createModelIssueException(
+                'The "userID" property must be an integer.',
+                $spec,
+                'd3cc11bb7ee84089207dc00fee71ecbb5f9679d4'
+            );
         }
 
         return (object)[
-            'description' => CBModel::value($spec, 'description', '', 'trim'),
-            'facebook' => CBModel::clone(CBModel::valueToObject($spec, 'facebook')),
-            'lastLoggedIn' => CBModel::value($spec, 'lastLoggedIn', 0, 'intval'),
-            'title' => CBModel::value($spec, 'title', '', 'trim'),
-            'userID' => $userID,
+            'description' => trim(
+                CBModel::valueToString($spec, 'description')
+            ),
+            'facebook' => CBModel::clone(
+                CBModel::valueToObject($spec, 'facebook')
+            ),
+            'lastLoggedIn' => CBModel::valueAsInt($spec, 'lastLoggedIn') ?? 0,
+            'title' => trim(
+                CBModel::valueToString($spec, 'title')
+            ),
+            'userID' => $userNumericID,
         ];
     }
+    /* CBModel_build() */
 }
