@@ -110,6 +110,7 @@ final class Colby {
         }
     }
 
+
     /**
      * @param string $cipherDataString
      *
@@ -125,14 +126,18 @@ final class Colby {
         $cipherData = unserialize($cipherDataString);
 
         if ($cipherData->version != 1) {
-            throw new RuntimeException("Unknown Colby cipher data version: {$cipherData->version}.");
+            throw new RuntimeException(
+                "Unknown Colby cipher data version: {$cipherData->version}."
+            );
         }
 
-        $serializedData = openssl_decrypt($cipherData->ciphertext,
-                                          Colby::encryptionMethod,
-                                          CBEncryptionPassword,
-                                          Colby::encryptionOptions,
-                                          $cipherData->initializationVector);
+        $serializedData = openssl_decrypt(
+            $cipherData->ciphertext,
+            Colby::encryptionMethod,
+            CBEncryptionPassword,
+            Colby::encryptionOptions,
+            $cipherData->initializationVector
+        );
 
         if (false === $serializedData) {
             return null;
@@ -140,6 +145,8 @@ final class Colby {
 
         return unserialize($serializedData);
     }
+    /* decrypt() */
+
 
     /**
      * Encryption is incredibly complex. This function and the `decrypt`
