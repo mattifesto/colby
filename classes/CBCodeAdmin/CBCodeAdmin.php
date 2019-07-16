@@ -618,6 +618,35 @@ final class CBCodeAdmin {
                     'specToDescription() interface functions should have the ' .
                     'name CBUISpec_toDescription()',
                 ],
+
+
+                /**
+                 * 2019_07_16
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyUser::currentUserHash',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace ColbyUser::currentUserHash() with ' .
+                        'ColbyUser::getCurrentUserID()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_16
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyUser::currentUserId',
+                    'severity' => 4,
+                    'title' => (
+                        'Use hexadecimal user IDs instead of numeric ' .
+                        'user IDs and use the function ' .
+                        'ColbyUser::getCurrentUserID()'
+                    ),
+                ],
             ]
         );
     }
