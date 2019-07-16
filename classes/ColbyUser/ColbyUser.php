@@ -36,6 +36,7 @@ final class ColbyUser {
     private function __construct() {
     }
 
+
     /**
      * @deprecated use ColbyUser::updateGroupMembership()
      *
@@ -58,6 +59,7 @@ final class ColbyUser {
         );
     }
 
+
     /**
      * @return ColbyUser
      */
@@ -72,23 +74,29 @@ final class ColbyUser {
         return ColbyUser::$currentUser;
     }
 
+
     /**
      * Returns the current user hash if a user is logged in; otherwise null.
      *
-     * @return hex160|null
+     * @return string|null
      */
-    static function currentUserHash() {
+    static function currentUserHash(): ?string {
         return ColbyUser::$currentUserHash;
     }
 
+
     /**
-     * Returns the current user ID if a user is logged in; otherwise null.
+     * @deprecated 2019_07_16 use ColbyUser::currentUserHash()
      *
      * @return int|null
+     *
+     *      Returns the current user numeric ID if a user is logged in;
+     *      otherwise null.
      */
-    static function currentUserId() {
+    static function currentUserId(): ?int {
         return ColbyUser::$currentUserId;
     }
+
 
     /**
      * @return bool
@@ -96,6 +104,7 @@ final class ColbyUser {
     static function currentUserIsLoggedIn(): bool {
         return !empty(ColbyUser::$currentUserHash);
     }
+
 
     /**
      * This function is more efficient than ColbyUser::isMemberOfGroup() because
@@ -148,6 +157,7 @@ EOT;
         return CBDB::SQLToObject($SQL);
     }
 
+
     /**
      * @return [string]
      */
@@ -164,7 +174,13 @@ EOT;
         $groupNames = [];
 
         foreach ($tableNames as $tableName) {
-            if (preg_match('/^ColbyUsersWhoAre(.+)$/', $tableName, $matches)) {
+            if (
+                preg_match(
+                    '/^ColbyUsersWhoAre(.+)$/',
+                    $tableName,
+                    $matches
+                )
+            ) {
                 $groupNames[] = $matches[1];
             }
         }
@@ -172,8 +188,9 @@ EOT;
         return $groupNames;
     }
 
+
     /**
-     * @param hex160 $userHash
+     * @param mixed $userHash
      *
      * @return object|false
      *
@@ -202,18 +219,25 @@ EOT;
         return CBDB::SQLToObject($SQL);
     }
 
+
     /**
      * @param string $groupName
      *
      * @return string|false
      */
     static function groupNameToTableName($groupName) {
-        if (!preg_match('/^[a-zA-Z0-9]+$/', $groupName)) {
+        if (
+            !preg_match(
+                '/^[a-zA-Z0-9]+$/',
+                $groupName
+            )
+        ) {
             return false;
         }
 
         return "ColbyUsersWhoAre{$groupName}";
     }
+
 
     /**
      * This function should be run only once. It is run when this class is first
@@ -221,7 +245,7 @@ EOT;
      *
      * @return void
      */
-    static function initialize() {
+    static function initialize(): void {
         if (!isset($_COOKIE[CBUserCookieName])) {
             return;
         }
@@ -229,26 +253,48 @@ EOT;
         $cookieCipherData = $_COOKIE[CBUserCookieName];
 
         try {
-            $cookie = Colby::decrypt($cookieCipherData);
+            $cookie = CBConvert::valueAsObject(
+                Colby::decrypt($cookieCipherData)
+            );
 
-            if (empty($cookie)) {
+            if ($cookie === null) {
                 ColbyUser::removeUserCookie();
                 return;
             }
 
-            if (time() > $cookie->expirationTimestamp) {
+            $expirationTimestamp = CBModel::valueAsInt(
+                $cookie,
+                'expirationTimestamp'
+            ) ?? PHP_INT_MIN;
+
+            if (time() > $expirationTimestamp) {
+                ColbyUser::removeUserCookie();
+                return;
+            }
+
+            $userID = CBModel::valueAsID($cookie, 'userID');
+
+            if ($userID === null) {
+                ColbyUser::removeUserCookie();
+                return;
+            }
+
+            $userNumericID = CBModel::valueAsInt($cookie, 'userNumericID');
+
+            if ($userNumericID === null) {
                 ColbyUser::removeUserCookie();
                 return;
             }
 
             /* Success, the user is now logged in. */
-            ColbyUser::$currentUserHash = $cookie->userHash;
-            ColbyUser::$currentUserId = $cookie->userId;
+            ColbyUser::$currentUserHash = $userID;
+            ColbyUser::$currentUserId = $userNumericID;
         } catch (Throwable $exception) {
             CBErrorHandler::report($exception);
             ColbyUser::removeUserCookie();
         }
     }
+    /* initialize() */
 
 
     /**
@@ -261,6 +307,7 @@ EOT;
     public function isLoggedIn() {
         return !!$this->id;
     }
+
 
     /**
      * ColbyUser::currentUserIsMemberOfGroup() is a more efficient alternative
@@ -303,6 +350,7 @@ EOT;
 
         return $isMember;
     }
+
 
     /**
      * @deprecated use ColbyUser::isMemberOfGroup()
@@ -357,6 +405,7 @@ EOT;
         return $this->groups[$group];
     }
 
+
     /**
      * This function is called at after Facebook authenticates a user that wants
      * to log in. It updates the database and sets a cookie in the user's
@@ -371,13 +420,13 @@ EOT;
      *  the user's access expires. It's the current unix timestamp plus the
      *  duration of the user's access.
      *
-     * @return null
+     * @return void
      */
     static function loginCurrentUser(
         $facebookAccessToken,
         $facebookAccessExpirationTime,
         $facebookProperties
-    ) {
+    ): void {
         $mysqli = Colby::mysqli();
         $facebookUserID = intval($facebookProperties->id);
 
@@ -385,7 +434,9 @@ EOT;
             throw new RuntimeException('The Facebook user ID is invalid.');
         }
 
-        $userIdentity = ColbyUser::facebookUserIDtoUserIdentity($facebookUserID);
+        $userIdentity = ColbyUser::facebookUserIDtoUserIdentity(
+            $facebookUserID
+        );
 
         $sqlFacebookAccessToken = $mysqli->escape_string($facebookAccessToken);
         $sqlFacebookAccessToken = "'{$sqlFacebookAccessToken}'";
@@ -423,7 +474,10 @@ EOT;
 EOT;
 
             Colby::query($sql);
-        } else {
+        }
+        /* if */
+
+        else {
             $userIdentity = (object)[
                 'hash' => CBHex160::random(),
             ];
@@ -458,7 +512,9 @@ EOT;
 
             /* Detect first user */
 
-            $count = CBDB::SQLToValue('SELECT COUNT(*) FROM `ColbyUsers`');
+            $count = CBDB::SQLToValue(
+                'SELECT COUNT(*) FROM `ColbyUsers`'
+            );
 
             if ($count === '1') {
                 Colby::query(
@@ -472,6 +528,8 @@ EOT;
                 );
             }
         }
+        /* else */
+
 
         /**
          * Update the user model
@@ -506,8 +564,10 @@ EOT;
          */
 
         $cookie = (object)[
-            'userHash' => $userIdentity->hash,
-            'userId' => $userIdentity->ID,
+            'userID' => $userIdentity->hash,
+
+            /* deprecated */
+            'userNumericID' => $userIdentity->ID,
 
             /* 24 hours from now */
             'expirationTimestamp' => time() + (60 * 60 * 24),
@@ -527,14 +587,17 @@ EOT;
             '/'
         );
     }
+    /* loginCurrentUser() */
+
 
     /**
      * This function must be called before any output is generated because it
      * sets a cookie.
      */
     static function logoutCurrentUser() {
-        self::removeUserCookie();
+        ColbyUser::removeUserCookie();
     }
+
 
     /**
      * @param string $redirect
@@ -573,6 +636,7 @@ EOT;
         return $URL;
     }
 
+
     /**
      * This function must be called before any output is generated because it
      * sets a cookie.
@@ -585,6 +649,7 @@ EOT;
 
         setcookie(CBUserCookieName, '', $time, '/');
     }
+
 
     /**
      * @param int $userID
@@ -616,6 +681,7 @@ EOT;
         Colby::query($SQL);
     }
 
+
     /**
      * @deprecated use ColbyUser::fetchUserDataByHash()
      *
@@ -631,18 +697,21 @@ EOT;
      */
     static function userRow($userId = null) {
         if (null === $userId) {
-            if (null === self::$currentUserId) {
+            if (null === ColbyUser::$currentUserId) {
                 return null;
             }
 
-            $userId = self::$currentUserId;
+            $userId = ColbyUser::$currentUserId;
         } else {
             // intval confirmed 64-bit capable (signed though)
             $userId = intval($userId);
         }
 
-        if ($userId == self::$currentUserId && self::$currentUserRow) {
-            return self::$currentUserRow;
+        if (
+            $userId == ColbyUser::$currentUserId &&
+            ColbyUser::$currentUserRow
+        ) {
+            return ColbyUser::$currentUserRow;
         }
 
         $sqlUserId = "'{$userId}'";
@@ -665,17 +734,18 @@ EOT;
 
         $result->free();
 
-        if ($userId == self::$currentUserId) {
+        if ($userId == ColbyUser::$currentUserId) {
             // cache current user row
             // user data shouldn't change significantly during a request
             // if it does, that will be the main task of the request
             // so the request will be aware of the changes
 
-            self::$currentUserRow = $userRow;
+            ColbyUser::$currentUserRow = $userRow;
         }
 
         return $userRow;
     }
+    /* userRow() */
 }
 
 ColbyUser::initialize();
