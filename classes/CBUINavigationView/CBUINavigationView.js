@@ -167,6 +167,19 @@ var CBUINavigationView = {
          * @return undefined
          */
         function navigate(item) {
+            if (typeof item !== "object") {
+                throw TypeError(
+                    `The "item" parameter must be an object`
+                );
+            }
+
+            if (!(item.element instanceof HTMLElement)) {
+                throw TypeError(
+                    `The "element" property of the "item" parameter ` +
+                    `must be an HTMLElement`
+                );
+            }
+
             if (level === undefined) {
                 level = 0;
             } else {
@@ -204,6 +217,8 @@ var CBUINavigationView = {
 
             window.scrollTo(0, 0);
         }
+        /* navigate() */
+
 
         /**
          * closure
