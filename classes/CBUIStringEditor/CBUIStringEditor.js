@@ -74,6 +74,7 @@ var CBUIStringEditor = {
             },
             set value(newValue) {
                 input.value = newValue;
+                resize();
             },
         };
 
