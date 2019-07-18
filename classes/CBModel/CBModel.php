@@ -285,6 +285,11 @@ final class CBModel {
      *      guaranteed to not throw an exception. The build process is allowed
      *      to have requirements and allowed to throw exceptions if those
      *      requirements are not met.
+     *
+     * @TODO 2019_07_17
+     *
+     *      This function should be changed to always either work or throw an
+     *      exception. It will always return an object, never null.
      */
     static function build($spec): ?stdClass {
         $className = CBModel::valueToString($spec, 'className');
