@@ -20,6 +20,19 @@ var CBNoteView = {
      */
     CBView_create: function (model) {
         let element = CBUI.createElement("CBNoteView");
+
+        let headerElement = CBUI.createElement("CBUI_content");
+
+        element.appendChild(headerElement);
+
+        let timeElement = Colby.unixTimestampToElement(
+            CBModel.valueAsInt(model, "note.timestamp"),
+            "",
+            "CBUI_textColor2 compact"
+        );
+
+        headerElement.appendChild(timeElement);
+
         let textElement = CBUI.createElement("CBNoteView_text");
 
         element.appendChild(textElement);
