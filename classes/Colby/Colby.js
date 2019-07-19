@@ -1089,19 +1089,33 @@ var Colby = {
      *
      * @return Element
      */
-    unixTimestampToElement: function (unixTimestamp, defaultTextContent) {
-        var element = document.createElement("time");
-        element.className = "time";
-        element.textContent = "---";
+    unixTimestampToElement: function (
+        unixTimestamp,
+        defaultTextContent,
+        className
+    ) {
+        let element = document.createElement("time");
 
-        if (unixTimestamp) {
+        if (typeof className === "string") {
+            element.className = "time " + className;
+        } else {
+            element.className = "time";
+        }
+
+        unixTimestamp = Number(unixTimestamp);
+
+        if (Number.isInteger(unixTimestamp)) {
             element.dataset.timestamp = unixTimestamp * 1000;
+            Colby.updateTimes(/* restart: */ true);
         } else {
             element.dataset.nulltextcontent = defaultTextContent || "";
         }
 
+        Colby.updateCBTimeElementTextContent(element);
+
         return element;
     },
+    /* unixTimestampToElement() */
 
 
     /**
