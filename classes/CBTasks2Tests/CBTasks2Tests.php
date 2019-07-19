@@ -32,11 +32,13 @@ final class CBTasks2Tests {
 
         CBModels::deleteByID($ID);
 
-        CBModels::save((object)[
-            'className' => 'CBMessageView',
-            'ID' => $ID,
-            'markup' => 'throw an exception',
-        ]);
+        CBModels::save(
+            (object)[
+                'className' => 'CBMessageView',
+                'ID' => $ID,
+                'markup' => 'throw an exception',
+            ]
+        );
 
         try {
             CBTasks2::runSpecificTask('CBTasks2Tests_task', $ID);
@@ -47,7 +49,11 @@ final class CBTasks2Tests {
         CBModels::deleteByID($ID);
 
         if ($actualExceptionMessage != $expectedExceptionMessage) {
-            return CBTest::resultMismatchFailure('Subtest 1', $actualExceptionMessage, $expectedExceptionMessage);
+            return CBTest::resultMismatchFailure(
+                'Subtest 1',
+                $actualExceptionMessage,
+                $expectedExceptionMessage
+            );
         }
 
         $SQL = <<<EOT
@@ -63,7 +69,11 @@ EOT;
         $expectedState = 4; /* state value for error */
 
         if ($actualState != $expectedState) {
-            return CBTest::resultMismatchFailure('Subtest 2', $actualState, $expectedState);
+            return CBTest::resultMismatchFailure(
+                'Subtest 2',
+                $actualState,
+                $expectedState
+            );
         }
 
         return (object)[
@@ -135,6 +145,8 @@ EOT;
         ];
     }
 }
+/* CBTasks2Tests */
+
 
 /**
  *
@@ -172,6 +184,7 @@ EOT;
         Colby::query($SQL);
     }
 
+
     /**
      * @param ID $ID
      *
@@ -185,6 +198,7 @@ EOT;
             throw new Exception('CBTasks2Tests_testException');
         }
     }
+
 
     /**
      * Deletes the test task row from the CBTasks2 table.
@@ -205,6 +219,7 @@ EOT;
         Colby::query($SQL);
     }
 
+
     /**
      * @return ID
      */
@@ -212,3 +227,4 @@ EOT;
         return '7e7909a13bb52cdcd3ecb531206a4acec50cd089';
     }
 }
+/* CBTasks2Tests_task */
