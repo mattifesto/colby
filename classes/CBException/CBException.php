@@ -160,4 +160,19 @@ EOT;
         return $this->sourceID;
     }
     /* getSourceID() */
+
+
+    /**
+     * @param Throwable $throwable
+     *
+     * @returh string|null
+     */
+    static function throwableToSourceID(Throwable $throwable): ?string {
+        if ($throwable instanceof CBException) {
+            return $throwable->getSourceID();
+        } else {
+            return null;
+        }
+    }
+    /* throwableToSourceID() */
 }
