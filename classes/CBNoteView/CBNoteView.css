@@ -1,4 +1,5 @@
 .CBNoteView_text {
+    overflow-wrap: break-word;
     padding: 5px 10px;
     white-space: pre-wrap;
 }
