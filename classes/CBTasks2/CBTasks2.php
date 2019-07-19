@@ -121,7 +121,7 @@ final class CBTasks2 {
      *      }
      */
     static function fetchStatus($args) {
-        $processID = CBModel::value($args, 'processID', null, 'CBConvert::valueAsHex160');
+        $processID = CBModel::valueAsID($args, 'processID');
 
         if ($processID !== null) {
             $processIDAsSQL = CBHex160::toSQL($processID);
@@ -251,20 +251,31 @@ EOT;
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS `CBTasks2` (
-                `className` VARCHAR(80) NOT NULL,
-                `ID`        BINARY(20) NOT NULL,
-                `priority`  TINYINT UNSIGNED NOT NULL DEFAULT {$defaultPriority},
-                `state`     TINYINT UNSIGNED NOT NULL,
-                `timestamp` BIGINT NOT NULL,
-
-                `processID` BINARY(20),
-                `starterID` BINARY(20),
+                `className`
+                    VARCHAR(80) NOT NULL,
+                `ID`
+                    BINARY(20) NOT NULL,
+                `priority`
+                    TINYINT UNSIGNED NOT NULL DEFAULT {$defaultPriority},
+                `state`
+                    TINYINT UNSIGNED NOT NULL,
+                `timestamp`
+                    BIGINT NOT NULL,
+                `processID`
+                    BINARY(20),
+                `starterID`
+                    BINARY(20),
 
                 PRIMARY KEY (`className`, `ID`),
-                KEY `state_priority` (`state`, `priority`),
-                KEY `processID_state_priority` (`processID`, `state`, `priority`),
-                KEY `state_timestamp` (`state`, `timestamp`),
-                KEY `starterID` (`starterID`)
+
+                KEY `state_priority`
+                    (`state`, `priority`),
+                KEY `processID_state_priority`
+                    (`processID`, `state`, `priority`),
+                KEY `state_timestamp`
+                    (`state`, `timestamp`),
+                KEY `starterID`
+                    (`starterID`)
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
@@ -274,6 +285,8 @@ EOT;
 
         Colby::query($SQL);
     }
+    /* CBInstall_install() */
+
 
     /**
      * When a task is run a log entry is made so CBLog is required for this
@@ -282,8 +295,11 @@ EOT;
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBLog'];
+        return [
+            'CBLog',
+        ];
     }
+
 
     /**
      * @param string $className
@@ -571,17 +587,32 @@ EOT;
 
             CBID::push($task->ID);
 
-            if (is_callable($function = "{$task->className}::CBTasks2_run")) {
+
+            if (
+                is_callable(
+                    $function = "{$task->className}::CBTasks2_run"
+                )
+            ) {
                 $taskReturnValue = call_user_func($function, $task->ID);
-            } else if (is_callable($function = "{$task->className}::CBTasks2_Execute")) { /* deprecated */
+            }
+
+            /* deprecated */
+            else if (
+                is_callable(
+                    $function = "{$task->className}::CBTasks2_Execute"
+                )
+            ) {
                 $taskReturnValue = call_user_func($function, $task->ID);
-            } else {
+            }
+
+            else {
                 throw new Exception(
                     "The CBTasks2_run() interface has not been " .
                     "implemented by the {$task->className} class " .
                     "preventing execution of the task for ID {$task->ID}"
                 );
             }
+
 
             /**
              * The task function can request that the task be rerun by returning
@@ -617,6 +648,23 @@ EOT;
 
             $newState = 3; /* complete */
         } catch (Throwable $throwable) {
+
+            /**
+             * @NOTE 2019_07_19
+             *
+             *      This call to report() was recently added because although
+             *      this function rethrows the exception sometimes that
+             *      exception is not caught and exceptions were being
+             *      effectively hidden.
+             *
+             *      This is a bigger code organization issue in this file and
+             *      should be resolved in the future by doing an exploration of
+             *      how task exceptions are and should be handled.
+             *
+             *      This is also a continuation of the issue of moveing away
+             *      from exception handlers and toward effectively placed
+             *      try-catch blocks throughout the system.
+             */
             CBErrorHandler::report($throwable);
 
             /**
@@ -748,7 +796,13 @@ EOT;
      *
      * @return void
      */
-    static function updateTasks(string $className, array $IDs, ?string $processID = null, ?int $priority = null, ?int $scheduled = null): void {
+    static function updateTasks(
+        string $className,
+        array $IDs,
+        ?string $processID = null,
+        ?int $priority = null,
+        ?int $scheduled = null
+    ): void {
         if (empty($IDs)) {
             return;
         }
@@ -791,7 +845,16 @@ EOT;
         $values = [];
 
         foreach ($IDsAsSQL as $IDAsSQL) {
-            $values[] = "({$classNameAsSQL}, {$IDAsSQL}, {$priority}, 1, {$now}, {$processIDAsSQL})";
+            $values[] = (
+                "(" .
+                "{$classNameAsSQL}, " .
+                "{$IDAsSQL}, " .
+                "{$priority}, " .
+                "1, " .
+                "{$now}, " .
+                "{$processIDAsSQL}" .
+                ")"
+            );
         }
 
         $values = implode(', ', $values);
@@ -820,6 +883,8 @@ EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
     }
+    /* updateTasks() */
+
 
     /**
      * @return null
