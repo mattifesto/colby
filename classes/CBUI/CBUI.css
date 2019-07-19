@@ -104,6 +104,27 @@
 
 
 /**
+ * 2019_07_18
+ *
+ *      This container has horzontal children that will each take up an equal
+ *      amount of the container's width. It's initial use was as a section item
+ *      of actions.
+ */
+
+.CBUI_container_horizontalEqual {
+    display: flex;
+}
+
+.CBUI_container_horizontalEqual > * {
+    flex: 1 1 320px;
+}
+
+.CBUI_container_horizontalEqual > * + * {
+    border-left: 1px solid var(--CBUIBorderColor);
+}
+
+
+/**
  * 2019_06_25
  *
  *      CBUI_container_topAndBottom styles vertically aligned container elements
