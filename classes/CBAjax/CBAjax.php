@@ -65,10 +65,12 @@ final class CBAjax {
             if (!is_callable($function)) {
                 $information = CBRequest::requestInformation();
 
-                $simpleMessage =
-                "A request was made to call the Ajax function \"{$functionName}\"" .
-                " on the \"{$functionClassName}\" class but the function " .
-                " \"{$function}()\" has not been implemented.";
+                $simpleMessage = (
+                    "A request was made to call the Ajax function " .
+                    "\"{$functionName}\" on the \"{$functionClassName}\" " .
+                    "class but the function \"{$function}()\" has not " .
+                    "been implemented."
+                );
 
                 $message = <<<EOT
 
@@ -90,16 +92,20 @@ EOT;
                 if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
                     $response->message = $simpleMessage;
                 } else {
-                    $response->message =
-                    'You do not have permission to call a requested Ajax function.';
+                    $response->message = (
+                        'You do not have permission to call a requested ' .
+                        'Ajax function.'
+                    );
                 }
             } else if (!is_callable($getGroupFunction)) {
                 $information = CBRequest::requestInformation();
 
-                $simpleMessage =
-                "A request was made to call the Ajax function \"{$functionName}\"" .
-                " on the \"{$functionClassName}\" class but the group function" .
-                " \"{$getGroupFunction}()\" has not been implemented.";
+                $simpleMessage = (
+                    "A request was made to call the Ajax function " .
+                    "\"{$functionName}\" on the \"{$functionClassName}\" " .
+                    "class but the group function \"{$getGroupFunction}()\" " .
+                    "has not been implemented."
+                );
 
                 $message = <<<EOT
 
@@ -121,14 +127,20 @@ EOT;
                 if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
                     $response->message = $simpleMessage;
                 } else {
-                    $response->message =
-                    'You do not have permission to call a requested Ajax function.';
+                    $response->message = (
+                        'You do not have permission to call a requested ' .
+                        'Ajax function.'
+                    );
                 }
             } else {
                 $group = call_user_func($getGroupFunction);
 
                 if (ColbyUser::currentUserIsMemberOfGroup($group)) {
-                    $response->value = call_user_func($function, $functionArguments);
+                    $response->value = call_user_func(
+                        $function,
+                        $functionArguments
+                    );
+
                     $response->wasSuccessful = true;
                 } else if (ColbyUser::currentUserId() === null) {
                     $response->message =
@@ -139,8 +151,10 @@ EOT;
 
                     $response->userMustLogIn = true;
                 } else {
-                    $response->message =
-                    'You do not have permission to call a requested Ajax function.';
+                    $response->message = (
+                        'You do not have permission to call a requested ' .
+                        'Ajax function.'
+                    );
 
                     $response->userMustLogIn = false;
                 }
@@ -148,10 +162,17 @@ EOT;
 
             $response->send();
         } catch (Throwable $throwable) {
+            CBErrorHandler::report($throwable);
+
             $response->classNameForException = get_class($throwable);
-            $response->message = 'Error ' . CBConvert::throwableToMessage($throwable);
             $response->stackTrace = Colby::exceptionStackTrace($throwable);
             $response->wasSuccessful = false;
+
+            $response->message = (
+                'Error ' .
+                CBConvert::throwableToMessage($throwable)
+            );
+
             $response->send();
         }
     }
