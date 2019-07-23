@@ -154,6 +154,10 @@ var CBAdminPageForUpdate = {
 
         main.appendChild(outputElement);
 
+        return;
+
+        /* -- closures -- -- -- -- -- */
+
         /**
          * TODO maybe make task not a closure
          *
@@ -168,7 +172,7 @@ var CBAdminPageForUpdate = {
             if (CBAdminPageForUpdate.taskIsRunning) {
                 let error = new Error("A task is already running.");
 
-                report(error);
+                Colby.displayAndReportError(error);
 
                 return;
             }
@@ -185,20 +189,17 @@ var CBAdminPageForUpdate = {
                     CBAdminPageForUpdate.taskIsRunning = false;
                 }
             ).catch(
-                report
+                function (error) {
+                    Colby.displayAndReportError(error);
+                }
             );
-
-            /**
-             * @param Error error
-             *
-             * @return undefined
-             */
-            function report(error) {
-                alert(error.message);
-            }
         }
+        /* task() */
 
-        /* closure */
+
+        /**
+         * @return Promise
+         */
         function promiseToBackupDatabase() {
             let expander = CBUIExpander.create();
             expander.title = "database backup in progress";
@@ -206,16 +207,23 @@ var CBAdminPageForUpdate = {
 
             outputElement.appendChild(expander.element);
 
-            return Colby.fetchAjaxResponse("/developer/mysql/ajax/backup-database/")
-                .then(onFulfilled);
+            let promise = Colby.fetchAjaxResponse(
+                "/developer/mysql/ajax/backup-database/"
+            ).then(
+                function () {
+                    expander.title = "database backup completed";
+                    expander.timestamp = Date.now() / 1000;
+                }
+            );
 
-            function onFulfilled() {
-                expander.title = "database backup completed";
-                expander.timestamp = Date.now() / 1000;
-            }
+            return promise;
         }
+        /* promiseToBackupDatabase() */
 
-        /* closure */
+
+        /**
+         * @return Promise
+         */
         function promiseToPullUpdates() {
             let expander = CBUIExpander.create();
             expander.title = "git pull in progress";
@@ -223,33 +231,37 @@ var CBAdminPageForUpdate = {
 
             outputElement.appendChild(expander.element);
 
-            return Colby.callAjaxFunction(
+            let promise = Colby.callAjaxFunction(
                 "CBAdminPageForUpdate",
                 "pull"
             ).then(
-                onFulfilled
+                function (response) {
+                    let message = [
+                        "--- pre green",
+                        CBMessageMarkup.stringToMessage(response.output),
+                        "---",
+                    ].join("\n");
+
+                    expander.message = message;
+                    expander.timestamp = Date.now() / 1000;
+
+                    if (!response.succeeded) {
+                        expander.title = "git pull failed";
+                        expander.severity = 3;
+                    } else {
+                        expander.title = "git pull completed";
+                    }
+                }
             );
 
-            function onFulfilled(response) {
-                let message = [
-                    "--- pre green",
-                    CBMessageMarkup.stringToMessage(response.output),
-                    "---",
-                ].join("\n");
-
-                expander.message = message;
-                expander.timestamp = Date.now() / 1000;
-
-                if (!response.succeeded) {
-                    expander.title = "git pull failed";
-                    expander.severity = 3;
-                } else {
-                    expander.title = "git pull completed";
-                }
-            }
+            return promise;
         }
+        /* promiseToPullUpdates() */
 
-        /* closure */
+
+        /**
+         * @return Promise
+         */
         function promiseToUpdateSite() {
             let expander = CBUIExpander.create();
             expander.title = "website update in progress";
@@ -257,15 +269,21 @@ var CBAdminPageForUpdate = {
 
             outputElement.appendChild(expander.element);
 
-            return Colby.fetchAjaxResponse("/api/?class=CBAdminPageForUpdate&function=update")
-                .then(onFulfilled);
+            let promise = Colby.callAjaxFunction(
+                "CBAdminPageForUpdate",
+                "update"
+            ).then(
+                function () {
+                    expander.title = "website update completed";
+                    expander.timestamp = Date.now() / 1000;
+                }
+            );
 
-            function onFulfilled() {
-                expander.title = "website update completed";
-                expander.timestamp = Date.now() / 1000;
-            }
+            return promise;
         }
+        /* promiseToUpdateSite() */
     },
+    /* init() */
 };
 
 Colby.afterDOMContentLoaded(CBAdminPageForUpdate.init);

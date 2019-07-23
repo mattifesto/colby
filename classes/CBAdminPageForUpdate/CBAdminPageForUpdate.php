@@ -11,6 +11,7 @@ final class CBAdminPageForUpdate {
         return ['develop', 'update'];
     }
 
+
     /**
      * @return stdClass
      */
@@ -18,12 +19,14 @@ final class CBAdminPageForUpdate {
         return (object)['group' => 'Developers'];
     }
 
+
     /**
      * @return void
      */
     static function adminPageRenderContent() {
         CBHTMLOutput::pageInformation()->title = 'Update Website';
     }
+
 
     /**
      * @return [string]
@@ -37,17 +40,20 @@ final class CBAdminPageForUpdate {
             'CBUISection',
             'CBUISectionItem4',
             'CBUIStringsPart',
+            'Colby',
         ];
     }
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v465.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v488.js', cbsysurl()),
         ];
     }
+
 
     /**
      * @return bool
@@ -77,6 +83,7 @@ EOT;
         }
     }
 
+
     /**
      * @return object
      *
@@ -86,7 +93,6 @@ EOT;
      *      }
      */
     static function CBAjax_pull(): stdClass {
-        $response = new CBAjaxResponse();
         $output = [];
 
         CBGit::pull($output, $exitCode);
@@ -100,6 +106,8 @@ EOT;
             'succeeded' => empty($exitCode),
         ];
     }
+    /* CBAjax_pull() */
+
 
     /**
      * @return string
@@ -108,41 +116,32 @@ EOT;
         return 'Developers';
     }
 
+
     /**
-     * @return null
+     * @return void
      */
-    static function update() {
+    static function update(): void {
         include Colby::findFile('setup/update.php');
         CBLog::addMessage('System', 5, 'The system was updated.');
 
         CBAdminPageForUpdate::$installationIsRequired = false;
     }
 
-    /**
-     * @return null
-     */
-    static function updateForAjax() {
-        $response = new CBAjaxResponse();
 
+    /**
+     * @return void
+     */
+    static function CBAjax_update(): void {
         CBAdminPageForUpdate::update();
-
-        $response->wasSuccessful    = true;
-        $response->message          = "The site was successfully updated.";
-        $response->send();
     }
+    /* CBAjax_update() */
+
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function updateForAjaxPermissions() {
-        $permissions = new stdClass();
-
-        if (isset($_POST['requestIsForInitialInstallation']) && CBAdminPageForUpdate::installationIsRequired()) {
-            $permissions->group = 'Public';
-        } else {
-            $permissions->group = 'Developers';
-        }
-
-        return $permissions;
+    static function CBAjax_update_group(): string {
+        return 'Developers';
     }
+    /* CBAjax_update_group() */
 }
