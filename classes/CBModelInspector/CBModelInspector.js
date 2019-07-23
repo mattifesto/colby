@@ -372,18 +372,27 @@ var CBModelInspector = {
                             title: `Version ${version.version}`,
                         });
 
+
+                        /**
+                         * @return undefined
+                         */
                         function revert() {
-                            var data = new FormData();
-                            data.append("ID", spec.ID);
-                            data.append("version", version.version);
-
-                            Colby.fetchAjaxResponse("/api/?class=CBModels&function=revert", data)
-                                 .then(resolved)
-                                 .catch(Colby.report);
-
-                            function resolved() {
-                                location.reload(true);
-                            }
+                            Colby.callAjaxFunction(
+                                "CBModels",
+                                "revert",
+                                {
+                                    ID: spec.ID,
+                                    version: version.version,
+                                }
+                            ).then(
+                                function () {
+                                    location.reload(true);
+                                }
+                            ).catch(
+                                function (error) {
+                                    Colby.displayAndReportError(error);
+                                }
+                            );
                         }
                     };
 

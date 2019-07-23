@@ -64,36 +64,18 @@ final class CBModelInspector {
         return 'Administrators';
     }
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
-            'CBArtworkElement',
-            'CBImage',
-            'CBMessageMarkup',
-            'CBUI',
-            'CBUIExpander',
-            'CBUIImageChooser',
-            'CBUINavigationArrowPart',
-            'CBUINavigationView',
-            'CBUIPanel',
-            'CBUISectionItem4',
-            'CBUIStringEditor',
-            'CBUIStringsPart',
-        ];
-    }
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v453.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v488.js', cbsysurl())
         ];
     }
+
 
     /**
      * @return [[<name>, <value>]]
@@ -123,6 +105,28 @@ final class CBModelInspector {
             ],
         ];
     }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBArtworkElement',
+            'CBImage',
+            'CBMessageMarkup',
+            'CBUI',
+            'CBUIExpander',
+            'CBUIImageChooser',
+            'CBUINavigationArrowPart',
+            'CBUINavigationView',
+            'CBUIPanel',
+            'CBUISectionItem4',
+            'CBUIStringEditor',
+            'CBUIStringsPart',
+        ];
+    }
+
 
     /* -- functions -- -- -- -- -- */
 
