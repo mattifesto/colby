@@ -870,53 +870,61 @@ EOT;
      *      2. You can stop your development web server to test the handling of
      *         server unavailable errors.
      *
-     * @return null
+     * @return void
      */
-    static function saveForAjax() {
-        // header("HTTP/1.0 404 Not Found"); return;
+    static function CBAjax_save($args): void {
 
-        $response = new CBAjaxResponse();
-        $spec = json_decode($_POST['specAsJSON']);
+        /**
+         * Uncomment to test failure of this Ajax function:
+         *
+         * header("HTTP/1.0 404 Not Found"); return;
+         */
 
-        if (CBModels::currentUserCanWrite($spec)) {
-            Colby::query('START TRANSACTION');
+        $spec = CBModel::valueAsModel($args, 'spec');
 
-            try {
-
-                CBModels::save([$spec]);
-                Colby::query('COMMIT');
-
-                $response->wasSuccessful = true;
-
-            } catch (Throwable $exception) {
-
-                Colby::query('ROLLBACK');
-
-                throw $exception;
-
-            }
-        } else {
-            // Unlike fetchSpecForAjax, an unsuccessful save does mark the
-            // response as not successful. Not being able to write is something
-            // the end user should be explicitly notified about.
-            $ID = empty($spec->ID) ? 'no ID specified' : $spec->ID;
-
-            $response->message =
-            "You do not have permissions to write the spec with ID: {$ID}";
-
-            $response->wasSuccessful = false;
+        if ($spec === null) {
+            throw CBException::createModelIssueException(
+                'The "spec" property of the arguments is not a valid model.',
+                $args,
+                'c6490ee97e815aa76e6821920922406ec764d10f'
+            );
         }
 
-        $response->send();
+        $ID = CBModel::valueAsID($spec, 'ID');
+
+        if ($ID === null) {
+            throw CBException::createModelIssueException(
+                'The spec to save does not have a valid ID',
+                $spec,
+                '666e8ff4a6eac1b5df92a3708eedfd0c745fbbae'
+            );
+        }
+
+        if (!CBModels::currentUserCanWrite($spec)) {
+            throw CBException::createModelIssueException(
+                'The current user does not have the permissions to save ' .
+                'this spec.',
+                $spec,
+                'f415157340b172d67f4c2fc7afa75888cdb4b72e'
+            );
+        }
+
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
     }
+    /* CBAjax_save() */
 
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function saveForAjaxPermissions() {
-        return (object)['group' => 'Public'];
+    static function CBAjax_save_group(): string {
+        return 'Public';
     }
+    /* CBAjax_save_group() */
 
 
     /**
