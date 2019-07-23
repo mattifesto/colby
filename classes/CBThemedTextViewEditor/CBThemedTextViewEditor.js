@@ -40,9 +40,15 @@ var CBThemedTextViewEditor = {
 
             CBUISpecClipboard.specs = [spec];
 
-            Colby.callAjaxFunction("CBThemedTextView", "convertToCBMessageView", spec)
-                .then(fulfilled)
-                .catch(Colby.displayAndReportError);
+            Colby.callAjaxFunction(
+                "CBThemedTextView",
+                "convertToCBMessageView",
+                spec
+            ).then(
+                fulfilled
+            ).catch(
+                Colby.displayAndReportError
+            );
 
             function fulfilled(convertedSpec) {
                 Object.assign(spec, convertedSpec);
@@ -61,6 +67,8 @@ var CBThemedTextViewEditor = {
             }
         }
     },
+    /* convertToCBMessageView() */
+
 
     /**
      * @param object spec
@@ -68,7 +76,7 @@ var CBThemedTextViewEditor = {
      *
      * @return Element
      */
-    createEditor : function(args) {
+    createEditor: function(args) {
         var element = document.createElement("div");
         element.className = "CBThemedTextViewEditor";
 
@@ -80,7 +88,10 @@ var CBThemedTextViewEditor = {
             {
                 let sectionItem = CBUISectionItem4.create();
                 sectionItem.callback = function () {
-                    CBThemedTextViewEditor.convertToCBMessageView(args.spec, args.specChangedCallback);
+                    CBThemedTextViewEditor.convertToCBMessageView(
+                        args.spec,
+                        args.specChangedCallback
+                    );
                 };
 
                 let stringsPart = CBUIStringsPart.create();
@@ -102,10 +113,10 @@ var CBThemedTextViewEditor = {
             {
                 let item = CBUI.createSectionItem();
                 item.appendChild(CBUIStringEditor.createEditor({
-                    labelText : "Title",
-                    propertyName : "titleAsMarkaround",
-                    spec : args.spec,
-                    specChangedCallback : args.specChangedCallback,
+                    labelText: "Title",
+                    propertyName: "titleAsMarkaround",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
                 }).element);
                 section.appendChild(item);
             }
@@ -113,10 +124,10 @@ var CBThemedTextViewEditor = {
             {
                 let item = CBUI.createSectionItem();
                 item.appendChild(CBUIStringEditor.createEditor({
-                    labelText : "Content",
-                    propertyName : "contentAsMarkaround",
-                    spec : args.spec,
-                    specChangedCallback : args.specChangedCallback,
+                    labelText: "Content",
+                    propertyName: "contentAsMarkaround",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
                 }).element);
                 section.appendChild(item);
             }
@@ -131,10 +142,10 @@ var CBThemedTextViewEditor = {
             {
                 let item = CBUI.createSectionItem();
                 item.appendChild(CBUIStringEditor.createEditor({
-                    labelText : "URL",
-                    propertyName : "URL",
-                    spec : args.spec,
-                    specChangedCallback : args.specChangedCallback,
+                    labelText: "URL",
+                    propertyName: "URL",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
                 }).element);
                 section.appendChild(item);
             }
@@ -150,10 +161,10 @@ var CBThemedTextViewEditor = {
             {
                 let item = CBUI.createSectionItem();
                 item.appendChild(CBUIStringEditor.createEditor({
-                    labelText : "Title Color",
-                    propertyName : "titleColor",
-                    spec : args.spec,
-                    specChangedCallback : args.specChangedCallback,
+                    labelText: "Title Color",
+                    propertyName: "titleColor",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
                 }).element);
                 section.appendChild(item);
             }
@@ -162,10 +173,10 @@ var CBThemedTextViewEditor = {
             {
                 let item = CBUI.createSectionItem();
                 item.appendChild(CBUIStringEditor.createEditor({
-                    labelText : "Content Color",
-                    propertyName : "contentColor",
-                    spec : args.spec,
-                    specChangedCallback : args.specChangedCallback,
+                    labelText: "Content Color",
+                    propertyName: "contentColor",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
                 }).element);
                 section.appendChild(item);
             }
@@ -174,10 +185,10 @@ var CBThemedTextViewEditor = {
             {
                 let item = CBUI.createSectionItem();
                 item.appendChild(CBUIBooleanEditor.create({
-                    labelText : "Center",
-                    propertyName : "center",
-                    spec : args.spec,
-                    specChangedCallback : args.specChangedCallback,
+                    labelText: "Center",
+                    propertyName: "center",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
                 }).element);
                 section.appendChild(item);
             }
@@ -193,10 +204,10 @@ var CBThemedTextViewEditor = {
                 let item = CBUI.createSectionItem();
 
                 item.appendChild(CBUIStringEditor.createEditor({
-                    labelText : "Styles Template",
-                    propertyName : "stylesTemplate",
-                    spec : args.spec,
-                    specChangedCallback : args.specChangedCallback,
+                    labelText: "Styles Template",
+                    propertyName: "stylesTemplate",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
                 }).element);
                 section.appendChild(item);
             }
@@ -207,6 +218,8 @@ var CBThemedTextViewEditor = {
 
         return element;
     },
+    /* createEditor() */
+
 
     /**
      * @param string? spec.contentAsMarkaround
@@ -214,7 +227,8 @@ var CBThemedTextViewEditor = {
      *
      * @return string|undefined
      */
-    specToDescription : function (spec) {
+    CBUISpec_toDescription: function (spec) {
         return spec.titleAsMarkaround || spec.contentAsMarkaround;
     },
+    /* CBUISpec_toDescription() */
 };
