@@ -1,9 +1,11 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBUIThemeSelector */
 /* global
     CBUISelector,
-    Colby */
+    Colby,
+*/
 
 var CBUIThemeSelector = {
 
@@ -17,59 +19,36 @@ var CBUIThemeSelector = {
      *
      * @return object
      */
-    create : function (args) {
-        var selector = CBUISelector.create({
-            labelText : args.labelText,
-            navigateToItemCallback : args.navigateToItemCallback,
-            propertyName : args.propertyName,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        });
+    create: function (args) {
+        var selector = CBUISelector.create(
+            {
+                labelText: args.labelText,
+                navigateToItemCallback: args.navigateToItemCallback,
+                propertyName: args.propertyName,
+                spec: args.spec,
+                specChangedCallback: args.specChangedCallback,
+            }
+        );
 
-        CBUIThemeSelector.fetchThemeOptions({
-            classNameForKind : args.classNameForKind,
-            updateOptionsCallback : selector.updateOptionsCallback,
-        });
+        Colby.callAjaxFunction(
+            "CBUIThemeSelector",
+            "fetchThemeOptions",
+            {
+                classNameForKind: args.classNameForKind,
+            }
+        ).then(
+            function (options) {
+                selector.options = options;
+            }
+        ).catch(
+            function (error) {
+                Colby.displayAndReportError(error);
+            }
+        );
 
         return {
-            element : selector.element,
+            element: selector.element,
         };
     },
-
-    /**
-     * @param string args.classNameForKind
-     * @param function args.updateOptionsCallback
-     *
-     * @return undefined
-     */
-    fetchThemeOptions : function (args) {
-        var data = new FormData();
-        data.append("classNameForKind", args.classNameForKind);
-
-        var xhr = new XMLHttpRequest();
-        xhr.onerror = Colby.displayXHRError.bind(undefined, {xhr : xhr});
-        xhr.onload = CBUIThemeSelector.handleThemeOptionsDidLoad.bind(undefined, {
-            updateOptionsCallback : args.updateOptionsCallback,
-            xhr : xhr,
-        });
-        xhr.open("POST", "/api/?class=CBUIThemeSelector&function=fetchThemeOptions");
-        xhr.send(data);
-    },
-
-    /**
-     * @param function args.updateOptionsCallback
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    handleThemeOptionsDidLoad : function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            var options = [{title:"Default", description:"", value:undefined}].concat(response.options);
-            args.updateOptionsCallback(options);
-        } else {
-            Colby.displayResponse(response);
-        }
-    },
+    /* create() */
 };
