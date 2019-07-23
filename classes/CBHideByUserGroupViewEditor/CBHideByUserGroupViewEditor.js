@@ -24,7 +24,14 @@ var CBHideByUserGroupViewEditor = {
         var element = document.createElement("div");
         element.className = "CBHideByUserGroupViewEditor";
         var groupOptions = [
-            {title: "All Visitors", description: "Every visitor, logged in or out, is a member of this group.", value: undefined},
+            {
+                title: "All Visitors",
+                description: (
+                    "Every visitor, logged in or out, is a member of this " +
+                    "group."
+                ),
+                value: undefined
+            },
         ];
 
         CBHideByUserGroupViewEditor_groupNames.forEach(function (groupName) {
@@ -77,7 +84,9 @@ var CBHideByUserGroupViewEditor = {
             }
 
             let editor = CBUISpecArrayEditor.create({
-                addableClassNames: CBHideByUserGroupViewEditor_addableClassNames,
+                addableClassNames: (
+                    CBHideByUserGroupViewEditor_addableClassNames
+                ),
                 navigateToItemCallback: args.navigateToItemCallback,
                 specs: args.spec.subviews,
                 specsChangedCallback: args.specChangedCallback,
@@ -91,6 +100,8 @@ var CBHideByUserGroupViewEditor = {
 
         return element;
     },
+    /* createEditor() */
+
 
     /**
      * @param string? spec.groupName
@@ -99,7 +110,7 @@ var CBHideByUserGroupViewEditor = {
      *
      * @return string|undefined
      */
-    specToDescription: function (spec) {
+    CBUISpec_toDescription: function (spec) {
         if (spec.hideFromMembers && spec.hideFromNonmembers) {
             return "Hidden from everyone";
         } else if (!spec.hideFromMembers && !spec.hideFromNonmembers) {
@@ -127,4 +138,5 @@ var CBHideByUserGroupViewEditor = {
         // Unreachable
         return undefined;
     },
+    /* CBUISpec_toDescription() */
 };
