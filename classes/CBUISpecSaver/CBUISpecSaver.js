@@ -1,7 +1,10 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBModel */
 /* globals
     Colby,
-    Promise */
+*/
 
 var CBUISpecSaver = {
 
@@ -37,6 +40,8 @@ var CBUISpecSaver = {
             specChangedCallback: specChangedCallback,
         };
     },
+    /* create() */
+
 
     /**
      * @return Promise
@@ -70,6 +75,8 @@ var CBUISpecSaver = {
 
         return CBUISpecSaver.flushPromise;
     },
+    /* flush() */
+
 
     /**
      * @param hex160 args.ID
@@ -91,6 +98,8 @@ var CBUISpecSaver = {
             CBUISpecSaver.requestSave({ID: args.ID});
         }
     },
+    /* specDidChange() */
+
 
     /**
      * This function can be called safely at any time, multiple times, without
@@ -99,11 +108,10 @@ var CBUISpecSaver = {
      *
      * @param hex160 args.ID
      *
-     * @return Promise
+     * @return undefined
      */
     requestSave: function (args) {
         var specData = CBUISpecSaver.specDataByID[args.ID];
-        var URL = "/api/?class=CBModels&function=save";
 
         // If a timeoutID is set it means this function has been called manually
         // and we can clear the timeout.
@@ -122,15 +130,31 @@ var CBUISpecSaver = {
             specData.promise = request();
         }
 
-        // Make a request.
-        function request() {
-            var formData = new FormData();
-            formData.append("specAsJSON", JSON.stringify(specData.spec));
+        return;
 
-            return Colby.fetchAjaxResponse(URL, formData)
-                .then(fulfilled, rejected)
-                .then(specData.fulfilledCallback, specData.rejectedCallback);
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return Promise
+         */
+        function request() {
+            return Colby.callAjaxFunction(
+                "CBModels",
+                "save",
+                {
+                    spec: specData.spec,
+                }
+            ).then(
+                fulfilled,
+                rejected
+            ).then(
+                specData.fulfilledCallback,
+                specData.rejectedCallback
+            );
         }
+        /* request() */
+
 
         // When a request is resolved:
         //      1. Update the spec version.
@@ -154,6 +178,8 @@ var CBUISpecSaver = {
 
             return ajaxResponse;
         }
+        /* fulfilled() */
+
 
         // When a request is rejected stop all active and pending requests:
         //      1. Reset specData values.
@@ -167,5 +193,7 @@ var CBUISpecSaver = {
 
             return Promise.reject(error);
         }
+        /* rejected() */
     },
+    /* requestSave() */
 };
