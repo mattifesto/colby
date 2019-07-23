@@ -248,42 +248,6 @@ final class CBCodeAdmin {
                 /* errors */
 
                 /**
-                 * 2019_07_09
-                 */
-                (object)[
-                    'args' => '--ignore-file=match:CBModel\.php',
-                    'filetype' => 'php',
-                    'regex' => 'CBModel_toModel',
-                    'title' => 'Rename CBModel_toModel() to CBModel_build()',
-                ],
-
-
-                /**
-                 * 2019_07_09
-                 */
-                (object)[
-                    'args' => '--ignore-file=match:CBModel\.php',
-                    'filetype' => 'php',
-                    'regex' => 'modelToSearchText',
-                    'title' => (
-                        'Rename modelToSearchText() to CBModel_toSearchText()'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_07_09
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'CBModels::modelWithClassName',
-                    'title' => (
-                        'Replace use of CBModels::modelWithClassName()'
-                    ),
-                ],
-
-
-                /**
                  * 2019_06_16
                  */
                 (object)[
@@ -547,14 +511,34 @@ final class CBCodeAdmin {
                 /* -- warnings -- -- -- -- -- */
 
                 /**
-                 * 2019_07_05
+                 * 2019_06_16
                  */
                 (object)[
+                    'args' => implode(
+                        ' ',
+                        [
+                            '--ignore-file=match:CBUISpec.js',
+                            '--ignore-file=match:CBUISpec_Tests.js',
+                        ]
+                    ),
                     'filetype' => 'js',
-                    'regex' => 'class=CBImages&function=upload',
+                    'regex' => '(?<!CBUISpec\\.)specToDescription',
                     'severity' => 4,
-                    'title' =>
-                    'Replace deprecated CBImages ajax upload function',
+                    'title' => (
+                        'Replace specToDescription() with ' .
+                        'CBUISpec_toDescription()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_06_22
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'new\\s+CBAjaxResponse\\(',
+                    'severity' => 4,
+                    'title' => 'Replace CBAjaxResponse with CBAjax interfaces',
                 ],
 
 
@@ -607,35 +591,53 @@ final class CBCodeAdmin {
 
 
                 /**
-                 * 2019_06_22
+                 * 2019_07_05
                  */
                 (object)[
-                    'filetype' => 'php',
-                    'regex' => 'new\\s+CBAjaxResponse\\(',
+                    'filetype' => 'js',
+                    'regex' => 'class=CBImages&function=upload',
                     'severity' => 4,
-                    'title' => 'Replace CBAjaxResponse with CBAjax interfaces',
+                    'title' =>
+                    'Replace deprecated CBImages ajax upload function',
                 ],
 
 
                 /**
-                 * 2019_06_16
-                 * Update interface function name
+                 * 2019_07_09
                  */
                 (object)[
-                    'args' => implode(
-                        ' ',
-                        [
-                            '--ignore-file=match:CBUISpec.js',
-                            '--ignore-file=match:CBUISpec_Tests.js',
-                        ]
-                    ),
-                    'filetype' => 'js',
-                    'regex' => '(?<!CBUISpec\\.)specToDescription',
+                    'args' => '--ignore-file=match:CBModel\.php',
+                    'filetype' => 'php',
+                    'regex' => 'CBModel_toModel',
                     'severity' => 4,
+                    'title' => 'Rename CBModel_toModel() to CBModel_build()',
+                ],
 
-                    'title' =>
-                    'specToDescription() interface functions should have the ' .
-                    'name CBUISpec_toDescription()',
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:CBModel\.php',
+                    'filetype' => 'php',
+                    'regex' => 'modelToSearchText',
+                    'severity' => 4,
+                    'title' => (
+                        'Rename modelToSearchText() to CBModel_toSearchText()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_09
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBModels::modelWithClassName',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of CBModels::modelWithClassName()'
+                    ),
                 ],
 
 
@@ -730,7 +732,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'Colby::URLForJavaScriptForSiteClass\\(',
-
+                    'severity' => 4,
                     'title' => (
                         'Replace Colby::URLForJavaScriptForSiteClass() with ' .
                         'Colby::flexpath()'
