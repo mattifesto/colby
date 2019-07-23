@@ -1,9 +1,11 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBMenuItemEditor */
 /* global
     CBUI,
-    CBUIStringEditor */
+    CBUIStringEditor,
+*/
 
 var CBMenuItemEditor = {
 
@@ -13,7 +15,7 @@ var CBMenuItemEditor = {
      *
      * @return Element
      */
-    createEditor : function (args) {
+    createEditor: function (args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBMenuItemEditor";
@@ -24,10 +26,10 @@ var CBMenuItemEditor = {
         item = CBUI.createSectionItem();
 
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText           : "Name",
-            propertyName        : "name",
-            spec                : args.spec,
-            specChangedCallback : args.specChangedCallback
+            labelText: "Name",
+            propertyName: "name",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback
         }).element);
 
         section.appendChild(item);
@@ -35,10 +37,10 @@ var CBMenuItemEditor = {
         item = CBUI.createSectionItem();
 
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText           : "Text",
-            propertyName        : "text",
-            spec                : args.spec,
-            specChangedCallback : args.specChangedCallback
+            labelText: "Text",
+            propertyName: "text",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback
         }).element);
 
         section.appendChild(item);
@@ -46,10 +48,10 @@ var CBMenuItemEditor = {
         item = CBUI.createSectionItem();
 
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText           : "URL",
-            propertyName        : "URL",
-            spec                : args.spec,
-            specChangedCallback : args.specChangedCallback
+            labelText: "URL",
+            propertyName: "URL",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback
         }).element);
 
         section.appendChild(item);
@@ -59,13 +61,16 @@ var CBMenuItemEditor = {
 
         return element;
     },
+    /* createEditor() */
+
 
     /**
      * @param object spec
      *
      * @return string
      */
-    specToDescription : function (spec) {
+    CBUISpec_toDescription: function (spec) {
         return spec.text;
     },
+    /* CBUISpec_toDescription() */
 };

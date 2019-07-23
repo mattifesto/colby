@@ -5,24 +5,20 @@ final class CBMenuItemEditor {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor'];
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v488.js', cbsysurl()),
+        ];
     }
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBMenuItemEditor::URL('CBMenuItemEditor.js')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBUI',
+            'CBUIStringEditor'
+        ];
     }
 }
