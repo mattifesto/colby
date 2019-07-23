@@ -5,14 +5,20 @@ final class CBKeyValuePairEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor'];
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v488.js', cbsysurl()),
+        ];
     }
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBUI',
+            'CBUIStringEditor',
+        ];
     }
 }

@@ -1,9 +1,11 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBKeyValuePairEditor */
 /* global
     CBUI,
-    CBUIStringEditor */
+    CBUIStringEditor,
+*/
 
 var CBKeyValuePairEditor = {
 
@@ -47,6 +49,8 @@ var CBKeyValuePairEditor = {
 
         return element;
     },
+    /* createEditor() */
+
 
     /**
      * @param string? spec.key
@@ -54,11 +58,12 @@ var CBKeyValuePairEditor = {
      *
      * @return string|undefined
      */
-    specToDescription: function (spec) {
+    CBUISpec_toDescription: function (spec) {
         if (spec.key === undefined) {
             return undefined;
         } else {
             return spec.key + ": " + spec.valueAsJSON;
         }
     },
+    /* CBUISpec_toDescription() */
 };
