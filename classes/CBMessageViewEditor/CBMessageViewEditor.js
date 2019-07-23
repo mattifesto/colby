@@ -5,7 +5,8 @@
 /* global
     CBMessageMarkup,
     CBUI,
-    CBUIStringEditor */
+    CBUIStringEditor,
+*/
 
 var CBMessageViewEditor = {
 
@@ -30,10 +31,10 @@ var CBMessageViewEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Content (Message Markup)",
-            propertyName : "markup",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Content (Message Markup)",
+            propertyName: "markup",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -61,10 +62,10 @@ var CBMessageViewEditor = {
         item = CBUI.createSectionItem();
 
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "CSS Class Names",
-            propertyName : "CSSClassNames",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "CSS Class Names",
+            propertyName: "CSSClassNames",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -77,10 +78,10 @@ var CBMessageViewEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "CSS Template",
-            propertyName : "CSSTemplate",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "CSS Template",
+            propertyName: "CSSTemplate",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -89,13 +90,15 @@ var CBMessageViewEditor = {
 
         return element;
     },
+    /* createEditor() */
+
 
     /**
      * @param string? spec.text
      *
      * @return string|undefined
      */
-    specToDescription: function (spec) {
+    CBUISpec_toDescription: function (spec) {
         if (spec.markup) {
             var text = CBMessageMarkup.markupToText(spec.markup);
 
@@ -110,4 +113,5 @@ var CBMessageViewEditor = {
 
         return undefined;
     },
+    /* CBUISpec_toDescription() */
 };
