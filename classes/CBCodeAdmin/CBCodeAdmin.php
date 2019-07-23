@@ -738,6 +738,31 @@ final class CBCodeAdmin {
                         'Colby::flexpath()'
                     ),
                 ],
+
+
+                /**
+                 * 2019_07_23
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'Colby::flexnameForJavaScriptForClass\\(',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace Colby::flexnameForJavaScriptForClass() with ' .
+                        'Colby::flexpath()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_23
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBSystemURL',
+                    'severity' => 4,
+                    'title' => 'Replace CBSystemURL with cbsysurl()',
+                ],
             ]
         );
     }
