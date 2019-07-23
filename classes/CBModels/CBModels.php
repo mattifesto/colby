@@ -649,28 +649,41 @@ EOT;
 
 
     /**
-     * @return null
+     * @return void
      */
-    static function revertForAjax() {
-        $response = new CBAjaxResponse();
-        $ID = $_POST['ID'];
-        $version = $_POST['version'];
+    static function CBAjax_revert(stdClass $args): void {
+        $ID = CBModel::valueAsID($args, 'ID');
+
+        if ($ID === null) {
+            throw CBException::createModelIssueException(
+                'The "ID" property is not a valid ID.',
+                $args,
+                '4fa9a03d08fe03aaac74891718fb02f247ede2ca'
+            );
+        }
+
+        $version = CBModel::valueAsInt($args, 'version');
+
+        if ($version === null) {
+            throw CBException::createModelIssueException(
+                'The "version" property is not a valid integer.',
+                $args,
+                'f37d2fdd918adcedce86682d0499b7001f65f6b2'
+            );
+        }
 
         CBModels::revert($ID, $version);
-
-        $response->wasSuccessful = true;
-        $response->send();
     }
+    /* CBAjax_revert() */
 
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function revertForAjaxPermissions() {
-        return (object)[
-            'group' => 'Administrators'
-        ];
+    static function CBAjax_revert_group(): string {
+        return 'Administrators';
     }
+    /* CBAjax_revert_group() */
 
 
     /**
