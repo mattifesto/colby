@@ -131,6 +131,25 @@ final class CBCodeAdmin {
      * should include "CodeAdmin" because these clases are automatically removed
      * from the search.
      *
+     * @NOTE 2019_07_23
+     *
+     *      Instructions:
+     *
+     *      Add each new search as a warning as long as the current code will
+     *      still work. The developer of a site should fix all warnings before
+     *      upgrading because at some point the code will change and the warning
+     *      will become an error.
+     *
+     *      The searches should go in chronological order from when they are
+     *      added, not in some form of alphabetical order. This indicates that
+     *      found items higher up or more urgent.
+     *
+     *      An error means that literally the code found will no longer work and
+     *      must be fixed before being put into production.
+     *
+     *      This is currently not perfect as some of the errors below should be
+     *      warnings.
+     *
      * @param object $search
      *
      * @return [string]
@@ -645,6 +664,76 @@ final class CBCodeAdmin {
                         'Use hexadecimal user IDs instead of numeric ' .
                         'user IDs and use the function ' .
                         'ColbyUser::getCurrentUserID()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_23
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'function\s+requiredClassNames\\(',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace requiredClassNames() with ' .
+                        'CBHTMLOutput_requiredClassNames()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_23
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'function\s+requiredCSSURLs\\(',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace requiredCSSURLs() with ' .
+                        'CBHTMLOutput_CSSURLs()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_23
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'function\s+requiredJavaScriptURLs\\(',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace requiredJavaScriptURLs() with ' .
+                        'CBHTMLOutput_JavaScriptURLs()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_23
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'function\s+requiredJavaScriptVariables\\(',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace requiredJavaScriptVariables() with ' .
+                        'CBHTMLOutput_JavaScriptVariables()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_23
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'Colby::URLForJavaScriptForSiteClass\\(',
+
+                    'title' => (
+                        'Replace Colby::URLForJavaScriptForSiteClass() with ' .
+                        'Colby::flexpath()'
                     ),
                 ],
             ]
