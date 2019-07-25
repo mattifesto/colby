@@ -17,24 +17,31 @@ final class CBAdministratorsUserGroupUserSettingsManager {
     }
 
     /**
-     * @param ID $targetUserID
+     * @param string $targetUserID
      *
      * @return void
      */
     static function CBUserSettingsManager_render(string $targetUserID): void {
+        echo '<div class="CBAdministratorsUserGroupUserSettingsManager">';
+
         $targetUserModel = CBModels::fetchModelByID($targetUserID);
-        $targetUserNumber = CBModel::valueAsInt($targetUserModel, 'userID');
+        $targetUserNumericID = CBModel::valueAsInt($targetUserModel, 'userID');
 
-        if (empty($targetUserNumber)) {
-            return;
+        if (
+            $targetUserNumericID !== null &&
+            ColbyUser::currentUserIsMemberOfGroup('Administrators')
+        ) {
+            $targetUserData = (object)[
+                'id' => $targetUserNumericID,
+            ];
+
+            CBGroupUserSettings::renderUserSettings(
+                $targetUserData,
+                'Administrators'
+            );
         }
 
-        $targetUserData = (object)[
-            'id' => $targetUserNumber,
-        ];
-
-        if (ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
-            CBGroupUserSettings::renderUserSettings($targetUserData, 'Administrators');
-        }
+        echo '</div>';
     }
+    /* CBUserSettingsManager_render() */
 }
