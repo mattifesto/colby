@@ -1,8 +1,12 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBGroupUserSettings */
 /* global
     CBUI,
     CBUIBooleanEditor,
-    Colby */
+    Colby,
+*/
 
 var CBGroupUserSettings = {
 
@@ -14,11 +18,17 @@ var CBGroupUserSettings = {
      */
     valueShouldChange: function (spec, newValue) {
         if (newValue === false) {
-            return confirm("Are you sure you want to remove this user from the " + spec.groupName + " group?");
+            return window.confirm(
+                "Are you sure you want to remove this user from the " +
+                spec.groupName +
+                " group?"
+            );
         }
 
         return true;
     },
+    /* valueShouldChange() */
+
 
     /**
      * @param Element args.element
@@ -39,7 +49,10 @@ var CBGroupUserSettings = {
                 spec: args.spec,
                 // TODO: disable UI function
             }),
-            valueShouldChangeCallback: CBGroupUserSettings.valueShouldChange.bind(undefined, args.spec),
+            valueShouldChangeCallback: CBGroupUserSettings.valueShouldChange.bind(
+                undefined,
+                args.spec
+            ),
         }).element);
         section.appendChild(item);
 
@@ -47,30 +60,41 @@ var CBGroupUserSettings = {
         args.element.appendChild(CBUI.createHalfSpace());
     },
 
+
     /**
-     * @param int userID
+     * @param int userNumericID
      * @param string groupName
      * @param Element element
      *
      * @return Promise
      */
-    fetchSpec: function (userID, groupName, element) {
-        var formData = new FormData();
-        formData.append("userID", userID);
-        formData.append("groupName", groupName);
-
-        return Colby.fetchAjaxResponse("/api/?class=CBGroupUserSettings&function=fetchSpec", formData)
-            .then(display, Colby.displayError);
-
-        function display(ajaxResponse) {
-            if (ajaxResponse.spec) {
-                CBGroupUserSettings.display({
-                    element: element,
-                    spec: ajaxResponse.spec,
-                });
+    fetchSpec: function (userNumericID, groupName, element) {
+        let promise = Colby.callAjaxFunction(
+            "CBGroupUserSettings",
+            "fetchSpec",
+            {
+                userNumericID: userNumericID,
+                groupName: groupName,
             }
-        }
+        ).then(
+            function (spec) {
+                CBGroupUserSettings.display(
+                    {
+                        element: element,
+                        spec: spec,
+                    }
+                );
+            }
+        ).catch(
+            function (error) {
+                Colby.displayAndReportError(error);
+            }
+        );
+
+        return promise;
     },
+    /* fetchSpec() */
+
 
     /**
      * @param object args.spec
@@ -78,30 +102,39 @@ var CBGroupUserSettings = {
      * @return Promise
      */
     save: function (args) {
-        var formData = new FormData();
-        formData.append("specAsJSON", JSON.stringify(args.spec));
-
         // TODO: disable UI while saving
 
-        return Colby.fetchAjaxResponse("/api/?class=CBGroupUserSettings&function=updateGroupMembership", formData)
-            .then(undefined, Colby.displayError);
+        return Colby.callAjaxFunction(
+            "CBGroupUserSettings",
+            "updateGroupMembership",
+            args.spec
+        ).catch(
+            function (error) {
+                Colby.displayAndReportError(error);
+            }
+        );
     },
+    /* save() */
+
 
     /**
      * @return undefined
      */
     DOMContentDidLoad: function () {
-        var userID, groupName, element;
+        var userNumericID, groupName, element;
         var elements = document.getElementsByClassName("CBGroupUserSettings");
 
         for (var i = 0; i < elements.length; i++) {
             element = elements.item(i);
-            userID = element.dataset.userid;
-            groupName = element.dataset.groupname;
+            userNumericID = element.dataset.userNumericId;
+            groupName = element.dataset.groupName;
 
-            CBGroupUserSettings.fetchSpec(userID, groupName, element);
+            CBGroupUserSettings.fetchSpec(userNumericID, groupName, element);
         }
     },
+    /* DOMContentDidLoad() */
 };
+/* CBGroupUserSettings */
 
-document.addEventListener("DOMContentLoaded", CBGroupUserSettings.DOMContentDidLoad);
+
+Colby.afterDOMContentLoaded(CBGroupUserSettings.DOMContentDidLoad);
