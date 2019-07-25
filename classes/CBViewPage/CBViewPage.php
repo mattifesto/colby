@@ -340,8 +340,8 @@ EOT;
             CBHTMLOutput::render();
         } catch (Throwable $throwable) {
             CBHTMLOutput::reset();
-
-            throw $throwable;
+            CBErrorHandler::report($throwable);
+            CBErrorHandler::renderErrorReportPage($throwable);
         }
     }
     /* CBPage_render() */
