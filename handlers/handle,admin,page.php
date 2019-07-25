@@ -16,40 +16,70 @@
  *  CBHTMLOutput_CSSURLs()
  *  CBHTMLOutput_JavaScriptURLs()
  */
-$class = isset($_GET['class']) ? $_GET['class'] : null;
 
-if (is_callable($getPermissions = "{$class}::adminPagePermissions")) {
-    $permissions = call_user_func($getPermissions);
+$adminClassName = cb_query_string_value('class');
+$getPermissionsFunctionName = "{$adminClassName}::adminPagePermissions";
 
-    if ('Public' === $permissions->group || ColbyUser::current()->isOneOfThe($permissions->group)) {
-        CBHTMLOutput::begin();
-        CBHTMLOutput::pageInformation()->classNameForPageSettings = 'CBPageSettingsForAdminPages';
+if (!is_callable($getPermissionsFunctionName)) {
+    return 0; /* !1 -> 404 */
+}
+
+$permissions = call_user_func($getPermissionsFunctionName);
+
+if (
+    'Public' === $permissions->group ||
+    ColbyUser::current()->isOneOfThe($permissions->group)
+) {
+    CBHTMLOutput::begin();
+
+    try {
+        CBHTMLOutput::pageInformation()->classNameForPageSettings =
+        'CBPageSettingsForAdminPages';
+
         CBHTMLOutput::requireClassName('CBUI');
-        CBHTMLOutput::requireClassName($class);
+        CBHTMLOutput::requireClassName($adminClassName);
 
         $menuModel = (object)[
             'className' => 'CBAdminPageMenuView',
         ];
 
-        if (is_callable($function = "{$class}::adminPageMenuNamePath")) {
+        if (is_callable($function = "{$adminClassName}::adminPageMenuNamePath")) {
             $names = call_user_func($function);
             CBHTMLOutput::pageInformation()->selectedMenuItemNames = $names;
         }
 
         CBView::render($menuModel);
 
-        ?><main class="CBUIRoot <?= $class ?>"><?php
-        if (is_callable($function = "{$class}::adminPageRenderContent")) {
-            call_user_func($function);
-        }
-        ?></main><?php
-        CBView::render((object)[
-            'className' => 'CBAdminPageFooterView',
-        ]);
+        ?>
+
+        <main class="CBUIRoot <?= $adminClassName ?>">
+
+            <?php
+
+            $renderFunctionName = "{$adminClassName}::adminPageRenderContent";
+
+            if (is_callable($renderFunctionName)) {
+                call_user_func($renderFunctionName);
+            }
+
+            ?>
+
+        </main>
+
+        <?php
+
+        CBView::render(
+            (object)[
+                'className' => 'CBAdminPageFooterView',
+            ]
+        );
+
         CBHTMLOutput::render();
-    } else {
-        return include cbsysdir() . '/handlers/handle-authorization-failed.php';
+    } catch(Throwable $throwable) {
+        CBHTMLOutput::reset();
+        CBErrorHandler::report($throwable);
+        CBErrorHandler::renderErrorReportPage($throwable);
     }
 } else {
-    return 0; /* !1 -> 404 */
+    return include cbsysdir() . '/handlers/handle-authorization-failed.php';
 }
