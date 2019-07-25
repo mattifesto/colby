@@ -2,6 +2,8 @@
 
 final class CBUsers {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
     /**
      * @return void
      */
@@ -33,6 +35,10 @@ EOT;
 
         Colby::query($SQL);
     }
+    /* CBInstall_install() */
+
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @param string $name
@@ -42,15 +48,24 @@ EOT;
      *
      * @return void
      */
-    static function installUserGroup(string $name): void {
+    static function installUserGroup(string $userGroupName): void {
+        if (CBConvert::valueAsName($userGroupName) === null) {
+            throw new CBException(
+                "The \$userGroupName parameter value \"{$userGroupName}\" " .
+                "is not valid.",
+                '',
+                'ed62068612672b934db76b46103f037a281cb252'
+            );
+        }
+
         $SQL = <<<EOT
 
-            CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAre{$name}` (
+            CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAre{$userGroupName}` (
                 `userId`    BIGINT UNSIGNED NOT NULL,
                 `added`     DATETIME NOT NULL,
 
                 PRIMARY KEY (`userId`),
-                CONSTRAINT `ColbyUsersWhoAre{$name}_userId`
+                CONSTRAINT `ColbyUsersWhoAre{$userGroupName}_userId`
                     FOREIGN KEY (`userId`)
                     REFERENCES `ColbyUsers` (`id`)
                     ON DELETE CASCADE
@@ -63,4 +78,27 @@ EOT;
 
         Colby::query($SQL);
     }
+    /* installUserGroup() */
+
+
+    /**
+     * @param string $userGroupName
+     *
+     * @return void
+     */
+    static function uninstallUserGroup(string $userGroupName): void {
+        if (CBConvert::valueAsName($userGroupName) === null) {
+            throw new CBException(
+                "The \$userGroupName parameter value \"{$userGroupName}\" " .
+                "is not valid.",
+                '',
+                'fc5c564cedc9fc1a692a6a359756bb82dcf89245'
+            );
+        }
+
+        Colby::query(
+            "DROP TABLE IF EXISTS ColbyUsersWhoAre{$userGroupName}"
+        );
+    }
+    /* uninstallUserGroup() */
 }
