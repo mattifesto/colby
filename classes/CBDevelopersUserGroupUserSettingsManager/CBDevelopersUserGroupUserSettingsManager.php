@@ -16,25 +16,33 @@ final class CBDevelopersUserGroupUserSettingsManager {
         return ['CBUserSettingsManagerCatalog'];
     }
 
+
     /**
-     * @param ID $targetUserID
+     * @param string $targetUserID
      *
      * @return void
      */
     static function CBUserSettingsManager_render(string $targetUserID): void {
+        echo '<div class="CBDevelopersUserGroupUserSettingsManager">';
+
         $targetUserModel = CBModels::fetchModelByID($targetUserID);
-        $targetUserNumber = CBModel::valueAsInt($targetUserModel, 'userID');
+        $targetUserNumericID = CBModel::valueAsInt($targetUserModel, 'userID');
 
-        if (empty($targetUserNumber)) {
-            return;
+        if (
+            $targetUserNumericID !== null &&
+            ColbyUser::currentUserIsMemberOfGroup('Developers')
+        ) {
+            $targetUserData = (object)[
+                'id' => $targetUserNumericID,
+            ];
+
+            CBGroupUserSettings::renderUserSettings(
+                $targetUserData,
+                'Developers'
+            );
         }
 
-        $targetUserData = (object)[
-            'id' => $targetUserNumber,
-        ];
-
-        if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
-            CBGroupUserSettings::renderUserSettings($targetUserData, 'Developers');
-        }
+        echo '</div>';
     }
+    /* CBUserSettingsManager_render() */
 }
