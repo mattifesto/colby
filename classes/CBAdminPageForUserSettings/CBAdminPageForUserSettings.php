@@ -23,7 +23,8 @@ final class CBAdminPageForUserSettings {
         $targetUserID = $_GET['hash'];
         $userData = ColbyUser::fetchUserDataByHash($targetUserID);
 
-        CBHTMLOutput::pageInformation()->title = "User Administration ({$userData->facebookName})";
+        CBHTMLOutput::pageInformation()->title =
+        "User Administration ({$userData->facebookName})";
 
         $userPhotoURL = CBFacebook::userImageURL($userData->facebookId);
 
@@ -36,20 +37,30 @@ final class CBAdminPageForUserSettings {
 
         <?php
 
-        CBUserSettingsManagerCatalog::render($targetUserID);
+        CBUserSettingsManagerCatalog::renderUserSettingsManagerViews(
+            $targetUserID
+        );
     }
 
-    /**
-     * @return [string]
-     */
-    static function requiredClassNames() {
-        return ['CBGroupUserSettings'];
-    }
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
+    }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBGroupUserSettings',
+        ];
     }
 }
