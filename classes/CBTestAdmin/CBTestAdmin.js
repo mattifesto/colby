@@ -40,7 +40,7 @@ var CBTestAdmin = {
      *      {
      *          type: string
      *          testClassName: string
-     *          testName: string
+     *          name: string
      *      }
      *
      * @return function
@@ -48,7 +48,7 @@ var CBTestAdmin = {
     convertJavaScriptTestToFunction: function (test) {
         let type = CBModel.valueToString(test, "type");
 
-        if (type === "server") {
+        if (type === "server" || type === "interactive_server") {
             let callable = CBModel.valueAsFunction(
                 CBTest,
                 "runServerTest"
@@ -81,7 +81,7 @@ var CBTestAdmin = {
 
         {
             let functionName =
-            `CBTest_${test.testName}`;
+            `CBTest_${test.name}`;
 
             let callable = CBModel.valueAsFunction(
                 window[test.testClassName + "Tests"],
@@ -95,10 +95,12 @@ var CBTestAdmin = {
 
         throw CBException.withError(
             Error(
-                "deprecated style test function not found",
-                "",
-                "5ac4cda27d2a6dfe61acf48bd51f8e0f8a7a959b"
-            )
+                `A JavaScript test function was not found for the ` +
+                `class name ${test.testClassName} and the test ` +
+                `name ${test.name}.`
+            ),
+            "",
+            "5ac4cda27d2a6dfe61acf48bd51f8e0f8a7a959b"
         );
     },
     /* convertJavaScriptTestToFunction() */
@@ -468,7 +470,7 @@ var CBTestAdmin = {
             function (currentTest) {
                 let type = CBModel.valueToString(currentTest, "type");
 
-                if (type === "interactive") {
+                if (type === "interactive" || type === "interactive_server") {
                     return;
                 }
 
@@ -586,7 +588,7 @@ var CBTestAdmin = {
      *      {
      *          type: string
      *          testClassName: string
-     *          testName: string
+     *          name: string
      *      }
      *
      * @return Promise
