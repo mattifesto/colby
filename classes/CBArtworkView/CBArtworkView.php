@@ -2,6 +2,22 @@
 
 final class CBArtworkView {
 
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v374.css', cbsysurl()),
+        ];
+    }
+    /* CBHTMLOutput_CSSURLs() */
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
     /**
      * @param model $spec
      *
@@ -215,12 +231,5 @@ final class CBArtworkView {
         </div>
 
         <?php
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
     }
 }
