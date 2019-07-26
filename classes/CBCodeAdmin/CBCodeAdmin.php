@@ -791,6 +791,23 @@ final class CBCodeAdmin {
                         'CBPagesPreferences::modelID()'
                     ),
                 ],
+
+
+                /**
+                 * 2019_07_26
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => (
+                        'CBPagesPreferences::defaultClassNamesForSupportedViews'
+                    ),
+                    'severity' => 4,
+                    'title' => (
+                        'Implement CBInstall_install() on any views in the ' .
+                        'constant, then remove them from the constant, ' .
+                        'then eventually remove the constant.'
+                    ),
+                ],
             ]
         );
     }
