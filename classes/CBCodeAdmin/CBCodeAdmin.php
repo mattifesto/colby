@@ -777,6 +777,20 @@ final class CBCodeAdmin {
                         'Colby::flexpath()'
                     ),
                 ],
+
+
+                /**
+                 * 2019_07_26
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBPagesPreferences::ID',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace CBPagesPreferences::ID with ' .
+                        'CBPagesPreferences::modelID()'
+                    ),
+                ],
             ]
         );
     }
