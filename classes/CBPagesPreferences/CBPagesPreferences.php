@@ -82,8 +82,9 @@ final class CBPagesPreferences {
                     'severity' => 5,
                     'message' => <<<EOT
 
-                        Removed the "defaultClassNameForPageSettings" property from
-                        the CBPagesPreferences spec because it is no longer used.
+                        Removed the "defaultClassNameForPageSettings" property
+                        from the CBPagesPreferences spec because it is no longer
+                        used.
 
 EOT
                 ]
@@ -303,7 +304,7 @@ EOT
      *      A alphabetized merge of the default supported view class names and
      *      the site specific supported view class names.
      */
-    static function classNamesForSupportedViews() {
+    static function classNamesForSupportedViews(): array {
         $model = CBModelCache::fetchModelByID(
             CBPagesPreferences::modelID()
         );
@@ -317,7 +318,8 @@ EOT
         array_unique(
             array_merge(
                 CBPagesPreferences::defaultClassNamesForSupportedViews,
-                $supportedViewClassNames
+                $supportedViewClassNames,
+                CBViewCatalog::fetchSupportedViewClassNames()
             )
         );
 
