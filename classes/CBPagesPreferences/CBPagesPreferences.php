@@ -11,8 +11,14 @@ final class CBPagesPreferences {
         'CBPageLayout',
     ];
 
+    /**
+     * @TODO 2019_07_26
+     *
+     *      Implement CBInstall interfaces on each of these views to install the
+     *      view in the CBViewCatalog, then remove the view from this array, and
+     *      eventually remove this constant when that process is finished.
+     */
     const defaultClassNamesForSupportedViews = [
-        'CBArtworkView',
         'CBContainerView',
         'CBContainerView2',
         'CBCustomView',
