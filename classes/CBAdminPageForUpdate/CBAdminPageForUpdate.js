@@ -207,8 +207,9 @@ var CBAdminPageForUpdate = {
 
             outputElement.appendChild(expander.element);
 
-            let promise = Colby.fetchAjaxResponse(
-                "/developer/mysql/ajax/backup-database/"
+            let promise = Colby.callAjaxFunction(
+                "CBAdminPageForUpdate",
+                "backupDatabase"
             ).then(
                 function () {
                     expander.title = "database backup completed";
