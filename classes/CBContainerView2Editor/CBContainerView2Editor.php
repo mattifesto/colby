@@ -9,7 +9,7 @@ final class CBContainerView2Editor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v491.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */

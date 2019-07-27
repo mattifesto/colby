@@ -87,19 +87,37 @@ var CBContainerView2Editor = {
 
         section = CBUI.createSection();
 
-        var chooser = CBUIImageChooser.createFullSizedChooser(
-            {
-                imageChosenCallback : handleImageChosen,
-                imageRemovedCallback : handleImageRemoved,
-            }
-        );
+        let imageChooser = CBUIImageChooser.create();
+        imageChooser.src = CBImage.toURL(args.spec.image, "rw960");
 
-        chooser.setImageURLCallback(
-            CBImage.toURL(args.spec.image, "rw960")
-        );
+        imageChooser.chosen = function (chooserArgs) {
+            CBContainerView2Editor.promise = Colby.callAjaxFunction(
+                "CBImages",
+                "upload",
+                {},
+                chooserArgs.file
+            ).then(
+                function (imageModel) {
+                    args.spec.image = imageModel;
+                    imageChooser.src = CBImage.toURL(imageModel, "rw960");
+
+                    args.specChangedCallback();
+                }
+            ).catch(
+                function (error) {
+                    Colby.displayAndReportError(error);
+                }
+            );
+        };
+
+        imageChooser.removed = function () {
+            args.spec.image = undefined;
+
+            args.specChangedCallback();
+        };
 
         item = CBUI.createSectionItem();
-        item.appendChild(chooser.element);
+        item.appendChild(imageChooser.element);
         section.appendChild(item);
 
         element.appendChild(section);
@@ -111,10 +129,10 @@ var CBContainerView2Editor = {
         item.appendChild(
             CBUIStringEditor.createEditor(
                 {
-                    labelText : "Title",
-                    propertyName : "title",
-                    spec : args.spec,
-                    specChangedCallback : args.specChangedCallback,
+                    labelText: "Title",
+                    propertyName: "title",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
                 }
             ).element
         );
@@ -175,10 +193,10 @@ var CBContainerView2Editor = {
         item.appendChild(
             CBUIStringEditor.createEditor(
                 {
-                    labelText : "CSS Class Names",
-                    propertyName : "CSSClassNames",
-                    spec : args.spec,
-                    specChangedCallback : args.specChangedCallback,
+                    labelText: "CSS Class Names",
+                    propertyName: "CSSClassNames",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
                 }
             ).element
         );
@@ -197,10 +215,10 @@ var CBContainerView2Editor = {
         item.appendChild(
             CBUIStringEditor.createEditor(
                 {
-                    labelText : "Local CSS Template",
-                    propertyName : "localCSSTemplate",
-                    spec : args.spec,
-                    specChangedCallback : args.specChangedCallback,
+                    labelText: "Local CSS Template",
+                    propertyName: "localCSSTemplate",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
                 }
             ).element
         );
@@ -213,48 +231,6 @@ var CBContainerView2Editor = {
         );
 
         return element;
-
-
-        /* -- closures -- -- -- -- -- */
-
-        /**
-         * @param object chooserArgs
-         *
-         * @return undefined
-         */
-        function handleImageChosen(chooserArgs) {
-            var ajaxURI = "/api/?class=CBImages&function=upload";
-            var formData = new FormData();
-            formData.append("image", chooserArgs.file);
-
-            CBContainerView2Editor.promise = Colby.fetchAjaxResponse(
-                ajaxURI,
-                formData
-            ).then(
-                handleImageUploaded
-            );
-
-            function handleImageUploaded(response) {
-                args.spec.image = response.image;
-                args.specChangedCallback();
-                chooserArgs.setImageURLCallback(
-                    CBImage.toURL(args.spec.image, "rw960")
-                );
-            }
-        }
-        /* handleImageChosen() */
-
-
-        /**
-         * @param object chooserArgs
-         *
-         * @return undefined
-         */
-        function handleImageRemoved(chooserArgs) {
-            args.spec.image = undefined;
-            args.specChangedCallback();
-        }
-        /* handleImageRemoved() */
     },
     /* createEditor() */
 };
