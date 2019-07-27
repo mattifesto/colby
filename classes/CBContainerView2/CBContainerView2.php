@@ -2,6 +2,44 @@
 
 final class CBContainerView2 {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
+    }
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBViewCatalog::installView(
+            __CLASS__
+        );
+    }
+    /* CBInstall_install() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBViewCatalog',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
     /**
      * @param model $spec
      *
@@ -36,7 +74,11 @@ final class CBContainerView2 {
         if (!empty($localCSSTemplate)) {
             $localCSSClassName = 'ID_' . CBHex160::random();
             $model->CSSClassNames[] = $localCSSClassName;
-            $model->localCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
+            $model->localCSS = CBView::localCSSTemplateToLocalCSS(
+                $localCSSTemplate,
+                'view',
+                ".{$localCSSClassName}"
+            );
         }
 
         return $model;
@@ -57,6 +99,7 @@ final class CBContainerView2 {
         );
     }
 
+
     /**
      * @param model $spec
      *
@@ -75,6 +118,9 @@ final class CBContainerView2 {
         return $spec;
     }
 
+
+    /* -- CBView interfaces -- -- -- -- -- */
+
     /**
      * @param model $model
      *
@@ -91,8 +137,17 @@ final class CBContainerView2 {
             $backgroundImageDeclaration = '';
         } else {
             $image = $model->image;
-            $imageURLAsHTML = cbhtml(CBDataStore::flexpath($image->ID, "original.{$image->extension}", CBSiteURL));
-            $backgroundImageDeclaration = "background-image: url('{$imageURLAsHTML}')";
+
+            $imageURLAsHTML = cbhtml(
+                CBDataStore::flexpath(
+                    $image->ID,
+                    "original.{$image->extension}",
+                    CBSiteURL
+                )
+            );
+
+            $backgroundImageDeclaration =
+            "background-image: url('{$imageURLAsHTML}')";
         }
 
         $subviews = CBModel::valueToArray($model, 'subviews');
@@ -111,17 +166,15 @@ EOT;
 
         ?>
 
-        <div class="CBContainerView2 <?= $CSSClassNames ?>" style="<?= $backgroundImageDeclaration ?>">
+        <div class="CBContainerView2 <?=
+            $CSSClassNames
+        ?>" style="<?=
+            $backgroundImageDeclaration
+        ?>">
             <?php array_walk($subviews, 'CBView::render') ?>
         </div>
 
         <?php
     }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
-    }
+    /* CBView_render() */
 }
