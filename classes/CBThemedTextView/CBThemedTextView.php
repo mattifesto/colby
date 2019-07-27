@@ -18,19 +18,29 @@ final class CBThemedTextView {
         return 'Administrators';
     }
 
+
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        CBViewCatalog::installView(__CLASS__, (object)['isDeprecated' => true]);
+        CBViewCatalog::installView(
+            __CLASS__,
+            (object)[
+                'isDeprecated' => true,
+            ]
+        );
     }
+
 
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBViewCatalog'];
+        return [
+            'CBViewCatalog',
+        ];
     }
+
 
     /**
      * @param model $model
