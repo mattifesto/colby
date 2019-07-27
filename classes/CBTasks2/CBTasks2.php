@@ -156,6 +156,7 @@ EOT;
             'total' => $scheduled + $ready + $running + $complete + $failed,
         ];
     }
+    /* fetchStatus() */
 
     /**
      * Table columns:
@@ -664,8 +665,16 @@ EOT;
              *      This is also a continuation of the issue of moveing away
              *      from exception handlers and toward effectively placed
              *      try-catch blocks throughout the system.
+             *
+             * @NOTE 2019_07_27
+             *
+             *      This is not the appropriate place to report this exception.
+             *      An try-catch block has been added to CBAjax which will
+             *      report. If exceptions are being hidden in other places there
+             *      is probably a try-catch block needed elsewhere.
+             *
+             *      CBErrorHandler::report($throwable);
              */
-            CBErrorHandler::report($throwable);
 
             /**
              * We'll rethrow this throwable at the end of the function after we
