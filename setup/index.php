@@ -59,30 +59,50 @@ class ColbyInstaller {
 
         ColbyInstaller::initializeProperties();
 
-        self::$dataDirectory                = cbsitedir() . '/data';
-        self::$tmpDirectory                 = cbsitedir() . '/tmp';
+        ColbyInstaller::$dataDirectory =
+        cbsitedir() . '/data';
 
-        self::$colbyConfigurationFilename   = cbsitedir() . '/colby-configuration.php';
-        self::$colbyFilename                = cbsitedir() . '/colby.php';
-        self::$faviconGifFilename           = cbsitedir() . '/favicon.gif';
-        self::$faviconIcoFilename           = cbsitedir() . '/favicon.ico';
-        self::$gitignoreFilename            = cbsitedir() . '/.gitignore';
-        self::$HTAccessFilename             = cbsitedir() . '/.htaccess';
-        self::$indexFilename                = cbsitedir() . '/index.php';
-        self::$siteConfigurationFilename    = cbsitedir() . '/site-configuration.php';
-        self::$versionFilename              = cbsitedir() . '/version.php';
+        ColbyInstaller::$tmpDirectory =
+        cbsitedir() . '/tmp';
+
+        ColbyInstaller::$colbyConfigurationFilename =
+        cbsitedir() . '/colby-configuration.php';
+
+        ColbyInstaller::$colbyFilename =
+        cbsitedir() . '/colby.php';
+
+        ColbyInstaller::$faviconGifFilename =
+        cbsitedir() . '/favicon.gif';
+
+        ColbyInstaller::$faviconIcoFilename =
+        cbsitedir() . '/favicon.ico';
+
+        ColbyInstaller::$gitignoreFilename =
+        cbsitedir() . '/.gitignore';
+
+        ColbyInstaller::$HTAccessFilename =
+        cbsitedir() . '/.htaccess';
+
+        ColbyInstaller::$indexFilename =
+        cbsitedir() . '/index.php';
+
+        ColbyInstaller::$siteConfigurationFilename =
+        cbsitedir() . '/site-configuration.php';
+
+        ColbyInstaller::$versionFilename =
+        cbsitedir() . '/version.php';
 
 
         if (ColbyInstaller::$propertiesAreAllSet) {
             try {
-                self::install();
+                ColbyInstaller::install();
             } catch (Throwable $exception) {
                 ColbyInstaller::$exception = $exception;
 
-                self::renderPlan();
+                ColbyInstaller::renderPlan();
             }
         } else {
-            self::renderPlan();
+            ColbyInstaller::renderPlan();
         }
     }
 
@@ -99,14 +119,22 @@ class ColbyInstaller {
         }
 
         $p = (object)[
-            'siteDomainName' => cb_post_value('siteDomainName', $_SERVER['SERVER_NAME'], 'trim'),
+            'siteDomainName' => cb_post_value(
+                'siteDomainName',
+                $_SERVER['SERVER_NAME'],
+                'trim'
+            ),
             'siteClassPrefix' => $siteClassPrefix,
             'mysqlHost' => cb_post_value('mysqlHost', '', 'trim'),
             'mysqlUser' => cb_post_value('mysqlUser', '', 'trim'),
             'mysqlPassword' => cb_post_value('mysqlPassword', '', 'trim'),
             'mysqlDatabase' => cb_post_value('mysqlDatabase', '', 'trim'),
             'facebookAppID' => cb_post_value('facebookAppID', '', 'trim'),
-            'facebookAppSecret' => cb_post_value('facebookAppSecret', '', 'trim'),
+            'facebookAppSecret' => cb_post_value(
+                'facebookAppSecret',
+                '',
+                'trim'
+            ),
         ];
 
         ColbyInstaller::$properties = $p;
@@ -121,10 +149,11 @@ class ColbyInstaller {
             !empty($p->facebookAppSecret);
     }
 
+
     /**
-     * @return null
+     * @return void
      */
-    static function install() {
+    static function install(): void {
         try {
             $siteDirectory = cbsitedir();
             $templateDirectory = __DIR__ . '/templates';
@@ -135,10 +164,10 @@ class ColbyInstaller {
             $mysqliDriver->report_mode = MYSQLI_REPORT_STRICT;
 
             $mysqli = new mysqli(
-                self::$properties->mysqlHost,
-                self::$properties->mysqlUser,
-                self::$properties->mysqlPassword,
-                self::$properties->mysqlDatabase
+                ColbyInstaller::$properties->mysqlHost,
+                ColbyInstaller::$properties->mysqlUser,
+                ColbyInstaller::$properties->mysqlPassword,
+                ColbyInstaller::$properties->mysqlDatabase
             );
 
             if ($mysqli->connect_error) {
@@ -146,82 +175,121 @@ class ColbyInstaller {
             }
 
             if (!$mysqli->set_charset('utf8mb4')) {
-                throw new Exception( 'Unable to set the mysqli character set to UTF-8.');
+                throw new Exception(
+                    'Unable to set the mysqli character set to UTF-8.'
+                );
             }
 
-            $mysqli->query('CREATE TABLE `ColbyInstallationTest` (`title` VARCHAR(80))');
+            $mysqli->query(
+                'CREATE TABLE `ColbyInstallationTest` (`title` VARCHAR(80))'
+            );
 
             if ($mysqli->error) {
-                throw new Exception("The MySQL account provided is unable to create tables: {$mysqli->error}");
+                throw new Exception(
+                    "The MySQL account provided is unable to create " .
+                    "tables: {$mysqli->error}"
+                );
             }
 
-            $mysqli->query('DROP TABLE `ColbyInstallationTest`');
+            $mysqli->query(
+                'DROP TABLE `ColbyInstallationTest`'
+            );
 
             if ($mysqli->error) {
-                throw new Exception("The MySQL account provided is unable to drop tables: {$mysqli->error}");
+                throw new Exception(
+                    "The MySQL account provided is unable to drop " .
+                    "tables: {$mysqli->error}"
+                );
             }
 
             $mysqli->close();
 
             /* Create files and directories */
 
-            if (!is_dir(self::$dataDirectory)) {
-                mkdir(self::$dataDirectory);
+            if (!is_dir(ColbyInstaller::$dataDirectory)) {
+                mkdir(ColbyInstaller::$dataDirectory);
             }
 
-            if (!is_dir(self::$tmpDirectory)) {
-                mkdir(self::$tmpDirectory);
+            if (!is_dir(ColbyInstaller::$tmpDirectory)) {
+                mkdir(ColbyInstaller::$tmpDirectory);
             }
 
             ColbyInstaller::writeColbyConfiguration();
 
-            if (!is_file(self::$gitignoreFilename)) {
-                copy(__DIR__ . '/gitignore.template.data', self::$gitignoreFilename);
+            if (!is_file(ColbyInstaller::$gitignoreFilename)) {
+                copy(
+                    __DIR__ . '/gitignore.template.data',
+                    ColbyInstaller::$gitignoreFilename
+                );
             } else {
-                $ignoresOld         = file(self::$gitignoreFilename);
-                $ignoresNew         = file(__DIR__ . '/gitignore.template.data');
-                $ignores            = array_merge($ignoresOld, $ignoresNew);
-                $ignores            = array_unique($ignores);
+                $ignoresOld = file(ColbyInstaller::$gitignoreFilename);
+                $ignoresNew = file(__DIR__ . '/gitignore.template.data');
+                $ignores = array_merge($ignoresOld, $ignoresNew);
+                $ignores = array_unique($ignores);
 
                 sort($ignores);
 
-                $ignores            = implode('', $ignores);
+                $ignores = implode('', $ignores);
 
-                file_put_contents(self::$gitignoreFilename, $ignores);
+                file_put_contents(ColbyInstaller::$gitignoreFilename, $ignores);
             }
 
-            touch(self::$HTAccessFilename);
+            touch(ColbyInstaller::$HTAccessFilename);
 
-            if (self::shouldPerformAFullInstallation()) {
-                $newData = file_get_contents(__DIR__ . '/htaccess.template.data');
+            if (ColbyInstaller::shouldPerformAFullInstallation()) {
+                $newData = file_get_contents(
+                    __DIR__ . '/htaccess.template.data'
+                );
 
-                file_put_contents(self::$HTAccessFilename, $newData, FILE_APPEND);
+                file_put_contents(
+                    ColbyInstaller::$HTAccessFilename,
+                    $newData,
+                    FILE_APPEND
+                );
             } else {
-                $newData = file_get_contents(__DIR__ . '/htaccess.partial.template.data');
+                $newData = file_get_contents(
+                    __DIR__ . '/htaccess.partial.template.data'
+                );
 
-                file_put_contents(self::$HTAccessFilename, $newData, FILE_APPEND);
+                file_put_contents(
+                    ColbyInstaller::$HTAccessFilename,
+                    $newData,
+                    FILE_APPEND
+                );
             }
 
-            if (self::shouldPerformAFullInstallation()) {
-                copy(__DIR__ . '/index.template.data', self::$indexFilename);
+            if (ColbyInstaller::shouldPerformAFullInstallation()) {
+                copy(
+                    __DIR__ . '/index.template.data',
+                    ColbyInstaller::$indexFilename
+                );
             } else {
-                copy(__DIR__ . '/index.template.data', self::$colbyFilename);
+                copy(
+                    __DIR__ . '/index.template.data',
+                    ColbyInstaller::$colbyFilename
+                );
             }
 
-            if (!is_file(self::$siteConfigurationFilename)) {
-                copy(__DIR__ . '/site-configuration.template.data', self::$siteConfigurationFilename);
+            if (!is_file(ColbyInstaller::$siteConfigurationFilename)) {
+                copy(
+                    __DIR__ . '/site-configuration.template.data',
+                    ColbyInstaller::$siteConfigurationFilename
+                );
             }
 
-            if (!is_file(self::$versionFilename)) {
-                copy(__DIR__ . '/version.template.data', self::$versionFilename);
+            if (!is_file(ColbyInstaller::$versionFilename)) {
+                copy(
+                    __DIR__ . '/version.template.data',
+                    ColbyInstaller::$versionFilename
+                );
             }
 
-            if (!is_file(self::$faviconGifFilename)) {
-                touch(self::$faviconGifFilename);
+            if (!is_file(ColbyInstaller::$faviconGifFilename)) {
+                touch(ColbyInstaller::$faviconGifFilename);
             }
 
-            if (!is_file(self::$faviconIcoFilename)) {
-                touch(self::$faviconIcoFilename);
+            if (!is_file(ColbyInstaller::$faviconIcoFilename)) {
+                touch(ColbyInstaller::$faviconIcoFilename);
             }
 
             /* /classes */
@@ -233,6 +301,7 @@ class ColbyInstaller {
             }
 
             $prefix = ColbyInstaller::$properties->siteClassPrefix;
+
             $templates = [
                 ['BlogPostPageKind', 'php'],
                 ['BlogPostPageTemplate', 'php'],
@@ -249,9 +318,15 @@ class ColbyInstaller {
             foreach ($templates as $template) {
                 $templateName = $template[0];
                 $extension = $template[1];
-                $sourceFilepath = "{$templateDirectory}/{$templateName}.{$extension}";
-                $destinationDirectory = "{$siteDirectory}/classes/{$prefix}{$templateName}";
-                $destinationFilepath = "{$destinationDirectory}/{$prefix}{$templateName}.{$extension}";
+
+                $sourceFilepath =
+                "{$templateDirectory}/{$templateName}.{$extension}";
+
+                $destinationDirectory =
+                "{$siteDirectory}/classes/{$prefix}{$templateName}";
+
+                $destinationFilepath =
+                "{$destinationDirectory}/{$prefix}{$templateName}.{$extension}";
 
                 if (!is_dir($destinationDirectory)) {
                     mkdir($destinationDirectory);
@@ -259,6 +334,7 @@ class ColbyInstaller {
 
                 $content = file_get_contents($sourceFilepath);
                 $content = preg_replace('/PREFIX/', $prefix, $content);
+
                 $content = preg_replace_callback(
                     '/RANDOMID/',
                     function () {
@@ -267,6 +343,7 @@ class ColbyInstaller {
                     },
                     $content
                 );
+
                 file_put_contents($destinationFilepath, $content);
             }
         } catch (Throwable $throwable) {
@@ -282,52 +359,68 @@ class ColbyInstaller {
 
         header('Location: /admin/');
     }
+    /* install() */
+
 
     /**
-     * @return null
+     * @return void
      */
-    static function renderPageBegin() {
+    static function renderPageBegin(): void {
         ?>
         <!doctype html>
         <html lang="en">
             <head>
                 <meta charset="UTF-8">
                 <title>Colby Installation</title>
-                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700">
-                <link rel="stylesheet" href="/colby/setup/styles.css">
+                <link
+                    rel="stylesheet"
+                    href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
+                >
+                <link
+                    rel="stylesheet"
+                    href="/colby/setup/styles.css"
+                >
             </head>
             <body class="ColbyInstaller">
                 <main>
         <?php
     }
+    /* renderPageBegin() */
+
 
     /**
-     * @return null
+     * @return void
      */
-    static function renderPageEnd() {
+    static function renderPageEnd(): void {
         ?>
                 </main>
             </body>
         </html>
         <?php
     }
+    /* renderPageEnd() */
+
 
     /**
-     * @return null
+     * @return void
      */
-    static function renderPlan() {
+    static function renderPlan(): void {
         ColbyInstaller::renderPageBegin();
 
         include __DIR__ . '/install-page.php';
 
         ColbyInstaller::renderPageEnd();
     }
+    /* renderPlan() */
+
 
     /**
      * This function is called if this page is accessed through HTTP instead of
      * HTTPS. A secure connection is required to set up Colby.
+     *
+     * @return void
      */
-    static function renderSecurityWarning() {
+    static function renderSecurityWarning(): void {
         $domainName = $_SERVER['SERVER_NAME'];
         $link = "https://{$domainName}/colby/setup/";
 
@@ -347,12 +440,16 @@ class ColbyInstaller {
 
         ColbyInstaller::renderPageEnd();
     }
+    /* renderSecurityWarning() */
+
 
     /**
      * This function is called if the Colby submodule has not been propertly
      * initialized.
+     *
+     * @return void
      */
-    static function renderSubmoduleWarning() {
+    static function renderSubmoduleWarning(): void {
         ColbyInstaller::renderPageBegin();
 
         ?>
@@ -373,6 +470,8 @@ class ColbyInstaller {
 
         ColbyInstaller::renderPageEnd();
     }
+    /* renderSubmoduleWarning() */
+
 
     /**
      * This function determines whether a full or partial installation should
@@ -384,15 +483,16 @@ class ColbyInstaller {
      *
      * @return bool
      */
-    private static function shouldPerformAFullInstallation() {
-        return !is_file(self::$indexFilename);
+    private static function shouldPerformAFullInstallation(): bool {
+        return !is_file(ColbyInstaller::$indexFilename);
     }
 
+
     /**
-     * @return null
+     * @return void
      */
-    static function writeColbyConfiguration() {
-        if (is_file(self::$colbyConfigurationFilename)) {
+    static function writeColbyConfiguration(): void {
+        if (is_file(ColbyInstaller::$colbyConfigurationFilename)) {
             return;
         }
 
@@ -412,20 +512,52 @@ class ColbyInstaller {
         $content = <<<EOT
 <?php
 
-define('CBSiteURL',                         'https://{$siteDomainName}');
+define(
+    'CBSiteURL',
+    'https://{$siteDomainName}'
+);
 
-define('CBFacebookAppID',                   '{$facebookAppID}');
-define('CBFacebookAppSecret',               '{$facebookAppSecret}');
+define(
+    'CBFacebookAppID',
+    '{$facebookAppID}'
+);
 
-define('CBMySQLHost',                       '{$mysqlHost}');
-define('CBMySQLUser',                       '{$mysqlUser}');
-define('CBMySQLPassword',                   '{$mysqlPassword}');
-define('CBMySQLDatabase',                   '{$mysqlDatabase}');
+define(
+    'CBFacebookAppSecret',
+    '{$facebookAppSecret}'
+);
 
-define('CBEncryptionPassword',              '{$encryptionPassword}');
+define(
+    'CBMySQLHost',
+    '{$mysqlHost}'
+);
+
+define(
+    'CBMySQLUser',
+    '{$mysqlUser}'
+);
+
+define(
+    'CBMySQLPassword',
+    '{$mysqlPassword}'
+);
+
+define(
+    'CBMySQLDatabase',
+    '{$mysqlDatabase}'
+);
+
+define(
+    'CBEncryptionPassword',
+    '{$encryptionPassword}'
+);
 
 EOT;
 
-        file_put_contents(ColbyInstaller::$colbyConfigurationFilename, $content);
+        file_put_contents(
+            ColbyInstaller::$colbyConfigurationFilename,
+            $content
+        );
     }
+    /* writeColbyConfiguration() */
 }
