@@ -8,9 +8,15 @@ final class CBAjax {
      * @return void
      */
     static function handleCallAjaxFunctionRequest(): void {
-        $response = new CBAjaxResponse();
+        header('Content-type: application/json');
 
         try {
+            $response = (object)[
+                'className' => 'CBAjax',
+                'message' => '',
+                'wasSuccessful' => false,
+            ];
+
             $ajaxArgumentsAsJSON = trim(
                 cb_post_value('ajaxArgumentsAsJSON')
             );
@@ -159,8 +165,6 @@ EOT;
                     $response->userMustLogIn = false;
                 }
             }
-
-            $response->send();
         } catch (Throwable $throwable) {
             CBErrorHandler::report($throwable);
 
@@ -172,9 +176,9 @@ EOT;
                 'Error ' .
                 CBConvert::throwableToMessage($throwable)
             );
-
-            $response->send();
         }
+
+        echo json_encode($response);
     }
     /* call() */
 
