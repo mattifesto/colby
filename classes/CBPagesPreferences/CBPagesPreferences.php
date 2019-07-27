@@ -19,7 +19,6 @@ final class CBPagesPreferences {
      *      eventually remove this constant when that process is finished.
      */
     const defaultClassNamesForSupportedViews = [
-        'CBContainerView',
         'CBContainerView2',
         'CBCustomView',
         'CBLinkView1',
