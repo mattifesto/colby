@@ -808,6 +808,39 @@ final class CBCodeAdmin {
                         'then eventually remove the constant.'
                     ),
                 ],
+
+
+                /**
+                 * 2019_07_27
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => (
+                        'CBUIImageChooser.createFullSizedChooser\\('
+                    ),
+                    'severity' => 4,
+                    'title' => (
+                        'Replace CBUIImageChooser.createFullSizedChooser() ' .
+                        'with CBUIImageChooser.create().'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_27
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => (
+                        'CBUIImageChooser.createThumbnailSizedChooser\\('
+                    ),
+                    'severity' => 4,
+                    'title' => (
+                        'Replace ' .
+                        'CBUIImageChooser.createThumbnailSizedChooser() ' .
+                        'with CBUIImageChooser.create().'
+                    ),
+                ],
             ]
         );
     }
