@@ -841,6 +841,22 @@ final class CBCodeAdmin {
                         'with CBUIImageChooser.create().'
                     ),
                 ],
+
+
+                /**
+                 * 2019_07_28
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => (
+                        'handle-authorization-failed-ajax.php'
+                    ),
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of handle-authorization-failed-ajax.php ' .
+                        'with CBAjax interfaces.'
+                    ),
+                ],
             ]
         );
     }
