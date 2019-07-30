@@ -128,14 +128,6 @@ final class ColbyConvert {
 
 
     /**
-     * @deprecated 2019_07_09
-     */
-    static function textToSQL($text) {
-        return CBDB::escapeString($text);
-    }
-
-
-    /**
      * @deprecated use CBConvert::stringToStub()
      */
     static function textToStub($text) {
