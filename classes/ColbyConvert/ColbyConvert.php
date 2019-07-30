@@ -128,14 +128,6 @@ final class ColbyConvert {
 
 
     /**
-     * @deprecated use CBConvert::stringToLines()
-     */
-    static function textToLines($text) {
-        return CBConvert::stringToLines($text);
-    }
-
-
-    /**
      * @deprecated 2019_07_09
      */
     static function textToSQL($text) {
