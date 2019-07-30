@@ -198,19 +198,6 @@ final class CBView {
 
 
     /**
-     * @deprecated use (object)['className' => '<desired class name>']
-     *
-     * @return object
-     */
-    static function modelWithClassName(string $className): stdClass {
-        return (object)[
-            'className' => $className,
-        ];
-    }
-    /* modelWithClassName() */
-
-
-    /**
      * @param model $model
      * @param callable $callback
      *
