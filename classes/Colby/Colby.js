@@ -500,6 +500,17 @@ var Colby = {
      *      response' object set to the Error's `ajaxResponse` propery.
      */
     fetchAjaxResponse: function (URL, data) {
+        if (
+            typeof URL !== "string" ||
+            URL === ""
+        ) {
+            throw TypeError(
+                "Colby.fetchAjaxResponse() was called with an invalid URL " +
+                " parameter value of: " +
+                JSON.stringify(URL)
+            );
+        }
+
         return new Promise(function (resolve, reject) {
             var fetchCount = 0;
             var xhr;
