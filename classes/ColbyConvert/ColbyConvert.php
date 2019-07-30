@@ -128,14 +128,6 @@ final class ColbyConvert {
 
 
     /**
-     * @deprecated use CBConvert::stringToStub()
-     */
-    static function textToStub($text) {
-        return CBConvert::stringToStub($text);
-    }
-
-
-    /**
      * This function will make the whitespace inside text visible, usually for
      * debugging purposes. I've added it here because I've needed and lost it
      * a few times and had a hard time finding it again and that usually means
