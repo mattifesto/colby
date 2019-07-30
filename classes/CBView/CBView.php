@@ -235,11 +235,6 @@ final class CBView {
             call_user_func($function, $model);
         }
 
-        /* deprecated */
-        else if (is_callable($function = "{$className}::renderModelAsHTML")) {
-            call_user_func($function, $model);
-        }
-
         else if (CBSitePreferences::debug()) {
             $classNameAsComment = ': ' . str_replace('--', ' - - ', $className);
 
