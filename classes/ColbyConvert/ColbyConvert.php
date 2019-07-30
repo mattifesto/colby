@@ -3,17 +3,6 @@
 final class ColbyConvert {
 
     /**
-     * @deprecated use CBConvert::centsToDollars()
-     *
-     * @param mixed $cents
-     *
-     * @return string
-     */
-    static function centsIntToDollarsString($cents): string {
-        return CBConvert::centsToDollars($cents);
-    }
-
-    /**
      * Sanitizes a cents string into a cents int. If the string is not a valid
      * cents string, null is returned.
      *
