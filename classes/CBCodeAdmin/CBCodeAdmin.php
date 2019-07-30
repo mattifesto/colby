@@ -508,6 +508,23 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_07_28 (warning)
+                 * 2019_07_30 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => (
+                        'handle-authorization-failed-ajax.php'
+                    ),
+                    'severity' => 3,
+                    'title' => (
+                        'Replace use of handle-authorization-failed-ajax.php ' .
+                        'with CBAjax interfaces.'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -839,22 +856,6 @@ final class CBCodeAdmin {
                         'Replace ' .
                         'CBUIImageChooser.createThumbnailSizedChooser() ' .
                         'with CBUIImageChooser.create().'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_07_28
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => (
-                        'handle-authorization-failed-ajax.php'
-                    ),
-                    'severity' => 4,
-                    'title' => (
-                        'Replace use of handle-authorization-failed-ajax.php ' .
-                        'with CBAjax interfaces.'
                     ),
                 ],
             ]
