@@ -128,16 +128,6 @@ final class ColbyConvert {
 
 
     /**
-     * @deprecated 2013_01_14
-     *
-     * @return string
-     */
-    static function textToFormattedContent($text) {
-        return CBMarkaround::markaroundToHTML($markaround);
-    }
-
-
-    /**
      * @deprecated use cbhtml()
      */
     static function textToHTML($text) {
