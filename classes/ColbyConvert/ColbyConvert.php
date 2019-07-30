@@ -128,14 +128,6 @@ final class ColbyConvert {
 
 
     /**
-     * @deprecated use cbhtml()
-     */
-    static function textToHTML($text) {
-        return cbhtml($text);
-    }
-
-
-    /**
      * @deprecated use CBConvert::stringToLines()
      */
     static function textToLines($text) {
