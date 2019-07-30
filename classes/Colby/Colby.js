@@ -769,6 +769,7 @@ var Colby = {
 
         switch (xhr.status) {
             case 0:
+
                 response = {
                     className: "CBAjaxResponse",
                     message: "An error occured when making an Ajax request " +
@@ -778,8 +779,11 @@ var Colby = {
                               "incorrect.",
                     wasSuccessful: false,
                 };
+
                 break;
+
             case 200:
+
                 try {
                     response = JSON.parse(xhr.responseText);
                 } catch (error) {
@@ -791,8 +795,29 @@ var Colby = {
                         wasSuccessful: false,
                     };
                 }
+
                 break;
+
+            case 404:
+
+                response = {
+                    className: "CBAjaxResponse",
+                    message: (
+                        "An Ajax request to the server ended with a status " +
+                        "of 404, meaning the request URL was not found. " +
+                        "The request URL was: " +
+                        (
+                            xhr.responseURL ||
+                            "(not available in this browser)"
+                        )
+                    ),
+                    wasSuccessful: false,
+                };
+
+                break;
+
             default:
+
                 response = {
                     className: "CBAjaxResponse",
                     message: "An Ajax request to the server returned an " +
@@ -801,6 +826,7 @@ var Colby = {
                               xhr.statusText + "\".",
                     wasSuccessful: false,
                 };
+
                 break;
         }
 
