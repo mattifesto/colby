@@ -244,7 +244,6 @@ final class CBCodeAdmin {
         return array_merge(
             $searches,
             [
-
                 /* errors */
 
                 /**
@@ -255,6 +254,104 @@ final class CBCodeAdmin {
                     'regex' => 'CBModelUpdater',
                     'title' => (
                         'The CBModelUpdater JavaScript class has been removed'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_06_16
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\\.centsToDollars\\(',
+                    'title' => (
+                        'Replace use of Colby.centsToDollars() with ' .
+                        'CBConvert.centsToDollars()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_06_16
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\\.imageToURL\\(',
+                    'title' => (
+                        'Replace use of Colby.imageToURL() with ' .
+                        'CBImage.toURL()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_06_16
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'Colby::reportException\\(',
+                    'title' => (
+                        'Replace use of Colby::reportException() with ' .
+                        'CBErrorHandler::report()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_06_16
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'dataStoreFlexpath',
+                    'title' => (
+                        'Replace use of Colby.dataStoreFlexpath() with ' .
+                        'CBDataStore.flexpath()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_06_16
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'dataStoreIDToURI',
+                    'title' => (
+                        'Replace use of Colby.dataStoreIDToURI() with ' .
+                        'CBDataStore.flexpath()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_06_16
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'setPanelContent\\(',
+                    'title' => 'Colby.setPanelContent() has been removed',
+                ],
+
+
+                /**
+                 * 2019_06_16
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'warnOlderBrowsers\\(',
+                    'title' => 'Colby.warnOlderBrowsers() has been removed',
+                ],
+
+
+                /**
+                 * 2019_06_22
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyRequest::isForFrontPage\\(',
+                    'title' => (
+                        'ColbyRequest::isForFrontPage() replaced with ' .
+                        'ColbyRequest::currentRequestIsForTheFrontPage()'
                     ),
                 ],
 
@@ -272,13 +369,12 @@ final class CBCodeAdmin {
 
 
                 /**
-                 * 2019_07_05
+                 * 2019_07_07
                  */
                 (object)[
-                    'args' => '--ignore-file=match:CBThemedMenuView',
                     'filetype' => 'php',
-                    'regex' => 'CBThemedMenuView',
-                    'title' => 'Replace use of CBThemedMenuView',
+                    'regex' => 'CBView::renderModelAsHTML',
+                    'title' => 'Replace use of CBView::renderModelAsHTML()',
                 ],
 
 
@@ -316,104 +412,15 @@ final class CBCodeAdmin {
 
 
                 /**
-                 * 2019_07_07
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'CBView::renderModelAsHTML',
-                    'title' => 'Replace use of CBView::renderModelAsHTML()',
-                ],
-
-
-                /**
-                 * 2019_06_16
-                 * Use CBConvert
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'Colby\\.centsToDollars\\(',
-                    'title' => 'Colby.centsToDollars()',
-                ],
-
-
-                /**
-                 * 2019_06_16
-                 * Use CBConvert
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'Colby\\.imageToURL\\(',
-                    'title' => 'Colby.imageToURL()',
-                ],
-
-
-                /**
-                 * 2019_06_16
-                 * Use CBErrorHandler::report()
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'Colby::reportException\\(',
-
-                    'title' =>
-                    'Colby::reportException() replaced with ' .
-                    'CBErrorHandler::report()',
-                ],
-
-
-                /**
-                 * 2019_06_16
-                 * Use CBDataStore.flexpath()
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'dataStoreFlexpath',
-                    'title' => 'Colby.dataStoreFlexpath()',
-                ],
-
-
-                /**
-                 * 2019_06_16
-                 * Use CBDataStore.flexpath()
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'dataStoreIDToURI',
-                    'title' => 'Colby.dataStoreIDToURI()',
-                ],
-
-
-                /**
-                 * 2019_06_16
-                 * Colby.setPanelContent() has been removed.
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'setPanelContent\\(',
-                    'title' => 'Colby.setPanelContent()',
-                ],
-
-
-                /**
-                 * 2019_06_16
-                 * Colby.warnOlderBrowsers() has been removed.
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'warnOlderBrowsers\\(',
-                    'title' => 'Colby.warnOlderBrowsers()',
-                ],
-
-
-                /**
                  * 2019_07_09
                  */
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::centsIntToDollarsString',
                     'title' => (
-                        'Replace ColbyConvert::centsIntToDollarsString() ' .
-                        'with CBConvert::centsToDollars()'
+                        'Replace use of ' .
+                        'ColbyConvert::centsIntToDollarsString() with ' .
+                        'CBConvert::centsToDollars()'
                     ),
                 ],
 
@@ -425,8 +432,8 @@ final class CBCodeAdmin {
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::markaroundToHTML',
                     'title' => (
-                        'Replace ColbyConvert::markaroundToHTML() with ' .
-                        'CBMarkaround::markaroundToHTML()'
+                        'Replace use of ColbyConvert::markaroundToHTML() ' .
+                        'with CBMarkaround::markaroundToHTML()'
                     ),
                 ],
 
@@ -438,7 +445,8 @@ final class CBCodeAdmin {
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::textToFormattedContent',
                     'title' => (
-                        'Replace ColbyConvert::textToFormattedContent() with ' .
+                        'Replace use of ' .
+                        'ColbyConvert::textToFormattedContent() with ' .
                         'CBMarkaround::markaroundToHTML()'
                     ),
                 ],
@@ -451,7 +459,8 @@ final class CBCodeAdmin {
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::textToHTML',
                     'title' => (
-                        'Replace ColbyConvert::textToHTML() with cbhtml()'
+                        'Replace use of ColbyConvert::textToHTML() ' .
+                        'with cbhtml()'
                     ),
                 ],
 
@@ -463,7 +472,7 @@ final class CBCodeAdmin {
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::textToLines',
                     'title' => (
-                        'Replace ColbyConvert::textToLines() with ' .
+                        'Replace use of ColbyConvert::textToLines() with ' .
                         'CBConvert::stringToLines()'
                     ),
                 ],
@@ -476,7 +485,7 @@ final class CBCodeAdmin {
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::textToSQL',
                     'title' => (
-                        'Replace ColbyConvert::textToSQL() with ' .
+                        'Replace use of ColbyConvert::textToSQL() with ' .
                         'CBDB::escapeString()'
                     ),
                 ],
@@ -489,22 +498,9 @@ final class CBCodeAdmin {
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::textToStub',
                     'title' => (
-                        'Replace ColbyConvert::textToStub() with ' .
+                        'Replace use of ColbyConvert::textToStub() with ' .
                         'CBConvert::stringToStub()'
                     ),
-                ],
-
-
-                /**
-                 * 2019_06_22
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'ColbyRequest::isForFrontPage\\(',
-
-                    'title' =>
-                    'ColbyRequest::isForFrontPage() replaced with ' .
-                    'ColbyRequest::currentRequestIsForTheFrontPage()',
                 ],
 
 
@@ -517,7 +513,6 @@ final class CBCodeAdmin {
                     'regex' => (
                         'handle-authorization-failed-ajax.php'
                     ),
-                    'severity' => 3,
                     'title' => (
                         'Replace use of handle-authorization-failed-ajax.php ' .
                         'with CBAjax interfaces.'
@@ -616,6 +611,18 @@ final class CBCodeAdmin {
                     'severity' => 4,
                     'title' =>
                     'Replace deprecated CBImages ajax upload function',
+                ],
+
+
+                /**
+                 * 2019_07_05
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:CBThemedMenuView',
+                    'filetype' => 'php',
+                    'regex' => 'CBThemedMenuView',
+                    'severity' => 4,
+                    'title' => 'Replace use of CBThemedMenuView',
                 ],
 
 
