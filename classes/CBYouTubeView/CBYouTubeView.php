@@ -2,6 +2,32 @@
 
 final class CBYouTubeView {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBViewCatalog::installView(
+            __CLASS__
+        );
+    }
+    /* CBInstall_install() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBViewCatalog',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
@@ -10,6 +36,7 @@ final class CBYouTubeView {
             Colby::flexpath(__CLASS__, 'css', cbsysurl()),
         ];
     }
+
 
     /**
      * @return [string]
@@ -20,6 +47,7 @@ final class CBYouTubeView {
         ];
     }
 
+
     /**
      * @param model $spec
      *
@@ -27,11 +55,19 @@ final class CBYouTubeView {
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
         return (object)[
-            'captionAsMessage' => CBModel::valueToString($spec, 'captionAsMessage'),
-            'videoID' => trim(CBModel::valueToString($spec, 'videoID')),
-            'width' => trim(CBModel::valueToString($spec, 'width')),
+            'captionAsMessage' => CBModel::valueToString(
+                $spec,
+                'captionAsMessage'
+            ),
+            'videoID' => trim(
+                CBModel::valueToString($spec, 'videoID')
+            ),
+            'width' => trim(
+                CBModel::valueToString($spec, 'width')
+            ),
         ];
     }
+
 
     /**
      * @return void
@@ -40,7 +76,11 @@ final class CBYouTubeView {
         $videoID = CBModel::valueToString($model, 'videoID');
 
         if (empty($videoID)) {
-            echo '<!-- CBYouTubeView: no valid video ID has been set for this view. -->';
+            echo (
+                '<!-- CBYouTubeView: no valid video ID has been set ' .
+                'for this view. -->'
+            );
+
             return;
         }
 
@@ -65,12 +105,16 @@ final class CBYouTubeView {
                 $width = "800px";
                 break;
         }
+
         ?>
 
         <div class="CBYouTubeView">
             <div class="width" style="width: <?= $width ?>">
                 <div class="aspect">
-                    <iframe src="<?= "https://www.youtube.com/embed/{$videoID}" ?>" allowfullscreen></iframe>
+                    <iframe
+                        src="<?= "https://www.youtube.com/embed/{$videoID}" ?>"
+                        allowfullscreen
+                    ></iframe>
                 </div>
                 <?php if (!empty($captionAsHTML)) { ?>
                     <div class="caption CBContentStyleSheet">
