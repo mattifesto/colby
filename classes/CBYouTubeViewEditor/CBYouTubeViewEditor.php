@@ -13,10 +13,13 @@ final class CBYouTubeViewEditor {
         ];
     }
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v494.js', cbsysurl()),
+        ];
     }
 }
