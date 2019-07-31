@@ -140,35 +140,37 @@ var CBIconLinkViewEditor = {
 
         return element;
 
+
+        /* -- closures -- -- -- -- -- */
+
         /**
-         *
+         * @return undefined
          */
         function handleImageChosen(chooserArgs) {
-            var ajaxURI = "/api/?class=CBImages&function=upload";
-            var formData = new FormData();
-            formData.append("image", chooserArgs.file);
-
-            CBIconLinkViewEditor.promise = Colby.fetchAjaxResponse(
-                ajaxURI,
-                formData
+            CBIconLinkViewEditor.promise = Colby.callAjaxFunction(
+                "CBImages",
+                "upload",
+                {},
+                chooserArgs.file
             ).then(
-                handleImageUploaded
-            );
+                function (imageModel) {
+                    args.spec.image = imageModel;
 
-            function handleImageUploaded(response) {
-                args.spec.image = response.image;
-                args.specChangedCallback();
-                chooserArgs.setImageURLCallback(
-                    CBImage.toURL(args.spec.image, "rw960")
-                );
-            }
+                    args.specChangedCallback();
+
+                    chooserArgs.setImageURLCallback(
+                        CBImage.toURL(imageModel, "rw960")
+                    );
+                }
+            );
         }
 
         /**
-         *
+         * @return undefined
          */
-        function handleImageRemoved(chooserArgs) {
+        function handleImageRemoved() {
             args.spec.image = undefined;
+
             args.specChangedCallback();
         }
     },
