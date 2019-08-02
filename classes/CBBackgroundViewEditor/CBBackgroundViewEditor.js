@@ -19,63 +19,6 @@
 var CBBackgroundViewEditor = {
 
     /**
-     * @param object spec
-     *
-     * @return string|undefined
-     */
-    CBUISpec_toDescription: function (spec) {
-        let title = CBModel.valueToString(spec, "title").trim();
-
-        if (title !== "") {
-            return title;
-        } else {
-            if (Array.isArray(spec.children)) {
-                for (let i = 0; i < spec.children.length; i++) {
-                    let description = CBUISpec.specToDescription(
-                        spec.children[i]
-                    );
-
-                    if (description) {
-                        return description;
-                    }
-                }
-            }
-        }
-    },
-    /* CBUISpec_toDescription() */
-
-
-    /**
-     * @param object spec
-     *
-     * @return string|undefined
-     */
-    CBUISpec_toThumbnailURI: function (spec) {
-        if (spec.image) {
-            return CBImage.toURL(
-                spec.image,
-                'rw320'
-            );
-        } else if (spec.imageURL) {
-            return spec.imageURL;
-        } else {
-            if (Array.isArray(spec.children)) {
-                for (let i = 0; i < spec.children.length; i++) {
-                    let thumbnailURI = CBUISpec.specToThumbnailURI(
-                        spec.children[i]
-                    );
-
-                    if (thumbnailURI) {
-                        return thumbnailURI;
-                    }
-                }
-            }
-        }
-    },
-    /* CBUISpec_toThumbnailURI() */
-
-
-    /**
      * @param function args.navigateToItemCallback
      * @param Object args.spec
      * @param function args.specChangedCallback
@@ -254,5 +197,64 @@ var CBBackgroundViewEditor = {
         }
     },
     /* prepareSpec() */
+
+
+    /* -- CBUISpec interfaces -- -- -- -- -- */
+
+    /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    CBUISpec_toDescription: function (spec) {
+        let title = CBModel.valueToString(spec, "title").trim();
+
+        if (title !== "") {
+            return title;
+        } else {
+            if (Array.isArray(spec.children)) {
+                for (let i = 0; i < spec.children.length; i++) {
+                    let description = CBUISpec.specToDescription(
+                        spec.children[i]
+                    );
+
+                    if (description) {
+                        return description;
+                    }
+                }
+            }
+        }
+    },
+    /* CBUISpec_toDescription() */
+
+
+    /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    CBUISpec_toThumbnailURI: function (spec) {
+        if (spec.image) {
+            return CBImage.toURL(
+                spec.image,
+                'rw320'
+            );
+        } else if (spec.imageURL) {
+            return spec.imageURL;
+        } else {
+            if (Array.isArray(spec.children)) {
+                for (let i = 0; i < spec.children.length; i++) {
+                    let thumbnailURI = CBUISpec.specToThumbnailURI(
+                        spec.children[i]
+                    );
+
+                    if (thumbnailURI) {
+                        return thumbnailURI;
+                    }
+                }
+            }
+        }
+    },
+    /* CBUISpec_toThumbnailURI() */
 };
 /* CBBackgroundViewEditor */
