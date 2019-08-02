@@ -118,30 +118,32 @@ var CBImagesTests = {
      * @return Promise
      */
     CBTest_upload: function () {
-        var URL = "/api/?class=CBImages&function=upload";
-        var data = new FormData();
+        let promise = Colby.callAjaxFunction(
+            "CBImages",
+            "upload",
+            {},
+            CBTestAdmin.fileInputElement.files[0]
+        ).then(
+            report1
+        ).then(
+            report2
+        ).then(
+            report3
+        );
 
-        /**
-         * @NOTE 2017.11.14 This is kind of a crazy public property access.
-         * However, it does work so think of a better way later if necessary.
-         */
+        return promise;
 
-        data.append("image", CBTestAdmin.fileInputElement.files[0]);
 
-        return Colby.fetchAjaxResponse(URL, data)
-                    .then(report1)
-                    .then(report2)
-                    .then(report3);
+        /* -- closures -- -- -- -- -- */
 
-        function report1(response) {
-            var image = response.image;
-
-            if (image.extension === "jpeg" &&
-                image.filename === "original" &&
-                image.height === 900 &&
-                image.ID === CBTestAdmin.testImageID &&
-                image.width === 1600)
-            {
+        function report1(imageModel) {
+            if (
+                imageModel.extension === "jpeg" &&
+                imageModel.filename === "original" &&
+                imageModel.height === 900 &&
+                imageModel.ID === CBTestAdmin.testImageID &&
+                imageModel.width === 1600
+            ) {
                 var imageURI =
                 "/" +
                 CBDataStore.flexpath(
@@ -154,6 +156,7 @@ var CBImagesTests = {
                 throw new Error("The image file did not upload correctly.");
             }
         }
+
 
         function report2(doesExist) {
             if (doesExist) {
@@ -169,6 +172,7 @@ var CBImagesTests = {
                 throw new Error("The image file is not available.");
             }
         }
+
 
         function report3(doesExist) {
             if (!doesExist) {
