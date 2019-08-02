@@ -104,19 +104,19 @@ var CBLinkView1Editor = {
          * @return undefined
          */
         function createEditor_handleImageChosen(chooserArgs) {
-            var ajaxURI = "/api/?class=CBImages&function=upload";
-            var formData = new FormData();
-            formData.append("image", chooserArgs.file);
-
-            CBLinkView1Editor.promise = Colby.fetchAjaxResponse(
-                ajaxURI,
-                formData
+            Colby.callAjaxFunction(
+                "CBImages",
+                "upload",
+                {},
+                chooserArgs.file
             ).then(
-                function (response) {
-                    args.spec.image = response.image;
+                function (imageModel) {
+                    args.spec.image = imageModel;
+
                     args.specChangedCallback();
+
                     chooserArgs.setImageURLCallback(
-                        CBImage.toURL(args.spec.image, "rw960")
+                        CBImage.toURL(imageModel, "rw960")
                     );
                 }
             );
@@ -127,7 +127,7 @@ var CBLinkView1Editor = {
         /**
          * @return undefined
          */
-        function createEditor_handleImageRemoved(chooserArgs) {
+        function createEditor_handleImageRemoved() {
             args.spec.image = undefined;
             args.specChangedCallback();
         }
