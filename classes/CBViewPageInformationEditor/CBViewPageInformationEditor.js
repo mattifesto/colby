@@ -4,6 +4,7 @@
 /* exported CBViewPageInformationEditor */
 /* globals
     CBImage,
+    CBModel,
     CBUI,
     CBUIActionLink,
     CBUIBooleanEditor,
@@ -32,41 +33,6 @@ var CBViewPageInformationEditor = {
      * @param object args
      *
      *      {
-     *          checkbox: Element
-     *          listClassName: string
-     *          spec: object
-     *          specChangedCallback: function
-     *      }
-     *
-     * @return undefined
-     */
-    checkboxDidChangeForListClassName: function (args) {
-        var checkbox        = args.checkbox;
-        var listClassName   = args.listClassName;
-
-        if (!args.spec.listClassNames) {
-            args.spec.listClassNames = [];
-        }
-
-        var index = args.spec.listClassNames.indexOf(listClassName);
-
-        if (checkbox.checked) {
-            if (index < 0) {
-                args.spec.listClassNames.push(listClassName);
-            }
-        } else {
-            if (index >= 0) {
-                args.spec.listClassNames.splice(index, 1);
-            }
-        }
-
-        args.specChangedCallback.call();
-    },
-
-    /**
-     * @param object args
-     *
-     *      {
      *          handleTitleChanged: function
      *          makeFrontPageCallback: function
      *          spec: object
@@ -77,8 +43,7 @@ var CBViewPageInformationEditor = {
      */
     createEditor: function (args) {
         var section, item;
-        var element = document.createElement("section");
-        element.className = "CBViewPageInformationEditor";
+        var element = CBUI.createElement("CBViewPageInformationEditor");
 
         section = CBUI.createSection();
 
@@ -149,7 +114,10 @@ var CBViewPageInformationEditor = {
                     propertyName: "isPublished",
                     spec: args.spec,
                     specChangedCallback: function () {
-                        var URI = args.spec.URI ? args.spec.URI.trim() : "";
+                        var URI = CBModel.valueToString(
+                            args.spec,
+                            "URI"
+                        ).trim();
 
                         if (args.spec.isPublished) {
                             if (URI === "") {
@@ -159,8 +127,9 @@ var CBViewPageInformationEditor = {
                             }
 
                             if (args.spec.publicationTimeStamp === undefined) {
-                                args.spec.publicationTimeStamp =
-                                Math.floor(Date.now() / 1000);
+                                args.spec.publicationTimeStamp = (
+                                    Math.floor(Date.now() / 1000)
+                                );
 
                                 publicationDateEditor.refresh();
                             }
@@ -192,19 +161,30 @@ var CBViewPageInformationEditor = {
             args.spec.publishedBy = CBCurrentUserID;
         }
 
-        var users = CBUsersWhoAreAdministrators.map(function (user) {
-            return { title: user.name, value: user.ID };
-        });
+        var users = CBUsersWhoAreAdministrators.map(
+            function (user) {
+                return {
+                    title: user.name,
+                    value: user.ID,
+                };
+            }
+        );
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUISelector.create({
-            labelText: "Published By",
-            navigateToItemCallback: args.navigateToItemCallback,
-            propertyName: "publishedBy",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-            options: users,
-        }).element);
+
+        item.appendChild(
+            CBUISelector.create(
+                {
+                    labelText: "Published By",
+                    navigateToItemCallback: args.navigateToItemCallback,
+                    propertyName: "publishedBy",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                    options: users,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         /* classNameForSettings */
@@ -345,10 +325,12 @@ var CBViewPageInformationEditor = {
         var thumbnailRemovedCallback =
         CBViewPageInformationEditor.handleThumbnailRemoved;
 
-        var chooser = CBUIImageChooser.createThumbnailSizedChooser({
-            imageChosenCallback: thumbnailChosenCallback,
-            imageRemovedCallback: thumbnailRemovedCallback,
-        });
+        var chooser = CBUIImageChooser.createThumbnailSizedChooser(
+            {
+                imageChosenCallback: thumbnailChosenCallback,
+                imageRemovedCallback: thumbnailRemovedCallback,
+            }
+        );
 
         CBViewPageEditor.thumbnailChangedCallback =
         CBViewPageInformationEditor.handleThumbnailChanged.bind(
@@ -389,26 +371,43 @@ var CBViewPageInformationEditor = {
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIActionLink.create({
-            labelText: "Preview",
-            callback: function () {
-                var name = "preview_" + args.spec.ID;
-                window.open("/admin/pages/preview/?ID=" + args.spec.ID, name);
-            },
-        }).element);
+
+        item.appendChild(
+            CBUIActionLink.create(
+                {
+                    labelText: "Preview",
+                    callback: function () {
+                        var name = "preview_" + args.spec.ID;
+                        window.open(
+                            "/admin/pages/preview/?ID=" +
+                            args.spec.ID,
+                            name
+                        );
+                    },
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIActionLink.create({
-            labelText: "Use as Front Page",
-            callback: args.makeFrontPageCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIActionLink.create(
+                {
+                    labelText: "Use as Front Page",
+                    callback: args.makeFrontPageCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
 
         /* copy */
         {
             let sectionItem = CBUISectionItem4.create();
+
             sectionItem.callback = function () {
                 let newID = Colby.random160();
 
@@ -431,6 +430,7 @@ var CBViewPageInformationEditor = {
         /* move to trash */
         {
             let sectionItem = CBUISectionItem4.create();
+
             sectionItem.callback = function () {
                 if (
                     window.confirm(
@@ -510,6 +510,8 @@ var CBViewPageInformationEditor = {
 
         return element;
     },
+    /* createEditor() */
+
 
     /**
      * All this function does is set the uploader thumbnail image. It may be
@@ -532,6 +534,8 @@ var CBViewPageInformationEditor = {
             args.setImageURLCallback();
         }
     },
+    /* handleThumbnailChanged() */
+
 
     /**
      * @param file chooserArgs.file
@@ -540,44 +544,23 @@ var CBViewPageInformationEditor = {
      * @return undefined
      */
     handleThumbnailChosen: function (chooserArgs) {
-        var formData = new FormData();
-        formData.append("image", chooserArgs.file);
-
-        var xhr = new XMLHttpRequest();
-
-        xhr.onerror = Colby.displayXHRError.bind(
-            undefined,
-            {
-                xhr: xhr,
+        Colby.callAjaxFunction(
+            "CBImages",
+            "upload",
+            {},
+            chooserArgs.file
+        ).then(
+            function (imageModel) {
+                CBViewPageEditor.setThumbnailImage(imageModel);
+            }
+        ).catch(
+            function (error) {
+                Colby.displayAndReportError(error);
             }
         );
-
-        xhr.onload =
-        CBViewPageInformationEditor.handleThumbnailChosenDidLoad.bind(
-            undefined,
-            {
-                xhr: xhr,
-            }
-        );
-
-        xhr.open("POST", "/api/?class=CBImages&function=upload");
-        xhr.send(formData);
     },
+    /* handleThumbnailChosen() */
 
-    /**
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    handleThumbnailChosenDidLoad: function (args) {
-        var response = Colby.responseFromXMLHttpRequest(args.xhr);
-
-        if (response.wasSuccessful) {
-            CBViewPageEditor.setThumbnailImage(response.image);
-        } else {
-            Colby.displayResponse(response);
-        }
-    },
 
     /**
      * @return undefined
