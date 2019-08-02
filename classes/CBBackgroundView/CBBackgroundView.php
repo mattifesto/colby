@@ -2,6 +2,32 @@
 
 final class CBBackgroundView {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBViewCatalog::installView(
+            __CLASS__
+        );
+    }
+    /* CBInstall_install() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBViewCatalog',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
     /**
      * @param model $spec
      *
@@ -13,9 +39,18 @@ final class CBBackgroundView {
             'imageHeight' => CBModel::valueAsInt($spec, 'imageHeight'),
             'imageWidth' => CBModel::valueAsInt($spec, 'imageWidth'),
             'imageURL' => CBModel::valueToString($spec, 'imageURL'),
-            'imageShouldRepeatHorizontally' => !empty($spec->imageShouldRepeatHorizontally),
-            'imageShouldRepeatVertically' => !empty($spec->imageShouldRepeatVertically),
-            'minimumViewHeightIsImageHeight' => !empty($spec->minimumViewHeightIsImageHeight),
+            'imageShouldRepeatHorizontally' => CBModel::valueToBool(
+                $spec,
+                'imageShouldRepeatHorizontally'
+            ),
+            'imageShouldRepeatVertically' => CBModel::valueToBool(
+                $spec,
+                'imageShouldRepeatVertically'
+            ),
+            'minimumViewHeightIsImageHeight' => CBModel::valueToBool(
+                $spec,
+                'minimumViewHeightIsImageHeight'
+            ),
         ];
 
         /* image (added 2017.09.12) */
@@ -38,6 +73,7 @@ final class CBBackgroundView {
         return $model;
     }
 
+
     /**
      * @param model $model
      *
@@ -52,6 +88,7 @@ final class CBBackgroundView {
             )
         );
     }
+
 
     /**
      * @param model $spec
@@ -70,6 +107,9 @@ final class CBBackgroundView {
 
         return $spec;
     }
+
+
+    /* -- CBView interfaces -- -- -- -- -- */
 
     /**
      * @param model $model
@@ -128,6 +168,7 @@ final class CBBackgroundView {
         <?php
     }
 
+
     /**
      * @param model $spec
      *
@@ -137,13 +178,17 @@ final class CBBackgroundView {
         return CBModel::valueToArray($spec, 'children');
     }
 
+
     /**
      * @param model $model
      * @param [model] $subviews
      *
      * @return void
      */
-    static function CBView_setSubviews(stdClass $model, array $subviews ): void {
+    static function CBView_setSubviews(
+        stdClass $model,
+        array $subviews
+    ): void {
         $model->children = $subviews;
     }
 }
