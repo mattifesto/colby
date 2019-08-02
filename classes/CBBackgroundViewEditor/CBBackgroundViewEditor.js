@@ -29,56 +29,86 @@ var CBBackgroundViewEditor = {
         CBBackgroundViewEditor.prepareSpec(args.spec);
 
         var section, item;
-        var element = document.createElement("div");
-        element.className = "CBBackgroundViewEditor";
+        var element = CBUI.createElement("CBBackgroundViewEditor");
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Title",
-            propertyName : "title",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Title",
+                    propertyName: "title",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Background color",
-            propertyName : "color",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIStringEditor.createEditor(
+                {
+                    labelText: "Background color",
+                    propertyName: "color",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Repeat Horizontally",
-            propertyName : "imageShouldRepeatHorizontally",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIBooleanEditor.create(
+                {
+                    labelText: "Repeat Horizontally",
+                    propertyName: "imageShouldRepeatHorizontally",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Repeat Vertically",
-            propertyName : "imageShouldRepeatVertically",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIBooleanEditor.create(
+                {
+                    labelText: "Repeat Vertically",
+                    propertyName: "imageShouldRepeatVertically",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Minimum View Height is Image Height",
-            propertyName : "minimumViewHeightIsImageHeight",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-        }).element);
+        item.appendChild(
+            CBUIBooleanEditor.create(
+                {
+                    labelText: "Minimum View Height is Image Height",
+                    propertyName: "minimumViewHeightIsImageHeight",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         element.appendChild(section);
@@ -86,41 +116,49 @@ var CBBackgroundViewEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         {
-            let editor = CBUISpecArrayEditor.create({
-                addableClassNames: CBBackgroundViewEditor_addableClassNames,
-                navigateToItemCallback: args.navigateToItemCallback,
-                specs: args.spec.children,
-                specsChangedCallback: args.specChangedCallback,
-            });
+            let editor = CBUISpecArrayEditor.create(
+                {
+                    addableClassNames: CBBackgroundViewEditor_addableClassNames,
+                    navigateToItemCallback: args.navigateToItemCallback,
+                    specs: args.spec.children,
+                    specsChangedCallback: args.specChangedCallback,
+                }
+            );
 
             editor.title = "Views";
 
             element.appendChild(editor.element);
-            element.appendChild(CBUI.createHalfSpace());
+
+            element.appendChild(
+                CBUI.createHalfSpace()
+            );
         }
 
         /* image */
 
-        element.appendChild(CBUI.createSectionHeader({
-            text: "Background Image"
-        }));
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    text: "Background Image"
+                }
+            )
+        );
 
         var chooser = CBUIImageChooser.createFullSizedChooser(
             {
                 imageChosenCallback: function (chooserArgs) {
-                    var formData = new FormData();
-                    formData.append("image", chooserArgs.file);
-
-                    Colby.fetchAjaxResponse(
-                        "/api/?class=CBImages&function=upload",
-                        formData
+                    Colby.callAjaxFunction(
+                        "CBImages",
+                        "upload",
+                        {},
+                        chooserArgs.file
                     ).then(
-                        function (response) {
-                            args.spec.image = response.image;
-                            args.spec.imageHeight = response.image.height;
-                            args.spec.imageWidth = response.image.width;
+                        function (imageModel) {
+                            args.spec.image = imageModel;
+                            args.spec.imageHeight = imageModel.height;
+                            args.spec.imageWidth = imageModel.width;
                             args.spec.imageURL = CBImage.toURL(
-                                response.image
+                                imageModel
                             );
 
                             updateImagePreview();
@@ -128,7 +166,9 @@ var CBBackgroundViewEditor = {
                             args.specChangedCallback();
                         }
                     ).catch(
-                        Colby.displayAndReportError
+                        function (error) {
+                            Colby.displayAndReportError(error);
+                        }
                     );
                 },
                 imageRemovedCallback: function () {
@@ -154,7 +194,9 @@ var CBBackgroundViewEditor = {
         section.appendChild(item);
         element.appendChild(section);
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         return element;
 
@@ -173,7 +215,12 @@ var CBBackgroundViewEditor = {
                     chooser.setImageURLCallback(args.spec.imageURL);
                 }
 
-                chooser.setCaptionCallback(args.spec.imageWidth + "px × " + args.spec.imageHeight + "px");
+                chooser.setCaptionCallback(
+                    args.spec.imageWidth +
+                    "px × " +
+                    args.spec.imageHeight +
+                    "px"
+                );
             } else {
                 chooser.setImageURLCallback();
                 chooser.setCaptionCallback("");
