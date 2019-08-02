@@ -72,19 +72,19 @@ var CBSitePreferencesEditor = {
         var chooser = CBUIImageChooser.createFullSizedChooser(
             {
                 imageChosenCallback: function (chooserArgs) {
-                    var ajaxURI = "/api/?class=CBImages&function=upload";
-                    var formData = new FormData();
-                    formData.append("image", chooserArgs.file);
-
-                    CBSitePreferencesEditor.promise = Colby.fetchAjaxResponse(
-                        ajaxURI,
-                        formData
+                    Colby.callAjaxFunction(
+                        "CBImages",
+                        "upload",
+                        {},
+                        chooserArgs.file
                     ).then(
-                        function (response) {
-                            args.spec.imageForIcon = response.image;
+                        function (imageModel) {
+                            args.spec.imageForIcon = imageModel;
+
                             args.specChangedCallback();
+
                             chooserArgs.setImageURLCallback(
-                                CBImage.toURL(response.image, "rw960")
+                                CBImage.toURL(imageModel, "rw960")
                             );
                         }
                     );
