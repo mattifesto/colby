@@ -168,14 +168,13 @@ EOT;
         } catch (Throwable $throwable) {
             CBErrorHandler::report($throwable);
 
-            $response->classNameForException = get_class($throwable);
-            $response->stackTrace = Colby::exceptionStackTrace($throwable);
             $response->wasSuccessful = false;
+            $response->message = $throwable->getMessage();
 
-            $response->message = (
-                'Error ' .
-                CBConvert::throwableToMessage($throwable)
-            );
+            if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+                $response->classNameForException = get_class($throwable);
+                $response->stackTrace = Colby::exceptionStackTrace($throwable);
+            }
         }
 
         echo json_encode($response);
