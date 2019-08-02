@@ -244,6 +244,7 @@ var CBContainerViewEditor = {
             }
         }
 
+
         function imageToURL(image) {
             return CBImage.toURL(
                 image,
@@ -251,29 +252,33 @@ var CBContainerViewEditor = {
             );
         }
 
+
         function createImageEditorElement(propertyName) {
             var section = CBUI.createSection();
+
             var chooser = CBUIImageChooser.createFullSizedChooser(
                 {
                     imageChosenCallback: function (imageChosenArgs) {
-                        var ajaxURI = "/api/?class=CBImages&function=upload";
-                        var formData = new FormData();
-                        formData.append("image", imageChosenArgs.file);
-
-                        CBContainerViewEditor.promise =
-                        Colby.fetchAjaxResponse(
-                            ajaxURI,
-                            formData
+                        Colby.callAjaxFunction(
+                            "CBImages",
+                            "upload",
+                            {},
+                            imageChosenArgs.file
                         ).then(
-                            handleImageUploaded
-                        );
+                            function (imageModel) {
+                                args.spec[propertyName] = imageModel;
 
-                        function handleImageUploaded(response) {
-                            args.spec[propertyName] = response.image;
-                            args.specChangedCallback();
-                            imageChosenArgs.setImageURLCallback(imageToURL(response.image));
-                            imageChosenArgs.setCaptionCallback(imageToSize(response.image));
-                        }
+                                args.specChangedCallback();
+
+                                imageChosenArgs.setImageURLCallback(
+                                    imageToURL(imageModel)
+                                );
+
+                                imageChosenArgs.setCaptionCallback(
+                                    imageToSize(imageModel)
+                                );
+                            }
+                        );
                     },
                     imageRemovedCallback: function () {
                         args.spec[propertyName] = undefined;
