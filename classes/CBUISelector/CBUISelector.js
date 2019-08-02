@@ -285,6 +285,7 @@ var CBUISelector = {
         return element;
     },
 
+
     /**
      * This function will show a selector for a list of options without having
      * to create a CBUISelector instance. It returns a promise that will have
@@ -312,7 +313,7 @@ var CBUISelector = {
      * @return Promise -> mixed
      */
     selectValue: function (args) {
-        var func = function (resolve, reject) {
+        var func = function (resolve /* , reject */) {
             if (args.options.length === 1) {
                 resolve (args.options[0].value);
                 return;
@@ -329,6 +330,8 @@ var CBUISelector = {
 
         return new Promise(func);
     },
+    /* selectValue() */
+
 
     /**
      * @param object $args
