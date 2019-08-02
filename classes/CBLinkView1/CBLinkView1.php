@@ -2,6 +2,32 @@
 
 final class CBLinkView1 {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBViewCatalog::installView(
+            __CLASS__
+        );
+    }
+    /* CBInstall_install() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBViewCatalog',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
     /**
      * @param model $spec
      *
@@ -23,6 +49,7 @@ final class CBLinkView1 {
         return $model;
     }
 
+
     /**
      * @param model $spec
      *
@@ -35,6 +62,7 @@ final class CBLinkView1 {
 
         return $spec;
     }
+
 
     /**
      * @param object $model
@@ -55,15 +83,27 @@ final class CBLinkView1 {
 
         switch ($size) {
             case 'small':
-                $imageURL = CBDataStore::flexpath($image->ID, "rw480.{$image->extension}", CBSiteURL);
+                $imageURL = CBDataStore::flexpath(
+                    $image->ID,
+                    "rw480.{$image->extension}",
+                    CBSiteURL
+                );
                 $imageWidth = 240;
                 break;
             case 'large':
-                $imageURL = CBDataStore::flexpath($image->ID, "rw960.{$image->extension}", CBSiteURL);
+                $imageURL = CBDataStore::flexpath(
+                    $image->ID,
+                    "rw960.{$image->extension}",
+                    CBSiteURL
+                );
                 $imageWidth = 480;
                 break;
             default:
-                $imageURL = CBDataStore::flexpath($image->ID, "rw640.{$image->extension}", CBSiteURL);
+                $imageURL = CBDataStore::flexpath(
+                    $image->ID,
+                    "rw640.{$image->extension}",
+                    CBSiteURL
+                );
                 $imageWidth = 320;
                 $size = 'medium';
                 break;
@@ -77,20 +117,26 @@ final class CBLinkView1 {
 
                     <?php
 
-                    CBArtworkElement::render([
-                        'alternativeText' => $title,
-                        'height' => $image->height,
-                        'maxWidth' => $imageWidth,
-                        'width' => $image->width,
-                        'URL' => $imageURL,
-                    ]);
+                    CBArtworkElement::render(
+                        [
+                            'alternativeText' => $title,
+                            'height' => $image->height,
+                            'maxWidth' => $imageWidth,
+                            'width' => $image->width,
+                            'URL' => $imageURL,
+                        ]
+                    );
 
                     ?>
 
                     <div class="text">
                         <figcaption>
-                            <div class="title"><?= cbhtml($title) ?></div>
-                            <div class="description"><?= cbhtml($description) ?></div>
+                            <div class="title"><?=
+                                cbhtml($title)
+                            ?></div>
+                            <div class="description"><?=
+                                cbhtml($description)
+                            ?></div>
                         </figcaption>
                         <div class="arrow">
                         </div>
@@ -101,6 +147,7 @@ final class CBLinkView1 {
 
         <?php
     }
+
 
     /**
      * @return [string]

@@ -20,7 +20,6 @@ final class CBPagesPreferences {
      */
     const defaultClassNamesForSupportedViews = [
         'CBCustomView',
-        'CBLinkView1',
         'CBMenuView',
         'CBMessageView',
         'CBPageListView2',
