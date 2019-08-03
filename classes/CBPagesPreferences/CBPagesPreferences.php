@@ -11,22 +11,6 @@ final class CBPagesPreferences {
         'CBPageLayout',
     ];
 
-    /**
-     * @TODO 2019_07_26
-     *
-     *      Implement CBInstall interfaces on each of these views to install the
-     *      view in the CBViewCatalog, then remove the view from this array, and
-     *      eventually remove this constant when that process is finished.
-     */
-    const defaultClassNamesForSupportedViews = [
-        'CBCustomView',
-        'CBMenuView',
-        'CBMessageView',
-        'CBPageListView2',
-        'CBPageTitleAndDescriptionView',
-        'CBTextView2',
-    ];
-
 
     /**
      * @return void
@@ -319,7 +303,6 @@ EOT
         $classNames =
         array_unique(
             array_merge(
-                CBPagesPreferences::defaultClassNamesForSupportedViews,
                 $supportedViewClassNames,
                 CBViewCatalog::fetchSupportedViewClassNames()
             )
