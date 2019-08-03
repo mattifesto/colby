@@ -153,12 +153,15 @@ final class CBMaintenance {
             }
         }
 
-        CBModel::merge($spec, (object)[
-            'holderID' => $holderID,
-            'timestamp' => time(),
-            'title' => $title,
-            'userID' => ColbyUser::currentUserHash(),
-        ]);
+        CBModel::merge(
+            $spec,
+            (object)[
+                'holderID' => $holderID,
+                'timestamp' => time(),
+                'title' => $title,
+                'userID' => ColbyUser::getCurrentUserID(),
+            ]
+        );
 
         CBModelUpdater::save($updater);
 
