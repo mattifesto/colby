@@ -2,6 +2,35 @@
 
 final class CBTextView2 {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBViewCatalog::installView(
+            __CLASS__,
+            (object)[
+                'isDeprecated' => true,
+            ]
+        );
+    }
+    /* CBInstall_install() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBViewCatalog',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
     /**
      * @return string
      */
