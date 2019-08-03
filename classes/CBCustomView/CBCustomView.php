@@ -2,6 +2,30 @@
 
 final class CBCustomView {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBViewCatalog::installView(
+            __CLASS__
+        );
+    }
+    /* CBInstall_install() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBViewCatalog',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
     /* -- CBModel interfaces -- -- -- -- -- */
 
     /**
