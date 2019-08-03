@@ -520,6 +520,26 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_07_26 (warning)
+                 * 2019_08_03 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => (
+                        'CBPagesPreferences::defaultClassNamesForSupportedViews'
+                    ),
+                    'severity' => 3,
+                    'title' => (
+                        'Implement CBInstall_install() on any views in the ' .
+                        'constant CBPagesPreferences::' .
+                        'defaultClassNamesForSupportedViews, then remove ' .
+                        'them from the constant, then eventually remove ' .
+                        'the constant.'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -813,23 +833,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace CBPagesPreferences::ID with ' .
                         'CBPagesPreferences::modelID()'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_07_26
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => (
-                        'CBPagesPreferences::defaultClassNamesForSupportedViews'
-                    ),
-                    'severity' => 4,
-                    'title' => (
-                        'Implement CBInstall_install() on any views in the ' .
-                        'constant, then remove them from the constant, ' .
-                        'then eventually remove the constant.'
                     ),
                 ],
 
