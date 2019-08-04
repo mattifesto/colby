@@ -553,6 +553,19 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_07_05 (warning)
+                 * 2019_08_04 (error)
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'class=CBImages&function=upload',
+                    'title' => (
+                        'Replace deprecated CBImages ajax upload function'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -621,18 +634,6 @@ final class CBCodeAdmin {
                     'regex' => 'CBSystemDirectory',
                     'severity' => 4,
                     'title' => 'Replace CBSystemDirectory with cbsysdir()',
-                ],
-
-
-                /**
-                 * 2019_07_05
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'class=CBImages&function=upload',
-                    'severity' => 4,
-                    'title' =>
-                    'Replace deprecated CBImages ajax upload function',
                 ],
 
 
