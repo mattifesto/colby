@@ -540,6 +540,19 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_06_22 (warning)
+                 * 2019_08_04 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBAjaxResponse',
+                    'title' => (
+                        'Replace use of CBAjaxResponse with a CBAjax interface'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -560,17 +573,6 @@ final class CBCodeAdmin {
                         'Replace specToDescription() with ' .
                         'CBUISpec_toDescription()'
                     ),
-                ],
-
-
-                /**
-                 * 2019_06_22
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'new\\s+CBAjaxResponse\\(',
-                    'severity' => 4,
-                    'title' => 'Replace CBAjaxResponse with CBAjax interfaces',
                 ],
 
 
