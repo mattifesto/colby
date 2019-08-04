@@ -192,6 +192,6 @@ EOT;
 
         return !empty($ajaxArgumentsAsJSON);
     }
-    /* requestIsForAjax() */
+    /* requestIsToCallAnAjaxFunction() */
 }
 /* CBAjax */
