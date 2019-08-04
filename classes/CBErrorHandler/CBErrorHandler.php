@@ -9,8 +9,8 @@ final class CBErrorHandler {
      * This function used as the parameter when set_exception_handler() is
      * called from Colby::initialize().
      *
-     * Both CBHTMLOutput and CBAjaxResponse have custom exception handlers that
-     * follow the guidelines specified here.
+     * CBHTMLOutput has a custom exception handler that follows the guidelines
+     * specified here.
      *
      * Custom exception handlers should:
      *
