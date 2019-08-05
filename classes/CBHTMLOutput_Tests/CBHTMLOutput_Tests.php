@@ -14,12 +14,46 @@ final class CBHTMLOutput_Tests {
                 'title' => 'CBHTMLOutput::begin() while active',
                 'name' => 'beginWhileActive',
             ],
+            (object)[
+                'type' => 'server',
+                'title' => 'CBHTMLOutput::begin() and CBHTMLOutput::reset()',
+                'name' => 'beginAndReset',
+            ],
         ];
     }
     /* CBTest_getTests() */
 
 
     /* -- tests -- -- -- -- -- */
+
+    /**
+     * The series of operations shown here should produce no errors.
+     *
+     * @return object
+     */
+    static function CBTest_beginAndReset(): stdClass {
+        CBHTMLOutput::reset();
+        CBHTMLOutput::reset();
+        CBHTMLOutput::reset();
+
+        CBHTMLOutput::begin();
+        CBHTMLOutput::reset();
+
+        CBHTMLOutput::begin();
+        CBHTMLOutput::reset();
+        CBHTMLOutput::reset();
+
+        CBHTMLOutput::begin();
+        CBHTMLOutput::reset();
+        CBHTMLOutput::reset();
+        CBHTMLOutput::reset();
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_beginAndReset() */
+
 
     /**
      * @return object
