@@ -57,6 +57,7 @@ final class CBGroupUserSettings {
 
     /**
      * @return bool
+     *
      *      Returns true if the current user has authorization to update user
      *      membership to the group; otherwise false.
      *
@@ -67,20 +68,26 @@ final class CBGroupUserSettings {
      *      classes and be definitive.
      */
     static function hasAuthorization($groupName) {
-        if ($groupName === "Administrators" || $groupName === "Developers") {
-            return ColbyUser::isMemberOfGroup(ColbyUser::currentUserId(), "Developers");
+        if (
+            $groupName === "Administrators" ||
+            $groupName === "Developers"
+        ) {
+            return ColbyUser::currentUserIsMemberOfGroup('Developers');
         }
 
         return true;
     }
+    /* hasAuthorization() */
+
 
     /**
-     * NOTE: 2016.01.06
-     * This acts as if it is a user settings class but it isn't because it
-     * requires one more parameter. It's not a big deal at the moment but May
-     * need to be reconsidered when I have more time.
+     * @NOTE: 2016_01_06
      *
-     * @param stdClass $userData
+     *      This acts as if it is a user settings class but it isn't because it
+     *      requires one more parameter. It's not a big deal at the moment but
+     *      May need to be reconsidered when I have more time.
+     *
+     * @param object $userData
      * @param string $groupName
      *
      * @return null
