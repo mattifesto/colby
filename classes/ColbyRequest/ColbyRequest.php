@@ -242,7 +242,8 @@ EOT;
             error_log(
                 "An error was caught in " .
                 __METHOD__ .
-                "(): \"{$message}\" in {$filename} line {$line}"
+                "(): \"{$message}\" in {$filename} line {$line} " .
+                '(Source ID: 49ce51c7ce77c31c44ce5ce471e656a096de7a84)'
             );
         }
     }
