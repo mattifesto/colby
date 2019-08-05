@@ -9,23 +9,22 @@ final class CBLoginTimeoutAlert {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [/*Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)*/];
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v499.js', cbsysurl()),
+        ];
     }
+
 
     /**
      * @return [[string, mixed]]
      */
-    static function requiredJavaScriptVariables() {
+    static function CBHTMLOutput_JavaScriptVariables(): array {
         return [
-            ['CBUserIsLoggedIn', empty(ColbyUser::currentUserId()) ? '' : 'yes'],
+            [
+                'CBUserIsLoggedIn',
+                ColbyUser::getCurrentUserID() === null ? '' : 'yes',
+            ],
         ];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexnameForJavaScriptForClass(CBSystemURL, __CLASS__)];
     }
 }

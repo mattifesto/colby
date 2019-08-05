@@ -1,7 +1,8 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
 /* global
     CBUserIsLoggedIn,
-    Colby
+    Colby,
 */
 
 var CBLoginTimeoutAlert = {
@@ -14,7 +15,11 @@ var CBLoginTimeoutAlert = {
             if (localStorage.getItem("CBUserIsLoggedIn") !== CBUserIsLoggedIn) {
                 if (localStorage.getItem("CBUserIsLoggedIn")) {
                     var element = document.createElement("div");
-                    element.textContent = "Your login has expired and you are currently logged out. Please login again if you need the privileges of a logged in user.";
+                    element.textContent = (
+                        "Your login has expired and you are currently " +
+                        "logged out. Please login again if you need the " +
+                        "privileges of a logged in user."
+                    );
 
                     Colby.setPanelElement(element);
                     Colby.showPanel();
