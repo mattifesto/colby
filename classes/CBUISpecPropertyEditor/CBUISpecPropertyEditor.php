@@ -11,21 +11,31 @@ final class CBUISpecPropertyEditor {
     /**
      * @return [string]
      */
-    static function requiredClassNames() {
-        return ['CBUI', 'CBUIActionLink', 'CBUISpec'];
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
     }
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'css', cbsysurl())];
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v360.js', cbsysurl()),
+        ];
     }
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v360.js', cbsysurl())];
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBUI',
+            'CBUIActionLink',
+            'CBUISpec',
+        ];
     }
 }
