@@ -718,11 +718,11 @@ final class CBCodeAdmin {
 
 
                 /**
-                 * 2019_07_23
+                 * 2019_07_23 (warning)
                  */
                 (object)[
                     'filetype' => 'php',
-                    'regex' => 'function\s+requiredClassNames\\(',
+                    'regex' => 'function\s+requiredClassNames\\(\s*\\)',
                     'severity' => 4,
                     'title' => (
                         'Replace requiredClassNames() with ' .
