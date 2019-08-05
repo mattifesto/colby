@@ -3,16 +3,22 @@
 final class CBErrorHandler {
 
     /**
-     * This is the default exception handler and is the official documentation
-     * for development of custom exception handlers for Colby.
+     * This is the default exception handler.
      *
      * This function used as the parameter when set_exception_handler() is
      * called from Colby::initialize().
      *
-     * CBHTMLOutput has a custom exception handler that follows the guidelines
-     * specified here.
+     * As of 2019_08_04, CBHTMLOutput uses a custom exception handler that
+     * follows the guidelines specified here. However, it will move to a render
+     * function with a callback that uses a try block to catch exceptions which
+     * is the current recommended way of handling exceptions.
      *
-     * Custom exception handlers should:
+     * Custom exception handlers are no longer recommended because they can
+     * easily be overridden by other custom exception handlers or try blocks
+     * making it difficult at times to find out why the custom exception handler
+     * was not used.
+     *
+     * Having said that, custom exception handlers should:
      *
      *      1. Call CBErrorHandler::report() passing the error or exception that
      *      occurred.
@@ -23,6 +29,12 @@ final class CBErrorHandler {
      *
      *      3. The catch of the try block should only call
      *      CBErrorHandler::report() with the inner error or exception.
+     *
+     * @TODO 2019_08_04
+     *
+     *      Documentation for handling exceptions should be converted to a
+     *      documentation page that will be available in the documentation admin
+     *      area.
      *
      * @param Throwable $throwable
      *
@@ -113,7 +125,10 @@ final class CBErrorHandler {
                     <meta charset="UTF-8">
                     <title>Error</title>
                     <meta name="description" content="">
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <meta
+                        name="viewport"
+                        content="width=device-width, initial-scale=1"
+                    >
                     <style>
                         * {
                             margin: 0;
@@ -180,8 +195,15 @@ final class CBErrorHandler {
     static function report(Throwable $throwable): void {
         try {
             try {
-                $firstLine = 'Error ' . CBConvert::throwableToMessage($throwable);
-                $firstLineAsMarkup = CBMessageMarkup::stringToMarkup($firstLine);
+                $firstLine = (
+                    'Error ' .
+                    CBConvert::throwableToMessage($throwable)
+                );
+
+                $firstLineAsMarkup = CBMessageMarkup::stringToMarkup(
+                    $firstLine
+                );
+
                 $stackTraceAsMarkup = CBMessageMarkup::stringToMarkup(
                     Colby::exceptionStackTrace($throwable)
                 );
@@ -248,16 +270,20 @@ EOT;
                 $message = $innerThrowable->getMessage();
 
                 error_log(
-                    "INNER ERROR \"{$message}\" occurred when"
-                    . " CBErrorHandler::report() attempted to create a log"
-                    . " entry AFTER {$firstLine}"
+                    "INNER ERROR \"{$message}\" occurred when " .
+                    "CBErrorHandler::report() attempted to create a log " .
+                    "entry AFTER {$firstLine} " .
+                    '(Source ID: c25603f39b103992980a5f7643c14b5839a3ebf8)'
                 );
             }
 
             try {
-                $link =
-                cbsiteurl()
-                . "/admin/page/?class=CBLogAdminPage&serialNumber={$serialNumber}";
+                $link = (
+                    cbsiteurl() .
+                    "/admin/page/?" .
+                    "class=CBLogAdminPage&" .
+                    "serialNumber={$serialNumber}"
+                );
 
                 CBSlack::sendMessage((object)[
                     'message' => "{$firstLine} <{$link}|link>",
@@ -266,9 +292,10 @@ EOT;
                 $message = $innerThrowable->getMessage();
 
                 error_log(
-                    "INNER ERROR \"{$message}\" occurred when"
-                    . " CBErrorHandler::report() attempted to send a Slack"
-                    . " message AFTER {$firstLine}"
+                    "INNER ERROR \"{$message}\" occurred when " .
+                    "CBErrorHandler::report() attempted to send a Slack " .
+                    "message AFTER {$firstLine} " .
+                    '(Source ID: 86a1652a3438f6d5f61068c732ae62275acb46c4)'
                 );
             }
         } catch (Throwable $innerThrowable) {
@@ -276,8 +303,9 @@ EOT;
                 $message = $innerThrowable->getMessage();
 
                 error_log(
-                    "INNER ERROR \"{$message}\" occurred inside"
-                    . " CBErrorHandler::report()"
+                    "INNER ERROR \"{$message}\" occurred inside " .
+                    "CBErrorHandler::report() " .
+                    '(Source ID: 4e4e71a29377d1709613e45b8d4c343616fc532f)'
                 );
             } catch (Throwable $secondInnerThrowable) {
                 /**
