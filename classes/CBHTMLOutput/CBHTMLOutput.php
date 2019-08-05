@@ -531,6 +531,42 @@ EOT;
 
 
     /**
+     * @NOTE 2019_08_04
+     *
+     *      THIS FUNCTION IS UNDER DEVELOPMENT, DO NOT USE OUTSIDE OF
+     *      DEVELOPMENT OR TESTING SCENARIOS
+     *
+     * This function will never throw an exception.
+     *
+     * @return void
+     */
+    static function render2(
+        callable $renderCallback
+    ): void {
+        if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+            return;
+        }
+
+        CBHTMLOutput::begin();
+
+        try {
+            call_user_func($renderCallback);
+
+            CBHTMLOutput::render();
+        } catch (Throwable $throwable) {
+            CBErrorHandler::report($throwable);
+
+            CBHTMLOutput::reset();
+
+            CBPageSettings::renderErrorPage(
+                CBHTMLOutput::classNameForPageSettings(),
+                $throwable
+            );
+        }
+    }
+    /* render2() */
+
+    /**
      * This function can be called at almost any time, even by a view in the
      * middle of a rendering pass to render a 404 page and exit the process.
      *
@@ -681,11 +717,13 @@ EOT;
         CBHTMLOutput::$styleSheets = [];
 
         /**
-         * @NOTE 2017.08.02 Colby was added by default to requiredClassNames to
-         *       smooth the transition of moving the Colby JavaScript and CSS
-         *       files into the classes/Colby directory. Now, if you need these
-         *       files for a view, layout, or whatever, you should add Colby to
-         *       your list of required class names.
+         * @NOTE 2017_08_02
+         *
+         *      Colby was added by default to requiredClassNames to smooth the
+         *      transition of moving the Colby JavaScript and CSS files into the
+         *      classes/Colby directory. Now, if you need these files for a
+         *      view, layout, or whatever, you should add Colby to your list of
+         *      required class names.
          */
 
         CBHTMLOutput::requireClassName('Colby');
