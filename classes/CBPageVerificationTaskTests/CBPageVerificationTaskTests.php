@@ -7,7 +7,11 @@ final class CBPageVerificationTaskTests {
      */
     static function CBTest_deprecatedAndUnsupportedViews(): stdClass {
         $ID = 'f9553b44249935fb78965c67862a1cec675b0835';
-        $spec = CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews();
+
+        $spec = (
+            CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews()
+        );
+
         $spec->ID = $ID;
 
         CBDB::transaction(
@@ -72,15 +76,22 @@ final class CBPageVerificationTaskTests {
      * @return object
      */
     static function CBTest_findDeprecatedSubviewClassNames(): stdClass {
-        $spec = CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews();
+        $spec = (
+            CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews()
+        );
+
         $expectedDeprecatedSubviewClassNames = [
             'CBThemedTextView',
+            'CBTextView2',
         ];
 
         $actualDeprecatedSubviewClassNames =
             CBPageVerificationTask::findDeprecatedSubviewClassNames($spec);
 
-        if ($actualDeprecatedSubviewClassNames != $expectedDeprecatedSubviewClassNames) {
+        if (
+            $actualDeprecatedSubviewClassNames !=
+            $expectedDeprecatedSubviewClassNames
+        ) {
             return CBTest::resultMismatchFailure(
                 'Subtest 1',
                 $actualDeprecatedSubviewClassNames,
@@ -99,7 +110,10 @@ final class CBPageVerificationTaskTests {
      * @return object
      */
     static function CBTest_findUnsupportedSubviewClassNames(): stdClass {
-        $spec = CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews();
+        $spec = (
+            CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews()
+        );
+
         $expectedUnsupportedSubviewClassNames = [
             'CBTextBoxView',
             'CBImageView',
@@ -111,7 +125,10 @@ final class CBPageVerificationTaskTests {
         $actualUnsupportedSubviewClassNames =
             CBPageVerificationTask::findUnsupportedSubviewClassNames($spec);
 
-        if ($actualUnsupportedSubviewClassNames != $expectedUnsupportedSubviewClassNames) {
+        if (
+            $actualUnsupportedSubviewClassNames !=
+            $expectedUnsupportedSubviewClassNames
+        ) {
             return CBTest::resultMismatchFailure(
                 'Subtest 1',
                 $actualUnsupportedSubviewClassNames,
@@ -148,15 +165,21 @@ final class CBPageVerificationTaskTests {
         if ($actual !== $expected) {
             return (object)[
                 'failed' => true,
-                'message' =>
+                'message' => (
                     "Test 1 failed:\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($actual, $expected),
+                    CBConvertTests::resultAndExpectedToMessage(
+                        $actual,
+                        $expected
+                    )
+                ),
             ];
         }
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
 
         $result = CBPageVerificationTask::run($ID);
         $actual = $result->hasColbyPagesRow;
@@ -165,15 +188,21 @@ final class CBPageVerificationTaskTests {
         if ($actual !== $expected) {
             return (object)[
                 'failed' => true,
-                'message' =>
+                'message' => (
                     "Test 2 failed:\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($actual, $expected),
+                    CBConvertTests::resultAndExpectedToMessage(
+                        $actual,
+                        $expected
+                    )
+                ),
             ];
         }
 
-        CBDB::transaction(function () use ($ID) {
-            CBModels::deleteByID($ID);
-        });
+        CBDB::transaction(
+            function () use ($ID) {
+                CBModels::deleteByID($ID);
+            }
+        );
 
         return (object)[
             'succeeded' => true,
@@ -202,8 +231,18 @@ final class CBPageVerificationTaskTests {
         CBModels::deleteByID(CBTestAdmin::testImageID());
 
         $testImageFilepath = CBTestAdmin::testImageFilepath();
-        $temporaryImageFilepath = CBDataStore::flexpath($temporaryImageDataStoreID, 'test.jpeg', cbsitedir());
-        $temporaryImageURL = CBDataStore::flexpath($temporaryImageDataStoreID, 'test.jpeg', cbsiteurl());
+
+        $temporaryImageFilepath = CBDataStore::flexpath(
+            $temporaryImageDataStoreID,
+            'test.jpeg',
+            cbsitedir()
+        );
+
+        $temporaryImageURL = CBDataStore::flexpath(
+            $temporaryImageDataStoreID,
+            'test.jpeg',
+            cbsiteurl()
+        );
 
         CBDataStore::create($temporaryImageDataStoreID);
         copy($testImageFilepath, $temporaryImageFilepath);
@@ -259,11 +298,17 @@ final class CBPageVerificationTaskTests {
         $updatedPageSpec = CBModels::fetchSpecByID($pageID);
 
         if (!empty($updatedPageSpec->thumbnailURL)) {
-            throw new Exception('The `thumbnailURL` property is still set on the updated page spec.');
+            throw new Exception(
+                'The `thumbnailURL` property is still set on the updated ' .
+                'page spec.'
+            );
         }
 
         if (empty($updatedPageSpec->deprecatedThumbnailURL)) {
-            throw new Exception('The `deprecatedThumbnailURL` property should be set on the updated page spec.');
+            throw new Exception(
+                'The `deprecatedThumbnailURL` property should be set on ' .
+                'the updated page spec.'
+            );
         }
 
         $resultImageID = CBModel::value($updatedPageSpec, 'image.ID');
@@ -272,7 +317,12 @@ final class CBPageVerificationTaskTests {
         if ($resultImageID !== $expectedImageID) {
             $resultImageIDAsJSON = json_encode($resultImageID);
             $expectedImageIDAsJSON = json_encode($expectedImageID);
-            throw new Exception("1: The page spec \"image.ID\" property is {$resultImageIDAsJSON} but {$expectedImageIDAsJSON} was expected.");
+
+            throw new Exception(
+                "1: The page spec \"image.ID\" property is " .
+                "{$resultImageIDAsJSON} but {$expectedImageIDAsJSON} " .
+                "was expected."
+            );
         }
 
         // clean up
@@ -299,8 +349,14 @@ final class CBPageVerificationTaskTests {
         $spec = (object)[
             'className' => 'CBViewPage',
             'ID' => $ID,
-            'image' => 'This test image property value is a string. A valid property value would be a CBImage spec.',
-            'title' => 'Test Page for CBTest_invalidImageProperty() in CBPageVerificationTaskTests',
+            'image' => (
+                'This test image property value is a string. A valid ' .
+                'property value would be a CBImage spec.'
+            ),
+            'title' => (
+                'Test Page for CBTest_invalidImageProperty() in ' .
+                'CBPageVerificationTaskTests'
+            ),
         ];
 
         CBDB::transaction(function () use ($ID) {
@@ -376,11 +432,18 @@ final class CBPageVerificationTaskTests {
      * @return ?object
      */
     static function CBTest_rowWithNoModel(): stdClass {
-        $ID = CBPageVerificationTaskTests::createPagesRowAndDataStoreWithoutModel();
+        $ID = (
+            CBPageVerificationTaskTests::createPagesRowAndDataStoreWithoutModel()
+        );
+
         $IDAsSQL = CBHex160::toSQL($ID);
         $result = CBPageVerificationTask::run($ID);
 
-        if (CBDB::SQLToValue("SELECT COUNT(*) FROM ColbyPages where archiveID = {$IDAsSQL}")) {
+        if (
+            CBDB::SQLToValue(
+                "SELECT COUNT(*) FROM ColbyPages where archiveID = {$IDAsSQL}"
+            )
+        ) {
             return (object)[
                 'failed' => true,
                 'message' =>
@@ -423,10 +486,16 @@ final class CBPageVerificationTaskTests {
         $testImage = CBImages::URIToCBImage(CBTestAdmin::testImageFilepath());
 
         if ($testImage->ID !== CBTestAdmin::testImageID()) {
-            throw new Exception('2: The imported test image ID is not what was expected.');
+            throw new Exception(
+                '2: The imported test image ID is not what was expected.'
+            );
         }
 
-        $testImageURL = CBDataStore::flexpath($testImage->ID, 'rw640.jpeg', cbsiteurl());
+        $testImageURL = CBDataStore::flexpath(
+            $testImage->ID,
+            'rw640.jpeg',
+            cbsiteurl()
+        );
 
         $initialPageSspec = (object)[
             'isTest' => true,
@@ -484,11 +553,17 @@ EOT;
         $updatedPageSpec = CBModels::fetchSpecByID($pageID);
 
         if (!empty($updatedPageSpec->thumbnailURL)) {
-            throw new Exception('2: The `thumbnailURL` property is still set on the updated page spec.');
+            throw new Exception(
+                '2: The `thumbnailURL` property is still set on the ' .
+                'updated page spec.'
+            );
         }
 
         if (empty($updatedPageSpec->deprecatedThumbnailURL)) {
-            throw new Exception('2: The `deprecatedThumbnailURL` property should be set on the updated page spec.');
+            throw new Exception(
+                '2: The `deprecatedThumbnailURL` property should be set ' .
+                'on the updated page spec.'
+            );
         }
 
         $resultImageID = CBModel::value($updatedPageSpec, 'image.ID');
@@ -497,7 +572,12 @@ EOT;
         if ($resultImageID !== $expectedImageID) {
             $resultImageIDAsJSON = json_encode($resultImageID);
             $expectedImageIDAsJSON = json_encode($expectedImageID);
-            throw new Exception("2: The page spec \"image.ID\" property is {$resultImageIDAsJSON} but {$expectedImageIDAsJSON} was expected.");
+
+            throw new Exception(
+                "2: The page spec \"image.ID\" property is " .
+                "{$resultImageIDAsJSON} but {$expectedImageIDAsJSON} " .
+                "was expected."
+            );
         }
 
         // clean up
@@ -577,8 +657,15 @@ EOT;
 
         Colby::query($SQL);
 
-        if (!CBDB::SQLToValue("SELECT COUNT(*) FROM ColbyPages where archiveID = {$archiveIDAsSQL}")) {
-            throw new RuntimeException('The ColbyPages row was not created.');
+        if (
+            !CBDB::SQLToValue(
+                "SELECT COUNT(*) FROM ColbyPages " .
+                "where archiveID = {$archiveIDAsSQL}"
+            )
+        ) {
+            throw new RuntimeException(
+                'The ColbyPages row was not created.'
+            );
         }
 
         CBDataStore::create($ID);
@@ -587,8 +674,13 @@ EOT;
 
         file_put_contents($filepath, __METHOD__ . "()\n");
 
-        if (!is_dir(CBDataStore::directoryForID($ID)) || !is_file($filepath)) {
-            throw new RuntimeException('The data store was not completely created.');
+        if (
+            !is_dir(CBDataStore::directoryForID($ID)) ||
+            !is_file($filepath)
+        ) {
+            throw new RuntimeException(
+                'The data store was not completely created.'
+            );
         }
 
         return $ID;
@@ -602,7 +694,10 @@ EOT;
     private static function specWithDeprecatedAndUnsupportedViews(): stdClass {
         return (object)[
             'className' => 'CBViewPage',
-            'title' => 'Test Page for CBTest_unsupportedViews() in CBPageVerificationTaskTests',
+            'title' => (
+                'Test Page for CBTest_unsupportedViews() in ' .
+                'CBPageVerificationTaskTests'
+            ),
             'sections' => [
                 (object)[
                     'className' => 'CBTextBoxView',
