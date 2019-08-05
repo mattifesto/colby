@@ -93,6 +93,7 @@ final class CBModels {
      * @param stdClass $model
      *
      * @return bool
+     *
      *      Returns true if the current user can write the model via Ajax;
      *      otherwise false. If permissions aren't implement by the model class
      *      the default is that Administrators can write and others can't.
@@ -115,12 +116,10 @@ final class CBModels {
         ) {
             return call_user_func($function, $model);
         } else {
-            return ColbyUser::isMemberOfGroup(
-                ColbyUser::currentUserId(),
-                'Administrators'
-            );
+            return ColbyUser::currentUserIsMemberOfGroup('Administrators');
         }
     }
+    /* currentUserCanWrite() */
 
 
     /**
