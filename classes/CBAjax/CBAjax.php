@@ -148,12 +148,13 @@ EOT;
                     );
 
                     $response->wasSuccessful = true;
-                } else if (ColbyUser::currentUserId() === null) {
-                    $response->message =
-                    'The requested Ajax function cannot be called because you' .
-                    ' are not currently logged in, possibly because your' .
-                    ' session has timed out. Reloading the current page will' .
-                    ' usually remedy this.';
+                } else if (ColbyUser::getCurrentUserID() === null) {
+                    $response->message = (
+                        'The requested Ajax function cannot be called ' .
+                        'because you are not currently logged in, possibly ' .
+                        'because your session has timed out. Reloading ' .
+                        'the current page will usually remedy this.'
+                    );
 
                     $response->userMustLogIn = true;
                 } else {
