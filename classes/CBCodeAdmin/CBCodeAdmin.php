@@ -871,6 +871,21 @@ final class CBCodeAdmin {
                         'with CBUIImageChooser.create().'
                     ),
                 ],
+
+
+                /**
+                 * 2019_08_04 (warning)
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:CBHTMLOutput.php',
+                    'filetype' => 'php',
+                    'regex' => 'CBHTMLOutput::\$classNameForSettings',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of CBHTMLOutput::$classNameForSettings ' .
+                        'with CBHTMLOutput::pageInformation()'
+                    ),
+                ],
             ]
         );
     }
