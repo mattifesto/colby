@@ -605,6 +605,17 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_07_23 (warning)
+                 * 2019_08_06 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBSystemURL',
+                    'title' => 'Replace CBSystemURL with cbsysurl()',
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -837,17 +848,6 @@ final class CBCodeAdmin {
                         'Replace Colby::flexnameForJavaScriptForClass() with ' .
                         'Colby::flexpath()'
                     ),
-                ],
-
-
-                /**
-                 * 2019_07_23
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'CBSystemURL',
-                    'severity' => 4,
-                    'title' => 'Replace CBSystemURL with cbsysurl()',
                 ],
 
 
