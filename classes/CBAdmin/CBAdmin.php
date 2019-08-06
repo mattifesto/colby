@@ -46,12 +46,25 @@ final class CBAdmin {
      * @return void
      */
     static function render(string $className, string $pageStub): void {
-        if (is_callable($function = "{$className}::CBAdmin_group")) {
-            $group = call_user_func($function);
+
+        /**
+         * @NOTE 2019_08_06
+         *
+         *      handle,admin.php ensures that all users are in the
+         *      Administrators group before calling this function. The
+         *      separation of that check from this function is not great.
+         */
+
+        $functionName = "{$className}::CBAdmin_group";
+
+        if (is_callable($functionName)) {
+            $group = call_user_func($functionName);
 
             if (!ColbyUser::currentUserIsMemberOfGroup($group)) {
-                include cbsysdir() .
-                '/handlers/handle-authorization-failed.php';
+                include (
+                    cbsysdir() .
+                    '/handlers/handle-authorization-failed.php'
+                );
 
                 return;
             }
