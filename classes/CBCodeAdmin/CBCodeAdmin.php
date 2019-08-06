@@ -576,6 +576,21 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_08_06 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => (
+                        'ColbyUser::addUserToGroup\\('
+                    ),
+                    'title' => (
+                        'Replace ColbyUser::addUserToGroup() with ' .
+                        'Colby::updateGroupMembership()'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
