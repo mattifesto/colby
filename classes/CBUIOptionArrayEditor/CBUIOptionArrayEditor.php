@@ -5,17 +5,10 @@ final class CBUIOptionArrayEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBUIOptionArrayEditor::URL('CBUIOptionArrayEditor.js')];
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'js', cbsysurl()),
+        ];
     }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
-    }
+    /* CBHTMLOutput_JavaScriptURLs() */
 }
