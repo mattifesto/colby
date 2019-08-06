@@ -2,6 +2,21 @@
 
 final class CBUser {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v500.js', cbsysurl()),
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
     /**
      * @param object $spec
      *
