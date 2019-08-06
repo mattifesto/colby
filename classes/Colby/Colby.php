@@ -497,7 +497,6 @@ final class Colby {
          */
 
         define('CBSystemURL', cbsiteurl() . "/colby");
-        define('COLBY_SYSTEM_URL', cbsysurl()); // @deprecated
 
         /**
          * Include the site configuration file. Unlike 'colby-configuration.php'
