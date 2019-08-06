@@ -591,6 +591,20 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_08_06 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => (
+                        'COLBY_SYSTEM_URL'
+                    ),
+                    'title' => (
+                        'Replace COLBY_SYSTEM_URL with cbsysurl()'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
