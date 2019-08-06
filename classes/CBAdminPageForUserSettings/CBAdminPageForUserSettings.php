@@ -5,26 +5,25 @@ final class CBAdminPageForUserSettings {
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
-        return ['general', 'users'];
+    static function CBAdmin_menuNamePath(): array {
+        return [
+            'general',
+            'users',
+        ];
     }
+    /* CBAdmin_menuNamePath() */
 
-    /**
-     * @return stdClass
-     */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Administrators'];
-    }
 
     /**
      * @return void
      */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render(): void {
         $targetUserID = $_GET['hash'];
         $userData = ColbyUser::fetchUserDataByHash($targetUserID);
 
-        CBHTMLOutput::pageInformation()->title =
-        "User Administration ({$userData->facebookName})";
+        CBHTMLOutput::pageInformation()->title = (
+            "User Administration ({$userData->facebookName})"
+        );
 
         $userPhotoURL = CBFacebook::userImageURL($userData->facebookId);
 
@@ -41,6 +40,7 @@ final class CBAdminPageForUserSettings {
             $targetUserID
         );
     }
+    /* CBAdmin_render() */
 
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
