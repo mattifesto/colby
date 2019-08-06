@@ -2,6 +2,19 @@
 
 final class CBLinkView1 {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
+    }
+    /* CBHTMLOutput_CSSURLs() */
+
+
     /* -- CBInstall interfaces -- -- -- -- -- */
 
     /**
@@ -146,13 +159,5 @@ final class CBLinkView1 {
         </figure>
 
         <?php
-    }
-
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexnameForCSSForClass(CBSystemURL, __CLASS__)];
     }
 }
