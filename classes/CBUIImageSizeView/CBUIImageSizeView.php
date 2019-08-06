@@ -5,24 +5,19 @@ final class CBUIImageSizeView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [CBUIImageSizeView::URL('CBUIImageSizeView.css')];
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
     }
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [CBUIImageSizeView::URL('CBUIImageSizeView.js')];
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return string
-     */
-    static function URL($filename) {
-        $className = __CLASS__;
-        return CBSystemURL . "/classes/{$className}/{$filename}";
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'js', cbsysurl()),
+        ];
     }
 }
