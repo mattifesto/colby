@@ -896,6 +896,24 @@ final class CBCodeAdmin {
                         'with CBHTMLOutput::pageInformation()'
                     ),
                 ],
+
+
+                /**
+                 * 2019_08_06 (warning)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => (
+                        'adminPagePermissions|' .
+                        'adminPageMenuNamePath|' .
+                        'adminPageRenderContent'
+                    ),
+                    'severity' => 4,
+                    'title' => (
+                        'Replace /admin/page/ interfaces with CBAdmin ' .
+                        'interfaces'
+                    ),
+                ],
             ]
         );
     }
