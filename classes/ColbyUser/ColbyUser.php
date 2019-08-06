@@ -38,29 +38,6 @@ final class ColbyUser {
 
 
     /**
-     * @deprecated use ColbyUser::updateGroupMembership()
-     *
-     * This function adds a user to a group. It does no error handling and will
-     * throw an exception if the user is already in the group or if the group
-     * doesn't exist.
-     *
-     * @param int $userID
-     * @param string $groupName
-     *
-     * @return null
-     */
-    static function addUserToGroup($userID, $groupName) {
-        $groupName = CBDB::escapeString($groupName);
-        $groupTableName = "ColbyUsersWhoAre{$groupName}";
-        $userID = intval($userID);
-
-        Colby::query(
-            "INSERT INTO `{$groupTableName}` VALUES ({$userID}, NOW())"
-        );
-    }
-
-
-    /**
      * @return ColbyUser
      */
     static function current() {
@@ -668,34 +645,41 @@ EOT;
 
 
     /**
-     * @param int $userID
+     * @param int $userNumericID
      * @param string $group
      * @param bool $isMember
      *
-     * @return null
+     * @return void
      */
-    static function updateGroupMembership($userID, $groupName, $isMember) {
+    static function updateGroupMembership(
+        int $userNumericID,
+        string $groupName,
+        bool $isMember
+    ): void {
         $tableName = ColbyUser::groupNameToTableName($groupName);
-        $userIDAsSQL = intval($userID);
 
         if ($isMember) {
             $SQL = <<<EOT
 
-                INSERT IGNORE INTO `{$tableName}`
-                VALUES ({$userIDAsSQL}, NOW())
+                INSERT IGNORE INTO {$tableName}
+                VALUES (
+                    {$userNumericID},
+                    NOW()
+                )
 
 EOT;
         } else {
             $SQL = <<<EOT
 
-                DELETE FROM `{$tableName}`
-                WHERE `userId` = {$userIDAsSQL}
+                DELETE FROM {$tableName}
+                WHERE userId = {$userNumericID}
 
 EOT;
         }
 
         Colby::query($SQL);
     }
+    /* updateGroupMembership() */
 
 
     /**
