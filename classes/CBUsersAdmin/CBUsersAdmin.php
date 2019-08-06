@@ -6,8 +6,12 @@ final class CBUsersAdmin {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['general', 'users'];
+        return [
+            'general',
+            'users',
+        ];
     }
+
 
     /**
      * @return void
@@ -16,29 +20,44 @@ final class CBUsersAdmin {
         CBHTMLOutput::pageInformation()->title = 'Users Administration';
     }
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v376.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v500.js', cbsysurl()),
+        ];
     }
+
 
     /**
      * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables(): array {
         return [
-            ['CBUsersAdmin_users', CBUsersAdmin::fetchUsers()],
+            [
+                'CBUsersAdmin_users',
+                CBUsersAdmin::fetchUsers(),
+            ],
         ];
     }
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
-        return ['CBUI', 'CBUINavigationArrowPart', 'CBUISectionItem4',
-                'CBUIStringsPart'];
+        return [
+            'CBUI',
+            'CBUINavigationArrowPart',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
+            'CBUser',
+            'Colby',
+        ];
     }
+
 
     /**
      * @return void
@@ -53,17 +72,23 @@ final class CBUsersAdmin {
             'URL' => '/admin/?c=CBUsersAdmin',
         ];
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
     }
+
 
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBGeneralAdminMenu'];
+        return [
+            'CBGeneralAdminMenu',
+        ];
     }
+
 
     /**
      * @return [stdClass]
