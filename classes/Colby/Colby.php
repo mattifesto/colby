@@ -492,13 +492,6 @@ final class Colby {
         include_once cbsitedir() . '/colby-configuration.php';
 
         /**
-         * Now that the CBSiteURL constant has been defined, the CBSystemURL
-         * constant can also be defined.
-         */
-
-        define('CBSystemURL', cbsiteurl() . "/colby");
-
-        /**
          * Include the site configuration file. Unlike 'colby-configuration.php'
          * which contains instance specific settings, 'site-configuration.php'
          * is checked in and shared by all instances of the site such as
@@ -740,6 +733,12 @@ function cbsiteurl() {
 /**
  * @return string
  */
-function cbsysurl() {
-    return CBSystemURL;
+function cbsysurl(): string {
+    static $value = null;
+
+    if ($value === null) {
+        $value = cbsiteurl() . '/colby';
+    }
+
+    return $value;
 }
