@@ -616,6 +616,20 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_07_16 (warning)
+                 * 2019_08_07 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyUser::currentUserHash',
+                    'title' => (
+                        'Replace ColbyUser::currentUserHash() with ' .
+                        'ColbyUser::getCurrentUserID()'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -734,20 +748,6 @@ final class CBCodeAdmin {
                     'severity' => 4,
                     'title' => (
                         'Replace use of CBModels::modelWithClassName()'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_07_16
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'ColbyUser::currentUserHash',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace ColbyUser::currentUserHash() with ' .
-                        'ColbyUser::getCurrentUserID()'
                     ),
                 ],
 
