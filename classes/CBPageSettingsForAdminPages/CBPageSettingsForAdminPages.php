@@ -6,8 +6,13 @@ final class CBPageSettingsForAdminPages {
      * @return [string]
      */
     static function CBPageSettings_htmlElementClassNames(): array {
-        return ['CBLightTheme', 'CBStyleSheet'];
+        return [
+            'CBPageSettingsForAdminPages',
+            'CBLightTheme',
+            'CBStyleSheet',
+        ];
     }
+
 
     /**
      * @param Throwable $throwable
@@ -34,6 +39,7 @@ final class CBPageSettingsForAdminPages {
         CBPage::renderSpec($spec);
         CBExceptionView::popThrowable();
     }
+
 
     /**
      * @return [string]
