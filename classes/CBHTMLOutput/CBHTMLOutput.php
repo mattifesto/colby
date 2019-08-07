@@ -371,11 +371,10 @@ EOT;
                 );
             }
 
-            if (
-                is_callable($function = "{$className}::CBHTMLOutput_JavaScriptURLs") ||
-                is_callable($function = "{$className}::requiredJavaScriptURLs")
-            ) {
-                $URLs = call_user_func($function);
+            $functionName = "{$className}::CBHTMLOutput_JavaScriptURLs";
+
+            if (is_callable($functionName)) {
+                $URLs = call_user_func($functionName);
 
                 array_walk(
                     $URLs,
