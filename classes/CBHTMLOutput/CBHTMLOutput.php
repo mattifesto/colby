@@ -353,7 +353,6 @@ EOT;
             $requiredClassNames,
             [
                 'CBHTMLOutput_requiredClassNames',
-                'requiredClassNames', /* deprecated */
             ]
         );
 
