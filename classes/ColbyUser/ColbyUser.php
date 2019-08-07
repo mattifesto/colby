@@ -53,16 +53,6 @@ final class ColbyUser {
 
 
     /**
-     * @deprecated 2019_07_16 use ColbyUser::getCurrentUserID()
-     *
-     * @return string|null
-     */
-    static function currentUserHash(): ?string {
-        return ColbyUser::getCurrentUserID();
-    }
-
-
-    /**
      * @deprecated 2019_07_16
      *
      *      Use the hexadecimal user ID instead of the numeric user ID. The
