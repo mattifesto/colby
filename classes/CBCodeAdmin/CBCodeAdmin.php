@@ -630,6 +630,62 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_07_23 (warning)
+                 * 2019_08_07 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'function\s+requiredClassNames\\(\s*\\)',
+                    'title' => (
+                        'Replace requiredClassNames() with ' .
+                        'CBHTMLOutput_requiredClassNames()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_23 (warning)
+                 * 2019_08_07 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'function\s+requiredJavaScriptURLs\\(',
+                    'title' => (
+                        'Replace requiredJavaScriptURLs() with ' .
+                        'CBHTMLOutput_JavaScriptURLs()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_23 (warning)
+                 * 2019_08_07 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'Colby::flexnameForJavaScriptForClass\\(',
+                    'title' => (
+                        'Replace Colby::flexnameForJavaScriptForClass() ' .
+                        'with Colby::flexpath()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_07_24 (warning)
+                 * 2019_08_07 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'Colby::flexnameForCSSForClass\\(',
+                    'title' => (
+                        'Replace Colby::flexnameForCSSForClass() with ' .
+                        'Colby::flexpath()'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -768,20 +824,6 @@ final class CBCodeAdmin {
 
 
                 /**
-                 * 2019_07_23 (warning)
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'function\s+requiredClassNames\\(\s*\\)',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace requiredClassNames() with ' .
-                        'CBHTMLOutput_requiredClassNames()'
-                    ),
-                ],
-
-
-                /**
                  * 2019_07_23
                  */
                 (object)[
@@ -791,20 +833,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace requiredCSSURLs() with ' .
                         'CBHTMLOutput_CSSURLs()'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_07_23
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'function\s+requiredJavaScriptURLs\\(',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace requiredJavaScriptURLs() with ' .
-                        'CBHTMLOutput_JavaScriptURLs()'
                     ),
                 ],
 
@@ -832,34 +860,6 @@ final class CBCodeAdmin {
                     'severity' => 4,
                     'title' => (
                         'Replace Colby::URLForJavaScriptForSiteClass() with ' .
-                        'Colby::flexpath()'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_07_23
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'Colby::flexnameForJavaScriptForClass\\(',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace Colby::flexnameForJavaScriptForClass() with ' .
-                        'Colby::flexpath()'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_07_24
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'Colby::flexnameForCSSForClass\\(',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace Colby::flexnameForCSSForClass() with ' .
                         'Colby::flexpath()'
                     ),
                 ],
