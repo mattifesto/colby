@@ -270,29 +270,6 @@ final class Colby {
         return self::findFile($path);
     }
 
-    /**
-     * @deprecated use Colby::flexpath()
-     *
-     * @param string $flexdir
-     * @param string $className
-     *
-     * @return string
-     */
-    static function flexnameForCSSForClass($flexdir, $className) {
-        return Colby::flexpath($className, 'css', $flexdir);
-    }
-
-    /**
-     * @deprecated use Colby::flexpath()
-     *
-     * @param string $flexdir
-     * @param string $className
-     *
-     * @return string
-     */
-    static function flexnameForJavaScriptForClass($flexdir, $className) {
-        return Colby::flexpath($className, 'js', $flexdir);
-    }
 
     /**
      * This function builds a flexpath from a class name. It is mosly used to
