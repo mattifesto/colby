@@ -51,17 +51,6 @@ final class CBHTMLOutput {
     const JSInHeadElement   = 2; // 1 << 1
     const JSDefer           = 4; // 1 << 2
 
-    /**
-     * @deprecated
-     *
-     * Set:
-     *  CBHTMLOutput::pageInformation()->classNameForPageSettings = 'MyClass';
-     *
-     * Get:
-     *  CBHTMLOutput::classNameForPageSettings();
-     */
-    public static $classNameForSettings;
-
     private static $CSSURLs;
     private static $exportedLists;
     private static $exportedVariables;
@@ -239,16 +228,10 @@ EOT;
      * @return ?string
      */
     static function classNameForPageSettings(): ?string {
-        $className = CBHTMLOutput::$classNameForSettings; /* deprecated */
-
-        if (empty($className)) {
-            $className = CBConvert::valueToString(
-                CBModel::value(
-                    CBHTMLOutput::$pageInformation,
-                    'classNameForPageSettings'
-                )
-            );
-        }
+        $className = CBModel::valueToString(
+            CBHTMLOutput::$pageInformation,
+            'classNameForPageSettings'
+        );
 
         if (empty($className)) {
             $className = CBPageSettings::defaultClassName(); /* deprecated */
@@ -256,6 +239,8 @@ EOT;
 
         return $className;
     }
+    /* classNameForPageSettings() */
+
 
     /**
      * @return null
@@ -701,7 +686,6 @@ EOT;
             ob_end_clean();
         }
 
-        CBHTMLOutput::$classNameForSettings = null; // @deprecated
         CBHTMLOutput::$CSSURLs = array();
         CBHTMLOutput::$exportedLists = array();
         CBHTMLOutput::$exportedVariables = array();
