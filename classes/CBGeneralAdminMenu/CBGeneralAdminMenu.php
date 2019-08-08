@@ -2,25 +2,25 @@
 
 final class CBGeneralAdminMenu {
 
-    const ID = '1668c3011f7be273731903b012a5884628300898';
-
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        $adminMenuSpec = CBModels::fetchSpecByID(CBAdminMenu::ID());
+        $adminMenuSpec = CBModels::fetchSpecByID(
+            CBAdminMenu::ID()
+        );
 
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'general',
-            'submenuID' => CBGeneralAdminMenu::ID,
+            'submenuID' => CBGeneralAdminMenu::getModelID(),
             'text' => 'General',
             'URL' => '/admin/',
         ];
 
         $spec = (object)[
             'className' => 'CBMenu',
-            'ID' => CBGeneralAdminMenu::ID,
+            'ID' => CBGeneralAdminMenu::getModelID(),
             'title' => 'General',
             'titleURI' => '/admin/',
             'items' => [
@@ -30,21 +30,18 @@ final class CBGeneralAdminMenu {
                     'text' => 'Status',
                     'URL' => '/admin/',
                 ],
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'log',
-                    'text' => 'Log',
-                    'URL' => '/admin/page/?class=CBLogAdminPage',
-                ],
             ],
         ];
 
-        CBDB::transaction(function () use ($adminMenuSpec, $spec) {
-            CBModels::save($adminMenuSpec);
-            CBModels::deleteByID(CBGeneralAdminMenu::ID);
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($adminMenuSpec, $spec) {
+                CBModels::save($adminMenuSpec);
+                CBModels::deleteByID(CBGeneralAdminMenu::getModelID());
+                CBModels::save($spec);
+            }
+        );
     }
+
 
     /**
      * @return [string]
@@ -53,5 +50,13 @@ final class CBGeneralAdminMenu {
         return [
             'CBAdminMenu',
         ];
+    }
+
+
+    /**
+     * @return string
+     */
+    static function getModelID(): string {
+        return '1668c3011f7be273731903b012a5884628300898';
     }
 }
