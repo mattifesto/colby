@@ -5,23 +5,21 @@ final class CBLogAdminPage {
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
-        return ['general', 'log'];
+    static function CBAdmin_menuNamePath(): array {
+        return [
+            'general',
+            'log',
+        ];
     }
 
-    /**
-     * @return stdClass
-     */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Administrators'];
-    }
 
     /**
-     * @return null
+     * @return void
      */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Website Log';
     }
+
 
     /**
      * @return [[<name>, <value>]]
@@ -62,6 +60,49 @@ EOT;
             'CBUIExpander',
             'CBUINavigationView',
             'CBUISelector',
+        ];
+    }
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'ID' => CBGeneralAdminMenu::getModelID(),
+            ]
+        );
+
+        $items = CBModel::valueToArray(
+            $updater->working,
+            'items'
+        );
+
+        array_push(
+            $items,
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'log',
+                'text' => 'Log',
+                'URL' => '/admin/?c=CBLogAdminPage',
+            ]
+        );
+
+        $updater->working->items = $items;
+
+        CBModelUpdater::save($updater);
+    }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBGeneralAdminMenu',
         ];
     }
 }
