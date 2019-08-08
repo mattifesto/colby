@@ -46,7 +46,9 @@ final class CBTasks2Admin {
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBGeneralAdminMenu::ID);
+        $spec = CBModels::fetchSpecByID(
+            CBGeneralAdminMenu::getModelID()
+        );
 
         $spec->items[] = (object)[
             'className' => 'CBMenuItem',
