@@ -29,7 +29,7 @@ final class CBModelUpdater {
      * If further updates to the spec aren't necessary, use the
      * CBModelUpdater::update() function instead.
      *
-     * @param model $updates
+     * @param object $updates
      *
      *      The object provided must have "className" and "ID" properties. There
      *      are technically situations where specifying the  "className"
@@ -71,6 +71,7 @@ final class CBModelUpdater {
         ];
     }
 
+
     /**
      * @param object $updater
      *
@@ -78,11 +79,14 @@ final class CBModelUpdater {
      */
     static function save(stdClass $updater): void {
         if ($updater->working != $updater->original) {
-            CBDB::transaction(function () use ($updater) {
-                CBModels::save($updater->working);
-            });
+            CBDB::transaction(
+                function () use ($updater) {
+                    CBModels::save($updater->working);
+                }
+            );
         }
     }
+
 
     /**
      * @param object $updates
