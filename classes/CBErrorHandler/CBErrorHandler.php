@@ -280,14 +280,16 @@ EOT;
             try {
                 $link = (
                     cbsiteurl() .
-                    "/admin/page/?" .
-                    "class=CBLogAdminPage&" .
+                    "/admin/?" .
+                    "c=CBLogAdminPage&" .
                     "serialNumber={$serialNumber}"
                 );
 
-                CBSlack::sendMessage((object)[
-                    'message' => "{$firstLine} <{$link}|link>",
-                ]);
+                CBSlack::sendMessage(
+                    (object)[
+                        'message' => "{$firstLine} <{$link}|link>",
+                    ]
+                );
             } catch (Throwable $innerThrowable) {
                 $message = $innerThrowable->getMessage();
 
