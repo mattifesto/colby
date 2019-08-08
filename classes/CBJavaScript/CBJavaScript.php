@@ -64,12 +64,14 @@ class CBJavaScript {
             $messages[] = "({$keyAsMarkup} (strong))((br)){$valueAsMarkup}((br))$hashAsMarkup";
         }
 
-        $link = cbsiteurl() . '/admin/page/?class=CBLogAdminPage';
+        $link = cbsiteurl() . '/admin/?c=CBLogAdminPage';
 
         if (CBJavaScript::shouldReportToDeveloper($errorModel, $hashes)) {
-            CBSlack::sendMessage((object)[
-                'message' => "{$firstLine} <{$link}|link>",
-            ]);
+            CBSlack::sendMessage(
+                (object)[
+                    'message' => "{$firstLine} <{$link}|link>",
+                ]
+            );
         }
 
         $firstLineAsMessage = CBMessageMarkup::stringToMarkup($firstLine);
