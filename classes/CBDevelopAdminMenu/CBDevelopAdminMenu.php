@@ -13,14 +13,14 @@ final class CBDevelopAdminMenu {
             'name' => 'develop',
             'submenuID' => CBDevelopAdminMenu::ID(),
             'text' => 'Develop',
-            'URL' => '/admin/page/?class=CBAdminPageForUpdate',
+            'URL' => CBAdmin::getAdminPageURL('CBAdminPageForUpdate'),
         ];
 
         $spec = (object)[
             'className' => 'CBMenu',
             'ID' => CBDevelopAdminMenu::ID(),
             'title' => 'Develop',
-            'titleURI' => '/admin/page/?class=CBAdminPageForUpdate',
+            'titleURI' => CBAdmin::getAdminPageURL('CBAdminPageForUpdate'),
             'items' => [
                 (object)[
                     'className' => 'CBMenuItem',
@@ -40,21 +40,18 @@ final class CBDevelopAdminMenu {
                     'text' => 'Test',
                     'URL' => '/admin/?c=CBTestAdmin',
                 ],
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'update',
-                    'text' => 'Update',
-                    'URL' => '/admin/page/?class=CBAdminPageForUpdate',
-                ],
             ],
         ];
 
-        CBDB::transaction(function () use ($adminMenuSpec, $spec) {
-            CBModels::save($adminMenuSpec);
-            CBModels::deleteByID(CBDevelopAdminMenu::ID());
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($adminMenuSpec, $spec) {
+                CBModels::save($adminMenuSpec);
+                CBModels::deleteByID(CBDevelopAdminMenu::ID());
+                CBModels::save($spec);
+            }
+        );
     }
+
 
     /**
      * @return [string]
