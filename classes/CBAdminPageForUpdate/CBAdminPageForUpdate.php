@@ -7,7 +7,7 @@ final class CBAdminPageForUpdate {
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
+    static function CBAdmin_menuNamePath() {
         return [
             'develop',
             'update',
@@ -16,19 +16,17 @@ final class CBAdminPageForUpdate {
 
 
     /**
-     * @return stdClass
+     * @return string
      */
-    static function adminPagePermissions() {
-        return (object)[
-            'group' => 'Developers',
-        ];
+    static function CBAdmin_group(): string {
+        return 'Developers';
     }
 
 
     /**
      * @return void
      */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Update Website';
     }
 
@@ -79,6 +77,49 @@ final class CBAdminPageForUpdate {
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
             Colby::flexpath(__CLASS__, 'v490.js', cbsysurl()),
+        ];
+    }
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'ID' => CBDevelopAdminMenu::ID(),
+            ]
+        );
+
+        $items = CBModel::valueToArray(
+            $updater->working,
+            'items'
+        );
+
+        array_push(
+            $items,
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'update',
+                'text' => 'Update',
+                'URL' => CBAdmin::getAdminPageURL('CBAdminPageForUpdate'),
+            ]
+        );
+
+        $updater->working->items = $items;
+
+        CBModelUpdater::save($updater);
+    }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBDevelopAdminMenu',
         ];
     }
 
