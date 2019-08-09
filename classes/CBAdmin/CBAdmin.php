@@ -38,6 +38,19 @@ final class CBAdmin {
 
     /**
      * @param string $className
+     *
+     * @return string
+     */
+    static function getAdminPageURL(string $className): string {
+        $classNameAsURI = $className;
+
+        return "/admin/?c={$classNameAsURI}";
+    }
+    /* getAdminPageURL() */
+
+
+    /**
+     * @param string $className
      * @param string $pageStub (deprecated)
      *
      *      The functions should manually gather query variables if they render
