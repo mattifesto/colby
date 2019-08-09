@@ -21,7 +21,11 @@ $adminClassName = cb_query_string_value('class');
 $getPermissionsFunctionName = "{$adminClassName}::adminPagePermissions";
 
 if (!is_callable($getPermissionsFunctionName)) {
-    return 0; /* !1 -> 404 */
+    $URL = cbsiteurl() . "/admin/?c={$adminClassName}";
+
+    header("Location: {$URL}");
+
+    return 1;
 }
 
 $permissions = call_user_func($getPermissionsFunctionName);
