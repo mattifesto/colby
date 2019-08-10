@@ -110,7 +110,7 @@ final class CBCodeAdmin {
             'className' => 'CBMenuItem',
             'name' => 'code',
             'text' => 'Code',
-            'URL' => '/admin/?c=CBCodeAdmin',
+            'URL' => CBAdmin::getAdminPageURL('CBCodeAdmin'),
         ];
 
         CBDB::transaction(
@@ -699,6 +699,24 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_08_06 (warning)
+                 * 2019_08_10 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => (
+                        'adminPagePermissions|' .
+                        'adminPageMenuNamePath|' .
+                        'adminPageRenderContent'
+                    ),
+                    'title' => (
+                        'Replace /admin/page/ interfaces with CBAdmin ' .
+                        'interfaces'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -921,24 +939,6 @@ final class CBCodeAdmin {
                         'Replace ' .
                         'CBUIImageChooser.createThumbnailSizedChooser() ' .
                         'with CBUIImageChooser.create().'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_08_06 (warning)
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => (
-                        'adminPagePermissions|' .
-                        'adminPageMenuNamePath|' .
-                        'adminPageRenderContent'
-                    ),
-                    'severity' => 4,
-                    'title' => (
-                        'Replace /admin/page/ interfaces with CBAdmin ' .
-                        'interfaces'
                     ),
                 ],
             ]
