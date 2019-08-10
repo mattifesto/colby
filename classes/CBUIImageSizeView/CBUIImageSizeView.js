@@ -1,4 +1,7 @@
 "use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBUIImageSizeView */
 
 var CBUIImageSizeView = {
 
@@ -8,23 +11,24 @@ var CBUIImageSizeView = {
      *
      * @return object
      */
-    create : function (args) {
+    create: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIImageSizeView";
 
         var imageChangedCallback = CBUIImageSizeView.handleImageChanged.bind(undefined, {
-            element : element,
-            propertyName : args.propertyName,
-            spec : args.spec,
+            element: element,
+            propertyName: args.propertyName,
+            spec: args.spec,
         });
 
         imageChangedCallback();
 
         return {
-            element : element,
-            imageChangedCallback : imageChangedCallback,
+            element: element,
+            imageChangedCallback: imageChangedCallback,
         };
     },
+
 
     /**
      * @param Element args.element
@@ -33,7 +37,7 @@ var CBUIImageSizeView = {
      *
      * @return undefined
      */
-    handleImageChanged : function (args) {
+    handleImageChanged: function (args) {
         var image = args.spec[args.propertyName];
 
         if (image === undefined) {
