@@ -1,4 +1,7 @@
 "use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported CBUIImageURLView */
 
 var CBUIImageURLView = {
 
@@ -11,7 +14,7 @@ var CBUIImageURLView = {
      *  function imageChangedCallback,
      * }
      */
-    create : function (args) {
+    create: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIImageURLView";
         var img = document.createElement("img");
@@ -19,22 +22,23 @@ var CBUIImageURLView = {
         element.appendChild(img);
 
         var imageChangedCallback = CBUIImageURLView.handleImageChanged.bind(undefined, {
-            img : img,
-            propertyName : args.propertyName,
-            spec : args.spec,
+            img: img,
+            propertyName: args.propertyName,
+            spec: args.spec,
         });
 
         imageChangedCallback();
 
         element.addEventListener("click", CBUIImageURLView.rotateClass.bind(undefined, {
-            element : element,
+            element: element,
         }));
 
         return {
-            element : element,
-            imageChangedCallback : imageChangedCallback,
+            element: element,
+            imageChangedCallback: imageChangedCallback,
         };
     },
+
 
     /**
      * @param Element args.img
@@ -43,7 +47,7 @@ var CBUIImageURLView = {
      *
      * @return undefined
      */
-    handleImageChanged : function (args) {
+    handleImageChanged: function (args) {
         var URL = args.spec[args.propertyName];
 
         if (URL === undefined) {
@@ -55,12 +59,13 @@ var CBUIImageURLView = {
         }
     },
 
+
     /**
      * @param args.element
      *
      * @return undefined
      */
-    rotateClass : function (args) {
+    rotateClass: function (args) {
         var classList = args.element.classList;
 
         if (classList.contains("medium")) {
