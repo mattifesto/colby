@@ -6,37 +6,46 @@ final class CBPagesAdminMenu {
      * @return void
      */
     static function CBInstall_install(): void {
-        $adminMenuSpec = CBModels::fetchSpecByID(CBAdminMenu::ID());
+        $adminMenuSpec = CBModels::fetchSpecByID(
+            CBAdminMenu::ID()
+        );
 
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'pages',
             'submenuID' => CBPagesAdminMenu::ID(),
             'text' => 'Pages',
-            'URL' => '/admin/page/?class=CBAdminPageForPagesFind',
+            'URL' => CBAdmin::getAdminPageURL('CBAdminPageForPagesFind'),
         ];
 
         $pagesAdminMenuSpec = (object)[
             'className' => 'CBMenu',
             'ID' => CBPagesAdminMenu::ID(),
             'title' => 'Pages',
-            'titleURI' => '/admin/page/?class=CBAdminPageForPagesFind',
+            'titleURI' => CBAdmin::getAdminPageURL('CBAdminPageForPagesFind'),
             'items' => [
                 (object)[
                     'className' => 'CBMenuItem',
                     'name' => 'create',
                     'text' => 'Create',
-                    'URL' => '/admin/?c=CBModelsAdminTemplateSelector&modelClassName=CBViewPage',
+                    'URL' => (
+                        '/admin/?' .
+                        'c=CBModelsAdminTemplateSelector&' .
+                        'modelClassName=CBViewPage'
+                    ),
                 ],
             ],
         ];
 
-        CBDB::transaction(function () use ($adminMenuSpec, $pagesAdminMenuSpec) {
-            CBModels::save($adminMenuSpec);
-            CBModels::deleteByID(CBPagesAdminMenu::ID());
-            CBModels::save($pagesAdminMenuSpec);
-        });
+        CBDB::transaction(
+            function () use ($adminMenuSpec, $pagesAdminMenuSpec) {
+                CBModels::save($adminMenuSpec);
+                CBModels::deleteByID(CBPagesAdminMenu::ID());
+                CBModels::save($pagesAdminMenuSpec);
+            }
+        );
     }
+
 
     /**
      * @return [string]
@@ -47,6 +56,7 @@ final class CBPagesAdminMenu {
             'CBGeneralAdminMenu',
         ];
     }
+
 
     /**
      * @return ID

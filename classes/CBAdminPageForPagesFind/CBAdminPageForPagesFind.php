@@ -2,27 +2,23 @@
 
 final class CBAdminPageForPagesFind {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
+    static function CBAdmin_menuNamePath(): array {
         return [
             'pages',
             'find',
         ];
     }
 
-    /**
-     * @return object
-     */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Administrators'];
-    }
 
     /**
      * @return null
      */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render() {
         CBHTMLOutput::pageInformation()->title = 'Pages Administration: Find';
     }
 
@@ -226,9 +222,11 @@ EOT;
      * @return void
      */
     static function CBInstall_install(): void {
-        $updater = CBModelUpdater::fetch((object)[
-            'ID' => CBPagesAdminMenu::ID(),
-        ]);
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'ID' => CBPagesAdminMenu::ID(),
+            ]
+        );
 
         $pagesAdminMenuSpec = $updater->working;
 
@@ -238,12 +236,13 @@ EOT;
                 'className' => 'CBMenuItem',
                 'name' => 'find',
                 'text' => 'Find',
-                'URL' => '/admin/page/?class=CBAdminPageForPagesFind',
+                'URL' => CBAdmin::getAdminPageURL('CBAdminPageForPagesFind'),
             ]
         );
 
         CBModelUpdater::save($updater);
     }
+
 
     /**
      * @return [string]

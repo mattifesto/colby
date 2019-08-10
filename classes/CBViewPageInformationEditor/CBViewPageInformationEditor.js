@@ -24,6 +24,7 @@
     CBUsersWhoAreAdministrators,
     CBViewPageInformationEditor_frameClassNames,
     CBViewPageInformationEditor_kindClassNames,
+    CBViewPageInformationEditor_pagesAdminURL,
     CBViewPageInformationEditor_settingsClassNames,
 */
 
@@ -451,7 +452,7 @@ var CBViewPageInformationEditor = {
                             );
 
                             window.location =
-                            "/admin/page/?class=CBAdminPageForPagesFind";
+                            CBViewPageInformationEditor_pagesAdminURL;
                         }
                     ).catch(
                         function (error) {
