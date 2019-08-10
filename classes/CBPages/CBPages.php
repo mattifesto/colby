@@ -9,9 +9,9 @@
 class CBPages {
 
     /**
-     * @return null
+     * @return void
      */
-    static function createPagesTable($args = []) {
+    static function createPagesTable($args = []): void {
         $name = 'ColbyPages'; $temporary = false;
         extract($args, EXTR_IF_EXISTS);
 
@@ -37,14 +37,31 @@ class CBPages {
                 `publishedBy`           BIGINT UNSIGNED,
                 `publishedMonth`        MEDIUMINT,
                 PRIMARY KEY     (archiveID),
-                KEY             `URI_published` (`URI`, `published`),
-                KEY             `classNameForKind_publishedMonth_published` (`classNameForKind`, `publishedMonth`, `published`),
+                KEY             `URI_published` (
+                                    `URI`,
+                                    `published`
+                                ),
+                KEY             `classNameForKind_publishedMonth_published` (
+                                    `classNameForKind`,
+                                    `publishedMonth`,
+                                    `published`
+                                ),
 
                 /* indexes used by the admin interface */
-                KEY             `created` (`created`),
-                KEY             `modified` (`modified`),
-                KEY             `classNameForKind_created` (`classNameForKind`, `created`),
-                KEY             `classNameForKind_modified` (`classNameForKind`, `modified`)
+                KEY             `created` (
+                                    `created`
+                                ),
+                KEY             `modified` (
+                                    `modified`
+                                ),
+                KEY             `classNameForKind_created` (
+                                    `classNameForKind`,
+                                    `created`
+                                ),
+                KEY             `classNameForKind_modified` (
+                                    `classNameForKind`,
+                                    `modified`
+                                )
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
@@ -54,6 +71,8 @@ EOT;
 
         Colby::query($SQL);
     }
+    /* createPagesTable() */
+
 
     /**
      * Deletes rows from the ColbyPages table.
@@ -63,15 +82,20 @@ EOT;
      *
      *      CBModels::deleteByID($pageID)
      *
-     * @return null
+     * @return void
      */
-    static function deletePagesByID(array $IDs) {
-        if (empty($IDs)) { return; }
+    static function deletePagesByID(array $IDs): void {
+        if (empty($IDs)) {
+            return;
+        }
 
         $IDsAsSQL = CBHex160::toSQL($IDs);
 
-        Colby::query("DELETE FROM `ColbyPages` WHERE `archiveID` IN ({$IDsAsSQL})");
+        Colby::query(
+            "DELETE FROM `ColbyPages` WHERE `archiveID` IN ({$IDsAsSQL})"
+        );
     }
+
 
     /**
      * Deletes rows from the ColbyPagesIntheTrash table.
@@ -81,39 +105,62 @@ EOT;
      *
      *      CBModels::deleteByID($pageID)
      *
-     * @return null
+     * @return void
      */
-    static function deletePagesFromTrashByID(array $IDs) {
-        if (empty($IDs)) { return; }
+    static function deletePagesFromTrashByID(array $IDs): void {
+        if (empty($IDs)) {
+            return;
+        }
 
         $IDsAsSQL = CBHex160::toSQL($IDs);
 
-        Colby::query("DELETE FROM `CBPagesInTheTrash` WHERE `archiveID` IN ({$IDsAsSQL})");
+        Colby::query(
+            "DELETE FROM `CBPagesInTheTrash` " .
+            "WHERE `archiveID` IN ({$IDsAsSQL})"
+        );
     }
     /* deletePagesFromTrashByID() */
 
 
     /**
-     * @param [{hex160}] $IDs
+     * @param [string] $IDs
      *
-     * @return [{stdClass}]
+     * @return [object]
      */
-    static function fetchPageSummaryModelsByID($IDs) {
-        if (empty($IDs)) { return []; }
+    static function fetchPageSummaryModelsByID($IDs): array {
+        if (empty($IDs)) {
+            return [];
+        }
 
         $IDsAsSQL = CBHex160::toSQL($IDs);
-        $SQL = "SELECT `keyValueData` FROM `ColbyPages` WHERE `archiveID` IN ($IDsAsSQL)";
 
-        return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $SQL = (
+            "SELECT `keyValueData` FROM `ColbyPages` " .
+            "WHERE `archiveID` IN ($IDsAsSQL)"
+        );
+
+        return CBDB::SQLToArray(
+            $SQL,
+            [
+                'valueIsJSON' => true,
+            ]
+        );
     }
+
 
     /**
      * @return void
      */
     static function CBInstall_install(): void {
         CBPages::createPagesTable();
-        CBPages::createPagesTable(['name' => 'CBPagesInTheTrash']);
+
+        CBPages::createPagesTable(
+            [
+                'name' => 'CBPagesInTheTrash',
+            ]
+        );
     }
+
 
     /**
      * Sometimes pages are considered "well-known" or "special" because they
@@ -129,6 +176,7 @@ EOT;
      */
     static function fetchPublishedPageIDsByURI(string $URI): array {
         $URIAsSQL = CBDB::stringToSQL($URI);
+
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(archiveID))
@@ -141,14 +189,15 @@ EOT;
         return CBDB::SQLToArray($SQL);
     }
 
+
     /**
-     * NOTE 2016.03.15 This function is somewhat messed up and it's very
+     * @NOTE 2016_03_15 This function is somewhat messed up and it's very
      * important. It makes a ton of assumptions many of which may be wrong. It
      * needs to be reviewed, have its parameters well documented, and fixed to
      * either be private or work for any caller. This function is the gatekeeper
      * to the ColbyPages table and any flaws it has are therefore large flaws.
      *
-     * NOTE The comments below may make incorrect assumptions:
+     * @NOTE The comments below may make incorrect assumptions:
      * To avoid duplicating property validation this function assumes the model
      * parameter has been generated with the `CBModel::toModel()` function or
      * another function that properly validates and sets the reserved page model
@@ -160,18 +209,25 @@ EOT;
      *
      * @return string
      */
-    static function modelToRowValues(stdClass $model) {
+    static function modelToRowValues(stdClass $model): string {
         $now = time();
         $IDAsSQL = CBHex160::toSQL(CBModel::value($model, 'ID'));
         $className = CBModel::value($model, 'className', '');
         $classNameAsSQL = CBDB::stringToSQL($className);
-        $classNameForKindAsSQL = CBModel::value($model, 'classNameForKind', 'NULL', function ($value) {
-            if (empty($value)) {
-                return 'NULL'; /* falsy value (empty string) should be treated as null */
-            } else {
-                return CBDB::stringToSQL($value);
+
+        $classNameForKindAsSQL = CBModel::value(
+            $model,
+            'classNameForKind',
+            'NULL',
+            function ($value) {
+                if (empty($value)) {
+                    return 'NULL'; /* falsy value (empty string) should be treated as null */
+                } else {
+                    return CBDB::stringToSQL($value);
+                }
             }
-        });
+        );
+
         $createdAsSQL = CBModel::value($model, 'created', $now, 'intval');
         $iterationAsSQL = 0; /* deprecated */
         $modifiedAsSQL = CBModel::value($model, 'modified', $now, 'intval');
@@ -179,29 +235,74 @@ EOT;
         $isPublished = CBModel::value($model, 'isPublished', false, 'boolval');
 
         if ($isPublished) {
-            $publishedAsSQL = CBModel::value($model, 'publicationTimeStamp', $now, 'intval');
-            $publishedByAsSQL = CBModel::value($model, 'publishedBy', 'NULL', 'intval');
-            $publishedMonthAsSQL = ColbyConvert::timestampToYearMonth($publishedAsSQL);
+            $publishedAsSQL = CBModel::value(
+                $model,
+                'publicationTimeStamp',
+                $now,
+                'intval'
+            );
+
+            $publishedByAsSQL = CBModel::value(
+                $model,
+                'publishedBy',
+                'NULL',
+                'intval'
+            );
+
+            $publishedMonthAsSQL = ColbyConvert::timestampToYearMonth(
+                $publishedAsSQL
+            );
         } else {
             $publishedAsSQL = 'NULL';
             $publishedByAsSQL = 'NULL';
             $publishedMonthAsSQL = 'NULL';
         }
 
-        $thumbnailURLAsSQL = CBDB::stringToSQL(CBModel::value($model, 'thumbnailURL', '', 'cbhtml'));
-        $URIAsSQL = CBDB::stringToSQL(CBModel::value($model, 'URI', ''));
+        $thumbnailURLAsSQL = CBDB::stringToSQL(
+            CBModel::value($model, 'thumbnailURL', '', 'cbhtml')
+        );
 
-        $keyValueDataAsSQL = CBDB::stringToSQL(json_encode(CBPage::toSummary($model)));
-        $searchTextAsSQL = CBDB::stringToSQL(CBModel::toSearchText($model));
+        $URIAsSQL = CBDB::stringToSQL(
+            CBModel::value($model, 'URI', '')
+        );
 
-        return "($IDAsSQL, $keyValueDataAsSQL, $classNameAsSQL, $classNameForKindAsSQL, $createdAsSQL, $iterationAsSQL, $modifiedAsSQL, $URIAsSQL, $thumbnailURLAsSQL, $searchTextAsSQL, $publishedAsSQL, $publishedByAsSQL, $publishedMonthAsSQL)";
+        $keyValueDataAsSQL = CBDB::stringToSQL(
+            json_encode(
+                CBPage::toSummary($model)
+            )
+        );
+
+        $searchTextAsSQL = CBDB::stringToSQL(
+            CBModel::toSearchText($model)
+        );
+
+        return (
+            "(" .
+            "$IDAsSQL, " .
+            "$keyValueDataAsSQL, " .
+            "$classNameAsSQL, " .
+            "$classNameForKindAsSQL, " .
+            "$createdAsSQL, " .
+            "$iterationAsSQL, " .
+            "$modifiedAsSQL, " .
+            "$URIAsSQL, " .
+            "$thumbnailURLAsSQL, " .
+            "$searchTextAsSQL, " .
+            "$publishedAsSQL, " .
+            "$publishedByAsSQL, " .
+            "$publishedMonthAsSQL" .
+            ")"
+        );
     }
+    /* modelToRowValues() */
+
 
     /**
      * @return void
      */
-    static function moveRowWithDataStoreIDToTheTrash($dataStoreID) {
+    static function moveRowWithDataStoreIDToTheTrash($dataStoreID): void {
         $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
+
         $sql = <<<EOT
 
             INSERT INTO `CBPagesInTheTrash` (
@@ -229,12 +330,15 @@ EOT;
 
         CBPages::deletePagesByID([$dataStoreID]);
     }
+    /* moveRowWithDataStoreIDToTheTrash() */
+
 
     /**
      * @return void
      */
-    static function recoverRowWithDataStoreIDFromTheTrash($dataStoreID) {
+    static function recoverRowWithDataStoreIDFromTheTrash($dataStoreID): void {
         $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
+
         $SQL = <<<EOT
 
             INSERT INTO `ColbyPages` (
@@ -262,20 +366,23 @@ EOT;
 
         CBPages::deletePagesFromTrashByID([$dataStoreID]);
     }
+    /* recoverRowWithDataStoreIDFromTheTrash() */
+
 
     /**
      * @param hex160 $args->ID
      *
-     * @return bool
+     * @return void
      */
-    static function CBAjax_moveToTrash(stdClass $args) {
+    static function CBAjax_moveToTrash(stdClass $args): void {
         CBPages::moveRowWithDataStoreIDToTheTrash($args->ID);
     }
+
 
     /**
      * @return string
      */
-    static function CBAjax_moveToTrash_group() {
+    static function CBAjax_moveToTrash_group(): string {
         return 'Administrators';
     }
 
@@ -322,7 +429,8 @@ EOT;
             $SQL = <<<EOT
 
                 UPDATE  `ColbyPages`            AS `p`
-                JOIN    `CBPagesTemporary`      AS `t` ON `p`.`archiveID` = `t`.`archiveID`
+                JOIN    `CBPagesTemporary`      AS `t`
+                            ON `p`.`archiveID`  = `t`.`archiveID`
                 SET     `p`.`keyValueData`      = `t`.`keyValueData`,
                         `p`.`className`         = `t`.`className`,
                         `p`.`classNameForKind`  = `t`.`classNameForKind`,
@@ -372,7 +480,8 @@ EOT;
                 `t`.`publishedBy`,
                 `t`.`publishedMonth`
             FROM        `CBPagesTemporary`  AS `t`
-            LEFT JOIN   `ColbyPages`        AS `p` ON `t`.`archiveID` = `p`.`archiveID`
+            LEFT JOIN   `ColbyPages`        AS `p`
+                            ON `t`.`archiveID` = `p`.`archiveID`
             WHERE       `p`.`archiveID` IS NULL
 
 EOT;
