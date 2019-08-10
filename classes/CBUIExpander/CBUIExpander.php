@@ -16,7 +16,7 @@ final class CBUIExpander {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v463.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v503.js', cbsysurl()),
         ];
     }
 

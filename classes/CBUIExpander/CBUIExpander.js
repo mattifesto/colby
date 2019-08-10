@@ -13,7 +13,7 @@ var CBUIExpander = {
     /**
      * @return undefined
      */
-    build: function (args) {
+    build: function () {
         var message;
         var elements = document.getElementsByClassName("CBUIExpander_builder");
 
@@ -41,6 +41,7 @@ var CBUIExpander = {
             }
         }
     },
+
 
     /**
      * Structure:
