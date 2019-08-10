@@ -21,7 +21,7 @@ final class CBUICaptcha {
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
             'https://www.google.com/recaptcha/api.js',
-            Colby::flexpath(__CLASS__, 'v484.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v503.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */

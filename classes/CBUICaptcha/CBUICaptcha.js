@@ -1,13 +1,23 @@
-"use strict"; /* jshint strict: global */
-/* globals CBUICaptchaReCAPTCHASiteKey, grecaptcha */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* exported
+    CBUICaptcha,
+    CBUICaptchaWasCompleted,
+    CBUICaptchaDidExpire,
+*/
+/* globals
+    CBUICaptchaReCAPTCHASiteKey,
+    grecaptcha,
+*/
 
 /**
  * This control can currently only be used one time per page.
  */
 var CBUICaptcha = {
 
-    captchaDidExpireCallback : undefined,
-    captchaWasCompletedCallback : undefined,
+    captchaDidExpireCallback: undefined,
+    captchaWasCompletedCallback: undefined,
 
     /**
      * @param string args.propertyName
@@ -16,7 +26,7 @@ var CBUICaptcha = {
      *
      * @return undefined
      */
-    captchaDidExpire : function (args) {
+    captchaDidExpire: function (args) {
         args.spec[args.propertyName] = undefined;
 
         grecaptcha.reset();
@@ -32,7 +42,7 @@ var CBUICaptcha = {
      *
      * @return undefined
      */
-    captchaWasCompleted : function (args, responseKey) {
+    captchaWasCompleted: function (args, responseKey) {
         args.spec[args.propertyName] = responseKey;
 
         args.specChangedCallback.call();
@@ -49,7 +59,7 @@ var CBUICaptcha = {
      *  Element element,
      * }
      */
-    create : function (args) {
+    create: function (args) {
         if (CBUICaptcha.captchaDidExpireCallback !== undefined) {
             throw "The CBUICaptcha control can only be used once per page.";
         }
@@ -66,19 +76,19 @@ var CBUICaptcha = {
         element.appendChild(captcha);
 
         CBUICaptcha.captchaDidExpireCallback = CBUICaptcha.captchaDidExpire.bind(undefined, {
-            propertyName : args.propertyName,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            propertyName: args.propertyName,
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         });
 
         CBUICaptcha.captchaWasCompletedCallback = CBUICaptcha.captchaWasCompleted.bind(undefined, {
-            propertyName : args.propertyName,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            propertyName: args.propertyName,
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         });
 
         return {
-            element : element,
+            element: element,
         };
     },
 };
