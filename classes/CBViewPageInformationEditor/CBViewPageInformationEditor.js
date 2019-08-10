@@ -19,9 +19,9 @@
 
     CBViewPageEditor,
 
-    CBCurrentUserID,
     CBPageClassNamesForLayouts,
     CBUsersWhoAreAdministrators,
+    CBViewPageInformationEditor_currentUserNumericID,
     CBViewPageInformationEditor_frameClassNames,
     CBViewPageInformationEditor_kindClassNames,
     CBViewPageInformationEditor_pagesAdminURL,
@@ -159,7 +159,8 @@ var CBViewPageInformationEditor = {
         /* publishedBy */
 
         if (!args.spec.publishedBy) {
-            args.spec.publishedBy = CBCurrentUserID;
+            args.spec.publishedBy =
+            CBViewPageInformationEditor_currentUserNumericID;
         }
 
         var users = CBUsersWhoAreAdministrators.map(
