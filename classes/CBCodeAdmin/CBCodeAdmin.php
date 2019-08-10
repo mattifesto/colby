@@ -941,6 +941,45 @@ final class CBCodeAdmin {
                         'with CBUIImageChooser.create().'
                     ),
                 ],
+
+
+                /**
+                 * 2019_08_10
+                 */
+                (object)[
+                    'args' => implode(
+                        ' ',
+                        [
+                            '--php',
+                            '--js',
+                            '--ignore-file=match:CBUpgradesForVersion380.php',
+                        ]
+                    ),
+                    'regex' => (
+                        'publishedBy'
+                    ),
+                    'severity' => 4,
+                    'title' => (
+                        'The ColbyPages table "publishedBy" column and the ' .
+                        'CBViewPage model "publishedBy" property are ' .
+                        'deprecated and being replaced because they use ' .
+                        'numeric user IDs.'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_08_10
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'currentUserNumericID',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of currentUserNumericID with ' .
+                        'the hex user ID'
+                    ),
+                ],
             ]
         );
     }
