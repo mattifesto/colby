@@ -5,28 +5,34 @@ final class CBDataStoresAdminPage {
     /**
      * @return [string]
      */
-    static function adminPageMenuNamePath() {
-        return ['develop', 'datastores'];
+    static function CBAdmin_menuNamePath(): array {
+        return [
+            'develop',
+            'datastores'
+        ];
     }
 
+
     /**
-     * @return stdClass
+     * @return string
      */
-    static function adminPagePermissions() {
-        return (object)['group' => 'Developers'];
+    static function CBAdmin_group(): string {
+        return 'Developers';
     }
+
 
     /**
      * @return void
      */
-    static function adminPageRenderContent() {
+    static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Data Stores Administration';
     }
 
+
     /**
-     * @return object
+     * @return [object]
      */
-    static function CBAjax_fetchData() {
+    static function CBAjax_fetchData(): array {
         $SQL = <<<EOT
 
             SELECT      `m`.`className` as `className`, LOWER(HEX(`ds`.`ID`)) as `ID`
@@ -40,26 +46,79 @@ EOT;
         return CBDB::SQLToObjects($SQL);
     }
 
+
     /**
      * @return string
      */
-    static function CBAjax_fetchData_group() {
+    static function CBAjax_fetchData_group(): string {
         return 'Developers';
     }
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIActionPart', 'CBUINavigationArrowPart',
-                'CBUINavigationView', 'CBUISectionItem4', 'CBUISelector',
-                'CBUITitleAndDescriptionPart'];
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBUI',
+            'CBUIActionPart',
+            'CBUINavigationArrowPart',
+            'CBUINavigationView',
+            'CBUISectionItem4',
+            'CBUISelector',
+            'CBUITitleAndDescriptionPart',
+        ];
     }
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v368.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v368.js', cbsysurl()),
+        ];
+    }
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'ID' => CBDevelopAdminMenu::ID(),
+            ]
+        );
+
+        $items = CBModel::valueToArray(
+            $updater->working,
+            'items'
+        );
+
+        array_push(
+            $items,
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'datastores',
+                'text' => 'Data Stores',
+                'URL' => CBAdmin::getAdminPageURL('CBDataStoresAdminPage'),
+            ]
+        );
+
+        $updater->working->items = $items;
+
+        CBModelUpdater::save($updater);
+    }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBDevelopAdminMenu',
+        ];
     }
 }

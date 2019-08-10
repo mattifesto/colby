@@ -24,12 +24,6 @@ final class CBDevelopAdminMenu {
             'items' => [
                 (object)[
                     'className' => 'CBMenuItem',
-                    'name' => 'datastores',
-                    'text' => 'Data Stores',
-                    'URL' => '/admin/page/?class=CBDataStoresAdminPage',
-                ],
-                (object)[
-                    'className' => 'CBMenuItem',
                     'name' => 'php',
                     'text' => 'PHP',
                     'URL' => '/admin/?c=CBPHPAdmin',
