@@ -38,7 +38,7 @@ var CBUIProcessStatus = {
      *              process.
      *      }
      */
-    create: function (args) {
+    create: function () {
         var afterSerial, isFetching, shouldFetchNextQuickly, processID, timeoutID;
         let logEntryMinimumSeverity = 6;
         var element = document.createElement("div");
