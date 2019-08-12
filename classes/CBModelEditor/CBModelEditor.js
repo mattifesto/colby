@@ -21,24 +21,16 @@ var CBModelEditor = {
      */
     createEditor: function (args) {
         var element = document.createElement("pre");
-        element.textContent = JSON.stringify(args.spec, null, 4);
+
+        element.textContent = JSON.stringify(
+            args.spec,
+            null,
+            4
+        );
 
         return element;
     },
-
-
-    /**
-     * @return undefined
-     */
-    handleDOMContentLoaded: function () {
-        if (window.CBModelEditorAuthorizationFailed) {
-            return;
-        }
-
-        CBModelEditor.renderEditorForSpec(
-            CBModelEditor_originalSpec
-        );
-    },
+    /* createEditor() */
 
 
     /**
@@ -50,22 +42,28 @@ var CBModelEditor = {
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
 
-        var specSaver = CBUISpecSaver.create({
-            rejectedCallback: CBModelEditor.saveWasRejected,
-            spec: spec,
-        });
+        var specSaver = CBUISpecSaver.create(
+            {
+                rejectedCallback: CBModelEditor.saveWasRejected,
+                spec: spec,
+            }
+        );
 
-        var navigationView = CBUINavigationView.create({
-            defaultSpecChangedCallback: specSaver.specChangedCallback,
-        });
+        var navigationView = CBUINavigationView.create(
+            {
+                defaultSpecChangedCallback: specSaver.specChangedCallback,
+            }
+        );
 
         main.appendChild(navigationView.element);
 
-        let specEditor = CBUISpecEditor.create({
-            navigateToItemCallback: navigationView.navigateToItemCallback,
-            spec: spec,
-            specChangedCallback: specSaver.specChangedCallback,
-        });
+        let specEditor = CBUISpecEditor.create(
+            {
+                navigateToItemCallback: navigationView.navigateToItemCallback,
+                spec: spec,
+                specChangedCallback: specSaver.specChangedCallback,
+            }
+        );
 
         let inspectHeaderItem = CBUI.createHeaderItem();
         inspectHeaderItem.textContent = "Inspect";
@@ -75,12 +73,16 @@ var CBModelEditor = {
             CBModelEditor_originalSpec.ID
         );
 
-        navigationView.navigateToItemCallback.call(undefined, {
-            element: specEditor.element,
-            rightElements: [inspectHeaderItem.element],
-            title: spec.className + " Editor",
-        });
+        navigationView.navigateToItemCallback.call(
+            undefined,
+            {
+                element: specEditor.element,
+                rightElements: [inspectHeaderItem.element],
+                title: spec.className + " Editor",
+            }
+        );
     },
+    /* renderEditorForSpec() */
 
 
     /**
@@ -103,9 +105,18 @@ var CBModelEditor = {
 
         return Promise.reject(error);
     },
+    /* saveWasRejected() */
 };
 
 
 Colby.afterDOMContentLoaded(
-    CBModelEditor.handleDOMContentLoaded
+    function afterDOMContentLoaded() {
+        if (window.CBModelEditorAuthorizationFailed) {
+            return;
+        }
+
+        CBModelEditor.renderEditorForSpec(
+            CBModelEditor_originalSpec
+        );
+    }
 );
