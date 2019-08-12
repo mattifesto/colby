@@ -18,8 +18,11 @@ class CBModelEditor {
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['models'];
+        return [
+            'models',
+        ];
     }
+
 
     /**
      * @return void
@@ -47,12 +50,21 @@ class CBModelEditor {
             if (empty($originalSpec)) {
                 if (empty($templateClassName)) {
                     $message = "No model exists with the ID {$ID}.";
-                } else  if (is_callable($function = "{$templateClassName}::CBModelTemplate_spec")) {
+                } else if (
+                    is_callable(
+                        $function = "{$templateClassName}::CBModelTemplate_spec"
+                    )
+                ) {
                     $originalSpec = call_user_func($function);
                     $originalSpec->ID = $ID;
                 } else {
-                    $templateClassNameAsMarkup = CBMessageMarkup::stringToMarkup($templateClassName);
-                    $message = "A model template with the class name \"{$templateClassNameAsMarkup}\" does not exist.";
+                    $templateClassNameAsMarkup =
+                    CBMessageMarkup::stringToMarkup($templateClassName);
+
+                    $message = (
+                        "A model template with the class name " .
+                        "\"{$templateClassNameAsMarkup}\" does not exist."
+                    );
                 }
             }
         }
@@ -62,6 +74,7 @@ class CBModelEditor {
 
         CBHTMLOutput::pageInformation()->title = 'Edit Model';
     }
+
 
     /**
      * @return [string]
@@ -77,11 +90,15 @@ class CBModelEditor {
         ];
 
         if (CBModelEditor::$originalSpec) {
-            array_push($classNames, CBModelEditor::$originalSpec->className . 'Editor');
+            array_push(
+                $classNames,
+                CBModelEditor::$originalSpec->className . 'Editor'
+            );
         };
 
         return $classNames;
     }
+
 
     /**
      * @return [string]
@@ -92,13 +109,20 @@ class CBModelEditor {
         ];
     }
 
+
     /**
      * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables(): array {
         return [
-            ['CBModelEditor_originalSpec', CBModelEditor::$originalSpec],
-            ['CBModelEditor_message', CBModelEditor::$message],
+            [
+                'CBModelEditor_originalSpec',
+                CBModelEditor::$originalSpec,
+            ],
+            [
+                'CBModelEditor_message',
+                CBModelEditor::$message,
+            ],
         ];
     }
 }
