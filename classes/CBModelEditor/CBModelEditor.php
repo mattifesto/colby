@@ -136,6 +136,15 @@ class CBModelEditor {
             }
         }
 
+        /**
+         * The original spec is upgraded before being sent to the editor to
+         * handle cases where a system update has recently happened that
+         * includes new upgrades for this class of model. All models are
+         * scheduled to be upgraded after an update, but it does take some time.
+         * A user may be editing a model before its upgrade task has run.
+         */
+        $originalSpec = CBModel::upgrade($originalSpec);
+
         $originalSpecHasBeenFetched = true;
 
         return $originalSpec;
