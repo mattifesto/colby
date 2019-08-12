@@ -11,8 +11,7 @@
  */
 class CBModelEditor {
 
-    private static $originalSpec = null;
-    private static $message = '';
+    /* -- CBAdmin interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
@@ -28,75 +27,26 @@ class CBModelEditor {
      * @return void
      */
     static function CBAdmin_render(): void {
-        $ID = cb_query_string_value('ID');
-        $copyID = cb_query_string_value('copyID');
-        $templateClassName = cb_query_string_value('templateClassName');
-        $message = '';
-
-        if (!CBHex160::is($ID)) {
-            $message = "No model ID was specified.";
-            $originalSpec = null;
-        } else {
-            $originalSpec = CBModels::fetchSpecByID($ID);
-
-            if (empty($originalSpec) && CBHex160::is($copyID)) {
-                $originalSpec = CBModels::fetchSpecByID($copyID);
-
-                if (!empty($originalSpec)) {
-                    $originalSpec = CBModel::copy($originalSpec, $ID);
-                }
-            }
-
-            if (empty($originalSpec)) {
-                if (empty($templateClassName)) {
-                    $message = "No model exists with the ID {$ID}.";
-                } else if (
-                    is_callable(
-                        $function = "{$templateClassName}::CBModelTemplate_spec"
-                    )
-                ) {
-                    $originalSpec = call_user_func($function);
-                    $originalSpec->ID = $ID;
-                } else {
-                    $templateClassNameAsMarkup =
-                    CBMessageMarkup::stringToMarkup($templateClassName);
-
-                    $message = (
-                        "A model template with the class name " .
-                        "\"{$templateClassNameAsMarkup}\" does not exist."
-                    );
-                }
-            }
-        }
-
-        CBModelEditor::$originalSpec = $originalSpec;
-        CBModelEditor::$message = $message;
-
         CBHTMLOutput::pageInformation()->title = 'Edit Model';
     }
 
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
-        $classNames = [
+        $originalSpec = CBModelEditor::fetchOriginalSpec();
+
+        return [
             'CBUI',
-            'CBUIMessagePart',
             'CBUINavigationView',
-            'CBUISectionItem4',
             'CBUISpecEditor',
             'CBUISpecSaver',
+            'Colby',
+            $originalSpec->className . 'Editor',
         ];
-
-        if (CBModelEditor::$originalSpec) {
-            array_push(
-                $classNames,
-                CBModelEditor::$originalSpec->className . 'Editor'
-            );
-        };
-
-        return $classNames;
     }
 
 
@@ -105,7 +55,7 @@ class CBModelEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v433.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v505.js', cbsysurl()),
         ];
     }
 
@@ -117,12 +67,78 @@ class CBModelEditor {
         return [
             [
                 'CBModelEditor_originalSpec',
-                CBModelEditor::$originalSpec,
-            ],
-            [
-                'CBModelEditor_message',
-                CBModelEditor::$message,
+                CBModelEditor::fetchOriginalSpec(),
             ],
         ];
     }
+
+
+    /* -- functions -- -- -- -- -- */
+
+    private static function fetchOriginalSpec(): stdClass {
+        static $originalSpec;
+        static $originalSpecHasBeenFetched = false;
+
+        if ($originalSpecHasBeenFetched) {
+            return $originalSpec;
+        }
+
+        $ID = cb_query_string_value('ID');
+        $copyID = cb_query_string_value('copyID');
+        $templateClassName = cb_query_string_value('templateClassName');
+
+        if (!CBHex160::is($ID)) {
+            throw new CBException(
+                "No model ID was specified.",
+                '',
+                '2db0099f3f9cf6dd7db8220a00a1e944de834758'
+            );
+        } else {
+            $originalSpec = CBModels::fetchSpecByID($ID);
+
+            if (empty($originalSpec) && CBHex160::is($copyID)) {
+                $copiedSpec = CBModels::fetchSpecByIDNullable($copyID);
+
+                if ($copiedSpec === null) {
+                    throw new CBException(
+                        "No model exists to copy with the ID {$copyID}",
+                        '',
+                        'fcfe83a69d00d91d61360ad1c376b71e0a063393'
+                    );
+                }
+                $originalSpec = CBModel::copy($copiedSpec, $ID);
+            }
+
+            if (empty($originalSpec)) {
+                if (empty($templateClassName)) {
+                    throw new CBException(
+                        "No model exists with the ID {$ID}.",
+                        '',
+                        'ad535e8eb3c2f8f1d84cb29cd5781e926415a0f1'
+                    );
+                } else if (
+                    is_callable(
+                        $function = "{$templateClassName}::CBModelTemplate_spec"
+                    )
+                ) {
+                    $originalSpec = call_user_func($function);
+                    $originalSpec->ID = $ID;
+                } else {
+                    throw new CBException(
+                        (
+                            "No model template class exists with the " .
+                            "class name \"{$templateClassName}\""
+                        ),
+                        '',
+                        '8dab808b65ec7529abeba0d6c7b7788a6fdd325f'
+                    );
+                }
+            }
+        }
+
+        $originalSpecHasBeenFetched = true;
+
+        return $originalSpec;
+    }
+    /* fetchOriginalSpec() */
 }

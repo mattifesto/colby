@@ -3,15 +3,13 @@
 /* jshint esversion: 6 */
 /* exported CBModelEditor */
 /* global
-    CBModelEditor_message,
-    CBModelEditor_originalSpec,
-    Colby,
     CBUI,
-    CBUIMessagePart,
     CBUINavigationView,
-    CBUISectionItem4,
     CBUISpecEditor,
     CBUISpecSaver,
+    Colby,
+
+    CBModelEditor_originalSpec,
 */
 
 var CBModelEditor = {
@@ -28,6 +26,7 @@ var CBModelEditor = {
         return element;
     },
 
+
     /**
      * @return undefined
      */
@@ -36,25 +35,11 @@ var CBModelEditor = {
             return;
         }
 
-        if (CBModelEditor_originalSpec) {
-            CBModelEditor.renderEditorForSpec(CBModelEditor_originalSpec);
-        } else {
-            var main = document.getElementsByTagName("main")[0];
-
-            main.appendChild(CBUI.createHalfSpace());
-
-            let sectionElement = CBUI.createSection();
-            let sectionItem = CBUISectionItem4.create();
-            let messagePart = CBUIMessagePart.create();
-            messagePart.message = CBModelEditor_message;
-
-            sectionItem.appendPart(messagePart);
-            sectionElement.appendChild(sectionItem.element);
-            main.appendChild(sectionElement);
-
-            main.appendChild(CBUI.createHalfSpace());
-        }
+        CBModelEditor.renderEditorForSpec(
+            CBModelEditor_originalSpec
+        );
     },
+
 
     /**
      * @param object spec
@@ -84,7 +69,11 @@ var CBModelEditor = {
 
         let inspectHeaderItem = CBUI.createHeaderItem();
         inspectHeaderItem.textContent = "Inspect";
-        inspectHeaderItem.href = "/admin/?c=CBModelInspector&ID=" + CBModelEditor_originalSpec.ID;
+
+        inspectHeaderItem.href = (
+            "/admin/?c=CBModelInspector&ID=" +
+            CBModelEditor_originalSpec.ID
+        );
 
         navigationView.navigateToItemCallback.call(undefined, {
             element: specEditor.element,
@@ -92,6 +81,7 @@ var CBModelEditor = {
             title: spec.className + " Editor",
         });
     },
+
 
     /**
      * @param Error error
@@ -102,11 +92,20 @@ var CBModelEditor = {
         if (error.ajaxResponse) {
             Colby.displayResponse(error.ajaxResponse);
         } else {
-            Colby.alert(error.message || "CBModelEditor.saveWasRejected(): No error message was provided.");
+            Colby.alert(
+                error.message ||
+                (
+                    "CBModelEditor.saveWasRejected(): " +
+                    "No error message was provided."
+                )
+            );
         }
 
         return Promise.reject(error);
     },
 };
 
-Colby.afterDOMContentLoaded(CBModelEditor.handleDOMContentLoaded);
+
+Colby.afterDOMContentLoaded(
+    CBModelEditor.handleDOMContentLoaded
+);
