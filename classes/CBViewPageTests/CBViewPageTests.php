@@ -34,7 +34,6 @@ final class CBViewPageTests {
             'URI' => '',
             'publicationTimeStamp' => null,
             'thumbnailURL' => '',
-            'layout' => null,
             'sections' => CBViewTests::testSubviewModels(),
             'thumbnailURLAsHTML' => '',
             'URIAsHTML' => '',
