@@ -277,17 +277,43 @@ EOT;
      * @return ?model
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
-        $model = (object)[
-            'largeImage' => CBModel::build(
-                CBModel::valueAsModel($spec, 'largeImage', ['CBImage'])
-            ),
-            'mediumImage' => CBModel::build(
-                CBModel::valueAsModel($spec, 'mediumImage', ['CBImage'])
-            ),
-            'smallImage' => CBModel::build(
-                CBModel::valueAsModel($spec, 'smallImage', ['CBImage'])
-            ),
-        ];
+        $model = (object)[];
+
+        /* large image */
+
+        $largeImageSpec = CBModel::valueAsModel(
+            $spec,
+            'largeImage',
+            ['CBImage']
+        );
+
+        if ($largeImageSpec) {
+            $model->largeImage = CBModel::build($largeImageSpec);
+        }
+
+        /* medium image */
+
+        $mediumImageSpec = CBModel::valueAsModel(
+            $spec,
+            'mediumImage',
+            ['CBImage']
+        );
+
+        if ($mediumImageSpec) {
+            $model->mediumImage = CBModel::build($mediumImageSpec);
+        }
+
+        /* small image */
+
+        $smallImageSpec = CBModel::valueAsModel(
+            $spec,
+            'smallImage',
+            ['CBImage']
+        );
+
+        if ($smallImageSpec) {
+            $model->smallImage = CBModel::build($smallImageSpec);
+        }
 
         $model->backgroundColor = CBModel::value(
             $spec,
