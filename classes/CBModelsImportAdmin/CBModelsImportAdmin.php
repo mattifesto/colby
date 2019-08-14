@@ -188,18 +188,14 @@ final class CBModelsImportAdmin {
 
                     $countOfSpecsInDataFile += 1;
 
-                    $className = CBModel::valueToString($rowSpec, 'className');
+                    $ID = CBModel::valueAsID($rowSpec, 'ID');
 
-                    if (empty($className)) {
-                        CBModelsImportAdmin::reportNoClassName($rowSpec);
-                        continue;
+                    if ($ID === null) {
+                        $ID = CBModel::toID($rowSpec);
+                        $rowSpec->ID = $ID;
                     }
 
-                    if (empty($rowSpec->ID)) {
-                        $rowSpec->ID = CBModel::toID($rowSpec);
-                    }
-
-                    $rowSpecs[$rowSpec->ID] = $rowSpec;
+                    $rowSpecs[$ID] = $rowSpec;
                 }
 
                 fclose($handle);
@@ -266,40 +262,5 @@ final class CBModelsImportAdmin {
      */
     static function CBAjax_uploadDataFile_group(): string {
         return 'Administrators';
-    }
-
-    /**
-     * @param object $spec
-     *
-     * @return void
-     */
-    static function reportNoClassName(stdClass $spec): void {
-        $specAsJSONAsMarkup = CBMessageMarkup::stringToMessage(
-            CBConvert::valueToPrettyJSON($spec)
-        );
-
-        $message = <<<EOT
-
-            An imported spec does not have a class name:
-
-            --- dl
-                --- dt
-                Imported spec
-                ---
-
-                --- dd
-                    --- pre\n{$specAsJSONAsMarkup}
-                    ---
-                ---
-            ---
-
-EOT;
-
-        CBLog::log((object)[
-            'message' => $message,
-            'severity' => 3,
-            'sourceClassName' => __CLASS__,
-            'sourceID' => 'de8eed53486f7f53a2185b93cc69c9e499e41b90',
-        ]);
     }
 }
