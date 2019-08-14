@@ -211,7 +211,7 @@ final class CBModel {
         if ($className === null) {
             throw CBException::createModelIssueException(
                 'An ID can\'t be generated for this spec because the ' .
-                'spec has an invalid "className" property.',
+                'spec has an invalid "className" property value.',
                 $spec,
                 'b4822d4eda69523f65029f047c2039e02196119d'
             );
@@ -314,56 +314,108 @@ final class CBModel {
      *
      * @return object
      *
-     *      This function was updated in February 2019 to prefer that
-     *      implementations throw an exception rather than return null. In the
-     *      future the return type will not be nullable and this function will
-     *      throw an exception in the cases where it used to return null.
+     *      The build process is allowed to have requirements and allowed to
+     *      throw exceptions if those requirements are not met.
      *
-     *      There is no use case where a return value of null is helpful, in
-     *      fact it probably hides errors.
+     *      @NOTE 2019_08_14
      *
-     *      It is no longer correct to think that building an any spec is
-     *      guaranteed to not throw an exception. The build process is allowed
-     *      to have requirements and allowed to throw exceptions if those
-     *      requirements are not met.
+     *          This function is coded properly to throw exceptions when
+     *          necessary. However, this will break many existing scenarios that
+     *          rely on the old, incorrect behavior.
      *
-     * @TODO 2019_07_17
-     *
-     *      This function should be changed to always either work or throw an
-     *      exception. It will always return an object, never null.
+     *          For now, we log the exceptions and return null instead of
+     *          throwing them.
      */
     static function build($spec): ?stdClass {
-        $className = CBModel::valueToString($spec, 'className');
+        $className = CBModel::valueAsName($spec, 'className');
 
-        if (empty($className)) {
+        if ($className === null) {
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    'This spec can\'t be built because it has an invalid ' .
+                    '"className" property value.',
+                    $spec,
+                    'd24a83a81c914e1a5b66eeede05a577c0c44bd57'
+                )
+            );
+
             return null;
         }
 
-        $model = null;
+        if (!class_exists($className)) {
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    'This spec can\'t be built because a class ' .
+                    "with the name \"{$className}\" doesn't exist.",
+                    $spec,
+                    '0f170c152f54ebb97ecd2fb0a27055a096276d37'
+                )
+            );
+
+            return null;
+        }
 
         if (is_callable($function = "{$className}::CBModel_build")) {
             $model = call_user_func($function, $spec);
         } else if (is_callable($function = "{$className}::CBModel_toModel")) {
             $model = call_user_func($function, $spec);
+        } else {
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    'This spec can\'t be built because ' .
+                    "the CBModel_build() interface has not been implemented " .
+                    "on the {$className} class.",
+                    $spec,
+                    'a92922e1bcf4fe374b54a2b45bd59403f2214faa'
+                )
+            );
+
+            return null;
         }
 
         if (!is_object($model)) {
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    "This spec can't be built because " .
+                    "the CBModel_build() interface returned a value that is " .
+                    "not an object.",
+                    $spec,
+                    '2a8ad1dd8a2d47a80d41609b98056f0e8775a47a'
+                )
+            );
+
             return null;
         }
 
         /**
          * Since "className" is the one required property for a model and should
-         * always be transferred by the build process, this function can
-         * transfer the property for all models.
+         * always be transferred by the build process, this function is allowed
+         * to transfer the property for all models.
          */
         $model->className = $className;
 
-        if (!empty($spec->ID)) {
-            if (CBHex160::is($spec->ID)) {
-                $model->ID = $spec->ID;
-            } else {
-                return null;
-            }
+
+        /**
+         * A model will always have the same ID as its spec. A malformed ID on
+         * the spec will cause an exception to be thrown.
+         */
+        $ID = CBModel::valueAsID($spec, 'ID');
+
+        if (isset($spec->ID) && $ID === null) {
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    'This spec can\'t be built because it has an invalid ' .
+                    '"ID" property value.',
+                    $spec,
+                    '11759b8ba7d8ae54039371942c9b09e29cda59d6'
+                )
+            );
+
+            return null;
+        }
+
+        if ($ID !== null) {
+            $model->ID = $ID;
         }
 
         /**
@@ -375,11 +427,15 @@ final class CBModel {
          *      be responsible for building all model properties.
          */
         if (!isset($model->title) && isset($spec->title)) {
-            $model->title = trim(CBModel::valueToString($spec, 'title'));
+            $model->title = trim(
+                CBModel::valueToString($spec, 'title')
+            );
         }
 
         return $model;
     }
+    /* build() */
+
 
     /**
      * Transfer the first level property values of object 2 onto object 1.
