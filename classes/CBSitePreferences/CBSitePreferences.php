@@ -191,9 +191,6 @@ EOT;
             'googleTagManagerID' => trim(
                 CBModel::valueToString($spec, 'googleTagManagerID')
             ),
-            'imageForIcon' => CBModel::build(
-                CBModel::valueAsModel($spec, 'imageForIcon', ['CBImage'])
-            ),
             'onDemandImageResizeOperations' => CBModel::valueToString(
                 $spec,
                 'onDemandImageResizeOperations'
@@ -214,6 +211,18 @@ EOT;
                 CBModel::valueToString($spec, 'twitterURL')
             ),
         ];
+
+        /* image for icon */
+
+        $imageForIconSpec = CBModel::valueAsModel(
+            $spec,
+            'imageForIcon',
+            ['CBImage']
+        );
+
+        if ($imageForIconSpec) {
+            $model->imageForIcon = CBModel::build($imageForIconSpec);
+        }
 
         /* administrator emails */
 
