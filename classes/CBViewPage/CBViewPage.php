@@ -85,10 +85,15 @@ final class CBViewPage {
             $model->thumbnailURL = null;
         }
 
-        $model->layout = CBModel::build(CBModel::valueAsModel($spec, 'layout'));
+        $layoutSpec = CBModel::valueAsModel($spec, 'layout');
+
+        if ($layoutSpec) {
+            $model->layout = CBModel::build($layoutSpec);
+        }
 
         $model->sections = [];
         $sectionSpecs = CBModel::valueToArray($spec, 'sections');
+
         foreach ($sectionSpecs as $sectionSpec) {
             if ($sectionModel = CBModel::build($sectionSpec)) {
                 $model->sections[] = $sectionModel;
