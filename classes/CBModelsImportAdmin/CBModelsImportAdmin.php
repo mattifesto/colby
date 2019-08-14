@@ -196,14 +196,7 @@ final class CBModelsImportAdmin {
                     }
 
                     if (empty($rowSpec->ID)) {
-                        $ID = CBModel::toID($rowSpec);
-
-                        if ($ID === null) {
-                            CBModelsImportAdmin::reportNoID($rowSpec);
-                            continue;
-                        } else {
-                            $rowSpec->ID = $ID;
-                        }
+                        $rowSpec->ID = CBModel::toID($rowSpec);
                     }
 
                     $rowSpecs[$rowSpec->ID] = $rowSpec;
@@ -307,61 +300,6 @@ EOT;
             'severity' => 3,
             'sourceClassName' => __CLASS__,
             'sourceID' => 'de8eed53486f7f53a2185b93cc69c9e499e41b90',
-        ]);
-    }
-
-    /**
-     * @param object $spec
-     *
-     * @return void
-     */
-    static function reportNoID(stdClass $spec): void {
-        $className = CBModel::valueToString($spec, 'className');
-        $specAsJSONAsMarkup = CBMessageMarkup::stringToMessage(
-            CBConvert::valueToPrettyJSON($spec)
-        );
-
-        $message = <<<EOT
-
-            An imported {$className} spec was unable to generate its own ID.
-
-EOT;
-
-        if (!class_exists($className)) {
-            $message .= <<<EOT
-
-                The {$className} class does not exist.
-
-EOT;
-        } else if (!is_callable("{$className}::CBModel_toID")) {
-            $message .= <<<EOT
-
-                The (CBModel_toID\(\)(code)) interface is not implemented by the
-                {$className} class.
-
-EOT;
-        }
-
-        $message .= <<<EOT
-
-            --- dl
-                --- dt
-                Imported spec
-                ---
-
-                --- dd
-                    --- pre\n{$specAsJSONAsMarkup}
-                    ---
-                ---
-            ---
-
-EOT;
-
-        CBLog::log((object)[
-            'message' => $message,
-            'severity' => 3,
-            'sourceClassName' => __CLASS__,
-            'sourceID' => '1506dfad3b967c8fc527f581e0a145d6475e5852',
         ]);
     }
 }
