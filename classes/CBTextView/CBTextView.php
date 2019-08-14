@@ -36,6 +36,20 @@ final class CBTextView {
     /* -- CBModel interfaces -- -- -- -- -- */
 
     /**
+     * @param object $spec
+     *
+     * @return object
+     *
+     *      This function returns an empty model because all models should
+     *      build, however this model gets upgraded so there should
+     *      theoretically be no models of this class remaining.
+     */
+    static function CBModel_build(stdClass $spec): stdClass {
+        return (object)[];
+    }
+
+
+    /**
      * @param model $spec
      *
      * @return model
