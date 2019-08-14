@@ -193,6 +193,7 @@ final class CBModel {
         return null;
     }
 
+
     /**
      * This function can be used to generate IDs for specs, such as specs
      * imported from CSV files.
@@ -202,17 +203,57 @@ final class CBModel {
      *      This function takes a mixed parameter to make it "array function
      *      safe".
      *
-     * @return ?hex160
+     * @return string
      */
-    static function toID($spec): ?string {
-        $className = CBModel::valueToString($spec, 'className');
+    static function toID($spec): string {
+        $className = CBModel::valueAsName($spec, 'className');
 
-        if (is_callable($function = "{$className}::CBModel_toID")) {
-            return call_user_func($function, $spec);
-        } else {
-            return null;
+        if ($className === null) {
+            throw CBException::createModelIssueException(
+                'An ID can\'t be generated for this spec because the ' .
+                'spec has an invalid "className" property.',
+                $spec,
+                'b4822d4eda69523f65029f047c2039e02196119d'
+            );
         }
+
+        if (!class_exists($className)) {
+            throw CBException::createModelIssueException(
+                'An ID can\'t be generated for this spec because a class ' .
+                "with the name \"{$className}\" doesn't exist.",
+                $spec,
+                'a8479ae50d410cc8b3f572402dddf2a047fa5020'
+            );
+        }
+
+        $functionName = "{$className}::CBModel_toID";
+
+        if (!is_callable($functionName)) {
+            throw CBException::createModelIssueException(
+                'An ID can\'t be generated for this spec because ' .
+                "the CBModel_toID() interface has not been implemented " .
+                "on the {$className} class.",
+                $spec,
+                'eda34362fa7ff5a25850a99b95877a75e018447e'
+            );
+        }
+
+        $ID = call_user_func($functionName, $spec);
+
+        if (CBConvert::valueAsID($ID) === null) {
+            throw CBException::createModelIssueException(
+                "An ID can't be generated for this spec because " .
+                "the {$functionName}() interface returned a value that is " .
+                "not an ID.",
+                $spec,
+                'bdd815415de119b95545340af3a0643f87ea31e9'
+            );
+        }
+
+        return $ID;
     }
+    /* toID() */
+
 
     /**
      * This function builds a new model from a source model. The source model,
