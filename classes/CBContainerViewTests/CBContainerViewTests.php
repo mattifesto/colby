@@ -38,8 +38,6 @@ final class CBContainerViewTests {
             'CSSClassNames' => [],
             'HREF' =>'',
             'HREFAsHTML' => '',
-            'largeImage' => null,
-            'mediumImage' => null,
             'smallImage' => (object)[
                 'className' => 'CBImage',
                 'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
