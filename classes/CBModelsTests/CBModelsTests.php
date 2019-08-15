@@ -44,7 +44,6 @@ final class CBModelsTests {
         return [
             ['CBModels', 'fetchModelByID'],
             ['CBModels', 'fetchModelsByID'],
-            ['CBModels', 'saveNullableModel'],
             ['CBModels', 'saveSpecWithoutID'],
         ];
     }
@@ -97,6 +96,7 @@ final class CBModelsTests {
         Colby::query('ROLLBACK');
     }
 
+
     /**
      * @return null
      */
@@ -145,52 +145,6 @@ final class CBModelsTests {
         Colby::query('ROLLBACK');
     }
 
-    /**
-     * CBModel::build() is allowed to return null when a spec doesn't have
-     * required properties. In general, spec shouldn't have required properties,
-     * but in cases like CBImage they do. This function tests the behavior of
-     * saving a spec that will generate a null model.
-     */
-    static function saveNullableModelTest() {
-        $exceptionWasThrown = false;
-
-        try {
-            Colby::query('START TRANSACTION');
-
-            $spec = (object)[
-                'ID' => CBHex160::random(),
-                'className' => 'CBImage',
-            ];
-
-            CBModels::save([$spec]);
-
-            Colby::query('ROLLBACK');
-        } catch (Throwable $throwable) {
-            Colby::query('ROLLBACK');
-
-            $exceptionWasThrown = true;
-
-            $expectedMessage = (
-                'A CBImage spec being saved generated a null model.'
-            );
-
-            $actualMessage = $throwable->getMessage();
-
-            if ($actualMessage !== $expectedMessage) {
-                throw new Exception(
-                    "The exception thrown had the message: " .
-                    "\"{$actualMessage}\", but the following message " .
-                    "was expected: \"{$expectedMessage}\""
-                );
-            }
-        }
-
-        if (!$exceptionWasThrown) {
-            throw new Exception(
-                'This test expects an exception to be thrown.'
-            );
-        }
-    }
 
     /**
      * CBModel::buildel() is allowed to return a model without an ID, however
