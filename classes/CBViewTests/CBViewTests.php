@@ -64,6 +64,7 @@ final class CBViewTests {
         ];
     }
 
+
     /**
      * @return object
      */
@@ -93,6 +94,7 @@ final class CBViewTests {
         ];
     }
 
+
     /**
      * @return [[<class>, <test>]]
      */
@@ -102,6 +104,7 @@ final class CBViewTests {
             ['CBView', 'getAndSetSubviews'],
         ];
     }
+
 
     /**
      * This test runs a CBView::render() test for all known classes.
@@ -138,6 +141,7 @@ final class CBViewTests {
         }
     }
 
+
     /**
      * @return [model]
      */
@@ -150,6 +154,7 @@ final class CBViewTests {
         ];
     }
 
+
     /**
      * @return string
      */
@@ -157,22 +162,19 @@ final class CBViewTests {
         return '42 CBTestView';
     }
 
+
     /**
      * @return [mixed]
      */
     static function testSubviewSpecs(): array {
         return [
-            null,
-            2,
             (object)[
                 'className' => 'CBTestView',
                 'value' => 42,
             ],
-            (object)[
-                'className' => 'jdkflskdljsdkfd',
-            ],
         ];
     }
+
 
     /**
      * @return [model]
@@ -183,11 +185,9 @@ final class CBViewTests {
                 'className' => 'CBTestView',
                 'value' => 42,
             ],
-            (object)[
-                'className' => 'jdkflskdljsdkfd',
-            ],
         ];
     }
+
 
     /**
      * @return void
