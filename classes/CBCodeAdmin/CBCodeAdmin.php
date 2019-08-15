@@ -993,6 +993,21 @@ final class CBCodeAdmin {
                         'Replace CBTests_classTest() with an actual test.'
                     ),
                 ],
+
+
+                /**
+                 * 2019_08_15
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBConvertTests::resultAndExpectedToMessage\(',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace ' .
+                        'CBConvertTests::resultAndExpectedToMessage() ' .
+                        'with CBTest::resultMismatchFailure().'
+                    ),
+                ],
             ]
         );
     }
