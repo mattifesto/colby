@@ -6,14 +6,9 @@ final class CBMenuTests {
         $spec = (object)[
             'className' => 'CBMenu',
             'items' => [
-                null,
-                2,
                 (object)[
                     'className' => 'CBTestView',
                     'value' => 42,
-                ],
-                (object)[
-                    'className' => 'jdkflskdljsdkfd',
                 ],
             ],
         ];
@@ -58,9 +53,6 @@ final class CBMenuTests {
                 (object)[
                     'className' => 'CBTestView',
                     'value' => 42,
-                ],
-                (object)[
-                    'className' => 'jdkflskdljsdkfd',
                 ],
             ],
         ];
