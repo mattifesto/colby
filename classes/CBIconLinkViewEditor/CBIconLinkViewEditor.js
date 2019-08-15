@@ -15,12 +15,16 @@
 var CBIconLinkViewEditor = {
 
     /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
      *
      * @return Element
      */
-    createEditor: function(args) {
+    createEditor: function (args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBIconLinkViewEditor";
@@ -117,22 +121,17 @@ var CBIconLinkViewEditor = {
             )
         );
 
-        var chooser = CBUIImageChooser.createFullSizedChooser(
-            {
-                imageChosenCallback: handleImageChosen,
-                imageRemovedCallback: handleImageRemoved,
-            }
-        );
+        let imageChooser = CBUIImageChooser.create();
+        imageChooser.chosen = handleImageChosen;
+        imageChooser.removed = handleImageRemoved;
 
         if (args.spec.image) {
-            chooser.setImageURLCallback(
-                CBImage.toURL(args.spec.image, "rw960")
-            );
+            imageChooser.src = CBImage.toURL(args.spec.image, "rw960");
         }
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
-        item.appendChild(chooser.element);
+        item.appendChild(imageChooser.element);
         section.appendChild(item);
         element.appendChild(section);
 
@@ -158,12 +157,11 @@ var CBIconLinkViewEditor = {
 
                     args.specChangedCallback();
 
-                    chooserArgs.setImageURLCallback(
-                        CBImage.toURL(imageModel, "rw960")
-                    );
+                    imageChooser.src = CBImage.toURL(imageModel, "rw960");
                 }
             );
         }
+
 
         /**
          * @return undefined
@@ -175,21 +173,6 @@ var CBIconLinkViewEditor = {
         }
     },
     /* createEditor() */
-
-
-    /**
-     * @param [function] args.callbacks
-     *
-     * @return undefined
-     */
-    imageChanged: function (args) {
-        args.callbacks.forEach(
-            function (callback) {
-                callback.call();
-            }
-        );
-    },
-    /* imageChanged() */
 
 
     /**

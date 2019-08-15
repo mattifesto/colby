@@ -9,7 +9,7 @@ final class CBIconLinkViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v494.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v507.js', cbsysurl())
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
