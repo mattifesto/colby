@@ -72,80 +72,99 @@ final class CBImage {
      * This model is validated more than most models because all of the
      * properties are required for the model to be valid.
      *
-     * @param string $spec->extension
-     * @param hex160 $spec->ID
-     * @param string $spec->filename
-     * @param int $spec->height
-     * @param int $spec->width
+     * @param object $spec
      *
-     * @return object|null
+     *      {
+     *          extension: string
+     *          filename: string
+     *          height: int
+     *          ID: string
+     *          width: int
+     *      }
+     *
+     * @return object
+     *
+     *      @NOTE 2019_08_14
+     *
+     *          This function is coded properly to throw exceptions when
+     *          necessary. However, this will break many existing scenarios that
+     *          rely on the old, incorrect behavior.
+     *
+     *          For now, we log the exceptions and return null instead of
+     *          throwing them.
      */
-    static function CBModel_build(stdClass $spec) {
-        $specIssues = [];
+    static function CBModel_build(stdClass $spec): ?stdClass {
         $extension = CBModel::value($spec, 'extension');
 
         if (empty($extension)) {
-            $specIssues[] = "The spec `extension` property is empty.";
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    'This spec can\'t be built because it has an invalid ' .
+                    '"extension" property value.',
+                    $spec,
+                    'c2bcc7c228c1433577f9b4b3c7ea4e2702c7b1d5'
+                )
+            );
+
+            return null;
         }
 
         $filename = CBModel::value($spec, 'filename');
 
         if (empty($filename)) {
-            // For backward compatability with older spec schema.
-            $filename = CBModel::value($spec, 'base');
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    'This spec can\'t be built because it has an invalid ' .
+                    '"filename" property value.',
+                    $spec,
+                    '2bc70fc87dd47cb4707395b4af6225b5cf2f0acd'
+                )
+            );
+
+            return null;
         }
 
-        if (empty($filename)) {
-            $specIssues[] = "The spec `filename` property is empty.";
-        }
-
-        $height = CBModel::value($spec, 'height', 0, 'intval');
+        $height = CBModel::valueAsInt($spec, 'height') ?? 0;
 
         if ($height < 1) {
-            $specIssues[] = "The spec `height` property is invalid.";
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    'This spec can\'t be built because it has an invalid ' .
+                    '"height" property value.',
+                    $spec,
+                    'c6b95f62d68542095335ef2175689dc1cb4f2b90'
+                )
+            );
+
+            return null;
         }
 
         $ID = CBModel::valueAsID($spec, 'ID');
 
         if (empty($ID)) {
-            $specIssues[] = "The spec `ID` property is invalid.";
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    'This spec can\'t be built because it has an invalid ' .
+                    '"ID" property value.',
+                    $spec,
+                    'ed759d15d41064ae2a3659639298383e6c429b9c'
+                )
+            );
+
+            return null;
         }
 
-        $width = CBModel::value($spec, 'width', 0, 'intval');
+        $width = CBModel::valueAsInt($spec, 'width') ?? 0;
 
         if ($width < 1) {
-            $specIssues[] = "The spec `width` property is invalid.";
-        }
-
-        if (!empty($specIssues)) {
-            $method = __METHOD__ . '()';
-            $specAsJSON = CBMessageMarkup::stringToMarkup(CBConvert::valueToPrettyJSON($spec));
-            $specIssues = implode("\n\n", $specIssues);
-            $message = <<<EOT
-
-                {$method} returned null because of spec issues.
-
-                (Issues: (strong))
-
-                --- ul
-
-                {$specIssues}
-
-                ---
-
-                (Spec: (strong))
-
-                --- pre
-{$specAsJSON}
-                ---
-
-EOT;
-
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => $message,
-                'severity' => 4,
-            ]);
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    'This spec can\'t be built because it has an invalid ' .
+                    '"width" property value.',
+                    $spec,
+                    'c2bedac1eb80124931939a28d82b60e570658c5d'
+                )
+            );
 
             return null;
         }
@@ -159,6 +178,8 @@ EOT;
             'width' => $width,
         ];
     }
+    /* CBModel_build() */
+
 
     /**
      * @param model $spec
