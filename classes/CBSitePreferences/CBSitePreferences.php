@@ -52,53 +52,18 @@ final class CBSitePreferences {
      * @return [string]
      */
     static function CBAdmin_getIssueMessages(): array {
-        $model = CBSitePreferences::model();
+        $issueMessages = [];
 
-        $absoluteAckPath = CBModel::valueToString($model, 'absoluteAckPath');
+        $message = CBSitePreferences::getIssueMessageForAck();
 
-        if (empty($absoluteAckPath)) {
-            $ackPath = "ack";
-        } else {
-            $ackPath = $absoluteAckPath;
-        }
-
-        exec("{$ackPath} --version", $output, $returnStatus);
-
-        if ($returnStatus != 0) {
-            $editSitePreferencesLink = (
-                '/admin/?c=CBModelEditor&ID=' .
-                CBSitePreferences::ID()
+        if ($message !== null) {
+            array_push(
+                $issueMessages,
+                $message
             );
-
-            if ($absoluteAckPath) {
-                $absoluteAckPathAsMessage = CBMessageMarkup::stringToMessage(
-                    $absoluteAckPath
-                );
-
-                $message = <<<EOT
-
-                    Trying to execute the (ack (code)) command at the absolute
-                    ack path, ({$absoluteAckPathAsMessage} (code)), which is set
-                    in site preferences generated a status code of
-                    ({$returnStatus} (code)). Fix or remove the absolute ack
-                    path in (site preferences (a {$editSitePreferencesLink})).
-
-EOT;
-            } else {
-                $message = <<<EOT
-
-                    Trying to execute the (ack (code)) command generated a
-                    status code of ({$returnStatus} (code)). Set the absolute
-                    ack path in (site preferences (a
-                    {$editSitePreferencesLink})).
-
-EOT;
-            }
-
-            return [$message];
         }
 
-        return [];
+        return $issueMessages;
     }
     /* CBAdmin_getIssueMessages() */
 
@@ -133,6 +98,7 @@ EOT;
     static function CBAjax_setFrontPageID_group(): string {
         return 'Administrators';
     }
+
 
     /**
      * @return void
@@ -292,6 +258,7 @@ EOT
         return CBModel::value($model, "custom.{$key}");
     }
 
+
     /**
      * Returns true if the site is in "debug" mode. Development and test sites
      * should generally have this property set to true and production sites
@@ -325,6 +292,7 @@ EOT
         return (bool)CBModel::value($model, 'debug');
     }
 
+
     /**
      * @return bool
      */
@@ -334,12 +302,69 @@ EOT
         return (bool)CBModel::value($model, 'disallowRobots');
     }
 
+
     /**
      * @return hex160?
      */
     static function frontPageID(): ?string {
         return CBModel::valueAsID(CBSitePreferences::model(), 'frontPageID');
     }
+
+
+    /**
+     * @return string|null
+     */
+    private static function getIssueMessageForAck(): ?string {
+        $model = CBSitePreferences::model();
+
+        $absoluteAckPath = CBModel::valueToString($model, 'absoluteAckPath');
+
+        if (empty($absoluteAckPath)) {
+            $ackPath = "ack";
+        } else {
+            $ackPath = $absoluteAckPath;
+        }
+
+        exec("{$ackPath} --version", $output, $returnStatus);
+
+        if ($returnStatus == 0) {
+            return null;
+        }
+
+        $editSitePreferencesLink = (
+            '/admin/?c=CBModelEditor&ID=' .
+            CBSitePreferences::ID()
+        );
+
+        if ($absoluteAckPath) {
+            $absoluteAckPathAsMessage = CBMessageMarkup::stringToMessage(
+                $absoluteAckPath
+            );
+
+            $message = <<<EOT
+
+                Trying to execute the (ack (code)) command at the absolute
+                ack path, ({$absoluteAckPathAsMessage} (code)), which is set
+                in site preferences generated a status code of
+                ({$returnStatus} (code)). Fix or remove the absolute ack
+                path in (site preferences (a {$editSitePreferencesLink})).
+
+EOT;
+        } else {
+            $message = <<<EOT
+
+                Trying to execute the (ack (code)) command generated a
+                status code of ({$returnStatus} (code)). Set the absolute
+                ack path in (site preferences (a
+                {$editSitePreferencesLink})).
+
+EOT;
+        }
+
+        return $message;
+    }
+    /* getIssueMessageForAck() */
+
 
     /**
      * @return string
@@ -350,12 +375,14 @@ EOT
         return empty($model->googleTagManagerID) ? '' : $model->googleTagManagerID;
     }
 
+
     /**
      * @return ID
      */
     static function ID(): string {
         return '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
     }
+
 
     /**
      * @return object|false
@@ -450,12 +477,14 @@ EOT
         CBSitePreferences::$model = null;
     }
 
+
     /**
      * @return string
      */
     static function mysqlDatabase() {
         return defined('CBMySQLDatabase') ? CBMySQLDatabase : COLBY_MYSQL_DATABASE;
     }
+
 
     /**
      * @return string
@@ -464,6 +493,7 @@ EOT
         return defined('CBMySQLHost') ? CBMySQLHost : COLBY_MYSQL_HOST;
     }
 
+
     /**
      * @return string
      */
@@ -471,12 +501,14 @@ EOT
         return defined('CBMySQLPassword') ? CBMySQLPassword : COLBY_MYSQL_PASSWORD;
     }
 
+
     /**
      * @return string
      */
     static function mysqlUser() {
         return defined('CBMySQLUser') ? CBMySQLUser : COLBY_MYSQL_USER;
     }
+
 
     /**
      * @return [string]
@@ -492,6 +524,7 @@ EOT
         return array_unique(array_merge($operations, CBSitePreferences::defaultResizeOperations));
     }
 
+
     /**
      * @return string|null
      */
@@ -500,6 +533,7 @@ EOT
         return empty($model->reCAPTCHASecretKey) ? null : $model->reCAPTCHASecretKey;
     }
 
+
     /**
      * @return string|null
      */
@@ -507,6 +541,7 @@ EOT
         $model = CBSitePreferences::model();
         return empty($model->reCAPTCHASiteKey) ? null : $model->reCAPTCHASiteKey;
     }
+
 
     /**
      * @deprecated Changing the default to true for now because I can't think
@@ -531,6 +566,7 @@ EOT
         return true;
     }
 
+
     /**
      * @param ID $ID
      *
@@ -547,6 +583,7 @@ EOT
         CBModels::save($spec);
     }
 
+
     /**
      * @deprecated use cbsitedir()
      */
@@ -554,12 +591,14 @@ EOT
         return cbsitedir();
     }
 
+
     /**
      * @return string
      */
     static function siteDomainName() {
         return explode('//', CBSiteURL)[1];
     }
+
 
     /**
      * @return string
