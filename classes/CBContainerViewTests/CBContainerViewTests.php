@@ -9,7 +9,7 @@ final class CBContainerViewTests {
             'smallImage' => (object)[
                 'className' => 'CBImage',
                 'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
-                'base' => 'original',
+                'filename' => 'original',
                 'extension' => 'jpeg',
                 'height' => 600,
                 'width' => 800,
@@ -17,7 +17,7 @@ final class CBContainerViewTests {
             'mediumImage' => (object)[
                 /* testing deprecated missing class name */
                 'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
-                'base' => 'original',
+                'filename' => 'original',
                 'extension' => 'jpeg',
                 'height' => 700,
                 'width' => 900,
@@ -25,7 +25,7 @@ final class CBContainerViewTests {
             'largeImage' => (object)[
                 /* testing deprecated missing class name */
                 'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
-                'base' => 'original',
+                'filename' => 'original',
                 'extension' => 'jpeg',
                 'height' => 800,
                 'width' => 1000,
