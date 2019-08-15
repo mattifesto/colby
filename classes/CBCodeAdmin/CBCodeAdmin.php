@@ -980,6 +980,19 @@ final class CBCodeAdmin {
                         'the hex user ID'
                     ),
                 ],
+
+
+                /**
+                 * 2019_08_15
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBTests_classTest',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace CBTests_classTest() with an actual test.'
+                    ),
+                ],
             ]
         );
     }
