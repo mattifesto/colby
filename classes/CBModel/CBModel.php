@@ -504,7 +504,7 @@ final class CBModel {
      *      This function takes a mixed parameter to make it "array function
      *      safe".
      *
-     * @return ?object
+     * @return object
      *
      *      If the $spec parameter is not a model, this function will return
      *      null. Otherwise, this function will always return another model.
@@ -513,9 +513,26 @@ final class CBModel {
      *      argument. However the returned model may be equal to the $spec
      *      argument. You can compare the $spec argument to the returned model
      *      using == to determine if any changes were made during the upgrade.
+     *
+     *      @NOTE 2019_08_14
+     *
+     *          This function is coded properly to throw exceptions when
+     *          necessary. However, this will break many existing scenarios that
+     *          rely on the old, incorrect behavior.
+     *
+     *          For now, we log the exceptions and return null instead of
+     *          throwing them.
      */
     static function upgrade($originalSpec): ?stdClass {
         if (CBConvert::valueAsModel($originalSpec) === null) {
+            CBErrorHandler::report(
+                CBException::createModelIssueException(
+                    'This spec can\'t be upgraded because it is not a model.',
+                    $originalSpec,
+                    'a38964f4fd545b2c8f568808d5f3035b168c6fc9'
+                )
+            );
+
             return null;
         }
 
