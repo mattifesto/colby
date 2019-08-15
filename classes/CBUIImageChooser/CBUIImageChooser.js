@@ -67,22 +67,36 @@ var CBUIImageChooser = {
         var chooseElement = document.createElement("div");
         chooseElement.textContent = "choose";
 
-        chooseElement.addEventListener("click", function () {
-            inputElement.click();
-        });
-
-        inputElement.addEventListener("change", function() {
-            if (typeof chosen === "function") {
-                chosen({
-                    file: inputElement.files[0],
-                    setCaptionCallback: function (value) { api.caption = value; }, /* deprecated */
-                    setImageURI: function (value) { api.src = value; }, /* deprecated */
-                    setImageURLCallback: function (value) { api.src = value; }, /* deprecated */
-                });
+        chooseElement.addEventListener(
+            "click",
+            function () {
+                inputElement.click();
             }
+        );
 
-            inputElement.value = null;
-        });
+        inputElement.addEventListener(
+            "change",
+            function() {
+                if (typeof chosen === "function") {
+                    chosen(
+                        {
+                            file: inputElement.files[0],
+                            setCaptionCallback: function (value) {
+                                api.caption = value;
+                            }, /* deprecated */
+                            setImageURI: function (value) {
+                                api.src = value;
+                            }, /* deprecated */
+                            setImageURLCallback: function (value) {
+                                api.src = value;
+                            }, /* deprecated */
+                        }
+                    );
+                }
+
+                inputElement.value = null;
+            }
+        );
 
         commandsElement.appendChild(chooseElement);
 
@@ -90,21 +104,26 @@ var CBUIImageChooser = {
         removeElement.style.display = "none";
         removeElement.textContent = "remove";
 
-        removeElement.addEventListener("click", function () {
-            api.caption = "";
-            api.src = "";
+        removeElement.addEventListener(
+            "click",
+            function () {
+                api.caption = "";
+                api.src = "";
 
-            if (typeof removed === "function") {
-                removed({
-                    setImageURI: function (value) { /* deprecated */
-                        api.src = value;
-                    },
-                    setImageURLCallback: function (value) { /* deprecated */
-                        api.src = value;
-                    },
-                });
+                if (typeof removed === "function") {
+                    removed(
+                        {
+                            setImageURI: function (value) {
+                                api.src = value;
+                            }, /* deprecated */
+                            setImageURLCallback: function (value) {
+                                api.src = value;
+                            }, /* deprecated */
+                        }
+                    );
+                }
             }
-        });
+        );
 
         commandsElement.appendChild(removeElement);
         element.appendChild(commandsElement);
@@ -179,6 +198,7 @@ var CBUIImageChooser = {
         return api;
     },
 
+
     /**
      * @deprecated use create()
      *
@@ -205,12 +225,21 @@ var CBUIImageChooser = {
         chooser.chosen = args.imageChosenCallback;
         chooser.removed = args.imageRemovedCallback;
 
-        chooser.setCaptionCallback = function (value) { chooser.caption = value; }; /* deprecated */
-        chooser.setImageURI = function (value) { chooser.src = value; }; /* deprecated */
-        chooser.setImageURLCallback = function (value) { chooser.src = value; }; /* deprecated */
+        chooser.setCaptionCallback = function (value) {
+            chooser.caption = value;
+        }; /* deprecated */
+
+        chooser.setImageURI = function (value) {
+            chooser.src = value;
+        }; /* deprecated */
+
+        chooser.setImageURLCallback = function (value) {
+            chooser.src = value;
+        }; /* deprecated */
 
         return chooser;
     },
+
 
     /**
      * @deprecated use create()
@@ -231,16 +260,24 @@ var CBUIImageChooser = {
      *          setImageURLCallback: function (deprecated)
      *      }
      */
-    createThumbnailSizedChooser : function (args) {
+    createThumbnailSizedChooser: function (args) {
         let chooser = CBUIImageChooser.create();
         chooser.element.classList.add("thumbnail");
 
         chooser.chosen = args.imageChosenCallback;
         chooser.removed = args.imageRemovedCallback;
 
-        chooser.setCaptionCallback = function (value) { chooser.caption = value; }; /* deprecated */
-        chooser.setImageURI = function (value) { chooser.src = value; }; /* deprecated */
-        chooser.setImageURLCallback = function (value) { chooser.src = value; }; /* deprecated */
+        chooser.setCaptionCallback = function (value) {
+            chooser.caption = value;
+        }; /* deprecated */
+
+        chooser.setImageURI = function (value) {
+            chooser.src = value;
+        }; /* deprecated */
+
+        chooser.setImageURLCallback = function (value) {
+            chooser.src = value;
+        }; /* deprecated */
 
         return chooser;
     },
