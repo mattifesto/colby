@@ -167,20 +167,7 @@ var CBSitePreferencesEditor = {
         }).element);
         section.appendChild(item);
 
-        /* ack */
-
-        {
-            section.appendChild(
-                CBUIStringEditor.createEditor(
-                    {
-                        labelText: "Absolute ack Path",
-                        propertyName: "absoluteAckPath",
-                        spec: args.spec,
-                        specChangedCallback: args.specChangedCallback,
-                    }
-                ).element
-            );
-        }
+        /* path */
 
         {
             section.appendChild(

@@ -153,9 +153,6 @@ final class CBSitePreferences {
      */
     static function CBModel_build(stdClass $spec): stdClass {
         $model = (object)[
-            'absoluteAckPath' => trim(
-                CBModel::valueToString($spec, 'absoluteAckPath')
-            ),
             'custom' => CBKeyValuePair::valueToObject($spec, 'custom'),
             'debug' => CBModel::valueToBool($spec, 'debug'),
             'disallowRobots' => CBModel::valueToBool($spec, 'disallowRobots'),
