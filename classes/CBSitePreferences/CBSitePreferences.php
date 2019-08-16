@@ -54,7 +54,16 @@ final class CBSitePreferences {
     static function CBAdmin_getIssueMessages(): array {
         $issueMessages = [];
 
-        $message = CBSitePreferences::getIssueMessageForAck();
+        $message = CBSitePreferences::getIssueMessage_ack();
+
+        if ($message !== null) {
+            array_push(
+                $issueMessages,
+                $message
+            );
+        }
+
+        $message = CBSitePreferences::getIssueMessage_mysqldump();
 
         if ($message !== null) {
             array_push(
@@ -319,18 +328,10 @@ EOT
     /**
      * @return string|null
      */
-    private static function getIssueMessageForAck(): ?string {
+    private static function getIssueMessage_ack(): ?string {
         $model = CBSitePreferences::model();
 
-        $absoluteAckPath = CBModel::valueToString($model, 'absoluteAckPath');
-
-        if (empty($absoluteAckPath)) {
-            $ackPath = "ack";
-        } else {
-            $ackPath = $absoluteAckPath;
-        }
-
-        exec("{$ackPath} --version", $output, $returnStatus);
+        exec("ack --version", $output, $returnStatus);
 
         if ($returnStatus == 0) {
             return null;
@@ -341,34 +342,47 @@ EOT
             CBSitePreferences::ID()
         );
 
-        if ($absoluteAckPath) {
-            $absoluteAckPathAsMessage = CBMessageMarkup::stringToMessage(
-                $absoluteAckPath
-            );
+        $message = <<<EOT
 
-            $message = <<<EOT
-
-                Trying to execute the (ack (code)) command at the absolute
-                ack path, ({$absoluteAckPathAsMessage} (code)), which is set
-                in site preferences generated a status code of
-                ({$returnStatus} (code)). Fix or remove the absolute ack
-                path in (site preferences (a {$editSitePreferencesLink})).
+            Trying to execute the (ack (code)) command generated a status code
+            of ({$returnStatus} (code)). Update the path in (site preferences (a
+            {$editSitePreferencesLink})).
 
 EOT;
-        } else {
-            $message = <<<EOT
-
-                Trying to execute the (ack (code)) command generated a
-                status code of ({$returnStatus} (code)). Set the absolute
-                ack path in (site preferences (a
-                {$editSitePreferencesLink})).
-
-EOT;
-        }
 
         return $message;
     }
-    /* getIssueMessageForAck() */
+    /* getIssueMessage_ack() */
+
+
+    /**
+     * @return string|null
+     */
+    private static function getIssueMessage_mysqldump(): ?string {
+        $model = CBSitePreferences::model();
+
+        exec("mysqldump --version", $output, $returnStatus);
+
+        if ($returnStatus == 0) {
+            return null;
+        }
+
+        $editSitePreferencesLink = (
+            '/admin/?c=CBModelEditor&ID=' .
+            CBSitePreferences::ID()
+        );
+
+        $message = <<<EOT
+
+            Trying to execute the (mysqldump (code)) command generated a status
+            code of ({$returnStatus} (code)). Update the path in (site
+            preferences (a {$editSitePreferencesLink})).
+
+EOT;
+
+        return $message;
+    }
+    /* getIssueMessage_mysqldump() */
 
 
     /**
