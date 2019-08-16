@@ -65,6 +65,8 @@ try {
     require_once cbsysdir() . '/version.php';
     require_once cbsysdir() . '/functions.php';
     require_once cbsysdir() . '/classes/Colby/Colby.php';
+
+    CBSitePreferences::initialize();
 } catch (Throwable $throwable) {
     $message = $throwable->getMessage();
     $filename = $throwable->getFile();
