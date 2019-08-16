@@ -406,6 +406,47 @@ EOT;
 
 
     /**
+     * Called by init.php
+     *
+     * @NOTE 2019_08_15
+     *
+     *      The putenv() and getenv() functions are very odd in the following
+     *      ways:
+     *
+     *          If you call putenv() to set PATH and getenv() to get it, you
+     *          will not get the value you set with putenv().
+     *
+     *          However, if you call putenv() to set PATH, the path you set will
+     *          be used by exec(). So you can call "exec('echo $PATH');" to get
+     *          the path.
+     *
+     *          If you call apache_setenv() to set PATH and getenv() to get it,
+     *          you will get the path you set with apache_setenv(), but exec()
+     *          will not use this path.
+     *
+     *      So, we use putenv() to set PATH below because our goal is to set the
+     *      path to be used by exec().
+     *
+     * @return void
+     */
+    static function initialize(): void {
+        $path = CBModel::valueToString(
+            CBSitePreferences::model(),
+            'path'
+        );
+
+        if ($path === '') {
+            return;
+        }
+
+        $newpath = getenv('PATH') . ':' . $path;
+
+        putenv("PATH={$newpath}");
+    }
+    /* initialize() */
+
+
+    /**
      * This function fetches the CBSitePreferences model from a file instead of
      * the database which has historically been how this model is intended to be
      * accessed.
