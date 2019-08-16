@@ -161,6 +161,11 @@ final class CBSitePreferences {
                 $spec,
                 'onDemandImageResizeOperations'
             ),
+
+            'path' => trim(
+                CBModel::valueToString($spec, 'path')
+            ),
+
             'reCAPTCHASecretKey' => trim(
                 CBModel::valueToString($spec, 'reCAPTCHASecretKey')
             ),
