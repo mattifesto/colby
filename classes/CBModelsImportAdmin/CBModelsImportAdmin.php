@@ -142,7 +142,9 @@ final class CBModelsImportAdmin {
      * @return object
      */
     static function CBAjax_uploadDataFile(stdClass $args): stdClass {
-        CBProcess::setID(CBModelImporter::processID());
+        CBProcess::setID(
+            CBModelImporter::processID()
+        );
 
         /**
          * @NOTE 2019_08_16
@@ -157,7 +159,10 @@ final class CBModelsImportAdmin {
          *      if not, they don't need to be saved.
          */
 
-        $saveUnchangedModels = (bool)CBModel::value($args, 'saveUnchangedModels');
+        $saveUnchangedModels = CBModel::valueToBool(
+            $args,
+            'saveUnchangedModels'
+        );
 
         /**
          * Because any error that occurs will be associated with the process ID,
@@ -167,21 +172,39 @@ final class CBModelsImportAdmin {
          */
 
         try {
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => 'A data file upload process has begun',
-                'severity' => 6,
-            ]);
+            CBLog::log(
+                (object)[
+                    'message' => 'A data file upload process has begun',
+                    'severity' => 6,
+                    'sourceClassName' => __CLASS__,
+                    'sourceID' => 'a16f002a207ba41c5e24b11f250265156331723e',
+                ]
+            );
 
-            if (strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION)) !== 'csv') {
-                throw new Exception('The data file should be a "csv" file.');
+            if (
+                strtolower(
+                    pathinfo(
+                        $_FILES['file']['name'],
+                        PATHINFO_EXTENSION
+                    )
+                ) !== 'csv'
+            ) {
+                throw new CBException(
+                    'The data file should be a "csv" file.',
+                    '',
+                    '653e99c77513130d2f32f2a0b20c0304c9522242'
+                );
             }
 
             if ($handle = fopen($_FILES['file']['tmp_name'], 'r')) {
                 $keys = fgetcsv($handle);
 
                 if ($keys === false) {
-                    throw new RuntimeException("The data file provided is empty");
+                    throw new CBException(
+                        'The data file provided is empty',
+                        '',
+                        '0dcb1db0bf92cbf32f78f72812b665ba94fadbec'
+                    );
                 }
 
                 $keys = array_map(function ($key) {
@@ -237,7 +260,10 @@ final class CBModelsImportAdmin {
 
                 fclose($handle);
 
-                $originalSpecs = CBModels::fetchSpecsByID(array_keys($rowSpecs));
+                $originalSpecs = CBModels::fetchSpecsByID(
+                    array_keys($rowSpecs)
+                );
+
                 $updatedSpecs = [];
 
                 foreach ($rowSpecs as $ID => $rowSpec) {
@@ -248,43 +274,64 @@ final class CBModelsImportAdmin {
                         $updatedSpec = $rowSpec;
                         $updatedSpec->version = $originalSpec->version;
 
-                        if ($saveUnchangedModels || $updatedSpec != $originalSpec) {
+                        if (
+                            $saveUnchangedModels ||
+                            $updatedSpec != $originalSpec
+                        ) {
                             $updatedSpecs[$ID] = $updatedSpec;
                         }
                     }
                 }
 
-                $specsByClass = array_reduce($updatedSpecs, function(&$specsByClass, $spec) {
-                    if (empty($specsByClass[$spec->className])) {
-                        $specsByClass[$spec->className] = [];
-                    }
+                $specsByClass = array_reduce(
+                    $updatedSpecs,
+                    function (&$specsByClass, $spec) {
+                        if (empty($specsByClass[$spec->className])) {
+                            $specsByClass[$spec->className] = [];
+                        }
 
-                    $specsByClass[$spec->className][] = $spec;
+                        $specsByClass[$spec->className][] = $spec;
 
-                    return $specsByClass;
-                }, []);
+                        return $specsByClass;
+                    },
+                    []
+                );
 
                 foreach ($specsByClass as $className => $specs) {
-                    CBDB::transaction(function () use ($specs) {
-                        CBModels::save($specs);
-                    });
+                    CBDB::transaction(
+                        function () use ($specs) {
+                            CBModels::save($specs);
+                        }
+                    );
 
                     $countOfSpecsSaved += count($specs);
                 }
 
             }
 
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => "{$countOfSpecsInDataFile} of the data file rows contained model information.",
-                'severity' => 6,
-            ]);
+            CBLog::log(
+                (object)[
+                    'message' => (
+                        "{$countOfSpecsInDataFile} of the data file rows " .
+                        "contained model information."
+                    ),
+                    'severity' => 6,
+                    'sourceClassName' => __CLASS__,
+                    'sourceID' => '3eab7002c9011291887fba0ce4a9c7f6cd3d13e9',
+                ]
+            );
 
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => "{$countOfSpecsSaved} of the data file rows provided changes to models that were saved.",
-                'severity' => 6,
-            ]);
+            CBLog::log(
+                (object)[
+                    'message' => (
+                        "{$countOfSpecsSaved} of the data file rows " .
+                        "provided changes to models that were saved."
+                    ),
+                    'severity' => 6,
+                    'sourceClassName' => __CLASS__,
+                    'sourceID' => 'e18b60bf0d7ae7377fdbce2a313175f4b66b3a0b',
+                ]
+            );
         } catch (Throwable $throwable) {
             CBErrorHandler::report($throwable);
         }
@@ -293,6 +340,8 @@ final class CBModelsImportAdmin {
 
         return (object)[];
     }
+    /* CBAjax_uploadDataFile() */
+
 
     /**
      * @return string
