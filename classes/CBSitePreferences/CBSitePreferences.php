@@ -56,6 +56,7 @@ final class CBSitePreferences {
             'getIssueMessage_ack',
             'getIssueMessage_mysqldump',
             'getIssueMessage_siteName',
+            'getIssueMessage_slackWebhookURL',
         ];
 
         $issueMessages = [];
@@ -404,6 +405,35 @@ EOT;
         $message = <<<EOT
 
             This site has no name. Set one in (site preferences (a
+            {$editSitePreferencesLink})).
+
+EOT;
+
+        return $message;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    private static function getIssueMessage_slackWebhookURL(): ?string {
+        $siteName = CBModel::valueToString(
+            CBSitePreferences::model(),
+            'slackWebhookURL'
+        );
+
+        if ($siteName !== '') {
+            return null;
+        }
+
+        $editSitePreferencesLink = (
+            '/admin/?c=CBModelEditor&ID=' .
+            CBSitePreferences::ID()
+        );
+
+        $message = <<<EOT
+
+            This site has no Slack webhook URL. Set one in (site preferences (a
             {$editSitePreferencesLink})).
 
 EOT;

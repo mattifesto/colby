@@ -257,23 +257,6 @@ EOT;
             /**
              * @NOTE 2017_08_17
              *
-             *      The slackWebhookURL propery on the CBSitePreferences model
-             *      is not technically required, but it is effectively required
-             *      because an admin should be tracking site errors.
-             */
-
-            $model = CBModelCache::fetchModelByID(CBSitePreferences::ID);
-            $slackWebhookURL = CBModel::value($model, 'slackWebhookURL');
-
-            if (empty($slackWebhookURL)) {
-                $issues[] =
-                'Enter a Slack Webhook URL in site preferences to receive ' .
-                'error notifications.';
-            }
-
-            /**
-             * @NOTE 2017_08_17
-             *
              *      Search for use of deprecated "colby/Colby.php" file.
              */
 
