@@ -182,6 +182,19 @@ var CBSitePreferencesEditor = {
             );
         }
 
+        {
+            section.appendChild(
+                CBUIStringEditor.createEditor(
+                    {
+                        labelText: "path",
+                        propertyName: "path",
+                        spec: args.spec,
+                        specChangedCallback: args.specChangedCallback,
+                    }
+                ).element
+            );
+        }
+
         /* Slack */
 
         section.appendChild(
