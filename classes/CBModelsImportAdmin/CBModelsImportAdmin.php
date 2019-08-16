@@ -144,6 +144,19 @@ final class CBModelsImportAdmin {
     static function CBAjax_uploadDataFile(stdClass $args): stdClass {
         CBProcess::setID(CBModelImporter::processID());
 
+        /**
+         * @NOTE 2019_08_16
+         *
+         *      The "save unchanged models" option can go away because we've
+         *      moved to the "process version" paradigm where a process version
+         *      number is set on the spec by CBModel_upgrade() and incremented
+         *      when the process changes.
+         *
+         *      Imported specs are upgraded before they are saved. If the
+         *      developer changes the process version, imported specs will save,
+         *      if not, they don't need to be saved.
+         */
+
         $saveUnchangedModels = (bool)CBModel::value($args, 'saveUnchangedModels');
 
         /**
@@ -180,7 +193,18 @@ final class CBModelsImportAdmin {
                 $countOfSpecsSaved = 0;
 
                 while (($values = fgetcsv($handle)) !== false) {
-                    $rowSpec = CBModelsImportAdmin::valuesAsObject($values, $keys);
+                    /**
+                     * @NOTE 2019_08_16
+                     *
+                     *      This function name should change to valuesAsModel()
+                     *      and throw an exception for any object that has a
+                     *      non-empty field but is not a model.
+                     */
+
+                    $rowSpec = CBModelsImportAdmin::valuesAsObject(
+                        $values,
+                        $keys
+                    );
 
                     if ($rowSpec === null) {
                         continue;
@@ -195,7 +219,20 @@ final class CBModelsImportAdmin {
                         $rowSpec->ID = $ID;
                     }
 
-                    $rowSpecs[$ID] = $rowSpec;
+                    /**
+                     * @NOTE 2019_08_16
+                     *
+                     *      All imported specs are upgraded before they are
+                     *      saved for two reasons:
+                     *
+                     *          1) If there are necessary changes that haven't
+                     *          been reflected in the comma separated values.
+                     *
+                     *          2) If there is a process version number that
+                     *          needs to be set on imported specs.
+                     */
+
+                    $rowSpecs[$ID] = CBModel::upgrade($rowSpec);
                 }
 
                 fclose($handle);
