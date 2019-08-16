@@ -52,24 +52,24 @@ final class CBSitePreferences {
      * @return [string]
      */
     static function CBAdmin_getIssueMessages(): array {
+        $functionNames = [
+            'getIssueMessage_ack',
+            'getIssueMessage_mysqldump',
+        ];
+
         $issueMessages = [];
 
-        $message = CBSitePreferences::getIssueMessage_ack();
+        foreach ($functionNames as $functionName) {
+            $functionName = "CBSitePreferences::{$functionName}";
 
-        if ($message !== null) {
-            array_push(
-                $issueMessages,
-                $message
-            );
-        }
+            $message = call_user_func($functionName);
 
-        $message = CBSitePreferences::getIssueMessage_mysqldump();
-
-        if ($message !== null) {
-            array_push(
-                $issueMessages,
-                $message
-            );
+            if ($message !== null) {
+                array_push(
+                    $issueMessages,
+                    $message
+                );
+            }
         }
 
         return $issueMessages;
