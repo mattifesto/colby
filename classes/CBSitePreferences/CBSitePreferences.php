@@ -55,6 +55,7 @@ final class CBSitePreferences {
         $functionNames = [
             'getIssueMessage_ack',
             'getIssueMessage_mysqldump',
+            'getIssueMessage_siteName',
         ];
 
         $issueMessages = [];
@@ -380,6 +381,35 @@ EOT;
         return $message;
     }
     /* getIssueMessage_mysqldump() */
+
+
+    /**
+     * @return string|null
+     */
+    private static function getIssueMessage_siteName(): ?string {
+        $siteName = CBModel::valueToString(
+            CBSitePreferences::model(),
+            'siteName'
+        );
+
+        if ($siteName !== '') {
+            return null;
+        }
+
+        $editSitePreferencesLink = (
+            '/admin/?c=CBModelEditor&ID=' .
+            CBSitePreferences::ID()
+        );
+
+        $message = <<<EOT
+
+            This site has no name. Set one in (site preferences (a
+            {$editSitePreferencesLink})).
+
+EOT;
+
+        return $message;
+    }
 
 
     /**

@@ -290,15 +290,6 @@ EOT;
                 }
             }
 
-            /* 2018_01_01 Warn if the site name has not been set. */
-
-            if (trim(CBSitePreferences::siteName()) === '') {
-                $issues[] = [
-                    'Site Name',
-                    'This site has no site name. Set one in site preferences.'
-                ];
-            }
-
             /* 2018_01_12 Unused function */
 
             if (is_callable('CBPageHelpers::classNameForPageSettings')) {
