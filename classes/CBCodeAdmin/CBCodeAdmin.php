@@ -167,19 +167,10 @@ final class CBCodeAdmin {
     static function search(stdClass $search): array {
         $output = [];
 
-        $ack = CBModel::valueToString(
-            CBSitePreferences::model(),
-            'absoluteAckPath'
-        );
-
-        if (empty($ack)) {
-            $ack = 'ack';
-        };
-
         $command = implode(
             ' ',
             [
-                $ack,
+                'ack',
                 '--heading',
                 // '--underline', (enable only if ack v3 is available)
                 "--match '{$search->regex}'",
