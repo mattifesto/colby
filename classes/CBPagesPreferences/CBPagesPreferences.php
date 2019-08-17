@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @deprecated 2019_08_17
+ *
+ *      In the past, this model was used to determine which views and layouts
+ *      were available on the websites. Now views should be installed in the
+ *      CBViewCatalog and layouts have been replaced by frames.
+ *
+ *      This class is currently still in use while code is being migrated to
+ *      other classes.
+ */
 final class CBPagesPreferences {
 
     /**
@@ -218,10 +228,20 @@ EOT
             CBPagesPreferences::modelID()
         );
 
-        return CBModel::valueToArray(
-            $model,
-            'deprecatedViewClassNames'
+        $deprecatedViewClassNames =
+        array_unique(
+            array_merge(
+                CBModel::valueToArray(
+                    $model,
+                    'deprecatedViewClassNames'
+                ),
+                CBViewCatalog::fetchDeprecatedViewClassNames()
+            )
         );
+
+        sort($deprecatedViewClassNames);
+
+        return $deprecatedViewClassNames;
     }
     /* classNamesForDeprecatedViews() */
 
@@ -232,29 +252,25 @@ EOT
      *      An array of view class names that can be edited for a page.
      */
     static function classNamesForEditableViews() {
-        $supportedClassNames =
-        CBPagesPreferences::classNamesForSupportedViews();
-
-        $deprecatedClassNames =
-        CBPagesPreferences::classNamesForDeprecatedViews();
-
-        $classNames =
+        $editableViewClassNames =
         array_unique(
             array_merge(
-                $supportedClassNames,
-                $deprecatedClassNames
+                CBPagesPreferences::classNamesForSupportedViews(),
+                CBPagesPreferences::classNamesForDeprecatedViews()
             )
         );
 
-        $classNames =
-        array_filter(
-            $classNames,
-            function ($className) {
-                return class_exists($className);
-            }
+        $editableViewClassNames =
+        array_values(
+            array_filter(
+                $editableViewClassNames,
+                function ($className) {
+                    return class_exists($className);
+                }
+            )
         );
 
-        return array_values($classNames);
+        return $editableViewClassNames;
     }
     /* classNamesForEditableViews() */
 
@@ -295,22 +311,20 @@ EOT
             CBPagesPreferences::modelID()
         );
 
-        $supportedViewClassNames = CBModel::valueToArray(
-            $model,
-            'supportedViewClassNames'
-        );
-
-        $classNames =
+        $supportedViewClassNames =
         array_unique(
             array_merge(
-                $supportedViewClassNames,
+                CBModel::valueToArray(
+                    $model,
+                    'supportedViewClassNames'
+                ),
                 CBViewCatalog::fetchSupportedViewClassNames()
             )
         );
 
-        sort($classNames);
+        sort($supportedViewClassNames);
 
-        return $classNames;
+        return $supportedViewClassNames;
     }
     /* classNamesForSupportedViews() */
 
