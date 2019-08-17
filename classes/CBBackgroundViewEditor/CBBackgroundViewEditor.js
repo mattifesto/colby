@@ -144,53 +144,15 @@ var CBBackgroundViewEditor = {
             )
         );
 
-        var chooser = CBUIImageChooser.createFullSizedChooser(
-            {
-                imageChosenCallback: function (chooserArgs) {
-                    Colby.callAjaxFunction(
-                        "CBImages",
-                        "upload",
-                        {},
-                        chooserArgs.file
-                    ).then(
-                        function (imageModel) {
-                            args.spec.image = imageModel;
-                            args.spec.imageHeight = imageModel.height;
-                            args.spec.imageWidth = imageModel.width;
-                            args.spec.imageURL = CBImage.toURL(
-                                imageModel
-                            );
-
-                            updateImagePreview();
-
-                            args.specChangedCallback();
-                        }
-                    ).catch(
-                        function (error) {
-                            Colby.displayAndReportError(error);
-                        }
-                    );
-                },
-                imageRemovedCallback: function () {
-                    args.spec.image = undefined;
-                    args.spec.imageHeight = undefined;
-                    args.spec.imageWidth = undefined;
-                    args.spec.imageURL = undefined;
-
-                    updateImagePreview();
-
-                    args.specChangedCallback();
-                },
-            }
-        );
-        /*  CBUIImageChooser.createFullSizedChooser() */
-
+        let imageChooser = CBUIImageChooser.create();
+        imageChooser.chosen = createEditor_imageWasChosen;
+        imageChooser.removed = createEditor_imageWasRemoved;
 
         updateImagePreview();
 
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
-        item.appendChild(chooser.element);
+        item.appendChild(imageChooser.element);
         section.appendChild(item);
         element.appendChild(section);
 
@@ -205,25 +167,73 @@ var CBBackgroundViewEditor = {
         /**
          * @return undefined
          */
+        function createEditor_imageWasChosen() {
+            Colby.callAjaxFunction(
+                "CBImages",
+                "upload",
+                {},
+                imageChooser.file
+            ).then(
+                function (imageModel) {
+                    args.spec.image = imageModel;
+                    args.spec.imageHeight = imageModel.height;
+                    args.spec.imageWidth = imageModel.width;
+                    args.spec.imageURL = CBImage.toURL(
+                        imageModel
+                    );
+
+                    updateImagePreview();
+
+                    args.specChangedCallback();
+                }
+            ).catch(
+                function (error) {
+                    Colby.displayAndReportError(error);
+                }
+            );
+        }
+        /* createEditor_imageWasChosen() */
+
+
+        /**
+         * @return undefined
+         */
+        function createEditor_imageWasRemoved() {
+            args.spec.image = undefined;
+            args.spec.imageHeight = undefined;
+            args.spec.imageWidth = undefined;
+            args.spec.imageURL = undefined;
+
+            updateImagePreview();
+
+            args.specChangedCallback();
+        }
+        /* createEditor_imageWasRemoved() */
+
+
+        /**
+         * @return undefined
+         */
         function updateImagePreview() {
             if (args.spec.imageURL) {
                 if (args.spec.image) {
-                    chooser.setImageURLCallback(
-                        CBImage.toURL(args.spec.image, 'rw960')
+                    imageChooser.src = CBImage.toURL(
+                        args.spec.image,
+                        'rw960'
                     );
                 } else {
-                    chooser.setImageURLCallback(args.spec.imageURL);
+                    imageChooser.src = args.spec.imageURL;
                 }
 
-                chooser.setCaptionCallback(
+                imageChooser.caption = (
                     args.spec.imageWidth +
                     "px × " +
                     args.spec.imageHeight +
                     "px"
                 );
             } else {
-                chooser.setImageURLCallback();
-                chooser.setCaptionCallback("");
+                imageChooser.src = "";
+                imageChooser.caption = "";
             }
         }
         /* updateImagePreview */
