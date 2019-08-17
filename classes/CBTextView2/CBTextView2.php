@@ -2,6 +2,26 @@
 
 final class CBTextView2 {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function CBAjax_convertToCBMessageView(stdClass $spec): stdClass {
+        return CBTextView2::convertToCBMessageView($spec);
+    }
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_convertToCBMessageView_group(): string {
+        return 'Administrators';
+    }
+
+
     /* -- CBInstall interfaces -- -- -- -- -- */
 
     /**
@@ -158,4 +178,37 @@ final class CBTextView2 {
         return $model;
     }
     /* CBModel_build() */
+
+
+    /* -- functions -- -- -- -- -- */
+
+    /**
+     * @param object $originalSpec
+     *
+     * @return object
+     */
+    static function convertToCBMessageView(stdClass $originalSpec): stdClass {
+        $messageViewSpec = CBModel::clone($originalSpec);
+
+        $messageViewSpec->className = 'CBMessageView';
+
+        $messageViewSpec->markup = CBMessageMarkup::stringToMessage(
+            CBModel::valueToString(
+                $originalSpec,
+                'contentAsCommonMark'
+            )
+        );
+
+        unset($messageViewSpec->contentAsCommonMark);
+
+        $messageViewSpec->CSSTemplate = CBModel::valueToString(
+            $originalSpec,
+            'localCSSTemplate'
+        );
+
+        unset($messageViewSpec->localCSSTemplate);
+
+        return $messageViewSpec;
+    }
+    /* convertToCBMessageView() */
 }
