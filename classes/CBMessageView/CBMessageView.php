@@ -45,8 +45,12 @@ final class CBMessageView {
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
-            'html' => CBMessageMarkup::markupToHTML(CBModel::valueToString($spec, 'markup')),
+            'html' => CBMessageMarkup::markupToHTML(
+                CBModel::valueToString($spec, 'markup')
+            ),
+
             'markup' => CBModel::valueToString($spec, 'markup'),
+
             'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
         ];
 
@@ -65,15 +69,22 @@ final class CBMessageView {
         /**
          * Step 3: Get the CSS template.
          */
-        $CSSTemplate = CBModel::value($spec, 'CSSTemplate', '', 'trim');
+        $CSSTemplate = trim(
+            CBModel::valueToString($spec, 'CSSTemplate')
+        );
 
         /**
          * Step 4: Generate the view CSS.
          */
-        $model->CSS = CBView::CSSTemplateToCSS($CSSTemplate, $uniqueCSSClassName);
+        $model->CSS = CBView::CSSTemplateToCSS(
+            $CSSTemplate,
+            $uniqueCSSClassName
+        );
 
         return $model;
     }
+    /* CBModel_build() */
+
 
     /**
      * @param object $model
@@ -87,6 +98,7 @@ final class CBMessageView {
             return '';
         }
     }
+
 
     /**
      * @param model $model
