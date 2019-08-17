@@ -38,9 +38,12 @@ final class CBViewPageEditor {
             CBPagesPreferences::classNamesForLayouts()
         );
 
-        $classNamesForEditors = array_map(function ($className) {
-            return "{$className}Editor";
-        }, $classNamesForEditableViewsAndLayouts);
+        $classNamesForEditors = array_map(
+            function ($className) {
+                return "{$className}Editor";
+            },
+            $classNamesForEditableViewsAndLayouts
+        );
 
         return array_merge(
             $classNamesForEditors,
