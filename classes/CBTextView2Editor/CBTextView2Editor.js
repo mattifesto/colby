@@ -5,7 +5,12 @@
 /* global
     CBModel,
     CBUI,
+    CBUINavigationView,
+    CBUIPanel,
+    CBUISpecClipboard,
+    CBUISpecEditor,
     CBUIStringEditor,
+    Colby,
 */
 
 var CBTextView2Editor = {
@@ -19,6 +24,36 @@ var CBTextView2Editor = {
     createEditor: function (args) {
         var section, item;
         var element = CBUI.createElement("CBTextView2Editor");
+
+        /* convert to CBMessageView */
+        {
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            element.appendChild(sectionContainerElement);
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
+
+            let actionElement = CBUI.createElement(
+                "CBUI_action"
+            );
+
+            actionElement.textContent = "Convert to CBMessageView";
+
+            actionElement.addEventListener(
+                "click",
+                createEditor_convert
+            );
+
+            sectionElement.appendChild(actionElement);
+        }
+        /* convert to CBMessageView */
+
 
         element.appendChild(
             CBUI.createHalfSpace()
@@ -122,6 +157,70 @@ var CBTextView2Editor = {
         );
 
         return element;
+
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return undefined
+         */
+        function createEditor_convert() {
+            CBUIPanel.message = "Are you sure?";
+
+            CBUIPanel.buttons = [
+                {
+                    title: "Yes",
+                    callback: createEditor_convertStage2,
+                },
+                {
+                    title: "No",
+                },
+            ];
+
+            CBUIPanel.isShowing = true;
+        }
+        /* createEditor_convert() */
+
+
+        /**
+         * @return undefined
+         */
+        function createEditor_convertStage2() {
+            CBUIPanel.reset();
+
+            CBUISpecClipboard.specs = [args.spec];
+
+            Colby.callAjaxFunction(
+                "CBTextView2",
+                "convertToCBMessageView",
+                args.spec
+            ).then(
+                function (messageViewSpec) {
+                    Object.assign(args.spec, messageViewSpec);
+
+                    args.specChangedCallback();
+
+                    let editor = CBUISpecEditor.create(
+                        {
+                            spec: args.spec,
+                            specChangedCallback: args.specChangedCallback,
+                        }
+                    );
+
+                    CBUINavigationView.replace(
+                        {
+                            element: editor.element,
+                            title: args.spec.className,
+                        }
+                    );
+                }
+            ).catch(
+                function (error) {
+                    Colby.displayAndReportError(error);
+                }
+            );
+        }
+        /* createEditor_convertStage2() */
     },
     /* createEditor() */
 
