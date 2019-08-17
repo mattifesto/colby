@@ -76,22 +76,44 @@ var CBUIImageChooser = {
 
         inputElement.addEventListener(
             "change",
-            function() {
+            function () {
                 if (typeof chosen === "function") {
-                    chosen(
-                        {
-                            file: inputElement.files[0],
-                            setCaptionCallback: function (value) {
-                                api.caption = value;
-                            }, /* deprecated */
-                            setImageURI: function (value) {
-                                api.src = value;
-                            }, /* deprecated */
-                            setImageURLCallback: function (value) {
-                                api.src = value;
-                            }, /* deprecated */
-                        }
-                    );
+
+                    /**
+                     * @deprecated use imageChooser API
+                     */
+                    let chosenArgs = {
+
+                        /**
+                         * @deprecated use imageChooser.file
+                         */
+                        get file() {
+                            return inputElement.files[0];
+                        },
+
+                        /**
+                         * @deprecated use imageChooser.caption
+                         */
+                        setCaptionCallback: function (value) {
+                            api.caption = value;
+                        },
+
+                        /**
+                         * @deprecated use imageChooser.src
+                         */
+                        setImageURI: function (value) {
+                            api.src = value;
+                        },
+
+                        /**
+                         * @deprecated use imageChooser.src
+                         */
+                        setImageURLCallback: function (value) {
+                            api.src = value;
+                        },
+                    };
+
+                    chosen(chosenArgs);
                 }
 
                 inputElement.value = null;
@@ -152,6 +174,14 @@ var CBUIImageChooser = {
             get element() {
                 return element;
             },
+
+            /**
+             * @return File|undefined
+             */
+            get file() {
+                return inputElement.files[0];
+            },
+
             get removed() {
                 return removed;
             },

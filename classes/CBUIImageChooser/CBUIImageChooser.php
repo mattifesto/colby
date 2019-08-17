@@ -20,7 +20,7 @@ final class CBUIImageChooser {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v507.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v511.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
