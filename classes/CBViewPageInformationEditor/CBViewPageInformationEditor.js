@@ -321,43 +321,27 @@ var CBViewPageInformationEditor = {
 
         section = CBUI.createSection();
 
-        var thumbnailChosenCallback =
-        CBViewPageInformationEditor.handleThumbnailChosen;
+        let imageChooser = CBUIImageChooser.create();
+        imageChooser.chosen = createEditor_handleImageChosen;
+        imageChooser.removed = createEditor_handleImageRemoved;
 
-        var thumbnailRemovedCallback =
-        CBViewPageInformationEditor.handleThumbnailRemoved;
-
-        var chooser = CBUIImageChooser.createThumbnailSizedChooser(
-            {
-                imageChosenCallback: thumbnailChosenCallback,
-                imageRemovedCallback: thumbnailRemovedCallback,
-            }
-        );
+        imageChooser.element.classList.add("CBUIImageChooser_thumbnail");
 
         CBViewPageEditor.thumbnailChangedCallback =
-        CBViewPageInformationEditor.handleThumbnailChanged.bind(
-            undefined,
-            {
-                setImageURLCallback: chooser.setImageURLCallback,
-            }
-        );
+        createEditor_handlePageThumbnailChanged;
 
         item = CBUI.createSectionItem();
-        item.appendChild(chooser.element);
+        item.appendChild(imageChooser.element);
         section.appendChild(item);
 
         element.appendChild(section);
 
-        var imageURL = args.spec.thumbnailURL; /* deprecated */
-
         if (args.spec.image) {
-            imageURL = CBImage.toURL(
+            imageChooser.src = CBImage.toURL(
                 args.spec.image,
                 "rw320"
             );
         }
-
-        chooser.setImageURLCallback(imageURL);
 
         /* actions */
 
@@ -511,64 +495,58 @@ var CBViewPageInformationEditor = {
         }
 
         return element;
+
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return undefined
+         */
+        function createEditor_handleImageChosen() {
+            Colby.callAjaxFunction(
+                "CBImages",
+                "upload",
+                {},
+                imageChooser.file
+            ).then(
+                function (imageModel) {
+                    CBViewPageEditor.setThumbnailImage(imageModel);
+                }
+            ).catch(
+                function (error) {
+                    Colby.displayAndReportError(error);
+                }
+            );
+        }
+        /* createEditor_handleImageChosen() */
+
+
+        /**
+         * @return undefined
+         */
+        function createEditor_handleImageRemoved() {
+            CBViewPageEditor.setThumbnailImage();
+        }
+        /* createEditor_handleImageRemoved() */
+
+
+        /**
+         * @param object args
+         *
+         *      {
+         *          spec: object
+         *          image: object
+         *      }
+         */
+        function createEditor_handlePageThumbnailChanged(args) {
+            if (args.image) {
+                imageChooser.src = CBImage.toURL(args.image, "rw640");
+            } else {
+                imageChooser.src = "";
+            }
+        }
+        /* createEditor_handlePageThumbnailChanged() */
     },
     /* createEditor() */
-
-
-    /**
-     * All this function does is set the uploader thumbnail image. It may be
-     * able to be replaced with a bound setImageURL callback. I think it's only
-     * called by this file. Also we probably don't have to handle the
-     * thumbnailURL case anymore.
-     *
-     * @param function args.setImageURLCallback
-     * @param object pageArgs.spec
-     * @param object pageArgs.image
-     */
-    handleThumbnailChanged: function (args, pageArgs) {
-        if (pageArgs.image) {
-            args.setImageURLCallback(
-                CBImage.toURL(pageArgs.image, "rw320")
-            );
-        } else if (pageArgs.spec.thumbnailURL) {
-            args.setImageURLCallback(pageArgs.spec.thumbnailURL);
-        } else {
-            args.setImageURLCallback();
-        }
-    },
-    /* handleThumbnailChanged() */
-
-
-    /**
-     * @param file chooserArgs.file
-     * @param function chooserArgs.setImageURLCallback
-     *
-     * @return undefined
-     */
-    handleThumbnailChosen: function (chooserArgs) {
-        Colby.callAjaxFunction(
-            "CBImages",
-            "upload",
-            {},
-            chooserArgs.file
-        ).then(
-            function (imageModel) {
-                CBViewPageEditor.setThumbnailImage(imageModel);
-            }
-        ).catch(
-            function (error) {
-                Colby.displayAndReportError(error);
-            }
-        );
-    },
-    /* handleThumbnailChosen() */
-
-
-    /**
-     * @return undefined
-     */
-    handleThumbnailRemoved: function () {
-        CBViewPageEditor.setThumbnailImage();
-    },
 };
 /* CBViewPageInformationEditor */

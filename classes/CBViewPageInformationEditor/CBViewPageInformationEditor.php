@@ -9,7 +9,7 @@ final class CBViewPageInformationEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v504.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v511.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
