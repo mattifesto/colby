@@ -232,79 +232,6 @@ var CBContainerViewEditor = {
             element.appendChild(editor.element);
         }
 
-        /**
-         * image properties
-         */
-
-        function imageToSize(image) {
-            if (image && image.width && image.height) {
-                return (image.width / 2) + "pt × " + (image.height / 2) + "pt";
-            } else {
-                return "";
-            }
-        }
-
-
-        function imageToURL(image) {
-            return CBImage.toURL(
-                image,
-                "rw960"
-            );
-        }
-
-
-        function createImageEditorElement(propertyName) {
-            var section = CBUI.createSection();
-
-            var chooser = CBUIImageChooser.createFullSizedChooser(
-                {
-                    imageChosenCallback: function (imageChosenArgs) {
-                        Colby.callAjaxFunction(
-                            "CBImages",
-                            "upload",
-                            {},
-                            imageChosenArgs.file
-                        ).then(
-                            function (imageModel) {
-                                args.spec[propertyName] = imageModel;
-
-                                args.specChangedCallback();
-
-                                imageChosenArgs.setImageURLCallback(
-                                    imageToURL(imageModel)
-                                );
-
-                                imageChosenArgs.setCaptionCallback(
-                                    imageToSize(imageModel)
-                                );
-                            }
-                        );
-                    },
-                    imageRemovedCallback: function () {
-                        args.spec[propertyName] = undefined;
-                        args.specChangedCallback();
-                    },
-                }
-            );
-
-            chooser.setImageURLCallback(
-                imageToURL(
-                    args.spec[propertyName]
-                )
-            );
-
-            chooser.setCaptionCallback(
-                imageToSize(
-                    args.spec[propertyName]
-                )
-            );
-
-            var item = CBUI.createSectionItem();
-            item.appendChild(chooser.element);
-            section.appendChild(item);
-
-            return section;
-        }
 
         /* large image */
 
@@ -425,6 +352,87 @@ var CBContainerViewEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         return element;
+
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return string
+         */
+        function imageToSize(image) {
+            if (image && image.width && image.height) {
+                return (image.width / 2) + "pt × " + (image.height / 2) + "pt";
+            } else {
+                return "";
+            }
+        }
+
+
+        /**
+         * @return string
+         */
+        function imageToURL(image) {
+            return CBImage.toURL(
+                image,
+                "rw960"
+            );
+        }
+
+
+        /**
+         * @return Element
+         */
+        function createImageEditorElement(propertyName) {
+            var section = CBUI.createSection();
+
+            let imageChooser = CBUIImageChooser.create();
+            imageChooser.chosen = createImageEditorElement_chosen;
+            imageChooser.removed = createImageEditorElement_removed;
+            imageChooser.src = imageToURL(args.spec[propertyName]);
+            imageChooser.caption = imageToSize(args.spec[propertyName]);
+
+            var item = CBUI.createSectionItem();
+
+            item.appendChild(imageChooser.element);
+            section.appendChild(item);
+
+            return section;
+
+
+            /* -- closures -- -- -- -- -- */
+
+            /**
+             * @return undefined
+             */
+            function createImageEditorElement_chosen() {
+                Colby.callAjaxFunction(
+                    "CBImages",
+                    "upload",
+                    {},
+                    imageChooser.file
+                ).then(
+                    function (imageModel) {
+                        args.spec[propertyName] = imageModel;
+                        imageChooser.src = imageToURL(imageModel);
+                        imageChooser.caption = imageToSize(imageModel);
+
+                        args.specChangedCallback();
+                    }
+                );
+            }
+            /* createImageEditorElement_chosen() */
+
+
+            /**
+             * @return undefined
+             */
+            function createImageEditorElement_removed() {
+                args.spec[propertyName] = undefined;
+                args.specChangedCallback();
+            }
+            /* createImageEditorElement_removed() */
+        }
+        /* createImageEditorElement() */
     },
     /* createEditor() */
 
