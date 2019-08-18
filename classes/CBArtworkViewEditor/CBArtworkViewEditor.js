@@ -35,16 +35,13 @@ var CBArtworkViewEditor = {
 
         section = CBUI.createSection();
 
-        var chooser = CBUIImageChooser.createFullSizedChooser(
-            {
-                imageChosenCallback: createEditor_handleImageChosen,
-                imageRemovedCallback: createEditor_handleImageRemoved,
-            }
-        );
+        let imageChooser = CBUIImageChooser.create();
+        imageChooser.chosen = createEditor_handleImageChosen;
+        imageChooser.removed = createEditor_handleImageRemoved;
 
         item = CBUI.createSectionItem();
 
-        item.appendChild(chooser.element);
+        item.appendChild(imageChooser.element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
@@ -186,9 +183,7 @@ var CBArtworkViewEditor = {
         /* set thumbnail */
 
         if (args.spec.image) {
-            chooser.setImageURLCallback(
-                CBImage.toURL(args.spec.image, "rw960")
-            );
+            imageChooser.src = CBImage.toURL(args.spec.image, "rw960");
         }
 
         return element;
@@ -201,21 +196,19 @@ var CBArtworkViewEditor = {
          *
          * @return undefined
          */
-        function createEditor_handleImageChosen(chooserArgs) {
+        function createEditor_handleImageChosen() {
             Colby.callAjaxFunction(
                 "CBImages",
                 "upload",
                 {},
-                chooserArgs.file
+                imageChooser.file
             ).then(
                 function (imageModel) {
                     args.spec.image = imageModel;
 
                     args.specChangedCallback();
 
-                    chooserArgs.setImageURI(
-                        CBImage.toURL(imageModel, "rw960")
-                    );
+                    imageChooser.src = CBImage.toURL(imageModel, "rw960");
 
                     let suggestThumbnailImage = CBModel.valueAsFunction(
                         window.CBViewPageEditor,
