@@ -48,7 +48,7 @@ var CBUIImageChooser = {
         element.appendChild(inputElement);
 
         var imageContainerElement = document.createElement("div");
-        imageContainerElement.className = "container";
+        imageContainerElement.className = "CBUIImageChooser_container";
         var imageElement = document.createElement("img");
         imageElement.style.display = "none";
 
@@ -56,13 +56,13 @@ var CBUIImageChooser = {
         element.appendChild(imageContainerElement);
 
         var captionElement = document.createElement("div");
-        captionElement.className = "caption";
+        captionElement.className = "CBUIImageChooser_caption";
         captionElement.style.display = "none";
 
         element.appendChild(captionElement);
 
         var commandsElement = document.createElement("div");
-        commandsElement.className = "commands";
+        commandsElement.className = "CBUIImageChooser_commands";
 
         var chooseElement = document.createElement("div");
         chooseElement.textContent = "choose";
@@ -250,7 +250,6 @@ var CBUIImageChooser = {
      */
     createFullSizedChooser: function (args) {
         let chooser = CBUIImageChooser.create();
-        chooser.element.classList.add("full");
 
         chooser.chosen = args.imageChosenCallback;
         chooser.removed = args.imageRemovedCallback;
@@ -292,7 +291,7 @@ var CBUIImageChooser = {
      */
     createThumbnailSizedChooser: function (args) {
         let chooser = CBUIImageChooser.create();
-        chooser.element.classList.add("thumbnail");
+        chooser.element.classList.add("CBUIImageChooser_thumbnail");
 
         chooser.chosen = args.imageChosenCallback;
         chooser.removed = args.imageRemovedCallback;

@@ -9,7 +9,7 @@ final class CBUIImageChooser {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v485.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v511.css', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_CSSURLs() */
