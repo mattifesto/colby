@@ -1,6 +1,10 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBUISelectableItem */
+/* global
+    CBErrorHandler,
+*/
 
 var CBUISelectableItem = {
 
@@ -22,13 +26,20 @@ var CBUISelectableItem = {
         var element = document.createElement("div");
         element.className = "CBUISelectableItem";
 
-        element.addEventListener("click", function () {
-            if (selectable) {
-                o.selected = !selected;
-            } else if (callback) {
-                callback();
+        element.addEventListener(
+            "click",
+            function create_clickEventListener() {
+                try {
+                    if (selectable) {
+                        o.selected = !selected;
+                    } else if (callback) {
+                        callback();
+                    }
+                } catch (error) {
+                    CBErrorHandler.displayAndReport(error);
+                }
             }
-        });
+        );
 
         var selectorPart = document.createElement("div");
         selectorPart.className = "selectorPart";
@@ -40,7 +51,7 @@ var CBUISelectableItem = {
         selectorBox.textContent = "✔";
 
         selectorPart.appendChild(selectorBox);
-        
+
         var partsElement = document.createElement("div");
         partsElement.className = "parts";
 
