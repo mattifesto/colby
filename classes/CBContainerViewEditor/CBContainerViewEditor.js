@@ -72,7 +72,6 @@ var CBContainerViewEditor = {
 
 
     /**
-     * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
      *
@@ -164,7 +163,6 @@ var CBContainerViewEditor = {
             CBUISelector.create(
                 {
                     labelText: "Type",
-                    navigateToItemCallback: args.navigateToItemCallback,
                     options: options,
                     propertyName: "tagName",
                     spec: args.spec,
@@ -221,7 +219,6 @@ var CBContainerViewEditor = {
             let editor = CBUISpecArrayEditor.create(
                 {
                     addableClassNames: CBContainerViewEditor_addableClassNames,
-                    navigateToItemCallback: args.navigateToItemCallback,
                     specs: args.spec.subviews,
                     specsChangedCallback: args.specChangedCallback,
                 }
