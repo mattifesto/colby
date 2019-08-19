@@ -6,10 +6,11 @@
     CBModel,
     CBUI,
     CBUIExpander,
-    CBLogAdminPage_classNames,
     CBUINavigationView,
     CBUISelector,
     Colby,
+
+    CBLogAdminPage_classNames,
 */
 
 var CBLogAdminPage = {
@@ -17,8 +18,15 @@ var CBLogAdminPage = {
     /**
      * @return Element
      */
-    create: function () {
-        let navigator = CBUINavigationView.create();
+    createElement: function () {
+        let interfaceElement;
+
+        {
+            let navigationView = CBUINavigationView.create();
+
+            interfaceElement = navigationView.element;
+        }
+
         var args = {
             lowestSeverity: 6,
             mostRecentDescending: true,
@@ -86,15 +94,20 @@ var CBLogAdminPage = {
 
             containerElement.appendChild(entriesElement);
 
-            navigator.navigateToItemCallback({
-                element: containerElement,
-                title: "Log",
-            });
+            CBUINavigationView.navigate(
+                {
+                    element: containerElement,
+                    title: "Log",
+                }
+            );
         }
 
         handleArgsChanged();
 
-        return navigator.element;
+        return interfaceElement;
+
+
+        /* -- closures -- -- -- -- -- */
 
         function handleArgsChanged() {
             Colby.callAjaxFunction("CBLog", "fetchEntries", args)
@@ -204,9 +217,21 @@ var CBLogAdminPage = {
             Colby.updateTimes();
         }
     },
+    /* createElement() */
 };
+/* CBLogAdminPage */
 
-Colby.afterDOMContentLoaded(function () {
-    var main = document.getElementsByTagName("main")[0];
-    main.appendChild(CBLogAdminPage.create());
-});
+
+Colby.afterDOMContentLoaded(
+    function () {
+        let pageElements = document.getElementsByClassName("CBLogAdminPage");
+
+        if (pageElements.length > 0) {
+            let pageElement = pageElements[0];
+
+            pageElement.appendChild(
+                CBLogAdminPage.createElement()
+            );
+        }
+    }
+);

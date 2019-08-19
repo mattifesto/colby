@@ -2,6 +2,8 @@
 
 final class CBLogAdminPage {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
@@ -18,6 +20,18 @@ final class CBLogAdminPage {
      */
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Website Log';
+    }
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v512.js', cbsysurl()),
+        ];
     }
 
 
@@ -41,14 +55,6 @@ EOT;
         ];
     }
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v456.js', cbsysurl()),
-        ];
-    }
 
     /**
      * @return [string]
@@ -60,6 +66,7 @@ EOT;
             'CBUIExpander',
             'CBUINavigationView',
             'CBUISelector',
+            'Colby',
         ];
     }
 
