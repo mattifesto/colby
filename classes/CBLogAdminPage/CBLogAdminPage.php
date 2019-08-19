@@ -30,7 +30,7 @@ final class CBLogAdminPage {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v512.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v513.js', cbsysurl()),
         ];
     }
 
