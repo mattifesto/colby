@@ -4,7 +4,6 @@
 /* exported CBModel */
 /* global
     CBConvert,
-    CBException,
 */
 
 var CBModel = {
@@ -178,12 +177,8 @@ var CBModel = {
         }
 
         if (typeof keyPath !== "string") {
-            throw CBException.withError(
-                TypeError(
-                    "The keyPath argument must be a string."
-                ),
-                "",
-                "604d5d5d2f4dd57fee2da86a18f4f9b4a2b8644b"
+            throw TypeError(
+                "The keyPath argument must be a string."
             );
         }
 

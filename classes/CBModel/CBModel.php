@@ -48,7 +48,7 @@ final class CBModel {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v512.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -60,7 +60,6 @@ final class CBModel {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBConvert',
-            'CBException',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
