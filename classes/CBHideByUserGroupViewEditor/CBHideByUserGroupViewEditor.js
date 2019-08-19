@@ -3,17 +3,18 @@
 /* jshint esversion: 6 */
 /* exported CBHideByUserGroupViewEditor */
 /* global
-    CBHideByUserGroupViewEditor_addableClassNames,
-    CBHideByUserGroupViewEditor_groupNames,
     CBUI,
     CBUIBooleanEditor,
     CBUISelector,
-    CBUISpecArrayEditor */
+    CBUISpecArrayEditor,
+
+    CBHideByUserGroupViewEditor_addableClassNames,
+    CBHideByUserGroupViewEditor_groupNames,
+*/
 
 var CBHideByUserGroupViewEditor = {
 
     /**
-     * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
      *
@@ -48,7 +49,6 @@ var CBHideByUserGroupViewEditor = {
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText: "User Group",
-            navigateToItemCallback: args.navigateToItemCallback,
             propertyName: "groupName",
             spec: args.spec,
             specChangedCallback: args.specChangedCallback,
@@ -87,7 +87,6 @@ var CBHideByUserGroupViewEditor = {
                 addableClassNames: (
                     CBHideByUserGroupViewEditor_addableClassNames
                 ),
-                navigateToItemCallback: args.navigateToItemCallback,
                 specs: args.spec.subviews,
                 specsChangedCallback: args.specChangedCallback,
             });

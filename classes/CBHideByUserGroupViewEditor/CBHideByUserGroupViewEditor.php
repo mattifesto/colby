@@ -5,22 +5,9 @@ final class CBHideByUserGroupViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return [
-            'CBUI',
-            'CBUIBooleanEditor',
-            'CBUISelector',
-            'CBUISpecArrayEditor',
-        ];
-    }
-
-
-    /**
-     * @return [string]
-     */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v488.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v514.js', cbsysurl()),
         ];
     }
 
@@ -38,6 +25,19 @@ final class CBHideByUserGroupViewEditor {
                 'CBHideByUserGroupViewEditor_groupNames',
                 ColbyUser::fetchGroupNames(),
             ],
+        ];
+    }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBUI',
+            'CBUIBooleanEditor',
+            'CBUISelector',
+            'CBUISpecArrayEditor',
         ];
     }
 }
