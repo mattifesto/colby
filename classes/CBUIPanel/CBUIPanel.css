@@ -54,16 +54,16 @@
 }
 
 /**
- * The message element has a padding of 10px to prevent the message from
- * touching the edges of the surface. The element is flexbox so that it can
- * center to content element both horizontally and vertically.
+ * The CBUIPanel_message and CBUIPanel_content mimic the styles of a
+ * CBMessageView.
  */
 .CBUIPanel_message {
+    box-sizing: border-box;
     display: flex;
-    align-items: center;
     justify-content: center;
-
-    padding: 10px;
+    line-height: 1.5;
+    max-width: 100%;
+    padding: 20px;
 }
 
 /**
@@ -72,8 +72,8 @@
  * maintain readability.
  */
 .CBUIPanel_content {
-    max-width: 36em;
-    text-align: center;
+    max-width: 100%;
+    width: 36em;
 }
 
 /**

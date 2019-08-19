@@ -125,9 +125,13 @@ Colby.afterDOMContentLoaded(
 
         init_reset();
 
-        Object.defineProperty(window, 'CBUIPanel', {
-            value: api,
-        });
+        Object.defineProperty(
+            window,
+            'CBUIPanel',
+            {
+                value: api,
+            }
+        );
 
         return;
 
