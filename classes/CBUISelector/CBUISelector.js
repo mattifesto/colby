@@ -17,7 +17,6 @@ var CBUISelector = {
      *
      *      {
      *          labelText: string? (deprecated)
-     *          navigateToItemCallback: function?
      *          propertyName: string?
      *          spec: object?
      *          specChangedCallback: function?
@@ -66,9 +65,7 @@ var CBUISelector = {
 
         /**
          * These default parameter values make it easier to get started with
-         * this control. However, the user won't be able to change the selection
-         * if the navigateToItemCallback parameter is not specified. See
-         * CBUINavigationView for more information.
+         * this control.
          */
 
         let title = '';
@@ -89,18 +86,6 @@ var CBUISelector = {
         var state = { options: undefined };
 
         updateOptions(options);
-
-        let navigate = args.navigateToItemCallback;
-
-        if (navigate === undefined) {
-            if (typeof CBUINavigationView === "object" && CBUINavigationView.context) {
-                navigate = CBUINavigationView.context.navigate;
-            } else {
-                throw new Error(
-                    "CBUISelector requires the use of CBUINavigationView"
-                );
-            }
-        }
 
         sectionItem.callback = showSelector;
 
@@ -194,7 +179,6 @@ var CBUISelector = {
         function showSelector() {
             CBUISelector.showSelector({
                 callback: updateValue,
-                navigateToItemCallback: navigate,
                 options: state.options,
                 selectValue: api.value,
                 title: title,
@@ -297,7 +281,6 @@ var CBUISelector = {
      * @param object args
      *
      *      {
-     *          navigateToItemCallback: function
      *          options: [object]
      *
      *              {
@@ -321,7 +304,6 @@ var CBUISelector = {
 
             CBUISelector.showSelector({
                 callback: resolve,
-                navigateToItemCallback: args.navigateToItemCallback,
                 options: args.options,
                 selectedValue: args.selectedValue,
                 title: args.title,
@@ -370,6 +352,7 @@ var CBUISelector = {
         }
     },
 };
+
 
 var CBUISelectorValueEditor = {
 
