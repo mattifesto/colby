@@ -9,7 +9,7 @@ final class CBMenuViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v477.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v513.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */

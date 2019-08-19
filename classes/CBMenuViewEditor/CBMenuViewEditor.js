@@ -18,7 +18,8 @@ var CBMenuViewEditor = {
      * @param object args
      *
      *      {
-     *          navigateToItemCallback: function
+     *          spec: object
+     *          specChangedCallback: function
      *      }
      *
      * @return Element
@@ -39,7 +40,6 @@ var CBMenuViewEditor = {
             CBUISelector.create(
                 {
                     labelText: "Menu",
-                    navigateToItemCallback: args.navigateToItemCallback,
                     options: CBMenuViewEditor_menuOptions,
                     propertyName: "menuID",
                     spec: args.spec,
@@ -58,7 +58,6 @@ var CBMenuViewEditor = {
         var menuItemSelector = CBUISelector.create(
             {
                 labelText: "Selected Item",
-                navigateToItemCallback: args.navigateToItemCallback,
                 propertyName: "selectedItemName",
                 spec: args.spec,
                 specChangedCallback: args.specChangedCallback,
