@@ -55,11 +55,14 @@ EOT;
     }
 
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBErrorHandler',
             'CBUI',
             'CBUIActionPart',
             'CBUINavigationArrowPart',
@@ -67,6 +70,7 @@ EOT;
             'CBUISectionItem4',
             'CBUISelector',
             'CBUITitleAndDescriptionPart',
+            'Colby',
         ];
     }
 
@@ -74,11 +78,12 @@ EOT;
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v368.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v514.js', cbsysurl()),
         ];
     }
+
 
     /* -- CBInstall interfaces -- -- -- -- -- */
 

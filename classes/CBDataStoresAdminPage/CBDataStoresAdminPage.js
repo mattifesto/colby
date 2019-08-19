@@ -3,6 +3,7 @@
 /* jshint esnext: true */
 /* exported CBDataStoresAdminPage */
 /* global
+    CBErrorHandler,
     CBUI,
     CBUIActionPart,
     CBUINavigationArrowPart,
@@ -10,7 +11,8 @@
     CBUISectionItem4,
     CBUISelector,
     CBUITitleAndDescriptionPart,
-    Colby */
+    Colby,
+*/
 
 var CBDataStoresAdminPage = {
 
@@ -19,24 +21,30 @@ var CBDataStoresAdminPage = {
      */
     createElement: function (data) {
         var element = document.createElement("div");
-        var navigationView = CBUINavigationView.create({
-            defaultSpecChangedCallback : function () {},
-            rootItem : {
-                element : element,
-                title : "Data Stores",
-            },
-        });
 
         element.appendChild(CBUI.createHalfSpace());
 
         {
             let sectionElement = CBUI.createSection();
             let sectionItem = CBUISectionItem4.create();
+
             sectionItem.callback = function () {
-                Colby.callAjaxFunction("CBDataStoresFinderTask", "restart")
-                    .then(function () { Colby.alert("The data store finder has been restarted."); })
-                    .catch(Colby.displayAndReportError);
+                Colby.callAjaxFunction(
+                    "CBDataStoresFinderTask",
+                    "restart"
+                ).then(
+                    function () {
+                        Colby.alert(
+                            "The data store finder has been restarted."
+                        );
+                    }
+                ).catch(
+                    function (error) {
+                        CBErrorHandler.displayAndReport(error);
+                    }
+                );
             };
+
             let actionPart = CBUIActionPart.create();
             actionPart.title = "Restart Data Store Finder";
 
@@ -74,7 +82,6 @@ var CBDataStoresAdminPage = {
             sectionElement.appendChild(CBUISelector.create({
                 labelText: "Class Name",
                 options: options,
-                navigateToItemCallback: navigationView.navigateToItemCallback,
                 propertyName: "className",
                 valueChangedCallback: update,
             }).element);
@@ -89,11 +96,24 @@ var CBDataStoresAdminPage = {
         element.appendChild(dataStoresSection);
         element.appendChild(CBUI.createHalfSpace());
 
+        var navigationView = CBUINavigationView.create();
+
+        CBUINavigationView.navigate(
+            {
+                element: element,
+                title: "Data Stores",
+            }
+        );
+
         return navigationView.element;
 
-        function update(className) {
-            //Colby.alert(className);
 
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return undefined
+         */
+        function update(className) {
             if (!className) {
                 className = null;
             }
@@ -103,12 +123,21 @@ var CBDataStoresAdminPage = {
             data.forEach(function (value) {
                 if (value.className === className) {
                     let sectionItem = CBUISectionItem4.create();
+
                     sectionItem.callback = function () {
-                        window.location = "/admin/?c=CBModelInspector&ID=" + value.ID;
+                        window.location = (
+                            "/admin/?c=CBModelInspector&ID=" +
+                            value.ID
+                        );
                     };
-                    let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
+
+                    let titleAndDescriptionPart =
+                    CBUITitleAndDescriptionPart.create();
+
                     titleAndDescriptionPart.title = value.ID;
-                    titleAndDescriptionPart.description = value.className || "No model";
+                    titleAndDescriptionPart.description = (
+                        value.className || "No model"
+                    );
 
                     sectionItem.appendPart(titleAndDescriptionPart);
                     sectionItem.appendPart(CBUINavigationArrowPart.create());
@@ -117,7 +146,10 @@ var CBDataStoresAdminPage = {
                 }
             });
         }
+        /* update() */
     },
+    /* createElement() */
+
 
     /**
      * @return undefined
