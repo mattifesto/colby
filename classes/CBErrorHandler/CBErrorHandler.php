@@ -2,6 +2,32 @@
 
 final class CBErrorHandler {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v512.js', cbsysurl()),
+        ];
+    }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBException',
+            'CBUIPanel',
+            'Colby',
+        ];
+    }
+
+
+    /* -- functions -- -- -- -- -- */
+
     /**
      * This is the default exception handler.
      *
