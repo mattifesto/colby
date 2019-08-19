@@ -2,39 +2,32 @@
 
 final class CBKeyValuePair {
 
-    /**
-     * @param model $spec
-     *
-     * @return ?model
-     */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $key = CBKeyValuePair::valueAsKey($spec, 'key');
+    /* -- CBModel interfaces -- -- -- -- -- */
 
-        if ($key === null) {
-            return null;
-        }
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function CBModel_build(stdClass $spec): stdClass {
+        $key = CBModel::valueAsName($spec, 'key') ?? '';
+
+        $value = json_decode(
+            CBModel::valueToString(
+                $spec,
+                'valueAsJSON'
+            )
+        );
 
         return (object)[
             'key' => $key,
-            'value' => json_decode(CBModel::valueToString($spec, 'valueAsJSON')),
+            'value' => $value,
         ];
     }
+    /* CBModel_build() */
 
-    /**
-     * @param mixed $spec
-     * @param string $keyPath
-     *
-     * @return ?string
-     */
-    private static function valueAsKey($spec, string $keyPath): ?string {
-        $key = trim(CBModel::valueToString($spec, $keyPath));
 
-        if (preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', $key)) {
-            return $key;
-        } else {
-            return null;
-        }
-    }
+    /* -- functions -- -- -- -- -- */
 
     /**
      * This function looks for an array of CBKeyValuePair specs and turns the
@@ -47,21 +40,39 @@ final class CBKeyValuePair {
      * @return object
      */
     static function valueToObject($spec, string $keyPath): stdClass {
-        $items = CBConvert::valueToArray(CBModel::value($spec, $keyPath));
+        $keyValuePairSpecs = CBModel::valueToArray($spec, $keyPath);
 
-        $models = array_map(function ($item) {
-            $spec = CBConvert::valueAsModel($item, ['CBKeyValuePair']);
-            return CBModel::build($spec);
-        }, $items);
+        $keyValuePairSpecs =
+        array_values(
+            array_filter(
+                array_map(
+                    function ($currentSpec) {
+                        return CBConvert::valueAsModel(
+                            $currentSpec,
+                            ['CBKeyValuePair']
+                        );
+                    },
+                    $keyValuePairSpecs
+                )
+            )
+        );
+
+        $keyValuePairModels = array_map(
+            function ($currentSpec) {
+                return CBModel::build($currentSpec);
+            },
+            $keyValuePairSpecs
+        );
 
         $object = (object)[];
 
-        foreach ($models as $model) {
-            if ($model) {
-                $object->{$model->key} = $model->value;
+        foreach ($keyValuePairModels as $keyValuePairModel) {
+            if (!empty($keyValuePairModel->key)) {
+                $object->{$keyValuePairModel->key} = $keyValuePairModel->value;
             }
         }
 
         return $object;
     }
+    /* valueToObject() */
 }
