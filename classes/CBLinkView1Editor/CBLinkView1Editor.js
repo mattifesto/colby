@@ -3,7 +3,9 @@
 /* jshint esversion: 6 */
 /* exported CBLinkView1Editor */
 /* globals
+    CBException,
     CBImage,
+    CBModel,
     CBUI,
     CBUIImageChooser,
     CBUISelector,
@@ -14,33 +16,61 @@
 var CBLinkView1Editor = {
 
     /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
      *
      * @return Element
      */
     createEditor: function (args) {
+        let spec = CBModel.valueAsModel(
+            args,
+            "spec"
+        );
+
+        if (spec === undefined) {
+            throw CBException.withValueRelatedError(
+                TypeError(
+                    "The spec parameter is not a valid model."
+                ),
+                args,
+                "72f17a59d7931caff1744c8f09caa1029926fd76"
+            );
+        }
+
+        let specChangedCallback = CBModel.valueAsFunction(
+            args,
+            "specChangedCallback"
+        );
+
+        if (spec === undefined) {
+            throw CBException.withValueRelatedError(
+                TypeError(
+                    "The specChangedCallback parameter is not a valid function."
+                ),
+                args,
+                "6250bd96166fa932a06a710932b99cfbe6e188e6"
+            );
+        }
+
         var section, item;
-        var element = document.createElement("div");
-        element.className = "CBLinkView1Editor";
+        let element = CBUI.createElement("CBLinkView1Editor");
 
         element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
 
-        var chooser = CBUIImageChooser.createFullSizedChooser(
-            {
-                imageChosenCallback: createEditor_handleImageChosen,
-                imageRemovedCallback: createEditor_handleImageRemoved,
-            }
-        );
+        let imageChooser = CBUIImageChooser.create();
+        imageChooser.chosen = createEditor_handleImageChosen;
+        imageChooser.removed = createEditor_handleImageRemoved;
 
-        chooser.setImageURLCallback(
-            CBImage.toURL(args.spec.image, "rw960")
-        );
+        imageChooser.src = CBImage.toURL(spec.image, "rw960");
 
         item = CBUI.createSectionItem();
-        item.appendChild(chooser.element);
+        item.appendChild(imageChooser.element);
         section.appendChild(item);
 
         element.appendChild(section);
@@ -52,8 +82,8 @@ var CBLinkView1Editor = {
         item.appendChild(CBUIStringEditor.createEditor({
             labelText: "Title",
             propertyName: "title",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
+            spec: spec,
+            specChangedCallback: specChangedCallback,
         }).element);
         section.appendChild(item);
 
@@ -61,8 +91,8 @@ var CBLinkView1Editor = {
         item.appendChild(CBUIStringEditor.createEditor({
             labelText: "Description",
             propertyName: "description",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
+            spec: spec,
+            specChangedCallback: specChangedCallback,
         }).element);
         section.appendChild(item);
 
@@ -70,23 +100,22 @@ var CBLinkView1Editor = {
         item.appendChild(CBUIStringEditor.createEditor({
             labelText: "URL",
             propertyName: "URL",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
+            spec: spec,
+            specChangedCallback: specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUISelector.create({
             labelText: "Size",
-            navigateToItemCallback: args.navigateToItemCallback,
             options: [
                 {title: "Small", value: "small"},
                 {title: "Medium", value: undefined},
                 {title: "Large", value: "large"},
             ],
             propertyName: "size",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
+            spec: spec,
+            specChangedCallback: specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -103,21 +132,19 @@ var CBLinkView1Editor = {
          *
          * @return undefined
          */
-        function createEditor_handleImageChosen(chooserArgs) {
+        function createEditor_handleImageChosen() {
             Colby.callAjaxFunction(
                 "CBImages",
                 "upload",
                 {},
-                chooserArgs.file
+                imageChooser.file
             ).then(
                 function (imageModel) {
-                    args.spec.image = imageModel;
+                    spec.image = imageModel;
 
-                    args.specChangedCallback();
+                    specChangedCallback();
 
-                    chooserArgs.setImageURLCallback(
-                        CBImage.toURL(imageModel, "rw960")
-                    );
+                    imageChooser.src = CBImage.toURL(imageModel, "rw960");
                 }
             );
         }
@@ -128,8 +155,8 @@ var CBLinkView1Editor = {
          * @return undefined
          */
         function createEditor_handleImageRemoved() {
-            args.spec.image = undefined;
-            args.specChangedCallback();
+            spec.image = undefined;
+            specChangedCallback();
         }
         /* createEditor_handleImageRemoved() */
     },
