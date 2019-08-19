@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBSitePreferencesEditor */
 /* globals
+    CBErrorHandler,
     CBImage,
     CBUI,
     CBUIBooleanEditor,
@@ -69,40 +70,14 @@ var CBSitePreferencesEditor = {
 
         /* image chooser for website icon */
 
-        var chooser = CBUIImageChooser.createFullSizedChooser(
-            {
-                imageChosenCallback: function (chooserArgs) {
-                    Colby.callAjaxFunction(
-                        "CBImages",
-                        "upload",
-                        {},
-                        chooserArgs.file
-                    ).then(
-                        function (imageModel) {
-                            args.spec.imageForIcon = imageModel;
+        let imageChooser = CBUIImageChooser.create();
+        imageChooser.chosen = createEditor_handleImageChosen;
+        imageChooser.removed = createEditor_handleImageRemoved;
 
-                            args.specChangedCallback();
-
-                            chooserArgs.setImageURLCallback(
-                                CBImage.toURL(imageModel, "rw960")
-                            );
-                        }
-                    );
-                },
-
-                imageRemovedCallback: function () {
-                    args.spec.imageForIcon = undefined;
-                    args.specChangedCallback();
-                },
-            }
-        );
-
-        chooser.setImageURLCallback(
-            CBImage.toURL(args.spec.imageForIcon, "rw960")
-        );
+        imageChooser.src = CBImage.toURL(args.spec.imageForIcon, "rw960");
 
         item = CBUI.createSectionItem();
-        item.appendChild(chooser.element);
+        item.appendChild(imageChooser.element);
         section.appendChild(item);
 
         element.appendChild(CBUI.createHalfSpace());
@@ -273,6 +248,44 @@ var CBSitePreferencesEditor = {
         }
 
         return element;
+
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return undefined
+         */
+        function createEditor_handleImageChosen() {
+            Colby.callAjaxFunction(
+                "CBImages",
+                "upload",
+                {},
+                imageChooser.file
+            ).then(
+                function (imageModel) {
+                    imageChooser.src = CBImage.toURL(imageModel, "rw960");
+                    args.spec.imageForIcon = imageModel;
+
+                    args.specChangedCallback();
+
+                }
+            ).catch(
+                function (error) {
+                    CBErrorHandler.displayAndReport(error);
+                }
+            );
+        }
+        /* createEditor_handleImageChosen() */
+
+
+        /**
+         * @return undefined
+         */
+        function createEditor_handleImageRemoved() {
+            args.spec.imageForIcon = undefined;
+            args.specChangedCallback();
+        }
+        /* createEditor_handleImageRemoved() */
     },
     /* createEditor() */
 };

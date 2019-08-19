@@ -7,7 +7,7 @@ final class CBSitePreferencesEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v509.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v512.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -18,6 +18,7 @@ final class CBSitePreferencesEditor {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBErrorHandler',
             'CBImage',
             'CBUI',
             'CBUIBooleanEditor',
