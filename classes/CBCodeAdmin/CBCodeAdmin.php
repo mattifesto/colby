@@ -999,6 +999,21 @@ final class CBCodeAdmin {
                         'with CBTest::resultMismatchFailure().'
                     ),
                 ],
+
+
+                /**
+                 * 2019_08_18
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'navigateToItemCallback',
+                    'severity' => 4,
+                    'title' => (
+                        'Remove use of "navigateToItemCallback". Any ' .
+                        'navigation should be done using ' .
+                        'CBUINavigationView.navigate() directly.'
+                    ),
+                ],
             ]
         );
     }
