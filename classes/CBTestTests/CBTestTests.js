@@ -10,7 +10,7 @@ var CBTestTests = {
      */
     CBTest_asynchronousSample: function () {
         let promise = new Promise(
-            function (resolve, reject) {
+            function (resolve) {
 
                 /**
                  * placeholder: test code
