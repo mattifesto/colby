@@ -5,18 +5,18 @@
 /* global
     CBUI,
     CBUISpecArrayEditor,
-    CBUIStringEditor */
+    CBUIStringEditor,
+*/
 
 var CBMenuEditor = {
 
     /**
-     * @param function args.navigateToItemCallback
      * @param Object args.spec
      * @param function args.specChangedCallback
      *
      * @return Element
      */
-    createEditor : function(args) {
+    createEditor: function(args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBMenuEditor";
@@ -28,19 +28,19 @@ var CBMenuEditor = {
         section = CBUI.createSection();
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Title",
-            propertyName : "title",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Title",
+            propertyName: "title",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Title URI",
-            propertyName : "titleURI",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Title URI",
+            propertyName: "titleURI",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -54,7 +54,6 @@ var CBMenuEditor = {
 
             let editor = CBUISpecArrayEditor.create({
                 addableClassNames: ["CBMenuItem"],
-                navigateToItemCallback: args.navigateToItemCallback,
                 specs: args.spec.items,
                 specsChangedCallback: args.specChangedCallback,
             });
