@@ -70,7 +70,7 @@ final class CBException extends Exception {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v473.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v512.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -81,6 +81,9 @@ final class CBException extends Exception {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBConvert',
+            'CBMessageMarkup',
+            'CBModel',
             'Colby',
         ];
     }
