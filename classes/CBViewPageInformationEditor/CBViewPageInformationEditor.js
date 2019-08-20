@@ -178,7 +178,6 @@ var CBViewPageInformationEditor = {
             CBUISelector.create(
                 {
                     labelText: "Published By",
-                    navigateToItemCallback: args.navigateToItemCallback,
                     propertyName: "publishedBy",
                     spec: args.spec,
                     specChangedCallback: args.specChangedCallback,
@@ -483,7 +482,6 @@ var CBViewPageInformationEditor = {
             var editor = CBUISpecPropertyEditor.create(
                 {
                     labelText: "Layout",
-                    navigateToItemCallback: args.navigateToItemCallback,
                     options: options,
                     propertyName: "layout",
                     spec: args.spec,
