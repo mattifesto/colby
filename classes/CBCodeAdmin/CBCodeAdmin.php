@@ -1014,6 +1014,52 @@ final class CBCodeAdmin {
                         'CBUINavigationView.navigate() directly.'
                     ),
                 ],
+
+
+                /**
+                 * 2019_08_20
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:CBUIImageChooser.js',
+                    'filetype' => 'js',
+                    'regex' => 'setImageURLCallback',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of "setImageURLCallback" with the ' .
+                        '"src" property on the CBUIImageChooser object.'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_08_20
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'specToThumbnailURI|CBUISpec_toThumbnailURI',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace "specToThumbnailURI" or ' .
+                        '"CBUISpec_toThumbnailURI" interface ' .
+                        'implementations with a "CBUISpec_toThumbnailURL" ' .
+                        'interface implementation.'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_08_20
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:CBUIImageChooser.js',
+                    'filetype' => 'js',
+                    'regex' => 'setImageURI',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of "setImageURI" with the ' .
+                        '"src" property on the CBUIImageChooser object.'
+                    ),
+                ],
             ]
         );
     }
