@@ -1,12 +1,15 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBUISpecPropertyEditor */
 /* global
     CBUI,
     CBUIActionLink,
+    CBUINavigationView,
     CBUISelector,
     CBUISpec,
-    CBUISpecEditor */
+    CBUISpecEditor,
+*/
 
 /**
  * This editor edits a property value that contains a spec. It allows the user
@@ -27,13 +30,14 @@ var CBUISpecPropertyEditor = {
             return { className: className };
         }
     },
+    /* classNameToSpec() */
+
 
     /**
      * @param object args
      *
      *      {
      *          labelText: string
-     *          navigateToItemCallback: function
      *          options: [object]
      *
      *              [{
@@ -78,35 +82,46 @@ var CBUISpecPropertyEditor = {
         var specItem = CBUI.createSectionItem();
         section.appendChild(specItem);
 
-        var editLayoutPreferencesCallback = CBUISpecPropertyEditor.handleEditLayoutPreferences.bind(undefined, {
-            navigateToItemCallback: args.navigateToItemCallback,
-            propertyName: args.propertyName,
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        });
+        var editLayoutPreferencesCallback =
+        CBUISpecPropertyEditor.handleEditLayoutPreferences.bind(
+            undefined,
+            {
+                propertyName: args.propertyName,
+                spec: args.spec,
+                specChangedCallback: args.specChangedCallback,
+            }
+        );
 
         specItem.addEventListener("click", editLayoutPreferencesCallback);
 
-        var updateDisplayCallback = CBUISpecPropertyEditor.updateDisplay.bind(undefined, {
-            propertyName: args.propertyName,
-            spec: args.spec,
-            specItemElement: specItem,
-        });
+        var updateDisplayCallback = CBUISpecPropertyEditor.updateDisplay.bind(
+            undefined,
+            {
+                propertyName: args.propertyName,
+                spec: args.spec,
+                specItemElement: specItem,
+            }
+        );
 
         updateDisplayCallback();
 
-        var updateValueCallback = CBUISpecPropertyEditor.updateValue.bind(undefined, {
-            propertyName: args.propertyName,
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-            updateDisplayCallback: updateDisplayCallback,
-        });
+        var updateValueCallback = CBUISpecPropertyEditor.updateValue.bind(
+            undefined,
+            {
+                propertyName: args.propertyName,
+                spec: args.spec,
+                specChangedCallback: args.specChangedCallback,
+                updateDisplayCallback: updateDisplayCallback,
+            }
+        );
 
-        var selectClassCallback = CBUISpecPropertyEditor.selectClass.bind(undefined, {
-            navigateToItemCallback: args.navigateToItemCallback,
-            options: args.options,
-            updateValueCallback: updateValueCallback,
-        });
+        var selectClassCallback = CBUISpecPropertyEditor.selectClass.bind(
+            undefined,
+            {
+                options: args.options,
+                updateValueCallback: updateValueCallback,
+            }
+        );
 
         /* change */
         item = CBUI.createSectionItem();
@@ -122,9 +137,10 @@ var CBUISpecPropertyEditor = {
             element: element,
         };
     },
+    /* create() */
+
 
     /**
-     * @param function args.navigateToItemCallback
      * @param string args.propertyName
      * @param object args.spec
      * @param function args.specChangedCallback
@@ -139,32 +155,39 @@ var CBUISpecPropertyEditor = {
         }
 
         var editor = CBUISpecEditor.create({
-            navigateToItemCallback: args.navigateToItemCallback,
             spec: args.spec[args.propertyName],
             specChangedCallback: args.specChangedCallback,
         });
 
-        args.navigateToItemCallback({
-            element: editor.element,
-            title: args.spec.className || "Unknown",
-        });
+        CBUINavigationView.navigate(
+            {
+                element: editor.element,
+                title: args.spec.className || "Unknown",
+            }
+        );
     },
+    /* handleEditLayoutPreferences() */
+
 
     /**
-     * @param function args.navigateToItemCallback
      * @param [object] args.options
      * @param function args.updateValueCallback
      *
      * @return undefined
      */
     selectClass: function (args) {
-        CBUISelector.selectValue({
-            navigateToItemCallback: args.navigateToItemCallback,
-            options: args.options,
-        })
-        .then(CBUISpecPropertyEditor.classNameToSpec)
-        .then(args.updateValueCallback);
+        CBUISelector.selectValue(
+            {
+                options: args.options,
+            }
+        ).then(
+            CBUISpecPropertyEditor.classNameToSpec
+        ).then(
+            args.updateValueCallback
+        );
     },
+    /* selectClass() */
+
 
     /**
      * @param string args.propertyName
@@ -189,7 +212,10 @@ var CBUISpecPropertyEditor = {
         title.textContent = titleText;
         var description = document.createElement("div");
         description.className = "description";
-        description.textContent = CBUISpec.specToDescription(args.spec.layout) || nonBreakingSpace;
+        description.textContent = (
+            CBUISpec.specToDescription(args.spec.layout) ||
+            nonBreakingSpace
+        );
 
         element.appendChild(title);
         element.appendChild(description);
@@ -197,6 +223,8 @@ var CBUISpecPropertyEditor = {
         args.specItemElement.textContent = null;
         args.specItemElement.appendChild(element);
     },
+    /* updateDisplay() */
+
 
     /**
      * @param string args.propertyName
@@ -211,4 +239,5 @@ var CBUISpecPropertyEditor = {
         args.updateDisplayCallback.call();
         args.specChangedCallback.call();
     },
+    /* updateValue() */
 };
