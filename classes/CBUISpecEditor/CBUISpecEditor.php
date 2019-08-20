@@ -9,7 +9,7 @@ final class CBUISpecEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v474.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v514.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -23,7 +23,6 @@ final class CBUISpecEditor {
             'CBDefaultEditor',
             'CBException',
             'CBModel',
-            'CBUINavigationView',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

@@ -6,7 +6,6 @@
     CBDefaultEditor,
     CBException,
     CBModel,
-    CBUINavigationView,
 */
 
 var CBUISpecEditor = {
@@ -64,12 +63,6 @@ var CBUISpecEditor = {
                 {
                     spec: spec,
                     specChangedCallback: args.specChangedCallback,
-
-                    /**
-                     * @deprecated Editors should directly use
-                     * CBUINavigationView.navigate()
-                     */
-                    navigateToItemCallback: CBUINavigationView.navigate,
                 }
             );
         }
