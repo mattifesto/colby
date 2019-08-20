@@ -16,7 +16,6 @@
 var CBSitePreferencesEditor = {
 
     /**
-     * @param function args.navigateToItemCallback
      * @param object args.spec
      * @param function args.specChangedCallback
      *
@@ -236,7 +235,6 @@ var CBSitePreferencesEditor = {
 
             let editor = CBUISpecArrayEditor.create({
                 addableClassNames: ["CBKeyValuePair"],
-                navigateToItemCallback: args.navigateToItemCallback,
                 specs: args.spec.custom,
                 specsChangedCallback: args.specChangedCallback,
             });
