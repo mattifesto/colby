@@ -35,7 +35,6 @@ var CBViewPageEditor = {
      * @param object args
      *
      *      {
-     *          navigateToItemCallback: function
      *          spec: model
      *          specChangedCallback: function
      *      }
@@ -78,7 +77,6 @@ var CBViewPageEditor = {
                     {
                         handleTitleChanged: handleTitleChanged,
                         makeFrontPageCallback: makeFrontPageCallback,
-                        navigateToItemCallback: args.navigateToItemCallback,
                         spec: args.spec,
                         specChangedCallback: args.specChangedCallback,
                     }
