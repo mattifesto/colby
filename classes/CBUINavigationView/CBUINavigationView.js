@@ -116,7 +116,6 @@ var CBUINavigationView = {
      *      {
      *          element: Element (readonly)
      *          navigate: function
-     *          navigateToItemCallback: function (deprecated)
      *      }
      */
     create: function (args) {
@@ -140,7 +139,6 @@ var CBUINavigationView = {
             },
 
             navigate: navigate,
-            navigateToItemCallback: navigate, /* deprecated */
             replace: replace,
         };
 
