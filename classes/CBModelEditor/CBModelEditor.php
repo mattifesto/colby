@@ -55,7 +55,7 @@ class CBModelEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v505.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v514.js', cbsysurl()),
         ];
     }
 

@@ -49,17 +49,12 @@ var CBModelEditor = {
             }
         );
 
-        var navigationView = CBUINavigationView.create(
-            {
-                defaultSpecChangedCallback: specSaver.specChangedCallback,
-            }
-        );
+        var navigationView = CBUINavigationView.create();
 
         main.appendChild(navigationView.element);
 
         let specEditor = CBUISpecEditor.create(
             {
-                navigateToItemCallback: navigationView.navigateToItemCallback,
                 spec: spec,
                 specChangedCallback: specSaver.specChangedCallback,
             }
@@ -73,8 +68,7 @@ var CBModelEditor = {
             CBModelEditor_originalSpec.ID
         );
 
-        navigationView.navigateToItemCallback.call(
-            undefined,
+        CBUINavigationView.navigate(
             {
                 element: specEditor.element,
                 rightElements: [inspectHeaderItem.element],
