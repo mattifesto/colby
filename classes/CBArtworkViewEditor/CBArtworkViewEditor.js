@@ -18,7 +18,6 @@ var CBArtworkViewEditor = {
      * @param object args
      *
      *      {
-     *          navigateToItemCallback: function
      *          spec: object
      *          specChangedCallback: function
      *      }
@@ -79,7 +78,6 @@ var CBArtworkViewEditor = {
             CBUISelector.create(
                 {
                     labelText: "Maximum Display Width",
-                    navigateToItemCallback: args.navigateToItemCallback,
                     options: [
                         {
                             title: "160 CSS pixels",
