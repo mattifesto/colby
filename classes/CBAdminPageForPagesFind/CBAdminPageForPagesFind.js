@@ -37,16 +37,6 @@ var CBAdminPageForPagesFind = {
             }
         );
 
-        var navigationView = CBUINavigationView.create(
-            {
-                defaultSpecChangedCallback: fetchPagesCallback,
-                rootItem: {
-                    element: element,
-                    title: "Find Pages",
-                },
-            }
-        );
-
         element.appendChild(
             CBUI.createHalfSpace()
         );
@@ -66,7 +56,6 @@ var CBAdminPageForPagesFind = {
             CBUISelector.create(
                 {
                     labelText: "Kind",
-                    navigateToItemCallback: navigationView.navigateToItemCallback,
                     propertyName: "classNameForKind",
                     spec: parameters,
                     specChangedCallback: fetchPagesCallback,
@@ -80,10 +69,6 @@ var CBAdminPageForPagesFind = {
             CBUISelector.create(
                 {
                     labelText: "Published",
-
-                    navigateToItemCallback:
-                    navigationView.navigateToItemCallback,
-
                     propertyName: "published",
                     spec: parameters,
                     specChangedCallback: fetchPagesCallback,
@@ -110,10 +95,6 @@ var CBAdminPageForPagesFind = {
             CBUISelector.create(
                 {
                     labelText: "Sorting",
-
-                    navigateToItemCallback:
-                    navigationView.navigateToItemCallback,
-
                     propertyName: "sorting",
                     spec: parameters,
                     specChangedCallback: fetchPagesCallback,
@@ -176,6 +157,15 @@ var CBAdminPageForPagesFind = {
         );
 
         fetchPagesCallback();
+
+        var navigationView = CBUINavigationView.create();
+
+        CBUINavigationView.navigate(
+            {
+                element: element,
+                title: "Find Pages",
+            }
+        );
 
         return navigationView.element;
     },
