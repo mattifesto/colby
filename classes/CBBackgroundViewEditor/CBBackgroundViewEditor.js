@@ -19,7 +19,6 @@
 var CBBackgroundViewEditor = {
 
     /**
-     * @param function args.navigateToItemCallback
      * @param Object args.spec
      * @param function args.specChangedCallback
      *
@@ -119,7 +118,6 @@ var CBBackgroundViewEditor = {
             let editor = CBUISpecArrayEditor.create(
                 {
                     addableClassNames: CBBackgroundViewEditor_addableClassNames,
-                    navigateToItemCallback: args.navigateToItemCallback,
                     specs: args.spec.children,
                     specsChangedCallback: args.specChangedCallback,
                 }
