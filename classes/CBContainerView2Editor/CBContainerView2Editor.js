@@ -151,7 +151,6 @@ var CBContainerView2Editor = {
             let editor = CBUISpecArrayEditor.create(
                 {
                     addableClassNames: CBContainerView2Editor_addableClassNames,
-                    navigateToItemCallback: args.navigateToItemCallback,
                     specs: args.spec.subviews,
                     specsChangedCallback: args.specChangedCallback,
                 }
