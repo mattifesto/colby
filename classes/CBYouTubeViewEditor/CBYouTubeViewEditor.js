@@ -74,7 +74,6 @@ var CBYouTubeViewEditor = {
                 CBUISelector.create(
                     {
                         labelText: "Maximum Display Width",
-                        navigateToItemCallback: args.navigateToItemCallback,
                         options: [
                             {
                                 title: "320 CSS pixels",

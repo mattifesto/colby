@@ -5,11 +5,9 @@ final class CBYouTubeViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            'CBUI',
-            'CBUISelector',
-            'CBUIStringEditor'
+            Colby::flexpath(__CLASS__, 'v514.js', cbsysurl()),
         ];
     }
 
@@ -17,9 +15,11 @@ final class CBYouTubeViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function CBHTMLOutput_requiredClassNames(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v494.js', cbsysurl()),
+            'CBUI',
+            'CBUISelector',
+            'CBUIStringEditor',
         ];
     }
 }
