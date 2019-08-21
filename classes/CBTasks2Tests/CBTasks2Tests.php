@@ -1,18 +1,30 @@
 <?php
 
-/**
- *
- */
 final class CBTasks2Tests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
     /**
-     * @return [string]
+     * @return [object]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function CBTest_getTests(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v460.js', cbsysurl()),
+            (object)[
+                'name' => 'runSpecificTask',
+                'title' => 'CBTasks2 run specific task',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'exceptionHandling',
+                'title' => 'CBTasks2 exception handling',
+                'type' => 'server',
+            ],
         ];
     }
+    /* CBTest_getTests() */
+
+
+    /* -- tests -- -- -- -- -- */
 
     /**
      * This test verifies two behaviors:
@@ -81,14 +93,6 @@ EOT;
         ];
     }
 
-    /**
-     * @return [[<class name>, <test name>]]
-     */
-    static function CBTest_javaScriptTests(): array {
-        return [
-            ['CBTasks2', 'stress'],
-        ];
-    }
 
     /**
      * @return object
@@ -132,16 +136,6 @@ EOT;
 
         return (object)[
             'succeeded' => true,
-        ];
-    }
-
-    /**
-     * @return [[<class>, <test>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBTasks2', 'runSpecificTask'],
-            ['CBTasks2', 'exceptionHandling'],
         ];
     }
 }
