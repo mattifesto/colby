@@ -193,6 +193,11 @@ EOT;
      *          testClassName: string
      *
      *              The class that implements the test function in JavaScript.
+     *
+     *          type: string
+     *
+     *              The default is to look for a client side test, specify the
+     *              string 'server' for a server test.
      *      }
      */
     static function getTests(): array {
