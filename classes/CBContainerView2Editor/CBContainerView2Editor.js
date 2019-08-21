@@ -18,61 +18,6 @@
 var CBContainerView2Editor = {
 
     /**
-     * @param object spec
-     *
-     * @return string|undefined
-     */
-    CBUISpec_toDescription: function (spec) {
-        let title = CBModel.valueToString(spec, "title").trim();
-
-        if (title !== "") {
-            return title;
-        } else {
-            if (Array.isArray(spec.subviews)) {
-                for (let i = 0; i < spec.subviews.length; i++) {
-                    let description = CBUISpec.specToDescription(
-                        spec.subviews[i]
-                    );
-
-                    if (description) {
-                        return description;
-                    }
-                }
-            }
-        }
-    },
-    /* CBUISpec_toDescription() */
-
-
-    /**
-     * @param object spec
-     *
-     * @return string|undefined
-     */
-    CBUISpec_toThumbnailURI: function (spec) {
-        if (spec.image) {
-            return CBImage.toURL(
-                spec.image,
-                'rw320'
-            );
-        } else {
-            if (Array.isArray(spec.subviews)) {
-                for (let i = 0; i < spec.subviews.length; i++) {
-                    let thumbnailURI = CBUISpec.specToThumbnailURI(
-                        spec.subviews[i]
-                    );
-
-                    if (thumbnailURI) {
-                        return thumbnailURI;
-                    }
-                }
-            }
-        }
-    },
-    /* CBUISpec_toThumbnailURI() */
-
-
-    /**
      * @param object args.spec
      * @param function args.specChangedCallback
      *
@@ -232,5 +177,62 @@ var CBContainerView2Editor = {
         return element;
     },
     /* createEditor() */
+
+
+    /* -- CBUISpec interfaces -- -- -- -- -- */
+
+    /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    CBUISpec_toDescription: function (spec) {
+        let title = CBModel.valueToString(spec, "title").trim();
+
+        if (title !== "") {
+            return title;
+        } else {
+            if (Array.isArray(spec.subviews)) {
+                for (let i = 0; i < spec.subviews.length; i++) {
+                    let description = CBUISpec.specToDescription(
+                        spec.subviews[i]
+                    );
+
+                    if (description) {
+                        return description;
+                    }
+                }
+            }
+        }
+    },
+    /* CBUISpec_toDescription() */
+
+
+    /**
+     * @param object spec
+     *
+     * @return string|undefined
+     */
+    CBUISpec_toThumbnailURL: function (spec) {
+        if (spec.image) {
+            return CBImage.toURL(
+                spec.image,
+                'rw320'
+            );
+        } else {
+            if (Array.isArray(spec.subviews)) {
+                for (let i = 0; i < spec.subviews.length; i++) {
+                    let thumbnailURI = CBUISpec.specToThumbnailURI(
+                        spec.subviews[i]
+                    );
+
+                    if (thumbnailURI) {
+                        return thumbnailURI;
+                    }
+                }
+            }
+        }
+    },
+    /* CBUISpec_toThumbnailURL() */
 };
 /* CBContainerView2Editor */
