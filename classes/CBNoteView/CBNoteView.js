@@ -5,6 +5,7 @@
 /* global
     CBModel,
     CBUI,
+    Colby,
 */
 
 var CBNoteView = {

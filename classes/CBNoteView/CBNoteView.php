@@ -31,6 +31,7 @@ final class CBNoteView {
         return [
             'CBModel',
             'CBUI',
+            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
