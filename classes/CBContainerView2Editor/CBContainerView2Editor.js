@@ -222,7 +222,7 @@ var CBContainerView2Editor = {
         } else {
             if (Array.isArray(spec.subviews)) {
                 for (let i = 0; i < spec.subviews.length; i++) {
-                    let thumbnailURI = CBUISpec.specToThumbnailURI(
+                    let thumbnailURI = CBUISpec.specToThumbnailURL(
                         spec.subviews[i]
                     );
 
