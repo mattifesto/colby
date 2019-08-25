@@ -4,6 +4,7 @@
 /* exported CBCodeAdmin */
 /* global
     CBMessageMarkup,
+    CBModel,
     CBUI,
     CBUIBooleanSwitchPart,
     CBUIExpander,
@@ -37,6 +38,13 @@ var CBCodeAdmin = {
                 let expander = CBUIExpander.create();
                 expander.title = search.title;
 
+                let searchMessage = CBModel.valueToString(
+                    search,
+                    "message"
+                );
+
+                expander.message = searchMessage;
+
                 rootElement.appendChild(expander.element);
 
                 promise = promise.then(
@@ -67,6 +75,8 @@ var CBCodeAdmin = {
                                 results = results.join("\n");
 
                                 expander.message = `
+
+                                    ${searchMessage}
 
                                     --- pre\n${results}
                                     ---

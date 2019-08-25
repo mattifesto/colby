@@ -64,7 +64,7 @@ final class CBCodeAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v500.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v518.js', cbsysurl()),
         ];
     }
 
@@ -88,6 +88,7 @@ final class CBCodeAdmin {
     static function CBHTMLOutput_requiredClassNames() {
         return [
             'CBMessageMarkup',
+            'CBModel',
             'CBUI',
             'CBUIBooleanSwitchPart',
             'CBUIExpander',
