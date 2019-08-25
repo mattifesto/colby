@@ -66,14 +66,18 @@ var CBModelsImportAdmin = {
 
             return;
 
+
+            /* -- closures -- -- -- -- -- */
+
             /**
              * handleDataFileInputElementChanged() closure
              *
              * @return Promise
              */
-            function dotasks(value) {
+            function dotasks() {
                 return Colby.tasks.start();
             }
+
 
             /**
              * handleDataFileInputElementChanged() closure
@@ -87,6 +91,7 @@ var CBModelsImportAdmin = {
                 importActionPart.element.classList.remove("disabled");
             }
 
+
             /**
              * handleDataFileInputElementChanged() closure
              *
@@ -97,6 +102,7 @@ var CBModelsImportAdmin = {
             function report(error) {
                 Colby.displayAndReportError(error);
             }
+
 
             /**
              * handleDataFileInputElementChanged() closure

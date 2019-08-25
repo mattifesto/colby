@@ -2,6 +2,8 @@
 
 final class CBModelsImportAdmin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
     /**
      * @return [string]
      */
@@ -12,6 +14,7 @@ final class CBModelsImportAdmin {
         ];
     }
 
+
     /**
      * @return void
      */
@@ -19,118 +22,8 @@ final class CBModelsImportAdmin {
         CBHTMLOutput::pageInformation()->title = 'Model Administration: Import';
     }
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
-        ];
-    }
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v462.js', cbsysurl()),
-        ];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
-            'CBMaintenance',
-            'CBModelImporter',
-            'CBUI',
-            'CBUIBooleanSwitchPart',
-            'CBUIProcessStatus',
-            'CBUISectionItem4',
-            'CBUIStringsPart',
-        ];
-    }
-
-    /**
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBModelsAdminMenu::ID());
-
-        $spec->items[] = (object)[
-            'className' => 'CBMenuItem',
-            'name' => 'import',
-            'text' => 'Import',
-            'URL' => '/admin/?c=CBModelsImportAdmin',
-        ];
-
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBInstall_requiredClassNames(): array {
-        return [
-            'CBModelsAdminMenu',
-        ];
-    }
-
-    /**
-     * @param [string] $values
-     * @param [string] $keys
-     *
-     * @return ?object
-     *
-     *      An object will be returned if it has at least one property value
-     *      that isn't entirely white space.
-     */
-    static function valuesAsObject(array $values, array $keys): ?stdClass {
-        $index = 0;
-        $object = (object)[];
-        $isEmpty = true;
-
-        while (isset($values[$index])) {
-            $value = $values[$index];
-
-            if (!empty($keys[$index])) {
-                $key = $keys[$index];
-
-                /**
-                 * $isEmpty will be set to false once there is at least one
-                 * non-empty value.
-                 */
-
-                if ($isEmpty && preg_match('/\S/', $value)) {
-                    $isEmpty = false;
-                }
-
-                /**
-                 * Values are always left as found except classname and ID
-                 * values which can be processed and validated.
-                 */
-
-                if ($key === 'className') {
-                    $value = trim($value);
-                } else if ($key === 'ID') {
-                    $value = CBConvert::valueAsHex160(trim($value));
-                }
-
-                $object->{$key} = $value;
-            }
-
-            $index += 1;
-        }
-
-        if ($isEmpty) {
-            return null;
-        } else {
-            return $object;
-        }
-    }
+    /* -- CBAjax interfaces -- -- -- -- -- */
 
     /**
      * @param object $args
@@ -349,4 +242,130 @@ final class CBModelsImportAdmin {
     static function CBAjax_uploadDataFile_group(): string {
         return 'Administrators';
     }
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
+    }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v518.js', cbsysurl()),
+        ];
+    }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBMaintenance',
+            'CBModelImporter',
+            'CBUI',
+            'CBUIBooleanSwitchPart',
+            'CBUIProcessStatus',
+            'CBUISectionItem4',
+            'CBUIStringsPart',
+        ];
+    }
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $spec = CBModels::fetchSpecByID(CBModelsAdminMenu::ID());
+
+        $spec->items[] = (object)[
+            'className' => 'CBMenuItem',
+            'name' => 'import',
+            'text' => 'Import',
+            'URL' => '/admin/?c=CBModelsImportAdmin',
+        ];
+
+        CBDB::transaction(function () use ($spec) {
+            CBModels::save($spec);
+        });
+    }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBModelsAdminMenu',
+        ];
+    }
+
+
+    /* -- functions -- -- -- -- -- */
+
+    /**
+     * @param [string] $values
+     * @param [string] $keys
+     *
+     * @return ?object
+     *
+     *      An object will be returned if it has at least one property value
+     *      that isn't entirely white space.
+     */
+    static function valuesAsObject(array $values, array $keys): ?stdClass {
+        $index = 0;
+        $object = (object)[];
+        $isEmpty = true;
+
+        while (isset($values[$index])) {
+            $value = $values[$index];
+
+            if (!empty($keys[$index])) {
+                $key = $keys[$index];
+
+                /**
+                 * $isEmpty will be set to false once there is at least one
+                 * non-empty value.
+                 */
+
+                if ($isEmpty && preg_match('/\S/', $value)) {
+                    $isEmpty = false;
+                }
+
+                /**
+                 * Values are always left as found except classname and ID
+                 * values which can be processed and validated.
+                 */
+
+                if ($key === 'className') {
+                    $value = trim($value);
+                } else if ($key === 'ID') {
+                    $value = CBConvert::valueAsHex160(trim($value));
+                }
+
+                $object->{$key} = $value;
+            }
+
+            $index += 1;
+        }
+
+        if ($isEmpty) {
+            return null;
+        } else {
+            return $object;
+        }
+    }
+    /* valuesAsObject() */
 }
