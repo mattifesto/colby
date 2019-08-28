@@ -66,39 +66,9 @@ var CBViewPageInformationEditor = {
             createEditor_createActionsElement()
         );
 
-        /* layout */
-
-        if (args.spec.layout) {
-            editorElement.appendChild(CBUI.createHalfSpace());
-
-            var options = CBPageClassNamesForLayouts.map(
-                function (className) {
-                    return {
-                        title: className,
-                        value: className
-                    };
-                }
-            );
-
-            options.unshift(
-                {
-                    title: "None",
-                    value: undefined
-                }
-            );
-
-            var editor = CBUISpecPropertyEditor.create(
-                {
-                    labelText: "Layout",
-                    options: options,
-                    propertyName: "layout",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            );
-
-            editorElement.appendChild(editor.element);
-        }
+        editorElement.appendChild(
+            createEditor_createLayoutEditorElement()
+        );
 
         return editorElement;
 
@@ -247,6 +217,49 @@ var CBViewPageInformationEditor = {
             return actionsElement;
         }
         /* createEditor_createActionsElement() */
+
+
+        /**
+         * @return Element
+         */
+        function createEditor_createLayoutEditorElement() {
+            let layoutEditorElement = CBUI.createElement(
+                "CBViewPageInformationEditor_layoutEditor"
+            );
+
+            if (args.spec.layout) {
+                var options = CBPageClassNamesForLayouts.map(
+                    function (className) {
+                        return {
+                            title: className,
+                            value: className
+                        };
+                    }
+                );
+
+                options.unshift(
+                    {
+                        title: "None",
+                        value: undefined
+                    }
+                );
+
+                var editor = CBUISpecPropertyEditor.create(
+                    {
+                        labelText: "Layout",
+                        options: options,
+                        propertyName: "layout",
+                        spec: args.spec,
+                        specChangedCallback: args.specChangedCallback,
+                    }
+                );
+
+                layoutEditorElement.appendChild(editor.element);
+            }
+
+            return layoutEditorElement;
+        }
+        /* createEditor_createLayoutEditorElement() */
 
 
         /**
