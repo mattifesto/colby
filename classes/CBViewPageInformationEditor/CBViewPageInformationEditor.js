@@ -43,13 +43,11 @@ var CBViewPageInformationEditor = {
      * @return Element
      */
     createEditor: function (args) {
-        var section, item;
-
-        let element = CBUI.createElement(
+        let editorElement = CBUI.createElement(
             "CBViewPageInformationEditor"
         );
 
-        element.appendChild(
+        editorElement.appendChild(
             createEditor_createPropertiesSectionElement()
         );
 
@@ -60,130 +58,18 @@ var CBViewPageInformationEditor = {
 
         let imageChooser;
 
-        element.appendChild(
+        editorElement.appendChild(
             createEditor_createPageThumbnailEditorElement()
         );
 
-        /* actions */
-
-        element.appendChild(CBUI.createHalfSpace());
-
-        {
-            let sectionTitleElement = CBUI.createElement("CBUI_title1");
-            sectionTitleElement.textContent = "Actions";
-
-            element.appendChild(sectionTitleElement);
-        }
-
-        section = CBUI.createSection();
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIActionLink.create(
-                {
-                    labelText: "Preview",
-                    callback: function () {
-                        var name = "preview_" + args.spec.ID;
-                        window.open(
-                            "/admin/pages/preview/?ID=" +
-                            args.spec.ID,
-                            name
-                        );
-                    },
-                }
-            ).element
+        editorElement.appendChild(
+            createEditor_createActionsElement()
         );
-
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIActionLink.create(
-                {
-                    labelText: "Use as Front Page",
-                    callback: args.makeFrontPageCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-
-        /* copy */
-        {
-            let sectionItem = CBUISectionItem4.create();
-
-            sectionItem.callback = function () {
-                let newID = Colby.random160();
-
-                let URI =
-                `/admin/?c=CBModelEditor&ID=${newID}&copyID=${args.spec.ID}`;
-
-                window.location = URI;
-            };
-
-            let stringsPart = CBUIStringsPart.create();
-            stringsPart.string1 = "Copy";
-
-            stringsPart.element.classList.add("action");
-            sectionItem.appendPart(stringsPart);
-            section.appendChild(sectionItem.element);
-        }
-        /* copy */
-
-
-        /* move to trash */
-        {
-            let sectionItem = CBUISectionItem4.create();
-
-            sectionItem.callback = function () {
-                if (
-                    window.confirm(
-                        "Are you sure you want to move this page to the trash?"
-                    )
-                ) {
-                    Colby.callAjaxFunction(
-                        "CBPages",
-                        "moveToTrash",
-                        {
-                            ID: args.spec.ID
-                        }
-                    ).then(
-                        function () {
-                            window.alert(
-                                "The page is the trash. You will be " +
-                                "redirected to pages administration."
-                            );
-
-                            window.location =
-                            CBViewPageInformationEditor_pagesAdminURL;
-                        }
-                    ).catch(
-                        function (error) {
-                            Colby.displayAndReportError(error);
-                        }
-                    );
-                }
-            };
-
-            let stringsPart = CBUIStringsPart.create();
-            stringsPart.string1 = "Move to Trash";
-
-            stringsPart.element.classList.add("action");
-            sectionItem.appendPart(stringsPart);
-            section.appendChild(sectionItem.element);
-        }
-        /* move to trash */
-
-
-        element.appendChild(section);
 
         /* layout */
 
         if (args.spec.layout) {
-            element.appendChild(CBUI.createHalfSpace());
+            editorElement.appendChild(CBUI.createHalfSpace());
 
             var options = CBPageClassNamesForLayouts.map(
                 function (className) {
@@ -211,13 +97,157 @@ var CBViewPageInformationEditor = {
                 }
             );
 
-            element.appendChild(editor.element);
+            editorElement.appendChild(editor.element);
         }
 
-        return element;
+        return editorElement;
 
 
         /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return Element
+         */
+        function createEditor_createActionsElement() {
+            let actionsElement = CBUI.createElement(
+                "CBViewPageInformationEditor_actions"
+            );
+
+            {
+                let sectionTitleElement = CBUI.createElement("CBUI_title1");
+                sectionTitleElement.textContent = "Actions";
+
+                actionsElement.appendChild(sectionTitleElement);
+            }
+
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            actionsElement.appendChild(sectionContainerElement);
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
+
+            /* preview */
+            {
+                let item = CBUI.createSectionItem();
+
+                item.appendChild(
+                    CBUIActionLink.create(
+                        {
+                            labelText: "Preview",
+                            callback: function () {
+                                var name = "preview_" + args.spec.ID;
+                                window.open(
+                                    "/admin/pages/preview/?ID=" +
+                                    args.spec.ID,
+                                    name
+                                );
+                            },
+                        }
+                    ).element
+                );
+
+                sectionElement.appendChild(item);
+            }
+            /* preview */
+
+
+            /* use as front page */
+            {
+                let item = CBUI.createSectionItem();
+
+                item.appendChild(
+                    CBUIActionLink.create(
+                        {
+                            labelText: "Use as Front Page",
+                            callback: args.makeFrontPageCallback,
+                        }
+                    ).element
+                );
+
+                sectionElement.appendChild(item);
+            }
+            /* use as front page */
+
+
+            /* copy */
+            {
+                let sectionItem = CBUISectionItem4.create();
+
+                sectionItem.callback = function () {
+                    let newID = Colby.random160();
+
+                    let URI =
+                    `/admin/?c=CBModelEditor&ID=${newID}&copyID=${args.spec.ID}`;
+
+                    window.location = URI;
+                };
+
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Copy";
+
+                stringsPart.element.classList.add("action");
+                sectionItem.appendPart(stringsPart);
+
+                sectionElement.appendChild(sectionItem.element);
+            }
+            /* copy */
+
+
+            /* move to trash */
+            {
+                let sectionItem = CBUISectionItem4.create();
+
+                sectionItem.callback = function () {
+                    if (
+                        window.confirm(
+                            "Are you sure you want to move this page to the trash?"
+                        )
+                    ) {
+                        Colby.callAjaxFunction(
+                            "CBPages",
+                            "moveToTrash",
+                            {
+                                ID: args.spec.ID
+                            }
+                        ).then(
+                            function () {
+                                window.alert(
+                                    "The page is the trash. You will be " +
+                                    "redirected to pages administration."
+                                );
+
+                                window.location =
+                                CBViewPageInformationEditor_pagesAdminURL;
+                            }
+                        ).catch(
+                            function (error) {
+                                Colby.displayAndReportError(error);
+                            }
+                        );
+                    }
+                };
+
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Move to Trash";
+
+                stringsPart.element.classList.add("action");
+                sectionItem.appendPart(stringsPart);
+
+                sectionElement.appendChild(sectionItem.element);
+            }
+            /* move to trash */
+
+
+            return actionsElement;
+        }
+        /* createEditor_createActionsElement() */
+
 
         /**
          * @return Element
@@ -234,41 +264,47 @@ var CBViewPageInformationEditor = {
             sectionContainerElement.appendChild(sectionElement);
 
             /* title */
+            {
+                let item = CBUI.createSectionItem();
 
-            item = CBUI.createSectionItem();
+                item.appendChild(
+                    CBUIStringEditor.createEditor(
+                        {
+                            labelText: "Title",
+                            propertyName: 'title',
+                            spec: args.spec,
+                            specChangedCallback: function () {
+                                args.handleTitleChanged();
+                                args.specChangedCallback();
+                            },
+                        }
+                    ).element
+                );
 
-            item.appendChild(
-                CBUIStringEditor.createEditor(
-                    {
-                        labelText: "Title",
-                        propertyName: 'title',
-                        spec: args.spec,
-                        specChangedCallback: function () {
-                            args.handleTitleChanged();
-                            args.specChangedCallback();
-                        },
-                    }
-                ).element
-            );
+                sectionElement.appendChild(item);
+            }
+            /* title */
 
-            sectionElement.appendChild(item);
 
             /* description */
+            {
+                let item = CBUI.createSectionItem();
 
-            item = CBUI.createSectionItem();
+                item.appendChild(
+                    CBUIStringEditor.createEditor(
+                        {
+                            labelText: "Description",
+                            propertyName: 'description',
+                            spec: args.spec,
+                            specChangedCallback: args.specChangedCallback,
+                        }
+                    ).element
+                );
 
-            item.appendChild(
-                CBUIStringEditor.createEditor(
-                    {
-                        labelText: "Description",
-                        propertyName: 'description',
-                        spec: args.spec,
-                        specChangedCallback: args.specChangedCallback,
-                    }
-                ).element
-            );
+                sectionElement.appendChild(item);
+            }
+            /* description */
 
-            sectionElement.appendChild(item);
 
             /* editors */
 
@@ -290,91 +326,111 @@ var CBViewPageInformationEditor = {
                 }
             );
 
-            /* isPublished */
 
-            item = CBUI.createSectionItem();
-            item.appendChild(
-                CBUIBooleanEditor.create(
-                    {
-                        labelText: "Published",
-                        propertyName: "isPublished",
-                        spec: args.spec,
-                        specChangedCallback: function () {
-                            var URI = CBModel.valueToString(
-                                args.spec,
-                                "URI"
-                            ).trim();
+            /* is published */
+            {
+                let item = CBUI.createSectionItem();
 
-                            if (args.spec.isPublished) {
-                                if (URI === "") {
-                                    URIEditor.updateValueCallback(
-                                        Colby.textToURI(args.spec.title)
-                                    );
+                item.appendChild(
+                    CBUIBooleanEditor.create(
+                        {
+                            labelText: "Published",
+                            propertyName: "isPublished",
+                            spec: args.spec,
+                            specChangedCallback: function () {
+                                var URI = CBModel.valueToString(
+                                    args.spec,
+                                    "URI"
+                                ).trim();
+
+                                if (args.spec.isPublished) {
+                                    if (URI === "") {
+                                        URIEditor.updateValueCallback(
+                                            Colby.textToURI(args.spec.title)
+                                        );
+                                    }
+
+                                    if (args.spec.publicationTimeStamp === undefined) {
+                                        args.spec.publicationTimeStamp = (
+                                            Math.floor(Date.now() / 1000)
+                                        );
+
+                                        publicationDateEditor.refresh();
+                                    }
                                 }
 
-                                if (args.spec.publicationTimeStamp === undefined) {
-                                    args.spec.publicationTimeStamp = (
-                                        Math.floor(Date.now() / 1000)
-                                    );
+                                args.specChangedCallback();
+                            },
+                        }
+                    ).element
+                );
 
-                                    publicationDateEditor.refresh();
-                                }
-                            }
+                sectionElement.appendChild(item);
+            }
+            /* is published */
 
-                            args.specChangedCallback();
-                        },
-                    }
-                ).element
-            );
 
-            sectionElement.appendChild(item);
 
-            /* publicationTimeStamp */
+            /* publication timestamp */
+            {
+                let item = CBUI.createSectionItem();
 
-            item = CBUI.createSectionItem();
-            item.appendChild(publicationDateEditor.element);
-            sectionElement.appendChild(item);
+                item.appendChild(publicationDateEditor.element);
+
+                sectionElement.appendChild(item);
+            }
+            /* publication timestamp */
+
+
 
             /* URI */
+            {
+                let item = CBUI.createSectionItem();
 
-            item = CBUI.createSectionItem();
-            item.appendChild(URIEditor.element);
-            sectionElement.appendChild(item);
+                item.appendChild(URIEditor.element);
 
-            /* publishedBy */
-
-            if (!args.spec.publishedBy) {
-                args.spec.publishedBy =
-                CBViewPageInformationEditor_currentUserNumericID;
+                sectionElement.appendChild(item);
             }
+            /* URI */
 
-            var users = CBUsersWhoAreAdministrators.map(
-                function (user) {
-                    return {
-                        title: user.name,
-                        value: user.ID,
-                    };
+
+
+            /* published by */
+            {
+                if (!args.spec.publishedBy) {
+                    args.spec.publishedBy =
+                    CBViewPageInformationEditor_currentUserNumericID;
                 }
-            );
 
-            item = CBUI.createSectionItem();
-
-            item.appendChild(
-                CBUISelector.create(
-                    {
-                        labelText: "Published By",
-                        propertyName: "publishedBy",
-                        spec: args.spec,
-                        specChangedCallback: args.specChangedCallback,
-                        options: users,
+                var users = CBUsersWhoAreAdministrators.map(
+                    function (user) {
+                        return {
+                            title: user.name,
+                            value: user.ID,
+                        };
                     }
-                ).element
-            );
+                );
 
-            sectionElement.appendChild(item);
+                let item = CBUI.createSectionItem();
 
-            /* classNameForSettings */
+                item.appendChild(
+                    CBUISelector.create(
+                        {
+                            labelText: "Published By",
+                            propertyName: "publishedBy",
+                            spec: args.spec,
+                            specChangedCallback: args.specChangedCallback,
+                            options: users,
+                        }
+                    ).element
+                );
 
+                sectionElement.appendChild(item);
+            }
+            /* published by */
+
+
+            /* class name for settings */
             {
                 let selector = CBUISelector.create();
                 selector.title = "Page Settings";
@@ -406,9 +462,10 @@ var CBViewPageInformationEditor = {
 
                 sectionElement.appendChild(selector.element);
             }
+            /* class name for settings */
 
-            /* classNameForKind */
 
+            /* class name for kind */
             {
                 let selector = CBUISelector.create();
                 selector.title = "Page Kind";
@@ -438,9 +495,10 @@ var CBViewPageInformationEditor = {
 
                 sectionElement.appendChild(selector.element);
             }
+            /* class name for kind */
 
-            /* frameClassName */
 
+            /* frame class name */
             {
                 let selector = CBUISelector.create();
                 selector.title = "Page Frame";
@@ -472,8 +530,11 @@ var CBViewPageInformationEditor = {
 
                 sectionElement.appendChild(selector.element);
             }
+            /* frame class name */
 
-            { /* selectedMainMenuItemName */
+
+            /* selected main menu item name */
+            {
                 let sectionItemElement = CBUI.createSectionItem();
                 let stringEditor = CBUIStringEditor.create();
                 stringEditor.title = "Selected Main Menu Item Name";
@@ -490,6 +551,7 @@ var CBViewPageInformationEditor = {
                 sectionItemElement.appendChild(stringEditor.element);
                 sectionElement.appendChild(sectionItemElement);
             }
+            /* selected main menu item name */
 
             return sectionContainerElement;
         }
@@ -536,8 +598,10 @@ var CBViewPageInformationEditor = {
             CBViewPageEditor.thumbnailChangedCallback =
             createEditor_handlePageThumbnailChanged;
 
-            item = CBUI.createSectionItem();
+            let item = CBUI.createSectionItem();
+
             item.appendChild(imageChooser.element);
+
             sectionElement.appendChild(item);
 
             if (args.spec.image) {
