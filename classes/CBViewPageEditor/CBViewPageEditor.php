@@ -9,7 +9,7 @@ final class CBViewPageEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v514.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v519.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -23,6 +23,10 @@ final class CBViewPageEditor {
             [
                 'CBViewPageEditor_addableClassNames',
                 CBPagesPreferences::classNamesForAddableViews()
+            ],
+            [
+                'CBViewPageEditor_currentFrontPageID',
+                CBSitePreferences::frontPageID(),
             ],
         ];
     }

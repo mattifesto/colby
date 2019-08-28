@@ -11,6 +11,7 @@
     Colby,
 
     CBViewPageEditor_addableClassNames,
+    CBViewPageEditor_currentFrontPageID,
 */
 
 var CBViewPageEditor = {
@@ -41,13 +42,22 @@ var CBViewPageEditor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
-        CBViewPageEditor.spec = args.spec;
-        CBViewPageEditor.specChangedCallback = args.specChangedCallback;
+    CBUISpecEditor_createEditorElement: function (args) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
+
+        CBViewPageEditor.spec = spec;
+        CBViewPageEditor.specChangedCallback = specChangedCallback;
 
         var editorContainer = document.createElement("div");
 
         editorContainer.classList.add("CBViewPageEditor");
+
+        if (spec.ID === CBViewPageEditor_currentFrontPageID) {
+            editorContainer.appendChild(
+                CBUISpecEditor_createEditorElement_createFrontPageNotificationElement()
+            );
+        }
 
         editorContainer.appendChild(
             CBUI.createHalfSpace()
@@ -60,7 +70,7 @@ var CBViewPageEditor = {
             CBViewPageEditor.handleTitleChanged.bind(
                 undefined,
                 {
-                    spec: args.spec,
+                    spec: spec,
                 }
             );
 
@@ -68,7 +78,7 @@ var CBViewPageEditor = {
             CBViewPageEditor.makeFrontPage.bind(
                 undefined,
                 {
-                    ID: args.spec.ID,
+                    ID: spec.ID,
                 }
             );
 
@@ -77,8 +87,8 @@ var CBViewPageEditor = {
                     {
                         handleTitleChanged: handleTitleChanged,
                         makeFrontPageCallback: makeFrontPageCallback,
-                        spec: args.spec,
-                        specChangedCallback: args.specChangedCallback,
+                        spec: spec,
+                        specChangedCallback: specChangedCallback,
                     }
                 )
             );
@@ -90,8 +100,8 @@ var CBViewPageEditor = {
 
         /* views */
         {
-            if (args.spec.sections === undefined) {
-                args.spec.sections = [];
+            if (spec.sections === undefined) {
+                spec.sections = [];
             }
 
             let titleElement = CBUI.createElement("CBUI_title1");
@@ -101,8 +111,8 @@ var CBViewPageEditor = {
 
             let editor = CBUISpecArrayEditor.create(
                 {
-                    specs: args.spec.sections,
-                    specsChangedCallback: args.specChangedCallback,
+                    specs: spec.sections,
+                    specsChangedCallback: specChangedCallback,
                     addableClassNames: CBViewPageEditor_addableClassNames,
                 }
             );
@@ -118,7 +128,7 @@ var CBViewPageEditor = {
 
         CBViewPageEditor.handleTitleChanged(
             {
-                spec: args.spec,
+                spec: spec,
             }
         );
 
@@ -127,8 +137,42 @@ var CBViewPageEditor = {
         );
 
         return editorContainer;
+
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return Element
+         */
+        function CBUISpecEditor_createEditorElement_createFrontPageNotificationElement() {
+            let element = CBUI.createElement(
+                "CBViewPageEditor_frontPageNotification " +
+                "CBUI_sectionContainer"
+            );
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            element.appendChild(sectionElement);
+
+            let textContainerElement = CBUI.createElement(
+                "CBUI_container_topAndBottom"
+            );
+
+            sectionElement.appendChild(textContainerElement);
+
+            let textElement = CBUI.createElement();
+
+            textElement.textContent = "This page is currently the front page.";
+
+            textContainerElement.appendChild(textElement);
+
+            return element;
+        }
+        /* CBUISpecEditor_createEditorElement_createFrontPageNotificationElement() */
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
 
 
     /**
