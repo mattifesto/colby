@@ -68,19 +68,34 @@ var CBUISpecPropertyEditor = {
      *      }
      */
     create: function (args) {
-        var section, item;
-        var element = document.createElement("div");
-        element.className = "CBUISpecPropertyEditor";
+        let element = CBUI.createElement(
+            "CBUISpecPropertyEditor"
+        );
 
-        element.appendChild(CBUI.createSectionHeader({
-            text: args.labelText,
-        }));
+        {
+            let sectionTitleElement = CBUI.createElement("CBUI_title1");
+            sectionTitleElement.textContent = args.labelText;
 
-        section = CBUI.createSection();
+            element.appendChild(sectionTitleElement);
+        }
+
+        let sectionContainerElement = CBUI.createElement(
+            "CBUI_sectionContainer"
+        );
+
+        element.appendChild(sectionContainerElement);
+
+        let sectionElement = CBUI.createElement(
+            "CBUI_section"
+        );
+
+        sectionContainerElement.appendChild(sectionElement);
 
         /* spec */
+
         var specItem = CBUI.createSectionItem();
-        section.appendChild(specItem);
+
+        sectionElement.appendChild(specItem);
 
         var editLayoutPreferencesCallback =
         CBUISpecPropertyEditor.handleEditLayoutPreferences.bind(
@@ -124,14 +139,22 @@ var CBUISpecPropertyEditor = {
         );
 
         /* change */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIActionLink.create({
-            callback: selectClassCallback,
-            labelText: "Select...",
-        }).element);
-        section.appendChild(item);
+        {
+            let item = CBUI.createSectionItem();
 
-        element.appendChild(section);
+            item.appendChild(
+                CBUIActionLink.create(
+                    {
+                        callback: selectClassCallback,
+                        labelText: "Select...",
+                    }
+                ).element
+            );
+
+            sectionElement.appendChild(item);
+        }
+        /* change */
+
 
         return {
             element: element,

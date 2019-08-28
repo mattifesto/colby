@@ -23,7 +23,7 @@ final class CBUISpecPropertyEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v514.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v519.js', cbsysurl()),
         ];
     }
 
