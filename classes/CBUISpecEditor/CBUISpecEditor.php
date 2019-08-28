@@ -9,7 +9,7 @@ final class CBUISpecEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v514.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v519.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */

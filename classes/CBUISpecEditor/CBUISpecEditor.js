@@ -47,7 +47,6 @@ var CBUISpecEditor = {
         let className = CBModel.valueToString(spec, "className");
 
         let editorObject;
-        let element;
 
         if (useStrict) {
             editorObject = window[className + "Editor"];
@@ -58,8 +57,23 @@ var CBUISpecEditor = {
             CBDefaultEditor;
         }
 
-        if (editorObject) {
-            element = editorObject.createEditor(
+        let createEditorElementInterface = CBModel.valueAsFunction(
+            editorObject,
+            "CBUISpecEditor_createEditorElement"
+        );
+
+        if (createEditorElementInterface === undefined) {
+            /* deprecated */
+            createEditorElementInterface = CBModel.valueAsFunction(
+                editorObject,
+                "createEditor"
+            );
+        }
+
+        let editorElement;
+
+        if (createEditorElementInterface) {
+            editorElement = createEditorElementInterface(
                 {
                     spec: spec,
                     specChangedCallback: args.specChangedCallback,
@@ -68,7 +82,7 @@ var CBUISpecEditor = {
         }
 
         return {
-            element: element,
+            element: editorElement,
         };
     },
     /* create() */
