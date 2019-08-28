@@ -53,38 +53,16 @@ var CBViewPageInformationEditor = {
             createEditor_createPropertiesSectionElement()
         );
 
-        /* thumbnail */
+        /**
+         * imageChooser will be set in
+         * createEditor_createPageThumbnailEditorElement()
+         */
 
-        {
-            let sectionTitleElement = CBUI.createElement("CBUI_title1");
-            sectionTitleElement.textContent = "Page Thumbnail Image";
+        let imageChooser;
 
-            element.appendChild(sectionTitleElement);
-        }
-
-        section = CBUI.createSection();
-
-        let imageChooser = CBUIImageChooser.create();
-        imageChooser.chosen = createEditor_handleImageChosen;
-        imageChooser.removed = createEditor_handleImageRemoved;
-
-        imageChooser.element.classList.add("CBUIImageChooser_thumbnail");
-
-        CBViewPageEditor.thumbnailChangedCallback =
-        createEditor_handlePageThumbnailChanged;
-
-        item = CBUI.createSectionItem();
-        item.appendChild(imageChooser.element);
-        section.appendChild(item);
-
-        element.appendChild(section);
-
-        if (args.spec.image) {
-            imageChooser.src = CBImage.toURL(
-                args.spec.image,
-                "rw320"
-            );
-        }
+        element.appendChild(
+            createEditor_createPageThumbnailEditorElement()
+        );
 
         /* actions */
 
@@ -241,6 +219,9 @@ var CBViewPageInformationEditor = {
 
         /* -- closures -- -- -- -- -- */
 
+        /**
+         * @return Element
+         */
         function createEditor_createPropertiesSectionElement() {
             let sectionContainerElement = CBUI.createElement(
                 "CBUI_sectionContainer"
@@ -513,6 +494,62 @@ var CBViewPageInformationEditor = {
             return sectionContainerElement;
         }
         /* createEditor_createPropertiesSectionElement() */
+
+
+        /**
+         * @return Element
+         */
+        function createEditor_createPageThumbnailEditorElement() {
+            let pageThumbnailEditorElement = CBUI.createElement(
+                "CBViewPageInformationEditor_pageThumbnailEditor"
+            );
+
+            {
+                let sectionTitleElement = CBUI.createElement("CBUI_title1");
+                sectionTitleElement.textContent = "Page Thumbnail Image";
+
+                pageThumbnailEditorElement.appendChild(sectionTitleElement);
+            }
+
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            pageThumbnailEditorElement.appendChild(sectionContainerElement);
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
+
+            /**
+             * The imageChooser variable is declared in createEditor()
+             */
+
+            imageChooser = CBUIImageChooser.create();
+            imageChooser.chosen = createEditor_handleImageChosen;
+            imageChooser.removed = createEditor_handleImageRemoved;
+
+            imageChooser.element.classList.add("CBUIImageChooser_thumbnail");
+
+            CBViewPageEditor.thumbnailChangedCallback =
+            createEditor_handlePageThumbnailChanged;
+
+            item = CBUI.createSectionItem();
+            item.appendChild(imageChooser.element);
+            sectionElement.appendChild(item);
+
+            if (args.spec.image) {
+                imageChooser.src = CBImage.toURL(
+                    args.spec.image,
+                    "rw320"
+                );
+            }
+
+            return pageThumbnailEditorElement;
+        }
+        /* createEditor_createPageThumbnailEditorElement() */
 
 
         /**
