@@ -87,8 +87,6 @@ var CBViewPageEditor = {
                     }
                 )
             );
-
-            editorContainer.appendChild(CBUI.createHalfSpace());
         }
         /* CBViewPageInformationEditor */
 
