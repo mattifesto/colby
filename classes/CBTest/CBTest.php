@@ -342,7 +342,6 @@ EOT;
             ['CBTestPage'],
             ['CBView',                  'render'],
             ['CBView',                  'toSubviews'],
-            ['CBViewPage',              'save'],
             ['ColbyMarkaroundParser',   'orderedList'],
             ['ColbyMarkaroundParser',   'paragraph'],
             ['ColbyMarkaroundParser',   'unorderedList'],

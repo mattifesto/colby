@@ -2,7 +2,34 @@
 
 final class CBViewPageTests {
 
-    static function CBTests_classTest() {
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'general',
+                'title' => 'CBViewPage',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'save',
+                'title' => 'CBViewPage Save',
+                'type' => 'server',
+            ],
+        ];
+    }
+    /* CBTest_getTests() */
+
+
+    /* -- tests -- -- -- -- -- */
+
+    /**
+     * @return object
+     */
+    static function CBTest_general(): stdClass {
 
         /* Test 1 */
 
@@ -42,11 +69,11 @@ final class CBViewPageTests {
         $model = CBModel::build($spec);
 
         if ($model != $expectedModel) {
-            return (object)[
-                'message' =>
-                    "Test 1: The result built model does not match the expected built model.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($model, $expectedModel),
-            ];
+            return CBTest::resultMismatchFailure(
+                'build',
+                $model,
+                $expectedModel
+            );
         }
 
         /* Test 2 */
@@ -55,11 +82,11 @@ final class CBViewPageTests {
         $expectedSearchText = CBViewTests::testSubviewSearchText() . ' CBViewPage';
 
         if ($searchText !== $expectedSearchText) {
-            return (object)[
-                'message' =>
-                    "Test 2: The result search text does not match the expected search text.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($searchText, $expectedSearchText),
-            ];
+            return CBTest::resultMismatchFailure(
+                'toSearchText',
+                $searchText,
+                $expectedSearchText
+            );
         }
 
         /* Test 3 */
@@ -80,18 +107,24 @@ final class CBViewPageTests {
         ];
 
         if ($upgradedSpec != $expectedUpgradedSpec) {
-            return (object)[
-                'message' =>
-                    "Test 3: The result upgraded spec does not match the expected upgraded spec.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($upgradedSpec, $expectedUpgradedSpec),
-            ];
+            return CBTest::resultMismatchFailure(
+                'upgrade',
+                $upgradedSpec,
+                $expectedUpgradedSpec
+            );
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_general() */
+
 
     /**
-     * @return null
+     * @return object
      */
-    static function saveTest() {
+    static function CBTest_save(): stdClass {
         $ID = '697f4e4cb46436f5c204e495caff5957d4d62a31';
         $kind = 'CBViewPageTestPages';
         $specURI = 'CBViewPageTests/super écali fragil isticø expialidociouså';
@@ -138,5 +171,10 @@ final class CBViewPageTests {
         }
 
         CBModels::deleteByID([$ID]);
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_save() */
 }
