@@ -39,7 +39,11 @@ final class CBModelAssociations {
      *
      * @return void
      */
-    static function add(string $ID, string $associationKey, string $associatedID): void {
+    static function add(
+        string $ID,
+        string $associationKey,
+        string $associatedID
+    ): void {
         $IDAsSQL = CBHex160::toSQL($ID);
         $associationKeyAsSQL = CBDB::stringToSQL($associationKey);
         $associatedIDAsSQL = CBHex160::toSQL($associatedID);
@@ -60,6 +64,8 @@ EOT;
 
         Colby::query($SQL);
     }
+    /* add() */
+
 
     /**
      * @param ?ID $ID
@@ -68,7 +74,11 @@ EOT;
      *
      * @return void
      */
-    static function delete(string $ID = null, string $associationKey = null, string $associatedID = null): void {
+    static function delete(
+        string $ID = null,
+        string $associationKey = null,
+        string $associatedID = null
+    ): void {
         $clauses = [];
 
         if ($ID !== null) {
@@ -104,6 +114,8 @@ EOT;
 
         Colby::query($SQL);
     }
+    /* delete() */
+
 
     /**
      * @param ?ID $primaryID
@@ -118,7 +130,11 @@ EOT;
      *          associatedID: ID
      *      }
      */
-    static function fetch(?string $primaryID, ?string $associationKey = null, ?string $associatedID = null): array {
+    static function fetch(
+        ?string $primaryID,
+        ?string $associationKey = null,
+        ?string $associatedID = null
+    ): array {
         $clauses = [];
 
         if ($primaryID !== null) {
@@ -137,7 +153,10 @@ EOT;
         }
 
         if (empty($clauses)) {
-            throw new Exception('At least one of the parameters to CBModelAssociations::fetch() must be specified.');
+            throw new Exception(
+                'At least one of the parameters to ' .
+                'CBModelAssociations::fetch() must be specified.'
+            );
         } else {
             $clauses = implode(' AND ', $clauses);
         }
@@ -154,6 +173,8 @@ EOT;
 
         return CBDB::SQLToObjects($SQL);
     }
+    /* fetch() */
+
 
     /**
      * @param ID $modelID
@@ -181,6 +202,8 @@ EOT;
             );
         }
     }
+    /* fetchAssociatedID() */
+
 
     /**
      * @param ID $modelID
@@ -204,6 +227,8 @@ EOT;
             $associations
         );
     }
+    /* fetchAssociatedIDs() */
+
 
     /**
      * @param ID $modelID
@@ -226,6 +251,8 @@ EOT;
             return CBModelCache::fetchModelByID($associatedID);
         }
     }
+    /* fetchAssociatedModel() */
+
 
     /**
      * @param ID $modelID
@@ -248,6 +275,8 @@ EOT;
             return CBModelCache::fetchModelsByID($associatedIDs);
         }
     }
+    /* fetchAssociatedModels() */
+
 
     /**
      * Call this function instead of fetch() when you know the result should be
@@ -260,8 +289,16 @@ EOT;
      *
      * @return ?object
      */
-    static function fetchOne(?string $primaryID, ?string $associationClassName = null, ?string $associatedID = null): ?stdClass {
-        $rows = CBModelAssociations::fetch($primaryID, $associationClassName, $associatedID);
+    static function fetchOne(
+        ?string $primaryID,
+        ?string $associationClassName = null,
+        ?string $associatedID = null
+    ): ?stdClass {
+        $rows = CBModelAssociations::fetch(
+            $primaryID,
+            $associationClassName,
+            $associatedID
+        );
 
         if (empty($rows)) {
             return null;
@@ -291,9 +328,14 @@ EOT;
                 'sourceClassName' => __CLASS__,
             ]);
 
-            throw new Exception('More than one CBModelAssociations row was found when at most one row was expected.');
+            throw new Exception(
+                'More than one CBModelAssociations row was found when ' .
+                'at most one row was expected.'
+            );
         }
     }
+    /* fetchOne() */
+
 
     /**
      * This function is useful in situations where you have a one-to-one
@@ -322,4 +364,5 @@ EOT;
             $associatedID
         );
     }
+    /* replaceAssociatedID() */
 }
