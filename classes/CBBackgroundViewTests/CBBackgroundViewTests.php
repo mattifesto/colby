@@ -2,7 +2,27 @@
 
 final class CBBackgroundViewTests {
 
-    static function CBTests_classTest() {
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'general',
+                'title' => 'CBBackgroundView',
+                'type' => 'server',
+            ],
+        ];
+    }
+    /* CBTest_getTests() */
+
+
+    /* -- tests -- -- -- -- -- */
+
+    /**
+     * @return object
+     */
+    static function CBTest_general(): stdClass {
         $spec = (object)[
             'className' => 'CBBackgroundView',
             'children' => CBViewTests::testSubviewSpecs(),
@@ -23,22 +43,22 @@ final class CBBackgroundViewTests {
         $model = CBModel::build($spec);
 
         if ($model != $expectedModel) {
-            return (object)[
-                'message' =>
-                    "The result built model does not match the expected built model.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($model, $expectedModel),
-            ];
+            return CBTest::resultMismatchFailure(
+                'build',
+                $model,
+                $expectedModel
+            );
         }
 
         $searchText = CBModel::toSearchText($model);
         $expectedSearchText = CBViewTests::testSubviewSearchText() . ' CBBackgroundView';
 
         if ($searchText !== $expectedSearchText) {
-            return (object)[
-                'message' =>
-                    "The result search text does not match the expected search text.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($searchText, $expectedSearchText),
-            ];
+            return CBTest::resultMismatchFailure(
+                'toSearchText',
+                $searchText,
+                $expectedSearchText
+            );
         }
 
         $upgradedSpec = CBModel::upgrade($spec);
@@ -48,11 +68,16 @@ final class CBBackgroundViewTests {
         ];
 
         if ($upgradedSpec != $expectedUpgradedSpec) {
-            return (object)[
-                'message' =>
-                    "The result upgraded spec does not match the expected upgraded spec.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($upgradedSpec, $expectedUpgradedSpec),
-            ];
+            return CBTest::resultMismatchFailure(
+                'upgrade',
+                $upgradedSpec,
+                $expectedUpgradedSpec
+            );
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_general() */
 }
