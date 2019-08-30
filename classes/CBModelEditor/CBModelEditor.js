@@ -42,6 +42,11 @@ var CBModelEditor = {
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
 
+        let inspectorURL = (
+            "/admin/?c=CBModelInspector&ID=" +
+            CBModelEditor_originalSpec.ID
+        );
+
         var specSaver = CBUISpecSaver.create(
             {
                 rejectedCallback: CBModelEditor.saveWasRejected,
@@ -57,16 +62,18 @@ var CBModelEditor = {
             {
                 spec: spec,
                 specChangedCallback: specSaver.specChangedCallback,
+                useStrict: true,
             }
         );
 
+        if (specEditor.element === undefined) {
+            window.location = inspectorURL;
+            return;
+        }
+
         let inspectHeaderItem = CBUI.createHeaderItem();
         inspectHeaderItem.textContent = "Inspect";
-
-        inspectHeaderItem.href = (
-            "/admin/?c=CBModelInspector&ID=" +
-            CBModelEditor_originalSpec.ID
-        );
+        inspectHeaderItem.href = inspectorURL;
 
         CBUINavigationView.navigate(
             {
