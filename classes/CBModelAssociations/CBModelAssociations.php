@@ -118,7 +118,7 @@ EOT;
 
 
     /**
-     * @param ?ID $primaryID
+     * @param ID|[ID] $IDs
      * @param ?string $associationKey
      * @param ?ID $associatedID
      *
@@ -131,15 +131,19 @@ EOT;
      *      }
      */
     static function fetch(
-        ?string $primaryID,
+        $IDs,
         ?string $associationKey = null,
         ?string $associatedID = null
     ): array {
         $clauses = [];
 
-        if ($primaryID !== null) {
-            $primaryIDAsSQL = CBHex160::toSQL($primaryID);
-            array_push($clauses, "ID = {$primaryIDAsSQL}");
+        if ($IDs !== null) {
+            if (!is_array($IDs)) {
+                $IDs = [$IDs];
+            }
+
+            $IDsAsSQL = CBHex160::toSQL($IDs);
+            array_push($clauses, "ID IN ({$IDsAsSQL})");
         }
 
         if ($associationKey !== null) {
