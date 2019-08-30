@@ -45,6 +45,79 @@ final class CBModels {
     /* CBAjax_deleteByID_group() */
 
 
+    /**
+     * This function is used often by websites to save models. The page editor
+     * and model editors use it.
+     *
+     * Testing:
+     *
+     *      Because this function is so easy to execute by editing a page or
+     *      other model, it can be used to test Colby Ajax functionaily. Placing
+     *      breakpoints in JavaScript while altering this function can simulate
+     *      various scenarios.
+     *
+     *      1. You can uncomment the code at the beginning of the function to
+     *         test the handling various HTTP status codes.
+     *      2. You can stop your development web server to test the handling of
+     *         server unavailable errors.
+     *
+     * @return void
+     */
+    static function CBAjax_save($args): void {
+
+        /**
+         * Uncomment to test failure of this Ajax function:
+         *
+         * header("HTTP/1.0 404 Not Found"); return;
+         */
+
+        $spec = CBModel::valueAsModel($args, 'spec');
+
+        if ($spec === null) {
+            throw CBException::createModelIssueException(
+                'The "spec" property of the arguments is not a valid model.',
+                $args,
+                'c6490ee97e815aa76e6821920922406ec764d10f'
+            );
+        }
+
+        $ID = CBModel::valueAsID($spec, 'ID');
+
+        if ($ID === null) {
+            throw CBException::createModelIssueException(
+                'The spec to save does not have a valid ID',
+                $spec,
+                '666e8ff4a6eac1b5df92a3708eedfd0c745fbbae'
+            );
+        }
+
+        if (!CBModels::currentUserCanWrite($spec)) {
+            throw CBException::createModelIssueException(
+                'The current user does not have the permissions to save ' .
+                'this spec.',
+                $spec,
+                'f415157340b172d67f4c2fc7afa75888cdb4b72e'
+            );
+        }
+
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
+    }
+    /* CBAjax_save() */
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_save_group(): string {
+        return 'Public';
+    }
+    /* CBAjax_save_group() */
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
     /**
@@ -87,7 +160,10 @@ final class CBModels {
             'CBUpgradesForVersion442',
         ];
     }
+    /* CBInstall_requiredClassNames() */
 
+
+    /* -- functions -- -- -- -- -- */
 
     /**
      * @param stdClass $model
@@ -204,6 +280,7 @@ EOT;
             CBModelCache::uncacheByID($IDs);
         }
     }
+    /* deleteByID() */
 
 
     /**
@@ -225,6 +302,7 @@ EOT;
 
         return CBDB::SQLtoArray($SQL);
     }
+    /* fetchCreatedTimestampsForIDs() */
 
 
     /**
@@ -243,6 +321,7 @@ EOT;
             return $models[$ID];
         }
     }
+    /* fetchModelByID() */
 
 
     /**
@@ -270,6 +349,7 @@ EOT;
             return $models[$ID];
         }
     }
+    /* fetchModelByIDNullable() */
 
 
     /**
@@ -299,6 +379,7 @@ EOT;
 
         return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
     }
+    /* fetchModelsByClassName() */
 
 
     /**
@@ -328,6 +409,7 @@ EOT;
             $valuesAsJSON
         );
     }
+    /* fetchModelsByClassName2() */
 
 
     /**
@@ -348,7 +430,8 @@ EOT;
         $IDsAsSQL = CBHex160::toSQL($IDs);
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(m.ID)), v.modelAsJSON
+            SELECT  LOWER(HEX(m.ID)),
+                    v.modelAsJSON
             FROM    CBModels AS m
             JOIN    CBModelVersions AS v ON
                     m.ID = v.ID AND
@@ -359,6 +442,8 @@ EOT;
 
         return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
     }
+    /* fetchModelsByID() */
+
 
     /**
      * @param [ID] $IDs
@@ -391,6 +476,7 @@ EOT;
             $valuesAsJSON
         );
     }
+    /* fetchModelsByID2() */
 
 
     /**
@@ -417,6 +503,7 @@ EOT;
 
         return CBDB::SQLToValue($SQL, ['valueIsJSON' => true]);
     }
+    /* fetchModelByIDWithVersion() */
 
 
     /**
@@ -453,6 +540,7 @@ EOT;
 
         return $value;
     }
+    /* fetchSpecAndModelByID() */
 
 
     /**
@@ -472,6 +560,7 @@ EOT;
             return $specs[$ID];
         }
     }
+    /* fetchSpecByID() */
 
 
     /**
@@ -499,6 +588,8 @@ EOT;
             return $specs[$ID];
         }
     }
+    /* fetchSpecByIDNullable() */
+
 
     /**
      * Retreives the current version of specs
@@ -547,6 +638,8 @@ EOT;
 
         return $specs;
     }
+    /* fetchSpecsByID() */
+
 
     /**
      * Locks the rows for and fetches the version and created timestamp for a
@@ -645,6 +738,7 @@ EOT;
 
         CBModels::save([$spec], /* force: */ true);
     }
+    /* revert() */
 
 
     /**
@@ -864,79 +958,7 @@ EOT;
             $delayInSeconds
         );
     }
-
-
-    /**
-     * This function is used often by websites to save models. The page editor
-     * and model editors use it.
-     *
-     * Testing:
-     *
-     *      Because this function is so easy to execute by editing a page or
-     *      other model, it can be used to test Colby Ajax functionaily. Placing
-     *      breakpoints in JavaScript while altering this function can simulate
-     *      various scenarios.
-     *
-     *      1. You can uncomment the code at the beginning of the function to
-     *         test the handling various HTTP status codes.
-     *      2. You can stop your development web server to test the handling of
-     *         server unavailable errors.
-     *
-     * @return void
-     */
-    static function CBAjax_save($args): void {
-
-        /**
-         * Uncomment to test failure of this Ajax function:
-         *
-         * header("HTTP/1.0 404 Not Found"); return;
-         */
-
-        $spec = CBModel::valueAsModel($args, 'spec');
-
-        if ($spec === null) {
-            throw CBException::createModelIssueException(
-                'The "spec" property of the arguments is not a valid model.',
-                $args,
-                'c6490ee97e815aa76e6821920922406ec764d10f'
-            );
-        }
-
-        $ID = CBModel::valueAsID($spec, 'ID');
-
-        if ($ID === null) {
-            throw CBException::createModelIssueException(
-                'The spec to save does not have a valid ID',
-                $spec,
-                '666e8ff4a6eac1b5df92a3708eedfd0c745fbbae'
-            );
-        }
-
-        if (!CBModels::currentUserCanWrite($spec)) {
-            throw CBException::createModelIssueException(
-                'The current user does not have the permissions to save ' .
-                'this spec.',
-                $spec,
-                'f415157340b172d67f4c2fc7afa75888cdb4b72e'
-            );
-        }
-
-        CBDB::transaction(
-            function () use ($spec) {
-                CBModels::save($spec);
-            }
-        );
-    }
-    /* CBAjax_save() */
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_save_group(): string {
-        return 'Public';
-    }
-    /* CBAjax_save_group() */
+    /* save() */
 
 
     /**
@@ -1081,4 +1103,5 @@ EOT;
 
         Colby::query('DROP TEMPORARY TABLE CBModelsTemp');
     }
+    /* saveToDatabase() */
 }
