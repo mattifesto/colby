@@ -4,15 +4,17 @@
 /* exported CBModelsAdmin */
 /* globals
     CBUI,
+    CBUINavigationArrowPart,
+    CBUISectionItem4,
+    CBUITitleAndDescriptionPart,
+    Colby,
+
     CBModelsAdmin_classHasTemplates,
     CBModelsAdmin_modelClassName,
     CBModelsAdmin_modelClassNames,
     CBModelsAdmin_modelList,
     CBModelsAdmin_page,
-    CBUINavigationArrowPart,
-    CBUISectionItem4,
-    CBUITitleAndDescriptionPart,
-    Colby */
+*/
 
 var CBModelsAdmin = {
 
