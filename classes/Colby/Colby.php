@@ -469,6 +469,20 @@ final class Colby {
         include_once cbsitedir() . '/colby-configuration.php';
 
         /**
+         * Automatically load libraries in the "libraries" directory.
+         */
+
+        if (is_dir('libraries')) {
+            $filenames = glob('libraries/*');
+
+            foreach ($filenames as $filename) {
+                if (is_dir($filename)) {
+                    Colby::loadLibrary($filename);
+                }
+            }
+        }
+
+        /**
          * Include the site configuration file. Unlike 'colby-configuration.php'
          * which contains instance specific settings, 'site-configuration.php'
          * is checked in and shared by all instances of the site such as
@@ -516,23 +530,37 @@ final class Colby {
      *
      *      Example: "mylibrary" or "libraries/mylibrary"
      *
+     *      @NOTE
+     *
+     *          A library will only be loaded if it has a library configurion
+     *          file.
+     *
      * @return void
      */
     static function loadLibrary($libraryPath): void {
-        Colby::$libraryDirectories[] = $libraryPath;
+        $libraryDirectory = (
+            cbsitedir() .
+            "/{$libraryPath}"
+        );
 
-        $libraryDirectory = cbsitedir() . "/{$libraryPath}";
+        $libraryConfigurationFilepath = (
+            $libraryDirectory .
+            '/library-configuration.php'
+        );
 
-        $filename = "{$libraryDirectory}/version.php";
+        if (file_exists($libraryConfigurationFilepath)) {
+            $libraryVersionFilepath = (
+                $libraryDirectory .
+                '/version.php'
+            );
 
-        if (file_exists($filename)) {
-            include_once $filename;
-        }
+            if (file_exists($libraryVersionFilepath)) {
+                include_once $libraryVersionFilepath;
+            }
 
-        $filename = "{$libraryDirectory}/library-configuration.php";
+            include_once $libraryConfigurationFilepath;
 
-        if (file_exists($filename)) {
-            include_once $filename;
+            Colby::$libraryDirectories[] = $libraryPath;
         }
     }
     /* loadLibrary() */
