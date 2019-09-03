@@ -12,29 +12,45 @@ final class CBModelTemplateCatalog {
      * @return void
      */
     static function CBInstall_install(): void {
-        CBDB::transaction(function () {
-            CBModels::deleteByID(CBModelTemplateCatalog::ID());
-        });
+        CBDB::transaction(
+            function () {
+                CBModels::deleteByID(
+                    CBModelTemplateCatalog::ID()
+                );
+            }
+        );
     }
+
 
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBModels'];
-    }
-
-    /**
-     * @param model $spec
-     *
-     * @return ?model
-     */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        return (object)[
-            'livePageTemplateClassName' => CBModel::valueToString($spec, 'livePageTemplateClassName'),
-            'templates' => CBModel::valueToObject($spec, 'templates'),
+        return [
+            'CBModels',
         ];
     }
+
+
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function CBModel_build(stdClass $spec): stdClass {
+        return (object)[
+            'livePageTemplateClassName' => CBModel::valueToString(
+                $spec,
+                'livePageTemplateClassName'
+            ),
+
+            'templates' => CBModel::valueToObject(
+                $spec,
+                'templates'
+            ),
+        ];
+    }
+
 
     /**
      * @param ?object $updates
@@ -47,15 +63,21 @@ final class CBModelTemplateCatalog {
      *      Passing the updates to this function results in cleaner and more
      *      concise code.
      *
-     * @return model
+     * @return object
      *
      *      Returns a the spec that has been installed as a starting point for a
      *      page on this site. The spec will be merged with the updates provided
      *      before being returned.
      */
     static function fetchLivePageTemplate(?stdClass $updates = null): stdClass {
-        $model = CBModels::fetchModelByID(CBModelTemplateCatalog::ID());
-        $className = CBModel::valueToString($model, 'livePageTemplateClassName');
+        $model = CBModels::fetchModelByID(
+            CBModelTemplateCatalog::ID()
+        );
+
+        $className = CBModel::valueToString(
+            $model,
+            'livePageTemplateClassName'
+        );
 
         if (is_callable($function = "{$className}::CBModelTemplate_spec")) {
             $spec = call_user_func($function);
@@ -73,23 +95,36 @@ final class CBModelTemplateCatalog {
 
         return $spec;
     }
+    /* fetchLivePageTemplate() */
+
 
     /**
      * @return [string]
      */
-    static function fetchTemplateClassNamesByTargetClassName(string $targetClassName): array {
-        $model = CBModels::fetchModelByID(CBModelTemplateCatalog::ID());
+    static function fetchTemplateClassNamesByTargetClassName(
+        string $targetClassName
+    ): array {
+        $model = CBModels::fetchModelByID(
+            CBModelTemplateCatalog::ID()
+        );
 
-        return CBModel::valueToArray($model, "templates.{$targetClassName}");
+        return CBModel::valueToArray(
+            $model,
+            "templates.{$targetClassName}"
+        );
     }
+
 
     /**
      * @return ID
      */
     static function ID(): string {
-        return CBModelTemplateCatalog::$testID ??
-            'a50a379457147244325e3c512dadd5fac26daf11';
+        return (
+            CBModelTemplateCatalog::$testID ??
+            'a50a379457147244325e3c512dadd5fac26daf11'
+        );
     }
+
 
     /**
      * @param string $templateClassName
@@ -97,9 +132,15 @@ final class CBModelTemplateCatalog {
      * @return void
      */
     static function install(string $templateClassName): void {
-        $templateSpec = call_user_func("{$templateClassName}::CBModelTemplate_spec");
+        $templateSpec = call_user_func(
+            "{$templateClassName}::CBModelTemplate_spec"
+        );
+
         $targetClassName = $templateSpec->className;
-        $originalSpec = CBModels::fetchSpecByID(CBModelTemplateCatalog::ID());
+
+        $originalSpec = CBModels::fetchSpecByID(
+            CBModelTemplateCatalog::ID()
+        );
 
         if (empty($originalSpec)) {
             $originalSpec = (object)[
@@ -109,28 +150,47 @@ final class CBModelTemplateCatalog {
 
         $spec = CBModel::clone($originalSpec);
         $spec->className = 'CBModelTemplateCatalog';
-        $templates = CBModel::valueAsObject($spec, 'templates');
+
+        $templates = CBModel::valueAsObject(
+            $spec,
+            'templates'
+        );
 
         if (empty($templates)) {
             $templates = (object)[];
         }
 
-        $templateClassNamesForTarget = CBModel::valueToArray($templates, $targetClassName);
+        $templateClassNamesForTarget = CBModel::valueToArray(
+            $templates,
+            $targetClassName
+        );
 
-        array_push($templateClassNamesForTarget, $templateClassName);
+        array_push(
+            $templateClassNamesForTarget,
+            $templateClassName
+        );
 
-        $templates->{$targetClassName} = array_values(array_filter(array_unique(
-            $templateClassNamesForTarget
-        )));
+        $templates->{$targetClassName} =
+        array_values(
+            array_filter(
+                array_unique(
+                    $templateClassNamesForTarget
+                )
+            )
+        );
 
         $spec->templates = $templates;
 
         if ($spec != $originalSpec) {
-            CBDB::transaction(function () use ($spec) {
-                CBModels::save($spec);
-            });
+            CBDB::transaction(
+                function () use ($spec) {
+                    CBModels::save($spec);
+                }
+            );
         }
     }
+    /* install() */
+
 
     /**
      * This template will be used by code that needs to create and render a page
@@ -147,7 +207,9 @@ final class CBModelTemplateCatalog {
      * @return void
      */
     static function installLivePageTemplate(string $templateClassName): void {
-        $originalSpec = CBModels::fetchSpecByID(CBModelTemplateCatalog::ID());
+        $originalSpec = CBModels::fetchSpecByID(
+            CBModelTemplateCatalog::ID()
+        );
 
         if (empty($originalSpec)) {
             $originalSpec = (object)[
@@ -160,9 +222,12 @@ final class CBModelTemplateCatalog {
         $spec->livePageTemplateClassName = $templateClassName;
 
         if ($spec != $originalSpec) {
-            CBDB::transaction(function () use ($spec) {
-                CBModels::save($spec);
-            });
+            CBDB::transaction(
+                function () use ($spec) {
+                    CBModels::save($spec);
+                }
+            );
         }
     }
+    /* installLivePageTemplate() */
 }
