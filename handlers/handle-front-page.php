@@ -13,23 +13,23 @@ $message = <<<EOT
 
         Alternatively, you can create this file to render your front page
         content.
-        
+
         (handlers/handle-front-page.php (code))
 
         ---
 
 EOT;
 
-$spec = CBModelTemplateCatalog::fetchLivePageTemplate();
-
-CBModel::merge($spec, (object)[
-    'title' => 'Default Front Page',
-    'sections' => [
+CBPage::renderSpec(
+    CBModelTemplateCatalog::fetchLivePageTemplate(
         (object)[
-            'className' => 'CBMessageView',
-            'markup' => $message,
-        ],
-    ],
-]);
-
-CBPage::renderSpec($spec);
+            'title' => 'Default Front Page',
+            'sections' => [
+                (object)[
+                    'className' => 'CBMessageView',
+                    'markup' => $message,
+                ],
+            ],
+        ]
+    )
+);
