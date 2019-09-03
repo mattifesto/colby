@@ -11,8 +11,9 @@ final class CBViewPage {
         ];
     }
 
+
     /**
-     * @param model $spec
+     * @param object $spec
      *
      *      {
      *          image: model?
@@ -22,20 +23,62 @@ final class CBViewPage {
      *              CBPage::toSummary() function.
      *      }
      *
-     * @return model
+     * @return object
      */
     static function CBModel_build($spec) {
         $model = (object)[
-            'classNameForKind' => CBModel::valueToString($spec, 'classNameForKind'),
-            'classNameForSettings' => CBModel::valueToString($spec, 'classNameForSettings'),
-            'description' => trim(CBModel::valueToString($spec, 'description')),
-            'frameClassName' => CBModel::valueToString($spec, 'frameClassName'),
-            'isPublished' => (bool)CBModel::value($spec, 'isPublished'),
+            'classNameForKind' => CBModel::valueToString(
+                $spec,
+                'classNameForKind'
+            ),
+
+            'classNameForSettings' => CBModel::valueToString(
+                $spec,
+                'classNameForSettings'
+            ),
+
+            'description' => trim(
+                CBModel::valueToString(
+                    $spec,
+                    'description'
+                )
+            ),
+
+            'frameClassName' => CBModel::valueToString(
+                $spec,
+                'frameClassName'
+            ),
+
+            'isPublished' => CBModel::valueToBool(
+                $spec,
+                'isPublished'
+            ),
+
             'iteration' => 0, /* deprecated */
-            'publicationTimeStamp' => CBModel::valueAsInt($spec, 'publicationTimeStamp'),
-            'publishedBy' => CBModel::valueAsInt($spec, 'publishedBy'),
-            'title' => trim(CBModel::valueToString($spec, 'title')),
-            'URI' => CBConvert::stringToURI(CBModel::valueToString($spec, 'URI')),
+
+            'publicationTimeStamp' => CBModel::valueAsInt(
+                $spec,
+                'publicationTimeStamp'
+            ),
+
+            'publishedBy' => CBModel::valueAsInt(
+                $spec,
+                'publishedBy'
+            ),
+
+            'title' => trim(
+                CBModel::valueToString(
+                    $spec,
+                    'title'
+                )
+            ),
+
+            'URI' => CBConvert::stringToURI(
+                CBModel::valueToString(
+                    $spec,
+                    'URI'
+                )
+            ),
         ];
 
         /**
@@ -44,11 +87,17 @@ final class CBViewPage {
          * The property value on the spec is a string, on the model an array.
          */
 
-        $selectedMenuItemNames = CBModel::valueToNames($spec, 'selectedMenuItemNames');
+        $selectedMenuItemNames = CBModel::valueToNames(
+            $spec,
+            'selectedMenuItemNames'
+        );
 
         if (empty($selectedMenuItemNames)) {
             /* deprecated */
-            $selectedMainMenuItemName = CBModel::valueToString($spec, 'selectedMainMenuItemName');
+            $selectedMainMenuItemName = CBModel::valueToString(
+                $spec,
+                'selectedMainMenuItemName'
+            );
 
             if (!empty($selectedMainMenuItemName)) {
                 $selectedMenuItemNames = [$selectedMainMenuItemName];
@@ -78,7 +127,10 @@ final class CBViewPage {
         }
 
         if (empty($model->image)) {
-            $model->thumbnailURL = CBModel::valueToString($spec, 'thumbnailURL');
+            $model->thumbnailURL = CBModel::valueToString(
+                $spec,
+                'thumbnailURL'
+            );
         } else {
             // The preference is not to set null properties but we set this one
             // for backward compatability.
@@ -109,11 +161,13 @@ final class CBViewPage {
 
         return $model;
     }
+    /* CBModel_build() */
+
 
     /**
-     * @param model $spec
+     * @param object $spec
      *
-     * @return model
+     * @return object
      */
     static function CBModel_prepareCopy(stdClass $spec): stdClass {
         unset($spec->isPublished);
@@ -125,22 +179,38 @@ final class CBViewPage {
         return $spec;
     }
 
+
     /**
-     * @param model $model
+     * @param object $model
      *
      * @return string
      */
     static function CBModel_toSearchText(stdClass $model): string {
-        $title = CBModel::valueToString($model, 'title');
-        $description = CBModel::valueToString($model, 'description');
+        $title = CBModel::valueToString(
+            $model,
+            'title'
+        );
+
+        $description = CBModel::valueToString(
+            $model,
+            'description'
+        );
 
         $strings = [
             $title,
             $description,
-            CBModel::toSearchText(CBModel::value($model, 'layout')),
+            CBModel::toSearchText(
+                CBModel::value(
+                    $model,
+                    'layout'
+                )
+            ),
         ];
 
-        $publicationTimeStamp = CBModel::valueAsInt($model, 'publicationTimeStamp');
+        $publicationTimeStamp = CBModel::valueAsInt(
+            $model,
+            'publicationTimeStamp'
+        );
 
         CBViewPage::initializePageInformation($model);
 
@@ -155,11 +225,13 @@ final class CBViewPage {
             )))
         );
     }
+    /* CBModel_toSearchText() */
+
 
     /**
-     * @param model $spec
+     * @param object $spec
      *
-     * @return model
+     * @return object
      */
     static function CBModel_upgrade(stdClass $spec): stdClass {
         if ($image = CBModel::valueAsObject($spec, 'image')) {
@@ -222,33 +294,74 @@ EOT;
 
         return $spec;
     }
+    /* CBModel_upgrade() */
+
 
     /**
-     * @param model $model
+     * @param object $model
      *
      * @return object
      */
     static function CBPage_toSummary(stdClass $model): stdClass {
         return (object)[
-            'description' => CBModel::valueToString($model, 'description'),
-            'URI' => CBModel::valueToString($model, 'URI'),
+            'description' => CBModel::valueToString(
+                $model,
+                'description'
+            ),
 
-            'created' => CBModel::valueAsInt($model, 'created'),
-            'updated' => CBModel::valueAsInt($model, 'modified'),
+            'URI' => CBModel::valueToString(
+                $model,
+                'URI'
+            ),
 
-            'isPublished' => (bool)CBModel::value($model, 'isPublished'),
-            'publicationTimeStamp' => CBModel::valueAsInt($model, 'publicationTimeStamp'),
+            'created' => CBModel::valueAsInt(
+                $model,
+                'created'
+            ),
 
-            'image' => CBModel::valueAsModel($model, 'image', ['CBImage']),
-            'thumbnailURL' => CBModel::valueToString($model, 'thumbnailURL'),
+            'updated' => CBModel::valueAsInt(
+                $model,
+                'modified'
+            ),
+
+            'isPublished' => CBModel::valueToBool(
+                $model,
+                'isPublished'
+            ),
+
+            'publicationTimeStamp' => CBModel::valueAsInt(
+                $model,
+                'publicationTimeStamp'
+            ),
+
+            'image' => CBModel::valueAsModel(
+                $model,
+                'image',
+                [
+                    'CBImage',
+                ]
+            ),
+
+            'thumbnailURL' => CBModel::valueToString(
+                $model,
+                'thumbnailURL'
+            ),
 
             /* deprecated? is an int, should be a hex160 */
-            'publishedBy' => CBModel::valueAsInt($model, 'publishedBy'),
+            'publishedBy' => CBModel::valueAsInt(
+                $model,
+                'publishedBy'
+            ),
 
             /* deprecated */
-            'dataStoreID' => CBModel::valueAsID($model, 'ID'),
+            'dataStoreID' => CBModel::valueAsID(
+                $model,
+                'ID'
+            ),
         ];
     }
+    /* CBPage_toSummary() */
+
 
     /**
      * @param model $model
@@ -259,15 +372,20 @@ EOT;
         return CBModel::valueToArray($model, 'sections');
     }
 
+
     /**
      * @param model $model
      * @param [model] $subviews
      *
      * @return void
      */
-    static function CBView_setSubviews(stdClass $model, array $subviews): void {
+    static function CBView_setSubviews(
+        stdClass $model,
+        array $subviews
+    ): void {
         $model->sections = $subviews;
     }
+
 
     /**
      * @param [hex160] $IDs
@@ -279,6 +397,7 @@ EOT;
         CBPages::deletePagesFromTrashByID($IDs);
     }
 
+
     /**
      * @param [object] $models
      *
@@ -287,6 +406,7 @@ EOT;
     static function CBModels_willSave(array $models) {
         CBPages::save($models);
     }
+
 
     /**
      * @param model $model
@@ -298,9 +418,20 @@ EOT;
      * @return void
      */
     static function CBPage_render($model): void {
-        $publicationTimeStamp = CBModel::value($model, 'publicationTimeStamp');
-        $title = CBConvert::valueToString(CBModel::value($model, 'title'));
-        $description = CBConvert::valueToString(CBModel::value($model, 'description'));
+        $publicationTimeStamp = CBModel::value(
+            $model,
+            'publicationTimeStamp'
+        );
+
+        $title = CBModel::valueToString(
+            $model,
+            'title'
+        );
+
+        $description = CBModel::valueToString(
+            $model,
+            'description'
+        );
 
         CBViewPage::initializePageInformation($model);
         CBHTMLOutput::begin();
@@ -311,22 +442,27 @@ EOT;
                 /**
                  * @TODO 2018_04_07
                  *
-                 *      The main element is the container of the CBViewPage class.
-                 *      The CBViewPage class should allow you to add classes and
-                 *      styles to this element. It does not currently allow that, so
-                 *      for now the CBViewPage_default class name is added which
-                 *      eventually can be removed by specifying the "custom" class
-                 *      name manually.
+                 *      The main element is the container of the CBViewPage
+                 *      class. The CBViewPage class should allow you to add
+                 *      classes and styles to this element. It does not
+                 *      currently allow that, so for now the CBViewPage_default
+                 *      class name is added which eventually can be removed by
+                 *      specifying the "custom" class name manually.
                  */
 
                 $renderContent = function () use ($model) {
                     echo '<main class="CBViewPage CBViewPage_default">';
+
                     $sections = CBModel::valueToArray($model, 'sections');
                     array_walk($sections, 'CBView::render');
+
                     echo '</main>';
                 };
 
-                $frameClassName = CBModel::valueToString($model, 'frameClassName');
+                $frameClassName = CBModel::valueToString(
+                    $model,
+                    'frameClassName'
+                );
 
                 CBPageFrame::render($frameClassName, $renderContent);
             } else {
@@ -337,8 +473,15 @@ EOT;
 
                 CBHTMLOutput::requireClassName($model->layout->className);
 
-                if (is_callable($renderLayout = "{$model->layout->className}::render")) {
-                    call_user_func($renderLayout, $model->layout, $renderContentCallback);
+                $renderLayoutFunctionName =
+                "{$model->layout->className}::render";
+
+                if (is_callable($renderLayoutFunctionName)) {
+                    call_user_func(
+                        $renderLayoutFunctionName,
+                        $model->layout,
+                        $renderContentCallback
+                    );
                 }
             }
 
@@ -366,20 +509,58 @@ EOT;
         if (empty($model->isPublished)) {
             $publishedTimestamp = null;
         } else {
-            $publishedTimestamp = CBModel::valueAsInt($model, 'publicationTimeStamp');
+            $publishedTimestamp = CBModel::valueAsInt(
+                $model,
+                'publicationTimeStamp'
+            );
         }
 
-        CBModel::merge($pageInformation, (object)[
-            'classNameForPageSettings' => CBModel::valueToString($model, 'classNameForSettings'),
-            'description' => CBModel::valueToString($model, 'description'),
-            'ID' => CBModel::valueAsID($model, 'ID'),
-            'image' => CBModel::valueAsModel($model, 'image', ['CBImage']),
-            'imageURL' => CBModel::valueToString($model, 'thumbnailURL'),
-            'publishedTimestamp' => $publishedTimestamp,
-            'selectedMenuItemNames' => CBViewPage::selectedMenuItemNames($model),
-            'title' => CBModel::valueToString($model, 'title'),
-        ]);
+        CBModel::merge(
+            $pageInformation,
+            (object)[
+                'classNameForPageSettings' => CBModel::valueToString(
+                    $model,
+                    'classNameForSettings'
+                ),
+
+                'description' => CBModel::valueToString(
+                    $model,
+                    'description'
+                ),
+
+                'ID' => CBModel::valueAsID(
+                    $model,
+                    'ID'
+                ),
+
+                'image' => CBModel::valueAsModel(
+                    $model,
+                    'image',
+                    [
+                        'CBImage',
+                    ]
+                ),
+
+                'imageURL' => CBModel::valueToString(
+                    $model,
+                    'thumbnailURL'
+                ),
+
+                'publishedTimestamp' => $publishedTimestamp,
+
+                'selectedMenuItemNames' => CBViewPage::selectedMenuItemNames(
+                    $model
+                ),
+
+                'title' => CBModel::valueToString(
+                    $model,
+                    'title'
+                ),
+            ]
+        );
     }
+    /* initializePageInformation() */
+
 
     /**
      * Use this function to get the array of selected menu item names. The first
@@ -395,10 +576,18 @@ EOT;
      * @return [string]
      */
     static function selectedMenuItemNames(stdClass $model): array {
-        $selectedMenuItemNames = CBModel::valueToArray($model, 'selectedMenuItemNames');
+        $selectedMenuItemNames = CBModel::valueToArray(
+            $model,
+            'selectedMenuItemNames'
+        );
 
         if (empty($selectedMenuItemNames)) {
-            $selectedMainMenuItemName = trim(CBModel::valueToString($model, 'selectedMainMenuItemName'));
+            $selectedMainMenuItemName = trim(
+                CBModel::valueToString(
+                    $model,
+                    'selectedMainMenuItemName'
+                )
+            );
 
             if (empty($selectedMainMenuItemName)) {
                 return [];
@@ -409,6 +598,8 @@ EOT;
 
         return $selectedMenuItemNames;
     }
+    /* selectedMenuItemNames() */
+
 
     /**
      * @param string $moniker
