@@ -10,25 +10,28 @@ $URL = cbsiteurl() . htmlspecialchars(
     )
 );
 
-$cm = <<<EOT
-The page you requested was not found.
+$URLAsMessage = CBMessageMarkup::stringToMessage($URL);
 
-`{$URL}`
+$message = <<<EOT
+
+    --- center
+    The page you requested was not found.
+
+    ({$URLAsMessage} (code))
+    ---
+
 EOT;
 
 CBPage::renderSpec(
-    (object)[
-        'className' => 'CBViewPage',
-        'title' => 'Page Not Found',
-        'layout' => (object)[
-            'className' => 'CBPageLayout',
-        ],
-        'sections' => [
-            (object)[
-                'className' => 'CBTextView2',
-                'contentAsCommonMark' => $cm,
-                'CSSClassNames' => 'center',
-            ],
-        ],
-    ]
+    CBModelTemplateCatalog::fetchLivePageTemplate(
+        (object)[
+            'title' => 'Page Not Found',
+            'sections' => [
+                (object)[
+                    'className' => 'CBMessageView',
+                    'markup' => $message,
+                ]
+            ]
+        ]
+    )
 );
