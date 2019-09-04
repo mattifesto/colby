@@ -701,19 +701,34 @@ EOT;
         return CBConvert::valueAsMoniker(CBModel::value($model, $keyPath));
     }
 
+
     /**
-     * This is a convenience function for:
-     *
-     *      CBConvert::valueAsName(CBModel::value(...))
-     *
      * @param mixed $model
      * @param string $keyPath
      *
      * @return ?string
      */
     static function valueAsName($model, string $keyPath): ?string {
-        return CBConvert::valueAsName(CBModel::value($model, $keyPath));
+        return CBConvert::valueAsName(
+            CBModel::value($model, $keyPath)
+        );
     }
+
+
+    /**
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return ?array
+     *
+     *      Returns null if the value contains an invalid name.
+     */
+    static function valueAsNames($model, string $keyPath): ?array {
+        return CBConvert::valueAsNames(
+            CBModel::value($model, $keyPath)
+        );
+    }
+
 
     /**
      * This is a convenience function for:
@@ -800,7 +815,10 @@ EOT;
         return CBConvert::valueToObject(CBModel::value($model, $keyPath));
     }
 
+
     /**
+     * @deprecated use CBModel::valueAsNames()
+     *
      * This is a convenience function for:
      *
      *      CBConvert::valueToNames(CBModel::value(...));
@@ -813,6 +831,7 @@ EOT;
     static function valueToNames($model, string $keyPath): array {
         return CBConvert::valueToNames(CBModel::value($model, $keyPath));
     }
+
 
     /**
      * This is a convenience function for:
