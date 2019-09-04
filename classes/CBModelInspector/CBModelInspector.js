@@ -28,27 +28,39 @@ var CBModelInspector = {
      */
     init: function () {
         let navigator = CBUINavigationView.create();
+
         let spec = {
             ID: CBModelInspector_modelID,
         };
+
         let navigationHomeElement = document.createElement("div");
         let modelInformationElement = document.createElement("div");
-        let IDDidChangeCallback = CBModelInspector.IDDidChange.bind(undefined, {
-            spec: spec,
-            container: modelInformationElement,
-        });
+
+        let IDDidChangeCallback = CBModelInspector.IDDidChange.bind(
+            undefined,
+            {
+                spec: spec,
+                container: modelInformationElement,
+            }
+        );
 
         navigationHomeElement.appendChild(CBUI.createHalfSpace());
 
         {
             let sectionElement = CBUI.createSection();
             let sectionItemElement = CBUI.createSectionItem();
-            sectionItemElement.appendChild(CBUIStringEditor.createEditor({
-                labelText: "ID",
-                propertyName: "ID",
-                spec: spec,
-                specChangedCallback: IDDidChangeCallback,
-            }).element);
+
+            sectionItemElement.appendChild(
+                CBUIStringEditor.createEditor(
+                    {
+                        labelText: "ID",
+                        propertyName: "ID",
+                        spec: spec,
+                        specChangedCallback: IDDidChangeCallback,
+                    }
+                ).element
+            );
+
             sectionElement.appendChild(sectionItemElement);
 
             navigationHomeElement.appendChild(sectionElement);
@@ -61,10 +73,12 @@ var CBModelInspector = {
         let mainElement = document.getElementsByTagName("main")[0];
         mainElement.appendChild(navigator.element);
 
-        navigator.navigate({
-            element: navigationHomeElement,
-            title: "Inspector",
-        });
+        navigator.navigate(
+            {
+                element: navigationHomeElement,
+                title: "Inspector",
+            }
+        );
 
         IDDidChangeCallback();
     },
@@ -210,7 +224,10 @@ var CBModelInspector = {
                     stringsPart.element.classList.add("action");
 
                     sectionItem.callback = function () {
-                        window.location = '/admin/?c=CBModelEditor&ID=' + model.ID;
+                        window.location = (
+                            '/admin/?c=CBModelEditor&ID=' +
+                            model.ID
+                        );
                     };
 
                     sectionItem.appendPart(stringsPart);
@@ -219,7 +236,9 @@ var CBModelInspector = {
 
                 {
                     let sectionItem = CBUISectionItem4.create();
-                    sectionItem.callback = function () { confirm(); };
+                    sectionItem.callback = function () {
+                        confirm();
+                    };
 
                     let stringsPart = CBUIStringsPart.create();
                     stringsPart.string1 = "Delete Model";
@@ -231,7 +250,10 @@ var CBModelInspector = {
 
                     /* stage 1 */
                     let confirm = function () {
-                        CBUIPanel.message = "Are you sure you want to delete this model?";
+                        CBUIPanel.message = (
+                            "Are you sure you want to delete this model?"
+                        );
+
                         CBUIPanel.buttons = [
                             {
                                 title: "Yes",
@@ -250,14 +272,26 @@ var CBModelInspector = {
                         CBUIPanel.message = "Deleting model...";
                         CBUIPanel.buttons = [];
 
-                        Colby.callAjaxFunction("CBModels", "deleteByID", {ID: model.ID})
-                            .then(report)
-                            .catch(Colby.displayAndReportError);
+                        Colby.callAjaxFunction(
+                            "CBModels",
+                            "deleteByID",
+                            {
+                                ID: model.ID,
+                            }
+                        ).then(
+                            report
+                        ).catch(
+                            Colby.displayAndReportError
+                        );
                     };
 
                     /* stage 3 */
                     let report = function () {
-                        CBUIPanel.message = "The model has been deleted.\n\nPress OK to navigate to the models admin page.";
+                        CBUIPanel.message = (
+                            "The model has been deleted.\n\nPress OK to " +
+                            "navigate to the models admin page."
+                        );
+
                         CBUIPanel.buttons = [
                             {
                                 title: "OK",
@@ -360,8 +394,13 @@ var CBModelInspector = {
                     let info = "";
 
                     if (version.replaced !== null) {
-                        let deathspan = (unixNow - version.replaced).toLocaleString();
-                        let lifespan = (version.replaced - version.timestamp).toLocaleString();
+                        let deathspan = (
+                            unixNow - version.replaced
+                        ).toLocaleString();
+
+                        let lifespan = (
+                            version.replaced - version.timestamp
+                        ).toLocaleString();
 
                         info = `(${deathspan} / ${lifespan} ${version.action})`;
                     }
@@ -372,10 +411,18 @@ var CBModelInspector = {
 
                     stringsPart.element.classList.add("titledescription");
 
-                    Colby.requestTimeUpdate(function (javascriptTimestamp) {
-                        let now = new Date(javascriptTimestamp);
-                        stringsPart.string2 = Colby.dateToRelativeLocaleString(versionCreated, now);
-                    });
+                    Colby.requestTimeUpdate(
+                        function (javascriptTimestamp) {
+                            let now = new Date(javascriptTimestamp);
+
+                            stringsPart.string2 = (
+                                Colby.dateToRelativeLocaleString(
+                                    versionCreated,
+                                    now
+                                )
+                            );
+                        }
+                    );
 
                     sectionItem.callback = function () {
                         let element = document.createElement("div");
@@ -400,7 +447,11 @@ var CBModelInspector = {
 
                         {
                             let message = CBMessageMarkup.stringToMarkup(
-                                JSON.stringify(JSON.parse(version.specAsJSON), undefined, 2)
+                                JSON.stringify(
+                                    JSON.parse(version.specAsJSON),
+                                    undefined,
+                                    2
+                                )
                             );
 
                             let expander = CBUIExpander.create();
@@ -420,7 +471,13 @@ var CBModelInspector = {
 
                         {
                             let message = CBMessageMarkup.stringToMarkup(
-                                JSON.stringify(JSON.parse(version.modelAsJSON), undefined, 2)
+                                JSON.stringify(
+                                    JSON.parse(
+                                        version.modelAsJSON
+                                    ),
+                                    undefined,
+                                    2
+                                )
                             );
 
                             let expander = CBUIExpander.create();
@@ -438,10 +495,12 @@ var CBModelInspector = {
                             element.appendChild(CBUI.createHalfSpace());
                         }
 
-                        CBUINavigationView.context.navigate({
-                            element: element,
-                            title: `Version ${version.version}`,
-                        });
+                        CBUINavigationView.context.navigate(
+                            {
+                                element: element,
+                                title: `Version ${version.version}`,
+                            }
+                        );
 
 
                         /**
@@ -478,42 +537,82 @@ var CBModelInspector = {
             args.container.appendChild(CBUI.createHalfSpace());
 
             if (modelData.rowFromColbyPages) {
-                args.container.appendChild(CBUIExpander.create({
-                    message: "ColbyPages Row\n\n--- pre\n" +
-                             CBMessageMarkup.stringToMarkup(JSON.stringify(modelData.rowFromColbyPages, undefined, 2)) +
-                             "\n---",
-                }).element);
+                args.container.appendChild(
+                    CBUIExpander.create(
+                        {
+                            message: (
+                                "ColbyPages Row\n\n--- pre\n" +
+                                CBMessageMarkup.stringToMarkup(
+                                    JSON.stringify(
+                                        modelData.rowFromColbyPages,
+                                        undefined,
+                                        2
+                                    )
+                                ) +
+                                "\n---"
+                            ),
+                        }
+                    ).element
+                );
             }
 
             if (modelData.rowFromCBImages) {
-                args.container.appendChild(CBUIExpander.create({
-                    message: "CBImages Row\n\n--- pre\n" +
-                             CBMessageMarkup.stringToMarkup(JSON.stringify(modelData.rowFromCBImages, undefined, 2)) +
-                             "\n---",
-                }).element);
+                args.container.appendChild(
+                    CBUIExpander.create(
+                        {
+                            message: (
+                                "CBImages Row\n\n--- pre\n" +
+                                CBMessageMarkup.stringToMarkup(
+                                    JSON.stringify(
+                                        modelData.rowFromCBImages,
+                                        undefined,
+                                        2
+                                    )
+                                ) +
+                                "\n---"
+                            ),
+                        }
+                    ).element
+                );
             }
 
             if (modelData.dataStoreFiles.length > 0) {
-                let links = modelData.dataStoreFiles.map(function (file) {
-                    let text = CBMessageMarkup.stringToMarkup(file.text);
-                    let URL = CBMessageMarkup.stringToMarkup(file.URL);
+                let links = modelData.dataStoreFiles.map(
+                    function (file) {
+                        let text = CBMessageMarkup.stringToMarkup(file.text);
+                        let URL = CBMessageMarkup.stringToMarkup(file.URL);
 
-                    return `(${text} (a ${URL}))`;
-                });
+                        return `(${text} (a ${URL}))`;
+                    }
+                );
 
-                args.container.appendChild(CBUIExpander.create({
-                    message: "Data Store Files\n\n--- ul\n" +
-                             links.join("\n\n") +
-                             "\n---",
-                }).element);
+                args.container.appendChild(
+                    CBUIExpander.create(
+                        {
+                            message: (
+                                "Data Store Files\n\n--- ul\n" +
+                                links.join("\n\n") +
+                                "\n---"
+                            ),
+                        }
+                    ).element
+                );
             }
 
             if (modelData.archive.length > 0) {
-                args.container.appendChild(CBUIExpander.create({
-                    message: "Archive\n\n--- pre\n" +
-                             CBMessageMarkup.stringToMarkup(modelData.archive) +
-                             "\n---",
-                }).element);
+                args.container.appendChild(
+                    CBUIExpander.create(
+                        {
+                            message: (
+                                "Archive\n\n--- pre\n" +
+                                CBMessageMarkup.stringToMarkup(
+                                    modelData.archive
+                                ) +
+                                "\n---"
+                            ),
+                        }
+                    ).element
+                );
             }
 
             Colby.updateTimes();
