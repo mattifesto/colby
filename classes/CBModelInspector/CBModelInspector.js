@@ -5,8 +5,7 @@
     CBArtworkElement,
     CBImage,
     CBMessageMarkup,
-    CBModelInspector_associatedImageModel,
-    CBModelInspector_modelID,
+    CBModel,
     CBUI,
     CBUIExpander,
     CBUIImageChooser,
@@ -17,6 +16,9 @@
     CBUIStringEditor,
     CBUIStringsPart,
     Colby,
+
+    CBModelInspector_associatedImageModel,
+    CBModelInspector_modelID,
 */
 
 var CBModelInspector = {
@@ -66,6 +68,8 @@ var CBModelInspector = {
 
         IDDidChangeCallback();
     },
+    /* init() */
+
 
     /**
      * @param object args
@@ -82,33 +86,88 @@ var CBModelInspector = {
      * @return undefined
      */
     IDDidChange: function (args) {
-        let spec = args.spec || {};
+        let containerElement = args.container;
 
-        if (/^[0-9a-f]{40}$/.test(spec.ID)) {
-            Colby.callAjaxFunction("CBModelInspector", "fetchModelData", {ID: spec.ID})
-                 .then(resolved)
-                 .catch(Colby.displayAndReportError);
-        } else {
+        let modelID = CBModel.valueAsID(
+            args.spec,
+            "ID"
+        );
+
+        if (modelID === undefined) {
             document.title = "Inspector: Invalid ID";
+            containerElement.textContent = "";
+            return;
         }
 
-        function resolved(response) {
-            var section;
+        Colby.callAjaxFunction(
+            "CBModelInspector",
+            "fetchModelData",
+            {
+                ID: modelID,
+            }
+        ).then(
+            function (modelData) {
+                IDDidChange_render(modelData);
+            }
+        ).catch(
+            function (error) {
+                Colby.displayAndReportError(error);
+            }
+        );
+
+        return;
+
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return Element
+         */
+        function IDDidChange_createAssociationsElement() {
+            let element = CBUI.createElement(
+                "CBModelInspector_associations"
+            );
+
+            element.textContent = "associations";
+
+            return element;
+        }
+        /* IDDidChange_createAssociationsElement() */
+
+
+        /**
+         * @return undefined
+         */
+        function IDDidChange_render(modelData) {
+            let model;
+            let section;
 
             args.container.textContent = "";
 
             section = CBUI.createSection();
 
-            if (response.modelVersions.length === 0) {
-                document.title = "Inspector: " + spec.ID;
-                section.appendChild(CBUI.createKeyValueSectionItem({
-                    key: "Notice",
-                    value: "This ID has no model."
-                }).element);
-            } else {
-                var model = JSON.parse(response.modelVersions[0].modelAsJSON);
+            if (modelData.modelVersions.length === 0) {
+                document.title = "Inspector: " + modelData.modelID;
 
-                document.title = "Inspector: " + (model.title ? model.title.trim() : model.className);
+                section.appendChild(
+                    CBUI.createKeyValueSectionItem(
+                        {
+                            key: "Notice",
+                            value: "This ID has no model."
+                        }
+                    ).element
+                );
+            } else {
+                model = JSON.parse(modelData.modelVersions[0].modelAsJSON);
+
+                document.title = (
+                    "Inspector: " +
+                    (
+                        model.title ?
+                        model.title.trim() :
+                        model.className
+                    )
+                );
 
                 if (model.className === "CBImage") {
                     let container = document.createElement("div");
@@ -217,6 +276,7 @@ var CBModelInspector = {
             args.container.appendChild(section);
             args.container.appendChild(CBUI.createHalfSpace());
 
+            /* associated image */
             {
                 let titleElement = document.createElement("div");
                 titleElement.className = "CBUI_title1";
@@ -272,8 +332,19 @@ var CBModelInspector = {
                     );
                 };
             }
+            /* associated image */
 
-            if (response.modelVersions.length > 0) {
+
+            /* associations */
+
+            args.container.appendChild(
+                IDDidChange_createAssociationsElement()
+            );
+
+
+            /* versions */
+
+            if (modelData.modelVersions.length > 0) {
                 {
                     let titleElement = document.createElement("div");
                     titleElement.className = "CBUI_title1";
@@ -284,7 +355,7 @@ var CBModelInspector = {
                 section = CBUI.createSection();
                 let unixNow = Math.floor(Date.now() / 1000);
 
-                response.modelVersions.forEach(function (version) {
+                modelData.modelVersions.forEach(function (version) {
                     let versionCreated = new Date(version.timestamp * 1000);
                     let info = "";
 
@@ -381,7 +452,7 @@ var CBModelInspector = {
                                 "CBModels",
                                 "revert",
                                 {
-                                    ID: spec.ID,
+                                    ID: modelData.modelID,
                                     version: version.version,
                                 }
                             ).then(
@@ -406,24 +477,24 @@ var CBModelInspector = {
 
             args.container.appendChild(CBUI.createHalfSpace());
 
-            if (response.rowFromColbyPages) {
+            if (modelData.rowFromColbyPages) {
                 args.container.appendChild(CBUIExpander.create({
                     message: "ColbyPages Row\n\n--- pre\n" +
-                             CBMessageMarkup.stringToMarkup(JSON.stringify(response.rowFromColbyPages, undefined, 2)) +
+                             CBMessageMarkup.stringToMarkup(JSON.stringify(modelData.rowFromColbyPages, undefined, 2)) +
                              "\n---",
                 }).element);
             }
 
-            if (response.rowFromCBImages) {
+            if (modelData.rowFromCBImages) {
                 args.container.appendChild(CBUIExpander.create({
                     message: "CBImages Row\n\n--- pre\n" +
-                             CBMessageMarkup.stringToMarkup(JSON.stringify(response.rowFromCBImages, undefined, 2)) +
+                             CBMessageMarkup.stringToMarkup(JSON.stringify(modelData.rowFromCBImages, undefined, 2)) +
                              "\n---",
                 }).element);
             }
 
-            if (response.dataStoreFiles.length > 0) {
-                let links = response.dataStoreFiles.map(function (file) {
+            if (modelData.dataStoreFiles.length > 0) {
+                let links = modelData.dataStoreFiles.map(function (file) {
                     let text = CBMessageMarkup.stringToMarkup(file.text);
                     let URL = CBMessageMarkup.stringToMarkup(file.URL);
 
@@ -437,17 +508,22 @@ var CBModelInspector = {
                 }).element);
             }
 
-            if (response.archive.length > 0) {
+            if (modelData.archive.length > 0) {
                 args.container.appendChild(CBUIExpander.create({
                     message: "Archive\n\n--- pre\n" +
-                             CBMessageMarkup.stringToMarkup(response.archive) +
+                             CBMessageMarkup.stringToMarkup(modelData.archive) +
                              "\n---",
                 }).element);
             }
 
             Colby.updateTimes();
         }
+        /* IDDidChange_render() */
     },
+    /* IDDidChange() */
 };
 
-Colby.afterDOMContentLoaded(CBModelInspector.init);
+
+Colby.afterDOMContentLoaded(
+    CBModelInspector.init
+);

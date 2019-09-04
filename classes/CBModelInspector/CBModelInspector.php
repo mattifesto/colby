@@ -21,6 +21,7 @@ final class CBModelInspector {
         CBHTMLOutput::pageInformation()->title = 'Model Inspector';
     }
 
+
     /* -- CBAjax interfaces -- -- -- -- -- */
 
     /**
@@ -38,14 +39,25 @@ final class CBModelInspector {
      *      }
      */
     static function CBAjax_fetchModelData(stdClass $args) {
-        $ID = CBModel::value($args, 'ID', null, 'CBConvert::valueAsHex160');
+        $ID = CBModel::valueAsID($args, 'ID');
 
-        if (!CBHex160::is($ID)) {
-            throw new InvalidArgumentException('ID');
+        if ($ID === null) {
+            throw CBException::createModelIssueException(
+                'The function arguments object has an invalid "ID" ' .
+                'property value.',
+                $args,
+                '334244b01b8d5fa31e4f4371f8d8af2f0a0c8be8'
+            );
         }
 
         $object = (object)[
             'className' => 'CBModelInspector_fetchModelData',
+
+            'assocations' => CBModelAssociations::fetch($ID),
+
+            'associationOf' => CBModelAssociations::fetch(null, null, $ID),
+
+            'modelID' => $ID,
         ];
 
         $object->archive = CBModelInspector::fetchArchive($ID);
@@ -56,6 +68,8 @@ final class CBModelInspector {
 
         return $object;
     }
+    /* CBAjax_fetchModelData() */
+
 
     /**
      * @return string
@@ -72,7 +86,7 @@ final class CBModelInspector {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v488.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v523.js', cbsysurl()),
         ];
     }
 
@@ -115,6 +129,7 @@ final class CBModelInspector {
             'CBArtworkElement',
             'CBImage',
             'CBMessageMarkup',
+            'CBModel',
             'CBUI',
             'CBUIExpander',
             'CBUIImageChooser',
