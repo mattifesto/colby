@@ -290,8 +290,6 @@ final class CBConvert {
      *
      * " hey  //  you read  / this post /  " --> "hey/you-read/this-post"
      *
-     * TODO: Reconcile with Colby.textToURI()
-     *
      * @param string $string
      *
      * @return string
