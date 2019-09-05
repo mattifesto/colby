@@ -7,7 +7,7 @@ final class CBModelAssociationsTable {
      *
      *      The "className" column will eventually be renamed to
      *      "associationKey" because it does not represent an actual class name
-     *      but instead the context of the assocation for the row.
+     *      but instead the context of the association for the row.
      *
      * @return void
      */
