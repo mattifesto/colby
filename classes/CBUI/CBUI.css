@@ -263,6 +263,13 @@
 }
 
 /**
+ * 2019_09_04
+ */
+.CBUI_fontFamily_monospace {
+    font-family: var(--CBMonospaceFontFamily), monospace;
+}
+
+/**
  * 2019_06_17
  */
 .CBUI_padding_standard {
