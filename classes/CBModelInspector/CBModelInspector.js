@@ -195,7 +195,7 @@ var CBModelInspector = {
                     associationElement.appendChild(keyElement);
 
                     let IDElement = CBUI.createElement(
-                        "CBUI_textSize_small CBUI_fontFamilty_monospace",
+                        "CBUI_textSize_small CBUI_fontFamily_monospace",
                         "a"
                     );
 
