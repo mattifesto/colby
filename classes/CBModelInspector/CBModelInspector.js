@@ -153,7 +153,67 @@ var CBModelInspector = {
                 "CBModelInspector_associations"
             );
 
-            element.textContent = "associations";
+            if (modelData.associations.length === 0) {
+                return element;
+            }
+
+            let titleElement = CBUI.createElement(
+                "CBUI_title1"
+            );
+
+            titleElement.textContent = "Associations";
+
+            element.appendChild(titleElement);
+
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            element.appendChild(sectionContainerElement);
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
+
+            modelData.associations.forEach(
+                function renderAssociation(association) {
+                    let associationElement = CBUI.createElement(
+                        "CBUI_container_leftAndRight"
+                    );
+
+                    sectionElement.appendChild(associationElement);
+
+                    let keyElement = CBUI.createElement();
+
+                    keyElement.textContent = CBModel.valueToString(
+                        association,
+                        "className"
+                    );
+
+                    associationElement.appendChild(keyElement);
+
+                    let IDElement = CBUI.createElement(
+                        "CBUI_textSize_small CBUI_fontFamilty_monospace",
+                        "a"
+                    );
+
+                    let associatedID = CBModel.valueAsID(
+                        association,
+                        "associatedID"
+                    );
+
+                    IDElement.href = (
+                        "/admin/?c=CBModelInspector&ID=" +
+                        associatedID
+                    );
+
+                    IDElement.textContent = associatedID;
+
+                    associationElement.appendChild(IDElement);
+                }
+            );
 
             return element;
         }

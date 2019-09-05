@@ -53,7 +53,7 @@ final class CBModelInspector {
         $object = (object)[
             'className' => 'CBModelInspector_fetchModelData',
 
-            'assocations' => CBModelAssociations::fetch($ID),
+            'associations' => CBModelAssociations::fetch($ID),
 
             'associationOf' => CBModelAssociations::fetch(null, null, $ID),
 
