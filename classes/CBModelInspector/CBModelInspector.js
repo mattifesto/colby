@@ -101,6 +101,7 @@ var CBModelInspector = {
      */
     IDDidChange: function (args) {
         let containerElement = args.container;
+        let model, modelData;
 
         let modelID = CBModel.valueAsID(
             args.spec,
@@ -120,8 +121,18 @@ var CBModelInspector = {
                 ID: modelID,
             }
         ).then(
-            function (modelData) {
-                IDDidChange_render(modelData);
+            function (value) {
+                modelData = value;
+
+                if (modelData.modelVersions.length > 0) {
+                    model = JSON.parse(
+                        modelData.modelVersions[0].modelAsJSON
+                    );
+                } else {
+                    model = undefined;
+                }
+
+                IDDidChange_render();
             }
         ).catch(
             function (error) {
@@ -152,15 +163,14 @@ var CBModelInspector = {
         /**
          * @return undefined
          */
-        function IDDidChange_render(modelData) {
-            let model;
+        function IDDidChange_render() {
             let section;
 
             args.container.textContent = "";
 
             section = CBUI.createSection();
 
-            if (modelData.modelVersions.length === 0) {
+            if (model === undefined) {
                 document.title = "Inspector: " + modelData.modelID;
 
                 section.appendChild(
@@ -172,8 +182,6 @@ var CBModelInspector = {
                     ).element
                 );
             } else {
-                model = JSON.parse(modelData.modelVersions[0].modelAsJSON);
-
                 document.title = (
                     "Inspector: " +
                     (
