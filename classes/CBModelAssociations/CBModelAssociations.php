@@ -4,7 +4,7 @@
  * @NOTE 2019_01_23
  *
  *      Changes have recently been made to the associations table to optimize it
- *      for "bi-directional" assocations. However, now I think that the
+ *      for "bi-directional" associations. However, now I think that the
  *      associated item or items should always be stored in the "associatedID"
  *      column of the table.
  *
@@ -344,7 +344,7 @@ EOT;
     /**
      * This function is useful in situations where you have a one-to-one
      * association and you want to add or replace the associated ID while making
-     * sure the assocation remains singular.
+     * sure the association remains singular.
      *
      * @param ID $ID
      * @param string $associationKey
