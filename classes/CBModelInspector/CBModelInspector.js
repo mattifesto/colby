@@ -166,9 +166,10 @@ var CBModelInspector = {
         function IDDidChange_render() {
             let section;
 
-            args.container.textContent = "";
+            containerElement.textContent = "";
 
             section = CBUI.createSection();
+            containerElement.appendChild(section);
 
             if (model === undefined) {
                 document.title = "Inspector: " + modelData.modelID;
@@ -181,153 +182,154 @@ var CBModelInspector = {
                         }
                     ).element
                 );
-            } else {
-                document.title = (
-                    "Inspector: " +
-                    (
-                        model.title ?
-                        model.title.trim() :
-                        model.className
-                    )
-                );
 
-                if (model.className === "CBImage") {
-                    let container = document.createElement("div");
-                    container.style.display = "flex";
-                    container.style.padding = "0 20px";
-                    container.style.justifyContent = "center";
-
-                    let artworkElement = CBArtworkElement.create({
-                        URL: CBImage.toURL(model, "rw1600"),
-                        aspectRatioWidth: model.width,
-                        aspectRatioHeight: model.height,
-                        maxWidth: 800,
-                    });
-
-                    container.appendChild(artworkElement);
-                    args.container.appendChild(container);
-                    args.container.appendChild(CBUI.createHalfSpace());
-                }
-
-                section.appendChild(CBUI.createKeyValueSectionItem({
-                    key: "Class Name",
-                    value: model.className,
-                }).element);
-
-                section.appendChild(CBUI.createKeyValueSectionItem({
-                    key: "Title",
-                    value: model.title,
-                }).element);
-
-                section.appendChild(CBUI.createKeyValueSectionItem({
-                    key: "Description",
-                    value: model.description,
-                }).element);
-
-                {
-                    let sectionItem = CBUISectionItem4.create();
-                    let stringsPart = CBUIStringsPart.create();
-                    stringsPart.string1 = "Edit Model";
-
-                    stringsPart.element.classList.add("action");
-
-                    sectionItem.callback = function () {
-                        window.location = (
-                            '/admin/?c=CBModelEditor&ID=' +
-                            model.ID
-                        );
-                    };
-
-                    sectionItem.appendPart(stringsPart);
-                    section.appendChild(sectionItem.element);
-                }
-
-                {
-                    let sectionItem = CBUISectionItem4.create();
-                    sectionItem.callback = function () {
-                        confirm();
-                    };
-
-                    let stringsPart = CBUIStringsPart.create();
-                    stringsPart.string1 = "Delete Model";
-
-                    stringsPart.element.classList.add("action");
-
-                    sectionItem.appendPart(stringsPart);
-                    section.appendChild(sectionItem.element);
-
-                    /* stage 1 */
-                    let confirm = function () {
-                        CBUIPanel.message = (
-                            "Are you sure you want to delete this model?"
-                        );
-
-                        CBUIPanel.buttons = [
-                            {
-                                title: "Yes",
-                                callback: deleteModel,
-                            },
-                            {
-                                title: "No",
-                            },
-                        ];
-
-                        CBUIPanel.isShowing = true;
-                    };
-
-                    /* stage 2 */
-                    let deleteModel = function () {
-                        CBUIPanel.message = "Deleting model...";
-                        CBUIPanel.buttons = [];
-
-                        Colby.callAjaxFunction(
-                            "CBModels",
-                            "deleteByID",
-                            {
-                                ID: model.ID,
-                            }
-                        ).then(
-                            report
-                        ).catch(
-                            Colby.displayAndReportError
-                        );
-                    };
-
-                    /* stage 3 */
-                    let report = function () {
-                        CBUIPanel.message = (
-                            "The model has been deleted.\n\nPress OK to " +
-                            "navigate to the models admin page."
-                        );
-
-                        CBUIPanel.buttons = [
-                            {
-                                title: "OK",
-                                callback: navigate,
-                            }
-                        ];
-                    };
-
-                    /* stage 4 */
-                    let navigate = function () {
-                        window.location = "/admin/?c=CBModelsAdmin";
-                    };
-                }
+                return;
             }
 
-            args.container.appendChild(section);
-            args.container.appendChild(CBUI.createHalfSpace());
+            document.title = (
+                "Inspector: " +
+                (
+                    model.title ?
+                    model.title.trim() :
+                    model.className
+                )
+            );
+
+            if (model.className === "CBImage") {
+                let container = document.createElement("div");
+                container.style.display = "flex";
+                container.style.padding = "0 20px";
+                container.style.justifyContent = "center";
+
+                let artworkElement = CBArtworkElement.create({
+                    URL: CBImage.toURL(model, "rw1600"),
+                    aspectRatioWidth: model.width,
+                    aspectRatioHeight: model.height,
+                    maxWidth: 800,
+                });
+
+                container.appendChild(artworkElement);
+                containerElement.appendChild(container);
+                containerElement.appendChild(CBUI.createHalfSpace());
+            }
+
+            section.appendChild(CBUI.createKeyValueSectionItem({
+                key: "Class Name",
+                value: model.className,
+            }).element);
+
+            section.appendChild(CBUI.createKeyValueSectionItem({
+                key: "Title",
+                value: model.title,
+            }).element);
+
+            section.appendChild(CBUI.createKeyValueSectionItem({
+                key: "Description",
+                value: model.description,
+            }).element);
+
+            {
+                let sectionItem = CBUISectionItem4.create();
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Edit Model";
+
+                stringsPart.element.classList.add("action");
+
+                sectionItem.callback = function () {
+                    window.location = (
+                        '/admin/?c=CBModelEditor&ID=' +
+                        model.ID
+                    );
+                };
+
+                sectionItem.appendPart(stringsPart);
+                section.appendChild(sectionItem.element);
+            }
+
+            {
+                let sectionItem = CBUISectionItem4.create();
+                sectionItem.callback = function () {
+                    confirm();
+                };
+
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Delete Model";
+
+                stringsPart.element.classList.add("action");
+
+                sectionItem.appendPart(stringsPart);
+                section.appendChild(sectionItem.element);
+
+                /* stage 1 */
+                let confirm = function () {
+                    CBUIPanel.message = (
+                        "Are you sure you want to delete this model?"
+                    );
+
+                    CBUIPanel.buttons = [
+                        {
+                            title: "Yes",
+                            callback: deleteModel,
+                        },
+                        {
+                            title: "No",
+                        },
+                    ];
+
+                    CBUIPanel.isShowing = true;
+                };
+
+                /* stage 2 */
+                let deleteModel = function () {
+                    CBUIPanel.message = "Deleting model...";
+                    CBUIPanel.buttons = [];
+
+                    Colby.callAjaxFunction(
+                        "CBModels",
+                        "deleteByID",
+                        {
+                            ID: model.ID,
+                        }
+                    ).then(
+                        report
+                    ).catch(
+                        Colby.displayAndReportError
+                    );
+                };
+
+                /* stage 3 */
+                let report = function () {
+                    CBUIPanel.message = (
+                        "The model has been deleted.\n\nPress OK to " +
+                        "navigate to the models admin page."
+                    );
+
+                    CBUIPanel.buttons = [
+                        {
+                            title: "OK",
+                            callback: navigate,
+                        }
+                    ];
+                };
+
+                /* stage 4 */
+                let navigate = function () {
+                    window.location = "/admin/?c=CBModelsAdmin";
+                };
+            }
+
+            containerElement.appendChild(CBUI.createHalfSpace());
 
             /* associated image */
             {
                 let titleElement = document.createElement("div");
                 titleElement.className = "CBUI_title1";
                 titleElement.textContent = "Associated Image";
-                args.container.appendChild(titleElement);
+                containerElement.appendChild(titleElement);
 
                 let sectionContainerElement = document.createElement("div");
                 sectionContainerElement.className = "CBUI_section_container";
-                args.container.appendChild(sectionContainerElement);
+                containerElement.appendChild(sectionContainerElement);
 
                 let sectionElement = document.createElement("div");
                 sectionElement.className = "CBUI_section";
@@ -379,7 +381,7 @@ var CBModelInspector = {
 
             /* associations */
 
-            args.container.appendChild(
+            containerElement.appendChild(
                 IDDidChange_createAssociationsElement()
             );
 
@@ -391,7 +393,7 @@ var CBModelInspector = {
                     let titleElement = document.createElement("div");
                     titleElement.className = "CBUI_title1";
                     titleElement.textContent = "Versions";
-                    args.container.appendChild(titleElement);
+                    containerElement.appendChild(titleElement);
                 }
 
                 section = CBUI.createSection();
@@ -539,13 +541,13 @@ var CBModelInspector = {
                     section.appendChild(sectionItem.element);
                 });
 
-                args.container.appendChild(section);
+                containerElement.appendChild(section);
             }
 
-            args.container.appendChild(CBUI.createHalfSpace());
+            containerElement.appendChild(CBUI.createHalfSpace());
 
             if (modelData.rowFromColbyPages) {
-                args.container.appendChild(
+                containerElement.appendChild(
                     CBUIExpander.create(
                         {
                             message: (
@@ -565,7 +567,7 @@ var CBModelInspector = {
             }
 
             if (modelData.rowFromCBImages) {
-                args.container.appendChild(
+                containerElement.appendChild(
                     CBUIExpander.create(
                         {
                             message: (
@@ -594,7 +596,7 @@ var CBModelInspector = {
                     }
                 );
 
-                args.container.appendChild(
+                containerElement.appendChild(
                     CBUIExpander.create(
                         {
                             message: (
@@ -608,7 +610,7 @@ var CBModelInspector = {
             }
 
             if (modelData.archive.length > 0) {
-                args.container.appendChild(
+                containerElement.appendChild(
                     CBUIExpander.create(
                         {
                             message: (
